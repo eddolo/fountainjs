@@ -1,0 +1,225 @@
+{
+  "candidate": "024ff8fe",
+  "date": "2026-11-11",
+  "scope": "Two Firefox lazy-collaboration failures during the continuing full matrix",
+  "records": [
+    {
+      "case": "collaboration-demo-opens-t-c8745-dule-load-and-shares-typing-firefox",
+      "traceLocalOnly": true,
+      "trace": "artifacts/release-browser-024ff8fe/collaboration-demo-opens-t-c8745-dule-load-and-shares-typing-firefox/trace.zip",
+      "traceSha256": "b9a2afb7d508d64c044a26864a6fd524ad68bc7b57eb36c52a6fdb7c103d65d7",
+      "phases": [
+        {
+          "title": "Launch browser",
+          "durationMs": 22293,
+          "failed": false
+        },
+        {
+          "title": "Fixture \"browser\"",
+          "durationMs": 22295,
+          "failed": false
+        },
+        {
+          "title": "Create page",
+          "durationMs": 23721,
+          "failed": false
+        },
+        {
+          "title": "Fixture \"page\"",
+          "durationMs": 23723,
+          "failed": false
+        },
+        {
+          "title": "Before Hooks",
+          "durationMs": 46137,
+          "failed": false
+        },
+        {
+          "title": "Navigate to \"/\"",
+          "durationMs": 3056,
+          "failed": false
+        },
+        {
+          "title": "Expect \"toBeVisible\"",
+          "durationMs": 1167,
+          "failed": false
+        },
+        {
+          "title": "Expect \"toContainText\"",
+          "durationMs": 13381,
+          "failed": true
+        },
+        {
+          "title": "Fixture \"context\"",
+          "durationMs": 6679,
+          "failed": false
+        },
+        {
+          "title": "After Hooks",
+          "durationMs": 11696,
+          "failed": false
+        },
+        {
+          "title": "Fixture \"browser\"",
+          "durationMs": 23739,
+          "failed": false
+        },
+        {
+          "title": "Worker Cleanup",
+          "durationMs": 23741,
+          "failed": false
+        }
+      ],
+      "console": []
+    },
+    {
+      "case": "collaboration-demo-recover-53084-ut-losing-the-current-draft-firefox",
+      "traceLocalOnly": true,
+      "trace": "artifacts/release-browser-024ff8fe/collaboration-demo-recover-53084-ut-losing-the-current-draft-firefox/trace.zip",
+      "traceSha256": "a36ffc1283a41768940fec4c43707aafe2abd2b412c8645e9bdf8d9b8afc64dc",
+      "phases": [
+        {
+          "title": "Launch browser",
+          "durationMs": 20099,
+          "failed": false
+        },
+        {
+          "title": "Fixture \"browser\"",
+          "durationMs": 20101,
+          "failed": false
+        },
+        {
+          "title": "Create context",
+          "durationMs": 6153,
+          "failed": false
+        },
+        {
+          "title": "Fixture \"context\"",
+          "durationMs": 6182,
+          "failed": false
+        },
+        {
+          "title": "Create page",
+          "durationMs": 20336,
+          "failed": false
+        },
+        {
+          "title": "Fixture \"page\"",
+          "durationMs": 20338,
+          "failed": false
+        },
+        {
+          "title": "Before Hooks",
+          "durationMs": 46628,
+          "failed": false
+        },
+        {
+          "title": "Navigate to \"/#collaboration\"",
+          "durationMs": 2352,
+          "failed": false
+        },
+        {
+          "title": "Expect \"toContainText\"",
+          "durationMs": 1140,
+          "failed": false
+        },
+        {
+          "title": "Fixture \"browser\"",
+          "durationMs": 32969,
+          "failed": false
+        },
+        {
+          "title": "Worker Cleanup",
+          "durationMs": 32971,
+          "failed": false
+        }
+      ],
+      "console": [
+        {
+          "type": "warning",
+          "text": "[JavaScript Warning: \"Loading failed for the module with source \u201chttp://127.0.0.1:4173/src/CollaborationDemo.tsx\u201d.\" {file: \"http://127.0.0.1:4173/src/App.tsx\" line: 0}]"
+        },
+        {
+          "type": "warning",
+          "text": "[JavaScript Warning: \"This site appears to use a scroll-linked positioning effect. This may not work well with asynchronous panning; see https://firefox-source-docs.mozilla.org/performance/scroll-linked_effects.html for further details and to join the discussion on related tools and features!\" {file: \"http://127.0.0.1:4173/#collaboration\" line: 0}]"
+        }
+      ]
+    }
+  ],
+  "interpretation": "The original full run had two Firefox timeouts with unusually slow browser/page setup. Both exact tests pass serially without source/assertion/timeout changes. This is consistent with transient setup/contention but does not independently establish parallel startup as the root cause. The failed full run is retained and does not become a clean matrix.",
+  "assertionsChanged": false,
+  "timeoutsChanged": false,
+  "next": "Run the unchanged candidate through hosted CI, including its complete browser matrix and Linux display-backed clipboard batch, once GitHub CLI authentication is available.",
+  "serialRerun": {
+    "workers": 1,
+    "assertionsChanged": false,
+    "timeoutsChanged": false,
+    "trace": "on",
+    "passed": 2,
+    "failed": 0,
+    "log": "artifacts/firefox-lazy-serial-024ff8fe.log",
+    "records": [
+      {
+        "case": "collaboration-demo-opens-t-c8745-dule-load-and-shares-typing-firefox",
+        "trace": "artifacts/firefox-lazy-serial-024ff8fe/collaboration-demo-opens-t-c8745-dule-load-and-shares-typing-firefox/trace.zip",
+        "traceLocalOnly": true,
+        "traceSha256": "d844639e88c7f2191e181f326ab2fabaaf284522fcddd2e6103b63ddc6b65ea9",
+        "phases": [
+          {
+            "title": "Launch browser",
+            "durationMs": 480,
+            "failed": false
+          },
+          {
+            "title": "Create context",
+            "durationMs": 93,
+            "failed": false
+          },
+          {
+            "title": "Create page",
+            "durationMs": 599,
+            "failed": false
+          },
+          {
+            "title": "Before Hooks",
+            "durationMs": 1198,
+            "failed": false
+          },
+          {
+            "title": "Navigate to \"/\"",
+            "durationMs": 1863,
+            "failed": false
+          }
+        ]
+      },
+      {
+        "case": "collaboration-demo-recover-53084-ut-losing-the-current-draft-firefox",
+        "trace": "artifacts/firefox-lazy-serial-024ff8fe/collaboration-demo-recover-53084-ut-losing-the-current-draft-firefox/trace.zip",
+        "traceLocalOnly": true,
+        "traceSha256": "d9d49e17d76874f809872b14a07c8aade0c60c965849077d74c827bae71613d8",
+        "phases": [
+          {
+            "title": "Create context",
+            "durationMs": 3,
+            "failed": false
+          },
+          {
+            "title": "Create page",
+            "durationMs": 139,
+            "failed": false
+          },
+          {
+            "title": "Before Hooks",
+            "durationMs": 148,
+            "failed": false
+          },
+          {
+            "title": "Navigate to \"/#collaboration\"",
+            "durationMs": 641,
+            "failed": false
+          }
+        ]
+      }
+    ]
+  }
+}

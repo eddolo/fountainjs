@@ -2,30 +2,33 @@
 
 ## Current programme status — 2026-11-11
 
-A subsequent full-run investigation reproduces a real virtual-layout lost
-click: a measurement frame moves a host button during its press. The repaired
-runtime `07a2c8ac` passes 15 recorded three-engine checks for release, cancel,
-blur and open Shadow DOM, plus a preceding 33-case broader regression. Its
-full source/release gates are being refreshed; the earlier checkpoint below
-does not certify this new runtime. [Repair evidence](RELEASES.md#verified-virtual-host-control-repair--2026-11-11).
+The latest local runtime checkpoint is `024ff8fe`: all 5,271 source tests in
+323 files pass, alongside build, package, type, headless, performance, retention,
+format and size gates. Fresh packed ESM/CommonJS consumers and both type
+analyses pass outside the repository without browser globals or optional
+peers. Publint retains its existing DOCX warning. The candidate remains
+`0.5.0-beta.1`, unpublished.
 
-The latest local checkpoint is versioned candidate `fc3aa39a`: all 5,271 source tests in
-323 files pass, alongside the build, package, type, headless, performance and
-retention gates. A real renderer failure discovered during the broad browser
-diagnostic is repaired: adjacent empty text runs no longer render a peer widget
-twice at the same position. At `7961b966`, twelve recorded regression journeys pass across
-Chromium, Firefox and WebKit. The 441-case remaining sweep finishes with 421
-passes, 19 skips and one module-loading failure before mobile typing starts.
-The unchanged failed check then passes three isolated runs. The original
-`ERR_NO_BUFFER_SPACE` trace is retained; this is not a clean final matrix.
-The native clipboard batch passes all 18 selected Chromium/Firefox checks;
-Windows WebKit fails three delivery checks, consistent with independent native
-controls. The batch stops at its failure limit. Linux display clipboard checks, fresh
-combined release CI, final packed consumers and publication remain pending.
-The `0.5.0-beta.1` tarball passes type analysis and an outside-repository
-ESM/CommonJS install without browser globals or optional peers. Pinned Lean,
-Bun, Deno and the site build also pass. Nothing is published for this candidate.
-[Current release evidence](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
+This includes the reproduced virtual-layout lost-click repair: a measurement
+frame moved a host button during its press. The guard passes 15 recorded
+three-engine release/cancel/blur/open-Shadow-DOM checks and a preceding 33-case
+broader regression. [Repair evidence](RELEASES.md#verified-virtual-host-control-repair--2026-11-11).
+
+The complete local editor/mobile matrix finishes with 1,063 passes, 19 existing
+skips and two Firefox lazy-loading timeouts. Both failed cases then pass
+serially with unchanged assertions/timeouts. Original traces show unusually
+slow browser/page setup; contention is a hypothesis, not an established root
+cause. Chromium, WebKit and both mobile-emulation projects have no failures.
+The first-run failures are retained and this does not establish a clean matrix.
+Linux display clipboard checks, fresh combined hosted CI, final release
+archive and publication remain pending.
+[Current checkpoint](RELEASES.md#repaired-runtime-integration-checkpoint--2026-11-11).
+
+Earlier checkpoints verify duplicate-widget repair, default Yjs, migration
+recovery, compiled presence, pinned Lean, Bun, Deno and production starter
+downloads. Earlier `ERR_NO_BUFFER_SPACE` and Windows WebKit clipboard failures
+remain recorded; isolated passes and independent controls do not waive gates.
+[Earlier evidence](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
 
 A November 11 review of upstream documentation adds three Missing outcomes:
 editable charts/diagrams, authorable template slots, and a whiteboard surface.

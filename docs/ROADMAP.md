@@ -44,22 +44,28 @@ The beta remains pending until the candidate has the following evidence.
    npm stage and a registry installation establish publication.
 
 The commands and publication procedure are in [RELEASES.md](RELEASES.md).
-The latest full local integration checkpoint is the versioned `fc3aa39a`, which passed all
-5,271 source tests and the package, Node/workerd, type, performance, retention,
-format, and size gates on November 11. A duplicate-widget renderer repair also
-passes 12 recorded desktop checks at `7961b966`. The versioned tarball also
-passes both type analyses and clean ESM/CommonJS installation outside the
-repository without browser globals, React, Yjs or jsdom. Pinned Lean, Bun,
-Deno and the site build pass. Fresh default Yjs (48), startup (24), migration
-recovery (21), and compiled native-presence (108) batches also pass; those
-executions overlap and do not count as new capabilities. Production-site
-starter downloads pass in three desktop engines. The full clean editor/mobile
-matrix, Linux display-backed clipboard checks and hosted CI remain pending. See the
-[checkpoint record](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
-That full run led to a reproduced virtual-layout lost-click repair: pending
-measurement moved a host button during its press. The guard passes 15 recorded
-desktop checks, including cancellation, blur and open Shadow DOM. Its complete
-source/release gates need refreshing. [Repair evidence](RELEASES.md#verified-virtual-host-control-repair--2026-11-11).
+The latest local runtime checkpoint is `024ff8fe`, including the virtual-layout
+host-control repair. It passes all 5,271 source tests in 323 files and the
+package, Node/workerd, type, performance, retention, format and size gates.
+Fresh packed ESM/CommonJS consumers and both type analyses also pass outside
+the repository without browser globals, React, Yjs or jsdom. Publint retains
+its existing DOCX warning.
+
+The complete local editor/mobile run finishes with 1,063 passes, 19 existing
+skips and two Firefox lazy-loading timeouts. Both exact failed cases pass
+serially with unchanged assertions and timeouts. The traces show much slower
+browser/page setup in the failed run, consistent with transient contention;
+the root cause is not established and this is not a clean matrix. Chromium,
+WebKit and both mobile-emulation projects have no failures. Linux display
+clipboard checks and fresh hosted CI remain required.
+[Current checkpoint](RELEASES.md#repaired-runtime-integration-checkpoint--2026-11-11).
+
+The preceding versioned checkpoint also passes pinned Lean, Bun, Deno, the
+site build, fresh default Yjs (48), startup (24), migration recovery (21),
+compiled native-presence (108), and production starter-download batches.
+Those executions overlap and do not count as new capabilities; hosted CI
+must refresh these outcomes for the final candidate.
+[Earlier evidence](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
 
 ## Remaining parity work
 

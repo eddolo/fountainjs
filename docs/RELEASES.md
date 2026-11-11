@@ -565,6 +565,61 @@ identified by SHA-256 in `artifacts/download-delivery-audit-20261111.json`.
 Fresh complete browser/CI and package validation remain mandatory; focused
 passes do not erase the original interrupted run.
 
+### Repaired runtime integration checkpoint — 2026-11-11
+
+At `024ff8fe`, `pnpm check` passes all 5,271 source tests in 323 files,
+including build, API/package, Node/workerd, format, framework types, size,
+performance and retention checks. The preceding run has two stale test
+expectations: download-request wording and the ninth CI browser invocation.
+Both are aligned without weakening delivery assertions; its 5,269 passes and
+two failures remain recorded. The subsequent complete source gate exits zero.
+
+The fresh `ff11e640` tarball contains 1,145 files and is 4,887,051 bytes. The
+only changes from that revision to `024ff8fe` are two unpackaged test files.
+Publint passes with its existing DOCX classification warning; both packed type
+analyses pass. A clean consumer outside the repository verifies ESM/CommonJS
+schema, extensions, transactions, exact Markdown and server HTML with no
+browser globals or resolvable React, Yjs or jsdom. The archive receipt records
+its SHA-512. Repack after the final packaged-documentation changes before staging.
+
+The complete local editor/mobile matrix terminates after 42.9 minutes:
+
+| Project | Passed | Existing skips | Failed |
+| --- | ---: | ---: | ---: |
+| Chromium | 342 | 0 | 0 |
+| Firefox | 331 | 9 | 2 |
+| WebKit | 332 | 10 | 0 |
+| Mobile Chrome emulation | 29 | 0 | 0 |
+| Mobile Safari emulation | 29 | 0 | 0 |
+| Total | 1,063 | 19 | 2 |
+
+The two failures are Firefox's delayed collaboration-module load and failed-load
+recovery journeys. Their traces show browser launches around 20–22 seconds and
+page creation around 20–24 seconds. Both exact cases pass with one worker,
+unchanged assertions and unchanged timeouts (4.4 and 3.3 seconds). The serial
+trace records a 480 ms browser launch and first-page creation of 599 ms.
+This supports a transient setup/contention hypothesis but does not prove its
+cause. The failed full run is retained and is not reported as a clean matrix.
+No new skip, retry or timeout allowance is introduced.
+
+Direct visual review of five saved screenshots covers recovered peer content,
+merged-table resizing, mobile-width task-reader navigation, and table indentation
+in editor/page preview. These captured states do not certify physical devices,
+assistive technology or independent Word/PDF fidelity.
+
+Evidence: `artifacts/release-checkpoint-024ff8fe.json`,
+`artifacts/release-check-024ff8fe.log`,
+`artifacts/release-preflight-ff11e640/receipt.json`,
+`artifacts/release-browser-024ff8fe.log`,
+`artifacts/firefox-lazy-serial-024ff8fe.log`,
+`artifacts/firefox-lazy-startup-diagnostic-024ff8fe.json`, and
+`artifacts/release-visual-review-024ff8fe.json`. Large raw reports/traces remain
+local and are identified by hashes in the compact checkpoint.
+
+GitHub CLI remains signed out at this checkpoint. Hosted CI, including the
+unchanged Linux display-backed clipboard batch, is still required before
+tagging/staging. Nothing from this candidate has been published or deployed.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

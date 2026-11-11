@@ -30,16 +30,62 @@
   "packageReceipt": "artifacts/release-preflight-ff11e640/receipt.json",
   "browserHeadlessPlan": 1084,
   "pending": [
-    "Terminal clean full browser matrix plus Linux display clipboard validation",
-    "Clean full browser matrix and Linux display clipboard validation",
+    "Clean hosted browser matrix and Linux display clipboard validation",
     "Hosted CI and GitHub authentication",
-    "Final release archive after evidence documentation updates, npm stage and approval",
+    "Final release archive after packaged documentation updates, npm stage and approval",
     "Registry installation and website deployment"
   ],
   "browserMatrix": {
-    "status": "running",
+    "status": "failed",
     "planned": 1084,
     "log": "artifacts/release-browser-024ff8fe.log",
-    "output": "artifacts/release-browser-024ff8fe"
+    "output": "artifacts/release-browser-024ff8fe",
+    "terminal": true,
+    "exitCode": 1,
+    "passed": 1063,
+    "skipped": 19,
+    "failed": 2,
+    "durationMs": 2573516.276,
+    "byProject": {
+      "chromium": {
+        "expected": 342
+      },
+      "firefox": {
+        "unexpected": 2,
+        "expected": 331,
+        "skipped": 9
+      },
+      "webkit": {
+        "expected": 332,
+        "skipped": 10
+      },
+      "mobile-chrome": {
+        "expected": 29
+      },
+      "mobile-safari": {
+        "expected": 29
+      }
+    },
+    "jsonReportLocalOnly": "artifacts/release-browser-024ff8fe.json",
+    "jsonReportSha256": "24b3df43a0cfd6492de1888e5b6f7fbab91b5778b257277d44bd2c0b317f0528",
+    "nativeClipboardCasesExcluded": 27,
+    "nativeClipboardGate": "Separate unchanged mandatory Linux headed CI batch"
+  },
+  "firefoxSerialDiagnostic": {
+    "status": "passed",
+    "passed": 2,
+    "failed": 0,
+    "workers": 1,
+    "assertionsChanged": false,
+    "timeoutsChanged": false,
+    "log": "artifacts/firefox-lazy-serial-024ff8fe.log",
+    "diagnostic": "artifacts/firefox-lazy-startup-diagnostic-024ff8fe.json",
+    "doesNotReplaceCleanMatrix": true
+  },
+  "visualReview": "artifacts/release-visual-review-024ff8fe.json",
+  "githubAuthentication": {
+    "status": "signed-out",
+    "userReply": "Intent to sign in, not observed completion",
+    "published": false
   }
 }

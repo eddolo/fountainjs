@@ -1,0 +1,68 @@
+{
+  "candidate": "024ff8fe",
+  "date": "2026-11-11",
+  "method": "Direct visual inspection of saved real-browser screenshots through view_image; no new browser process or test mutation during the continuing full matrix.",
+  "observations": [
+    {
+      "path": "artifacts/release-browser-024ff8fe/collaboration-demo-recover-53084-ut-losing-the-current-draft-webkit/collaboration-recovered.png",
+      "engine": "webkit",
+      "observed": "Both connected author panels display Shared launch note after recovery. Peer labels and selection highlights are visible. Structured settings cards show the same title and layout. Ada has one formatting control and Grace has five, consistent with the current demo source rather than clipped controls.",
+      "files": [
+        {
+          "path": "artifacts/release-browser-024ff8fe/collaboration-demo-recover-53084-ut-losing-the-current-draft-webkit/collaboration-recovered.png",
+          "sha256": "fee1baac3bbd2dead9dad45673a0b03ee78d687407ce3a939c2425276abbbc4f",
+          "localOnly": true
+        }
+      ]
+    },
+    {
+      "path": "artifacts/release-browser-024ff8fe/editor-announces-table-res-81504-inter-and-history-workflows-firefox/table-resize-announced-and-committed.png",
+      "engine": "firefox",
+      "observed": "The selected merged first-row cell has a visible purple outline and resize edge. Its neighbor remains separate; Left, Right and Neighbor row remain visible on the second row. No visible content overlap in this captured state.",
+      "files": [
+        {
+          "path": "artifacts/release-browser-024ff8fe/editor-announces-table-res-81504-inter-and-history-workflows-firefox/table-resize-announced-and-committed.png",
+          "sha256": "43ab7988fb11b54e7b5fda7760e8eebf9031ff281096cbcbd1a3ec1a2e5e1854",
+          "localOnly": true
+        }
+      ]
+    },
+    {
+      "path": "artifacts/release-browser-024ff8fe/editor-discovers-product-w-0aed3-e-task-drafts-and-histories-firefox/task-reader-mobile.png",
+      "engine": "firefox, mobile-width viewport",
+      "observed": "Home and workflow breadcrumbs, Back to workflow lab, task selection, Delete task, Edit description, and download/open controls remain visible in a single-column layout. Reader description has no rich-editor toolbar. This is viewport evidence, not physical Firefox mobile support.",
+      "files": [
+        {
+          "path": "artifacts/release-browser-024ff8fe/editor-discovers-product-w-0aed3-e-task-drafts-and-histories-firefox/task-reader-mobile.png",
+          "sha256": "c787eff8b762c8e287e4b7782f26fef7ee8523d1e637a3ac5067dc6bdade2898",
+          "localOnly": true
+        }
+      ]
+    },
+    {
+      "paths": [
+        "artifacts/release-browser-024ff8fe/editor-conversion-lab-pres-d6c2d-r-preview-and-reopened-DOCX-chromium/table-indent-editor.png",
+        "artifacts/release-browser-024ff8fe/editor-conversion-lab-pres-d6c2d-r-preview-and-reopened-DOCX-chromium/table-indent-preview.png"
+      ],
+      "engine": "chromium",
+      "observed": "Baseline and indented tables remain distinct in editor and page-preview captures. The second table is visibly inset relative to the first in both. Page-preview capture includes surrounding page UI and is clipped at its outer viewport; it does not establish independent Word/PDF rendering fidelity.",
+      "files": [
+        {
+          "path": "artifacts/release-browser-024ff8fe/editor-conversion-lab-pres-d6c2d-r-preview-and-reopened-DOCX-chromium/table-indent-editor.png",
+          "sha256": "31c9f3d25fbcc18fba4b2e85eac15be2f9fa4298b653358136e174f3b27158de",
+          "localOnly": true
+        },
+        {
+          "path": "artifacts/release-browser-024ff8fe/editor-conversion-lab-pres-d6c2d-r-preview-and-reopened-DOCX-chromium/table-indent-preview.png",
+          "sha256": "1139e4aaf774b6be8c23ddb41c139c6900ddffaaac362fd07f686160f85bbaee",
+          "localOnly": true
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Static screenshots verify only their captured states; they do not establish the entire interaction or physical-device coverage.",
+    "These observations do not certify PDF/DOCX fidelity or overall release readiness.",
+    "The continuing full matrix and its first-run failures remain independent evidence."
+  ]
+}

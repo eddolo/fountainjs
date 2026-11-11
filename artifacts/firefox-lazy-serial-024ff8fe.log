@@ -1,0 +1,37 @@
+[WebServer] (node:17904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:24284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 89% of 6.9s inside plugin hooks (6.2s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (85%, 5.9s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:25116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:14428) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:21856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:25144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [firefox] › tests\browser\collaboration-demo.spec.ts:21:1 › opens the lazy collaboration demo after a slow module load and shares typing (4.4s)
+  ok 2 [firefox] › tests\browser\collaboration-demo.spec.ts:50:1 › recovers a failed collaboration load in a new tab without losing the current draft (3.3s)
+
+  2 passed (30.4s)

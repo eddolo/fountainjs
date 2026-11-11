@@ -20,8 +20,9 @@ until the combined candidate passes the release gates.
 
 The candidate manifest, versioned changelog and downloadable starters now
 identify `0.5.0-beta.1`. Tag/changelog validation passes locally. This version
-is not published; package/consumer checks and full release CI remain required
-before tagging and staging. The existing public package remains `0.4.0-beta.2`.
+is not published; local package/consumer checks pass, and full hosted release
+CI remains required before tagging and staging. The existing public package
+remains `0.4.0-beta.2`.
 
 The default `fountainjs-editor/yjs` storage format changes. Existing XML rooms
 need `fountainjs-editor/yjs/legacy` or an explicit migration. The supported Yjs
@@ -30,13 +31,20 @@ persisted room. Portable document JSON has its separate migration contract.
 
 ## Local validation
 
-Versioned candidate `fc3aa39a` passed `pnpm check`, including all 5,271 source tests in 323
-files, API/package/runtime/format/type checks and existing size, latency and
-retention checks. Its duplicate-widget repair adds 63 CommonJS bytes, with
-64 bytes of aggregate capacity and all other limits unchanged. The versioned
-tarball passes both type analyses and a clean ESM/CommonJS consumer outside the
-repository without browser globals, optional peers or jsdom. Pinned Lean,
-Bun, Deno and the site build pass. Publint retains its existing DOCX warning.
+Runtime candidate `024ff8fe` passes `pnpm check`, including all 5,271 source
+tests in 323 files, API/package/Node/workerd/format/type checks and existing
+size, latency and retention checks. The virtual host-control guard prevents
+measurement from moving an external button during its native press; release,
+cancellation, blur and open Shadow DOM pass 15 recorded desktop checks. It
+adds 791 CommonJS bytes and 1,024 bytes of aggregate CJS capacity; other limits
+stay unchanged. Public API signatures stay unchanged (five private members
+update two declaration snapshots).
+
+The fresh tarball passes both type analyses and a clean ESM/CommonJS consumer
+outside the repository without browser globals, optional peers or jsdom.
+Publint retains its existing DOCX warning. Repack after the final packaged-doc
+updates before staging. Pinned Lean, Bun, Deno and the site build pass at the
+preceding versioned checkpoint; hosted CI must refresh them for this candidate.
 
 Fresh default Yjs (48), startup (24), migration recovery (21) and compiled
 presence/retained-document (108) batches pass in all three desktop engines.
@@ -44,26 +52,25 @@ The 108-case batch repeats 48 retained cases; counts are executions. The
 production-site starter-download journey passes in three engines and verifies
 nine real ZIPs against the candidate source/version.
 
-The latest twelve recorded desktop checks pass across Chromium, Firefox and
-WebKit. The broad diagnostic stopped with 628 passes and five failures, leading
-to test-selector/decoration-observation corrections and a real duplicate-widget
-renderer repair. Failed controls and exact one-widget/source-retention checks
-are retained. Earlier default Yjs/startup/migration/native-presence batches
-passed at `597f5415`. The 441-case remaining diagnostic finishes with 421
-passes, 19 skips and one Chromium module-load failure before the mobile editor
-initializes (`ERR_NO_BUFFER_SPACE`). Three unchanged isolated repeats pass;
-the first-run trace stays retained. It does not replace a clean full matrix.
-Update this section with final candidate CI before opening the prepared review.
+The complete local editor/mobile matrix finishes with 1,063 passes, 19 existing
+skips and two Firefox lazy-loading timeouts in 42.9 minutes. Chromium (342),
+WebKit (332), mobile Chrome (29) and mobile Safari emulation (29) have no
+failures. Firefox has 331 passes, nine skips and two failures. Both exact failed
+cases pass serially with unchanged assertions/timeouts in 4.4 and 3.3 seconds.
+The original traces show unusually slow browser/page setup; transient
+contention is a hypothesis, not an established cause. This is not a clean matrix.
+Original failure evidence and the serial traces are retained separately.
+
+Direct screenshot review covers recovered collaboration, merged-table resizing,
+mobile task-reader navigation and editor/page-preview indentation. Static
+captures do not establish physical-device, AT or independent Word/PDF coverage.
 
 ## Release gates still open
 
-- Complete browser/Yjs recovery and Linux display-backed clipboard validation.
-  A later full run records 178 pass lines and a download timeout after virtual
-  document undo before being interrupted for diagnosis. A deterministic native
-  reproduction then confirms a 48-pixel target shift during virtual measurement.
-  The host-press guard and composed-path repair pass 15 recorded desktop checks;
-  a preceding 33-case batch covers broader editing/exports. Refresh the complete
-  source/package/browser gates for repaired runtime `07a2c8ac`.
+- Clean hosted browser/Yjs recovery and Linux display-backed clipboard validation.
+  The repaired media-range/export-undo workflow passes in all three desktop
+  engines in the current full run. The two Firefox lazy-loading failures and
+  their serial passes remain separate evidence; do not waive hosted validation.
   The local serialized clipboard batch passes all 18 Chromium/Firefox checks;
   Windows WebKit delivery fails three checks, consistent with independent native
   controls. The original failure receipts remain retained.
