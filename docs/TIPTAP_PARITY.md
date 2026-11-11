@@ -679,7 +679,7 @@ the full suite passes 3,238 / 235 files. These do not certify physical devices.
 Local performance checks remain unresolved: failures occur on different metrics
 and a rebuilt previous-commit control also fails. Keep the unchanged numerical
 limits and every result; no clean performance, new parity row or npm claim.
-Current acceptance is detailed in [the roadmap](ROADMAP.md) and
+Acceptance at this checkpoint is detailed in [the engineering history](ROADMAP_HISTORY.md) and
 `artifacts/explicit-focus-verification-20261103.json`. Dated checkpoint entries
 below are historical evidence, not certification of later HEAD changes.
 
@@ -1195,7 +1195,7 @@ performance limits. Six recorded three-engine public workflows pass; all 15
 new source/reader/mobile/diagnostic captures are inspected. The complete gate
 precedes only a browser-test first-line click correction; a fresh type check
 and the final recording cover it. Evidence and remaining scope are in
-[the roadmap](ROADMAP.md) and [the contract](MARKDOWN_DOCUMENT_FLOW.md#unfinished-tag-retention-guard-2026-10-06-unreleased).
+[the engineering history](ROADMAP_HISTORY.md) and [the contract](MARKDOWN_DOCUMENT_FLOW.md#unfinished-tag-retention-guard-2026-10-06-unreleased).
 No CommonMark count, parity row or completion percentage is promoted.
 
 Production preservation follow-up (2026-10-06, Unreleased): optional server
@@ -1621,7 +1621,7 @@ The recorded journey and visually inspected editor/reader/mobile layouts retain
 the exact three lines and indentation. Chromium/WebKit passed; Firefox had one
 partial-selection/paste failure under load before three isolated passes. That
 failure was subsequently traced to a page reload, as documented above. See the
-[roadmap evidence and remaining limits](ROADMAP.md).
+[historical evidence and remaining limits](ROADMAP_HISTORY.md).
 
 Preformatted paragraph follow-through (2026-09-08, Unreleased): source-tagged soft
 breaks now survive closed text-only pre scopes as code line breaks. HTML newline
@@ -1716,7 +1716,7 @@ an explicit import choice rather than mandatory syntax. The opt-out passes 566
 reference comparisons while default scores stay unchanged. The headless demo
 and Chromium/Firefox/WebKit DOCX handoff checks, plus a recorded Chromium journey,
 exercise plain-address and explicit-link retention. This is a Markdown compatibility increment, not
-full CommonMark certification; see [ROADMAP.md](ROADMAP.md).
+full CommonMark certification; see [the engineering history](ROADMAP_HISTORY.md).
 
 Latest verified increment (2026-09-07, Unreleased): root Markdown reference
 definitions (standalone or immediately before content) retain source and lookup precedence through unrelated edits and
@@ -1752,7 +1752,7 @@ leak with explicit document-shell loss reports; complete source/layout retention
 is not claimed. Full CI then exposed inline-atom selection loss, repaired by
 preserving its exact native node range. The new issue-editor workflow provides
 recorded visual/source/draft/reader evidence, not full GitLab compatibility.
-See [ROADMAP.md](ROADMAP.md) and [the workflow guide](ISSUE_EDITOR_DEMO.md).
+See [the engineering history](ROADMAP_HISTORY.md) and [the workflow guide](ISSUE_EDITOR_DEMO.md).
 
 Current Markdown follow-through (2026-09-07): optional raw-HTML block conversion
 and inline HTML scope projection connect the isolated server importer to
@@ -1980,7 +1980,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | PROD-10 | Practical onboarding and one-layer customization | Partial | The developer guide and package-backed demos link to downloadable plain DOM, React and Node.js starters for the published beta. Clean npm installs and browser journeys cover editing, undo/redo, JSON and the first custom block. The Node.js ZIP installs outside the repository and runs Markdown and HTML conversion with validated JSON, reported HTML losses, and exact unchanged Markdown. Broader task recipes and independent onboarding comparisons remain open. |
 
 Ideas collected from current editor-community discussions are triaged in the
-[opportunity roadmap](ROADMAP.md). It distinguishes already delivered outcomes
+[opportunity record](ROADMAP_HISTORY.md). It distinguishes already delivered outcomes
 from genuine gaps and treats upstream demand claims as research leads until the
 original sources and present status are verified.
 

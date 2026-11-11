@@ -1,0 +1,10 @@
+$ node scripts/test-lean-loopback.mjs
+Lean (version 4.30.0, x86_64-w64-windows-gnu, commit d024af099ca4bf2c86f649261ebf59565dc8c622, Release)
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+[Error: Lean loopback request timed out.]
+
+Node.js v24.22.1
+[ELIFECYCLE] Command failed with exit code 1.

@@ -135,7 +135,7 @@ builder is prototype-free; final public attributes remain frozen ordinary
 objects. Native text-node reopening also passes its supplied attributes through
 the text type's normal defaults/validators rather than discarding them via
 `schema.text()`. This is a model/native-JSON retention guarantee, not full DOCX/PDF/FJS
-file fidelity. See the scoped verification in [the roadmap](ROADMAP.md).
+file fidelity. See the scoped verification in [the engineering history](ROADMAP_HISTORY.md).
 
 Marks belong to inline content, including atomic inline nodes—not only text.
 Pass them as the fifth argument to `schema.node(...)`, or use

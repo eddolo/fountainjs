@@ -225,6 +225,47 @@ authentication is currently unavailable on this machine.
 [Draft PR](https://github.com/eddolo/fountainjs/pull/22) ·
 [Registry tags](https://registry.npmjs.org/-/package/fountainjs-editor/dist-tags).
 
+### Local integration preflight at 235b88fd
+
+The `235b88fd` runtime passed `pnpm check` on Windows on November 11 with two
+source-test workers. All 5,254 tests in 322 files passed. The same run passed
+build, API surface, package imports, Node/workerd, headless processing, Markdown
+profiles, math references, DOCX interoperability, existing size limits,
+performance/retention and framework type checks.
+The log is `artifacts/release-check-235b88fd.log`.
+
+The separate real Lean check initially reached its 15-second request timeout
+while the full check was running. An isolated rerun verified both valid and
+invalid proofs with the pinned Lean 4.30.0 toolchain. Both results remain in
+`artifacts/release-lean-235b88fd.log` and
+`artifacts/release-lean-235b88fd-serial.log`. This establishes successful isolated
+verification. It does not establish reliability under simultaneous build load.
+
+A tarball packed from this runtime passed general public-entry type resolution
+and the separate Angular ESM profile. Publint exited successfully with its
+existing DOCX CommonJS-format warning. A clean consumer installed the tarball
+with optional peer installation disabled and exercised schema, extension
+composition, transactions, exact Markdown source and server HTML in both ESM
+and CommonJS without browser globals. The consumer probe and output are in
+`artifacts/release-preflight-235b88fd/`. The unchanged server-runtime script
+also passed in Bun 1.4.4 and Deno 2.9.6, complementing Node and workerd in the
+full check.
+
+The next planned package version is `0.5.0-beta.1`, accounting for the changed
+default Yjs storage representation and supported Yjs version range. The
+[adoption guide](YJS_DEFAULT_ADOPTION.md) describes the explicit legacy entry
+and migration path. The package manifest remains at the published version
+until the release candidate is prepared. Downloadable starters continue to pin
+the existing published package so their installation remains reproducible.
+
+The complete local browser matrix is running after installing the missing
+Playwright browser executables. The interrupted launch-only failures remain
+recorded separately. Native clipboard workflows require a separate serialized
+run, matching the CI split. The exact candidate still needs hosted CI,
+final versioned release notes, recorded visual
+review and publication verification. GitHub CLI sign-in is pending. No npm
+version or public release status changes as a result of this local checkpoint.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad
