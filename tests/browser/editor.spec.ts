@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { wordBodyWithFields, wordBodyWithNestedField } from '../fixtures/docx-body-fields';
+import { suggestionScrollJourney, suggestionTabJourney } from './suggestion-navigation-journey';
 import { runSiteFontJourney } from './site-font-journey';
 import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
 import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
@@ -5680,6 +5681,14 @@ test('runs grouped default and product slash commands in the public React playgr
   await expect(menu.getByText('Product', { exact: true })).toBeVisible();
   await menu.getByRole('option').click();
   await expect(freshEditor.locator('.demo-callout').last()).toContainText('A custom node supplied by the demo extension.');
+});
+
+test('keeps the active option visible while wrapping through public slash suggestions', async ({ page }, info) => {
+  await suggestionScrollJourney(page, info);
+});
+
+test('lets Tab leave the editor when public emoji suggestions close', async ({ page }, info) => {
+  await suggestionTabJourney(page, info);
 });
 
 test('leaves IME candidate keys alone while the public slash menu is open', async ({ page }, info) => {

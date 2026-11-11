@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep keyboard-selected slash commands, mentions, and emoji visible in their
+  picker, and let Tab dismiss the picker and continue normal navigation.
+
 - Add a Vue document field with JSON `v-model`, disabled state, and a form demo
   covering typing, submission, undo and reset.
 

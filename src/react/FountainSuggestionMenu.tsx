@@ -1,9 +1,10 @@
-import { useEffect, useId, useLayoutEffect, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
 import type {
   SuggestionController,
   SuggestionItemBase,
   SuggestionSnapshot,
 } from '../extensions/suggestion';
+import { placeEditorMenu } from '../view/menu-position';
 
 export interface FountainSuggestionMenuProps<Item extends SuggestionItemBase> {
   controller: SuggestionController<Item>;
@@ -24,22 +25,25 @@ function useSuggestionSnapshot<Item extends SuggestionItemBase>(controller: Sugg
   );
 }
 
-function anchorStyle(element: HTMLElement | null | undefined): CSSProperties | undefined {
+function anchorStyle(element: HTMLElement | null | undefined, menu: HTMLElement | null): CSSProperties | undefined {
   const query = element?.querySelector<HTMLElement>('[data-fountain-suggestion-query]');
-  if (!query) return undefined;
-  const bounds = query.getBoundingClientRect();
-  const gap = 7;
-  const edge = 8;
-  const menuHeight = Math.min(380, window.innerHeight * .55);
-  const menuWidth = Math.min(320, window.innerWidth - edge * 2);
-  const top = bounds.bottom + gap + menuHeight <= window.innerHeight - edge
-    ? bounds.bottom + gap
-    : Math.max(edge, bounds.top - gap - menuHeight);
-  return {
-    position: 'fixed',
-    insetBlockStart: top,
-    insetInlineStart: Math.max(edge, Math.min(window.innerWidth - menuWidth - edge, bounds.left)),
-  };
+  if (!query || !menu) return undefined;
+  const viewport = query.ownerDocument.documentElement;
+  const { left, top } = placeEditorMenu(query.getBoundingClientRect(), menu.getBoundingClientRect(), 'floating', {
+    gap: 7, viewportWidth: viewport.clientWidth, viewportHeight: viewport.clientHeight,
+  });
+  return { position: 'fixed', left, top };
+}
+
+function revealActiveOption(menu: HTMLElement | null): void {
+  const option = menu?.querySelector('[role="option"][aria-selected="true"]');
+  if (!menu || !option) return;
+  // Scroll only this picker. Moving an ancestor can put the editing caret out of view.
+  const top = menu.getBoundingClientRect().top + menu.clientTop;
+  const bottom = top + menu.clientHeight;
+  const bounds = option.getBoundingClientRect();
+  if (bounds.top < top) menu.scrollTop += Math.floor(bounds.top - top);
+  else if (bounds.bottom > bottom) menu.scrollTop += Math.ceil(bounds.bottom - bottom);
 }
 
 /** Accessible, framework-specific rendering for the headless suggestion controller. */
@@ -54,21 +58,27 @@ export function FountainSuggestionMenu<Item extends SuggestionItemBase>({
 }: FountainSuggestionMenuProps<Item>) {
   const snapshot = useSuggestionSnapshot(controller);
   const [style, setStyle] = useState<CSSProperties | undefined>();
+  const menu = useRef<HTMLElement>(null);
+  const pointer = useRef<{ x: number; y: number } | null>(null);
   const listboxId = `fountain-suggestions-${useId().replace(/:/g, '')}`;
 
   useLayoutEffect(() => {
     if (!snapshot.open) return;
-    setStyle(anchorStyle(anchorElement));
+    setStyle(anchorStyle(anchorElement, menu.current));
+    revealActiveOption(menu.current);
   }, [anchorElement, snapshot]);
 
   useEffect(() => {
-    if (!snapshot.open || !anchorElement) return;
-    const update = () => setStyle(anchorStyle(anchorElement));
-    window.addEventListener('resize', update);
-    window.addEventListener('scroll', update, true);
+    const viewport = anchorElement?.ownerDocument.defaultView;
+    if (!snapshot.open || !viewport) return;
+    const update = (event: Event) => {
+      if (event.target !== menu.current) setStyle(anchorStyle(anchorElement, menu.current));
+    };
+    viewport.addEventListener('resize', update);
+    viewport.addEventListener('scroll', update, true);
     return () => {
-      window.removeEventListener('resize', update);
-      window.removeEventListener('scroll', update, true);
+      viewport.removeEventListener('resize', update);
+      viewport.removeEventListener('scroll', update, true);
     };
   }, [anchorElement, snapshot.open]);
 
@@ -112,13 +122,22 @@ export function FountainSuggestionMenu<Item extends SuggestionItemBase>({
     tabIndex={-1}
     key={`${item.id}:${index}`}
     onMouseDown={(event) => event.preventDefault()}
-    onMouseEnter={() => controller.select(index)}
+    onPointerMove={(event) => {
+      if (event.pointerType === 'touch') return;
+      const { clientX: x, clientY: y } = event;
+      // WebKit can redispatch pointer movement as the list scrolls under it.
+      if (pointer.current?.x === x && pointer.current?.y === y) return;
+      pointer.current = { x, y };
+      if (snapshot.selectedIndex !== index) controller.select(index);
+    }}
     onClick={() => controller.accept(index)}
   >
     {renderItem?.(item, snapshot) ?? item.label}
   </button>;
   return (
     <section
+      ref={menu}
+      onPointerLeave={() => { pointer.current = null; }}
       className={['fountain-suggestion-menu', className].filter(Boolean).join(' ')}
       data-status={snapshot.status}
       aria-label={label}

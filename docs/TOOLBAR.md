@@ -21,6 +21,16 @@ fix. The field and RTL navigation checks, plus the main toolbar traversal
 checks, passed in recorded Chromium, Firefox and WebKit runs. The Chromium
 RTL focus capture was visually checked.
 
+## Suggestion menu keyboard behavior
+
+Arrow keys keep the active slash command, mention, or emoji in view while
+DOM focus stays on the editor. The picker scrolls within its own bounds,
+including when the active option wraps from the first to the last result.
+Enter applies the active option. Escape dismisses the picker. Tab dismisses
+it and continues normal focus navigation or the editor's structural Tab
+behavior in a table, list, or code block.
+[WAI-ARIA scrollable listbox guidance](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-scrollable/).
+
 ## Suggestion menus during text composition
 
 The editor leaves composition keystrokes to the input method before checking

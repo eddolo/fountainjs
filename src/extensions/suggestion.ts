@@ -307,6 +307,7 @@ export function handleSuggestionKeyDown<Item extends SuggestionItemBase>(
   if (event.key === 'ArrowUp') return controller.move(-1);
   if (event.key === 'Enter') return controller.accept();
   if (event.key === 'Escape') return controller.dismiss();
-  if (event.key === 'Tab') return controller.dismiss();
+  // Let the editor or browser continue its normal Tab navigation.
+  if (event.key === 'Tab') controller.dismiss();
   return false;
 }

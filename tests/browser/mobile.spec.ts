@@ -475,7 +475,7 @@ test('keeps ruby annotation editing touch-operable and inside the phone viewport
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
 
-test('keeps the suggestion picker visible and touch-selectable on a phone viewport', async ({ page }) => {
+test('keeps the suggestion picker visible and touch-selectable on a phone viewport', async ({ page }, info) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
   const firstParagraph = editor.locator('[data-fountain-node="paragraph"]').first();
@@ -486,7 +486,8 @@ test('keeps the suggestion picker visible and touch-selectable on a phone viewpo
 
   const menu = page.locator('.fountain-suggestion-menu[aria-label="Choose an emoji"]');
   await expect(menu).toBeVisible();
-  await expect(menu.getByRole('option')).toHaveCount(24);
+  const emojiOptions = menu.getByRole('option');
+  await expect(emojiOptions).toHaveCount(24);
   const menuBox = await menu.boundingBox();
   const viewport = page.viewportSize();
   expect(menuBox).not.toBeNull();
@@ -495,12 +496,16 @@ test('keeps the suggestion picker visible and touch-selectable on a phone viewpo
   expect((menuBox?.x ?? 0) + (menuBox?.width ?? 0)).toBeLessThanOrEqual((viewport?.width ?? 0) + 1);
   expect((menuBox?.y ?? -1)).toBeGreaterThanOrEqual(0);
   expect((menuBox?.y ?? 0) + (menuBox?.height ?? 0)).toBeLessThanOrEqual((viewport?.height ?? 0) + 1);
+  await page.keyboard.press('ArrowUp');
+  await expect(emojiOptions.last()).toHaveAttribute('aria-selected', 'true');
+  await expect(emojiOptions.last()).toBeInViewport({ ratio: 0.98 });
+  await menu.screenshot({ path: info.outputPath('emoji-last-option-visible.png') });
 
   await page.keyboard.press('Escape');
   await page.keyboard.press('Backspace');
   await page.keyboard.type(':rock');
   await expect(menu.getByRole('option')).toHaveCount(1);
-  await menu.getByRole('option').click();
+  await menu.getByRole('option').tap();
   await expect(menu).toHaveCount(0);
   await expect(editor.locator('[data-fountain-emoji="true"]').last()).toContainText('🚀');
 
@@ -517,7 +522,7 @@ test('keeps the suggestion picker visible and touch-selectable on a phone viewpo
   expect((slashBox?.y ?? -1)).toBeGreaterThanOrEqual(0);
   expect((slashBox?.y ?? 0) + (slashBox?.height ?? 0)).toBeLessThanOrEqual((viewport?.height ?? 0) + 1);
   await page.keyboard.type('callout');
-  await slashMenu.getByRole('option').click();
+  await slashMenu.getByRole('option').tap();
   await expect(editor.locator('.demo-callout').last()).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });

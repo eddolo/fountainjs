@@ -394,7 +394,7 @@ describe('headless slash command registry', () => {
     expect(controller.getSnapshot().items.map((item) => item.id)).toEqual(['abort']);
     expect(controller.accept()).toBe(false);
     expect(editor.getText()).toBe('/ab');
-    expect(extension.plugins?.[0]?.spec.props?.handleKeyDown?.(editor, keyboard('Tab'))).toBe(true);
+    expect(extension.plugins?.[0]?.spec.props?.handleKeyDown?.(editor, keyboard('Tab'))).toBe(false);
     expect(controller.getSnapshot().open).toBe(false);
     expect(editor.getText()).toBe('/ab');
     editor.destroy();
