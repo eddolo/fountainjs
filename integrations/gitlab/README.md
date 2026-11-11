@@ -104,6 +104,17 @@ template replacement is undoable. Whole-document transactions preserve root
 attributes. Host change subscribers receive actual edits, not initial loads,
 selection-only updates or interaction-mode changes.
 
+`subscribeChange` now reports a discriminated result: `{ status: 'ready',
+markdown }` or `{ status: 'error', error }`. An export error does not undo the
+already applied edit and must not throw through the editor's remaining view
+notifications. The host must clear its current serialized value and prevent
+submission on an error; it must not save the last successful string as the
+current document. `getSerializedContent()` still throws on conversion failure.
+Undo can restore a serializable document. A successful explicit load establishes
+a new baseline silently, so its caller must refresh the serialized value and
+clear its error state. Host callback exceptions remain application errors;
+they are not misreported as converter failures.
+
 Newer loads cancel older ones, which settle as `superseded` even if a renderer
 ignores cancellation. An intervening document edit causes a typed conflict
 instead of overwriting the newer work, including edits followed by undo. Active
@@ -123,6 +134,27 @@ X11/Xvfb passes all three cases. Recorded Windows/Linux frames and the detailed
 heading/template states receive visual review.
 
 [Lifecycle evidence](../../artifacts/gitlab-serialized-content-integration-20261111.json).
+
+The later conversion-recovery audit finds and repairs both interrupted view
+notifications and unintended navigation from editable reference atoms. Install
+`createGitLabReferenceNavigationPlugin()` from `plugins/reference_navigation.ts`
+with the GitLab schema/view: ordinary left clicks stay in the draft, while
+modified clicks and read-only link use remain browser navigation. This is a
+view interaction policy, not authorization or a replacement router.
+
+Four recovery cases and seven reference-interaction cases pass alongside the
+existing lifecycle/codec cases (54 focused tests). The earlier full unit run
+passes 5,393 tests/333 files, before the seven added navigation cases; root
+TypeScript subsequently passes with all new code. Nine compiled Windows native
+journeys pass across Chromium/Firefox/WebKit, and all five Linux WebKit/Xvfb
+journeys pass, including native external copy. Recorded refusal, continued
+typing, undo and explicit reload states receive visual review. The initial
+Windows run's accidental-navigation failures and a Firefox context-teardown
+timeout are retained; no assertions or timeouts are weakened. This establishes
+the scoped component recovery behavior, not real GitLab saving or source-mode
+recovery in the complete application.
+
+[Recovery evidence](../../artifacts/gitlab-export-recovery-20261111.json).
 
 ## Rendered-resource and reference resolver
 

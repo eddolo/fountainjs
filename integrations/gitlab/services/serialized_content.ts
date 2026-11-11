@@ -7,6 +7,9 @@ export interface SerializedContentCodec {
 }
 
 export type SerializedContentResult = { status: 'applied' | 'superseded' };
+export type SerializedContentChange =
+  | { status: 'ready'; markdown: string }
+  | { status: 'error'; error: unknown };
 
 export class SerializedContentConflict extends Error {
   constructor() {
@@ -88,12 +91,19 @@ export class SerializedContentController {
     }
   }
 
-  /** Only actual document changes are host edits; loads/mode/caret changes are not. */
-  subscribeChange(listener: (value: { markdown: string }) => void): () => void {
+  /**
+   * Only document changes are host edits. A conversion error has no Markdown:
+   * the host must block submission until a later ready event or explicit retry.
+   * It must not interrupt later subscribers after the edit has been applied.
+   */
+  subscribeChange(listener: (value: SerializedContentChange) => void): () => void {
     this.assertAlive();
     const unsubscribe = this.editor.subscribe((state, transaction) => {
       if (!this.disposed && transaction.docChanged && transaction.getMeta('preventUpdate') !== true) {
-        listener({ markdown: this.codec.serialize({ doc: state.doc }) });
+        let change: SerializedContentChange;
+        try { change = { status: 'ready', markdown: this.codec.serialize({ doc: state.doc }) }; }
+        catch (error) { change = { status: 'error', error }; }
+        listener(change);
       }
     });
     const release = () => { unsubscribe(); this.subscriptions.delete(release); };

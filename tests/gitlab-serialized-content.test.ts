@@ -51,7 +51,10 @@ it('loads outside history, makes templates undoable, and establishes a fresh bas
 it('reports user edits once while suppressing load, selection and interaction-mode changes', async () => {
   const { editor, controller } = setup();
   const changes: string[] = [];
-  const unsubscribe = controller.subscribeChange(({ markdown }) => changes.push(markdown));
+  const unsubscribe = controller.subscribeChange(change => {
+    if (change.status === 'error') throw change.error;
+    changes.push(change.markdown);
+  });
   await controller.setSerializedContent('Original');
   editor.setEditable(false); editor.setEditable(true);
   typeAtEnd(editor, '!');

@@ -14,6 +14,15 @@ archive byte-identity statements below are historical. Capability-row counts
 are unchanged by this integration work.
 [Current source/caret evidence](RELEASES.md#external-source-capture-gitlab-codec-and-native-atom-caret--2026-11-11).
 
+The subsequent GitLab component recovery work prevents an export error from
+interrupting later view updates and prevents ordinary reference clicks from
+leaving an editable draft. Conversion errors have no Markdown value; Undo or
+explicit reload restores valid output. There are 54 focused passes, root types,
+nine Windows and five Linux WebKit native passes. The full 5,393-test unit run
+precedes seven added interaction cases; this does not replace the complete
+package gate above or certify actual GitLab saving, services or full readiness.
+[Recovery scope](RELEASES.md#gitlab-export-error-and-reference-navigation-recovery--2026-11-11).
+
 The earlier full local source-check checkpoint is `1e86e5e0`: all 5,271 source tests in
 323 files pass, alongside build, package, type, headless, performance, retention,
 format and size gates. Fresh packed ESM/CommonJS consumers and both type

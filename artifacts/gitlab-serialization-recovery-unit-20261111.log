@@ -1,0 +1,59 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-serialization-recovery.test.ts (4 tests | 2 failed) 33ms
+   × continues reporting edits in a non-serializable document and detects them during a pending replacement 8ms
+   × does not misclassify a host listener exception as a conversion error 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-serialization-recovery.test.ts > continues reporting edits in a non-serializable document and detects them during a pending replacement
+AssertionError: expected 'OriginalNew ' to be 'New Original' // Object.is equality
+
+Expected: "New Original"
+Received: "OriginalNew "
+
+ ❯ tests/gitlab-serialization-recovery.test.ts:44:28
+     42|   expect(() => insertText(editor, 'New ')).not.toThrow();
+     43|   await loading;
+     44|   expect(editor.getText()).toBe('New Original');
+       |                            ^
+     45|   expect(changes).toHaveLength(2);
+     46|   expect(changes.every(change => (change as { status: string }).status…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/gitlab-serialization-recovery.test.ts > does not misclassify a host listener exception as a conversion error
+AssertionError: expected [ { status: 'ready', …(1) } ] to deeply equal [ { status: 'ready', …(1) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "markdown": "New Original",
++     "markdown": "OriginalNew&#32;",
+      "status": "ready",
+    },
+  ]
+
+ ❯ tests/gitlab-serialization-recovery.test.ts:68:18
+     66|   controller.subscribeChange(change => { events.push(change); throw ho…
+     67|   expect(() => insertText(editor, 'New ')).toThrow(hostError);
+     68|   expect(events).toEqual([{ status: 'ready', markdown: 'New Original' …
+       |                  ^
+     69|   expect(controller.getSerializedContent()).toBe('New Original');
+     70| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 45 passed (47)
+   Start at  23:40:47
+   Duration  1.31s (transform 74%, import 20%, tests 4%, worker 1%)
+
+  Transform  transforming modules took 2.26s · 74% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

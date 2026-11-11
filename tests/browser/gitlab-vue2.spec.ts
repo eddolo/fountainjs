@@ -161,3 +161,48 @@ test('edits pinned GitLab reference rendering without replacing source tokens wi
     scope: 'Real compiled Fountain conversion, Vue 2 view and native editing over pinned GitLab HTML response data. Not a live GitLab service or full product.',
     rawReferenceTokensRetained: true, shortDisplayCommit: true, labelColor: true, nativeDeleteAndUndo: true }, null, 2));
 });
+
+test('keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload', async ({ page }, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  const original = 'See #1 and !1 by @root with ~bug in b51c8ef20575';
+  const host = page.getByLabel('Latest host Markdown', { exact: true });
+  const load = page.getByRole('button', { name: 'Load Markdown baseline', exact: true });
+  const undo = page.getByRole('button', { name: 'Undo document', exact: true });
+  await page.getByRole('textbox', { name: 'Markdown replacement source', exact: true }).fill(original);
+  await load.click();
+  await expect(host).toHaveText(original);
+  await editor.locator('[data-fountain-gitlab-reference="user"]').click();
+  await expect(page).toHaveURL(/\/tests\/browser\/fixtures\/gitlab-vue2\.html\?gitlab-rendered=1$/);
+  await editor.locator('p').click(); await page.keyboard.press('End');
+  await page.getByRole('button', { name: 'Centre paragraph', exact: true }).click();
+  await expect(editor.locator('p')).toHaveCSS('text-align', 'center');
+  await expect(page.getByRole('alert')).toContainText('GitLab Markdown conversion cannot complete');
+  await expect(host).toHaveText('');
+  await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');
+  await expect(editor.locator('p')).toContainText('b51c8ef2 added');
+  await expect(host).toHaveText('');
+  await page.screenshot({ path: info.outputPath('gitlab-export-refused-current-document.png') });
+  await undo.click();
+  await expect(page.getByRole('alert')).toBeVisible();
+  await undo.click();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await expect(host).toHaveText(original);
+  await expect(editor.locator('p')).not.toHaveCSS('text-align', 'center');
+  await page.screenshot({ path: info.outputPath('gitlab-export-undo-recovered.png') });
+  await page.getByRole('button', { name: 'Redo document', exact: true }).click();
+  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(host).toHaveText('');
+  await load.click();
+  await expect(host).toHaveText(original);
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await expect(undo).toBeDisabled();
+  await expect(page.getByLabel('View mount count', { exact: true })).toHaveText('1');
+  await page.screenshot({ path: info.outputPath('gitlab-export-reload-recovered.png') });
+  expect(errors).toEqual([]);
+  await writeFile(info.outputPath('gitlab-export-recovery.json'), JSON.stringify({ engine: info.project.name,
+    scope: 'Compiled Vue 2 host/codec integration with pinned HTML input. Full GitLab application submission, storage and authorization remain unverified.',
+    staleMarkdownCleared: true, failedExportDoesNotFreezeView: true, undoAndReloadRecovery: true, noRemount: true, errors }, null, 2));
+});

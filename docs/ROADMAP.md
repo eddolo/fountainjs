@@ -54,6 +54,15 @@ partial; unchanged source can be exact, but edited output is currently canonical
 This is not full product, physical-device, packed-consumer or hosted-release proof.
 [Current evidence and missing conversions](../integrations/gitlab/README.md#gitlab-rendered-document-codec).
 
+The following private integration audit repairs conversion failures interrupting
+view updates and reference clicks leaving an editable draft. Explicit error
+events with no current Markdown allow the host to prevent stale submission;
+Undo and reload recover. All 54 focused cases, root types, nine compiled Windows
+and five Linux WebKit native journeys pass. The 5,393-test full unit run precedes
+the seven added interaction cases; the full package gate above remains the
+5,389-test checkpoint. Actual host save/storage/auth and full product integration
+remain unfinished. [Recovery evidence](../integrations/gitlab/README.md#serialized-content-lifecycle).
+
 The earlier complete local source check is the November 11 runtime-editability
 repair: **5,300 tests in 327 files**, with all package, server, type, conformance,
 size, performance and retention gates passing. Three native interaction-mode

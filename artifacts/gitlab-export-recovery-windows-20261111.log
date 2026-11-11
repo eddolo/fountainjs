@@ -1,0 +1,237 @@
+$ playwright test -c playwright.gitlab-bridge.config.ts "--grep" "loads real Markdown|edits pinned|keeps the visible" "--output" "artifacts/gitlab-export-recovery-windows-20261111"
+[WebServer] (node:14428) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:23664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:8964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\gitlab-vue2.spec.ts:81:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (2.1s)
+  ok 2 [chromium] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (2.3s)
+  x  3 [chromium] › tests\browser\gitlab-vue2.spec.ts:165:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload (18.0s)
+(node:17972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [firefox] › tests\browser\gitlab-vue2.spec.ts:81:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (36.5s)
+(node:15016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [firefox] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (4.7s)
+  x  6 [firefox] › tests\browser\gitlab-vue2.spec.ts:165:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload (12.4s)
+(node:20904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\gitlab-vue2.spec.ts:81:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (6.9s)
+  ok 8 [webkit] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (6.5s)
+  x  9 [webkit] › tests\browser\gitlab-vue2.spec.ts:165:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload (11.1s)
+
+
+  1) [chromium] › tests\browser\gitlab-vue2.spec.ts:165:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true }).locator('p')
+    Expected substring: "b51c8ef2 added"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true }).locator('p')
+
+
+      181 |   await expect(host).toHaveText('');
+      182 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');
+    > 183 |   await expect(editor.locator('p')).toContainText('b51c8ef2 added');
+          |                                     ^
+      184 |   await expect(host).toHaveText('');
+      185 |   await page.screenshot({ path: info.outputPath('gitlab-export-refused-current-document.png') });
+      186 |   await undo.click();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:183:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\gitlab-vue2.spec.ts:81:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host 
+
+    Tearing down "context" exceeded the test timeout of 30000ms.
+
+    Error: browserContext.close: Test ended.
+    Browser logs:
+
+    <launching> C:\Users\cappu\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\cappu\AppData\Local\Temp\playwright_firefoxdev_profile-LjwaqW -juggler-pipe -silent
+    <launched> pid=13276
+    [pid=13276][err] *** You are running in headless mode.
+    [pid=13276][err] JavaScript warning: resource://services-settings/Utils.sys.mjs, line 119: unreachable code after return statement
+    [pid=13276][out] 
+    [pid=13276][out] Juggler listening to the pipe
+    [pid=13276][err] [WARN  rkv::backend::impl_safe::environment] `load_ratio()` is irrelevant for this storage backend.
+    [pid=13276][out] Crash Annotation GraphicsCriticalError: |[0][GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt (t=1.23806) [GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+    [pid=13276][err] JavaScript error: chrome://juggler/content/Helper.js, line 82: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.removeProgressListener]
+    [pid=13276][out] console.warn: services.settings: #fetchAttachment: Forcing fallbackToDump to false due to Utils.LOAD_DUMPS being false
+    [pid=13276][out] console.error: (new NotFoundError("Could not find fa0fc42c-d91d-fca7-34eb-806ff46062dc in cache or dump", "resource://services-settings/Attachments.sys.mjs", 48))
+    [pid=13276][out] console.warn: "Unable to find the attachment for" "fa0fc42c-d91d-fca7-34eb-806ff46062dc"
+    [pid=13276][out] console.error: "Error fetching remote settings base url from CDN. Falling back to https://firefox-settings-attachments.cdn.mozilla.net/" (new SyntaxError("XMLHttpRequest.open: '/' is not a valid URL.", (void 0), 126))
+    [pid=13276][out] console.error: services.settings: 
+    [pid=13276][out]   Message: EmptyDatabaseError: "main/nimbus-desktop-experiments" has not been synced yet
+    [pid=13276][out]   Stack:
+    [pid=13276][out]     EmptyDatabaseError@resource://services-settings/Database.sys.mjs:19:5
+    [pid=13276][out] list@resource://services-settings/Database.sys.mjs:96:13
+    [pid=13276][out] 
+    [pid=13276][out] console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 181"  data: no]
+    [pid=13276][err] [WARN  glean_core::error_recording] gfx.adapter.primary.driver_files: Value length 731 exceeds maximum of 255
+    [pid=13276] <gracefully close start>
+    [pid=13276][out] 
+    [pid=13276][out]         ERROR: Failed "callFunction": connector for namespace "page" in channel "undefined" is disposed. _rejectCallbacksFromConnector@chrome://juggler/content/SimpleChannel.js:108:25
+    [pid=13276][out] dispose@chrome://juggler/content/SimpleChannel.js:119:27
+    [pid=13276][out] dispose@chrome://juggler/content/protocol/PageHandler.js:152:23
+    [pid=13276][out] _dispose@chrome://juggler/content/protocol/Dispatcher.js:117:21
+    [pid=13276][out] destroySession@chrome://juggler/content/protocol/Dispatcher.js:35:13
+    [pid=13276][out] dispose@chrome://juggler/content/protocol/BrowserHandler.js:77:24
+    [pid=13276][out] _dispose@chrome://juggler/content/protocol/Dispatcher.js:117:21
+    [pid=13276][out] _dispose@chrome://juggler/content/protocol/Dispatcher.js:41:23
+    [pid=13276][out] observe/browserHandler<@chrome://juggler/content/components/Juggler.js:142:22
+    [pid=13276][out] Browser.close@chrome://juggler/content/protocol/BrowserHandler.js:156:10
+    [pid=13276][out] 
+    [pid=13276][err] JavaScript error: chrome://juggler/content/Helper.js, line 82: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.removeProgressListener]
+    [pid=13276][out]       
+    [pid=13276][out]         ERROR: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIRemoteDebuggingPipe.sendMessage] send@chrome://juggler/content/components/Juggler.js:134:18
+    [pid=13276][out] _dispatch@chrome://juggler/content/protocol/Dispatcher.js:76:24
+    [pid=13276][out] ssi_onQuitApplicationGranted@resource:///modules/sessionstore/SessionStore.sys.mjs:2945:19
+    [pid=13276][out] ssi_observe@resource:///modules/sessionstore/SessionStore.sys.mjs:1632:14
+    [pid=13276][out] observe/browserHandler<@chrome://juggler/content/components/Juggler.js:143:16
+    [pid=13276][out] Browser.close@chrome://juggler/content/protocol/BrowserHandler.js:156:10
+    [pid=13276][out] 
+    [pid=13276][err] JavaScript error: chrome://juggler/content/components/Juggler.js, line 134: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIRemoteDebuggingPipe.sendMessage]
+    [pid=13276][err] JavaScript error: chrome://juggler/content/components/Juggler.js, line 134: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIRemoteDebuggingPipe.sendMessage]
+    [pid=13276][err] JavaScript warning: resource://gre/modules/UpdateService.sys.mjs, line 4029: unreachable code after return statement
+    [pid=13276][out]       1794440639139	addons.xpi	ERROR	System addon update list error [Exception... "<no message>"  nsresult: "0x8046001e (<unknown>)"  location: "JS frame :: resource://gre/modules/ServiceRequest.sys.mjs :: open :: line 126"  data: no]
+    [pid=13276][err] JavaScript error: resource://gre/modules/UpdateService.sys.mjs, line 5608: 
+    [pid=13276][out] *** UTM:SVC TimerManager:registerTimer called after profile-before-change notification. Ignoring timer registration for id: telemetry_untrustedmodules_ping
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox] › tests\browser\gitlab-vue2.spec.ts:165:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true }).locator('p')
+    Expected substring: "b51c8ef2 added"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true }).locator('p')
+
+
+      181 |   await expect(host).toHaveText('');
+      182 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');
+    > 183 |   await expect(editor.locator('p')).toContainText('b51c8ef2 added');
+          |                                     ^
+      184 |   await expect(host).toHaveText('');
+      185 |   await page.screenshot({ path: info.outputPath('gitlab-export-refused-current-document.png') });
+      186 |   await undo.click();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:183:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit] › tests\browser\gitlab-vue2.spec.ts:165:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true }).locator('p')
+    Expected substring: "b51c8ef2 added"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true }).locator('p')
+
+
+      181 |   await expect(host).toHaveText('');
+      182 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');
+    > 183 |   await expect(editor.locator('p')).toContainText('b51c8ef2 added');
+          |                                     ^
+      184 |   await expect(host).toHaveText('');
+      185 |   await page.screenshot({ path: info.outputPath('gitlab-export-refused-current-document.png') });
+      186 |   await undo.click();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:183:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-export-recovery-windows-20261111\gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [chromium] › tests\browser\gitlab-vue2.spec.ts:165:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload 
+    [firefox] › tests\browser\gitlab-vue2.spec.ts:81:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host 
+    [firefox] › tests\browser\gitlab-vue2.spec.ts:165:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload 
+    [webkit] › tests\browser\gitlab-vue2.spec.ts:165:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload 
+  5 passed (3.0m)
+[ELIFECYCLE] Command failed with exit code 1.

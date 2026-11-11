@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-11",
+  "baseCommit": "d3b6eae9",
+  "status": "Private integration recovery verified; actual full GitLab application unfinished",
+  "repairs": [
+    "Serialization failures become explicit error events without Markdown; later editor/view subscribers still receive the applied edit.",
+    "getSerializedContent still refuses unrepresentable documents. Hosts must clear serialized output and block submission on error.",
+    "Undo restores valid source; explicit successful loads refresh host error/output without remounting or retaining old history.",
+    "Scoped GitLab reference plugin prevents ordinary editable-link navigation; modified and reader navigation remains available."
+  ],
+  "verification": {
+    "focused": { "passed": 54, "files": 4, "recoveryCases": 4, "navigationCases": 7, "log": "artifacts/gitlab-export-recovery-focused-final-20261111.log" },
+    "rootTypes": { "passed": true, "log": "artifacts/gitlab-export-recovery-types-final-20261111.log" },
+    "fullUnits": { "passed": 5393, "files": 333, "log": "artifacts/gitlab-export-recovery-full-unit-20261111.log", "scope": "Before seven added navigation cases, which pass in the subsequent focused run. Not a new complete package gate." },
+    "compiledWindowsNative": { "passed": 9, "failed": 0, "engines": ["chromium", "firefox", "webkit"], "log": "artifacts/gitlab-export-recovery-windows-final-20261111.log", "scope": "Load/history, reference editing and refusal/recovery. Excludes earlier Windows native external-copy failure." },
+    "compiledLinuxWebKit": { "passed": 5, "failed": 0, "display": "GDK_BACKEND=x11 and Xvfb", "log": "artifacts/gitlab-export-recovery-linux-20261111.log", "scope": "Full five-case component profile including native external copy, no skips/flaky cases." },
+    "visualReview": {
+      "directory": "artifacts/gitlab-export-recovery-windows-final-20261111/gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload-firefox",
+      "frames": ["gitlab-export-refused-current-document.png", "gitlab-export-undo-recovered.png", "gitlab-export-reload-recovered.png"],
+      "video": "video.webm",
+      "review": "Viewed all three state images. Recording retained; no claim of continuous video playback or full product UX review."
+    }
+  },
+  "initialFailures": [
+    { "log": "artifacts/gitlab-serialization-recovery-before-20261111.log", "result": "Two genuine serialization exception failures; third release case passes. Test rejection handler was subsequently attached before the failure assertion to avoid an unrelated unhandled rejection on an early test exit." },
+    { "log": "artifacts/gitlab-serialization-recovery-unit-20261111.log", "result": "45 passes/two test setup failures: default caret was at the end, not the assumed start. Explicit initial Selection.cursor added; no production change for this mismatch." },
+    { "log": "artifacts/gitlab-export-recovery-windows-20261111.log", "result": "Five passes/four failures: recovery leaves the page via a reference in all three engines; unrelated Firefox lifecycle context teardown exceeds timeout. Current scoped navigation repair passes all nine journeys with original assertions and timeouts." }
+  ],
+  "package": {
+    "runtimeChanged": false,
+    "publicAPIChanged": false,
+    "dependencyChanged": false,
+    "acceptanceLimitChanged": false,
+    "lastCompletePackageGate": "artifacts/gitlab-codec-full-check-final-20261111.log",
+    "hostedCIAndFreshPackedConsumerStillRequired": true
+  },
+  "remaining": [
+    "Actual GitLab component/toolbar and host source-mode recovery integration",
+    "Remaining rendered Markdown/source-aware specialized dialect adapters",
+    "Authenticated host rendering, real save/storage, uploads and permission enforcement",
+    "GitLab collaborative seeding/replacement protocol",
+    "Full application journeys and professional reference-product acceptance",
+    "Other two complete reference products",
+    "Fresh packed consumers, combined hosted CI and publication"
+  ]
+}

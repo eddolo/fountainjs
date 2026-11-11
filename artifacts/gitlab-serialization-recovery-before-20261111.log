@@ -1,0 +1,73 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-serialization-recovery.test.ts (3 tests | 2 failed) 29ms
+   × reports an actual GitLab export loss without interrupting document/view notifications, then recovers through history 21ms
+   × continues reporting edits in a non-serializable document and detects them during a pending replacement 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-serialization-recovery.test.ts > reports an actual GitLab export loss without interrupting document/view notifications, then recovers through history
+AssertionError: expected [Function] to not throw an error but 'GitLabMarkdownConversionError: GitLab…' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document."
+
+ ❯ tests/gitlab-serialization-recovery.test.ts:24:125
+     22|   // Registered after the converter, as a mounted view would be.
+     23|   editor.subscribe(state => observed.push(String(state.doc.child(0).at…
+     24|   expect(() => editor.dispatch(editor.createTransaction().setNodeAttrs…
+       |                                                                                                                             ^
+     25|   expect(observed).toEqual(['center']);
+     26|   expect(changes).toEqual([{ status: 'error', error: expect.any(GitLab…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/gitlab-serialization-recovery.test.ts > continues reporting edits in a non-serializable document and detects them during a pending replacement
+AssertionError: expected [Function] to not throw an error but 'GitLabMarkdownConversionError: GitLab…' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document."
+
+ ❯ tests/gitlab-serialization-recovery.test.ts:41:125
+     39|   controller.subscribeChange(change => changes.push(change));
+     40|   const loading = controller.setSerializedContent('Replacement');
+     41|   expect(() => editor.dispatch(editor.createTransaction().setNodeAttrs…
+       |                                                                                                                             ^
+     42|   expect(() => insertText(editor, 'New ')).not.toThrow();
+     43|   await expect(loading).rejects.toBeInstanceOf(SerializedContentConfli…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+SerializedContentConflict: The document changed while Markdown was loading. Keep the current edits and retry explicitly.
+ ❯ SerializedContentController.setSerializedContent integrations/gitlab/services/serialized_content.ts:73:51
+     71|       // Selection and interaction-mode changes are allowed; any repla…
+     72|       // user/remote document edit requires a deliberate retry, even a…
+     73|       if (this.documentVersion !== version) throw new SerializedConten…
+       |                                                   ^
+     74|       if (!document || document.type !== this.editor.state.schema.topN…
+     75|         throw new TypeError('The Markdown codec must return a document…
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+
+This error originated in "tests/gitlab-serialization-recovery.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+     Errors  1 error
+   Start at  23:40:03
+   Duration  1.27s (transform 78%, import 19%, tests 3%, worker 1%)
+

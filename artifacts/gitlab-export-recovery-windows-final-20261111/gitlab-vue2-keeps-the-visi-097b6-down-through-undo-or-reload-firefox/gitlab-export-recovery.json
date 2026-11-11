@@ -1,0 +1,9 @@
+{
+  "engine": "firefox",
+  "scope": "Compiled Vue 2 host/codec integration with pinned HTML input. Full GitLab application submission, storage and authorization remain unverified.",
+  "staleMarkdownCleared": true,
+  "failedExportDoesNotFreezeView": true,
+  "undoAndReloadRecovery": true,
+  "noRemount": true,
+  "errors": []
+}

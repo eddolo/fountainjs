@@ -1085,6 +1085,34 @@ ESM, CSS, latency, heap or semantic/reference ceiling changes. Earlier archives
 are stale. Fresh packed consumers, exact combined hosted checks and publication
 remain required. Evidence: `artifacts/gitlab-codec-integration-20261111.json`.
 
+### GitLab export-error and reference-navigation recovery — 2026-11-11
+
+The integration controller previously let codec serialization exceptions escape
+from its change subscriber after an edit had already applied. Later subscribers,
+including a mounted view, could miss the update. It now sends discriminated
+`ready` or `error` events. Error events contain no stale Markdown. The host must
+block submission, retain the current document and allow Undo/retry;
+`getSerializedContent()` still refuses an unrepresentable document. Loads stay
+silent; the caller refreshes its serialized/error state after a successful load.
+
+The recorded native journey also finds that ordinary clicks on an uneditable
+reference link can leave the entire draft. The scoped GitLab view plugin
+prevents that default while editing, retaining intentional modified/reader
+navigation. The unchanged native recovery assertions then pass across all three
+desktop engines. No engine runtime, public npm API, declaration hash, dependency
+or acceptance limit changes in this follow-up.
+
+Verification: 54 focused cases, root TypeScript, nine compiled Windows journeys
+and all five Linux WebKit/Xvfb journeys pass. The full unit run passes 5,393
+tests/333 files before the seven new interaction cases; its scope is recorded
+rather than claiming a fresh combined full package gate. Firefox refusal/undo/
+reload frames receive visual review, and the journey videos are retained.
+The first Windows run's three navigation failures and one Firefox teardown
+timeout remain evidence; no expectations/timeouts are weakened. The full GitLab
+application, actual save/permissions/services, source-mode recovery and the
+other flagship products remain unfinished. Evidence:
+`artifacts/gitlab-export-recovery-20261111.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad
