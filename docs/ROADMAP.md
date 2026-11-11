@@ -127,11 +127,20 @@ built site 29/30. Required Linux display-backed checks retain that assertion;
 publication remains pending those results.
 [Copy/contrast evidence](RELEASES.md#homepage-copy-and-contrast--2026-11-11).
 
-Homepage selection-only export work is repaired with nine native-key journeys
-across three formats/desktop engines. A rejected full-selection synthetic HTML
-paste blocked the larger fixture and remains an explicit follow-up; do not treat
-the small-sample export checks as paste or large-document certification.
+Homepage selection-only export work is repaired. Nine additional journeys use
+a 502-block fixture within the existing character limit. The initial refusal
+was caused by an oversized fixture; false success reporting is now fixed with
+an explicit rejected outcome. Three source and three compiled native clipboard
+journeys pass. The full local check passes 5,291 tests/325 files and every
+existing package/runtime/type/format/size/performance gate. This is not whole
+product, physical-device or hosted-release approval.
 [Measured scope](WEBSITE_BUILD_IDENTITY.md#homepage-export-work).
+
+The three flagship showcases must meet the [professional reference-product
+requirements](PROFESSIONAL_REFERENCE_PRODUCTS.md). The existing limited issue
+and task workflow labs do not satisfy that requirement. GitLab integration has
+a pinned, reproducible upstream contract inventory; implementation and real
+application verification remain outstanding.
 
 ## Remaining parity work
 

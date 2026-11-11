@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/gitlabhq/gitlabhq",
+  "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+  "files": {
+    "component": "app/assets/javascripts/content_editor/components/content_editor.vue",
+    "host": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
+    "service": "app/assets/javascripts/content_editor/services/create_content_editor.js",
+    "extensions": "app/assets/javascripts/content_editor/extensions/index.js",
+    "package": "package.json"
+  }
+}

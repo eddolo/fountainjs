@@ -1,0 +1,516 @@
+{
+  "measuredAt": "2026-11-11T21:15:32.549Z",
+  "upstream": {
+    "repository": "https://github.com/gitlabhq/gitlabhq",
+    "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+    "files": {
+      "component": "app/assets/javascripts/content_editor/components/content_editor.vue",
+      "host": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
+      "service": "app/assets/javascripts/content_editor/services/create_content_editor.js",
+      "extensions": "app/assets/javascripts/content_editor/extensions/index.js",
+      "package": "package.json"
+    }
+  },
+  "provenance": {
+    "component": {
+      "path": "app/assets/javascripts/content_editor/components/content_editor.vue",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/components/content_editor.vue",
+      "sha256": "2fbd71b6ca81e24b6c7f6066493e22d3ba8d715ddff8da8d66a0b7517802e13c",
+      "bytes": 14246
+    },
+    "host": {
+      "path": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
+      "sha256": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
+      "bytes": 15852
+    },
+    "service": {
+      "path": "app/assets/javascripts/content_editor/services/create_content_editor.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/services/create_content_editor.js",
+      "sha256": "1f261b0892809e85b6661f21a407f63e80075c7eeff234f691fddf67250915b1",
+      "bytes": 3335
+    },
+    "extensions": {
+      "path": "app/assets/javascripts/content_editor/extensions/index.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/extensions/index.js",
+      "sha256": "efa6f31a52de69c5175f35fd1c7f06bf974a5e358df4611884219ac86dcef7f9",
+      "bytes": 3713
+    },
+    "package": {
+      "path": "package.json",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/package.json",
+      "sha256": "0ab11c4adfa2881225edadbb417231386304af5b424bee9f639e90eb7cf39c4a",
+      "bytes": 14669
+    }
+  },
+  "runtimeDependencies": {
+    "vue": "2.7.16",
+    "@gitlab/ui": "138.7.1",
+    "@tiptap/core": "^2.27.3",
+    "@tiptap/vue-2": "^2.27.3"
+  },
+  "component": {
+    "props": [
+      {
+        "name": "renderMarkdown",
+        "type": "Function",
+        "required": true,
+        "default": null
+      },
+      {
+        "name": "markdownDocsPath",
+        "type": "String",
+        "required": true,
+        "default": null
+      },
+      {
+        "name": "uploadsPath",
+        "type": "String",
+        "required": true,
+        "default": null
+      },
+      {
+        "name": "extensions",
+        "type": "Array",
+        "required": false,
+        "default": "() => []"
+      },
+      {
+        "name": "serializerConfig",
+        "type": "Object",
+        "required": false,
+        "default": "() => {}"
+      },
+      {
+        "name": "markdown",
+        "type": "String",
+        "required": false,
+        "default": "''"
+      },
+      {
+        "name": "placeholder",
+        "type": "String",
+        "required": false,
+        "default": "''"
+      },
+      {
+        "name": "autofocus",
+        "type": "[String, Boolean]",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "supportsQuickActions",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "supportsTableOfContents",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "drawioEnabled",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "codeSuggestionsConfig",
+        "type": "Object",
+        "required": false,
+        "default": "() => ({})"
+      },
+      {
+        "name": "editable",
+        "type": "Boolean",
+        "required": false,
+        "default": "true"
+      },
+      {
+        "name": "enableAutocomplete",
+        "type": "Boolean",
+        "required": false,
+        "default": "true"
+      },
+      {
+        "name": "autocompleteDataSources",
+        "type": "Object",
+        "required": false,
+        "default": "() => ({})"
+      },
+      {
+        "name": "disableAttachments",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "newCommentTemplatePaths",
+        "type": "Array",
+        "required": false,
+        "default": "() => []"
+      },
+      {
+        "name": "immersive",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "hideModeSwitcher",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "ariaLabel",
+        "type": "String",
+        "required": false,
+        "default": "''"
+      },
+      {
+        "name": "ariaLabelledBy",
+        "type": "String",
+        "required": false,
+        "default": "''"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "String",
+        "required": false,
+        "default": "''"
+      },
+      {
+        "name": "collaborationProvider",
+        "type": "Object",
+        "required": false,
+        "default": "null"
+      }
+    ],
+    "events": [
+      "blur",
+      "change",
+      "enable-markdown-editor",
+      "focus",
+      "initialized",
+      "keydown",
+      "loading"
+    ],
+    "methods": [
+      "editorSelector",
+      "setEditorSelectorDataset",
+      "getEditorSelectorDataset",
+      "handleManualResize",
+      "handleManualResizeUp",
+      "pasteContent",
+      "setSerializedContent",
+      "focus",
+      "onFocus",
+      "onBlur",
+      "notifyLoading",
+      "notifyLoadingSuccess",
+      "notifyLoadingError",
+      "notifyChange",
+      "handleEditorModeChanged"
+    ],
+    "watched": [
+      "autocompleteDataSources",
+      "markdown",
+      "editable",
+      "editorAriaAttributes"
+    ],
+    "slots": [
+      "header",
+      "header-buttons",
+      "toolbar"
+    ]
+  },
+  "host": {
+    "props": [
+      {
+        "name": "value",
+        "type": "String",
+        "required": true,
+        "default": null
+      },
+      {
+        "name": "setFacade",
+        "type": "Function",
+        "required": false,
+        "default": "null"
+      },
+      {
+        "name": "renderMarkdownPath",
+        "type": "String",
+        "required": true,
+        "default": null
+      },
+      {
+        "name": "uploadsPath",
+        "type": "String",
+        "required": false,
+        "default": "() => window.uploads_path || ''"
+      },
+      {
+        "name": "enableContentEditor",
+        "type": "Boolean",
+        "required": false,
+        "default": "true"
+      },
+      {
+        "name": "formFieldProps",
+        "type": "Object",
+        "required": true,
+        "default": null
+      },
+      {
+        "name": "autofocus",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "enableAutocomplete",
+        "type": "Boolean",
+        "required": false,
+        "default": "true"
+      },
+      {
+        "name": "autocompleteDataSources",
+        "type": "Object",
+        "required": false,
+        "default": "() => ({})"
+      },
+      {
+        "name": "supportsQuickActions",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "supportsTableOfContents",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "autosaveKey",
+        "type": "String",
+        "required": false,
+        "default": "null"
+      },
+      {
+        "name": "markdownDocsPath",
+        "type": "String",
+        "required": false,
+        "default": "''"
+      },
+      {
+        "name": "drawioEnabled",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "disabled",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "disableAttachments",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "codeSuggestionsConfig",
+        "type": "Object",
+        "required": false,
+        "default": "() => ({ lines: [], lineType: '', canSuggest: false, showPopover: false })"
+      },
+      {
+        "name": "noteableType",
+        "type": "String",
+        "required": false,
+        "default": "''"
+      },
+      {
+        "name": "restrictedToolBarItems",
+        "type": "Array",
+        "required": false,
+        "default": "() => []"
+      },
+      {
+        "name": "restoreFromAutosave",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "newCommentTemplatePaths",
+        "type": "Array",
+        "required": false,
+        "default": "() => []"
+      },
+      {
+        "name": "editorAiActions",
+        "type": "Array",
+        "required": false,
+        "default": "() => []"
+      },
+      {
+        "name": "immersive",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "fillContainer",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "hideModeSwitcher",
+        "type": "Boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "collaborationProvider",
+        "type": "Object",
+        "required": false,
+        "default": "null"
+      },
+      {
+        "name": "beforeContentEditor",
+        "type": "Function",
+        "required": false,
+        "default": "null"
+      }
+    ],
+    "events": [
+      "blur",
+      "content-editor",
+      "focus",
+      "handle-suggest-dismissed",
+      "input",
+      "keydown",
+      "markdown-field"
+    ],
+    "methods": [
+      "getValue",
+      "setValue",
+      "updateValue",
+      "append",
+      "setTemplate",
+      "updateMarkdownFromContentEditor",
+      "updateMarkdownFromMarkdownField",
+      "renderMarkdown",
+      "onEditingModeChange",
+      "onEditingModeRestored",
+      "notifyEditingModeChange",
+      "autofocusTextarea",
+      "focus",
+      "setEditorAsAutofocused",
+      "saveDraft",
+      "clearDraft",
+      "togglePreview",
+      "autosizeTextarea",
+      "onKeydown"
+    ],
+    "watched": [
+      "value",
+      "collaborationProvider"
+    ],
+    "slots": [
+      "header",
+      "header-buttons",
+      "toolbar"
+    ]
+  },
+  "extensions": [
+    "Alert",
+    "AlertTitle",
+    "Attachment",
+    "Audio",
+    "BlobEmbed",
+    "Blockquote",
+    "Bold",
+    "BulletList",
+    "Code",
+    "CodeBlockHighlight",
+    "CodeSuggestion",
+    "ColorChip",
+    "CopyPaste",
+    "DescriptionItem",
+    "DescriptionList",
+    "Details",
+    "DetailsContent",
+    "Diagram",
+    "DrawioDiagram",
+    "Document",
+    "Dropcursor",
+    "Emoji",
+    "ExternalKeydownHandler",
+    "Figure",
+    "FigureCaption",
+    "FootnoteDefinition",
+    "FootnoteReference",
+    "FootnotesSection",
+    "Frontmatter",
+    "Gapcursor",
+    "HardBreak",
+    "Heading",
+    "History",
+    "Highlight",
+    "HorizontalRule",
+    "HTMLMarks",
+    "HTMLNodes",
+    "Iframe",
+    "Image",
+    "Indent",
+    "InlineDiff",
+    "Italic",
+    "Link",
+    "ListItem",
+    "Loading",
+    "MathInline",
+    "OrderedList",
+    "Paragraph",
+    "Placeholder",
+    "HTMLComment",
+    "Reference",
+    "ReferenceLabel",
+    "ReferenceDefinition",
+    "Selection",
+    "Strike",
+    "Subscript",
+    "Suggestions",
+    "Superscript",
+    "Table",
+    "TableCell",
+    "TableHeader",
+    "TableOfContents",
+    "TableRow",
+    "TaskItem",
+    "TaskList",
+    "Text",
+    "Time",
+    "Video",
+    "WordBreak"
+  ],
+  "status": "Upstream contracts inventoried. Fountain replacement is not implemented or production-verified.",
+  "requiredEvidence": [
+    "Real GitLab application with the Fountain replacement enabled",
+    "Upstream editor tests and system workflows on original and replacement",
+    "GitLab Flavored Markdown rendering, source retention and editing semantics",
+    "Real authenticated persistence, uploads, references, permissions and collaboration",
+    "Native recorded browser use, accessibility, lifecycle and failure recovery",
+    "Repeatable side-by-side measurements before any superiority claim"
+  ]
+}
