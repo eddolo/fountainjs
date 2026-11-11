@@ -38,6 +38,12 @@ tarball passes both type analyses and a clean ESM/CommonJS consumer outside the
 repository without browser globals, optional peers or jsdom. Pinned Lean,
 Bun, Deno and the site build pass. Publint retains its existing DOCX warning.
 
+Fresh default Yjs (48), startup (24), migration recovery (21) and compiled
+presence/retained-document (108) batches pass in all three desktop engines.
+The 108-case batch repeats 48 retained cases; counts are executions. The
+production-site starter-download journey passes in three engines and verifies
+nine real ZIPs against the candidate source/version.
+
 The latest twelve recorded desktop checks pass across Chromium, Firefox and
 WebKit. The broad diagnostic stopped with 628 passes and five failures, leading
 to test-selector/decoration-observation corrections and a real duplicate-widget

@@ -1,0 +1,36 @@
+[WebServer] (node:23512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 21 tests using 1 worker
+
+(node:5468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\yjs-namespace-real.spec.ts:54:1 › opens after local draft storage is blocked and keeps the recovered draft @storage-startup (7.2s)
+  ok  2 [chromium] › tests\manual\yjs-namespace-real.spec.ts:125:1 › recovers the exact embedded offline draft after a lost save reply and reload @nested (2.2s)
+  ok  3 [chromium] › tests\manual\yjs-namespace-real.spec.ts:434:1 › keeps a retained draft across reload after a committed rollback loses its reply (2.3s)
+  ok  4 [chromium] › tests\manual\yjs-namespace-real.spec.ts:463:1 › recovers a saved legacy paragraph into the migrated room after explicit review (2.1s)
+  ok  5 [chromium] › tests\manual\yjs-namespace-real.spec.ts:501:1 › recovers a saved legacy paragraph selected from multiple changes (1.8s)
+  ok  6 [chromium] › tests\manual\yjs-namespace-real.spec.ts:533:1 › recovers a saved legacy paragraph after the apply reply is lost and the tab reloads (2.2s)
+  ok  7 [chromium] › tests\manual\yjs-namespace-real.spec.ts:577:1 › recovers a saved legacy paragraph proposal after a rejected reply and repeated reloads (2.6s)
+(node:17744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  8 [firefox] › tests\manual\yjs-namespace-real.spec.ts:54:1 › opens after local draft storage is blocked and keeps the recovered draft @storage-startup (9.2s)
+  ok  9 [firefox] › tests\manual\yjs-namespace-real.spec.ts:125:1 › recovers the exact embedded offline draft after a lost save reply and reload @nested (2.5s)
+  ok 10 [firefox] › tests\manual\yjs-namespace-real.spec.ts:434:1 › keeps a retained draft across reload after a committed rollback loses its reply (2.7s)
+  ok 11 [firefox] › tests\manual\yjs-namespace-real.spec.ts:463:1 › recovers a saved legacy paragraph into the migrated room after explicit review (2.9s)
+  ok 12 [firefox] › tests\manual\yjs-namespace-real.spec.ts:501:1 › recovers a saved legacy paragraph selected from multiple changes (2.2s)
+  ok 13 [firefox] › tests\manual\yjs-namespace-real.spec.ts:533:1 › recovers a saved legacy paragraph after the apply reply is lost and the tab reloads (2.7s)
+  ok 14 [firefox] › tests\manual\yjs-namespace-real.spec.ts:577:1 › recovers a saved legacy paragraph proposal after a rejected reply and repeated reloads (3.5s)
+(node:21460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 15 [webkit] › tests\manual\yjs-namespace-real.spec.ts:54:1 › opens after local draft storage is blocked and keeps the recovered draft @storage-startup (22.9s)
+  ok 16 [webkit] › tests\manual\yjs-namespace-real.spec.ts:125:1 › recovers the exact embedded offline draft after a lost save reply and reload @nested (5.2s)
+  ok 17 [webkit] › tests\manual\yjs-namespace-real.spec.ts:434:1 › keeps a retained draft across reload after a committed rollback loses its reply (5.5s)
+  ok 18 [webkit] › tests\manual\yjs-namespace-real.spec.ts:463:1 › recovers a saved legacy paragraph into the migrated room after explicit review (7.9s)
+  ok 19 [webkit] › tests\manual\yjs-namespace-real.spec.ts:501:1 › recovers a saved legacy paragraph selected from multiple changes (5.3s)
+  ok 20 [webkit] › tests\manual\yjs-namespace-real.spec.ts:533:1 › recovers a saved legacy paragraph after the apply reply is lost and the tab reloads (6.4s)
+  ok 21 [webkit] › tests\manual\yjs-namespace-real.spec.ts:577:1 › recovers a saved legacy paragraph proposal after a rejected reply and repeated reloads (7.3s)
+
+  21 passed (1.9m)

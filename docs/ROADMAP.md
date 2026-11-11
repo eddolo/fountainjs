@@ -50,10 +50,11 @@ format, and size gates on November 11. A duplicate-widget renderer repair also
 passes 12 recorded desktop checks at `7961b966`. The versioned tarball also
 passes both type analyses and clean ESM/CommonJS installation outside the
 repository without browser globals, React, Yjs or jsdom. Pinned Lean, Bun,
-Deno and the site build pass. Earlier default Yjs, startup, migration and
-native-presence batches passed at `597f5415`; the combined latest candidate
-still needs fresh release validation. The full editor/mobile matrix, serialized
-native clipboard batch and hosted CI remain pending. See the
+Deno and the site build pass. Fresh default Yjs (48), startup (24), migration
+recovery (21), and compiled native-presence (108) batches also pass; those
+executions overlap and do not count as new capabilities. Production-site
+starter downloads pass in three desktop engines. The full clean editor/mobile
+matrix, Linux display-backed clipboard checks and hosted CI remain pending. See the
 [checkpoint record](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
 
 ## Remaining parity work

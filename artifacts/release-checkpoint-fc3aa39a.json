@@ -1,0 +1,54 @@
+{
+  "candidateRuntimeCommit": "fc3aa39af81cac74c9f3d6d3732c96fc7298c829",
+  "date": "2026-11-11",
+  "version": "0.5.0-beta.1",
+  "published": false,
+  "fullCheck": {
+    "exitCode": 0,
+    "tests": 5271,
+    "files": 323,
+    "log": "artifacts/release-check-fc3aa39a.log"
+  },
+  "packageReceipt": "artifacts/release-preflight-fc3aa39a/receipt.json",
+  "separateChecksPassed": [
+    "real Lean 4.30.0 valid/invalid proofs",
+    "Bun 1.4.4",
+    "Deno 2.9.6",
+    "production site build",
+    "packed general-entry type analysis",
+    "packed Angular ESM-only type analysis",
+    "outside-repository ESM/CommonJS consumer without optional peers or fake DOM"
+  ],
+  "browserBatches": {
+    "defaultYjs": 48,
+    "startupRecovery": 24,
+    "migrationRecovery": 21,
+    "compiledNativePresenceAndRetainedDocuments": 108,
+    "overlappingRetainedExecutions": 48,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "failures": 0
+  },
+  "productionStarterDownloads": {
+    "passedJourneys": 3,
+    "actualArchives": 9,
+    "version": "0.5.0-beta.1",
+    "visualReview": "WebKit narrow Node starter card",
+    "receipt": "artifacts/starter-release-archives-fc3aa39a.json"
+  },
+  "priorDiagnostics": "artifacts/release-checkpoint-7961b966.json",
+  "priorFailuresRemainVisible": [
+    "Broad source-server Chromium ERR_NO_BUFFER_SPACE; unchanged isolated check passed three repeats",
+    "Windows WebKit native clipboard delivery fails consistently with independent native controls"
+  ],
+  "pending": [
+    "Clean complete editor/mobile matrix and hosted CI",
+    "Linux display-backed native clipboard delivery; actual Safari evidence remains limited",
+    "Final archive/hash after packaged documentation edits",
+    "GitHub authentication/push, tag and npm stage",
+    "Maintainer approval, registry consumer installation and live-site verification"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "candidateCommit": "fc3aa39a",
+  "productionBuild": true,
+  "passedJourneys": 3,
+  "downloadedArchives": [
+    {
+      "file": "artifacts\\starter-release-reviewed-fc3aa39a\\starter-downloads-download-0c6e6-ts-from-the-developer-guide-chromium\\fountainjs-node.zip",
+      "dependency": "0.5.0-beta.1"
+    },
+    {
+      "file": "artifacts\\starter-release-reviewed-fc3aa39a\\starter-downloads-download-0c6e6-ts-from-the-developer-guide-chromium\\fountainjs-plain-dom.zip",
+      "dependency": "0.5.0-beta.1"
+    },
+    {
+      "file": "artifacts\\starter-release-reviewed-fc3aa39a\\starter-downloads-download-0c6e6-ts-from-the-developer-guide-chromium\\fountainjs-react.zip",
+      "dependency": "0.5.0-beta.1"
+    },
+    {
+      "file": "artifacts\\starter-release-reviewed-fc3aa39a\\starter-downloads-download-0c6e6-ts-from-the-developer-guide-firefox\\fountainjs-node.zip",
+      "dependency": "0.5.0-beta.1"
+    },
+    {
+      "file": "artifacts\\starter-release-reviewed-fc3aa39a\\starter-downloads-download-0c6e6-ts-from-the-developer-guide-firefox\\fountainjs-plain-dom.zip",
+      "dependency": "0.5.0-beta.1"
+    },
+    {
+      "file": "artifacts\\starter-release-reviewed-fc3aa39a\\starter-downloads-download-0c6e6-ts-from-the-developer-guide-firefox\\fountainjs-react.zip",
+      "dependency": "0.5.0-beta.1"
+    },
+    {
+      "file": "artifacts\\starter-release-reviewed-fc3aa39a\\starter-downloads-download-0c6e6-ts-from-the-developer-guide-webkit\\fountainjs-node.zip",
+      "dependency": "0.5.0-beta.1"
+    },
+    {
+      "file": "artifacts\\starter-release-reviewed-fc3aa39a\\starter-downloads-download-0c6e6-ts-from-the-developer-guide-webkit\\fountainjs-plain-dom.zip",
+      "dependency": "0.5.0-beta.1"
+    },
+    {
+      "file": "artifacts\\starter-release-reviewed-fc3aa39a\\starter-downloads-download-0c6e6-ts-from-the-developer-guide-webkit\\fountainjs-react.zip",
+      "dependency": "0.5.0-beta.1"
+    }
+  ],
+  "published": false
+}

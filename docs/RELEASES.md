@@ -461,10 +461,28 @@ an ancestor home directory; that failed receipt is retained, and the final
 consumer runs under `C:/Temp` outside that ancestor. Version, archive hash and
 consumer results are in `artifacts/release-preflight-fc3aa39a/receipt.json`.
 
+Fresh browser batches then pass at the same versioned runtime: 48 public
+default-Yjs checks, 24 startup/detached-draft checks, 21 migration-recovery
+checks, and 108 compiled cursor/presence and retained-document checks. All
+three desktop engines participate. The 108-case batch repeats 48 retained
+cases; these are executions, not additive unique capability counts. Logs are
+`artifacts/yjs-{default,startup,migration,presence}-fc3aa39a.log`.
+
+The existing starter-download journey also passes against the production site
+build in all three desktop engines. Nine actual downloaded ZIPs match source
+files and depend on `0.5.0-beta.1`; narrow layout receives visual review.
+The new preview harness initially omits the `/fountainjs/` base and fails
+before finding the developer page. Correcting only its base configuration
+allows the unchanged assertions to pass. The initial diagnostic is retained.
+See `artifacts/playwright-starter-release-20261111.config.ts`,
+`artifacts/starter-release-reviewed-fc3aa39a.log` and
+`artifacts/starter-release-archives-fc3aa39a.json`.
+
 This is a local package checkpoint, not the published artifact. Later packaged
 documentation changes require a new archive/hash before staging. The previous
-browser diagnostics retain their failures and scope. Fresh combined browser/Yjs
-validation, hosted CI, npm approval, registry installation and live-site checks
+browser diagnostics retain their failures and scope. A clean complete
+editor/mobile matrix, Linux display clipboard validation, hosted CI, npm
+approval, registry installation and live-site checks
 remain open.
 
 ## Failure and rollback policy
