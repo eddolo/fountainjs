@@ -63,7 +63,7 @@ describe('browser CI retry evidence retention', () => {
     expect(job).toContain('run: pnpm install --frozen-lockfile');
     expect(job).toContain('run: pnpm exec playwright install --with-deps');
     expect(job).toMatch(/^        run: pnpm audit:ui --reporter=list,json$/m);
-    expect(job).toMatch(/^        run: pnpm exec playwright test --config playwright\.production\.config\.ts --reporter=list,json$/m);
+    expect(job).toMatch(/^        run: xvfb-run --auto-servernum pnpm exec playwright test --config playwright\.production\.config\.ts --headed --reporter=list,json$/m);
     expect(job).toMatch(/^        run: pnpm audit:starters:prepare$/m);
     expect(job).toMatch(/^        run: pnpm audit:starters --reporter=list,json$/m);
     expect(job!.indexOf('run: pnpm install --frozen-lockfile')).toBeLessThan(job!.indexOf('run: pnpm audit:ui'));

@@ -125,9 +125,11 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
       - name: Check built production workflows on the deployment subpath
+        # Native clipboard output must reach a real display-backed pasteboard.
+        # Keep production assertions intact and serialize their clipboard owner.
         env:
           PLAYWRIGHT_JSON_OUTPUT_NAME: artifacts/production-browser/report.json
-        run: pnpm exec playwright test --config playwright.production.config.ts --reporter=list,json
+        run: xvfb-run --auto-servernum pnpm exec playwright test --config playwright.production.config.ts --headed --reporter=list,json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -158,7 +160,7 @@ jobs:
       # Independent controls prove headless Linux WebKit loses rich clipboard
       # data while the real Xvfb-backed display retains it. Serialize native
       # clipboard owners; keep the rest of the matrix headless.
-      FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN: "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy|native shared-context|inherited node direction survives trusted|copies and cuts a partial text-to-image range"
+      FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN: "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy|native shared-context|inherited node direction survives trusted|copies and cuts a partial text-to-image range|recovers homepage copy by native manual copying|copies homepage output using the native clipboard API"
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -355,6 +357,20 @@ jobs:
             test-results/**/code-labels*.png
             test-results/**/code-labels*.md
           if-no-files-found: ignore
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: homepage-copy-and-contrast-evidence
+          path: |
+            test-results/**/copy-*.png
+            test-results/**/native-copy-external-receiver.png
+            test-results/**/homepage-contrast.json
+            test-results/site-copy-contrast-*/video.webm
+            structural-direction-clipboard-results/**/copy-*.png
+            structural-direction-clipboard-results/**/native-copy-external-receiver.png
+            structural-direction-clipboard-results/site-copy-contrast-*/video.webm
+          if-no-files-found: warn
           retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.
       # Preserve this evidence on success too; it is not Word fidelity approval.

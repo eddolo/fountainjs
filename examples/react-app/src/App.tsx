@@ -83,6 +83,7 @@ import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import { SitePageLink } from './SitePageLink';
 import 'fountainjs-editor/styles.css';
+import { LiveExportOutput } from './LiveExportOutput';
 
 const initialContent = {
   type: 'doc',
@@ -567,7 +568,6 @@ function App() {
     [editor],
   );
   const [format, setFormat] = useState<ExportFormat>('markdown');
-  const [copied, setCopied] = useState(false);
   const [compactToolbar, setCompactToolbar] = useState(false);
   const [agentProposal, setAgentProposal] = useState<AIDocumentProposal>();
   const [agentToolMessage, setAgentToolMessage] = useState('No document-tool call has run.');
@@ -635,12 +635,6 @@ function App() {
     }
   };
 
-  const copy = async () => {
-    await navigator.clipboard.writeText(output);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1400);
-  };
-
   return (
     <main>
       <header className="site-header">
@@ -681,7 +675,7 @@ function App() {
         <div className="open-source__lead"><span>WHAT OPEN SOURCE MEANS HERE</span><h2>The editor belongs in your product—not behind ours.</h2><p>“Open source” describes what you can inspect, own, change, and run. It does not pretend that databases, servers, storage, or third-party models cost nothing.</p></div>
         <div className="open-source__grid">
           <article><b>01</b><h3>Public source and MIT terms</h3><p>The engine, optional modules, types, tests, and documentation are public. The MIT license allows commercial use, modification, forks, redistribution, and private product code.</p></article>
-          <article><b>02</b><h3>No Fountain feature paywall</h3><p>A capability only counts in this project when it ships through the public package. There is no private extension registry, paid editor tier, or license key that unlocks document features.</p></article>
+          <article><b>02</b><h3>No Fountain feature paywall</h3><p>The engine and optional editor modules use the same MIT license. There is no private extension registry, paid editor tier, or license key that unlocks document features.</p></article>
           <article><b>03</b><h3>No required Fountain cloud</h3><p>Use the editor locally and connect your own database, files, authentication, collaboration transport, conversion service, or AI provider through replaceable interfaces.</p></article>
           <article><b>04</b><h3>You choose infrastructure costs</h3><p>Your hosting or chosen third-party services may charge you. Those are application decisions, not hidden requirements imposed by FountainJS; local and self-hosted implementations remain valid.</p></article>
         </div>
@@ -789,11 +783,9 @@ function App() {
           <aside className="studio__tools">
             <div className="module-stack"><span>COMPOSED FOR THIS DEMO</span><div>{demoKit.extensions.map((extension) => <code key={extension.name}>{extension.name}</code>)}</div></div>
             <FountainIntegrityInspector editor={editor} />
-            <section className="studio__export">
-              <div className="export-head"><strong>Live document output</strong><button onClick={copy}>{copied ? 'Copied!' : 'Copy'}</button></div>
-              <div className="format-tabs">{(['markdown', 'html', 'json'] as ExportFormat[]).map((item) => <button type="button" key={item} className={format === item ? 'active' : ''} onClick={() => setFormat(item)}>{item}</button>)}</div>
-              <pre><code>{output}</code></pre>
-            </section>
+            <LiveExportOutput output={output}>
+              <div className="format-tabs">{(['markdown', 'html', 'json'] as ExportFormat[]).map((item) => <button type="button" key={item} className={format === item ? 'active' : ''} aria-pressed={format === item} onClick={() => setFormat(item)}>{item}</button>)}</div>
+            </LiveExportOutput>
             <details className="optional-ai">
               <summary>Optional AI review examples</summary>
               <FountainAIReview controller={aiController} title="Text proposal stream" />
