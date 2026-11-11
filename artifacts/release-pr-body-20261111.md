@@ -43,8 +43,8 @@ update two declaration snapshots).
 The fresh tarball passes both type analyses and a clean ESM/CommonJS consumer
 outside the repository without browser globals, optional peers or jsdom.
 Publint retains its existing DOCX warning. Repack after the final packaged-doc
-updates before staging. Pinned Lean, Bun, Deno and the site build pass at the
-preceding versioned checkpoint; hosted CI must refresh them for this candidate.
+updates before staging. Pinned Lean, Bun, Deno and the production site build
+pass again at `b03ad598`; hosted CI must still verify the final candidate.
 
 Fresh default Yjs (48), startup (24), migration recovery (21) and compiled
 presence/retained-document (108) batches pass in all three desktop engines.
@@ -58,8 +58,12 @@ WebKit (332), mobile Chrome (29) and mobile Safari emulation (29) have no
 failures. Firefox has 331 passes, nine skips and two failures. Both exact failed
 cases pass serially with unchanged assertions/timeouts in 4.4 and 3.3 seconds.
 The original traces show unusually slow browser/page setup; transient
-contention is a hypothesis, not an established cause. This is not a clean matrix.
-Original failure evidence and the serial traces are retained separately.
+contention is a hypothesis, not an established cause. The complete Firefox
+project subsequently passes with one worker: 333 passes, nine existing skips,
+zero failures, no retries and unchanged assertions/timeouts, in 27.2 minutes.
+All five projects have failure-free runs at the same runtime revision across
+the original matrix and this Firefox follow-up. Original parallel failures
+and serial evidence remain separate; hosted parallel CI is still mandatory.
 
 Direct screenshot review covers recovered collaboration, merged-table resizing,
 mobile task-reader navigation and editor/page-preview indentation. Static

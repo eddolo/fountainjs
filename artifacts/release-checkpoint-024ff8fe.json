@@ -32,7 +32,7 @@
   "pending": [
     "Clean hosted browser matrix and Linux display clipboard validation",
     "Hosted CI and GitHub authentication",
-    "Matched release tag, npm stage and maintainer approval",
+    "Final archive after supplemental evidence documentation, matched release tag, npm stage and maintainer approval",
     "Registry installation and website deployment"
   ],
   "browserMatrix": {
@@ -88,5 +88,25 @@
     "userReply": "Intent to sign in, not observed completion",
     "published": false
   },
-  "finalPackagedDocumentationReceipt": "artifacts/release-preflight-2d55f329/receipt.json"
+  "finalPackagedDocumentationReceipt": "artifacts/release-preflight-2d55f329/receipt.json",
+  "completeFirefoxSerial": {
+    "status": "passed",
+    "terminal": true,
+    "exitCode": 0,
+    "sourceCommit": "b03ad598",
+    "runtimeCommit": "024ff8fe",
+    "workers": 1,
+    "passed": 333,
+    "skipped": 9,
+    "failed": 0,
+    "durationMs": 1630718.263,
+    "assertionsChanged": false,
+    "timeoutsChanged": false,
+    "retries": 0,
+    "log": "artifacts/firefox-complete-serial-b03ad598.log",
+    "jsonReportLocalOnly": "artifacts/firefox-complete-serial-b03ad598.json",
+    "jsonReportSha256": "d9fff6ebd42422f50467109e9ab88af92ef5296b278f819ddb4b76ba38576597",
+    "doesNotEraseOriginalParallelFailures": true
+  },
+  "supplementalReleaseChecks": "artifacts/release-supplement-b03ad598.json"
 }

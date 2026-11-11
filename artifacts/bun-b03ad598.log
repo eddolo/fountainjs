@@ -1,0 +1,16 @@
+1.4.4
+Compiled runtime: 24 empty-heading HTML contracts passed.
+Compiled runtime: 11 preformatted-break HTML contracts passed.
+Compiled runtime: 14 preformatted-formatting contracts passed.
+Compiled runtime: 486 link normalization/security/history/destination contracts passed.
+Compiled runtime: 13 anchor loss/privacy/retention contracts passed.
+Compiled runtime: inert inline lexical data, full reopen, real transactions/history and altered-carrier refusal passed.
+Compiled runtime: 576 owned-attribute checks plus immutable snapshots/history passed.
+Compiled runtime: 140 native emphasis and partial-schema retention checks passed.
+Compiled runtime: protected Markdown images/rules/tables, exact source, native/canonical reopen and refusal guards passed.
+Compiled runtime: anonymous HTML flow, native/canonical reopening and exact source passed.
+Bun 1.4.4: DOM-free server HTML import/export passed.
+Bun 1.4.4: inert HTML comment retention, canonical reopen and breakout rejection passed.
+Bun 1.4.4: complete HTML page-settings retention and invalid/fragment boundaries passed.
+Bun 1.4.4: block-returning Markdown paragraph recovery passed.
+Bun 1.4.4: lazy Markdown flow paragraph sources passed.

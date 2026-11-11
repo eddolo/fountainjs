@@ -1,0 +1,188 @@
+{
+  "candidateSourceCommit": "b03ad598",
+  "runtimeCandidateCommit": "024ff8fe3e8d60cacd6c4ca2d4a662137e853cda",
+  "date": "2026-11-11",
+  "version": "0.5.0-beta.1",
+  "published": false,
+  "sourceMutationsDuringChecks": false,
+  "assertionsChanged": false,
+  "timeoutsChanged": false,
+  "batches": {
+    "defaultYjs": {
+      "stats": {
+        "startTime": "2026-11-11T17:14:45.619Z",
+        "duration": 115384.26699999999,
+        "expected": 48,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/yjs-default-b03ad598.log",
+      "jsonReportLocalOnly": "artifacts/yjs-default-b03ad598.json",
+      "jsonReportSha256": "50290e37066ab4311f6ffb2c0b6c3faa777f67aacbc63c4d2d48c20b075881f6"
+    },
+    "startupRecovery": {
+      "stats": {
+        "startTime": "2026-11-11T17:16:58.534Z",
+        "duration": 32915.805,
+        "expected": 24,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/yjs-startup-b03ad598.log",
+      "jsonReportLocalOnly": "artifacts/yjs-startup-b03ad598.json",
+      "jsonReportSha256": "5c6b080462cc2ee5cd4755e94e8c75edb60d0a5de6017d46b9df08bdc035fc23"
+    },
+    "migrationRecovery": {
+      "stats": {
+        "startTime": "2026-11-11T17:17:43.480Z",
+        "duration": 124015.84099999999,
+        "expected": 21,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/yjs-migration-b03ad598.log",
+      "jsonReportLocalOnly": "artifacts/yjs-migration-b03ad598.json",
+      "jsonReportSha256": "6c1a1d4e1d82d93b7e4598008411fd3c104ffa1ed8fb0c9276a03a8d5871522b"
+    },
+    "compiledPresenceAndRetained": {
+      "stats": {
+        "startTime": "2026-11-11T17:20:16.799Z",
+        "duration": 200496.829,
+        "expected": 108,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/yjs-presence-b03ad598.log",
+      "jsonReportLocalOnly": "artifacts/yjs-presence-b03ad598.json",
+      "jsonReportSha256": "ac8f0b9250185b437b3f7c10a86466ff8127e56483226eb146a1ca723191df5b"
+    },
+    "productionStarters": {
+      "stats": {
+        "startTime": "2026-11-11T17:24:01.622Z",
+        "duration": 26219.618000000002,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/starter-site-b03ad598.log",
+      "jsonReportLocalOnly": "artifacts/starter-site-b03ad598.json",
+      "jsonReportSha256": "07df0a5916fd438bc7fb2259dcec22edbfcc38e4f2648d2262dd2f3811744543"
+    }
+  },
+  "cliChecks": {
+    "Lean4.30.0": {
+      "exitCode": 0,
+      "log": "artifacts/lean-b03ad598.log",
+      "sha256": "9a9a367c3b9cdb4db023c7f39572eacb0e38fe2649449b6a5fae3034e3b131e0"
+    },
+    "Bun1.4.4": {
+      "exitCode": 0,
+      "log": "artifacts/bun-b03ad598.log",
+      "sha256": "c3441a0ef8942608f32019a9f031ab3421b0bab1045b4241638055e91b035137"
+    },
+    "Deno2.9.6": {
+      "exitCode": 0,
+      "log": "artifacts/deno-b03ad598.log",
+      "sha256": "70900aa63b3346e654e1e993ed76abd467e3af8723d21cfc73d0dd5757e76d22"
+    },
+    "productionSiteBuild": {
+      "exitCode": 0,
+      "log": "artifacts/site-build-b03ad598.log",
+      "sha256": "cef391924ece1d3eda3e2ce9f8997a7494bcb28a469dcee14d03f20602bccd0a"
+    }
+  },
+  "archiveRuntimeComparison": {
+    "receipt": "artifacts/release-preflight-2d55f329/receipt.json",
+    "distFilesCompared": 1008,
+    "allByteIdentical": true,
+    "distFilesComparedAfterCompleteFirefox": 1008,
+    "allByteIdenticalAfterCompleteFirefox": true
+  },
+  "scope": {
+    "collaborationExecutions": 201,
+    "overlappingRetainedExecutions": 48,
+    "productionStarterJourneys": 3,
+    "actualStarterArchives": 9,
+    "testsAreNotCapabilityCounts": true
+  },
+  "visualReview": [
+    {
+      "path": "artifacts/yjs-presence-b03ad598/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/backward-selection.png",
+      "sha256": "cf0556b7462c1420a58ec79a074987cd48362bca85cd6c6514208efd65f0f22d",
+      "localOnly": true,
+      "observed": "Both authors show Alpha and the same selected-figure image. The left panel has a visible text selection and media-edge handles; the peer panel displays a remote presence highlight.",
+      "method": "Direct view_image inspection of saved real-browser capture; static state only."
+    },
+    {
+      "path": "artifacts/yjs-presence-b03ad598/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/comparison.png",
+      "sha256": "51b4d782f608ebc376dce5c3d754dcd767899687fee252b11c48ed1e2eabe9b7",
+      "localOnly": true,
+      "observed": "Reference and Presence panels show matching edited mixed-direction text. The Presence panel adds a peer caret/name above its anchor without visibly changing the text.",
+      "method": "Direct view_image inspection of saved real-browser capture; static state only."
+    },
+    {
+      "path": "artifacts/starter-site-b03ad598/starter-downloads-download-0c6e6-ts-from-the-developer-guide-webkit/node-starter-narrow.png",
+      "sha256": "28687b2953753a9c8893c354ff1a2bbc4d220a874558af14f3a96b5104a89e09",
+      "localOnly": true,
+      "observed": "Node.js starter card text wraps within the narrow card, and the Download Node.js starter button and server-demo link remain visible.",
+      "method": "Direct view_image inspection of saved real-browser capture; static state only."
+    }
+  ],
+  "remaining": [
+    "All five browser projects have failure-free runs at the same runtime revision, across the original matrix and this complete serial Firefox follow-up. The earlier two-worker matrix still records two Firefox failures; hosted parallel CI is not waived.",
+    "Fresh hosted CI, including Linux display-backed native clipboard, is mandatory.",
+    "Physical mobile/IME and AT evidence are not established by these checks.",
+    "GitHub CLI is still signed out; no push, tag, npm stage, registry publication or site deployment occurred."
+  ],
+  "completeFirefoxSerial": {
+    "status": "passed",
+    "terminal": true,
+    "exitCode": 0,
+    "sourceCommit": "b03ad598",
+    "runtimeCommit": "024ff8fe",
+    "workers": 1,
+    "passed": 333,
+    "skipped": 9,
+    "failed": 0,
+    "durationMs": 1630718.263,
+    "assertionsChanged": false,
+    "timeoutsChanged": false,
+    "retries": 0,
+    "log": "artifacts/firefox-complete-serial-b03ad598.log",
+    "jsonReportLocalOnly": "artifacts/firefox-complete-serial-b03ad598.json",
+    "jsonReportSha256": "d9fff6ebd42422f50467109e9ab88af92ef5296b278f819ddb4b76ba38576597",
+    "doesNotEraseOriginalParallelFailures": true
+  },
+  "remoteReview": {
+    "repository": "eddolo/fountainjs",
+    "number": 22,
+    "url": "https://github.com/eddolo/fountainjs/pull/22",
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "head": "fix/native-focus-intent-20261105",
+    "headSha": "1a9e1640ef8d2fd6f955baeac5b078ba9b0db859",
+    "base": "fix/structural-range-formatting-20261105",
+    "baseSha": "8a9c51f650317b8598356badaa452faec6568ec7",
+    "source": "Connected GitHub get_pr_info, 2026-11-11",
+    "headIsCandidateAncestor": true,
+    "candidateDiffFiles": 2144,
+    "newGitBlobsOver100MiB": 0,
+    "remoteMutations": false
+  },
+  "websiteClaimReview": {
+    "scope": "Read-only inspection of CommonMark profile and conversion-loss wording; not a complete website audit.",
+    "files": [
+      "examples/react-app/src/Developers.tsx",
+      "examples/react-app/src/ConversionLab.tsx",
+      "examples/react-app/src/App.tsx"
+    ],
+    "result": "The 652/652 result is scoped to opt-in complete-file source data; default profile is separately stated. Conversion issues are explicitly not proof of zero loss. The comparison acknowledges the older stack production history and ecosystem scale.",
+    "sourceChanged": false
+  }
+}

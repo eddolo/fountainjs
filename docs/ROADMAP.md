@@ -55,17 +55,21 @@ The complete local editor/mobile run finishes with 1,063 passes, 19 existing
 skips and two Firefox lazy-loading timeouts. Both exact failed cases pass
 serially with unchanged assertions and timeouts. The traces show much slower
 browser/page setup in the failed run, consistent with transient contention;
-the root cause is not established and this is not a clean matrix. Chromium,
-WebKit and both mobile-emulation projects have no failures. Linux display
+the root cause is not established and this is not a clean parallel matrix.
+The complete Firefox project subsequently passes with one worker: 333 passes,
+nine existing skips, no retries or changed assertions/timeouts. All five
+projects therefore have failure-free runs at the same runtime revision,
+collected across the original matrix and the Firefox follow-up. Linux display
 clipboard checks and fresh hosted CI remain required.
 [Current checkpoint](RELEASES.md#repaired-runtime-integration-checkpoint--2026-11-11).
 
-The preceding versioned checkpoint also passes pinned Lean, Bun, Deno, the
-site build, fresh default Yjs (48), startup (24), migration recovery (21),
-compiled native-presence (108), and production starter-download batches.
-Those executions overlap and do not count as new capabilities; hosted CI
-must refresh these outcomes for the final candidate.
-[Earlier evidence](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
+Fresh checks at `b03ad598` also pass pinned Lean, Bun, Deno, the production
+site build, default Yjs (48), startup (24), migration recovery (21), compiled
+native-presence (108), and three production starter-download journeys. All
+1,008 distribution files remain byte-identical to the tested archive. Those
+executions overlap and do not count as new capabilities; hosted CI must
+refresh these outcomes for the final candidate.
+[Supplementary evidence](RELEASES.md#supplementary-release-validation--2026-11-11).
 
 ## Remaining parity work
 

@@ -19,16 +19,21 @@ skips and two Firefox lazy-loading timeouts. Both failed cases then pass
 serially with unchanged assertions/timeouts. Original traces show unusually
 slow browser/page setup; contention is a hypothesis, not an established root
 cause. Chromium, WebKit and both mobile-emulation projects have no failures.
-The first-run failures are retained and this does not establish a clean matrix.
-Linux display clipboard checks, fresh combined hosted CI, final release
-archive and publication remain pending.
+The complete Firefox project then passes serially: 333 passes, nine existing
+skips and zero failures, with unchanged assertions/timeouts and no retries.
+All five projects have failure-free runs at the same runtime revision across
+the original matrix and Firefox follow-up. The original parallel failures
+remain retained. Linux display clipboard checks, fresh combined hosted CI,
+final release archive and publication remain pending.
 [Current checkpoint](RELEASES.md#repaired-runtime-integration-checkpoint--2026-11-11).
 
-Earlier checkpoints verify duplicate-widget repair, default Yjs, migration
-recovery, compiled presence, pinned Lean, Bun, Deno and production starter
-downloads. Earlier `ERR_NO_BUFFER_SPACE` and Windows WebKit clipboard failures
-remain recorded; isolated passes and independent controls do not waive gates.
-[Earlier evidence](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
+Fresh `b03ad598` checks verify default Yjs (48), startup (24), migration
+recovery (21), compiled presence/retained documents (108), real Lean, Bun,
+Deno and three production starter-download journeys. Forty-eight retained
+executions overlap. All 1,008 distribution files match the tested tarball.
+Earlier `ERR_NO_BUFFER_SPACE` and Windows WebKit clipboard failures remain
+recorded; these passes and independent controls do not waive hosted gates.
+[Supplementary evidence](RELEASES.md#supplementary-release-validation--2026-11-11).
 
 A November 11 review of upstream documentation adds three Missing outcomes:
 editable charts/diagrams, authorable template slots, and a whiteboard surface.

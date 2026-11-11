@@ -620,6 +620,50 @@ GitHub CLI remains signed out at this checkpoint. Hosted CI, including the
 unchanged Linux display-backed clipboard batch, is still required before
 tagging/staging. Nothing from this candidate has been published or deployed.
 
+### Supplementary release validation — 2026-11-11
+
+At source checkpoint `b03ad598`, the runtime remains `024ff8fe`. Fresh checks
+pass Lean 4.30.0 with valid/invalid proofs, Bun 1.4.4, Deno 2.9.6, and the
+production-site build. The unchanged recorded browser batches pass:
+
+| Batch | Passed | Scope |
+| --- | ---: | --- |
+| Default Yjs | 48 | Native offline editing, author history, room replacement and reopening. |
+| Startup recovery | 24 | Incomplete/out-of-order data, restored drafts and cancelled admission. |
+| Migration recovery | 21 | Reviewed drafts, lost replies, reloads and blocked local storage. |
+| Compiled presence/retained documents | 108 | Native grapheme/bidi navigation, passive overlays, clipping, undo and synchronization. |
+| Production starter downloads | 3 | Nine real ZIPs checked against source and candidate version across three engines. |
+
+The 201 collaboration executions include 48 repeated retained-adapter cases;
+they are not 201 distinct capabilities. Direct screenshot review covers a
+text/media selection, matching mixed-direction reference/presence editors,
+and the narrow WebKit Node starter card. These are captured states, not
+continuous-video, physical-device or assistive-technology certification.
+
+The complete Firefox project also passes with one worker: **333 passes, nine
+existing skips, zero failures**, in 27.2 minutes. It uses the same assertions,
+timeouts and native-display clipboard exclusion as the earlier full matrix;
+there are no retries. All five projects consequently have failure-free runs
+at the same runtime revision, collected across the original matrix and the
+complete Firefox follow-up. The original two-worker run still records its two
+failures. Serial scheduling is verified evidence, not proof of their root
+cause or a waiver of fresh hosted CI.
+
+All 1,008 built distribution files match the tested `2d55f329` archive byte
+for byte after these checks. The compact receipt hashes the raw reports and
+selected local screenshots: `artifacts/release-supplement-b03ad598.json`.
+Logs use the matching `*-b03ad598.log` names. The refreshed complete Firefox
+log is `artifacts/firefox-complete-serial-b03ad598.log`.
+
+Read-only remote inspection confirms draft PR #22 remains open at
+`1a9e1640ef8d2fd6f955baeac5b078ba9b0db859`, an ancestor of this candidate.
+The proposed stacked review has 2,144 changed files at this checkpoint and no
+new Git blob over 100 MiB. GitHub CLI remains signed out. No remote branch,
+tag, release, npm stage or deployment is created by this validation.
+
+Repack after these packaged-documentation updates. Hosted CI, including
+the unchanged Linux display-backed clipboard workflows, remains mandatory.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad
