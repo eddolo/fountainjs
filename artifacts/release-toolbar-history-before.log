@@ -1,0 +1,175 @@
+[WebServer] (node:6388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:24292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 90% of 7.1s inside plugin hooks (6.4s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 6.2s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:24060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:21452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:16696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:3892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (10.2s)
+(node:6640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (15.6s)
+(node:6656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (16.2s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).getByRole('img', { name: 'Service diagram', exact: true })
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).getByRole('img', { name: 'Service diagram', exact: true })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       at markdown-structural-recovery-journey.ts:119
+
+      117 |   await expect(imageForm.getByText('Alternative text', { exact: true })).toBeVisible();
+      118 |   await expect(imageForm.getByText('Title (optional)', { exact: true })).toBeVisible();
+    > 119 |   await imageForm.getByLabel('Alternative text', { exact: true }).fill('Service diagram reviewed');
+          |                         ^
+      120 |   await imageForm.getByLabel('Image title', { exact: true }).fill('Service map verified');
+      121 |   await capture('nested-flow-image-controls.png');
+      122 |   await imageForm.getByRole('button', { name: 'Save image', exact: true }).click();
+        at verify (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-structural-recovery-journey.ts:119:25)
+        at markdownStructuralRecoveryJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-structural-recovery-journey.ts:182:3)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:642:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-chromium\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).getByRole('img', { name: 'Service diagram', exact: true })
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).getByRole('img', { name: 'Service diagram', exact: true })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       at markdown-structural-recovery-journey.ts:119
+
+      117 |   await expect(imageForm.getByText('Alternative text', { exact: true })).toBeVisible();
+      118 |   await expect(imageForm.getByText('Title (optional)', { exact: true })).toBeVisible();
+    > 119 |   await imageForm.getByLabel('Alternative text', { exact: true }).fill('Service diagram reviewed');
+          |                         ^
+      120 |   await imageForm.getByLabel('Image title', { exact: true }).fill('Service map verified');
+      121 |   await capture('nested-flow-image-controls.png');
+      122 |   await imageForm.getByRole('button', { name: 'Save image', exact: true }).click();
+        at verify (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-structural-recovery-journey.ts:119:25)
+        at markdownStructuralRecoveryJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-structural-recovery-journey.ts:182:3)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:642:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-firefox\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).getByRole('img', { name: 'Service diagram', exact: true })
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).getByRole('img', { name: 'Service diagram', exact: true })
+        13 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       at markdown-structural-recovery-journey.ts:119
+
+      117 |   await expect(imageForm.getByText('Alternative text', { exact: true })).toBeVisible();
+      118 |   await expect(imageForm.getByText('Title (optional)', { exact: true })).toBeVisible();
+    > 119 |   await imageForm.getByLabel('Alternative text', { exact: true }).fill('Service diagram reviewed');
+          |                         ^
+      120 |   await imageForm.getByLabel('Image title', { exact: true }).fill('Service map verified');
+      121 |   await capture('nested-flow-image-controls.png');
+      122 |   await imageForm.getByRole('button', { name: 'Save image', exact: true }).click();
+        at verify (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-structural-recovery-journey.ts:119:25)
+        at markdownStructuralRecoveryJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-structural-recovery-journey.ts:182:3)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:642:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-webkit\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-toolbar-history-before\editor-recovers-nested-Mar-c3056-hrough-an-editor-and-reader-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader 
+    [firefox] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader 
+    [webkit] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader 

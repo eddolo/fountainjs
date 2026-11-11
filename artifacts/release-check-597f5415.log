@@ -1,0 +1,552 @@
+$ pnpm build && pnpm test:api && pnpm test:package && pnpm test:server-runtimes && pnpm test:headless && pnpm test:markdown-conformance && pnpm test:math-reference && pnpm test:docx-interoperability && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test
+$ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 373 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/html-server.js               0.09 kB │ gzip:  0.09 kB
+dist/B3HoYgiU.js                  0.10 kB │ gzip:  0.12 kB │ map:   0.43 kB
+dist/yjs-retained.js              0.19 kB │ gzip:  0.14 kB
+dist/6OWPP9A_.js                  0.28 kB │ gzip:  0.23 kB │ map:   3.37 kB
+dist/MqzuiJN-.js                  0.30 kB │ gzip:  0.22 kB │ map:   1.32 kB
+dist/yjs.js                       0.43 kB │ gzip:  0.30 kB │ map:   2.23 kB
+dist/BXLdaFQd.js                  0.45 kB │ gzip:  0.31 kB │ map:   1.46 kB
+dist/CQ3KgNg-.js                  0.46 kB │ gzip:  0.33 kB │ map:   1.70 kB
+dist/BnFMdUMI.js                  0.51 kB │ gzip:  0.30 kB │ map:   2.53 kB
+dist/Cv9XzdCy.js                  0.52 kB │ gzip:  0.32 kB │ map:   8.20 kB
+dist/text-style.js                0.78 kB │ gzip:  0.35 kB
+dist/svelte.js                    0.80 kB │ gzip:  0.46 kB │ map:   3.41 kB
+dist/EuNFkSAi.js                  0.88 kB │ gzip:  0.47 kB │ map:   2.55 kB
+dist/D1AFWIEp.js                  0.91 kB │ gzip:  0.47 kB │ map:   3.88 kB
+dist/N_kHJUKF.js                  1.01 kB │ gzip:  0.52 kB │ map:   6.17 kB
+dist/react-widgets.js             1.22 kB │ gzip:  0.58 kB │ map:   5.30 kB
+dist/KoUbe7hE.js                  1.38 kB │ gzip:  0.66 kB │ map:   4.99 kB
+dist/BG5jeMm4.js                  1.53 kB │ gzip:  0.78 kB │ map:   5.46 kB
+dist/CjF9iDJQ.js                  1.56 kB │ gzip:  0.81 kB │ map:   5.78 kB
+dist/BWRnwTft.js                  1.76 kB │ gzip:  0.90 kB │ map:   5.46 kB
+dist/sDYxc2yD.js                  2.11 kB │ gzip:  0.97 kB │ map:   6.10 kB
+dist/Bw8w8O4J.js                  2.26 kB │ gzip:  1.01 kB │ map:   7.46 kB
+dist/BLf5Nyeq.js                  2.27 kB │ gzip:  0.96 kB │ map:   8.49 kB
+dist/CcFuyTHX.js                  2.32 kB │ gzip:  1.12 kB │ map:   8.58 kB
+dist/BH7rBvQl.js                  2.61 kB │ gzip:  1.12 kB │ map:  10.00 kB
+dist/7R2r_fH_.js                  2.62 kB │ gzip:  1.21 kB │ map:   9.57 kB
+dist/D8p1sV6E.js                  2.75 kB │ gzip:  1.16 kB │ map:  10.12 kB
+dist/vue.js                       3.15 kB │ gzip:  1.51 kB │ map:   9.51 kB
+dist/BFZyttOC.js                  3.41 kB │ gzip:  1.45 kB │ map:  11.30 kB
+dist/BOcTSfaZ.js                  3.68 kB │ gzip:  1.28 kB │ map:  12.82 kB
+dist/DQrWsEXp.js                  3.69 kB │ gzip:  1.37 kB │ map:  14.26 kB
+dist/widgets-dom.js               3.97 kB │ gzip:  1.50 kB │ map:  13.20 kB
+dist/integrity-dom.js             4.27 kB │ gzip:  1.77 kB │ map:  13.46 kB
+dist/D3PDtJyp.js                  4.42 kB │ gzip:  1.56 kB │ map:  16.06 kB
+dist/bAsG4x0w.js                  4.66 kB │ gzip:  2.04 kB │ map:  15.64 kB
+dist/table-of-contents.js         4.69 kB │ gzip:  2.11 kB │ map:  16.67 kB
+dist/AH9zlmGA.js                  4.70 kB │ gzip:  1.94 kB │ map:  14.59 kB
+dist/DVlwl6P2.js                  4.81 kB │ gzip:  1.80 kB │ map:  15.72 kB
+dist/testing.js                   5.42 kB │ gzip:  2.08 kB │ map:  17.77 kB
+dist/react-tracked-changes.js     5.90 kB │ gzip:  2.05 kB │ map:  13.04 kB
+dist/CwT8DmAz.js                  5.96 kB │ gzip:  2.44 kB │ map:  21.94 kB
+dist/migrations.js                6.08 kB │ gzip:  2.01 kB │ map:  18.89 kB
+dist/BSRqOqc5.js                  6.18 kB │ gzip:  2.39 kB │ map:  24.25 kB
+dist/details.js                   6.24 kB │ gzip:  2.34 kB │ map:  20.20 kB
+dist/9qHqNOmV.js                  6.26 kB │ gzip:  2.18 kB │ map:  20.14 kB
+dist/react-integrity.js           6.49 kB │ gzip:  2.20 kB │ map:  12.24 kB
+dist/html-inert.js                6.99 kB │ gzip:  2.87 kB │ map:  17.56 kB
+dist/react-comments.js            7.18 kB │ gzip:  2.59 kB │ map:  17.89 kB
+dist/widgets.js                   7.29 kB │ gzip:  2.91 kB │ map:  26.31 kB
+dist/oDFdtosg.js                  7.61 kB │ gzip:  2.67 kB │ map:  28.51 kB
+dist/BaHfH1Ug.js                  7.64 kB │ gzip:  3.01 kB │ map:  25.75 kB
+dist/react-versions.js            7.75 kB │ gzip:  2.37 kB │ map:  16.76 kB
+dist/node-ids.js                  7.79 kB │ gzip:  3.08 kB │ map:  28.70 kB
+dist/BW5Egu7n.js                  7.96 kB │ gzip:  3.17 kB │ map:  31.20 kB
+dist/_cI4-REW.js                  8.20 kB │ gzip:  3.04 kB │ map:  27.43 kB
+dist/structured-attributes.js     8.48 kB │ gzip:  2.69 kB │ map:  29.80 kB
+dist/core.js                      8.95 kB │ gzip:  3.16 kB
+dist/Z_iz2Hd0.js                  9.00 kB │ gzip:  3.71 kB │ map:  33.01 kB
+dist/ai-generated-media.js        9.16 kB │ gzip:  2.96 kB │ map:  26.13 kB
+dist/ruby.js                      9.26 kB │ gzip:  3.17 kB │ map:  27.49 kB
+dist/B-X5Dhyc.js                  9.34 kB │ gzip:  3.32 kB │ map:  35.21 kB
+dist/integrity.js                 9.36 kB │ gzip:  3.29 kB │ map:  29.67 kB
+dist/pages.js                     9.90 kB │ gzip:  3.40 kB │ map:  28.91 kB
+dist/C1J8FFB0.js                 10.35 kB │ gzip:  3.77 kB │ map:  38.71 kB
+dist/pages-preview.js            11.89 kB │ gzip:  4.29 kB │ map:  35.98 kB
+dist/html-source.js              11.96 kB │ gzip:  4.38 kB │ map:  33.22 kB
+dist/yjs-room.js                 12.44 kB │ gzip:  4.25 kB │ map:  36.23 kB
+dist/DSRLmP9s.js                 13.40 kB │ gzip:  4.54 kB │ map:  40.93 kB
+dist/ai-conversation.js          13.59 kB │ gzip:  4.03 kB │ map:  39.41 kB
+dist/D7y8ktaI.js                 13.92 kB │ gzip:  5.12 kB │ map:  43.61 kB
+dist/ai-document-tools.js        14.07 kB │ gzip:  4.29 kB │ map:  43.37 kB
+dist/BoFwEcER.js                 15.20 kB │ gzip:  5.88 kB │ map:  53.77 kB
+dist/BClp82VE.js                 15.67 kB │ gzip:  6.14 kB │ map:  47.19 kB
+dist/C-2a-wjD.js                 17.49 kB │ gzip:  5.56 kB │ map:  61.49 kB
+dist/06rRUJou.js                 18.07 kB │ gzip:  6.83 kB │ map:  52.28 kB
+dist/document-utilities.js       19.53 kB │ gzip:  6.74 kB │ map:  64.13 kB
+dist/yjs-legacy.js               20.05 kB │ gzip:  6.07 kB │ map:  60.51 kB
+dist/tracked-changes.js          23.72 kB │ gzip:  7.32 kB │ map:  80.08 kB
+dist/versions.js                 24.65 kB │ gzip:  7.09 kB │ map:  75.93 kB
+dist/D8scOej1.js                 25.21 kB │ gzip:  8.21 kB │ map:  76.84 kB
+dist/comments.js                 25.28 kB │ gzip:  8.02 kB │ map:  85.74 kB
+dist/D0DIiYwD.js                 29.78 kB │ gzip:  8.91 kB │ map:  90.63 kB
+dist/markdown-html-D3sEScT1.js   40.97 kB │ gzip: 23.40 kB │ map:  73.64 kB
+dist/pages-dom.js                45.50 kB │ gzip: 12.27 kB │ map: 139.70 kB
+dist/DDgO1d5n.js                 69.94 kB │ gzip: 19.39 kB │ map: 240.23 kB
+dist/react.js                    75.57 kB │ gzip: 20.16 kB │ map: 179.73 kB
+dist/index.js                    75.63 kB │ gzip: 23.83 kB │ map: 181.22 kB
+dist/D8IP21TO.js                 89.97 kB │ gzip: 29.97 kB │ map: 336.11 kB
+dist/CJ_mi40g.js                 96.49 kB │ gzip: 27.99 kB │ map: 305.16 kB
+dist/BCFpS_Vz.js                129.00 kB │ gzip: 34.15 kB │ map: 377.32 kB
+dist/docx.js                    181.87 kB │ gzip: 59.94 kB │ map: 579.36 kB
+dist/BO0ukoKT.js                209.64 kB │ gzip: 52.39 kB │ map: 719.77 kB
+dist/emoji-data.js              274.47 kB │ gzip: 30.18 kB │ map: 451.89 kB
+
+transforming...
+✓ 373 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/html-server.cjs               0.16 kB │ gzip:  0.15 kB
+dist/BrBcAANm.cjs                  0.16 kB │ gzip:  0.16 kB │ map:   0.43 kB
+dist/yjs-retained.cjs              0.27 kB │ gzip:  0.19 kB
+dist/DlQkwKdU.cjs                  0.47 kB │ gzip:  0.27 kB │ map:   3.39 kB
+dist/DkzkJuuS.cjs                  0.48 kB │ gzip:  0.25 kB │ map:   1.38 kB
+dist/yjs.cjs                       0.49 kB │ gzip:  0.36 kB │ map:   2.28 kB
+dist/CUi7RU93.cjs                  0.52 kB │ gzip:  0.36 kB │ map:   1.81 kB
+dist/owlJN_nc.cjs                  0.58 kB │ gzip:  0.35 kB │ map:   8.33 kB
+dist/DpJAcU4A.cjs                  0.59 kB │ gzip:  0.35 kB │ map:   1.59 kB
+dist/Chgba0Kb.cjs                  0.77 kB │ gzip:  0.41 kB
+dist/SWsNzUV-.cjs                  0.81 kB │ gzip:  0.33 kB │ map:   2.65 kB
+dist/text-style.cjs                0.85 kB │ gzip:  0.34 kB
+dist/svelte.cjs                    0.87 kB │ gzip:  0.51 kB │ map:   3.64 kB
+dist/DuyU6zi1.cjs                  0.88 kB │ gzip:  0.51 kB │ map:   2.71 kB
+dist/Bg2b7jBC.cjs                  0.99 kB │ gzip:  0.52 kB │ map:   4.01 kB
+dist/CNaCvDOw.cjs                  1.03 kB │ gzip:  0.54 kB │ map:   6.45 kB
+dist/react-widgets.cjs             1.33 kB │ gzip:  0.63 kB │ map:   5.62 kB
+dist/BN1TjeX-.cjs                  1.48 kB │ gzip:  0.69 kB │ map:   5.34 kB
+dist/kIOwnErL.cjs                  1.71 kB │ gzip:  0.86 kB │ map:   6.14 kB
+dist/DCpMAsDX.cjs                  1.79 kB │ gzip:  0.90 kB │ map:   5.72 kB
+dist/D5ZIveTN.cjs                  1.95 kB │ gzip:  0.83 kB │ map:   5.79 kB
+dist/MiF6EkPf.cjs                  2.10 kB │ gzip:  0.99 kB │ map:   7.84 kB
+dist/B2iSUXni.cjs                  2.52 kB │ gzip:  1.17 kB │ map:   9.07 kB
+dist/DWo7qF9i.cjs                  2.57 kB │ gzip:  1.04 kB │ map:   6.42 kB
+dist/CwtWauqp.cjs                  2.60 kB │ gzip:  1.24 kB │ map:  10.01 kB
+dist/BQA6ywOV.cjs                  2.61 kB │ gzip:  1.16 kB │ map:  10.43 kB
+dist/DdwMzxLs.cjs                  2.65 kB │ gzip:  1.05 kB │ map:   8.93 kB
+dist/DlLFB2ZW.cjs                  2.75 kB │ gzip:  1.20 kB │ map:  10.59 kB
+dist/vue.cjs                       3.23 kB │ gzip:  1.53 kB │ map:  10.51 kB
+dist/zeCiZJPv.cjs                  3.26 kB │ gzip:  1.44 kB │ map:  12.05 kB
+dist/widgets-dom.cjs               3.70 kB │ gzip:  1.59 kB │ map:  13.86 kB
+dist/hPNebBu9.cjs                  3.82 kB │ gzip:  1.35 kB │ map:  13.68 kB
+dist/integrity-dom.cjs             4.01 kB │ gzip:  1.83 kB │ map:  14.27 kB
+dist/CjwogQ6Z.cjs                  4.56 kB │ gzip:  1.61 kB │ map:  17.10 kB
+dist/table-of-contents.cjs         4.61 kB │ gzip:  2.13 kB │ map:  17.66 kB
+dist/Dsxky-On.cjs                  4.82 kB │ gzip:  1.83 kB │ map:  16.60 kB
+dist/DhuFjFZE.cjs                  4.93 kB │ gzip:  1.48 kB │ map:  15.24 kB
+dist/testing.cjs                   5.12 kB │ gzip:  2.14 kB │ map:  19.03 kB
+dist/BJA4YAKU.cjs                  5.24 kB │ gzip:  2.02 kB │ map:  15.79 kB
+dist/migrations.cjs                5.42 kB │ gzip:  2.06 kB │ map:  19.77 kB
+dist/react-tracked-changes.cjs     5.43 kB │ gzip:  2.02 kB │ map:  14.63 kB
+dist/react-integrity.cjs           5.56 kB │ gzip:  2.23 kB │ map:  14.22 kB
+dist/B5PKTl9T.cjs                  5.90 kB │ gzip:  2.25 kB │ map:  21.48 kB
+dist/details.cjs                   5.96 kB │ gzip:  2.46 kB │ map:  21.90 kB
+dist/ByeBXDOn.cjs                  6.17 kB │ gzip:  2.07 kB │ map:  16.71 kB
+dist/DpyLLIk-.cjs                  6.21 kB │ gzip:  2.44 kB │ map:  25.39 kB
+dist/DeMldw_2.cjs                  6.36 kB │ gzip:  2.50 kB │ map:  23.47 kB
+dist/react-comments.cjs            6.48 kB │ gzip:  2.60 kB │ map:  20.26 kB
+dist/html-inert.cjs                6.60 kB │ gzip:  2.98 kB │ map:  18.90 kB
+dist/react-versions.cjs            6.81 kB │ gzip:  2.39 kB │ map:  19.39 kB
+dist/widgets.cjs                   6.98 kB │ gzip:  2.93 kB │ map:  28.17 kB
+dist/node-ids.cjs                  7.40 kB │ gzip:  3.16 kB │ map:  30.79 kB
+dist/BXQGRo9T.cjs                  7.72 kB │ gzip:  2.80 kB │ map:  30.09 kB
+dist/structured-attributes.cjs     7.76 kB │ gzip:  2.80 kB │ map:  31.60 kB
+dist/DEtoOfu-.cjs                  8.02 kB │ gzip:  3.24 kB │ map:  33.00 kB
+dist/CLIC3-RA.cjs                  8.02 kB │ gzip:  3.14 kB │ map:  29.34 kB
+dist/ai-generated-media.cjs        8.12 kB │ gzip:  3.06 kB │ map:  27.63 kB
+dist/ruby.cjs                      8.15 kB │ gzip:  3.35 kB │ map:  29.80 kB
+dist/integrity.cjs                 8.31 kB │ gzip:  3.43 kB │ map:  30.93 kB
+dist/core.cjs                      8.68 kB │ gzip:  2.52 kB
+dist/chA4gpAQ.cjs                  9.04 kB │ gzip:  3.10 kB │ map:  27.37 kB
+dist/Dehhd3_1.cjs                  9.08 kB │ gzip:  3.79 kB │ map:  34.33 kB
+dist/B0fZiKct.cjs                  9.16 kB │ gzip:  3.39 kB │ map:  37.59 kB
+dist/pages.cjs                     9.18 kB │ gzip:  3.48 kB │ map:  31.14 kB
+dist/Djczic7M.cjs                  9.52 kB │ gzip:  3.92 kB │ map:  41.93 kB
+dist/html-source.cjs              10.18 kB │ gzip:  4.47 kB │ map:  35.41 kB
+dist/pages-preview.cjs            10.53 kB │ gzip:  4.38 kB │ map:  38.73 kB
+dist/yjs-room.cjs                 11.43 kB │ gzip:  4.35 kB │ map:  38.30 kB
+dist/ai-conversation.cjs          11.81 kB │ gzip:  4.26 kB │ map:  42.18 kB
+dist/ai-document-tools.cjs        12.61 kB │ gzip:  4.34 kB │ map:  46.02 kB
+dist/3_WcVyCv.cjs                 13.71 kB │ gzip:  5.19 kB │ map:  46.78 kB
+dist/wS8zK5sJ.cjs                 13.94 kB │ gzip:  4.67 kB │ map:  43.40 kB
+dist/DUr6ny25.cjs                 15.54 kB │ gzip:  5.94 kB │ map:  57.56 kB
+dist/Cmthk05n.cjs                 15.99 kB │ gzip:  6.31 kB │ map:  49.81 kB
+dist/yjs-legacy.cjs               16.37 kB │ gzip:  6.25 kB │ map:  64.63 kB
+dist/EG3HexL0.cjs                 16.66 kB │ gzip:  5.63 kB │ map:  65.30 kB
+dist/2FJHw8gn.cjs                 17.49 kB │ gzip:  6.75 kB │ map:  56.21 kB
+dist/document-utilities.cjs       18.22 kB │ gzip:  6.84 kB │ map:  68.50 kB
+dist/versions.cjs                 20.78 kB │ gzip:  7.38 kB │ map:  81.63 kB
+dist/tracked-changes.cjs          20.84 kB │ gzip:  7.48 kB │ map:  86.24 kB
+dist/comments.cjs                 22.84 kB │ gzip:  8.36 kB │ map:  91.78 kB
+dist/BgYdmq1q.cjs                 23.09 kB │ gzip:  8.45 kB │ map:  82.99 kB
+dist/CNYCr6qy.cjs                 28.72 kB │ gzip:  9.19 kB │ map:  97.86 kB
+dist/pages-dom.cjs                37.28 kB │ gzip: 12.82 kB │ map: 150.48 kB
+dist/markdown-html-BVYgcY-N.cjs   40.52 kB │ gzip: 23.62 kB │ map:  74.76 kB
+dist/CKLHGYn1.cjs                 62.41 kB │ gzip: 19.90 kB │ map: 264.04 kB
+dist/react.cjs                    63.92 kB │ gzip: 20.22 kB │ map: 202.95 kB
+dist/index.cjs                    75.20 kB │ gzip: 22.58 kB │ map: 191.65 kB
+dist/0wqCu4ZS.cjs                 79.55 kB │ gzip: 30.04 kB │ map: 357.63 kB
+dist/Dota2TPW.cjs                 83.94 kB │ gzip: 28.28 kB │ map: 326.25 kB
+dist/C99m8IwH.cjs                101.94 kB │ gzip: 34.38 kB │ map: 409.75 kB
+dist/docx.cjs                    163.17 kB │ gzip: 59.05 kB │ map: 614.20 kB
+dist/DGvdpvnr.cjs                168.40 kB │ gzip: 53.59 kB │ map: 754.75 kB
+dist/emoji-data.cjs              274.54 kB │ gzip: 30.24 kB │ map: 451.98 kB
+
+✓ built in 7.09s
+[PLUGIN_TIMINGS] Your build spent 91% of 7.1s inside plugin hooks (6.4s).
+Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+  - fountain-library-output renderChunk (88%, 6.3s, 187 calls)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+$ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+$ node scripts/check-api-surface.mjs
+Public API surface verified across 450 declaration files.
+$ node scripts/smoke-package.mjs
+Packed ESM source-data writer: 25 acceptance/refusal contracts passed.
+Packed ESM: 486 link normalization/security/history/destination contracts passed.
+Packed ESM root/core: 13/13 anchor loss/privacy/retention contracts passed.
+Packed ESM root/core: 5/5 optional bookmark contracts passed.
+Packed ESM: 140 native emphasis and partial-schema retention checks passed.
+Packed ESM root/core: 576/576 owned-attribute checks plus immutable snapshots/history passed.
+Packed ESM root/core: DOM-free direction/history/HTML/loss-report contracts passed.
+Packed ESM root/core: 24/24 empty-heading HTML contracts passed.
+Packed ESM root/core: 11/11 preformatted-break HTML contracts passed.
+Packed ESM root/core: 14/14 preformatted-formatting contracts passed.
+Built ESM root/core: 10/10 portable list geometry contracts passed.
+Built ESM root/core: contextual spacing model, HTML, transactions and native spacing export/reopen contracts passed.
+Built ESM root/core: 12/12 parser-owned Markdown source-boundary contracts passed.
+Built ESM root/core: 12/12 nested Markdown source contracts passed.
+Built ESM root/core: 12/12 reference-scoped Markdown boundary contracts passed.
+Built ESM root/core: 50/50 HTML-adapted Markdown source contracts passed.
+Built ESM root/core: 42/42 nested reference source contracts passed.
+Built ESM root/core: 36/36 container reference source contracts passed.
+Built ESM root/core: 25/25 complete source proof contracts passed.
+Packed CommonJS source-data writer: 25 acceptance/refusal contracts passed.
+Packed CommonJS: 486 link normalization/security/history/destination contracts passed.
+Packed CommonJS root/core: 13/13 anchor loss/privacy/retention contracts passed.
+Packed CommonJS root/core: 5/5 optional bookmark contracts passed.
+Packed CommonJS: 140 native emphasis and partial-schema retention checks passed.
+Packed CommonJS root/core: 576/576 owned-attribute checks plus immutable snapshots/history passed.
+Packed CommonJS root/core: DOM-free direction/history/HTML/loss-report contracts passed.
+Packed CommonJS root/core: 24/24 empty-heading HTML contracts passed.
+Packed CommonJS root/core: 11/11 preformatted-break HTML contracts passed.
+Packed CommonJS root/core: 14/14 preformatted-formatting contracts passed.
+Built CommonJS root/core: 10/10 portable list geometry contracts passed.
+Built CommonJS root/core: contextual spacing model, HTML, transactions and native spacing export/reopen contracts passed.
+Built CommonJS root/core: 12/12 parser-owned Markdown source-boundary contracts passed.
+Built CommonJS root/core: 12/12 nested Markdown source contracts passed.
+Built CommonJS root/core: 12/12 reference-scoped Markdown boundary contracts passed.
+Built CommonJS root/core: 50/50 HTML-adapted Markdown source contracts passed.
+Built CommonJS root/core: 42/42 nested reference source contracts passed.
+Built CommonJS root/core: 36/36 container reference source contracts passed.
+Built CommonJS root/core: 25/25 complete source proof contracts passed.
+ESM, CommonJS, headless core, AI document tools, conversations, generated media, DOCX interchange, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.
+$ node scripts/smoke-server-html-runtime.mjs && node scripts/check-server-html-worker.mjs
+Compiled runtime: 24 empty-heading HTML contracts passed.
+Compiled runtime: 11 preformatted-break HTML contracts passed.
+Compiled runtime: 14 preformatted-formatting contracts passed.
+Compiled runtime: 486 link normalization/security/history/destination contracts passed.
+Compiled runtime: 13 anchor loss/privacy/retention contracts passed.
+Compiled runtime: inert inline lexical data, full reopen, real transactions/history and altered-carrier refusal passed.
+Compiled runtime: 576 owned-attribute checks plus immutable snapshots/history passed.
+Compiled runtime: 140 native emphasis and partial-schema retention checks passed.
+Compiled runtime: protected Markdown images/rules/tables, exact source, native/canonical reopen and refusal guards passed.
+Compiled runtime: anonymous HTML flow, native/canonical reopening and exact source passed.
+Node 24.22.1: DOM-free server HTML import/export passed.
+Node 24.22.1: inert HTML comment retention, canonical reopen and breakout rejection passed.
+Node 24.22.1: complete HTML page-settings retention and invalid/fragment boundaries passed.
+Node 24.22.1: block-returning Markdown paragraph recovery passed.
+Node 24.22.1: lazy Markdown flow paragraph sources passed.
+Cloudflare workerd (Miniflare): 25 complete source proof contracts passed.
+Cloudflare workerd (Miniflare): 36 container reference source contracts passed.
+Cloudflare workerd (Miniflare): 42 nested reference source contracts passed.
+Cloudflare workerd (Miniflare): 50 HTML-adapted Markdown source contracts passed.
+Cloudflare workerd (Miniflare): 12 reference-scoped Markdown boundary contracts passed.
+Cloudflare workerd (Miniflare): 12 nested Markdown source contracts passed.
+Cloudflare workerd (Miniflare): 12 parser-owned Markdown source-boundary contracts passed.
+Cloudflare workerd (Miniflare): 24 empty-heading HTML contracts passed.
+Cloudflare workerd (Miniflare): 11 preformatted-break HTML contracts passed.
+Cloudflare workerd (Miniflare): 14 preformatted-formatting contracts passed.
+Cloudflare workerd (Miniflare): 486 link normalization/security/history/destination contracts passed.
+Cloudflare workerd (Miniflare): 13 anchor loss/privacy/retention contracts passed.
+Cloudflare workerd (Miniflare): inert inline lexical data, complete reopen, transactions/history and carrier refusal passed.
+Cloudflare workerd (Miniflare): 576 owned-attribute checks plus immutable snapshots/history passed.
+Cloudflare workerd (Miniflare): 140 native emphasis and partial-schema retention checks passed.
+Cloudflare workerd (Miniflare): protected Markdown images/rules/tables, full reopen and refusal guards passed.
+Cloudflare workerd (Miniflare): anonymous HTML flow without synthetic paragraphs and native/canonical reopening passed.
+Cloudflare workerd (Miniflare): inert HTML comment retention, canonical reopen and breakout rejection passed.
+Cloudflare workerd (Miniflare): DOM-free server HTML import/export passed.
+Cloudflare workerd (Miniflare): complete HTML page-settings retention and invalid/fragment boundaries passed.
+$ node scripts/check-headless-boundary.mjs && tsc -p tsconfig.headless.json
+Headless source boundary verified across 142 modules.
+$ node scripts/check-markdown-conformance.mjs
+Anchor oracle sensitivity: 3 placeholder-vs-hyperlink distinctions retained.
+Preformatted oracle sensitivity: 4 line-break distinctions and 2 equivalent literal-newline controls retained.
+Link grammar: 22 supplemental reference and exact-source checks.
+Delimiter neighbors: 6674 generated LF/CRLF reference-semantic, exact-source and complete native canonical contracts passed; not official-corpus matches.
+Code labels: 34 LF/CRLF full reference-semantic, exact-source and canonical round-trip contracts passed.
+Identity-preserving flow: 48 safe-fallback/source checks; 8 fixtures still declined on this route. Lazy paragraph context distinguishes the legacy collision.
+Explicit paragraph-source flow: 8 LF/CRLF exact-code/source contracts; 2 full structural matches. Outer-div mismatches retained; 4 structural fixture kinds still declined.
+Explicit structural source flow: 58 LF/CRLF reference-code/source contracts. Paragraphs, headings, code, plain hard breaks and list/quote nesting supported; outer-div mismatches remain. Separate contracts cover protected Markdown images/rules and pipe tables; specialized unsupported blocks still refuse conversion.
+Structural source flow: 44 LF/CRLF full reference-structure and exact-source contracts outside pre.
+Entity newlines: 12 reference text-character and canonical round-trip contracts passed.
+Code origins: 20 LF/CRLF import/source contracts; identical-HTML provenance distinguished; 6 newline corruptions rejected.
+Table projection: unit spans/cell wrappers equivalent; 14 structural/content corruptions rejected.
+Formatting scopes: 20 reference semantic/source contracts; 10 corruptions rejected.
+Inline block HTML: 2 existing literal fallbacks retained, explicitly not counted as conformance.
+Paragraph recovery: 76 opt-in reference/source contracts; existing baselines unchanged.
+Paragraph recovery: 1304 corpus source-retention checks; not full semantic conformance.
+Reference parser reproduced all 652 official HTML outputs exactly.
+Inert raw HTML: 72/72 semantic, 72/72 exact token contracts; 144/144 generated boundary/round-trip contracts.
+Oracle sensitivity: 8 semantic and 2 literal-whitespace corruptions rejected; reference parser absent from 178 runtime source maps.
+URL oracle sensitivity: 4 raw-control/backslash aliases rejected; 3 TAB/LF/CR preprocessing equivalences; 2 reviewed URI equivalents retained.
+Literal-address import policy: 566/566 reference semantic contracts passed (default baseline unchanged).
+CommonMark 0.31.2: 563/652 examples match Fountain's neutral semantic projection.
+Baseline classifications: 563 matching, 72 pending, 17 intentional divergences.
+Opt-in HTML flow: 1304 exact-source contracts passed (LF/CRLF); not semantic conformance.
+Opt-in HTML block + inline semantics: 579/652 exact neutral-projection matches; remaining differences unresolved, not full conformance.
+Optional HTML containers: 26 reference-semantic and 26 exact-source checks; existing schema/profile scores unchanged.
+Opt-in source recovery: 580/652 neutral-projection matches on LF and CRLF; 1304 separate exact-source checks. Not full CommonMark conformance.
+Whole-document optional-container profile: 601/652; 1304 separate exact-source checks.
+Whole-document optional-container+comment profile: 613/652; 1304 separate exact-source checks.
+Whole-document optional-container+comment+anonymous-flow profile: 613/652; 1304 separate exact-source checks.
+Explicit unsanitized source-output profile: 631/652; 1304 separate exact-source checks.
+Complete-source oracle sensitivity: 18 positive/negative controls; body, declaration and EOF data stay independent.
+Complete-document source BODY profile: 635/652; 1304 exact-source and 1304 native-JSON checks; 2 declaration / 6 EOF checks.
+Complete source retention diagnostics: 1298/1304 exact safe-HTML model reopens; source model statuses {"equal-except-source-tokens":1292,"different":12}. Neither is body semantic conformance.
+Source-capture body diagnostics: 633/652 on both line endings (1266/1304 checks); frontmatter route differs from parse() only in examples 96,98.
+Explicit Markdown-body and literal-address source capture: 638/652 on both line endings, with 1304 exact-source checks.
+Explicit complete source body without Markdown caret children: 648/652 on both line endings.
+Explicit complete source body with inactive URI capture: 652/652 on both line endings; 1304 exact-source checks.
+$ node scripts/audit-math-labels.mjs
+{
+  "renderer": "MathJax 4.1.3",
+  "status": "reference-semantics-verified",
+  "fountainStatus": "document-context API and bounded host SVG/reader lab implemented; this script checks semantics only, not whole-paper or export parity",
+  "equations": [
+    {
+      "sha256": "d43aafd64986470149793169e6c1f001eae2f66706335d4b5e6864ff4fc465b7",
+      "tags": [
+        {
+          "id": "mjx-eqn:eq:dNFE",
+          "text": "(1)",
+          "row": 0
+        }
+      ]
+    },
+    {
+      "sha256": "b8ae1e0dc1cbaf7c15846891804d22fa0581f45f54e14e4da7857061ab57d3ec",
+      "tags": [
+        {
+          "id": "mjx-eqn:eq:dSNFE",
+          "text": "(2)",
+          "row": 1
+        }
+      ]
+    }
+  ],
+  "backwardReferences": [
+    [
+      {
+        "text": "(1)",
+        "href": "#mjx-eqn%3Aeq%3AdNFE"
+      }
+    ],
+    [
+      {
+        "text": "(2)",
+        "href": "#mjx-eqn%3Aeq%3AdSNFE"
+      }
+    ]
+  ],
+  "reorderedForwardReferences": [
+    [
+      {
+        "text": "(2)",
+        "href": "#mjx-eqn%3Aeq%3AdNFE"
+      }
+    ],
+    [
+      {
+        "text": "(1)",
+        "href": "#mjx-eqn%3Aeq%3AdSNFE"
+      }
+    ]
+  ],
+  "deletedTarget": [
+    {
+      "text": "(???)",
+      "href": "#"
+    }
+  ],
+  "checks": [
+    "unchanged source",
+    "nonumber defers label to numbered row",
+    "backward references",
+    "forward references",
+    "reorder renumbering",
+    "fresh-snapshot repeatability",
+    "deleted target remains unresolved",
+    "duplicate labels rejected",
+    "starred environments",
+    "manual tags",
+    "unsupported commands rejected"
+  ]
+}
+$ node scripts/check-docx-interoperability.mjs && node scripts/check-docx-table-text.mjs && node scripts/check-docx-quote-appearance.mjs
+python-docx opened Fountain media and edited a typed glossary; Fountain retained glossary roles and independent body/cell controls with two explicit behavior-loss warnings (38 additional style/interchange diagnostics retained).
+ESM: DOM-free shipped DOCX table text, Word toggle resets, regional paragraph layout and native reopening passed.
+CommonJS: DOM-free shipped DOCX table text, Word toggle resets, regional paragraph layout and native reopening passed.
+ESM: complete bordered/borderless quote JSON, native Word styles, neutral HTML, core editing/history and Yjs local undo retain source-owned appearance without DOM.
+CommonJS: complete bordered/borderless quote JSON, native Word styles, neutral HTML, core editing/history and Yjs local undo retain source-owned appearance without DOM.
+$ node scripts/check-build-budgets.mjs
+dist/index.js: 73.9 KiB / 111 KiB
+dist/index.cjs: 73.4 KiB / 93 KiB
+dist/core.js: 8.7 KiB / 9.5 KiB
+dist/core.cjs: 8.5 KiB / 8.8 KiB
+dist/ai-document-tools.js: 13.7 KiB / 18 KiB
+dist/ai-document-tools.cjs: 12.3 KiB / 15 KiB
+dist/ai-conversation.js: 13.3 KiB / 17 KiB
+dist/ai-conversation.cjs: 11.5 KiB / 14 KiB
+dist/ai-generated-media.js: 9.0 KiB / 11 KiB
+dist/ai-generated-media.cjs: 7.9 KiB / 10 KiB
+dist/docx.js: 177.6 KiB / 210.8 KiB
+dist/docx.cjs: 159.3 KiB / 170.8 KiB
+HTML5 entity decoder ESM: 40.0 KiB / 43 KiB
+HTML5 entity decoder CommonJS: 39.6 KiB / 41 KiB
+dist/document-utilities.js: 19.1 KiB / 36 KiB
+dist/document-utilities.cjs: 17.8 KiB / 30 KiB
+dist/emoji-data.js: 268.0 KiB / 340 KiB
+dist/emoji-data.cjs: 268.1 KiB / 280 KiB
+dist/react.js: 73.8 KiB / 92.8 KiB
+dist/react.cjs: 62.4 KiB / 69.5 KiB
+dist/vue.js: 3.1 KiB / 3.5 KiB
+dist/vue.cjs: 3.2 KiB / 3.5 KiB
+dist/svelte.js: 0.8 KiB / 2 KiB
+dist/svelte.cjs: 0.9 KiB / 2 KiB
+dist/angular/index.js: 4.1 KiB / 5 KiB
+dist/yjs.js: 0.4 KiB / 30 KiB
+dist/yjs.cjs: 0.5 KiB / 25 KiB
+dist/comments.js: 24.7 KiB / 30 KiB
+dist/comments.cjs: 22.3 KiB / 25 KiB
+dist/react-comments.js: 7.0 KiB / 11 KiB
+dist/react-comments.cjs: 6.3 KiB / 8 KiB
+dist/tracked-changes.js: 23.2 KiB / 30 KiB
+dist/tracked-changes.cjs: 20.4 KiB / 25 KiB
+dist/react-tracked-changes.js: 5.8 KiB / 9 KiB
+dist/react-tracked-changes.cjs: 5.3 KiB / 7 KiB
+dist/versions.js: 24.1 KiB / 35 KiB
+dist/versions.cjs: 20.3 KiB / 30 KiB
+dist/react-versions.js: 7.6 KiB / 18 KiB
+dist/react-versions.cjs: 6.7 KiB / 14 KiB
+dist/details.js: 6.1 KiB / 10 KiB
+dist/details.cjs: 5.8 KiB / 8 KiB
+dist/ruby.js: 9.0 KiB / 12 KiB
+dist/ruby.cjs: 8.0 KiB / 10 KiB
+dist/text-style.js: 0.8 KiB / 2 KiB
+dist/text-style.cjs: 0.8 KiB / 2 KiB
+dist/testing.js: 5.3 KiB / 7 KiB
+dist/testing.cjs: 5.0 KiB / 6 KiB
+dist/migrations.js: 5.9 KiB / 8 KiB
+dist/migrations.cjs: 5.3 KiB / 7 KiB
+dist/node-ids.js: 7.6 KiB / 9 KiB
+dist/node-ids.cjs: 7.2 KiB / 8 KiB
+dist/table-of-contents.js: 4.6 KiB / 7 KiB
+dist/table-of-contents.cjs: 4.5 KiB / 6 KiB
+dist/integrity.js: 9.1 KiB / 13 KiB
+dist/integrity.cjs: 8.1 KiB / 11 KiB
+dist/integrity-dom.js: 4.2 KiB / 6 KiB
+dist/integrity-dom.cjs: 3.9 KiB / 5 KiB
+dist/react-integrity.js: 6.3 KiB / 12 KiB
+dist/react-integrity.cjs: 5.4 KiB / 10 KiB
+dist/structured-attributes.js: 8.3 KiB / 11 KiB
+dist/structured-attributes.cjs: 7.6 KiB / 9 KiB
+dist/html-server.js: 0.1 KiB / 270 KiB
+dist/html-server.cjs: 0.2 KiB / 225 KiB
+dist/html-inert.js: 6.8 KiB / 8.5 KiB
+dist/html-inert.cjs: 6.4 KiB / 7 KiB
+dist/html-source.js: 11.7 KiB / 14 KiB
+dist/html-source.cjs: 9.9 KiB / 11.8 KiB
+dist/widgets.js: 7.1 KiB / 9 KiB
+dist/widgets.cjs: 6.8 KiB / 8 KiB
+dist/widgets-dom.js: 3.9 KiB / 5 KiB
+dist/widgets-dom.cjs: 3.6 KiB / 5 KiB
+dist/react-widgets.js: 1.2 KiB / 2 KiB
+dist/react-widgets.cjs: 1.3 KiB / 2 KiB
+dist/pages.js: 9.7 KiB / 23 KiB
+dist/pages.cjs: 9.0 KiB / 19 KiB
+dist/pages-dom.js: 44.4 KiB / 54 KiB
+dist/pages-dom.cjs: 36.4 KiB / 45 KiB
+dist/pages-preview.js: 11.6 KiB / 14 KiB
+dist/pages-preview.cjs: 10.3 KiB / 12 KiB
+dist/styles.css: 88.7 KiB / 88.8 KiB
+all ESM runtime code: 1591.0 KiB / 1691.3 KiB
+all CommonJS runtime code: 1418.7 KiB / 1418.8 KiB
+$ node --expose-gc scripts/check-performance-budgets.mjs && node --expose-gc scripts/check-shared-direction-retention.mjs && node --expose-gc scripts/check-position-mapping-retention.mjs
+100 blocks: local p50 0.03 ms, p95 0.05 ms; incremental remote p50 0.01 ms, p95 0.03 ms; JSON boundary p50 0.56 ms, p95 1.69 ms
+  first edit / initial p95 / initial peak: local 1.46 ms / 0.11 ms / 1.46 ms; incremental remote 0.24 ms / 0.06 ms / 0.83 ms
+1,000 blocks: local p50 0.02 ms, p95 0.05 ms; incremental remote p50 0.02 ms, p95 0.03 ms; JSON boundary p50 8.51 ms, p95 9.03 ms
+  first edit / initial p95 / initial peak: local 0.90 ms / 0.05 ms / 0.90 ms; incremental remote 0.08 ms / 0.04 ms / 0.63 ms
+5,000 blocks: local p50 0.07 ms, p95 0.08 ms; incremental remote p50 0.07 ms, p95 0.12 ms; JSON boundary p50 25.85 ms, p95 43.46 ms
+  first edit / initial p95 / initial peak: local 3.30 ms / 0.17 ms / 3.30 ms; incremental remote 0.29 ms / 0.09 ms / 0.29 ms
+10,000 blocks: local p50 0.14 ms, p95 0.17 ms; incremental remote p50 0.12 ms, p95 0.16 ms; JSON boundary p50 65.82 ms, p95 94.69 ms
+  first edit / initial p95 / initial peak: local 27.99 ms / 0.25 ms / 27.99 ms; incremental remote 0.78 ms / 0.20 ms / 0.78 ms
+100 HTML blocks: server parse p50 4.92 ms, p95 19.70 ms
+1,000 HTML blocks: server parse p50 44.04 ms, p95 52.68 ms
+5,000 HTML blocks: server parse p50 204.41 ms, p95 265.90 ms
+10,000 HTML blocks: server parse p50 400.55 ms, p95 416.95 ms
+server HTML 1,000→10,000 median growth: 9.09x / 15x
+local 1,000→10,000 median growth: 7.53x / 15x
+incremental remote 1,000→10,000 median growth: 6.18x / 15x
+2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+destroyed-editor retained heap: 0.15 MiB / 16 MiB
+retained 10,000-block server HTML document: 15.17 MiB / 48 MiB
+{
+  "scope": "Bounded public HTML projection with shared direction; no DOM or history plugin",
+  "edits": 2000,
+  "blocks": 1000,
+  "elapsedMs": 7456.495800000001,
+  "liveGrowthBytes": 381704,
+  "liveLimitBytes": 8388608,
+  "destroyedEditors": 40,
+  "destroyedGrowthBytes": 278296,
+  "destroyedLimitBytes": 16777216
+}
+{
+  "blocks": 5000,
+  "snapshots": 500,
+  "validatedEverySnapshot": true,
+  "measurement": "heapUsed + arrayBuffers after forced GC",
+  "retainedBytes": 24069536,
+  "retainedLimitBytes": 33554432,
+  "releasedBytes": 785840,
+  "releasedLimitBytes": 4194304
+}
+$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+$ pnpm --dir tools/svelte-check exec svelte-check --workspace ../.. --tsconfig tsconfig.svelte.json --fail-on-warnings
+Loading svelte-check in workspace: c:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App
+Getting Svelte diagnostics...
+
+svelte-check found 0 errors and 0 warnings
+$ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json --noEmit && pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json --noEmit
+$ vitest run
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+
+ Test Files  322 passed (322)
+      Tests  5257 passed (5257)
+   Start at  13:29:28
+   Duration  212.74s (environment 44%, import 29%, tests 23%, transform 3%, worker 1%)
+
+     Import  772 modules were evaluated 1596 times · 107.10s total, 29% of tracked time
+             ~16.11s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

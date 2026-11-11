@@ -258,13 +258,47 @@ and migration path. The package manifest remains at the published version
 until the release candidate is prepared. Downloadable starters continue to pin
 the existing published package so their installation remains reproducible.
 
-The complete local browser matrix is running after installing the missing
-Playwright browser executables. The interrupted launch-only failures remain
-recorded separately. Native clipboard workflows require a separate serialized
-run, matching the CI split. The exact candidate still needs hosted CI,
-final versioned release notes, recorded visual
-review and publication verification. GitHub CLI sign-in is pending. No npm
-version or public release status changes as a result of this local checkpoint.
+After installing the missing Playwright browser executables, the broad local
+run recorded 187 passes and one failure before it was stopped for a repair.
+The image-edit workflow could save attributes, but its immediate keyboard undo
+did nothing after focus returned to a toolbar button. The standalone workflow
+failed in Chromium, Firefox and WebKit. The run remains incomplete, including
+the separate serialized native clipboard batch. Its log is
+`artifacts/release-browser-235b88fd-installed.log`.
+
+### Toolbar history repair at 597f5415
+
+The toolbar reuses the existing history-key handler for focused action buttons
+while no panel is open. Form fields keep native key handling. Composition and
+Alt-modified events are excluded, and cancel still returns focus to the panel's
+trigger. The regression checks fail before the repair and cover Control/Command
+undo, Shift+Z and Control+Y redo, field ownership and the returned trigger.
+
+The `597f5415` runtime passed `pnpm check` with all 5,257 source tests in 322
+files. Public API, package imports, Node/workerd, headless processing, formats,
+framework types, latency, retention and existing size limits passed in the same
+run. The log is `artifacts/release-check-597f5415.log`.
+The initial handler exceeded the aggregate CommonJS cap. Consolidating its
+event guards and the panel's enabled-field selector kept the repair within the
+existing allowance. No acceptance limits changed.
+
+The final tarball passes the general public-entry type check, the separate
+Angular ESM profile, and a clean ESM/CommonJS consumer without optional peers
+or browser globals. The consumer files and output are under
+`artifacts/release-preflight-597f5415/`.
+
+All 12 recorded checks pass against the final committed runtime across
+Chromium, Firefox and WebKit. They cover the complete nested-content/image
+workflow, slash-menu scrolling, emoji Tab navigation and panel focus/cancel.
+Sampled frames from all three workflow videos and the reader screenshots
+received visual review. The recording configuration and log are
+`artifacts/toolbar-history-browser-20261111.config.ts` and
+`artifacts/toolbar-history-browser-final-20261111.log`. The built website also
+passes under `/fountainjs/`.
+
+The complete browser/Yjs matrix, hosted CI, versioned release notes and
+publication verification remain open. GitHub CLI sign-in is still pending.
+No npm version or public release status changes at this checkpoint.
 
 ## Failure and rollback policy
 

@@ -1,0 +1,51 @@
+[WebServer] (node:4824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:25544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 91% of 7.3s inside plugin hooks (6.7s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 6.5s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:20904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:14084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:6032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:9312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:24172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (7.0s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:5686:1 › keeps the active option visible while wrapping through public slash suggestions (3.0s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:5690:1 › lets Tab leave the editor when public emoji suggestions close (2.3s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:5981:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (7.3s)
+(node:18052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (11.7s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:5686:1 › keeps the active option visible while wrapping through public slash suggestions (4.6s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:5690:1 › lets Tab leave the editor when public emoji suggestions close (3.4s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:5981:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (9.4s)
+(node:10712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (14.4s)
+  ok 10 [webkit] › tests\browser\editor.spec.ts:5686:1 › keeps the active option visible while wrapping through public slash suggestions (4.0s)
+  ok 11 [webkit] › tests\browser\editor.spec.ts:5690:1 › lets Tab leave the editor when public emoji suggestions close (3.0s)
+  ok 12 [webkit] › tests\browser\editor.spec.ts:5981:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (16.2s)
+
+  12 passed (1.9m)

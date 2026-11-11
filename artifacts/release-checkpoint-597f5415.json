@@ -1,0 +1,53 @@
+{
+  "runtimeCommit": "597f5415b7c62d23fc779e7469d6dd2a30492f86",
+  "date": "2026-11-11",
+  "manifestVersion": "0.4.0-beta.2",
+  "publishedArtifact": false,
+  "plannedVersion": "0.5.0-beta.1",
+  "fullCheck": {
+    "exitCode": 0,
+    "sourceTests": 5257,
+    "testFiles": 322,
+    "log": "artifacts/release-check-597f5415.log"
+  },
+  "recordedBrowserChecks": {
+    "passed": 12,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "config": "artifacts/toolbar-history-browser-20261111.config.ts",
+    "visualReview": "Sampled video frames and reader screenshots",
+    "completeBrowserMatrix": false
+  },
+  "previousBroadRun": {
+    "passed": 187,
+    "failed": 1,
+    "interruptedForRepair": true,
+    "log": "artifacts/release-browser-235b88fd-installed.log"
+  },
+  "package": {
+    "cleanConsumerESM": "passed",
+    "cleanConsumerCommonJS": "passed",
+    "publicEntryTypeAnalysis": "passed",
+    "angularESMTypeAnalysis": "passed",
+    "publint": "passed with existing DOCX format warning",
+    "tarballSHA512": "17113D54C0445F8B938B02B38628378837D1E3BB08CBBE2C1A6256C7AAD8A0BF7152FD4ADC4F69ADB0856A31A057AC36E1404775F9113D2BFF30EE293688A7F2"
+  },
+  "budgets": {
+    "changed": false,
+    "commonJSBytes": 1452790,
+    "commonJSLimitBytes": 1452800
+  },
+  "siteBuild": {
+    "passed": true,
+    "base": "/fountainjs/"
+  },
+  "pending": [
+    "Complete browser and Yjs matrix",
+    "GitHub CLI sign-in and hosted CI",
+    "Final versioned release metadata",
+    "npm staging approval and publication verification"
+  ]
+}

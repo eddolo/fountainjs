@@ -1,0 +1,27 @@
+[WebServer] (node:19812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:24404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (18.9s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:5686:1 › keeps the active option visible while wrapping through public slash suggestions (5.1s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:5690:1 › lets Tab leave the editor when public emoji suggestions close (3.6s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:5981:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (11.1s)
+(node:11360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (13.7s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:5686:1 › keeps the active option visible while wrapping through public slash suggestions (6.1s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:5690:1 › lets Tab leave the editor when public emoji suggestions close (4.0s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:5981:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (11.9s)
+(node:5200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (17.0s)
+  ok 10 [webkit] › tests\browser\editor.spec.ts:5686:1 › keeps the active option visible while wrapping through public slash suggestions (4.5s)
+  ok 11 [webkit] › tests\browser\editor.spec.ts:5690:1 › lets Tab leave the editor when public emoji suggestions close (3.0s)
+  ok 12 [webkit] › tests\browser\editor.spec.ts:5981:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (17.4s)
+
+  12 passed (2.2m)

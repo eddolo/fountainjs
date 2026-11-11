@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/react-toolbar-panels.test.tsx (21 tests | 3 failed) 749ms
+   ❯ toolbar configuration panel keyboard ownership (15)
+     × keeps document undo and redo available on a focused toolbar button with Control 69ms
+     × keeps document undo and redo available on a focused toolbar button with Command 26ms
+     × keeps document undo and redo available on a focused toolbar button with Control+Y 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/react-toolbar-panels.test.tsx > toolbar configuration panel keyboard ownership > keeps document undo and redo available on a focused toolbar button with Control
+ FAIL  tests/react-toolbar-panels.test.tsx > toolbar configuration panel keyboard ownership > keeps document undo and redo available on a focused toolbar button with Command
+ FAIL  tests/react-toolbar-panels.test.tsx > toolbar configuration panel keyboard ownership > keeps document undo and redo available on a focused toolbar button with Control+Y
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/react-toolbar-panels.test.tsx:38:40
+     36|       const undoKey = new KeyboardEvent('keydown', { key: 'z', ...modi…
+     37|       await act(async () => bold.dispatchEvent(undoKey));
+     38|       expect(undoKey.defaultPrevented).toBe(true);
+       |                                        ^
+     39|       expect(editor.getJSON()).toEqual(original);
+     40|       expect(document.activeElement).toBe(bold);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 18 passed (21)
+   Start at  13:22:56
+   Duration  4.46s (environment 38%, transform 36%, tests 17%, import 8%)
+

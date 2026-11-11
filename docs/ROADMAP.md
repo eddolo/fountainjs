@@ -44,12 +44,13 @@ The beta remains pending until the candidate has the following evidence.
    npm stage and a registry installation establish publication.
 
 The commands and publication procedure are in [RELEASES.md](RELEASES.md).
-The latest full local integration checkpoint is `235b88fd`, which passed all
-5,254 source tests and the package, Node/workerd, type, performance, retention,
-format, and size gates on November 11. Real Lean verification also passed in
-isolation after timing out during the simultaneous full check. The complete
-local browser matrix and hosted CI remain pending. See the
-[checkpoint record](RELEASES.md#local-integration-preflight-at-235b88fd).
+The latest full local integration checkpoint is `597f5415`, which passed all
+5,257 source tests and the package, Node/workerd, type, performance, retention,
+format, and size gates on November 11. Twelve recorded desktop journeys pass
+after repairing toolbar undo/redo. The preceding checkpoint also passed real
+Lean verification in isolation after a timeout during simultaneous build load.
+The complete browser/Yjs matrix and hosted CI remain pending. See the
+[checkpoint record](RELEASES.md#toolbar-history-repair-at-597f5415).
 
 ## Remaining parity work
 
