@@ -438,6 +438,35 @@ applied historical receipt and must not be reapplied. The versioned candidate
 requires fresh package/consumer and release CI validation. Publication, registry
 verification and website deployment have not occurred for this candidate.
 
+### Versioned local preflight at fc3aa39a
+
+The local `0.5.0-beta.1` candidate passes the complete `pnpm check`: 5,271 tests
+in 323 files, with the API/package/headless/format/framework type, latency,
+memory and size gates. The real Lean 4.30.0 loopback verifies valid and invalid
+proofs. Bun 1.4.4, Deno 2.9.6 and the production site build pass separately.
+Logs use the `artifacts/*-fc3aa39a.log` suffix.
+
+The packed checkpoint has 1,145 files and 4,882,691 bytes. Both general-entry
+type analysis and the separate Angular ESM-only analysis pass. Publint exits
+zero with its existing DOCX `.cjs` syntax-classification warning. The initial
+type-analyzer `--pack` invocation cannot find `npm`; analysis succeeds against
+the actual `pnpm pack` tarball instead, with the same entry/profile scopes.
+
+A fresh consumer installs only this tarball outside the repository, with peer
+auto-installation disabled and Node global search paths disabled. It proves
+React, Yjs and jsdom cannot resolve, then passes ESM/CommonJS schema, extension,
+transaction, exact unchanged Markdown and server HTML checks without browser
+globals. An initial user-temp isolation assertion detects React installed in
+an ancestor home directory; that failed receipt is retained, and the final
+consumer runs under `C:/Temp` outside that ancestor. Version, archive hash and
+consumer results are in `artifacts/release-preflight-fc3aa39a/receipt.json`.
+
+This is a local package checkpoint, not the published artifact. Later packaged
+documentation changes require a new archive/hash before staging. The previous
+browser diagnostics retain their failures and scope. Fresh combined browser/Yjs
+validation, hosted CI, npm approval, registry installation and live-site checks
+remain open.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

@@ -44,14 +44,17 @@ The beta remains pending until the candidate has the following evidence.
    npm stage and a registry installation establish publication.
 
 The commands and publication procedure are in [RELEASES.md](RELEASES.md).
-The latest full local integration checkpoint is `7961b966`, which passed all
+The latest full local integration checkpoint is the versioned `fc3aa39a`, which passed all
 5,271 source tests and the package, Node/workerd, type, performance, retention,
 format, and size gates on November 11. A duplicate-widget renderer repair also
-passes 12 recorded desktop checks. Earlier default Yjs, startup, migration and
+passes 12 recorded desktop checks at `7961b966`. The versioned tarball also
+passes both type analyses and clean ESM/CommonJS installation outside the
+repository without browser globals, React, Yjs or jsdom. Pinned Lean, Bun,
+Deno and the site build pass. Earlier default Yjs, startup, migration and
 native-presence batches passed at `597f5415`; the combined latest candidate
 still needs fresh release validation. The full editor/mobile matrix, serialized
 native clipboard batch and hosted CI remain pending. See the
-[checkpoint record](RELEASES.md#empty-run-widget-repair-at-7961b966).
+[checkpoint record](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
 
 ## Remaining parity work
 

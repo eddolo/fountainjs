@@ -2,11 +2,11 @@
 
 ## Current programme status — 2026-11-11
 
-The latest local runtime checkpoint is `7961b966`: all 5,271 source tests in
+The latest local checkpoint is versioned candidate `fc3aa39a`: all 5,271 source tests in
 323 files pass, alongside the build, package, type, headless, performance and
 retention gates. A real renderer failure discovered during the broad browser
 diagnostic is repaired: adjacent empty text runs no longer render a peer widget
-twice at the same position. Twelve recorded regression journeys pass across
+twice at the same position. At `7961b966`, twelve recorded regression journeys pass across
 Chromium, Firefox and WebKit. The 441-case remaining sweep finishes with 421
 passes, 19 skips and one module-loading failure before mobile typing starts.
 The unchanged failed check then passes three isolated runs. The original
@@ -15,7 +15,10 @@ The native clipboard batch passes all 18 selected Chromium/Firefox checks;
 Windows WebKit fails three delivery checks, consistent with independent native
 controls. The batch stops at its failure limit. Linux display clipboard checks, fresh
 combined release CI, final packed consumers and publication remain pending.
-[Current release evidence](RELEASES.md#empty-run-widget-repair-at-7961b966).
+The `0.5.0-beta.1` tarball passes type analysis and an outside-repository
+ESM/CommonJS install without browser globals or optional peers. Pinned Lean,
+Bun, Deno and the site build also pass. Nothing is published for this candidate.
+[Current release evidence](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
 
 A November 11 review of upstream documentation adds three Missing outcomes:
 editable charts/diagrams, authorable template slots, and a whiteboard surface.

@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Missing expected exception.
+    at file:///C:/Users/cappu/AppData/Local/Temp/fountain-release-fc3aa39a-5rul1i24/verify.mjs:10:54
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: { code: 'MODULE_NOT_FOUND' },
+  operator: 'throws',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

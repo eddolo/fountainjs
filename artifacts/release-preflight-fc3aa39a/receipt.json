@@ -1,0 +1,32 @@
+{
+  "candidateCommit": "fc3aa39af81cac74c9f3d6d3732c96fc7298c829",
+  "version": "0.5.0-beta.1",
+  "fileCount": 1145,
+  "bytes": 4882691,
+  "sha512": "sha512-O7g+W2HOzRbMQpl7FkzJvdc5XSGL75TulBbIEmyVKt36bzm/fQtlXgikZIyRGfB9HhoeS7AgY2S9spi5MpxESg==",
+  "unexpectedDirectories": [],
+  "tarball": "artifacts/release-preflight-fc3aa39a/fountainjs-editor-0.5.0-beta.1.tgz",
+  "cleanConsumerOutsideRepository": true,
+  "globalSearchPathsDisabled": true,
+  "unresolvableOptionalPeers": [
+    "react",
+    "yjs"
+  ],
+  "unresolvableFakeDOM": [
+    "jsdom"
+  ],
+  "modesPassed": [
+    "ESM",
+    "CommonJS"
+  ],
+  "consumerLog": "artifacts/release-preflight-fc3aa39a/consumer-verification.log",
+  "publint": {
+    "exitCode": 0,
+    "warning": "Existing DOCX require/default .cjs syntax classification warning"
+  },
+  "typeAnalyses": {
+    "general": "passed",
+    "angularEsmOnly": "passed"
+  },
+  "published": false
+}

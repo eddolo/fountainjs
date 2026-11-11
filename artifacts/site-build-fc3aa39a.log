@@ -1,0 +1,463 @@
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 810 modules transformed.
+rendering chunks...
+computing gzip size...
+examples/react-app/dist/block-reordering.html                                0.97 kB │ gzip:   0.45 kB
+examples/react-app/dist/developers.html                                      1.00 kB │ gzip:   0.46 kB
+examples/react-app/dist/workflows.html                                       1.04 kB │ gzip:   0.46 kB
+examples/react-app/dist/demos.html                                           1.07 kB │ gzip:   0.48 kB
+examples/react-app/dist/math-renderer.html                                   1.21 kB │ gzip:   0.48 kB
+examples/react-app/dist/task-workflow.html                                   1.30 kB │ gzip:   0.51 kB
+examples/react-app/dist/issue-editor.html                                    1.44 kB │ gzip:   0.52 kB
+examples/react-app/dist/math-references.html                                 1.44 kB │ gzip:   0.53 kB
+examples/react-app/dist/index.html                                           1.46 kB │ gzip:   0.55 kB
+examples/react-app/dist/demos/vue-runbook.html                               1.77 kB │ gzip:   0.54 kB
+examples/react-app/dist/demos/svelte-report.html                             1.78 kB │ gzip:   0.54 kB
+examples/react-app/dist/demos/angular-media.html                             1.78 kB │ gzip:   0.54 kB
+examples/react-app/dist/demos/react-article.html                             1.78 kB │ gzip:   0.54 kB
+examples/react-app/dist/demos/python-content-api.html                        1.78 kB │ gzip:   0.54 kB
+examples/react-app/dist/demos/go-docs-service.html                           1.79 kB │ gzip:   0.54 kB
+examples/react-app/dist/demos/node-markdown.html                             1.79 kB │ gzip:   0.55 kB
+examples/react-app/dist/demos/web-component-cms.html                         1.79 kB │ gzip:   0.55 kB
+examples/react-app/dist/demos/plain-dom-notes.html                           1.79 kB │ gzip:   0.55 kB
+examples/react-app/dist/demos/java-approval-workflow.html                    1.79 kB │ gzip:   0.55 kB
+examples/react-app/dist/conversion-lab.html                                  2.13 kB │ gzip:   0.75 kB
+examples/react-app/dist/assets/KaTeX_Size3-Regular-CTq5MqoE.woff             4.42 kB
+examples/react-app/dist/assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2            4.92 kB
+examples/react-app/dist/assets/KaTeX_Size2-Regular-Dy4dx90m.woff2            5.20 kB
+examples/react-app/dist/assets/KaTeX_Size1-Regular-mCD8mA8B.woff2            5.46 kB
+examples/react-app/dist/assets/KaTeX_Size4-Regular-BF-4gkZK.woff             5.98 kB
+examples/react-app/dist/assets/KaTeX_Size2-Regular-oD1tc_U0.woff             6.18 kB
+examples/react-app/dist/assets/KaTeX_Size1-Regular-C195tn64.woff             6.49 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2      6.90 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2         6.91 kB
+examples/react-app/dist/assets/KaTeX_Size3-Regular-DgpXs0kz.ttf              7.58 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Regular-CTRA-rTL.woff       7.65 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff          7.71 kB
+examples/react-app/dist/assets/KaTeX_Script-Regular-D3wIWfF6.woff2           9.64 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2       10.34 kB
+examples/react-app/dist/assets/KaTeX_Size4-Regular-DWFBv043.ttf             10.36 kB
+examples/react-app/dist/assets/KaTeX_Script-Regular-D5yQViql.woff           10.58 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2         11.31 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Bold-CL6g_b3V.woff2            11.34 kB
+examples/react-app/dist/assets/KaTeX_Size2-Regular-B7gKUWhC.ttf             11.50 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2        12.02 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Bold-D1sUS0GD.woff2          12.21 kB
+examples/react-app/dist/assets/KaTeX_Size1-Regular-Dbsnue_I.ttf             12.22 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff        12.31 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Regular-wX97UBjC.ttf       12.34 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf          12.36 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Regular-Dxdc4cR9.woff          13.20 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Bold-BsDP51OF.woff             13.29 kB
+examples/react-app/dist/assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2      13.56 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Italic-DN2j7dab.woff         14.11 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff           14.40 kB
+examples/react-app/dist/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff       16.02 kB
+examples/react-app/dist/assets/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2         16.40 kB
+examples/react-app/dist/assets/KaTeX_Math-Italic-t53AETM-.woff2             16.44 kB
+examples/react-app/dist/assets/KaTeX_Script-Regular-C5JkGWo-.ttf            16.64 kB
+examples/react-app/dist/assets/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2         16.78 kB
+examples/react-app/dist/assets/KaTeX_Main-Italic-NWA7e6Wa.woff2             16.98 kB
+examples/react-app/dist/assets/KaTeX_Math-BoldItalic-iY-2wyZ7.woff          18.66 kB
+examples/react-app/dist/assets/KaTeX_Math-Italic-DA0__PXp.woff              18.74 kB
+examples/react-app/dist/assets/KaTeX_Main-BoldItalic-SpSLRI95.woff          19.41 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf         19.43 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Regular-CB_wures.ttf           19.57 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Bold-BdnERNNW.ttf              19.58 kB
+examples/react-app/dist/assets/KaTeX_Main-Italic-BMLOBm91.woff              19.67 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf          22.36 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Bold-CFMepnvq.ttf            24.50 kB
+examples/react-app/dist/assets/KaTeX_Main-Bold-Cx986IdX.woff2               25.32 kB
+examples/react-app/dist/assets/KaTeX_Main-Regular-B22Nviop.woff2            26.27 kB
+examples/react-app/dist/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf        27.55 kB
+examples/react-app/dist/assets/KaTeX_AMS-Regular-BQhdFMY1.woff2             28.07 kB
+examples/react-app/dist/assets/KaTeX_Main-Bold-Jm3AIy58.woff                29.91 kB
+examples/react-app/dist/assets/KaTeX_Main-Regular-Dr94JaBh.woff             30.77 kB
+examples/react-app/dist/assets/KaTeX_Math-BoldItalic-B3XSjfu4.ttf           31.19 kB
+examples/react-app/dist/assets/KaTeX_Math-Italic-flOr_0UB.ttf               31.30 kB
+examples/react-app/dist/assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf           32.96 kB
+examples/react-app/dist/assets/KaTeX_AMS-Regular-DMm9YOAa.woff              33.51 kB
+examples/react-app/dist/assets/KaTeX_Main-Italic-3WenGoN9.ttf               33.58 kB
+examples/react-app/dist/assets/KaTeX_Main-Bold-waoOVXN0.ttf                 51.33 kB
+examples/react-app/dist/assets/KaTeX_Main-Regular-ypZvNtVU.ttf              53.58 kB
+examples/react-app/dist/assets/KaTeX_AMS-Regular-DRggAlZN.ttf               63.63 kB
+examples/react-app/dist/assets/WorkflowBreadcrumbs-Dq01QYFU.css              0.71 kB │ gzip:   0.36 kB
+examples/react-app/dist/assets/mathReferences-DHnUk6bM.css                   1.58 kB │ gzip:   0.55 kB
+examples/react-app/dist/assets/math-renderer-Bzeyzs68.css                    1.92 kB │ gzip:   0.78 kB
+examples/react-app/dist/assets/blockReordering-GRvXrbLU.css                  2.61 kB │ gzip:   0.87 kB
+examples/react-app/dist/assets/issueEditor-Br4QWpL-.css                      3.07 kB │ gzip:   1.11 kB
+examples/react-app/dist/assets/demo-main-BOOiNS6J.css                        3.68 kB │ gzip:   1.18 kB
+examples/react-app/dist/assets/workflows-BxL3iTbO.css                        6.25 kB │ gzip:   1.81 kB
+examples/react-app/dist/assets/conversionLab-B5r0GTdD.css                    7.30 kB │ gzip:   1.99 kB
+examples/react-app/dist/assets/developers-BXgpiZm1.css                       8.66 kB │ gzip:   2.40 kB
+examples/react-app/dist/assets/demos-CHT7dWlF.css                           22.24 kB │ gzip:   4.95 kB
+examples/react-app/dist/assets/site-fonts-XbZJvApt.css                      29.00 kB │ gzip:   6.41 kB
+examples/react-app/dist/assets/katex-QAR1SwR3.css                           30.38 kB │ gzip:   7.96 kB
+examples/react-app/dist/assets/styles-BJmTmAtX.css                          81.98 kB │ gzip:  12.63 kB
+examples/react-app/dist/assets/site-fonts-Dg5XJFqD.js                        0.40 kB │ gzip:   0.29 kB
+examples/react-app/dist/assets/WorkflowBreadcrumbs-DJlrltet.js               0.83 kB │ gzip:   0.34 kB
+examples/react-app/dist/assets/math-renderer-D9snoi-1.js                     0.95 kB │ gzip:   0.36 kB
+examples/react-app/dist/assets/preload-helper-BjgPt-_P.js                    1.20 kB │ gzip:   0.68 kB
+examples/react-app/dist/assets/KoUbe7hE-FxSnFC5a.js                          1.31 kB │ gzip:   0.61 kB
+examples/react-app/dist/assets/conversion-lab-docx-media-CugSp4Ut.js         1.51 kB │ gzip:   0.79 kB
+examples/react-app/dist/assets/math-document-files-paiebTfe.js               1.57 kB │ gzip:   0.88 kB
+examples/react-app/dist/assets/workflows-nx3p9T0n.js                         4.59 kB │ gzip:   1.63 kB
+examples/react-app/dist/assets/mathRenderer-JSTV_cZ-.js                      6.51 kB │ gzip:   2.78 kB
+examples/react-app/dist/assets/node-ids-BXrzgHRo.js                          6.69 kB │ gzip:   2.71 kB
+examples/react-app/dist/assets/demos-BjXU7_MR.js                             7.31 kB │ gzip:   2.68 kB
+examples/react-app/dist/assets/taskWorkflow-DNRb50Be.js                      9.17 kB │ gzip:   3.57 kB
+examples/react-app/dist/assets/blockReordering-BJTYucy3.js                   9.52 kB │ gzip:   3.83 kB
+examples/react-app/dist/assets/issueEditor-IX6_1340.js                      12.10 kB │ gzip:   4.71 kB
+examples/react-app/dist/assets/browser-BXlMmLo7.js                          12.39 kB │ gzip:   6.11 kB
+examples/react-app/dist/assets/CollaborationDemo-CUINqp50.js                14.27 kB │ gzip:   4.85 kB
+examples/react-app/dist/assets/CollaborationDemo-B33whYoA.js                14.28 kB │ gzip:   4.85 kB
+examples/react-app/dist/assets/demos-CIYGRhi9.js                            20.73 kB │ gzip:   7.89 kB
+examples/react-app/dist/assets/svelte-report-hAjULpQA.js                    45.99 kB │ gzip:  18.17 kB
+examples/react-app/dist/assets/dist-Cz4HW5gX.js                             50.26 kB │ gzip:  15.05 kB
+examples/react-app/dist/assets/vue-runbook-D6PK7lin.js                      63.11 kB │ gzip:  24.91 kB
+examples/react-app/dist/assets/conversionLab-BWzXRBoo.js                    78.97 kB │ gzip:  25.73 kB
+examples/react-app/dist/assets/demo-main-DeNZwa1H.js                        89.46 kB │ gzip:  27.13 kB
+examples/react-app/dist/assets/react-DmV_UjuO.js                            93.59 kB │ gzip:  26.56 kB
+examples/react-app/dist/assets/developers-DCtW1w-s.js                      124.99 kB │ gzip:  35.47 kB
+examples/react-app/dist/assets/main-DcL-SxSn.js                            185.54 kB │ gzip:  52.86 kB
+examples/react-app/dist/assets/SitePageLink-F6rtmo3i.js                    191.26 kB │ gzip:  60.33 kB
+examples/react-app/dist/assets/docx-T-Q87MSZ.js                            200.73 kB │ gzip:  66.19 kB
+examples/react-app/dist/assets/html-server-BEjSfA-L.js                     203.84 kB │ gzip:  51.60 kB
+examples/react-app/dist/assets/react-comments-DvXpF2GI.js                  223.18 kB │ gzip:  66.15 kB
+examples/react-app/dist/assets/katex.min-C7iIJkK6.js                       258.39 kB │ gzip:  77.55 kB
+examples/react-app/dist/assets/pages-preview-faZOHCc9.js                   274.07 kB │ gzip:  84.73 kB
+examples/react-app/dist/assets/styles-DeysRpMF.js                          536.63 kB │ gzip: 170.12 kB
+examples/react-app/dist/assets/campaign-C2-HK-P2.js                        571.41 kB │ gzip: 175.68 kB
+examples/react-app/dist/assets/mathReferences-yEtmvpjj.js                1,582.43 kB │ gzip: 617.93 kB
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+    ╭─[ dist/react.js:87:2 ]
+    │
+ 87 │     /* @__PURE__ */
+    │     ───────┬───────  
+    │            ╰───────── comment ignored due to position
+    │ 
+    │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+    │ 
+    │ Help 2: Disable with `checks.invalidAnnotation: false`.
+────╯
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react.js:314:2 ]
+     │
+ 314 │     /* @__PURE__ */
+     │     ───────┬───────  
+     │            ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react.js:334:2 ]
+     │
+ 334 │     /* @__PURE__ */
+     │     ───────┬───────  
+     │            ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react.js:344:2 ]
+     │
+ 344 │     /* @__PURE__ */
+     │     ───────┬───────  
+     │            ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react.js:496:3 ]
+     │
+ 496 │        /* @__PURE__ */
+     │        ───────┬───────  
+     │               ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react.js:585:2 ]
+     │
+ 585 │     /* @__PURE__ */
+     │     ───────┬───────  
+     │            ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+      ╭─[ dist/react.js:1680:2 ]
+      │
+ 1680 │     /* @__PURE__ */
+      │     ───────┬───────  
+      │            ╰───────── comment ignored due to position
+      │ 
+      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+      │ 
+      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+──────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+      ╭─[ dist/react.js:1789:2 ]
+      │
+ 1789 │     /* @__PURE__ */
+      │     ───────┬───────  
+      │            ╰───────── comment ignored due to position
+      │ 
+      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+      │ 
+      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+──────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+      ╭─[ dist/react.js:1932:2 ]
+      │
+ 1932 │     /* @__PURE__ */
+      │     ───────┬───────  
+      │            ╰───────── comment ignored due to position
+      │ 
+      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+      │ 
+      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+──────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+      ╭─[ dist/react.js:2096:2 ]
+      │
+ 2096 │     /* @__PURE__ */
+      │     ───────┬───────  
+      │            ╰───────── comment ignored due to position
+      │ 
+      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+      │ 
+      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+──────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+      ╭─[ dist/react.js:2367:2 ]
+      │
+ 2367 │     /* @__PURE__ */
+      │     ───────┬───────  
+      │            ╰───────── comment ignored due to position
+      │ 
+      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+      │ 
+      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+──────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+      ╭─[ dist/react.js:2418:2 ]
+      │
+ 2418 │     /* @__PURE__ */
+      │     ───────┬───────  
+      │            ╰───────── comment ignored due to position
+      │ 
+      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+      │ 
+      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+──────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+      ╭─[ dist/react.js:2439:2 ]
+      │
+ 2439 │     /* @__PURE__ */
+      │     ───────┬───────  
+      │            ╰───────── comment ignored due to position
+      │ 
+      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+      │ 
+      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+──────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+      ╭─[ dist/react.js:2545:2 ]
+      │
+ 2545 │     /* @__PURE__ */
+      │     ───────┬───────  
+      │            ╰───────── comment ignored due to position
+      │ 
+      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+      │ 
+      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+──────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+      ╭─[ dist/react.js:2553:2 ]
+      │
+ 2553 │     /* @__PURE__ */
+      │     ───────┬───────  
+      │            ╰───────── comment ignored due to position
+      │ 
+      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+      │ 
+      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+──────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-tracked-changes.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+    ╭─[ dist/react-tracked-changes.js:52:2 ]
+    │
+ 52 │     /* @__PURE__ */
+    │     ───────┬───────  
+    │            ╰───────── comment ignored due to position
+    │ 
+    │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+    │ 
+    │ Help 2: Disable with `checks.invalidAnnotation: false`.
+────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-tracked-changes.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react-tracked-changes.js:135:6 ]
+     │
+ 135 │               /* @__PURE__ */
+     │               ───────┬───────  
+     │                      ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-versions.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+    ╭─[ dist/react-versions.js:41:2 ]
+    │
+ 41 │     /* @__PURE__ */
+    │     ───────┬───────  
+    │            ╰───────── comment ignored due to position
+    │ 
+    │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+    │ 
+    │ Help 2: Disable with `checks.invalidAnnotation: false`.
+────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-versions.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react-versions.js:133:6 ]
+     │
+ 133 │               /* @__PURE__ */
+     │               ───────┬───────  
+     │                      ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-versions.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react-versions.js:253:7 ]
+     │
+ 253 │                  /* @__PURE__ */
+     │                  ───────┬───────  
+     │                         ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-integrity.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+    ╭─[ dist/react-integrity.js:26:2 ]
+    │
+ 26 │     /* @__PURE__ */
+    │     ───────┬───────  
+    │            ╰───────── comment ignored due to position
+    │ 
+    │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+    │ 
+    │ Help 2: Disable with `checks.invalidAnnotation: false`.
+────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+    ╭─[ dist/react-comments.js:15:2 ]
+    │
+ 15 │     /* @__PURE__ */
+    │     ───────┬───────  
+    │            ╰───────── comment ignored due to position
+    │ 
+    │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+    │ 
+    │ Help 2: Disable with `checks.invalidAnnotation: false`.
+────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+    ╭─[ dist/react-comments.js:28:2 ]
+    │
+ 28 │     /* @__PURE__ */
+    │     ───────┬───────  
+    │            ╰───────── comment ignored due to position
+    │ 
+    │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+    │ 
+    │ Help 2: Disable with `checks.invalidAnnotation: false`.
+────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+    ╭─[ dist/react-comments.js:60:7 ]
+    │
+ 60 │                  /* @__PURE__ */
+    │                  ───────┬───────  
+    │                         ╰───────── comment ignored due to position
+    │ 
+    │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+    │ 
+    │ Help 2: Disable with `checks.invalidAnnotation: false`.
+────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react-comments.js:105:2 ]
+     │
+ 105 │     /* @__PURE__ */
+     │     ───────┬───────  
+     │            ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react-comments.js:200:6 ]
+     │
+ 200 │               /* @__PURE__ */
+     │               ───────┬───────  
+     │                      ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+[INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+     ╭─[ dist/react-comments.js:225:9 ]
+     │
+ 225 │                     /* @__PURE__ */
+     │                     ───────┬───────  
+     │                            ╰───────── comment ignored due to position
+     │ 
+     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+     │ 
+     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+─────╯
+
+✓ built in 1.70s

@@ -1,0 +1,3 @@
+$ node scripts/test-lean-loopback.mjs
+Lean (version 4.30.0, x86_64-w64-windows-gnu, commit d024af099ca4bf2c86f649261ebf59565dc8c622, Release)
+Real Lean loopback integration verified valid and invalid proofs.

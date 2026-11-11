@@ -30,12 +30,13 @@ persisted room. Portable document JSON has its separate migration contract.
 
 ## Local validation
 
-Runtime `7961b966` passed `pnpm check`, including all 5,271 source tests in 323
+Versioned candidate `fc3aa39a` passed `pnpm check`, including all 5,271 source tests in 323
 files, API/package/runtime/format/type checks and existing size, latency and
 retention checks. Its duplicate-widget repair adds 63 CommonJS bytes, with
-64 bytes of aggregate capacity and all other limits unchanged. Earlier tarball
-type/consumer analysis passed at `597f5415`; refresh it for the final versioned
-candidate. Publint retains its existing DOCX format warning.
+64 bytes of aggregate capacity and all other limits unchanged. The versioned
+tarball passes both type analyses and a clean ESM/CommonJS consumer outside the
+repository without browser globals, optional peers or jsdom. Pinned Lean,
+Bun, Deno and the site build pass. Publint retains its existing DOCX warning.
 
 The latest twelve recorded desktop checks pass across Chromium, Firefox and
 WebKit. The broad diagnostic stopped with 628 passes and five failures, leading
