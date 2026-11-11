@@ -1,8 +1,8 @@
 /** @vitest-environment jsdom */
-import { createApp, createSSRApp, defineComponent, effectScope, h, isProxy, KeepAlive, nextTick, shallowRef } from 'vue';
+import { createApp, createSSRApp, defineComponent, effectScope, h, isProxy, KeepAlive, nextTick, onErrorCaptured, shallowRef } from 'vue';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { CoreExtension, StarterKit, composeExtensions, createCollaborationExtension, createEditor, insertText, undo, redo, type Editor } from '../src';
-import { FountainEditor, useFountain, useFountainState, type FountainEditorHandle } from '../src/vue';
+import { COLLABORATION_REMOTE_META, CoreExtension, StarterKit, canUndo, composeExtensions, createCollaborationExtension, createEditor, insertText, undo, redo, type Editor, type NodeJSON } from '../src';
+import { FountainDocumentField, FountainEditor, useFountain, useFountainState, type FountainDocumentFieldHandle, type FountainEditorHandle } from '../src/vue';
 
 const cleanups: (() => void)[] = [];
 afterEach(() => { cleanups.splice(0).reverse().forEach(cleanup => cleanup()); });
@@ -17,6 +17,106 @@ function mount(component: ReturnType<typeof defineComponent>) {
 }
 
 describe('Vue first-party lifecycle', () => {
+  it('binds document JSON without resetting typing history and isolates an external reset from older edits', async () => {
+    const config = { schema: StarterKit.schema, plugins: StarterKit.plugins };
+    const model = shallowRef<NodeJSON | null>({ type: 'doc', attrs: { owner: 'Ada' }, content: [{ type: 'paragraph' }] });
+    const field = shallowRef<FountainDocumentFieldHandle | null>(null);
+    const update = vi.fn((value: NodeJSON) => { model.value = value; });
+    const Harness = defineComponent({ setup: () => () => h(FountainDocumentField, {
+      config, modelValue: model.value, 'onUpdate:modelValue': update, ref: field,
+    }) });
+    const { element } = mount(Harness); await nextTick();
+    const editor = field.value!.editor!;
+    expect(insertText(editor, 'Draft notes')).toBe(true);
+    await nextTick();
+    expect(model.value).toEqual(editor.getJSON());
+    expect(model.value?.attrs).toMatchObject({ owner: 'Ada' });
+    expect(update).toHaveBeenCalledTimes(1);
+    expect(element.querySelector('[role=textbox]')?.textContent).toBe('Draft notes');
+    model.value = structuredClone(model.value);
+    await nextTick();
+    expect(undo(editor)).toBe(true);
+    await nextTick();
+    expect(editor.getText()).toBe('');
+    expect(redo(editor)).toBe(true);
+    await nextTick();
+    expect(editor.getText()).toBe('Draft notes');
+
+    const newDocument: NodeJSON = { type: 'doc', attrs: { owner: 'Grace' }, content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Saved review' }] },
+    ] };
+    model.value = newDocument;
+    await nextTick();
+    expect(editor.getText()).toBe('Saved review');
+    expect(editor.getJSON().attrs).toMatchObject({ owner: 'Grace' });
+    expect(canUndo(editor)).toBe(false);
+    expect(update).toHaveBeenCalledTimes(3);
+    model.value = null;
+    await nextTick();
+    expect(editor.getText()).toBe('');
+    expect(editor.getJSON().attrs?.owner).toBeUndefined();
+    expect(field.value!.editor).toBe(editor);
+    expect(update).toHaveBeenCalledTimes(3);
+  });
+
+  it('blocks local document writes while disabled and retains host replacements and remote changes', async () => {
+    const config = { schema: StarterKit.schema, plugins: StarterKit.plugins };
+    const disabled = shallowRef(false);
+    const model = shallowRef<NodeJSON | null>(null);
+    const field = shallowRef<FountainDocumentFieldHandle | null>(null);
+    const update = vi.fn((value: NodeJSON) => { model.value = value; });
+    const blur = vi.fn();
+    const Harness = defineComponent({ setup: () => () => h('section', [
+      h(FountainDocumentField, {
+        config, modelValue: model.value, disabled: disabled.value, 'onUpdate:modelValue': update, onBlur: blur, ref: field,
+      }),
+      h('button', 'Outside'),
+    ]) });
+    const { element } = mount(Harness); await nextTick();
+    const editor = field.value!.editor!;
+    field.value!.focus();
+    expect(document.activeElement).toBe(element.querySelector('[role=textbox]'));
+    element.querySelector('button')!.focus();
+    expect(blur).toHaveBeenCalledTimes(1);
+    disabled.value = true; await nextTick();
+    expect(element.querySelector('[data-fountain-root]')?.hasAttribute('inert')).toBe(true);
+    expect(element.querySelector('[role=textbox]')?.getAttribute('contenteditable')).toBe('false');
+    expect(insertText(editor, 'Blocked')).toBe(false);
+    expect(update).not.toHaveBeenCalled();
+    const saved: NodeJSON = { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Saved' }] }] };
+    model.value = saved;
+    await nextTick();
+    expect(editor.getText()).toBe('Saved');
+    expect(update).not.toHaveBeenCalled();
+    const remote = editor.state.schema.nodeFromJSON({ type: 'doc', content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Remote review' }] },
+    ] });
+    expect(editor.dispatch(editor.createTransaction().replaceDocument(remote).setMeta(COLLABORATION_REMOTE_META, true))).toBe(true);
+    await nextTick();
+    expect(model.value).toEqual(editor.getJSON());
+    disabled.value = false; await nextTick();
+    expect(field.value!.editor).toBe(editor);
+    expect(element.querySelector('[role=textbox]')?.textContent).toBe('Remote review');
+    expect(element.querySelector<HTMLElement>('[role=textbox]')?.contentEditable).toBe('true');
+  });
+
+  it('reports an invalid parent value through Vue and retains the last accepted document', async () => {
+    const config = { schema: StarterKit.schema, plugins: StarterKit.plugins };
+    const model = shallowRef<NodeJSON | null>({ type: 'doc', content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Valid draft' }] },
+    ] });
+    const report = vi.fn();
+    const Harness = defineComponent({ setup() {
+      onErrorCaptured(error => { report(error); return false; });
+      return () => h(FountainDocumentField, { config, modelValue: model.value });
+    } });
+    const { element } = mount(Harness); await nextTick();
+    model.value = { type: 'doc', content: [{ type: 'unknown_node' }] };
+    await nextTick();
+    expect(report).toHaveBeenCalledTimes(1);
+    expect(element.querySelector('[role=textbox]')?.textContent).toBe('Valid draft');
+  });
+
   it('creates and disposes one unproxied engine/provider per mount, after the view', async () => {
     const connect = vi.fn(), disconnect = vi.fn(), destroy = vi.fn();
     const kit = composeExtensions([CoreExtension, createCollaborationExtension({ adapter: () => ({ connect, disconnect, destroy }) })]);

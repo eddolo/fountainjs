@@ -1,5 +1,69 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
 
+export async function vueDocumentFieldJourney(page: Page, info: TestInfo) {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/developers.html');
+  await page.getByRole('link', { name: 'Vue runbook', exact: true }).click();
+  await expect(page).toHaveURL(/\/demos\/vue-runbook\.html$/u);
+  const form = page.getByRole('region', { name: 'Release review form' });
+  const notes = form.getByRole('textbox', { name: 'Review notes' });
+  const release = form.getByRole('textbox', { name: 'Release', exact: true });
+  const preview = form.getByRole('button', { name: 'Preview submission' });
+  const payload = form.getByLabel('Review submission payload');
+  const initial = 'Confirm the rollback plan.';
+  await expect(notes).toHaveText(initial);
+  await release.fill('Winter release');
+  await notes.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Owner confirmed.');
+  await expect(notes).toHaveText(initial + ' Owner confirmed.');
+  await expect(release).toHaveValue('Winter release');
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(notes).toHaveText(initial);
+  await page.keyboard.press('ControlOrMeta+Shift+z');
+  await expect(notes).toHaveText(initial + ' Owner confirmed.');
+  await preview.click();
+  expect(JSON.parse(await payload.innerText())).toMatchObject({
+    release: 'Winter release',
+    notes: { type: 'doc', attrs: { workflow: 'release-review' }, content: [
+      { type: 'paragraph', content: [{ type: 'text', text: initial + ' Owner confirmed.' }] },
+    ] },
+  });
+  await form.screenshot({ path: info.outputPath('vue-review-form-submitted.png') });
+
+  const disabled = form.getByRole('checkbox', { name: 'Disable review notes' });
+  await disabled.check();
+  await expect(form.locator('.bare-editor')).toHaveAttribute('inert', '');
+  await expect(form.locator('.bare-editor [role="textbox"]')).toHaveAttribute('contenteditable', 'false');
+  await preview.click();
+  expect(JSON.parse(await payload.innerText())).toEqual({ release: 'Winter release' });
+  await disabled.uncheck();
+  await expect(notes).toHaveText(initial + ' Owner confirmed.');
+
+  await form.getByRole('button', { name: 'Clear notes' }).click();
+  await expect(notes).toHaveText('');
+  await notes.click();
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(notes).toHaveText('');
+  await page.keyboard.type('New review notes.');
+  await expect(notes).toHaveText('New review notes.');
+  await disabled.check();
+  await form.getByRole('button', { name: 'Reset review' }).click();
+  await expect(notes).toHaveText(initial);
+  await expect(release).toHaveValue('November update');
+  await expect(disabled).not.toBeChecked();
+  await expect(payload).toHaveCount(0);
+  await expect(page.getByRole('textbox', { name: 'Vue runbook editor' })).toContainText('Inspect the packed npm artifact');
+  await form.screenshot({ path: info.outputPath('vue-review-form-reset.png') });
+  await page.setViewportSize({ width: 390, height: 844 });
+  const narrow = await form.boundingBox();
+  expect(narrow?.x).toBeGreaterThanOrEqual(0);
+  expect(narrow!.x + narrow!.width).toBeLessThanOrEqual(390);
+  await form.screenshot({ path: info.outputPath('vue-review-form-narrow.png') });
+  expect(errors).toEqual([]);
+}
+
 /** Public controls and native keyboard input, not calls to a hidden test editor. */
 export async function vueRunbookJourney(page: Page, info: TestInfo) {
   const errors: string[] = [];

@@ -82,6 +82,18 @@
 .vue-table-tools summary { cursor: pointer; padding: 5px; color: #403b52; font-size: 12px; }
 [data-vue-runbook] .demo-output { max-height: 760px; }
 [data-vue-runbook] .demo-output pre { min-height: 0; }
+.vue-document-form { max-width: 1500px; margin: 24px auto 0; padding: 24px; border-radius: 18px; background: #eeecf4; color: #211b35; }
+.vue-document-form h2 { margin: 0 0 16px; font-size: 20px; }
+.vue-document-form form { display: grid; gap: 14px; }
+.vue-document-form form > label, .vue-review-notes { display: grid; gap: 6px; }
+.vue-document-form form > label { width: min(100%, 360px); }
+.vue-document-form input[name="release"] { padding: 8px 10px; border: 1px solid #aaa2bb; border-radius: 7px; font: inherit; }
+.vue-document-form .fountain-editor { min-height: 132px; max-height: 280px; overflow: auto; }
+.vue-document-form [inert] { opacity: .7; }
+.vue-document-form .demo-controls { align-items: center; gap: 8px; margin: 0; }
+.vue-document-form .demo-controls label { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+.vue-document-form .demo-controls button { min-height: 44px; padding-inline: 12px; font-size: 13px; }
+.vue-document-form pre { max-height: 280px; overflow: auto; margin-bottom: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .svelte-lifecycle-demo { max-width: 1500px; margin: auto; }
 .svelte-lifecycle-demo > .demo-controls { align-items: center; font-size: 12px; }
 .svelte-report-hidden { min-height: 260px; padding: 32px; color: #403b52; background: white; border-radius: 12px; line-height: 1.7; }

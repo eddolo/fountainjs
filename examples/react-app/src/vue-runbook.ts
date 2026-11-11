@@ -1,14 +1,64 @@
-import { createApp, defineComponent, h, ref } from 'vue';
-import { FountainEditor, useFountain, useFountainState } from 'fountainjs-editor/vue';
+import { createApp, defineComponent, h, ref, shallowRef } from 'vue';
+import { FountainDocumentField, FountainEditor, useFountain, useFountainState } from 'fountainjs-editor/vue';
 import {
   StarterKit, HTMLExporter, MarkdownExporter, insertList, insertTable,
   toggleMark, toggleQuote, undo, redo, canUndo, canRedo, isMarkActive, isInsideNode,
   getActiveTableCell, addTableRow, addTableColumn, deleteTableRow, deleteTableColumn,
   deleteTable, selectTableRow, selectTableColumn, mergeTableCells, splitTableCell,
   toggleTableHeaderRow, toggleTableHeaderColumn, toggleTableHeaderCell,
-  setMark, unsetMark, setTextAlignment, selectAll, type Editor,
+  setMark, unsetMark, setTextAlignment, selectAll, type Editor, type NodeJSON,
 } from 'fountainjs-editor';
 import type { DemoDefinition } from './demo-definitions';
+
+const ReleaseReviewForm = defineComponent({
+  setup() {
+    const initial: NodeJSON = { type: 'doc', attrs: { workflow: 'release-review' }, content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Confirm the rollback plan.' }] },
+    ] };
+    const model = shallowRef<NodeJSON | null>(initial);
+    const disabled = ref(false);
+    const submitted = shallowRef<Record<string, unknown> | null>(null);
+    const config = { schema: StarterKit.schema, plugins: StarterKit.plugins };
+    const options = {
+      attributes: { 'aria-labelledby': 'vue-review-notes-label' },
+      placeholder: 'Add a note for the release owner…',
+    };
+    const submit = (event: SubmitEvent) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget as HTMLFormElement);
+      const notes = data.get('notes');
+      submitted.value = { release: data.get('release'), ...(typeof notes === 'string' ? { notes: JSON.parse(notes) } : {}) };
+    };
+    return () => h('section', { class: 'vue-document-form', 'aria-label': 'Release review form' }, [
+      h('h2', 'Release review form'),
+      h('form', { onSubmit: submit, onReset: () => { model.value = initial; disabled.value = false; submitted.value = null; } }, [
+        h('label', ['Release', h('input', { name: 'release', defaultValue: 'November update', required: true })]),
+        h('div', { class: 'vue-review-notes' }, [
+          h('span', { id: 'vue-review-notes-label' }, 'Review notes'),
+          h(FountainDocumentField, {
+            class: 'bare-editor',
+            config,
+            options,
+            disabled: disabled.value,
+            modelValue: model.value,
+            'onUpdate:modelValue': (value: NodeJSON) => { model.value = value; },
+          }),
+        ]),
+        h('input', { type: 'hidden', name: 'notes', disabled: disabled.value || model.value === null, value: JSON.stringify(model.value) }),
+        h('div', { class: 'demo-controls' }, [
+          h('label', [h('input', {
+            type: 'checkbox', checked: disabled.value,
+            onChange: (event: Event) => { disabled.value = (event.target as HTMLInputElement).checked; },
+          }), ' Disable review notes']),
+          h('button', { type: 'button', disabled: disabled.value, onClick: () => { model.value = null; } }, 'Clear notes'),
+          h('button', { type: 'reset' }, 'Reset review'),
+          h('button', { type: 'submit' }, 'Preview submission'),
+        ]),
+      ]),
+      submitted.value ? h('pre', { 'aria-label': 'Review submission payload', tabindex: 0 }, JSON.stringify(submitted.value, null, 2)) : null,
+    ]);
+  },
+});
 
 /** The gallery shell is React; everything inside this mount is rendered by Vue. */
 export function mountVueRunbook(element: HTMLElement, demo: DemoDefinition): () => void {
@@ -33,7 +83,7 @@ export function mountVueRunbook(element: HTMLElement, demo: DemoDefinition): () 
         const quote = Boolean(editor.value && isInsideNode(editor.value, 'blockquote'));
         const output = !doc ? '' : format.value === 'json' ? JSON.stringify(doc.toJSON(), null, 2)
           : format.value === 'markdown' ? MarkdownExporter.export(doc) : HTMLExporter.export(doc);
-        return h('div', { class: 'demo-workspace', 'data-vue-runbook': '' }, [
+        const runbook = h('div', { class: 'demo-workspace', 'data-vue-runbook': '' }, [
           h('section', { class: 'demo-surface' }, [
             h('div', { class: 'surface-label' }, [h('span', 'LIVE VUE 3 + FOUNTAIN BINDINGS'), h('i', 'Vue owns this editor, toolbar, and document inspector.')]),
             h('div', { class: 'demo-controls', role: 'group', 'aria-label': 'Runbook commands' }, [
@@ -79,6 +129,7 @@ export function mountVueRunbook(element: HTMLElement, demo: DemoDefinition): () 
             h('pre', [h('code', output)]),
           ]),
         ]);
+        return h('div', [runbook, h(ReleaseReviewForm)]);
       };
     },
   }));

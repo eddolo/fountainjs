@@ -59,7 +59,7 @@ import { mathReferencesJourney } from './math-references-journey';
 import { textlessReplacementJourney } from './textless-replacement-journey';
 import { mathFilesJourney } from './math-files-journey';
 import { mathPagesJourney } from './math-pages-journey';
-import { vueRunbookJourney } from './vue-runbook-journey';
+import { vueDocumentFieldJourney, vueRunbookJourney } from './vue-runbook-journey';
 import { svelteReportJourney } from './svelte-report-journey';
 import { angularBriefFormJourney, angularCampaignJourney } from './angular-campaign-journey';
 import { listNumberingJourney } from './list-numbering-journey';
@@ -825,6 +825,10 @@ test('uses first-party Svelte bindings for table editing, history, stores and ow
 
 test('uses first-party Vue bindings for editing, reactive state, history and view remounts', async ({ page }, info) => {
   await vueRunbookJourney(page, info);
+});
+
+test('binds rich text to a Vue form through typing, submission, disable and reset', async ({ page }, info) => {
+  await vueDocumentFieldJourney(page, info);
 });
 
 test('keeps real SVG equation links inside paged snapshots across editing and rebuilding', async ({ page, browserName }, info) => {

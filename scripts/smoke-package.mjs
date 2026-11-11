@@ -224,7 +224,7 @@ const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');
 if (esmEmojiData.unicodeEmojis.length < 1_900) throw new Error('ESM Unicode emoji data entry is incomplete.');
 assertExports(await import('fountainjs-editor/react'), reactNames, 'ESM React entry');
-assertExports(await import('fountainjs-editor/vue'), ['FountainEditor', 'useFountain', 'useFountainState'], 'ESM Vue entry');
+assertExports(await import('fountainjs-editor/vue'), ['FountainDocumentField', 'FountainEditor', 'useFountain', 'useFountainState'], 'ESM Vue entry');
 assertExports(await import('fountainjs-editor/svelte'), ['createFountain', 'fountainState', 'fountainEditor'], 'ESM Svelte entry');
 // Angular's published directive is partial-Ivy. A normal Angular application
 // links it at build time; this Node-only import smoke uses its JIT compiler.
@@ -480,7 +480,7 @@ const cjsEmojiData = require('fountainjs-editor/emoji-data');
 assertExports(cjsEmojiData, emojiDataNames, 'CommonJS Unicode emoji data entry');
 if (cjsEmojiData.unicodeEmojis.length < 1_900) throw new Error('CommonJS Unicode emoji data entry is incomplete.');
 assertExports(require('fountainjs-editor/react'), reactNames, 'CommonJS React entry');
-assertExports(require('fountainjs-editor/vue'), ['FountainEditor', 'useFountain', 'useFountainState'], 'CommonJS Vue entry');
+assertExports(require('fountainjs-editor/vue'), ['FountainDocumentField', 'FountainEditor', 'useFountain', 'useFountainState'], 'CommonJS Vue entry');
 assertExports(require('fountainjs-editor/svelte'), ['createFountain', 'fountainState', 'fountainEditor'], 'CommonJS Svelte entry');
 assertExports(require('fountainjs-editor/comments'), commentsNames, 'CommonJS comments entry');
 assertExports(require('fountainjs-editor/react/comments'), reactCommentsNames, 'CommonJS React comments entry');

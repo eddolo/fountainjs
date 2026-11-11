@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add a Vue document field with JSON `v-model`, disabled state, and a form demo
+  covering typing, submission, undo and reset.
+
 - Retain complex Word page-number and page-count fields in supported headers
   and footers so pagination and DOCX export can recalculate them after edits.
 

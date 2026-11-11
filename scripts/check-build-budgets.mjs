@@ -116,9 +116,10 @@ const limits = Object.freeze({
   // Named configuration panels, trigger ownership/focus and native field keys
   // add ~1.6 KiB ESM / 1.4 KiB CJS only here; ESM still fits its existing cap.
   'dist/react.cjs': 69.5 * kibibyte,
-  // Vue remains an external optional peer; only lifecycle/state/view glue ships here.
-  'dist/vue.js': 3 * kibibyte,
-  'dist/vue.cjs': 3 * kibibyte,
+  // Vue remains an external optional peer. The JSON form field brings this
+  // entry to 3,159 bytes ESM and 3,239 bytes CommonJS.
+  'dist/vue.js': 3.5 * kibibyte,
+  'dist/vue.cjs': 3.5 * kibibyte,
   'dist/svelte.js': 2 * kibibyte,
   'dist/svelte.cjs': 2 * kibibyte,
   'dist/angular/index.js': 5 * kibibyte,
@@ -688,7 +689,8 @@ const limits = Object.freeze({
   // bytes, 182 above the preceding limit. Allow 192 bytes for this repair.
   // DOCX complex page fields and the custom numbering fallback measure
   // 1,450,491 bytes against the previous 1,449,408-byte cap.
-  'all CommonJS runtime code': 1417 * kibibyte,
+  // The Vue form field brings the measured total to 1,452,286 bytes.
+  'all CommonJS runtime code': 1418.75 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

@@ -71,14 +71,57 @@ settings. The optional stylesheet and every surrounding control are replaceable.
   signal; implement any deliberate offline policy at the provider boundary.
 
 Vue manages the host element, never the contenteditable descendants. Do not put
-Vue children or a `v-model` HTML string into `FountainEditor`. Changes already
-flow through Fountain transactions; reflecting every state update back through
-a document replacement would corrupt ordinary undo/selection behavior.
+Vue children inside `FountainEditor`. Use `FountainDocumentField` to bind the
+document as portable JSON.
 
 Keep `options` stable during ordinary re-renders. Replacing the options object
 intentionally rebuilds the view (not the engine/history); it is not a live
 deep-options watcher. HTML fallthrough attributes such as `class` apply to the
 host. Use `options.ariaLabel` and `options.attributes` for the editable element.
+
+## Bind a form field
+
+The unreleased `FountainDocumentField` component owns its editor and binds a
+`NodeJSON | null` model using the standard Vue `v-model` contract. Replace
+the model object when loading a different document. Use `null` to clear the
+field to the schema's default document. [Vue component models](https://vuejs.org/guide/components/v-model)
+
+```vue
+<script setup lang="ts">
+import { shallowRef } from 'vue'
+import { StarterKit, type NodeJSON } from 'fountainjs-editor'
+import { FountainDocumentField } from 'fountainjs-editor/vue'
+import 'fountainjs-editor/styles.css'
+
+const emit = defineEmits<{ submit: [notes: NodeJSON | null] }>()
+const notes = shallowRef<NodeJSON | null>(null)
+const config = { schema: StarterKit.schema, plugins: StarterKit.plugins }
+const options = { ariaLabel: 'Review notes' }
+</script>
+
+<template>
+  <form @submit.prevent="emit('submit', notes)" @reset="notes = null">
+    <FountainDocumentField v-model="notes" :config="config" :options="options" />
+    <button type="reset">Clear notes</button>
+    <button type="submit">Submit review</button>
+  </form>
+</template>
+```
+
+Accepted document edits emit JSON, including root attributes. Vue can reflect
+the same value back without disturbing the caret or undo history. A different
+parent value replaces the document and starts new local undo history. The editor
+uses the schema and plugins supplied on mount. The component emits `blur` when
+focus leaves the entire field, and its template ref exposes the owned editor
+and `focus()` through `FountainDocumentFieldHandle`.
+
+Bind `:disabled` to make the field inert and block local document changes.
+Parent updates and provider-designated remote changes still apply. Re-enabling
+keeps the same editor and its history. The host owns validation and submission.
+The runbook's Release review form shows how to include the JSON in native
+`FormData` through a hidden input and omit it while disabled. Use the
+[form-associated Web Component](WEB_COMPONENT_FORMS.md) for native form
+participation and browser constraint validation.
 
 ## Focus, saving, collaboration and read-only views
 
