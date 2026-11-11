@@ -1,0 +1,28 @@
+{
+  "packageSourceCommit": "19f4dca7",
+  "demoToolingCommit": "1e86e5e0",
+  "libraryRuntimeBaseline": "024ff8fe",
+  "version": "0.5.0-beta.1",
+  "files": 1145,
+  "bytes": 4891240,
+  "sha512": "sha512-WH07swHDQRmgmb8snrdNTal5MmguElSrsPQIk9Qsp13FvvGk5rVGT6VZBMEIj+ZDb1aEsPJllBzbAe+hQtq5FQ==",
+  "changedArchiveMembers": [
+    "package/docs/ARCHITECTURE.md",
+    "package/docs/RELEASES.md",
+    "package/docs/ROADMAP.md",
+    "package/docs/TIPTAP_PARITY.md",
+    "package/package.json"
+  ],
+  "packageMetadataDifferenceOnly": {
+    "field": "scripts.audit:ui",
+    "before": "playwright test -c playwright.audit.config.ts",
+    "after": "playwright test -c playwright.audit.config.ts editor-capabilities-audit.spec.ts latest-ui-audit.spec.ts"
+  },
+  "allOtherMembersByteIdentical": true,
+  "distributionFilesByteIdentical": 1008,
+  "previousReceipt": "artifacts/release-preflight-94c0bebc/receipt.json",
+  "currentSourceCheck": "artifacts/release-check-1e86e5e0.log",
+  "currentRecordedAudit": "artifacts/manual-ui-release-audit-20261111.json",
+  "consumerScope": "Previous ESM/CommonJS/type evidence applies to identical runtime/declarations/exports/dependencies. This documentation/developer-command repack does not claim a new consumer execution.",
+  "published": false
+}
