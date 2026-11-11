@@ -56,8 +56,10 @@ native clipboard batch and hosted CI remain pending. See the
 ## Remaining parity work
 
 The [capability ledger](TIPTAP_PARITY.md) records 61 Delivered, eight Partial,
-and two Host boundary rows. These are capability counts. Release readiness
-also depends on the evidence above.
+two Host boundary and three Missing rows. The November 11 upstream catalogue
+review added charts/diagrams, template slots and a whiteboard surface to the
+previous 71-row scope. These are capability counts. Release readiness also
+depends on the evidence above; the new outcomes do not expand this beta.
 
 | Area | Work still required |
 | --- | --- |
@@ -89,6 +91,10 @@ including their scope, sources, and required proof.
 - Native renderer prototypes and a language-neutral document/operation protocol.
 - Monaco/CodeMirror, Jupyter-kernel, and terminal adapters for structured workspaces.
 - Authorable forms with separate definitions, respondent views, and submissions.
+- Editable charts/source-backed diagrams, validated template slots and variable
+  bindings, and an optional structured whiteboard surface. The
+  [November 11 catalogue audit](TIPTAP_PARITY.md#catalogue-review--2026-11-11)
+  records the missing outcomes and their upstream references.
 - Provider-based audio/video transcription and further language-service modules.
 - Further block, table, media, and editorial features justified by complete use cases.
 

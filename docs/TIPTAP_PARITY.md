@@ -1,6 +1,26 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-## Current programme status — 2026-11-10
+## Current programme status — 2026-11-11
+
+The latest local runtime checkpoint is `7961b966`: all 5,271 source tests in
+323 files pass, alongside the build, package, type, headless, performance and
+retention gates. A real renderer failure discovered during the broad browser
+diagnostic is repaired: adjacent empty text runs no longer render a peer widget
+twice at the same position. Twelve recorded regression journeys pass across
+Chromium, Firefox and WebKit. The remaining-case sweep is still in progress;
+it is not a clean final matrix. Serialized native clipboard checks, fresh
+combined release CI, final packed consumers and publication remain pending.
+[Current release evidence](RELEASES.md#empty-run-widget-repair-at-7961b966).
+
+A November 11 review of upstream documentation adds three Missing outcomes:
+editable charts/diagrams, authorable template slots, and a whiteboard surface.
+The expanded ledger therefore has **61 Delivered, eight Partial, two Host
+boundary and three Missing rows (74 total)**. Earlier 71-row counts describe
+the previous comparison scope. General widgets or embedded images do not
+establish these first-party capabilities. See the catalogue audit below.
+These additions are post-beta work; the current release scope stays fixed.
+
+## Historical programme status — 2026-11-10
 
 The six original default-adapter concurrency regressions now pass through the
 ordinary `/yjs` entry. It uses retained character/node identities; the former
@@ -1913,6 +1933,8 @@ A row may move to **Delivered** only when all applicable gates pass:
 | DOC-17 | Stable unique node identifiers | Delivered | The isolated DOM-free module provides configurable `nodeId` policy, deterministic/injected generation, O(1) lookup, fail-closed diagnostics, lookup/update/select commands, one-step history-neutral repair, JSON normalization, schema filtering, and mixed-client Yjs repair convergence. Identity survives ordinary edits and moves, duplicate paste remains one undo action, and the public Go demo proves IDs through a real rendered workflow. The complete 400-test package suite and 278-pass Chromium/Firefox/WebKit/mobile [CI run for `8fca57c`](https://github.com/eddolo/fountainjs/actions/runs/33967296032), plus the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33967296119), are green. |
 | DOC-18 | Guaranteed trailing editable block | Delivered | `StarterKit` now appends one schema-valid direct text block after terminal tables, media, dividers, widgets, quotes, lists, and other non-text blocks while leaving editable paragraphs/headings/code blocks unchanged. The independently configurable, DOM-free extension is idempotent, history-neutral, nested-root aware, and provider-independently rebroadcast after remote repair; unit, Yjs-convergence, and real-browser typing/table-control coverage protect the invariant. The complete [CI run for `530c47f`](https://github.com/eddolo/fountainjs/actions/runs/34029708945) and corresponding [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34029708931) are green. See [TRAILING_EDITABLE_BLOCK.md](TRAILING_EDITABLE_BLOCK.md). |
 | DOC-19 | Office and external-app paste normalization | Delivered | Source-aware configurable cleanup covers independent/nested Word lists with numeric starts, footnotes/endnotes and revisions; Google Docs structure and metadata; Excel tables, spans, and supported cell styling; annotated MathML, ruby, semantic footnotes, unsafe content, external-comment loss, and safe fallback. Fountain-to-Fountain copy writes schema-validated versioned JSON for exact compatible content plus clean semantic HTML and readable text for external destinations; missing extensions fall back without breaking paste. Chromium clipboard journeys prove exact complex-document round trips and rich/text-only external destinations, while synthetic native paste events prove representative Word/Docs/Excel ingestion in Chromium, Firefox, and WebKit. The complete 620-test package gate and 359-pass all-engine browser matrix are certified by [CI run `849a96a`](https://github.com/eddolo/fountainjs/actions/runs/34044186483), with the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34044186485). Unknown proprietary properties, formulas, and external comment threads remain explicit losses rather than false fidelity claims. |
+| DOC-20 | Editable charts and source-backed diagrams | Missing | No first-party chart/diagram module exists in the current source. An embedded SVG or image is not editable chart data or Mermaid/draw.io/BPMN source. Define a portable schema, renderer boundary, author controls, undo/collaboration behavior and export fallbacks; verify a complete workflow before promotion. See the November 11 catalogue audit. |
+| DOC-21 | Authorable template slots and document fields | Missing | Existing widgets and host permission hooks are building blocks, not a complete templating/form product. Define author and respondent views, validated rich-content slots, variable bindings, protected regions, persistence and server-authoritative access checks. The roadmap retains authorable forms as future work. See the November 11 catalogue audit. |
 
 ### Product UI
 
@@ -1963,6 +1985,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | SURFACE-03 | Standards-based Web Component | Delivered | Public value/event/lifecycle and configurable schema/plugins remain available. Unreleased source adds opt-in native JSON FormData, required-content/custom-error validity, associated-label focus/naming, reset, fieldset disabling and state restoration. Real native ElementInternals and recorded public-workshop checks cover the bounded contract; full native-input, autofill and assistive-technology parity remain unclaimed. See [WEB_COMPONENT_FORMS.md](WEB_COMPONENT_FORMS.md). |
 | SURFACE-04 | Native Vue, Svelte, and Angular bindings | Partial | Optional `/vue` composables/component, `/svelte` lifecycle/store/action and `/angular` signals/partial-Ivy directive; real compiled framework demos with ownership, SSR and browser editing checks. [Vue](VUE.md), [Svelte](SVELTE.md), [Angular](ANGULAR.md) guides. All three base adapters ship in [0.4.0-beta.2](https://github.com/eddolo/fountainjs/releases/tag/v0.4.0-beta.2). The unreleased Angular 22 Forms entry adds portable JSON form values, touch and disabled state, and undo-safe resets. The unreleased Vue document field adds portable JSON `v-model`, blur and disabled state, and external resets. Equivalent optional framework UI suites, broader framework-version and form coverage, and further production evidence remain open. |
 | SURFACE-05 | Headless/server document processing | Delivered | `fountainjs-editor/core` exposes the model/schema, logical selections, transactions, editor state, commands, history, portable extension composition, generic collaboration, formats, migrations, stable IDs, and structured attributes behind a 50-module import gate. A real package consumer compiles with only `ES2023`, no ambient types, and `skipLibCheck: false`; packed ESM/CommonJS execute generic and Yjs collaboration with `document` and `window` absent; `html/server` supplies bounded HTML parsing. The complete 455-test package gate and 289-pass Chromium/Firefox/WebKit/mobile matrix are certified in [CI run `2c7ff4c`](https://github.com/eddolo/fountainjs/actions/runs/33979389234), with the corresponding [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33979389243). Native UI renderers remain explicitly outside this delivered server outcome. |
+| SURFACE-06 | Structured whiteboard editing surface | Missing | No first-party board renderer, shape selection, camera, drawing or board collaboration contract exists. Document block reordering is not a whiteboard. Keep this as an optional future surface with its own persistence, accessibility, history and collaboration tests. See the November 11 catalogue audit. |
 
 ### Production readiness and ecosystem
 
@@ -1986,8 +2009,31 @@ original sources and present status are verified.
 
 ### Catalogue coverage notes
 
-The audit explicitly maps every distinct outcome in the current
-[Tiptap extension catalogue](https://tiptap.dev/docs/editor/extensions/overview).
+### Catalogue review — 2026-11-11
+
+The previous assertion that every current upstream outcome was mapped was too
+broad. This review checks the official
+[Tiptap extension catalogue](https://tiptap.dev/docs/editor/extensions/overview)
+and the feature pages below. It adds three explicit Missing outcomes rather
+than treating a possible custom extension as delivered functionality.
+
+- [Diagrams](https://tiptap.dev/docs/diagrams/getting-started/overview) documents
+  editable chart data and source-backed flow diagrams. Fountain has no matching
+  first-party module: DOC-20 is Missing.
+- [Slots](https://tiptap.dev/docs/composable-docs/slots/getting-started/overview)
+  documents validated document fields with Content Protection and variable
+  bindings. Fountain's generic widgets do not deliver this complete authoring
+  workflow: DOC-21 is Missing.
+- [Whiteboard](https://tiptap.dev/docs/editor/whiteboard/getting-started/overview)
+  documents a board with editable shapes, camera navigation and optional
+  collaboration. A conventional document with draggable blocks does not meet
+  that contract: SURFACE-06 is Missing.
+
+All three upstream pages label these features alpha/pilot at the review date.
+Their presence is a coverage gap to track, not evidence of upstream production
+quality or a reason to destabilize the fixed beta candidate. This is a dated
+comparison, not a guarantee that a changing catalogue stays exhaustive.
+
 Bundle extensions such as StarterKit, ListKit, TableKit, and TextStyleKit do not
 receive duplicate rows because their underlying outcomes are already listed.
 YouTube and Twitch map to DOC-07's provider-gated embeds; Audio maps to native
