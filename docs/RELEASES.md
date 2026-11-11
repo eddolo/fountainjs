@@ -100,7 +100,7 @@ The independent `recorded-ui` runner executes the eight `pnpm audit:ui`
 journeys, then `playwright.production.config.ts` builds the website and checks
 starter downloads, rich image-caption import, offline equation HTML readers
 and build/framework identity in Chromium, Firefox and WebKit at `/fountainjs/`
-(15 production checks). It then prepares the packed
+(30 production checks, headed on Linux Xvfb for native clipboard delivery). It then prepares the packed
 candidate in three external starter projects and runs six built-consumer browser
 journeys plus the Node conversion/probe checks.
 [Standalone audit procedure](INSTALLED_STARTER_AUDIT.md). Rebuild-backed runs stay
@@ -865,6 +865,39 @@ The compact report is `artifacts/website-identity-integration-20261111.json`.
 The five-project combined hosted matrix, npm-CLI/registry consumption, final
 package sealing, staging/approval and deployment remain pending. The published
 site and npm package are not updated by these local commits.
+
+### Homepage copy and contrast — 2026-11-11
+
+Source `ef634988` adds caught clipboard failures, a labelled read-only/manual
+copy route, snapshot-bound success, serialized pending requests and format
+pressed state. Named small-text accent/outline/export colors are repaired.
+The two original regression cases fail before the repair; the complete recovery,
+race and contrast batch then passes 12/12 across Chromium/Firefox/WebKit. Eleven
+computed solid-surface targets per engine now have a minimum contrast of 5.15:1.
+
+An added unmocked clipboard-API positive case exposes separate platform results.
+Chromium's independent control initially denies write permission even with focus
+and user activation. Granting clipboard-write in the positive-path test makes
+that case pass; rejection tests remain. Windows headless WebKit reports successful
+API writing but native keyboard paste is empty in both Fountain and an independent
+plain HTML control. The final source batch is **14 passes, one failure**, and
+production is **29 passes, one failure**. The WebKit assertion is retained
+unchanged, with no skip, xfail or retries. The browser/OS bridge cause is not
+established by these observations.
+
+Required CI now places the nine new native-copy executions in the existing
+serialized Linux display batch and runs all production checks headed on Xvfb.
+Collection proves 36 display and 1,096 remaining headless executions form a
+disjoint, complete 1,132-case union; these are collection counts, not passes.
+Nineteen release/metadata policy checks and root TypeScript pass. All 1,008 library
+files remain identical to the sealed archive, with no API or acceptance-limit
+changes. Two recovery captures receive direct visual review. The compact report
+is `artifacts/site-copy-contrast-integration-20261111.json`.
+
+[Copy contract and scope](WEBSITE_BUILD_IDENTITY.md#homepage-copy-and-text-contrast).
+Fresh headed Linux CI, the current combined revision gates and final publication
+checks remain pending. The local failed native positive case is not waived for
+release; source/production pass counts above remain explicit.
 
 ## Failure and rollback policy
 

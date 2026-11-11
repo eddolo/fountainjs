@@ -1,0 +1,79 @@
+[
+  {
+    "selector": ".capabilities__heading > span",
+    "text": "IN THIS PREVIEW",
+    "foreground": "rgb(182, 167, 255)",
+    "background": "rgb(34, 32, 51)",
+    "contrast": 7.532002863850595
+  },
+  {
+    "selector": ".flow__title > span",
+    "text": "HOW MODULARITY WORKS",
+    "foreground": "rgb(182, 167, 255)",
+    "background": "rgb(23, 21, 42)",
+    "contrast": 8.461675810413853
+  },
+  {
+    "selector": ".architecture > div > span",
+    "text": "THE EXTENSION CONTRACT",
+    "foreground": "rgb(182, 167, 255)",
+    "background": "rgb(23, 21, 42)",
+    "contrast": 8.461675810413853
+  },
+  {
+    "selector": ".section-heading > div > span",
+    "text": "LIVE PLAYGROUND",
+    "foreground": "rgb(182, 167, 255)",
+    "background": "rgb(34, 32, 51)",
+    "contrast": 7.532002863850595
+  },
+  {
+    "selector": ".studio__outline .fountain-navigator__title",
+    "text": "Outline",
+    "foreground": "rgb(105, 98, 119)",
+    "background": "rgb(248, 247, 251)",
+    "contrast": 5.447710215724558
+  },
+  {
+    "selector": ".outline-tip",
+    "text": "Markdown shortcuts## heading \u00b7 - list \u00b7 > quote",
+    "foreground": "rgb(105, 98, 119)",
+    "background": "rgb(248, 247, 251)",
+    "contrast": 5.447710215724558
+  },
+  {
+    "selector": ".format-tabs button",
+    "text": "markdown",
+    "foreground": "rgb(255, 255, 255)",
+    "background": "rgb(109, 74, 255)",
+    "contrast": 5.154950775529779
+  },
+  {
+    "selector": ".format-tabs button",
+    "text": "html",
+    "foreground": "rgb(188, 183, 202)",
+    "background": "rgb(40, 36, 56)",
+    "contrast": 7.690709865043258
+  },
+  {
+    "selector": ".format-tabs button",
+    "text": "json",
+    "foreground": "rgb(188, 183, 202)",
+    "background": "rgb(40, 36, 56)",
+    "contrast": 7.690709865043258
+  },
+  {
+    "selector": ".export-head button",
+    "text": "Copy",
+    "foreground": "rgb(187, 180, 208)",
+    "background": "rgb(40, 36, 56)",
+    "contrast": 7.539070992732324
+  },
+  {
+    "selector": ".open-source__lead > span",
+    "text": "WHAT OPEN SOURCE MEANS HERE",
+    "foreground": "rgb(182, 167, 255)",
+    "background": "rgb(23, 21, 42)",
+    "contrast": 8.461675810413853
+  }
+]

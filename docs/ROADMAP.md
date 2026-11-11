@@ -116,8 +116,16 @@ preview copy is reconciled. Nineteen focused checks, six homepage interaction
 checks, 15 built-site checks and eight recorded release journeys pass locally;
 the built metadata names clean source `72174160`. These overlapping executions
 are verification evidence, not new capability counts.
-[Website identity contract](WEBSITE_BUILD_IDENTITY.md). Remaining Copy feedback,
-contrast, export-panel profiling and marketing-page rendering work stays open.
+[Website identity contract](WEBSITE_BUILD_IDENTITY.md). Copy recovery and the named contrast repairs now have local evidence; broader
+accessibility, export-panel profiling and marketing-page rendering stay open.
+
+Homepage Copy now has an accessible manual recovery path and snapshot-bound
+feedback. The targeted text colors measure at least 5.15:1 in all three desktop
+engines. Recovery/race/contrast cases pass, but the positive Windows WebKit API
+paste case fails in both Fountain and a plain native control: source 14/15,
+built site 29/30. Required Linux display-backed checks retain that assertion;
+publication remains pending those results.
+[Copy/contrast evidence](RELEASES.md#homepage-copy-and-contrast--2026-11-11).
 
 ## Remaining parity work
 

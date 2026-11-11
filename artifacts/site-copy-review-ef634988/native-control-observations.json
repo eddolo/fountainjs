@@ -1,0 +1,33 @@
+[
+  {
+    "name": "chromium",
+    "record": {
+      "state": "failed",
+      "focus": true,
+      "activation": true,
+      "error": "NotAllowedError: Failed to execute 'writeText' on 'Clipboard': Write permission denied."
+    },
+    "receivedMatchesControl": false,
+    "receivedLength": 0
+  },
+  {
+    "name": "firefox",
+    "record": {
+      "state": "success",
+      "focus": true,
+      "activation": true
+    },
+    "receivedMatchesControl": true,
+    "receivedLength": 29
+  },
+  {
+    "name": "webkit",
+    "record": {
+      "state": "success",
+      "focus": true,
+      "activation": true
+    },
+    "receivedMatchesControl": false,
+    "receivedLength": 0
+  }
+]

@@ -130,3 +130,12 @@ checks at 72174160, six ordinary homepage interactions and eight recorded
 release journeys pass. The compiled offline-equation download is included.
 The audit uses a server configuration that disables automatic browser opening.
 Fresh combined hosted CI, final sealing and publication remain pending.
+
+Homepage Copy now catches rejection/unavailability, supplies a readonly manual
+copy route and associates feedback with the copied snapshot. Named contrast
+targets reach at least 5.15:1. Source is 14 passes/one failed positive API paste;
+production is 29 passes/one failure. Windows WebKit's same empty native paste
+is reproduced by independent plain HTML. No assertion/skip waiver was added.
+Required source native cases and all production cases run serialized/headed
+on Linux Xvfb; that hosted result is pending. Nineteen policy checks, TypeScript
+and byte identity of all 1,008 library files pass. This does not approve release.

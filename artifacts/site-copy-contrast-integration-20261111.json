@@ -1,0 +1,238 @@
+{
+  "date": "2026-11-11",
+  "sourceCommit": "ef634988",
+  "change": "Homepage automatic-copy failures now expose accessible readonly source and Select output; async results belong to the copied snapshot and pending requests are serialized. Normal-text contrast fixed for the named dark/pale labels and export controls. Format controls publish pressed state. No library/API change.",
+  "validation": {
+    "baseline": {
+      "copyFailureAndContrastCasesFailed": 2,
+      "originalPreviewContrast": 3.0805195121730073
+    },
+    "sourceAllRecoveredAndContrast": {
+      "startTime": "2026-11-11T20:11:28.949Z",
+      "duration": 48834.547999999995,
+      "expected": 12,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "sourceWithUnmockedPositivePath": {
+      "startTime": "2026-11-11T20:20:42.216Z",
+      "duration": 67491.47600000001,
+      "expected": 14,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "production": {
+      "startTime": "2026-11-11T20:23:18.700Z",
+      "duration": 82368.989,
+      "expected": 29,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "policyTests": 19,
+    "rootTypeScript": true,
+    "contrast": {
+      "chromium": {
+        "measuredTargets": 11,
+        "minimum": 5.154950775529779
+      },
+      "firefox": {
+        "measuredTargets": 11,
+        "minimum": 5.154950775529779
+      },
+      "webkit": {
+        "measuredTargets": 11,
+        "minimum": 5.154950775529779
+      }
+    },
+    "unchangedLibraryFiles": 1008,
+    "partition": {
+      "scope": "Collection identities only, not execution passes or capability counts",
+      "all": 1132,
+      "display": 36,
+      "headless": 1096,
+      "disjoint": true,
+      "completeUnion": true,
+      "newNativeClipboardExecutions": [
+        {
+          "title": "copies homepage output using the native clipboard API",
+          "project": "chromium"
+        },
+        {
+          "title": "recovers homepage copy by native manual copying when clipboard access is denied",
+          "project": "chromium"
+        },
+        {
+          "title": "recovers homepage copy by native manual copying when clipboard access is unavailable",
+          "project": "chromium"
+        },
+        {
+          "title": "copies homepage output using the native clipboard API",
+          "project": "firefox"
+        },
+        {
+          "title": "recovers homepage copy by native manual copying when clipboard access is denied",
+          "project": "firefox"
+        },
+        {
+          "title": "recovers homepage copy by native manual copying when clipboard access is unavailable",
+          "project": "firefox"
+        },
+        {
+          "title": "copies homepage output using the native clipboard API",
+          "project": "webkit"
+        },
+        {
+          "title": "recovers homepage copy by native manual copying when clipboard access is denied",
+          "project": "webkit"
+        },
+        {
+          "title": "recovers homepage copy by native manual copying when clipboard access is unavailable",
+          "project": "webkit"
+        }
+      ],
+      "pattern": "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy|native shared-context|inherited node direction survives trusted|copies and cuts a partial text-to-image range|recovers homepage copy by native manual copying|copies homepage output using the native clipboard API"
+    }
+  },
+  "unresolved": {
+    "case": "Windows headless WebKit reports writeText success but native keyboard paste receives empty text. The unchanged independent plain HTML control reproduces it.",
+    "source": "14 passed, 1 failed",
+    "production": "29 passed, 1 failed",
+    "releaseAction": "Keep positive-path paste assertions unchanged. Required Linux CI runs native clipboard cases serialized on Xvfb and all production cases headed on Xvfb; that hosted execution is still pending. No skip, xfail, assertion weakening or publication waiver added."
+  },
+  "method": [
+    "Denial and missing-API recovery paths inject the clipboard error but use real native keyboard copy/paste into an independent receiver.",
+    "Positive path uses the real clipboard API. Chromium receives explicit clipboard-write permission after its independent default-permission control fails; Firefox passes normally.",
+    "Pending-request test deliberately controls promise completion to check format changes without false Copied feedback.",
+    "Contrast uses computed styles on 11 named solid-surface targets per engine; does not certify full-site accessibility or physical-device/AT use.",
+    "Two recovery screenshots directly reviewed; no continuous video review claimed."
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/site-copy-contrast-before-20261111.log",
+      "bytes": 10779,
+      "sha256": "e9f3607f069bf21c77ed8de6b8e10f98cd66294a8e1c3e7991c215c84764b7f3"
+    },
+    {
+      "path": "artifacts/site-copy-contrast-before-20261111.json",
+      "bytes": 17729,
+      "sha256": "48e610ae3ea1ec2867d285a914de20af9a9601f0d61a1f9317a7c73b579aedf3"
+    },
+    {
+      "path": "artifacts/site-copy-contrast-after-20261111.log",
+      "bytes": 15689,
+      "sha256": "fe12001e297de80342b89fd7e5912da1f18e3b866923bb9e043a4638d6578048"
+    },
+    {
+      "path": "artifacts/site-copy-contrast-final-20261111.json",
+      "bytes": 27304,
+      "sha256": "804f4c68a9b11d2a983e84f27953039289aa81d214f04ad2b4bdb4031e719710"
+    },
+    {
+      "path": "artifacts/site-copy-native-final-20261111.json",
+      "bytes": 46794,
+      "sha256": "e6dc53e52416b2ad5d33fca68efb05551bc59faf47ca1c749ed2c64630bb70f5"
+    },
+    {
+      "path": "artifacts/site-copy-permission-final-20261111.log",
+      "bytes": 11138,
+      "sha256": "c3bb40817782bbd4b3971c55436b749c1d395987d7236a662a648257227ced5e"
+    },
+    {
+      "path": "artifacts/site-copy-permission-final-20261111.json",
+      "bytes": 42019,
+      "sha256": "34d7e05673acbe4d4eaf754718819d96459d78b8e98eb782e1d6328eea423085"
+    },
+    {
+      "path": "artifacts/site-copy-production-20261111.log",
+      "bytes": 33183,
+      "sha256": "1e89405426aeb84d40c8aaf43ac4edacfb36e6ecae74403f0ad6ca3182862b0a"
+    },
+    {
+      "path": "artifacts/site-copy-production-20261111.json",
+      "bytes": 71833,
+      "sha256": "9d191cff74d4e67458416ef4e91ce70dc5ccd29204d6816855eda33c4f878887"
+    },
+    {
+      "path": "artifacts/site-copy-policy-20261111.log",
+      "bytes": 430,
+      "sha256": "84dd7cf3dece4544d4144ce022f359fd64e9358ff7d523cdc1e6a9d4985be187"
+    },
+    {
+      "path": "artifacts/site-copy-typecheck-20261111.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/site-copy-ci-partition-20261111/receipt.json",
+      "bytes": 1789,
+      "sha256": "84e579e084146c2fa489bff39d70ce00ba9cccade30995d8d140116fe15e1692"
+    },
+    {
+      "path": "artifacts/native-clipboard-api-control-20261111/observations.json",
+      "bytes": 671,
+      "sha256": "9e7429fc046ddf5ea9acd9ce4bd0afa6ab75a604129e79db18ef67366cac0681"
+    }
+  ],
+  "retainedReview": [
+    {
+      "path": "artifacts/site-copy-review-ef634988/chromium-contrast.json",
+      "bytes": 2246,
+      "sha256": "00267da6cd9fa150939640774da32a497ced1e2ae02713b7c4cd70c98557c2db"
+    },
+    {
+      "path": "artifacts/site-copy-review-ef634988/chromium-manual-fallback.png",
+      "bytes": 23040,
+      "sha256": "d2c6b9580b40ef8bd0c88195e5dd81b794831fb3534705faeb74946ed181595e"
+    },
+    {
+      "path": "artifacts/site-copy-review-ef634988/firefox-contrast.json",
+      "bytes": 2246,
+      "sha256": "00267da6cd9fa150939640774da32a497ced1e2ae02713b7c4cd70c98557c2db"
+    },
+    {
+      "path": "artifacts/site-copy-review-ef634988/native-control-chromium.png",
+      "bytes": 8509,
+      "sha256": "6d29ad55881ac92d5f46dfc974644adb434955ece0743ef181ffc055d681837e"
+    },
+    {
+      "path": "artifacts/site-copy-review-ef634988/native-control-firefox.png",
+      "bytes": 10176,
+      "sha256": "9b936c3ee77459db70d06d14f87533f67d300c36e1b15834b1673b2a23f41782"
+    },
+    {
+      "path": "artifacts/site-copy-review-ef634988/native-control-observations.json",
+      "bytes": 671,
+      "sha256": "9e7429fc046ddf5ea9acd9ce4bd0afa6ab75a604129e79db18ef67366cac0681"
+    },
+    {
+      "path": "artifacts/site-copy-review-ef634988/native-control-webkit.png",
+      "bytes": 8579,
+      "sha256": "1f283e7cfb20c2b697c51527651f4e04fe6808cb30a5f20244bc2b8af3b28144"
+    },
+    {
+      "path": "artifacts/site-copy-review-ef634988/webkit-contrast.json",
+      "bytes": 2246,
+      "sha256": "00267da6cd9fa150939640774da32a497ced1e2ae02713b7c4cd70c98557c2db"
+    },
+    {
+      "path": "artifacts/site-copy-review-ef634988/webkit-manual-fallback.png",
+      "bytes": 43004,
+      "sha256": "c0eabdb314ee57d57cc5b612cec61c7a03827cdeed8e70a4efe073264ab4f1de"
+    }
+  ],
+  "pending": [
+    "Fresh headed Linux CI/native pasteboard verification",
+    "Current full combined browser/source revision gate",
+    "Final archive refresh and registry consumer checks",
+    "Registry staging/approval and deployment"
+  ],
+  "unchanged": [
+    "All library distribution bytes",
+    "Public API and package renderer boundaries",
+    "Code-size/performance acceptance limits",
+    "Capability ledger and beta scope"
+  ]
+}

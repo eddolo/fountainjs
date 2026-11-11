@@ -34,10 +34,33 @@ verification; keep the published-version README and adapter availability notes
 accurate when publication is actually verified. Do not merge this candidate
 into an automatically deployed branch while starter pins remain unpublished.
 
+## Homepage copy and text contrast
+
+The local candidate now shows an alert and a read-only source field when
+programmatic copying is rejected or unavailable. **Select output** focuses and
+selects that field for native keyboard copying. Failed copying does not alter
+the document. Pending requests are serialized and success belongs to the copied
+snapshot, so switching output format cannot falsely confirm the new output.
+The format buttons also publish their pressed state.
+
+The named dark-surface accent labels, pale outline labels and inactive export
+controls now pass normal-text contrast checks. Eleven targets per desktop engine
+measure at least 5.15:1. This is scoped computed-style evidence, not whole-site
+WCAG, font-readability, screen-reader or mobile certification.
+
+Manual recovery, race handling and contrast pass across all three engines.
+The unmocked positive API path passes Chromium with write permission and
+Firefox. Windows headless WebKit reports successful API writing but pastes empty
+text; an independent native HTML control reproduces it. The source run records
+14 passes/one failure, and the built site records 29 passes/one failure. The
+positive paste assertion remains required. Linux CI serializes native clipboard
+cases on Xvfb and runs production workflows headed on Xvfb; that hosted evidence
+is pending, so this is not release approval. No browser assertion is skipped or
+weakened to hide the local result.
+
 The November 11 website assessment also identifies remaining work:
 
-- Visible Copy failure feedback and an accessible manual-copy route.
-- Contrast repairs for small text on dark and pale surfaces, followed by review.
+- Broader accessibility, contrast and readability audits beyond these named targets.
 - Measurement of homepage export-panel work during editing.
 - Stronger first-visit navigation and marketing/documentation prerendering,
   including canonical and sharing metadata.
