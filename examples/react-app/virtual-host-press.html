@@ -26,7 +26,14 @@
   const view = new EditorView(document.querySelector('#mount'), editor, { virtualization: virtual
     ? { minimumBlockCount: 0, estimatedBlockHeight: 48, overscanPx: 0, pinnedOverscanBlocks: 0 } : false });
   const button = document.querySelector('#export');
-  document.addEventListener('pointerdown', event => { if (event.target === button) pointerId = event.pointerId; });
+  if (new URL(location.href).searchParams.get('shadow') === '1') {
+    const host = document.createElement('host-toolbar'); host.style.display = 'inline-block';
+    button.replaceWith(host);
+    const shadow = host.attachShadow({ mode: 'open' });
+    const style = document.createElement('style'); style.textContent = 'button { width: 220px; height: 48px; margin: 24px; }';
+    shadow.append(style, button);
+  }
+  document.addEventListener('pointerdown', event => { if (event.composedPath().includes(button)) pointerId = event.pointerId; });
   button.onclick = () => { document.querySelector('#count').textContent = String(++clicks); };
   window.scrollTo(0, button.offsetTop - innerHeight / 2);
   const snapshot = () => {

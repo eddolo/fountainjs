@@ -7,6 +7,7 @@
 - Defer pending virtual viewport/measurement work during an external control
   press so it cannot move the target before the click. Resume on pointer release,
   cancellation or window blur, and remove the handlers when the view is destroyed.
+  Composed event paths also preserve controls inside open Shadow DOM.
 
 - Demo export messages report a download request rather than claiming the
   browser completed the download. Actual file delivery remains independently

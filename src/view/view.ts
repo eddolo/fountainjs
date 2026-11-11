@@ -617,9 +617,10 @@ export class EditorView {
   };
 
   private onVirtualHostPointerDown = (event: PointerEvent): void => {
-    const target = event.target;
+    const path = event.composedPath();
+    const target = path[0];
     if (!this.virtualized || event.button !== 0 || !(target instanceof Element)
-      || this.mount.contains(target) || !target.closest('button, input, select, textarea, a[href], [role="button"]')) return;
+      || path.includes(this.mount) || !target.closest('button, input, select, textarea, a[href], [role="button"]')) return;
     this.virtualHostPointers.add(event.pointerId);
   };
 

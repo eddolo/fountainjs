@@ -14,7 +14,7 @@ import { runVirtualSelectionJourney } from './virtual-selection-journey';
 import { virtualHostControlJourney, type VirtualHostControlMode } from './virtual-host-control-journey';
 
 test.describe('Virtual host controls', () => {
-  for (const mode of ['control', 'release', 'cancel', 'blur'] satisfies VirtualHostControlMode[]) {
+  for (const mode of ['control', 'release', 'cancel', 'blur', 'shadow'] satisfies VirtualHostControlMode[]) {
     test(`keeps a host control stable through a virtual measurement frame: ${mode}`, async ({ page }, info) => {
       await virtualHostControlJourney(page, info, mode);
     });

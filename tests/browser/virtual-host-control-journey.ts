@@ -1,7 +1,7 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';
 
-export type VirtualHostControlMode = 'control' | 'release' | 'cancel' | 'blur';
+export type VirtualHostControlMode = 'control' | 'release' | 'cancel' | 'blur' | 'shadow';
 
 interface FrameSnapshot {
   top: number; left: number; width: number; height: number; clicks: number;
@@ -19,9 +19,11 @@ export async function virtualHostControlJourney(page: Page, info: TestInfo, mode
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   const virtual = mode !== 'control';
-  await page.goto(`/virtual-host-press.html?virtual=${Number(virtual)}`);
+  await page.goto(`/virtual-host-press.html?virtual=${Number(virtual)}&shadow=${Number(mode === 'shadow')}`);
   await page.waitForFunction(() => Boolean(window.virtualFrameAudit), { polling: 50 });
   const before = await page.evaluate(() => window.virtualFrameAudit.snapshot());
+  expect(before.top).toBeGreaterThanOrEqual(0);
+  expect(before.top + before.height).toBeLessThanOrEqual(await page.evaluate(() => innerHeight));
   if (virtual) expect(before.mounted).toBeLessThan(40);
   else expect(before.mounted).toBe(300);
   await page.screenshot({ path: info.outputPath(`virtual-host-${mode}-before.png`) });
@@ -39,7 +41,7 @@ export async function virtualHostControlJourney(page: Page, info: TestInfo, mode
   }
   await page.mouse.up();
   const after = await page.evaluate(() => window.virtualFrameAudit.snapshot());
-  if (mode === 'release' || mode === 'control') expect(after.clicks, 'The native click must reach Export once').toBe(1);
+  if (mode === 'release' || mode === 'control' || mode === 'shadow') expect(after.clicks, 'The native click must reach Export once').toBe(1);
   if (virtual) {
     const resumed = await page.evaluate(() => window.virtualFrameAudit.flushFrame());
     expect(resumed.callbacks, 'Virtual work must resume after release, cancellation or blur').toBeGreaterThan(0);
