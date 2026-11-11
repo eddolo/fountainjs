@@ -5,6 +5,9 @@
     "component": "app/assets/javascripts/content_editor/components/content_editor.vue",
     "host": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
     "service": "app/assets/javascripts/content_editor/services/create_content_editor.js",
+    "documentService": "app/assets/javascripts/content_editor/services/content_editor.js",
+    "deserializer": "app/assets/javascripts/content_editor/services/gl_api_markdown_deserializer.js",
+    "assetResolver": "app/assets/javascripts/content_editor/services/asset_resolver.js",
     "extensions": "app/assets/javascripts/content_editor/extensions/index.js",
     "package": "package.json"
   }

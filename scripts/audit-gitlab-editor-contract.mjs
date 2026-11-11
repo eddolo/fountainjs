@@ -45,6 +45,22 @@ function vueContract(source, filename) {
   };
 }
 
+function moduleContract(source) {
+  const ast = babelParse(source, { sourceType: 'module' });
+  return {
+    imports: ast.program.body.filter(node => node.type === 'ImportDeclaration').map(node => ({
+      from: node.source.value, bindings: node.specifiers.map(specifier => specifier.local.name),
+    })),
+    classes: ast.program.body.map(node => node.declaration ?? node).filter(node => node.type === 'ClassDeclaration').map(node => ({
+      name: node.id?.name ?? null,
+      methods: node.body.body.filter(method => method.type === 'ClassMethod').map(method => ({
+        name: nameOf(method), kind: method.kind, async: method.async,
+        parameters: method.params.map(parameter => source.slice(parameter.start, parameter.end)),
+      })),
+    })),
+  };
+}
+
 if (process.argv.length > 3 || !/^[a-f0-9]{40}$/.test(pin.commit) || pin.repository !== 'https://github.com/gitlabhq/gitlabhq') {
   throw new Error('Usage: node scripts/audit-gitlab-editor-contract.mjs [report.json]. Inspect the pinned upstream manifest.');
 }
@@ -70,7 +86,8 @@ const report = {
   provenance: Object.fromEntries(Object.entries(sources).map(([name, { source, ...metadata }]) => [name, metadata])),
   runtimeDependencies: Object.fromEntries(['vue', '@gitlab/ui', '@tiptap/core', '@tiptap/vue-2'].map(name => [name, dependencies[name] ?? null])),
   component, host, extensions,
-  status: 'Upstream contracts inventoried. Fountain replacement is not implemented or production-verified.',
+  services: Object.fromEntries(['documentService', 'deserializer', 'assetResolver'].map(name => [name, moduleContract(sources[name].source)])),
+  status: 'Upstream contracts inventoried. This source inventory does not verify a Fountain replacement.',
   requiredEvidence: ['Real GitLab application with the Fountain replacement enabled',
     'Upstream editor tests and system workflows on original and replacement',
     'GitLab Flavored Markdown rendering, source retention and editing semantics',

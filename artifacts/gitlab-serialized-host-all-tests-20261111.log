@@ -1,0 +1,13 @@
+$ vitest run
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+
+ Test Files  328 passed (328)
+      Tests  5311 passed (5311)
+   Start at  22:24:56
+   Duration  122.06s (environment 44%, import 29%, tests 22%, transform 4%, worker 1%)
+
+    Isolate  328 workers spawned · ~1.28s startup each (spawn + environment, per file)
+             at least ~58.53s faster with isolate: false — reuses workers across files instead of one per file
+

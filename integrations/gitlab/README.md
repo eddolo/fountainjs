@@ -18,9 +18,10 @@ Reproduce the source-backed inventory with:
 node scripts/audit-gitlab-editor-contract.mjs
 ```
 
-The audit fetches five immutable upstream files, records their byte counts and
+The audit fetches eight immutable upstream files, records their byte counts and
 SHA-256 digests, parses the Vue component's props/events/methods/watchers/slots
-and its host contract, and inventories the exported editor extensions. It reads
+and its host contract, inventories the exported editor extensions, and records
+the document/deserializer/asset service imports and class methods. It reads
 upstream source; it does not execute downloaded code. Its report is evidence
 about the interface to implement, not a passing integration test.
 
@@ -38,6 +39,12 @@ Inspect these upstream files through the pinned source links in the report:
   switching, templates, input events, draft ownership and editor references.
 - `content_editor/services/create_content_editor.js`: asynchronous GitLab
   Markdown rendering, asset resolution, serialization and collaboration.
+- `content_editor/services/content_editor.js`: document loads, template/history
+  behavior, change suppression, and coordinated collaborative seeding.
+- `content_editor/services/gl_api_markdown_deserializer.js`: actual GitLab
+  render callback, quick-action handling and ProseMirror/DOM conversion.
+- `content_editor/services/asset_resolver.js`: canonical URLs, references,
+  placeholders, diagram rendering and quick-action explanations.
 - `content_editor/extensions/index.js`: the feature inventory, including
   GitLab references, code suggestions, quick-action-related behavior, diagrams,
   uploads, frontmatter, footnotes, table operations and specialized content.
@@ -67,7 +74,7 @@ On Linux, native clipboard verification uses a real X11 display:
 GDK_BACKEND=x11 xvfb-run --auto-servernum pnpm audit:gitlab-bridge --headed
 ```
 
-The November 11 local result is five of six cases passing on Windows: Chromium
+The initial November 11 surface result is five of six cases passing on Windows: Chromium
 and Firefox pass both journeys; WebKit passes refusal/recovery but its native
 copy to an external textarea receives empty text. A separate plain HTML control
 reproduces the Windows result. The same two component journeys pass in Linux
@@ -76,7 +83,8 @@ too. No assertions, timeouts or skips were changed to obtain the Linux pass.
 Initial WSL runs exposed a separate first-click timeout while Wayland remained
 available; selecting X11 explicitly resolves it in the recorded run. This does
 not establish the precise Windows browser/OS cause or certify physical Safari.
-The required hosted CI job retains all six executions and uploads evidence.
+The required hosted CI job retains these cases and the additional lifecycle
+journey below, and uploads evidence.
 
 [Evidence and remaining boundaries](../../artifacts/editability-integration-20261111.json).
 
@@ -85,6 +93,36 @@ yet replace its Markdown service, extension/toolbars, upload handling,
 collaboration provider or host draft/template behavior. No GitLab backend has
 been started or verified. Those integrations and the requirements below remain
 necessary before describing the product as ready.
+
+## Serialized-content lifecycle
+
+`services/serialized_content.ts` implements the non-collaborative document
+lifecycle over the actual public Fountain editor. It requires an explicit
+codec implementing the host dialect; it does not quietly use ordinary Markdown
+as GitLab Markdown. Initial/reopened loads establish a clean undo baseline;
+template replacement is undoable. Whole-document transactions preserve root
+attributes. Host change subscribers receive actual edits, not initial loads,
+selection-only updates or interaction-mode changes.
+
+Newer loads cancel older ones, which settle as `superseded` even if a renderer
+ignores cancellation. An intervening document edit causes a typed conflict
+instead of overwriting the newer work, including edits followed by undo. Active
+rendering errors and refused/invalid document replacements remain explicit.
+Disposal cancels pending work and releases subscriptions; the host owns and
+destroys the editor separately. A collaboration adapter prohibits this local
+replacement route. GitLab's elected seeding/replacement protocol must be adapted
+before collaborative Markdown initialization is supported.
+
+Eleven focused tests use the built public package in Node without jsdom. The
+recorded Vue 2 journey uses the real ordinary Fountain Markdown importer/exporter
+to exercise loads, typing, template application, quote/heading rendering,
+undo/redo, reopening and change notifications. It intentionally does not certify
+the GitLab dialect or service implementation. The expanded Windows profile is
+eight passes/one retained WebKit clipboard failure; Linux WebKit on explicit
+X11/Xvfb passes all three cases. Recorded Windows/Linux frames and the detailed
+heading/template states receive visual review.
+
+[Lifecycle evidence](../../artifacts/gitlab-serialized-content-integration-20261111.json).
 
 ## Full application completion requirements
 

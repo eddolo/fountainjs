@@ -1,0 +1,642 @@
+[WebServer] (node:3276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:8560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:24600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\gitlab-vue2.spec.ts:4:1 › keeps actual Vue 2 host mode changes and view remounts on one Fountain document history (918ms)
+  ok 2 [chromium] › tests\browser\gitlab-vue2.spec.ts:63:1 › removes the surface when a host filter refuses read-only mode and recovers without losing the document (435ms)
+  ok 3 [chromium] › tests\browser\gitlab-vue2.spec.ts:81:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (740ms)
+(node:10204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\gitlab-vue2.spec.ts:4:1 › keeps actual Vue 2 host mode changes and view remounts on one Fountain document history (2.6s)
+  ok 5 [firefox] › tests\browser\gitlab-vue2.spec.ts:63:1 › removes the surface when a host filter refuses read-only mode and recovers without losing the document (748ms)
+  ok 6 [firefox] › tests\browser\gitlab-vue2.spec.ts:81:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (1.3s)
+(node:8176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  7 [webkit] › tests\browser\gitlab-vue2.spec.ts:4:1 › keeps actual Vue 2 host mode changes and view remounts on one Fountain document history (6.4s)
+(node:24416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 8 [webkit] › tests\browser\gitlab-vue2.spec.ts:63:1 › removes the surface when a host filter refuses read-only mode and recovers without losing the document (1.4s)
+  ok 9 [webkit] › tests\browser\gitlab-vue2.spec.ts:81:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (2.1s)
+
+
+  1) [webkit] › tests\browser\gitlab-vue2.spec.ts:4:1 › keeps actual Vue 2 host mode changes and view remounts on one Fountain document history 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'External copy target', exact: true })
+    Expected: "Vue 2 integration.A"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'External copy target', exact: true })
+        13 × locator resolved to <textarea aria-label="External copy target"></textarea>
+           - unexpected value ""
+
+
+      38 |     globalThis as typeof globalThis & { bridgeClipboardProbe: unknown[] }
+      39 |   ).bridgeClipboardProbe), null, 2));
+    > 40 |   await expect(page.getByRole('textbox', { name: 'External copy target', exact: true })).toHaveValue('Vue 2 integration.A');
+         |                                                                                          ^
+      41 |   await page.screenshot({ path: info.outputPath('vue2-read-only.png') });
+      42 |   await page.getByRole('button', { name: 'Enable editing', exact: true }).click();
+      43 |   await expect(editor).toHaveAttribute('contenteditable', 'true');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:40:90
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-serialized-host-windows-20261111\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-serialized-host-windows-20261111\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-serialized-host-windows-20261111\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-serialized-host-windows-20261111\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-serialized-host-windows-20261111\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › tests\browser\gitlab-vue2.spec.ts:4:1 › keeps actual Vue 2 host mode changes and view remounts on one Fountain document history 
+  8 passed (21.9s)
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.gitlab-bridge.config.ts",
+      "--output=artifacts/gitlab-serialized-host-windows-20261111",
+      "--reporter=list,json"
+    ],
+    "configFile": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\playwright.gitlab-bridge.config.ts",
+    "rootDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-serialized-host-windows-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-serialized-host-windows-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-serialized-host-windows-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm exec vite build --config vite.gitlab-bridge.config.ts && pnpm exec vite preview --config vite.gitlab-bridge.config.ts --host 127.0.0.1 --port 4198 --strictPort",
+      "url": "http://127.0.0.1:4198/tests/browser/fixtures/gitlab-vue2.html",
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "gitlab-vue2.spec.ts",
+      "file": "gitlab-vue2.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "keeps actual Vue 2 host mode changes and view remounts on one Fountain document history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 918,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:22:57.296Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-chromium\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-25d21108f2063533506f",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "removes the surface when a host filter refuses read-only mode and recovers without losing the document",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 435,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:22:58.345Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-removes-the-su-f43f6-without-losing-the-document-chromium\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-removes-the-su-f43f6-without-losing-the-document-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-a82c09688fab29e0e93d",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 63,
+          "column": 1
+        },
+        {
+          "title": "loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 740,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:22:58.807Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-chromium\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-7538bee1c18604a3a853",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 81,
+          "column": 1
+        },
+        {
+          "title": "keeps actual Vue 2 host mode changes and view remounts on one Fountain document history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2578,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:23:00.073Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-firefox\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-firefox\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-50c72cab3ccc8a3c2a53",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "removes the surface when a host filter refuses read-only mode and recovers without losing the document",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 748,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:23:03.140Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-removes-the-su-f43f6-without-losing-the-document-firefox\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-removes-the-su-f43f6-without-losing-the-document-firefox\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-d68dcbb132daba1f888c",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 63,
+          "column": 1
+        },
+        {
+          "title": "loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1284,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:23:03.939Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-2844adce7941aef4a619",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 81,
+          "column": 1
+        },
+        {
+          "title": "keeps actual Vue 2 host mode changes and view remounts on one Fountain document history",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6364,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('textbox', { name: 'External copy target', exact: true })\nExpected: \u001b[32m\"Vue 2 integration.A\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'External copy target', exact: true })\u001b[22m\n\u001b[2m    13 × locator resolved to <textarea aria-label=\"External copy target\"></textarea>\u001b[22m\n\u001b[2m       - unexpected value \"\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('textbox', { name: 'External copy target', exact: true })\nExpected: \u001b[32m\"Vue 2 integration.A\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'External copy target', exact: true })\u001b[22m\n\u001b[2m    13 × locator resolved to <textarea aria-label=\"External copy target\"></textarea>\u001b[22m\n\u001b[2m       - unexpected value \"\"\u001b[22m\n\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts:40:90",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                      "column": 90,
+                      "line": 40
+                    },
+                    "snippet": "  38 |     globalThis as typeof globalThis & { bridgeClipboardProbe: unknown[] }\n  39 |   ).bridgeClipboardProbe), null, 2));\n> 40 |   await expect(page.getByRole('textbox', { name: 'External copy target', exact: true })).toHaveValue('Vue 2 integration.A');\n     |                                                                                          ^\n  41 |   await page.screenshot({ path: info.outputPath('vue2-read-only.png') });\n  42 |   await page.getByRole('button', { name: 'Enable editing', exact: true }).click();\n  43 |   await expect(editor).toHaveAttribute('contenteditable', 'true');"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                        "column": 90,
+                        "line": 40
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('textbox', { name: 'External copy target', exact: true })\nExpected: \u001b[32m\"Vue 2 integration.A\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'External copy target', exact: true })\u001b[22m\n\u001b[2m    13 × locator resolved to <textarea aria-label=\"External copy target\"></textarea>\u001b[22m\n\u001b[2m       - unexpected value \"\"\u001b[22m\n\n\n  38 |     globalThis as typeof globalThis & { bridgeClipboardProbe: unknown[] }\n  39 |   ).bridgeClipboardProbe), null, 2));\n> 40 |   await expect(page.getByRole('textbox', { name: 'External copy target', exact: true })).toHaveValue('Vue 2 integration.A');\n     |                                                                                          ^\n  41 |   await page.screenshot({ path: info.outputPath('vue2-read-only.png') });\n  42 |   await page.getByRole('button', { name: 'Enable editing', exact: true }).click();\n  43 |   await expect(editor).toHaveAttribute('contenteditable', 'true');\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts:40:90"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:23:06.070Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-webkit\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-webkit\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-webkit\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-webkit\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                    "column": 90,
+                    "line": 40
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "076bc0070f517945042c-0a481a66003ceab7d7a5",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "removes the surface when a host filter refuses read-only mode and recovers without losing the document",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1421,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:23:12.948Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-removes-the-su-f43f6-without-losing-the-document-webkit\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-removes-the-su-f43f6-without-losing-the-document-webkit\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-bbb484325798578bdd7d",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 63,
+          "column": 1
+        },
+        {
+          "title": "loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2120,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:23:14.475Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-webkit\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-windows-20261111\\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-webkit\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-98973be4248b64002cc0",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 81,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-11T22:22:54.922Z",
+    "duration": 21892.432,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

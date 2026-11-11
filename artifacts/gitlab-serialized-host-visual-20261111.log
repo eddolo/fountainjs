@@ -1,0 +1,191 @@
+[WebServer] (node:1552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:22068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:16488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [firefox] › tests\browser\gitlab-vue2.spec.ts:81:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (5.3s)
+
+  1 passed (15.5s)
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.gitlab-bridge.config.ts",
+      "--project=firefox",
+      "--grep",
+      "loads real Markdown",
+      "--output=artifacts/gitlab-serialized-host-visual-20261111",
+      "--reporter=list,json"
+    ],
+    "configFile": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\playwright.gitlab-bridge.config.ts",
+    "rootDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-serialized-host-visual-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-serialized-host-visual-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-serialized-host-visual-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm exec vite build --config vite.gitlab-bridge.config.ts && pnpm exec vite preview --config vite.gitlab-bridge.config.ts --host 127.0.0.1 --port 4198 --strictPort",
+      "url": "http://127.0.0.1:4198/tests/browser/fixtures/gitlab-vue2.html",
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "gitlab-vue2.spec.ts",
+      "file": "gitlab-vue2.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5291,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:25:52.937Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-visual-20261111\\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-serialized-host-visual-20261111\\gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-2844adce7941aef4a619",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 81,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-11T22:25:46.995Z",
+    "duration": 15492.874000000002,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

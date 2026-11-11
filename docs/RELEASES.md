@@ -964,6 +964,42 @@ Fresh packed consumers, the combined hosted matrix and publication remain open.
 [Integration contract](../integrations/gitlab/README.md).
 Compact evidence: `artifacts/editability-integration-20261111.json`.
 
+### GitLab host document lifecycle — 2026-11-11
+
+The private integration now has a serialized-content controller using the real
+public Fountain package. Initial/reopened loads reset local undo; templates are
+undoable; root document attributes survive replacement/undo/redo. Actual user
+document changes notify the host while loads, caret changes and mode updates do
+not. Concurrent loads cancel older results. Intervening typing, including typing
+followed by undo, causes a conflict instead of overwriting the user's work.
+Disposal cancels pending rendering and releases subscriptions without destroying
+the host-owned editor. Uncoordinated loads into collaboration sessions are
+refused pending the actual session seeding/replacement adapter.
+
+Eleven focused package-backed Node cases pass without jsdom. The full unit suite
+passes **5,311 tests in 328 files**, and root TypeScript passes. The expanded
+compiled Vue 2 profile finishes **eight passes/one retained Windows WebKit
+clipboard failure**; explicit X11/Xvfb Linux WebKit passes **all three cases**.
+The new load/edit/template/undo/reopen journey itself passes in all desktop
+engines. An additional Firefox capture run passes; recorded Windows/Linux frames
+and detailed heading/quote states receive visual review. Overlapping runs are
+verification, not additive feature counts. Assertions, retries and timeouts
+remain unchanged. Required CI automatically includes the new journey.
+
+The host codec is explicitly required. The fixture uses the real ordinary
+Fountain Markdown importer/exporter, which does not establish GitLab dialect or
+service compatibility. The source inventory now hashes eight immutable upstream
+files and lists the real document/deserializer/asset-service imports and methods.
+GitLab application, backend authorization/persistence/uploads, collaboration and
+its full editing features are still unverified/unimplemented integration work.
+
+No library runtime, package API, dependency or acceptance-limit change in this
+follow-up. The complete `pnpm check` checkpoint remains the preceding runtime
+repair, not a newly claimed repeat of every gate. Fresh packaging/consumers and
+hosted release verification remain required.
+[Controller scope](../integrations/gitlab/README.md#serialized-content-lifecycle).
+Evidence: `artifacts/gitlab-serialized-content-integration-20261111.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

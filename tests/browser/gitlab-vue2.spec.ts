@@ -77,3 +77,44 @@ test('removes the surface when a host filter refuses read-only mode and recovers
   await page.getByRole('button', { name: 'Undo document', exact: true }).click();
   await expect(editor).toHaveText('Vue 2 integration.');
 });
+
+test('loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host', async ({ page }, info) => {
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  const source = page.getByRole('textbox', { name: 'Markdown replacement source', exact: true });
+  const changes = page.getByLabel('Host document change count', { exact: true });
+  const undo = page.getByRole('button', { name: 'Undo document', exact: true });
+  await source.fill('## Loaded heading\n\n**Baseline** text.');
+  await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+  await expect(editor.getByRole('heading', { name: 'Loaded heading', exact: true })).toBeVisible();
+  await expect(editor.locator('strong')).toHaveText('Baseline');
+  await expect(changes).toHaveText('0');
+  await expect(undo).toBeDisabled();
+  await page.screenshot({ path: info.outputPath('vue2-loaded-heading.png') });
+  await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type('A');
+  await expect(page.getByLabel('Latest host Markdown', { exact: true })).toHaveText('## Loaded heading\n\n**Baseline** text.A');
+  await expect(changes).toHaveText('1');
+  await source.fill('## Template\n\n> Retain this quote.');
+  await page.getByRole('button', { name: 'Apply Markdown template', exact: true }).click();
+  await expect(editor.locator('blockquote')).toHaveText('Retain this quote.');
+  await expect(changes).toHaveText('1');
+  await page.screenshot({ path: info.outputPath('vue2-template.png') });
+  await undo.click();
+  await expect(editor.locator('p')).toHaveText('Baseline text.A');
+  await undo.click();
+  await expect(editor.locator('p')).toHaveText('Baseline text.');
+  await expect(undo).toBeDisabled();
+  await page.getByRole('button', { name: 'Redo document', exact: true }).click();
+  await expect(editor.locator('p')).toHaveText('Baseline text.A');
+  await source.fill('Fresh baseline.');
+  await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+  await expect(editor).toHaveText('Fresh baseline.');
+  await expect(undo).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Redo document', exact: true })).toBeDisabled();
+  await expect(page.getByLabel('View mount count', { exact: true })).toHaveText('1');
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('vue2-loaded-baseline.png') });
+  await writeFile(info.outputPath('serialized-content.json'), JSON.stringify({ engine: info.project.name,
+    scope: 'Real compiled Vue 2 component, public Fountain engine and ordinary Markdown importer/exporter. Not GitLab dialect, real backend or full application verification.',
+    silentInitialLoad: true, undoableTemplate: true, baselineClearsHistory: true, viewRetained: true }, null, 2));
+});

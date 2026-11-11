@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-11",
+  "baseCommit": "7afa2f0c",
+  "status": "Private host lifecycle implemented and locally verified; complete GitLab application replacement remains outstanding",
+  "implementation": {
+    "file": "integrations/gitlab/services/serialized_content.ts",
+    "behavior": ["Explicit host dialect codec", "Initial/reopened local history baseline", "Undoable template replacement", "Root attribute retention", "User document change notifications without load/caret/mode echoes", "Latest load wins with cooperative abort and immediate superseded settlement", "Intervening-edit conflicts including edit then undo", "Invalid-schema and transaction-refusal recovery", "Disposal releases subscriptions and retains host-owned editor", "Refusal of uncoordinated collaborative replacement"],
+    "doesNotImplement": ["GitLab Markdown dialect codec", "GitLab renderer/asset/upload/autocomplete adapters", "GitLab elected collaborative seeding or storage migration", "Complete ContentEditor component contract", "Backend authorization, persistence or full product workflows"]
+  },
+  "verification": {
+    "focused": { "controllerTests": 11, "ciPolicyTests": 3, "passed": true, "runtime": "Public package build in Node, Vitest node environment, no jsdom", "log": "artifacts/gitlab-serialized-content-final-20261111.log" },
+    "rootTypeScript": { "passed": true, "log": "artifacts/gitlab-serialized-content-types-20261111.log" },
+    "completeUnitSuite": { "passed": 5311, "files": 328, "failed": 0, "log": "artifacts/gitlab-serialized-host-all-tests-20261111.log" },
+    "expandedWindowsProfile": { "passed": 8, "failed": 1, "skipped": 0, "flaky": 0, "log": "artifacts/gitlab-serialized-host-windows-20261111.log", "failure": "Existing WebKit native external-copy case writes expected 19 characters but native paste receives zero; not waived or fixed by this change" },
+    "expandedLinuxWebKitProfile": { "passed": 3, "failed": 0, "skipped": 0, "flaky": 0, "display": "Explicit GDK_BACKEND=x11 with xvfb-run", "log": "artifacts/gitlab-serialized-host-linux-20261111.log" },
+    "newNativeJourney": { "passedEngines": ["chromium", "firefox", "webkit"], "behavior": "Real ordinary Markdown load, native typing, heading/strong/quote rendering, template application, undo/redo, fresh baseline and preserved outer view", "limitations": "Uses the real ordinary Fountain Markdown codec, not a GitLab backend or GitLab dialect adapter" },
+    "visualCaptureFollowup": { "engine": "firefox", "passed": 1, "log": "artifacts/gitlab-serialized-host-visual-20261111.log" },
+    "visualReview": ["artifacts/gitlab-serialized-host-windows-contact-20261111.png", "artifacts/gitlab-serialized-host-linux-contact-20261111.png", "artifacts/gitlab-serialized-host-visual-20261111/gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox/vue2-loaded-heading.png", "artifacts/gitlab-serialized-host-visual-20261111/gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host-firefox/vue2-template.png"]
+  },
+  "upstreamSource": { "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47", "filesHashed": 8, "report": "artifacts/gitlab-editor-contract-20261111.json", "refreshLog": "artifacts/gitlab-editor-contract-refresh-20261111.log", "execution": "Source parsed, not executed" },
+  "package": { "libraryRuntimeChanged": false, "publicAPIChanged": false, "dependenciesChanged": false, "acceptanceLimitsChanged": false, "newFullPipelineRun": false, "publication": false },
+  "earlierSetupCorrections": ["Initial test helper used a nonexistent MarkdownExporter.serialize method; corrected to the actual export API", "Root typecheck exposed mixing source/public schema types; integration tests now use the real public package consistently"],
+  "remaining": ["Actual GitLab dialect, services, extension inventory, host component and complete application verification", "Coordinated collaborative initialization/replacement using the real host protocol", "Fresh packed consumers and combined hosted release checks", "Existing Windows WebKit clipboard diagnosis and broader physical-device/AT evidence"]
+}

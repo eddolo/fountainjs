@@ -54,6 +54,15 @@ control. This runtime change supersedes earlier archive identity claims: a
 fresh final package and combined hosted checks remain required.
 [Current bridge evidence](../integrations/gitlab/README.md#implemented-integration-primitive).
 
+The subsequent serialized-content controller adds asynchronous load/template
+history, cancellation, conflict protection and host change notifications. The
+complete unit suite passes **5,311 tests in 328 files**, and root TypeScript
+passes. Its native lifecycle journey passes in all desktop engines and Linux
+WebKit; the existing Windows WebKit external-copy failure remains. These checks
+use an explicit ordinary-Markdown codec, not a completed GitLab dialect adapter.
+No library runtime/API or size limit changes in this follow-up.
+[Lifecycle scope and evidence](../integrations/gitlab/README.md#serialized-content-lifecycle).
+
 The earlier complete local source-check checkpoint is `e15335c7`, including the offline
 equation HTML projection and earlier image-caption/recorded-audit repairs. Its library runtime is byte-identical to
 `024ff8fe`, including the virtual-layout host-control repair. It passes all 5,279 source tests in 323 files and the

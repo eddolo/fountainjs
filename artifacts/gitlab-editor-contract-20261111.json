@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-11-11T21:15:32.549Z",
+  "measuredAt": "2026-11-11T22:27:08.886Z",
   "upstream": {
     "repository": "https://github.com/gitlabhq/gitlabhq",
     "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
@@ -7,6 +7,9 @@
       "component": "app/assets/javascripts/content_editor/components/content_editor.vue",
       "host": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
       "service": "app/assets/javascripts/content_editor/services/create_content_editor.js",
+      "documentService": "app/assets/javascripts/content_editor/services/content_editor.js",
+      "deserializer": "app/assets/javascripts/content_editor/services/gl_api_markdown_deserializer.js",
+      "assetResolver": "app/assets/javascripts/content_editor/services/asset_resolver.js",
       "extensions": "app/assets/javascripts/content_editor/extensions/index.js",
       "package": "package.json"
     }
@@ -29,6 +32,24 @@
       "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/services/create_content_editor.js",
       "sha256": "1f261b0892809e85b6661f21a407f63e80075c7eeff234f691fddf67250915b1",
       "bytes": 3335
+    },
+    "documentService": {
+      "path": "app/assets/javascripts/content_editor/services/content_editor.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/services/content_editor.js",
+      "sha256": "9631b7798ab4cc17e223cbe962522a083a9cbecb10933f714779793d21265d23",
+      "bytes": 4022
+    },
+    "deserializer": {
+      "path": "app/assets/javascripts/content_editor/services/gl_api_markdown_deserializer.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/services/gl_api_markdown_deserializer.js",
+      "sha256": "0525d0f44d82bcc5e0fe46fc7fe8744ae61239854b1c694901f17a7d6f04c6e8",
+      "bytes": 2498
+    },
+    "assetResolver": {
+      "path": "app/assets/javascripts/content_editor/services/asset_resolver.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/services/asset_resolver.js",
+      "sha256": "c55b2a7b98826d0874a937fe948bde231b7bdf4801f6248ace4501cd2f346746",
+      "bytes": 3663
     },
     "extensions": {
       "path": "app/assets/javascripts/content_editor/extensions/index.js",
@@ -504,7 +525,265 @@
     "Video",
     "WordBreak"
   ],
-  "status": "Upstream contracts inventoried. Fountain replacement is not implemented or production-verified.",
+  "services": {
+    "documentService": {
+      "imports": [
+        {
+          "from": "@tiptap/pm/transform",
+          "bindings": [
+            "DocAttrStep"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ContentEditor",
+          "methods": [
+            {
+              "name": "constructor",
+              "kind": "constructor",
+              "async": false,
+              "parameters": [
+                "{\n    tiptapEditor,\n    serializer,\n    deserializer,\n    assetResolver,\n    eventHub,\n    drawioEnabled,\n    supportsTableOfContents,\n    codeSuggestionsConfig,\n    autocompleteHelper,\n    collaborationProvider = null,\n  }"
+              ]
+            },
+            {
+              "name": "tiptapEditor",
+              "kind": "get",
+              "async": false,
+              "parameters": []
+            },
+            {
+              "name": "eventHub",
+              "kind": "get",
+              "async": false,
+              "parameters": []
+            },
+            {
+              "name": "serializer",
+              "kind": "get",
+              "async": false,
+              "parameters": []
+            },
+            {
+              "name": "editable",
+              "kind": "get",
+              "async": false,
+              "parameters": []
+            },
+            {
+              "name": "isCollaborative",
+              "kind": "get",
+              "async": false,
+              "parameters": []
+            },
+            {
+              "name": "dispose",
+              "kind": "method",
+              "async": false,
+              "parameters": []
+            },
+            {
+              "name": "disposeAllEvents",
+              "kind": "method",
+              "async": false,
+              "parameters": []
+            },
+            {
+              "name": "deserialize",
+              "kind": "method",
+              "async": false,
+              "parameters": [
+                "markdown"
+              ]
+            },
+            {
+              "name": "resolveUrl",
+              "kind": "method",
+              "async": false,
+              "parameters": [
+                "canonicalSrc"
+              ]
+            },
+            {
+              "name": "resolveIframeSrc",
+              "kind": "method",
+              "async": false,
+              "parameters": [
+                "canonicalSrc"
+              ]
+            },
+            {
+              "name": "resolveReference",
+              "kind": "method",
+              "async": false,
+              "parameters": [
+                "originalText"
+              ]
+            },
+            {
+              "name": "renderDiagram",
+              "kind": "method",
+              "async": false,
+              "parameters": [
+                "code",
+                "language"
+              ]
+            },
+            {
+              "name": "explainQuickAction",
+              "kind": "method",
+              "async": false,
+              "parameters": [
+                "text"
+              ]
+            },
+            {
+              "name": "setEditable",
+              "kind": "method",
+              "async": false,
+              "parameters": [
+                "editable = true"
+              ]
+            },
+            {
+              "name": "updateAutocompleteDataSources",
+              "kind": "method",
+              "async": false,
+              "parameters": [
+                "dataSources"
+              ]
+            },
+            {
+              "name": "_whenSyncedOrTimeout",
+              "kind": "method",
+              "async": true,
+              "parameters": []
+            },
+            {
+              "name": "setSerializedContent",
+              "kind": "method",
+              "async": true,
+              "parameters": [
+                "serializedContent",
+                "{ addToHistory = false } = {}"
+              ]
+            },
+            {
+              "name": "getSerializedContent",
+              "kind": "method",
+              "async": false,
+              "parameters": []
+            }
+          ]
+        }
+      ]
+    },
+    "deserializer": {
+      "imports": [
+        {
+          "from": "@tiptap/pm/model",
+          "bindings": [
+            "ProseMirror"
+          ]
+        },
+        {
+          "from": "~/lib/utils/dom_utils",
+          "bindings": [
+            "replaceCommentsWith"
+          ]
+        }
+      ],
+      "classes": []
+    },
+    "assetResolver": {
+      "imports": [
+        {
+          "from": "~/locale",
+          "bindings": [
+            "n__"
+          ]
+        },
+        {
+          "from": "~/lib/utils/memoize_async",
+          "bindings": [
+            "memoizeAsync"
+          ]
+        },
+        {
+          "from": "./serializer/link",
+          "bindings": [
+            "escape"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "AssetResolver",
+          "methods": [
+            {
+              "name": "constructor",
+              "kind": "constructor",
+              "async": false,
+              "parameters": [
+                "{ renderMarkdown }"
+              ]
+            },
+            {
+              "name": "resolveUrl",
+              "kind": "method",
+              "async": true,
+              "parameters": [
+                "canonicalSrc"
+              ]
+            },
+            {
+              "name": "resolveIframeSrc",
+              "kind": "method",
+              "async": true,
+              "parameters": [
+                "canonicalSrc"
+              ]
+            },
+            {
+              "name": "resolvePlaceholder",
+              "kind": "method",
+              "async": true,
+              "parameters": [
+                "placeholder"
+              ]
+            },
+            {
+              "name": "resolveReference",
+              "kind": "method",
+              "async": true,
+              "parameters": [
+                "originalText"
+              ]
+            },
+            {
+              "name": "explainQuickAction",
+              "kind": "method",
+              "async": true,
+              "parameters": [
+                "text"
+              ]
+            },
+            {
+              "name": "renderDiagram",
+              "kind": "method",
+              "async": true,
+              "parameters": [
+                "code",
+                "language"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "status": "Upstream contracts inventoried. This source inventory does not verify a Fountain replacement.",
   "requiredEvidence": [
     "Real GitLab application with the Fountain replacement enabled",
     "Upstream editor tests and system workflows on original and replacement",

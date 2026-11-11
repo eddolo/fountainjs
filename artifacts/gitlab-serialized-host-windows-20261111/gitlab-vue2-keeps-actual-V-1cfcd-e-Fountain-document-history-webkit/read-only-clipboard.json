@@ -1,0 +1,25 @@
+[
+  {
+    "type": "copy",
+    "prevented": true,
+    "target": "SPAN",
+    "active": "DIV",
+    "selected": "Vue 2 integration.A",
+    "types": [
+      "text/plain",
+      "text/html",
+      "application/x-fountainjs+json"
+    ],
+    "writtenLength": 19
+  },
+  {
+    "type": "paste",
+    "target": "TEXTAREA",
+    "types": [
+      "text/plain",
+      "text/uri-list",
+      "text/html"
+    ],
+    "receivedLength": 0
+  }
+]
