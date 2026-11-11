@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from 'vite';
 import { angularLinker } from './tools/angular-build/vite-plugin.mjs';
+import { siteBuildInfoPlugin } from './tools/site-build-info';
 
 const demoSlugs = [
   'react-article',
@@ -19,7 +20,12 @@ const demoSlugs = [
 
 export default defineConfig({
   root: fileURLToPath(new URL('./examples/react-app', import.meta.url)),
-  plugins: [angularLinker(), react(), svelte({ configFile: false })],
+  plugins: [angularLinker(), react(), svelte({ configFile: false }), siteBuildInfoPlugin([
+    '/', '/index.html', '/developers.html', '/demos.html', '/conversion-lab.html',
+    '/workflows.html', '/task-workflow.html', '/issue-editor.html',
+    '/math-renderer.html', '/math-references.html', '/block-reordering.html',
+    ...demoSlugs.map(slug => `/demos/${slug}.html`),
+  ])],
   // The optional Vue demo uses render functions, not the template compiler.
   define: { __VUE_OPTIONS_API__: false, __VUE_PROD_DEVTOOLS__: false, __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false },
   // Export diagnostics and registered HTML recovery load their server adapters

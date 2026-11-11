@@ -659,7 +659,7 @@ function Developers() {
         </div>
         <div className="dev-hero__facts" aria-label="Project facts">
           <span><b>0</b> runtime dependencies</span>
-          <span><b>3</b> official surfaces</span>
+          <span><b>6</b> browser interfaces</span>
           <span><b>6</b> extension contribution types</span>
           <span><b>1</b> portable document tree</span>
         </div>

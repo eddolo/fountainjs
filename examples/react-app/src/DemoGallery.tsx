@@ -3,9 +3,9 @@ import { SitePageLink } from './SitePageLink';
 import './workflows.css';
 
 const surfaces = [
-  ['React', 'The optional React entry supplies hooks, composer, toolbar, navigator, and review UI.'],
+  ['Framework bindings', 'React hooks/components, Vue composables/components, Svelte stores/actions, and Angular signals/directives are separate optional entries.'],
   ['Plain DOM', 'Create an Editor and EditorView directly. No component framework is required.'],
-  ['Web Component', 'Vue, Svelte, Angular, and plain HTML consume the same registered custom element.'],
+  ['Web Component', 'Any compatible frontend can use the registered custom element as an alternative to a framework-specific binding.'],
   ['Portable JSON', 'Node.js, Python, Go, Java, and other services share data rather than frontend objects.'],
 ] as const;
 
@@ -29,7 +29,7 @@ function DemoGallery() {
 
       <section className="demos-intro" id="gallery">
         <div><span>THE SHOWCASE</span><h2>Not ten reskins of one editor.</h2></div>
-        <p>Each page starts from a different use case and integration boundary. React uses the React adapter. Plain DOM uses the framework-neutral view. Vue, Svelte, and Angular use the actual Custom Element. Backend examples exercise the portable document boundary and show the corresponding server contract.</p>
+        <p>Each page starts from a different use case and integration boundary. React uses the React adapter. Plain DOM uses the framework-neutral view. Vue, Svelte and Angular use their first-party bindings; the Web Component has its own example. Backend examples exercise the portable document boundary and show the corresponding server contract.</p>
       </section>
 
       <section className="demo-grid" aria-label="FountainJS integration demos">
@@ -49,7 +49,7 @@ function DemoGallery() {
         <p><a href="./issue-editor.html">Issue editor workflow →</a> — an unofficial GitLab-style bug report with visual/Markdown switching, source-fidelity diagnostics, local image insertion, draft download/reopen, and a separate reader preview. No account or submission server is connected.</p>
         <p><a href="./math-renderer.html">Math renderer lab →</a> — edit typeset formulas, import a real paper’s table, and inspect equation failures and table-layout losses. This capability lab is separate from the ten environment demos.</p>
         <p><a href="./math-references.html">Equation references lab →</a> — edit and reorder the original labelled equations with locally bundled MathJax, save/reopen JSON files, inspect missing/duplicate references, and follow links across paged snapshots. Print or save a current snapshot as PDF; whole-paper layout, accessible PDF and native DOCX math remain separate audit work.</p>
-        <div className="boundary-section__heading"><span>WHAT IS ACTUALLY SHARED</span><h2>Framework-neutral does not mean framework-shaped examples.</h2><p>The browser editor has four honest integration boundaries. The gallery uses each one where it belongs.</p></div>
+        <div className="boundary-section__heading"><span>WHAT IS ACTUALLY SHARED</span><h2>Framework-neutral does not mean framework-shaped examples.</h2><p>The gallery groups framework bindings, plain DOM, Web Component and portable-data integrations. Each example names the route it actually runs.</p></div>
         <div className="boundary-list">{surfaces.map(([name, description], index) => <article key={name}><b>0{index + 1}</b><h3>{name}</h3><p>{description}</p></article>)}</div>
         <div className="boundary-note"><b>About backend demos</b><p>Python, Go, and Java do not execute a browser editor. Their demos pair a live FountainJS frontend with real server-side JSON shapes. The Node.js demo runs the headless schema and formats, including the isolated DOM-free HTML importer without jsdom. The page labels this boundary instead of pretending every language runs the DOM view.</p></div>
       </section>

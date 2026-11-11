@@ -53,9 +53,9 @@ test('human release journey: writing, AI review, conversation, structured tools,
     await capture(page, testInfo, '03-review-before-accept');
     await panel.getByRole('button', { name: 'Accept change' }).click();
     await expect(editor).toContainText('Make it unmistakably clear:');
-    await expect(editor).toContainText('This is the real npm package');
-    await expect(editor).not.toContainText('This is thereal npm package');
-    await expect(page.locator('.studio__export pre')).toContainText('the **real npm package**');
+    await expect(editor).toContainText('This is the FountainJS engine');
+    await expect(editor).not.toContainText('This is theFountainJS engine');
+    await expect(page.locator('.studio__export pre')).toContainText('the **FountainJS engine**');
     await capture(page, testInfo, '04-accepted-text-proposal');
     await pause(page);
   });

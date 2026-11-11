@@ -6300,12 +6300,12 @@ test('opens the searchable clipboard-history picker in the public React toolbar'
   await page.keyboard.press('ControlOrMeta+Alt+v');
   await expect(search).toBeFocused();
   await expect(picker.getByText('Copied in this editor · stored in memory')).toBeVisible();
-  await expect(picker.locator('summary')).toContainText('the real npm package, not a picture');
-  await expect(picker.locator('summary')).toHaveAttribute('title', /the real npm package, not a picture/);
+  await expect(picker.locator('summary')).toContainText('the FountainJS engine. Your edits');
+  await expect(picker.locator('summary')).toHaveAttribute('title', /the FountainJS engine. Your edits/);
   await search.fill('no match for this query');
   await search.press('Enter');
   await expect(search).toBeFocused();
-  await search.fill('real npm package');
+  await search.fill('FountainJS engine');
   await expect(picker.locator('[role="listitem"]')).toHaveCount(1);
   await search.press('Enter');
   await expect(picker).toHaveCount(0);
@@ -7901,9 +7901,9 @@ test('preserves whitespace when an AI proposal ends at a formatting boundary', a
   await expect(panel.locator('.fountain-ai-review__status')).toHaveText('Review needed');
   await panel.getByRole('button', { name: 'Accept change' }).click();
 
-  await expect(editor).toContainText('This is the real npm package');
-  await expect(editor).not.toContainText('This is thereal npm package');
-  await expect(page.locator('.studio__export pre')).toContainText('the **real npm package**');
+  await expect(editor).toContainText('This is the FountainJS engine');
+  await expect(editor).not.toContainText('This is theFountainJS engine');
+  await expect(page.locator('.studio__export pre')).toContainText('the **FountainJS engine**');
 });
 
 test('runs a host-owned multi-turn AI conversation with reusable prompts and clear confirmation', async ({ page }) => {

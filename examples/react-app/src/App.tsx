@@ -90,8 +90,8 @@ const initialContent = {
     { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Try FountainJS in this document.' }] },
     { type: 'paragraph', content: [
       { type: 'text', text: 'Select text, type across paragraphs, and use the toolbar. This is the ' },
-      { type: 'text', text: 'real npm package', marks: [{ type: 'strong' }] },
-      { type: 'text', text: ', not a picture or a scripted mock-up.' },
+      { type: 'text', text: 'FountainJS engine', marks: [{ type: 'strong' }] },
+      { type: 'text', text: '. Your edits update the document and exported data.' },
     ] },
     { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'What you can test here' }] },
     { type: 'paragraph', content: [{ type: 'text', text: 'Insert lists, tables, images, media, callouts, and collapsible sections. Then switch between Markdown, HTML, and JSON output on the right.' }] },
@@ -668,10 +668,10 @@ function App() {
         </div>
         <div className="definition__answer">
           <p className="big-answer">Your users get a familiar document editor. Your developers get the library, source code, and extension points needed to fit it into a real product.</p>
-          <p>FountainJS runs in the browser. Choose the plain DOM API, Web Component, or React components; Vue, Svelte, Angular, and other frameworks can use the same Web Component or DOM API. Documents are portable JSON, so a backend written in Python, Go, Ruby, PHP, Java, or another language can store and process them.</p>
+          <p>FountainJS runs in the browser. Choose the plain DOM API, Web Component, or first-party React, Vue, Svelte and Angular bindings. Other frameworks can use the DOM or Web Component interfaces. Documents are portable JSON, so a backend written in Python, Go, Ruby, PHP, Java, or another language can store and process them.</p>
           <div className="definition__parts">
             <article><b>01</b><h3>Working features included</h3><p>Start with normal writing, media, tables, export, collaboration, comments, change review, and versions instead of rebuilding basics.</p></article>
-            <article><b>02</b><h3>Use your current stack</h3><p>Embed it in React or use the DOM/Web Component interfaces from Vue, Svelte, Angular, plain JavaScript, and other frontend tools.</p></article>
+            <article><b>02</b><h3>Use your current stack</h3><p>Use the React, Vue, Svelte or Angular bindings, the plain DOM view, or the framework-independent Web Component.</p></article>
             <article><b>03</b><h3>Change what your product needs</h3><p>Add a block, command, format, toolbar, storage provider, or service without maintaining a fork of the editor.</p></article>
           </div>
         </div>
@@ -689,7 +689,7 @@ function App() {
       </section>
 
       <section className="capabilities">
-        <div className="capabilities__heading"><span>IN THE PACKAGE TODAY</span><h2>The features people expect from a serious editor.</h2><p>These capabilities work now and ship in the public npm package. Import only the modules you need.</p></div>
+        <div className="capabilities__heading"><span>IN THIS PREVIEW</span><h2>The features people expect from a serious editor.</h2><p>These capabilities are demonstrated in this source build. The build label identifies its package and the verified npm release. Import only the modules you need.</p></div>
         <div className="capabilities__grid">
           <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, foreground/background colour, font family, font size, line height, marks, mentions, emoji, smart typography, live counts, slash commands, find/replace, undo/redo, paste, and IME input.</p></article>
           <article><b>02</b><h3>Structured blocks</h3><p>Bullet and numbered lists, task lists, code blocks, dividers, collapsible details, nested document structures, tables, and custom block types.</p></article>
