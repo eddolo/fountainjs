@@ -1,0 +1,45 @@
+{
+  "candidateCommit": "024ff8fe3e8d60cacd6c4ca2d4a662137e853cda",
+  "runtimeRepairCommit": "07a2c8acdc7876c3121eb7ea23ea9f828e4de072",
+  "version": "0.5.0-beta.1",
+  "published": false,
+  "previousFullCheck": {
+    "commit": "ff11e640",
+    "passed": 5269,
+    "failed": 2,
+    "terminal": true,
+    "failures": [
+      "Outdated completed-download announcement expectation",
+      "Eight rather than nine CI browser invocations"
+    ],
+    "log": "artifacts/release-check-ff11e640.log"
+  },
+  "alignedFocusedChecks": {
+    "passed": 11,
+    "files": 2,
+    "log": "artifacts/virtual-host-aligned-unit-20261111.log"
+  },
+  "fullCheck": {
+    "status": "passed",
+    "exitCode": 0,
+    "tests": 5271,
+    "files": 323,
+    "durationSeconds": 196.26,
+    "log": "artifacts/release-check-024ff8fe.log"
+  },
+  "packageReceipt": "artifacts/release-preflight-ff11e640/receipt.json",
+  "browserHeadlessPlan": 1084,
+  "pending": [
+    "Terminal clean full browser matrix plus Linux display clipboard validation",
+    "Clean full browser matrix and Linux display clipboard validation",
+    "Hosted CI and GitHub authentication",
+    "Final release archive after evidence documentation updates, npm stage and approval",
+    "Registry installation and website deployment"
+  ],
+  "browserMatrix": {
+    "status": "running",
+    "planned": 1084,
+    "log": "artifacts/release-browser-024ff8fe.log",
+    "output": "artifacts/release-browser-024ff8fe"
+  }
+}

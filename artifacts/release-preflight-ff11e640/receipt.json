@@ -1,0 +1,29 @@
+{
+  "packageSourceCommit": "ff11e640308937ccd9d57ba4d4ed52e274e6cd13",
+  "currentCandidateCommit": "024ff8fe3e8d60cacd6c4ca2d4a662137e853cda",
+  "difference": "Two nonpackaged test files only; runtime and packaged files unchanged",
+  "version": "0.5.0-beta.1",
+  "files": 1145,
+  "bytes": 4887051,
+  "sha512": "sha512-j1DsQ/ApXAjXENnfnqTjvq6Y00p3CWaz/+l7IhRnxQYz0JL7sy9rfFy9q+ipxDd7H/r5/AgQGT7CfZsLtfc4ww==",
+  "unexpectedDirectories": [],
+  "published": false,
+  "publint": {
+    "exitCode": 0,
+    "warning": "Existing DOCX .cjs syntax classification warning"
+  },
+  "generalEntryTypes": "passed",
+  "angularEsmOnlyTypes": "passed",
+  "cleanConsumer": {
+    "outsideRepository": true,
+    "globalSearchPathsDisabled": true,
+    "unresolvable": [
+      "react",
+      "yjs",
+      "jsdom"
+    ],
+    "esm": "passed",
+    "commonjs": "passed",
+    "log": "artifacts/release-preflight-ff11e640/consumer-verification.log"
+  }
+}
