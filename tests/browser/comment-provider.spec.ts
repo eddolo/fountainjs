@@ -37,3 +37,38 @@ test('posts only the submitted comment while preserving a newer draft and target
   await expect(input).toHaveCount(0);
   await expect(page.getByText('Requests: 3', { exact: true })).toBeVisible();
 });
+
+test('keeps a thread saving until both responses arrive and keeps its newest revision', async ({ page }, info) => {
+  await page.goto('/comment-send-test.html?reorder');
+  const panel = page.getByLabel('Shared review');
+  const accept = page.getByRole('button', { name: 'Accept pending comment' });
+  await panel.getByRole('button', { name: 'New comment', exact: true }).click();
+  await panel.getByLabel('Comment target').selectOption('document');
+  await panel.getByRole('textbox', { name: 'New comment', exact: true }).fill('Original review comment');
+  await panel.getByRole('button', { name: 'Create thread' }).click();
+  await accept.click();
+
+  const thread = panel.getByRole('region', { name: 'Thread by Ada' });
+  const reaction = thread.getByRole('button', { name: 'React 👍 to comment by Ada' });
+  await thread.getByRole('button', { name: 'Edit', exact: true }).click();
+  const edit = thread.getByRole('textbox', { name: 'Edit comment' });
+  const save = thread.getByRole('button', { name: 'Save', exact: true });
+  const saving = thread.getByRole('status').filter({ hasText: 'Saving…' });
+  await edit.fill('Edited in the first request');
+  await save.click();
+  await reaction.click();
+  await expect(page.getByText('Requests: 3', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Deliver newest receipt' }).click();
+  await expect(reaction).toHaveText('👍 1');
+  await expect(saving).toBeVisible();
+  await expect(save).toBeDisabled();
+  await edit.fill('Text entered while the edit is still pending');
+  await panel.screenshot({ path: info.outputPath('second-receipt-arrived.png') });
+
+  await accept.click();
+  await expect(saving).toHaveCount(0);
+  await expect(edit).toHaveValue('Text entered while the edit is still pending');
+  await thread.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(thread).toContainText('Edited in the first request');
+  await expect(reaction).toHaveText('👍 1');
+});

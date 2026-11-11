@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep a comment thread marked as saving until all of its writes settle.
+  Late edit responses preserve newer revisions and deleted threads.
+
 - Keep newer comment text and target changes while a submitted comment is
   posting, and prevent duplicate sends while waiting for the provider.
 

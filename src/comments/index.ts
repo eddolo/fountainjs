@@ -11,6 +11,7 @@ import {
   textPointToPosition,
   type AnySelection,
   type Editor,
+  type EditorState,
   type Node,
   type NodeJSON,
   type PositionMapping,
@@ -208,6 +209,7 @@ interface CommentsRuntime {
   readonly idFactory: NonNullable<CommentsExtensionOptions['idFactory']>;
   readonly now: NonNullable<CommentsExtensionOptions['now']>;
   readonly listeners: Set<(event: CommentEvent) => void>;
+  readonly pendingWrites: Set<CommentOperation>;
   readonly queuedAnchors: Map<string, CommentAnchor>;
   anchorSnapshot: ReadonlyMap<string, CommentAnchor>;
   unsubscribe: () => void;
@@ -400,12 +402,20 @@ function stateSnapshot(value: Partial<CommentsState> = {}): CommentsState {
   });
 }
 
+function currentSnapshot(state: EditorState): CommentsState {
+  return commentsKey.get(state) ?? stateSnapshot();
+}
+
 function setState(editor: Editor, state: CommentsState, transaction?: Transaction): boolean {
   if (editor.isDestroyed) return false;
   return editor.dispatch((transaction ?? editor.state.createTransaction())
     .setMeta(STATE_META, state)
     .setMeta('addToHistory', false)
     .setMeta('force', true));
+}
+
+function updateSnapshot(editor: Editor, patch: Partial<CommentsState>): void {
+  setState(editor, stateSnapshot({ ...currentSnapshot(editor.state), ...patch }));
 }
 
 function textProjection(document: Node): FlatText {
@@ -672,8 +682,7 @@ function contain(runtime: CommentsRuntime, operation: () => void | Promise<void>
 
 function reportError(runtime: CommentsRuntime, error: unknown, recoverable = true): CommentsError {
   const normalized = immutableError({ message: error instanceof Error ? error.message : String(error), recoverable }) as CommentsError;
-  const current = commentsKey.get(runtime.editor.state) ?? stateSnapshot();
-  setState(runtime.editor, stateSnapshot({ ...current, status: 'error', error: normalized }));
+  updateSnapshot(runtime.editor, { status: 'error', error: normalized });
   emit(runtime, { type: 'error', error: normalized });
   return normalized;
 }
@@ -681,7 +690,7 @@ function reportError(runtime: CommentsRuntime, error: unknown, recoverable = tru
 function replaceThreads(runtime: CommentsRuntime, values: readonly CommentThread[]): void {
   if (runtime.destroyed) return;
   try {
-    const current = commentsKey.get(runtime.editor.state) ?? stateSnapshot();
+    const current = currentSnapshot(runtime.editor.state);
     const threads = normalizeThreads(values, runtime.editor.state.doc);
     const ids = new Set(threads.map((thread) => thread.id));
     runtime.anchorSnapshot = new Map(threads.map((thread) => [thread.id, thread.anchor]));
@@ -696,8 +705,7 @@ function replaceThreads(runtime: CommentsRuntime, values: readonly CommentThread
 
 function setStatus(runtime: CommentsRuntime, status: CommentsStatus, error?: CommentsError | string): void {
   if (runtime.destroyed) return;
-  const current = commentsKey.get(runtime.editor.state) ?? stateSnapshot();
-  setState(runtime.editor, stateSnapshot({ ...current, status, error: immutableError(error) }));
+  updateSnapshot(runtime.editor, { status, error: immutableError(error) });
 }
 
 function operationThreadId(operation: CommentOperation): string {
@@ -737,8 +745,12 @@ function runtimeFor(editor: Editor): CommentsRuntime {
   return runtime;
 }
 
+function findThread(state: CommentsState | undefined, threadId: string): CommentThread | undefined {
+  return state?.threads.find((thread) => thread.id === threadId);
+}
+
 function currentThread(runtime: CommentsRuntime, threadId: string): CommentThread {
-  const thread = commentsKey.get(runtime.editor.state)?.threads.find((candidate) => candidate.id === threadId);
+  const thread = findThread(getCommentsState(runtime.editor), threadId);
   if (!thread) throw new Error(`Unknown comment thread: ${threadId}`);
   return thread;
 }
@@ -749,25 +761,29 @@ function currentComment(thread: CommentThread, commentId: string): CommentMessag
   return comment;
 }
 
-function withPending(runtime: CommentsRuntime, threadId: string, pending: boolean): void {
-  const current = commentsKey.get(runtime.editor.state) ?? stateSnapshot();
-  const ids = new Set(current.pendingThreadIds);
-  if (pending) ids.add(threadId); else ids.delete(threadId);
-  setState(runtime.editor, stateSnapshot({ ...current, pendingThreadIds: [...ids].sort() }));
+function withPending(runtime: CommentsRuntime, operation: CommentOperation, pending: boolean): void {
+  const writes = runtime.pendingWrites;
+  if (pending) writes.add(operation);
+  else writes.delete(operation);
+  const pendingThreadIds = [...new Set(Array.from(writes, operationThreadId))].sort();
+  updateSnapshot(runtime.editor, { pendingThreadIds });
 }
 
-function applyAdapterResult(runtime: CommentsRuntime, result: CommentAdapterResult): CommentThread | undefined {
-  const current = commentsKey.get(runtime.editor.state) ?? stateSnapshot();
-  if (result.removedThreadId) {
-    if (!validId(result.removedThreadId)) throw new TypeError('The comment adapter returned an invalid removed thread id.');
-    const threads = current.threads.filter((thread) => thread.id !== result.removedThreadId);
+function applyAdapterResult(runtime: CommentsRuntime, result: CommentAdapterResult, creating?: boolean): CommentThread | undefined {
+  const current = currentSnapshot(runtime.editor.state);
+  const { removedThreadId } = result;
+  if (removedThreadId) {
+    if (!validId(removedThreadId)) throw new TypeError('The comment adapter returned an invalid removed thread id.');
+    const threads = current.threads.filter((thread) => thread.id !== removedThreadId);
     replaceThreads(runtime, threads);
     return undefined;
   }
   if (!result.thread) throw new Error('The comment adapter did not return an authoritative result.');
   const thread = normalizeThread(result.thread, runtime.editor.state.doc);
-  const threads = [...current.threads.filter((candidate) => candidate.id !== thread.id), thread];
-  replaceThreads(runtime, threads);
+  const previous = findThread(current, thread.id);
+  // Only creation can add a missing thread. Older receipts leave newer state intact.
+  if (previous ? previous.revision > thread.revision : !creating) return previous;
+  replaceThreads(runtime, [...current.threads.filter((candidate) => candidate !== previous), thread]);
   return thread;
 }
 
@@ -780,30 +796,29 @@ async function runOperation(
 ): Promise<CommentThread | undefined> {
   const { adapter, adapterEpoch } = runtime;
   if (!allowed(runtime, action, thread, comment)) throw new Error(`Comment permission denied: ${action}.`);
-  const threadId = operationThreadId(operation);
   const requireAdapter = () => {
     if (!hasAdapter(runtime, adapterEpoch)) throw new Error('Comments adapter changed.');
   };
   requireAdapter();
-  withPending(runtime, threadId, true);
   try {
+    withPending(runtime, operation, true);
     requireAdapter();
     const result = await adapter.apply(operation);
     requireAdapter();
-    const next = applyAdapterResult(runtime, result);
+    const next = applyAdapterResult(runtime, result, operation.type === 'create-thread');
     requireAdapter();
-    if (runtime.connected && commentsKey.get(runtime.editor.state)?.status === 'error') {
+    if (runtime.connected && getCommentsState(runtime.editor)?.status === 'error') {
       setStatus(runtime, 'connected');
       requireAdapter();
     }
     if (operation.type === 'create-thread' && next) emit(runtime, { type: 'thread-created', thread: next });
-    else if (operation.type === 'remove-thread') emit(runtime, { type: 'thread-removed', threadId });
+    else if (operation.type === 'remove-thread') emit(runtime, { type: 'thread-removed', threadId: operation.threadId });
     else if (next) emit(runtime, { type: 'thread-updated', thread: next, operation: operation.type });
     return next;
   } catch (error) {
     if (hasAdapter(runtime, adapterEpoch)) reportError(runtime, error);
     throw error;
-  } finally { if (hasAdapter(runtime, adapterEpoch)) withPending(runtime, threadId, false); }
+  } finally { if (hasAdapter(runtime, adapterEpoch)) withPending(runtime, operation, false); }
 }
 
 function operationBase(runtime: CommentsRuntime): CommentOperationBase {
@@ -823,7 +838,7 @@ export function subscribeCommentEvents(editor: Editor, listener: (event: Comment
 export function canComment(editor: Editor, action: CommentAction, threadId?: string, commentId?: string): boolean {
   const runtime = runtimes.get(editor);
   if (!runtime || runtime.destroyed) return false;
-  const thread = threadId ? commentsKey.get(editor.state)?.threads.find((candidate) => candidate.id === threadId) : undefined;
+  const thread = threadId ? findThread(getCommentsState(editor), threadId) : undefined;
   const comment = thread && commentId ? thread.comments.find((candidate) => candidate.id === commentId) : undefined;
   return allowed(runtime, action, thread, comment);
 }
@@ -969,8 +984,8 @@ export async function toggleCommentReaction(editor: Editor, threadId: string, co
 
 export function selectCommentThread(editor: Editor, threadId: string, selectAnchor = true): boolean {
   const runtime = runtimes.get(editor);
-  const state = commentsKey.get(editor.state);
-  const thread = state?.threads.find((candidate) => candidate.id === threadId);
+  const state = getCommentsState(editor);
+  const thread = findThread(state, threadId);
   if (!runtime || !state || !thread) return false;
   let transaction = editor.state.createTransaction();
   const anchor = thread.anchor;
@@ -996,7 +1011,7 @@ export function selectCommentThread(editor: Editor, threadId: string, selectAnch
 
 export function unselectCommentThread(editor: Editor): boolean {
   const runtime = runtimes.get(editor);
-  const state = commentsKey.get(editor.state);
+  const state = getCommentsState(editor);
   if (!runtime || !state || !state.selectedThreadId) return false;
   const previous = state.selectedThreadId;
   const changed = setState(editor, stateSnapshot({ ...state, selectedThreadId: undefined }));
@@ -1006,7 +1021,7 @@ export function unselectCommentThread(editor: Editor): boolean {
 
 export function hoverCommentThreads(editor: Editor, threadIds: readonly string[]): boolean {
   const runtime = runtimes.get(editor);
-  const state = commentsKey.get(editor.state);
+  const state = getCommentsState(editor);
   if (!runtime || !state) return false;
   const known = new Set(state.threads.map((thread) => thread.id));
   const next = [...new Set(threadIds.filter((id) => validId(id) && known.has(id)))].sort();
@@ -1056,7 +1071,7 @@ function start(runtime: CommentsRuntime, reconnecting = false): boolean {
       runtime.queuedAnchors.clear();
       for (const [threadId, anchor] of queued) {
         if (!current()) break;
-        const thread = commentsKey.get(runtime.editor.state)?.threads.find((candidate) => candidate.id === threadId);
+        const thread = findThread(getCommentsState(runtime.editor), threadId);
         if (thread) sendMappedAnchor(runtime, threadId, anchor);
       }
     };
@@ -1111,6 +1126,7 @@ export function replaceCommentsAdapter(
   runtime.generation += 1;
   const epoch = ++runtime.adapterEpoch;
   runtime.adapter = adapter;
+  runtime.pendingWrites.clear();
   runtime.queuedAnchors.clear();
   runtime.anchorSnapshot = new Map();
   // Old callbacks have lost authority before either provider sees the switch.
@@ -1163,7 +1179,7 @@ export function createCommentsExtension(options: CommentsExtensionOptions): Foun
       },
     },
     props: {
-      decorations: (state) => threadDecorations(commentsKey.get(state) ?? stateSnapshot(), state.doc),
+      decorations: (state) => threadDecorations(currentSnapshot(state), state.doc),
       handleClick: (editor, event) => {
         const element = event.target instanceof Element
           ? event.target.closest<HTMLElement>('[data-fountain-comment-thread]')
@@ -1196,6 +1212,7 @@ export function createCommentsExtension(options: CommentsExtensionOptions): Foun
           idFactory,
           now,
           listeners: new Set(),
+          pendingWrites: new Set(),
           queuedAnchors: new Map(),
           anchorSnapshot: new Map(),
           unsubscribe: () => {},
@@ -1204,7 +1221,7 @@ export function createCommentsExtension(options: CommentsExtensionOptions): Foun
           destroyed: false,
         };
         runtime.unsubscribe = editor.subscribe((state, transaction) => {
-          mappedAnchorChanges(runtime, commentsKey.get(state) ?? stateSnapshot(), transaction);
+          mappedAnchorChanges(runtime, currentSnapshot(state), transaction);
         });
         runtimes.set(editor, runtime);
         if (options.autoConnect !== false) start(runtime);

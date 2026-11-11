@@ -246,6 +246,55 @@ describe('provider-independent threaded comments', () => {
     expect(getCommentsState(editor)?.threads[0]?.comments).toHaveLength(1);
   });
 
+  it.each(['newer first', 'older first', 'deleted'])('handles concurrent thread receipts (%s)', async (order) => {
+    const server = new InMemoryCommentsStore();
+    const backing = server.createAdapter();
+    const receipts: (() => void)[] = [];
+    const kit = composeExtensions([CoreExtension, createCommentsExtension({
+      user: { id: 'ada', name: 'Ada' },
+      adapter: () => ({
+        connect: context => context.replaceThreads(server.snapshot),
+        apply(operation) {
+          const result = backing.apply(operation);
+          if (operation.type === 'create-thread') return result;
+          return new Promise<CommentAdapterResult>(resolve => receipts.push(() => resolve(result)));
+        },
+      }),
+    })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    try {
+      const thread = await createCommentThread(editor, { type: 'document', content: 'Original' });
+      const commentId = thread.comments[0].id;
+      const edit = updateComment(editor, thread.id, commentId, 'Edited');
+      const second = order === 'deleted'
+        ? removeCommentThread(editor, thread.id)
+        : toggleCommentReaction(editor, thread.id, commentId, '👍');
+      const read = () => getCommentsState(editor)!;
+      expect(read().pendingThreadIds).toEqual([thread.id]);
+
+      if (order === 'older first') {
+        receipts[0]();
+        await edit;
+        expect(read().pendingThreadIds).toEqual([thread.id]);
+        expect(read().threads[0].revision).toBe(2);
+        receipts[1]();
+        await second;
+      } else {
+        receipts[1]();
+        await second;
+        const stillPending = read().pendingThreadIds;
+        receipts[0]();
+        if (order === 'deleted') await expect(edit).rejects.toThrow('removed the edited thread');
+        else expect((await edit).revision).toBe(3);
+        expect(stillPending).toEqual([thread.id]);
+      }
+      expect(read().pendingThreadIds).toEqual([]);
+      expect(read().threads).toEqual(server.snapshot);
+    } finally {
+      editor.destroy();
+    }
+  });
+
   it.each(['resolve', 'reject'])('isolates late %s and snapshots from a replaced adapter', async (outcome) => {
     let oldContext!: CommentsAdapterContext;
     let oldThread!: CommentThread;

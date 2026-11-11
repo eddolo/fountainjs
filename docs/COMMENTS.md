@@ -155,10 +155,10 @@ Events cover thread creation/update/removal, selection, hover, anchor orphaning
 and restoration, and contained adapter errors. Event listeners are
 observational: a listener exception cannot corrupt editor state.
 
-`pendingThreadIds` indicates operations waiting for an authoritative adapter
-response. FountainJS does not optimistically mutate a thread. This avoids
-showing a comment as saved when the backend rejected it or returned a newer
-revision.
+`pendingThreadIds` includes a thread until all of its pending user operations
+settle. FountainJS applies changes after the adapter confirms them. A write
+response with an older revision leaves the newer thread in place, and a late
+edit response leaves a deleted thread absent.
 
 ## Production adapter contract
 

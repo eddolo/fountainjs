@@ -11,6 +11,7 @@
 <section id="transport" aria-label="Comment provider">
   <p id="requests">Requests: 0</p>
   <button id="accept" type="button" disabled>Accept pending comment</button>
+  <button id="latest" type="button" disabled hidden>Deliver newest receipt</button>
   <button id="reject" type="button" disabled>Reject pending comment</button>
 </section>
 <div id="review"></div>
@@ -22,25 +23,32 @@
   import { FountainComments } from 'fountainjs-editor/react/comments';
   import 'fountainjs-editor/styles.css';
 
-  const adapter = new InMemoryCommentsStore().createAdapter();
+  const store = new InMemoryCommentsStore(), adapter = store.createAdapter();
+  const reorder = new URLSearchParams(location.search).has('reorder');
   const requests = document.querySelector('#requests');
   const accept = document.querySelector('#accept'), reject = document.querySelector('#reject');
+  const latest = document.querySelector('#latest');
+  latest.hidden = !reorder;
   const queue = [];
   let sent = 0;
   function report() {
     requests.textContent = 'Requests: ' + sent;
     accept.disabled = reject.disabled = queue.length === 0;
+    latest.disabled = queue.length < 2;
   }
   accept.onclick = () => { queue.shift()?.accept(); report(); };
+  latest.onclick = () => { queue.pop()?.accept(); report(); };
   reject.onclick = () => { queue.shift()?.reject(new Error('The provider declined this comment.')); report(); };
   const kit = composeExtensions([CoreExtension, createCommentsExtension({
     user: { id: 'ada', name: 'Ada' },
     adapter: () => ({
       ...adapter,
+      connect: reorder ? context => context.replaceThreads(store.snapshot) : adapter.connect,
       apply(operation) {
         sent++;
+        const receipt = reorder ? adapter.apply(operation) : undefined;
         return new Promise((resolve, reject) => {
-          queue.push({ accept: () => resolve(Promise.resolve().then(() => adapter.apply(operation))), reject });
+          queue.push({ accept: () => resolve(receipt ?? Promise.resolve().then(() => adapter.apply(operation))), reject });
           report();
         });
       },
