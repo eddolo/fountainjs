@@ -61,7 +61,7 @@ weakened to hide the local result.
 The November 11 website assessment also identifies remaining work:
 
 - Broader accessibility, contrast and readability audits beyond these named targets.
-- Measurement of homepage export-panel work during editing.
+- Larger-document and production measurements of homepage export-panel work.
 - Stronger first-visit navigation and marketing/documentation prerendering,
   including canonical and sharing metadata.
 - Independent developer onboarding and physical-device/assistive-technology use.
@@ -70,3 +70,28 @@ Optional typography already loads outside the initial render path in the local
 candidate. Installed starter preparation/browser tests are also required in CI.
 These are local improvements; they are not evidence that an old deployed site
 or the current public npm release already includes them.
+
+## Homepage export work
+
+The homepage now memoizes live output by the immutable document and selected
+format, rather than the complete editor state. Native caret/selection changes
+therefore leave the output alone; typing, undo and format changes still refresh
+it immediately. No engine, exporter or scheduling contract changed.
+
+An instrumented Chromium baseline on the unchanged nine-block homepage sample
+recorded 44 Markdown exports during ten left/right caret pairs and a backward
+selection/collapse. Those calls took approximately 3.6 ms in total in this run;
+this establishes avoidable work, not substantial lag. After the change, nine
+source-served journeys (Markdown/HTML/JSON in Chromium/Firefox/WebKit) pass with
+zero selection-only exports, positive real-edit exporter calls, native typing,
+exact output restoration after undo, and format-switch restoration. Timings
+include instrumentation and are observations, not production performance gates.
+The tests record video, screenshots and JSON measurements for required CI.
+
+A separate synthetic HTML-paste setup could parse 502 blocks but could not
+replace the fully selected homepage sample: the command returned false and the
+original remained. This prevented the larger-document experiment; it is retained
+in `artifacts/homepage-export-integration-20261111.json` as an unresolved finding,
+not a passing paste test or evidence about the OS clipboard. Native paste and
+the rejection's cause still need investigation. Do not infer large-document
+performance or whole-editor paste correctness from the nine passing journeys.

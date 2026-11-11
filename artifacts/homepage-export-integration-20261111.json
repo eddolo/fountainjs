@@ -1,0 +1,472 @@
+{
+  "date": "2026-11-11",
+  "parentCommit": "1a73f3d6",
+  "scope": "Source-served unchanged homepage sample. Native keys; actual observed module exporters instrumented. No production or large-document performance claim.",
+  "baseline": {
+    "engine": "chromium",
+    "format": "markdown",
+    "fixture": "Unmodified public homepage sample",
+    "selection": [
+      {
+        "format": "markdown",
+        "durationMs": 0.20000000298023224
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.19999999552965164
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.20000000298023224
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.09999999403953552
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.20000000298023224
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.09999999403953552
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.09999999403953552
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.20000000298023224
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.09999999403953552
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.19999999552965164
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.10000000149011612
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0.09999999403953552
+      },
+      {
+        "format": "markdown",
+        "durationMs": 0
+      }
+    ],
+    "typing": {
+      "exports": [
+        {
+          "format": "markdown",
+          "durationMs": 0.10000000149011612
+        },
+        {
+          "format": "markdown",
+          "durationMs": 0
+        }
+      ],
+      "inputs": [
+        22.69999999552965
+      ]
+    },
+    "errors": [],
+    "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+  },
+  "after": [
+    {
+      "engine": "chromium",
+      "format": "html",
+      "fixture": "Unmodified public homepage sample",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "html",
+            "durationMs": 0.10000000149011612
+          },
+          {
+            "format": "html",
+            "durationMs": 0
+          }
+        ],
+        "inputs": [
+          24.100000001490116
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "firefox",
+      "format": "html",
+      "fixture": "Unmodified public homepage sample",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "html",
+            "durationMs": 0
+          },
+          {
+            "format": "html",
+            "durationMs": 0
+          }
+        ],
+        "inputs": [
+          56
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "webkit",
+      "format": "html",
+      "fixture": "Unmodified public homepage sample",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "html",
+            "durationMs": 0
+          },
+          {
+            "format": "html",
+            "durationMs": 0
+          }
+        ],
+        "inputs": [
+          148
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "chromium",
+      "format": "markdown",
+      "fixture": "Unmodified public homepage sample",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "markdown",
+            "durationMs": 0.10000000149011612
+          },
+          {
+            "format": "markdown",
+            "durationMs": 0.10000000149011612
+          }
+        ],
+        "inputs": [
+          21.599999994039536
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "firefox",
+      "format": "markdown",
+      "fixture": "Unmodified public homepage sample",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "markdown",
+            "durationMs": 0
+          },
+          {
+            "format": "markdown",
+            "durationMs": 0
+          }
+        ],
+        "inputs": [
+          55
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "webkit",
+      "format": "markdown",
+      "fixture": "Unmodified public homepage sample",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "markdown",
+            "durationMs": 1
+          },
+          {
+            "format": "markdown",
+            "durationMs": 0
+          }
+        ],
+        "inputs": [
+          164
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "chromium",
+      "format": "json",
+      "fixture": "Unmodified public homepage sample",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "json",
+            "durationMs": 0
+          },
+          {
+            "format": "json",
+            "durationMs": 0.10000000149011612
+          }
+        ],
+        "inputs": [
+          25.19999999552965
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "firefox",
+      "format": "json",
+      "fixture": "Unmodified public homepage sample",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "json",
+            "durationMs": 0
+          },
+          {
+            "format": "json",
+            "durationMs": 0
+          }
+        ],
+        "inputs": [
+          47
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "webkit",
+      "format": "json",
+      "fixture": "Unmodified public homepage sample",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "json",
+            "durationMs": 2
+          },
+          {
+            "format": "json",
+            "durationMs": 6
+          }
+        ],
+        "inputs": [
+          168
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    }
+  ],
+  "unresolvedPaste": {
+    "scope": "Synthetic HTML paste event after native full-document selection; not native clipboard certification",
+    "importBlocks": 502,
+    "commandBatches": [
+      {
+        "selection": {
+          "path": [
+            0,
+            0
+          ],
+          "endPath": [
+            8,
+            0
+          ],
+          "from": 0,
+          "to": 115,
+          "kind": "all"
+        },
+        "sameAllClass": true,
+        "sameRoot": true,
+        "editable": true,
+        "result": false,
+        "blocks": 9
+      },
+      {
+        "selection": {
+          "path": [
+            0,
+            0
+          ],
+          "endPath": [
+            8,
+            0
+          ],
+          "from": 0,
+          "to": 115,
+          "kind": "all"
+        },
+        "sameAllClass": true,
+        "sameRoot": true,
+        "editable": true,
+        "result": false,
+        "blocks": 9
+      }
+    ],
+    "observedBlocks": 9,
+    "errors": [],
+    "status": "Unresolved: original document unchanged; larger fixture not loaded",
+    "reproduction": "artifacts/homepage-paste-investigation-20261111.spec.ts",
+    "trace": "artifacts/homepage-export-setup-20261111/homepage-export-avoids-ful-b1d09-while-keeping-markdown-live-chromium/trace.zip"
+  },
+  "validation": [
+    "9/9 source browser cases pass",
+    "Root TypeScript passes",
+    "8 focused metadata/browser-CI checks pass",
+    "Three restored Markdown panels visually inspected"
+  ],
+  "publication": "No push, staging, publication or deployment"
+}

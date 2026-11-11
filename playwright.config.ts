@@ -39,6 +39,7 @@ const desktopTests = [
   '**/starter-downloads.spec.ts', '**/docx-research-workflow.spec.ts',
   '**/html-math-export.spec.ts',
   '**/site-copy-contrast.spec.ts',
+  '**/homepage-export.spec.ts',
 ];
 
 export default defineConfig({

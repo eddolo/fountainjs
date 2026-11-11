@@ -581,12 +581,13 @@ function App() {
     });
   }, [conversationController]);
 
+  const document = state?.doc;
   const output = useMemo(() => {
-    if (!state) return '';
-    if (format === 'html') return HTMLExporter.export(state, { document: false });
-    if (format === 'json') return JSONExporter.export(state);
-    return MarkdownExporter.export(state);
-  }, [format, state]);
+    if (!document) return '';
+    if (format === 'html') return HTMLExporter.export(document, { document: false });
+    if (format === 'json') return JSONExporter.export(document);
+    return MarkdownExporter.export(document);
+  }, [format, document]);
 
   const characterCount = demoKit.services.characterCount as CharacterCountService;
   const words = characterCount.words(editor);

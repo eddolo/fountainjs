@@ -117,7 +117,7 @@ checks, 15 built-site checks and eight recorded release journeys pass locally;
 the built metadata names clean source `72174160`. These overlapping executions
 are verification evidence, not new capability counts.
 [Website identity contract](WEBSITE_BUILD_IDENTITY.md). Copy recovery and the named contrast repairs now have local evidence; broader
-accessibility, export-panel profiling and marketing-page rendering stay open.
+accessibility, larger-document/production profiling and marketing-page rendering stay open.
 
 Homepage Copy now has an accessible manual recovery path and snapshot-bound
 feedback. The targeted text colors measure at least 5.15:1 in all three desktop
@@ -126,6 +126,12 @@ paste case fails in both Fountain and a plain native control: source 14/15,
 built site 29/30. Required Linux display-backed checks retain that assertion;
 publication remains pending those results.
 [Copy/contrast evidence](RELEASES.md#homepage-copy-and-contrast--2026-11-11).
+
+Homepage selection-only export work is repaired with nine native-key journeys
+across three formats/desktop engines. A rejected full-selection synthetic HTML
+paste blocked the larger fixture and remains an explicit follow-up; do not treat
+the small-sample export checks as paste or large-document certification.
+[Measured scope](WEBSITE_BUILD_IDENTITY.md#homepage-export-work).
 
 ## Remaining parity work
 

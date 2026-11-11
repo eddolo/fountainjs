@@ -1,5 +1,18 @@
 # Release and API stability policy
 
+## Homepage live-export selection work — 2026-11-11
+
+The source homepage caches its live export by document identity and format.
+Selection-only changes no longer serialize an unchanged document. Nine native
+typing/selection/undo journeys across three formats and three desktop engines
+pass; output remains immediate for edits and exact after undo. The baseline
+recorded 44 unnecessary Markdown exports (about 3.6 ms total on the small sample).
+This is scoped host-work evidence, not a large-document or production speed claim.
+A rejected full-selection synthetic paste prevented the larger fixture from
+loading and remains unresolved; its evidence is retained separately. Root
+TypeScript passes. No library API, acceptance limit or publication changed.
+[Scope and remaining work](WEBSITE_BUILD_IDENTITY.md#homepage-export-work).
+
 FountainJS is currently a `0.x` public beta. “Beta” is not permission for
 unannounced breakage: every release must state what changed, keep persisted data
 recoverable, and pass the same public package/browser gates used during

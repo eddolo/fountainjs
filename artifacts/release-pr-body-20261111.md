@@ -131,6 +131,13 @@ release journeys pass. The compiled offline-equation download is included.
 The audit uses a server configuration that disables automatic browser opening.
 Fresh combined hosted CI, final sealing and publication remain pending.
 
+Homepage live output now depends on document/format, avoiding selection-only
+serialization. Nine source desktop journeys pass with native keys and a positive
+real-edit export control. A small-sample Chromium baseline recorded 44 redundant
+Markdown exports (about 3.6 ms total). Larger fixture loading exposed a rejected
+full-selection synthetic paste, retained as unresolved; no large-document or
+production performance claim is made. TypeScript passes; no library/budget change.
+
 Homepage Copy now catches rejection/unavailability, supplies a readonly manual
 copy route and associates feedback with the copied snapshot. Named contrast
 targets reach at least 5.15:1. Source is 14 passes/one failed positive API paste;

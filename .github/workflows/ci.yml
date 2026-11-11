@@ -367,6 +367,9 @@ jobs:
             test-results/**/native-copy-external-receiver.png
             test-results/**/homepage-contrast.json
             test-results/site-copy-contrast-*/video.webm
+            test-results/**/homepage-export-measurement.json
+            test-results/**/live-output-after-undo.png
+            test-results/homepage-export-*/video.webm
             structural-direction-clipboard-results/**/copy-*.png
             structural-direction-clipboard-results/**/native-copy-external-receiver.png
             structural-direction-clipboard-results/site-copy-contrast-*/video.webm
