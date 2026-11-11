@@ -1,0 +1,29 @@
+{
+  "packageSourceCommit": "2d55f329",
+  "runtimeCandidateCommit": "024ff8fe3e8d60cacd6c4ca2d4a662137e853cda",
+  "version": "0.5.0-beta.1",
+  "files": 1145,
+  "bytes": 4888143,
+  "sha512": "sha512-TgoPzV3x9s7Xs0cPlJNuGl8t2y6yV9IKN+yY49Ts6Yd/3mb+QDmkjkQefZ2hmRw4lrWyQtDsJVylBJdVP2aYPg==",
+  "previousReceipt": "artifacts/release-preflight-ff11e640/receipt.json",
+  "changedArchiveMembers": [
+    "package/docs/RELEASES.md",
+    "package/docs/ROADMAP.md",
+    "package/docs/TIPTAP_PARITY.md"
+  ],
+  "allOtherArchiveMembersByteIdentical": true,
+  "unexpectedDirectories": [],
+  "published": false,
+  "cleanConsumer": {
+    "outsideRepository": true,
+    "globalSearchPathsDisabled": true,
+    "unresolvable": [
+      "react",
+      "yjs",
+      "jsdom"
+    ],
+    "esm": "passed",
+    "commonjs": "passed",
+    "log": "artifacts/release-preflight-2d55f329/consumer-verification.log"
+  }
+}

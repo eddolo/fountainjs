@@ -32,7 +32,7 @@
   "pending": [
     "Clean hosted browser matrix and Linux display clipboard validation",
     "Hosted CI and GitHub authentication",
-    "Final release archive after packaged documentation updates, npm stage and approval",
+    "Matched release tag, npm stage and maintainer approval",
     "Registry installation and website deployment"
   ],
   "browserMatrix": {
@@ -87,5 +87,6 @@
     "status": "signed-out",
     "userReply": "Intent to sign in, not observed completion",
     "published": false
-  }
+  },
+  "finalPackagedDocumentationReceipt": "artifacts/release-preflight-2d55f329/receipt.json"
 }
