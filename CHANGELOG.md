@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Paste reports now distinguish refused insertions with `outcome: 'rejected'`
+  and an `insertion-rejected` issue instead of falsely reporting inserted text.
+  Refused valid rich content is not retried as plain text to bypass editing
+  rules. Hosts handling the outcome union exhaustively should add the new case.
+  The homepage displays its character limit and explains refused pastes.
+
 ## 0.5.0-beta.1 — 2026-11-11
 
 - Defer pending virtual viewport/measurement work during an external control

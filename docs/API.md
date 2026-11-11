@@ -2066,6 +2066,13 @@ clipboard JSON.
 `stripSourceMetadata`, and `onReport`. Reports identify Fountain, Word, Excel,
 Google Docs, MathML, generic HTML, or plain text; name the inserted outcome;
 count UTF-8 input/output bytes; and list immutable loss/normalization issues.
+If a valid paste is refused by document limits, an insertion point, or a
+transaction filter, the report instead has `outcome: 'rejected'`, zero output
+bytes, and an `insertion-rejected` issue. The document stays unchanged. A valid
+rich paste veto is not retried as unformatted text to bypass that editing rule.
+Parse/schema incompatibility can still use the reported HTML/plain-text fallback.
+Hosts should show rejection feedback through `onReport`; the callback does not
+override or disable the document's rules.
 Cleanup removes executable content, normalizes supported Office structures, and
 never claims to reconstruct external comments or unknown proprietary metadata.
 Word visual-list paragraphs retain numeric ordered starts, nested levels, and

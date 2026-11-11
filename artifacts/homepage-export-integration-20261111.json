@@ -458,9 +458,11 @@
     ],
     "observedBlocks": 9,
     "errors": [],
-    "status": "Unresolved: original document unchanged; larger fixture not loaded",
+    "status": "Resolved as expected configured 5,000-character limit; original fixture exceeded it.",
     "reproduction": "artifacts/homepage-paste-investigation-20261111.spec.ts",
-    "trace": "artifacts/homepage-export-setup-20261111/homepage-export-avoids-ful-b1d09-while-keeping-markdown-live-chromium/trace.zip"
+    "trace": "artifacts/homepage-export-setup-20261111/homepage-export-avoids-ful-b1d09-while-keeping-markdown-live-chromium/trace.zip",
+    "originalStatus": "Unresolved: original document unchanged; larger fixture not loaded",
+    "resolution": "See paste-limit-integration-20261111.json. A shorter 502-block fixture passes; false success reporting was independently reproduced and fixed."
   },
   "validation": [
     "9/9 source browser cases pass",

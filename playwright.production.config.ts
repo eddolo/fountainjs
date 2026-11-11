@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 import base from './playwright.config';
 
-const productionTests = ['**/starter-downloads.spec.ts', '**/docx-caption-production-real.spec.ts', '**/site-identity-production.spec.ts', '**/html-math-export.spec.ts', '**/site-copy-contrast.spec.ts'];
+const productionTests = ['**/starter-downloads.spec.ts', '**/docx-caption-production-real.spec.ts', '**/site-identity-production.spec.ts', '**/html-math-export.spec.ts', '**/site-copy-contrast.spec.ts', '**/homepage-paste.spec.ts'];
 
 export default defineConfig({
   ...base,

@@ -4,7 +4,8 @@ import { writeFile } from 'node:fs/promises';
 test.use({ video: 'on', trace: 'on' });
 test.setTimeout(60_000);
 
-for (const format of ['markdown', 'html', 'json'] as const) test(`avoids full homepage exports during selection while keeping ${format} live`, async ({ page }, info) => {
+for (const fixture of ['sample', '502 blocks'] as const)
+for (const format of ['markdown', 'html', 'json'] as const) test(`avoids full homepage exports during selection while keeping ${format} live (${fixture})`, async ({ page }, info) => {
   const modules: string[] = [], errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('response', response => {
@@ -34,6 +35,22 @@ for (const format of ['markdown', 'html', 'json'] as const) test(`avoids full ho
   }, modules.at(-1)!);
   const panel = page.locator('.studio__export');
   await panel.getByRole('button', { name: format, exact: true }).click();
+  if (fixture === '502 blocks') {
+    await editor.locator(':scope > p').first().click();
+    await page.keyboard.press('ControlOrMeta+a');
+    await editor.evaluate(element => {
+      const html = '<h1>Engineering report</h1><p>Reviewer note.</p>' + Array.from({ length: 500 }, (_, index) => `<p>O${index}: <strong>x</strong>.</p>`).join('');
+      const plain = new DOMParser().parseFromString(html, 'text/html').body.textContent!;
+      // Fixture delivery is synthetic; the measured interaction below uses native keys.
+      const event = new Event('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(event, 'clipboardData', { value: { files: [], types: ['text/html', 'text/plain'],
+        getData: (type: string) => type === 'text/html' ? html : type === 'text/plain' ? plain : '' } });
+      element.dispatchEvent(event);
+    });
+    await expect(page.locator('.section-heading p').filter({ hasText: '502 blocks' })).toBeVisible();
+    await expect(panel.locator('pre')).toContainText('O499:');
+    await page.keyboard.press('ControlOrMeta+Home');
+  }
   const note = editor.locator(':scope > h1').first();
   const originalNote = (await note.textContent())!;
   await expect(panel.locator('pre')).toContainText(originalNote);
@@ -66,7 +83,7 @@ for (const format of ['markdown', 'html', 'json'] as const) test(`avoids full ho
   await panel.getByRole('button', { name: format, exact: true }).click();
   await expect.poll(() => panel.locator('pre').textContent()).toBe(before);
   await writeFile(info.outputPath('homepage-export-measurement.json'), JSON.stringify({
-    engine: info.project.name, format, fixture: 'Unmodified public homepage sample', selection,
+    engine: info.project.name, format, fixture, characterCount: await page.locator('.fountain-character-count').textContent(), selection,
     typing, errors, scope: 'Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification.',
   }, null, 2));
   await panel.screenshot({ path: info.outputPath('live-output-after-undo.png') });

@@ -30,6 +30,7 @@ import {
   type AssetUploadHandler,
   type ImageUploadHandler,
   type FountainMenuService,
+  type ExternalPasteReport,
   InMemoryAIConversationStore,
   InMemoryAIPromptStore,
 } from 'fountainjs-editor';
@@ -530,6 +531,11 @@ function App() {
     plugins: demoKit.plugins,
   });
   const state = useFountainState(editor);
+  const [pasteNotice, setPasteNotice] = useState('');
+  const pasteOptions = useMemo(() => ({
+    onReport: (report: ExternalPasteReport) => setPasteNotice(report.outcome === 'rejected'
+      ? 'Paste was not inserted. This playground allows 5,000 characters. Try less text or another insertion point.' : ''),
+  }), []);
   const editorHandle = useRef<FountainEditorHandle>(null);
   const aiController = useMemo(() => new AIController(editor, demoAdapter), [editor]);
   const conversationStore = useMemo(() => new InMemoryAIConversationStore(), []);
@@ -733,6 +739,7 @@ function App() {
               editor={editor}
               placeholder="Start writing…"
               blockHandles
+              paste={pasteOptions}
               assetUpload={demoAssetUpload}
               toolbarProps={compactToolbar ? {
                 toolbarLabel: 'Compact writing toolbar',
@@ -780,6 +787,11 @@ function App() {
               renderItem={(item) => <><b className="suggestion-emoji">{item.emoji}</b><span>{item.label}</span></>}
             />
             <FountainCharacterCount editor={editor} service={characterCount} />
+            <p className="studio__limit-note">This playground limits documents to 5,000 characters.</p>
+            {pasteNotice && <div role="alert" className="studio__paste-notice">
+              <p>{pasteNotice}</p>
+              <button type="button" onClick={() => setPasteNotice('')}>Dismiss paste notice</button>
+            </div>}
           </div>
           <aside className="studio__tools">
             <div className="module-stack"><span>COMPOSED FOR THIS DEMO</span><div>{demoKit.extensions.map((extension) => <code key={extension.name}>{extension.name}</code>)}</div></div>

@@ -21,7 +21,8 @@ export type ExternalPasteIssueCode =
   | 'tracked-change-metadata-dropped'
   | 'external-comments-not-imported'
   | 'rich-html-import-failed'
-  | 'rich-html-unavailable';
+  | 'rich-html-unavailable'
+  | 'insertion-rejected';
 
 export interface ExternalPasteIssue {
   readonly code: ExternalPasteIssueCode;
@@ -34,7 +35,8 @@ export type ExternalPasteOutcome =
   | 'inserted-fountain-document'
   | 'inserted-rich-html'
   | 'inserted-plain-text'
-  | 'inserted-table-grid';
+  | 'inserted-table-grid'
+  | 'rejected';
 
 export interface ExternalPasteReport {
   readonly source: ExternalPasteSource;

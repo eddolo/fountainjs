@@ -1,0 +1,302 @@
+{
+  "date": "2026-11-11",
+  "parentCommit": "95d0c198",
+  "correction": "The old 502-block fixture exceeded the configured 5,000-character playground limit. It did not establish a paste insertion bug.",
+  "actualDefect": "Refused paste commands reported inserted-plain-text despite no accepted document change.",
+  "repair": "Add rejected outcome and insertion-rejected issue with zero output bytes; retain document/history; do not bypass a valid rich-content veto via unformatted retry; show host feedback.",
+  "largeFixtureMeasurements": [
+    {
+      "engine": "chromium",
+      "format": "html",
+      "fixture": "502 blocks",
+      "characterCount": "4423 / 5000 characters1004 words",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "html",
+            "durationMs": 0.7000000029802322
+          },
+          {
+            "format": "html",
+            "durationMs": 0.7999999970197678
+          }
+        ],
+        "inputs": [
+          34.5
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "firefox",
+      "format": "html",
+      "fixture": "502 blocks",
+      "characterCount": "4423 / 5000 characters1004 words",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "html",
+            "durationMs": 2
+          },
+          {
+            "format": "html",
+            "durationMs": 0
+          }
+        ],
+        "inputs": [
+          43
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "webkit",
+      "format": "html",
+      "fixture": "502 blocks",
+      "characterCount": "4423 / 5000 characters1004 words",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "html",
+            "durationMs": 2
+          },
+          {
+            "format": "html",
+            "durationMs": 1
+          }
+        ],
+        "inputs": [
+          198
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "chromium",
+      "format": "markdown",
+      "fixture": "502 blocks",
+      "characterCount": "4423 / 5000 characters1004 words",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "markdown",
+            "durationMs": 1.8999999985098839
+          },
+          {
+            "format": "markdown",
+            "durationMs": 2.3000000044703484
+          }
+        ],
+        "inputs": [
+          36.70000000298023
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "firefox",
+      "format": "markdown",
+      "fixture": "502 blocks",
+      "characterCount": "4423 / 5000 characters1004 words",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "markdown",
+            "durationMs": 2
+          },
+          {
+            "format": "markdown",
+            "durationMs": 2
+          }
+        ],
+        "inputs": [
+          64
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "webkit",
+      "format": "markdown",
+      "fixture": "502 blocks",
+      "characterCount": "4423 / 5000 characters1004 words",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "markdown",
+            "durationMs": 7
+          },
+          {
+            "format": "markdown",
+            "durationMs": 3
+          }
+        ],
+        "inputs": [
+          173
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "chromium",
+      "format": "json",
+      "fixture": "502 blocks",
+      "characterCount": "4423 / 5000 characters1004 words",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "json",
+            "durationMs": 0.5
+          },
+          {
+            "format": "json",
+            "durationMs": 0.5
+          }
+        ],
+        "inputs": [
+          164.39999999850988
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "firefox",
+      "format": "json",
+      "fixture": "502 blocks",
+      "characterCount": "4423 / 5000 characters1004 words",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "json",
+            "durationMs": 2
+          },
+          {
+            "format": "json",
+            "durationMs": 1
+          }
+        ],
+        "inputs": [
+          112
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    },
+    {
+      "engine": "webkit",
+      "format": "json",
+      "fixture": "502 blocks",
+      "characterCount": "4423 / 5000 characters1004 words",
+      "selection": [],
+      "typing": {
+        "exports": [
+          {
+            "format": "json",
+            "durationMs": 1
+          },
+          {
+            "format": "json",
+            "durationMs": 1
+          }
+        ],
+        "inputs": [
+          277
+        ]
+      },
+      "errors": [],
+      "scope": "Real selection/typing/undo in the source-served homepage. Timings include instrumentation and host rendering; not production or cross-editor performance certification."
+    }
+  ],
+  "nativeSource": [
+    {
+      "engine": "chromium",
+      "clipboard": "Native keyboard copy from a separate controlled contenteditable and native keyboard paste into Fountain; no clipboard API stubs or permissions override.",
+      "rejectedCharacters": 5001,
+      "originalPreserved": true,
+      "richPasteAccepted": true,
+      "undoRedo": true,
+      "errors": []
+    },
+    {
+      "engine": "firefox",
+      "clipboard": "Native keyboard copy from a separate controlled contenteditable and native keyboard paste into Fountain; no clipboard API stubs or permissions override.",
+      "rejectedCharacters": 5001,
+      "originalPreserved": true,
+      "richPasteAccepted": true,
+      "undoRedo": true,
+      "errors": []
+    },
+    {
+      "engine": "webkit",
+      "clipboard": "Native keyboard copy from a separate controlled contenteditable and native keyboard paste into Fountain; no clipboard API stubs or permissions override.",
+      "rejectedCharacters": 5001,
+      "originalPreserved": true,
+      "richPasteAccepted": true,
+      "undoRedo": true,
+      "errors": []
+    }
+  ],
+  "nativeProduction": [
+    {
+      "engine": "chromium",
+      "clipboard": "Native keyboard copy from a separate controlled contenteditable and native keyboard paste into Fountain; no clipboard API stubs or permissions override.",
+      "rejectedCharacters": 5001,
+      "originalPreserved": true,
+      "richPasteAccepted": true,
+      "undoRedo": true,
+      "errors": []
+    },
+    {
+      "engine": "firefox",
+      "clipboard": "Native keyboard copy from a separate controlled contenteditable and native keyboard paste into Fountain; no clipboard API stubs or permissions override.",
+      "rejectedCharacters": 5001,
+      "originalPreserved": true,
+      "richPasteAccepted": true,
+      "undoRedo": true,
+      "errors": []
+    },
+    {
+      "engine": "webkit",
+      "clipboard": "Native keyboard copy from a separate controlled contenteditable and native keyboard paste into Fountain; no clipboard API stubs or permissions override.",
+      "rejectedCharacters": 5001,
+      "originalPreserved": true,
+      "richPasteAccepted": true,
+      "undoRedo": true,
+      "errors": []
+    }
+  ],
+  "validation": {
+    "fullLocalGate": "pnpm check: passed, 5291 tests / 325 files, all package, API, Node/workerd/headless, format/reference, types, size and performance gates",
+    "focused": "81 focused tests passed",
+    "sourceFinal": "12/12: 9 bounded 502-block export checks + 3 native clipboard journeys",
+    "sourceSample": "9 sample checks passed in the preceding source matrix",
+    "production": "3/3 native clipboard journeys",
+    "visual": "Six compiled refusal/recovery screenshots inspected",
+    "size": "Existing limits pass without adjustment; final messages shortened for clarity."
+  },
+  "retainedFailures": [
+    "Initial source matrix: 16 passes / 5 failures. Three Firefox synthetic DataTransfer fixture deliveries failed; explicit event payload corrects delivery. Two native clipboard journeys expected Markdown syntax but styled content correctly used HTML fallback; final assertion checks exported HTML semantics.",
+    "Separate Windows WebKit programmatic clipboard API bridge failure remains documented, unchanged.",
+    "First full check stopped at the intentional public API guard. Additive union changes reviewed in CHANGELOG and API docs; exactly two declaration hashes refreshed."
+  ],
+  "limits": [
+    "No production-performance or universal-paste claim",
+    "Fresh combined hosted Linux/display-backed CI and final archive/consumer verification remain required",
+    "No push, staging, publication or deployment"
+  ]
+}

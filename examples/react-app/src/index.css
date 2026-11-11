@@ -1,4 +1,8 @@
 :root { color-scheme: light; }
+.studio__limit-note { color: #5c586b; font-size: 13px; }
+.studio__paste-notice { margin: 12px; padding: 12px 16px; color: #322b47; background: #f1effa; border: 1px solid #b6a7cf; border-radius: 8px; }
+.studio__paste-notice p { margin: 0 0 8px; }
+.studio__paste-notice button { padding: 6px 10px; color: #322b47; background: white; border: 1px solid #918b9f; border-radius: 5px; }
 * { box-sizing: border-box; }
 /* Native focus/scroll-into-view must settle immediately, not move pointer targets. */
 html { scroll-behavior: auto; scroll-padding-top: 88px; }

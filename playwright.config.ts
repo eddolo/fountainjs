@@ -40,6 +40,7 @@ const desktopTests = [
   '**/html-math-export.spec.ts',
   '**/site-copy-contrast.spec.ts',
   '**/homepage-export.spec.ts',
+  '**/homepage-paste.spec.ts',
 ];
 
 export default defineConfig({

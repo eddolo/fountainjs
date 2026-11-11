@@ -8,9 +8,16 @@ typing/selection/undo journeys across three formats and three desktop engines
 pass; output remains immediate for edits and exact after undo. The baseline
 recorded 44 unnecessary Markdown exports (about 3.6 ms total on the small sample).
 This is scoped host-work evidence, not a large-document or production speed claim.
-A rejected full-selection synthetic paste prevented the larger fixture from
-loading and remains unresolved; its evidence is retained separately. Root
-TypeScript passes. No library API, acceptance limit or publication changed.
+The initial larger fixture exceeded the demo's configured character limit; the
+refusal is resolved as expected policy. The later shorter 502-block fixture
+passes nine source journeys within the same limit. The investigation found and
+fixed false paste-success reporting: the additive `rejected` outcome is recorded
+in the API snapshot and changelog. Three source and three compiled-site native
+copy/paste journeys verify refusal, recovery, rich content and exact undo/redo.
+The final full local `pnpm check` passes 5,291 tests/325 files and all package,
+runtime, type, format, size and performance gates. Acceptance limits did not
+change. Fresh hosted CI, final archive/adoption verification and publication
+remain pending; the separate WebKit programmatic-clipboard failure is retained.
 [Scope and remaining work](WEBSITE_BUILD_IDENTITY.md#homepage-export-work).
 
 FountainJS is currently a `0.x` public beta. “Beta” is not permission for

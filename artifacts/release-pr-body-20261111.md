@@ -138,6 +138,15 @@ Markdown exports (about 3.6 ms total). Larger fixture loading exposed a rejected
 full-selection synthetic paste, retained as unresolved; no large-document or
 production performance claim is made. TypeScript passes; no library/budget change.
 
+Follow-up resolves the oversized paste investigation as the existing 5,000-character
+demo limit. A shorter 502-block fixture passes nine additional source cases.
+The genuine false-success report is repaired with the additive rejected outcome;
+API/changelog review is recorded. Three source and three compiled native
+copy/paste journeys pass, with visual refusal/recovery review. Full local check:
+5,291 tests/325 files plus all existing gates, without capacity changes.
+This follow-up does change the paste reporting API; the earlier no-API-change
+statement describes only the preceding memoization commit.
+
 Homepage Copy now catches rejection/unavailability, supplies a readonly manual
 copy route and associates feedback with the copied snapshot. Named contrast
 targets reach at least 5.15:1. Source is 14 passes/one failed positive API paste;

@@ -538,18 +538,20 @@ export class InputManager {
           ));
           return true;
         }
+        this.rejectPaste(event, 'fountain', fountain);
+        return true;
       } catch { /* The receiving schema can legitimately omit the copied extension. */ }
       return Object.freeze({
         code: 'fountain-document-fallback',
         count: 1,
-        message: 'The exact Fountain document was incompatible with this editor schema; portable HTML or text was used instead.',
+        message: 'Fountain clipboard content is incompatible with this schema; HTML or text was used.',
         lossy: true,
       });
     } else if (fountain) {
       return Object.freeze({
         code: 'fountain-document-fallback',
         count: 1,
-        message: 'The exact Fountain clipboard document exceeded the safe import limit; portable HTML or text was used instead.',
+        message: 'Fountain clipboard content exceeds the import limit; HTML or text was used.',
         lossy: true,
       });
     }
@@ -588,6 +590,8 @@ export class InputManager {
           ));
           return;
         }
+        this.rejectPaste(event, richSource, html, richIssues);
+        return;
       } catch (error) {
         this.options.onError?.(error);
         richIssues = Object.freeze([...richIssues, Object.freeze({
@@ -600,7 +604,10 @@ export class InputManager {
     }
     if (text === undefined) return;
     event?.preventDefault();
-    this.editor.runCommandBatch(() => insertPlainText(this.editor, text));
+    if (!this.editor.runCommandBatch(() => insertPlainText(this.editor, text))) {
+      this.rejectPaste(event, html ? richSource : 'plain-text', html || text, richIssues);
+      return;
+    }
     this.reportPaste(createExternalPasteReport(
       html ? richSource : 'plain-text',
       'inserted-plain-text',
@@ -613,6 +620,15 @@ export class InputManager {
   private reportPaste(report: ExternalPasteReport): void {
     try { this.options.paste?.onReport?.(report); }
     catch (error) { this.options.onError?.(error); }
+  }
+
+  private rejectPaste(event: Event | undefined, source: ExternalPasteReport['source'], input: string,
+    issues: readonly ExternalPasteIssue[] = []): void {
+    event?.preventDefault();
+    this.reportPaste(createExternalPasteReport(source, 'rejected', input, '', [...issues, {
+      code: 'insertion-rejected', count: 1, lossy: false,
+      message: 'Paste refused by document limits or editing rules.',
+    }]));
   }
 
   private writeCellSelection(event: ClipboardEvent): boolean {

@@ -88,10 +88,25 @@ exact output restoration after undo, and format-switch restoration. Timings
 include instrumentation and are observations, not production performance gates.
 The tests record video, screenshots and JSON measurements for required CI.
 
-A separate synthetic HTML-paste setup could parse 502 blocks but could not
-replace the fully selected homepage sample: the command returned false and the
-original remained. This prevented the larger-document experiment; it is retained
-in `artifacts/homepage-export-integration-20261111.json` as an unresolved finding,
-not a passing paste test or evidence about the OS clipboard. Native paste and
-the rejection's cause still need investigation. Do not infer large-document
-performance or whole-editor paste correctness from the nine passing journeys.
+The initial 502-block fixture exceeded this demo's configured 5,000-character
+limit. Its refusal was expected, not a proven insertion failure. A shorter
+502-block fixture now fits under that same limit and passes all nine
+format/desktop-engine journeys. Firefox requires the explicit synthetic event
+payload used by the existing journeys; its synthetic DataTransfer setup did not
+deliver the fixture. Actual native clipboard operation is tested separately.
+The old investigation/report remain historical evidence with this correction.
+
+The investigation did identify a real reporting error: a refused paste could
+claim `inserted-plain-text`. Reports now use `rejected`, zero output bytes and an
+`insertion-rejected` issue. A vetoed valid rich paste is not retried as plain text
+to bypass editing rules. The original document/history remain unchanged. The
+homepage displays the limit and supplies an accessible refusal notice.
+
+Seven unit regressions cover accepted/refused HTML, plain text and Fountain
+payloads, undo, and a general rich-content transaction veto. Three source and
+three compiled-site journeys use native keyboard copy from a separate controlled
+editable, paste 5,001 characters, verify refusal and preservation, then paste
+rich content successfully and verify exact undo/redo. All three engines pass;
+six compiled refusal/recovery screenshots were reviewed. These native keyboard
+journeys do not use the separate failing Windows WebKit clipboard API bridge.
+They do not certify every document, operating system or physical device.
