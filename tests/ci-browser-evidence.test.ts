@@ -30,7 +30,7 @@ describe('browser CI retry evidence retention', () => {
 
   it('keeps preflight outputs separate so later runs cannot remove their failed attempts', () => {
     const commands = workflow.split('\n').filter(line => line.includes('run:') && line.includes('playwright test'));
-    expect(commands).toHaveLength(9);
+    expect(commands).toHaveLength(10);
     const directories = commands.map(line => {
       const explicit = line.match(/--output=([^\s]+)/)?.[1];
       if (explicit) return explicit;
@@ -46,11 +46,39 @@ describe('browser CI retry evidence retention', () => {
     expect(directories).toContain('artifacts/yjs-default-browser');
     expect(directories).toContain('artifacts/yjs-incomplete-room-browser');
     expect(directories).toContain('artifacts/virtual-host-browser');
+    expect(directories).toContain('artifacts/production-browser');
     // Preserve the disjoint headed clipboard / remaining headless coverage.
     const standard = commands.filter(line => !line.includes('--config'));
     expect(standard).toHaveLength(5);
     expect(standard[1]).toContain('--headed');
     expect(standard[1]).toContain('--workers=1');
     expect(standard[4]).toContain('--grep-invert "${FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN}"');
+  });
+
+  it('requires recorded user journeys and production checks on an independent failure-gating runner', () => {
+    const job = workflow.split(/^  recorded-ui:\s*$/m)[1]?.split(/^  [\w-]+:\s*$/m)[0];
+    expect(job).toBeDefined();
+    expect(job).not.toMatch(/^    (?:if|needs|continue-on-error):/m);
+    expect(job).not.toContain('continue-on-error:');
+    expect(job).toContain('run: pnpm install --frozen-lockfile');
+    expect(job).toContain('run: pnpm exec playwright install --with-deps');
+    expect(job).toMatch(/^        run: pnpm audit:ui --reporter=list,json$/m);
+    expect(job).toMatch(/^        run: pnpm exec playwright test --config playwright\.production\.config\.ts --reporter=list,json$/m);
+    expect(job!.indexOf('run: pnpm install --frozen-lockfile')).toBeLessThan(job!.indexOf('run: pnpm audit:ui'));
+    expect(job!.indexOf('run: pnpm audit:ui')).toBeLessThan(job!.indexOf('--config playwright.production.config.ts'));
+    for (const [name, path] of [
+      ['recorded-ui-release-evidence', 'artifacts/manual-ui-audit/'],
+      ['production-browser-evidence', 'artifacts/production-browser/'],
+    ]) {
+      const upload = job!.split('- uses: actions/upload-artifact@v4').find(step => step.includes(`name: ${name}`));
+      expect(upload).toContain('if: always()');
+      expect(upload).toContain(`path: ${path}`);
+      expect(upload).not.toContain('if: failure()');
+    }
+    // The normal browser job retains all prior preflights and the complete
+    // matrix. The reusable release workflow also waits for this new job.
+    const release = readFileSync(new URL('../.github/workflows/release.yml', import.meta.url), 'utf8');
+    expect(release).toContain('uses: ./.github/workflows/ci.yml');
+    expect(release).toContain('needs: verify');
   });
 });

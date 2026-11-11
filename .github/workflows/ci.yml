@@ -98,6 +98,43 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm test:lean-integration
+  # Separate checkout/runner: recorded journeys rebuild the package and must
+  # never invalidate the main browser job's served modules during interaction.
+  recorded-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps
+      - name: Record complete human release journeys
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: artifacts/manual-ui-audit/report.json
+        run: pnpm audit:ui --reporter=list,json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recorded-ui-release-evidence
+          path: artifacts/manual-ui-audit/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Check built production workflows on the deployment subpath
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: artifacts/production-browser/report.json
+        run: pnpm exec playwright test --config playwright.production.config.ts --reporter=list,json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: production-browser-evidence
+          path: artifacts/production-browser/
+          if-no-files-found: warn
+          retention-days: 7
   browser:
     runs-on: ubuntu-latest
     env:
