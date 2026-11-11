@@ -152,7 +152,7 @@ from the LRU. Callers settle even if their provider ignores the optional signal;
 the provider must forward that signal to cancel the underlying transport too.
 Create a new resolver when project/auth context changes.
 
-`fixtures/service-html.json` contains twelve expression-free literals extracted
+`fixtures/service-html.json` now contains twenty-two expression-free literals extracted
 from the pinned upstream test module. The extraction script records source and
 license hashes and never executes upstream code. The accompanying
 `fixtures/GITLAB-LICENSE.txt` retains its copyright/license notice. Refresh with
@@ -178,6 +178,56 @@ remain required. No public product/showcase action is added from this fixture
 test evidence.
 
 [Resolver evidence](../../artifacts/gitlab-asset-resolver-integration-20261111.json).
+
+## GitLab-rendered document codec
+
+`services/markdown_codec.ts` converts the actual host renderer's `body` through
+the public DOM-free HTML importer. `createGitLabSchemaSpec(base?)` adds typed
+references and placeholders, plus distinct canonical/display URL attributes on
+images and links. It uses Fountain's model and transactions, not ProseMirror or
+literal AST compatibility. Register the explicit schema before using this codec
+with `SerializedContentController`. The host still supplies its real renderer.
+
+The public `MarkdownSourceSnapshot.capture(source, document)` now binds source
+after external conversion. It validates the document without running Fountain's
+Markdown parser over a different dialect. It deliberately infers neither source
+positions nor frontmatter. The codec retains exact source for an unchanged
+document (and provenance-verified automatic caret repair), but edited output is
+currently canonical. Untouched-block source retention after edits is unfinished.
+Snapshots are import-local, not a persisted source/asset package format.
+
+Current evidence and remaining conversion work:
+
+| Content | Current behavior and limit |
+| --- | --- |
+| Basic rendered paragraphs/headings/lists/tables | Uses the existing model/importer; this is not full GitLab Flavored Markdown conformance. |
+| Issue/MR/user/label/commit paragraph | Typed references keep original syntax separately from visible text and display URLs. Native edits/delete/undo preserve the tested source tokens. Labels retain background color with a contrasting foreground. Broader reference-kind/expansion document cases still need explicit coverage. |
+| Repository/upload/proxy images and links | Canonical addresses survive unrelated edits, including tested nested-list/table/linked-image cases. Lazy-loading GIF/proxy addresses are not written back as source. This is address/structure proof, not authenticated asset loading or image visual fidelity. |
+| Missing canonical image carrier | Untouched source remains exact; edited export reports the missing mapping and refuses silent URL substitution. Recovering the actual address from source is unfinished. |
+| Placeholders | Resolved visible value remains separate from the original placeholder token. |
+| Homogeneous nested task lists | Checkbox state comes from the item's own input, not a checked descendant. Mixed task/bullet lists, task-table cells and inapplicable tasks need dedicated adapters. |
+| Highlight/underline/subscript/superscript | Ordinary text exports the actual GitLab HTML dialect (`mark`, `u`, `sub`, `sup`). Custom highlight colors, certain combined code/atom formatting and authored layout require an explicit retained representation. |
+| Math, diagrams, frontmatter, review suggestions, footnotes, embeds, TOC and other specialized GitLab renderers | Known markers are reported before flattening. Their source-aware GitLab adapters remain required, even when Fountain already has a corresponding native feature. |
+| Quick actions | A preview response containing command metadata is refused until a dedicated document/source adapter is implemented. Source is retained; nothing is executed by the codec. |
+| Error/recovery and host workflow | Typed import/export issues are available. Complete host error presentation/source-mode recovery, provider/auth context, uploads, collaboration and the full application are still required. |
+
+The new native journey uncovered an engine caret defect: a native parent edge
+after an inline atom was incorrectly mapped to preceding text. Firefox also
+places End inside the uneditable atom's display text. The engine now maps those
+exact edges structurally while leaving native controls/interior positions alone.
+Regression cases fail before the repairs and pass afterward. Native typing,
+deleting the final reference and undo pass in all three desktop engines. The
+expanded profile is 11 passes/one existing Windows WebKit clipboard failure;
+Linux WebKit on explicit X11/Xvfb passes all four journeys. Captured states were
+visually reviewed; this private fixture is not the running GitLab product.
+
+The source-capture API changes two declaration hashes. Its implementation and
+the caret repair measure about 1,455,787 aggregate CJS bytes, 571 more than the prior
+runtime. Aggregate capacity changes from 1421.25 to 1421.75 KiB; individual
+entries, ESM, CSS, latency and heap ceilings remain unchanged. Earlier archives
+are stale. Final packed consumers/hosted CI and publication are still required.
+
+[Codec and caret evidence](../../artifacts/gitlab-codec-integration-20261111.json).
 
 ## Full application completion requirements
 

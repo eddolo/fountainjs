@@ -1033,6 +1033,58 @@ codec, source retention and complete product workflows remain outstanding.
 Evidence: `artifacts/gitlab-asset-resolver-integration-20261111.json` and
 `artifacts/gitlab-live-render-probe-20261111.json`.
 
+### External source capture, GitLab codec and native atom caret — 2026-11-11
+
+The public additive `MarkdownSourceSnapshot.capture(source, document)` validates
+an externally converted root and binds exact source without reparsing another
+dialect into Fountain's AST. It does not infer frontmatter/block positions or
+promise unchanged-block retention after edits. Four focused cases cover an
+external reference node, canonical edited output, invalid roots and live versus
+authored caret paragraphs. Actual local ESM/CommonJS public-package imports pass
+in Node without browser globals or jsdom. Two declaration hashes change.
+
+The private GitLab codec preserves original reference/placeholder tokens,
+canonical image/link destinations, nested task state and tested GitLab HTML mark
+syntax. Its corpus expands to 22 pinned upstream HTML literals. Known unhandled
+expansions and lossy edited exports produce typed issues with original source
+retained on import failure. This is a partial dialect adapter, not complete GFM,
+authenticated asset/service, block-source-retention or application verification.
+The [conversion matrix](../integrations/gitlab/README.md#gitlab-rendered-document-codec)
+keeps missing math/diagram/frontmatter/review/footnote/embed/TOC/quick-action and
+mixed-task workflows explicit instead of removing them from the requirement.
+
+Native use exposes a real engine defect: End after an inline atom redirects
+typing to preceding text in all three engines. Structural boundary mapping
+repairs Chromium/WebKit; an additional exact-display-edge mapping repairs
+Firefox's caret inside the uneditable atom. Five source regressions retain
+native-control selection and fail on the relevant old paths. Three-engine
+native typing, reference deletion and undo pass. Visual review also exposes
+blue-on-blue label text; a contrasting foreground repairs it while retaining
+the imported background. The expanded Windows profile is 11 passes/one retained
+WebKit native-copy failure, and Linux X11/Xvfb WebKit passes all four journeys.
+These are compiled private fixture journeys, not a running GitLab application.
+
+The first complete pipeline reaches 5,388 passes/one failure because the new
+invalid-source hint no longer contains an existing error-message contract. The
+message prefix is restored while retaining the new API hint; the original
+security/provenance test is unchanged, and the 130-case focused repair passes.
+The failed pipeline is retained alongside the subsequent final run.
+
+The final complete `pnpm check` passes **5,389 tests in 332 files** and every
+package/API, Node/workerd, headless, conformance/interoperability, framework type,
+size, performance and retention gate. A fresh compiled three-engine reference
+journey also passes after the message-only compatibility correction. Additional
+edit/delete/restore captures receive visual review. The broader Windows/Linux
+profiles above overlap this targeted follow-up and are not additive feature
+counts. The original source expectations, native clipboard assertion and test
+timeouts remain intact.
+
+The measured CJS aggregate is 1,455,787 bytes (+571); its ceiling changes from
+1421.25 to 1421.75 KiB (+512 bytes, within prior remaining headroom). No entry,
+ESM, CSS, latency, heap or semantic/reference ceiling changes. Earlier archives
+are stale. Fresh packed consumers, exact combined hosted checks and publication
+remain required. Evidence: `artifacts/gitlab-codec-integration-20261111.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

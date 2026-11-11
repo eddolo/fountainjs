@@ -114,6 +114,10 @@ export class SelectionHandler {
       // Do not reinterpret the TR/TD/container endpoints produced by semantic
       // cell or node selection synchronization as an ordinary text range.
       if (!block.type.isBlock || block.type.spec.atom || block.content.some(child => !child.type.isInline)) return null;
+      // A native container edge can sit after an inline atom. Searching past
+      // that atom for an editable text wrapper would move End/typing before it.
+      // Keep structural endpoints with the document-position mapper instead.
+      if (block.content.some(child => !child.isText && (child.type.spec.atom || !child.type.spec.content))) return null;
     } catch { return null; }
     const edge = (child: globalThis.Node, last: boolean): HTMLElement | undefined => {
       if (child.nodeType !== 1) return undefined;
@@ -150,8 +154,18 @@ export class SelectionHandler {
     if (owner) {
       const path = parseNodePath(owner), model = getNodeAtPath(this.editor.state.doc, path);
       if (model.type.spec.atom || !model.type.spec.content) {
-        if (!ranged) return null;
         const range = nodeRangeAtPath(this.editor.state.doc, path);
+        if (!ranged) {
+          // Firefox can report End inside an uneditable inline atom's final
+          // display text. Only its exact edges own a legal model caret; native
+          // form controls/editable NodeView content retain their own selection.
+          const control = element.closest('input, textarea, select, button, [contenteditable="true"]');
+          if (!model.type.isInline || !model.type.spec.atom || control && control !== this.dom) return null;
+          const end = textOffsetWithin(owner, owner, owner.childNodes.length);
+          if (!end) return null;
+          const point = textOffsetWithin(owner, node, offset);
+          return point === 0 ? range.from : point === end ? range.to : null;
+        }
         return association > 0 ? range.from : range.to;
       }
     }

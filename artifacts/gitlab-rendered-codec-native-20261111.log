@@ -1,0 +1,521 @@
+[WebServer] (node:6316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:1164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:22700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (5.7s)
+(node:23452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (7.0s)
+(node:17604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (6.3s)
+
+
+  1) [chromium] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByLabel('Latest host Markdown', { exact: true })
+    Expected: "See #1 and !1 by @root with ~bug in b51c8ef20575 added"
+    Received: "See #1 and !1 by @root with ~bug in  addedb51c8ef20575"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByLabel('Latest host Markdown', { exact: true })
+        14 × locator resolved to <output aria-label="Latest host Markdown">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>
+           - unexpected value "See #1 and !1 by @root with ~bug in  addedb51c8ef20575"
+
+
+      134 |   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');
+      135 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');
+    > 136 |   await expect(host).toHaveText(original + ' added');
+          |                      ^
+      137 |   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });
+      138 |   await page.getByRole('button', { name: 'Undo document', exact: true }).click();
+      139 |   await expect(host).toHaveText(original);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:136:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByLabel('Latest host Markdown', { exact: true })
+    Expected: "See #1 and !1 by @root with ~bug in b51c8ef20575 added"
+    Received: "See #1 and !1 by @root with ~bug in  addedb51c8ef20575"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByLabel('Latest host Markdown', { exact: true })
+        14 × locator resolved to <output aria-label="Latest host Markdown">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>
+           - unexpected value "See #1 and !1 by @root with ~bug in  addedb51c8ef20575"
+
+
+      134 |   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');
+      135 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');
+    > 136 |   await expect(host).toHaveText(original + ' added');
+          |                      ^
+      137 |   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });
+      138 |   await page.getByRole('button', { name: 'Undo document', exact: true }).click();
+      139 |   await expect(host).toHaveText(original);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:136:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByLabel('Latest host Markdown', { exact: true })
+    Expected: "See #1 and !1 by @root with ~bug in b51c8ef20575 added"
+    Received: "See #1 and !1 by @root with ~bug in  addedb51c8ef20575"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByLabel('Latest host Markdown', { exact: true })
+        14 × locator resolved to <output aria-label="Latest host Markdown">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>
+           - unexpected value "See #1 and !1 by @root with ~bug in  addedb51c8ef20575"
+
+
+      134 |   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');
+      135 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');
+    > 136 |   await expect(host).toHaveText(original + ' added');
+          |                      ^
+      137 |   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });
+      138 |   await page.getByRole('button', { name: 'Undo document', exact: true }).click();
+      139 |   await expect(host).toHaveText(original);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:136:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-rendered-codec-native-20261111\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels 
+    [firefox] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels 
+    [webkit] › tests\browser\gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels 
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.gitlab-bridge.config.ts",
+      "--grep",
+      "edits pinned GitLab",
+      "--output=artifacts/gitlab-rendered-codec-native-20261111",
+      "--reporter=list,json"
+    ],
+    "configFile": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\playwright.gitlab-bridge.config.ts",
+    "rootDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-rendered-codec-native-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-rendered-codec-native-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-rendered-codec-native-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm exec vite build --config vite.gitlab-bridge.config.ts && pnpm exec vite preview --config vite.gitlab-bridge.config.ts --host 127.0.0.1 --port 4198 --strictPort",
+      "url": "http://127.0.0.1:4198/tests/browser/fixtures/gitlab-vue2.html",
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "gitlab-vue2.spec.ts",
+      "file": "gitlab-vue2.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "edits pinned GitLab reference rendering without replacing source tokens with display labels",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5709,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Latest host Markdown', { exact: true })\nExpected: \u001b[32m\"See #1 and !1 by @root with ~bug in b51c8ef20575\u001b[7m added\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"See #1 and !1 by @root with ~bug in \u001b[7m added\u001b[27mb51c8ef20575\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Latest host Markdown', { exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <output aria-label=\"Latest host Markdown\">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>\u001b[22m\n\u001b[2m       - unexpected value \"See #1 and !1 by @root with ~bug in  addedb51c8ef20575\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Latest host Markdown', { exact: true })\nExpected: \u001b[32m\"See #1 and !1 by @root with ~bug in b51c8ef20575\u001b[7m added\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"See #1 and !1 by @root with ~bug in \u001b[7m added\u001b[27mb51c8ef20575\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Latest host Markdown', { exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <output aria-label=\"Latest host Markdown\">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>\u001b[22m\n\u001b[2m       - unexpected value \"See #1 and !1 by @root with ~bug in  addedb51c8ef20575\"\u001b[22m\n\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts:136:22",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                      "column": 22,
+                      "line": 136
+                    },
+                    "snippet": "  134 |   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');\n  135 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');\n> 136 |   await expect(host).toHaveText(original + ' added');\n      |                      ^\n  137 |   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });\n  138 |   await page.getByRole('button', { name: 'Undo document', exact: true }).click();\n  139 |   await expect(host).toHaveText(original);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                        "column": 22,
+                        "line": 136
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Latest host Markdown', { exact: true })\nExpected: \u001b[32m\"See #1 and !1 by @root with ~bug in b51c8ef20575\u001b[7m added\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"See #1 and !1 by @root with ~bug in \u001b[7m added\u001b[27mb51c8ef20575\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Latest host Markdown', { exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <output aria-label=\"Latest host Markdown\">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>\u001b[22m\n\u001b[2m       - unexpected value \"See #1 and !1 by @root with ~bug in  addedb51c8ef20575\"\u001b[22m\n\n\n  134 |   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');\n  135 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');\n> 136 |   await expect(host).toHaveText(original + ' added');\n      |                      ^\n  137 |   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });\n  138 |   await page.getByRole('button', { name: 'Undo document', exact: true }).click();\n  139 |   await expect(host).toHaveText(original);\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts:136:22"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T23:03:58.237Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-chromium\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                    "column": 22,
+                    "line": 136
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "076bc0070f517945042c-65ec578e1b9ac9aa81e1",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "edits pinned GitLab reference rendering without replacing source tokens with display labels",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7025,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Latest host Markdown', { exact: true })\nExpected: \u001b[32m\"See #1 and !1 by @root with ~bug in b51c8ef20575\u001b[7m added\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"See #1 and !1 by @root with ~bug in \u001b[7m added\u001b[27mb51c8ef20575\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Latest host Markdown', { exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <output aria-label=\"Latest host Markdown\">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>\u001b[22m\n\u001b[2m       - unexpected value \"See #1 and !1 by @root with ~bug in  addedb51c8ef20575\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Latest host Markdown', { exact: true })\nExpected: \u001b[32m\"See #1 and !1 by @root with ~bug in b51c8ef20575\u001b[7m added\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"See #1 and !1 by @root with ~bug in \u001b[7m added\u001b[27mb51c8ef20575\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Latest host Markdown', { exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <output aria-label=\"Latest host Markdown\">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>\u001b[22m\n\u001b[2m       - unexpected value \"See #1 and !1 by @root with ~bug in  addedb51c8ef20575\"\u001b[22m\n\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts:136:22",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                      "column": 22,
+                      "line": 136
+                    },
+                    "snippet": "  134 |   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');\n  135 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');\n> 136 |   await expect(host).toHaveText(original + ' added');\n      |                      ^\n  137 |   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });\n  138 |   await page.getByRole('button', { name: 'Undo document', exact: true }).click();\n  139 |   await expect(host).toHaveText(original);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                        "column": 22,
+                        "line": 136
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Latest host Markdown', { exact: true })\nExpected: \u001b[32m\"See #1 and !1 by @root with ~bug in b51c8ef20575\u001b[7m added\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"See #1 and !1 by @root with ~bug in \u001b[7m added\u001b[27mb51c8ef20575\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Latest host Markdown', { exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <output aria-label=\"Latest host Markdown\">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>\u001b[22m\n\u001b[2m       - unexpected value \"See #1 and !1 by @root with ~bug in  addedb51c8ef20575\"\u001b[22m\n\n\n  134 |   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');\n  135 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');\n> 136 |   await expect(host).toHaveText(original + ' added');\n      |                      ^\n  137 |   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });\n  138 |   await page.getByRole('button', { name: 'Undo document', exact: true }).click();\n  139 |   await expect(host).toHaveText(original);\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts:136:22"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T23:04:04.573Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                    "column": 22,
+                    "line": 136
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "076bc0070f517945042c-95b3387a8817b463ca3f",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "edits pinned GitLab reference rendering without replacing source tokens with display labels",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6270,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Latest host Markdown', { exact: true })\nExpected: \u001b[32m\"See #1 and !1 by @root with ~bug in b51c8ef20575\u001b[7m added\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"See #1 and !1 by @root with ~bug in \u001b[7m added\u001b[27mb51c8ef20575\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Latest host Markdown', { exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <output aria-label=\"Latest host Markdown\">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>\u001b[22m\n\u001b[2m       - unexpected value \"See #1 and !1 by @root with ~bug in  addedb51c8ef20575\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Latest host Markdown', { exact: true })\nExpected: \u001b[32m\"See #1 and !1 by @root with ~bug in b51c8ef20575\u001b[7m added\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"See #1 and !1 by @root with ~bug in \u001b[7m added\u001b[27mb51c8ef20575\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Latest host Markdown', { exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <output aria-label=\"Latest host Markdown\">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>\u001b[22m\n\u001b[2m       - unexpected value \"See #1 and !1 by @root with ~bug in  addedb51c8ef20575\"\u001b[22m\n\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts:136:22",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                      "column": 22,
+                      "line": 136
+                    },
+                    "snippet": "  134 |   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');\n  135 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');\n> 136 |   await expect(host).toHaveText(original + ' added');\n      |                      ^\n  137 |   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });\n  138 |   await page.getByRole('button', { name: 'Undo document', exact: true }).click();\n  139 |   await expect(host).toHaveText(original);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                        "column": 22,
+                        "line": 136
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Latest host Markdown', { exact: true })\nExpected: \u001b[32m\"See #1 and !1 by @root with ~bug in b51c8ef20575\u001b[7m added\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"See #1 and !1 by @root with ~bug in \u001b[7m added\u001b[27mb51c8ef20575\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Latest host Markdown', { exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <output aria-label=\"Latest host Markdown\">See #1 and !1 by @root with ~bug in  addedb51c8ef…</output>\u001b[22m\n\u001b[2m       - unexpected value \"See #1 and !1 by @root with ~bug in  addedb51c8ef20575\"\u001b[22m\n\n\n  134 |   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');\n  135 |   await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');\n> 136 |   await expect(host).toHaveText(original + ' added');\n      |                      ^\n  137 |   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });\n  138 |   await page.getByRole('button', { name: 'Undo document', exact: true }).click();\n  139 |   await expect(host).toHaveText(original);\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts:136:22"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T23:04:13.043Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-webkit\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-webkit\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-webkit\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\gitlab-rendered-codec-native-20261111\\gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-webkit\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\gitlab-vue2.spec.ts",
+                    "column": 22,
+                    "line": 136
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "076bc0070f517945042c-8dd0c6335ffc99ea576c",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 122,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-11T23:03:54.790Z",
+    "duration": 24846.094,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

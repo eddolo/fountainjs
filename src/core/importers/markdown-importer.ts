@@ -320,6 +320,20 @@ export class MarkdownSourceSnapshot {
     }));
   }
 
+  /**
+   * Bind exact Markdown to an externally converted document. The converter
+   * owns dialect semantics and sanitization. No block/source positions or
+   * frontmatter interpretation are inferred; edited output is canonical.
+   */
+  static capture(source: string, document: Node): MarkdownSourceSnapshot {
+    if (typeof source !== 'string') throw new TypeError('Markdown source must be a string.');
+    if (!(document instanceof Node) || document.type !== document.type.schema.topNodeType) {
+      throw new TypeError('Markdown source capture requires a complete Fountain document.');
+    }
+    document.type.schema.validate(document);
+    return new MarkdownSourceSnapshot(source, splitMarkdownSource(source, 'markdown'), document);
+  }
+
   static parse(source: string, schema: Schema, options: MarkdownImportOptions = {}): MarkdownSourceImportResult {
     if (typeof source !== 'string') throw new TypeError('Markdown source must be a string.');
     const parts = splitMarkdownSource(source, options.frontmatter);

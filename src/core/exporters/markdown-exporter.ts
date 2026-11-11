@@ -729,7 +729,7 @@ export class MarkdownExporter {
     options: MarkdownExportOptions = {},
   ): MarkdownSourceExportResult {
     if (!(source instanceof MarkdownSourceSnapshot)) {
-      throw new TypeError('Markdown source must come from MarkdownImporter.parseWithSource().');
+      throw new TypeError('Markdown source must come from MarkdownImporter.parseWithSource(). Or MarkdownSourceSnapshot.capture().');
     }
     const node = 'doc' in stateOrNode ? stateOrNode.doc : stateOrNode;
     if (source.matches(node)) {

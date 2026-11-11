@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/inline-atom-caret-view.test.ts (4 tests | 2 failed) 114ms
+   × types after an inline atom at a native atom-text-end endpoint (following text: false) 11ms
+   × types after an inline atom at a native atom-text-end endpoint (following text: true) 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/inline-atom-caret-view.test.ts > types after an inline atom at a native atom-text-end endpoint (following text: false)
+ FAIL  tests/inline-atom-caret-view.test.ts > types after an inline atom at a native atom-text-end endpoint (following text: true)
+AssertionError: expected 'AddedBefore ' to be 'Before ' // Object.is equality
+
+Expected: "Before "
+Received: "AddedBefore "
+
+ ❯ tests/inline-atom-caret-view.test.ts:25:51
+     23|   view.dom.dispatchEvent(new KeyboardEvent('keyup', { key: 'End', bubb…
+     24|   expect(insertText(editor, 'Added')).toBe(true);
+     25|   expect(editor.state.doc.child(0).child(0).text).toBe('Before ');
+       |                                                   ^
+     26|   expect(editor.state.doc.child(0).child(1).type.name).toBe('inline_at…
+     27|   expect(editor.state.doc.child(0).child(2).text).toBe(following ? 'Ad…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  23:09:25
+   Duration  3.51s (environment 46%, transform 41%, import 9%, tests 3%)
+

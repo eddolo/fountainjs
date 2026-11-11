@@ -44,7 +44,17 @@ The beta remains pending until the candidate has the following evidence.
    npm stage and a registry installation establish publication.
 
 The commands and publication procedure are in [RELEASES.md](RELEASES.md).
-The latest complete local source check is the November 11 runtime-editability
+The latest complete local `pnpm check` passes **5,389 tests in 332 files**,
+including the external source-capture API and inline-atom caret repairs. All
+package/API, server/headless, format, type, size, performance and retention gates
+pass. Compiled native reference typing/deletion/undo passes in all three desktop
+engines. The broader GitLab profile remains 11 passes/one Windows WebKit copy
+failure, with all four cases passing in Linux WebKit/Xvfb. The GitLab codec is
+partial; unchanged source can be exact, but edited output is currently canonical.
+This is not full product, physical-device, packed-consumer or hosted-release proof.
+[Current evidence and missing conversions](../integrations/gitlab/README.md#gitlab-rendered-document-codec).
+
+The earlier complete local source check is the November 11 runtime-editability
 repair: **5,300 tests in 327 files**, with all package, server, type, conformance,
 size, performance and retention gates passing. Three native interaction-mode
 journeys pass on Chromium/Firefox/WebKit. The actual Vue 2 surface bridge passes

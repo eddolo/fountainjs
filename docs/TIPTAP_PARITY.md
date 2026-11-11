@@ -2,14 +2,26 @@
 
 ## Current programme status — 2026-11-11
 
-The latest full local source-check checkpoint is `1e86e5e0`: all 5,271 source tests in
+The latest local full `pnpm check` passes **5,389 tests in 332 files**, including
+external Markdown source binding and native inline-atom End/typing repairs.
+Package/API, runtime/headless, format, type, size, performance and retention gates
+pass. Native reference edits/delete/undo pass in Chromium, Firefox and WebKit;
+the expanded host profile still has one Windows WebKit native-copy failure.
+Linux WebKit/Xvfb passes all four host journeys. The private GitLab codec remains
+partial, and no full application, authenticated-service or superiority claim is
+made. Fresh packed consumers and combined hosted CI remain required; older
+archive byte-identity statements below are historical. Capability-row counts
+are unchanged by this integration work.
+[Current source/caret evidence](RELEASES.md#external-source-capture-gitlab-codec-and-native-atom-caret--2026-11-11).
+
+The earlier full local source-check checkpoint is `1e86e5e0`: all 5,271 source tests in
 323 files pass, alongside build, package, type, headless, performance, retention,
 format and size gates. Fresh packed ESM/CommonJS consumers and both type
 analyses pass outside the repository without browser globals or optional
 peers. Publint retains its existing DOCX warning. The candidate remains
 `0.5.0-beta.1`, unpublished.
 
-Its library output remains byte-identical to `024ff8fe`. The current demo
+At that earlier checkpoint, library output is byte-identical to `024ff8fe`. The demo
 repairs rich image-caption previews and the recorded UI audit entry point.
 Eight recorded journeys, three desktop caption checks and three built-site
 checks pass. Eight full-resolution states and sampled timelines are reviewed;

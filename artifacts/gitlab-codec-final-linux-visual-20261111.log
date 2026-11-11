@@ -1,0 +1,147 @@
+[WebServer] 127.0.0.1 - - [11/Nov/2026 23:33:05] "GET /tests/browser/fixtures/gitlab-vue2.html HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+[WebServer] 127.0.0.1 - - [11/Nov/2026 23:33:08] "GET /tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [11/Nov/2026 23:33:08] "GET /assets/gitlab-vue2-BJmTmAtX.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [11/Nov/2026 23:33:08] "GET /assets/gitlab-vue2-BpliYU4V.js HTTP/1.1" 200 -
+  ✓  1 tests/browser/gitlab-vue2.spec.ts:122:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (3.1s)
+
+  1 passed (6.4s)
+{
+  "config": {
+    "argv": [
+      "/home/eddolo/.cache/fountainjs-native-audit/node-v24.22.1-linux-x64/bin/node",
+      "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/playwright.gitlab-vue2-linux-20261111.config.cjs",
+      "--grep",
+      "edits pinned GitLab",
+      "--output=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-codec-final-linux-visual-20261111",
+      "--reporter=list,json"
+    ],
+    "configFile": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/playwright.gitlab-vue2-linux-20261111.config.cjs",
+    "rootDir": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-codec-final-linux-visual-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "command": "python3 -m http.server 4199 --bind 127.0.0.1",
+      "cwd": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-site",
+      "url": "http://127.0.0.1:4199/tests/browser/fixtures/gitlab-vue2.html",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "gitlab-vue2.spec.ts",
+      "file": "gitlab-vue2.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "edits pinned GitLab reference rendering without replacing source tokens with display labels",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3139,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T23:33:07.568Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-codec-final-linux-visual-20261111/gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-codec-final-linux-visual-20261111/gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-61203ef6dce1aa88db67",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 122,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-11T23:33:04.900Z",
+    "duration": 6383.5019999999995,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

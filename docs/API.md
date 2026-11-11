@@ -2176,6 +2176,15 @@ source, options?)` then returns `{ markdown, losses, preservation }`:
 - `canonical` means no recognized frontmatter existed and the changed model was
   rendered through the normal exporter.
 
+`MarkdownSourceSnapshot.capture(originalMarkdown, convertedDocument)` binds
+source after an external, host-owned dialect converter. The root document is
+schema-validated. The converter owns semantic correctness and sanitization;
+capture does not reparse the source, infer frontmatter, or invent block/source
+positions. Unchanged output can be exact, including the existing provenance-
+checked automatic caret case. After edits, export is canonical with ordinary
+loss reports. This is not a block-level source-retention guarantee or a
+different AST/schema requirement.
+
 `MarkdownSourceSnapshot.mapBlocks(document)` exposes the same immutable,
 identity-first mapping. Equal originals can retain distinct source spellings
 when their immutable node references survive deletion or movement; duplicated

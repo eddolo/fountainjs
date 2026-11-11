@@ -702,7 +702,11 @@ const limits = Object.freeze({
   // and read-only keyboard/focus handling measure 1,455,216 CJS bytes.
   // Round capacity to the next quarter KiB; all entry/ESM/CSS/performance caps
   // stay unchanged. Preserve the preceding failed measurement.
-  'all CommonJS runtime code': 1421.25 * kibibyte,
+  // External-converter source capture plus native inline-atom caret repairs
+  // measure ~1,455,787 bytes (+571 bytes). Add half KiB aggregate capacity over
+  // the preceding 1421.25 KiB ceiling; keep the preceding failed size
+  // evidence and every entry/ESM/CSS/performance acceptance limit unchanged.
+  'all CommonJS runtime code': 1421.75 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

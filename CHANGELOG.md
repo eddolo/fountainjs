@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add `MarkdownSourceSnapshot.capture(source, document)` for explicit source
+  binding after a host-owned Markdown converter. It validates the supplied
+  document and preserves untouched source exactly without requiring Fountain's
+  parser or AST. It does not infer frontmatter or block/source mappings;
+  edited output remains canonical unless the host supplies its own mapping.
+- Repair native End/typing at inline-atom boundaries, including Firefox's
+  caret endpoint inside an uneditable atom's display text. Structural caret
+  mapping retains the correct side of the atom and leaves widget controls alone.
+
 - Add `editor.setEditable(boolean)` to change interaction mode without
   replacing the document, selection or undo history. Views update accessibility
   state and task/custom controls; unfinished composition is cancelled. Read-only

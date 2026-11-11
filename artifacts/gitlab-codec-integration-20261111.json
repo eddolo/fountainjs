@@ -1,0 +1,122 @@
+{
+  "date": "2026-11-11",
+  "baseCommit": "c0362288",
+  "status": "Local source-capture and native-caret checkpoint verified; GitLab codec and complete product still partial",
+  "implementation": {
+    "publicAPI": "MarkdownSourceSnapshot.capture(source, document)",
+    "publicContract": "Schema-validated external root; converter owns dialect semantics and sanitization. Exact unchanged source without literal AST equality. No inferred frontmatter/block mappings; edited output canonical.",
+    "codec": "integrations/gitlab/services/markdown_codec.ts",
+    "supportedEvidence": [
+      "Original versus visible reference/placeholder text",
+      "Canonical versus display/proxy/lazy image and link URLs",
+      "Tested linked, nested-list and table image addresses",
+      "Own versus descendant nested task checkbox state",
+      "GitLab HTML mark/u/sub/sup text serialization",
+      "Import/source and edited-export issues instead of known silent loss",
+      "Contrasting foreground for retained reference label colors"
+    ],
+    "sourceSnapshots": "Import-local; not persisted native file retention or exact unchanged-block preservation after edits",
+    "caretRepair": "src/view/selection-handler.ts: retain parent/atom boundaries and map Firefox's exact display-text edges while excluding native controls and interior positions",
+    "matrix": "integrations/gitlab/README.md#gitlab-rendered-document-codec"
+  },
+  "verification": {
+    "focusedCases": {
+      "sourceCapture": 4,
+      "atomCaret": 5,
+      "codecIncludingExplicitRefusals": 32,
+      "passed": 41,
+      "log": "artifacts/gitlab-codec-final-unit-20261111.log"
+    },
+    "selectionRegressionBatch": {
+      "passed": 62,
+      "log": "artifacts/inline-atom-caret-unit-final-20261111.log",
+      "scope": "Collected before the additional native-control guard case; overlapping focused evidence"
+    },
+    "publicESMandCommonJS": {
+      "passed": true,
+      "noBrowserGlobals": true,
+      "noFakeDOM": true,
+      "scope": "Actual local package build, not sealed archive/registry installation",
+      "log": "artifacts/external-markdown-source-package-smoke-20261111.log",
+      "script": "artifacts/smoke-external-markdown-source-20261111.mjs"
+    },
+    "completeCheck": {
+      "passed": true,
+      "tests": 5389,
+      "files": 332,
+      "log": "artifacts/gitlab-codec-full-check-final-20261111.log"
+    },
+    "compiledWindowsProfile": {
+      "passed": 11,
+      "failed": 1,
+      "skipped": 0,
+      "flaky": 0,
+      "log": "artifacts/gitlab-codec-final-windows-20261111.log",
+      "retainedFailure": "Existing WebKit native external copy receives empty text; assertion not weakened"
+    },
+    "compiledLinuxWebKitProfile": {
+      "passed": 4,
+      "failed": 0,
+      "display": "GDK_BACKEND=x11 and Xvfb",
+      "log": "artifacts/gitlab-codec-final-linux-20261111.log"
+    },
+    "freshPositiveNativeCapture": {
+      "passed": 3,
+      "failed": 0,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "log": "artifacts/gitlab-codec-final-visual-20261111.log",
+      "scope": "Compiled current library after error-message compatibility correction; pinned GitLab HTML provider data, not a live application"
+    },
+    "visualReview": [
+      "artifacts/gitlab-codec-final-windows-20261111/gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox/gitlab-reference-edit.png",
+      "artifacts/gitlab-codec-final-linux-20261111/gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels/gitlab-reference-edit.png",
+      "artifacts/gitlab-codec-final-visual-20261111/gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox/gitlab-reference-deleted.png",
+      "artifacts/gitlab-codec-final-visual-20261111/gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels-firefox/gitlab-reference-restored.png"
+    ],
+    "freshLinuxWebKitVisualCapture": {
+      "passed": 1,
+      "scope": "Fresh compiled reference journey; overlaps the four-case Linux profile",
+      "log": "artifacts/gitlab-codec-final-linux-visual-20261111.log",
+      "failed": 0
+    }
+  },
+  "failuresRetained": [
+    "Initial public-subpath setup used nonexistent /server-html; corrected to the actual /html/server export.",
+    "Initial edited fixtures expose generated auto-direction/start-alignment metadata; normalize only the renderer default while retaining authored alignment issues.",
+    "Initial native test fails in all three engines: End typing goes before the last reference. First structural repair passes Chromium/WebKit; Firefox still fails until its exact atom display edge is mapped. Regression expectations retained.",
+    "Visual review exposes blue-on-blue labels; background retained and foreground repaired.",
+    "First full pipeline: 5388 passes/one legacy invalid-source message failure. Preserve original message prefix; unchanged 130-case focused check and final full pipeline pass."
+  ],
+  "capacity": {
+    "publicDeclarationHashesChanged": 2,
+    "aggregateCJSBytes": 1455787,
+    "precedingRuntimeCJSBytes": 1455216,
+    "addedBytes": 571,
+    "ceilingKiBBefore": 1421.25,
+    "ceilingKiBAfter": 1421.75,
+    "otherAcceptanceLimitsChanged": false,
+    "failedMeasurement": "artifacts/markdown-external-source-size-before-20261111.log"
+  },
+  "fixtures": {
+    "count": 22,
+    "file": "integrations/gitlab/fixtures/service-html.json",
+    "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+    "refreshLog": "artifacts/gitlab-codec-fixture-refresh-20261111.log",
+    "licenseRetained": true
+  },
+  "remaining": [
+    "Exact untouched-block retention after external-dialect edits",
+    "Missing canonical image mapping recovery",
+    "Broader per-reference-kind/expanded-form document cases",
+    "Mixed/inapplicable/task-table list semantics",
+    "Math, diagrams, scientific/frontmatter, review suggestions, footnotes, embeds, TOC and other specialized source-aware adapters",
+    "Quick-action document/source representation",
+    "Complete host error presentation and source-mode recovery",
+    "Actual authenticated rendering, uploads, permissions, collaboration seeding/storage and full application workflows",
+    "Fresh packed consumers, combined hosted CI and publication"
+  ]
+}
