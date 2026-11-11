@@ -1,0 +1,72 @@
+[WebServer] (node:2172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:19796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 91% of 6.8s inside plugin hooks (6.2s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 6.0s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:23160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:20376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:6012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 33 tests using 1 worker
+
+(node:9012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents (20.6s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: control (889ms)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: release (805ms)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: cancel (861ms)
+  ok  5 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: blur (896ms)
+  ok  6 [chromium] › tests\browser\editor.spec.ts:690:1 › discovers product workflows and preserves separate task drafts and histories (6.2s)
+  ok  7 [chromium] › tests\browser\editor.spec.ts:4764:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo (871ms)
+  ok  8 [chromium] › tests\browser\editor.spec.ts:4839:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes (1.6s)
+  ok  9 [chromium] › tests\browser\editor.spec.ts:5869:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs (1.9s)
+  ok 10 [chromium] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline (2.9s)
+  ok 11 [chromium] › tests\browser\editor.spec.ts:8008:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy (1.0s)
+(node:5136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 12 [firefox] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents (15.6s)
+  ok 13 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: control (2.0s)
+  ok 14 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: release (2.0s)
+  ok 15 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: cancel (2.0s)
+  ok 16 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: blur (1.9s)
+  ok 17 [firefox] › tests\browser\editor.spec.ts:690:1 › discovers product workflows and preserves separate task drafts and histories (7.6s)
+  ok 18 [firefox] › tests\browser\editor.spec.ts:4764:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo (1.7s)
+  ok 19 [firefox] › tests\browser\editor.spec.ts:4839:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes (2.8s)
+  ok 20 [firefox] › tests\browser\editor.spec.ts:5869:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs (3.2s)
+  ok 21 [firefox] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline (4.6s)
+  ok 22 [firefox] › tests\browser\editor.spec.ts:8008:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy (2.2s)
+(node:16016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 23 [webkit] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents (27.5s)
+  ok 24 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: control (1.4s)
+  ok 25 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: release (1.4s)
+  ok 26 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: cancel (1.4s)
+  ok 27 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: blur (1.3s)
+  ok 28 [webkit] › tests\browser\editor.spec.ts:690:1 › discovers product workflows and preserves separate task drafts and histories (12.4s)
+  ok 29 [webkit] › tests\browser\editor.spec.ts:4764:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo (1.5s)
+  ok 30 [webkit] › tests\browser\editor.spec.ts:4839:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes (3.7s)
+  ok 31 [webkit] › tests\browser\editor.spec.ts:5869:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs (2.4s)
+  ok 32 [webkit] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline (5.5s)
+  ok 33 [webkit] › tests\browser\editor.spec.ts:8008:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy (2.0s)
+
+  33 passed (2.8m)

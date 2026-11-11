@@ -56,6 +56,10 @@ executions overlap and do not count as new capabilities. Production-site
 starter downloads pass in three desktop engines. The full clean editor/mobile
 matrix, Linux display-backed clipboard checks and hosted CI remain pending. See the
 [checkpoint record](RELEASES.md#versioned-local-preflight-at-fc3aa39a).
+That full run led to a reproduced virtual-layout lost-click repair: pending
+measurement moved a host button during its press. The guard passes 15 recorded
+desktop checks, including cancellation, blur and open Shadow DOM. Its complete
+source/release gates need refreshing. [Repair evidence](RELEASES.md#verified-virtual-host-control-repair--2026-11-11).
 
 ## Remaining parity work
 

@@ -1,0 +1,163 @@
+[WebServer] (node:9760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:21248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 91% of 7.2s inside plugin hooks (6.5s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 6.3s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:3664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:24276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:3788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:23592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow (1.3s)
+(node:25520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow (3.5s)
+(node:14328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow (1.6s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow 
+
+    Error: Measurement must not move a pressed host target
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 1
+    Received:   48
+
+       at virtual-host-control-journey.ts:33
+
+      31 |   await writeFile(info.outputPath(`virtual-host-${mode}-held.json`), JSON.stringify({ before, held }, null, 2));
+      32 |   expect(held.after.blocks).toBe(300);
+    > 33 |   expect(Math.abs(held.after.top - before.top), 'Measurement must not move a pressed host target').toBeLessThan(1);
+         |                                                                                                    ^
+      34 |   expect(held.after.mounted).toBe(before.mounted);
+      35 |   if (mode === 'cancel') {
+      36 |     await page.locator('#export').dispatchEvent('pointercancel', { pointerId: held.after.pointerId, button: 0 });
+        at virtualHostControlJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\virtual-host-control-journey.ts:33:100)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:19:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow 
+
+    Error: Measurement must not move a pressed host target
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 1
+    Received:   48
+
+       at virtual-host-control-journey.ts:33
+
+      31 |   await writeFile(info.outputPath(`virtual-host-${mode}-held.json`), JSON.stringify({ before, held }, null, 2));
+      32 |   expect(held.after.blocks).toBe(300);
+    > 33 |   expect(Math.abs(held.after.top - before.top), 'Measurement must not move a pressed host target').toBeLessThan(1);
+         |                                                                                                    ^
+      34 |   expect(held.after.mounted).toBe(before.mounted);
+      35 |   if (mode === 'cancel') {
+      36 |     await page.locator('#export').dispatchEvent('pointercancel', { pointerId: held.after.pointerId, button: 0 });
+        at virtualHostControlJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\virtual-host-control-journey.ts:33:100)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:19:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow 
+
+    Error: Measurement must not move a pressed host target
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 1
+    Received:   48
+
+       at virtual-host-control-journey.ts:33
+
+      31 |   await writeFile(info.outputPath(`virtual-host-${mode}-held.json`), JSON.stringify({ before, held }, null, 2));
+      32 |   expect(held.after.blocks).toBe(300);
+    > 33 |   expect(Math.abs(held.after.top - before.top), 'Measurement must not move a pressed host target').toBeLessThan(1);
+         |                                                                                                    ^
+      34 |   expect(held.after.mounted).toBe(before.mounted);
+      35 |   if (mode === 'cancel') {
+      36 |     await page.locator('#export').dispatchEvent('pointercancel', { pointerId: held.after.pointerId, button: 0 });
+        at virtualHostControlJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\virtual-host-control-journey.ts:33:100)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:19:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\virtual-host-shadow-before-20261111\editor-Virtual-host-contro-33b43-al-measurement-frame-shadow-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow 
+    [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow 
+    [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow 

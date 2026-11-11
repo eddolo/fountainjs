@@ -1,0 +1,1086 @@
+Listing tests:
+  [chromium] › collaboration-demo.spec.ts:21:1 › opens the lazy collaboration demo after a slow module load and shares typing
+  [chromium] › collaboration-demo.spec.ts:50:1 › recovers a failed collaboration load in a new tab without losing the current draft
+  [chromium] › collaboration-demo.spec.ts:94:1 › runs the public two-editor collaboration demo with presence and author-local undo
+  [chromium] › collaboration-demo.spec.ts:164:1 › replaces both live collaboration documents without remounting the public editors
+  [chromium] › collaboration-demo.spec.ts:225:1 › protects a rejected collaboration draft from peer edits and room switching
+  [chromium] › collaboration-demo.spec.ts:268:1 › merges two offline settings copies without reassigning the original card
+  [chromium] › collaboration-demo.spec.ts:301:1 › copies a settings card through the real Chromium clipboard before its original
+  [chromium] › collaboration-demo.spec.ts:327:1 › preserves both editors and the open comment when preparing a room switch fails
+  [chromium] › collaboration-demo.spec.ts:393:3 › keeps offline text through quote in the public collaboration demo
+  [chromium] › collaboration-demo.spec.ts:393:3 › keeps offline text through bullet list in the public collaboration demo
+  [chromium] › collaboration-demo.spec.ts:393:3 › keeps offline text through numbered list in the public collaboration demo
+  [chromium] › collaboration-demo.spec.ts:393:3 › keeps offline text through task list in the public collaboration demo
+  [chromium] › collaboration-demo.spec.ts:393:3 › keeps offline text through partial bold in the public collaboration demo
+  [chromium] › collaboration-demo.spec.ts:393:3 › keeps offline text through paragraph split in the public collaboration demo
+  [chromium] › collaboration-demo.spec.ts:461:1 › continues editing after competing offline wraps in the public collaboration demo
+  [chromium] › collaboration-demo.spec.ts:492:1 › merges nested collaborative settings through the public two-editor demo
+  [chromium] › collaboration-demo.spec.ts:528:1 › restores separate comment drafts and their targets without remounting the editors
+  [chromium] › collaboration-demo.spec.ts:608:1 › runs shared threaded comments through the public provider-neutral review panel
+  [chromium] › comment-provider.spec.ts:3:1 › posts only the submitted comment while preserving a newer draft and target
+  [chromium] › comment-provider.spec.ts:41:1 › keeps a thread saving until both responses arrive and keeps its newest revision
+  [chromium] › ..\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents
+  [chromium] › ..\manual\document-range-formatting-real.spec.ts:4:1 › formats directed text-to-image selections through the toolbar with exact history and reader export
+  [chromium] › ..\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+  [chromium] › ..\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs
+  [chromium] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto
+  [chromium] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control
+  [chromium] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item
+  [chromium] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control
+  [chromium] › ..\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history
+  [chromium] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent
+  [chromium] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent
+  [chromium] › ..\manual\html-anchors-real.spec.ts:10:1 › edits imported bookmark content and removes an empty bookmark with native input
+  [chromium] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: control
+  [chromium] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: release
+  [chromium] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: cancel
+  [chromium] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: blur
+  [chromium] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow
+  [chromium] › editor.spec.ts:26:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint
+  [chromium] › editor.spec.ts:50:53 › keeps per-file HTML conversion settings through html editing and export
+  [chromium] › editor.spec.ts:50:53 › keeps per-file HTML conversion settings through markdown editing and export
+  [chromium] › editor.spec.ts:91:1 › preserves physical preformatted breaks through real import editing and HTML download
+  [chromium] › editor.spec.ts:94:1 › retains an empty heading through actual HTML download reopen and native editing
+  [chromium] › editor.spec.ts:97:47 › focuses the start empty text source before native typing
+  [chromium] › editor.spec.ts:97:47 › focuses the end empty text source before native typing
+  [chromium] › editor.spec.ts:102:1 › fills replaced childless blocks by native click without adding another block
+  [chromium] › editor.spec.ts:106:1 › keeps native form labels names and validation anchors consistent through reconnect
+  [chromium] › editor.spec.ts:110:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent
+  [chromium] › editor.spec.ts:114:1 › validates required documents custom errors and labels through the native form workshop
+  [chromium] › editor.spec.ts:121:1 › keeps distant native edits backward selections and history correct across shared prefixes
+  [chromium] › editor.spec.ts:131:1 › retains explicit nested emphasis through native editing history and HTML reopening
+  [chromium] › editor.spec.ts:134:1 › retains unfinished EOF source through native literal edits and refuses following content
+  [chromium] › editor.spec.ts:138:1 › edits source-empty documents with visible native Enter Backspace history and reopening
+  [chromium] › editor.spec.ts:141:1 › retains leading Markdown declarations through native edits and complete source reopening
+  [chromium] › editor.spec.ts:144:1 › retains source document envelopes through native edits history and HTML reopening
+  [chromium] › editor.spec.ts:148:1 › preserves unsupported anchors through native editing history and safe reopening
+  [chromium] › editor.spec.ts:151:1 › inspects and downloads retained HTML source without activating it
+  [chromium] › editor.spec.ts:154:1 › retains authored carriage returns through raw source editing and reopening
+  [chromium] › editor.spec.ts:172:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing
+  [chromium] › editor.spec.ts:176:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks
+  [chromium] › editor.spec.ts:181:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr
+  [chromium] › editor.spec.ts:181:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl
+  [chromium] › editor.spec.ts:181:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto
+  [chromium] › editor.spec.ts:192:3 › retains shared automatic list scope through real convert, typing and downloaded HTML
+  [chromium] › editor.spec.ts:192:3 › retains shared automatic list scope through real lift, typing and downloaded HTML
+  [chromium] › editor.spec.ts:202:3 › reorders real runbook blocks with native pointer feedback in ltr
+  [chromium] › editor.spec.ts:202:3 › reorders real runbook blocks with native pointer feedback in rtl
+  [chromium] › editor.spec.ts:206:1 › reorders real runbook blocks with keyboard structural feedback
+  [chromium] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: unwrap
+  [chromium] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: indent
+  [chromium] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: nested-lift
+  [chromium] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: contained
+  [chromium] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: ltr
+  [chromium] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: rtl-cell-ltr
+  [chromium] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: auto
+  [chromium] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: host-css
+  [chromium] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: rtl-spans
+  [chromium] › editor.spec.ts:222:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML
+  [chromium] › editor.spec.ts:226:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML
+  [chromium] › editor.spec.ts:230:1 › compares list-first code text-click focus and editing to a plain native surface
+  [chromium] › editor.spec.ts:234:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview
+  [chromium] › editor.spec.ts:238:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history
+  [chromium] › editor.spec.ts:242:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export
+  [chromium] › editor.spec.ts:246:1 › separates the homepage framework descenders from the italic extend line
+  [chromium] › editor.spec.ts:265:1 › keeps consecutive marked quoted and table blank lines visible in reader and saved HTML
+  [chromium] › editor.spec.ts:269:1 › fills and reopens a retained childless paragraph using real pointer typing Enter Backspace and undo
+  [chromium] › editor.spec.ts:273:1 › edits structured inert block wrappers with actual table navigation Enter Backspace history and safe reopening
+  [chromium] › editor.spec.ts:277:1 › retains HTML link navigation and literal Markdown data through real editing and reopening
+  [chromium] › editor.spec.ts:281:1 › edits inert script style textarea source with real Enter Backspace history and safe reader reopening
+  [chromium] › editor.spec.ts:285:1 › retains unfinished raw HTML as editable Markdown source and discloses direct HTML omissions
+  [chromium] › editor.spec.ts:289:1 › preserves registered inert inline source through real typing history and Markdown HTML JSON reopening
+  [chromium] › editor.spec.ts:293:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening
+  [chromium] › editor.spec.ts:297:1 › previews and prints only the current local draft in the conversion lab
+  [chromium] › editor.spec.ts:307:1 › keeps Word table cell alignment through editor, page preview and DOCX reopen
+  [chromium] › editor.spec.ts:311:1 › conversion lab previews and prints a draft while a linked image stalls
+  [chromium] › editor.spec.ts:323:1 › conversion lab retains Word row splitting policy through preview and DOCX reopen
+  [chromium] › editor.spec.ts:327:1 › conversion lab preserves Word hyphens through editing, preview and DOCX reopen
+  [chromium] › editor.spec.ts:331:1 › conversion lab preserves Word links on line breaks and linked images
+  [chromium] › editor.spec.ts:335:1 › conversion lab recalculates complex Word page fields after editing and DOCX reopen
+  [chromium] › editor.spec.ts:346:1 › conversion lab preserves Word table indentation in the editor, preview, and reopened DOCX
+  [chromium] › editor.spec.ts:350:1 › retains explicit Word row heights through preview and DOCX reopen
+  [chromium] › editor.spec.ts:354:1 › prints the edited scientific DOCX in the conversion lab
+  [chromium] › editor.spec.ts:368:1 › imports private files in the conversion lab with reports and export reopen
+  [chromium] › editor.spec.ts:372:1 › edits cached Word field results without exposing instructions in the conversion lab
+  [chromium] › editor.spec.ts:413:1 › reconnects an imported orphan footnote and exports its native reference
+  [chromium] › editor.spec.ts:476:1 › keeps keyboard focus and surviving drafts when removing files from the conversion lab
+  [chromium] › editor.spec.ts:528:1 › keeps valid and malformed Markdown links distinct through an edit and download
+  [chromium] › editor.spec.ts:553:1 › resolves unequal Markdown runs through actual selection editing history download and reader reopen
+  [chromium] › editor.spec.ts:558:3 › retains partial Markdown em scope through real typing history and canonical reopening
+  [chromium] › editor.spec.ts:558:3 › retains partial Markdown strong scope through real typing history and canonical reopening
+  [chromium] › editor.spec.ts:563:1 › submits resets and disables a native form-associated Web Component
+  [chromium] › editor.spec.ts:567:1 › converts document-wide HTML scopes with source edit undo and explicit layout differences
+  [chromium] › editor.spec.ts:571:1 › preserves inert HTML comments through human editing source and reader output
+  [chromium] › editor.spec.ts:575:1 › copies anonymous flow internally and into an external plain-text editor through real clipboard
+  [chromium] › editor.spec.ts:580:1 › retains cleared anonymous flow through real cut save reopen and continued editing
+  [chromium] › editor.spec.ts:584:1 › retains anonymous HTML flow without extra spacing through real typing Enter deletion and reader output
+  [chromium] › editor.spec.ts:588:1 › retains literal flow newlines through actual Markdown export and source reimport
+  [chromium] › editor.spec.ts:592:1 › edits protected Markdown images and dividers inside HTML sections through history and reopening
+  [chromium] › editor.spec.ts:596:1 › edits protected Markdown tables inside HTML sections through cell navigation history and reopening
+  [chromium] › editor.spec.ts:600:1 › authors sections with properties, empty content, undo and reader preview
+  [chromium] › editor.spec.ts:604:1 › preserves optional section containers through real editing and reader output
+  [chromium] › editor.spec.ts:608:1 › edits and reopens a Word glossary with term and description roles
+  [chromium] › editor.spec.ts:612:1 › imports and edits Word content controls without losing visible content
+  [chromium] › editor.spec.ts:635:1 › preserves code endings through source recovery and reader handoff
+  [chromium] › editor.spec.ts:639:1 › edits definition lists and reopens a glossary in a reader
+  [chromium] › editor.spec.ts:643:1 › edits registered HTML wrappers after Markdown source recovery
+  [chromium] › editor.spec.ts:647:1 › retains the complete document through pointer and keyboard output-format changes
+  [chromium] › editor.spec.ts:651:1 › recovers nested Markdown lists and quotes through an editor and reader
+  [chromium] › editor.spec.ts:655:1 › edits opaque code labels and reopens them safely in a reader
+  [chromium] › editor.spec.ts:660:1 › guards editor actions against page reloads without suppressing failures
+  [chromium] › editor.spec.ts:670:1 › recovers paragraph HTML into editable blocks and a reopened reader
+  [chromium] › editor.spec.ts:674:1 › reads separate retired paragraphs after Markdown HTML scope conversion and handoff
+  [chromium] › editor.spec.ts:678:1 › preserves headerless and mixed tables through source and file handoff
+  [chromium] › editor.spec.ts:682:1 › retains HTML block formatting through server import, paste and draft handoff
+  [chromium] › editor.spec.ts:686:1 › navigates workflow parents and restores deleted task drafts and histories
+  [chromium] › editor.spec.ts:690:1 › discovers product workflows and preserves separate task drafts and histories
+  [chromium] › editor.spec.ts:694:1 › retains escaped pipes and strikethrough through table edits and Markdown handoff
+  [chromium] › editor.spec.ts:698:1 › retains literal text lines through editing and Markdown handoff
+  [chromium] › editor.spec.ts:702:1 › keeps literal syntax unformatted through visual edits and Markdown reopen
+  [chromium] › editor.spec.ts:706:1 › chooses literal address import and retains links through DOCX handoff
+  [chromium] › editor.spec.ts:710:1 › writes and reopens an issue with visual Markdown source fidelity and reader preview
+  [chromium] › editor.spec.ts:714:1 › issue workflow preserves root references and validates local image files
+  [chromium] › editor.spec.ts:752:1 › issue workflow preserves reference prefixes and reports container fallback
+  [chromium] › editor.spec.ts:776:1 › reopens a full HTML report without promoting page metadata into editor content
+  [chromium] › editor.spec.ts:780:1 › matches native document parsing for HTML envelopes, recovery, and noscript
+  [chromium] › editor.spec.ts:794:1 › aligns selected paragraphs using backward selection, toolbar, history and HTML export
+  [chromium] › editor.spec.ts:798:1 › exports independent DOCX list starts and renders the same procedure beside the editor
+  [chromium] › editor.spec.ts:802:1 › retains zero-based list numbers through keyboard outdent history and export
+  [chromium] › editor.spec.ts:806:1 › imports ordered-list starts like the native browser integer parser
+  [chromium] › editor.spec.ts:820:1 › uses first-party Angular signals and directive for campaign editing and owner cleanup
+  [chromium] › editor.spec.ts:824:1 › disposes Svelte custom block views before their owned engine
+  [chromium] › editor.spec.ts:833:1 › uses first-party Svelte bindings for table editing, history, stores and owner disposal
+  [chromium] › editor.spec.ts:837:1 › uses first-party Vue bindings for editing, reactive state, history and view remounts
+  [chromium] › editor.spec.ts:841:1 › binds rich text to a Vue form through typing, submission, disable and reset
+  [chromium] › editor.spec.ts:845:1 › keeps real SVG equation links inside paged snapshots across editing and rebuilding
+  [chromium] › editor.spec.ts:849:1 › saves and reopens equation files with source, references and history intact
+  [chromium] › editor.spec.ts:853:1 › recovers from textless replacement for native typing, lines and history
+  [chromium] › editor.spec.ts:857:1 › renders labelled equations and reader links through real editing and recovery
+  [chromium] › editor.spec.ts:861:1 › keeps moved math source attached to its formula through native editing, undo, and export
+  [chromium] › editor.spec.ts:865:1 › imports the published TeX table with visible losses and editable numeric values
+  [chromium] › editor.spec.ts:949:1 › keeps comparison names separate from their copy in a mobile desktop-site viewport
+  [chromium] › editor.spec.ts:977:1 › renders, edits, and measures portable page intent in a real browser
+  [chromium] › editor.spec.ts:1046:1 › measures browser line boxes, list items, rowspan groups, and footnotes as legal page fragments
+  [chromium] › editor.spec.ts:1140:1 › continues measured long footnotes through editable and print page projections
+  [chromium] › editor.spec.ts:1248:1 › prints a mixed repeated-footnote, merged-table, and manual-break document without loss
+  [chromium] › editor.spec.ts:1356:1 › starts a new preview sheet at a DOCX paragraph break
+  [chromium] › editor.spec.ts:1386:1 › keeps all lines of a DOCX paragraph together when it fits on the next sheet
+  [chromium] › editor.spec.ts:1414:1 › keeps a multiline DOCX caption with the following paragraph
+  [chromium] › editor.spec.ts:1445:1 › keeps a DOCX heading and caption chain with its body
+  [chromium] › editor.spec.ts:1473:1 › paginates imported styled semantic HTML without structural or PDF text loss
+  [chromium] › editor.spec.ts:1618:1 › uses a host print renderer without moving or exposing live custom DOM
+  [chromium] › editor.spec.ts:1653:1 › keeps native disclosure and media controls out of the visual sheets keyboard order
+  [chromium] › editor.spec.ts:1728:1 › projects exact A4 and Letter print sheets in every browser engine
+  [chromium] › editor.spec.ts:1845:1 › emits exact A4 and Letter PDF pages for every projected sheet in Chromium
+  [chromium] › editor.spec.ts:1885:1 › keeps 1,000-block pagination reflow local to the changed block
+  [chromium] › editor.spec.ts:1897:1 › bounds alternating edge reflow across 5,000 rendered page blocks
+  [chromium] › editor.spec.ts:1920:1 › keeps 5,000 unchanged page blocks cached through leading insertion and removal
+  [chromium] › editor.spec.ts:1946:1 › edits, selects, and composes across guarded page shells in one contenteditable
+  [chromium] › editor.spec.ts:2022:1 › keeps one paragraph editable when its measured lines span page shells
+  [chromium] › editor.spec.ts:2149:1 › maps carets, ranges, and composition around injected paragraph page gaps
+  [chromium] › editor.spec.ts:2253:1 › keeps one canonical ordered list editable and numbered across page shells
+  [chromium] › editor.spec.ts:2388:52 › honours explicit table repetition independently of cell roles (ordinary)
+  [chromium] › editor.spec.ts:2388:52 › honours explicit table repetition independently of cell roles (off)
+  [chromium] › editor.spec.ts:2421:1 › keeps one canonical table editable with repeated headers across page shells
+  [chromium] › editor.spec.ts:2571:1 › keeps merged header and body rowspans intact across editable table pages
+  [chromium] › editor.spec.ts:2637:1 › reports an oversized table row without clipping or splitting its editable model
+  [chromium] › editor.spec.ts:2679:1 › keeps canonical page furniture and footnotes editable while projecting every page copy
+  [chromium] › editor.spec.ts:2764:1 › keeps code, media, disclosures, and custom atoms canonical across editable pages
+  [chromium] › editor.spec.ts:2899:1 › keeps tracked review and Yjs live between list items split across pages
+  [chromium] › editor.spec.ts:2965:1 › keeps tracked review and Yjs live between table rows split across pages
+  [chromium] › editor.spec.ts:3042:13 › keeps comments attached and synchronized inside a continued list
+  [chromium] › editor.spec.ts:3042:13 › keeps comments attached and synchronized inside a continued table
+  [chromium] › editor.spec.ts:3096:1 › keeps tracked review and Yjs live inside a paragraph split across pages
+  [chromium] › editor.spec.ts:3157:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries
+  [chromium] › editor.spec.ts:3232:1 › tracks real browser insertion and replacement with reversible review decisions
+  [chromium] › editor.spec.ts:3261:1 › runs the package-backed full-text tracked review panel
+  [chromium] › editor.spec.ts:3279:1 › runs package-backed named versions, exact comparison, preview, and guarded restoration
+  [chromium] › editor.spec.ts:3309:1 › edits and persists package-backed collapsible details in the public playground
+  [chromium] › editor.spec.ts:3335:1 › edits semantic ruby annotations through the package-backed public playground
+  [chromium] › editor.spec.ts:3365:1 › converges live and offline Yjs edits and keeps collaborative undo author-local
+  [chromium] › editor.spec.ts:3394:1 › runs reference links, recursive blocks, rich tables, and loss reports in a real browser
+  [chromium] › editor.spec.ts:3419:1 › round-trips variable-delimiter Markdown code spans in the browser package
+  [chromium] › editor.spec.ts:3987:1 › types, deletes, and undoes inside imported empty documents, quotes, and list items
+  [chromium] › editor.spec.ts:4017:1 › round-trips marker-relative list containers and exact code whitespace
+  [chromium] › editor.spec.ts:4061:1 › preserves raw Markdown and inert frontmatter through the browser package
+  [chromium] › editor.spec.ts:4087:1 › edits through real beforeinput events and undoes a Markdown input rule
+  [chromium] › editor.spec.ts:4101:1 › groups adjacent browser typing and respects explicit undo boundaries
+  [chromium] › editor.spec.ts:4122:3 › preserves replacement formatting across subsequent typing input
+  [chromium] › editor.spec.ts:4122:3 › preserves replacement formatting across subsequent composition input
+  [chromium] › editor.spec.ts:4153:1 › commits cross-browser composition sequences once and supports replacement input
+  [chromium] › editor.spec.ts:4185:1 › maps decorations through typing without persisting widget content
+  [chromium] › editor.spec.ts:4200:1 › distinguishes rendered widget labels from authored document text
+  [chromium] › editor.spec.ts:4217:1 › highlights editable code and updates language metadata through public commands
+  [chromium] › editor.spec.ts:4248:1 › runs a view-focused chain and checks it without preview side effects
+  [chromium] › editor.spec.ts:4269:1 › applies every configured paste-rule match through a browser paste event
+  [chromium] › editor.spec.ts:4287:1 › autolinks, safely activates, edits, and removes links in a real browser
+  [chromium] › editor.spec.ts:4318:1 › preserves structured rich HTML from a real browser clipboard event
+  [chromium] › editor.spec.ts:4339:1 › pastes unwrapped inline HTML without dropping surrounding text or formatting
+  [chromium] › editor.spec.ts:4360:1 › honors strict raw HTML token boundaries in the public Markdown pipeline
+  [chromium] › editor.spec.ts:4377:1 › pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists
+  [chromium] › editor.spec.ts:4397:1 › pastes structured table cells and edits separate paragraphs without flattening nested blocks
+  [chromium] › editor.spec.ts:4420:1 › retains standalone non-collapsible Unicode text during rich paste
+  [chromium] › editor.spec.ts:4437:1 › pastes empty formatting and applies it to subsequently typed text
+  [chromium] › editor.spec.ts:4461:57 › pastes and edits list-first code without inventing a blank paragraph
+  [chromium] › editor.spec.ts:4461:57 › pastes and edits list-first code without inventing a blank paragraph from its label area
+  [chromium] › editor.spec.ts:4489:1 › normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine
+  [chromium] › editor.spec.ts:4542:1 › imports an extension-defined HTML node through the schema contract
+  [chromium] › editor.spec.ts:4567:1 › pastes mixed nested HTML lists without flattening their hierarchy
+  [chromium] › editor.spec.ts:4590:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys
+  [chromium] › editor.spec.ts:4623:1 › edits bidirectional and deeply nested text by logical document positions
+  [chromium] › editor.spec.ts:4650:1 › moves a selected top-level block through native drag data
+  [chromium] › editor.spec.ts:4668:1 › keeps a custom block’s native drag after the editor selects another block
+  [chromium] › editor.spec.ts:4703:1 › shows a host-replaceable drop cursor for inline text and atomic block targets
+  [chromium] › editor.spec.ts:4764:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo
+  [chromium] › editor.spec.ts:4839:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes
+  [chromium] › editor.spec.ts:4935:1 › replaces a DOM selection that crosses block boundaries
+  [chromium] › editor.spec.ts:4974:1 › keeps a visible editable paragraph after a terminal non-text block
+  [chromium] › editor.spec.ts:4996:1 › uses Ctrl+A as an explicit all-document selection and replaces the document
+  [chromium] › editor.spec.ts:5008:1 › selects and deletes a block image through real pointer and keyboard input
+  [chromium] › editor.spec.ts:5031:1 › edits, aligns, resizes, and undoes a production image through accessible controls
+  [chromium] › editor.spec.ts:5087:1 › inserts and removes a true inline image without breaking surrounding text
+  [chromium] › editor.spec.ts:5105:1 › tracks and cancels browser-native image upload tasks
+  [chromium] › editor.spec.ts:5145:1 › extends and replaces a rectangular cell selection through real pointer input
+  [chromium] › editor.spec.ts:5173:1 › keeps mixed-format links intact through backward selection typing and history
+  [chromium] › editor.spec.ts:5205:1 › reaches overflowing code by keyboard and leaves it without modifying the document
+  [chromium] › editor.spec.ts:5251:1 › pastes into tab-focused code through Chromium clipboard without changing the previous paragraph
+  [chromium] › editor.spec.ts:5275:1 › announces table resize values through real keyboard, pointer and history workflows
+  [chromium] › editor.spec.ts:5328:1 › edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids
+  [chromium] › editor.spec.ts:5401:1 › keeps normal paste while offering bounded editor-local clipboard slots
+  [chromium] › editor.spec.ts:5437:1 › renders and types into a structural gap as a new block
+  [chromium] › editor.spec.ts:5449:1 › edits Lean without a mandatory server and renders transient provider diagnostics
+  [chromium] › editor.spec.ts:5476:1 › keeps custom NodeViews live across updates and mapped moves while containing their DOM
+  [chromium] › editor.spec.ts:5513:1 › loads the public React playground without console or page errors
+  [chromium] › editor.spec.ts:5538:1 › publishes actionable extension authoring, conformance, and doctor guidance
+  [chromium] › editor.spec.ts:5556:1 › pairs the optional AI demo with developer recipes for every public workflow
+  [chromium] › editor.spec.ts:5577:1 › shows verified room setup before the legacy collaboration recipe
+  [chromium] › editor.spec.ts:5599:1 › keeps headline phrases together and makes full-page navigation explicit
+  [chromium] › editor.spec.ts:5624:1 › uses package-backed mentions, emoji, typography, and live counting in the public React playground
+  [chromium] › editor.spec.ts:5685:1 › runs grouped default and product slash commands in the public React playground
+  [chromium] › editor.spec.ts:5716:1 › keeps the active option visible while wrapping through public slash suggestions
+  [chromium] › editor.spec.ts:5720:1 › lets Tab leave the editor when public emoji suggestions close
+  [chromium] › editor.spec.ts:5724:1 › leaves IME candidate keys alone while the public slash menu is open
+  [chromium] › editor.spec.ts:5766:1 › runs accessible bubble and floating menus in the public React playground
+  [chromium] › editor.spec.ts:5835:1 › skips unavailable host controls during public toolbar keyboard navigation
+  [chromium] › editor.spec.ts:5869:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs
+  [chromium] › editor.spec.ts:5906:1 › applies the complete text-style suite through the public React toolbar
+  [chromium] › editor.spec.ts:5967:1 › uses the public React image workflow for metadata, alignment, and replacement
+  [chromium] › editor.spec.ts:6011:1 › opens and cancels public configuration panels with keyboard focus and exact document retention
+  [chromium] › editor.spec.ts:6129:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor
+  [chromium] › editor.spec.ts:6156:1 › keeps table configuration labels legible on pointer hover
+  [chromium] › editor.spec.ts:6195:1 › creates and edits a link through the public React toolbar
+  [chromium] › editor.spec.ts:6226:1 › toggles a selected block through the public React list controls
+  [chromium] › editor.spec.ts:6241:1 › edits code language and line numbers through the public React toolbar
+  [chromium] › editor.spec.ts:6260:1 › opens the searchable clipboard-history picker in the public React toolbar
+  [chromium] › editor.spec.ts:6347:1 › preserves copied line breaks in the public clipboard-history picker
+  [chromium] › editor.spec.ts:6381:1 › keeps the public outline stable, hierarchical, active, and navigable
+  [chromium] › editor.spec.ts:6406:1 › exposes and explicitly cleans invisible text in the public playground
+  [chromium] › editor.spec.ts:6447:1 › runs the public plain-DOM first-class widget demo
+  [chromium] › editor.spec.ts:6494:1 › runs the public React first-class widget demo without losing control focus
+  [chromium] › editor.spec.ts:6532:1 › makes the quote control discoverable and toggles an existing quote in the Java workflow demo
+  [chromium] › editor.spec.ts:6546:1 › retains table captions and reports their projected association in the conversion demo
+  [chromium] › editor.spec.ts:6563:1 › preserves complex figure content in the public Markdown conversion demo
+  [chromium] › editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline
+  [chromium] › editor.spec.ts:6652:1 › preserves parser-owned Markdown source through native editing, type changes and downloads
+  [chromium] › editor.spec.ts:6656:1 › preserves nested Markdown source through real list and quote editing
+  [chromium] › editor.spec.ts:6660:1 › keeps reference definitions outside a terminal fence after real structural editing
+  [chromium] › editor.spec.ts:6664:1 › imports leading Markdown delimiters and literal addresses through edit, download and reopen
+  [chromium] › editor.spec.ts:6668:1 › exports untouched empty Markdown containers without dropping authored blank or edited content
+  [chromium] › editor.spec.ts:6672:1 › retains blocked Markdown destinations through edits and safe reader downloads
+  [chromium] › editor.spec.ts:6676:1 › reviews CommonMark source and downloads an offline HTML reader
+  [chromium] › editor.spec.ts:6680:1 › reopens source-preserved issue drafts with the real HTML table adapter enabled
+  [chromium] › editor.spec.ts:6684:1 › preserves nested reference Markdown through real list quote and task editing
+  [chromium] › editor.spec.ts:6688:1 › preserves container definitions while editing and unwrapping a referenced quote
+  [chromium] › editor.spec.ts:6692:1 › records native DOCX viewer disagreements without certifying math fidelity
+  [chromium] › editor.spec.ts:6697:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission
+  [chromium] › editor.spec.ts:6821:1 › renders real KaTeX while reporting published-equation and trust failures without source loss
+  [chromium] › editor.spec.ts:6854:1 › edits multiline math without losing line breaks, descriptions, or undo history
+  [chromium] › editor.spec.ts:6891:1 › renders and inserts native math in the public DOM integration
+  [chromium] › editor.spec.ts:6948:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+  [chromium] › editor.spec.ts:6996:1 › keeps rich and multiline paste structurally predictable in the public editor
+  [chromium] › editor.spec.ts:7069:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML
+  [chromium] › editor.spec.ts:7136:1 › round-trips an extension-owned Fountain atom through the Chromium clipboard
+  [chromium] › editor.spec.ts:7185:1 › round-trips a complex whole Fountain document through the Chromium clipboard exactly
+  [chromium] › editor.spec.ts:7272:1 › copies clean semantic Fountain HTML into an external browser editor
+  [chromium] › editor.spec.ts:7327:1 › copies readable Fountain text into a plain-text external editor
+  [chromium] › editor.spec.ts:7386:1 › copies math to external rich and plain-text editors without renderer controls
+  [chromium] › editor.spec.ts:7431:1 › renders repeated empty paragraphs and removes each visible line
+  [chromium] › editor.spec.ts:7461:1 › undoes and redoes real typing with both common browser keyboard chords
+  [chromium] › editor.spec.ts:7478:1 › keeps a backward DOM selection backward after model synchronization
+  [chromium] › editor.spec.ts:7502:1 › preserves a backward selection made with real keyboard input
+  [chromium] › editor.spec.ts:7517:1 › replaces a backward selection made by a real reverse pointer drag
+  [chromium] › editor.spec.ts:7553:1 › turns multi-format and multi-block selections into visible paragraph boundaries
+  [chromium] › editor.spec.ts:7623:1 › visibly splits and joins ordinary paragraphs with both deletion directions
+  [chromium] › editor.spec.ts:7666:1 › deletes an adjacent inline atom without eating surrounding text
+  [chromium] › editor.spec.ts:7696:1 › unwraps and exits an inserted quote with ordinary browser keys
+  [chromium] › editor.spec.ts:7725:1 › publishes semantic selection controls and table interaction in the demo gallery
+  [chromium] › editor.spec.ts:7742:1 › edits, validates, disables and resets the Angular campaign brief form
+  [chromium] › editor.spec.ts:7746:1 › runs campaign images, native media and safe embeds through Angular with honest upload boundaries
+  [chromium] › editor.spec.ts:7823:1 › uses the public React media workflow for native playback, provider-gated embeds, and asset uploads
+  [chromium] › editor.spec.ts:7868:1 › streams an optional AI proposal outside the document until review is ready
+  [chromium] › editor.spec.ts:7893:1 › preserves whitespace when an AI proposal ends at a formatting boundary
+  [chromium] › editor.spec.ts:7908:1 › runs a host-owned multi-turn AI conversation with reusable prompts and clear confirmation
+  [chromium] › editor.spec.ts:7936:1 › reviews generated media before the normal host upload inserts one undoable node
+  [chromium] › editor.spec.ts:7962:1 › reviews a schema-aware agent tool proposal before one-step apply and undo
+  [chromium] › editor.spec.ts:7987:1 › keeps a 1,000-block input update local and paints within budget
+  [chromium] › editor.spec.ts:8008:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy
+  [chromium] › editor.spec.ts:8066:1 › exports rich tables as HTML Markdown and exposes the compatibility note
+  [chromium] › editor.spec.ts:8088:1 › HTML comments do not insert phantom paragraphs in converted Markdown
+  [chromium] › editor.spec.ts:8100:1 › imported table section order matches the physically rendered source table
+  [chromium] › editor.spec.ts:8131:1 › imports zero-rowspan cells with the same row-group geometry in server and browser
+  [chromium] › editor.spec.ts:8162:1 › reconstructs HTML tables across Markdown block boundaries
+  [chromium] › editor.spec.ts:8183:1 › applies surrounding HTML formatting without replacing Markdown block content
+  [chromium] › editor.spec.ts:8196:1 › converts raw HTML blocks only when the headless demo option is enabled
+  [chromium] › editor.spec.ts:8212:1 › projects inline HTML around Markdown nodes only with explicit opt-in and visible fallback
+  [chromium] › editor.spec.ts:8237:1 › shows specific discarded HTML and rejected URL losses in both conversion surfaces
+  [chromium] › editor.spec.ts:8263:1 › repairs source after native nested heading-to-paragraph changes
+  [chromium] › editor.spec.ts:8267:1 › keeps full Markdown export out of real large-issue typing
+  [chromium] › editor.spec.ts:8271:1 › optional site fonts do not block issue editing
+  [chromium] › editor.spec.ts:8275:1 › replaces selected nested sibling blocks and media through native pointer input
+  [chromium] › editor.spec.ts:8279:1 › replaces native selections across quote and list ancestors without leaving selected media
+  [chromium] › editor.spec.ts:8283:1 › retains different quote attributes through native replacement and JSON export
+  [chromium] › editor.spec.ts:8287:1 › replaces and restores selections across offscreen document content
+  [chromium] › starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide
+  [firefox] › collaboration-demo.spec.ts:21:1 › opens the lazy collaboration demo after a slow module load and shares typing
+  [firefox] › collaboration-demo.spec.ts:50:1 › recovers a failed collaboration load in a new tab without losing the current draft
+  [firefox] › collaboration-demo.spec.ts:94:1 › runs the public two-editor collaboration demo with presence and author-local undo
+  [firefox] › collaboration-demo.spec.ts:164:1 › replaces both live collaboration documents without remounting the public editors
+  [firefox] › collaboration-demo.spec.ts:225:1 › protects a rejected collaboration draft from peer edits and room switching
+  [firefox] › collaboration-demo.spec.ts:268:1 › merges two offline settings copies without reassigning the original card
+  [firefox] › collaboration-demo.spec.ts:301:1 › copies a settings card through the real Chromium clipboard before its original
+  [firefox] › collaboration-demo.spec.ts:327:1 › preserves both editors and the open comment when preparing a room switch fails
+  [firefox] › collaboration-demo.spec.ts:393:3 › keeps offline text through quote in the public collaboration demo
+  [firefox] › collaboration-demo.spec.ts:393:3 › keeps offline text through bullet list in the public collaboration demo
+  [firefox] › collaboration-demo.spec.ts:393:3 › keeps offline text through numbered list in the public collaboration demo
+  [firefox] › collaboration-demo.spec.ts:393:3 › keeps offline text through task list in the public collaboration demo
+  [firefox] › collaboration-demo.spec.ts:393:3 › keeps offline text through partial bold in the public collaboration demo
+  [firefox] › collaboration-demo.spec.ts:393:3 › keeps offline text through paragraph split in the public collaboration demo
+  [firefox] › collaboration-demo.spec.ts:461:1 › continues editing after competing offline wraps in the public collaboration demo
+  [firefox] › collaboration-demo.spec.ts:492:1 › merges nested collaborative settings through the public two-editor demo
+  [firefox] › collaboration-demo.spec.ts:528:1 › restores separate comment drafts and their targets without remounting the editors
+  [firefox] › collaboration-demo.spec.ts:608:1 › runs shared threaded comments through the public provider-neutral review panel
+  [firefox] › comment-provider.spec.ts:3:1 › posts only the submitted comment while preserving a newer draft and target
+  [firefox] › comment-provider.spec.ts:41:1 › keeps a thread saving until both responses arrive and keeps its newest revision
+  [firefox] › ..\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents
+  [firefox] › ..\manual\document-range-formatting-real.spec.ts:4:1 › formats directed text-to-image selections through the toolbar with exact history and reader export
+  [firefox] › ..\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+  [firefox] › ..\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs
+  [firefox] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto
+  [firefox] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control
+  [firefox] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item
+  [firefox] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control
+  [firefox] › ..\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history
+  [firefox] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent
+  [firefox] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent
+  [firefox] › ..\manual\html-anchors-real.spec.ts:10:1 › edits imported bookmark content and removes an empty bookmark with native input
+  [firefox] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: control
+  [firefox] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: release
+  [firefox] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: cancel
+  [firefox] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: blur
+  [firefox] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow
+  [firefox] › editor.spec.ts:26:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint
+  [firefox] › editor.spec.ts:50:53 › keeps per-file HTML conversion settings through html editing and export
+  [firefox] › editor.spec.ts:50:53 › keeps per-file HTML conversion settings through markdown editing and export
+  [firefox] › editor.spec.ts:91:1 › preserves physical preformatted breaks through real import editing and HTML download
+  [firefox] › editor.spec.ts:94:1 › retains an empty heading through actual HTML download reopen and native editing
+  [firefox] › editor.spec.ts:97:47 › focuses the start empty text source before native typing
+  [firefox] › editor.spec.ts:97:47 › focuses the end empty text source before native typing
+  [firefox] › editor.spec.ts:102:1 › fills replaced childless blocks by native click without adding another block
+  [firefox] › editor.spec.ts:106:1 › keeps native form labels names and validation anchors consistent through reconnect
+  [firefox] › editor.spec.ts:110:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent
+  [firefox] › editor.spec.ts:114:1 › validates required documents custom errors and labels through the native form workshop
+  [firefox] › editor.spec.ts:121:1 › keeps distant native edits backward selections and history correct across shared prefixes
+  [firefox] › editor.spec.ts:131:1 › retains explicit nested emphasis through native editing history and HTML reopening
+  [firefox] › editor.spec.ts:134:1 › retains unfinished EOF source through native literal edits and refuses following content
+  [firefox] › editor.spec.ts:138:1 › edits source-empty documents with visible native Enter Backspace history and reopening
+  [firefox] › editor.spec.ts:141:1 › retains leading Markdown declarations through native edits and complete source reopening
+  [firefox] › editor.spec.ts:144:1 › retains source document envelopes through native edits history and HTML reopening
+  [firefox] › editor.spec.ts:148:1 › preserves unsupported anchors through native editing history and safe reopening
+  [firefox] › editor.spec.ts:151:1 › inspects and downloads retained HTML source without activating it
+  [firefox] › editor.spec.ts:154:1 › retains authored carriage returns through raw source editing and reopening
+  [firefox] › editor.spec.ts:172:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing
+  [firefox] › editor.spec.ts:176:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks
+  [firefox] › editor.spec.ts:181:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr
+  [firefox] › editor.spec.ts:181:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl
+  [firefox] › editor.spec.ts:181:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto
+  [firefox] › editor.spec.ts:192:3 › retains shared automatic list scope through real convert, typing and downloaded HTML
+  [firefox] › editor.spec.ts:192:3 › retains shared automatic list scope through real lift, typing and downloaded HTML
+  [firefox] › editor.spec.ts:202:3 › reorders real runbook blocks with native pointer feedback in ltr
+  [firefox] › editor.spec.ts:202:3 › reorders real runbook blocks with native pointer feedback in rtl
+  [firefox] › editor.spec.ts:206:1 › reorders real runbook blocks with keyboard structural feedback
+  [firefox] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: unwrap
+  [firefox] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: indent
+  [firefox] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: nested-lift
+  [firefox] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: contained
+  [firefox] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: ltr
+  [firefox] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: rtl-cell-ltr
+  [firefox] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: auto
+  [firefox] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: host-css
+  [firefox] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: rtl-spans
+  [firefox] › editor.spec.ts:222:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML
+  [firefox] › editor.spec.ts:226:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML
+  [firefox] › editor.spec.ts:230:1 › compares list-first code text-click focus and editing to a plain native surface
+  [firefox] › editor.spec.ts:234:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview
+  [firefox] › editor.spec.ts:238:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history
+  [firefox] › editor.spec.ts:242:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export
+  [firefox] › editor.spec.ts:246:1 › separates the homepage framework descenders from the italic extend line
+  [firefox] › editor.spec.ts:265:1 › keeps consecutive marked quoted and table blank lines visible in reader and saved HTML
+  [firefox] › editor.spec.ts:269:1 › fills and reopens a retained childless paragraph using real pointer typing Enter Backspace and undo
+  [firefox] › editor.spec.ts:273:1 › edits structured inert block wrappers with actual table navigation Enter Backspace history and safe reopening
+  [firefox] › editor.spec.ts:277:1 › retains HTML link navigation and literal Markdown data through real editing and reopening
+  [firefox] › editor.spec.ts:281:1 › edits inert script style textarea source with real Enter Backspace history and safe reader reopening
+  [firefox] › editor.spec.ts:285:1 › retains unfinished raw HTML as editable Markdown source and discloses direct HTML omissions
+  [firefox] › editor.spec.ts:289:1 › preserves registered inert inline source through real typing history and Markdown HTML JSON reopening
+  [firefox] › editor.spec.ts:293:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening
+  [firefox] › editor.spec.ts:297:1 › previews and prints only the current local draft in the conversion lab
+  [firefox] › editor.spec.ts:307:1 › keeps Word table cell alignment through editor, page preview and DOCX reopen
+  [firefox] › editor.spec.ts:311:1 › conversion lab previews and prints a draft while a linked image stalls
+  [firefox] › editor.spec.ts:323:1 › conversion lab retains Word row splitting policy through preview and DOCX reopen
+  [firefox] › editor.spec.ts:327:1 › conversion lab preserves Word hyphens through editing, preview and DOCX reopen
+  [firefox] › editor.spec.ts:331:1 › conversion lab preserves Word links on line breaks and linked images
+  [firefox] › editor.spec.ts:335:1 › conversion lab recalculates complex Word page fields after editing and DOCX reopen
+  [firefox] › editor.spec.ts:346:1 › conversion lab preserves Word table indentation in the editor, preview, and reopened DOCX
+  [firefox] › editor.spec.ts:350:1 › retains explicit Word row heights through preview and DOCX reopen
+  [firefox] › editor.spec.ts:354:1 › prints the edited scientific DOCX in the conversion lab
+  [firefox] › editor.spec.ts:368:1 › imports private files in the conversion lab with reports and export reopen
+  [firefox] › editor.spec.ts:372:1 › edits cached Word field results without exposing instructions in the conversion lab
+  [firefox] › editor.spec.ts:413:1 › reconnects an imported orphan footnote and exports its native reference
+  [firefox] › editor.spec.ts:476:1 › keeps keyboard focus and surviving drafts when removing files from the conversion lab
+  [firefox] › editor.spec.ts:528:1 › keeps valid and malformed Markdown links distinct through an edit and download
+  [firefox] › editor.spec.ts:553:1 › resolves unequal Markdown runs through actual selection editing history download and reader reopen
+  [firefox] › editor.spec.ts:558:3 › retains partial Markdown em scope through real typing history and canonical reopening
+  [firefox] › editor.spec.ts:558:3 › retains partial Markdown strong scope through real typing history and canonical reopening
+  [firefox] › editor.spec.ts:563:1 › submits resets and disables a native form-associated Web Component
+  [firefox] › editor.spec.ts:567:1 › converts document-wide HTML scopes with source edit undo and explicit layout differences
+  [firefox] › editor.spec.ts:571:1 › preserves inert HTML comments through human editing source and reader output
+  [firefox] › editor.spec.ts:575:1 › copies anonymous flow internally and into an external plain-text editor through real clipboard
+  [firefox] › editor.spec.ts:580:1 › retains cleared anonymous flow through real cut save reopen and continued editing
+  [firefox] › editor.spec.ts:584:1 › retains anonymous HTML flow without extra spacing through real typing Enter deletion and reader output
+  [firefox] › editor.spec.ts:588:1 › retains literal flow newlines through actual Markdown export and source reimport
+  [firefox] › editor.spec.ts:592:1 › edits protected Markdown images and dividers inside HTML sections through history and reopening
+  [firefox] › editor.spec.ts:596:1 › edits protected Markdown tables inside HTML sections through cell navigation history and reopening
+  [firefox] › editor.spec.ts:600:1 › authors sections with properties, empty content, undo and reader preview
+  [firefox] › editor.spec.ts:604:1 › preserves optional section containers through real editing and reader output
+  [firefox] › editor.spec.ts:608:1 › edits and reopens a Word glossary with term and description roles
+  [firefox] › editor.spec.ts:612:1 › imports and edits Word content controls without losing visible content
+  [firefox] › editor.spec.ts:635:1 › preserves code endings through source recovery and reader handoff
+  [firefox] › editor.spec.ts:639:1 › edits definition lists and reopens a glossary in a reader
+  [firefox] › editor.spec.ts:643:1 › edits registered HTML wrappers after Markdown source recovery
+  [firefox] › editor.spec.ts:647:1 › retains the complete document through pointer and keyboard output-format changes
+  [firefox] › editor.spec.ts:651:1 › recovers nested Markdown lists and quotes through an editor and reader
+  [firefox] › editor.spec.ts:655:1 › edits opaque code labels and reopens them safely in a reader
+  [firefox] › editor.spec.ts:660:1 › guards editor actions against page reloads without suppressing failures
+  [firefox] › editor.spec.ts:670:1 › recovers paragraph HTML into editable blocks and a reopened reader
+  [firefox] › editor.spec.ts:674:1 › reads separate retired paragraphs after Markdown HTML scope conversion and handoff
+  [firefox] › editor.spec.ts:678:1 › preserves headerless and mixed tables through source and file handoff
+  [firefox] › editor.spec.ts:682:1 › retains HTML block formatting through server import, paste and draft handoff
+  [firefox] › editor.spec.ts:686:1 › navigates workflow parents and restores deleted task drafts and histories
+  [firefox] › editor.spec.ts:690:1 › discovers product workflows and preserves separate task drafts and histories
+  [firefox] › editor.spec.ts:694:1 › retains escaped pipes and strikethrough through table edits and Markdown handoff
+  [firefox] › editor.spec.ts:698:1 › retains literal text lines through editing and Markdown handoff
+  [firefox] › editor.spec.ts:702:1 › keeps literal syntax unformatted through visual edits and Markdown reopen
+  [firefox] › editor.spec.ts:706:1 › chooses literal address import and retains links through DOCX handoff
+  [firefox] › editor.spec.ts:710:1 › writes and reopens an issue with visual Markdown source fidelity and reader preview
+  [firefox] › editor.spec.ts:714:1 › issue workflow preserves root references and validates local image files
+  [firefox] › editor.spec.ts:752:1 › issue workflow preserves reference prefixes and reports container fallback
+  [firefox] › editor.spec.ts:776:1 › reopens a full HTML report without promoting page metadata into editor content
+  [firefox] › editor.spec.ts:780:1 › matches native document parsing for HTML envelopes, recovery, and noscript
+  [firefox] › editor.spec.ts:794:1 › aligns selected paragraphs using backward selection, toolbar, history and HTML export
+  [firefox] › editor.spec.ts:798:1 › exports independent DOCX list starts and renders the same procedure beside the editor
+  [firefox] › editor.spec.ts:802:1 › retains zero-based list numbers through keyboard outdent history and export
+  [firefox] › editor.spec.ts:806:1 › imports ordered-list starts like the native browser integer parser
+  [firefox] › editor.spec.ts:820:1 › uses first-party Angular signals and directive for campaign editing and owner cleanup
+  [firefox] › editor.spec.ts:824:1 › disposes Svelte custom block views before their owned engine
+  [firefox] › editor.spec.ts:833:1 › uses first-party Svelte bindings for table editing, history, stores and owner disposal
+  [firefox] › editor.spec.ts:837:1 › uses first-party Vue bindings for editing, reactive state, history and view remounts
+  [firefox] › editor.spec.ts:841:1 › binds rich text to a Vue form through typing, submission, disable and reset
+  [firefox] › editor.spec.ts:845:1 › keeps real SVG equation links inside paged snapshots across editing and rebuilding
+  [firefox] › editor.spec.ts:849:1 › saves and reopens equation files with source, references and history intact
+  [firefox] › editor.spec.ts:853:1 › recovers from textless replacement for native typing, lines and history
+  [firefox] › editor.spec.ts:857:1 › renders labelled equations and reader links through real editing and recovery
+  [firefox] › editor.spec.ts:861:1 › keeps moved math source attached to its formula through native editing, undo, and export
+  [firefox] › editor.spec.ts:865:1 › imports the published TeX table with visible losses and editable numeric values
+  [firefox] › editor.spec.ts:949:1 › keeps comparison names separate from their copy in a mobile desktop-site viewport
+  [firefox] › editor.spec.ts:977:1 › renders, edits, and measures portable page intent in a real browser
+  [firefox] › editor.spec.ts:1046:1 › measures browser line boxes, list items, rowspan groups, and footnotes as legal page fragments
+  [firefox] › editor.spec.ts:1140:1 › continues measured long footnotes through editable and print page projections
+  [firefox] › editor.spec.ts:1248:1 › prints a mixed repeated-footnote, merged-table, and manual-break document without loss
+  [firefox] › editor.spec.ts:1356:1 › starts a new preview sheet at a DOCX paragraph break
+  [firefox] › editor.spec.ts:1386:1 › keeps all lines of a DOCX paragraph together when it fits on the next sheet
+  [firefox] › editor.spec.ts:1414:1 › keeps a multiline DOCX caption with the following paragraph
+  [firefox] › editor.spec.ts:1445:1 › keeps a DOCX heading and caption chain with its body
+  [firefox] › editor.spec.ts:1473:1 › paginates imported styled semantic HTML without structural or PDF text loss
+  [firefox] › editor.spec.ts:1618:1 › uses a host print renderer without moving or exposing live custom DOM
+  [firefox] › editor.spec.ts:1653:1 › keeps native disclosure and media controls out of the visual sheets keyboard order
+  [firefox] › editor.spec.ts:1728:1 › projects exact A4 and Letter print sheets in every browser engine
+  [firefox] › editor.spec.ts:1845:1 › emits exact A4 and Letter PDF pages for every projected sheet in Chromium
+  [firefox] › editor.spec.ts:1885:1 › keeps 1,000-block pagination reflow local to the changed block
+  [firefox] › editor.spec.ts:1897:1 › bounds alternating edge reflow across 5,000 rendered page blocks
+  [firefox] › editor.spec.ts:1920:1 › keeps 5,000 unchanged page blocks cached through leading insertion and removal
+  [firefox] › editor.spec.ts:1946:1 › edits, selects, and composes across guarded page shells in one contenteditable
+  [firefox] › editor.spec.ts:2022:1 › keeps one paragraph editable when its measured lines span page shells
+  [firefox] › editor.spec.ts:2149:1 › maps carets, ranges, and composition around injected paragraph page gaps
+  [firefox] › editor.spec.ts:2253:1 › keeps one canonical ordered list editable and numbered across page shells
+  [firefox] › editor.spec.ts:2388:52 › honours explicit table repetition independently of cell roles (ordinary)
+  [firefox] › editor.spec.ts:2388:52 › honours explicit table repetition independently of cell roles (off)
+  [firefox] › editor.spec.ts:2421:1 › keeps one canonical table editable with repeated headers across page shells
+  [firefox] › editor.spec.ts:2571:1 › keeps merged header and body rowspans intact across editable table pages
+  [firefox] › editor.spec.ts:2637:1 › reports an oversized table row without clipping or splitting its editable model
+  [firefox] › editor.spec.ts:2679:1 › keeps canonical page furniture and footnotes editable while projecting every page copy
+  [firefox] › editor.spec.ts:2764:1 › keeps code, media, disclosures, and custom atoms canonical across editable pages
+  [firefox] › editor.spec.ts:2899:1 › keeps tracked review and Yjs live between list items split across pages
+  [firefox] › editor.spec.ts:2965:1 › keeps tracked review and Yjs live between table rows split across pages
+  [firefox] › editor.spec.ts:3042:13 › keeps comments attached and synchronized inside a continued list
+  [firefox] › editor.spec.ts:3042:13 › keeps comments attached and synchronized inside a continued table
+  [firefox] › editor.spec.ts:3096:1 › keeps tracked review and Yjs live inside a paragraph split across pages
+  [firefox] › editor.spec.ts:3157:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries
+  [firefox] › editor.spec.ts:3232:1 › tracks real browser insertion and replacement with reversible review decisions
+  [firefox] › editor.spec.ts:3261:1 › runs the package-backed full-text tracked review panel
+  [firefox] › editor.spec.ts:3279:1 › runs package-backed named versions, exact comparison, preview, and guarded restoration
+  [firefox] › editor.spec.ts:3309:1 › edits and persists package-backed collapsible details in the public playground
+  [firefox] › editor.spec.ts:3335:1 › edits semantic ruby annotations through the package-backed public playground
+  [firefox] › editor.spec.ts:3365:1 › converges live and offline Yjs edits and keeps collaborative undo author-local
+  [firefox] › editor.spec.ts:3394:1 › runs reference links, recursive blocks, rich tables, and loss reports in a real browser
+  [firefox] › editor.spec.ts:3419:1 › round-trips variable-delimiter Markdown code spans in the browser package
+  [firefox] › editor.spec.ts:3987:1 › types, deletes, and undoes inside imported empty documents, quotes, and list items
+  [firefox] › editor.spec.ts:4017:1 › round-trips marker-relative list containers and exact code whitespace
+  [firefox] › editor.spec.ts:4061:1 › preserves raw Markdown and inert frontmatter through the browser package
+  [firefox] › editor.spec.ts:4087:1 › edits through real beforeinput events and undoes a Markdown input rule
+  [firefox] › editor.spec.ts:4101:1 › groups adjacent browser typing and respects explicit undo boundaries
+  [firefox] › editor.spec.ts:4122:3 › preserves replacement formatting across subsequent typing input
+  [firefox] › editor.spec.ts:4122:3 › preserves replacement formatting across subsequent composition input
+  [firefox] › editor.spec.ts:4153:1 › commits cross-browser composition sequences once and supports replacement input
+  [firefox] › editor.spec.ts:4185:1 › maps decorations through typing without persisting widget content
+  [firefox] › editor.spec.ts:4200:1 › distinguishes rendered widget labels from authored document text
+  [firefox] › editor.spec.ts:4217:1 › highlights editable code and updates language metadata through public commands
+  [firefox] › editor.spec.ts:4248:1 › runs a view-focused chain and checks it without preview side effects
+  [firefox] › editor.spec.ts:4269:1 › applies every configured paste-rule match through a browser paste event
+  [firefox] › editor.spec.ts:4287:1 › autolinks, safely activates, edits, and removes links in a real browser
+  [firefox] › editor.spec.ts:4318:1 › preserves structured rich HTML from a real browser clipboard event
+  [firefox] › editor.spec.ts:4339:1 › pastes unwrapped inline HTML without dropping surrounding text or formatting
+  [firefox] › editor.spec.ts:4360:1 › honors strict raw HTML token boundaries in the public Markdown pipeline
+  [firefox] › editor.spec.ts:4377:1 › pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists
+  [firefox] › editor.spec.ts:4397:1 › pastes structured table cells and edits separate paragraphs without flattening nested blocks
+  [firefox] › editor.spec.ts:4420:1 › retains standalone non-collapsible Unicode text during rich paste
+  [firefox] › editor.spec.ts:4437:1 › pastes empty formatting and applies it to subsequently typed text
+  [firefox] › editor.spec.ts:4461:57 › pastes and edits list-first code without inventing a blank paragraph
+  [firefox] › editor.spec.ts:4461:57 › pastes and edits list-first code without inventing a blank paragraph from its label area
+  [firefox] › editor.spec.ts:4489:1 › normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine
+  [firefox] › editor.spec.ts:4542:1 › imports an extension-defined HTML node through the schema contract
+  [firefox] › editor.spec.ts:4567:1 › pastes mixed nested HTML lists without flattening their hierarchy
+  [firefox] › editor.spec.ts:4590:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys
+  [firefox] › editor.spec.ts:4623:1 › edits bidirectional and deeply nested text by logical document positions
+  [firefox] › editor.spec.ts:4650:1 › moves a selected top-level block through native drag data
+  [firefox] › editor.spec.ts:4668:1 › keeps a custom block’s native drag after the editor selects another block
+  [firefox] › editor.spec.ts:4703:1 › shows a host-replaceable drop cursor for inline text and atomic block targets
+  [firefox] › editor.spec.ts:4764:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo
+  [firefox] › editor.spec.ts:4839:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes
+  [firefox] › editor.spec.ts:4935:1 › replaces a DOM selection that crosses block boundaries
+  [firefox] › editor.spec.ts:4974:1 › keeps a visible editable paragraph after a terminal non-text block
+  [firefox] › editor.spec.ts:4996:1 › uses Ctrl+A as an explicit all-document selection and replaces the document
+  [firefox] › editor.spec.ts:5008:1 › selects and deletes a block image through real pointer and keyboard input
+  [firefox] › editor.spec.ts:5031:1 › edits, aligns, resizes, and undoes a production image through accessible controls
+  [firefox] › editor.spec.ts:5087:1 › inserts and removes a true inline image without breaking surrounding text
+  [firefox] › editor.spec.ts:5105:1 › tracks and cancels browser-native image upload tasks
+  [firefox] › editor.spec.ts:5145:1 › extends and replaces a rectangular cell selection through real pointer input
+  [firefox] › editor.spec.ts:5173:1 › keeps mixed-format links intact through backward selection typing and history
+  [firefox] › editor.spec.ts:5205:1 › reaches overflowing code by keyboard and leaves it without modifying the document
+  [firefox] › editor.spec.ts:5251:1 › pastes into tab-focused code through Chromium clipboard without changing the previous paragraph
+  [firefox] › editor.spec.ts:5275:1 › announces table resize values through real keyboard, pointer and history workflows
+  [firefox] › editor.spec.ts:5328:1 › edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids
+  [firefox] › editor.spec.ts:5401:1 › keeps normal paste while offering bounded editor-local clipboard slots
+  [firefox] › editor.spec.ts:5437:1 › renders and types into a structural gap as a new block
+  [firefox] › editor.spec.ts:5449:1 › edits Lean without a mandatory server and renders transient provider diagnostics
+  [firefox] › editor.spec.ts:5476:1 › keeps custom NodeViews live across updates and mapped moves while containing their DOM
+  [firefox] › editor.spec.ts:5513:1 › loads the public React playground without console or page errors
+  [firefox] › editor.spec.ts:5538:1 › publishes actionable extension authoring, conformance, and doctor guidance
+  [firefox] › editor.spec.ts:5556:1 › pairs the optional AI demo with developer recipes for every public workflow
+  [firefox] › editor.spec.ts:5577:1 › shows verified room setup before the legacy collaboration recipe
+  [firefox] › editor.spec.ts:5599:1 › keeps headline phrases together and makes full-page navigation explicit
+  [firefox] › editor.spec.ts:5624:1 › uses package-backed mentions, emoji, typography, and live counting in the public React playground
+  [firefox] › editor.spec.ts:5685:1 › runs grouped default and product slash commands in the public React playground
+  [firefox] › editor.spec.ts:5716:1 › keeps the active option visible while wrapping through public slash suggestions
+  [firefox] › editor.spec.ts:5720:1 › lets Tab leave the editor when public emoji suggestions close
+  [firefox] › editor.spec.ts:5724:1 › leaves IME candidate keys alone while the public slash menu is open
+  [firefox] › editor.spec.ts:5766:1 › runs accessible bubble and floating menus in the public React playground
+  [firefox] › editor.spec.ts:5835:1 › skips unavailable host controls during public toolbar keyboard navigation
+  [firefox] › editor.spec.ts:5869:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs
+  [firefox] › editor.spec.ts:5906:1 › applies the complete text-style suite through the public React toolbar
+  [firefox] › editor.spec.ts:5967:1 › uses the public React image workflow for metadata, alignment, and replacement
+  [firefox] › editor.spec.ts:6011:1 › opens and cancels public configuration panels with keyboard focus and exact document retention
+  [firefox] › editor.spec.ts:6129:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor
+  [firefox] › editor.spec.ts:6156:1 › keeps table configuration labels legible on pointer hover
+  [firefox] › editor.spec.ts:6195:1 › creates and edits a link through the public React toolbar
+  [firefox] › editor.spec.ts:6226:1 › toggles a selected block through the public React list controls
+  [firefox] › editor.spec.ts:6241:1 › edits code language and line numbers through the public React toolbar
+  [firefox] › editor.spec.ts:6260:1 › opens the searchable clipboard-history picker in the public React toolbar
+  [firefox] › editor.spec.ts:6347:1 › preserves copied line breaks in the public clipboard-history picker
+  [firefox] › editor.spec.ts:6381:1 › keeps the public outline stable, hierarchical, active, and navigable
+  [firefox] › editor.spec.ts:6406:1 › exposes and explicitly cleans invisible text in the public playground
+  [firefox] › editor.spec.ts:6447:1 › runs the public plain-DOM first-class widget demo
+  [firefox] › editor.spec.ts:6494:1 › runs the public React first-class widget demo without losing control focus
+  [firefox] › editor.spec.ts:6532:1 › makes the quote control discoverable and toggles an existing quote in the Java workflow demo
+  [firefox] › editor.spec.ts:6546:1 › retains table captions and reports their projected association in the conversion demo
+  [firefox] › editor.spec.ts:6563:1 › preserves complex figure content in the public Markdown conversion demo
+  [firefox] › editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline
+  [firefox] › editor.spec.ts:6652:1 › preserves parser-owned Markdown source through native editing, type changes and downloads
+  [firefox] › editor.spec.ts:6656:1 › preserves nested Markdown source through real list and quote editing
+  [firefox] › editor.spec.ts:6660:1 › keeps reference definitions outside a terminal fence after real structural editing
+  [firefox] › editor.spec.ts:6664:1 › imports leading Markdown delimiters and literal addresses through edit, download and reopen
+  [firefox] › editor.spec.ts:6668:1 › exports untouched empty Markdown containers without dropping authored blank or edited content
+  [firefox] › editor.spec.ts:6672:1 › retains blocked Markdown destinations through edits and safe reader downloads
+  [firefox] › editor.spec.ts:6676:1 › reviews CommonMark source and downloads an offline HTML reader
+  [firefox] › editor.spec.ts:6680:1 › reopens source-preserved issue drafts with the real HTML table adapter enabled
+  [firefox] › editor.spec.ts:6684:1 › preserves nested reference Markdown through real list quote and task editing
+  [firefox] › editor.spec.ts:6688:1 › preserves container definitions while editing and unwrapping a referenced quote
+  [firefox] › editor.spec.ts:6692:1 › records native DOCX viewer disagreements without certifying math fidelity
+  [firefox] › editor.spec.ts:6697:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission
+  [firefox] › editor.spec.ts:6821:1 › renders real KaTeX while reporting published-equation and trust failures without source loss
+  [firefox] › editor.spec.ts:6854:1 › edits multiline math without losing line breaks, descriptions, or undo history
+  [firefox] › editor.spec.ts:6891:1 › renders and inserts native math in the public DOM integration
+  [firefox] › editor.spec.ts:6948:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+  [firefox] › editor.spec.ts:6996:1 › keeps rich and multiline paste structurally predictable in the public editor
+  [firefox] › editor.spec.ts:7069:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML
+  [firefox] › editor.spec.ts:7136:1 › round-trips an extension-owned Fountain atom through the Chromium clipboard
+  [firefox] › editor.spec.ts:7185:1 › round-trips a complex whole Fountain document through the Chromium clipboard exactly
+  [firefox] › editor.spec.ts:7272:1 › copies clean semantic Fountain HTML into an external browser editor
+  [firefox] › editor.spec.ts:7327:1 › copies readable Fountain text into a plain-text external editor
+  [firefox] › editor.spec.ts:7386:1 › copies math to external rich and plain-text editors without renderer controls
+  [firefox] › editor.spec.ts:7431:1 › renders repeated empty paragraphs and removes each visible line
+  [firefox] › editor.spec.ts:7461:1 › undoes and redoes real typing with both common browser keyboard chords
+  [firefox] › editor.spec.ts:7478:1 › keeps a backward DOM selection backward after model synchronization
+  [firefox] › editor.spec.ts:7502:1 › preserves a backward selection made with real keyboard input
+  [firefox] › editor.spec.ts:7517:1 › replaces a backward selection made by a real reverse pointer drag
+  [firefox] › editor.spec.ts:7553:1 › turns multi-format and multi-block selections into visible paragraph boundaries
+  [firefox] › editor.spec.ts:7623:1 › visibly splits and joins ordinary paragraphs with both deletion directions
+  [firefox] › editor.spec.ts:7666:1 › deletes an adjacent inline atom without eating surrounding text
+  [firefox] › editor.spec.ts:7696:1 › unwraps and exits an inserted quote with ordinary browser keys
+  [firefox] › editor.spec.ts:7725:1 › publishes semantic selection controls and table interaction in the demo gallery
+  [firefox] › editor.spec.ts:7742:1 › edits, validates, disables and resets the Angular campaign brief form
+  [firefox] › editor.spec.ts:7746:1 › runs campaign images, native media and safe embeds through Angular with honest upload boundaries
+  [firefox] › editor.spec.ts:7823:1 › uses the public React media workflow for native playback, provider-gated embeds, and asset uploads
+  [firefox] › editor.spec.ts:7868:1 › streams an optional AI proposal outside the document until review is ready
+  [firefox] › editor.spec.ts:7893:1 › preserves whitespace when an AI proposal ends at a formatting boundary
+  [firefox] › editor.spec.ts:7908:1 › runs a host-owned multi-turn AI conversation with reusable prompts and clear confirmation
+  [firefox] › editor.spec.ts:7936:1 › reviews generated media before the normal host upload inserts one undoable node
+  [firefox] › editor.spec.ts:7962:1 › reviews a schema-aware agent tool proposal before one-step apply and undo
+  [firefox] › editor.spec.ts:7987:1 › keeps a 1,000-block input update local and paints within budget
+  [firefox] › editor.spec.ts:8008:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy
+  [firefox] › editor.spec.ts:8066:1 › exports rich tables as HTML Markdown and exposes the compatibility note
+  [firefox] › editor.spec.ts:8088:1 › HTML comments do not insert phantom paragraphs in converted Markdown
+  [firefox] › editor.spec.ts:8100:1 › imported table section order matches the physically rendered source table
+  [firefox] › editor.spec.ts:8131:1 › imports zero-rowspan cells with the same row-group geometry in server and browser
+  [firefox] › editor.spec.ts:8162:1 › reconstructs HTML tables across Markdown block boundaries
+  [firefox] › editor.spec.ts:8183:1 › applies surrounding HTML formatting without replacing Markdown block content
+  [firefox] › editor.spec.ts:8196:1 › converts raw HTML blocks only when the headless demo option is enabled
+  [firefox] › editor.spec.ts:8212:1 › projects inline HTML around Markdown nodes only with explicit opt-in and visible fallback
+  [firefox] › editor.spec.ts:8237:1 › shows specific discarded HTML and rejected URL losses in both conversion surfaces
+  [firefox] › editor.spec.ts:8263:1 › repairs source after native nested heading-to-paragraph changes
+  [firefox] › editor.spec.ts:8267:1 › keeps full Markdown export out of real large-issue typing
+  [firefox] › editor.spec.ts:8271:1 › optional site fonts do not block issue editing
+  [firefox] › editor.spec.ts:8275:1 › replaces selected nested sibling blocks and media through native pointer input
+  [firefox] › editor.spec.ts:8279:1 › replaces native selections across quote and list ancestors without leaving selected media
+  [firefox] › editor.spec.ts:8283:1 › retains different quote attributes through native replacement and JSON export
+  [firefox] › editor.spec.ts:8287:1 › replaces and restores selections across offscreen document content
+  [firefox] › starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide
+  [webkit] › collaboration-demo.spec.ts:21:1 › opens the lazy collaboration demo after a slow module load and shares typing
+  [webkit] › collaboration-demo.spec.ts:50:1 › recovers a failed collaboration load in a new tab without losing the current draft
+  [webkit] › collaboration-demo.spec.ts:94:1 › runs the public two-editor collaboration demo with presence and author-local undo
+  [webkit] › collaboration-demo.spec.ts:164:1 › replaces both live collaboration documents without remounting the public editors
+  [webkit] › collaboration-demo.spec.ts:225:1 › protects a rejected collaboration draft from peer edits and room switching
+  [webkit] › collaboration-demo.spec.ts:268:1 › merges two offline settings copies without reassigning the original card
+  [webkit] › collaboration-demo.spec.ts:301:1 › copies a settings card through the real Chromium clipboard before its original
+  [webkit] › collaboration-demo.spec.ts:327:1 › preserves both editors and the open comment when preparing a room switch fails
+  [webkit] › collaboration-demo.spec.ts:393:3 › keeps offline text through quote in the public collaboration demo
+  [webkit] › collaboration-demo.spec.ts:393:3 › keeps offline text through bullet list in the public collaboration demo
+  [webkit] › collaboration-demo.spec.ts:393:3 › keeps offline text through numbered list in the public collaboration demo
+  [webkit] › collaboration-demo.spec.ts:393:3 › keeps offline text through task list in the public collaboration demo
+  [webkit] › collaboration-demo.spec.ts:393:3 › keeps offline text through partial bold in the public collaboration demo
+  [webkit] › collaboration-demo.spec.ts:393:3 › keeps offline text through paragraph split in the public collaboration demo
+  [webkit] › collaboration-demo.spec.ts:461:1 › continues editing after competing offline wraps in the public collaboration demo
+  [webkit] › collaboration-demo.spec.ts:492:1 › merges nested collaborative settings through the public two-editor demo
+  [webkit] › collaboration-demo.spec.ts:528:1 › restores separate comment drafts and their targets without remounting the editors
+  [webkit] › collaboration-demo.spec.ts:608:1 › runs shared threaded comments through the public provider-neutral review panel
+  [webkit] › comment-provider.spec.ts:3:1 › posts only the submitted comment while preserving a newer draft and target
+  [webkit] › comment-provider.spec.ts:41:1 › keeps a thread saving until both responses arrive and keeps its newest revision
+  [webkit] › ..\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents
+  [webkit] › ..\manual\document-range-formatting-real.spec.ts:4:1 › formats directed text-to-image selections through the toolbar with exact history and reader export
+  [webkit] › ..\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+  [webkit] › ..\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs
+  [webkit] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto
+  [webkit] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control
+  [webkit] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item
+  [webkit] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control
+  [webkit] › ..\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history
+  [webkit] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent
+  [webkit] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent
+  [webkit] › ..\manual\html-anchors-real.spec.ts:10:1 › edits imported bookmark content and removes an empty bookmark with native input
+  [webkit] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: control
+  [webkit] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: release
+  [webkit] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: cancel
+  [webkit] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: blur
+  [webkit] › editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow
+  [webkit] › editor.spec.ts:26:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint
+  [webkit] › editor.spec.ts:50:53 › keeps per-file HTML conversion settings through html editing and export
+  [webkit] › editor.spec.ts:50:53 › keeps per-file HTML conversion settings through markdown editing and export
+  [webkit] › editor.spec.ts:91:1 › preserves physical preformatted breaks through real import editing and HTML download
+  [webkit] › editor.spec.ts:94:1 › retains an empty heading through actual HTML download reopen and native editing
+  [webkit] › editor.spec.ts:97:47 › focuses the start empty text source before native typing
+  [webkit] › editor.spec.ts:97:47 › focuses the end empty text source before native typing
+  [webkit] › editor.spec.ts:102:1 › fills replaced childless blocks by native click without adding another block
+  [webkit] › editor.spec.ts:106:1 › keeps native form labels names and validation anchors consistent through reconnect
+  [webkit] › editor.spec.ts:110:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent
+  [webkit] › editor.spec.ts:114:1 › validates required documents custom errors and labels through the native form workshop
+  [webkit] › editor.spec.ts:121:1 › keeps distant native edits backward selections and history correct across shared prefixes
+  [webkit] › editor.spec.ts:131:1 › retains explicit nested emphasis through native editing history and HTML reopening
+  [webkit] › editor.spec.ts:134:1 › retains unfinished EOF source through native literal edits and refuses following content
+  [webkit] › editor.spec.ts:138:1 › edits source-empty documents with visible native Enter Backspace history and reopening
+  [webkit] › editor.spec.ts:141:1 › retains leading Markdown declarations through native edits and complete source reopening
+  [webkit] › editor.spec.ts:144:1 › retains source document envelopes through native edits history and HTML reopening
+  [webkit] › editor.spec.ts:148:1 › preserves unsupported anchors through native editing history and safe reopening
+  [webkit] › editor.spec.ts:151:1 › inspects and downloads retained HTML source without activating it
+  [webkit] › editor.spec.ts:154:1 › retains authored carriage returns through raw source editing and reopening
+  [webkit] › editor.spec.ts:172:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing
+  [webkit] › editor.spec.ts:176:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks
+  [webkit] › editor.spec.ts:181:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr
+  [webkit] › editor.spec.ts:181:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl
+  [webkit] › editor.spec.ts:181:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto
+  [webkit] › editor.spec.ts:192:3 › retains shared automatic list scope through real convert, typing and downloaded HTML
+  [webkit] › editor.spec.ts:192:3 › retains shared automatic list scope through real lift, typing and downloaded HTML
+  [webkit] › editor.spec.ts:202:3 › reorders real runbook blocks with native pointer feedback in ltr
+  [webkit] › editor.spec.ts:202:3 › reorders real runbook blocks with native pointer feedback in rtl
+  [webkit] › editor.spec.ts:206:1 › reorders real runbook blocks with keyboard structural feedback
+  [webkit] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: unwrap
+  [webkit] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: indent
+  [webkit] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: nested-lift
+  [webkit] › editor.spec.ts:211:3 › preserves list direction through real transforms and downloaded HTML: contained
+  [webkit] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: ltr
+  [webkit] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: rtl-cell-ltr
+  [webkit] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: auto
+  [webkit] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: host-css
+  [webkit] › editor.spec.ts:217:3 › inserts table columns on the physical left and right: rtl-spans
+  [webkit] › editor.spec.ts:222:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML
+  [webkit] › editor.spec.ts:226:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML
+  [webkit] › editor.spec.ts:230:1 › compares list-first code text-click focus and editing to a plain native surface
+  [webkit] › editor.spec.ts:234:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview
+  [webkit] › editor.spec.ts:238:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history
+  [webkit] › editor.spec.ts:242:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export
+  [webkit] › editor.spec.ts:246:1 › separates the homepage framework descenders from the italic extend line
+  [webkit] › editor.spec.ts:265:1 › keeps consecutive marked quoted and table blank lines visible in reader and saved HTML
+  [webkit] › editor.spec.ts:269:1 › fills and reopens a retained childless paragraph using real pointer typing Enter Backspace and undo
+  [webkit] › editor.spec.ts:273:1 › edits structured inert block wrappers with actual table navigation Enter Backspace history and safe reopening
+  [webkit] › editor.spec.ts:277:1 › retains HTML link navigation and literal Markdown data through real editing and reopening
+  [webkit] › editor.spec.ts:281:1 › edits inert script style textarea source with real Enter Backspace history and safe reader reopening
+  [webkit] › editor.spec.ts:285:1 › retains unfinished raw HTML as editable Markdown source and discloses direct HTML omissions
+  [webkit] › editor.spec.ts:289:1 › preserves registered inert inline source through real typing history and Markdown HTML JSON reopening
+  [webkit] › editor.spec.ts:293:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening
+  [webkit] › editor.spec.ts:297:1 › previews and prints only the current local draft in the conversion lab
+  [webkit] › editor.spec.ts:307:1 › keeps Word table cell alignment through editor, page preview and DOCX reopen
+  [webkit] › editor.spec.ts:311:1 › conversion lab previews and prints a draft while a linked image stalls
+  [webkit] › editor.spec.ts:323:1 › conversion lab retains Word row splitting policy through preview and DOCX reopen
+  [webkit] › editor.spec.ts:327:1 › conversion lab preserves Word hyphens through editing, preview and DOCX reopen
+  [webkit] › editor.spec.ts:331:1 › conversion lab preserves Word links on line breaks and linked images
+  [webkit] › editor.spec.ts:335:1 › conversion lab recalculates complex Word page fields after editing and DOCX reopen
+  [webkit] › editor.spec.ts:346:1 › conversion lab preserves Word table indentation in the editor, preview, and reopened DOCX
+  [webkit] › editor.spec.ts:350:1 › retains explicit Word row heights through preview and DOCX reopen
+  [webkit] › editor.spec.ts:354:1 › prints the edited scientific DOCX in the conversion lab
+  [webkit] › editor.spec.ts:368:1 › imports private files in the conversion lab with reports and export reopen
+  [webkit] › editor.spec.ts:372:1 › edits cached Word field results without exposing instructions in the conversion lab
+  [webkit] › editor.spec.ts:413:1 › reconnects an imported orphan footnote and exports its native reference
+  [webkit] › editor.spec.ts:476:1 › keeps keyboard focus and surviving drafts when removing files from the conversion lab
+  [webkit] › editor.spec.ts:528:1 › keeps valid and malformed Markdown links distinct through an edit and download
+  [webkit] › editor.spec.ts:553:1 › resolves unequal Markdown runs through actual selection editing history download and reader reopen
+  [webkit] › editor.spec.ts:558:3 › retains partial Markdown em scope through real typing history and canonical reopening
+  [webkit] › editor.spec.ts:558:3 › retains partial Markdown strong scope through real typing history and canonical reopening
+  [webkit] › editor.spec.ts:563:1 › submits resets and disables a native form-associated Web Component
+  [webkit] › editor.spec.ts:567:1 › converts document-wide HTML scopes with source edit undo and explicit layout differences
+  [webkit] › editor.spec.ts:571:1 › preserves inert HTML comments through human editing source and reader output
+  [webkit] › editor.spec.ts:575:1 › copies anonymous flow internally and into an external plain-text editor through real clipboard
+  [webkit] › editor.spec.ts:580:1 › retains cleared anonymous flow through real cut save reopen and continued editing
+  [webkit] › editor.spec.ts:584:1 › retains anonymous HTML flow without extra spacing through real typing Enter deletion and reader output
+  [webkit] › editor.spec.ts:588:1 › retains literal flow newlines through actual Markdown export and source reimport
+  [webkit] › editor.spec.ts:592:1 › edits protected Markdown images and dividers inside HTML sections through history and reopening
+  [webkit] › editor.spec.ts:596:1 › edits protected Markdown tables inside HTML sections through cell navigation history and reopening
+  [webkit] › editor.spec.ts:600:1 › authors sections with properties, empty content, undo and reader preview
+  [webkit] › editor.spec.ts:604:1 › preserves optional section containers through real editing and reader output
+  [webkit] › editor.spec.ts:608:1 › edits and reopens a Word glossary with term and description roles
+  [webkit] › editor.spec.ts:612:1 › imports and edits Word content controls without losing visible content
+  [webkit] › editor.spec.ts:635:1 › preserves code endings through source recovery and reader handoff
+  [webkit] › editor.spec.ts:639:1 › edits definition lists and reopens a glossary in a reader
+  [webkit] › editor.spec.ts:643:1 › edits registered HTML wrappers after Markdown source recovery
+  [webkit] › editor.spec.ts:647:1 › retains the complete document through pointer and keyboard output-format changes
+  [webkit] › editor.spec.ts:651:1 › recovers nested Markdown lists and quotes through an editor and reader
+  [webkit] › editor.spec.ts:655:1 › edits opaque code labels and reopens them safely in a reader
+  [webkit] › editor.spec.ts:660:1 › guards editor actions against page reloads without suppressing failures
+  [webkit] › editor.spec.ts:670:1 › recovers paragraph HTML into editable blocks and a reopened reader
+  [webkit] › editor.spec.ts:674:1 › reads separate retired paragraphs after Markdown HTML scope conversion and handoff
+  [webkit] › editor.spec.ts:678:1 › preserves headerless and mixed tables through source and file handoff
+  [webkit] › editor.spec.ts:682:1 › retains HTML block formatting through server import, paste and draft handoff
+  [webkit] › editor.spec.ts:686:1 › navigates workflow parents and restores deleted task drafts and histories
+  [webkit] › editor.spec.ts:690:1 › discovers product workflows and preserves separate task drafts and histories
+  [webkit] › editor.spec.ts:694:1 › retains escaped pipes and strikethrough through table edits and Markdown handoff
+  [webkit] › editor.spec.ts:698:1 › retains literal text lines through editing and Markdown handoff
+  [webkit] › editor.spec.ts:702:1 › keeps literal syntax unformatted through visual edits and Markdown reopen
+  [webkit] › editor.spec.ts:706:1 › chooses literal address import and retains links through DOCX handoff
+  [webkit] › editor.spec.ts:710:1 › writes and reopens an issue with visual Markdown source fidelity and reader preview
+  [webkit] › editor.spec.ts:714:1 › issue workflow preserves root references and validates local image files
+  [webkit] › editor.spec.ts:752:1 › issue workflow preserves reference prefixes and reports container fallback
+  [webkit] › editor.spec.ts:776:1 › reopens a full HTML report without promoting page metadata into editor content
+  [webkit] › editor.spec.ts:780:1 › matches native document parsing for HTML envelopes, recovery, and noscript
+  [webkit] › editor.spec.ts:794:1 › aligns selected paragraphs using backward selection, toolbar, history and HTML export
+  [webkit] › editor.spec.ts:798:1 › exports independent DOCX list starts and renders the same procedure beside the editor
+  [webkit] › editor.spec.ts:802:1 › retains zero-based list numbers through keyboard outdent history and export
+  [webkit] › editor.spec.ts:806:1 › imports ordered-list starts like the native browser integer parser
+  [webkit] › editor.spec.ts:820:1 › uses first-party Angular signals and directive for campaign editing and owner cleanup
+  [webkit] › editor.spec.ts:824:1 › disposes Svelte custom block views before their owned engine
+  [webkit] › editor.spec.ts:833:1 › uses first-party Svelte bindings for table editing, history, stores and owner disposal
+  [webkit] › editor.spec.ts:837:1 › uses first-party Vue bindings for editing, reactive state, history and view remounts
+  [webkit] › editor.spec.ts:841:1 › binds rich text to a Vue form through typing, submission, disable and reset
+  [webkit] › editor.spec.ts:845:1 › keeps real SVG equation links inside paged snapshots across editing and rebuilding
+  [webkit] › editor.spec.ts:849:1 › saves and reopens equation files with source, references and history intact
+  [webkit] › editor.spec.ts:853:1 › recovers from textless replacement for native typing, lines and history
+  [webkit] › editor.spec.ts:857:1 › renders labelled equations and reader links through real editing and recovery
+  [webkit] › editor.spec.ts:861:1 › keeps moved math source attached to its formula through native editing, undo, and export
+  [webkit] › editor.spec.ts:865:1 › imports the published TeX table with visible losses and editable numeric values
+  [webkit] › editor.spec.ts:949:1 › keeps comparison names separate from their copy in a mobile desktop-site viewport
+  [webkit] › editor.spec.ts:977:1 › renders, edits, and measures portable page intent in a real browser
+  [webkit] › editor.spec.ts:1046:1 › measures browser line boxes, list items, rowspan groups, and footnotes as legal page fragments
+  [webkit] › editor.spec.ts:1140:1 › continues measured long footnotes through editable and print page projections
+  [webkit] › editor.spec.ts:1248:1 › prints a mixed repeated-footnote, merged-table, and manual-break document without loss
+  [webkit] › editor.spec.ts:1356:1 › starts a new preview sheet at a DOCX paragraph break
+  [webkit] › editor.spec.ts:1386:1 › keeps all lines of a DOCX paragraph together when it fits on the next sheet
+  [webkit] › editor.spec.ts:1414:1 › keeps a multiline DOCX caption with the following paragraph
+  [webkit] › editor.spec.ts:1445:1 › keeps a DOCX heading and caption chain with its body
+  [webkit] › editor.spec.ts:1473:1 › paginates imported styled semantic HTML without structural or PDF text loss
+  [webkit] › editor.spec.ts:1618:1 › uses a host print renderer without moving or exposing live custom DOM
+  [webkit] › editor.spec.ts:1653:1 › keeps native disclosure and media controls out of the visual sheets keyboard order
+  [webkit] › editor.spec.ts:1728:1 › projects exact A4 and Letter print sheets in every browser engine
+  [webkit] › editor.spec.ts:1845:1 › emits exact A4 and Letter PDF pages for every projected sheet in Chromium
+  [webkit] › editor.spec.ts:1885:1 › keeps 1,000-block pagination reflow local to the changed block
+  [webkit] › editor.spec.ts:1897:1 › bounds alternating edge reflow across 5,000 rendered page blocks
+  [webkit] › editor.spec.ts:1920:1 › keeps 5,000 unchanged page blocks cached through leading insertion and removal
+  [webkit] › editor.spec.ts:1946:1 › edits, selects, and composes across guarded page shells in one contenteditable
+  [webkit] › editor.spec.ts:2022:1 › keeps one paragraph editable when its measured lines span page shells
+  [webkit] › editor.spec.ts:2149:1 › maps carets, ranges, and composition around injected paragraph page gaps
+  [webkit] › editor.spec.ts:2253:1 › keeps one canonical ordered list editable and numbered across page shells
+  [webkit] › editor.spec.ts:2388:52 › honours explicit table repetition independently of cell roles (ordinary)
+  [webkit] › editor.spec.ts:2388:52 › honours explicit table repetition independently of cell roles (off)
+  [webkit] › editor.spec.ts:2421:1 › keeps one canonical table editable with repeated headers across page shells
+  [webkit] › editor.spec.ts:2571:1 › keeps merged header and body rowspans intact across editable table pages
+  [webkit] › editor.spec.ts:2637:1 › reports an oversized table row without clipping or splitting its editable model
+  [webkit] › editor.spec.ts:2679:1 › keeps canonical page furniture and footnotes editable while projecting every page copy
+  [webkit] › editor.spec.ts:2764:1 › keeps code, media, disclosures, and custom atoms canonical across editable pages
+  [webkit] › editor.spec.ts:2899:1 › keeps tracked review and Yjs live between list items split across pages
+  [webkit] › editor.spec.ts:2965:1 › keeps tracked review and Yjs live between table rows split across pages
+  [webkit] › editor.spec.ts:3042:13 › keeps comments attached and synchronized inside a continued list
+  [webkit] › editor.spec.ts:3042:13 › keeps comments attached and synchronized inside a continued table
+  [webkit] › editor.spec.ts:3096:1 › keeps tracked review and Yjs live inside a paragraph split across pages
+  [webkit] › editor.spec.ts:3157:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries
+  [webkit] › editor.spec.ts:3232:1 › tracks real browser insertion and replacement with reversible review decisions
+  [webkit] › editor.spec.ts:3261:1 › runs the package-backed full-text tracked review panel
+  [webkit] › editor.spec.ts:3279:1 › runs package-backed named versions, exact comparison, preview, and guarded restoration
+  [webkit] › editor.spec.ts:3309:1 › edits and persists package-backed collapsible details in the public playground
+  [webkit] › editor.spec.ts:3335:1 › edits semantic ruby annotations through the package-backed public playground
+  [webkit] › editor.spec.ts:3365:1 › converges live and offline Yjs edits and keeps collaborative undo author-local
+  [webkit] › editor.spec.ts:3394:1 › runs reference links, recursive blocks, rich tables, and loss reports in a real browser
+  [webkit] › editor.spec.ts:3419:1 › round-trips variable-delimiter Markdown code spans in the browser package
+  [webkit] › editor.spec.ts:3987:1 › types, deletes, and undoes inside imported empty documents, quotes, and list items
+  [webkit] › editor.spec.ts:4017:1 › round-trips marker-relative list containers and exact code whitespace
+  [webkit] › editor.spec.ts:4061:1 › preserves raw Markdown and inert frontmatter through the browser package
+  [webkit] › editor.spec.ts:4087:1 › edits through real beforeinput events and undoes a Markdown input rule
+  [webkit] › editor.spec.ts:4101:1 › groups adjacent browser typing and respects explicit undo boundaries
+  [webkit] › editor.spec.ts:4122:3 › preserves replacement formatting across subsequent typing input
+  [webkit] › editor.spec.ts:4122:3 › preserves replacement formatting across subsequent composition input
+  [webkit] › editor.spec.ts:4153:1 › commits cross-browser composition sequences once and supports replacement input
+  [webkit] › editor.spec.ts:4185:1 › maps decorations through typing without persisting widget content
+  [webkit] › editor.spec.ts:4200:1 › distinguishes rendered widget labels from authored document text
+  [webkit] › editor.spec.ts:4217:1 › highlights editable code and updates language metadata through public commands
+  [webkit] › editor.spec.ts:4248:1 › runs a view-focused chain and checks it without preview side effects
+  [webkit] › editor.spec.ts:4269:1 › applies every configured paste-rule match through a browser paste event
+  [webkit] › editor.spec.ts:4287:1 › autolinks, safely activates, edits, and removes links in a real browser
+  [webkit] › editor.spec.ts:4318:1 › preserves structured rich HTML from a real browser clipboard event
+  [webkit] › editor.spec.ts:4339:1 › pastes unwrapped inline HTML without dropping surrounding text or formatting
+  [webkit] › editor.spec.ts:4360:1 › honors strict raw HTML token boundaries in the public Markdown pipeline
+  [webkit] › editor.spec.ts:4377:1 › pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists
+  [webkit] › editor.spec.ts:4397:1 › pastes structured table cells and edits separate paragraphs without flattening nested blocks
+  [webkit] › editor.spec.ts:4420:1 › retains standalone non-collapsible Unicode text during rich paste
+  [webkit] › editor.spec.ts:4437:1 › pastes empty formatting and applies it to subsequently typed text
+  [webkit] › editor.spec.ts:4461:57 › pastes and edits list-first code without inventing a blank paragraph
+  [webkit] › editor.spec.ts:4461:57 › pastes and edits list-first code without inventing a blank paragraph from its label area
+  [webkit] › editor.spec.ts:4489:1 › normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine
+  [webkit] › editor.spec.ts:4542:1 › imports an extension-defined HTML node through the schema contract
+  [webkit] › editor.spec.ts:4567:1 › pastes mixed nested HTML lists without flattening their hierarchy
+  [webkit] › editor.spec.ts:4590:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys
+  [webkit] › editor.spec.ts:4623:1 › edits bidirectional and deeply nested text by logical document positions
+  [webkit] › editor.spec.ts:4650:1 › moves a selected top-level block through native drag data
+  [webkit] › editor.spec.ts:4668:1 › keeps a custom block’s native drag after the editor selects another block
+  [webkit] › editor.spec.ts:4703:1 › shows a host-replaceable drop cursor for inline text and atomic block targets
+  [webkit] › editor.spec.ts:4764:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo
+  [webkit] › editor.spec.ts:4839:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes
+  [webkit] › editor.spec.ts:4935:1 › replaces a DOM selection that crosses block boundaries
+  [webkit] › editor.spec.ts:4974:1 › keeps a visible editable paragraph after a terminal non-text block
+  [webkit] › editor.spec.ts:4996:1 › uses Ctrl+A as an explicit all-document selection and replaces the document
+  [webkit] › editor.spec.ts:5008:1 › selects and deletes a block image through real pointer and keyboard input
+  [webkit] › editor.spec.ts:5031:1 › edits, aligns, resizes, and undoes a production image through accessible controls
+  [webkit] › editor.spec.ts:5087:1 › inserts and removes a true inline image without breaking surrounding text
+  [webkit] › editor.spec.ts:5105:1 › tracks and cancels browser-native image upload tasks
+  [webkit] › editor.spec.ts:5145:1 › extends and replaces a rectangular cell selection through real pointer input
+  [webkit] › editor.spec.ts:5173:1 › keeps mixed-format links intact through backward selection typing and history
+  [webkit] › editor.spec.ts:5205:1 › reaches overflowing code by keyboard and leaves it without modifying the document
+  [webkit] › editor.spec.ts:5251:1 › pastes into tab-focused code through Chromium clipboard without changing the previous paragraph
+  [webkit] › editor.spec.ts:5275:1 › announces table resize values through real keyboard, pointer and history workflows
+  [webkit] › editor.spec.ts:5328:1 › edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids
+  [webkit] › editor.spec.ts:5401:1 › keeps normal paste while offering bounded editor-local clipboard slots
+  [webkit] › editor.spec.ts:5437:1 › renders and types into a structural gap as a new block
+  [webkit] › editor.spec.ts:5449:1 › edits Lean without a mandatory server and renders transient provider diagnostics
+  [webkit] › editor.spec.ts:5476:1 › keeps custom NodeViews live across updates and mapped moves while containing their DOM
+  [webkit] › editor.spec.ts:5513:1 › loads the public React playground without console or page errors
+  [webkit] › editor.spec.ts:5538:1 › publishes actionable extension authoring, conformance, and doctor guidance
+  [webkit] › editor.spec.ts:5556:1 › pairs the optional AI demo with developer recipes for every public workflow
+  [webkit] › editor.spec.ts:5577:1 › shows verified room setup before the legacy collaboration recipe
+  [webkit] › editor.spec.ts:5599:1 › keeps headline phrases together and makes full-page navigation explicit
+  [webkit] › editor.spec.ts:5624:1 › uses package-backed mentions, emoji, typography, and live counting in the public React playground
+  [webkit] › editor.spec.ts:5685:1 › runs grouped default and product slash commands in the public React playground
+  [webkit] › editor.spec.ts:5716:1 › keeps the active option visible while wrapping through public slash suggestions
+  [webkit] › editor.spec.ts:5720:1 › lets Tab leave the editor when public emoji suggestions close
+  [webkit] › editor.spec.ts:5724:1 › leaves IME candidate keys alone while the public slash menu is open
+  [webkit] › editor.spec.ts:5766:1 › runs accessible bubble and floating menus in the public React playground
+  [webkit] › editor.spec.ts:5835:1 › skips unavailable host controls during public toolbar keyboard navigation
+  [webkit] › editor.spec.ts:5869:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs
+  [webkit] › editor.spec.ts:5906:1 › applies the complete text-style suite through the public React toolbar
+  [webkit] › editor.spec.ts:5967:1 › uses the public React image workflow for metadata, alignment, and replacement
+  [webkit] › editor.spec.ts:6011:1 › opens and cancels public configuration panels with keyboard focus and exact document retention
+  [webkit] › editor.spec.ts:6129:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor
+  [webkit] › editor.spec.ts:6156:1 › keeps table configuration labels legible on pointer hover
+  [webkit] › editor.spec.ts:6195:1 › creates and edits a link through the public React toolbar
+  [webkit] › editor.spec.ts:6226:1 › toggles a selected block through the public React list controls
+  [webkit] › editor.spec.ts:6241:1 › edits code language and line numbers through the public React toolbar
+  [webkit] › editor.spec.ts:6260:1 › opens the searchable clipboard-history picker in the public React toolbar
+  [webkit] › editor.spec.ts:6347:1 › preserves copied line breaks in the public clipboard-history picker
+  [webkit] › editor.spec.ts:6381:1 › keeps the public outline stable, hierarchical, active, and navigable
+  [webkit] › editor.spec.ts:6406:1 › exposes and explicitly cleans invisible text in the public playground
+  [webkit] › editor.spec.ts:6447:1 › runs the public plain-DOM first-class widget demo
+  [webkit] › editor.spec.ts:6494:1 › runs the public React first-class widget demo without losing control focus
+  [webkit] › editor.spec.ts:6532:1 › makes the quote control discoverable and toggles an existing quote in the Java workflow demo
+  [webkit] › editor.spec.ts:6546:1 › retains table captions and reports their projected association in the conversion demo
+  [webkit] › editor.spec.ts:6563:1 › preserves complex figure content in the public Markdown conversion demo
+  [webkit] › editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline
+  [webkit] › editor.spec.ts:6652:1 › preserves parser-owned Markdown source through native editing, type changes and downloads
+  [webkit] › editor.spec.ts:6656:1 › preserves nested Markdown source through real list and quote editing
+  [webkit] › editor.spec.ts:6660:1 › keeps reference definitions outside a terminal fence after real structural editing
+  [webkit] › editor.spec.ts:6664:1 › imports leading Markdown delimiters and literal addresses through edit, download and reopen
+  [webkit] › editor.spec.ts:6668:1 › exports untouched empty Markdown containers without dropping authored blank or edited content
+  [webkit] › editor.spec.ts:6672:1 › retains blocked Markdown destinations through edits and safe reader downloads
+  [webkit] › editor.spec.ts:6676:1 › reviews CommonMark source and downloads an offline HTML reader
+  [webkit] › editor.spec.ts:6680:1 › reopens source-preserved issue drafts with the real HTML table adapter enabled
+  [webkit] › editor.spec.ts:6684:1 › preserves nested reference Markdown through real list quote and task editing
+  [webkit] › editor.spec.ts:6688:1 › preserves container definitions while editing and unwrapping a referenced quote
+  [webkit] › editor.spec.ts:6692:1 › records native DOCX viewer disagreements without certifying math fidelity
+  [webkit] › editor.spec.ts:6697:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission
+  [webkit] › editor.spec.ts:6821:1 › renders real KaTeX while reporting published-equation and trust failures without source loss
+  [webkit] › editor.spec.ts:6854:1 › edits multiline math without losing line breaks, descriptions, or undo history
+  [webkit] › editor.spec.ts:6891:1 › renders and inserts native math in the public DOM integration
+  [webkit] › editor.spec.ts:6948:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+  [webkit] › editor.spec.ts:6996:1 › keeps rich and multiline paste structurally predictable in the public editor
+  [webkit] › editor.spec.ts:7069:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML
+  [webkit] › editor.spec.ts:7136:1 › round-trips an extension-owned Fountain atom through the Chromium clipboard
+  [webkit] › editor.spec.ts:7185:1 › round-trips a complex whole Fountain document through the Chromium clipboard exactly
+  [webkit] › editor.spec.ts:7272:1 › copies clean semantic Fountain HTML into an external browser editor
+  [webkit] › editor.spec.ts:7327:1 › copies readable Fountain text into a plain-text external editor
+  [webkit] › editor.spec.ts:7386:1 › copies math to external rich and plain-text editors without renderer controls
+  [webkit] › editor.spec.ts:7431:1 › renders repeated empty paragraphs and removes each visible line
+  [webkit] › editor.spec.ts:7461:1 › undoes and redoes real typing with both common browser keyboard chords
+  [webkit] › editor.spec.ts:7478:1 › keeps a backward DOM selection backward after model synchronization
+  [webkit] › editor.spec.ts:7502:1 › preserves a backward selection made with real keyboard input
+  [webkit] › editor.spec.ts:7517:1 › replaces a backward selection made by a real reverse pointer drag
+  [webkit] › editor.spec.ts:7553:1 › turns multi-format and multi-block selections into visible paragraph boundaries
+  [webkit] › editor.spec.ts:7623:1 › visibly splits and joins ordinary paragraphs with both deletion directions
+  [webkit] › editor.spec.ts:7666:1 › deletes an adjacent inline atom without eating surrounding text
+  [webkit] › editor.spec.ts:7696:1 › unwraps and exits an inserted quote with ordinary browser keys
+  [webkit] › editor.spec.ts:7725:1 › publishes semantic selection controls and table interaction in the demo gallery
+  [webkit] › editor.spec.ts:7742:1 › edits, validates, disables and resets the Angular campaign brief form
+  [webkit] › editor.spec.ts:7746:1 › runs campaign images, native media and safe embeds through Angular with honest upload boundaries
+  [webkit] › editor.spec.ts:7823:1 › uses the public React media workflow for native playback, provider-gated embeds, and asset uploads
+  [webkit] › editor.spec.ts:7868:1 › streams an optional AI proposal outside the document until review is ready
+  [webkit] › editor.spec.ts:7893:1 › preserves whitespace when an AI proposal ends at a formatting boundary
+  [webkit] › editor.spec.ts:7908:1 › runs a host-owned multi-turn AI conversation with reusable prompts and clear confirmation
+  [webkit] › editor.spec.ts:7936:1 › reviews generated media before the normal host upload inserts one undoable node
+  [webkit] › editor.spec.ts:7962:1 › reviews a schema-aware agent tool proposal before one-step apply and undo
+  [webkit] › editor.spec.ts:7987:1 › keeps a 1,000-block input update local and paints within budget
+  [webkit] › editor.spec.ts:8008:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy
+  [webkit] › editor.spec.ts:8066:1 › exports rich tables as HTML Markdown and exposes the compatibility note
+  [webkit] › editor.spec.ts:8088:1 › HTML comments do not insert phantom paragraphs in converted Markdown
+  [webkit] › editor.spec.ts:8100:1 › imported table section order matches the physically rendered source table
+  [webkit] › editor.spec.ts:8131:1 › imports zero-rowspan cells with the same row-group geometry in server and browser
+  [webkit] › editor.spec.ts:8162:1 › reconstructs HTML tables across Markdown block boundaries
+  [webkit] › editor.spec.ts:8183:1 › applies surrounding HTML formatting without replacing Markdown block content
+  [webkit] › editor.spec.ts:8196:1 › converts raw HTML blocks only when the headless demo option is enabled
+  [webkit] › editor.spec.ts:8212:1 › projects inline HTML around Markdown nodes only with explicit opt-in and visible fallback
+  [webkit] › editor.spec.ts:8237:1 › shows specific discarded HTML and rejected URL losses in both conversion surfaces
+  [webkit] › editor.spec.ts:8263:1 › repairs source after native nested heading-to-paragraph changes
+  [webkit] › editor.spec.ts:8267:1 › keeps full Markdown export out of real large-issue typing
+  [webkit] › editor.spec.ts:8271:1 › optional site fonts do not block issue editing
+  [webkit] › editor.spec.ts:8275:1 › replaces selected nested sibling blocks and media through native pointer input
+  [webkit] › editor.spec.ts:8279:1 › replaces native selections across quote and list ancestors without leaving selected media
+  [webkit] › editor.spec.ts:8283:1 › retains different quote attributes through native replacement and JSON export
+  [webkit] › editor.spec.ts:8287:1 › replaces and restores selections across offscreen document content
+  [webkit] › starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide
+  [mobile-chrome] › mobile.spec.ts:5:1 › navigates workflow parents and restores deleted task drafts and histories on mobile
+  [mobile-chrome] › mobile.spec.ts:9:1 › enters code through a touch label and preserves source through a reader handoff
+  [mobile-chrome] › mobile.spec.ts:16:1 › preserves physical preformatted breaks through real mobile import editing and HTML download
+  [mobile-chrome] › mobile.spec.ts:19:1 › retains an empty heading through actual HTML download reopen and native mobile editing
+  [mobile-chrome] › mobile.spec.ts:22:47 › focuses the start empty text source on mobile before native typing
+  [mobile-chrome] › mobile.spec.ts:22:47 › focuses the end empty text source on mobile before native typing
+  [mobile-chrome] › mobile.spec.ts:27:1 › validates required documents custom errors and labels on a mobile viewport
+  [mobile-chrome] › mobile.spec.ts:31:1 › submits resets and disables a native form-associated Web Component on mobile
+  [mobile-chrome] › mobile.spec.ts:36:1 › uses Angular campaign controls on a touch viewport and preserves history across view remount
+  [mobile-chrome] › mobile.spec.ts:63:1 › uses the real Svelte report on a touch viewport with retained edits and history
+  [mobile-chrome] › mobile.spec.ts:93:1 › uses the real Vue runbook on a touch viewport without losing task state
+  [mobile-chrome] › mobile.spec.ts:116:1 › handles virtual-keyboard replacement, composition, deletion, and history input
+  [mobile-chrome] › mobile.spec.ts:155:1 › shows every empty line created and removed by repeated mobile Enter and Backspace
+  [mobile-chrome] › mobile.spec.ts:182:1 › inserts and updates native math from the phone controls
+  [mobile-chrome] › mobile.spec.ts:196:1 › keeps Word export and re-import understandable on a phone viewport
+  [mobile-chrome] › mobile.spec.ts:219:1 › keeps editable page content continuous on a narrow screen
+  [mobile-chrome] › mobile.spec.ts:242:1 › preserves split-paragraph selection and composition through mobile page fallback
+  [mobile-chrome] › mobile.spec.ts:350:1 › keeps the public editor usable without horizontal overflow at a phone viewport
+  [mobile-chrome] › mobile.spec.ts:372:1 › keeps the closing promise in four intentional mobile phrases
+  [mobile-chrome] › mobile.spec.ts:405:1 › keeps tracked review complete and touch-operable on a phone viewport
+  [mobile-chrome] › mobile.spec.ts:423:1 › keeps complete version names and guarded restore touch-operable on a phone
+  [mobile-chrome] › mobile.spec.ts:442:1 › keeps native collapsible details readable and touch-operable on a phone
+  [mobile-chrome] › mobile.spec.ts:457:1 › keeps ruby annotation editing touch-operable and inside the phone viewport
+  [mobile-chrome] › mobile.spec.ts:478:1 › keeps the suggestion picker visible and touch-selectable on a phone viewport
+  [mobile-chrome] › mobile.spec.ts:530:1 › keeps contextual menus reachable and touch-selectable on a phone viewport
+  [mobile-chrome] › mobile.spec.ts:580:1 › keeps a composed icon toolbar reachable and touch-operable on a phone viewport
+  [mobile-chrome] › mobile.spec.ts:602:1 › keeps the complete text-style panel usable without mobile page overflow
+  [mobile-chrome] › mobile.spec.ts:624:1 › exposes touch-sized block movement controls without page overflow
+  [mobile-chrome] › mobile.spec.ts:641:1 › keeps a 100,000-block virtual document bounded on mobile engines
+  [mobile-safari] › mobile.spec.ts:5:1 › navigates workflow parents and restores deleted task drafts and histories on mobile
+  [mobile-safari] › mobile.spec.ts:9:1 › enters code through a touch label and preserves source through a reader handoff
+  [mobile-safari] › mobile.spec.ts:16:1 › preserves physical preformatted breaks through real mobile import editing and HTML download
+  [mobile-safari] › mobile.spec.ts:19:1 › retains an empty heading through actual HTML download reopen and native mobile editing
+  [mobile-safari] › mobile.spec.ts:22:47 › focuses the start empty text source on mobile before native typing
+  [mobile-safari] › mobile.spec.ts:22:47 › focuses the end empty text source on mobile before native typing
+  [mobile-safari] › mobile.spec.ts:27:1 › validates required documents custom errors and labels on a mobile viewport
+  [mobile-safari] › mobile.spec.ts:31:1 › submits resets and disables a native form-associated Web Component on mobile
+  [mobile-safari] › mobile.spec.ts:36:1 › uses Angular campaign controls on a touch viewport and preserves history across view remount
+  [mobile-safari] › mobile.spec.ts:63:1 › uses the real Svelte report on a touch viewport with retained edits and history
+  [mobile-safari] › mobile.spec.ts:93:1 › uses the real Vue runbook on a touch viewport without losing task state
+  [mobile-safari] › mobile.spec.ts:116:1 › handles virtual-keyboard replacement, composition, deletion, and history input
+  [mobile-safari] › mobile.spec.ts:155:1 › shows every empty line created and removed by repeated mobile Enter and Backspace
+  [mobile-safari] › mobile.spec.ts:182:1 › inserts and updates native math from the phone controls
+  [mobile-safari] › mobile.spec.ts:196:1 › keeps Word export and re-import understandable on a phone viewport
+  [mobile-safari] › mobile.spec.ts:219:1 › keeps editable page content continuous on a narrow screen
+  [mobile-safari] › mobile.spec.ts:242:1 › preserves split-paragraph selection and composition through mobile page fallback
+  [mobile-safari] › mobile.spec.ts:350:1 › keeps the public editor usable without horizontal overflow at a phone viewport
+  [mobile-safari] › mobile.spec.ts:372:1 › keeps the closing promise in four intentional mobile phrases
+  [mobile-safari] › mobile.spec.ts:405:1 › keeps tracked review complete and touch-operable on a phone viewport
+  [mobile-safari] › mobile.spec.ts:423:1 › keeps complete version names and guarded restore touch-operable on a phone
+  [mobile-safari] › mobile.spec.ts:442:1 › keeps native collapsible details readable and touch-operable on a phone
+  [mobile-safari] › mobile.spec.ts:457:1 › keeps ruby annotation editing touch-operable and inside the phone viewport
+  [mobile-safari] › mobile.spec.ts:478:1 › keeps the suggestion picker visible and touch-selectable on a phone viewport
+  [mobile-safari] › mobile.spec.ts:530:1 › keeps contextual menus reachable and touch-selectable on a phone viewport
+  [mobile-safari] › mobile.spec.ts:580:1 › keeps a composed icon toolbar reachable and touch-operable on a phone viewport
+  [mobile-safari] › mobile.spec.ts:602:1 › keeps the complete text-style panel usable without mobile page overflow
+  [mobile-safari] › mobile.spec.ts:624:1 › exposes touch-sized block movement controls without page overflow
+  [mobile-safari] › mobile.spec.ts:641:1 › keeps a 100,000-block virtual document bounded on mobile engines
+Total: 1084 tests in 13 files

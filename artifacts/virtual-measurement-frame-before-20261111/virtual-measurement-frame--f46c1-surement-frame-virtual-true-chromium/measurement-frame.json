@@ -1,0 +1,53 @@
+{
+  "before": {
+    "top": 360,
+    "left": 24,
+    "width": 220,
+    "height": 48,
+    "scrollY": 13936,
+    "clicks": 0,
+    "pendingFrames": 2,
+    "blocks": 300,
+    "mounted": 16,
+    "rootHeight": 14272
+  },
+  "frame": {
+    "before": {
+      "top": 360,
+      "left": 24,
+      "width": 220,
+      "height": 48,
+      "scrollY": 13936,
+      "clicks": 0,
+      "pendingFrames": 2,
+      "blocks": 300,
+      "mounted": 16,
+      "rootHeight": 14272
+    },
+    "after": {
+      "top": 408,
+      "left": 24,
+      "width": 220,
+      "height": 48,
+      "scrollY": 13808,
+      "clicks": 0,
+      "pendingFrames": 1,
+      "blocks": 300,
+      "mounted": 11,
+      "rootHeight": 14192
+    },
+    "callbacks": 2
+  },
+  "after": {
+    "top": 408,
+    "left": 24,
+    "width": 220,
+    "height": 48,
+    "scrollY": 13808,
+    "clicks": 0,
+    "pendingFrames": 2,
+    "blocks": 300,
+    "mounted": 11,
+    "rootHeight": 14192
+  }
+}

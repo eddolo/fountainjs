@@ -1,0 +1,53 @@
+{
+  "before": {
+    "top": 360,
+    "left": 24,
+    "width": 220,
+    "height": 48,
+    "scrollY": 11664,
+    "clicks": 0,
+    "pendingFrames": 0,
+    "blocks": 300,
+    "mounted": 300,
+    "rootHeight": 12000
+  },
+  "frame": {
+    "before": {
+      "top": 360,
+      "left": 24,
+      "width": 220,
+      "height": 48,
+      "scrollY": 11664,
+      "clicks": 0,
+      "pendingFrames": 0,
+      "blocks": 300,
+      "mounted": 300,
+      "rootHeight": 12000
+    },
+    "after": {
+      "top": 360,
+      "left": 24,
+      "width": 220,
+      "height": 48,
+      "scrollY": 11664,
+      "clicks": 0,
+      "pendingFrames": 0,
+      "blocks": 300,
+      "mounted": 300,
+      "rootHeight": 12000
+    },
+    "callbacks": 0
+  },
+  "after": {
+    "top": 360,
+    "left": 24,
+    "width": 220,
+    "height": 48,
+    "scrollY": 11664,
+    "clicks": 1,
+    "pendingFrames": 0,
+    "blocks": 300,
+    "mounted": 300,
+    "rootHeight": 12000
+  }
+}

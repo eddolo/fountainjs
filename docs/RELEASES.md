@@ -485,6 +485,86 @@ editor/mobile matrix, Linux display clipboard validation, hosted CI, npm
 approval, registry installation and live-site checks
 remain open.
 
+### Subsequent full-matrix download diagnostic — 2026-11-11
+
+The clean 1,069-case non-display-clipboard run at `af8401b3` encounters a
+missing download after undo restores a 302-block virtual document. The run
+is deliberately interrupted to investigate: its log contains 178 passes and
+one failure, without a terminal aggregate. It is not release certification.
+The first six directed media-range scenarios finish; the seventh times out
+waiting for its twentieth download. No console error is recorded.
+
+Two unchanged instrumented journeys pass serially and four pass with two
+workers, each delivering all 24 files. A separate native control drops its
+eleventh rapid Blob download; spacing that control by 200 ms delivers 24/24.
+[Chromium's source](https://raw.githubusercontent.com/chromium/chromium/main/third_party/blink/renderer/core/frame/local_frame.cc)
+independently documents a ten-request burst throttle, but
+the original failed journey reaches only three downloads in a sliding second.
+The native control therefore does not establish the original cause. Its trace
+frames show a viewport shift around the click; late virtual measurement/scroll
+adjustment remains a hypothesis requiring a deterministic reproduction.
+
+At the wording-only `e5a3fab4` checkpoint, the demos say a download was requested instead of claiming completion
+after `anchor.click()`. All nine existing issue/task/DOCX workflows pass
+across Chromium, Firefox and WebKit with unchanged delivery/content assertions.
+All 190 emitted library JavaScript/CommonJS/CSS files are byte-identical to
+the `fc3aa39a` package checkpoint; only demo wording changes. No input,
+download, virtualization or test-acceptance algorithm is changed by this
+wording repair. The unresolved delivery failure still blocks a clean matrix.
+
+See `artifacts/download-delivery-audit-20261111.json`, the retained original
+trace, `artifacts/download-status-browser-20261111.log`, and the independent
+native/instrumented probes. This diagnostic does not waive full hosted CI or
+the separate Windows WebKit clipboard limitation.
+
+### Verified virtual host-control repair — 2026-11-11
+
+A focused real-browser fixture reproduces the suspected class of failure
+deterministically. It uses public `EditorView`, 300 paragraphs, real CSS
+geometry and native mouse-down/up, while controlling only application RAF
+delivery. A pending frame moves the external Export button by 48 pixels;
+the click count stays zero. The independent non-virtual control passes.
+No private renderer method or document mutation drives the reproduction.
+
+The renderer now defers queued virtual viewport and measurement callbacks
+while an interactive host control outside its mount is pressed. Pointer
+release/cancel and window blur resume that work; destruction removes the
+listeners and pending callbacks. Controls within the editor mount, including
+its reorder UI, are excluded. Composed event paths recognize controls in open
+Shadow DOM. That edge first fails in Chromium, Firefox and WebKit, then passes
+after the event-path repair.
+
+All 15 final recorded cases pass in the three desktop engines: non-virtual
+control, press/release, pointer cancellation, window blur and open Shadow DOM.
+The target stays still during the press, exactly one native release click
+arrives, the 300-block model is unchanged, virtual rendering resumes and
+teardown clears pending work. The earlier 33-case batch passes the original
+eight-scenario issue export, task/DOCX handoffs, native block reordering,
+toolbar traversal and 100,000-block IME/selection/copy. It precedes the final
+composed-path refinement; the final 15-case batch repeats the ordinary modes.
+
+The 23 existing virtualization unit checks pass. API review finds only five
+private class members added in the two `EditorView` declaration files; all
+450 declaration hashes are checked after updating those two snapshots. The
+final repair adds 791 CommonJS bytes, measuring 1,453,644. Aggregate CJS
+capacity increases by 1,024 bytes to 1,453,888; entry, ESM, CSS, latency and
+retention limits stay unchanged. Both the original size failure and passing
+receipt are retained. The repaired runtime is `07a2c8ac`; full source and
+release gates must be refreshed before publication.
+
+`playwright.virtual-host.config.ts` records this bounded preflight in CI; the
+ordinary matrix repeats its assertions. Initial recording setup used an
+unsupported describe-level video setting; its failure is retained and the
+setting is moved to this configuration. A preceding broader run is interrupted
+after recording metadata changes, then rerun with files frozen. Neither is
+represented as a product failure or a clean matrix.
+
+The compact audit, source/probes, negative/positive frame data and selected
+recordings are versioned. The original 11 MB full-run trace remains local,
+identified by SHA-256 in `artifacts/download-delivery-audit-20261111.json`.
+Fresh complete browser/CI and package validation remain mandatory; focused
+passes do not erase the original interrupted run.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

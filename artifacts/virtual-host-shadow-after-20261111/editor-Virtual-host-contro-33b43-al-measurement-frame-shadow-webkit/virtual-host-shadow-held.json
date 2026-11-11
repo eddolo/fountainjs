@@ -1,0 +1,43 @@
+{
+  "before": {
+    "top": 360,
+    "left": 24,
+    "width": 220,
+    "height": 48,
+    "scrollY": 13936,
+    "clicks": 0,
+    "pendingFrames": 2,
+    "blocks": 300,
+    "mounted": 16,
+    "rootHeight": 14272
+  },
+  "held": {
+    "before": {
+      "top": 360,
+      "left": 24,
+      "width": 220,
+      "height": 48,
+      "scrollY": 13936,
+      "clicks": 0,
+      "pointerId": 1,
+      "pendingFrames": 2,
+      "blocks": 300,
+      "mounted": 16,
+      "rootHeight": 14272
+    },
+    "after": {
+      "top": 360,
+      "left": 24,
+      "width": 220,
+      "height": 48,
+      "scrollY": 13936,
+      "clicks": 0,
+      "pointerId": 1,
+      "pendingFrames": 0,
+      "blocks": 300,
+      "mounted": 16,
+      "rootHeight": 14272
+    },
+    "callbacks": 2
+  }
+}

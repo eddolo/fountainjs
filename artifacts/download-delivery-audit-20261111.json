@@ -1,0 +1,131 @@
+{
+  "date": "2026-11-11",
+  "runtimeCheckpoint": "fc3aa39a",
+  "uiCommit": "e5a3fab4",
+  "fullMatrix": {
+    "sourceHead": "af8401b3",
+    "planned": 1069,
+    "passedLogLines": 178,
+    "failedLogLines": 1,
+    "stoppedIntentionallyAfterActualFailure": true,
+    "terminalAggregateNotAvailable": true,
+    "log": "artifacts/release-browser-af8401b3.log"
+  },
+  "failure": {
+    "scenario": "virtual-leading-forward: original download after undo",
+    "deliveredDownloadsBeforeFailure": 19,
+    "maximumDownloadsInSlidingSecond": 3,
+    "lastInputPoint": {
+      "x": 142.91,
+      "y": 404.23
+    },
+    "noConsoleErrors": true,
+    "hypothesis": "Late virtual layout/scroll adjustment moves the host button between actionability and input; unproven pending deterministic reproduction",
+    "burstThrottleNotEstablishedAsCause": true
+  },
+  "unchangedInstrumentedJourneys": {
+    "serialPassed": 2,
+    "twoWorkersPassed": 4,
+    "actualDownloadsEach": 24
+  },
+  "independentNativeControl": {
+    "rapid": {
+      "delivered": 10,
+      "failedAt": 11
+    },
+    "interval200ms": {
+      "delivered": 24
+    },
+    "source": "https://raw.githubusercontent.com/chromium/chromium/main/third_party/blink/renderer/core/frame/local_frame.cc",
+    "inference": "Independent rapid downloads hit Chromium burst throttling. This does not explain the original lower-rate failure."
+  },
+  "uiRepair": "Three demos report download requested, not completed, because anchor.click cannot confirm browser delivery. No download/engine algorithm changed.",
+  "uiRegression": {
+    "passed": 9,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "scenarios": [
+      "Eight directed text-to-image selection/edit/undo/reopen cases",
+      "Task workflow description download and reopen",
+      "Headless Markdown/server HTML plus DOCX download/reimport"
+    ],
+    "log": "artifacts/download-status-browser-20261111.log"
+  },
+  "pending": [
+    "Complete pnpm check on repaired runtime",
+    "Fresh full matrix and hosted CI",
+    "Final archive/type/consumer checks and release approval"
+  ],
+  "lowOverheadInstrumentedJourneys": {
+    "twoWorkersPassed": 4,
+    "log": "artifacts/boundary-download-quiet-20261111.log",
+    "forcedLayoutLogging": false
+  },
+  "originalTrace": {
+    "localOnly": true,
+    "path": "artifacts/release-browser-af8401b3/editor-replaces-directed-t-21aca-inary-and-virtual-documents-chromium/trace.zip",
+    "bytes": 11281936,
+    "sha256": "1ac9d62af19ee8fbc0eb65d3a66a7918695530e32be2a5b45d01d62ed00a7b87"
+  },
+  "subsequentDeterministicReproduction": {
+    "sourceFixture": "examples/react-app/virtual-host-press.html",
+    "before": {
+      "controlPassed": 1,
+      "virtualFailed": 1,
+      "buttonMovementPx": 48,
+      "receivedClicks": 0,
+      "modelBlocks": 300,
+      "log": "artifacts/virtual-measurement-frame-before-20261111.log"
+    },
+    "fixCommit": "73dd1b2ad361f55f7b5366f173be459664d271f1",
+    "after": {
+      "controlPassed": 1,
+      "virtualPassed": 1,
+      "buttonMovementPx": 0,
+      "receivedClicks": 1,
+      "log": "artifacts/virtual-measurement-frame-after-20261111.log"
+    },
+    "publicPackageChecks": {
+      "passed": 12,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "modes": [
+        "control",
+        "release",
+        "cancel",
+        "blur"
+      ],
+      "log": "artifacts/virtual-host-public-before-20261111.log",
+      "logNameNote": "Despite the initial output name, this public package run rebuilt the patched source and is AFTER evidence."
+    }
+  },
+  "wordingOnlyLibraryRuntimeByteComparison": {
+    "baselineTarball": "fc3aa39a",
+    "filesCompared": 190,
+    "different": []
+  },
+  "repairFinal": {
+    "runtimeCommit": "07a2c8acdc7876c3121eb7ea23ea9f828e4de072",
+    "viewSourceSha256": "d9f55632b65dbf35146a56aa00087a7ebd6e1c9fd5699d15395ebf1d635f215f",
+    "recordedBrowserPassed": 15,
+    "recordedBrowserLog": "artifacts/virtual-host-shadow-after-20261111.log",
+    "shadowBeforeFailed": 3,
+    "broaderLightDOMChecksPassed": 33,
+    "broaderLog": "artifacts/virtual-host-broad-final-20261111.log",
+    "existingVirtualizationUnitChecksPassed": 23,
+    "publicDeclarationFilesChecked": 450,
+    "declarationChanges": "Only five private class member names in dist/view/view.d.ts and .d.cts",
+    "cjsBytes": 1453644,
+    "addedCjsBytes": 791,
+    "previousCjsLimitBytes": 1452864,
+    "newCjsLimitBytes": 1453888,
+    "capacityIncreaseBytes": 1024,
+    "otherLimitsChanged": false
+  }
+}

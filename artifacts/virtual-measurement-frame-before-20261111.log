@@ -1,0 +1,52 @@
+[WebServer] (node:5528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:24052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › artifacts\virtual-measurement-frame-20261111.spec.ts:4:38 › host export click survives a measurement frame: virtual=false (624ms)
+  x  2 [chromium] › artifacts\virtual-measurement-frame-20261111.spec.ts:4:38 › host export click survives a measurement frame: virtual=true (544ms)
+
+
+  1) [chromium] › artifacts\virtual-measurement-frame-20261111.spec.ts:4:38 › host export click survives a measurement frame: virtual=true 
+
+    Error: A pending virtual measurement must not move the host button out from under an ordinary pointer click
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      15 |   await page.screenshot({ path: info.outputPath('after.png') });
+      16 |   expect(after.blocks).toBe(300);
+    > 17 |   expect(after.clicks, 'A pending virtual measurement must not move the host button out from under an ordinary pointer click').toBe(1);
+         |                                                                                                                                ^
+      18 |   expect(Math.abs(after.top - before.top)).toBeLessThan(1);
+      19 |   await page.evaluate(() => (window as any).virtualFrameAudit.close());
+      20 | });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\artifacts\virtual-measurement-frame-20261111.spec.ts:17:128
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\virtual-measurement-frame-before-20261111\virtual-measurement-frame--f46c1-surement-frame-virtual-true-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\virtual-measurement-frame-before-20261111\virtual-measurement-frame--f46c1-surement-frame-virtual-true-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\virtual-measurement-frame-before-20261111\virtual-measurement-frame--f46c1-surement-frame-virtual-true-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\virtual-measurement-frame-before-20261111\virtual-measurement-frame--f46c1-surement-frame-virtual-true-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\virtual-measurement-frame-before-20261111\virtual-measurement-frame--f46c1-surement-frame-virtual-true-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › artifacts\virtual-measurement-frame-20261111.spec.ts:4:38 › host export click survives a measurement frame: virtual=true 
+  1 passed (5.7s)

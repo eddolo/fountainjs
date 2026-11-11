@@ -1,0 +1,13 @@
+[WebServer] (node:25124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:24868) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › artifacts\virtual-measurement-frame-20261111.spec.ts:4:38 › host export click survives a measurement frame: virtual=false (687ms)
+  ok 2 [chromium] › artifacts\virtual-measurement-frame-20261111.spec.ts:4:38 › host export click survives a measurement frame: virtual=true (554ms)
+
+  2 passed (5.9s)

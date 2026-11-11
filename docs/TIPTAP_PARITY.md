@@ -2,6 +2,13 @@
 
 ## Current programme status — 2026-11-11
 
+A subsequent full-run investigation reproduces a real virtual-layout lost
+click: a measurement frame moves a host button during its press. The repaired
+runtime `07a2c8ac` passes 15 recorded three-engine checks for release, cancel,
+blur and open Shadow DOM, plus a preceding 33-case broader regression. Its
+full source/release gates are being refreshed; the earlier checkpoint below
+does not certify this new runtime. [Repair evidence](RELEASES.md#verified-virtual-host-control-repair--2026-11-11).
+
 The latest local checkpoint is versioned candidate `fc3aa39a`: all 5,271 source tests in
 323 files pass, alongside the build, package, type, headless, performance and
 retention gates. A real renderer failure discovered during the broad browser

@@ -1,0 +1,54 @@
+[WebServer] (node:6624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:17756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 91% of 6.7s inside plugin hooks (6.1s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 6.0s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:22644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:10980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:25088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:12328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: control (1.2s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: release (876ms)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: cancel (903ms)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: blur (923ms)
+  ok  5 [chromium] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow (1.1s)
+(node:8360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: control (3.6s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: release (2.3s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: cancel (2.4s)
+  ok  9 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: blur (2.3s)
+  ok 10 [firefox] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow (2.2s)
+(node:14036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 11 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: control (1.6s)
+  ok 12 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: release (1.5s)
+  ok 13 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: cancel (1.5s)
+  ok 14 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: blur (1.6s)
+  ok 15 [webkit] › tests\browser\editor.spec.ts:18:5 › Virtual host controls › keeps a host control stable through a virtual measurement frame: shadow (1.4s)
+
+  15 passed (50.0s)

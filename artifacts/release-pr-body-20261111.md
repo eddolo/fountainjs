@@ -58,6 +58,12 @@ Update this section with final candidate CI before opening the prepared review.
 ## Release gates still open
 
 - Complete browser/Yjs recovery and Linux display-backed clipboard validation.
+  A later full run records 178 pass lines and a download timeout after virtual
+  document undo before being interrupted for diagnosis. A deterministic native
+  reproduction then confirms a 48-pixel target shift during virtual measurement.
+  The host-press guard and composed-path repair pass 15 recorded desktop checks;
+  a preceding 33-case batch covers broader editing/exports. Refresh the complete
+  source/package/browser gates for repaired runtime `07a2c8ac`.
   The local serialized clipboard batch passes all 18 Chromium/Firefox checks;
   Windows WebKit delivery fails three checks, consistent with independent native
   controls. The original failure receipts remain retained.

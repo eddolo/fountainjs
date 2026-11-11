@@ -1,0 +1,77 @@
+[WebServer] (node:24660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:5048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 91% of 6.6s inside plugin hooks (6.0s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 5.8s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:12148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:8348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:9308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+Cannot use({ video }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at editor.spec.ts:17
+
+  15 |
+  16 | test.describe('Virtual host controls', () => {
+> 17 |   test.use({ video: 'on' });
+     |        ^
+  18 |   for (const mode of ['control', 'release', 'cancel', 'blur'] satisfies VirtualHostControlMode[]) {
+  19 |     test(`keeps a host control stable through a virtual measurement frame: ${mode}`, async ({ page }, info) => {
+  20 |       await virtualHostControlJourney(page, info, mode);
+Cannot use({ video }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at editor.spec.ts:17
+
+  15 |
+  16 | test.describe('Virtual host controls', () => {
+> 17 |   test.use({ video: 'on' });
+     |        ^
+  18 |   for (const mode of ['control', 'release', 'cancel', 'blur'] satisfies VirtualHostControlMode[]) {
+  19 |     test(`keeps a host control stable through a virtual measurement frame: ${mode}`, async ({ page }, info) => {
+  20 |       await virtualHostControlJourney(page, info, mode);
+Cannot use({ video }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at editor.spec.ts:17
+
+  15 |
+  16 | test.describe('Virtual host controls', () => {
+> 17 |   test.use({ video: 'on' });
+     |        ^
+  18 |   for (const mode of ['control', 'release', 'cancel', 'blur'] satisfies VirtualHostControlMode[]) {
+  19 |     test(`keeps a host control stable through a virtual measurement frame: ${mode}`, async ({ page }, info) => {
+  20 |       await virtualHostControlJourney(page, info, mode);
+Cannot use({ video }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at editor.spec.ts:17
+
+  15 |
+  16 | test.describe('Virtual host controls', () => {
+> 17 |   test.use({ video: 'on' });
+     |        ^
+  18 |   for (const mode of ['control', 'release', 'cancel', 'blur'] satisfies VirtualHostControlMode[]) {
+  19 |     test(`keeps a host control stable through a virtual measurement frame: ${mode}`, async ({ page }, info) => {
+  20 |       await virtualHostControlJourney(page, info, mode);
+
