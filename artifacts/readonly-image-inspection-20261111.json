@@ -1,0 +1,29 @@
+{
+  "editable": false,
+  "controls": [
+    {
+      "tag": "DIV",
+      "class": "fountain-image__resize-controls",
+      "hidden": true,
+      "display": "none",
+      "height": 0,
+      "placeholder": null
+    },
+    {
+      "tag": "FIGCAPTION",
+      "class": "fountain-image__caption",
+      "hidden": true,
+      "display": "none",
+      "height": 0,
+      "placeholder": null
+    },
+    {
+      "tag": "TEXTAREA",
+      "class": "fountain-image__caption-input",
+      "hidden": true,
+      "display": "none",
+      "height": 0,
+      "placeholder": "Add a caption"
+    }
+  ]
+}

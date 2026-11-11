@@ -60,5 +60,24 @@
     "compiledPublicDefault": true,
     "log": "artifacts/release-yjs-default-597f5415.log",
     "visualReview": "Sample reopening and continued-editing screenshots"
+  },
+  "roomRecoveryBrowserChecks": {
+    "passed": 24,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "log": "artifacts/release-room-recovery-597f5415.log"
+  },
+  "migrationRecoveryBrowserChecks": {
+    "passed": 21,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "log": "artifacts/release-migration-recovery-597f5415.log",
+    "visualReview": "Sample reopened storage and recovered archive screenshots"
   }
 }

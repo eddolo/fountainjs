@@ -312,9 +312,20 @@ blank lines, mounted room replacement, download and JSON reopening.
 The log is `artifacts/release-yjs-default-597f5415.log`. Sample reopening and
 continued-editing screenshots received visual review.
 
-The broad five-engine editor run and separate startup/migration/presence batches
-are still running. The serialized native clipboard batch remains pending. These
-48 passes do not certify those other batches or the hosted release gate.
+The startup/detached-draft batch passes all 24 checks and the migration-recovery
+selection passes all 21 checks across the same three engines. They exercise
+incomplete room data, settings before admission, cancellation, changed private
+drafts, blocked local storage, lost save/apply replies, repeated reloads and
+explicitly reviewed recovery into a migrated room. The terminal logs are
+`artifacts/release-room-recovery-597f5415.log` and
+`artifacts/release-migration-recovery-597f5415.log`. Sample recovery/archive
+screenshots received visual review. A separate Chromium inspection confirmed
+that empty image captions and resize controls have `display: none` and zero
+height in a read-only built-package view. It required no implementation change.
+
+The broad five-engine editor run and 108-case compiled native-presence batch
+are still running. The serialized native clipboard batch remains pending.
+The completed batches do not certify those other checks or hosted CI.
 
 The broad run also exposed an ambiguous list-button test query. Its substring
 match selected both `Bullet list` and the lower demo's `Toggle bullet list`.

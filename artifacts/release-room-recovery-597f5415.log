@@ -1,0 +1,39 @@
+[WebServer] (node:22136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:9912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\yjs-detached-draft-real.spec.ts:7:1 › keeps and downloads detached edits before deliberately rejoining a changed room (3.8s)
+  ok  2 [chromium] › tests\manual\yjs-incomplete-room-real.spec.ts:7:3 › preserves the local draft when incomplete legacy room data arrives out of order (1.3s)
+  ok  3 [chromium] › tests\manual\yjs-incomplete-room-real.spec.ts:7:3 › preserves the local draft when incomplete retained room data arrives out of order (1.3s)
+  ok  4 [chromium] › tests\manual\yjs-incomplete-room-real.spec.ts:31:3 › checks saved default settings before connecting a retained room (1.4s)
+  ok  5 [chromium] › tests\manual\yjs-incomplete-room-real.spec.ts:31:3 › checks saved custom settings before connecting a retained room (1.3s)
+  ok  6 [chromium] › tests\manual\yjs-incomplete-room-real.spec.ts:52:1 › keeps a host-restored draft editable when it changes during checkpoint installation (1.0s)
+  ok  7 [chromium] › tests\manual\yjs-incomplete-room-real.spec.ts:66:1 › keeps the editor offline when the host cancels during initial room sync (1.3s)
+  ok  8 [chromium] › tests\manual\yjs-incomplete-room-real.spec.ts:81:1 › leaves the legacy editor offline when the host cancels its initial room sync (1.1s)
+(node:17364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [firefox] › tests\manual\yjs-detached-draft-real.spec.ts:7:1 › keeps and downloads detached edits before deliberately rejoining a changed room (6.3s)
+  ok 10 [firefox] › tests\manual\yjs-incomplete-room-real.spec.ts:7:3 › preserves the local draft when incomplete legacy room data arrives out of order (4.7s)
+  ok 11 [firefox] › tests\manual\yjs-incomplete-room-real.spec.ts:7:3 › preserves the local draft when incomplete retained room data arrives out of order (2.3s)
+  ok 12 [firefox] › tests\manual\yjs-incomplete-room-real.spec.ts:31:3 › checks saved default settings before connecting a retained room (2.7s)
+  ok 13 [firefox] › tests\manual\yjs-incomplete-room-real.spec.ts:31:3 › checks saved custom settings before connecting a retained room (2.3s)
+  ok 14 [firefox] › tests\manual\yjs-incomplete-room-real.spec.ts:52:1 › keeps a host-restored draft editable when it changes during checkpoint installation (1.9s)
+  ok 15 [firefox] › tests\manual\yjs-incomplete-room-real.spec.ts:66:1 › keeps the editor offline when the host cancels during initial room sync (2.3s)
+  ok 16 [firefox] › tests\manual\yjs-incomplete-room-real.spec.ts:81:1 › leaves the legacy editor offline when the host cancels its initial room sync (2.5s)
+(node:24408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 17 [webkit] › tests\manual\yjs-detached-draft-real.spec.ts:7:1 › keeps and downloads detached edits before deliberately rejoining a changed room (6.4s)
+  ok 18 [webkit] › tests\manual\yjs-incomplete-room-real.spec.ts:7:3 › preserves the local draft when incomplete legacy room data arrives out of order (3.7s)
+  ok 19 [webkit] › tests\manual\yjs-incomplete-room-real.spec.ts:7:3 › preserves the local draft when incomplete retained room data arrives out of order (4.3s)
+  ok 20 [webkit] › tests\manual\yjs-incomplete-room-real.spec.ts:31:3 › checks saved default settings before connecting a retained room (4.1s)
+  ok 21 [webkit] › tests\manual\yjs-incomplete-room-real.spec.ts:31:3 › checks saved custom settings before connecting a retained room (4.8s)
+  ok 22 [webkit] › tests\manual\yjs-incomplete-room-real.spec.ts:52:1 › keeps a host-restored draft editable when it changes during checkpoint installation (3.5s)
+  ok 23 [webkit] › tests\manual\yjs-incomplete-room-real.spec.ts:66:1 › keeps the editor offline when the host cancels during initial room sync (2.9s)
+  ok 24 [webkit] › tests\manual\yjs-incomplete-room-real.spec.ts:81:1 › leaves the legacy editor offline when the host cancels its initial room sync (2.0s)
+
+  24 passed (1.4m)
