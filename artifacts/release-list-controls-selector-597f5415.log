@@ -1,0 +1,14 @@
+
+Running 3 tests using 1 worker
+
+(node:23272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:6196:1 › toggles a selected block through the public React list controls (3.8s)
+(node:24484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\browser\editor.spec.ts:6196:1 › toggles a selected block through the public React list controls (12.1s)
+(node:6328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\browser\editor.spec.ts:6196:1 › toggles a selected block through the public React list controls (9.5s)
+
+  3 passed (53.3s)

@@ -6201,9 +6201,9 @@ test('toggles a selected block through the public React list controls', async ({
   await paragraph.click();
   await page.keyboard.press('Home');
   await page.keyboard.press('Shift+End');
-  await page.getByRole('button', { name: 'Bullet list' }).click();
+  await page.getByRole('button', { name: 'Bullet list', exact: true }).click();
   await expect(editor.locator('ul > li').first()).toHaveText(text ?? '');
-  await page.getByRole('button', { name: 'Bullet list' }).click();
+  await page.getByRole('button', { name: 'Bullet list', exact: true }).click();
   await expect(editor.locator('ul > li').filter({ hasText: text ?? '' })).toHaveCount(0);
   await expect(editor.locator('[data-fountain-node="paragraph"]').filter({ hasText: text ?? '' })).toHaveCount(1);
 });

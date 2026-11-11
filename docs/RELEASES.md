@@ -316,6 +316,15 @@ The broad five-engine editor run and separate startup/migration/presence batches
 are still running. The serialized native clipboard batch remains pending. These
 48 passes do not certify those other batches or the hosted release gate.
 
+The broad run also exposed an ambiguous list-button test query. Its substring
+match selected both `Bullet list` and the lower demo's `Toggle bullet list`.
+Both clicks now use the exact toolbar label; the existing list/paragraph
+assertions are unchanged. The repaired check passes in all three desktop
+engines. The original failure context and the separate rerun are retained
+under `artifacts/release-browser-597f5415/` and
+`artifacts/release-list-controls-selector-597f5415.log`. This diagnostic run
+includes that test-only correction; it is not a fresh frozen release run.
+
 Remote review inventory on November 11 still shows stacked draft PRs #8–22.
 The local branch is ahead of the newest draft's `1a9e1640` head. The prepared
 next draft continues `fix/native-focus-intent-20261105`; its description is in
