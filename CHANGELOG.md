@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Retain complex Word page-number and page-count fields in supported headers
+  and footers so pagination and DOCX export can recalculate them after edits.
+
 - Keep a comment thread marked as saving until all of its writes settle.
   Late edit responses preserve newer revisions and deleted threads.
 

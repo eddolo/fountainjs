@@ -686,7 +686,9 @@ const limits = Object.freeze({
   // preceding limit. Allow 192 bytes for the added wire-offset checks.
   // Clipboard picker keyboard focus and result labels measure 1,449,398
   // bytes, 182 above the preceding limit. Allow 192 bytes for this repair.
-  'all CommonJS runtime code': 1415.4375 * kibibyte,
+  // DOCX complex page fields and the custom numbering fallback measure
+  // 1,450,491 bytes against the previous 1,449,408-byte cap.
+  'all CommonJS runtime code': 1417 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

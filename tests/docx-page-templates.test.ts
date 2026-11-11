@@ -13,6 +13,11 @@ const w = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 const r = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
 const rel = 'http://schemas.openxmlformats.org/package/2006/relationships';
 const p = (text: string) => `<w:p><w:r><w:t>${text}</w:t></w:r></w:p>`;
+const marker = (type: string, attrs = '') => `<w:fldChar w:fldCharType="${type}"${attrs}/>`;
+const run = (content: string) => `<w:r>${content}</w:r>`;
+const instruction = (text: string) => `<w:instrText xml:space="preserve">${text}</w:instrText>`;
+const complexField = (code: string, cache: string, attrs = '') =>
+  run(marker('begin', attrs) + instruction(code)) + run(marker('separate')) + cache + run(marker('end'));
 const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
 function input({ section = '<w:headerReference w:type="default" r:id="head"/><w:footerReference w:type="default" r:id="foot"/>',
   header = p('Header'), footer = '<w:p><w:r><w:t>Page </w:t></w:r><w:fldSimple w:instr="PAGE"><w:r><w:t>9</w:t></w:r></w:fldSimple></w:p>',
@@ -51,6 +56,59 @@ describe('native DOCX page templates', () => {
     expect(strFromU8(parts['[Content_Types].xml']!)).toContain('wordprocessingml.header+xml');
     expect(read(result.bytes).document.toJSON()).toEqual(withDOCXExportDefaults(doc.toJSON()));
     expect(result.report.issues.some(issue => issue.code === 'page-field-recalculation-required')).toBe(true);
+  });
+
+  it('keeps supported complex page fields dynamic and uses cached-result formatting', () => {
+    const footer = '<w:p>' + run('<w:t xml:space="preserve">Page </w:t>' + marker('begin') + instruction(' PA'))
+      + run(instruction('GE \\* MERGEFORMAT ') + marker('separate'))
+      + run('<w:rPr><w:b/></w:rPr><w:t>9</w:t>' + marker('end') + '<w:t xml:space="preserve"> of </w:t>')
+      + complexField(' NUMPAGES ', run('<w:t>42</w:t>')) + run('<w:t>.</w:t>') + '</w:p>';
+    const result = read(input({ footer }));
+    const children = result.document.child(2).child(0).content;
+    expect(children.map(node => node.type.name)).toEqual(['text', 'page_field', 'text', 'page_field', 'text']);
+    expect(children.filter(node => node.type.name === 'page_field').map(node => node.attrs.kind)).toEqual(['page-number', 'page-count']);
+    expect(children[1].marks.map(mark => mark.type.name)).toEqual(['strong']);
+    expect(children[3].marks).toHaveLength(0);
+    expect(result.document.child(2).textContent).toBe('Page {page} of {pages}.');
+    expect(result.report.issues).toEqual([]);
+    const exported = exportDOCX(result.document);
+    const nativeFooter = strFromU8(unzipSync(exported.bytes)['word/footer2.xml']!);
+    expect(nativeFooter).toContain('w:instr="PAGE"');
+    expect(nativeFooter).toContain('w:instr="NUMPAGES"');
+    expect(read(exported.bytes).document.toJSON()).toEqual(withDOCXExportDefaults(result.document.toJSON()));
+  });
+
+  it('keeps cached text for locked fields, unsupported switches, nested fields, and body fields', () => {
+    const text = (value: string) => run(`<w:t>${value}</w:t>`);
+    const page = complexField(' PAGE ', text('8'));
+    const footer = '<w:p>'
+      + complexField(' PAGE ', text('7'), ' w:fldLock="true"')
+      + complexField(' PAGE \\* ROMAN ', text('IX'))
+      + complexField(' IF 1 = 1 ', page)
+      + complexField(' PAGE ', text('one') + text('two'))
+      + complexField(' PAGE ', text('4'), ' w:fldLock="false"')
+      + run(marker('begin') + instruction(' NUMPAGES ') + marker('end'))
+      + '</w:p>';
+    const result = read(input({ body: '<w:p>' + page + '</w:p>', footer }));
+    expect(result.document.child(0).textContent).toBe('8');
+    expect(result.document.child(2).textContent).toBe('7IX8onetwo{page}{pages}');
+    expect(result.document.child(2).child(0).content.filter(node => node.type.name === 'page_field').map(node => node.attrs.kind))
+      .toEqual(['page-number', 'page-count']);
+    expect(result.report.issues.map(issue => [issue.code, issue.sourcePart])).toEqual([
+      ['unsupported-complex-word-field', 'word/document.xml'],
+      ['unsupported-complex-word-field', 'word/footer1.xml'],
+    ]);
+  });
+
+  it('reports custom section numbering and preserves cached text instead of substituting default numbering', () => {
+    const section = '<w:headerReference w:type="default" r:id="head"/><w:footerReference w:type="default" r:id="foot"/><w:pgNumType w:start="8"/>';
+    const footer = '<w:p><w:fldSimple w:instr="PAGE">' + run('<w:t>8</w:t>') + '</w:fldSimple>'
+      + complexField(' PAGE ', run('<w:t>8</w:t>')) + '</w:p>';
+    const result = read(input({ section, footer }));
+    expect(result.document.child(2).textContent).toBe('88');
+    expect(result.report.issues.map(issue => issue.code)).toEqual([
+      'section-page-numbering-not-imported', 'unsupported-word-field', 'unsupported-complex-word-field',
+    ]);
   });
 
   it.each([['../media/logo.png', 'word/media/logo.png'], ['../../assets/logo.png', 'assets/logo.png']])('extracts a header image through %s and retains the bytes', (target, part) => {

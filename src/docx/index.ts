@@ -31,6 +31,7 @@ import { isTableAppearance, type TableAppearance } from '../core/table-appearanc
 import { readWordTableWidth, wordTableWidthXML } from './table-width';
 import { createWordTableRegions, mergeWordTableProperties, WORD_TABLE_REGIONS } from './table-style';
 import { rasterType } from './raster-type';
+import type { PageFieldKind } from '../pages/templates';
 export type { DOCXMathExpression } from './math';
 
 export type DOCXIssueSeverity = 'info' | 'warning' | 'error';
@@ -351,8 +352,8 @@ interface ImportMediaContext {
   readonly importedParts: Set<string>;
   readonly sourcePart?: string;
   readonly footnotes?: ReadonlyMap<string, XMLElement>;
-  readonly pageTemplate?: boolean;
-  readonly hiddenFieldContent?: WeakSet<XMLElement>;
+  readonly projectPageFields?: boolean;
+  readonly hiddenFieldContent?: WeakMap<XMLElement, boolean | ComplexPageField>;
   readonly themeFonts?: ReturnType<typeof readWordThemeFonts>;
   readonly styles?: ReturnType<typeof readWordStyleSheet>;
   readonly tableText?: WordTableTextFormatting;
@@ -501,39 +502,87 @@ function embeddedImageNode(
 
 const fieldContainers = /^(?:p|r|tbl|tr|tc|sdt|sdtContent|ins|hyperlink|fldSimple|smartTag|customXml|dir|bdo)$/;
 
-function hiddenComplexFieldContent(story: XMLElement): WeakSet<XMLElement> | undefined {
+function pageFieldKind(instruction: string | undefined): PageFieldKind | undefined {
+  const match = /^(PAGE|NUMPAGES)(?:\s+\\\*\s*(?:ARABIC|MERGEFORMAT))*$/i.exec(instruction?.trim() ?? '');
+  if (match) return match[1]!.toUpperCase() === 'PAGE' ? 'page-number' : 'page-count';
+}
+
+function unlockedField(element: XMLElement): boolean {
+  const lock = wordPageAttribute(element, 'fldLock');
+  return lock === undefined || /^(?:0|false|off)$/.test(lock);
+}
+
+interface ComplexPageField {
+  readonly kind: PageFieldKind;
+  readonly resultRun?: XMLElement;
+}
+
+interface OpenComplexField {
+  readonly begin: XMLElement;
+  separator?: XMLElement;
+  page?: { readonly paragraph: XMLElement; instruction: string; resultRun?: XMLElement };
+}
+
+function hiddenComplexFieldContent(story: XMLElement, projectPageFields = false): ImportMediaContext['hiddenFieldContent'] {
   const boundaries = new Map<XMLElement, number>();
-  const open: [begin: XMLElement, separator?: XMLElement][] = [];
-  function walk(parent: XMLElement, visit: (item: XMLElement, parent: XMLElement) => void) {
+  const pageFields = new Map<XMLElement, ComplexPageField>();
+  const open: OpenComplexField[] = [];
+  function walk(parent: XMLElement, visit: (item: XMLElement, parent: XMLElement, grandparent?: XMLElement) => void, grandparent?: XMLElement) {
     for (const item of elements(parent)) {
-      visit(item, parent);
+      visit(item, parent, grandparent);
       const name = localName(item.name);
-      if (fieldContainers.test(name) && expandedName(item) === `${WORD_NS}|${name}`) walk(item, visit);
+      if (fieldContainers.test(name) && expandedName(item) === `${WORD_NS}|${name}`) walk(item, visit, parent);
     }
   }
   // Pair markers before hiding anything. An unclosed field leaves its ordinary
   // runs visible. Story boundaries also prevent an orphan marker hiding a note.
-  walk(story, (item, parent) => {
-    if (localName(item.name) !== 'fldChar' || expandedName(item) !== `${WORD_NS}|fldChar`
-      || expandedName(parent) !== `${WORD_NS}|r`) return;
-    const type = wordPageAttribute(item, 'fldCharType');
-    if (type === 'begin') open.push([item]);
-    else if (type === 'separate') {
-      const field = open.at(-1);
-      if (field) field[1] ??= item;
-    } else if (type === 'end') {
-      const field = open.pop();
-      if (field) {
-        boundaries.set(field[0], 1).set(field[1] ?? item, -1);
+  walk(story, (item, parent, grandparent) => {
+    const field = open.at(-1);
+    const page = field?.page;
+    const name = localName(item.name);
+    if (name === 'fldChar' && expandedName(item) === `${WORD_NS}|fldChar`
+      && expandedName(parent) === `${WORD_NS}|r`) {
+      const type = wordPageAttribute(item, 'fldCharType');
+      if (type === 'begin') {
+        if (field) field.page = undefined;
+        const project = projectPageFields && !field && grandparent && expandedName(grandparent) === `${WORD_NS}|p` && unlockedField(item);
+        open.push({ begin: item, page: project ? { paragraph: grandparent, instruction: '' } : undefined });
+      } else if (type === 'separate' && field) {
+        if (field.separator) field.page = undefined;
+        field.separator ??= item;
+      } else if (type === 'end' && field) {
+        open.pop();
+        const kind = page && pageFieldKind(page.instruction);
+        if (kind) pageFields.set(field.begin, { kind, resultRun: page.resultRun });
+        boundaries.set(field.begin, 1).set(kind ? item : field.separator ?? item, -1);
+      } else if (field) {
+        field.page = undefined;
       }
+    } else if (field && page) {
+      // A page field is one inline atom. Leave nested fields, other content,
+      // or differently styled cached runs in their ordinary text form.
+      const word = expandedName(item) === `${WORD_NS}|${name}`;
+      if (word && ((name === 'r' && parent === page.paragraph) || name === 'rPr')) return;
+      if (word && name === 'instrText' && !field.separator) {
+        page.instruction += textContent(item);
+        if (page.instruction.length <= 100) return;
+      } else if (word && name === 't' && field.separator && (!page.resultRun || page.resultRun === parent)
+        && /^\s*\d*\s*$/.test(textContent(item))) {
+        page.resultRun = parent;
+        return;
+      }
+      field.page = undefined;
     }
   });
   if (!boundaries.size) return;
-  const hidden = new WeakSet<XMLElement>();
+  const hidden = new WeakMap<XMLElement, boolean | ComplexPageField>();
   let depth = 0;
+  let projected = false;
   walk(story, item => {
     depth += boundaries.get(item) ?? 0;
-    if (depth) hidden.add(item);
+    const field = pageFields.get(item);
+    if (field || !depth) projected = Boolean(field);
+    if (depth) hidden.set(item, field ?? projected);
   });
   return hidden;
 }
@@ -549,6 +598,9 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
     }, media.tableText) : run;
     return runMarks(effective, schema, hyperlink, issues, path, media.themeFonts);
   };
+  const appendPageField = (kind: PageFieldKind, run?: XMLElement, hyperlink?: string) => {
+    output.push(schema.node('page_field', { kind }, [], undefined, run ? projectedMarks(run, hyperlink) : []));
+  };
   const appendText = (value: string, marks: readonly Mark[], explicitEmpty = false) => {
     if (!value && !explicitEmpty) return;
     const previous = output.at(-1);
@@ -560,10 +612,9 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
     const name = localName(element.name);
     if (name === 'fldSimple' && expandedName(element) === `${WORD_NS}|fldSimple`) {
       if (media.hiddenFieldContent?.has(element)) return;
-      const field = media.pageTemplate && /^(PAGE|NUMPAGES)(?:\s+\\\*\s+MERGEFORMAT)?$/i.exec((wordPageAttribute(element, 'instr') ?? '').trim());
-      if (field && schema.nodes.page_field) {
-        const firstRun = descendants(element, 'r')[0];
-        output.push(schema.node('page_field', { kind: field[1]!.toUpperCase() === 'PAGE' ? 'page-number' : 'page-count' }, [], undefined, firstRun ? projectedMarks(firstRun, hyperlink) : []));
+      const kind = media.projectPageFields && unlockedField(element) && pageFieldKind(wordPageAttribute(element, 'instr'));
+      if (kind) {
+        appendPageField(kind, descendants(element, 'r')[0], hyperlink);
       } else {
         issues.push({ code: 'unsupported-word-field', severity: 'warning', message: 'Only the cached result of the Word field, if present, was imported.', path, sourcePart });
         elements(element).forEach(item => visit(item, hyperlink));
@@ -613,7 +664,9 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
         const itemName = localName(item.name);
         if (itemName === 'oMath' || itemName === 'oMathPara') visit(item, hyperlink);
         else if (itemName === 'instrText' || itemName === 'fldChar') {
-          if (!reportedComplexField && expandedName(item) === `${WORD_NS}|${itemName}`
+          const field = media.hiddenFieldContent?.get(item);
+          if (typeof field === 'object') appendPageField(field.kind, field.resultRun ?? element, hyperlink);
+          else if (field !== true && !reportedComplexField && expandedName(item) === `${WORD_NS}|${itemName}`
             && (itemName === 'instrText' || wordPageAttribute(item, 'fldCharType') === 'begin')) {
             reportedComplexField = true;
             issues.push({ code: 'unsupported-complex-word-field', severity: 'warning', message: 'Word field instructions were omitted. Ordinary cached result text remains editable.', path, sourcePart });
@@ -1731,6 +1784,15 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     if (sections.length > 1) issues.push({ code: 'section-templates-not-imported', severity: 'warning', message: 'Multiple Word sections require section-scoped templates. Their headers/footers were not flattened into one global template set; retain the original.', sourcePart: 'word/document.xml' });
     else if (sections.length === 1) {
       const section = sections[0]!;
+      const pageNumbering = wordStyleChild(section, 'pgNumType');
+      const customNumbering = pageNumbering && (
+        (wordPageAttribute(pageNumbering, 'fmt') ?? 'decimal') !== 'decimal'
+        || (wordPageAttribute(pageNumbering, 'start') ?? '1') !== '1'
+        || wordPageAttribute(pageNumbering, 'chapStyle') !== undefined
+        || wordPageAttribute(pageNumbering, 'chapSep') !== undefined
+      );
+      const projectPageFields = Boolean(schema.nodes.page_field && !customNumbering);
+      if (customNumbering) issues.push({ code: 'section-page-numbering-not-imported', severity: 'warning', message: 'Custom Word section numbering was omitted. Page fields retain only their cached results.', sourcePart: 'word/document.xml' });
       readExtraParts(['word/settings.xml']);
       const settings = parse('word/settings.xml');
       const on = (item?: XMLElement) => Boolean(item) && !['0', 'false', 'off'].includes(attr(item, 'val') ?? '');
@@ -1766,7 +1828,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
           const story = root && elements(root).find(item => expandedName(item) === `${WORD_NS}|${kind === 'header' ? 'hdr' : 'ftr'}`);
           if (!story) throw new Error('Invalid DOCX header/footer root.');
           const start = issues.length;
-          const content = parseBlocks(story, schema, { ...media, pageTemplate: true, sourcePart: target, relationships: relationshipMap(parse(relPart)), restoredMath: new Map(), hiddenFieldContent: hiddenComplexFieldContent(story) }, numbering, issues, [blocks.length]);
+          const content = parseBlocks(story, schema, { ...media, projectPageFields, sourcePart: target, relationships: relationshipMap(parse(relPart)), restoredMath: new Map(), hiddenFieldContent: hiddenComplexFieldContent(story, projectPageFields) }, numbering, issues, [blocks.length]);
           for (let index = start; index < issues.length; index++) issues[index] = { ...issues[index]!, sourcePart: target };
           blocks.push(schema.node(`page_${kind}`, { variant }, content.length ? content : [schema.node('paragraph')]));
           importedStories.add(target);

@@ -650,17 +650,22 @@ Native templates can move relative to ordinary Fountain blocks after reopening.
 Original style inheritance, distances from page edges, section layout and exact
 template positions are not preserved by this change.
 
-Simple native `PAGE`/`NUMPAGES` fields, optionally with `MERGEFORMAT`, map to
-`page_field` nodes and export as dynamic fields. Their cached export value is a
-placeholder and requires the receiving application to recalculate it. The
-independent browser viewer leaves the fixture's page-number field blank: **field
-structure is verified, displayed page-number fidelity is not**. Complex or other
-field instructions are omitted with a warning. This also applies to unsupported
-fields in the document body and footnotes. Ordinary cached result runs remain
-editable and export as static text. A nested field's cached result stays
-hidden while it belongs to an enclosing instruction. Marker pairing spans
-paragraphs within the same story. Unclosed fields leave ordinary runs visible.
-Field evaluation and preservation of dynamic field structure remain open.
+Native `PAGE`/`NUMPAGES` fields in active headers and footers map to
+`page_field` nodes and export as dynamic fields. The importer accepts simple
+fields and closed, non-nested complex fields in one paragraph, with optional
+`ARABIC` or `MERGEFORMAT` switches. Complex fields may have no cached
+result or one numeric result run, whose supported formatting is retained.
+The export asks the receiving application to recalculate the numbers. The
+Conversion Lab and Chromium print PDF updated the footer after inserting a
+page break. LibreOffice 24.2.7.2 showed pages 1–2 on the source and pages 1–3
+on the downloaded DOCX. The independent browser DOCX viewer and Microsoft
+Word remain unverified for this fixture.
+
+Locked fields, custom section numbering, unsupported switches and other Word
+fields fall back to editable cached text with a warning. This includes fields
+in the document body and footnotes. Cached content inside an enclosing field
+instruction stays hidden. Marker pairing spans paragraphs within a story, and
+unclosed fields leave ordinary runs visible.
 [Word complex field markers](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.fieldchar).
 
 The [Microsoft header-reference documentation](https://learn.microsoft.com/en-us/office/open-xml/word/how-to-replace-the-header-in-a-word-processing-document)

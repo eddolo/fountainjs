@@ -103,7 +103,7 @@ test('keeps native form emptiness custom policy failures and canceled invalid ev
 test('validates required documents custom errors and labels through the native form workshop', async ({ page }, info) => {
   await webComponentValidationJourney(page, info);
 });
-import { conversionCellAlignmentJourney, conversionLabJourney, conversionPagePreviewJourney, conversionRowHeightJourney, conversionRowSplittingJourney, conversionScientificPreviewJourney, conversionSlowImagePreviewJourney, conversionTableIndentJourney, conversionWordHyperlinksJourney, conversionWordHyphensJourney } from './conversion-lab-journey';
+import { conversionCellAlignmentJourney, conversionComplexPageFieldsJourney, conversionLabJourney, conversionPagePreviewJourney, conversionRowHeightJourney, conversionRowSplittingJourney, conversionScientificPreviewJourney, conversionSlowImagePreviewJourney, conversionTableIndentJourney, conversionWordHyperlinksJourney, conversionWordHyphensJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
 import { childOffsetJourney } from './child-offset-journey';
 
@@ -319,6 +319,17 @@ test('conversion lab preserves Word hyphens through editing, preview and DOCX re
 
 test('conversion lab preserves Word links on line breaks and linked images', async ({ page }, info) => {
   await conversionWordHyperlinksJourney(page, info);
+});
+
+test('conversion lab recalculates complex Word page fields after editing and DOCX reopen', async ({ page }, info) => {
+  const pdf = await conversionComplexPageFieldsJourney(page, info);
+  if (pdf) {
+    const pages = await extractPDFPageText(pdf);
+    expect(pages).toHaveLength(3);
+    expect(pages[0]).toContain('Draft summary Page 1 of 3');
+    expect(pages[1]).toContain('Review findings Page 2 of 3');
+    expect(pages[2]).toContain('Closing notes Page 3 of 3');
+  }
 });
 
 test('conversion lab preserves Word table indentation in the editor, preview, and reopened DOCX', async ({ page }, info) => {

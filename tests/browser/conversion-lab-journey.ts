@@ -1,8 +1,74 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
 import { readFile, writeFile } from 'node:fs/promises';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
-import { Schema, StarterKit, MarkdownImporter } from 'fountainjs-editor';
+import { Schema, StarterKit, MarkdownImporter, composeExtensions } from 'fountainjs-editor';
 import { exportDOCX } from 'fountainjs-editor/docx';
+import { PagesExtension } from 'fountainjs-editor/pages';
+
+export async function conversionComplexPageFieldsJourney(page: Page, info: TestInfo) {
+  const schema = new Schema(composeExtensions([...StarterKit.extensions, PagesExtension]).schema);
+  const paragraph = (text: string, pageBreakBefore = false) => schema.node('paragraph', {
+    layout: { unit: 'pt', pageBreakBefore },
+  }, [schema.text(text)]);
+  const footer = schema.node('page_footer', {}, [schema.node('paragraph', {}, [
+    schema.text('Page '), schema.node('page_field', { kind: 'page-number' }),
+    schema.text(' of '), schema.node('page_field', { kind: 'page-count' }),
+  ])]);
+  const document = schema.node('doc', {
+    pageSettings: { unit: 'pt', width: 360, height: 432, marginTop: 36, marginRight: 36, marginBottom: 36, marginLeft: 36, footerDistance: 18 },
+  }, [paragraph('Draft summary'), paragraph('Review findings', true), paragraph('Closing notes'), footer]);
+  const parts = unzipSync(exportDOCX(document).bytes);
+  const footerPart = 'word/footer1.xml';
+  // Model the begin/separate/end encoding used by Word and LibreOffice.
+  parts[footerPart] = strToU8(strFromU8(parts[footerPart]!).replace(
+    /<w:fldSimple w:instr="(PAGE|NUMPAGES)"[^>]*>(.*?)<\/w:fldSimple>/gu,
+    (_, code, cached) => '<w:r><w:fldChar w:fldCharType="begin"/></w:r>'
+      + '<w:r><w:instrText xml:space="preserve"> ' + code + ' \\* Arabic \\* MERGEFORMAT </w:instrText></w:r>'
+      + '<w:r><w:fldChar w:fldCharType="separate"/></w:r>' + cached
+      + '<w:r><w:fldChar w:fldCharType="end"/></w:r>',
+  ));
+  expect(strFromU8(parts[footerPart]!)).not.toContain('fldSimple');
+  const source = info.outputPath('word-page-fields.docx');
+  await writeFile(source, zipSync(parts));
+
+  await page.goto('/conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles(source);
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: word-page-fields.docx' });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  const preview = workspace.getByRole('region', { name: 'Draft pagination' });
+  const fieldAtoms = editor.locator('[data-fountain-page-field]');
+  const footers = preview.locator('.fountain-page-preview__footer');
+  const build = preview.getByRole('button', { name: 'Build page preview' });
+  await expect(fieldAtoms).toHaveText(['{page}', '{pages}']);
+  await expect(workspace.getByText(/Word field instructions were omitted/)).toHaveCount(0);
+  await build.click();
+  await expect(footers).toHaveText(['Page 1 of 2', 'Page 2 of 2']);
+  await preview.screenshot({ path: info.outputPath('page-fields-before-edit.png') });
+
+  await editor.getByText('Review findings', { exact: true }).click();
+  await workspace.getByRole('button', { name: 'Insert page break after current block' }).click();
+  await build.click();
+  await expect(footers).toHaveText(['Page 1 of 3', 'Page 2 of 3', 'Page 3 of 3']);
+  await preview.screenshot({ path: info.outputPath('page-fields-after-edit.png') });
+  const pdf = info.project.name === 'chromium'
+    ? await page.pdf({ path: info.outputPath('page-fields-print.pdf'), preferCSSPageSize: true })
+    : undefined;
+
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  const pending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const saved = info.outputPath('fountain-page-fields.docx');
+  await (await pending).saveAs(saved);
+  const nativeFooter = strFromU8(unzipSync(await readFile(saved))[footerPart]!);
+  expect(nativeFooter.match(/w:instr="(?:PAGE|NUMPAGES)"/gu)).toEqual(['w:instr="PAGE"', 'w:instr="NUMPAGES"']);
+  await input.setInputFiles(saved);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-page-fields.docx' });
+  const reopenedPreview = reopened.getByRole('region', { name: 'Draft pagination' });
+  await reopenedPreview.getByRole('button', { name: 'Build page preview' }).click();
+  await expect(reopenedPreview.locator('.fountain-page-preview__footer')).toHaveText(['Page 1 of 3', 'Page 2 of 3', 'Page 3 of 3']);
+  return pdf;
+}
 
 export async function conversionWordHyperlinksJourney(page: Page, info: TestInfo) {
   const schema = new Schema(StarterKit.schema);
