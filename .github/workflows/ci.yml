@@ -178,6 +178,8 @@ jobs:
         run: pnpm exec playwright test --project=webkit --output=native-focus-preflight-results --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks|compares list-first code text-click"
       - name: Firefox native RTL selection preflight
         run: pnpm exec playwright test --project=firefox --output=firefox-selection-preflight-results --grep "edits RTL blocks|compares list-first code text-click"
+      - name: Record virtual-layout host-control pointer recovery
+        run: pnpm exec playwright test --config playwright.virtual-host.config.ts
       - name: Remaining headless browser matrix
         run: pnpm exec playwright test --grep-invert "${FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN}"
       - uses: actions/upload-artifact@v4
@@ -205,6 +207,7 @@ jobs:
             test-results/**/virtual-host-*.png
             test-results/**/virtual-host-*.json
             test-results/**/video.webm
+            artifacts/virtual-host-browser/
             test-results/**/anchor-loss-*.png
             test-results/**/anchor-loss-observations.json
             test-results/**/anchor-loss-export.json
