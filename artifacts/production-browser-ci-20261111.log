@@ -1,0 +1,357 @@
+[WebServer] (node:6624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]     ╭─[ dist/react.js:87:2 ]
+[WebServer]     │
+[WebServer]  87 │     /* @__PURE__ */
+[WebServer]     │     ───────┬───────  
+[WebServer]     │            ╰───────── comment ignored due to position
+[WebServer]     │ 
+[WebServer]     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]     │ 
+[WebServer]     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ────╯
+[WebServer] 
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react.js:314:2 ]
+[WebServer]      │
+[WebServer]  314 │     /* @__PURE__ */
+[WebServer]      │     ───────┬───────  
+[WebServer]      │            ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react.js:334:2 ]
+[WebServer]      │
+[WebServer]  334 │     /* @__PURE__ */
+[WebServer]      │     ───────┬───────  
+[WebServer]      │            ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react.js:344:2 ]
+[WebServer]      │
+[WebServer]  344 │     /* @__PURE__ */
+[WebServer]      │     ───────┬───────  
+[WebServer]      │            ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react.js:496:3 ]
+[WebServer]      │
+[WebServer]  496 │        /* @__PURE__ */
+[WebServer]      │        ───────┬───────  
+[WebServer]      │               ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react.js:585:2 ]
+[WebServer]      │
+[WebServer]  585 │     /* @__PURE__ */
+[WebServer]      │     ───────┬───────  
+[WebServer]      │            ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]       ╭─[ dist/react.js:1680:2 ]
+[WebServer]       │
+[WebServer]  1680 │     /* @__PURE__ */
+[WebServer]       │     ───────┬───────  
+[WebServer]       │            ╰───────── comment ignored due to position
+[WebServer]       │ 
+[WebServer]       │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]       │ 
+[WebServer]       │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ──────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]       ╭─[ dist/react.js:1789:2 ]
+[WebServer]       │
+[WebServer]  1789 │     /* @__PURE__ */
+[WebServer]       │     ───────┬───────  
+[WebServer]       │            ╰───────── comment ignored due to position
+[WebServer]       │ 
+[WebServer]       │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]       │ 
+[WebServer]       │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ──────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]       ╭─[ dist/react.js:1932:2 ]
+[WebServer]       │
+[WebServer]  1932 │     /* @__PURE__ */
+[WebServer]       │     ───────┬───────  
+[WebServer]       │            ╰───────── comment ignored due to position
+[WebServer]       │ 
+[WebServer]       │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]       │ 
+[WebServer]       │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ──────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]       ╭─[ dist/react.js:2096:2 ]
+[WebServer]       │
+[WebServer]  2096 │     /* @__PURE__ */
+[WebServer]       │     ───────┬───────  
+[WebServer]       │            ╰───────── comment ignored due to position
+[WebServer]       │ 
+[WebServer]       │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]       │ 
+[WebServer]       │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ──────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]       ╭─[ dist/react.js:2367:2 ]
+[WebServer]       │
+[WebServer]  2367 │     /* @__PURE__ */
+[WebServer]       │     ───────┬───────  
+[WebServer]       │            ╰───────── comment ignored due to position
+[WebServer]       │ 
+[WebServer]       │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]       │ 
+[WebServer]       │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ──────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]       ╭─[ dist/react.js:2418:2 ]
+[WebServer]       │
+[WebServer]  2418 │     /* @__PURE__ */
+[WebServer]       │     ───────┬───────  
+[WebServer]       │            ╰───────── comment ignored due to position
+[WebServer]       │ 
+[WebServer]       │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]       │ 
+[WebServer]       │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ──────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]       ╭─[ dist/react.js:2439:2 ]
+[WebServer]       │
+[WebServer]  2439 │     /* @__PURE__ */
+[WebServer]       │     ───────┬───────  
+[WebServer]       │            ╰───────── comment ignored due to position
+[WebServer]       │ 
+[WebServer]       │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]       │ 
+[WebServer]       │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ──────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]       ╭─[ dist/react.js:2545:2 ]
+[WebServer]       │
+[WebServer]  2545 │     /* @__PURE__ */
+[WebServer]       │     ───────┬───────  
+[WebServer]       │            ╰───────── comment ignored due to position
+[WebServer]       │ 
+[WebServer]       │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]       │ 
+[WebServer]       │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ──────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]       ╭─[ dist/react.js:2553:2 ]
+[WebServer]       │
+[WebServer]  2553 │     /* @__PURE__ */
+[WebServer]       │     ───────┬───────  
+[WebServer]       │            ╰───────── comment ignored due to position
+[WebServer]       │ 
+[WebServer]       │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]       │ 
+[WebServer]       │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ──────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]     ╭─[ dist/react-comments.js:15:2 ]
+[WebServer]     │
+[WebServer]  15 │     /* @__PURE__ */
+[WebServer]     │     ───────┬───────  
+[WebServer]     │            ╰───────── comment ignored due to position
+[WebServer]     │ 
+[WebServer]     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]     │ 
+[WebServer]     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]     ╭─[ dist/react-comments.js:28:2 ]
+[WebServer]     │
+[WebServer]  28 │     /* @__PURE__ */
+[WebServer]     │     ───────┬───────  
+[WebServer]     │            ╰───────── comment ignored due to position
+[WebServer]     │ 
+[WebServer]     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]     │ 
+[WebServer]     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]     ╭─[ dist/react-comments.js:60:7 ]
+[WebServer]     │
+[WebServer]  60 │                  /* @__PURE__ */
+[WebServer]     │                  ───────┬───────  
+[WebServer]     │                         ╰───────── comment ignored due to position
+[WebServer]     │ 
+[WebServer]     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]     │ 
+[WebServer]     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react-comments.js:105:2 ]
+[WebServer]      │
+[WebServer]  105 │     /* @__PURE__ */
+[WebServer]      │     ───────┬───────  
+[WebServer]      │            ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react-comments.js:200:6 ]
+[WebServer]      │
+[WebServer]  200 │               /* @__PURE__ */
+[WebServer]      │               ───────┬───────  
+[WebServer]      │                      ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-comments.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react-comments.js:225:9 ]
+[WebServer]      │
+[WebServer]  225 │                     /* @__PURE__ */
+[WebServer]      │                     ───────┬───────  
+[WebServer]      │                            ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-integrity.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]     ╭─[ dist/react-integrity.js:26:2 ]
+[WebServer]     │
+[WebServer]  26 │     /* @__PURE__ */
+[WebServer]     │     ───────┬───────  
+[WebServer]     │            ╰───────── comment ignored due to position
+[WebServer]     │ 
+[WebServer]     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]     │ 
+[WebServer]     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-tracked-changes.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]     ╭─[ dist/react-tracked-changes.js:52:2 ]
+[WebServer]     │
+[WebServer]  52 │     /* @__PURE__ */
+[WebServer]     │     ───────┬───────  
+[WebServer]     │            ╰───────── comment ignored due to position
+[WebServer]     │ 
+[WebServer]     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]     │ 
+[WebServer]     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-tracked-changes.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react-tracked-changes.js:135:6 ]
+[WebServer]      │
+[WebServer]  135 │               /* @__PURE__ */
+[WebServer]      │               ───────┬───────  
+[WebServer]      │                      ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-versions.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]     ╭─[ dist/react-versions.js:41:2 ]
+[WebServer]     │
+[WebServer]  41 │     /* @__PURE__ */
+[WebServer]     │     ───────┬───────  
+[WebServer]     │            ╰───────── comment ignored due to position
+[WebServer]     │ 
+[WebServer]     │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]     │ 
+[WebServer]     │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-versions.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react-versions.js:133:6 ]
+[WebServer]      │
+[WebServer]  133 │               /* @__PURE__ */
+[WebServer]      │               ───────┬───────  
+[WebServer]      │                      ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] [INVALID_ANNOTATION] A comment "/* @__PURE__ */" in "dist/react-versions.js" contains an annotation that Rolldown cannot interpret due to the position of the comment.
+[WebServer]      ╭─[ dist/react-versions.js:253:7 ]
+[WebServer]      │
+[WebServer]  253 │                  /* @__PURE__ */
+[WebServer]      │                  ───────┬───────  
+[WebServer]      │                         ╰───────── comment ignored due to position
+[WebServer]      │ 
+[WebServer]      │ Help 1: Correct annotation placement: https://rolldown.rs/in-depth/dead-code-elimination#pure
+[WebServer]      │ 
+[WebServer]      │ Help 2: Disable with `checks.invalidAnnotation: false`.
+[WebServer] ─────╯
+[WebServer] 
+[WebServer] (node:10600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+[WebServer]   - import "./vite.config" without a file extension (vite.production-preview.config.ts:2:18). Add the file extension
+[WebServer] Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+Running 6 tests using 1 worker
+
+(node:25432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide (12.2s)
+  ok 2 [chromium] › tests\manual\docx-caption-production-real.spec.ts:3:1 › retains the embedded Word image and its rich caption on the production subpath (1.5s)
+(node:14788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\browser\starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide (4.5s)
+  ok 4 [firefox] › tests\manual\docx-caption-production-real.spec.ts:3:1 › retains the embedded Word image and its rich caption on the production subpath (1.7s)
+(node:15660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\browser\starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide (4.4s)
+  ok 6 [webkit] › tests\manual\docx-caption-production-real.spec.ts:3:1 › retains the embedded Word image and its rich caption on the production subpath (2.6s)
+
+  6 passed (37.4s)

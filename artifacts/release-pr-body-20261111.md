@@ -71,6 +71,12 @@ captures do not establish physical-device, AT or independent Word/PDF coverage.
 
 ## Release gates still open
 
+The reusable CI now includes a required independent `recorded-ui` job. It
+records all eight release journeys and checks six production-subpath starter
+and caption workflows, retaining evidence on success or failure. Local CI-mode
+journeys, production checks, 14 policy checks and root/configuration types pass.
+The main matrix/preflights remain unchanged. Actual hosted results are pending.
+
 Latest demo/tooling follow-up `1e86e5e0` restores rich DOCX image-caption
 previews and scopes the recorded command to its two original audit files.
 Its complete source gate passes 5,271 tests; eight recorded journeys, three

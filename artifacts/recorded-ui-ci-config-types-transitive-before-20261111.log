@@ -1,0 +1,1 @@
+vite.config.ts(5,31): error TS7016: Could not find a declaration file for module './tools/angular-build/vite-plugin.mjs'. 'C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tools/angular-build/vite-plugin.mjs' implicitly has an 'any' type.

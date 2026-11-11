@@ -1,0 +1,8 @@
+Listing tests:
+  [chromium] › browser\starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide
+  [chromium] › manual\docx-caption-production-real.spec.ts:3:1 › retains the embedded Word image and its rich caption on the production subpath
+  [firefox] › browser\starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide
+  [firefox] › manual\docx-caption-production-real.spec.ts:3:1 › retains the embedded Word image and its rich caption on the production subpath
+  [webkit] › browser\starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide
+  [webkit] › manual\docx-caption-production-real.spec.ts:3:1 › retains the embedded Word image and its rich caption on the production subpath
+Total: 6 tests in 2 files

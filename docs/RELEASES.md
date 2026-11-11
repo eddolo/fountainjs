@@ -84,6 +84,9 @@ A release is eligible for npm staging only when all of the following are true:
 10. changes to the reference Lean checker pass `pnpm test:lean-integration`
     against the pinned real Lean toolchain; mocked provider tests alone are not
     release evidence.
+11. the recorded human release journeys and built production-subpath workflows
+    pass in the required `recorded-ui` CI job, with recordings, snapshots and
+    reports retained for review. Automated passes do not replace visual review.
 
 Normal push/PR CI runs every constituent of `pnpm check`, including public API
 snapshot review, Node/Worker smoke tests and the independent math-reference
@@ -92,6 +95,15 @@ the local gate grows. Bun/Deno, browser, real Lean and package-consumer checks
 remain additional jobs/steps. Command coverage is not evidence that an individual
 gate adequately tests its claimed behavior, and the math oracle is not visual
 rendering or whole-paper fidelity certification.
+
+The independent `recorded-ui` runner executes the eight `pnpm audit:ui`
+journeys, then `playwright.production.config.ts` builds the website and checks
+starter downloads and rich image-caption import in Chromium, Firefox and
+WebKit at `/fountainjs/` (six production checks). Rebuild-backed runs stay
+sequential within that checkout and separate from the main browser runner.
+Both evidence uploads run even after failure. The reusable CI called by the
+release workflow includes this required job; actual hosted results remain
+necessary before staging.
 
 `scripts/check-release.mjs` enforces items 1 and 2. On a published release,
 the GitHub Publish npm workflow first calls the same CI used for pull

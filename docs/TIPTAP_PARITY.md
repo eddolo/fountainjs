@@ -2,7 +2,7 @@
 
 ## Current programme status — 2026-11-11
 
-The latest local source checkpoint is `1e86e5e0`: all 5,271 source tests in
+The latest full local source-check checkpoint is `1e86e5e0`: all 5,271 source tests in
 323 files pass, alongside build, package, type, headless, performance, retention,
 format and size gates. Fresh packed ESM/CommonJS consumers and both type
 analyses pass outside the repository without browser globals or optional
@@ -18,6 +18,12 @@ Continuous playback, known DOCX viewer omissions, older-rasterizer differences
 and fresh combined hosted CI remain open boundaries. The broad matrix below
 predates this demo change.
 [Recorded journey evidence](RELEASES.md#recorded-release-journeys--2026-11-11).
+
+The required `recorded-ui` CI job now protects the eight recorded journeys
+and six built-site starter/caption checks on an independent runner. Local
+CI-mode journeys (eight), production checks (six), policy checks (14), and
+root/configuration types pass. Hosted CI is unverified; these executions do
+not add capability rows or certify continuous playback or physical devices.
 
 This includes the reproduced virtual-layout lost-click repair: a measurement
 frame moved a host button during its press. The guard passes 15 recorded

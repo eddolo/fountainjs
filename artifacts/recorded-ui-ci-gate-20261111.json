@@ -1,0 +1,104 @@
+{
+  "sourceCommit": "bbc73358",
+  "date": "2026-11-11",
+  "purpose": "Make the existing recorded human journeys and built production workflows mandatory release CI, not only a local procedure.",
+  "runtimeChanges": false,
+  "hostedCIExecuted": false,
+  "githubAuthentication": "CLI signed out",
+  "newJob": {
+    "name": "recorded-ui",
+    "runner": "ubuntu-latest",
+    "independent": true,
+    "required": true,
+    "continuedOnError": false,
+    "orderedCommands": [
+      "pnpm install --frozen-lockfile",
+      "pnpm exec playwright install --with-deps",
+      "pnpm audit:ui --reporter=list,json",
+      "pnpm exec playwright test --config playwright.production.config.ts --reporter=list,json"
+    ],
+    "evidenceUploads": [
+      {
+        "name": "recorded-ui-release-evidence",
+        "path": "artifacts/manual-ui-audit/",
+        "if-no-files-found": "warn",
+        "retention-days": 7
+      },
+      {
+        "name": "production-browser-evidence",
+        "path": "artifacts/production-browser/",
+        "if-no-files-found": "warn",
+        "retention-days": 7
+      }
+    ],
+    "allUploadsAlways": true
+  },
+  "checks": {
+    "recordedUIWithCIEnv": {
+      "stats": {
+        "startTime": "2026-11-11T18:48:10.412Z",
+        "duration": 75532.057,
+        "expected": 8,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/recorded-ui-ci-local-20261111.log",
+      "jsonReportLocalOnly": "artifacts/recorded-ui-ci-local-20261111.json",
+      "jsonReportSha256": "68c7ee003478b3f68a96fd4677a45370ea766b905a75a47441e75ece0b0a9264"
+    },
+    "builtProduction": {
+      "stats": {
+        "startTime": "2026-11-11T18:46:04.547Z",
+        "duration": 37356.570999999996,
+        "expected": 6,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/production-browser-ci-20261111.log",
+      "jsonReportLocalOnly": "artifacts/production-browser-ci-20261111.json",
+      "jsonReportSha256": "bd44b2670eb0378b30ed9975b0d1c5e26ec242e3d9ca3d8f4294e89d9367b8e7"
+    }
+  },
+  "policyTests": {
+    "passed": 14,
+    "files": 2,
+    "log": "artifacts/recorded-ui-ci-policy-20261111.log"
+  },
+  "typechecks": {
+    "root": {
+      "exitCode": 0,
+      "log": "artifacts/recorded-ui-ci-root-types-20261111.log"
+    },
+    "newConfigurations": {
+      "exitCode": 0,
+      "log": "artifacts/recorded-ui-ci-config-types-20261111.log",
+      "commandIncludes": "--ignoreConfig with explicit module/target options",
+      "boundaryRepair": "tools/angular-build/vite-plugin.d.mts declares the existing JavaScript bridge as a Vite Plugin; runtime implementation unchanged."
+    }
+  },
+  "retainedDiagnostics": [
+    {
+      "log": "artifacts/recorded-ui-ci-config-types-invocation-20261111.log",
+      "cause": "File arguments require --ignoreConfig in the installed TypeScript CLI."
+    },
+    {
+      "log": "artifacts/recorded-ui-ci-config-types-transitive-before-20261111.log",
+      "cause": "Existing internal Angular/Vite JavaScript bridge lacked a declaration for strict configuration checking."
+    }
+  ],
+  "boundaries": [
+    "Local CI=true on Windows does not establish hosted Ubuntu execution.",
+    "Previously recorded visual review remains bounded; no new continuous playback or physical-device claim.",
+    "The last full source gate is the 5271-test 1e86e5e0 checkpoint. This change adds one policy test; only the affected 14 policy tests and typechecks are claimed here.",
+    "No package staging, publication, tag or deployment occurred.",
+    "Packaged documentation changed after the last archive; refresh the archive after final hosted evidence before staging."
+  ],
+  "libraryDistribution": {
+    "files": 1008,
+    "allByteIdenticalTo": "artifacts/release-preflight-19f4dca7/receipt.json",
+    "budgetsChanged": false,
+    "publicAPIChanged": false
+  }
+}

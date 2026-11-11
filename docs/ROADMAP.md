@@ -44,7 +44,7 @@ The beta remains pending until the candidate has the following evidence.
    npm stage and a registry installation establish publication.
 
 The commands and publication procedure are in [RELEASES.md](RELEASES.md).
-The latest local source checkpoint is `1e86e5e0`, including the rich image-caption
+The latest complete local source-check checkpoint is `1e86e5e0`, including the rich image-caption
 preview and recorded-audit repairs. Its library runtime is byte-identical to
 `024ff8fe`, including the virtual-layout host-control repair. It passes all 5,271 source tests in 323 files and the
 package, Node/workerd, type, performance, retention, format and size gates.
@@ -80,6 +80,12 @@ differences and known DOCX viewer omissions remain distinct from these passes.
 The earlier broad browser matrix predates this demo change; fresh combined
 hosted CI remains required.
 [Recorded journey evidence](RELEASES.md#recorded-release-journeys--2026-11-11).
+
+CI now includes a required independent `recorded-ui` job for those eight
+journeys and six built-site starter/caption checks. Local CI-mode execution
+passes eight journeys; the stable production configuration passes all six.
+Fourteen release-policy checks and both configuration/root typechecks pass.
+These validate the new wiring locally; hosted Linux execution is still pending.
 
 ## Remaining parity work
 

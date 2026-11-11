@@ -30,9 +30,9 @@
   "packageReceipt": "artifacts/release-preflight-ff11e640/receipt.json",
   "browserHeadlessPlan": 1084,
   "pending": [
-    "Fresh combined hosted CI and Linux display clipboard validation",
+    "Fresh combined hosted CI, including recorded-ui and Linux display clipboard validation",
     "Continuous recording playback and broader physical-device/AT evidence",
-    "GitHub authentication, matched tag and npm staging/approval",
+    "Refresh archive after final evidence documentation; GitHub authentication, matched tag and npm staging/approval",
     "Registry installation and website deployment"
   ],
   "browserMatrix": {
@@ -117,5 +117,13 @@
     "exitCode": 0,
     "log": "artifacts/release-check-1e86e5e0.log"
   },
-  "recordedReleaseAudit": "artifacts/manual-ui-release-audit-20261111.json"
+  "recordedReleaseAudit": "artifacts/manual-ui-release-audit-20261111.json",
+  "requiredRecordedCI": {
+    "sourceCommit": "bbc73358",
+    "evidence": "artifacts/recorded-ui-ci-gate-20261111.json",
+    "policyTestsPassed": 14,
+    "localCIEnvJourneysPassed": 8,
+    "builtProductionChecksPassed": 6,
+    "hostedExecution": "pending"
+  }
 }
