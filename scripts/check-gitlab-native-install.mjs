@@ -11,7 +11,8 @@ if (execFileSync('docker', ['inspect', '--format', '{{.State.Running}}', 'founta
   throw new Error('Stop the isolated task application before exercising source rollback.');
 const manifest = new URL('artifacts/gitlab-native-browser-install/install.json', root);
 const before = JSON.parse(await readFile(manifest));
-if (before.source !== source || before.restored || before.formatVersion !== 4 || Object.keys(before.files).length !== 13)
+const files = ({ 4: 13, 5: 15 })[before.formatVersion];
+if (before.source !== source || before.restored || !files || Object.keys(before.files).length !== files)
   throw new Error('Unexpected source install generation.');
 const install = restore => execFileSync(process.execPath,
   [fileURLToPath(new URL('scripts/install-gitlab-native-browser.mjs', root)), source, ...(restore ? ['--restore'] : [])], { stdio: 'inherit' });
@@ -30,9 +31,9 @@ const after = JSON.parse(await readFile(manifest));
 for (const [path, digest] of Object.entries(before.files))
   if (after.files[path] !== digest || createHash('sha256').update(await readFile(`${source}/${path}`)).digest('hex') !== digest)
     throw new Error(`Reinstalled source differs: ${path}`);
-await writeFile(new URL('artifacts/gitlab-native-alert-install-roundtrip-20261112.json', root), JSON.stringify({
-  status: 'passed', formatVersion: 4, files: 13, revision: after.revision,
-  checks: ['Guarded thirteen-file source rollback succeeds', 'Ten verified additions are removed',
-    'Exact current source generation is reinstalled', 'All thirteen source digests match'],
+await writeFile(new URL(`artifacts/gitlab-native-${before.formatVersion === 5 ? 'media' : 'alert'}-install-roundtrip-20261112.json`, root), JSON.stringify({
+  status: 'passed', formatVersion: before.formatVersion, files, revision: after.revision,
+  checks: [`Guarded ${files}-file source rollback succeeds`, `${files - prepared.length} verified additions are removed`,
+    'Exact current source generation is reinstalled', `All ${files} source digests match`],
   scope: 'Source rollback with application stopped; compiled deployment rollback remains separate acceptance work',
 }, null, 2) + '\n');

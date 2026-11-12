@@ -887,6 +887,77 @@ products. Nothing in this checkpoint is published.
 [real journey](../../artifacts/gitlab-native-alerts-20261112/report.json),
 [alert contracts](services/README.md#native-gitlab-alerts).
 
+### Native media properties
+
+The image/audio/video adapter retains canonical and resolved URLs separately,
+recovers the description/title pair from GitLab's folded label, and projects image sizes and surrounding links
+back into GitLab Markdown after other edits. The native properties form captures
+one mapped atom, supports undo/redo, validates dimensions and preserves drafts
+through invalid input, conflicting edits, cancellation and real renderer failure.
+The contextual controls open/copy/remove media and use the existing real upload
+picker for file replacement. Native audio/video playback has a separate document
+selection button so editing does not intercept the player's controls.
+
+Actual application testing exposed two public engine defects: deletion of a lone
+inline atom could leave the next typed text in an extra paragraph, and a cold
+replacement image could remain unloaded outside the viewport. The repairs retain
+a text caret in the original paragraph, reserve temporary image geometry and
+reveal selected nodes. Default and custom image renderers pass the same six
+offscreen/delayed-response checks in Chromium, Firefox and WebKit without changing
+saved document attributes. The public CommonJS graph grows 979 bytes from the
+alert checkpoint to 1,458,118 bytes; its aggregate capacity increases by 1 KiB.
+Individual entry, ESM, CSS, semantic and performance limits remain unchanged.
+
+The real upload journey also exposed collapsed audio controls from explicit
+automatic CSS dimensions. Native automatic dimensions now remain unset. Component
+keyboard testing caught a form whose modal footer could not trigger native Enter
+submission; the form now has its own submit control. Failed runs remain evidence,
+not passing product acceptance.
+
+This work does not close the original media-menu requirement. Diagrams, iframe
+editing, drag resizing, all codecs, captions/tracks and all GitLab editor surfaces
+remain unfinished or unverified. The other two complete reference products are
+also unfinished. The showcase is to be built from the working integration and its
+verified capabilities.
+
+All **5,747 root tests/353 files** pass, as do the package/API, Node/Worker/headless,
+format, framework, size and performance/retention gates. A retained table timeout
+under overlapping frontend compilation passes serially and in the four-worker
+full suite without changing its timeout or assertions. The eight upstream suites
+remain **283 passed / 3 failed / 286 total**, with eleven passing media-component
+cases. The original media, specialized-code and reference-menu requirements still
+fail. Nine ordered patches reconstruct the specs; source lint and the guarded
+fifteen-file source rollback/reinstall pass.
+
+The actual Linux Chromium journey passes **21 checks**, including real image/WAV/
+VP8 upload and playback, file replacement, canonical clipboard copy, offline draft
+recovery, blocked-save recovery, source-mode handoff, exact saved Markdown, reader
+reopen, private issue/upload refusal and application restart. Eighteen actual
+renderer fixtures now include titled and mixed media. Nine component states at
+desktop/360px widths pass with zero accessibility violations, separately from the
+application evidence. Existing reader image intermittency and broad cross-engine,
+physical-device and full-workflow acceptance remain open.
+
+To repeat media acceptance after building/installing the matching native runtime
+and rebuilding the pinned application, run in its Linux browser environment:
+
+```sh
+node scripts/create-gitlab-media-test-assets.mjs
+node scripts/run-gitlab-native-browser-audit.mjs --media
+```
+
+The generator makes real PNG, PCM WAV and VP8 WebM files for the actual upload
+picker. `--media-fixtures` separately captures renderer structures with illustrative
+asset URLs; those fixtures are not playback/upload evidence. Browser recordings
+and failures are retained. The immediate playback screenshot caught the modal's
+closing fade; clean editor frames at 146/150 seconds are extracted from the same
+retained recording. The restarted reader screenshot shows the decoded video,
+audio controls and figure. No backend response or success outcome is fabricated.
+
+[Checkpoint evidence](../../artifacts/gitlab-native-media-integration-20261112.json),
+[real journey](../../artifacts/gitlab-native-media-20261112/report.json),
+[media contracts](services/README.md#native-image-audio-and-video-properties).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

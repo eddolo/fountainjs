@@ -20,6 +20,7 @@ import {
   type Transaction,
 } from '../core';
 import { isCompositionKey } from '../core/composition-key';
+import { isInlineImageLoadingMutation } from './inline-image-loading';
 import {
   createCommandManager,
   type CommandChecks,
@@ -218,7 +219,7 @@ export class EditorView {
     this.selections.sync(this.editor.state.selection);
   }
 
-  /** Reveal the current DOM selection without changing document state. */
+  /** Reveal the current selection without changing document state. */
   scrollSelectionIntoView(): void {
     if (!this.destroyed) this.revealCaret();
   }
@@ -362,6 +363,12 @@ export class EditorView {
   };
 
   private revealCaret(): void {
+    const selection = this.editor.state.selection;
+    if (selection instanceof NodeSelection) {
+      this.dom.querySelector<HTMLElement>(`[data-fountain-path="${selection.nodePath.join('.')}"]`)
+        ?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+      return;
+    }
     const native = this.dom.ownerDocument.getSelection(), ownerWindow = this.dom.ownerDocument.defaultView;
     if (!native?.isCollapsed || !native.rangeCount || !native.focusNode || !this.dom.contains(native.focusNode) || !ownerWindow) return;
     const element = native.focusNode.nodeType === 1 ? native.focusNode as HTMLElement : native.focusNode.parentElement;
@@ -979,6 +986,7 @@ export class EditorView {
         'draggable',
       ].includes(mutation.attributeName ?? '')) continue;
       if (isEditablePageStyleMutation(mutation)) continue;
+      if (isInlineImageLoadingMutation(mutation)) continue;
       const entry = [...this.nodeViews]
         .sort((left, right) => right.path.length - left.path.length)
         .find(({ nodeView }) => nodeView.dom === mutation.target || nodeView.dom.contains(mutation.target));

@@ -719,7 +719,13 @@ const limits = Object.freeze({
   // bytes capacity; every entry/ESM/CSS/performance/retention limit stays fixed.
   // Required-container removal and selection recovery measure 1,457,032 bytes
   // (+248 bytes). Add 256 bytes; other acceptance limits remain unchanged.
-  'all CommonJS runtime code': 1423 * kibibyte,
+  // Exact caret placement after inline-atom deletion adds 217 bytes, reaching
+  // 1,457,356. Add 256 bytes; entry, ESM, CSS and performance limits stay fixed.
+  // Cold inline-image replacement reserves visible loading geometry without
+  // changing document attributes or bypassing custom renderers. Together with
+  // caret recovery and explicit node reveal: 1,458,118 bytes (+979 from alerts).
+  // Allow 1 KiB total; entry, ESM, CSS and performance limits stay fixed.
+  'all CommonJS runtime code': 1424 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

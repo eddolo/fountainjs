@@ -90,8 +90,8 @@
   "installation": {
     "formatVersion": 4,
     "files": 13,
-    "manifest": "artifacts/gitlab-native-browser-install/install.json",
-    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "manifest": "artifacts/gitlab-native-alert-checkpoint-install-20261112.json",
+    "runtimeManifest": "artifacts/gitlab-native-alert-checkpoint-build-20261112.json",
     "testedRuntimeManifest": "artifacts/gitlab-native-alert-tested-build-20261112.json",
     "finalWhitespaceCleanup": "Removing an extra EOF blank line changes one source-input hash; rebuilt runtime bytes and all installed file digests remain identical to the tested generation",
     "previousManifest": "artifacts/gitlab-native-code-checkpoint-install-20261112.json",

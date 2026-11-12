@@ -1,0 +1,20 @@
+{
+  "scope": "Eight isolated component states and narrow properties form, with fixed renderer fixtures and local real media files; separate from actual GitLab upload/persistence acceptance",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "80fa31cd359661dcceb122d50ba0aa0d17ccf9e6d2a08e62510af5e87860490b",
+  "status": "failed",
+  "checks": [
+    "image/1280px: no accessibility violations, page errors or horizontal overflow"
+  ],
+  "pages": [
+    {
+      "id": "image",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@fafa43b435057030990389e066077f0f.webm"
+    }
+  ],
+  "sources": {},
+  "error": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByRole('dialog', { name: 'Media properties', exact: true })\nExpected: 0\nReceived: 1\nTimeout:  5000ms\n\nCall log:\n  - Expect \"to.have.count\" with timeout 5000ms\n  - waiting for getByRole('dialog', { name: 'Media properties', exact: true })\n    14 × locator resolved to 1 element\n       - unexpected value \"1\"\n"
+}

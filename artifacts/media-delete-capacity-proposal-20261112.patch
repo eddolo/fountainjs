@@ -1,0 +1,13 @@
+diff --git a/scripts/check-build-budgets.mjs b/scripts/check-build-budgets.mjs
+index 4e371a27..28abf499 100644
+--- a/scripts/check-build-budgets.mjs
++++ b/scripts/check-build-budgets.mjs
+@@ -722 +722,7 @@ const limits = Object.freeze({
+-  'all CommonJS runtime code': 1423 * kibibyte,
++  // Exact caret placement after inline-atom deletion adds 217 bytes, reaching
++  // 1,457,356. Add 256 bytes; entry, ESM, CSS and performance limits stay fixed.
++  // Cold inline-image replacement reserves visible loading geometry without
++  // changing document attributes or bypassing custom renderers. Together with
++  // caret recovery and explicit node reveal: 1,458,118 bytes (+979 from alerts).
++  // Allow 1 KiB total; entry, ESM, CSS and performance limits stay fixed.
++  'all CommonJS runtime code': 1424 * kibibyte,

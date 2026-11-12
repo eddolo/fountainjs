@@ -2,7 +2,27 @@
 
 Updated 2026-11-12.
 
-The latest GitLab checkpoint adds native alerts: all five types, direct literal
+The latest GitLab checkpoint adds native image/audio/video properties, canonical
+URL retention, replacement uploads, dimensions, deletion, undo/redo and native
+playback. Actual testing repaired inline-atom caret recovery, cold-image geometry
+and node reveal, collapsed audio controls, Enter submission and description/title
+recovery from GitLab's folded media labels. All **5,747 unit tests/353 files** pass,
+along with package/API, runtime/headless, format, framework, size and performance/
+retention gates. A retained table timeout under overlapping compilation passes
+serially and in the bounded four-worker full suite without changing assertions
+or timeouts. Six default/custom image-renderer journeys pass across Chromium,
+Firefox and WebKit. The actual GitLab journey passes **21 checks**, including real
+uploads/playback, blocked-save recovery, source switching, saved reader/reopen,
+private access refusal and application restart. Nine isolated component states
+pass keyboard/clipboard/accessibility checks. GitLab's eight-suite set remains
+**283 passed / 3 failed / 286 total**; unfinished media, specialized-code and
+reference-menu requirements remain open. Fifteen-file guarded source rollback/
+reinstall and nine ordered patches verify. Aggregate CJS capacity grows by 1 KiB
+for 979 measured bytes; entry, ESM, CSS, semantic and performance limits stay fixed.
+This is incomplete product work, with no parity-row promotion or publication.
+[Current evidence and limits](../integrations/gitlab/README.md#native-media-properties).
+
+The preceding GitLab checkpoint adds native alerts: all five types, direct literal
 title/body editing, insertion, conversion to text, deletion, undo/redo and keyboard/
 mobile input boundaries. Actual renderer fixtures preserve generated versus
 authored default-word titles. Structural export retains nested list, code and

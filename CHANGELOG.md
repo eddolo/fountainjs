@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Keep cold inline-image replacements visible while lazy loading, then release
+  their temporary minimum geometry after decoding. Preserve custom renderers,
+  authored dimensions, and the document's saved/exported attributes.
+  Explicit selection reveal also scrolls selected nodes into view, including
+  image replacements below the current viewport.
+
+- Keep the caret at a deleted inline atom's position when neighboring text
+  cannot own it. Typing after deletion, including undo/redo, stays in the same
+  paragraph instead of creating an extra blank paragraph or replacing a neighbor.
+
 - Add opt-in `MarkdownExportOptions.omitTrailingCaret` to omit only the editor's
   still-empty automatic trailing paragraph. Authored blank paragraphs and the
   document itself remain unchanged; default export behavior is preserved.

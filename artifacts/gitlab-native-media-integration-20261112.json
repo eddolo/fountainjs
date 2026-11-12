@@ -1,0 +1,190 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-native-product-integration",
+  "parentRevision": "f92617d363b3aa7555fcd80961188749fa996007",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Native image/audio/video source normalization, canonical/display URL separation and description/title recovery from actual GitLab renderer labels",
+    "Mapped selected-media properties, dimensions, deletion, open/copy URL and real replacement upload with native undo/redo",
+    "Real WAV/VP8 native playback, failed-URL draft retention, cancellation/conflict and read-only boundaries",
+    "Public inline-atom deletion caret recovery, temporary cold-image geometry and explicit node-selection reveal preserving custom renderers and saved attributes"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Linux Chromium",
+    "checks": 21,
+    "report": "artifacts/gitlab-native-media-20261112/report.json",
+    "issueIID": 65,
+    "runtimeSHA256": "077589e823310718235568b2d2fa23fc0e85178925d782dd9aec3c40deb8d7f7",
+    "errors": [],
+    "media": {
+      "image": {
+        "canonical": "/uploads/3592c9b1349535e0c0c2cb7873466bd1/fountain-figure.png",
+        "alt": "Replacement figure",
+        "title": "Replacement title",
+        "width": 240
+      },
+      "replacedUpload": "/uploads/c6fdd9e88e85d4ecf7b6d0496a7cbc07/fountain-figure-replacement.png",
+      "audio": {
+        "canonical": "/uploads/25ec87be3d955ed8f29c2773ca46584c/fountain-recording.wav",
+        "alt": "Reviewed audio",
+        "title": "Retained recording title"
+      },
+      "video": {
+        "canonical": "/uploads/71f5d743af6594e1139ea5efcd29fb30/fountain-recording.webm",
+        "alt": "Reviewed video",
+        "title": "Preserved video title",
+        "width": 280
+      },
+      "playback": {
+        "audio": {
+          "currentTime": 1,
+          "duration": 1
+        },
+        "video": {
+          "currentTime": 0.008226,
+          "width": 320,
+          "height": 180,
+          "frames": 8
+        }
+      }
+    },
+    "visualReview": "Native image replacement/properties, offline draft, actual playable controls, expanded saved/reopened/restarted reader and desktop/360px component states visually inspected",
+    "recording": "artifacts/gitlab-native-media-20261112/recordings/page@683ff77a554afa3f7f15cf7db877dd13.webm",
+    "visualCaptureLimits": "Immediate playback PNG includes a modal closing fade; clean editor frames at 146/150 seconds come directly from the retained recording. Immediate saved-reader video can still be loading; the restart image shows its decoded frame."
+  },
+  "components": {
+    "status": "passed",
+    "checks": 14,
+    "pages": 9,
+    "violations": 0,
+    "report": "artifacts/gitlab-native-media-storybook-20261112/report.json",
+    "scope": "Eight isolated component states and narrow properties form, with fixed renderer fixtures and local real media files; separate from actual GitLab upload/persistence acceptance"
+  },
+  "upstream": {
+    "report": "artifacts/gitlab-native-media-jest-final-20261112.json",
+    "suites": 8,
+    "passed": 283,
+    "failed": 3,
+    "total": 286,
+    "pending": 0,
+    "remainingFailures": [
+      "ContentEditor renders media bubble menu",
+      "ContentEditor renders codeBlock bubble menu",
+      "ContentEditor renders reference bubble menu"
+    ],
+    "interpretation": "The complete selected suite still fails; unfinished media/code/reference requirements remain unchanged and unskipped"
+  },
+  "rootGates": {
+    "units": 5747,
+    "files": 353,
+    "unitLog": "artifacts/gitlab-native-media-full-unit-final-20261112.log",
+    "prerequisites": "artifacts/gitlab-native-media-prerequisites-final-20261112.log",
+    "performance": "artifacts/gitlab-native-media-performance-final-20261112.log",
+    "publicImageBrowsers": "artifacts/gitlab-native-media-inline-image-reveal-20261112.log",
+    "publicImageScreenshots": "artifacts/gitlab-native-media-image-browsers-20261112/",
+    "aggregateCommonJSBytes": 1458118,
+    "aggregateCommonJSLimitBytes": 1458176,
+    "commonJSGrowthBytes": 979,
+    "acceptanceLimits": "Aggregate CJS capacity +1 KiB; individual entry, ESM, CSS, semantic and performance limits unchanged",
+    "publicAPISnapshot": "450 declaration files; only the existing selection-reveal method comment changes its two declaration hashes",
+    "performanceIsolation": "Application, browser audits, frontend compilers and unit runners stopped during performance/retention gates",
+    "unitConcurrency": "Four workers; unchanged assertions/timeouts. Earlier overlapping frontend build produced one retained table timeout; serial table and bounded full suite pass"
+  },
+  "installation": {
+    "formatVersion": 5,
+    "files": 15,
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "roundtrip": "artifacts/gitlab-native-media-install-roundtrip-20261112.json",
+    "patchVerification": "artifacts/gitlab-native-media-patch-verification-20261112.json",
+    "sourceLint": "artifacts/gitlab-native-media-eslint-final-20261112.log",
+    "build": "artifacts/gitlab-native-media-rspack-titles-final-20261112.log",
+    "formattingVerification": "artifacts/gitlab-native-media-lf-verification-20261112.log",
+    "rollbackScope": "Guarded source rollback/reinstall; compiled deployment rollback remains open"
+  },
+  "retainedFailures": [
+    {
+      "path": "artifacts/gitlab-native-media-replacement-failure-20261112/report.json",
+      "finding": "Cold replacement image had no geometry"
+    },
+    {
+      "path": "artifacts/gitlab-native-media-reveal-failure-20261112/report.json",
+      "finding": "Selected offscreen image was not revealed for loading"
+    },
+    {
+      "path": "artifacts/gitlab-native-media-audio-failure-20261112/report.json",
+      "finding": "Explicit automatic CSS dimensions collapsed native audio controls"
+    },
+    {
+      "path": "artifacts/gitlab-native-media-keyboard-failure-20261112/report.json",
+      "finding": "Modal properties form lacked native Enter submission"
+    },
+    {
+      "path": "artifacts/gitlab-native-media-save-failure-20261112/report.json",
+      "finding": "Saved titled media refused visual reopening"
+    },
+    {
+      "path": "artifacts/gitlab-native-media-title-failure-20261112/report.json",
+      "finding": "Detailed diagnosis retained full saved source and ambiguous-label error"
+    },
+    {
+      "path": "artifacts/gitlab-native-media-full-unit-parallel-failure-20261112.log",
+      "finding": "Table timeout while frontend compilation overlapped unbounded unit workers"
+    }
+  ],
+  "remaining": [
+    "Complete media menu including diagrams/iframes/drag resizing and all codecs/tracks",
+    "Specialized code and reference menus, remaining GitLab dialect and all editor surfaces",
+    "Roles, multi-user, reconnect and full workflow acceptance",
+    "Cross-engine full application, physical mobile/IME and assistive technology",
+    "Earlier reader image intermittency",
+    "Compiled deployment rollback",
+    "Other two complete reference products",
+    "Hosted CI/release/publication"
+  ],
+  "publication": "None; no parity row promoted",
+  "sourceHashes": {
+    "CHANGELOG.md": "c18b45f65d925bb833865c32d4d666dcaae219a9c27596bbc927e4dd1945c88d",
+    "api-surface.json": "2da4730785e3e22078385c1de9eabc7b3fdabc3e236058ed786dc31d7e54667e",
+    "docs/PROFESSIONAL_REFERENCE_PRODUCTS.md": "fee0c913071b351d8897cbbf0022875b57b9fca3bece732c62e6377e97c055dc",
+    "docs/ROADMAP.md": "291e34fa136532e32d8b36998a8d4f70095ff96c73f9a3110794d90f031b045b",
+    "integrations/gitlab/README.md": "e53afb08a320ddf762aa4ac1592b7e1e2a1c5f0b439ae686881d9b08d32892ed",
+    "integrations/gitlab/components/fountain_content_editor.vue": "88494e0d8b12fcc3c2d2e55d7db3a5a63aef54752f9206af859989786f96971c",
+    "integrations/gitlab/runtime/browser.ts": "3302c3a2afbba6794ee7f3f8f21f8116459114dfb23409b29e662856f77e8eb1",
+    "integrations/gitlab/services/README.md": "96e8b1adf49ec89032f0a874a9b9a75f54dd50a98d2479c700fd3e9e1aeb0d0c",
+    "integrations/gitlab/services/content_editor.ts": "3b290e3557a5dc52cd703155ef4d7cf659a79ec3cb039f9f0a2a5bcb2dbdb9ec",
+    "integrations/gitlab/services/markdown_codec.ts": "c3cbcb50d0b8a8d69069b6f4d1f078f6905ad20a7964d169dcc25bce6e40cf0f",
+    "playwright.config.ts": "e560eff27f15f13eba28210759d5c97a9401fe7a81bd9687caec96e8213dd372",
+    "scripts/audit-gitlab-product-baseline.mjs": "1e9291ea0f31e87c6bef1b8427586f7d3ab392a3edb0cfd9214841d34392d930",
+    "scripts/build-gitlab-native-runtime.mjs": "34cf823285722f2683c0d95cfba8c9df54b4a78e26dfc187a31dabf1a0a67471",
+    "scripts/capture-gitlab-alert-rendering.mjs": "30d40ef114a4e54b450665770ad56e96e76a075a2e038f73c099aed84022fedb",
+    "scripts/check-build-budgets.mjs": "2079363dd946f8f6a3ee5dabd781e8d438a088584337b8d40d0d24a76f4e9a75",
+    "scripts/check-gitlab-native-install.mjs": "f84b5e364cca8b10661347ea86958ca0b3cff328bac1c54a9480ecdc6a50f7cb",
+    "scripts/check-gitlab-native-patches.mjs": "33855eae26c7b369cc9b5ceb82fd4abf731d9d755239f12754cace20206db06a",
+    "scripts/install-gitlab-native-browser.mjs": "8694f787aac4cffabb37ebbfb82c116add360f6c707ba1ba9b3480b615c691b7",
+    "scripts/prepare-gitlab-link-storybook.mjs": "fbea7ea0bb003847833446fbef4f4475702c39d4a8e2114f0e7f107d767fd394",
+    "scripts/run-gitlab-native-browser-audit.mjs": "7994e4b781ddd236d52d858226d5f086ca7cf38177ae84a662be14216329d545",
+    "src/core/commands.ts": "b522b2341162f93c0a9c36b53eea407c8adfddf6c9dde2d28c9a2bc4c723a95e",
+    "src/view/dom-renderer.ts": "1bd87fabaeb410b0048ce27f6dbc0cb4a48d3b8427ce8c323a9d6bfd4f478a8b",
+    "src/view/view.ts": "6d07ac88c6d9454fdb191aa71b9e936aa0f38b9c45e371a7c96518744f5db1e2",
+    "integrations/gitlab/components/fountain_media_menu.stories.js": "8e559cb48b572ca6188cd46a8818420f5bf8d20d475cdf7ccc7ecc95cbf5a585",
+    "integrations/gitlab/components/fountain_media_menu.vue": "314a54b69d639dd2dbad551a70ff09dd36900934519adc3a3f2dd646cd875219",
+    "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+    "integrations/gitlab/fixtures/media-live-html.json": "8e7c92a0ca83bdb654991a3585c17d13e5cada9ab49b9e48b646998079450c44",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-media-tests.patch": "5aedee89675aad5cce297d975355aaf692b762d5370ab029f33c5eb7af27c64e",
+    "integrations/gitlab/services/media.ts": "bca2e9a4c2b4d34486884ec061c3115262776ca26f64a94c6cd370430845279d",
+    "integrations/gitlab/services/media_editing.ts": "d212f94d4b7010c779331344dc90440a5c22c44a1c7f48019153150105cf3807",
+    "integrations/gitlab/specs/fountain_media_menu_spec.js": "bfe6ed385df4b179e16c092af9ed8e757faff09ed1d28adad1bf8876999ccdb4",
+    "scripts/audit-gitlab-media-storybook.mjs": "0e97fe04f13d52d8ea31da5066c1070670778da7494670a9b5d8d0fff0a6b1d7",
+    "scripts/audit-gitlab-native-media.mjs": "c207fb8f2a99e28eda7602e6cb5fa210558e8fa7df82efbf76b31560a1271eed",
+    "scripts/create-gitlab-media-test-assets.mjs": "804434264c4654023a4d10d47cee8d84505bea21fce0a2ec84e6264adb938ea4",
+    "src/view/inline-image-loading.ts": "a40d5bbd779774193a9d87c00a574bf8f29c2a287a71da116add4fb73644d774",
+    "tests/browser/inline-image-loading-fixture.ts": "030c01ab54959ff1e68b4133bf7778fe6f6112cd494d09696a972f86bb63eadb",
+    "tests/browser/inline-image-loading.html": "76e0a5f56d9360dd002a6544adf2283cc13063768ea7826a4297007ccc68bcff",
+    "tests/browser/inline-image-loading.spec.ts": "8d56745545b0db4b6e14191d644e4d1cbd20336b5b6d687329f10f2304d73394",
+    "tests/gitlab-media-codec.test.ts": "f4d8fca0d622ba519dc7db07c10a428970ad50a55175053d90c07e5e92720c59",
+    "tests/gitlab-media-editing.test.ts": "ead605f4a2b116e0a1cf01e334e1b31badeafc0d3fe53a0e7efa438ea872aa61",
+    "tests/inline-atom-delete-caret.test.ts": "27d0d2c02b252cfae1be704a9615ff1866d5c971cbfe10e548818f586250c34f"
+  }
+}

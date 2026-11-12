@@ -5,6 +5,7 @@ import type { VirtualBlockLayout, VirtualBlockPlan } from './virtual-layout';
 import type { EditorView } from './view';
 import { applySharedDirectionProjection } from './shared-direction';
 import { applyParagraphSpacingProjection, clearParagraphSpacingProjection } from './paragraph-spacing';
+import { reserveInlineImageGeometry } from './inline-image-loading';
 
 export interface DOMRenderContext {
   /** Root model document used by context-sensitive node serializers. */
@@ -279,6 +280,10 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
   const nodeContext = context.document ? { document: context.document, path } : undefined;
   const rendered = custom ?? renderSpec(node.type.spec.toDOM?.(node, nodeContext) ?? ['div', 0]);
   const { dom, contentDOM } = rendered;
+  if (!custom && node.type.name === 'inline_image') {
+    const images = dom.tagName === 'IMG' ? [dom as HTMLImageElement] : [...dom.querySelectorAll('img')];
+    images.forEach(reserveInlineImageGeometry);
+  }
   dom.dataset.fountainNode = node.type.name;
   dom.dataset.fountainPath = path.join('.');
   applySharedDirectionProjection(dom, node, context.document ?? node);

@@ -1,0 +1,33 @@
+$ vitest run
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/table.test.ts (13 tests | 1 failed) 7690ms
+   ❯ production table editing (13)
+     × projects resize geometry once per immutable table, including movement and remote-row widths 5659ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/table.test.ts > production table editing > projects resize geometry once per immutable table, including movement and remote-row widths
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/table.test.ts:111:3
+    109|   });
+    110|
+    111|   it('projects resize geometry once per immutable table, including mov…
+       |   ^
+    112|     const rows = Array.from({ length: 30 }, (_, row) => Array.from({ l…
+    113|       cell(`${row}:${column}`, row === 29 ? { colwidth: [80 + column *…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 352 passed (353)
+      Tests  1 failed | 5746 passed (5747)
+   Start at  19:58:26
+   Duration  136.94s (environment 41%, import 27%, tests 25%, transform 6%, worker 1%)
+
+    Isolate  353 workers spawned · ~1.26s startup each (spawn + environment, per file)
+             at least ~62.10s faster with isolate: false — reuses workers across files instead of one per file
+
+[ELIFECYCLE] Test failed. See above for more details.

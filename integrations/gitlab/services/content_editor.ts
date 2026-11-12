@@ -21,6 +21,8 @@ import { GitLabAttachmentUploads, type GitLabUploadHandler, type GitLabUploadSna
 import { GitLabLinkEditingSession, type GitLabLinkSnapshot } from './link_editing';
 import { GitLabCodeEditingSession } from './code_editing';
 import { GitLabAlertEditing } from './alert_editing';
+import type { GitLabPlayableKind } from './media';
+import { GitLabMediaEditingSession, type GitLabMediaSnapshot } from './media_editing';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -30,6 +32,7 @@ export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
   onListenerError?(error: unknown): void;
   uploadAttachment?: GitLabUploadHandler;
   maxUploadEntries?: number;
+  describeMedia?(kind: GitLabPlayableKind): string;
 }
 export class GitLabEditorNotReady extends Error {
   constructor(readonly status: GitLabEditorStatus) {
@@ -40,6 +43,7 @@ export class GitLabEditorNotReady extends Error {
 
 /** Native document service. GitLab owns network access; Fountain owns its model. */
 export class GitLabContentEditor {
+  private mediaSession?: GitLabMediaEditingSession;
   readonly editor: Editor;
   readonly assetResolver: GitLabAssetResolver;
   private readonly controller: SerializedContentController;
@@ -78,12 +82,15 @@ export class GitLabContentEditor {
       'onListenerError',
       'uploadAttachment',
       'maxUploadEntries',
+      'describeMedia',
     ]);
     for (const key of Object.keys(options)) {
       if (!supported.has(key)) throw new TypeError(`UNSUPPORTED_GITLAB_NATIVE_OPTION:${key}`);
     }
     if (options.uploadAttachment !== undefined && typeof options.uploadAttachment !== 'function')
       throw new TypeError('EXPECTED_GITLAB_UPLOAD_HANDLER');
+    if (options.describeMedia !== undefined && typeof options.describeMedia !== 'function')
+      throw new TypeError('EXPECTED_GITLAB_MEDIA_LOCALIZER');
     if (options.maxUploadEntries !== undefined && (!Number.isInteger(options.maxUploadEntries)
       || options.maxUploadEntries < 1 || options.maxUploadEntries > 1000))
       throw new RangeError('INVALID_GITLAB_UPLOAD_CAPACITY');
@@ -107,7 +114,9 @@ export class GitLabContentEditor {
     let alertInput: Plugin | undefined;
     try {
       this.editor = createEditor({
-        schema: createGitLabSchemaSpec(kit.schema),
+        schema: createGitLabSchemaSpec(kit.schema, options.describeMedia ? {
+          audio: options.describeMedia('audio'), video: options.describeMedia('video'),
+        } : undefined),
         plugins: [new Plugin({ props: {
           handleKeyDown: (editor, event) => alertInput?.spec.props?.handleKeyDown?.(editor, event) ?? false,
           handleBeforeInput: (editor, event) => alertInput?.spec.props?.handleBeforeInput?.(editor, event) ?? false,
@@ -193,6 +202,27 @@ export class GitLabContentEditor {
   get availableUploadSlots(): number { return this.uploads.availableSlots; }
   uploadAttachment(file: File): Promise<SerializedContentResult> { return this.uploads.add(file); }
   retryUpload(id: string): Promise<SerializedContentResult> { return this.uploads.retry(id); }
+  beginMediaEdit(changed?: (snapshot: GitLabMediaSnapshot) => void): GitLabMediaEditingSession {
+    this.mediaSession?.close();
+    const session = new GitLabMediaEditingSession({ editor: this.editor,
+      ensureReady: () => {
+        this.assertAlive();
+        if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
+          throw new GitLabEditorNotReady(this.status);
+      },
+      resolve: async (source, signal) => {
+        const result = await this.codec.deserialize({ schema: this.editor.state.schema, markdown: source, signal });
+        const block = result.document.content[0];
+        if (result.document.childCount !== 1 || block?.type.name !== 'paragraph' || block.childCount !== 1
+          || !['inline_image', 'gitlab_media'].includes(block.child(0).type.name)) throw new Error('GITLAB_MEDIA_RESOLUTION_FAILED');
+        return block.child(0);
+      },
+      validate: doc => { this.codec.serialize({ doc }); }, changed,
+      closed: () => { if (this.mediaSession === session) this.mediaSession = undefined; },
+      onListenerError: error => { this.listenerFailure = error; this.reportListenerError?.(error); },
+    });
+    this.mediaSession = session; return session;
+  }
   beginCodeEdit(): GitLabCodeEditingSession {
     this.codeSession?.close();
     const session = new GitLabCodeEditingSession({ editor: this.editor,
@@ -371,6 +401,8 @@ export class GitLabContentEditor {
     this.linkSession = undefined;
     this.codeSession?.close();
     this.codeSession = undefined;
+    this.mediaSession?.close();
+    this.mediaSession = undefined;
     this.insertions.dispose();
     this.uploads.dispose();
     this.uploadListeners.clear();

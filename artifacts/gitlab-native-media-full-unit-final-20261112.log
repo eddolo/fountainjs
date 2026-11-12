@@ -1,0 +1,11 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+
+ Test Files  353 passed (353)
+      Tests  5747 passed (5747)
+   Start at  20:01:27
+   Duration  168.59s (environment 45%, import 30%, tests 20%, transform 4%, worker 1%)
+
+    Isolate  353 workers spawned · ~990ms startup each (spawn + environment, per file)
+             at least ~86.37s faster with isolate: false — reuses workers across files instead of one per file

@@ -13,7 +13,7 @@ const temporary = await mkdtemp(join(tmpdir(), 'fountain-gitlab-patch-check-'));
 const env = { ...process.env, GIT_INDEX_FILE: join(temporary, 'index') };
 const run = (...args) => execFileSync('git', args, { cwd: source, env, encoding: 'utf8' });
 const names = ['current-document', 'native-host-tests', 'native-component-tests', 'native-attachment-tests',
-  'native-upload-capacity-tests', 'native-link-tests', 'native-code-tests', 'native-alert-tests'];
+  'native-upload-capacity-tests', 'native-link-tests', 'native-code-tests', 'native-alert-tests', 'native-media-tests'];
 const patches = names.map(name => `integrations/gitlab/patches/gitlab-19.5.3-${name}.patch`);
 try {
   const revision = run('rev-parse', 'HEAD').trim();
@@ -28,16 +28,16 @@ try {
   }
   for (const path of ['spec/frontend/content_editor/components/content_editor_spec.js',
     'spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js',
-    ...['link', 'code', 'alert'].map(kind => `spec/frontend/content_editor/components/fountain_${kind}_menu_spec.js`)]) {
+    ...['link', 'code', 'alert', 'media'].map(kind => `spec/frontend/content_editor/components/fountain_${kind}_menu_spec.js`)]) {
     if (run('show', `:${path}`) !== await readFile(join(source, path), 'utf8'))
       throw new Error(`Reconstructed test source differs: ${path}`);
   }
   run('apply', '--reverse', '--check', fileURLToPath(new URL(patches.at(-1), root)));
   const report = { status: 'passed', revision, patches: hashes,
-    checks: ['Eight patches apply in order using a separate temporary index',
+    checks: ['Nine patches apply in order using a separate temporary index',
       'Reconstructed host and native menu specs match the tested checkout byte for byte',
-      'Native alert test patch reverse-check passes'],
+      'Native media test patch reverse-check passes'],
     isolation: 'Upstream worktree and main index are unchanged; temporary index removed' };
-  await writeFile(new URL('artifacts/gitlab-native-alert-patch-verification-20261112.json', root), JSON.stringify(report, null, 2) + '\n');
-  console.log('Eight ordered native patches reconstruct the tested pinned source.');
+  await writeFile(new URL('artifacts/gitlab-native-media-patch-verification-20261112.json', root), JSON.stringify(report, null, 2) + '\n');
+  console.log('Nine ordered native patches reconstruct the tested pinned source.');
 } finally { await rm(temporary, { recursive: true, force: true }); }

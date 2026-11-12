@@ -71,10 +71,14 @@ function replaceAllSelection(editor: Editor, text: string): boolean {
 function replaceNodeSelection(editor: Editor, selection: NodeSelection, text?: string): boolean {
   const selected = getNodeAtPath(editor.state.doc, selection.nodePath);
   const typed = text === undefined ? undefined : editor.state.schema.text(text, editor.state.storedMarks);
+  const parent = selected.type.isInline ? getNodeAtPath(editor.state.doc, selection.nodePath.slice(0, -1)) : undefined;
+  const index = selection.nodePath.at(-1)!;
+  const inlineCaret = text === undefined && parent && !parent.content[index - 1]?.isText && !parent.content[index + 1]?.isText
+    && parent.type.spec.content && matchesContentExpression([editor.state.schema.text('')], parent.type.spec.content);
   const fillEmptyBlock = typed && (selected.type.isBlock || selected.type.isInline && selected.type.spec.code) && !selected.type.spec.atom && !selected.childCount
     && selected.type.spec.content && matchesContentExpression([typed], selected.type.spec.content);
   const replacement = text === undefined
-    ? []
+    ? inlineCaret ? [editor.state.schema.text('')] : []
     : fillEmptyBlock ? [selected.copy([typed!])]
     : selected.type.isInline
       ? [editor.state.schema.text(text, editor.state.storedMarks)]
@@ -93,6 +97,7 @@ function replaceNodeSelection(editor: Editor, selection: NodeSelection, text?: s
     } catch { return false; }
     return dispatchIfValid(editor, transaction);
   }
+  if (inlineCaret) transaction.setSelection(Selection.cursor(selection.nodePath, 0));
   if (text !== undefined) {
     const caretPath = selected.type.isInline && !fillEmptyBlock ? selection.nodePath : [...selection.nodePath, 0];
     transaction = transaction.setSelection(Selection.cursor(caretPath, text.length));

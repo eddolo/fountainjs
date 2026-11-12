@@ -1,0 +1,135 @@
+import { MarkdownExporter, MarkdownImporter, isSafeURL, type NodeSpec, type Schema } from 'fountainjs-editor';
+import { parseFragment, type DefaultTreeAdapterMap } from 'parse5';
+import type { GitLabMarkdownIssue } from './markdown_codec';
+import { GitLabPlayableView } from '../components/media_view';
+
+export type GitLabPlayableKind = 'audio' | 'video';
+export interface GitLabMediaFields {
+  readonly canonical: string;
+  readonly alt: string;
+  readonly title: string;
+  readonly width: string;
+  readonly height: string;
+}
+export const isGitLabMediaURL = (value: unknown): value is string => typeof value === 'string'
+  && value.length <= 2048 && value === value.trim() && isSafeURL(value)
+  && !/^(?:data:|blob:|mailto:|tel:|#)/iu.test(value);
+const literal = (value: unknown): value is string => typeof value === 'string' && value.length <= 10_000 && !/[\r\n\0]/u.test(value);
+export function gitlabMediaDimension(value: unknown): string {
+  if (value === 'auto') return '';
+  if (typeof value !== 'string' || value.length > 40 || !/^\d+(?:\.\d+)?(?:px|%)?$/u.test(value)) throw new Error('GITLAB_MEDIA_INVALID_DIMENSION');
+  return value.endsWith('px') ? value.slice(0, -2) : value;
+}
+export function gitlabMediaCSSDimension(value: unknown): string {
+  const dimension = gitlabMediaDimension(value);
+  return !dimension ? 'auto' : dimension.endsWith('%') ? dimension : `${dimension}px`;
+}
+
+/** Use Fountain's existing Markdown escaping, then add GitLab's native size syntax. */
+export function gitlabMediaSource(schema: Schema, fields: GitLabMediaFields): string {
+  if (!isGitLabMediaURL(fields.canonical)) throw new Error('GITLAB_MEDIA_INVALID_URL');
+  if (!literal(fields.alt) || !literal(fields.title)) throw new Error('GITLAB_MEDIA_INVALID_DESCRIPTION');
+  const width = gitlabMediaDimension(fields.width), height = gitlabMediaDimension(fields.height);
+  const image = schema.node('inline_image', { src: fields.canonical, alt: fields.alt, title: fields.title });
+  const doc = schema.node('doc', {}, [schema.node('paragraph', {}, [image])]);
+  const source = new MarkdownExporter().export(doc);
+  const sizes = [...(width ? [`width=${JSON.stringify(width)}`] : []), ...(height ? [`height=${JSON.stringify(height)}`] : [])];
+  return source + (sizes.length ? `{${sizes.join(' ')}}` : '');
+}
+
+export function gitlabMediaNodes(labels: Readonly<Record<GitLabPlayableKind, string>> = { audio: 'Select audio', video: 'Select video' }): Record<string, NodeSpec> {
+  return { gitlab_media: { group: 'inline', inline: true, atom: true,
+    attrs: {
+      kind: { validate: value => value === 'audio' || value === 'video' },
+      src: { validate: isGitLabMediaURL }, gitlabCanonicalSrc: { validate: isGitLabMediaURL },
+      alt: { default: '', validate: literal }, title: { default: '', validate: literal },
+      width: { default: 'auto', validate: value => { try { gitlabMediaDimension(value); return true; } catch { return false; } } },
+      height: { default: 'auto', validate: value => { try { gitlabMediaDimension(value); return true; } catch { return false; } } },
+    },
+    parseHTML: [{ tag: 'span[data-fountain-gitlab-media]', priority: 350, getAttrs: element => ({
+      kind: element.getAttribute('data-fountain-gitlab-media'), src: element.getAttribute('data-media-src'),
+      gitlabCanonicalSrc: element.getAttribute('data-media-canonical'), alt: element.getAttribute('data-media-alt') ?? '',
+      title: element.getAttribute('data-media-title') ?? '', width: element.getAttribute('data-media-width') ?? 'auto', height: element.getAttribute('data-media-height') ?? 'auto',
+    }) }],
+    toText: node => String(node.attrs.alt || node.attrs.gitlabCanonicalSrc),
+    nodeView: class extends GitLabPlayableView {
+      constructor(node: ConstructorParameters<typeof GitLabPlayableView>[0], view: unknown, getPath: () => number[]) {
+        super(node, view, getPath, labels[node.attrs.kind as GitLabPlayableKind]);
+      }
+    },
+    toDOM: node => ['span', { 'data-fountain-gitlab-media': node.attrs.kind,
+      'data-media-src': node.attrs.src, 'data-media-canonical': node.attrs.gitlabCanonicalSrc,
+      'data-media-alt': node.attrs.alt, 'data-media-title': node.attrs.title,
+      'data-media-width': node.attrs.width, 'data-media-height': node.attrs.height,
+      class: `media-container ${String(node.attrs.kind)}-container`,
+    }, [String(node.attrs.kind), { src: node.attrs.src, controls: '', preload: 'metadata',
+      'aria-label': node.attrs.alt || undefined, title: node.attrs.title || undefined,
+      style: ['max-width:100%', ...(['width', 'height'] as const).flatMap(dimension => node.attrs[dimension] === 'auto' ? [] : [`${dimension}:${String(node.attrs[dimension])}`])].join(';') }]],
+  } };
+}
+
+type Element = DefaultTreeAdapterMap['element'];
+const attr = (element: Element, name: string): string | undefined => element.attrs.find(item => item.name === name)?.value;
+const classes = (element: Element): string[] => (attr(element, 'class') ?? '').split(/\s+/u).filter(Boolean);
+export function normalizeGitLabMedia(elements: readonly Element[], source: string, schema: Schema): { handled: Set<Element>; issues: GitLabMarkdownIssue[] } {
+  const handled = new Set<Element>(), issues: GitLabMarkdownIssue[] = [];
+  const hasPlayable = elements.some(element => classes(element).some(name => ['audio-container', 'video-container'].includes(name)));
+  const candidates: { canonical: string; alt: string; title: string }[] = [];
+  if (hasPlayable || source.includes('<')) {
+    // GitLab alert titles are literal; keep their syntax out of Markdown source analysis.
+    const lines = source.split(/\r\n|\r|\n/u);
+    for (const element of elements.filter(element => classes(element).includes('markdown-alert'))) {
+      const line = Number(attr(element, 'data-sourcepos')?.match(/^(\d+):/u)?.[1]) - 1;
+      if (line >= 0 && line < lines.length) lines[line] = lines[line]!.replace(/(\[!(?:note|tip|important|warning|caution)\][\t ]+)(.*)$/iu,
+        (_match, prefix: string, title: string) => prefix + Array.from(title, character => `&#${character.codePointAt(0)};`).join(''));
+    }
+    let rawMedia = false;
+    const inspect = (html: string): void => {
+      const stack: DefaultTreeAdapterMap['node'][] = [parseFragment(html)];
+      while (stack.length) {
+        const node = stack.pop()!;
+        if ('tagName' in node && ['audio', 'video', 'iframe', 'source', 'track'].includes(node.tagName)) rawMedia = true;
+        if ('childNodes' in node) stack.push(...node.childNodes);
+      }
+    };
+    const parsed = new MarkdownImporter().parse(lines.join('\n'), schema, { autolinkLiterals: false,
+      parseHTMLBlock: html => { inspect(html); return null; },
+      parseHTMLInline: segments => { segments.forEach(segment => { if (segment.kind === 'html') inspect(segment.html); }); return null; },
+    });
+    parsed.descendants(node => { if (['inline_image', 'image_super'].includes(node.type.name)) candidates.push({ canonical: String(node.attrs.src), alt: String(node.attrs.alt), title: String(node.attrs.title ?? '') }); });
+    if (rawMedia) issues.push({ stage: 'import', code: 'raw-media-source', message: 'The pinned GitLab renderer does not retain raw HTML media. Keep the original source instead of editing an incomplete rendering.' });
+  }
+  for (const root of elements) {
+    const names = classes(root), kinds = ['audio', 'video'].filter(kind => names.includes(`${kind}-container`));
+    if (!kinds.length) continue;
+    const children = root.childNodes.filter(child => child.nodeName !== '#text' || !('value' in child) || child.value.trim());
+    const media = children[0] && 'tagName' in children[0] ? children[0] : undefined;
+    try {
+      if (root.tagName !== 'span' || kinds.length !== 1 || !names.includes('media-container')
+        || names.some(name => !['media-container', `${kinds[0]}-container`].includes(name))
+        || root.attrs.some(item => item.name !== 'class') || children.length !== 1 || !media || media.tagName !== kinds[0]
+        || media.childNodes.length || media.attrs.some(item => !['src', 'controls', 'data-setup', 'data-title', 'data-canonical-src', 'class', 'preload', 'width', 'height'].includes(item.name))
+        || classes(media).some(name => !['gfm', 'gl-rounded-lg'].includes(name))
+        || !['', 'true'].includes(attr(media, 'controls') ?? 'missing')
+        || !['{}', undefined].includes(attr(media, 'data-setup'))
+        || !['metadata', 'none', undefined].includes(attr(media, 'preload'))) throw new Error('Unrecognized playable markup.');
+      const src = attr(media, 'src'), canonical = attr(media, 'data-canonical-src'), label = attr(media, 'data-title') ?? '';
+      if (!isGitLabMediaURL(src) || !isGitLabMediaURL(canonical) || !literal(label)) throw new Error('Invalid media source or description.');
+      // GitLab renders title || alt into data-title, omitting the other field.
+      const descriptions = new Map(candidates.filter(item => item.canonical === canonical && (item.title || item.alt) === label)
+        .map(item => [JSON.stringify([item.alt, item.title]), item]));
+      if (descriptions.size !== 1) throw new Error('The media source description/title cannot be mapped unambiguously.');
+      const { alt, title } = [...descriptions.values()][0]!;
+      const width = gitlabMediaCSSDimension(attr(media, 'width') ?? 'auto'), height = gitlabMediaCSSDimension(attr(media, 'height') ?? 'auto');
+      root.attrs = [
+        ['data-fountain-gitlab-media', kinds[0]!], ['data-media-src', src], ['data-media-canonical', canonical],
+        ['data-media-alt', alt], ['data-media-title', title], ['data-media-width', width], ['data-media-height', height],
+      ].map(([name, value]) => ({ name: name!, value: value! }));
+      root.childNodes = [];
+      handled.add(root); handled.add(media);
+    } catch (error) {
+      issues.push({ stage: 'import', code: 'media-source', message: `${error instanceof Error ? error.message : 'Invalid media.'} Original source is retained.` });
+    }
+  }
+  return { handled, issues };
+}

@@ -3,9 +3,11 @@ export { assertGitLabNativeHostConfiguration } from '../services/host_configurat
 export { getGitLabLinkContext } from '../services/link_editing';
 export { getGitLabCodeContext } from '../services/code_editing';
 export { getGitLabAlertContext } from '../services/alert_editing';
+export { getGitLabMediaContext } from '../services/media_editing';
 export {
   EditorView,
   Selection,
+  NodeSelection,
   toggleMark,
   isMarkActive,
   setBlockType,

@@ -1,0 +1,5 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/content_editor/components/fountain_media_menu.vue app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js spec/frontend/content_editor/components/fountain_media_menu_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+Done in 7.19s.

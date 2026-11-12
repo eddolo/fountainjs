@@ -227,6 +227,37 @@ projection reuses unchanged node objects to retain that ownership evidence.
 Authored, copied and JSON-reopened blank paragraphs are preserved. The public
 option is additive and defaults off; it does not mutate the document.
 
+## Native image, audio and video properties
+
+`media.ts` normalizes the pinned renderer's image and playable containers into
+native Fountain nodes. The canonical upload URL stays separate from the resolved
+display URL. GitLab folds `title || alt` into one playable label; both source
+fields are recovered through the existing Markdown parser. Ambiguous mappings,
+raw media HTML stripped by GitLab,
+and unfamiliar container attributes refuse conversion with the source retained.
+The schema and codec can run in pure Node; DOM objects are constructed only when
+the browser mounts a playable NodeView.
+
+`media_editing.ts` captures one selected atom for the lifetime of a properties
+form. Unrelated edits map that target; replacing or changing it creates a
+conflict. Description, title and size edits use native transactions without a
+network request. URL changes use GitLab's real renderer and verify the returned
+canonical URL, description, title and dimensions before committing. Cancel,
+disposal, failed resolution and late responses cannot redirect the edit or
+discard its draft. Changes and removal participate in native undo/redo.
+
+The contextual menu exposes properties, open, canonical URL copy, deletion and
+the existing real upload picker for replacement. Native audio/video controls own
+playback; a separate keyboard-accessible button selects the document atom.
+Widths/heights accept pixels, percentages or `auto`. Image source projection
+also retains explicit dimensions and surrounding link marks after other edits.
+
+These contracts cover images, WAV audio and VP8 WebM video in the scoped audits.
+They do not close the original media-menu requirement: iframe/diagram editing,
+drag resizing, all supported codecs, captions/tracks and complete application
+coverage still require implementation or acceptance evidence. Component renderer
+fixtures are separate from actual upload, playback and persistence journeys.
+
 ## Build and real-service evidence
 
 ```sh

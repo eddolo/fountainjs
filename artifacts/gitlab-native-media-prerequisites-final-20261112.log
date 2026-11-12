@@ -1,0 +1,290 @@
+$ node scripts/check-api-surface.mjs
+Public API surface verified across 450 declaration files.
+$ node scripts/smoke-package.mjs
+Packed ESM source-data writer: 25 acceptance/refusal contracts passed.
+Packed ESM: 486 link normalization/security/history/destination contracts passed.
+Packed ESM root/core: 13/13 anchor loss/privacy/retention contracts passed.
+Packed ESM root/core: 5/5 optional bookmark contracts passed.
+Packed ESM: 140 native emphasis and partial-schema retention checks passed.
+Packed ESM root/core: 576/576 owned-attribute checks plus immutable snapshots/history passed.
+Packed ESM root/core: DOM-free direction/history/HTML/loss-report contracts passed.
+Packed ESM root/core: 24/24 empty-heading HTML contracts passed.
+Packed ESM root/core: 11/11 preformatted-break HTML contracts passed.
+Packed ESM root/core: 14/14 preformatted-formatting contracts passed.
+Built ESM root/core: 10/10 portable list geometry contracts passed.
+Built ESM root/core: contextual spacing model, HTML, transactions and native spacing export/reopen contracts passed.
+Built ESM root/core: 12/12 parser-owned Markdown source-boundary contracts passed.
+Built ESM root/core: 12/12 nested Markdown source contracts passed.
+Built ESM root/core: 12/12 reference-scoped Markdown boundary contracts passed.
+Built ESM root/core: 50/50 HTML-adapted Markdown source contracts passed.
+Built ESM root/core: 42/42 nested reference source contracts passed.
+Built ESM root/core: 36/36 container reference source contracts passed.
+Built ESM root/core: 25/25 complete source proof contracts passed.
+Packed CommonJS source-data writer: 25 acceptance/refusal contracts passed.
+Packed CommonJS: 486 link normalization/security/history/destination contracts passed.
+Packed CommonJS root/core: 13/13 anchor loss/privacy/retention contracts passed.
+Packed CommonJS root/core: 5/5 optional bookmark contracts passed.
+Packed CommonJS: 140 native emphasis and partial-schema retention checks passed.
+Packed CommonJS root/core: 576/576 owned-attribute checks plus immutable snapshots/history passed.
+Packed CommonJS root/core: DOM-free direction/history/HTML/loss-report contracts passed.
+Packed CommonJS root/core: 24/24 empty-heading HTML contracts passed.
+Packed CommonJS root/core: 11/11 preformatted-break HTML contracts passed.
+Packed CommonJS root/core: 14/14 preformatted-formatting contracts passed.
+Built CommonJS root/core: 10/10 portable list geometry contracts passed.
+Built CommonJS root/core: contextual spacing model, HTML, transactions and native spacing export/reopen contracts passed.
+Built CommonJS root/core: 12/12 parser-owned Markdown source-boundary contracts passed.
+Built CommonJS root/core: 12/12 nested Markdown source contracts passed.
+Built CommonJS root/core: 12/12 reference-scoped Markdown boundary contracts passed.
+Built CommonJS root/core: 50/50 HTML-adapted Markdown source contracts passed.
+Built CommonJS root/core: 42/42 nested reference source contracts passed.
+Built CommonJS root/core: 36/36 container reference source contracts passed.
+Built CommonJS root/core: 25/25 complete source proof contracts passed.
+ESM, CommonJS, headless core, AI document tools, conversations, generated media, DOCX interchange, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.
+$ node scripts/smoke-server-html-runtime.mjs && node scripts/check-server-html-worker.mjs
+Compiled runtime: 24 empty-heading HTML contracts passed.
+Compiled runtime: 11 preformatted-break HTML contracts passed.
+Compiled runtime: 14 preformatted-formatting contracts passed.
+Compiled runtime: 486 link normalization/security/history/destination contracts passed.
+Compiled runtime: 13 anchor loss/privacy/retention contracts passed.
+Compiled runtime: inert inline lexical data, full reopen, real transactions/history and altered-carrier refusal passed.
+Compiled runtime: 576 owned-attribute checks plus immutable snapshots/history passed.
+Compiled runtime: 140 native emphasis and partial-schema retention checks passed.
+Compiled runtime: protected Markdown images/rules/tables, exact source, native/canonical reopen and refusal guards passed.
+Compiled runtime: anonymous HTML flow, native/canonical reopening and exact source passed.
+Node 24.22.1: DOM-free server HTML import/export passed.
+Node 24.22.1: inert HTML comment retention, canonical reopen and breakout rejection passed.
+Node 24.22.1: complete HTML page-settings retention and invalid/fragment boundaries passed.
+Node 24.22.1: block-returning Markdown paragraph recovery passed.
+Node 24.22.1: lazy Markdown flow paragraph sources passed.
+Cloudflare workerd (Miniflare): 25 complete source proof contracts passed.
+Cloudflare workerd (Miniflare): 36 container reference source contracts passed.
+Cloudflare workerd (Miniflare): 42 nested reference source contracts passed.
+Cloudflare workerd (Miniflare): 50 HTML-adapted Markdown source contracts passed.
+Cloudflare workerd (Miniflare): 12 reference-scoped Markdown boundary contracts passed.
+Cloudflare workerd (Miniflare): 12 nested Markdown source contracts passed.
+Cloudflare workerd (Miniflare): 12 parser-owned Markdown source-boundary contracts passed.
+Cloudflare workerd (Miniflare): 24 empty-heading HTML contracts passed.
+Cloudflare workerd (Miniflare): 11 preformatted-break HTML contracts passed.
+Cloudflare workerd (Miniflare): 14 preformatted-formatting contracts passed.
+Cloudflare workerd (Miniflare): 486 link normalization/security/history/destination contracts passed.
+Cloudflare workerd (Miniflare): 13 anchor loss/privacy/retention contracts passed.
+Cloudflare workerd (Miniflare): inert inline lexical data, complete reopen, transactions/history and carrier refusal passed.
+Cloudflare workerd (Miniflare): 576 owned-attribute checks plus immutable snapshots/history passed.
+Cloudflare workerd (Miniflare): 140 native emphasis and partial-schema retention checks passed.
+Cloudflare workerd (Miniflare): protected Markdown images/rules/tables, full reopen and refusal guards passed.
+Cloudflare workerd (Miniflare): anonymous HTML flow without synthetic paragraphs and native/canonical reopening passed.
+Cloudflare workerd (Miniflare): inert HTML comment retention, canonical reopen and breakout rejection passed.
+Cloudflare workerd (Miniflare): DOM-free server HTML import/export passed.
+Cloudflare workerd (Miniflare): complete HTML page-settings retention and invalid/fragment boundaries passed.
+$ node scripts/check-headless-boundary.mjs && tsc -p tsconfig.headless.json
+Headless source boundary verified across 143 modules.
+$ node scripts/check-markdown-conformance.mjs
+Anchor oracle sensitivity: 3 placeholder-vs-hyperlink distinctions retained.
+Preformatted oracle sensitivity: 4 line-break distinctions and 2 equivalent literal-newline controls retained.
+Link grammar: 22 supplemental reference and exact-source checks.
+Delimiter neighbors: 6674 generated LF/CRLF reference-semantic, exact-source and complete native canonical contracts passed; not official-corpus matches.
+Code labels: 34 LF/CRLF full reference-semantic, exact-source and canonical round-trip contracts passed.
+Identity-preserving flow: 48 safe-fallback/source checks; 8 fixtures still declined on this route. Lazy paragraph context distinguishes the legacy collision.
+Explicit paragraph-source flow: 8 LF/CRLF exact-code/source contracts; 2 full structural matches. Outer-div mismatches retained; 4 structural fixture kinds still declined.
+Explicit structural source flow: 58 LF/CRLF reference-code/source contracts. Paragraphs, headings, code, plain hard breaks and list/quote nesting supported; outer-div mismatches remain. Separate contracts cover protected Markdown images/rules and pipe tables; specialized unsupported blocks still refuse conversion.
+Structural source flow: 44 LF/CRLF full reference-structure and exact-source contracts outside pre.
+Entity newlines: 12 reference text-character and canonical round-trip contracts passed.
+Code origins: 20 LF/CRLF import/source contracts; identical-HTML provenance distinguished; 6 newline corruptions rejected.
+Table projection: unit spans/cell wrappers equivalent; 14 structural/content corruptions rejected.
+Formatting scopes: 20 reference semantic/source contracts; 10 corruptions rejected.
+Inline block HTML: 2 existing literal fallbacks retained, explicitly not counted as conformance.
+Paragraph recovery: 76 opt-in reference/source contracts; existing baselines unchanged.
+Paragraph recovery: 1304 corpus source-retention checks; not full semantic conformance.
+Reference parser reproduced all 652 official HTML outputs exactly.
+Inert raw HTML: 72/72 semantic, 72/72 exact token contracts; 144/144 generated boundary/round-trip contracts.
+Oracle sensitivity: 8 semantic and 2 literal-whitespace corruptions rejected; reference parser absent from 178 runtime source maps.
+URL oracle sensitivity: 4 raw-control/backslash aliases rejected; 3 TAB/LF/CR preprocessing equivalences; 2 reviewed URI equivalents retained.
+Literal-address import policy: 566/566 reference semantic contracts passed (default baseline unchanged).
+CommonMark 0.31.2: 563/652 examples match Fountain's neutral semantic projection.
+Baseline classifications: 563 matching, 72 pending, 17 intentional divergences.
+Opt-in HTML flow: 1304 exact-source contracts passed (LF/CRLF); not semantic conformance.
+Opt-in HTML block + inline semantics: 579/652 exact neutral-projection matches; remaining differences unresolved, not full conformance.
+Optional HTML containers: 26 reference-semantic and 26 exact-source checks; existing schema/profile scores unchanged.
+Opt-in source recovery: 580/652 neutral-projection matches on LF and CRLF; 1304 separate exact-source checks. Not full CommonMark conformance.
+Whole-document optional-container profile: 601/652; 1304 separate exact-source checks.
+Whole-document optional-container+comment profile: 613/652; 1304 separate exact-source checks.
+Whole-document optional-container+comment+anonymous-flow profile: 613/652; 1304 separate exact-source checks.
+Explicit unsanitized source-output profile: 631/652; 1304 separate exact-source checks.
+Complete-source oracle sensitivity: 18 positive/negative controls; body, declaration and EOF data stay independent.
+Complete-document source BODY profile: 635/652; 1304 exact-source and 1304 native-JSON checks; 2 declaration / 6 EOF checks.
+Complete source retention diagnostics: 1298/1304 exact safe-HTML model reopens; source model statuses {"equal-except-source-tokens":1292,"different":12}. Neither is body semantic conformance.
+Source-capture body diagnostics: 633/652 on both line endings (1266/1304 checks); frontmatter route differs from parse() only in examples 96,98.
+Explicit Markdown-body and literal-address source capture: 638/652 on both line endings, with 1304 exact-source checks.
+Explicit complete source body without Markdown caret children: 648/652 on both line endings.
+Explicit complete source body with inactive URI capture: 652/652 on both line endings; 1304 exact-source checks.
+$ node scripts/audit-math-labels.mjs
+{
+  "renderer": "MathJax 4.1.3",
+  "status": "reference-semantics-verified",
+  "fountainStatus": "document-context API and bounded host SVG/reader lab implemented; this script checks semantics only, not whole-paper or export parity",
+  "equations": [
+    {
+      "sha256": "d43aafd64986470149793169e6c1f001eae2f66706335d4b5e6864ff4fc465b7",
+      "tags": [
+        {
+          "id": "mjx-eqn:eq:dNFE",
+          "text": "(1)",
+          "row": 0
+        }
+      ]
+    },
+    {
+      "sha256": "b8ae1e0dc1cbaf7c15846891804d22fa0581f45f54e14e4da7857061ab57d3ec",
+      "tags": [
+        {
+          "id": "mjx-eqn:eq:dSNFE",
+          "text": "(2)",
+          "row": 1
+        }
+      ]
+    }
+  ],
+  "backwardReferences": [
+    [
+      {
+        "text": "(1)",
+        "href": "#mjx-eqn%3Aeq%3AdNFE"
+      }
+    ],
+    [
+      {
+        "text": "(2)",
+        "href": "#mjx-eqn%3Aeq%3AdSNFE"
+      }
+    ]
+  ],
+  "reorderedForwardReferences": [
+    [
+      {
+        "text": "(2)",
+        "href": "#mjx-eqn%3Aeq%3AdNFE"
+      }
+    ],
+    [
+      {
+        "text": "(1)",
+        "href": "#mjx-eqn%3Aeq%3AdSNFE"
+      }
+    ]
+  ],
+  "deletedTarget": [
+    {
+      "text": "(???)",
+      "href": "#"
+    }
+  ],
+  "checks": [
+    "unchanged source",
+    "nonumber defers label to numbered row",
+    "backward references",
+    "forward references",
+    "reorder renumbering",
+    "fresh-snapshot repeatability",
+    "deleted target remains unresolved",
+    "duplicate labels rejected",
+    "starred environments",
+    "manual tags",
+    "unsupported commands rejected"
+  ]
+}
+$ node scripts/check-docx-interoperability.mjs && node scripts/check-docx-table-text.mjs && node scripts/check-docx-quote-appearance.mjs
+python-docx opened Fountain media and edited a typed glossary; Fountain retained glossary roles and independent body/cell controls with two explicit behavior-loss warnings (38 additional style/interchange diagnostics retained).
+ESM: DOM-free shipped DOCX table text, Word toggle resets, regional paragraph layout and native reopening passed.
+CommonJS: DOM-free shipped DOCX table text, Word toggle resets, regional paragraph layout and native reopening passed.
+ESM: complete bordered/borderless quote JSON, native Word styles, neutral HTML, core editing/history and Yjs local undo retain source-owned appearance without DOM.
+CommonJS: complete bordered/borderless quote JSON, native Word styles, neutral HTML, core editing/history and Yjs local undo retain source-owned appearance without DOM.
+$ node scripts/check-build-budgets.mjs
+dist/index.js: 73.9 KiB / 111 KiB
+dist/index.cjs: 73.4 KiB / 93 KiB
+dist/core.js: 8.7 KiB / 9.5 KiB
+dist/core.cjs: 8.5 KiB / 8.8 KiB
+dist/ai-document-tools.js: 13.7 KiB / 18 KiB
+dist/ai-document-tools.cjs: 12.3 KiB / 15 KiB
+dist/ai-conversation.js: 13.3 KiB / 17 KiB
+dist/ai-conversation.cjs: 11.5 KiB / 14 KiB
+dist/ai-generated-media.js: 9.0 KiB / 11 KiB
+dist/ai-generated-media.cjs: 7.9 KiB / 10 KiB
+dist/docx.js: 177.6 KiB / 210.8 KiB
+dist/docx.cjs: 159.3 KiB / 170.8 KiB
+HTML5 entity decoder ESM: 40.0 KiB / 43 KiB
+HTML5 entity decoder CommonJS: 39.6 KiB / 41 KiB
+dist/document-utilities.js: 19.1 KiB / 36 KiB
+dist/document-utilities.cjs: 17.8 KiB / 30 KiB
+dist/emoji-data.js: 268.0 KiB / 340 KiB
+dist/emoji-data.cjs: 268.1 KiB / 280 KiB
+dist/react.js: 73.8 KiB / 92.8 KiB
+dist/react.cjs: 62.4 KiB / 69.5 KiB
+dist/vue.js: 3.1 KiB / 3.5 KiB
+dist/vue.cjs: 3.2 KiB / 3.5 KiB
+dist/svelte.js: 0.8 KiB / 2 KiB
+dist/svelte.cjs: 0.9 KiB / 2 KiB
+dist/angular/index.js: 4.1 KiB / 5 KiB
+dist/yjs.js: 0.4 KiB / 30 KiB
+dist/yjs.cjs: 0.5 KiB / 25 KiB
+dist/comments.js: 24.7 KiB / 30 KiB
+dist/comments.cjs: 22.3 KiB / 25 KiB
+dist/react-comments.js: 7.0 KiB / 11 KiB
+dist/react-comments.cjs: 6.3 KiB / 8 KiB
+dist/tracked-changes.js: 23.2 KiB / 30 KiB
+dist/tracked-changes.cjs: 20.4 KiB / 25 KiB
+dist/react-tracked-changes.js: 5.8 KiB / 9 KiB
+dist/react-tracked-changes.cjs: 5.3 KiB / 7 KiB
+dist/versions.js: 24.1 KiB / 35 KiB
+dist/versions.cjs: 20.3 KiB / 30 KiB
+dist/react-versions.js: 7.6 KiB / 18 KiB
+dist/react-versions.cjs: 6.7 KiB / 14 KiB
+dist/details.js: 6.1 KiB / 10 KiB
+dist/details.cjs: 5.8 KiB / 8 KiB
+dist/ruby.js: 9.0 KiB / 12 KiB
+dist/ruby.cjs: 8.0 KiB / 10 KiB
+dist/text-style.js: 0.8 KiB / 2 KiB
+dist/text-style.cjs: 0.8 KiB / 2 KiB
+dist/testing.js: 5.3 KiB / 7 KiB
+dist/testing.cjs: 5.0 KiB / 6 KiB
+dist/migrations.js: 5.9 KiB / 8 KiB
+dist/migrations.cjs: 5.3 KiB / 7 KiB
+dist/node-ids.js: 7.6 KiB / 9 KiB
+dist/node-ids.cjs: 7.2 KiB / 8 KiB
+dist/table-of-contents.js: 4.6 KiB / 7 KiB
+dist/table-of-contents.cjs: 4.5 KiB / 6 KiB
+dist/integrity.js: 9.1 KiB / 13 KiB
+dist/integrity.cjs: 8.1 KiB / 11 KiB
+dist/integrity-dom.js: 4.2 KiB / 6 KiB
+dist/integrity-dom.cjs: 3.9 KiB / 5 KiB
+dist/react-integrity.js: 6.3 KiB / 12 KiB
+dist/react-integrity.cjs: 5.4 KiB / 10 KiB
+dist/structured-attributes.js: 8.3 KiB / 11 KiB
+dist/structured-attributes.cjs: 7.6 KiB / 9 KiB
+dist/html-server.js: 0.1 KiB / 270 KiB
+dist/html-server.cjs: 0.2 KiB / 225 KiB
+dist/html-inert.js: 6.8 KiB / 8.5 KiB
+dist/html-inert.cjs: 6.4 KiB / 7 KiB
+dist/html-source.js: 11.7 KiB / 14 KiB
+dist/html-source.cjs: 9.9 KiB / 11.8 KiB
+dist/widgets.js: 7.1 KiB / 9 KiB
+dist/widgets.cjs: 6.8 KiB / 8 KiB
+dist/widgets-dom.js: 3.9 KiB / 5 KiB
+dist/widgets-dom.cjs: 3.6 KiB / 5 KiB
+dist/react-widgets.js: 1.2 KiB / 2 KiB
+dist/react-widgets.cjs: 1.3 KiB / 2 KiB
+dist/pages.js: 9.7 KiB / 23 KiB
+dist/pages.cjs: 9.0 KiB / 19 KiB
+dist/pages-dom.js: 44.4 KiB / 54 KiB
+dist/pages-dom.cjs: 36.4 KiB / 45 KiB
+dist/pages-preview.js: 11.6 KiB / 14 KiB
+dist/pages-preview.cjs: 10.3 KiB / 12 KiB
+dist/styles.css: 88.8 KiB / 88.8 KiB
+all ESM runtime code: 1598.2 KiB / 1691.3 KiB
+all CommonJS runtime code: 1423.9 KiB / 1424 KiB
+$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+$ pnpm --dir tools/svelte-check exec svelte-check --workspace ../.. --tsconfig tsconfig.svelte.json --fail-on-warnings
+Loading svelte-check in workspace: c:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App
+Getting Svelte diagnostics...
+
+svelte-check found 0 errors and 0 warnings
+$ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json --noEmit && pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json --noEmit

@@ -1,0 +1,100 @@
+{
+  "scope": "Authenticated renderer structure fixtures; asset URLs are illustrative, not uploaded/playback acceptance",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "fixtures": [
+    {
+      "name": "image",
+      "source": "![Original figure](/uploads/media-fixture/figure.png \"Figure title\")",
+      "body": "<p data-sourcepos=\"1:1-1:68\" dir=\"auto\"><a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/figure.png\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/figure.png\" data-link=\"true\"><img data-sourcepos=\"1:1-1:68\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Original figure\" title=\"Figure title\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
+    },
+    {
+      "name": "image-sized",
+      "source": "![Sized figure](/uploads/media-fixture/figure.png){width=\"320\" height=\"180\"}",
+      "body": "<p data-sourcepos=\"1:1-1:76\" dir=\"auto\"><a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/figure.png\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/figure.png\" data-link=\"true\"><img data-sourcepos=\"1:1-1:50\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Sized figure\" width=\"320\" height=\"180\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
+    },
+    {
+      "name": "image-percent",
+      "source": "![Responsive figure](/uploads/media-fixture/figure.png){width=\"50%\"}",
+      "body": "<p data-sourcepos=\"1:1-1:68\" dir=\"auto\"><a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/figure.png\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/figure.png\" data-link=\"true\"><img data-sourcepos=\"1:1-1:55\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Responsive figure\" width=\"50%\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
+    },
+    {
+      "name": "image-inline",
+      "source": "Before ![Inline figure](/uploads/media-fixture/figure.png) after.",
+      "body": "<p data-sourcepos=\"1:1-1:65\" dir=\"auto\">Before <a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/figure.png\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/figure.png\" data-link=\"true\"><img data-sourcepos=\"1:8-1:58\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Inline figure\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a> after.</p>"
+    },
+    {
+      "name": "image-link",
+      "source": "[![Linked figure](/uploads/media-fixture/figure.png)](/help/user/project)",
+      "body": "<p data-sourcepos=\"1:1-1:73\" dir=\"auto\"><a data-sourcepos=\"1:1-1:73\" href=\"/root/fountain-product-integration/-/blob/main/help/user/project\" data-canonical-src=\"/help/user/project\" class=\"gfm\"><img data-sourcepos=\"1:2-1:52\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Linked figure\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
+    },
+    {
+      "name": "audio",
+      "source": "![Audio description](/uploads/media-fixture/recording.wav)",
+      "body": "<p data-sourcepos=\"1:1-1:58\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Audio description\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
+    },
+    {
+      "name": "audio-titled",
+      "source": "![Audio description](/uploads/media-fixture/recording.wav \"Retained audio title\")",
+      "body": "<p data-sourcepos=\"1:1-1:81\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained audio title\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
+    },
+    {
+      "name": "audio-link",
+      "source": "[Audio download](/uploads/media-fixture/recording.wav)",
+      "body": "<p data-sourcepos=\"1:1-1:54\" dir=\"auto\"><a data-sourcepos=\"1:1-1:54\" href=\"/-/project/1/uploads/media-fixture/recording.wav\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" data-link=\"true\" class=\"gfm\">Audio download</a></p>"
+    },
+    {
+      "name": "video",
+      "source": "![Video description](/uploads/media-fixture/recording.webm)",
+      "body": "<p data-sourcepos=\"1:1-1:59\" dir=\"auto\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Video description\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>"
+    },
+    {
+      "name": "video-titled",
+      "source": "![Video description](/uploads/media-fixture/recording.webm \"Retained video title\"){width=\"280\"}",
+      "body": "<p data-sourcepos=\"1:1-1:95\" dir=\"auto\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained video title\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" width=\"280\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>"
+    },
+    {
+      "name": "multiple-titled",
+      "source": "![Video description](/uploads/media-fixture/recording.webm \"Retained video title\"){width=\"280\"}\n\n![Audio description](/uploads/media-fixture/recording.wav \"Retained audio title\")",
+      "body": "<p data-sourcepos=\"1:1-1:95\" dir=\"auto\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained video title\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" width=\"280\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>&#x000A;<p data-sourcepos=\"3:1-3:81\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained audio title\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
+    },
+    {
+      "name": "video-sized",
+      "source": "![Sized video](/uploads/media-fixture/recording.webm){width=\"320\" height=\"180\"}",
+      "body": "<p data-sourcepos=\"1:1-1:79\" dir=\"auto\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Sized video\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" height=\"180\" width=\"320\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>"
+    },
+    {
+      "name": "video-inline",
+      "source": "Before ![Inline video](/uploads/media-fixture/recording.webm) after.",
+      "body": "<p data-sourcepos=\"1:1-1:68\" dir=\"auto\">Before <span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Inline video\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span> after.</p>"
+    },
+    {
+      "name": "nested",
+      "source": "> ![Quoted video](/uploads/media-fixture/recording.webm)\n\n- ![Listed audio](/uploads/media-fixture/recording.wav)",
+      "body": "<blockquote data-sourcepos=\"1:1-1:56\" dir=\"auto\">&#x000A;<p data-sourcepos=\"1:3-1:56\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Quoted video\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>&#x000A;</blockquote>&#x000A;<ul data-sourcepos=\"3:1-3:55\" dir=\"auto\">&#x000A;<li data-sourcepos=\"3:1-3:55\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Listed audio\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></li>&#x000A;</ul>"
+    },
+    {
+      "name": "youtube",
+      "source": "![Training video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)",
+      "body": "<p data-sourcepos=\"1:1-1:62\" dir=\"auto\"><a class=\"no-attachment-icon\" href=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" target=\"_blank\" rel=\"nofollow noreferrer noopener\"><img data-sourcepos=\"1:1-1:62\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Training video\" decoding=\"async\" class=\"lazy\" data-src=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"></a></p>"
+    },
+    {
+      "name": "vimeo",
+      "source": "![Training video](https://vimeo.com/123456789)",
+      "body": "<p data-sourcepos=\"1:1-1:46\" dir=\"auto\"><a class=\"no-attachment-icon\" href=\"https://vimeo.com/123456789\" target=\"_blank\" rel=\"nofollow noreferrer noopener\"><img data-sourcepos=\"1:1-1:46\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Training video\" decoding=\"async\" class=\"lazy\" data-src=\"https://vimeo.com/123456789\"></a></p>"
+    },
+    {
+      "name": "drawio",
+      "source": "![Architecture](/uploads/media-fixture/architecture.drawio.svg)",
+      "body": "<p data-sourcepos=\"1:1-1:63\" dir=\"auto\"><a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/architecture.drawio.svg\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/architecture.drawio.svg\" data-link=\"true\"><img data-sourcepos=\"1:1-1:63\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Architecture\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/architecture.drawio.svg\" data-canonical-src=\"/uploads/media-fixture/architecture.drawio.svg\"></a></p>"
+    },
+    {
+      "name": "raw-video",
+      "source": "<video src=\"/uploads/media-fixture/recording.webm\" controls width=\"320\" height=\"180\"></video>",
+      "body": "<p data-sourcepos=\"1:1-1:93\" dir=\"auto\"></p>"
+    }
+  ]
+}

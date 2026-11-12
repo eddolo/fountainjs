@@ -1,0 +1,13 @@
+warning: in the working copy of 'docs/ROADMAP.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'playwright.config.ts', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/view/dom-renderer.ts', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/view/view.ts', CRLF will be replaced by LF the next time Git touches it
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 101 modules transformed.
+rendering chunks...
+computing gzip size...
+artifacts/gitlab-native-runtime/fountain-runtime.mjs  1,497.40 kB │ gzip: 374.39 kB
+
+✓ built in 198ms
+{"normalized":4,"unchangedRuntimeSHA256":"077589e823310718235568b2d2fa23fc0e85178925d782dd9aec3c40deb8d7f7"}

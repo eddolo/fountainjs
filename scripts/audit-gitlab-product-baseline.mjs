@@ -6,6 +6,7 @@ import { chromium, expect } from '@playwright/test';
 import { auditNativeLinks } from './audit-gitlab-native-links.mjs';
 import { auditNativeCode } from './audit-gitlab-native-code.mjs';
 import { auditNativeAlerts, assertSavedNativeAlerts } from './audit-gitlab-native-alerts.mjs';
+import { auditNativeMedia, assertSavedNativeMedia } from './audit-gitlab-native-media.mjs';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
@@ -13,14 +14,15 @@ const nativeCapacity = process.argv.includes('--native-attachment-capacity');
 const nativeLinks = process.argv.includes('--native-links');
 const nativeCode = process.argv.includes('--native-code');
 const nativeAlerts = process.argv.includes('--native-alerts');
+const nativeMedia = process.argv.includes('--native-media');
 const debugLinks = nativeLinks && process.argv.includes('--debug-links');
-const nativeAttachments = process.argv.includes('--native-attachments') || nativeCapacity;
+const nativeAttachments = process.argv.includes('--native-attachments') || nativeCapacity || nativeMedia;
 const nativeComponent = process.argv.includes('--native-component') || nativeAttachments || nativeLinks || nativeCode || nativeAlerts;
 const nativeInsertion = process.argv.includes('--native-insertion') || nativeComponent;
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -105,6 +107,7 @@ const report = {
   nativeLinks,
   nativeCodeProfile: nativeCode,
   nativeAlertsProfile: nativeAlerts,
+  nativeMediaProfile: nativeMedia,
 };
 if (nativeBrowser)
   report.nativeRuntime = JSON.parse(
@@ -346,6 +349,7 @@ try {
     if (nativeLinks) await auditNativeLinks({ page, context, editor, toolbar, output, report });
     if (nativeCode) await auditNativeCode({ page, editor, toolbar, output, report });
     if (nativeAlerts) await auditNativeAlerts({ page, editor, toolbar, output, report });
+    if (nativeMedia) await auditNativeMedia({ page, context, editor, toolbar, output, report });
     if (nativeAttachments) {
       if (process.argv.includes('--probe-upload-focus')) await editor.evaluate(element => {
         const root = element.closest('[data-fountain-integration="native"]');
@@ -404,6 +408,7 @@ try {
       await editor.getByText('Recovered paste', { exact: true }).click();
       await page.keyboard.press('End');
       await page.keyboard.press('Enter');
+      const imagesBeforeClipboard = await editor.locator('img').count();
       await page.evaluate(async bytes => {
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': new Blob([new Uint8Array(bytes)], { type: 'image/png' }) })]);
       }, [...figure]);
@@ -413,7 +418,7 @@ try {
       expect(pastedResponse.ok()).toBe(true);
       const pastedBody = await pastedResponse.json();
       report.nativeUploads.push({ source: 'native-clipboard-image', markdown: (pastedBody.link ?? pastedBody).markdown });
-      await expect(editor.locator('img')).toHaveCount(3);
+      await expect(editor.locator('img')).toHaveCount(imagesBeforeClipboard + 1);
       await expect.poll(() => editor.locator('img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
       report.checks.push('Actual browser image clipboard and native paste upload through GitLab instead of embedding binary data in document JSON');
       if (nativeCapacity) {
@@ -557,6 +562,10 @@ try {
     await assertSavedNativeAlerts({ page, description: saved.description, report, output, phase: 'saved' });
     report.checks.push('Actual UI Save persists native alert kinds, custom titles, nested math/code and body text, and the GitLab reader renders them from saved server source');
   }
+  if (nativeMedia) {
+    await assertSavedNativeMedia({ page, description: saved.description, report, output, phase: 'saved' });
+    report.checks.push('Actual UI Save retains native media URLs, descriptions, titles and dimensions; the GitLab reader decodes the saved image/audio/video files');
+  }
   if (nativeInsertion)
     expect(saved.description).toContain('Pasted **GitLab Markdown** with @root.');
   if (nativeAttachments) {
@@ -665,6 +674,7 @@ try {
   await page.reload();
   await expect(page.getByText(marker, { exact: true })).toBeVisible();
   if (nativeAlerts) await assertSavedNativeAlerts({ page, description: saved.description, report, output, phase: 'reopened' });
+  if (nativeMedia) await assertSavedNativeMedia({ page, description: saved.description, report, output, phase: 'reopened' });
   await page
     .getByRole('img', { name: 'Uploaded baseline figure', exact: true })
     .scrollIntoViewIfNeeded();
@@ -714,6 +724,7 @@ try {
     await page.goto(issue.web_url);
     await expect(page.getByText(marker, { exact: true })).toBeVisible();
     if (nativeAlerts) await assertSavedNativeAlerts({ page, description: reopened.description, report, output, phase: 'restart' });
+    if (nativeMedia) await assertSavedNativeMedia({ page, description: reopened.description, report, output, phase: 'restart' });
     const reopenedImage = page.getByRole('img', {
       name: 'Uploaded baseline figure',
       exact: true,
@@ -737,6 +748,28 @@ try {
 } catch (error) {
   report.status = 'failed';
   report.error = String(error).replaceAll(password, '[redacted]');
+  if (nativeMedia) report.nativeMediaFailure = await context.pages()[0]?.evaluate(() => ({
+    host: (() => {
+      const owner = document.querySelector('[data-fountain-integration="native"]');
+      const component = owner?.__vue__ ?? owner?.__vueParentComponent?.proxy;
+      return { message: component?.failure?.message, stack: component?.failure?.stack,
+        issues: component?.failure?.issues, source: component?.contentEditor?.recovery?.markdown,
+        loadFailed: component?.loadFailed, fatal: component?.fatal };
+    })(),
+    fields: Array.from(document.querySelectorAll('[role="dialog"] input'), input => ({ label: input.id, value: input.value })),
+    errors: Array.from(document.querySelectorAll('[data-fountain-error]'), element => element.getAttribute('data-fountain-error')),
+    images: Array.from(document.querySelectorAll('[data-fountain-root] img'), image => ({
+      src: image.getAttribute('src'), currentSrc: image.currentSrc, complete: image.complete,
+      naturalWidth: image.naturalWidth, loading: image.loading, style: image.getAttribute('style'),
+      rect: image.getBoundingClientRect().toJSON(),
+    })),
+    nativeSelection: { collapsed: getSelection()?.isCollapsed,
+      path: getSelection()?.focusNode?.parentElement?.closest('[data-fountain-path]')?.getAttribute('data-fountain-path') },
+    playback: Array.from(document.querySelectorAll('[data-fountain-root] audio, [data-fountain-root] video'), media => ({
+      kind: media.tagName, src: media.getAttribute('src'), readyState: media.readyState, currentTime: media.currentTime,
+      error: media.error?.code, style: media.getAttribute('style'), rect: media.getBoundingClientRect().toJSON(),
+    })),
+  }));
   if (nativeAlerts) report.nativeAlertFailure = await context.pages()[0]?.evaluate(() => {
     const owner = document.querySelector('[data-fountain-integration="native"]');
     const component = owner?.__vue__ ?? owner?.__vueParentComponent?.proxy;

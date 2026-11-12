@@ -1,0 +1,91 @@
+{
+  "scope": "Eight isolated component states and narrow properties form, with fixed renderer fixtures and local real media files; separate from actual GitLab upload/persistence acceptance",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "077589e823310718235568b2d2fa23fc0e85178925d782dd9aec3c40deb8d7f7",
+  "status": "passed",
+  "checks": [
+    "image/1280px: no accessibility violations, page errors or horizontal overflow",
+    "1280px: keyboard form submission updates the native image width and closes the properties dialog",
+    "properties/1280px: no accessibility violations, page errors or horizontal overflow",
+    "audio: real media metadata loads and the keyboard selection button exposes its properties",
+    "audio/1280px: no accessibility violations, page errors or horizontal overflow",
+    "video: real media metadata loads and the keyboard selection button exposes its properties",
+    "video/1280px: no accessibility violations, page errors or horizontal overflow",
+    "Read-only properties/deletion stay disabled while actual clipboard URL copy remains available",
+    "read-only/1280px: no accessibility violations, page errors or horizontal overflow",
+    "invalid-size/1280px: no accessibility violations, page errors or horizontal overflow",
+    "failed-url/1280px: no accessibility violations, page errors or horizontal overflow",
+    "conflict/1280px: no accessibility violations, page errors or horizontal overflow",
+    "360px: keyboard form submission updates the native image width and closes the properties dialog",
+    "properties/360px: no accessibility violations, page errors or horizontal overflow"
+  ],
+  "pages": [
+    {
+      "id": "image",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@d03b9b469a8f63a404729432b3b8a415.webm"
+    },
+    {
+      "id": "properties",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@a048bd02e5e8af94f8652e5291b76ad8.webm"
+    },
+    {
+      "id": "audio",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@0ad2dba5933b5e20b4679064f502905e.webm"
+    },
+    {
+      "id": "video",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@2e9a0060fceb80c65687f5f7b49786f3.webm"
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@98a2dc526d343fbb12c7ca4378c125b2.webm"
+    },
+    {
+      "id": "invalid-size",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@a893a85cc31b0a702c96ea8f8eeba0af.webm"
+    },
+    {
+      "id": "failed-url",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@175e7d78c8cef1b42436f69d5f0f403e.webm"
+    },
+    {
+      "id": "conflict",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@7e2d3eccf2ec1ccc86183e035fc9decf.webm"
+    },
+    {
+      "id": "properties",
+      "width": 360,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-storybook-20261112/recordings/page@a4acb4db10c51ae47693d752782f50a3.webm"
+    }
+  ],
+  "sources": {
+    "app/assets/javascripts/content_editor/components/fountain_media_menu.vue": "64d690b709406427b9deb54cab6ab9da936133da7f80da2f394cabde7fff9c6d",
+    "app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js": "03112061593371dac9b5f336b5763320e896926e58d49a21bfe1903dc6c04fd1"
+  }
+}

@@ -19,6 +19,7 @@ import FountainFormattingToolbar from './fountain_formatting_toolbar.vue';
 import FountainLinkMenu from './fountain_link_menu.vue';
 import FountainCodeMenu from './fountain_code_menu.vue';
 import FountainAlertMenu from './fountain_alert_menu.vue';
+import FountainMediaMenu from './fountain_media_menu.vue';
 
 export default {
   name: 'FountainContentEditor',
@@ -32,6 +33,7 @@ export default {
     FountainLinkMenu,
     FountainCodeMenu,
     FountainAlertMenu,
+    FountainMediaMenu,
   },
   // The installer inserts the pinned host's exact public prop definitions here.
   props: {},
@@ -132,6 +134,7 @@ export default {
           renderMarkdown: (markdown, options) =>
             this.renderMarkdown(markdown, { ...options, noHeaderAnchors: true }),
           describeLabels: this.describeLabels,
+          describeMedia: kind => kind === 'audio' ? s__('ContentEditor|Select audio') : s__('ContentEditor|Select video'),
           editable: this.editable,
           extensions: this.extensions,
           renderMath: createKaTeXRenderer(katex),
@@ -448,6 +451,7 @@ export default {
             <fountain-link-menu ref="linkMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-code-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-alert-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
+            <fountain-media-menu :content-editor="contentEditor" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="attachFiles([$event])" />
           </template>
           <template #header-buttons>
             <slot name="header-buttons"></slot>

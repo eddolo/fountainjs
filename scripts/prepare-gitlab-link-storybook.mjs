@@ -6,7 +6,7 @@ const source = process.argv[2];
 if (!source || !isAbsolute(source)) throw new Error('Pass the absolute pinned GitLab checkout.');
 if (execFileSync('git', ['-C', source, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
   !== '0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf') throw new Error('Unexpected source pin.');
-const kind = process.argv.includes('--alert') ? 'alert' : process.argv.includes('--code') ? 'code' : 'link';
+const kind = process.argv.includes('--media') ? 'media' : process.argv.includes('--alert') ? 'alert' : process.argv.includes('--code') ? 'code' : 'link';
 const directory = resolve(source, `storybook/.fountain-${kind}-audit`);
 await mkdir(directory, { recursive: true });
 const files = {
