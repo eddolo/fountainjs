@@ -1,11 +1,18 @@
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
-const output = new URL('artifacts/gitlab-product-baseline-20261112/', root);
+const preparedHost = process.argv.includes('--prepared-host');
+const output = new URL(
+  preparedHost
+    ? 'artifacts/gitlab-prepared-host-20261112/'
+    : 'artifacts/gitlab-product-baseline-20261112/',
+  root,
+);
 await mkdir(output, { recursive: true });
 const baseURL = 'http://127.0.0.1:5080';
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
@@ -25,6 +32,15 @@ const compose = (...args) => docker('compose', '-f', linuxComposeFile, ...args);
 const container = compose('ps', '--all', '--quiet', 'baseline').trim();
 if (!container) throw new Error('Start the isolated GitLab baseline first.');
 const inspection = JSON.parse(docker('inspect', container))[0];
+const frontendMount = inspection.Mounts.find(
+  (mount) =>
+    mount.Destination === '/opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack',
+);
+if (preparedHost ? !frontendMount || frontendMount.RW : Boolean(frontendMount)) {
+  throw new Error(
+    'The frontend deployment does not match the requested original/prepared-host audit.',
+  );
+}
 if (
   inspection.Config.Image !== pin.image ||
   inspection.Config.Labels['com.docker.compose.project'] !== 'fountain-gitlab-integration'
@@ -48,10 +64,13 @@ if (!password)
 
 const report = {
   date: new Date().toISOString(),
-  scope: 'Original GitLab product baseline; Fountain is not installed in this application',
+  scope: preparedHost
+    ? 'Actual GitLab original editor with rebuilt prepared host changes; Fountain browser editor not installed'
+    : 'Original GitLab product baseline; Fountain is not installed in this application',
   pin,
   checks: [],
   secrets: 'Password/session used in memory only; no traces or storage-state files',
+  preparedHost,
 };
 const browser = await chromium.launch();
 let context;
@@ -61,6 +80,43 @@ try {
     recordVideo: { dir: fileURLToPath(new URL('recordings/', output)) },
   });
   const page = await context.newPage();
+  const preparedScriptReads = [];
+  const preparedScripts = [];
+  const imageResponses = [];
+  page.on('response', response => {
+    const url = new URL(response.url());
+    if (url.origin === baseURL && url.pathname.endsWith('/fountain-baseline-figure.png')) {
+      imageResponses.push({ path: url.pathname, status: response.status() });
+    }
+  });
+  report.imageResponses = imageResponses;
+  if (preparedHost)
+    page.on('response', (response) => {
+      const url = new URL(response.url());
+      if (
+        url.origin !== baseURL ||
+        !url.pathname.startsWith('/assets/webpack/') ||
+        !url.pathname.endsWith('.js')
+      )
+        return;
+      preparedScriptReads.push(
+        response
+          .body()
+          .then((bytes) => {
+            const source = bytes.toString('utf8');
+            if (
+              source.includes('MARKDOWN_SUBMISSION_NOT_READY') &&
+              source.includes('EXPECTED_CURRENT_MARKDOWN')
+            ) {
+              preparedScripts.push({
+                path: url.pathname,
+                sha256: createHash('sha256').update(bytes).digest('hex'),
+              });
+            }
+          })
+          .catch(() => {}),
+      );
+    });
   const ready = async () => {
     await expect(async () => {
       const state = JSON.parse(docker('inspect', '--format', '{{json .State}}', container));
@@ -132,6 +188,7 @@ try {
   await expect(page.getByRole('heading', { name: issue.title, exact: true })).toBeVisible();
   const image = page.getByRole('img', { name: 'Uploaded baseline figure', exact: true });
   await expect(image).toBeVisible();
+  await image.scrollIntoViewIfNeeded();
   await expect(image).toHaveAttribute('src', /\/fountain-baseline-figure\.png(?:\?|$)/);
   await expect
     .poll(() => image.evaluate((element) => element.complete && element.naturalWidth > 0))
@@ -154,6 +211,27 @@ try {
   await page.keyboard.press('Enter');
   const marker = 'Edited through the original GitLab rich editor; persisted after restart.';
   await editor.pressSequentially(marker);
+  if (preparedHost) {
+    await Promise.all(preparedScriptReads);
+    expect(preparedScripts.length).toBeGreaterThan(0);
+    report.preparedScripts = preparedScripts;
+    report.frontendMount = { source: frontendMount.Source, readOnly: !frontendMount.RW };
+    const description = page.getByTestId('work-item-description-wrapper');
+    await description
+      .getByRole('button', { name: 'Switch to plain text editing', exact: true })
+      .click();
+    const source = description.locator('textarea');
+    await expect(source).toBeVisible();
+    expect(await source.inputValue()).toContain(marker);
+    await description
+      .getByRole('button', { name: 'Switch to rich text editing', exact: true })
+      .click();
+    await expect(editor).toBeVisible();
+    await expect(editor.getByText(marker, { exact: true })).toBeVisible();
+    report.checks.push(
+      'Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value',
+    );
+  }
   await expect(editor.getByText(marker, { exact: true })).toBeVisible();
   await page.screenshot({
     path: fileURLToPath(new URL('original-rich-edit.png', output)),
@@ -181,6 +259,9 @@ try {
   );
   await page.reload();
   await expect(page.getByText(marker, { exact: true })).toBeVisible();
+  await page
+    .getByRole('img', { name: 'Uploaded baseline figure', exact: true })
+    .scrollIntoViewIfNeeded();
   await expect(
     page.getByRole('img', { name: 'Uploaded baseline figure', exact: true }),
   ).toBeVisible();
@@ -211,6 +292,7 @@ try {
     await page.goto(issue.web_url);
     await expect(page.getByText(marker, { exact: true })).toBeVisible();
     const reopenedImage = page.getByRole('img', { name: 'Uploaded baseline figure', exact: true });
+    await reopenedImage.scrollIntoViewIfNeeded();
     await expect(reopenedImage).toHaveAttribute('src', /\/fountain-baseline-figure\.png(?:\?|$)/);
     await expect
       .poll(() => reopenedImage.evaluate((element) => element.complete && element.naturalWidth > 0))
@@ -228,6 +310,22 @@ try {
 } catch (error) {
   report.status = 'failed';
   report.error = String(error).replaceAll(password, '[redacted]');
+  if (preparedHost && report.checks.length > 1) {
+    const active = context.pages()[0];
+    report.failedImages = await active.getByRole('img', { name: 'Uploaded baseline figure', exact: true }).evaluateAll(images => images.map(image => ({
+      src: image.src, currentSrc: image.currentSrc, complete: image.complete, width: image.naturalWidth, loading: image.loading,
+    })));
+    report.failedImageRequests = [];
+    for (const image of report.failedImages) {
+      if (new URL(image.src).origin !== baseURL) continue;
+      const response = await active.request.get(image.src);
+      report.failedImageRequests.push({ status: response.status(), contentType: response.headers()['content-type'], bytes: (await response.body()).length });
+    }
+    await context
+      .pages()[0]
+      ?.screenshot({ path: fileURLToPath(new URL('failure.png', output)), fullPage: true })
+      .catch(() => {});
+  }
   process.exitCode = 1;
 } finally {
   await context?.close();

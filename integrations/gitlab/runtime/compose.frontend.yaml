@@ -1,0 +1,9 @@
+services:
+  baseline:
+    environment:
+      ENABLE_RSPACK: "true"
+    volumes:
+      - type: bind
+        source: ${FOUNTAIN_GITLAB_FRONTEND_ASSETS:?Set the absolute Linux build output directory}
+        target: /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack
+        read_only: true

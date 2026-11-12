@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-12T08:55:41.383Z",
+  "scope": "Actual GitLab original editor with rebuilt prepared host changes; Fountain browser editor not installed",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ],
+  "secrets": "Password/session used in memory only; no traces or storage-state files",
+  "preparedHost": true,
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/80dcbc850e104b5bfce9a5492bd5231b/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/80dcbc850e104b5bfce9a5492bd5231b/fountain-baseline-figure.png",
+      "status": 304
+    },
+    {
+      "path": "/-/project/1/uploads/80dcbc850e104b5bfce9a5492bd5231b/fountain-baseline-figure.png",
+      "status": 304
+    }
+  ],
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 10,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/10"
+  },
+  "preparedScripts": [
+    {
+      "path": "/assets/webpack/22019.2dac5e8e.chunk.js",
+      "sha256": "a0e253d020bd4e580f9e2427a0a4fcb8acbeadf8c86a7183e55c9340a893c2f7"
+    },
+    {
+      "path": "/assets/webpack/22019.2dac5e8e.chunk.js",
+      "sha256": "a0e253d020bd4e580f9e2427a0a4fcb8acbeadf8c86a7183e55c9340a893c2f7"
+    },
+    {
+      "path": "/assets/webpack/22019.2dac5e8e.chunk.js",
+      "sha256": "a0e253d020bd4e580f9e2427a0a4fcb8acbeadf8c86a7183e55c9340a893c2f7"
+    }
+  ],
+  "frontendMount": {
+    "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+    "readOnly": true
+  },
+  "source": {
+    "original": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/80dcbc850e104b5bfce9a5492bd5231b/fountain-baseline-figure.png)\n\nEnd of the original description.\n",
+    "saved": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n|-------|--------|\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/80dcbc850e104b5bfce9a5492bd5231b/fountain-baseline-figure.png)\n\nEnd of the original description.\n\nEdited through the original GitLab rich editor; persisted after restart."
+  },
+  "status": "passed"
+}

@@ -1,0 +1,52 @@
+{
+  "scope": "Native headless Fountain service with real GitLab render/save APIs and original reader; not the deployed Fountain browser editor",
+  "checks": [
+    "Actual GitLab GraphQL-discovered renderer imports its real table/checklist/reference/math/image HTML; untouched source is byte-exact",
+    "Native Fountain transactions serialize and save through real authenticated GitLab HTTP; server returns exact submitted source",
+    "Saved native document reimports through the actual renderer and visibly retains table, equation, image and new paragraph in GitLab"
+  ],
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1407378,
+    "sha256": "5b7d0a44520105874af15fa64a8006dcb1b71dc8181e1e1f7d0dd82b86f03063",
+    "parentRevision": "a65de2e12f416ed1ca53efd718dd3dbbcac3b66c",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "6f1f082132389eb69d49c1d864264e788517c2d6be786d02e55e87feab6e910c",
+      "integrations/gitlab/services/content_editor.ts": "c4905e1e5f65bdc5f1a878fafc37f41e18ce3e08a81263265d4e33dbd09d8599",
+      "integrations/gitlab/services/serialized_content.ts": "9c83d8172cb2ca72e22b62fcc1379a8cc1bbd7c580873f42cfa832a824526521",
+      "integrations/gitlab/services/markdown_codec.ts": "ac963f88bfc78b9868950fa0a5ab362ea4bf46d0fbae215478e09c178e0b7852",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "caea8f3c22f3bd3ca90fa7015ff2260cb0c8d5d9974fb9906c7cdbe2a79189f3",
+      "integrations/gitlab/plugins/reference_navigation.ts": "7c7137d249f8887a93f7fe089961a0377115f8d6c71323e8d4165d21e384d4b0",
+      "dist/index.js": "ea3074596f1518e64b1c7e11ff50cb7dda1ecf97c33b5f00c89b195e246670bd"
+    }
+  },
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 11,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/11"
+  },
+  "renderCalls": 2,
+  "source": {
+    "original": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/2b1094aa1ae661b412423bf9de5ea6f8/fountain-baseline-figure.png)\n\nEnd of the original description.\n",
+    "saved": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| :--- | :--- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/2b1094aa1ae661b412423bf9de5ea6f8/fountain-baseline-figure.png)\n\nEnd of the original description.\n\nNative Fountain service edit: saved through GitLab."
+  },
+  "status": "passed"
+}

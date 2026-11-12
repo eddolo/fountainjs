@@ -106,6 +106,17 @@ frontend; deployment of the complete Fountain component/toolbars/adapters and
 broader product acceptance remain unfinished. No parity row is promoted.
 [Real-product baseline and remaining scope](../integrations/gitlab/README.md#real-gitlab-original-product-baseline).
 
+The matching full frontend now builds and runs with the prepared host patch.
+Loaded script digests and a real rich/source/rich save/restart journey are
+recorded. The final run passes; earlier blank-image failures after restart remain
+an open intermittent finding. A new native Fountain document service also passes
+a separate real GitLab render/edit/save/reimport audit in Node, with its own
+upload and visually reviewed result. Full units pass **5,483/339 files**, plus
+26 focused cases and root types. The browser still uses GitLab's existing editor;
+native component/toolbar/provider deployment and broader acceptance remain open.
+No capability-row promotion or refreshed publication gate is claimed.
+[Native service/deployment scope](../integrations/gitlab/README.md#rebuilt-host-deployment-and-native-document-service).
+
 The earlier complete local source check is the November 11 runtime-editability
 repair: **5,300 tests in 327 files**, with all package, server, type, conformance,
 size, performance and retention gates passing. Three native interaction-mode

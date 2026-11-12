@@ -1,0 +1,11 @@
+{
+  "status": "failed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "Private issue is unavailable to an unauthenticated browser context"
+  ],
+  "error": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate"
+}

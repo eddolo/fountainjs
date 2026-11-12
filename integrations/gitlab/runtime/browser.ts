@@ -1,0 +1,22 @@
+export { GitLabContentEditor, GitLabEditorNotReady } from '../services/content_editor';
+export {
+  EditorView,
+  Selection,
+  toggleMark,
+  isMarkActive,
+  setBlockType,
+  toggleQuote,
+  insertList,
+  insertTable,
+  insertInlineImage,
+  setLink,
+  unsetLink,
+  insertText,
+  splitBlock,
+  insertBlock,
+  undo,
+  redo,
+  canUndo,
+  canRedo,
+  createKaTeXRenderer,
+} from 'fountainjs-editor';

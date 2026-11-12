@@ -2,6 +2,16 @@
 
 ## Current programme status — 2026-11-12
 
+The full matching GitLab frontend now builds and serves the prepared host patch;
+the recorded real rich/source/rich save/restart journey passes on its final run.
+Earlier post-restart image failures remain unresolved. A native Fountain service
+independently imports the actual GraphQL-discovered GitLab renderer output,
+edits and saves through real APIs, reimports and visibly retains the test content.
+Full units pass **5,483/339 files**, with 26 focused cases and root types passing.
+Fountain's browser component/toolbar is still not deployed. There is no parity-row
+promotion or whole-product/superiority claim.
+[Native service scope](RELEASES.md#native-gitlab-service-and-rebuilt-host-deployment--2026-11-12).
+
 The original GitLab product now has a recorded real-service baseline at a matched
 image/source pin: authenticated rich editing/save/reopen, actual image upload,
 anonymous denial and persistence after container restart pass in Linux Chromium.

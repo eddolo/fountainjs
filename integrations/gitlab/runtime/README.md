@@ -102,6 +102,40 @@ GitLab's actual Prettier/Tailwind and ESLint checks also pass on all eight edite
 files. The source patch is verified forward against a separate baseline index
 and in reverse against the edited checkout.
 
+## Running the rebuilt application frontend
+
+The matching source builds its full production frontend with `corepack yarn
+rspack-prod`. A sparse source checkout must include all build inputs, including
+`app/views`, `app/graphql`, images, stylesheets, fonts and tooling; missing source
+templates are build failures, not optional features to omit. Retain the source
+pin, prepared patch, build log and generated asset manifest.
+
+The optional `compose.frontend.yaml` binds that complete build read-only over the
+packaged frontend. Set `FOUNTAIN_GITLAB_FRONTEND_ASSETS` to its absolute Linux
+`public/assets/webpack` directory, then use both Compose files. Rspack emits
+`manifest.rspack.json`; the override sets the official `ENABLE_RSPACK` switch and
+the base profile forwards it into the Rails service environment. Merely setting
+the outer container variable does not configure Puma's environment.
+
+```sh
+export FOUNTAIN_GITLAB_FRONTEND_ASSETS=/absolute/gitlab-source/public/assets/webpack
+docker compose -f integrations/gitlab/runtime/compose.yaml \
+  -f integrations/gitlab/runtime/compose.frontend.yaml up -d
+node scripts/audit-gitlab-product-baseline.mjs --prepared-host --verify-restart
+```
+
+The prepared-host audit requires the read-only bind, records the loaded JavaScript
+containing the current-value/handoff guards, exercises rich/source/rich mode
+switching, then verifies UI save/reopen and restart. It writes to a separate
+artifact directory and refuses to label an overridden frontend as the original
+baseline. This build still uses GitLab's Tiptap editor; a Fountain browser
+replacement must be compiled and checked separately. Lazy image checks scroll
+the image into view and retain failure diagnostics rather than accepting a blank.
+
+To roll back the frontend, recreate using only the base Compose file. Its default
+Rails environment selects the packaged Webpack manifest again. The database,
+uploads and other private configuration remain in the same dedicated volumes.
+
 Full acceptance still requires the matching Fountain component, toolbars and
 dialect adapters in that real application, then authenticated issue/MR/wiki and
 discussion workflows, permissions, concurrent users, recovery and broader browser

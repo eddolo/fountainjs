@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-integration",
+  "scope": "Real GitLab application frontend deployment and native Fountain service integration; complete Fountain browser replacement remains open",
+  "parentRevision": "a65de2e12f416ed1ca53efd718dd3dbbcac3b66c",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "upstreamTag": "v19.5.3",
+  "nativeRuntime": {
+    "manifest": "artifacts/gitlab-native-runtime/build.json",
+    "sha256": "5b7d0a44520105874af15fa64a8006dcb1b71dc8181e1e1f7d0dd82b86f03063",
+    "serviceSHA256": "c4905e1e5f65bdc5f1a878fafc37f41e18ce3e08a81263265d4e33dbd09d8599",
+    "publishedAPI": false
+  },
+  "nativeService": {
+    "report": "artifacts/gitlab-native-service-20261112/report.json",
+    "log": "artifacts/gitlab-native-service-live-final-20261112.log",
+    "screenshot": "artifacts/gitlab-native-service-20261112/saved-native-document.png",
+    "recording": "artifacts/gitlab-native-service-20261112/recordings/page@17f528d0852f6e08d3de20317f29fcb2.webm",
+    "status": "passed",
+    "issueIID": 11,
+    "checks": 3,
+    "scope": "Native service imported in pure Node, real authenticated project/upload/render/save APIs, original GitLab reader visually verified. No native Fountain browser editor mounted. Untouched initial source is byte-exact; edited serialization is not claimed byte-exact."
+  },
+  "preparedApplication": {
+    "report": "artifacts/gitlab-prepared-host-20261112/report.json",
+    "log": "artifacts/gitlab-prepared-host-diagnostics-20261112.log",
+    "screenshot": "artifacts/gitlab-prepared-host-20261112/original-after-restart.png",
+    "recording": "artifacts/gitlab-prepared-host-20261112/recordings/page@06cb651843c813feebc4c22d124ee269.webm",
+    "status": "passed",
+    "issueIID": 10,
+    "checks": 6,
+    "loadedScriptSHA256": "a0e253d020bd4e580f9e2427a0a4fcb8acbeadf8c86a7183e55c9340a893c2f7",
+    "frontendBindReadOnly": true,
+    "scope": "Complete rebuilt upstream frontend with current-document host guards, original Tiptap editor. Real sign-in, rich/source/rich handoff, UI save/reopen, anonymous denial and application restart."
+  },
+  "sourceBuild": {
+    "command": "corepack yarn rspack-prod",
+    "status": "passed",
+    "compiler": "Rspack 2.2.8",
+    "compileSeconds": 57.28,
+    "commandSeconds": 59.37,
+    "warnings": ["asset size limit", "entrypoint size limit"],
+    "summary": "artifacts/gitlab-source-build-summary-20261112.txt",
+    "nativeFountainBrowserReplacementIncluded": false
+  },
+  "validation": {
+    "fullUnits": { "tests": 5483, "files": 339, "status": "passed", "log": "artifacts/gitlab-native-service-full-unit-20261112.log" },
+    "focusedUnits": { "tests": 26, "files": 3, "status": "passed", "log": "artifacts/gitlab-native-service-focused-current-20261112.log" },
+    "types": { "status": "passed", "log": "artifacts/gitlab-native-service-types-final-20261112.log" },
+    "upstreamSuites": "168 passing tests recorded at the preceding checkpoint on the unchanged eight source/spec changes; not rerun at this checkpoint",
+    "hostedCI": "not-run",
+    "fullReleaseGate": "not-refreshed"
+  },
+  "retainedFinding": {
+    "status": "open",
+    "description": "Earlier prepared-host restart runs failed image readiness assertions with a blank image or incompletely hydrated reader. The instrumented final run passed; cause and fix are not established.",
+    "log": "artifacts/gitlab-prepared-host-final-20261112.log",
+    "screenshot": "artifacts/gitlab-prepared-host-20261112/failure.png"
+  },
+  "remaining": [
+    "Native Fountain browser component and full toolbar integrated into actual GitLab frontend",
+    "Real uploads, suggestions, quick actions and native collaboration/session adapters",
+    "Complete dialect, unsupported-content and round-trip acceptance",
+    "End-to-end issue, MR, wiki and discussion workflows with actual permissions and concurrent users",
+    "Recovery, browser/mobile, keyboard and assistive-technology acceptance",
+    "Export, performance, packed-consumer, hosted CI and release checks",
+    "Two additional complete professional products; current demonstrations do not satisfy that requirement"
+  ],
+  "runtime": {
+    "stoppedAfterAudit": true,
+    "dedicatedVolumesRetained": true,
+    "limitation": "WSL lifetime must be retained during restart audits; this local runtime is not evidence of production hosting readiness."
+  },
+  "localDiagnosticRemediation": {
+    "description": "A raw startup diagnostic printed a generated local test PostgreSQL key. Only that local certificate/key pair was rotated; installed certificate and matching private key were verified without printing their values. Raw configuration logs and secret files are excluded.",
+    "verification": "artifacts/gitlab-local-certificate-final-verification-20261112.log"
+  },
+  "publication": "None; package API, public package versions and acceptance budgets unchanged"
+}

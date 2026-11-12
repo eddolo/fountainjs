@@ -453,9 +453,9 @@ The source now guards optional alert actions and supplies valid unit inputs.
 No test timeout, assertion or console-error policy is relaxed. The earlier
 development pin remains a separate capture; both source patches are retained.
 
-The complete Fountain unit suite still passes 5,472 cases/338 files. The real
-GitLab container continues to use its original frontend; the patched source and
-Fountain replacement are not deployed. Full toolbars/dialect coverage, real
+At this baseline checkpoint the complete Fountain suite passed 5,472 cases/338
+files and the image used its packaged frontend. The later deployment and native
+service results below supersede that integration state. Full toolbars/dialect coverage, real
 MR/wiki/discussion flows, concurrent users and broader browser/product acceptance
 remain open. The baseline is stopped after testing, with records retained in its
 own volumes. Credentials and session state are not committed.
@@ -469,6 +469,45 @@ cross-component caller; unused-disable directives remain checked.
 
 [Original-product report](../../artifacts/gitlab-product-baseline-20261112/report.json)
 and [source/runtime verification scope](../../artifacts/gitlab-product-integration-20261112.json).
+
+### Rebuilt host deployment and native document service
+
+The matching source now builds its complete production frontend with Rspack,
+without omitting page entries. The local profile binds that build read-only and
+uses GitLab's official Rspack selection in the Rails environment. The recorded
+prepared-host journey verifies the loaded guard-containing JavaScript by digest,
+then performs rich/source/rich handoff, UI save/reopen, private-access denial and
+a container restart over real records. Its final run passes and the restored
+image/equation receive visual review. Earlier post-restart image-decode checks
+failed; their cause is not established and the successful rerun does not close
+that intermittent finding. Failure logs/screens remain evidence, not hidden skips.
+The browser still uses GitLab's Tiptap editor with the prepared host changes.
+
+`services/content_editor.ts` now provides the native Fountain model/service path:
+starter extensions, math, source-aware GitLab codec, assets/references, history,
+load supersession, explicit failed-source recovery and current-value reads.
+Unloaded/pending/failed replacements cannot submit cached content. Host callback
+failures are isolated from later editor subscribers and remain observable.
+Unsupported options and legacy extensions/providers fail explicitly.
+
+The self-contained real-service audit discovers the preview endpoint through
+GitLab GraphQL, uploads its own PNG, imports real renderer HTML into Fountain
+without a fake DOM, verifies exact untouched source, applies native transactions,
+saves through authenticated GitLab HTTP, and reimports/reviews the resulting
+table, checklist, mention, math, image and paragraph in GitLab's reader. It passes.
+The runtime build retains byte/source hashes. This is a headless service audit;
+it does not deploy or certify Fountain's browser component/toolbar.
+
+The complete local unit suite passes **5,483 tests/339 files**, including eleven
+native-service cases; 26 focused lifecycle/service cases and root types pass.
+No shipped engine/API or capacity-limit change. Full native component, toolbars,
+suggestions, upload controls, collaboration and complete dialect/application
+coverage remain required. No capability row or product readiness claim is promoted.
+
+[Native service contract](services/README.md),
+[real-service report](../../artifacts/gitlab-native-service-20261112/report.json),
+[prepared-host report](../../artifacts/gitlab-prepared-host-20261112/report.json)
+and [checkpoint scope](../../artifacts/gitlab-native-service-integration-20261112.json).
 
 ### Remaining full application acceptance
 

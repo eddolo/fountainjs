@@ -1262,6 +1262,39 @@ committed. Current evidence:
 `artifacts/gitlab-product-integration-20261112.json` and
 `artifacts/gitlab-product-baseline-20261112/report.json`.
 
+### Native GitLab service and rebuilt host deployment — 2026-11-12
+
+The matching source's full Rspack production build succeeds. A read-only frontend
+override selects its actual Rspack manifest through GitLab's Rails environment;
+the packaged default remains available for rollback. The prepared-host audit
+records guard-containing script digests, performs real rich/source/rich handoff,
+UI save/reopen, anonymous denial and a restart. Its final run passes with reviewed
+image/math output. Earlier post-restart image-decode failures remain unresolved;
+the passing rerun is not a claim that their cause is fixed.
+
+A private native document service composes Fountain's model, starter extensions,
+math, GitLab codec, asset resolver and lifecycle. Current-value reads block
+unloaded/pending/failed replacement state; recovery preserves both visible work
+and rejected source. Superseded responses cannot overwrite newer loads, history
+retains template/reopen behavior and host observer failures do not interrupt later
+editor subscribers. Unsupported legacy options/providers are explicit errors.
+
+The self-contained Node/native Chromium audit uploads its own fixture, discovers
+GitLab's preview endpoint through GraphQL, imports real HTML into Fountain without
+a fake DOM, preserves untouched source exactly, edits with native transactions,
+saves through real authenticated APIs, reimports and visually reviews the result
+in GitLab. It passes with source/runtime hashes and a retained recording. This
+does not mount Fountain's browser editor in GitLab; its full component, toolbar,
+suggestions, upload controls, collaboration and dialect coverage remain open.
+
+All **5,483 unit tests in 339 files**, 26 focused service/lifecycle cases and root
+types pass. No shipped engine/API, dependency, capacity-limit or parity-row change.
+The development instance retains its own records and is stopped after testing.
+During local startup diagnosis a generated PostgreSQL key was printed; only that
+test key/certificate was replaced, installation/pairing was verified, and no key,
+credential, raw configuration dump or session-state file is committed.
+Evidence: `artifacts/gitlab-native-service-integration-20261112.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

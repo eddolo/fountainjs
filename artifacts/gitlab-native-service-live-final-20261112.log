@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual GitLab GraphQL-discovered renderer imports its real table/checklist/reference/math/image HTML; untouched source is byte-exact",
+    "Native Fountain transactions serialize and save through real authenticated GitLab HTTP; server returns exact submitted source",
+    "Saved native document reimports through the actual renderer and visibly retains table, equation, image and new paragraph in GitLab"
+  ]
+}

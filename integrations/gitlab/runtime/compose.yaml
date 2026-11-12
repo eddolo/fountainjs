@@ -22,6 +22,7 @@ services:
         sidekiq['concurrency'] = 3
         postgresql['shared_buffers'] = '128MB'
         prometheus_monitoring['enable'] = false
+        gitlab_rails['env'] = { 'ENABLE_RSPACK' => ENV.fetch('ENABLE_RSPACK', 'false') }
     volumes:
       - baseline-config:/etc/gitlab
       - baseline-logs:/var/log/gitlab

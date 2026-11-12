@@ -1,0 +1,11 @@
+Source: GitLab FOSS v19.5.3, 0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf
+Command: corepack yarn rspack-prod
+Original local log: artifacts/gitlab-product-source-build-current-20261112.log
+Scope: complete upstream production frontend with prepared current-document host patch; original Tiptap editor remains.
+
+WARNING in ⚠ asset size limit: The following asset(s) exceed the recommended size limit (300.000 KiB). This can impact web performance.
+WARNING in ⚠ entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (500.000 KiB). This can impact web performance.
+Rspack 2.2.8 compiled with 2 warnings in 57.28 s
+Done in 59.37s.
+
+Warnings remain warnings. No acceptance threshold was raised. This does not establish production performance or a full Fountain browser replacement.
