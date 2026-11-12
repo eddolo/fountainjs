@@ -5,6 +5,7 @@ import { blockSelectionRange, selectedBlockPaths } from './block-range';
 import { RestructureChildrenStep } from './transaction/restructure-children-step';
 import { nodeRangeAtPath } from './transaction/mapping';
 import { Node, type Attributes } from './schema';
+import { matchesContentExpression } from './schema/content-expression';
 import { getActiveTableCell } from './table-commands';
 import { TableMap } from './table-map';
 import { getNodeAtPath, getTextLeaves, replaceNodeAtPath, replaceNodeWithNodes } from './transaction/path';
@@ -233,9 +234,17 @@ export function setNodeAttributes(editor: Editor, path: readonly number[], attrs
 
 export function removeNode(editor: Editor, path: readonly number[]): boolean {
   if (!editor.editable || !path.length) return false;
-  try { getNodeAtPath(editor.state.doc, path); }
+  let parent: Node;
+  try { getNodeAtPath(editor.state.doc, path); parent = getNodeAtPath(editor.state.doc, path.slice(0, -1)); }
   catch { return false; }
-  const transaction = editor.state.createTransaction().replaceNode(path, []);
+  const index = path.at(-1)!;
+  const remaining = [...parent.content.slice(0, index), ...parent.content.slice(index + 1)];
+  const replacement: Node[] = [];
+  if (!matchesContentExpression(remaining, parent.type.spec.content ?? '')) {
+    replacement.push(emptyParagraph(editor));
+    if (!matchesContentExpression([...parent.content.slice(0, index), ...replacement, ...parent.content.slice(index + 1)], parent.type.spec.content ?? '')) return false;
+  }
+  const transaction = editor.state.createTransaction().replaceNode(path, replacement);
   const leaves = getTextLeaves(transaction.doc);
   if (!leaves.length) {
     const paragraph = emptyParagraph(editor);
@@ -245,12 +254,11 @@ export function removeNode(editor: Editor, path: readonly number[]): boolean {
       for (let index = 0; index < Math.min(path.length, leaf.path.length); index += 1) {
         if (leaf.path[index] !== path[index]) return (leaf.path[index] as number) > (path[index] as number);
       }
-      return false;
+      return leaf.path.length >= path.length;
     }) ?? leaves.at(-1);
     if (next) transaction.setSelection(Selection.cursor(next.path, 0));
   }
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 /** Removes the table containing the current cell or selected table node. */

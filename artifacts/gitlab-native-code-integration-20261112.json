@@ -1,0 +1,202 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-native-product-integration",
+  "parentRevision": "2094547a46215a46d9d13ecd10538000e3f0c322",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Native ordinary-code language/custom-label controls, raw-source copy, deletion and undo/redo",
+    "Mapped captured targets, retained invalid/conflicting drafts, cancellation/IME, read-only mutation refusal and released closed sessions",
+    "Actual GitLab code rendering normalization with explicit unknown-content refusal and math-adapter precedence",
+    "Public required-container removal, intermediate selection recovery and immediate caret landing",
+    "Native host theme contrast and explicit caret reveal after toolbar focus"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Linux Chromium",
+    "report": "artifacts/gitlab-native-code-20261112/report.json",
+    "checks": 17,
+    "issueIID": 52,
+    "recordings": [
+      "artifacts/gitlab-native-code-20261112/recordings/page@8062b2b353890fa3ca65f1a60a424db0.webm"
+    ],
+    "screenshots": [
+      "artifacts/gitlab-native-code-20261112/code-invalid-draft.png",
+      "artifacts/gitlab-native-code-20261112/code-edited.png",
+      "artifacts/gitlab-native-code-20261112/code-nested-removal.png",
+      "artifacts/gitlab-native-code-20261112/original-rich-edit.png",
+      "artifacts/gitlab-native-code-20261112/original-reopened.png",
+      "artifacts/gitlab-native-code-20261112/original-after-restart.png"
+    ],
+    "errors": [],
+    "runtimeSHA256": "9c6191e5194b98ffdf80cd23c711ffa1bf52679cfe990aaf387f3da947a79eea",
+    "loadedScripts": [
+      {
+        "path": "/assets/webpack/content_editor.2dffcb6d.chunk.js",
+        "sha256": "d8159a4e9543d7b0243f5e8d75b4945adb8327c9adfb8da1ae357847e6d5a1b5"
+      },
+      {
+        "path": "/assets/webpack/content_editor.2dffcb6d.chunk.js",
+        "sha256": "d8159a4e9543d7b0243f5e8d75b4945adb8327c9adfb8da1ae357847e6d5a1b5"
+      },
+      {
+        "path": "/assets/webpack/content_editor.2dffcb6d.chunk.js",
+        "sha256": "d8159a4e9543d7b0243f5e8d75b4945adb8327c9adfb8da1ae357847e6d5a1b5"
+      },
+      {
+        "path": "/assets/webpack/content_editor.2dffcb6d.chunk.js",
+        "sha256": "d8159a4e9543d7b0243f5e8d75b4945adb8327c9adfb8da1ae357847e6d5a1b5"
+      }
+    ],
+    "code": {
+      "originalText": "const total = 42;\nconsole.log(total);",
+      "copiedText": "const total = 42;\nconsole.log(total);",
+      "language": "python",
+      "finalText": "const total = 42;\nconsole.log(total); // reviewed",
+      "nestedReplacement": "Replaced nested code"
+    },
+    "visualReview": "Readable actual code colors and language controls; full multiline source retained. Final nested replacement must remain in viewport after toolbar deletion/undo/redo and real typing. Editor, reader/reopen and after-restart screenshots inspected with original table, math, figure, references and authored content.",
+    "scope": "Actual authenticated renderer, browser clipboard, code editing/nested deletion, UI save/reopen, anonymous refusal and application restart; not all product surfaces or browsers"
+  },
+  "upstream": {
+    "report": "artifacts/gitlab-native-code-upstream-visible-20261112.json",
+    "passed": 260,
+    "failed": 4,
+    "total": 264,
+    "skipped": 0,
+    "nativeCodeCases": 10,
+    "nativeLinkCases": 8,
+    "workItemDescriptionCases": 64,
+    "remainingFailures": [
+      "ContentEditor renders alert bubble menu",
+      "ContentEditor renders media bubble menu",
+      "ContentEditor renders codeBlock bubble menu",
+      "ContentEditor renders reference bubble menu"
+    ],
+    "scope": "Six actual upstream suites; ordinary code does not close legacy diagram/frontmatter menu requirements"
+  },
+  "isolatedComponents": {
+    "report": "artifacts/gitlab-native-code-storybook-20261112/report.json",
+    "status": "passed",
+    "checks": 8,
+    "scenarios": 5,
+    "distinctStates": 4,
+    "violations": 0,
+    "scope": "Four isolated actual-component states plus narrow keyboard workflow using fixed renderer fixtures; not real-service acceptance",
+    "ruleExceptions": "none",
+    "sources": {
+      "app/assets/javascripts/content_editor/components/fountain_code_menu.vue": "c520e1ea45188e7a9847cf46fdac3dac2a2b5b251262b41a16103698767fd5f7",
+      "app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js": "31bfae7301e808c3dedffcb69903f1dc686d625d2b3ffbe37406c91bce165e01"
+    }
+  },
+  "localGates": {
+    "units": 5614,
+    "unitFiles": 347,
+    "focusedAfterMathRepair": 122,
+    "apiContracts": 450,
+    "prerequisites": {
+      "log": "artifacts/gitlab-native-code-complete-local-check-20261112.log",
+      "status": "all scripted gates before the initial unit run passed",
+      "initialUnitResult": "5612 passed / 1 failed: ordinary-code normalization intercepted an existing fenced math carrier",
+      "repair": "Run recognized math normalization first, excluding its handled nodes from ordinary-code normalization"
+    },
+    "finalUnits": {
+      "log": "artifacts/gitlab-native-code-full-unit-final-20261112.log",
+      "status": "passed"
+    },
+    "currentRootTypes": {
+      "log": "artifacts/gitlab-native-code-types-accepted-20261112.log",
+      "status": "passed"
+    },
+    "passed": [
+      "Build",
+      "Package export smoke",
+      "450 API contracts",
+      "Server runtimes/workerd",
+      "Pure Node headless",
+      "Scoped Markdown conformance",
+      "Math reference",
+      "DOCX interoperability",
+      "Build budgets",
+      "Performance/retention",
+      "Root/Svelte/Angular types"
+    ],
+    "performanceIsolation": "No task application, browser or frontend compiler ran during the recorded performance/retention gates",
+    "aggregateCommonJSBytes": 1457032,
+    "aggregateCommonJSLimitBytes": 1457152,
+    "commonJSGrowthBytes": 248,
+    "allowanceIncreaseBytes": 256,
+    "otherAcceptanceLimits": "unchanged",
+    "scope": "Recorded local prerequisite gates plus repaired full unit/type runs; hosted release and whole-product browser acceptance remain open"
+  },
+  "installation": {
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "previousManifest": "artifacts/gitlab-native-browser-install/link-checkpoint-install-20261112.json",
+    "previousRuntimeManifest": "artifacts/gitlab-native-runtime/link-checkpoint-build-20261112.json",
+    "patchVerification": "artifacts/gitlab-native-code-patch-verification-20261112.json",
+    "sourceRoundtrip": "artifacts/gitlab-native-code-install-roundtrip-20261112.json",
+    "scope": "Seven ordered spec patches; versioned eleven-file source restore/reinstall, not a compiled deployment rollback test"
+  },
+  "retainedFindings": [
+    "Diagrams, frontmatter, suggestions, GLQL and complete snippet workflows remain unimplemented",
+    "Draft target indication across manual block changes needs broader native UX acceptance",
+    "Intermittent initial reader lazy-image decode remains open despite later passes",
+    "Full roles/surfaces, dialect/source fidelity, templates/autocomplete, collaboration, mobile/cross-engine/assistive technology and hosted release remain open",
+    "Other two full products remain unimplemented; no parity/superiority promotion or publication"
+  ],
+  "diagnosticHistory": {
+    "actualRendererRefusal": "artifacts/gitlab-native-code-renderer-refusal-20261112/report.json",
+    "firstFunctionalPass": "artifacts/gitlab-native-code-first-functional-pass-20261112/report.json",
+    "note": "First functional journey passed 17 checks. Visual review found offscreen caret after toolbar use; final source adds explicit caret reveal and final actual journey adds a viewport assertion. Earlier fixture/contrast/keyboard/math failures are retained in selected logs."
+  },
+  "logs": [
+    "artifacts/gitlab-native-code-complete-local-check-20261112.log",
+    "artifacts/gitlab-native-code-full-unit-final-20261112.log",
+    "artifacts/gitlab-native-code-types-accepted-20261112.log",
+    "artifacts/gitlab-native-code-source-build-visible-20261112.log",
+    "artifacts/gitlab-native-code-storybook-build-visible-20261112.log",
+    "artifacts/gitlab-native-code-upstream-visible-20261112.log",
+    "artifacts/gitlab-native-code-lint-visible-20261112.log",
+    "artifacts/gitlab-native-code-storybook-audit-visible-20261112.log",
+    "artifacts/gitlab-native-code-live-visible-20261112.log",
+    "artifacts/gitlab-native-code-runtime-build-verified-20261112.log",
+    "artifacts/gitlab-native-code-install-visible-20261112.log",
+    "artifacts/gitlab-native-code-install-roundtrip-20261112.log",
+    "artifacts/gitlab-native-code-math-regression-final-20261112.log",
+    "artifacts/gitlab-native-code-session-release-20261112.log"
+  ],
+  "sourceHashEncoding": "UTF-8 with LF newlines",
+  "sourceHashes": {
+    "CHANGELOG.md": "55b8b8e4ba7f54e9d563892a4eafbfbc8d2878bd732195dcc192c8b12ab25509",
+    "docs/ROADMAP.md": "b46ba028e13bf0d4eafbfef39032a8ab7ed8c855a43052e8b31c35d27abe8d75",
+    "integrations/gitlab/README.md": "fb4099dc7aa7fa0defe23561523e5f4d23f70271eb1a466e463e141bc4534bb5",
+    "integrations/gitlab/components/fountain_code_menu.stories.js": "e2be20acec84202f0da503c69ec6fa37dd670bd81fa5502d351f77f3418c801d",
+    "integrations/gitlab/components/fountain_code_menu.vue": "d64ea299eff138d883552068b880b37c1b9587e7db59e63b47b9cffbc709e40a",
+    "integrations/gitlab/components/fountain_content_editor.vue": "9f93b0edd36c9b6d8fa05779c4bb4fd60b9fae1d05327042c7a9b0630a627ec7",
+    "integrations/gitlab/components/fountain_editor_surface.vue": "3dd2a210db6b08cc3f0d0aa5d27a9ef5540284f90723a74873b8f6df60c1389b",
+    "integrations/gitlab/fixtures/code-block-html.json": "ef5763bcf63193932fb8f3d84b6f0f123ca5e141c25062e0e18d553a80337e5c",
+    "integrations/gitlab/fixtures/code-block-live-html.json": "30f2007d60b590b73c83627c608afba20ca77eb464600cbd912161b7c1f1c345",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-code-tests.patch": "6df83ef747a385d5fdd675ae12ddbf51731550582a8b33e4ead50808351d6a6a",
+    "integrations/gitlab/runtime/README.md": "1a9ca14e23a6ff38b5cb852a9901cf35d61bb4eba0ec976f65fd0d9adbd05873",
+    "integrations/gitlab/runtime/browser.ts": "0880e95c9507977b0b4cc164e2aa8981ad1c3edbfef6ce2257c984e4675e4b18",
+    "integrations/gitlab/services/README.md": "f1f0737961385ce7c8d772ef3c0992f2ec21aed20ffab6aa498214a67f766963",
+    "integrations/gitlab/services/code_editing.ts": "437a6f4740d6b28287d0902b4f2d6913d8ff5ce294be6687b6ca160af7479763",
+    "integrations/gitlab/services/code_rendering.ts": "624aaf0515f5f91950918becf919c1a4e9c8e1c1bab98a18d775af87df2584ea",
+    "integrations/gitlab/services/content_editor.ts": "0ace42b3c7effe77975fdec3455130f6553706a7e194f27828e2cea35857cc22",
+    "integrations/gitlab/services/markdown_codec.ts": "e82629e22e92b0d4d4bf825b9a752f5100e62b1635fcadb7e9efe0161b65c011",
+    "integrations/gitlab/specs/fountain_code_menu_spec.js": "7ea724ec8f6215fb4b78ed35792de975752545a359f75596e9585651a48b5d58",
+    "scripts/audit-gitlab-code-storybook.mjs": "da719b4ad535ca781566e362f6b6dd020fdea9634a265fe9df8ceeb528ada0ac",
+    "scripts/audit-gitlab-native-code.mjs": "0d3b0e4e8edf1b44e884132b21c06ed55d7b2a05129c971594b2feef36098150",
+    "scripts/audit-gitlab-product-baseline.mjs": "b3e29f7b0571d408482bd5128427bf0bcc72bb5742b78924b392f381528ea50f",
+    "scripts/build-gitlab-native-runtime.mjs": "0e965d8b9a35067517bb540c62e8abee24c49fc094fd243242400adad397e461",
+    "scripts/check-build-budgets.mjs": "3d7db1c2afe98f93919a9481d9fe8dbfb642d492988f4e5b2c46a7c5f4d220f6",
+    "scripts/install-gitlab-native-browser.mjs": "f766786dfce46a48b12c25acf6d14d5d13959f3c95d7d7044ccfa8919d6374ce",
+    "scripts/prepare-gitlab-link-storybook.mjs": "5084188c5a934f8b019720160f8121d49659de717f18018420072cf67cb54dab",
+    "scripts/run-gitlab-native-browser-audit.mjs": "376e262236c2edf9cc12f1a32b14e404fc217cd70aa128a3fa88ae8b43dd6056",
+    "src/core/structure-commands.ts": "3b6835934e6fa80ead21ed33a86c947548f959800b801ae8c36f3b7d5b806fac",
+    "src/core/transaction/mapping.ts": "1cc9f282b4f3b161a7d5a01dc227f19f918ed3eaa47063ac678f09a254289b60",
+    "tests/gitlab-code-editing.test.ts": "d05935e382a8edc5e84eb877fca82e79fb8569e4640b53dcf2d98db7d551316f",
+    "tests/gitlab-code-rendering.test.ts": "0b4bdc1dafe0e4fdee02d6bc65ad8d9684b3ea1957f76d4e8481ee0b0ce42fb0",
+    "tests/nested-node-removal.test.ts": "8213173592f375d89906e3c33eaa97b4abc8718fed7a072c60b52b53399dac06"
+  }
+}

@@ -1,0 +1,44 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/content_editor/components/fountain_code_menu_spec.js -t Escape
+  console.log
+    {"draft":"js","session":false,"focus":1,"field":"rust"}
+
+      at Object.log (spec/frontend/content_editor/components/fountain_code_menu_spec.js:48:13)
+
+FAIL spec/frontend/content_editor/components/fountain_code_menu_spec.js
+  FountainCodeMenu
+    ✕ cancels through Escape without changing the document (278 ms)
+    ○ skipped prefills the canonical language and applies a custom label with one-step undo/redo
+    ○ skipped retains an invalid draft and permits correction
+    ○ skipped explains specialized renderer refusal without changing code or draft
+    ○ skipped retains a draft after the captured code changes and refuses stale apply/delete
+    ○ skipped removes a full multiline block and restores it through undo
+    ○ skipped keeps read-only language/deletion disabled while exposing copy
+    ○ skipped closes the owned session on component teardown
+
+  ● FountainCodeMenu › cancels through Escape without changing the document
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "js"
+    Received: "rust"
+
+      47 |     await createComponent(); draft('rust'); fireEvent.keyDown(field(), { key: 'Escape', keyCode: 27 }); await settle();
+      48 |     console.log(JSON.stringify({ draft: wrapper.vm.language, session: Boolean(wrapper.vm.session), focus: wrapper.emitted('focus')?.length, field: field().value }));
+    > 49 |     expect(field().value).toBe('js'); expect(service.getSerializedContent()).toBe(source);
+         |                           ^
+      50 |     expect(wrapper.emitted('focus')).toHaveLength(1);
+      51 |   });
+      52 |   it('retains a draft after the captured code changes and refuses stale apply/delete', async () => {
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_code_menu_spec.js:49:27)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 7 skipped, 8 total
+Snapshots:   0 total
+Time:        3.924 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js/i with tests matching "Escape".
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

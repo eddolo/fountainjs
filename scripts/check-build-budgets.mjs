@@ -717,7 +717,9 @@ const limits = Object.freeze({
   // Preserve mark nesting during attribute updates and export one logical link
   // across differently formatted text: 1,456,784 bytes (+365 bytes). Add 256
   // bytes capacity; every entry/ESM/CSS/performance/retention limit stays fixed.
-  'all CommonJS runtime code': 1422.75 * kibibyte,
+  // Required-container removal and selection recovery measure 1,457,032 bytes
+  // (+248 bytes). Add 256 bytes; other acceptance limits remain unchanged.
+  'all CommonJS runtime code': 1423 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

@@ -142,6 +142,46 @@ table labels refuse before conversion rather than silently folding their source.
 These are private integration contracts, not new public npm APIs or full GitLab
 link/dialect acceptance.
 
+## Native ordinary-code controls
+
+`getGitLabCodeContext()` reads the complete source and canonical language of one
+active `code_block`, including a structural node selection. A selection extending
+outside the block does not expose editable code controls. Copy reads model text,
+so syntax-coloring spans and CSS line numbers cannot enter the clipboard.
+
+`beginCodeEdit()` captures one immutable block. Unrelated structural edits map its
+target; edits to that block, document replacement, supersession and disposal
+invalidate or close the session. Moving the caret cannot redirect an open draft.
+Closing releases the service's session ownership and document subscriptions.
+Language changes and deletion validate serialization inside a native command
+batch. Refusal rolls back document and history. Unchanged language spelling is a
+no-op, including authored mixed case. New language labels are normalized to lower
+case and bounded to 80 ASCII letters/digits or `_+.#-` characters.
+
+The native contextual row provides a labeled input with GitLab's language
+suggestions, custom labels, explicit Apply/Cancel, full-source Copy and Delete.
+It wraps at narrow widths. Escape cancels after the native input commits its local
+draft, then returns focus through the editor view; active IME composition is left
+alone. The surface reveals the restored caret after toolbar focus so a correct
+model selection does not remain offscreen. Invalid/conflicting drafts remain visible. Read-only users can copy but
+cannot change language or delete. Language labels select existing highlighting
+behavior; choosing a custom label does not install or execute anything.
+
+`code_rendering.ts` recognizes GitLab's canonical-language pre/code carriers and
+known span metadata (`class`, `id`, `lang`, `data-lang`). It retains every source
+character and removes only a verified presentation wrapper and empty Copy/Insert
+snippet controls. Nonempty controls, unknown attributes/children and fence
+parameters cause a conversion refusal. Fixtures include both pinned upstream
+frontend literals and an actual authenticated renderer response. Diagrams,
+frontmatter, suggestions, GLQL and complete snippet workflows still need dedicated
+adapters; the ordinary-code menu does not implement them.
+
+Deleting the final block in a required list item, quote or table cell retains an
+editable paragraph. Removing a root block lands at the immediate successor.
+Intermediate structural selection mapping can recover without inventing an
+invalid gap. These are public engine repairs; the GitLab controls remain private
+integration code.
+
 ## Build and real-service evidence
 
 ```sh

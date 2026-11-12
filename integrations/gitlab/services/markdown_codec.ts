@@ -5,6 +5,7 @@ import { parseFragment, serialize, type DefaultTreeAdapterMap } from 'parse5';
 import type { SerializedContentCodec } from './serialized_content';
 import type { GitLabRenderResponse } from './asset_resolver';
 import { gitlabMathNodes, normalizeGitLabMath, serializeGitLabMath } from './math';
+import { normalizeGitLabCodeRendering } from './code_rendering';
 
 export interface GitLabMarkdownIssue { stage: 'import' | 'export'; code: string; message: string; path?: readonly number[] }
 export class GitLabMarkdownConversionError extends Error {
@@ -118,7 +119,11 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
       owned.push(input); checkboxes.set(parent, owned);
     }
   }
-  const math = normalizeGitLabMath(elements), issues: GitLabMarkdownIssue[] = [...math.issues];
+  const math = normalizeGitLabMath(elements);
+  const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element)));
+  const issues: GitLabMarkdownIssue[] = [
+    ...math.issues, ...codeIssues.map(issue => ({ stage: 'import' as const, ...issue })),
+  ];
   for (const element of elements) {
     if (math.handled.has(element)) continue;
     const classes = (attr(element, 'class') ?? '').split(/\s+/u);

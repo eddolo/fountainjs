@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Preserve required list, quote and table-cell containers when removing their
+  final block, recover selection through empty intermediate containers, and land
+  the caret in the immediate replacement or following block.
+
 - Preserve the nesting order of existing marks when their attributes change.
   Markdown export keeps a continuous outer link across differently formatted
   text, including reference links, instead of creating separate reader links.

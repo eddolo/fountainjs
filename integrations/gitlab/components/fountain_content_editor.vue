@@ -17,6 +17,7 @@ import {
 import FountainEditorSurface from './fountain_editor_surface.vue';
 import FountainFormattingToolbar from './fountain_formatting_toolbar.vue';
 import FountainLinkMenu from './fountain_link_menu.vue';
+import FountainCodeMenu from './fountain_code_menu.vue';
 
 export default {
   name: 'FountainContentEditor',
@@ -28,6 +29,7 @@ export default {
     FountainEditorSurface,
     FountainFormattingToolbar,
     FountainLinkMenu,
+    FountainCodeMenu,
   },
   // The installer inserts the pinned host's exact public prop definitions here.
   props: {},
@@ -440,6 +442,7 @@ export default {
         >
           <template #context-actions>
             <fountain-link-menu ref="linkMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
+            <fountain-code-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
           </template>
           <template #header-buttons>
             <slot name="header-buttons"></slot>

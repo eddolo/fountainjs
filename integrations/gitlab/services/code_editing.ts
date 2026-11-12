@@ -1,0 +1,122 @@
+import { NodeSelection, closeHistory, mapSelection, removeNode,
+  type Editor, type Node, type Transaction } from 'fountainjs-editor';
+
+export interface GitLabCodeContext {
+  readonly path: readonly number[];
+  readonly text: string;
+  readonly language: string;
+}
+interface CodeEditingOptions {
+  editor: Editor;
+  ensureReady(): void;
+  validate(doc: Node): void;
+  closed?(): void;
+  onListenerError?(error: unknown): void;
+}
+const at = (doc: Node, path: readonly number[]): Node => path.reduce((node, index) => node.child(index), doc);
+const inside = (path: readonly number[], parent: readonly number[]): boolean =>
+  path.length >= parent.length && parent.every((part, index) => path[index] === part);
+
+export function getGitLabCodeContext(editor: Editor): GitLabCodeContext | undefined {
+  const { doc, selection } = editor.state;
+  if (selection.kind !== 'text' && selection.kind !== 'node') return undefined;
+  const origin = selection instanceof NodeSelection ? selection.nodePath : selection.path;
+  try {
+    for (let length = origin.length; length > 0; length--) {
+      const path = origin.slice(0, length), node = at(doc, path);
+      if (node.type.name !== 'code_block') continue;
+      if (!inside(selection.endPath, path) || node.content.some(child => !child.isText)) return undefined;
+      return Object.freeze({ path: Object.freeze(path), text: node.textContent,
+        language: String(node.attrs.language) });
+    }
+  } catch { return undefined; }
+  return undefined;
+}
+
+/** A form owns one captured block; later selection changes cannot redirect it. */
+export class GitLabCodeEditingSession {
+  private options?: CodeEditingOptions;
+  private doc?: Node;
+  private node?: Node;
+  private selected: NodeSelection;
+  private release?: () => void;
+  private conflicted = false;
+  private committing = false;
+  readonly initial: GitLabCodeContext;
+
+  constructor(options: CodeEditingOptions) {
+    options.ensureReady();
+    const context = getGitLabCodeContext(options.editor);
+    if (!context) throw new Error('GITLAB_CODE_SELECTION_REQUIRED');
+    this.initial = context; this.options = options;
+    this.doc = options.editor.state.doc; this.node = at(this.doc, context.path);
+    this.selected = new NodeSelection(this.doc, context.path);
+    this.release = options.editor.subscribe((state, transaction) => this.track(state.doc, transaction));
+  }
+
+  get conflict(): boolean { return this.conflicted; }
+  get closed(): boolean { return !this.options; }
+
+  private track(doc: Node, transaction: Transaction): void {
+    if (!transaction.docChanged || this.committing || this.conflicted || !this.doc) return;
+    try {
+      if (transaction.originalDoc !== this.doc || transaction.getMeta('content$replace')) throw new Error();
+      const mapped = mapSelection(this.selected, this.doc, doc, transaction.mapping);
+      if (!(mapped instanceof NodeSelection) || at(doc, mapped.nodePath) !== this.node) throw new Error();
+      this.selected = mapped; this.doc = doc;
+    } catch { this.conflicted = true; }
+  }
+
+  private ready(): CodeEditingOptions {
+    if (!this.options) throw new Error('GITLAB_CODE_SESSION_CLOSED');
+    this.options.ensureReady();
+    if (this.conflicted || this.options.editor.state.doc !== this.doc) throw new Error('GITLAB_CODE_TARGET_CHANGED');
+    return this.options;
+  }
+
+  applyLanguage(input: string): boolean {
+    const { editor } = this.ready();
+    if (typeof input !== 'string' || !/^[A-Za-z0-9_+.#-]{1,80}$/u.test(input.trim()))
+      throw new Error('GITLAB_CODE_INVALID_LANGUAGE');
+    const language = input.trim().toLowerCase();
+    if (input.trim() === this.initial.language) { this.close(); return true; }
+    if (['mermaid', 'plantuml', 'glql', 'suggestion', 'math'].includes(language))
+      throw new Error('GITLAB_CODE_SPECIALIZED_LANGUAGE');
+    if (language === this.initial.language) { this.close(); return true; }
+    closeHistory(editor); this.ready();
+    const transaction = editor.createTransaction().setNodeAttrs(this.selected.nodePath, { ...this.node!.attrs, language });
+    this.commit(() => editor.dispatch(transaction));
+    this.close(); return true;
+  }
+
+  remove(): boolean {
+    const { editor } = this.ready();
+    closeHistory(editor); this.ready();
+    this.commit(() => removeNode(editor, this.selected.nodePath));
+    this.close(); return true;
+  }
+
+  private commit(execute: () => boolean): void {
+    const options = this.ready();
+    this.committing = true;
+    try {
+      const accepted = options.editor.runCommandBatch(() => {
+        this.ready();
+        const before = options.editor.state.doc;
+        if (!execute() || options.editor.state.doc === before) return false;
+        options.validate(options.editor.state.doc);
+        return true;
+      });
+      if (!accepted) throw new Error('GITLAB_CODE_UPDATE_REFUSED');
+    } finally { this.committing = false; }
+  }
+
+  close(): void {
+    const options = this.options;
+    if (!options) return;
+    this.release?.(); this.release = undefined;
+    this.options = undefined; this.doc = undefined; this.node = undefined;
+    try { options.closed?.(); }
+    catch (error) { try { options.onListenerError?.(error); } catch { /* Closing observers cannot reverse a committed edit. */ } }
+  }
+}

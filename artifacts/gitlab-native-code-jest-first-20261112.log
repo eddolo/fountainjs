@@ -1,0 +1,92 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-code-jest-first-20261112.json spec/frontend/content_editor/components/fountain_code_menu_spec.js
+FAIL spec/frontend/content_editor/components/fountain_code_menu_spec.js
+  FountainCodeMenu
+    ✓ prefills the canonical language and applies a custom label with one-step undo/redo (139 ms)
+    ✓ retains an invalid draft and permits correction (66 ms)
+    ✓ explains specialized renderer refusal without changing code or draft (44 ms)
+    ✕ cancels through Escape without changing the document (36 ms)
+    ✕ retains a draft after the captured code changes and refuses stale apply/delete (48 ms)
+    ✕ removes a full multiline block and restores it through undo (23 ms)
+    ✕ keeps read-only language/deletion disabled while exposing copy (31 ms)
+    ✓ closes the owned session on component teardown (27 ms)
+
+  ● FountainCodeMenu › cancels through Escape without changing the document
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "js"
+    Received: "rust"
+
+      92 |     fireEvent.keyDown(field(), { key: 'Escape', keyCode: 27 });
+      93 |     await settle();
+    > 94 |     expect(field().value).toBe('js');
+         |                           ^
+      95 |     expect(service.getSerializedContent()).toBe(source);
+      96 |     expect(wrapper.emitted('focus')).toHaveLength(1);
+      97 |   });
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_code_menu_spec.js:94:27)
+
+  ● FountainCodeMenu › retains a draft after the captured code changes and refuses stale apply/delete
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      103 |     expect(getByRole(wrapper.element, 'alert').textContent).toContain('code block changed');
+      104 |     expect(field().value).toBe('rust');
+    > 105 |     expect(button('Apply language').disabled).toBe(true);
+          |                                               ^
+      106 |     expect(button('Delete code block').disabled).toBe(true);
+      107 |     fireEvent.click(button('Cancel language edit'));
+      108 |     await settle();
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_code_menu_spec.js:105:47)
+
+  ● FountainCodeMenu › removes a full multiline block and restores it through undo
+
+    TypeError: Expected container to be an Element, a Document or a DocumentFragment but got Comment.
+
+      114 |     await settle();
+      115 |     expect(service.editor.state.doc.child(0).type.name).toBe('paragraph');
+    > 116 |     expect(queryByRole(wrapper.element, 'combobox')).toBeNull();
+          |                       ^
+      117 |     expect(undo(service.editor)).toBe(true);
+      118 |     await settle();
+      119 |     expect(field().value).toBe('js');
+
+      at checkContainerType (node_modules/@testing-library/dom/dist/helpers.js:61:11)
+      at queryAllByRole (node_modules/@testing-library/dom/dist/queries/role.js:34:35)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (spec/frontend/content_editor/components/fountain_code_menu_spec.js:116:23)
+
+  ● FountainCodeMenu › keeps read-only language/deletion disabled while exposing copy
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      123 |     await createComponent(false);
+      124 |     expect(field().disabled).toBe(true);
+    > 125 |     expect(button('Apply language').disabled).toBe(true);
+          |                                               ^
+      126 |     expect(button('Delete code block').disabled).toBe(true);
+      127 |     expect(button('Copy code').disabled).toBe(false);
+      128 |   });
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_code_menu_spec.js:125:47)
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 4 passed, 8 total
+Snapshots:   0 total
+Time:        5.082 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-code-jest-first-20261112.json
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

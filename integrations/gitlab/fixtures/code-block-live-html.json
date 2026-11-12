@@ -1,0 +1,10 @@
+{
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "source": "Authenticated actual GitLab Markdown renderer response during native browser paste",
+    "request": "```javascript\nconst total = 42;\nconsole.log(total);\n```",
+    "report": "artifacts/gitlab-native-code-renderer-refusal-20261112/report.json"
+  },
+  "html": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"javascript\" class=\"code highlight js-syntax-highlight language-javascript\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"javascript\"><span class=\"kd\">const</span> <span class=\"nx\">total</span> <span class=\"o\">=</span> <span class=\"mi\">42</span><span class=\"p\">;</span></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"javascript\"><span class=\"nx\">console</span><span class=\"p\">.</span><span class=\"nf\">log</span><span class=\"p\">(</span><span class=\"nx\">total</span><span class=\"p\">);</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
+}

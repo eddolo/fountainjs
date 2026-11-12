@@ -2,7 +2,26 @@
 
 Updated 2026-11-12.
 
-The latest real GitLab checkpoint adds native text-link creation, preview, copy,
+The latest GitLab work adds native ordinary-code language controls, full-source
+copy, deletion and undo/redo, with mapped targets and retained invalid/conflicting
+drafts. Real renderer output is normalized through an explicit code adapter.
+Public engine repairs retain required containers when deleting their final block
+and land the caret in the immediate replacement or successor. All **5,614 unit
+tests/347 files** pass. Package/API, headless/server, format, size, performance/
+retention and framework type checks pass; an initial math-routing regression is
+repaired and its failed run is retained. GitLab's scoped upstream set is
+**260 passed / 4 failed / 264 total**, including ten passing new code-control
+cases. Four component states at desktop/narrow widths pass eight checks with
+zero accessibility violations. The final actual GitLab journey passes **17 checks**,
+including a viewport assertion for nested deletion/typing, exact source saving,
+reader reopen, anonymous refusal and application restart. Native acceptance is
+currently Linux Chromium-only.
+Diagrams, frontmatter, suggestions, GLQL and complete snippet workflows remain
+unfinished. The four legacy contextual-menu requirements still fail; no parity
+row or full-product claim is promoted.
+[Current evidence and limits](../integrations/gitlab/README.md#native-ordinary-code-controls).
+
+The preceding real GitLab checkpoint adds native text-link creation, preview, copy,
 editing and removal, with mapped selection, one-step undo/redo, strict host URL
 resolution and retained drafts during real network failure. Its recorded journey
 passes **17 checks**, including actual save/reopen, anonymous refusal and application

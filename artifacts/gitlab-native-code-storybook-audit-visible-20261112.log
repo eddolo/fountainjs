@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "checks": [
+    "1280px: keyboard Enter applies a custom language, browser clipboard copies all source, Escape cancels and returns editor focus",
+    "editing/1280px: no accessibility violations, page errors or horizontal page overflow",
+    "Read-only code can be copied through the real browser clipboard while mutation controls remain disabled",
+    "read-only/1280px: no accessibility violations, page errors or horizontal page overflow",
+    "invalid-language/1280px: no accessibility violations, page errors or horizontal page overflow",
+    "conflict/1280px: no accessibility violations, page errors or horizontal page overflow",
+    "360px: keyboard Enter applies a custom language, browser clipboard copies all source, Escape cancels and returns editor focus",
+    "editing/360px: no accessibility violations, page errors or horizontal page overflow"
+  ],
+  "pages": [
+    {
+      "id": "editing",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "invalid-language",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "conflict",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "editing",
+      "width": 360,
+      "violations": []
+    }
+  ]
+}

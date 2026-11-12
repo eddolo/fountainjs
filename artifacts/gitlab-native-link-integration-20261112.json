@@ -93,8 +93,8 @@
     "scope": "Separate recorded gates; not a hosted release or complete refreshed cross-browser product gate"
   },
   "installation": {
-    "manifest": "artifacts/gitlab-native-browser-install/install.json",
-    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "manifest": "artifacts/gitlab-native-browser-install/link-checkpoint-install-20261112.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/link-checkpoint-build-20261112.json",
     "previousManifest": "artifacts/gitlab-native-browser-install/capacity-checkpoint-install-20261112.json",
     "previousRuntimeManifest": "artifacts/gitlab-native-runtime/capacity-checkpoint-build-20261112.json",
     "patchVerification": "artifacts/gitlab-native-link-patch-verification-20261112.json",

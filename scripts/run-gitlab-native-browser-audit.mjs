@@ -30,7 +30,8 @@ try {
     process.execPath,
     [
       resolve(root, 'scripts/audit-gitlab-product-baseline.mjs'),
-      process.argv.includes('--links') ? '--native-links'
+      process.argv.includes('--code') ? '--native-code'
+        : process.argv.includes('--links') ? '--native-links'
         : process.argv.includes('--capacity') ? '--native-attachment-capacity'
         : process.argv.includes('--attachments') ? '--native-attachments'
         : process.argv.includes('--component') ? '--native-component'

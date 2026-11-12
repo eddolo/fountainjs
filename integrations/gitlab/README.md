@@ -767,6 +767,71 @@ hosted release remain open. No full-product or superiority claim is made.
 [real journey](../../artifacts/gitlab-native-links-20261112/report.json),
 [link contracts](services/README.md).
 
+### Native ordinary-code controls
+
+The actual component provides a contextual code-language input with GitLab's
+suggestions and custom labels, Apply/Cancel, complete source Copy and Delete.
+Language edits preserve code text and surrounding content, and have one-step
+undo/redo. Invalid/conflicting drafts remain visible; Escape restores the field
+and editor focus. Composition Escape is left alone. Applying a language contains
+the submit event so it cannot submit the enclosing GitLab issue form. Read-only
+users retain Copy while mutation controls are disabled.
+
+The converter now recognizes canonical GitLab code HTML, retains all source
+characters and removes known syntax-coloring/presentation carriers. It handles
+both pinned frontend fixtures and an actual authenticated renderer response with
+`data-lang` and an empty Insert snippet control. Unknown markup, nonempty
+controls and fence parameters refuse conversion. Recognized math is dispatched
+to the existing math adapter first. Diagrams, frontmatter, suggestions, GLQL and
+full snippet workflows remain dedicated adapter work.
+
+Native code testing also found public engine failures: deletion could leave a
+required list/quote/cell empty, nested selection mapping could fabricate an
+invalid gap, and caret landing could skip an immediate replacement/successor.
+These are repaired with source tests and undo/redo coverage. The service releases
+closed sessions and subscriptions, maps unrelated edits and refuses changed or
+replaced targets. Draft-target feedback across manual block switches still needs
+broader native UX acceptance.
+
+All **5,614 tests/347 files** pass. The recorded prerequisite run passes package,
+450 API contracts, server/headless, scoped Markdown/math/DOCX checks, build
+budgets, performance/retention and framework types, then exposes the math-routing
+regression above. The repaired full unit rerun and current root types pass.
+Aggregate CJS grows 248 bytes, with 256 bytes of measured allowance; other limits
+remain unchanged. The source-pinned upstream set is **260 passed / 4 failed /
+264 total**, including ten new code-control cases. Alert, media, code-block and
+reference legacy-menu requirements remain failing; ordinary-code controls do
+not close diagram/frontmatter coverage. Seven ordered patches reconstruct the
+tested specs exactly. No cases are skipped.
+
+Four isolated component states and a 360-pixel keyboard workflow pass eight
+checks, including read-only browser clipboard copy, with no accessibility
+violations or page overflow. A real theme collision was found and repaired by
+pairing the native dark token colors with their background under GitLab CSS.
+These component fixtures are separate from actual-service product acceptance.
+
+The final actual-service journey passes **17 checks**: real renderer import,
+language changes, clipboard, invalid/cancel recovery, root and nested deletion/
+undo/redo, direct typing, exact server source, reader save/reopen, private access
+refusal and actual application restart. The nested replacement paragraph must
+remain in the viewport. Visual review of the first functional pass found that a
+correct caret could remain offscreen after toolbar use; the final surface now
+reveals it through the existing view API. Final editor, nested caret, reader and
+restart screenshots are inspected, and browser recordings are retained. This is
+Linux Chromium evidence, not cross-engine or complete product acceptance.
+The eleven-file, version-3 source installer also passes restore/reinstall with
+every file digest unchanged. This is source rollback evidence; it does not claim
+a compiled deployment rollback exercise.
+
+Full product, reader image
+intermittency, complete dialect/source fidelity, all roles/surfaces, cross-engine,
+mobile/assistive technology and hosted release remain open. Other products are
+still unimplemented and nothing from this checkpoint is published.
+
+[Checkpoint evidence](../../artifacts/gitlab-native-code-integration-20261112.json),
+[actual journey](../../artifacts/gitlab-native-code-20261112/report.json),
+[code contracts](services/README.md#native-ordinary-code-controls).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

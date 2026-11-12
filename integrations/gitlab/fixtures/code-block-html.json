@@ -1,0 +1,12 @@
+{
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "path": "spec/frontend/content_editor/extensions/code_block_highlight_spec.js",
+    "sha256": "74dfa2d78f3c56ed9a889cab2f4f6c6e3ebbcbbef62bed77bb41ef7bd13abdbc",
+    "method": "Expression-free AST template literals; upstream source not executed"
+  },
+  "fixtures": {
+    "CODE_BLOCK_HTML": "<div class=\"gl-relative markdown-code-block js-markdown-code\">&#x000A;<pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"javascript\" class=\"code highlight js-syntax-highlight language-javascript\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" lang=\"javascript\"><span class=\"nx\">console</span><span class=\"p\">.</span><span class=\"nf\">log</span><span class=\"p\">(</span><span class=\"dl\">'</span><span class=\"s1\">hello world</span><span class=\"dl\">'</span><span class=\"p\">)</span></span></code></pre>&#x000A;<copy-code></copy-code>&#x000A;</div>",
+    "EMPTY_CODE_BLOCK_HTML": "<div class=\"gl-relative markdown-code-block js-markdown-code\">&#x000A;<pre class=\"code highlight js-syntax-highlight language-javascript\" data-canonical-lang=\"js\" data-sourcepos=\"1:1-2:3\"><code></code></pre>&#x000A;&#x000A;</div>"
+  }
+}

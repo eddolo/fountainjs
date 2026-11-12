@@ -1,0 +1,51 @@
+{
+  "scope": "Four isolated actual-component states plus narrow keyboard workflow using fixed renderer fixtures; not real-service acceptance",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "status": "passed",
+  "checks": [
+    "1280px: keyboard Enter applies a custom language, browser clipboard copies all source, Escape cancels and returns editor focus",
+    "editing/1280px: no accessibility violations, page errors or horizontal page overflow",
+    "Read-only code can be copied through the real browser clipboard while mutation controls remain disabled",
+    "read-only/1280px: no accessibility violations, page errors or horizontal page overflow",
+    "invalid-language/1280px: no accessibility violations, page errors or horizontal page overflow",
+    "conflict/1280px: no accessibility violations, page errors or horizontal page overflow",
+    "360px: keyboard Enter applies a custom language, browser clipboard copies all source, Escape cancels and returns editor focus",
+    "editing/360px: no accessibility violations, page errors or horizontal page overflow"
+  ],
+  "pages": [
+    {
+      "id": "editing",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "id": "invalid-language",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "id": "conflict",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "id": "editing",
+      "width": 360,
+      "violations": [],
+      "errors": []
+    }
+  ],
+  "sources": {
+    "app/assets/javascripts/content_editor/components/fountain_code_menu.vue": "c520e1ea45188e7a9847cf46fdac3dac2a2b5b251262b41a16103698767fd5f7",
+    "app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js": "31bfae7301e808c3dedffcb69903f1dc686d625d2b3ffbe37406c91bce165e01"
+  }
+}

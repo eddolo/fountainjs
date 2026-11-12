@@ -170,16 +170,34 @@ retaining attachment/contextual-menu requirements. Then apply
 `gitlab-19.5.3-native-attachment-tests.patch` for the native file controls and nine
 additional upload/focus cases. Then apply
 `gitlab-19.5.3-native-upload-capacity-tests.patch` for two whole-batch admission
-cases. The three suites currently pass 176 of 181 cases; five contextual-menu
-cases remain failing. All 75 host and 40 form cases pass.
-Forward/reverse checks reconstruct both native specs exactly
+cases. Then apply `gitlab-19.5.3-native-link-tests.patch` and
+`gitlab-19.5.3-native-code-tests.patch` in that order. They add native link and
+ordinary-code component behavior tests. The current six-suite set is 260 passed /
+4 failed / 264 cases, including 64 work-item description cases, eight link cases
+and ten code cases. Alert, media, code-block and reference legacy-menu requirements
+remain failing; ordinary code controls do not implement diagrams/frontmatter.
+All 75 host and 40 form cases pass.
+Forward/reverse checks reconstruct the native specs exactly
 without changing the main index; no skips or timeout increases waive failures.
+
+```sh
+corepack yarn jest --runInBand \
+  spec/frontend/content_editor/components/content_editor_spec.js \
+  spec/frontend/content_editor/components/fountain_link_menu_spec.js \
+  spec/frontend/content_editor/components/fountain_code_menu_spec.js \
+  spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js \
+  spec/frontend/issuable/issuable_form_spec.js \
+  spec/frontend/work_items/components/work_item_description_spec.js
+```
 
 The installer checks source revision, prepared-file digests, runtime input hashes
 and existing owned-file hashes. It rejects unrecognized edits and symlinks. It
 retains original source files for rollback and formats installed components with
 GitLab's own Prettier/Tailwind configuration. Its install manifest identifies
-every changed file. The native runtime and renderer CSS are local build inputs.
+every changed file. Format 3 owns exactly eleven files, including both native
+menu components and their isolated Storybook states; earlier retained generations
+remain recognizable for guarded upgrade/restore. The native runtime and renderer
+CSS are local build inputs.
 
 Native imports request `no_header_anchors` through the real host callback;
 reader navigation decorations must not become source links. Cancellation is
@@ -199,6 +217,10 @@ node scripts/run-gitlab-native-browser-audit.mjs --component
 node scripts/run-gitlab-native-browser-audit.mjs --attachments
 # Include whole-batch refusal and smaller-selection recovery through the picker:
 node scripts/run-gitlab-native-browser-audit.mjs --capacity
+# Text links, actual renderer offline/retry, clipboard and mixed-format saving:
+node scripts/run-gitlab-native-browser-audit.mjs --links
+# Ordinary code, languages, clipboard, nested removal and visible caret recovery:
+node scripts/run-gitlab-native-browser-audit.mjs --code
 ```
 
 Use `PLAYWRIGHT_BROWSERS_PATH` when the installed Linux browser lives outside

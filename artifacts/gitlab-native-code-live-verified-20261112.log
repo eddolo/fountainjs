@@ -1,0 +1,26 @@
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{
+  "status": "passed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Actual GitLab-rendered multiline highlighted code imports, changes language and restores through one-step undo/redo",
+    "Real browser clipboard copies the complete code source; invalid/custom drafts and Escape preserve the code and restore editor focus",
+    "Delete removes the full code block, undo restores it, and actual browser typing edits the restored code in place",
+    "Actual nested code deletion/undo/redo retains its list and neighboring item; browser typing lands in the replacement paragraph",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Native UI Save persists the changed code language and exact source; the actual GitLab reader renders the edited code",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ]
+}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped

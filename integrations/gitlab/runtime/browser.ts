@@ -1,6 +1,7 @@
 export { GitLabContentEditor, GitLabEditorNotReady } from '../services/content_editor';
 export { assertGitLabNativeHostConfiguration } from '../services/host_configuration';
 export { getGitLabLinkContext } from '../services/link_editing';
+export { getGitLabCodeContext } from '../services/code_editing';
 export {
   EditorView,
   Selection,

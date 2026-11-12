@@ -1,0 +1,152 @@
+{
+  "date": "2026-11-12T16:58:57.784Z",
+  "scope": "Native Fountain browser editor in the actual GitLab application; partial toolbar/providers, not full product acceptance",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Actual GitLab-rendered multiline highlighted code imports, changes language and restores through one-step undo/redo",
+    "Real browser clipboard copies the complete code source; invalid/custom drafts and Escape preserve the code and restore editor focus",
+    "Delete removes the full code block, undo restores it, and actual browser typing edits the restored code in place",
+    "Actual nested code deletion/undo/redo retains its list and neighboring item; browser typing lands in the replacement paragraph",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Native UI Save persists the changed code language and exact source; the actual GitLab reader renders the edited code",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ],
+  "secrets": "Password/session used in memory only; no traces or storage-state files",
+  "preparedHost": true,
+  "nativeBrowser": true,
+  "nativeInsertion": true,
+  "nativeComponent": true,
+  "nativeAttachments": false,
+  "nativeCapacity": false,
+  "nativeLinks": false,
+  "nativeCodeProfile": true,
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1448617,
+    "sha256": "9c6191e5194b98ffdf80cd23c711ffa1bf52679cfe990aaf387f3da947a79eea",
+    "parentRevision": "2094547a46215a46d9d13ecd10538000e3f0c322",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "0880e95c9507977b0b4cc164e2aa8981ad1c3edbfef6ce2257c984e4675e4b18",
+      "integrations/gitlab/services/content_editor.ts": "0ace42b3c7effe77975fdec3455130f6553706a7e194f27828e2cea35857cc22",
+      "integrations/gitlab/services/markdown_insertion.ts": "379504ee7216d91e9ed7a8342c637ffda871d08e1648043e23e6428cd57d1621",
+      "integrations/gitlab/services/attachment_uploads.ts": "94c88655b81c3d2863369601d92ffad1bdec106e2016949809490b353ca436ca",
+      "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+      "integrations/gitlab/services/code_editing.ts": "437a6f4740d6b28287d0902b4f2d6913d8ff5ce294be6687b6ca160af7479763",
+      "integrations/gitlab/services/code_rendering.ts": "624aaf0515f5f91950918becf919c1a4e9c8e1c1bab98a18d775af87df2584ea",
+      "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+      "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+      "integrations/gitlab/services/markdown_codec.ts": "e82629e22e92b0d4d4bf825b9a752f5100e62b1635fcadb7e9efe0161b65c011",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "caea8f3c22f3bd3ca90fa7015ff2260cb0c8d5d9974fb9906c7cdbe2a79189f3",
+      "integrations/gitlab/plugins/reference_navigation.ts": "7c7137d249f8887a93f7fe089961a0377115f8d6c71323e8d4165d21e384d4b0",
+      "dist/index.js": "019e688b6e47a207b505a6d4c182c9d55424b4065e979a4f4c9b03a5da844225"
+    }
+  },
+  "browserErrors": [],
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/25b96a1a1748649d21540473fbc3e6dc/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/25b96a1a1748649d21540473fbc3e6dc/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/25b96a1a1748649d21540473fbc3e6dc/fountain-baseline-figure.png",
+      "status": 304
+    }
+  ],
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 50,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/50"
+  },
+  "originalServerDescription": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/25b96a1a1748649d21540473fbc3e6dc/fountain-baseline-figure.png)\n\nEnd of the original description.",
+  "nativeCodeRendering": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"javascript\" class=\"code highlight js-syntax-highlight language-javascript\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"javascript\"><span class=\"kd\">const</span> <span class=\"nx\">total</span> <span class=\"o\">=</span> <span class=\"mi\">42</span><span class=\"p\">;</span></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"javascript\"><span class=\"nx\">console</span><span class=\"p\">.</span><span class=\"nf\">log</span><span class=\"p\">(</span><span class=\"nx\">total</span><span class=\"p\">);</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<ul data-sourcepos=\"6:1-9:15\" dir=\"auto\">&#x000A;<li data-sourcepos=\"6:1-8:5\">&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"6:3-8:5\" data-canonical-lang=\"js\" class=\"code highlight js-syntax-highlight language-javascript\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"javascript\"><span class=\"nx\">Nested</span> <span class=\"nx\">console</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;</li>&#x000A;<li data-sourcepos=\"9:1-9:15\">Neighbor item</li>&#x000A;</ul>",
+  "nativeCode": {
+    "originalText": "const total = 42;\nconsole.log(total);",
+    "copiedText": "const total = 42;\nconsole.log(total);",
+    "language": "python",
+    "finalText": "const total = 42;\nconsole.log(total); // reviewed",
+    "nestedReplacement": "Replaced nested code"
+  },
+  "preparedScripts": [
+    {
+      "path": "/assets/webpack/content_editor.e4c4b699.chunk.js",
+      "sha256": "38e10bb63f42ea42db2901d1726be7296643de2053f46fd7cf43ffb70f28e1a5"
+    },
+    {
+      "path": "/assets/webpack/content_editor.e4c4b699.chunk.js",
+      "sha256": "38e10bb63f42ea42db2901d1726be7296643de2053f46fd7cf43ffb70f28e1a5"
+    },
+    {
+      "path": "/assets/webpack/content_editor.e4c4b699.chunk.js",
+      "sha256": "38e10bb63f42ea42db2901d1726be7296643de2053f46fd7cf43ffb70f28e1a5"
+    },
+    {
+      "path": "/assets/webpack/content_editor.e4c4b699.chunk.js",
+      "sha256": "38e10bb63f42ea42db2901d1726be7296643de2053f46fd7cf43ffb70f28e1a5"
+    }
+  ],
+  "frontendMount": {
+    "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+    "readOnly": true
+  },
+  "nativeTaskControls": [
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    },
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    }
+  ],
+  "source": {
+    "original": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/25b96a1a1748649d21540473fbc3e6dc/fountain-baseline-figure.png)\n\nEnd of the original description.\n",
+    "saved": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| :--- | :--- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/25b96a1a1748649d21540473fbc3e6dc/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with @root.\n\n**Recovered paste**\n\n```python\nconst total = 42;\nconsole.log(total); // reviewed\n```\n\n- Replaced nested code\n- Neighbor item\n\n<p data-fountain-empty=\"text\"></p>"
+  },
+  "comment": {
+    "body": "Native Fountain discussion: created through the actual GitLab comment form.",
+    "persisted": true
+  },
+  "recoveryIssue": {
+    "iid": 51,
+    "originalSourceUnchanged": true,
+    "recoveryDraftCancelled": true
+  },
+  "status": "passed"
+}

@@ -80,6 +80,7 @@ export default {
     // eslint-disable-next-line vue/no-unused-properties -- Called by the owning ContentEditor.
     focus(position) {
       this.fountainView?.focus(position);
+      this.fountainView?.scrollSelectionIntoView();
     },
     // eslint-disable-next-line vue/no-unused-properties -- Called after a host-owned file insertion.
     revealSelection() {
@@ -118,3 +119,14 @@ export default {
 <template>
   <div ref="mount" data-fountain-root="gitlab" v-bind="$attrs"></div>
 </template>
+<style>
+/* Keep the native token palette paired with its background under host CSS. */
+[data-fountain-root='gitlab'] .fountain-editor pre.fjs-highlight--dark {
+  background: #151823;
+  color: #e7e9ee;
+}
+[data-fountain-root='gitlab'] .fountain-editor pre.fjs-code-block > code {
+  background: transparent;
+  color: inherit;
+}
+</style>

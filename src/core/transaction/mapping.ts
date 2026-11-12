@@ -397,7 +397,8 @@ export function mapSelection(selection: AnySelection, before: Node, after: Node,
       if (!point) return selectionWithoutText(after, from);
       return Selection.cursor(point.path, point.offset);
     }
-    return new GapSelection(after, from, 1);
+    try { return new GapSelection(after, from, 1); }
+    catch { return selectionAtPosition(after, from); }
   }
   if (selection instanceof CellSelection) {
     const anchorFrom = nodeRangeAtPath(before, selection.anchorCellPath).from;
