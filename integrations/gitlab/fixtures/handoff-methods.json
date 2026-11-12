@@ -1,0 +1,44 @@
+{
+  "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+  "license": "GITLAB-LICENSE.txt",
+  "patchSHA256": "96e548f8ccc3092974c3e285d8cb67dec1f621629056f09b1fb9dcc89cb6c244",
+  "scope": "Selected actual host methods for isolated contract regression; not full Vue/GitLab application validation.",
+  "files": [
+    {
+      "kind": "host",
+      "path": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
+      "originalSHA256": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
+      "patchedSHA256": "9cdfe2d8a9deb3528f05bc845acaafc972178a9ec15ee1be8503745b856eb6d2",
+      "method": "onEditingModeChange",
+      "code": "async onEditingModeChange(editingMode) {\r\n      if (this.isContentEditorActive && editingMode === EDITING_MODE_MARKDOWN_FIELD) {\r\n        try {\r\n          // The observer is debounced; read before unmounting the rich editor.\r\n          const markdown = this.$refs.contentEditor.getSerializedContentForHandoff();\r\n          if (typeof markdown !== 'string') throw new Error('Expected current Markdown.');\r\n          this.updateMarkdownFromContentEditor({ markdown });\r\n          if (this.alert?.handoffError) this.alert = null;\r\n        } catch {\r\n          this.alert = {\r\n            message: s__(\r\n              'MarkdownEditor|Unable to switch to Markdown. Your document is still open in the rich text editor. Finish the current edit or resolve the conversion error, then try again.',\r\n            ),\r\n            variant: 'danger',\r\n            handoffError: true,\r\n            dismiss: () => { this.alert = null; },\r\n          };\r\n          return;\r\n        }\r\n      }\r\n\r\n      if (\r\n        editingMode === EDITING_MODE_CONTENT_EDITOR &&\r\n        this.beforeContentEditor &&\r\n        !(await this.beforeContentEditor(this.markdown))\r\n      ) {\r\n        return;\r\n      }\r\n\r\n      this.editingMode = editingMode;\r\n      this.notifyEditingModeChange(editingMode);\r\n    }"
+    },
+    {
+      "kind": "restored",
+      "path": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
+      "originalSHA256": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
+      "patchedSHA256": "9cdfe2d8a9deb3528f05bc845acaafc972178a9ec15ee1be8503745b856eb6d2",
+      "method": "onEditingModeRestored",
+      "code": "onEditingModeRestored(editingMode) {\r\n      if (!this.isDefaultEditorEnabled) return;\r\n      if (this.isContentEditorActive && editingMode === EDITING_MODE_MARKDOWN_FIELD) {\r\n        return this.onEditingModeChange(editingMode);\r\n      }\r\n      if (editingMode === EDITING_MODE_CONTENT_EDITOR && !this.enableContentEditor) {\r\n        this.editingMode = EDITING_MODE_MARKDOWN_FIELD;\r\n        return;\r\n      }\r\n\r\n      this.editingMode = editingMode;\r\n      this.$emit(EDITING_MODE_EVENTS[editingMode]);\r\n      this.notifyEditingModeChange(editingMode);\r\n    }"
+    },
+    {
+      "kind": "component",
+      "path": "app/assets/javascripts/content_editor/components/content_editor.vue",
+      "originalSHA256": "2fbd71b6ca81e24b6c7f6066493e22d3ba8d715ddff8da8d66a0b7517802e13c",
+      "patchedSHA256": "f7bd1c156d9fc1298f939150f9efa3f4722366ef00e74cdefb1ebae4c29f0c67",
+      "method": "getSerializedContentForHandoff",
+      "code": "getSerializedContentForHandoff() {\r\n      if (\r\n        this.isLoading ||\r\n        !this.contentEditor?.tiptapEditor?.view ||\r\n        this.contentEditor.tiptapEditor.view.composing ||\r\n        (!this.collaborationProvider && this.latestMarkdown !== this.markdown)\r\n      ) {\r\n        throw new Error('The rich text editor is not ready for serialization.');\r\n      }\r\n      return this.contentEditor.getSerializedContent();\r\n    }"
+    }
+  ],
+  "tests": [
+    {
+      "path": "spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js",
+      "sha256": "8f3f17868877428a5dacc400bc64556b2817fa4cb2430e013594480aaf6cfc86",
+      "status": "Parsed, not executed"
+    },
+    {
+      "path": "spec/frontend/content_editor/components/content_editor_spec.js",
+      "sha256": "a7ee4a9ea277cc486a2ae123c4c446dda214cdbe6dc450449f4ff0725923ba2b",
+      "status": "Parsed, not executed"
+    }
+  ]
+}

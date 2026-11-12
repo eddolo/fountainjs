@@ -1,0 +1,23 @@
+{
+  "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+  "templatesCompile": true,
+  "patchPath": "integrations/gitlab/patches/0001-guard-markdown-handoff.patch",
+  "upstreamJestExecuted": false,
+  "methods": [
+    {
+      "kind": "host",
+      "method": "onEditingModeChange",
+      "present": true
+    },
+    {
+      "kind": "restored",
+      "method": "onEditingModeRestored",
+      "present": true
+    },
+    {
+      "kind": "component",
+      "method": "getSerializedContentForHandoff",
+      "present": true
+    }
+  ]
+}

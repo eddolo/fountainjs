@@ -4,6 +4,8 @@
 *.jpeg binary
 *.gif binary
 *.webp binary
+# Unified diff context prefixes include space-only lines as file-format data.
+/integrations/gitlab/patches/*.patch whitespace=-blank-at-eol
 # Downloaded source fixtures are evidence; preserve their literal CRLF bytes.
 /artifacts/markdown-source-boundaries-browser-20261104/**/source-boundary-journey/*.md -text
 /artifacts/markdown-nested-source-browser-20261104/**/nested-source-journey/*.md -text

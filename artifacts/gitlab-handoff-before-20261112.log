@@ -1,0 +1,24 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-host-handoff.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-host-handoff.test.ts [ tests/gitlab-host-handoff.test.ts ]
+Error: Cannot find module '../integrations/gitlab/fixtures/handoff-methods.json' imported from C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/gitlab-host-handoff.test.ts
+ ❯ tests/gitlab-host-handoff.test.ts:2:1
+      1| import { expect, it, vi } from 'vitest';
+      2| import data from '../integrations/gitlab/fixtures/handoff-methods.json…
+       | ^
+      3|
+      4| const rich = 'contentEditor', markdown = 'markdownField';
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  00:19:59
+   Duration  215ms (worker 98%, environment 2%)
+

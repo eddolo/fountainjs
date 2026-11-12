@@ -9,6 +9,7 @@ import { GitLabMarkdownCodec, createGitLabSchemaSpec } from '../../../integratio
 import { createGitLabReferenceNavigationPlugin } from '../../../integrations/gitlab/plugins/reference_navigation';
 import gitlabHTML from '../../../integrations/gitlab/fixtures/service-html.json';
 import gitlabMath from '../../../integrations/gitlab/fixtures/math-html.json';
+import handoffContract from '../../../integrations/gitlab/fixtures/handoff-methods.json';
 import 'fountainjs-editor/styles.css';
 
 const vetoMode = new URLSearchParams(location.search).has('reject-mode');
@@ -39,12 +40,36 @@ const pinnedGitLabCodec = new GitLabMarkdownCodec({ renderMarkdown: async markdo
   return { body: gitlabHTML.fixtures.RESOLVED_REFERENCES_PARAGRAPH_HTML };
 } });
 const content = new SerializedContentController(editor, gitlabRendered ? pinnedGitLabCodec : ordinaryCodec);
+// Execute only the captured patched host method in this private contract page.
+const changeEditingMode = new Function('EDITING_MODE_CONTENT_EDITOR', 'EDITING_MODE_MARKDOWN_FIELD', 's__',
+  `return ({ ${handoffContract.files.find(file => file.kind === 'host')!.code} }).onEditingModeChange;`)(
+  'contentEditor', 'markdownField', (value: string) => value.split('|').slice(1).join('|'));
 let unsubscribe: (() => void) | undefined;
 let unsubscribeChange: (() => void) | undefined;
 const app = new Vue({
-  data: () => ({ editable: true, visible: true, ready: 0, revision: 0, error: '', serializationError: '', markdown: '', changes: 0, serialized: '', loading: false }),
+  data: () => ({ editable: true, visible: true, ready: 0, revision: 0, error: '', serializationError: '', markdown: '', changes: 0, serialized: '', loading: false,
+    editingMode: 'contentEditor', alert: null as { message: string } | null }),
+  computed: { isContentEditorActive(): boolean { return this.editingMode === 'contentEditor'; } },
   beforeDestroy() { unsubscribe?.(); unsubscribeChange?.(); content.dispose(); },
   methods: {
+    onEditingModeChange(mode: string): Promise<void> { return changeEditingMode.call(this, mode); },
+    updateMarkdownFromContentEditor({ markdown }: { markdown: string }) { this.markdown = markdown; },
+    notifyEditingModeChange() { /* Focus behavior belongs to the real GitLab host, outside this fixture. */ },
+    readForHandoff() {
+      if (this.loading) throw new Error('Markdown is still loading.');
+      return content.getSerializedContent();
+    },
+    async beforeContentEditor(markdown: string) {
+      this.loading = true;
+      try {
+        const result = await content.setSerializedContent(markdown);
+        if (result.status !== 'applied') return false;
+        this.serialized = content.getSerializedContent();
+        this.serializationError = '';
+        return true;
+      } catch (error) { this.error = String(error); return false; }
+      finally { this.loading = false; }
+    },
     async replaceMarkdown(addToHistory: boolean) {
       this.loading = true;
       this.error = '';
@@ -71,12 +96,17 @@ const app = new Vue({
           on: { mousedown: (event: MouseEvent) => event.preventDefault(), click: () => setTextAlignment(editor, 'center') } }, 'Centre paragraph'),
         gitlabRendered ? h('button', { attrs: { type: 'button', disabled: !this.editable },
           on: { mousedown: (event: MouseEvent) => event.preventDefault(), click: () => insertInlineMath(editor, 'x^2') } }, 'Insert inline math') : null,
+        h('button', { attrs: { type: 'button' }, on: { click: () => this.onEditingModeChange(this.isContentEditorActive ? 'markdownField' : 'contentEditor') } },
+          this.isContentEditorActive ? 'Use Markdown mode' : 'Use rich text mode'),
       ]),
       h('output', { attrs: { 'aria-label': 'View mount count' } }, String(this.ready)),
       this.error ? h('p', { attrs: { role: 'alert' } }, this.error) : null,
       this.serializationError ? h('p', { attrs: { role: 'alert' } }, this.serializationError) : null,
-      this.visible ? h(Surface, { props: { editor, editable: this.editable, options },
+      this.alert ? h('p', { attrs: { role: 'alert' } }, this.alert.message) : null,
+      this.visible && this.isContentEditorActive ? h(Surface, { ref: 'contentEditor', props: { editor, editable: this.editable, options, readSerializedContent: this.readForHandoff },
         on: { ready: () => { this.ready++; this.error = ''; }, error: (error: unknown) => { this.error = String(error); } } }) : null,
+      !this.isContentEditorActive ? h('textarea', { attrs: { 'aria-label': 'Current Markdown editor' }, domProps: { value: this.markdown },
+        on: { input: (event: Event) => { this.markdown = (event.target as HTMLTextAreaElement).value; } } }) : null,
       h('output', { attrs: { 'aria-label': 'Bridge document JSON' } }, JSON.stringify(editor.getJSON())),
       h('fieldset', [h('legend', gitlabRendered ? 'Pinned GitLab HTML conversion contract; no live GitLab service'
         : 'Serialized-content lifecycle (ordinary Fountain Markdown, not GitLab dialect verification)'),

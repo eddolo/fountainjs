@@ -1,0 +1,84 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-host-handoff.test.ts (9 tests | 6 failed) 12ms
+   × flushes the current rich document before switching instead of trusting a delayed parent value 6ms
+   × retains the mounted document and draft when handoff throws 1ms
+   × retains the mounted document and draft when handoff missing component 1ms
+   × retains the mounted document and draft when handoff non-string 1ms
+   × hands off an empty current document without restoring older content 1ms
+   × reads the actual component serializer and propagates a conversion refusal 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-host-handoff.test.ts > flushes the current rich document before switching instead of trusting a delayed parent value
+AssertionError: expected 'Old debounced value' to be 'Latest rich text' // Object.is equality
+
+Expected: "Latest rich text"
+Received: "Old debounced value"
+
+ ❯ tests/gitlab-host-handoff.test.ts:25:28
+     23|   const { context, events } = host();
+     24|   await selected('host').call(context, markdown);
+     25|   expect(context.markdown).toBe('Latest rich text');
+       |                            ^
+     26|   expect(context.editingMode).toBe(markdown);
+     27|   expect(events).toEqual(['publish:Latest rich text', 'mode:' + markdo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/gitlab-host-handoff.test.ts > retains the mounted document and draft when handoff throws
+ FAIL  tests/gitlab-host-handoff.test.ts > retains the mounted document and draft when handoff missing component
+ FAIL  tests/gitlab-host-handoff.test.ts > retains the mounted document and draft when handoff non-string
+AssertionError: expected 'markdownField' to be 'contentEditor' // Object.is equality
+
+Expected: "contentEditor"
+Received: "markdownField"
+
+ ❯ tests/gitlab-host-handoff.test.ts:35:31
+     33|   await selected('host').call(context, markdown);
+     34|   expect(context.markdown).toBe('Old debounced value');
+     35|   expect(context.editingMode).toBe(rich);
+       |                               ^
+     36|   expect(events).toEqual([]);
+     37|   expect(context.alert?.variant).toBe('danger');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/gitlab-host-handoff.test.ts > hands off an empty current document without restoring older content
+AssertionError: expected 'Old debounced value' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Old debounced value
+
+ ❯ tests/gitlab-host-handoff.test.ts:43:28
+     41|   const { context } = host(() => '');
+     42|   await selected('host').call(context, markdown);
+     43|   expect(context.markdown).toBe('');
+       |                            ^
+     44|   expect(context.editingMode).toBe(markdown);
+     45| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/gitlab-host-handoff.test.ts > reads the actual component serializer and propagates a conversion refusal
+Error: The actual GitLab getSerializedContentForHandoff method is missing.
+ ❯ selected tests/gitlab-host-handoff.test.ts:7:25
+      5| function selected(kind: string): (this: any, ...args: any[]) => any {
+      6|   const file = data.files.find(file => file.kind === kind)!;
+      7|   if (!file.code) throw new Error(`The actual GitLab ${file.method} me…
+       |                         ^
+      8|   return new Function('EDITING_MODE_CONTENT_EDITOR', 'EDITING_MODE_MAR…
+      9|     `return ({ ${file.code} }).${file.method};`)(rich, markdown, (text…
+ ❯ tests/gitlab-host-handoff.test.ts:68:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 3 passed (9)
+   Start at  00:20:26
+   Duration  232ms (transform 43%, import 28%, tests 20%, worker 9%)
+

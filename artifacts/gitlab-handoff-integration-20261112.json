@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-12",
+  "baseCommit": "02b3c64c",
+  "status": "Prepared actual GitLab host patch and verified isolated Fountain handoff protocol; full application not running",
+  "upstream": {
+    "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+    "version": "19.6.0-pre",
+    "checkout": "C:/Temp/fountainjs-gitlab-integration",
+    "workingTree": "Four intentional uncommitted source/spec edits; HEAD remains the original integration pin",
+    "patch": "integrations/gitlab/patches/0001-guard-markdown-handoff.patch",
+    "fixture": "integrations/gitlab/fixtures/handoff-methods.json",
+    "capture": "scripts/capture-gitlab-handoff-contract.mjs",
+    "captureLog": "artifacts/gitlab-handoff-patch-capture-verified-20261112.log",
+    "captureGuard": "A separate no-checkout worktree at the original pin refuses capture before audit outputs change; artifacts/gitlab-handoff-capture-guard-20261112.json",
+    "templates": "Two actual SFC templates compile using the isolated Vue 2.7.16 compiler",
+    "patchChecks": "Forward check against the unchanged pinned index and reverse check against the edited working tree both pass",
+    "jest": "Six added upstream regression cases parsed, not executed; full GitLab dependencies/runtime unavailable"
+  },
+  "behavior": [
+    "Read live serialized content before replacing the rich component with a Markdown field; a debounced parent value is not authoritative.",
+    "Publish valid current Markdown, including an empty string, before changing mode.",
+    "Readiness/conversion failures keep the rich document mounted and previous draft unchanged; retry after recovery clears only the handoff error.",
+    "Restored Markdown preferences use the same guard.",
+    "Original GitLab child refuses loading, active composition and unapplied source replacements; collaborative reads use current model state.",
+    "Fountain surface exposes the same method through a host-owned reader callback; tracks composition at the root and native descendant controls; releases listeners on destruction."
+  ],
+  "verification": {
+    "completeUnitSuite": { "passed": 5452, "files": 336, "log": "artifacts/gitlab-handoff-full-unit-20261112.log", "scope": "Current integration tests. Not a new complete package/build/performance or hosted release gate." },
+    "focused": { "passed": 30, "files": 3, "handoffCasesIncludingPatchDigest": 15, "log": "artifacts/gitlab-handoff-unit-frozen-20261112.log", "scope": "Selected actual patched host/component methods and existing public Fountain controller; not the complete imported GitLab component" },
+    "rootTypes": { "passed": true, "log": "artifacts/gitlab-handoff-types-verified-20261112.log" },
+    "windowsBroader": { "passed": 24, "failed": 0, "log": "artifacts/gitlab-handoff-native-20261112.log", "scope": "Eight private component journeys per desktop engine, before final restored-method metadata and extended child-composition checks. Existing Windows native external-copy failure excluded." },
+    "windowsCurrent": { "passed": 9, "failed": 0, "log": "artifacts/gitlab-handoff-native-verified-20261112.log", "scope": "Three current handoff journeys across Chromium/Firefox/WebKit. They overlap the broader profile." },
+    "linuxCurrent": { "passed": 9, "failed": 0, "log": "artifacts/gitlab-handoff-linux-verified-20261112.log", "display": "Explicit X11/Xvfb", "scope": "All nine component journeys including native external copy; no skips/flaky cases." },
+    "composition": "Synthetic composition events on the editor root and native math source control. Not physical IME/mobile/assistive-technology certification.",
+    "visualReview": {
+      "sourceDirectory": "artifacts/gitlab-handoff-native-verified-20261112/gitlab-vue2-hands-the-late-6a7cd-de-method-before-unmounting-firefox",
+      "sourceFrames": ["gitlab-handoff-current-source.png", "gitlab-handoff-reopened-rich.png"],
+      "refusalDirectory": "artifacts/gitlab-handoff-native-verified-20261112/gitlab-vue2-blocks-a-lossy-93f53-ent-and-recovers-after-undo-firefox",
+      "refusalFrames": ["gitlab-handoff-refused-document-retained.png", "gitlab-handoff-after-undo.png"],
+      "review": "Viewed all four Firefox state frames; videos retained, no continuous playback claim."
+    }
+  },
+  "initialFailures": [
+    { "log": "artifacts/gitlab-handoff-capture-before-20261112.log", "result": "Setup used root Vue 3 compiler, which has no Vue 2 parseComponent export. Corrected to resolve the existing isolated pinned Vue 2 compiler; initial missing-fixture test failure retained separately." },
+    { "log": "artifacts/gitlab-handoff-baseline-20261112.log", "result": "Actual original host-method baseline: six failures/three passes before the patch; latest source, refusal and component handoff contract are absent." },
+    { "log": "artifacts/gitlab-handoff-types-20261112.log", "result": "Untyped captured function spoiled Vue fixture method inference; explicit wrapper signature and computed return type repair type checking without weakening expectations." }
+  ],
+  "remaining": ["Execute upstream Jest suites and build the actual patched GitLab application", "Wire the full Fountain ContentEditor/toolbar into that application", "Guard native-form and custom AJAX submissions against stale/invalid serialization", "Live authenticated render/save/uploads/permissions and collaboration", "Remaining GitLab dialect and source-retention adapters", "Actual persistence/restart, physical input/accessibility and full product acceptance", "Other two complete professional reference products", "Fresh package consumers, combined hosted CI and publication"],
+  "unchanged": ["Shipped engine runtime and public npm API", "Dependency/lockfile and acceptance limits", "Overall parity ledger statuses", "No GitHub/npm publication"]
+}

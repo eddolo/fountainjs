@@ -1,0 +1,167 @@
+diff --git a/app/assets/javascripts/content_editor/components/content_editor.vue b/app/assets/javascripts/content_editor/components/content_editor.vue
+index f82bed1..a5a1620 100644
+--- a/app/assets/javascripts/content_editor/components/content_editor.vue
++++ b/app/assets/javascripts/content_editor/components/content_editor.vue
+@@ -280,6 +280,18 @@ export default {
+     this.contentEditor.dispose();
+   },
+   methods: {
++    // Read the live document before the host removes this component.
++    getSerializedContentForHandoff() {
++      if (
++        this.isLoading ||
++        !this.contentEditor?.tiptapEditor?.view ||
++        this.contentEditor.tiptapEditor.view.composing ||
++        (!this.collaborationProvider && this.latestMarkdown !== this.markdown)
++      ) {
++        throw new Error('The rich text editor is not ready for serialization.');
++      }
++      return this.contentEditor.getSerializedContent();
++    },
+     editorSelector() {
+       return this.contentEditor?.tiptapEditor?.view?.dom?.closest('.js-editor');
+     },
+diff --git a/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue b/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
+index ecebe2e..297021b 100644
+--- a/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
++++ b/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
+@@ -2,7 +2,7 @@
+ import { defineAsyncComponent } from 'vue';
+ import { GlAlert } from '@gitlab/ui';
+ import Autosize from 'autosize';
+-import { __ } from '~/locale';
++import { __, s__ } from '~/locale';
+ import axios from '~/lib/utils/axios_utils';
+ import { updateDraft, clearDraft, getDraft } from '~/lib/utils/autosave';
+ import { setUrlParams, joinPaths } from '~/lib/utils/url_utility';
+@@ -322,6 +322,26 @@ export default {
+         }));
+     },
+     async onEditingModeChange(editingMode) {
++      if (this.isContentEditorActive && editingMode === EDITING_MODE_MARKDOWN_FIELD) {
++        try {
++          // The observer is debounced; read before unmounting the rich editor.
++          const markdown = this.$refs.contentEditor.getSerializedContentForHandoff();
++          if (typeof markdown !== 'string') throw new Error('Expected current Markdown.');
++          this.updateMarkdownFromContentEditor({ markdown });
++          if (this.alert?.handoffError) this.alert = null;
++        } catch {
++          this.alert = {
++            message: s__(
++              'MarkdownEditor|Unable to switch to Markdown. Your document is still open in the rich text editor. Finish the current edit or resolve the conversion error, then try again.',
++            ),
++            variant: 'danger',
++            handoffError: true,
++            dismiss: () => { this.alert = null; },
++          };
++          return;
++        }
++      }
++
+       if (
+         editingMode === EDITING_MODE_CONTENT_EDITOR &&
+         this.beforeContentEditor &&
+@@ -335,6 +355,9 @@ export default {
+     },
+     onEditingModeRestored(editingMode) {
+       if (!this.isDefaultEditorEnabled) return;
++      if (this.isContentEditorActive && editingMode === EDITING_MODE_MARKDOWN_FIELD) {
++        return this.onEditingModeChange(editingMode);
++      }
+       if (editingMode === EDITING_MODE_CONTENT_EDITOR && !this.enableContentEditor) {
+         this.editingMode = EDITING_MODE_MARKDOWN_FIELD;
+         return;
+diff --git a/spec/frontend/content_editor/components/content_editor_spec.js b/spec/frontend/content_editor/components/content_editor_spec.js
+index 3016973..91cd54e 100644
+--- a/spec/frontend/content_editor/components/content_editor_spec.js
++++ b/spec/frontend/content_editor/components/content_editor_spec.js
+@@ -68,6 +68,32 @@ describe('ContentEditor', () => {
+     mock.restore();
+   });
+ 
++  describe('getSerializedContentForHandoff', () => {
++    beforeEach(async () => {
++      renderMarkdown.mockResolvedValue({ body: '<p>Original</p>' });
++      createWrapper({ markdown: 'Original' });
++      await waitForPromises();
++    });
++
++    it('reads the current document before the update observer fires', () => {
++      findEditorContent().props('editor').commands.setContent('<p>Latest edit</p>', false);
++
++      expect(wrapper.vm.getSerializedContentForHandoff()).toBe('Latest edit');
++    });
++
++    it('refuses a handoff while a document is loading', async () => {
++      await wrapper.setData({ isLoading: true });
++
++      expect(() => wrapper.vm.getSerializedContentForHandoff()).toThrow();
++    });
++
++    it('refuses a handoff while native composition is active', () => {
++      jest.spyOn(findEditorContent().props('editor').view, 'composing', 'get').mockReturnValue(true);
++
++      expect(() => wrapper.vm.getSerializedContentForHandoff()).toThrow();
++    });
++  });
++
+   it('triggers initialized event', () => {
+     createWrapper();
+ 
+diff --git a/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js b/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+index 076195e..af90c22 100644
+--- a/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
++++ b/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+@@ -454,6 +454,52 @@ describe('vue_shared/component/markdown/markdown_editor', () => {
+     expect(wrapper.emitted(EDITING_MODE_EVENTS[EDITING_MODE_CONTENT_EDITOR])).toHaveLength(1);
+   });
+ 
++  describe('when handing current rich content to Markdown', () => {
++    beforeEach(async () => {
++      buildWrapper({ propsData: { autosaveKey: 'issue/handoff' } });
++      await enableContentEditor();
++    });
++
++    it('reads the document before a delayed observer can publish it', async () => {
++      findContentEditor().vm.contentEditor.tiptapEditor.commands.setContent(
++        '<p>Latest unreported edit</p>',
++        false,
++      );
++
++      await enableMarkdownEditor();
++
++      expect(findTextarea().element.value).toBe('Latest unreported edit');
++      expect(localStorage.getItem('autosave/issue/handoff')).toBe('Latest unreported edit');
++    });
++
++    it('keeps the rich editor and draft when conversion refuses the handoff', async () => {
++      const previousDraft = localStorage.getItem('autosave/issue/handoff');
++      jest.spyOn(findContentEditor().vm, 'getSerializedContentForHandoff').mockImplementation(() => {
++        throw new Error('Conversion refused');
++      });
++
++      findContentEditor().vm.$emit('enable-markdown-editor');
++      await waitForPromises();
++
++      expect(findContentEditor().exists()).toBe(true);
++      expect(findTextarea().exists()).toBe(false);
++      expect(wrapper.findComponent(GlAlert).props('variant')).toBe('danger');
++      expect(localStorage.getItem('autosave/issue/handoff')).toBe(previousDraft);
++    });
++
++    it('reads current content when a restored preference requests Markdown', async () => {
++      findContentEditor().vm.contentEditor.tiptapEditor.commands.setContent(
++        '<p>Latest restored-mode edit</p>',
++        false,
++      );
++
++      await wrapper.vm.onEditingModeRestored(EDITING_MODE_MARKDOWN_FIELD);
++      await waitForPromises();
++
++      expect(findTextarea().element.value).toBe('Latest restored-mode edit');
++    });
++  });
++
+   describe('when the parent guards a switch to rich text', () => {
+     describe('when the parent declines', () => {
+       it('keeps the plain text draft', async () => {

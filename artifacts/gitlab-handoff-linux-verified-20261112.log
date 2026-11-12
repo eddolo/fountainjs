@@ -1,0 +1,543 @@
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:33:52] "GET /tests/browser/fixtures/gitlab-vue2.html HTTP/1.1" 200 -
+
+Running 9 tests using 1 worker
+
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:33:56] "GET /tests/browser/fixtures/gitlab-vue2.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:33:56] "GET /assets/gitlab-vue2-C1qcAPPA.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:33:56] "GET /assets/gitlab-vue2-BCEvcDod.js HTTP/1.1" 200 -
+  ✓  1 tests/browser/gitlab-vue2.spec.ts:5:1 › keeps actual Vue 2 host mode changes and view remounts on one Fountain document history (4.0s)
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:33:59] "GET /tests/browser/fixtures/gitlab-vue2.html?reject-mode=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:33:59] "GET /assets/gitlab-vue2-C1qcAPPA.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:33:59] "GET /assets/gitlab-vue2-BCEvcDod.js HTTP/1.1" 200 -
+  ✓  2 tests/browser/gitlab-vue2.spec.ts:64:1 › removes the surface when a host filter refuses read-only mode and recovers without losing the document (1.5s)
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:01] "GET /tests/browser/fixtures/gitlab-vue2.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:01] "GET /assets/gitlab-vue2-C1qcAPPA.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:01] "GET /assets/gitlab-vue2-BCEvcDod.js HTTP/1.1" 200 -
+  ✓  3 tests/browser/gitlab-vue2.spec.ts:82:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (2.8s)
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:04] "GET /tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:04] "GET /assets/gitlab-vue2-BCEvcDod.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:04] "GET /assets/gitlab-vue2-C1qcAPPA.css HTTP/1.1" 200 -
+  ✓  4 tests/browser/gitlab-vue2.spec.ts:123:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (2.5s)
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:06] "GET /tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:06] "GET /assets/gitlab-vue2-C1qcAPPA.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:06] "GET /assets/gitlab-vue2-BCEvcDod.js HTTP/1.1" 200 -
+  ✓  5 tests/browser/gitlab-vue2.spec.ts:166:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload (3.6s)
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:10] "GET /tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:10] "GET /assets/gitlab-vue2-C1qcAPPA.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:10] "GET /assets/gitlab-vue2-BCEvcDod.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:11] "GET /assets/KaTeX_Main-Regular-B22Nviop.woff2 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:11] "GET /assets/KaTeX_Math-Italic-t53AETM-.woff2 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:13] "GET /assets/KaTeX_Size2-Regular-Dy4dx90m.woff2 HTTP/1.1" 200 -
+  ✓  6 tests/browser/gitlab-vue2.spec.ts:211:1 › renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior (5.1s)
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:15] "GET /tests/browser/fixtures/gitlab-vue2.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:15] "GET /assets/gitlab-vue2-C1qcAPPA.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:15] "GET /assets/gitlab-vue2-BCEvcDod.js HTTP/1.1" 200 -
+  ✓  7 tests/browser/gitlab-vue2.spec.ts:270:1 › hands the latest rich edit to the actual patched host mode method before unmounting (4.1s)
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:20] "GET /tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:20] "GET /assets/gitlab-vue2-BCEvcDod.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:20] "GET /assets/gitlab-vue2-C1qcAPPA.css HTTP/1.1" 200 -
+  ✓  8 tests/browser/gitlab-vue2.spec.ts:292:1 › blocks a lossy handoff without dropping the rich document and recovers after undo (3.1s)
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:23] "GET /tests/browser/fixtures/gitlab-vue2.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:23] "GET /assets/gitlab-vue2-BCEvcDod.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:23] "GET /assets/gitlab-vue2-C1qcAPPA.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:24] "GET /tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:24] "GET /assets/KaTeX_Main-Regular-B22Nviop.woff2 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [12/Nov/2026 00:34:24] "GET /assets/KaTeX_Math-Italic-t53AETM-.woff2 HTTP/1.1" 200 -
+  ✓  9 tests/browser/gitlab-vue2.spec.ts:313:1 › retains the surface during an unfinished composition handoff (2.9s)
+
+  9 passed (34.7s)
+{
+  "config": {
+    "argv": [
+      "/home/eddolo/.cache/fountainjs-native-audit/node-v24.22.1-linux-x64/bin/node",
+      "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/playwright.gitlab-vue2-linux-20261111.config.cjs",
+      "--output=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112",
+      "--reporter=list,json"
+    ],
+    "configFile": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/playwright.gitlab-vue2-linux-20261111.config.cjs",
+    "rootDir": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "command": "python3 -m http.server 4199 --bind 127.0.0.1",
+      "cwd": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-site",
+      "url": "http://127.0.0.1:4199/tests/browser/fixtures/gitlab-vue2.html",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "gitlab-vue2.spec.ts",
+      "file": "gitlab-vue2.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "keeps actual Vue 2 host mode changes and view remounts on one Fountain document history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3992,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T00:33:55.029Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-0c2d8ebbc46f7ae8bc8a",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "removes the surface when a host filter refuses read-only mode and recovers without losing the document",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1464,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T00:33:59.549Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-removes-the-su-f43f6-without-losing-the-document/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-removes-the-su-f43f6-without-losing-the-document/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-ae8025a5c508386fa5ee",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2764,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T00:34:01.069Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-loads-real-Mar-3ed7b-r-changes-to-the-Vue-2-host/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-0767c2dcfd9897498b11",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 82,
+          "column": 1
+        },
+        {
+          "title": "edits pinned GitLab reference rendering without replacing source tokens with display labels",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2547,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T00:34:03.923Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-edits-pinned-G-6146f--tokens-with-display-labels/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-61203ef6dce1aa88db67",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 123,
+          "column": 1
+        },
+        {
+          "title": "keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3616,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T00:34:06.613Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-keeps-the-visi-097b6-down-through-undo-or-reload/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-787d21e3fd0455f8f4e6",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 166,
+          "column": 1
+        },
+        {
+          "title": "renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5119,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T00:34:10.416Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-renders-and-ed-ae5a2-undo-and-read-only-behavior/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-renders-and-ed-ae5a2-undo-and-read-only-behavior/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-0bc69e05314e891f8656",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 211,
+          "column": 1
+        },
+        {
+          "title": "hands the latest rich edit to the actual patched host mode method before unmounting",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4104,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T00:34:15.671Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-hands-the-late-6a7cd-de-method-before-unmounting/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-hands-the-late-6a7cd-de-method-before-unmounting/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-2c9014231f420bc04711",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 270,
+          "column": 1
+        },
+        {
+          "title": "blocks a lossy handoff without dropping the rich document and recovers after undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3087,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T00:34:19.875Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-blocks-a-lossy-93f53-ent-and-recovers-after-undo/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-blocks-a-lossy-93f53-ent-and-recovers-after-undo/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-ee7b50d19be4d5ac8294",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 292,
+          "column": 1
+        },
+        {
+          "title": "retains the surface during an unfinished composition handoff",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2929,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T00:34:23.136Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-retains-the-su-f0550-inished-composition-handoff/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-handoff-linux-verified-20261112/gitlab-vue2-retains-the-su-f0550-inished-composition-handoff/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-a869953c46c075dfcaa3",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 313,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T00:33:52.108Z",
+    "duration": 34709.703,
+    "expected": 9,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

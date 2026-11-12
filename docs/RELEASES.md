@@ -1153,6 +1153,43 @@ limit changes. Full application integration, remaining GitLab dialect adapters,
 fresh packed consumers and combined hosted CI remain required. Evidence:
 `artifacts/gitlab-math-integration-20261112.json`.
 
+### GitLab rich-to-Markdown handoff — 2026-11-12
+
+The prepared patch changes GitLab's actual host/component source at the pinned
+revision. Its observer is debounced; the parent must read the current serialized
+document before unmounting the rich editor, rather than relying on cached
+Markdown. Valid content, including empty content, is published first. Readiness/
+conversion failures retain the rich document and previous draft. Restored-mode
+preferences use the same guard. The original child checks loading, composition
+and unapplied source replacement. The Fountain Vue surface provides the same
+handoff interface through a caller-owned reader and native composition tracking.
+
+The full local unit suite passes **5,452 tests in 336 files**, with fifteen
+handoff cases and thirty focused passes. Root types pass. The selected-method
+baseline has six failures/three passes before the patch; source changes are
+reviewable in `integrations/gitlab/patches/0001-guard-markdown-handoff.patch`.
+Its digest binds the test fixture to that patch. Forward/reverse application
+checks pass, two actual SFC templates compile in the isolated Vue 2 compiler,
+and six new upstream Jest cases parse. Those upstream suites are not executed.
+Capture also refuses an unpatched baseline without changing audit outputs.
+
+Twenty-four broader Windows journeys pass, excluding the retained external-copy
+failure. Nine final handoff journeys then pass across Chromium/Firefox/WebKit,
+and all nine current Linux WebKit/Xvfb component journeys pass. They overlap;
+composition cases use synthetic events on root/native math controls. Source,
+reopen, refusal and undo frames receive visual review and videos are retained.
+These are isolated component/selected-host-method journeys, not the full GitLab
+application. The checkout has four intentional uncommitted source/spec edits at
+the original HEAD; the main repository retains their reproducible patch.
+
+This does not certify form/AJAX submission safety, real authenticated services,
+storage, permissions, collaboration or full product readiness. Engine runtime,
+public npm API and capacity limits are unchanged. The only whitespace-rule
+addition treats unified-patch context prefixes as file-format data; actual
+upstream source whitespace checks remain enforced. Fresh package/hosted release
+gates and publication remain required. Evidence:
+`artifacts/gitlab-handoff-integration-20261112.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

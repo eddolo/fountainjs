@@ -8,11 +8,13 @@ export default {
     editor: { type: Object, required: true },
     options: { type: Object, default: () => ({}) },
     editable: { type: Boolean, default: undefined },
+    readSerializedContent: { type: Function, default: undefined },
   },
   emits: ['ready', 'error', 'focus', 'blur', 'keydown'],
   created() {
     // The host service owns the model; Vue owns only this browser view.
     this.fountainView = null;
+    this.composing = false;
   },
   mounted() {
     this.mountSurface();
@@ -49,6 +51,8 @@ export default {
         dom.addEventListener('focusin', this.onFocus);
         dom.addEventListener('focusout', this.onBlur);
         dom.addEventListener('keydown', this.onKeydown);
+        dom.addEventListener('compositionstart', this.onCompositionStart);
+        dom.addEventListener('compositionend', this.onCompositionEnd);
         this.$emit('ready', this.fountainView);
       } catch (error) {
         this.releaseSurface();
@@ -58,13 +62,24 @@ export default {
     releaseSurface() {
       const view = this.fountainView;
       this.fountainView = null;
+      this.composing = false;
       if (!view) return;
       view.dom.removeEventListener('focusin', this.onFocus);
       view.dom.removeEventListener('focusout', this.onBlur);
       view.dom.removeEventListener('keydown', this.onKeydown);
+      view.dom.removeEventListener('compositionstart', this.onCompositionStart);
+      view.dom.removeEventListener('compositionend', this.onCompositionEnd);
       view.destroy();
     },
     focus(position) { this.fountainView?.focus(position); },
+    getSerializedContentForHandoff() {
+      if (!this.fountainView || this.composing || !this.readSerializedContent) {
+        throw new Error('The rich text surface is not ready for serialization.');
+      }
+      return this.readSerializedContent();
+    },
+    onCompositionStart() { this.composing = true; },
+    onCompositionEnd() { this.composing = false; },
     onFocus(event) {
       if (!this.fountainView?.dom.contains(event.relatedTarget)) this.$emit('focus', event);
     },

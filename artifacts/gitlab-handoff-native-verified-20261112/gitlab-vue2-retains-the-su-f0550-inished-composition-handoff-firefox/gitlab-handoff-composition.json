@@ -1,0 +1,8 @@
+{
+  "engine": "firefox",
+  "targets": [
+    "editor root",
+    "native math source control"
+  ],
+  "scope": "Synthetic composition-event guard in native browser; not physical IME certification or full GitLab product verification."
+}

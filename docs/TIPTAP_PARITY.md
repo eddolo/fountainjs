@@ -2,7 +2,17 @@
 
 ## Current programme status — 2026-11-12
 
-The latest private GitLab integration checkpoint adds native editable math
+The latest integration checkpoint prepares an actual GitLab host patch to read
+current Markdown before a rich editor is removed, retain the document on refused
+handoff, and guard restored-mode preferences. Fountain's native Vue surface
+implements the matching reader/composition protocol. All **5,452 unit tests in
+336 files** and root types pass; current recorded handoff cases pass in every
+desktop engine and all nine Linux WebKit component journeys pass. The upstream
+Jest additions are parsed but not run, and actual application save/storage/
+permissions still need verification. No overall parity claim or row promotion.
+[Handoff scope](RELEASES.md#gitlab-rich-to-markdown-handoff--2026-11-12).
+
+The preceding private GitLab integration checkpoint adds native editable math
 without changing Fountain's shipped runtime. The complete unit suite passes
 **5,437 tests in 335 files**, with 91 focused integration cases and root types
 passing. Current recorded math edits/history pass in all three desktop engines;

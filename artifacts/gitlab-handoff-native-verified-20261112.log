@@ -1,0 +1,34 @@
+$ playwright test -c playwright.gitlab-bridge.config.ts "--grep" "hands the latest|blocks a lossy|unfinished composition" "--output" "artifacts/gitlab-handoff-native-verified-20261112"
+[WebServer] (node:6672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:9980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:24112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\gitlab-vue2.spec.ts:270:1 › hands the latest rich edit to the actual patched host mode method before unmounting (740ms)
+  ok 2 [chromium] › tests\browser\gitlab-vue2.spec.ts:292:1 › blocks a lossy handoff without dropping the rich document and recovers after undo (784ms)
+  ok 3 [chromium] › tests\browser\gitlab-vue2.spec.ts:313:1 › retains the surface during an unfinished composition handoff (818ms)
+(node:17392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\gitlab-vue2.spec.ts:270:1 › hands the latest rich edit to the actual patched host mode method before unmounting (2.4s)
+  ok 5 [firefox] › tests\browser\gitlab-vue2.spec.ts:292:1 › blocks a lossy handoff without dropping the rich document and recovers after undo (1.2s)
+  ok 6 [firefox] › tests\browser\gitlab-vue2.spec.ts:313:1 › retains the surface during an unfinished composition handoff (1.3s)
+(node:23692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\gitlab-vue2.spec.ts:270:1 › hands the latest rich edit to the actual patched host mode method before unmounting (2.1s)
+  ok 8 [webkit] › tests\browser\gitlab-vue2.spec.ts:292:1 › blocks a lossy handoff without dropping the rich document and recovers after undo (2.1s)
+  ok 9 [webkit] › tests\browser\gitlab-vue2.spec.ts:313:1 › retains the surface during an unfinished composition handoff (1.9s)
+
+  9 passed (19.5s)

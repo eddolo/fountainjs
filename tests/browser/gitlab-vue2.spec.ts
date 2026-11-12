@@ -266,3 +266,76 @@ test('renders and edits GitLab math as real Fountain source-backed nodes with un
     scope: 'Real public Fountain math nodes, trusted-off KaTeX, native Vue 2 editing and pinned GitLab HTML inputs. Actual GitLab backend/storage remains unverified.',
     sourceEditAndUndo: true, secondEquation: true, readerMode: true, inlineDisplay: true, fencedMath: true, errors }, null, 2));
 });
+
+test('hands the latest rich edit to the actual patched host mode method before unmounting', async ({ page }, info) => {
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  const replacement = page.getByRole('textbox', { name: 'Markdown replacement source', exact: true });
+  await replacement.fill('Original baseline.');
+  await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+  await editor.click(); await page.keyboard.press('End'); await page.keyboard.type(' Latest edit.');
+  // The parent draft is deliberately still stale, as it can be before debounce.
+  await expect(replacement).toHaveValue('Original baseline.');
+  await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
+  const source = page.getByRole('textbox', { name: 'Current Markdown editor', exact: true });
+  await expect(source).toHaveValue('Original baseline. Latest edit.');
+  await expect(editor).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('gitlab-handoff-current-source.png') });
+  await source.fill('Revised in Markdown.');
+  await page.getByRole('button', { name: 'Use rich text mode', exact: true }).click();
+  await expect(editor).toHaveText('Revised in Markdown.');
+  await expect(source).toHaveCount(0);
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('gitlab-handoff-reopened-rich.png') });
+});
+
+test('blocks a lossy handoff without dropping the rich document and recovers after undo', async ({ page }, info) => {
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
+  const original = 'See #1 and !1 by @root with ~bug in b51c8ef20575';
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  await page.getByRole('textbox', { name: 'Markdown replacement source', exact: true }).fill(original);
+  await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+  await editor.locator('p').click(); await page.keyboard.press('End');
+  await page.getByRole('button', { name: 'Centre paragraph', exact: true }).click();
+  await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
+  await expect(editor).toBeVisible();
+  await expect(editor.locator('p')).toHaveCSS('text-align', 'center');
+  await expect(page.getByRole('textbox', { name: 'Current Markdown editor', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('alert').filter({ hasText: 'Unable to switch to Markdown' })).toBeVisible();
+  await page.screenshot({ path: info.outputPath('gitlab-handoff-refused-document-retained.png') });
+  await page.getByRole('button', { name: 'Undo document', exact: true }).click();
+  await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
+  await expect(page.getByRole('textbox', { name: 'Current Markdown editor', exact: true })).toHaveValue(original);
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('gitlab-handoff-after-undo.png') });
+});
+
+test('retains the surface during an unfinished composition handoff', async ({ page }, info) => {
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  await editor.dispatchEvent('compositionstart', { data: '' });
+  await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
+  await expect(editor).toBeVisible();
+  await expect(page.getByRole('alert')).toContainText('Unable to switch to Markdown');
+  await editor.dispatchEvent('compositionend', { data: '' });
+  await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
+  await expect(page.getByRole('textbox', { name: 'Current Markdown editor', exact: true })).toHaveValue('Vue 2 integration.');
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
+  const original = mathFixtures.rows.find(row => row.description === 'inline math with dollars')!.markdown;
+  await page.getByRole('textbox', { name: 'Markdown replacement source', exact: true }).fill(original);
+  await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+  await editor.locator('[data-fountain-math="inline"]').click();
+  const mathInput = editor.getByRole('textbox', { name: 'Edit math source', exact: true });
+  await mathInput.dispatchEvent('compositionstart', { data: '' });
+  await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
+  await expect(editor).toBeVisible();
+  await expect(page.getByRole('alert')).toContainText('Unable to switch to Markdown');
+  await mathInput.dispatchEvent('compositionend', { data: '' });
+  await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
+  await expect(page.getByRole('textbox', { name: 'Current Markdown editor', exact: true })).toHaveValue(original);
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await writeFile(info.outputPath('gitlab-handoff-composition.json'), JSON.stringify({ engine: info.project.name,
+    targets: ['editor root', 'native math source control'],
+    scope: 'Synthetic composition-event guard in native browser; not physical IME certification or full GitLab product verification.' }, null, 2));
+});

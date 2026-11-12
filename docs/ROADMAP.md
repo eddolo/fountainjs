@@ -72,6 +72,16 @@ Known conversion refusals remain explicit. This is not a full GitLab application
 or a refreshed complete package/hosted gate, and parity-row counts are unchanged.
 [Math evidence and limits](../integrations/gitlab/README.md#gitlab-math-adapter).
 
+A prepared patch now guards the actual GitLab host's rich-to-Markdown handoff:
+read current serialized content before unmounting, keep the document open on
+refusal, and route restored-mode preferences through the same check. The native
+Fountain surface provides this protocol through a host-owned reader and
+composition tracking. The full unit suite passes **5,452 cases/336 files**;
+fifteen handoff cases, thirty focused cases, current native journeys and root
+types pass. The actual GitLab application/upstream Jest suite and native-form/
+AJAX submission safety remain unfinished. No parity row is promoted.
+[Host patch and scope](../integrations/gitlab/README.md#prepared-host-markdown-handoff-patch).
+
 The earlier complete local source check is the November 11 runtime-editability
 repair: **5,300 tests in 327 files**, with all package, server, type, conformance,
 size, performance and retention gates passing. Three native interaction-mode

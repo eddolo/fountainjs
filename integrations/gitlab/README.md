@@ -334,6 +334,67 @@ evidence, not a running GitLab application or a new combined release gate.
 
 ## Full application completion requirements
 
+### Prepared host Markdown handoff patch
+
+`patches/0001-guard-markdown-handoff.patch` changes the actual pinned GitLab host
+and rich-editor component, with upstream Jest regressions. The host's change
+observer is debounced: reading only its cached Markdown when unmounting the
+rich editor can drop the latest edit. The patched parent first calls the child
+component's `getSerializedContentForHandoff()`, then publishes that current
+string before changing mode. Empty content is valid. Conversion/readiness
+failure leaves the rich document mounted and the previous draft untouched.
+Restored editing-mode preferences use the same guard.
+
+The original GitLab child checks loading, composition and unapplied source
+replacement before calling its existing serializer. Collaborative state is
+read from the current model rather than a lagging Markdown prop. The Fountain
+surface supplies the same handoff method using an optional trusted-host
+`readSerializedContent` callback and native composition tracking. Its callback
+must also enforce host loading/replacement state. No ProseMirror compatibility
+layer is added to Fountain.
+
+The parent-gate and autosave paths remain the real GitLab paths; this patch does
+not replace storage, authentication, permission checks or the submit pipeline.
+In particular, blocking stale form/AJAX submissions while conversion is invalid
+is still required separately. Full source-mode recovery is not certified by
+these isolated checks.
+
+Check and apply the reviewed patch to a clean checkout at the exact pin:
+
+```sh
+git -C /path/to/pinned/gitlab apply --check /absolute/path/to/0001-guard-markdown-handoff.patch
+git -C /path/to/pinned/gitlab apply /absolute/path/to/0001-guard-markdown-handoff.patch
+```
+
+After editing the patched checkout, refresh its reviewable patch and method
+fixtures with `node scripts/capture-gitlab-handoff-contract.mjs /path/to/pinned/gitlab`.
+Capture refuses an unpatched checkout or empty diff before replacing outputs.
+
+The capture requires the pinned HEAD, records original/patched source hashes,
+compiles the two SFC templates with the isolated Vue 2.7 compiler, and parses the
+upstream Jest additions. The patch is checked against the unchanged index and
+against the edited working tree in reverse. The selected-method fixtures are
+test-only code used by the isolated regression/native page; they are not the
+full GitLab component or runtime-evaluated code for a production application.
+The upstream Jest suite still needs its full dependency/runtime environment;
+parsing the additions is not an executed upstream-test result.
+
+The complete local unit suite passes 5,452 cases/336 files; fifteen handoff
+cases plus controller regressions pass all thirty focused cases. Root types pass.
+The broader Windows component profile passes 24 selected journeys, excluding the
+retained native external-copy failure; nine final handoff journeys pass in the
+three desktop engines after the final fixture/composition-control changes.
+All nine current Linux WebKit/Xvfb component journeys pass. These profiles
+overlap. Source/reopen/refusal/undo frames receive visual review and recordings
+are retained. Composition-event cases cover the root and native math source
+control synthetically; they do not certify physical IME/mobile input. A separate
+baseline worktree proves that capture refuses an unpatched source tree without
+overwriting the prepared patch or fixtures.
+
+[Handoff evidence and remaining host work](../../artifacts/gitlab-handoff-integration-20261112.json).
+
+### Remaining full application acceptance
+
 1. Run a version-pinned GitLab instance and original editor; retain baseline
    data, browser recordings and upstream test results.
 2. Implement the complete component and host contract with explicit lifecycle,
