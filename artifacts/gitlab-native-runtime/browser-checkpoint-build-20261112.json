@@ -1,0 +1,19 @@
+{
+  "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+  "entry": "integrations/gitlab/runtime/browser.ts",
+  "target": "es2018",
+  "bytes": 1408829,
+  "sha256": "c450e9cce3b82f7a4e5940c3efab46a0081872d935a450ad0de6433626c0bc91",
+  "parentRevision": "ae3c8571f8a10d14f8588c7283923e7038f641ec",
+  "inputs": {
+    "integrations/gitlab/runtime/browser.ts": "9045a2c87ebd5bad617dd1da4203057b993880bf4bda621473a2a59c430a5c54",
+    "integrations/gitlab/services/content_editor.ts": "c4905e1e5f65bdc5f1a878fafc37f41e18ce3e08a81263265d4e33dbd09d8599",
+    "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+    "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+    "integrations/gitlab/services/markdown_codec.ts": "ac963f88bfc78b9868950fa0a5ab362ea4bf46d0fbae215478e09c178e0b7852",
+    "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+    "integrations/gitlab/services/asset_resolver.ts": "caea8f3c22f3bd3ca90fa7015ff2260cb0c8d5d9974fb9906c7cdbe2a79189f3",
+    "integrations/gitlab/plugins/reference_navigation.ts": "7c7137d249f8887a93f7fe089961a0377115f8d6c71323e8d4165d21e384d4b0",
+    "dist/index.js": "ea3074596f1518e64b1c7e11ff50cb7dda1ecf97c33b5f00c89b195e246670bd"
+  }
+}

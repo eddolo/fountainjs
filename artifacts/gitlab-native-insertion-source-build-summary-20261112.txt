@@ -1,0 +1,8 @@
+Pinned GitLab CE source 0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf
+Final installed runtime SHA256: b6cb57c47b92e1720ffda396b8b8ad64b6185f94d166634baacd41712187f4d5
+Command: corepack yarn rspack-prod
+Exit: 0
+Rspack 2.2.8 compiled with 2 warnings in 85.06 s
+Done in 87.06s.
+Warnings: existing asset-size and entrypoint-size warnings retained, not disabled.
+Full local source-build log: artifacts/gitlab-native-insertion-source-build-final-reviewed-20261112.log

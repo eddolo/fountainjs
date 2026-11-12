@@ -535,17 +535,55 @@ Chromium surface regression, and five-file upstream ESLint/Prettier checks pass.
 The complete source frontend builds. Installer rollback/reinstall and refusal of
 changed owned files pass, with all seven installed file digests restored.
 
-The upstream host Jest suite remains **61 passed / 14 failed** on the native
-candidate. Legacy Tiptap fixtures and shallow view setup need migration; actual
-append/paste and full host-contract behavior remain unfinished. These failures
-are not waived. Native upload/autocomplete/template/provider adapters, complete
-toolbars/menus, source-recovery controls, dialect/untouched-region fidelity,
-localization, MR/wiki/multi-user and broader browser/accessibility/release checks
-remain open. The beta/public package is unchanged and no parity row is promoted.
+The earlier upstream host run retained **61 passed / 14 failed**. The subsequent
+insertion checkpoint below migrates those host fixtures and reruns the broader
+three-suite acceptance set; neither result certifies the complete product.
 
 [Install and rollback](runtime/README.md#native-browser-installation-in-progress),
 [native browser report](../../artifacts/gitlab-native-browser-20261112/report.json)
 and [checkpoint scope and retained failures](../../artifacts/gitlab-native-browser-integration-20261112.json).
+
+### Native Markdown insertion and current acceptance
+
+The real GitLab component now connects host paste events and an explicit browser
+**Paste Markdown** action to native Fountain transactions. Pending renderer work
+keeps its insertion target through unrelated typing; conflicting edits refuse
+the operation with the source retained. Ordered requests, one-step undo,
+serialization preflight/rollback, document replacement and disposal are covered.
+An actual unsupported footnote is visibly retained for inspection/retry rather
+than silently omitted. Saved-reply picker and general clipboard parity remain open.
+
+The final recorded Linux Chromium journey passes **ten checks** against the real
+application: clipboard/render/insert/history, rejected-source recovery, native
+formatting/task controls, source handoff, UI save/reopen, an actual comment,
+anonymous denial and service restart. Editor, retained-source controls and
+post-restart reader receive visual review. There are no browser page errors.
+
+The migrated upstream host suite passes **75/75** using the actual Fountain
+surface and transactions. A reproducible patch applies after the prepared host
+patch; forward/reverse checks and exact live-spec comparison pass. The broader
+three-suite run is **126 passed / 42 failed**: host and issuable-form suites pass,
+while the legacy component suite remains failing. Its Tiptap-only fixtures need
+careful migration, and real attachment/menu/immersive/recovery requirements must
+be verified or implemented rather than deleted from acceptance.
+
+The full root unit suite passes **5,507 tests/341 files**, focused tests **82/3**,
+all framework types and the public API snapshot pass. Package and complete GitLab
+frontend builds, upstream three-file ESLint, performance/retention checks and
+size checks pass. A public `insertDocument` repair preserves authored paragraph
+attributes. Its measured CommonJS growth is 193 bytes; aggregate capacity rises
+by 256 bytes, with entry, ESM, CSS and performance limits unchanged. This is not
+a refreshed full release gate or hosted CI, and nothing has been published.
+
+Full native toolbars/menus, uploads, autocomplete, saved replies/templates,
+specialized dialects, source fidelity, providers, MR/wiki/multi-user flows,
+localization, accessibility and cross-browser/product/release acceptance remain
+open. The other two professional products remain unimplemented candidates.
+No capability row or superiority claim is promoted.
+
+[Insertion contract](services/README.md#asynchronous-markdown-insertion),
+[recorded real journey](../../artifacts/gitlab-native-insertion-20261112/report.json)
+and [current evidence and remaining failures](../../artifacts/gitlab-native-insertion-integration-20261112.json).
 
 ### Remaining full application acceptance
 

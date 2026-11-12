@@ -15,6 +15,7 @@ import {
   type SerializedContentResult,
 } from './serialized_content';
 import { createGitLabReferenceNavigationPlugin } from '../plugins/reference_navigation';
+import { GitLabMarkdownInsertion } from './markdown_insertion';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -35,6 +36,7 @@ export class GitLabContentEditor {
   readonly editor: Editor;
   readonly assetResolver: GitLabAssetResolver;
   private readonly controller: SerializedContentController;
+  private readonly insertions: GitLabMarkdownInsertion;
   private readonly releaseChanges: () => void;
   private readonly listeners = new Set<(change: SerializedContentChange) => void>();
   private readonly statusListeners = new Set<(status: GitLabEditorStatus) => void>();
@@ -92,9 +94,23 @@ export class GitLabContentEditor {
       this.assetResolver.dispose();
       throw error;
     }
-    this.controller = new SerializedContentController(
+    const codec = new GitLabMarkdownCodec(options);
+    this.controller = new SerializedContentController(this.editor, codec);
+    this.insertions = new GitLabMarkdownInsertion(
       this.editor,
-      new GitLabMarkdownCodec(options),
+      codec,
+      () => {
+        this.assertAlive();
+        if (
+          this.loading ||
+          this.loadFailure ||
+          this.exportFailure ||
+          !this.loaded ||
+          !this.editable
+        )
+          throw new GitLabEditorNotReady(this.status);
+      },
+      () => this.notifyStatus(),
     );
     this.releaseChanges = this.controller.subscribeChange((change) => {
       if (this.destroyed) return;
@@ -110,7 +126,7 @@ export class GitLabContentEditor {
 
   get status(): GitLabEditorStatus {
     if (this.destroyed) return 'destroyed';
-    if (this.loading) return 'loading';
+    if (this.loading || this.insertions.pendingCount > 0) return 'loading';
     if (this.loadFailure || this.exportFailure) return 'error';
     return this.loaded ? 'ready' : 'unloaded';
   }
@@ -124,10 +140,19 @@ export class GitLabContentEditor {
   get listenerError(): unknown {
     return this.listenerFailure;
   }
+  get pendingInsertions(): number {
+    return this.insertions.pendingCount;
+  }
+  get insertionRecovery(): Readonly<{ markdown: string; error: unknown }> | undefined {
+    return this.insertions.recovery;
+  }
+  pasteMarkdown(markdown: string): Promise<SerializedContentResult> {
+    return this.insertions.insert(markdown);
+  }
 
   getSerializedContent(): string {
     this.assertAlive();
-    if (this.loading || this.loadFailure || !this.loaded)
+    if (this.loading || this.pendingInsertions > 0 || this.loadFailure || !this.loaded)
       throw new GitLabEditorNotReady(this.status);
     try {
       const markdown = this.controller.getSerializedContent();
@@ -149,6 +174,7 @@ export class GitLabContentEditor {
     if (typeof markdown !== 'string') throw new TypeError('EXPECTED_MARKDOWN_STRING');
     const request = ++this.request;
     this.loading = true;
+    this.insertions.cancel();
     this.notifyStatus();
     try {
       const result = await this.controller.setSerializedContent(markdown, options);
@@ -229,6 +255,7 @@ export class GitLabContentEditor {
     if (this.destroyed) return;
     this.destroyed = true;
     this.request++;
+    this.insertions.dispose();
     this.releaseChanges();
     this.controller.dispose();
     this.assetResolver.dispose();

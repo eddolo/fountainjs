@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Preserve authored paragraph attributes when inserting rich content. Alignment,
+  explicit direction and custom structured metadata stay attached to their block
+  instead of disappearing when a single paragraph is merged into surrounding text.
+
 - Add `MarkdownSourceSnapshot.capture(source, document)` for explicit source
   binding after a host-owned Markdown converter. It validates the supplied
   document and preserves untouched source exactly without requiring Fountain's

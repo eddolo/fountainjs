@@ -21,7 +21,7 @@ export default {
     editor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
   },
-  emits: ['focus', 'error'],
+  emits: ['focus', 'error', 'paste-markdown'],
   data() {
     return { state: null };
   },
@@ -104,6 +104,18 @@ export default {
     this.releaseState();
   },
   methods: {
+    async pasteMarkdown() {
+      if (this.disabled || !this.editor.editable) return;
+      try {
+        // eslint-disable-next-line no-restricted-properties -- This reads the clipboard; copyToClipboard only writes it.
+        const { clipboard } = navigator;
+        if (!clipboard?.readText) throw new Error('GITLAB_CLIPBOARD_UNAVAILABLE');
+        const markdown = await clipboard.readText();
+        this.$emit('paste-markdown', markdown);
+      } catch {
+        this.$emit('error', new Error('GITLAB_CLIPBOARD_READ_FAILED'));
+      }
+    },
     preserveSelection(event) {
       if (event.target.closest('button')) event.preventDefault();
     },
@@ -159,5 +171,8 @@ export default {
       @click="execute(control)"
     />
     <slot name="header-buttons"></slot>
+    <gl-button :disabled="disabled" category="tertiary" size="small" @click="pasteMarkdown">{{
+      s__('ContentEditor|Paste Markdown')
+    }}</gl-button>
   </div>
 </template>

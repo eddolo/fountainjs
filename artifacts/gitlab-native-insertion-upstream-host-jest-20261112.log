@@ -1,0 +1,116 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+PASS spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+  vue_shared/component/markdown/markdown_editor
+    ✓ displays markdown field by default (45 ms)
+    ✓ passes render_quick_actions param to renderMarkdownPath if quick actions are enabled (81 ms)
+    ✓ does not pass render_quick_actions param to renderMarkdownPath if quick actions are disabled (30 ms)
+    ✓ requests undecorated native input when table of contents are supported (32 ms)
+    ✓ enables content editor switcher when contentEditorEnabled prop is true (12 ms)
+    ✓ hides content editor switcher when contentEditorEnabled prop is false (11 ms)
+    ✓ passes codeSuggestionsConfig as a single prop to markdown field component (13 ms)
+    ✓ renders markdown field textarea (9 ms)
+    ✓ renders data on textarea for noteable type (11 ms)
+    ✓ renders data on textarea for can suggest (8 ms)
+    ✓ emits `content-editor` when enable-content-editor emitted from markdown editor (26 ms)
+    ✓ emits `markdown-field` when `enable-markdown-editor` emitted from content editor (24 ms)
+    ✓ emits initial editing mode on mount so parents can sync custom UI (13 ms)
+    ✓ does not enable immersive mode on content editor by default (17 ms)
+    when attachments are disabled
+      ✓ disables canAttachFile (11 ms)
+      ✓ passes `attach-file` to restrictedToolBarItems (20 ms)
+    when additional restricted tool bar items are given
+      ✓ passes them to restrictedToolBarItems (13 ms)
+      when attachments are disabled
+        ✓ passes `attach-file` and `full-screen` restrictedToolBarItems (20 ms)
+    disabled
+      ✓ disables markdown field when disabled prop is true (10 ms)
+      ✓ enables markdown field when disabled prop is false (13 ms)
+      ✓ disables content editor when disabled prop is true (29 ms)
+      ✓ enables content editor when disabled prop is false (23 ms)
+    fillContainer
+      by default
+        ✓ does not put the fill class on the root (9 ms)
+      when fillContainer is true
+        ✓ puts `md-area-wrapper-fill` on the root (17 ms)
+    hideModeSwitcher
+      by default
+        ✓ shows the content editor switcher in markdown field (9 ms)
+        ✓ does not pass hideModeSwitcher to content editor (22 ms)
+      when hideModeSwitcher is true
+        ✓ hides the content editor switcher in markdown field (14 ms)
+        ✓ passes hideModeSwitcher to content editor (30 ms)
+    autosize
+      ✓ autosizes the textarea when the value changes from outside the component (13 ms)
+      ✓ does not autosize the textarea if markdown editor is disabled (31 ms)
+    autosave
+      ✓ automatically saves the textarea value to local storage if autosaveKey is defined (10 ms)
+      ✓ loads value from local storage if autosaveKey is defined, and value isn't (16 ms)
+      ✓ doesn't load value from local storage if autosaveKey is defined, and value is (10 ms)
+      ✓ does not save the textarea value to local storage if autosaveKey is not defined (11 ms)
+      ✓ does not save the textarea value to local storage if value is empty (12 ms)
+      ✓ can restore note directly from autosave (12 ms)
+      clear local storage event handler
+        ✓ does not clear the local storage if the autosave key is not defined (17 ms)
+        ✓ does not clear the local storage if the event autosave key does not match (10 ms)
+        ✓ clears the local storage if the event autosave key matches (9 ms)
+    when handing current rich content to Markdown
+      ✓ reads the document before a delayed observer can publish it (29 ms)
+      ✓ keeps the rich editor and draft when conversion refuses the handoff (29 ms)
+      ✓ reads current content when a restored preference requests Markdown (32 ms)
+    when the parent guards a switch to rich text
+      when the parent declines
+        ✓ keeps the plain text draft (16 ms)
+      when the parent confirms
+        ✓ enters rich text (20 ms)
+    when editingMode is markdownField
+      ✓ emits input event when markdown field textarea changes (10 ms)
+      ✓ autosaves the markdown value to local storage (11 ms)
+      ✓ bubbles up keydown event (11 ms)
+      when autofocus is true
+        ✓ sets the markdown field as the active element in the document (15 ms)
+      when markdown field triggers enable-content-editor event
+        ✓ displays the content editor (28 ms)
+        ✓ adds hidden field with current markdown (27 ms)
+        ✓ hides the markdown field (25 ms)
+    when contentEditor is disabled
+      ✓ resets the editingMode to markdownField (19 ms)
+    when editingMode is contentEditor
+      ✓ emits input event when content editor emits change event (32 ms)
+      ✓ autosaves the content editor value to local storage (36 ms)
+      ✓ does not autofocus the content editor (44 ms)
+      when autofocus is true
+        ✓ sets the content editor autofocus property to end (37 ms)
+      when keydown event is fired
+        ✓ bubbles up keydown event (34 ms)
+        ✓ bubbles up keydown event for meta key with default behaviour intact (25 ms)
+        ✓ bubbles up keydown event for meta + k key on selected text with default behaviour prevented (19 ms)
+        ✓ bubbles up keydown event for meta + k key without text selection with default behaviour prevented (24 ms)
+        ✓ bubbles up keydown event for meta + non-k key with default behaviour intact (18 ms)
+      when richText editor triggers `enable-markdown-editor` event
+        ✓ hides the content editor (30 ms)
+        ✓ shows the markdown field (25 ms)
+    setTemplate
+      ✓ sets the value of markdown when markdown is empty (14 ms)
+      ✓ does not set the value of markdown when markdown is not empty and force is false (11 ms)
+      ✓ sets the value of markdown when markdown is not empty and force is true (15 ms)
+      ✓ dismisses a pending confirmation when a collaboration provider arrives (12 ms)
+      ✓ shows a warning alert when markdown is not empty (11 ms)
+    append public API
+      ✓ updates editor value (11 ms)
+      ✓ updates rich text editor value (33 ms)
+      ✓ appends to existing value (9 ms)
+      ✓ apples focus when no value is given (9 ms)
+    immersive mode
+      ✓ passes on immersive mode to content editor (23 ms)
+      ✓ passes on immersive mode to plain text editor (8 ms)
+      ✓ removes the focus outline on the textarea (9 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       75 passed, 75 total
+Snapshots:   0 total
+Time:        7.984 s
+Ran all test suites matching /spec\/frontend\/vue_shared\/components\/markdown\/markdown_editor_spec.js/i.
+Done in 9.41s.

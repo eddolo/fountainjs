@@ -1,0 +1,15 @@
+{
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "status": "passed",
+  "patches": {
+    "integrations/gitlab/patches/gitlab-19.5.3-current-document.patch": "6c2c7b2dee50fa655f39ae0663c01f7fa9a14f14ddc1763f30237dfefec74d4a",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-host-tests.patch": "f91fee895107e0f6bb1fd6fb1728e7142b25dc6fe399715aadf5cc2f34565ffd"
+  },
+  "checks": [
+    "Prepared patch applies to pinned HEAD in a temporary index",
+    "Native host test patch applies after prepared patch",
+    "Reverse check passes against actual installed source",
+    "Reconstructed host spec exactly matches tested live source"
+  ],
+  "isolation": "Main index and source worktree untouched; temporary index removed"
+}

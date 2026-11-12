@@ -49,6 +49,26 @@ response. Superseded loads cannot change the newest request's status. Disposal
 cancels pending loads, removes subscriptions, destroys the owned model and clears
 retained recovery/error references.
 
+## Asynchronous Markdown insertion
+
+`pasteMarkdown(source)` uses the same real host renderer/codec as document loads,
+then inserts at the captured native selection. Requests run in invocation order.
+Native position maps follow unrelated typing while rendering; overlapping edits,
+unlocated semantic changes and out-of-order/reentrant host notifications refuse
+the insertion rather than overwrite content. The rejected source remains in
+`insertionRecovery`. Disposal and document replacement cancel queued requests.
+
+While `pendingInsertions` is nonzero, status is `loading` and serialization is
+refused. The author can continue typing. The candidate insertion is serialized
+inside a native command batch before committing; conversion errors and host
+filters roll the batch back. Each successful paste is one undo step.
+
+The native component connects GitLab's `CONTENT_EDITOR_PASTE` event and a real
+browser-clipboard **Paste Markdown** button. Rejected source is inspectable in a
+read-only textarea with an explicit retry action. A later successful paste clears
+the recovery alert. This is Markdown insertion, not certification of arbitrary
+HTML/Word clipboard content or of the unfinished saved-reply picker.
+
 ## Build and real-service evidence
 
 ```sh
@@ -64,8 +84,10 @@ preview endpoint through GitLab GraphQL, imports its HTML, performs native
 Fountain transactions, saves through authenticated GitLab HTTP, reimports and
 visually checks the resulting issue. No render or save responses are fabricated.
 
-This is a service-boundary audit. The displayed reader is GitLab's own reader;
-Fountain's complete browser component, toolbar, suggestions, uploads and provider
-integration remain unfinished. Unknown/unrepresentable content is an explicit
-conversion error, not feature parity. The native service is private integration
-code and is not a newly published npm API.
+That service-boundary audit displays GitLab's own reader. The subsequent native
+browser audit mounts Fountain in the real issue/discussion composers; run
+`scripts/run-gitlab-native-browser-audit.mjs --insertion` inside Linux to exercise
+clipboard insertion, retained-source recovery, real saving and restart. The full
+toolbar, suggestions, upload controls and provider integration remain unfinished.
+Unknown/unrepresentable content is an explicit conversion error, not feature
+parity. This service is private integration code, not a newly published npm API.

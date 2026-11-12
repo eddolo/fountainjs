@@ -706,7 +706,9 @@ const limits = Object.freeze({
   // measure ~1,455,787 bytes (+571 bytes). Add half KiB aggregate capacity over
   // the preceding 1421.25 KiB ceiling; keep the preceding failed size
   // evidence and every entry/ESM/CSS/performance acceptance limit unchanged.
-  'all CommonJS runtime code': 1421.75 * kibibyte,
+  // Preserving authored paragraph attributes during rich insertion measures
+  // 1,455,980 bytes. Add 256 bytes capacity; other limits remain unchanged.
+  'all CommonJS runtime code': 1422 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

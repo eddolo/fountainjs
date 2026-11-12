@@ -910,6 +910,17 @@ describe('document model and transactions', () => {
     expect(MarkdownExporter.export(editor.state)).toContain('## Two\n\nParagraphs');
   });
 
+  it.each([{ align: 'center' }, { dir: 'rtl' }, { align: 'left', alignExplicit: true }, { externalRecord: { id: 'paragraph-1' } }])('retains authored paragraph attributes when inserting rich content: %j', (attrs) => {
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    insertText(editor, 'Before after');
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 6)));
+    const { schema } = editor.state;
+    const fragment = schema.node('doc', {}, [schema.node('paragraph', attrs, [schema.text('Retained')])]);
+    expect(insertDocument(editor, fragment)).toBe(true);
+    expect(editor.state.doc.content.map(node => node.textContent)).toEqual(['Before', 'Retained', ' after']);
+    expect(editor.state.doc.child(1).attrs).toMatchObject(attrs);
+  });
+
   it('turns multiline plain text into visible blocks when replacing a selected node', () => {
     const editor = createEditor({ schema: CoreSchemaSpec });
     expect(insertImage(editor, { src: '/selected.png', alt: 'selected' })).toBe(true);

@@ -6,10 +6,13 @@ import { chromium, expect } from '@playwright/test';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
-const nativeBrowser = process.argv.includes('--native-browser');
+const nativeInsertion = process.argv.includes('--native-insertion');
+const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeBrowser
+  nativeInsertion
+    ? 'artifacts/gitlab-native-insertion-20261112/'
+    : nativeBrowser
     ? 'artifacts/gitlab-native-browser-20261112/'
     : preparedHost
     ? 'artifacts/gitlab-prepared-host-20261112/'
@@ -77,6 +80,7 @@ const report = {
   secrets: 'Password/session used in memory only; no traces or storage-state files',
   preparedHost,
   nativeBrowser,
+  nativeInsertion,
 };
 if (nativeBrowser)
   report.nativeRuntime = JSON.parse(
@@ -89,6 +93,8 @@ try {
     viewport: { width: 1440, height: 1000 },
     recordVideo: { dir: fileURLToPath(new URL('recordings/', output)) },
   });
+  if (nativeInsertion)
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: baseURL });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(error.message));
@@ -255,6 +261,46 @@ try {
     await expect(editor.locator('strong').filter({ hasText: marker })).toHaveCount(0);
     await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
     await expect(editor.locator('strong').filter({ hasText: marker })).toBeVisible();
+    if (nativeInsertion) {
+      await page.keyboard.press('End');
+      await page.keyboard.press('Enter');
+      await page.evaluate(() =>
+        navigator.clipboard.writeText('Pasted **GitLab Markdown** with @root.'),
+      );
+      await toolbar.getByRole('button', { name: 'Paste Markdown', exact: true }).click();
+      await expect(editor.locator('strong').filter({ hasText: 'GitLab Markdown' })).toBeVisible();
+      await expect(editor.getByText('Pasted', { exact: false })).toBeVisible();
+      await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
+      await expect(editor.getByText('GitLab Markdown', { exact: true })).toHaveCount(0);
+      await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
+      await expect(editor.getByText('GitLab Markdown', { exact: true })).toBeVisible();
+      const beforeFailure = await editor.innerText();
+      const rejected = 'Unsupported footnote [^source].\n\n[^source]: Keep this exact source.';
+      await page.evaluate((source) => navigator.clipboard.writeText(source), rejected);
+      await toolbar.getByRole('button', { name: 'Paste Markdown', exact: true }).click();
+      await page.getByText('Retained paste source', { exact: true }).click();
+      const retained = page.getByRole('textbox', { name: 'Failed paste source', exact: true });
+      await expect(retained).toHaveValue(rejected);
+      expect(await editor.innerText()).toBe(beforeFailure);
+      await retained.scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: fileURLToPath(new URL('retained-paste-source.png', output)),
+        fullPage: true,
+      });
+      await editor.getByText('GitLab Markdown', { exact: true }).click();
+      await page.keyboard.press('End');
+      await page.keyboard.press('Enter');
+      await page.evaluate(() => navigator.clipboard.writeText('**Recovered paste**'));
+      await toolbar.getByRole('button', { name: 'Paste Markdown', exact: true }).click();
+      await expect(editor.getByText('Recovered paste', { exact: true })).toBeVisible();
+      await expect(page.getByText('Retained paste source', { exact: true })).toHaveCount(0);
+      report.checks.push(
+        'Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo',
+      );
+      report.checks.push(
+        'An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste',
+      );
+    }
     report.checks.push(
       'Native Fountain toolbar formats actual browser selection; undo and redo update both document and view',
     );
@@ -326,6 +372,8 @@ try {
   await expect(page.getByText(marker, { exact: true })).toBeVisible();
   const saved = await api('GET', `/projects/${project.id}/issues/${issue.iid}`);
   expect(saved.description).toContain(marker);
+  if (nativeInsertion)
+    expect(saved.description).toContain('Pasted **GitLab Markdown** with @root.');
   if (nativeBrowser) expect(saved.description).not.toContain('[](#source-retention-investigation)');
   for (const value of [
     'formatted content',

@@ -37,9 +37,24 @@ export default {
       failure: null,
       fatal: false,
       hasRecovery: false,
+      inserting: false,
+      failedInsertionSource: null,
     };
   },
   computed: {
+    failureMessage() {
+      if (this.failureCode === 'GITLAB_CLIPBOARD_READ_FAILED')
+        return s__(
+          'ContentEditor|Unable to read the clipboard. Check browser clipboard permissions, or use your browser paste command.',
+        );
+      if (this.failureCode === 'GITLAB_INSERTION_TARGET_CHANGED')
+        return s__(
+          'ContentEditor|Paste stopped because the selected content changed. Your document is unchanged by the paste, and its source is retained below.',
+        );
+      return s__(
+        'ContentEditor|The editor operation could not be completed. Your source and current document are retained.',
+      );
+    },
     failureCode() {
       const message = this.failure?.message;
       if (typeof message === 'string' && /^[A-Z][A-Z0-9_]+$/u.test(message)) return message;
@@ -101,6 +116,7 @@ export default {
       this.releaseChange = this.contentEditor.subscribeChange(this.onDocumentChange);
       this.releaseStatus = this.contentEditor.subscribeStatus(() => {
         this.hasRecovery = Boolean(this.contentEditor.recovery);
+        this.inserting = this.contentEditor.pendingInsertions > 0;
       });
     } catch (error) {
       this.fatal = true;
@@ -193,9 +209,18 @@ export default {
     },
     onSurfaceError(error) {
       this.failure = error;
+      this.failedInsertionSource = this.contentEditor?.insertionRecovery?.markdown ?? null;
     },
-    pasteContent() {
-      this.onSurfaceError(new Error('GITLAB_NATIVE_PASTE_ADAPTER_REQUIRED'));
+    async pasteContent(markdown) {
+      try {
+        const result = await this.contentEditor.pasteMarkdown(markdown);
+        if (result.status === 'applied' && !this.disposed) {
+          this.failedInsertionSource = null;
+          this.focus();
+        }
+      } catch (error) {
+        if (!this.disposed) this.onSurfaceError(error);
+      }
     },
     retryLoad() {
       return this.setSerializedContent(this.contentEditor.recovery?.markdown ?? this.markdown);
@@ -240,11 +265,7 @@ export default {
       }}
     </gl-alert>
     <gl-alert v-if="failure" variant="danger" :dismissible="false">
-      {{
-        s__(
-          'ContentEditor|The editor operation could not be completed. Your source and current document are retained. Conversion failures block saving.',
-        )
-      }}
+      {{ failureMessage }}
       <gl-button v-if="hasRecovery" size="small" @click="retryLoad">{{
         s__('ContentEditor|Retry source')
       }}</gl-button>
@@ -252,6 +273,22 @@ export default {
         s__('ContentEditor|Keep current document')
       }}</gl-button>
     </gl-alert>
+    <details v-if="failedInsertionSource !== null" class="gl-p-3">
+      <summary>{{ s__('ContentEditor|Retained paste source') }}</summary>
+      <textarea
+        :value="failedInsertionSource"
+        :aria-label="s__('ContentEditor|Failed paste source')"
+        readonly
+        class="gl-w-full"
+        rows="4"
+      ></textarea>
+      <gl-button
+        size="small"
+        :disabled="!editable || inserting || isLoading"
+        @click="pasteContent(failedInsertionSource)"
+        >{{ s__('ContentEditor|Retry paste at cursor') }}</gl-button
+      >
+    </details>
     <div
       data-testid="content-editor"
       class="content-editor-body gl-relative"
@@ -265,6 +302,7 @@ export default {
           :disabled="!editable || isLoading"
           @focus="focus"
           @error="onSurfaceError"
+          @paste-markdown="pasteContent"
         >
           <template #header-buttons>
             <slot name="header-buttons"></slot>
@@ -277,7 +315,7 @@ export default {
           </template>
         </fountain-formatting-toolbar>
       </div>
-      <gl-loading-icon v-if="isLoading" size="lg" class="gl-p-5" />
+      <gl-loading-icon v-if="isLoading || inserting" size="lg" class="gl-p-5" />
       <fountain-editor-surface
         v-if="contentEditor"
         ref="surface"

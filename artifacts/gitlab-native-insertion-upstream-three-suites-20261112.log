@@ -1,0 +1,1162 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/issuable/issuable_form_spec.js spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js spec/frontend/content_editor/components/content_editor_spec.js
+FAIL spec/frontend/content_editor/components/content_editor_spec.js
+  ● ContentEditor › getSerializedContentForHandoff › reads the current document before the update observer fires
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      77 |
+      78 |     it('reads the current document before the update observer fires', () => {
+    > 79 |       findEditorContent().props('editor').commands.setContent('<p>Latest edit</p>', false);
+         |                           ^
+      80 |
+      81 |       expect(wrapper.vm.getSerializedContentForHandoff()).toBe('Latest edit');
+      82 |     });
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/content_editor_spec.js:79:27)
+
+  ● ContentEditor › getSerializedContentForHandoff › reads the current document before the update observer fires
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › getSerializedContentForHandoff › refuses a handoff while a document is loading
+
+    TypeError: this.$refs.surface.getSerializedContentForHandoff is not a function
+
+      309 |       if (this.isLoading || this.fatal || this.latestMarkdown !== this.markdown)
+      310 |         throw new Error('MARKDOWN_SERIALIZATION_NOT_READY');
+    > 311 |       return this.$refs.surface.getSerializedContentForHandoff();
+          |                                 ^
+      312 |     },
+      313 |     readSerializedContent() {
+      314 |       return this.contentEditor.getSerializedContent();
+
+      at VueComponent.getSerializedContentForHandoff (app/assets/javascripts/content_editor/components/content_editor.vue:311:33)
+      at Object.getSerializedContentForHandoff (spec/frontend/content_editor/components/content_editor_spec.js:98:25)
+
+  ● ContentEditor › getSerializedContentForHandoff › refuses a handoff while native composition is active
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      101 |     it('refuses a handoff while native composition is active', () => {
+      102 |       jest
+    > 103 |         .spyOn(findEditorContent().props('editor').view, 'composing', 'get')
+          |                                    ^
+      104 |         .mockReturnValue(true);
+      105 |
+      106 |       expect(() => wrapper.vm.getSerializedContentForHandoff()).toThrow();
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/content_editor_spec.js:103:36)
+
+  ● ContentEditor › getSerializedContentForHandoff › refuses a handoff while native composition is active
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › renders EditorContent component and provides tiptapEditor instance
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      125 |     const editorContent = findEditorContent();
+      126 |
+    > 127 |     expect(editorContent.props().editor).toBeInstanceOf(Editor);
+          |                          ^
+      128 |     expect(editorContent.classes()).toContain('md');
+      129 |   });
+      130 |
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/content_editor_spec.js:127:26)
+
+  ● ContentEditor › renders EditorContent component and provides tiptapEditor instance
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › allows setting the tiptap editor to autofocus
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      134 |     await nextTick();
+      135 |
+    > 136 |     expect(findEditorContent().props().editor.options.autofocus).toBe('start');
+          |                                ^
+      137 |   });
+      138 |
+      139 |   it('renders ContentEditorProvider component', () => {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/content_editor_spec.js:136:32)
+
+  ● ContentEditor › allows setting the tiptap editor to autofocus
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › renders ContentEditorProvider component
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      140 |     createWrapper();
+      141 |
+    > 142 |     expect(wrapper.findComponent(ContentEditorProvider).exists()).toBe(true);
+          |                                                                   ^
+      143 |   });
+      144 |
+      145 |   it('renders toolbar component', () => {
+
+      at Object.toBe (spec/frontend/content_editor/components/content_editor_spec.js:142:67)
+
+  ● ContentEditor › renders toolbar component
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      146 |     createWrapper();
+      147 |
+    > 148 |     expect(wrapper.findComponent(FormattingToolbar).exists()).toBe(true);
+          |                                                               ^
+      149 |   });
+      150 |
+      151 |   it('displays an attachment button', () => {
+
+      at Object.toBe (spec/frontend/content_editor/components/content_editor_spec.js:148:63)
+
+  ● ContentEditor › displays an attachment button
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      152 |     createWrapper();
+      153 |
+    > 154 |     expect(wrapper.findComponent(FormattingToolbar).props().hideAttachmentButton).toBe(false);
+          |                                                     ^
+      155 |   });
+      156 |
+      157 |   it('hides the attachment button if attachments are disabled', () => {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/content_editor_spec.js:154:53)
+
+  ● ContentEditor › displays an attachment button
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › hides the attachment button if attachments are disabled
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      158 |     createWrapper({ disableAttachments: true });
+      159 |
+    > 160 |     expect(wrapper.findComponent(FormattingToolbar).props().hideAttachmentButton).toBe(true);
+          |                                                     ^
+      161 |   });
+      162 |
+      163 |   it('shows the footer', () => {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/content_editor_spec.js:160:53)
+
+  ● ContentEditor › hides the attachment button if attachments are disabled
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › when setting initial content › succeeds › shows placeholder text
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "Enter some text here..."
+    Received string:    "This integration is unfinished. Autocomplete, attachments, saved replies, quick actions and specialized menus are not connected yet. Use source editing for those workflows.
+                Markdown help"
+
+      204 |
+      205 |       it('shows placeholder text', () => {
+    > 206 |         expect(wrapper.text()).toContain('Enter some text here...');
+          |                                ^
+      207 |       });
+      208 |     });
+      209 |
+
+      at Object.toContain (spec/frontend/content_editor/components/content_editor_spec.js:206:32)
+
+  ● ContentEditor › when setting initial content › fails › sets the content editor as read only when loading content fails
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      219 |         await nextTick();
+      220 |
+    > 221 |         expect(findEditorContent().props().editor.isEditable).toBe(false);
+          |                                    ^
+      222 |       });
+      223 |
+      224 |       it('hides loading indicator', async () => {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/content_editor_spec.js:221:36)
+
+  ● ContentEditor › when setting initial content › fails › sets the content editor as read only when loading content fails
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › when setting initial content › fails › displays error alert indicating that the content editor failed to load
+
+    [vue-test-utils]: find did not return Component, cannot call text() on empty Wrapper
+
+      229 |
+      230 |       it('displays error alert indicating that the content editor failed to load', () => {
+    > 231 |         expect(findContentEditorAlert().text()).toContain(
+          |                                         ^
+      232 |           'An error occurred while trying to render the rich text editor. Please try again.',
+      233 |         );
+      234 |       });
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.text (node_modules/@vue/test-utils/dist/vue-test-utils.js:8941:3)
+      at Object.text (spec/frontend/content_editor/components/content_editor_spec.js:231:41)
+
+  ● ContentEditor › when setting initial content › fails › displays error alert indicating that the content editor failed to load
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › when setting initial content › fails › when clicking the retry button in the loading error alert and loading succeeds › hides the loading error alert
+
+    [vue-test-utils]: find did not return Component, cannot call text() on empty Wrapper
+
+      241 |
+      242 |         it('hides the loading error alert', () => {
+    > 243 |           expect(findContentEditorAlert().text()).toBe('');
+          |                                           ^
+      244 |         });
+      245 |
+      246 |         it('sets the content editor as writable', async () => {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.text (node_modules/@vue/test-utils/dist/vue-test-utils.js:8941:3)
+      at Object.text (spec/frontend/content_editor/components/content_editor_spec.js:243:43)
+
+  ● ContentEditor › when setting initial content › fails › when clicking the retry button in the loading error alert and loading succeeds › hides the loading error alert
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › when setting initial content › fails › when clicking the retry button in the loading error alert and loading succeeds › sets the content editor as writable
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      247 |           await nextTick();
+      248 |
+    > 249 |           expect(findEditorContent().props().editor.isEditable).toBe(true);
+          |                                      ^
+      250 |         });
+      251 |       });
+      252 |     });
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/content_editor_spec.js:249:38)
+
+  ● ContentEditor › when setting initial content › fails › when clicking the retry button in the loading error alert and loading succeeds › sets the content editor as writable
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › when loading markdown › loads the initial markdown outside the undo history
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      267 |
+      268 |     it('loads the initial markdown outside the undo history', () => {
+    > 269 |       expect(setSerializedContent).toHaveBeenCalledTimes(1);
+          |                                    ^
+      270 |       expect(setSerializedContent.mock.calls[0]).toEqual(['hello', undefined]);
+      271 |     });
+      272 |
+
+      at Object.toHaveBeenCalledTimes (spec/frontend/content_editor/components/content_editor_spec.js:269:36)
+
+  ● ContentEditor › when loading markdown › loads a changed markdown prop as an undoable replacement
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: "replaced", {"addToHistory": true}
+
+    Number of calls: 0
+
+      274 |       await wrapper.setProps({ markdown: 'replaced' });
+      275 |
+    > 276 |       expect(setSerializedContent).toHaveBeenCalledWith('replaced', { addToHistory: true });
+          |                                    ^
+      277 |     });
+      278 |
+      279 |     describe('when a changed markdown prop fails to load and Retry succeeds', () => {
+
+      at Object.toHaveBeenCalledWith (spec/frontend/content_editor/components/content_editor_spec.js:276:36)
+
+  ● ContentEditor › when loading markdown › when a changed markdown prop fails to load and Retry succeeds › loads the replacement as undoable on both attempts
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 18
+    + Received  +  1
+
+    - Array [
+    -   Array [
+    -     "hello",
+    -     undefined,
+    -   ],
+    -   Array [
+    -     "replaced",
+    -     Object {
+    -       "addToHistory": true,
+    -     },
+    -   ],
+    -   Array [
+    -     "replaced",
+    -     Object {
+    -       "addToHistory": true,
+    -     },
+    -   ],
+    - ]
+    + Array []
+
+      289 |
+      290 |       it('loads the replacement as undoable on both attempts', () => {
+    > 291 |         expect(setSerializedContent.mock.calls).toEqual([
+          |                                                 ^
+      292 |           ['hello', undefined],
+      293 |           ['replaced', { addToHistory: true }],
+      294 |           ['replaced', { addToHistory: true }],
+
+      at Object.toEqual (spec/frontend/content_editor/components/content_editor_spec.js:291:49)
+
+  ● ContentEditor › when loading markdown › when a changed markdown prop fails to load and Retry succeeds › restores the previous content when undo is pressed
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      256 |     let setSerializedContent;
+      257 |
+    > 258 |     const findTiptapEditor = () => findEditorContent().props('editor');
+          |                                                        ^
+      259 |
+      260 |     beforeEach(async () => {
+      261 |       renderMarkdown.mockResolvedValue({ body: '<p>hello</p>' });
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/content_editor_spec.js:258:56)
+      at Object.findTiptapEditor (spec/frontend/content_editor/components/content_editor_spec.js:299:30)
+
+  ● ContentEditor › when loading markdown › when a changed markdown prop fails to load and Retry succeeds › restores the previous content when undo is pressed
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › when focused event is emitted › adds is-focused class when focus event is emitted
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      313 |       createWrapper();
+      314 |
+    > 315 |       findEditorStateObserver().vm.$emit('focus');
+          |                                   ^
+      316 |
+      317 |       await nextTick();
+      318 |     });
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:315:35)
+
+  ● ContentEditor › when focused event is emitted › adds is-focused class when focus event is emitted
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "is-focused"
+    Received array: ["content-editor-body", "gl-relative"]
+
+      319 |
+      320 |     it('adds is-focused class when focus event is emitted', () => {
+    > 321 |       expect(findEditorElement().classes()).toContain('is-focused');
+          |                                             ^
+      322 |     });
+      323 |
+      324 |     it('removes is-focused class when blur event is emitted', async () => {
+
+      at Object.toContain (spec/frontend/content_editor/components/content_editor_spec.js:321:45)
+
+  ● ContentEditor › when focused event is emitted › removes is-focused class when blur event is emitted
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      313 |       createWrapper();
+      314 |
+    > 315 |       findEditorStateObserver().vm.$emit('focus');
+          |                                   ^
+      316 |
+      317 |       await nextTick();
+      318 |     });
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:315:35)
+
+  ● ContentEditor › when focused event is emitted › removes is-focused class when blur event is emitted
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      323 |
+      324 |     it('removes is-focused class when blur event is emitted', async () => {
+    > 325 |       findEditorStateObserver().vm.$emit('blur');
+          |                                   ^
+      326 |
+      327 |       await nextTick();
+      328 |
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:325:35)
+
+  ● ContentEditor › when focused event is emitted › removes is-focused class when blur event is emitted
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › when focused event is emitted › hides placeholder text
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      313 |       createWrapper();
+      314 |
+    > 315 |       findEditorStateObserver().vm.$emit('focus');
+          |                                   ^
+      316 |
+      317 |       await nextTick();
+      318 |     });
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:315:35)
+
+  ● ContentEditor › when focused event is emitted › emits focus event
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      313 |       createWrapper();
+      314 |
+    > 315 |       findEditorStateObserver().vm.$emit('focus');
+          |                                   ^
+      316 |
+      317 |       await nextTick();
+      318 |     });
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:315:35)
+
+  ● ContentEditor › when focused event is emitted › emits focus event
+
+    expect(received).toHaveLength(expected)
+
+    Matcher error: received value must have a length property whose value must be a number
+
+    Received has value: undefined
+
+      335 |
+      336 |     it('emits focus event', () => {
+    > 337 |       expect(wrapper.emitted('focus')).toHaveLength(1);
+          |                                        ^
+      338 |     });
+      339 |
+      340 |     it('emits blur event when editorStateObserver emits blur event', async () => {
+
+      at Object.toHaveLength (spec/frontend/content_editor/components/content_editor_spec.js:337:40)
+
+  ● ContentEditor › when focused event is emitted › emits focus event
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › when focused event is emitted › emits blur event when editorStateObserver emits blur event
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      313 |       createWrapper();
+      314 |
+    > 315 |       findEditorStateObserver().vm.$emit('focus');
+          |                                   ^
+      316 |
+      317 |       await nextTick();
+      318 |     });
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:315:35)
+
+  ● ContentEditor › when focused event is emitted › emits blur event when editorStateObserver emits blur event
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      339 |
+      340 |     it('emits blur event when editorStateObserver emits blur event', async () => {
+    > 341 |       findEditorStateObserver().vm.$emit('blur');
+          |                                   ^
+      342 |
+      343 |       await nextTick();
+      344 |
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:341:35)
+
+  ● ContentEditor › when focused event is emitted › emits blur event when editorStateObserver emits blur event
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › when editorStateObserver emits doc-update event › emits change event with the latest markdown
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      359 |       await waitForPromises();
+      360 |
+    > 361 |       findEditorStateObserver().vm.$emit('doc-update');
+          |                                   ^
+      362 |     });
+      363 |
+      364 |     it('emits change event with the latest markdown', () => {
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:361:35)
+
+  ● ContentEditor › when editorStateObserver emits doc-update event › emits change event with the latest markdown
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: [[{"markdown": "Loaded content"}]]
+    Received: undefined
+
+      363 |
+      364 |     it('emits change event with the latest markdown', () => {
+    > 365 |       expect(wrapper.emitted('change')).toEqual([[{ markdown }]]);
+          |                                         ^
+      366 |     });
+      367 |
+      368 |     it('hides the placeholder text', () => {
+
+      at Object.toEqual (spec/frontend/content_editor/components/content_editor_spec.js:365:41)
+
+  ● ContentEditor › when editorStateObserver emits doc-update event › hides the placeholder text
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      359 |       await waitForPromises();
+      360 |
+    > 361 |       findEditorStateObserver().vm.$emit('doc-update');
+          |                                   ^
+      362 |     });
+      363 |
+      364 |     it('emits change event with the latest markdown', () => {
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:361:35)
+
+  ● ContentEditor › when editorStateObserver emits keydown event › bubbles up event
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      377 |       createWrapper();
+      378 |
+    > 379 |       findEditorStateObserver().vm.$emit(KEYDOWN_EVENT, event);
+          |                                   ^
+      380 |       expect(wrapper.emitted(KEYDOWN_EVENT)).toEqual([[event]]);
+      381 |     });
+      382 |   });
+
+      at Object.<anonymous> (spec/frontend/content_editor/components/content_editor_spec.js:379:35)
+
+  ● ContentEditor › when editorStateObserver emits keydown event › bubbles up event
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › renders alert bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      392 |     createWrapper();
+      393 |
+    > 394 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      395 |   });
+      396 |
+      397 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:394:55)
+
+  ● ContentEditor › renders link bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      392 |     createWrapper();
+      393 |
+    > 394 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      395 |   });
+      396 |
+      397 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:394:55)
+
+  ● ContentEditor › renders media bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      392 |     createWrapper();
+      393 |
+    > 394 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      395 |   });
+      396 |
+      397 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:394:55)
+
+  ● ContentEditor › renders codeBlock bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      392 |     createWrapper();
+      393 |
+    > 394 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      395 |   });
+      396 |
+      397 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:394:55)
+
+  ● ContentEditor › renders reference bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      392 |     createWrapper();
+      393 |
+    > 394 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      395 |   });
+      396 |
+      397 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:394:55)
+
+  ● ContentEditor › pastes content when CONTENT_EDITOR_READY_PASTE event is emitted
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      419 |
+      420 |     const editorContent = findEditorContent();
+    > 421 |     const commands = mockChainedCommands(editorContent.props('editor'), [
+          |                                                        ^
+      422 |       'focus',
+      423 |       'pasteContent',
+      424 |       'run',
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/content_editor_spec.js:421:56)
+
+  ● ContentEditor › pastes content when CONTENT_EDITOR_READY_PASTE event is emitted
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › aria attributes › uses the default aria-label when no ariaLabel prop is provided
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      35 |   const findLoadingIndicator = () => wrapper.findComponent(GlLoadingIcon);
+      36 |   const findContentEditorAlert = () => wrapper.findComponent(ContentEditorAlert);
+    > 37 |   const findEditorDom = () => findEditorContent().props('editor').view.dom;
+         |                                                   ^
+      38 |   const createWrapper = ({ markdown, autofocus, ...props } = {}) => {
+      39 |     wrapper = shallowMountExtended(ContentEditor, {
+      40 |       propsData: {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/content_editor_spec.js:37:51)
+      at Object.findEditorDom (spec/frontend/content_editor/components/content_editor_spec.js:440:14)
+
+  ● ContentEditor › aria attributes › uses the default aria-label when no ariaLabel prop is provided
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › aria attributes › uses the provided ariaLabel prop
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      35 |   const findLoadingIndicator = () => wrapper.findComponent(GlLoadingIcon);
+      36 |   const findContentEditorAlert = () => wrapper.findComponent(ContentEditorAlert);
+    > 37 |   const findEditorDom = () => findEditorContent().props('editor').view.dom;
+         |                                                   ^
+      38 |   const createWrapper = ({ markdown, autofocus, ...props } = {}) => {
+      39 |     wrapper = shallowMountExtended(ContentEditor, {
+      40 |       propsData: {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/content_editor_spec.js:37:51)
+      at Object.findEditorDom (spec/frontend/content_editor/components/content_editor_spec.js:446:14)
+
+  ● ContentEditor › aria attributes › uses the provided ariaLabel prop
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › aria attributes › uses aria-labelledby when ariaLabelledBy prop is provided
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      35 |   const findLoadingIndicator = () => wrapper.findComponent(GlLoadingIcon);
+      36 |   const findContentEditorAlert = () => wrapper.findComponent(ContentEditorAlert);
+    > 37 |   const findEditorDom = () => findEditorContent().props('editor').view.dom;
+         |                                                   ^
+      38 |   const createWrapper = ({ markdown, autofocus, ...props } = {}) => {
+      39 |     wrapper = shallowMountExtended(ContentEditor, {
+      40 |       propsData: {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/content_editor_spec.js:37:51)
+      at Object.findEditorDom (spec/frontend/content_editor/components/content_editor_spec.js:452:14)
+
+  ● ContentEditor › aria attributes › uses aria-labelledby when ariaLabelledBy prop is provided
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › aria attributes › uses aria-describedby when ariaDescribedBy prop is provided with ariaLabelledBy
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      35 |   const findLoadingIndicator = () => wrapper.findComponent(GlLoadingIcon);
+      36 |   const findContentEditorAlert = () => wrapper.findComponent(ContentEditorAlert);
+    > 37 |   const findEditorDom = () => findEditorContent().props('editor').view.dom;
+         |                                                   ^
+      38 |   const createWrapper = ({ markdown, autofocus, ...props } = {}) => {
+      39 |     wrapper = shallowMountExtended(ContentEditor, {
+      40 |       propsData: {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/content_editor_spec.js:37:51)
+      at Object.findEditorDom (spec/frontend/content_editor/components/content_editor_spec.js:459:14)
+
+  ● ContentEditor › aria attributes › uses aria-describedby when ariaDescribedBy prop is provided with ariaLabelledBy
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › aria attributes › uses aria-describedby with aria-label fallback when ariaLabelledBy is not provided
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      35 |   const findLoadingIndicator = () => wrapper.findComponent(GlLoadingIcon);
+      36 |   const findContentEditorAlert = () => wrapper.findComponent(ContentEditorAlert);
+    > 37 |   const findEditorDom = () => findEditorContent().props('editor').view.dom;
+         |                                                   ^
+      38 |   const createWrapper = ({ markdown, autofocus, ...props } = {}) => {
+      39 |     wrapper = shallowMountExtended(ContentEditor, {
+      40 |       propsData: {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/content_editor_spec.js:37:51)
+      at Object.findEditorDom (spec/frontend/content_editor/components/content_editor_spec.js:466:14)
+
+  ● ContentEditor › aria attributes › uses aria-describedby with aria-label fallback when ariaLabelledBy is not provided
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › aria attributes › updates aria attributes reactively when props change
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      35 |   const findLoadingIndicator = () => wrapper.findComponent(GlLoadingIcon);
+      36 |   const findContentEditorAlert = () => wrapper.findComponent(ContentEditorAlert);
+    > 37 |   const findEditorDom = () => findEditorContent().props('editor').view.dom;
+         |                                                   ^
+      38 |   const createWrapper = ({ markdown, autofocus, ...props } = {}) => {
+      39 |     wrapper = shallowMountExtended(ContentEditor, {
+      40 |       propsData: {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/content_editor_spec.js:37:51)
+      at Object.findEditorDom (spec/frontend/content_editor/components/content_editor_spec.js:474:14)
+
+  ● ContentEditor › aria attributes › updates aria attributes reactively when props change
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › aria attributes › removes the stale aria-label when switching to aria-labelledby after mount
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      35 |   const findLoadingIndicator = () => wrapper.findComponent(GlLoadingIcon);
+      36 |   const findContentEditorAlert = () => wrapper.findComponent(ContentEditorAlert);
+    > 37 |   const findEditorDom = () => findEditorContent().props('editor').view.dom;
+         |                                                   ^
+      38 |   const createWrapper = ({ markdown, autofocus, ...props } = {}) => {
+      39 |     wrapper = shallowMountExtended(ContentEditor, {
+      40 |       propsData: {
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/content_editor_spec.js:37:51)
+      at Object.findEditorDom (spec/frontend/content_editor/components/content_editor_spec.js:485:14)
+
+  ● ContentEditor › aria attributes › removes the stale aria-label when switching to aria-labelledby after mount
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● ContentEditor › immersive mode › does show the immersive class when immersive prop is true
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "immersive"
+    Received array: ["md-area", "gl-relative"]
+
+      500 |
+      501 |     it('does show the immersive class when immersive prop is true', () => {
+    > 502 |       expect(wrapper.findByTestId('content-editor-container').classes()).toContain('immersive');
+          |                                                                          ^
+      503 |     });
+      504 |
+      505 |     it('removes relative positioning, so it can be positioned by the parent', () => {
+
+      at Object.toContain (spec/frontend/content_editor/components/content_editor_spec.js:502:74)
+
+  ● ContentEditor › immersive mode › removes relative positioning, so it can be positioned by the parent
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "gl-relative"
+    Received array:     ["md-area", "gl-relative"]
+
+      504 |
+      505 |     it('removes relative positioning, so it can be positioned by the parent', () => {
+    > 506 |       expect(wrapper.findByTestId('content-editor-container').classes()).not.toContain(
+          |                                                                              ^
+      507 |         'gl-relative',
+      508 |       );
+      509 |     });
+
+      at Object.toContain (spec/frontend/content_editor/components/content_editor_spec.js:506:78)
+
+  ● ContentEditor › immersive mode › has a sticky header
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "gl-sticky"
+    Received array: []
+
+      510 |
+      511 |     it('has a sticky header', () => {
+    > 512 |       expect(wrapper.findByTestId('content-editor-header').classes()).toContain('gl-sticky');
+          |                                                                       ^
+      513 |     });
+      514 |
+      515 |     it('hides the footer', () => {
+
+      at Object.toContain (spec/frontend/content_editor/components/content_editor_spec.js:512:71)
+
+PASS spec/frontend/issuable/issuable_form_spec.js
+PASS spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       42 failed, 126 passed, 168 total
+Snapshots:   0 total
+Time:        11.228 s
+Ran all test suites matching /spec\/frontend\/issuable\/issuable_form_spec.js|spec\/frontend\/vue_shared\/components\/markdown\/markdown_editor_spec.js|spec\/frontend\/content_editor\/components\/content_editor_spec.js/i.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

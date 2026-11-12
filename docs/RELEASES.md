@@ -1317,6 +1317,30 @@ and actual append/paste/full-contract work remain required, alongside the missin
 feature adapters and broader product/release gates. No publication or parity
 promotion. Evidence: `artifacts/gitlab-native-browser-integration-20261112.json`.
 
+### Native GitLab Markdown insertion checkpoint — 2026-11-12
+
+Native host paste events and an explicit clipboard button now use the real
+GitLab renderer and native Fountain insertion/history. Requests retain ordered,
+mapped selections; conflicting edits and unrepresentable results preserve the
+document and rejected source. A recorded ten-check real-service journey passes
+clipboard/undo/recovery, save/reopen/comment, anonymous denial and restart.
+Editor, recovery controls and restored reader receive visual review.
+
+All 5,507 root unit tests/341 files, 82 focused cases/3 files, framework types,
+public API snapshot, package/frontend builds, performance/retention and size
+checks pass. The migrated native host suite passes 75/75. The broader three-suite
+run is 126 passed/42 failed: actual component acceptance remains open alongside
+the missing feature adapters and full product/browser/release gates. No skips or
+timeouts were added to hide those failures. The patch is reproducible against the
+matching prepared source.
+
+The public `insertDocument` repair retains authored paragraph attributes rather
+than flattening them away. Its CommonJS output grows 193 bytes; measured aggregate
+capacity increases 256 bytes (1421.75 to 1422 KiB). Entry, ESM, CSS and performance
+limits stay unchanged. This checkpoint is local, not a complete `pnpm check`,
+hosted CI, release or parity promotion. Evidence and open requirements:
+`artifacts/gitlab-native-insertion-integration-20261112.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

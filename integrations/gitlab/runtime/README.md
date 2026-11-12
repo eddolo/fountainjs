@@ -160,6 +160,14 @@ cd /absolute/gitlab-source
 corepack yarn rspack-prod
 ```
 
+For upstream host tests, apply
+`integrations/gitlab/patches/gitlab-19.5.3-native-host-tests.patch` after the
+prepared current-document patch and native installation. It mounts the actual
+native surface and replaces two Tiptap-only test setup calls with native
+transactions. All 75 host cases pass; other upstream component/form suites still
+need native migration and verification. Forward/reverse application and exact
+live-spec identity are checked without changing the main Git index.
+
 The installer checks source revision, prepared-file digests, runtime input hashes
 and existing owned-file hashes. It rejects unrecognized edits and symlinks. It
 retains original source files for rollback and formats installed components with
@@ -176,6 +184,8 @@ Run the real-service audit inside Linux from the Fountain checkout:
 
 ```sh
 node scripts/run-gitlab-native-browser-audit.mjs
+# Include real clipboard insertion, unsupported-source recovery and undo/redo:
+node scripts/run-gitlab-native-browser-audit.mjs --insertion
 ```
 
 Use `PLAYWRIGHT_BROWSERS_PATH` when the installed Linux browser lives outside
@@ -192,9 +202,10 @@ node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source --restore
 Restore refuses changed installed files, restores the recorded host/configuration
 files and removes only verified installer-owned files. Rebuild before serving
 that restored frontend, or recreate with the original base Compose profile.
-Full native toolbar/menus, upload/suggestion/provider adapters, source-recovery
-controls, upstream native-test migration, accessibility and cross-browser/product
-acceptance remain necessary. Passing a selected real journey does not close them.
+Full native toolbar/menus, upload/suggestion/provider adapters, replacement-source
+recovery controls, remaining upstream native-test migration, accessibility and
+cross-browser/product acceptance remain necessary. Passing a selected real
+journey does not close them.
 
 Configuration references: [GitLab Docker installation](https://docs.gitlab.com/install/docker/installation/)
 and [memory-constrained environments](https://docs.gitlab.com/omnibus/settings/memory_constrained_envs/).

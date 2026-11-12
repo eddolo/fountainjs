@@ -52,3 +52,5 @@
 /artifacts/structural-formatting-*.json -text -whitespace
 /artifacts/structural-formatting-verified-browser-20261105/**/*.json -text -whitespace
 /artifacts/structural-formatting-table-verified-browser-20261105/**/*.json -text -whitespace
+# Captured compiler/test receipts are raw diagnostics, not source formatting.
+/artifacts/gitlab-native-insertion-*.log -text -whitespace

@@ -2,15 +2,17 @@
 
 ## Current programme status — 2026-11-12
 
-Fountain now mounts in the real GitLab issue and discussion editors. The latest
-native Chromium journey passes eight checks over actual services, including
-formatting/history, source handoff, real saves/comments and restart persistence.
-183 integration unit cases, types, source build and upstream lint/format pass.
-The native upstream host suite remains **61 passed / 14 failed**; full toolbar,
-upload/suggestion/provider, source fidelity and product acceptance remain open.
-No capability row or superiority claim is promoted. The earlier service-only
-checkpoint below describes its historical scope.
-[Native browser evidence](../artifacts/gitlab-native-browser-integration-20261112.json).
+Fountain mounts in real GitLab issue/discussion editors. The current recorded
+native Chromium journey passes **ten checks**, adding actual clipboard Markdown
+insertion/undo and visibly retained unsupported source to real saves/comments,
+source handoff, access denial and restart persistence. All **5,507 unit tests/341
+files**, types, API, builds, performance/retention and measured size checks pass.
+The upstream host suite now passes **75/75**; the broader native set remains
+**126 passed / 42 failed** in the component suite. Native fixture migration and
+missing feature contracts remain required. Full menus, uploads/suggestions,
+providers, source fidelity and product/release acceptance are open. No capability
+row or superiority claim is promoted. Following checkpoints are historical.
+[Current native evidence](../artifacts/gitlab-native-insertion-integration-20261112.json).
 
 The full matching GitLab frontend now builds and serves the prepared host patch;
 the recorded real rich/source/rich save/restart journey passes on its final run.

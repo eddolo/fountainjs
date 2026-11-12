@@ -544,11 +544,19 @@ export function insertDocument(editor: Editor, document: Node): boolean {
   const blocks = [...document.content];
   const single = blocks.length === 1 ? blocks[0] : undefined;
   const parent = getNodeAtPath(state.doc, path.slice(0, -1));
+  const defaults = single && single.type.spec.attrs || {};
   // HTML import wraps an inline clipboard fragment in the schema's paragraph.
   // Only unwrap that known text container. Atomic/leaf blocks have no children,
   // so a generic `every(isInline)` check is vacuously true and used to report a
   // successful paste while silently inserting nothing.
+  // Authored block attributes must stay on their paragraph rather than vanish
+  // when its inline content joins the destination text.
   if (single && (single.type === state.schema.nodes.paragraph || single.type === state.schema.nodes.html_flow)
+    && Object.entries(single.attrs).every(([name, value]) => (
+      name === 'dir' && value === 'auto'
+      || name === 'align' && !single.attrs.alignExplicit && ['left', 'start'].includes(String(value))
+      || JSON.stringify(value) === JSON.stringify(defaults[name] && defaults[name].default)
+    ))
     && single.content.every((node) => node.type.isInline)
     && parent.content.every((node) => node.type.isInline)) {
     const text = target.text ?? '';

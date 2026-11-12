@@ -1,0 +1,81 @@
+diff --git a/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js b/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+index 8499c685..1c7853e3
+--- a/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
++++ b/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+@@ -15,6 +15,7 @@ import {
+ import markdownEditorEventHub from '~/vue_shared/components/markdown/eventhub';
+ import MarkdownEditor from '~/vue_shared/components/markdown/markdown_editor.vue';
+ import ContentEditor from '~/content_editor/components/content_editor.vue';
++import FountainEditorSurface from '~/content_editor/components/fountain_editor_surface.vue';
+ import MarkdownField from '~/vue_shared/components/markdown/field.vue';
+ import { stubComponent } from 'helpers/stub_component';
+ import { useLocalStorageSpy } from 'helpers/local_storage_helper';
+@@ -65,6 +66,7 @@ describe('vue_shared/component/markdown/markdown_editor', () => {
+       stubs: {
+         MarkdownField,
+         ContentEditor,
++        FountainEditorSurface,
+         ...stubs,
+       },
+     });
+@@ -81,6 +83,19 @@ describe('vue_shared/component/markdown/markdown_editor', () => {
+     return result.exists() ? result : wrapper.findComponent(ContentEditorStub);
+   };
+ 
++  const replaceUnreportedContent = (content) => {
++    const { editor } = findContentEditor().vm.contentEditor;
++    const { schema } = editor.state;
++    editor.dispatch(
++      editor
++        .createTransaction()
++        .replaceDocument(
++          schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text(content)])]),
++        )
++        .setMeta('preventUpdate', true),
++    );
++  };
++
+   const enableContentEditor = () => {
+     window.gon = { text_editor: 'rich_text_editor' };
+     return new Promise((resolve) => {
+@@ -147,14 +162,14 @@ describe('vue_shared/component/markdown/markdown_editor', () => {
+     );
+   });
+ 
+-  it('passes no_header_anchors=false to renderMarkdownPath if table of contents are supported', async () => {
++  it('requests undecorated native input when table of contents are supported', async () => {
+     buildWrapper({ propsData: { supportsTableOfContents: true } });
+ 
+     await enableContentEditor();
+ 
+     expect(mock.history.post).toHaveLength(1);
+     expect(mock.history.post[0].url).toBe(
+-      `${window.location.origin}/api/markdown?render_quick_actions=false&no_header_anchors=false`,
++      `${window.location.origin}/api/markdown?render_quick_actions=false&no_header_anchors=true`,
+     );
+   });
+ 
+@@ -464,10 +479,7 @@ describe('vue_shared/component/markdown/markdown_editor', () => {
+     });
+ 
+     it('reads the document before a delayed observer can publish it', async () => {
+-      findContentEditor().vm.contentEditor.tiptapEditor.commands.setContent(
+-        '<p>Latest unreported edit</p>',
+-        false,
+-      );
++      replaceUnreportedContent('Latest unreported edit');
+ 
+       await enableMarkdownEditor();
+ 
+@@ -493,10 +505,7 @@ describe('vue_shared/component/markdown/markdown_editor', () => {
+     });
+ 
+     it('reads current content when a restored preference requests Markdown', async () => {
+-      findContentEditor().vm.contentEditor.tiptapEditor.commands.setContent(
+-        '<p>Latest restored-mode edit</p>',
+-        false,
+-      );
++      replaceUnreportedContent('Latest restored-mode edit');
+ 
+       await wrapper.vm.onEditingModeRestored(EDITING_MODE_MARKDOWN_FIELD);
+       await waitForPromises();

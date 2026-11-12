@@ -1,0 +1,160 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-native-insertion-integration",
+  "parentRevision": "f4d028e2dd2a4c9f9767cb41fc20b26f36314a12",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "scope": "Native Fountain Markdown insertion in actual GitLab issue/discussion editors; real backend and records, incomplete full component/product acceptance",
+  "browser": {
+    "status": "passed",
+    "checks": 10,
+    "issueIID": 17,
+    "engine": "Native Linux Chromium",
+    "report": "artifacts/gitlab-native-insertion-20261112/report.json",
+    "log": "artifacts/gitlab-native-insertion-live-final-20261112.log",
+    "recording": "artifacts/gitlab-native-insertion-20261112/recordings/page@879022391cb84e27cad6233c660970f5.webm",
+    "screenshots": [
+      "artifacts/gitlab-native-insertion-20261112/original-rich-edit.png",
+      "artifacts/gitlab-native-insertion-20261112/retained-paste-source.png",
+      "artifacts/gitlab-native-insertion-20261112/original-after-restart.png"
+    ],
+    "visualReview": "Inspected native editor and restored reader: headings, bold/reference, working tasks, table, equation, decoded uploaded PNG, pasted and recovered paragraphs. Inspected exact rejected-footnote source and retry controls. Comment persistence is checked in the actual UI/API and recording, not a separate screenshot review.",
+    "pageErrors": [],
+    "runtimeSHA256": "b6cb57c47b92e1720ffda396b8b8ad64b6185f94d166634baacd41712187f4d5",
+    "loadedScripts": [
+      {
+        "path": "/assets/webpack/content_editor.cd204959.chunk.js",
+        "sha256": "7c96eedd75368fe8d75619884e0f81f102c409dda2d47fa31d71b866606e854e"
+      },
+      {
+        "path": "/assets/webpack/content_editor.cd204959.chunk.js",
+        "sha256": "7c96eedd75368fe8d75619884e0f81f102c409dda2d47fa31d71b866606e854e"
+      },
+      {
+        "path": "/assets/webpack/content_editor.cd204959.chunk.js",
+        "sha256": "7c96eedd75368fe8d75619884e0f81f102c409dda2d47fa31d71b866606e854e"
+      }
+    ],
+    "pinFlagScope": "Immutable packaged-image pin retains fountainReplacementInstalled=false; nativeBrowser/nativeInsertion, mounted native DOM, read-only frontend overlay and loaded runtime/script hashes identify the replacement."
+  },
+  "implementation": [
+    "Native GitLab paste event and explicit real browser clipboard Markdown button",
+    "Ordered asynchronous insertion with native position maps and conservative target conflict detection, including reentrant host edits",
+    "Pending work blocks serialization/save/handoff while allowing author typing",
+    "Serialization preflight and host-filter refusal roll back the complete native batch",
+    "One undo step per successful insertion; replacement/disposal cancel queued requests",
+    "Rejected original source remains visible and explicitly retryable; successful paste clears recovery",
+    "Public insertDocument preserves authored paragraph alignment/direction/custom metadata",
+    "Native host fixtures use actual Fountain surface/transactions rather than a Tiptap facade"
+  ],
+  "validation": {
+    "units": {
+      "status": "passed",
+      "tests": 5507,
+      "files": 341,
+      "log": "artifacts/gitlab-native-insertion-full-unit-final-20261112.log"
+    },
+    "focused": {
+      "status": "passed",
+      "tests": 82,
+      "files": 3,
+      "log": "artifacts/gitlab-native-insertion-final-focused-20261112.log"
+    },
+    "frameworkTypes": {
+      "status": "passed",
+      "scope": "Root TypeScript, Svelte and both Angular configurations",
+      "log": "artifacts/gitlab-native-insertion-typecheck-final-20261112.log"
+    },
+    "api": {
+      "status": "passed",
+      "declarations": 450,
+      "log": "artifacts/gitlab-native-insertion-api-20261112.log"
+    },
+    "packageBuild": {
+      "status": "passed",
+      "log": "artifacts/gitlab-native-insertion-package-build-20261112.log"
+    },
+    "sourceBuild": {
+      "status": "passed",
+      "compilerSeconds": 85.06,
+      "commandSeconds": 87.06,
+      "warnings": [
+        "asset size limit",
+        "entrypoint size limit"
+      ],
+      "summary": "artifacts/gitlab-native-insertion-source-build-summary-20261112.txt"
+    },
+    "upstreamHostJest": {
+      "status": "passed",
+      "tests": 75,
+      "log": "artifacts/gitlab-native-insertion-upstream-host-jest-20261112.log",
+      "refreshedInBroaderRun": true,
+      "patchVerification": "artifacts/gitlab-native-insertion-patch-verification-20261112.json"
+    },
+    "upstreamBroaderAcceptance": "artifacts/gitlab-native-insertion-component-acceptance-20261112.json",
+    "upstreamESLint": {
+      "status": "passed",
+      "files": 3,
+      "log": "artifacts/gitlab-native-insertion-eslint-20261112.log"
+    },
+    "performanceAndRetention": {
+      "status": "passed",
+      "log": "artifacts/gitlab-native-insertion-performance-20261112.log"
+    },
+    "sizes": {
+      "status": "passed",
+      "log": "artifacts/gitlab-native-insertion-build-budgets-20261112.log",
+      "failedPriorAllowance": "artifacts/gitlab-native-insertion-build-budgets-before-20261112.log",
+      "change": {
+        "aggregateCommonJSKiB": [
+          1421.75,
+          1422
+        ],
+        "measuredBytes": 1455980,
+        "measuredGrowthBytes": 193,
+        "unchanged": "Entry, ESM, CSS, performance and retention limits"
+      }
+    },
+    "completeReleaseGate": "Not refreshed; no full pnpm check, combined hosted CI or publication claim"
+  },
+  "installation": {
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "ownedFiles": 7,
+    "previousCheckpointManifests": [
+      "artifacts/gitlab-native-runtime/browser-checkpoint-build-20261112.json",
+      "artifacts/gitlab-native-browser-install/browser-checkpoint-install-20261112.json"
+    ],
+    "ownershipGuard": "Current install succeeded over verified owned files; prior rollback/reinstall/changed-file evidence remains scoped to its archived checkpoint"
+  },
+  "retainedFindings": [
+    "Broader upstream native component suite still fails 42 cases; requirements retained",
+    "Unsupported GitLab footnotes are rejected/retained, not implemented",
+    "Edited Markdown still canonicalizes task whitespace/table separators; complete untouched-region fidelity is unproven",
+    "Earlier original/prepared-reader image intermittency is not causally closed by passing native journeys",
+    "Independent editor-only KaTeX assets remain unverified outside the seeded reader context",
+    "Clipboard permission refusal and every collaboration/rebase case are not covered by the recorded journey",
+    "First successful insertion run lacked intended paragraph separation in its fixture; final run uses an actual Enter action and visibly separate recovered paragraph"
+  ],
+  "remaining": [
+    "Migrate native component acceptance without deleting behavior requirements; implement attachment/contextual menu/immersive gaps",
+    "Complete native toolbar, upload/autocomplete/saved-reply/template and specialized GitLab dialect adapters",
+    "Full replacement-source recovery inspection and untouched-region Markdown fidelity",
+    "Native collaboration/session providers, MR/wiki/threaded discussions and multi-user recovery/permissions",
+    "Localization, accessibility, mobile/cross-engine acceptance, performance, packed consumers and hosted release gates",
+    "Two further complete professional products; Outline/Directus remain candidates"
+  ],
+  "runtime": "Own application stopped successfully in runner finally; dedicated private records/volumes retained",
+  "publication": "None. Public engine behavior repaired locally; private native insertion API not published. No parity row, production readiness or superiority claim promoted.",
+  "sourceHashes": {
+    "src/core/commands.ts": "093225ee1b431d9bfe3fa33f8d766a0b462b6efd084f4839d0bd2ff5a274149c",
+    "tests/core.test.ts": "a1da6414e4f5418b0bc48c1550eba8efd611701871ec402fe8b9021c48d85f9b",
+    "tests/gitlab-markdown-insertion.test.ts": "c814288314c29859097c00c4c1dfe0fb1acd03afc52c6b0c52b27912b1488d38",
+    "integrations/gitlab/components/fountain_content_editor.vue": "a207edd0265e0337d156ad2f60fae5d6eae3c6238b5ffbb522e7decb6797a346",
+    "integrations/gitlab/components/fountain_formatting_toolbar.vue": "029badd2ceacfd1f740dde67d19a78b8769de80d28c3afcb0cebd6d397f52384",
+    "integrations/gitlab/services/content_editor.ts": "39126c9fd9eeaf38248327ebd59545394929e1cbc918c84d5eb09f9eae5ea747",
+    "integrations/gitlab/services/markdown_insertion.ts": "942de1f9918f0c1374c1844b47450c9eb5f1a8b97a04558c4f72bbd773a8c6fd",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-host-tests.patch": "f91fee895107e0f6bb1fd6fb1728e7142b25dc6fe399715aadf5cc2f34565ffd",
+    "scripts/check-build-budgets.mjs": "4869a5a0b68dffd343fdf0a6f64da7e91b813404ce3a8d7d816db05f864e33c0",
+    "scripts/audit-gitlab-product-baseline.mjs": "020b9aa37b9fdeaf083a9b63c7a0b22f9c0e615bd9eebe65aa6c1648a62212ec"
+  }
+}

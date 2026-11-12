@@ -59,7 +59,7 @@
     "Upstream native host suite still fails; full native component/toolbar/provider parity is not complete"
   ],
   "installation": {
-    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "manifest": "artifacts/gitlab-native-browser-install/browser-checkpoint-install-20261112.json",
     "ownedFiles": 7,
     "rollback": "passed",
     "rollbackLog": "artifacts/gitlab-native-browser-rollback-20261112.log",
