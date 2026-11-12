@@ -1446,7 +1446,7 @@ export class ServerHTMLImporter {
         // Keep the ORIGINAL subtree, complete defaults, marks and identities.
         const expected = schema.node('table', {}, paragraph.rows.map(row => schema.node('table_row', {},
           row.cells.map(cell => schema.node(row.header ? 'table_header' : 'table_cell', {}, [schema.node('paragraph',
-            { align: cell.align }, normalized(cell.segments.map(part => part.kind === 'node'
+            { align: cell.align, ...(cell.explicitLeft && schema.nodes.paragraph?.spec.attrs?.alignExplicit ? { alignExplicit: true } : {}) }, normalized(cell.segments.map(part => part.kind === 'node'
               ? part.node : schema.text(part.html.replace(/\n/gu, ' '), part.marks)))),
           ])),
         )));

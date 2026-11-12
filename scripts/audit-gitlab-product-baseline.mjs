@@ -14,7 +14,8 @@ const nativeCapacity = process.argv.includes('--native-attachment-capacity');
 const nativeLinks = process.argv.includes('--native-links');
 const nativeCode = process.argv.includes('--native-code');
 const nativeAlerts = process.argv.includes('--native-alerts');
-const nativeMedia = process.argv.includes('--native-media');
+const nativeMediaFiles = process.argv.includes('--native-media-files');
+const nativeMedia = process.argv.includes('--native-media') || nativeMediaFiles;
 const debugLinks = nativeLinks && process.argv.includes('--debug-links');
 const nativeAttachments = process.argv.includes('--native-attachments') || nativeCapacity || nativeMedia;
 const nativeComponent = process.argv.includes('--native-component') || nativeAttachments || nativeLinks || nativeCode || nativeAlerts;
@@ -22,7 +23,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -108,6 +109,7 @@ const report = {
   nativeCodeProfile: nativeCode,
   nativeAlertsProfile: nativeAlerts,
   nativeMediaProfile: nativeMedia,
+  nativeMediaFilesProfile: nativeMediaFiles,
 };
 if (nativeBrowser)
   report.nativeRuntime = JSON.parse(
@@ -767,6 +769,7 @@ try {
       path: getSelection()?.focusNode?.parentElement?.closest('[data-fountain-path]')?.getAttribute('data-fountain-path') },
     playback: Array.from(document.querySelectorAll('[data-fountain-root] audio, [data-fountain-root] video'), media => ({
       kind: media.tagName, src: media.getAttribute('src'), readyState: media.readyState, currentTime: media.currentTime,
+      paused: media.paused, ended: media.ended,
       error: media.error?.code, style: media.getAttribute('style'), rect: media.getBoundingClientRect().toJSON(),
     })),
   }));

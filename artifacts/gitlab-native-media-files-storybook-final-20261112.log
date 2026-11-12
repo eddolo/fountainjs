@@ -1,0 +1,88 @@
+{
+  "status": "passed",
+  "checks": [
+    "image/1280px: no accessibility violations, page errors or horizontal overflow",
+    "1280px: keyboard form submission updates the native image width and closes the properties dialog",
+    "properties/1280px: no accessibility violations, page errors or horizontal overflow",
+    "audio: real media metadata loads and the keyboard selection button exposes its properties",
+    "audio/1280px: no accessibility violations, page errors or horizontal overflow",
+    "video: real media metadata loads and the keyboard selection button exposes its properties",
+    "video/1280px: no accessibility violations, page errors or horizontal overflow",
+    "Read-only properties/deletion stay disabled while actual clipboard URL copy remains available",
+    "read-only/1280px: no accessibility violations, page errors or horizontal overflow",
+    "invalid-size/1280px: no accessibility violations, page errors or horizontal overflow",
+    "failed-url/1280px: no accessibility violations, page errors or horizontal overflow",
+    "conflict/1280px: no accessibility violations, page errors or horizontal overflow",
+    "360px: keyboard form submission updates the native image width and closes the properties dialog",
+    "properties/360px: no accessibility violations, page errors or horizontal overflow",
+    "1280px: real picker selection survives a move to unrelated text and replaces the captured image with link, title, description and width retained",
+    "replacement/1280px: no accessibility violations, page errors or horizontal overflow",
+    "Open audio properties and its reader-size notice have no accessibility violations",
+    "Audio size controls disclose the GitLab-reader boundary while retaining the requested editor width",
+    "audio-properties/1280px: no accessibility violations, page errors or horizontal overflow",
+    "360px: real picker selection survives a move to unrelated text and replaces the captured image with link, title, description and width retained",
+    "replacement/360px: no accessibility violations, page errors or horizontal overflow"
+  ],
+  "pages": [
+    {
+      "id": "image",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "properties",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "audio",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "video",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "invalid-size",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "failed-url",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "conflict",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "properties",
+      "width": 360,
+      "violations": []
+    },
+    {
+      "id": "replacement",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "audio-properties",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "replacement",
+      "width": 360,
+      "violations": []
+    }
+  ]
+}

@@ -958,6 +958,64 @@ audio controls and figure. No backend response or success outcome is fabricated.
 [real journey](../../artifacts/gitlab-native-media-20261112/report.json),
 [media contracts](services/README.md#native-image-audio-and-video-properties).
 
+### Native media file replacement
+
+Replacement now owns the originally selected media from the moment the native
+picker opens. Moving the cursor or editing elsewhere cannot redirect the upload.
+The new file changes only the canonical/display URL; link marks, title,
+description, dimensions and custom attributes remain on the original node.
+Network/render failures retain the target and uploaded-file recovery for retry.
+Conflicting edits or a different media kind refuse replacement without silently
+inserting at the new cursor. Cancellation, permission/capacity refusal and
+disposal release their owned sessions.
+
+Actual source-mode reimport and image deletion exposed a shared pipe-table
+alignment defect that blocked otherwise valid media edits. The public exporter
+now distinguishes implicit `---` from physical-left `:---`, suppresses only
+alignment represented by that column, and reports incompatible body-cell or
+logical alignment. Both direct and protected HTML-container imports retain the
+physical-left marker. An optional HTML-flow cell descriptor carries that marker;
+existing adapter callers remain compatible. Rendered RTL reopening passes in
+Chromium, Firefox and WebKit.
+
+Visual review also exposed a weakness in the earlier video audit: its click hit
+Chromium's seek bar, and a nonzero initial WebM timestamp could satisfy the old
+positive-time assertion. The corrected audit clicks Play, requires time to advance
+from its initial value and lets reader playback finish before capture. Earlier
+runs remain evidence of their narrower checks, not proof of video playback.
+
+The actual pinned GitLab renderer also omits audio dimensions. Source dimensions
+are retained in the editor where unambiguous, and the properties form discloses
+that GitLab's reader uses its standard player size. This boundary remains open.
+
+All **5,786 root unit tests/355 files** and the package/API, Node/Worker/headless,
+format, framework, size and quiet performance/retention checks pass. Eight upstream
+suites remain **290 passed / 3 failed / 293 total**, including eighteen passing
+media-component cases. The original complete media, code-block and reference-menu
+requirements remain failing and unskipped. Aggregate CJS grows **556 bytes** from
+the preceding checkpoint to **1,458,674 bytes**, with 512 bytes of additional
+capacity over its previous ceiling; all other limits remain unchanged.
+
+The final actual-service journey passes **24 checks** on issue 73, including
+native file pickers, offline upload retry after typing elsewhere, wrong-kind
+refusal, exact source saving, reopen, private-access refusal and an actual
+application restart. Reader video advances and reaches its end after save,
+reopen and restart; all three phases decode eighteen frames. Twelve isolated
+component states pass **21 checks** with zero accessibility violations, including
+the open audio properties form after nested modal animations complete. The
+fifteen-file source rollback/reinstall and nine ordered patches also pass.
+
+[Checkpoint evidence](../../artifacts/gitlab-native-media-files-integration-20261112.json),
+[real recorded journey](../../artifacts/gitlab-native-media-files-20261112/report.json),
+[component evidence](../../artifacts/gitlab-native-media-files-storybook-20261112/report.json).
+
+Repeat the real-service upload/save/reopen/restart journey with `--media-files`
+after installing the matching runtime and building the pinned GitLab frontend.
+`scripts/audit-gitlab-media-storybook.mjs --media-files` separately exercises fixed
+component states, including native picker ownership after cursor movement at
+desktop/360px widths. Those fixtures do not substitute for real service evidence.
+No full-product/parity completion or publication is claimed.
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

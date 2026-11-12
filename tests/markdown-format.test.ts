@@ -1391,7 +1391,7 @@ describe('Markdown interchange', () => {
     expect(table.child(1).content.map((cell) => cell.child(0).attrs.align)).toEqual(['left', 'center', 'right']);
 
     const markdown = MarkdownExporter.export(document);
-    expect(markdown).toContain('| :--- | :---: | ---: |');
+    expect(markdown).toContain('| --- | :---: | ---: |');
     expect(markdown).toContain('Path \\| label');
     expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
   });

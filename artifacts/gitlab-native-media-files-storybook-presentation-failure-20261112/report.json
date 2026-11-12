@@ -1,0 +1,447 @@
+{
+  "scope": "Isolated component states with fixed renderer/upload fixtures and real local media files; separate from actual GitLab upload/persistence acceptance",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "5d9338b596e7de7a14133931fd759df492907cb6b66c10f404fa00411792ac67",
+  "status": "failed",
+  "checks": [
+    "image/1280px: no accessibility violations, page errors or horizontal overflow",
+    "1280px: keyboard form submission updates the native image width and closes the properties dialog",
+    "properties/1280px: no accessibility violations, page errors or horizontal overflow",
+    "audio: real media metadata loads and the keyboard selection button exposes its properties",
+    "audio/1280px: no accessibility violations, page errors or horizontal overflow",
+    "video: real media metadata loads and the keyboard selection button exposes its properties",
+    "video/1280px: no accessibility violations, page errors or horizontal overflow",
+    "Read-only properties/deletion stay disabled while actual clipboard URL copy remains available",
+    "read-only/1280px: no accessibility violations, page errors or horizontal overflow",
+    "invalid-size/1280px: no accessibility violations, page errors or horizontal overflow",
+    "failed-url/1280px: no accessibility violations, page errors or horizontal overflow",
+    "conflict/1280px: no accessibility violations, page errors or horizontal overflow",
+    "360px: keyboard form submission updates the native image width and closes the properties dialog"
+  ],
+  "pages": [
+    {
+      "id": "image",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@aefb8f34e84ab60bda21a601e980ba5c.webm"
+    },
+    {
+      "id": "properties",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@d4de15145da2fb53158dcdfb79541d0e.webm"
+    },
+    {
+      "id": "audio",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@91fc77ba9eb855143ab533ff3c7597d4.webm"
+    },
+    {
+      "id": "video",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@4e1526c99aee5056e2304664cc9e79f0.webm"
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@34a1ff3e5100fefa9052c5be471669e1.webm"
+    },
+    {
+      "id": "invalid-size",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@689d21ac2b9288d28975c1b4bdce6f12.webm"
+    },
+    {
+      "id": "failed-url",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@f2ab1bd2b9f8387d2450f51470d19978.webm"
+    },
+    {
+      "id": "conflict",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@f13269e1698f44d75d7b6cc8478eba91.webm"
+    },
+    {
+      "id": "properties",
+      "width": 360,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT"
+          ],
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=axeAPI",
+          "nodes": [
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#cccbcd",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 1.61,
+                    "fontSize": "13.5pt (18px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<div id=\"fountain-media-1___BV_modal_content_\" tabindex=\"-1\" class=\"modal-content\">",
+                      "target": [
+                        "#fountain-media-1___BV_modal_content_"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<h2 class=\"modal-title\">Media properties</h2>",
+              "target": [
+                "h2"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#cccbcd",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 1.61,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<div id=\"fountain-media-1___BV_modal_content_\" tabindex=\"-1\" class=\"modal-content\">",
+                      "target": [
+                        "#fountain-media-1___BV_modal_content_"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<label id=\"gl-form-group-label-2\" for=\"fountain-media-1-url\" class=\"!gl-block col-form-label\">\n      Media URL\n      <!----> <!----></label>",
+              "target": [
+                "#gl-form-group-label-2"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#d3d3d4",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 1.49,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<input id=\"fountain-media-1-url\" type=\"text\" class=\"gl-form-input form-control\" maxlength=\"2048\" style=\"\">",
+                      "target": [
+                        "#fountain-media-1-url"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<input id=\"fountain-media-1-url\" type=\"text\" class=\"gl-form-input form-control\" maxlength=\"2048\" style=\"\">",
+              "target": [
+                "#fountain-media-1-url"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#cccbcd",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 1.61,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<div id=\"fountain-media-1___BV_modal_content_\" tabindex=\"-1\" class=\"modal-content\">",
+                      "target": [
+                        "#fountain-media-1___BV_modal_content_"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<label id=\"gl-form-group-label-3\" for=\"fountain-media-1-alt\" class=\"!gl-block col-form-label\">\n      Media description\n      <!----> <!----></label>",
+              "target": [
+                "#gl-form-group-label-3"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#d3d3d4",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 1.49,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<input id=\"fountain-media-1-alt\" type=\"text\" class=\"gl-form-input form-control\" maxlength=\"10000\" style=\"\">",
+                      "target": [
+                        "#fountain-media-1-alt"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<input id=\"fountain-media-1-alt\" type=\"text\" class=\"gl-form-input form-control\" maxlength=\"10000\" style=\"\">",
+              "target": [
+                "#fountain-media-1-alt"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#cccbcd",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 1.61,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<div id=\"fountain-media-1___BV_modal_content_\" tabindex=\"-1\" class=\"modal-content\">",
+                      "target": [
+                        "#fountain-media-1___BV_modal_content_"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<label id=\"gl-form-group-label-4\" for=\"fountain-media-1-title\" class=\"!gl-block col-form-label\">\n      Media title\n      <!----> <!----></label>",
+              "target": [
+                "#gl-form-group-label-4"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#d3d3d4",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 1.49,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<input id=\"fountain-media-1-title\" type=\"text\" class=\"gl-form-input form-control\" maxlength=\"10000\" style=\"\">",
+                      "target": [
+                        "#fountain-media-1-title"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<input id=\"fountain-media-1-title\" type=\"text\" class=\"gl-form-input form-control\" maxlength=\"10000\" style=\"\">",
+              "target": [
+                "#fountain-media-1-title"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#d3d3d4",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 1.49,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<div id=\"fountain-media-1___BV_modal_content_\" tabindex=\"-1\" class=\"modal-content\">",
+                      "target": [
+                        "#fountain-media-1___BV_modal_content_"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<p>\n          Use pixels, a percentage, or auto. Automatic height keeps the original aspect ratio.\n        </p>",
+              "target": [
+                "p"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#c2c2c3",
+                    "bgColor": "#f3f3f3",
+                    "contrastRatio": 1.6,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<div id=\"fountain-media-1___BV_modal_content_\" tabindex=\"-1\" class=\"modal-content\">",
+                      "target": [
+                        "#fountain-media-1___BV_modal_content_"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.6 (foreground color: #c2c2c3, background color: #f3f3f3, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<label id=\"gl-form-group-label-5\" for=\"fountain-media-1-width\" class=\"!gl-block col-form-label\">\n      Media width\n      <!----> <!----></label>",
+              "target": [
+                "#gl-form-group-label-5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.6 (foreground color: #c2c2c3, background color: #f3f3f3, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#d3d3d4",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 1.49,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<input id=\"fountain-media-1-width\" type=\"text\" class=\"gl-form-input form-control\" maxlength=\"40\" style=\"\">",
+                      "target": [
+                        "#fountain-media-1-width"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<input id=\"fountain-media-1-width\" type=\"text\" class=\"gl-form-input form-control\" maxlength=\"40\" style=\"\">",
+              "target": [
+                "#fountain-media-1-width"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ],
+      "errors": []
+    }
+  ],
+  "sources": {},
+  "error": "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  -   1\n+ Received  + 391\n\n- Array []\n+ Array [\n+   Object {\n+     \"description\": \"Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds\",\n+     \"help\": \"Elements must meet minimum color contrast ratio thresholds\",\n+     \"helpUrl\": \"https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=axeAPI\",\n+     \"id\": \"color-contrast\",\n+     \"impact\": \"serious\",\n+     \"nodes\": Array [\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#ffffff\",\n+               \"contrastRatio\": 1.61,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#cccbcd\",\n+               \"fontSize\": \"13.5pt (18px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<div id=\\\"fountain-media-1___BV_modal_content_\\\" tabindex=\\\"-1\\\" class=\\\"modal-content\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1___BV_modal_content_\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<h2 class=\\\"modal-title\\\">Media properties</h2>\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"h2\",\n+         ],\n+       },\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#ffffff\",\n+               \"contrastRatio\": 1.61,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#cccbcd\",\n+               \"fontSize\": \"10.5pt (14px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<div id=\\\"fountain-media-1___BV_modal_content_\\\" tabindex=\\\"-1\\\" class=\\\"modal-content\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1___BV_modal_content_\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<label id=\\\"gl-form-group-label-2\\\" for=\\\"fountain-media-1-url\\\" class=\\\"!gl-block col-form-label\\\">\n+       Media URL\n+       <!----> <!----></label>\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"#gl-form-group-label-2\",\n+         ],\n+       },\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#ffffff\",\n+               \"contrastRatio\": 1.49,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#d3d3d4\",\n+               \"fontSize\": \"10.5pt (14px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<input id=\\\"fountain-media-1-url\\\" type=\\\"text\\\" class=\\\"gl-form-input form-control\\\" maxlength=\\\"2048\\\" style=\\\"\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1-url\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<input id=\\\"fountain-media-1-url\\\" type=\\\"text\\\" class=\\\"gl-form-input form-control\\\" maxlength=\\\"2048\\\" style=\\\"\\\">\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"#fountain-media-1-url\",\n+         ],\n+       },\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#ffffff\",\n+               \"contrastRatio\": 1.61,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#cccbcd\",\n+               \"fontSize\": \"10.5pt (14px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<div id=\\\"fountain-media-1___BV_modal_content_\\\" tabindex=\\\"-1\\\" class=\\\"modal-content\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1___BV_modal_content_\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<label id=\\\"gl-form-group-label-3\\\" for=\\\"fountain-media-1-alt\\\" class=\\\"!gl-block col-form-label\\\">\n+       Media description\n+       <!----> <!----></label>\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"#gl-form-group-label-3\",\n+         ],\n+       },\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#ffffff\",\n+               \"contrastRatio\": 1.49,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#d3d3d4\",\n+               \"fontSize\": \"10.5pt (14px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<input id=\\\"fountain-media-1-alt\\\" type=\\\"text\\\" class=\\\"gl-form-input form-control\\\" maxlength=\\\"10000\\\" style=\\\"\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1-alt\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<input id=\\\"fountain-media-1-alt\\\" type=\\\"text\\\" class=\\\"gl-form-input form-control\\\" maxlength=\\\"10000\\\" style=\\\"\\\">\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"#fountain-media-1-alt\",\n+         ],\n+       },\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#ffffff\",\n+               \"contrastRatio\": 1.61,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#cccbcd\",\n+               \"fontSize\": \"10.5pt (14px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<div id=\\\"fountain-media-1___BV_modal_content_\\\" tabindex=\\\"-1\\\" class=\\\"modal-content\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1___BV_modal_content_\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.61 (foreground color: #cccbcd, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<label id=\\\"gl-form-group-label-4\\\" for=\\\"fountain-media-1-title\\\" class=\\\"!gl-block col-form-label\\\">\n+       Media title\n+       <!----> <!----></label>\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"#gl-form-group-label-4\",\n+         ],\n+       },\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#ffffff\",\n+               \"contrastRatio\": 1.49,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#d3d3d4\",\n+               \"fontSize\": \"10.5pt (14px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<input id=\\\"fountain-media-1-title\\\" type=\\\"text\\\" class=\\\"gl-form-input form-control\\\" maxlength=\\\"10000\\\" style=\\\"\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1-title\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<input id=\\\"fountain-media-1-title\\\" type=\\\"text\\\" class=\\\"gl-form-input form-control\\\" maxlength=\\\"10000\\\" style=\\\"\\\">\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"#fountain-media-1-title\",\n+         ],\n+       },\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#ffffff\",\n+               \"contrastRatio\": 1.49,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#d3d3d4\",\n+               \"fontSize\": \"10.5pt (14px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<div id=\\\"fountain-media-1___BV_modal_content_\\\" tabindex=\\\"-1\\\" class=\\\"modal-content\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1___BV_modal_content_\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<p>\n+           Use pixels, a percentage, or auto. Automatic height keeps the original aspect ratio.\n+         </p>\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"p\",\n+         ],\n+       },\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#f3f3f3\",\n+               \"contrastRatio\": 1.6,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#c2c2c3\",\n+               \"fontSize\": \"10.5pt (14px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.6 (foreground color: #c2c2c3, background color: #f3f3f3, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<div id=\\\"fountain-media-1___BV_modal_content_\\\" tabindex=\\\"-1\\\" class=\\\"modal-content\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1___BV_modal_content_\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.6 (foreground color: #c2c2c3, background color: #f3f3f3, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<label id=\\\"gl-form-group-label-5\\\" for=\\\"fountain-media-1-width\\\" class=\\\"!gl-block col-form-label\\\">\n+       Media width\n+       <!----> <!----></label>\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"#gl-form-group-label-5\",\n+         ],\n+       },\n+       Object {\n+         \"all\": Array [],\n+         \"any\": Array [\n+           Object {\n+             \"data\": Object {\n+               \"bgColor\": \"#ffffff\",\n+               \"contrastRatio\": 1.49,\n+               \"expectedContrastRatio\": \"4.5:1\",\n+               \"fgColor\": \"#d3d3d4\",\n+               \"fontSize\": \"10.5pt (14px)\",\n+               \"fontWeight\": \"normal\",\n+               \"messageKey\": null,\n+               \"shadowColor\": undefined,\n+             },\n+             \"id\": \"color-contrast\",\n+             \"impact\": \"serious\",\n+             \"message\": \"Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+             \"relatedNodes\": Array [\n+               Object {\n+                 \"html\": \"<input id=\\\"fountain-media-1-width\\\" type=\\\"text\\\" class=\\\"gl-form-input form-control\\\" maxlength=\\\"40\\\" style=\\\"\\\">\",\n+                 \"target\": Array [\n+                   \"#fountain-media-1-width\",\n+                 ],\n+               },\n+             ],\n+           },\n+         ],\n+         \"failureSummary\": \"Fix any of the following:\n+   Element has insufficient color contrast of 1.49 (foreground color: #d3d3d4, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\",\n+         \"html\": \"<input id=\\\"fountain-media-1-width\\\" type=\\\"text\\\" class=\\\"gl-form-input form-control\\\" maxlength=\\\"40\\\" style=\\\"\\\">\",\n+         \"impact\": \"serious\",\n+         \"none\": Array [],\n+         \"target\": Array [\n+           \"#fountain-media-1-width\",\n+         ],\n+       },\n+     ],\n+     \"tags\": Array [\n+       \"cat.color\",\n+       \"wcag2aa\",\n+       \"wcag143\",\n+       \"TTv5\",\n+       \"TT13.c\",\n+       \"EN-301-549\",\n+       \"EN-9.1.4.3\",\n+       \"ACT\",\n+     ],\n+   },\n+ ]"
+}

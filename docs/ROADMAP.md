@@ -2,7 +2,23 @@
 
 Updated 2026-11-12.
 
-The latest GitLab checkpoint adds native image/audio/video properties, canonical
+Current work hardens real media-file replacement: picker ownership, mapped retry
+targets, preservation of image links/title/description/dimensions, wrong-kind
+refusal and cleanup. The real workflow exposed a shared pipe-table alignment
+defect; direct and nested imports now distinguish implicit/default from explicit
+physical-left columns, including rendered RTL reopening in all three desktop
+engines. All **5,786 tests/355 files** and existing package/API/runtime/format/
+framework/size/performance gates pass. GitLab's eight-suite set is **290 passed /
+3 failed / 293 total**. The real recorded service journey passes **24 checks**,
+including upload/retry, source persistence, private-access refusal and restart;
+reader video playback now requires advancing time and completion. Twelve isolated
+component states pass 21 checks with no accessibility violations. Complete media,
+specialized-code and reference menus,
+remaining application workflows and the other two full products remain open.
+Audio dimensions survive editing, but GitLab's reader still uses standard sizing.
+[Current contracts and limits](../integrations/gitlab/README.md#native-media-file-replacement).
+
+The preceding GitLab checkpoint adds native image/audio/video properties, canonical
 URL retention, replacement uploads, dimensions, deletion, undo/redo and native
 playback. Actual testing repaired inline-atom caret recovery, cold-image geometry
 and node reveal, collapsed audio controls, Enter submission and description/title

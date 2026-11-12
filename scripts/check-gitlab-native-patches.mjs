@@ -38,6 +38,7 @@ try {
       'Reconstructed host and native menu specs match the tested checkout byte for byte',
       'Native media test patch reverse-check passes'],
     isolation: 'Upstream worktree and main index are unchanged; temporary index removed' };
-  await writeFile(new URL('artifacts/gitlab-native-media-patch-verification-20261112.json', root), JSON.stringify(report, null, 2) + '\n');
+  const profile = process.argv.includes('--media-files') ? 'media-files' : 'media';
+  await writeFile(new URL(`artifacts/gitlab-native-${profile}-patch-verification-20261112.json`, root), JSON.stringify(report, null, 2) + '\n');
   console.log('Nine ordered native patches reconstruct the tested pinned source.');
 } finally { await rm(temporary, { recursive: true, force: true }); }

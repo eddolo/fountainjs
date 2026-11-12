@@ -1,0 +1,189 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-table-alignment-report.test.ts (6 tests | 6 failed) 28ms
+   × retains uniform physical column alignment in pipe Markdown without reporting false paragraph losses 18ms
+   × reports a body-cell alignment that differs from the center column: undefined 2ms
+   × reports a body-cell alignment that differs from the center column: right 1ms
+   × reports a body-cell alignment that differs from the left column: center 2ms
+   × keeps loss reporting for explicit physical-left paragraphs outside a table 1ms
+   × retains distinct cell alignment through the explicit HTML table format 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-table-alignment-report.test.ts > retains uniform physical column alignment in pipe Markdown without reporting false paragraph losses
+AssertionError: expected [ { kind: 'attribute', …(3) }, …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "detail": "Explicit physical-left alignment is not retained by this Markdown profile.",
++     "kind": "attribute",
++     "path": [
++       0,
++       0,
++       0,
++       0,
++     ],
++     "type": "paragraph",
++   },
++   {
++     "detail": "Explicit physical-left alignment is not retained by this Markdown profile.",
++     "kind": "attribute",
++     "path": [
++       0,
++       1,
++       0,
++       0,
++     ],
++     "type": "paragraph",
++   },
++ ]
+
+ ❯ tests/markdown-table-alignment-report.test.ts:12:25
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/markdown-table-alignment-report.test.ts > reports a body-cell alignment that differs from the center column: undefined
+ FAIL  tests/markdown-table-alignment-report.test.ts > reports a body-cell alignment that differs from the center column: right
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "detail": StringContaining "one alignment",
+  "kind": "attribute",
+  "path": [
+    0,
+    1,
+    0,
+    0,
+  ],
+  "type": "paragraph",
+}
+
++ Received:
+[]
+
+ ❯ tests/markdown-table-alignment-report.test.ts:20:25
+     18| it.each([['center', undefined], ['center', 'right'], ['left', 'center'…
+     19|   const result = new MarkdownExporter().exportWithReport(table(header!…
+     20|   expect(result.losses).toContainEqual(expect.objectContaining({ kind:…
+       |                         ^
+     21|     detail: expect.stringContaining('one alignment') }));
+     22| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/markdown-table-alignment-report.test.ts > reports a body-cell alignment that differs from the left column: center
+AssertionError: expected [ { kind: 'attribute', …(3) } ] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "detail": StringContaining "one alignment",
+  "kind": "attribute",
+  "path": [
+    0,
+    1,
+    0,
+    0,
+  ],
+  "type": "paragraph",
+}
+
++ Received:
+[
+  {
+    "detail": "Explicit physical-left alignment is not retained by this Markdown profile.",
+    "kind": "attribute",
+    "path": [
+      0,
+      0,
+      0,
+      0,
+    ],
+    "type": "paragraph",
+  },
+]
+
+ ❯ tests/markdown-table-alignment-report.test.ts:20:25
+     18| it.each([['center', undefined], ['center', 'right'], ['left', 'center'…
+     19|   const result = new MarkdownExporter().exportWithReport(table(header!…
+     20|   expect(result.losses).toContainEqual(expect.objectContaining({ kind:…
+       |                         ^
+     21|     detail: expect.stringContaining('one alignment') }));
+     22| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/markdown-table-alignment-report.test.ts > keeps loss reporting for explicit physical-left paragraphs outside a table
+AssertionError: expected [ { kind: 'attribute', …(3) } ] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "detail": StringContaining "physical-left",
+  "kind": "attribute",
+  "path": [
+    0,
+  ],
+  "type": "paragraph",
+}
+
++ Received:
+[
+  {
+    "detail": "Text direction is not represented by ordinary Markdown; retain Fountain JSON or HTML.",
+    "kind": "attribute",
+    "path": [
+      0,
+    ],
+    "type": "paragraph",
+  },
+]
+
+ ❯ tests/markdown-table-alignment-report.test.ts:26:25
+     24| it('keeps loss reporting for explicit physical-left paragraphs outside…
+     25|   const result = new MarkdownExporter().exportWithReport(parse('<p dir…
+     26|   expect(result.losses).toContainEqual(expect.objectContaining({ kind:…
+       |                         ^
+     27|     detail: expect.stringContaining('physical-left') }));
+     28| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/markdown-table-alignment-report.test.ts > retains distinct cell alignment through the explicit HTML table format
+AssertionError: expected [ { kind: 'node', …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "detail": "HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed.",
++     "kind": "node",
++     "path": [
++       0,
++     ],
++     "type": "table",
++   },
++ ]
+
+ ❯ tests/markdown-table-alignment-report.test.ts:33:25
+     31|   const document = table('center', 'right');
+     32|   const result = new MarkdownExporter().exportWithReport(document, { t…
+     33|   expect(result.losses).toEqual([]);
+       |                         ^
+     34|   const reopened = parse(result.markdown);
+     35|   expect(reopened.child(0).child(0).child(0).child(0).attrs.align).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  21:00:44
+   Duration  1.90s (transform 77%, import 21%, tests 2%)

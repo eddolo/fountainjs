@@ -50,6 +50,7 @@ export class GitLabContentEditor {
   private readonly codec: GitLabMarkdownCodec;
   private readonly insertions: GitLabMarkdownInsertion;
   private readonly uploads: GitLabAttachmentUploads;
+  private readonly mediaSessions = new Set<GitLabMediaEditingSession>();
   private linkSession?: GitLabLinkEditingSession;
   private codeSession?: GitLabCodeEditingSession;
   readonly alerts: GitLabAlertEditing;
@@ -204,6 +205,25 @@ export class GitLabContentEditor {
   retryUpload(id: string): Promise<SerializedContentResult> { return this.uploads.retry(id); }
   beginMediaEdit(changed?: (snapshot: GitLabMediaSnapshot) => void): GitLabMediaEditingSession {
     this.mediaSession?.close();
+    const session = this.createMediaSession(changed);
+    this.mediaSession = session;
+    return session;
+  }
+  beginMediaReplacement(): GitLabMediaEditingSession {
+    return this.createMediaSession();
+  }
+  async replaceMediaAttachment(file: File, target = this.beginMediaReplacement()): Promise<SerializedContentResult> {
+    if (!this.mediaSessions.has(target)) throw new Error('GITLAB_MEDIA_TARGET_OWNER_REQUIRED');
+    return this.uploads.add(file, {
+      operation: 'replace-media',
+      insert: (source, signal) => this.insertions.insertFrom(source, signal, undefined, {
+        selection: target.replacementSelection,
+        project: (document, markdown) => target.projectFileReplacement(document, markdown),
+      }),
+      close: () => target.close(),
+    });
+  }
+  private createMediaSession(changed?: (snapshot: GitLabMediaSnapshot) => void): GitLabMediaEditingSession {
     const session = new GitLabMediaEditingSession({ editor: this.editor,
       ensureReady: () => {
         this.assertAlive();
@@ -218,10 +238,14 @@ export class GitLabContentEditor {
         return block.child(0);
       },
       validate: doc => { this.codec.serialize({ doc }); }, changed,
-      closed: () => { if (this.mediaSession === session) this.mediaSession = undefined; },
+      closed: () => {
+        this.mediaSessions.delete(session);
+        if (this.mediaSession === session) this.mediaSession = undefined;
+      },
       onListenerError: error => { this.listenerFailure = error; this.reportListenerError?.(error); },
     });
-    this.mediaSession = session; return session;
+    this.mediaSessions.add(session);
+    return session;
   }
   beginCodeEdit(): GitLabCodeEditingSession {
     this.codeSession?.close();
@@ -401,7 +425,8 @@ export class GitLabContentEditor {
     this.linkSession = undefined;
     this.codeSession?.close();
     this.codeSession = undefined;
-    this.mediaSession?.close();
+    for (const session of this.mediaSessions) session.close();
+    this.mediaSessions.clear();
     this.mediaSession = undefined;
     this.insertions.dispose();
     this.uploads.dispose();

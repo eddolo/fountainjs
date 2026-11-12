@@ -18,9 +18,10 @@ export default {
   data() {
     return { context: null, dialogOpen: false, sessionState: null, modalId: uniqueId('fountain-media-'),
       draftURL: '', draftAlt: '', draftTitle: '', draftWidth: 'auto', draftHeight: 'auto',
-      applying: false, errorCode: null, copyState: null, previewFailed: false };
+      applying: false, errorCode: null, copyState: null, previewFailed: false, replacementTarget: null };
   },
   computed: {
+    displayContext() { return this.sessionState || this.replacementTarget?.snapshot || this.context; },
     primaryAction() {
       return { text: s__('ContentEditor|Apply media changes'), attributes: { variant: 'confirm',
         disabled: this.disabled || this.applying || this.sessionState?.closed || this.sessionState?.conflict,
@@ -47,11 +48,11 @@ export default {
     },
   },
   created() {
-    this.disposed = false; this.session = null; this.refresh();
+    this.disposed = false; this.session = null; this.replacementTarget = null; this.refresh();
     this.releaseState = this.contentEditor.editor.subscribe(() => this.refresh());
   },
   beforeDestroy() {
-    this.disposed = true; this.releaseState(); this.session?.close(); this.stopPreview();
+    this.disposed = true; this.releaseState(); this.session?.close(); this.cancelReplacement(); this.stopPreview();
   },
   methods: {
     refresh() { this.context = getGitLabMediaContext(this.contentEditor.editor) || null; this.copyState = null; },
@@ -83,6 +84,7 @@ export default {
       if (event?.defaultPrevented) return;
       this.stopPreview(); this.session?.close(); this.session = null; this.applying = false;
     },
+    onHidden() { if (!this.disposed) this.sessionState = null; },
     remove() {
       if (this.disabled) return;
       try { this.contentEditor.beginMediaEdit().remove(); this.$emit('focus'); }
@@ -96,27 +98,38 @@ export default {
         if (!this.disposed && this.context?.canonical === address) this.copyState = 'copied';
       } catch { if (!this.disposed) this.copyState = 'failed'; }
     },
+    chooseReplacement() {
+      if (!this.allowUpload || this.disabled || !this.context) return;
+      this.cancelReplacement();
+      try {
+        this.replacementTarget = markRaw(this.contentEditor.beginMediaReplacement());
+        this.$refs.file.click();
+      } catch (error) { this.cancelReplacement(); this.$emit('error', error); }
+    },
+    cancelReplacement() { this.replacementTarget?.close(); this.replacementTarget = null; },
     replaceFile(event) {
       const input = event.target;
       const [file] = input.files; input.value = '';
-      if (file && this.allowUpload && !this.disabled) this.$emit('replace-file', file);
+      const target = this.replacementTarget; this.replacementTarget = null;
+      if (file && target && this.allowUpload && !this.disabled) this.$emit('replace-file', { file, target });
+      else target?.close();
     },
   },
 };
 </script>
 <template>
-  <div v-if="context" data-testid="native-media-menu" class="gl-inline-flex gl-flex-wrap gl-items-center gl-gap-2" role="group" :aria-label="s__('ContentEditor|Media controls')">
+  <div v-if="displayContext" data-testid="native-media-menu" class="gl-inline-flex gl-flex-wrap gl-items-center gl-gap-2" role="group" :aria-label="s__('ContentEditor|Media controls')">
     <gl-button :disabled="disabled" size="small" @click="open">{{ s__('ContentEditor|Edit media properties') }}</gl-button>
-    <gl-link :href="context.displayURL" target="_blank" rel="noopener noreferrer">{{ s__('ContentEditor|Open media') }}</gl-link>
+    <gl-link :href="displayContext.displayURL" target="_blank" rel="noopener noreferrer">{{ s__('ContentEditor|Open media') }}</gl-link>
     <gl-button size="small" @click="copy">{{ s__('ContentEditor|Copy media URL') }}</gl-button>
     <gl-button :disabled="disabled" size="small" @click="remove">{{ s__('ContentEditor|Delete media') }}</gl-button>
     <template v-if="allowUpload">
-      <gl-button :disabled="disabled" size="small" @click="$refs.file.click()">{{ s__('ContentEditor|Replace media file') }}</gl-button>
-      <input ref="file" type="file" :accept="`${context.kind}/*`" class="gl-hidden" :disabled="disabled" :aria-label="s__('ContentEditor|Replacement media file')" @change="replaceFile" />
+      <gl-button :disabled="disabled" size="small" @click="chooseReplacement">{{ s__('ContentEditor|Replace media file') }}</gl-button>
+      <input ref="file" type="file" :accept="`${displayContext.kind}/*`" class="gl-hidden" :disabled="disabled" :aria-label="s__('ContentEditor|Replacement media file')" @change="replaceFile" @cancel="cancelReplacement" />
     </template>
     <span v-if="copyState === 'copied'" role="status">{{ s__('ContentEditor|Media URL copied.') }}</span>
     <span v-if="copyState === 'failed'" role="alert">{{ s__('ContentEditor|Unable to copy the media URL. Open the media and copy its address instead.') }}</span>
-    <gl-modal v-model="dialogOpen" :modal-id="modalId" :title="s__('ContentEditor|Media properties')" :action-primary="primaryAction" :action-cancel="cancelAction" :return-focus="focusTarget" @primary="apply" @hide="onHide">
+    <gl-modal v-model="dialogOpen" :modal-id="modalId" :title="s__('ContentEditor|Media properties')" :action-primary="primaryAction" :action-cancel="cancelAction" :return-focus="focusTarget" @primary="apply" @hide="onHide" @hidden="onHidden">
       <template v-if="sessionState">
         <img v-if="sessionState.kind === 'image'" :src="sessionState.displayURL" :alt="sessionState.alt" class="gl-mb-4 gl-max-h-48 gl-max-w-full" @error="previewFailed = true" />
         <audio v-else-if="sessionState.kind === 'audio'" ref="previewMedia" :src="sessionState.displayURL" controls preload="metadata" :aria-label="sessionState.alt || s__('ContentEditor|Audio preview')" class="gl-mb-4 gl-max-w-full" @error="previewFailed = true"></audio>
@@ -130,6 +143,7 @@ export default {
           <gl-form-group :label="s__('ContentEditor|Media description')" :label-for="`${modalId}-alt`"><gl-form-input :id="`${modalId}-alt`" v-model="draftAlt" :disabled="applying" :maxlength="10000" /></gl-form-group>
           <gl-form-group :label="s__('ContentEditor|Media title')" :label-for="`${modalId}-title`"><gl-form-input :id="`${modalId}-title`" v-model="draftTitle" :disabled="applying" :maxlength="10000" /></gl-form-group>
           <p>{{ s__('ContentEditor|Use pixels, a percentage, or auto. Automatic height keeps the original aspect ratio.') }}</p>
+        <p v-if="sessionState.kind === 'audio'" role="status">{{ s__('ContentEditor|Audio dimensions are retained for editing. GitLab’s reader uses its standard player size.') }}</p>
           <gl-form-group :label="s__('ContentEditor|Media width')" :label-for="`${modalId}-width`"><gl-form-input :id="`${modalId}-width`" v-model="draftWidth" :disabled="applying" :maxlength="40" /></gl-form-group>
           <gl-form-group :label="s__('ContentEditor|Media height')" :label-for="`${modalId}-height`"><gl-form-input :id="`${modalId}-height`" v-model="draftHeight" :disabled="applying" :maxlength="40" /></gl-form-group>
         </gl-form>

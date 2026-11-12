@@ -1,0 +1,149 @@
+{
+  "scope": "Isolated component states with fixed renderer/upload fixtures and real local media files; separate from actual GitLab upload/persistence acceptance",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "5d9338b596e7de7a14133931fd759df492907cb6b66c10f404fa00411792ac67",
+  "status": "passed",
+  "checks": [
+    "image/1280px: no accessibility violations, page errors or horizontal overflow",
+    "1280px: keyboard form submission updates the native image width and closes the properties dialog",
+    "properties/1280px: no accessibility violations, page errors or horizontal overflow",
+    "audio: real media metadata loads and the keyboard selection button exposes its properties",
+    "audio/1280px: no accessibility violations, page errors or horizontal overflow",
+    "video: real media metadata loads and the keyboard selection button exposes its properties",
+    "video/1280px: no accessibility violations, page errors or horizontal overflow",
+    "Read-only properties/deletion stay disabled while actual clipboard URL copy remains available",
+    "read-only/1280px: no accessibility violations, page errors or horizontal overflow",
+    "invalid-size/1280px: no accessibility violations, page errors or horizontal overflow",
+    "failed-url/1280px: no accessibility violations, page errors or horizontal overflow",
+    "conflict/1280px: no accessibility violations, page errors or horizontal overflow",
+    "360px: keyboard form submission updates the native image width and closes the properties dialog",
+    "properties/360px: no accessibility violations, page errors or horizontal overflow",
+    "1280px: real picker selection survives a move to unrelated text and replaces the captured image with link, title, description and width retained",
+    "replacement/1280px: no accessibility violations, page errors or horizontal overflow",
+    "Open audio properties and its reader-size notice have no accessibility violations",
+    "Audio size controls disclose the GitLab-reader boundary while retaining the requested editor width",
+    "audio-properties/1280px: no accessibility violations, page errors or horizontal overflow",
+    "360px: real picker selection survives a move to unrelated text and replaces the captured image with link, title, description and width retained",
+    "replacement/360px: no accessibility violations, page errors or horizontal overflow"
+  ],
+  "pages": [
+    {
+      "id": "image",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@731db1addb97cadcac9f6e17f4ed66df.webm"
+    },
+    {
+      "id": "properties",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@95048d3a87f657fa0bc88bd214a9294e.webm"
+    },
+    {
+      "id": "audio",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@247972b6f018c0a9cb5604e5a6cbd210.webm"
+    },
+    {
+      "id": "video",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@520ba2dbb8b075ae31632d5957f3a4e3.webm"
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@9b34efc8f0d9f8eefdd4dc34fe787d19.webm"
+    },
+    {
+      "id": "invalid-size",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@60a26ebe21c98512a267a0bc58c2183d.webm"
+    },
+    {
+      "id": "failed-url",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@488c744abd5f99fb7cbe8aa43edf706c.webm"
+    },
+    {
+      "id": "conflict",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@33194bf3b19576e6a4a7361f403656b7.webm"
+    },
+    {
+      "id": "properties",
+      "width": 360,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@ec41256dcdc8540b6730ca41c44f914d.webm"
+    },
+    {
+      "id": "replacement",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@d7a5e17265e82c7612d0ee091464963b.webm"
+    },
+    {
+      "id": "audio-properties",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@85f88b362fb353112d916d6f8a5e8eb8.webm"
+    },
+    {
+      "id": "replacement",
+      "width": 360,
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-media-files-storybook-20261112/recordings/page@339527922a36a1dfec2a3a8847593537.webm"
+    }
+  ],
+  "sources": {
+    "app/assets/javascripts/content_editor/components/fountain_media_menu.vue": "e82d339aa84952dbd5a03835fa53076e543c50d127d6670c7c21d640528b0398",
+    "app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js": "c21780ebdac982dd08df5335214ea013eb07cdc68bf77e1b3f4db3cddce02565"
+  },
+  "audioModalPresentation": [
+    {
+      "tag": "DIV",
+      "class": "modal fade show gl-block gl-modal",
+      "opacity": "1",
+      "color": "rgb(58, 56, 61)",
+      "filter": "none"
+    },
+    {
+      "tag": "DIV",
+      "class": "",
+      "opacity": "1",
+      "color": "rgb(58, 56, 61)",
+      "filter": "none"
+    },
+    {
+      "tag": "BODY",
+      "class": "sb-main-padded sb-show-main modal-open",
+      "opacity": "1",
+      "color": "rgb(58, 56, 61)",
+      "filter": "none"
+    },
+    {
+      "tag": "HTML",
+      "class": "",
+      "opacity": "1",
+      "color": "rgb(0, 0, 0)",
+      "filter": "none"
+    }
+  ]
+}

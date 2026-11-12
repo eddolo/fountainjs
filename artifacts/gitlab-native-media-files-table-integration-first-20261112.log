@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-media-file-replacement.test.ts (20 tests | 1 failed) 110ms
+   × can delete a linked image after reloading canonical left-aligned Markdown tables 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-media-file-replacement.test.ts > can delete a linked image after reloading canonical left-aligned Markdown tables
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.serialize integrations/gitlab/services/markdown_codec.ts:300:37
+    298|   serialize(input: { doc: Node }): string {
+    299|     const result = this.serializeWithReport(input);
+    300|     if (result.issues.length) throw new GitLabMarkdownConversionError(…
+       |                                     ^
+    301|     return result.markdown;
+    302|   }
+ ❯ Object.validate integrations/gitlab/services/content_editor.ts:240:37
+ ❯ integrations/gitlab/services/media_editing.ts:163:17
+ ❯ p.runCommandBatch src/core/editor.ts:137:24
+ ❯ GitLabMediaEditingSession.commit integrations/gitlab/services/media_editing.ts:160:39
+ ❯ GitLabMediaEditingSession.remove integrations/gitlab/services/media_editing.ts:154:10
+ ❯ tests/gitlab-media-file-replacement.test.ts:247:35
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 passed (20)
+   Start at  21:03:29
+   Duration  1.31s (transform 74%, import 16%, tests 10%)

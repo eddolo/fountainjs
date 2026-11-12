@@ -10,6 +10,11 @@ import {
 } from 'fountainjs-editor';
 import type { SerializedContentCodec, SerializedContentResult } from './serialized_content';
 
+export interface GitLabInsertionProjection {
+  readonly selection: AnySelection;
+  project(document: Node, markdown: string): Node;
+}
+
 export class GitLabInsertionConflict extends Error {
   constructor() {
     super('GITLAB_INSERTION_TARGET_CHANGED');
@@ -69,6 +74,7 @@ export class GitLabMarkdownInsertion {
     resolveSource: (signal: AbortSignal) => string | Promise<string>,
     signal?: AbortSignal,
     markdown?: string,
+    projection?: GitLabInsertionProjection,
   ): Promise<SerializedContentResult> {
     if (this.destroyed) throw new Error('GITLAB_INSERTION_DESTROYED');
     this.ensureReady();
@@ -83,7 +89,7 @@ export class GitLabMarkdownInsertion {
     });
     this.turn = previous.then(() => complete);
     this.pending.add(request);
-    let target = this.editor.state.selection,
+    let target = projection?.selection ?? this.editor.state.selection,
       targetDoc = this.editor.state.doc;
     const targetMarks = this.editor.state.storedMarks;
     let conflict = false;
@@ -164,6 +170,7 @@ export class GitLabMarkdownInsertion {
       if (conflict && !this.destroyed) throw new GitLabInsertionConflict();
       if (!decoded || request.signal.aborted || this.destroyed) return { status: 'superseded' };
       this.ensureReady();
+      const document = projection?.project(decoded.document, markdown) ?? decoded.document;
       release();
       this.pending.delete(request);
       closeHistory(this.editor);
@@ -178,7 +185,7 @@ export class GitLabMarkdownInsertion {
           )
         )
           return false;
-        if (!insertDocument(this.editor, decoded.document)) return false;
+        if (!insertDocument(this.editor, document)) return false;
         this.codec.serialize({ doc: this.editor.state.doc });
         return true;
       });

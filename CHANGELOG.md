@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Keep representable pipe-table column alignment free of false loss reports;
+  report cells whose physical alignment differs from their column. Standalone
+  physical-left and logical alignment reporting remains in place. Reopening an
+  explicit `:---` column retains physical-left intent under RTL presentation;
+  implicit `---` columns stay implicit during canonical export and reopening.
+  The optional HTML-flow cell descriptor adds `explicitLeft?: true` so adapters
+  can preserve this distinction without changing existing callers.
+
 - Keep cold inline-image replacements visible while lazy loading, then release
   their temporary minimum geometry after decoding. Preserve custom renderers,
   authored dimensions, and the document's saved/exported attributes.

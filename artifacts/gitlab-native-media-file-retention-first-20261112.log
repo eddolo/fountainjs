@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-media-file-replacement.test.ts (1 test | 1 failed) 35ms
+   × replaces a selected image file while retaining its link, description, title and size with one-step undo/redo 34ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-media-file-replacement.test.ts > replaces a selected image file while retaining its link, description, title and size with one-step undo/redo
+AssertionError: expected undefined to be '/help/user/project' // Object.is equality
+
+- Expected:
+"/help/user/project"
+
++ Received:
+undefined
+
+ ❯ tests/gitlab-media-file-replacement.test.ts:30:74
+     28|   await expect(service.uploadAttachment(file())).resolves.toEqual({ st…
+     29|   const node = editor.state.doc.child(0).child(0);
+     30|   expect(node.marks.find(mark => mark.type.name === 'link')?.attrs.hre…
+       |                                                                          ^
+     31|   expect(node.attrs).toMatchObject({ alt: 'Linked figure', title: 'Aut…
+     32|     gitlabCanonicalSrc: '/uploads/media-fixture/replacement.png' });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  20:20:39
+   Duration  1.46s (transform 78%, import 19%, tests 3%)

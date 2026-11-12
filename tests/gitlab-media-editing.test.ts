@@ -7,6 +7,17 @@ import live from '../integrations/gitlab/fixtures/media-live-html.json';
 
 const services: GitLabContentEditor[] = [];
 afterEach(() => services.splice(0).forEach(service => service.dispose()));
+
+it('releases its owner even if a close-state observer throws', async () => {
+  const { editor } = await setup();
+  const closed = vi.fn(), onListenerError = vi.fn(), failure = new Error('Observer failed');
+  const session = new GitLabMediaEditingSession({ editor, ensureReady: () => {},
+    resolve: async () => editor.state.doc.child(0).child(0), validate: () => {},
+    changed: () => { throw failure; }, closed, onListenerError });
+  session.close(); session.close();
+  expect(closed).toHaveBeenCalledTimes(1); expect(onListenerError).toHaveBeenCalledWith(failure);
+  expect(session.snapshot.closed).toBe(true);
+});
 const fixture = (name: string) => live.fixtures.find(item => item.name === name)!;
 const fields = (session: GitLabMediaEditingSession, changes: Partial<GitLabMediaFields> = {}): GitLabMediaFields => {
   const { canonical, alt, title, width, height } = session.initial;

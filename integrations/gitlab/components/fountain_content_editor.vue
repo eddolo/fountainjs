@@ -197,9 +197,16 @@ export default {
         throw new Error('GITLAB_INVALID_UPLOAD_RESPONSE');
       return response.markdown;
     },
-    async attachFiles(files) {
-      if (!this.canUpload) throw new Error('GITLAB_UPLOAD_DISABLED');
+    attachFiles(files) { return this.uploadFiles(files); },
+    replaceMediaFile({ file, target }) { return this.uploadFiles([file], target).catch(error => this.onSurfaceError(error)); },
+    async uploadFiles(files, replacementTarget) {
+      if (replacementTarget && files.length !== 1) {
+        replacementTarget.close();
+        throw new Error('GITLAB_MEDIA_REPLACEMENT_FILE_REQUIRED');
+      }
+      if (!this.canUpload) { replacementTarget?.close(); throw new Error('GITLAB_UPLOAD_DISABLED'); }
       if (files.length > this.contentEditor.availableUploadSlots) {
+        replacementTarget?.close();
         this.onSurfaceError(new Error('GITLAB_UPLOAD_QUEUE_FULL'));
         return;
       }
@@ -215,7 +222,9 @@ export default {
         previous = state.selection;
       });
       try {
-        const results = await Promise.allSettled(files.map(file => this.contentEditor.uploadAttachment(file)));
+        const results = await Promise.allSettled(files.map(file => replacementTarget
+          ? this.contentEditor.replaceMediaAttachment(file, replacementTarget)
+          : this.contentEditor.uploadAttachment(file)));
         if (!this.disposed && !selectionMoved && ownsFocus && document.activeElement === active
           && results.length && results.every(result => result.status === 'fulfilled' && result.value.status === 'applied'))
           this.$refs.surface.revealSelection();
@@ -230,6 +239,8 @@ export default {
     uploadMessage(upload) {
       if (upload.errorCode === 'GITLAB_UPLOAD_TOO_LARGE')
         return s__('ContentEditor|This file exceeds the upload limit for this GitLab instance.');
+      if (!this.canRetryUpload(upload))
+        return s__('ContentEditor|The original media changed or the uploaded file has a different type. The replacement was not applied. Remove this upload and choose the media again.');
       if (upload.errorCode === 'GITLAB_INSERTION_TARGET_CHANGED')
         return s__('ContentEditor|The insertion target changed. Your file is retained; retry at the current cursor.');
       if (upload.status === 'failed')
@@ -237,6 +248,11 @@ export default {
       if (upload.status === 'queued') return s__('ContentEditor|Queued');
       if (upload.status === 'inserting') return s__('ContentEditor|Inserting uploaded content');
       return s__('ContentEditor|Uploading');
+    },
+    canRetryUpload(upload) {
+      return upload.operation !== 'replace-media' || !['GITLAB_INSERTION_TARGET_CHANGED',
+        'GITLAB_MEDIA_TARGET_CHANGED', 'GITLAB_MEDIA_SESSION_CLOSED',
+        'GITLAB_MEDIA_REPLACEMENT_KIND_MISMATCH'].includes(upload.errorCode);
     },
     describeLabels(action, count) {
       if (action === 'add')
@@ -407,7 +423,7 @@ export default {
           <textarea :value="upload.source" :aria-label="s__('ContentEditor|Uploaded file source')" readonly class="gl-w-full" rows="3"></textarea>
         </details>
         <progress v-if="upload.status === 'uploading'" :value="upload.progress" max="1" :aria-label="s__('ContentEditor|File upload progress')"></progress>
-        <gl-button v-if="upload.status === 'failed'" :disabled="!canUpload" size="small" @click="retryUpload(upload.id)">{{ s__('ContentEditor|Retry upload') }}</gl-button>
+        <gl-button v-if="upload.status === 'failed' && canRetryUpload(upload)" :disabled="!canUpload" size="small" @click="retryUpload(upload.id)">{{ s__('ContentEditor|Retry upload') }}</gl-button>
         <gl-button size="small" @click="cancelUpload(upload.id)">{{ upload.status === 'failed' ? s__('ContentEditor|Remove upload') : s__('ContentEditor|Cancel upload') }}</gl-button>
       </li>
     </ul>
@@ -451,7 +467,7 @@ export default {
             <fountain-link-menu ref="linkMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-code-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-alert-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
-            <fountain-media-menu :content-editor="contentEditor" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="attachFiles([$event])" />
+            <fountain-media-menu :content-editor="contentEditor" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />
           </template>
           <template #header-buttons>
             <slot name="header-buttons"></slot>

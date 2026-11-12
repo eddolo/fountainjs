@@ -32,6 +32,11 @@
       "body": "<p data-sourcepos=\"1:1-1:73\" dir=\"auto\"><a data-sourcepos=\"1:1-1:73\" href=\"/root/fountain-product-integration/-/blob/main/help/user/project\" data-canonical-src=\"/help/user/project\" class=\"gfm\"><img data-sourcepos=\"1:2-1:52\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Linked figure\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
     },
     {
+      "name": "image-link-sized",
+      "source": "[![Linked figure](/uploads/media-fixture/figure.png \"Linked figure title\"){width=\"240\"}](/help/user/project)",
+      "body": "<p data-sourcepos=\"1:1-1:108\" dir=\"auto\"><a data-sourcepos=\"1:1-1:108\" href=\"/root/fountain-product-integration/-/blob/main/help/user/project\" data-canonical-src=\"/help/user/project\" class=\"gfm\"><img data-sourcepos=\"1:2-1:74\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Linked figure\" title=\"Linked figure title\" width=\"240\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
+    },
+    {
       "name": "audio",
       "source": "![Audio description](/uploads/media-fixture/recording.wav)",
       "body": "<p data-sourcepos=\"1:1-1:58\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Audio description\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
@@ -40,6 +45,11 @@
       "name": "audio-titled",
       "source": "![Audio description](/uploads/media-fixture/recording.wav \"Retained audio title\")",
       "body": "<p data-sourcepos=\"1:1-1:81\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained audio title\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
+    },
+    {
+      "name": "audio-sized",
+      "source": "![Audio description](/uploads/media-fixture/recording.wav \"Retained audio title\"){width=\"240\" height=\"54\"}",
+      "body": "<p data-sourcepos=\"1:1-1:106\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained audio title\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
     },
     {
       "name": "audio-link",

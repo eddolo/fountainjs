@@ -189,9 +189,9 @@ function reportNodeAttributes(
   if (name === 'doc' && node.attrs.pageSettings != null) {
     report(context, 'attribute', name, path, 'Physical page settings are not represented by ordinary Markdown; retain Fountain JSON or a supported paged format.');
   }
-  if (['paragraph', 'heading'].includes(name) && node.attrs.align === 'left' && node.attrs.alignExplicit === true) {
+  if (!tableAlignmentRepresented && ['paragraph', 'heading'].includes(name) && node.attrs.align === 'left' && node.attrs.alignExplicit === true) {
     report(context, 'attribute', name, path, 'Explicit physical-left alignment is not retained by this Markdown profile.');
-  } else if ((!tableAlignmentRepresented || ['start', 'end'].includes(String(node.attrs.align))) && ['paragraph', 'heading'].includes(name) && node.attrs.align && node.attrs.align !== 'left') {
+  } else if ((!tableAlignmentRepresented || !['left', 'center', 'right'].includes(String(node.attrs.align))) && ['paragraph', 'heading'].includes(name) && node.attrs.align && node.attrs.align !== 'left') {
     report(context, 'attribute', name, path, 'Text alignment is not represented by ordinary Markdown.');
   }
   if (name === 'code_block' && node.attrs.lineNumbers === false) {
@@ -498,21 +498,30 @@ function inlineContent(node: Node, context: RenderContext, path: readonly number
   return result.join('');
 }
 
-function tableCell(node: Node, context: RenderContext, path: readonly number[], depth: number): string {
+type TableAlignment = 'default' | 'left' | 'center' | 'right';
+const tableDelimiters: Readonly<Record<TableAlignment, string>> = { default: '---', left: ':---', center: ':---:', right: '---:' };
+
+function tableCell(node: Node, context: RenderContext, path: readonly number[], depth: number, alignment: TableAlignment): string {
   reportNodeAttributes(node, context, path);
   if (node.content.length !== 1 || node.content[0]?.type.name !== 'paragraph') {
     report(context, 'node', node.type.name, path, 'Multiple or non-paragraph cell blocks are flattened into one Markdown table cell.');
   }
   return node.content
-    .map((child, index) => render(child, context, [...path, index], depth, true))
+    .map((child, index) => {
+      const align = child.attrs.align;
+      if (child.type.name === 'paragraph' && (align === 'left' || align === 'center' || align === 'right') && tableAlignment(child) !== alignment)
+        report(context, 'attribute', child.type.name, [...path, index], 'Pipe Markdown uses one alignment for a complete column; this cell differs.');
+      return render(child, context, [...path, index], depth, true);
+    })
     .join(' ')
     .replace(/\|/g, '\\|')
     .replace(/\n+/g, ' ');
 }
 
-function tableAlignment(cell: Node | undefined): 'left' | 'center' | 'right' {
-  const align = cell?.content[0]?.attrs.align;
-  return align === 'center' || align === 'right' ? align : 'left';
+function tableAlignment(block: Node | undefined): TableAlignment {
+  const align = block?.attrs.align;
+  if (align === 'center' || align === 'right') return align;
+  return align === 'left' && (!block?.type.spec.attrs?.alignExplicit || block.attrs.alignExplicit === true || block.attrs.dir !== undefined) ? 'left' : 'default';
 }
 
 function longestMarkerRun(value: string, marker: '`' | '~'): number {
@@ -685,14 +694,14 @@ function render(
         return schemaHTML(node, context, path);
       }
       const firstRow = node.content[0];
-      const alignments = firstRow?.content.map(tableAlignment) ?? [];
+      const alignments = firstRow?.content.map(cell => tableAlignment(cell.content[0])) ?? [];
       return node.content.map((row, rowIndex) => {
         reportNodeAttributes(row, context, [...path, rowIndex]);
         if (row.content.some(cell => cell.type.name !== (rowIndex === 0 ? 'table_header' : 'table_cell'))) {
           report(context, 'node', 'table_row', [...path, rowIndex], 'Pipe Markdown makes the first row column headers and later rows data cells. Use HTML tables to preserve different cell roles.');
         }
-        const cells = row.content.map((cell, cellIndex) => tableCell(cell, context, [...path, rowIndex, cellIndex], depth));
-        const delimiter = alignments.map((align) => align === 'center' ? ':---:' : align === 'right' ? '---:' : ':---');
+        const cells = row.content.map((cell, cellIndex) => tableCell(cell, context, [...path, rowIndex, cellIndex], depth, alignments[cellIndex] ?? 'default'));
+        const delimiter = alignments.map(align => tableDelimiters[align]);
         return `| ${cells.join(' | ')} |${rowIndex === 0 ? `\n| ${delimiter.join(' | ')} |` : ''}`;
       }).join('\n');
     }

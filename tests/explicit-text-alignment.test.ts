@@ -2,7 +2,7 @@
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
-import { AllSelection, CoreExtension, CoreSchemaSpec, HTMLExporter, MarkdownExporter, Plugin, Schema,
+import { AllSelection, CoreExtension, CoreSchemaSpec, HTMLExporter, MarkdownExporter, MarkdownImporter, Plugin, Schema,
   Selection, composeExtensions, createEditor, createHistoryPlugin, setBlockType, setTextAlignment,
   setTextDirection, splitBlock, undo } from '../src';
 import { ServerHTMLImporter } from '../src/html/server';
@@ -76,7 +76,7 @@ it('keeps read-only/filter rejection atomic and validates the marker', () => {
   } finally { editor.destroy(); }
 });
 
-it('exports physical left in Word and reports its Markdown loss, including cells', () => {
+it('exports physical left in Word and reports Markdown loss only outside representable pipe-table columns', () => {
   const paragraph = schema.node('paragraph', { align: 'left', alignExplicit: true }, [schema.text('שלום')]);
   const doc = schema.node('doc', {}, [paragraph]);
   const exported = exportDOCX(doc);
@@ -85,8 +85,12 @@ it('exports physical left in Word and reports its Markdown loss, including cells
   expect(reopened.child(0).attrs).toMatchObject({ align: 'left', alignExplicit: true });
   expect(HTMLExporter.export(reopened, { document: false })).toContain('text-align:left');
   const table = schema.node('doc', {}, [schema.node('table', {}, [schema.node('table_row', {}, [schema.node('table_header', {}, [paragraph])])])]);
-  for (const document of [doc, table]) expect(MarkdownExporter.exportWithReport(document).losses)
+  expect(MarkdownExporter.exportWithReport(doc).losses)
     .toContainEqual(expect.objectContaining({ detail: expect.stringContaining('physical-left alignment') }));
+  const markdown = MarkdownExporter.exportWithReport(table);
+  expect(markdown.losses).toEqual([]);
+  expect(markdown.markdown).toContain('| :--- |');
+  expect(MarkdownImporter.parse(markdown.markdown, schema).toJSON()).toEqual(table.toJSON());
 });
 
 it('synchronizes and clears the marker field through Yjs without a DOM', () => {

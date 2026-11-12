@@ -1,0 +1,66 @@
+FAIL spec/frontend/content_editor/components/content_editor_spec.js
+  ● ContentEditor › renders media bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      685 |     createWrapper();
+      686 |
+    > 687 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      688 |   });
+      689 |
+      690 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:687:55)
+
+  ● ContentEditor › renders codeBlock bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      685 |     createWrapper();
+      686 |
+    > 687 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      688 |   });
+      689 |
+      690 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:687:55)
+
+  ● ContentEditor › renders reference bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      685 |     createWrapper();
+      686 |
+    > 687 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      688 |   });
+      689 |
+      690 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:687:55)
+
+PASS spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+PASS spec/frontend/work_items/components/work_item_description_spec.js
+PASS spec/frontend/content_editor/components/fountain_code_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_alert_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_media_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_link_menu_spec.js
+PASS spec/frontend/issuable/issuable_form_spec.js
+
+Test Suites: 1 failed, 7 passed, 8 total
+Tests:       3 failed, 290 passed, 293 total
+Snapshots:   0 total
+Time:        20.269 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/content_editor_spec.js|spec\/frontend\/vue_shared\/components\/markdown\/markdown_editor_spec.js|spec\/frontend\/work_items\/components\/work_item_description_spec.js|spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_alert_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_media_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_link_menu_spec.js|spec\/frontend\/issuable\/issuable_form_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-media-files-jest-final-20261112.json

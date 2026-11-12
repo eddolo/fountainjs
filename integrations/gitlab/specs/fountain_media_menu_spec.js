@@ -1,7 +1,7 @@
 import { fireEvent, getByRole, queryByRole, waitFor } from '@testing-library/dom';
 import { mountExtended } from 'helpers/vue_test_utils_helper';
 import waitForPromises from 'helpers/wait_for_promises';
-import { GitLabContentEditor, NodeSelection, undo, redo } from '~/content_editor/services/fountain_runtime';
+import { GitLabContentEditor, NodeSelection, Selection, undo, redo } from '~/content_editor/services/fountain_runtime';
 import FountainMediaMenu from '~/content_editor/components/fountain_media_menu.vue';
 
 describe('FountainMediaMenu', () => {
@@ -104,5 +104,79 @@ describe('FountainMediaMenu', () => {
     fireEvent.click(getByRole(dialog(), 'button', { name: 'Apply media changes' })); await settle();
     wrapper.destroy(); wrapper = null; expect(renderMarkdown.mock.calls[1][1].signal.aborted).toBe(true);
     finish({ body: html }); await settle(); expect(service.getSerializedContent()).toBe(source);
+  });
+  it('captures the selected target before opening the picker and transfers it with the chosen file', async () => {
+    await createComponent(true, true);
+    const inputElement = wrapper.find('input[type="file"]').element;
+    const click = jest.spyOn(inputElement, 'click').mockImplementation(() => {});
+    const captured = jest.spyOn(service, 'beginMediaReplacement');
+    fireEvent.click(button('Replace media file'));
+    expect(click).toHaveBeenCalledTimes(1);
+    const target = captured.mock.results[0].value;
+    const selected = new File(['image'], 'replacement.png', { type: 'image/png' });
+    fireEvent.change(inputElement, { target: { files: [selected] } }); await settle();
+    expect(wrapper.emitted('replace-file')[0][0]).toEqual({ file: selected, target });
+    expect(target.snapshot.path).toEqual([0, 0]); expect(target.snapshot.closed).toBe(false);
+    expect(inputElement.value).toBe(''); expect(service.getSerializedContent()).toBe(source);
+  });
+  it('keeps the picker input and captured target when the cursor moves to unrelated inserted text', async () => {
+    await createComponent(true, true);
+    const inputElement = wrapper.find('input[type="file"]').element;
+    jest.spyOn(inputElement, 'click').mockImplementation(() => {});
+    fireEvent.click(button('Replace media file'));
+    service.editor.dispatch(service.editor.createTransaction().replace(0, 0, [service.editor.state.schema.node('paragraph', {}, [service.editor.state.schema.text('Other text')])])
+      .setSelection(Selection.cursor([0, 0], 2))); await settle();
+    expect(wrapper.find('input[type="file"]').element).toBe(inputElement);
+    const selected = new File(['image'], 'replacement.png', { type: 'image/png' });
+    fireEvent.change(inputElement, { target: { files: [selected] } }); await settle();
+    const { target } = wrapper.emitted('replace-file')[0][0];
+    expect(target.snapshot.path).toEqual([1, 0]); expect(target.snapshot.closed).toBe(false);
+    expect(service.editor.state.doc.child(0).textContent).toBe('Other text');
+  });
+  it('closes a cancelled picker target without emitting an upload', async () => {
+    await createComponent(true, true);
+    const inputElement = wrapper.find('input[type="file"]').element;
+    jest.spyOn(inputElement, 'click').mockImplementation(() => {});
+    const captured = jest.spyOn(service, 'beginMediaReplacement');
+    fireEvent.click(button('Replace media file'));
+    fireEvent(inputElement, new Event('cancel')); await settle();
+    expect(captured.mock.results[0].value.snapshot.closed).toBe(true);
+    expect(wrapper.emitted('replace-file')).toBeUndefined(); expect(service.getSerializedContent()).toBe(source);
+  });
+  it('closes a picker target during teardown without starting an upload', async () => {
+    await createComponent(true, true);
+    jest.spyOn(wrapper.find('input[type="file"]').element, 'click').mockImplementation(() => {});
+    const captured = jest.spyOn(service, 'beginMediaReplacement');
+    fireEvent.click(button('Replace media file')); wrapper.destroy(); wrapper = null;
+    expect(captured.mock.results[0].value.snapshot.closed).toBe(true);
+    expect(service.getSerializedContent()).toBe(source);
+  });
+  it('refuses a file returned after the component becomes read-only and releases its target', async () => {
+    await createComponent(true, true);
+    const inputElement = wrapper.find('input[type="file"]').element;
+    jest.spyOn(inputElement, 'click').mockImplementation(() => {});
+    const captured = jest.spyOn(service, 'beginMediaReplacement');
+    fireEvent.click(button('Replace media file')); await wrapper.setProps({ disabled: true });
+    fireEvent.change(inputElement, { target: { files: [new File(['image'], 'replacement.png')] } }); await settle();
+    expect(wrapper.emitted('replace-file')).toBeUndefined(); expect(captured.mock.results[0].value.snapshot.closed).toBe(true);
+    expect(service.getSerializedContent()).toBe(source);
+  });
+  it('retains and applies the captured properties form after selection moves to inserted text', async () => {
+    await createComponent(); await open(); input('Media description', 'Captured draft');
+    service.editor.dispatch(service.editor.createTransaction().replace(0, 0, [service.editor.state.schema.node('paragraph', {}, [service.editor.state.schema.text('Other text')])])
+      .setSelection(Selection.cursor([0, 0], 2))); await settle();
+    expect(field('Media description').value).toBe('Captured draft');
+    fireEvent.click(getByRole(dialog(), 'button', { name: 'Apply media changes' })); await settle();
+    expect(service.editor.state.doc.child(0).textContent).toBe('Other text');
+    expect(service.editor.state.doc.child(1).child(0).attrs.alt).toBe('Captured draft');
+  });
+  it('keeps a conflicted property draft visible after its media is replaced by text', async () => {
+    await createComponent(); await open(); input('Media description', 'Keep this draft');
+    service.editor.dispatch(service.editor.createTransaction().replaceNode([0, 0], [service.editor.state.schema.text('Another author replaced the image')])
+      .setSelection(Selection.cursor([0, 0], 3))); await settle();
+    expect(field('Media description').value).toBe('Keep this draft');
+    expect(getByRole(dialog(), 'alert').textContent).toContain('selected media changed');
+    expect(getByRole(dialog(), 'button', { name: 'Apply media changes' }).getAttribute('aria-disabled')).toBe('true');
+    expect(service.editor.state.doc.child(0).textContent).toBe('Another author replaced the image');
   });
 });

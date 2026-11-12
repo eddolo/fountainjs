@@ -1,0 +1,770 @@
+@storybook/cli v7.6.24
+
+info => Cleaning outputDir: /home/eddolo/.cache/fountainjs-gitlab-product/media-storybook
+info => Loading presets
+info Found existing addon "@storybook/addon-docs", skipping.
+info Found existing addon "@storybook/addon-viewport", skipping.
+info Found existing addon "@storybook/addon-docs", skipping.
+info Found existing addon "@storybook/addon-viewport", skipping.
+info => Building manager..
+info => Manager built (132 ms)
+info => Building preview..
+info => Copying static files: /home/eddolo/.cache/fountainjs-gitlab-product/source/storybook/node_modules/@storybook/manager/static at /home/eddolo/.cache/fountainjs-gitlab-product/media-storybook/sb-common-assets
+info Using Babel compiler
+info Addon-docs: using MDX2
+info => Using implicit CSS loaders
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+info => Loading custom Webpack config (full-control mode).
+<s> [webpack.Progress] 0%
+
+<s> [webpack.Progress] 1% setup before run
+<s> [webpack.Progress] 1% setup before run NodeEnvironmentPlugin
+<s> [webpack.Progress] 1% setup before run
+<s> [webpack.Progress] 2% setup run
+<s> [webpack.Progress] 2% setup run
+<s> [webpack.Progress] 4% setup normal module factory
+<s> [webpack.Progress] 4% setup normal module factory CaseSensitivePathsPlugin
+<s> [webpack.Progress] 4% setup normal module factory IgnorePlugin
+<s> [webpack.Progress] 4% setup normal module factory NormalModuleReplacementPlugin
+<s> [webpack.Progress] 4% setup normal module factory NormalModuleReplacementPlugin
+<s> [webpack.Progress] 4% setup normal module factory NormalModuleReplacementPlugin
+<s> [webpack.Progress] 4% setup normal module factory NormalModuleReplacementPlugin
+<s> [webpack.Progress] 4% setup normal module factory
+<s> [webpack.Progress] 5% setup context module factory
+<s> [webpack.Progress] 5% setup context module factory IgnorePlugin
+<s> [webpack.Progress] 5% setup context module factory
+<s> [webpack.Progress] 6% setup before compile
+<s> [webpack.Progress] 6% setup before compile ProgressPlugin
+<s> [webpack.Progress] 6% setup before compile
+<s> [webpack.Progress] 7% setup compile
+<s> [webpack.Progress] 7% setup compile ExternalsPlugin
+<s> [webpack.Progress] 7% setup compile ExternalsPlugin
+<s> [webpack.Progress] 7% setup compile
+<s> [webpack.Progress] 8% setup compilation
+<s> [webpack.Progress] 8% setup compilation HtmlWebpackPlugin
+<s> [webpack.Progress] 8% setup compilation unplugin-csf
+<s> [webpack.Progress] 8% setup compilation ArrayPushCallbackChunkFormatPlugin
+<s> [webpack.Progress] 8% setup compilation JsonpChunkLoadingPlugin
+<s> [webpack.Progress] 8% setup compilation StartupChunkDependenciesPlugin
+<s> [webpack.Progress] 8% setup compilation ImportScriptsChunkLoadingPlugin
+<s> [webpack.Progress] 8% setup compilation WorkerPlugin
+<s> [webpack.Progress] 8% setup compilation SplitChunksPlugin
+<s> [webpack.Progress] 8% setup compilation RuntimeChunkPlugin
+<s> [webpack.Progress] 8% setup compilation ResolverCachePlugin
+<s> [webpack.Progress] 8% setup compilation
+<s> [webpack.Progress] 9% setup compilation
+<s> [webpack.Progress] 9% setup compilation DefinePlugin
+<s> [webpack.Progress] 9% setup compilation ProvidePlugin
+<s> [webpack.Progress] 9% setup compilation ProgressPlugin
+<s> [webpack.Progress] 9% setup compilation vue-loader-plugin
+<s> [webpack.Progress] 9% setup compilation ChunkPrefetchPreloadPlugin
+<s> [webpack.Progress] 9% setup compilation SourceMapDevToolPlugin
+<s> [webpack.Progress] 9% setup compilation JavascriptModulesPlugin
+<s> [webpack.Progress] 9% setup compilation JsonModulesPlugin
+<s> [webpack.Progress] 9% setup compilation AssetModulesPlugin
+<s> [webpack.Progress] 9% setup compilation EntryPlugin
+<s> [webpack.Progress] 9% setup compilation RuntimePlugin
+<s> [webpack.Progress] 9% setup compilation InferAsyncModulesPlugin
+<s> [webpack.Progress] 9% setup compilation DataUriPlugin
+<s> [webpack.Progress] 9% setup compilation FileUriPlugin
+<s> [webpack.Progress] 9% setup compilation CompatibilityPlugin
+<s> [webpack.Progress] 9% setup compilation HarmonyModulesPlugin
+<s> [webpack.Progress] 9% setup compilation AMDPlugin
+<s> [webpack.Progress] 9% setup compilation RequireJsStuffPlugin
+<s> [webpack.Progress] 9% setup compilation CommonJsPlugin
+<s> [webpack.Progress] 9% setup compilation LoaderPlugin
+<s> [webpack.Progress] 9% setup compilation LoaderPlugin
+<s> [webpack.Progress] 9% setup compilation NodeStuffPlugin
+<s> [webpack.Progress] 9% setup compilation APIPlugin
+<s> [webpack.Progress] 9% setup compilation ExportsInfoApiPlugin
+<s> [webpack.Progress] 9% setup compilation WebpackIsIncludedPlugin
+<s> [webpack.Progress] 9% setup compilation ConstPlugin
+<s> [webpack.Progress] 9% setup compilation UseStrictPlugin
+<s> [webpack.Progress] 9% setup compilation RequireIncludePlugin
+<s> [webpack.Progress] 9% setup compilation RequireEnsurePlugin
+<s> [webpack.Progress] 9% setup compilation RequireContextPlugin
+<s> [webpack.Progress] 9% setup compilation ImportPlugin
+<s> [webpack.Progress] 9% setup compilation ImportMetaContextPlugin
+<s> [webpack.Progress] 9% setup compilation SystemPlugin
+<s> [webpack.Progress] 9% setup compilation ImportMetaPlugin
+<s> [webpack.Progress] 9% setup compilation URLPlugin
+<s> [webpack.Progress] 9% setup compilation DefaultStatsFactoryPlugin
+<s> [webpack.Progress] 9% setup compilation DefaultStatsPresetPlugin
+<s> [webpack.Progress] 9% setup compilation DefaultStatsPrinterPlugin
+<s> [webpack.Progress] 9% setup compilation JavascriptMetaInfoPlugin
+<s> [webpack.Progress] 9% setup compilation EnsureChunkConditionsPlugin
+<s> [webpack.Progress] 9% setup compilation RemoveEmptyChunksPlugin
+<s> [webpack.Progress] 9% setup compilation MergeDuplicateChunksPlugin
+<s> [webpack.Progress] 9% setup compilation FlagIncludedChunksPlugin
+<s> [webpack.Progress] 9% setup compilation SideEffectsFlagPlugin
+<s> [webpack.Progress] 9% setup compilation FlagDependencyExportsPlugin
+<s> [webpack.Progress] 9% setup compilation FlagDependencyUsagePlugin
+<s> [webpack.Progress] 9% setup compilation InnerGraphPlugin
+<s> [webpack.Progress] 9% setup compilation MangleExportsPlugin
+<s> [webpack.Progress] 9% setup compilation ModuleConcatenationPlugin
+<s> [webpack.Progress] 9% setup compilation NoEmitOnErrorsPlugin
+<s> [webpack.Progress] 9% setup compilation RealContentHashPlugin
+<s> [webpack.Progress] 9% setup compilation WasmFinalizeExportsPlugin
+<s> [webpack.Progress] 9% setup compilation NamedModuleIdsPlugin
+<s> [webpack.Progress] 9% setup compilation DeterministicChunkIdsPlugin
+<s> [webpack.Progress] 9% setup compilation DefinePlugin
+<s> [webpack.Progress] 9% setup compilation TerserPlugin
+<s> [webpack.Progress] 9% setup compilation TemplatedPathPlugin
+<s> [webpack.Progress] 9% setup compilation RecordIdsPlugin
+<s> [webpack.Progress] 9% setup compilation WarnCaseSensitiveModulesPlugin
+<s> [webpack.Progress] 9% setup compilation IgnoreWarningsPlugin
+<s> [webpack.Progress] 9% setup compilation
+<s> [webpack.Progress] 10% building
+<s> [webpack.Progress] 10% building 0/1 entries 0/0 dependencies 0/0 modules
+info => Copying static files: /home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/images at /home/eddolo/.cache/fountainjs-gitlab-product/media-storybook/assets/images
+<s> [webpack.Progress] 10% building import loader ./node_modules/babel-loader/lib/index.js
+<s> [webpack.Progress] 10% building 0/1 entries 7/16 dependencies 3/7 modules
+<s> [webpack.Progress] 10% building 0/1 entries 22/25 dependencies 4/19 modules
+<s> [webpack.Progress] 10% building 0/1 entries 30/40 dependencies 4/25 modules
+[BABEL] Note: The code generator has deoptimised the styling of /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/monaco-editor/esm/vs/language/typescript/lib/lib.js as it exceeds the max of 500KB.
+<s> [webpack.Progress] 10% building 0/1 entries 46/61 dependencies 7/30 modules
+<s> [webpack.Progress] 10% building 0/1 entries 54/70 dependencies 8/35 modules
+<s> [webpack.Progress] 10% building 0/1 entries 66/96 dependencies 9/39 modules
+<s> [webpack.Progress] 10% building import loader ./node_modules/@storybook/builder-webpack5/dist/loaders/export-order-loader.js
+<s> [webpack.Progress] 10% building import loader ./node_modules/unplugin/dist/webpack/loaders/transform.js
+<s> [webpack.Progress] 10% building 0/1 entries 66/96 dependencies 15/39 modules
+<s> [webpack.Progress] 10% building 0/1 entries 67/96 dependencies 15/40 modules
+[BABEL] Note: The code generator has deoptimised the styling of /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/monaco-editor/esm/vs/language/css/_deps/vscode-css-languageservice/data/webCustomData.js as it exceeds the max of 500KB.
+[BABEL] Note: The code generator has deoptimised the styling of /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/monaco-editor/esm/vs/language/typescript/lib/typescriptServices.js as it exceeds the max of 500KB.
+<s> [webpack.Progress] 10% building 0/1 entries 76/97 dependencies 16/46 modules
+<s> [webpack.Progress] 11% building 0/1 entries 81/108 dependencies 21/48 modules
+<s> [webpack.Progress] 11% building 0/1 entries 89/109 dependencies 22/54 modules
+<s> [webpack.Progress] 11% building 0/1 entries 92/109 dependencies 24/56 modules
+<s> [webpack.Progress] 11% building import loader ./node_modules/style-loader/dist/cjs.js
+<s> [webpack.Progress] 11% building import loader ./node_modules/css-loader/dist/cjs.js
+<s> [webpack.Progress] 11% building import loader ./node_modules/postcss-loader/dist/cjs.js
+<s> [webpack.Progress] 11% building import loader ./node_modules/sass-loader/dist/cjs.js
+<s> [webpack.Progress] 11% building 0/1 entries 92/109 dependencies 24/56 modules
+<s> [webpack.Progress] 11% building 0/1 entries 93/141 dependencies 25/57 modules
+<s> [webpack.Progress] 11% building 0/1 entries 108/141 dependencies 27/67 modules
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+<s> [webpack.Progress] 11% building 0/1 entries 122/147 dependencies 32/80 modules
+<s> [webpack.Progress] 11% building 0/1 entries 146/200 dependencies 35/96 modules
+<s> [webpack.Progress] 12% building 0/1 entries 163/217 dependencies 38/99 modules
+<s> [webpack.Progress] 13% building 0/1 entries 236/300 dependencies 60/149 modules
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+<s> [webpack.Progress] 13% building 0/1 entries 292/400 dependencies 68/154 modules
+<s> [webpack.Progress] 13% building import loader ./node_modules/vue-docgen-loader/lib/index.js
+<s> [webpack.Progress] 13% building import loader ./node_modules/vue-loader/lib/index.js
+<s> [webpack.Progress] 13% building 0/1 entries 370/418 dependencies 72/207 modules
+[BABEL] Note: The code generator has deoptimised the styling of /home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/content_editor/services/fountain_runtime.js as it exceeds the max of 500KB.
+<s> [webpack.Progress] 13% building 0/1 entries 400/420 dependencies 72/229 modules
+<s> [webpack.Progress] 17% building 0/1 entries 600/633 dependencies 131/273 modules
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import './application_base';
+  │         ^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/application.scss 1:9  root stylesheet
+
+<s> [webpack.Progress] 17% building 0/1 entries 634/700 dependencies 135/281 modules
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+6 │ @import '@gitlab/at.js/dist/css/jquery.atwho';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/_application_base.scss 6:9  @import
+    ../app/assets/stylesheets/application.scss 1:9        root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+7 │ @import 'dropzone/dist/basic';
+  │         ^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/_application_base.scss 7:9  @import
+    ../app/assets/stylesheets/application.scss 1:9        root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+   ╷
+10 │ @import 'root';
+   │         ^^^^^^
+   ╵
+    ../app/assets/stylesheets/_application_base.scss 10:9  @import
+    ../app/assets/stylesheets/application.scss 1:9         root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+   ╷
+12 │ @import 'framework';
+   │         ^^^^^^^^^^^
+   ╵
+    ../app/assets/stylesheets/_application_base.scss 12:9  @import
+    ../app/assets/stylesheets/application.scss 1:9         root stylesheet
+
+<s> [webpack.Progress] 19% building import loader ./node_modules/vue-loader/lib/loaders/pitcher.js
+<s> [webpack.Progress] 19% building import loader ./node_modules/vue-loader/lib/loaders/templateLoader.js
+<s> [webpack.Progress] 19% building 0/1 entries 697/725 dependencies 170/292 modules
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '../white_base';
+  │         ^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+5 │ @import './common';
+  │         ^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/_white_base.scss 5:9   @import
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+4 │ @import '../framework/variables';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/common.scss 4:9        @import
+    ../app/assets/stylesheets/highlight/_white_base.scss 5:9   @import
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+5 │ @import './conflict_colors';
+  │         ^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/common.scss 5:9        @import
+    ../app/assets/stylesheets/highlight/_white_base.scss 5:9   @import
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+6 │ @import 'page_bundles/mixins_and_variables_and_functions';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/common.scss 6:9        @import
+    ../app/assets/stylesheets/highlight/_white_base.scss 5:9   @import
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+<s> [webpack.Progress] 21% building import loader ./node_modules/vue-loader/lib/loaders/stylePostLoader.js
+<s> [webpack.Progress] 21% building 0/1 entries 731/744 dependencies 201/307 modules
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+<s> [webpack.Progress] 22% building 0/1 entries 793/800 dependencies 230/331 modules
+<s> [webpack.Progress] 26% building 0/1 entries 1233/1273 dependencies 307/700 modules
+<s> [webpack.Progress] 27% building 0/1 entries 1500/1529 dependencies 326/781 modules
+<s> [webpack.Progress] 28% building 0/1 entries 1700/1716 dependencies 332/831 modules
+<s> [webpack.Progress] 30% building 0/1 entries 2257/2300 dependencies 396/1046 modules
+<s> [webpack.Progress] 35% building 0/1 entries 3000/3294 dependencies 567/1237 modules
+<s> [webpack.Progress] 34% building 0/1 entries 3338/3400 dependencies 573/1274 modules
+<s> [webpack.Progress] 37% building 0/1 entries 3578/3600 dependencies 659/1321 modules
+<s> [webpack.Progress] 36% building 0/1 entries 3640/3700 dependencies 662/1362 modules
+<s> [webpack.Progress] 38% building 0/1 entries 3843/3900 dependencies 771/1474 modules
+<s> [webpack.Progress] 43% building 0/1 entries 4548/4600 dependencies 1074/1751 modules
+<s> [webpack.Progress] 45% building 0/1 entries 4818/4900 dependencies 1232/1930 modules
+DEPRECATION WARNING [user-authored]: color.red() is deprecated. Suggestion:
+
+color.channel($color, "red", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+   ╷
+80 │   $r: color.red($color);
+   │       ^^^^^^^^^^^^^^^^^
+   ╵
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_functions.scss 80:7      color-yiq()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/mixins/_forms.scss 65:12  form-validation-state()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_forms.scss 264:3         @import
+    ../node_modules/@gitlab/ui/src/scss/bootstrap_no_utils.scss 12:9               @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 3:9                @import
+    ../app/assets/stylesheets/framework.scss 5:9                                   @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                          @import
+    ../app/assets/stylesheets/application.scss 1:9                                 root stylesheet
+
+DEPRECATION WARNING [user-authored]: color.green() is deprecated. Suggestion:
+
+color.channel($color, "green", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+   ╷
+81 │   $g: color.green($color);
+   │       ^^^^^^^^^^^^^^^^^^^
+   ╵
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_functions.scss 81:7      color-yiq()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/mixins/_forms.scss 65:12  form-validation-state()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_forms.scss 264:3         @import
+    ../node_modules/@gitlab/ui/src/scss/bootstrap_no_utils.scss 12:9               @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 3:9                @import
+    ../app/assets/stylesheets/framework.scss 5:9                                   @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                          @import
+    ../app/assets/stylesheets/application.scss 1:9                                 root stylesheet
+
+DEPRECATION WARNING [user-authored]: color.blue() is deprecated. Suggestion:
+
+color.channel($color, "blue", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+   ╷
+82 │   $b: color.blue($color);
+   │       ^^^^^^^^^^^^^^^^^^
+   ╵
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_functions.scss 82:7      color-yiq()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/mixins/_forms.scss 65:12  form-validation-state()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_forms.scss 264:3         @import
+    ../node_modules/@gitlab/ui/src/scss/bootstrap_no_utils.scss 12:9               @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 3:9                @import
+    ../app/assets/stylesheets/framework.scss 5:9                                   @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                          @import
+    ../app/assets/stylesheets/application.scss 1:9                                 root stylesheet
+
+<s> [webpack.Progress] 49% building 0/1 entries 5045/5134 dependencies 1400/1952 modules
+<s> [webpack.Progress] 56% building 0/1 entries 5400/5533 dependencies 1754/2085 modules
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+   ┌──> ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss
+75 │             z-index: 1;
+   │             ^^^^^^^^^^ declaration
+   ╵
+   ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+78 │ ┌       @media (forced-colors: active) {
+79 │ │         outline: 2px solid LinkText if-important($important);
+80 │ │       }
+   │ └─── nested rule
+   ╵
+    ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss 75:11  @import
+    ../node_modules/@gitlab/ui/src/scss/components.scss 46:9                                    @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 21:9                            @import
+    ../app/assets/stylesheets/framework.scss 5:9                                                @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                                       @import
+    ../app/assets/stylesheets/application.scss 1:9                                              root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+   ┌──> ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss
+91 │             z-index: 1;
+   │             ^^^^^^^^^^ declaration
+   ╵
+   ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+78 │ ┌       @media (forced-colors: active) {
+79 │ │         outline: 2px solid LinkText if-important($important);
+80 │ │       }
+   │ └─── nested rule
+   ╵
+    ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss 91:11  @import
+    ../node_modules/@gitlab/ui/src/scss/components.scss 46:9                                    @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 21:9                            @import
+    ../app/assets/stylesheets/framework.scss 5:9                                                @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                                       @import
+    ../app/assets/stylesheets/application.scss 1:9                                              root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+   ┌──> ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss
+99 │             z-index: 1;
+   │             ^^^^^^^^^^ declaration
+   ╵
+   ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+78 │ ┌       @media (forced-colors: active) {
+79 │ │         outline: 2px solid LinkText if-important($important);
+80 │ │       }
+   │ └─── nested rule
+   ╵
+    ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss 99:11  @import
+    ../node_modules/@gitlab/ui/src/scss/components.scss 46:9                                    @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 21:9                            @import
+    ../app/assets/stylesheets/framework.scss 5:9                                                @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                                       @import
+    ../app/assets/stylesheets/application.scss 1:9                                              root stylesheet
+
+<s> [webpack.Progress] 61% building 0/1 entries 6082/6100 dependencies 2098/2223 modules
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+    ┌──> ../node_modules/@gitlab/duo-ui/src/components/chat/duo_chat.scss
+23  │       transition: background-color $gl-transition-duration-medium $gl-easing-out-cubic;
+    │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ declaration
+    ╵
+    ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+247 │ ┌   @media (prefers-reduced-motion) {
+248 │ │     transition-duration: 0.01ms !important;
+249 │ │     transition-delay: 0ms !important;
+250 │ │   }
+    │ └─── nested rule
+    ╵
+    ../node_modules/@gitlab/duo-ui/src/components/chat/duo_chat.scss 23:5  @import
+    ../node_modules/@gitlab/duo-ui/src/scss/components.scss 4:9            @import
+    ../app/assets/stylesheets/framework.scss 6:9                           @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                  @import
+    ../app/assets/stylesheets/application.scss 1:9                         root stylesheet
+
+DEPRECATION WARNING [user-authored]: $lightness: Passing a number without unit % (-10) is deprecated.
+
+To preserve current behavior: $lightness * 1%
+
+More info: https://sass-lang.com/d/function-units
+
+    ╷
+137 │     background-color: color.adjust($color, $lightness: -10);
+    │                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ╵
+    ../app/assets/stylesheets/highlight/common.scss 137:23      line-hover-bg()
+    ../app/assets/stylesheets/highlight/_white_base.scss 121:5  white-base()
+    ../app/assets/stylesheets/highlight/themes/white.scss 5:3   root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+    ┌──> ../node_modules/@gitlab/duo-ui/src/components/chat/components/duo_chat_loader/duo_chat_loader.scss
+6   │       transition: width 200ms $gl-easing-out-cubic;
+    │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ declaration
+    ╵
+    ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+247 │ ┌   @media (prefers-reduced-motion) {
+248 │ │     transition-duration: 0.01ms !important;
+249 │ │     transition-delay: 0ms !important;
+250 │ │   }
+    │ └─── nested rule
+    ╵
+    ../node_modules/@gitlab/duo-ui/src/components/chat/components/duo_chat_loader/duo_chat_loader.scss 6:5  @import
+    ../node_modules/@gitlab/duo-ui/src/scss/components.scss 5:9                                             @import
+    ../app/assets/stylesheets/framework.scss 6:9                                                            @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                                                   @import
+    ../app/assets/stylesheets/application.scss 1:9                                                          root stylesheet
+
+WARNING: 47 repetitive deprecation warnings omitted.
+
+WARNING: 336 repetitive deprecation warnings omitted.
+
+<s> [webpack.Progress] 64% building 0/1 entries 6194/6200 dependencies 2246/2252 modules
+<s> [webpack.Progress] 65% building 1/1 entries 6217/6217 dependencies 2271/2271 modules
+<s> [webpack.Progress] 65% building
+<s> [webpack.Progress] 69% building finish
+<s> [webpack.Progress] 69% building finish
+<s> [webpack.Progress] 70% sealing finish module graph
+<s> [webpack.Progress] 70% sealing finish module graph ResolverCachePlugin
+<s> [webpack.Progress] 70% sealing finish module graph InferAsyncModulesPlugin
+<s> [webpack.Progress] 70% sealing finish module graph FlagDependencyExportsPlugin
+<s> [webpack.Progress] 70% sealing finish module graph InnerGraphPlugin
+<s> [webpack.Progress] 70% sealing finish module graph WasmFinalizeExportsPlugin
+<s> [webpack.Progress] 70% sealing finish module graph
+<s> [webpack.Progress] 70% sealing plugins
+<s> [webpack.Progress] 70% sealing plugins WarnCaseSensitiveModulesPlugin
+<s> [webpack.Progress] 70% sealing plugins
+<s> [webpack.Progress] 71% sealing dependencies optimization
+<s> [webpack.Progress] 71% sealing dependencies optimization SideEffectsFlagPlugin
+<s> [webpack.Progress] 71% sealing dependencies optimization FlagDependencyUsagePlugin
+<s> [webpack.Progress] 71% sealing dependencies optimization
+<s> [webpack.Progress] 71% sealing after dependencies optimization
+<s> [webpack.Progress] 71% sealing after dependencies optimization
+<s> [webpack.Progress] 72% sealing chunk graph
+<s> [webpack.Progress] 72% sealing chunk graph
+<s> [webpack.Progress] 73% sealing after chunk graph
+<s> [webpack.Progress] 73% sealing after chunk graph
+<s> [webpack.Progress] 73% sealing optimizing
+<s> [webpack.Progress] 73% sealing optimizing
+<s> [webpack.Progress] 74% sealing module optimization
+<s> [webpack.Progress] 74% sealing module optimization
+<s> [webpack.Progress] 75% sealing after module optimization
+<s> [webpack.Progress] 75% sealing after module optimization
+<s> [webpack.Progress] 75% sealing chunk optimization
+<s> [webpack.Progress] 75% sealing chunk optimization EnsureChunkConditionsPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization RemoveEmptyChunksPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization MergeDuplicateChunksPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization SplitChunksPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization RemoveEmptyChunksPlugin
+<s> [webpack.Progress] 75% sealing chunk optimization
+<s> [webpack.Progress] 76% sealing after chunk optimization
+<s> [webpack.Progress] 76% sealing after chunk optimization
+<s> [webpack.Progress] 77% sealing module and chunk tree optimization
+<s> [webpack.Progress] 77% sealing module and chunk tree optimization PersistentChildCompilerSingletonPlugin
+<s> [webpack.Progress] 77% sealing module and chunk tree optimization
+<s> [webpack.Progress] 77% sealing after module and chunk tree optimization
+<s> [webpack.Progress] 77% sealing after module and chunk tree optimization
+<s> [webpack.Progress] 78% sealing chunk modules optimization
+<s> [webpack.Progress] 78% sealing chunk modules optimization ModuleConcatenationPlugin
+<s> [webpack.Progress] 78% sealing chunk modules optimization
+<s> [webpack.Progress] 78% sealing after chunk modules optimization
+<s> [webpack.Progress] 78% sealing after chunk modules optimization
+<s> [webpack.Progress] 79% sealing module reviving
+<s> [webpack.Progress] 79% sealing module reviving RecordIdsPlugin
+<s> [webpack.Progress] 79% sealing module reviving
+<s> [webpack.Progress] 80% sealing before module ids
+<s> [webpack.Progress] 80% sealing before module ids
+<s> [webpack.Progress] 80% sealing module ids
+<s> [webpack.Progress] 80% sealing module ids NamedModuleIdsPlugin
+<s> [webpack.Progress] 80% sealing module ids
+<s> [webpack.Progress] 81% sealing module id optimization
+<s> [webpack.Progress] 81% sealing module id optimization
+<s> [webpack.Progress] 82% sealing module id optimization
+<s> [webpack.Progress] 82% sealing module id optimization
+<s> [webpack.Progress] 82% sealing chunk reviving
+<s> [webpack.Progress] 82% sealing chunk reviving RecordIdsPlugin
+<s> [webpack.Progress] 82% sealing chunk reviving
+<s> [webpack.Progress] 83% sealing before chunk ids
+<s> [webpack.Progress] 83% sealing before chunk ids
+<s> [webpack.Progress] 84% sealing chunk ids
+<s> [webpack.Progress] 84% sealing chunk ids DeterministicChunkIdsPlugin
+<s> [webpack.Progress] 84% sealing chunk ids
+<s> [webpack.Progress] 84% sealing chunk id optimization
+<s> [webpack.Progress] 84% sealing chunk id optimization FlagIncludedChunksPlugin
+<s> [webpack.Progress] 84% sealing chunk id optimization
+<s> [webpack.Progress] 85% sealing after chunk id optimization
+<s> [webpack.Progress] 85% sealing after chunk id optimization
+<s> [webpack.Progress] 86% sealing record modules
+<s> [webpack.Progress] 86% sealing record modules RecordIdsPlugin
+<s> [webpack.Progress] 86% sealing record modules
+<s> [webpack.Progress] 86% sealing record chunks
+<s> [webpack.Progress] 86% sealing record chunks RecordIdsPlugin
+<s> [webpack.Progress] 86% sealing record chunks
+<s> [webpack.Progress] 87% sealing module hashing
+<s> [webpack.Progress] 87% sealing module hashing
+<s> [webpack.Progress] 87% sealing code generation
+<s> [webpack.Progress] 87% sealing code generation
+<s> [webpack.Progress] 88% sealing runtime requirements
+<s> [webpack.Progress] 88% sealing runtime requirements
+<s> [webpack.Progress] 89% sealing hashing
+<s> [webpack.Progress] 89% sealing hashing
+<s> [webpack.Progress] 89% sealing after hashing
+<s> [webpack.Progress] 89% sealing after hashing
+<s> [webpack.Progress] 90% sealing record hash
+<s> [webpack.Progress] 90% sealing record hash
+<s> [webpack.Progress] 91% sealing module assets processing
+<s> [webpack.Progress] 91% sealing module assets processing
+<s> [webpack.Progress] 91% sealing chunk assets processing
+<s> [webpack.Progress] 91% sealing chunk assets processing
+<s> [webpack.Progress] 92% sealing asset processing
+<s> [webpack.Progress] 92% sealing asset processing PersistentChildCompilerSingletonPlugin
+<s> [webpack.Progress] 92% sealing asset processing TerserPlugin
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin editor.84a8ae44.worker.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin editor.84a8ae44.worker.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin json.fd016677.worker.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin json.fd016677.worker.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin html.9d29f0bb.worker.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin html.9d29f0bb.worker.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin css.ae5b8118.worker.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin css.ae5b8118.worker.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin ts.ec6c455b.worker.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin ts.ec6c455b.worker.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin yaml.fe43b05f.worker.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin yaml.fe43b05f.worker.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin main.5b70b1cb.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin main.5b70b1cb.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin runtime~main.9c6a6ab9.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin runtime~main.9c6a6ab9.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin fountain_media_menu-stories.f7aec285.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin fountain_media_menu-stories.f7aec285.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 433.e397b8ab.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 433.e397b8ab.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 683.8674cddf.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 683.8674cddf.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 617.940b8f40.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 617.940b8f40.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 648.09582170.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 648.09582170.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 857.a1f4df49.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 857.a1f4df49.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 421.f243a094.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 421.f243a094.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 71.39697796.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 71.39697796.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 647.f3c48310.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 647.f3c48310.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 42.8d1fd214.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 42.8d1fd214.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 999.8cd5cb3e.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 999.8cd5cb3e.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 997.816250c0.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 997.816250c0.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin resolve sources
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 71.39697796.iframe.bundle.js attach SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 71.39697796.iframe.bundle.js attached SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 999.8cd5cb3e.iframe.bundle.js attach SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 999.8cd5cb3e.iframe.bundle.js attached SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 997.816250c0.iframe.bundle.js attach SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin 997.816250c0.iframe.bundle.js attached SourceMap
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin resolve sources
+<s> [webpack.Progress] 92% sealing asset processing SourceMapDevToolPlugin
+<s> [webpack.Progress] 92% sealing asset processing HtmlWebpackPlugin
+<s> [webpack.Progress] 92% sealing asset processing HtmlWebpackPlugin
+<s> [webpack.Progress] 92% sealing asset processing HtmlWebpackPlugin resolve sources
+<s> [webpack.Progress] 92% sealing asset processing HtmlWebpackPlugin
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin main.7f4e4eef.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin main.7f4e4eef.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin runtime~main.5d9ce8d4.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin runtime~main.5d9ce8d4.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin fountain_media_menu-stories.b6afe1b3.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin fountain_media_menu-stories.b6afe1b3.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 433.bbd1e2e8.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 433.bbd1e2e8.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 617.9fb55b7f.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 617.9fb55b7f.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 648.9a7c4ef0.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 648.9a7c4ef0.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 857.7fdbd949.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 857.7fdbd949.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 421.348d246a.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 421.348d246a.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 647.e3efbb65.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 647.e3efbb65.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 683.cb5efe6a.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 683.cb5efe6a.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 42.cb5c3974.iframe.bundle.js generate SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin 42.cb5c3974.iframe.bundle.js generated SourceMap
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin resolve sources
+<s> [webpack.Progress] 92% sealing asset processing RealContentHashPlugin
+<s> [webpack.Progress] 92% sealing asset processing
+<s> [webpack.Progress] 93% sealing after asset optimization
+<s> [webpack.Progress] 93% sealing after asset optimization
+<s> [webpack.Progress] 93% sealing recording
+<s> [webpack.Progress] 93% sealing recording
+<s> [webpack.Progress] 94% sealing after seal
+<s> [webpack.Progress] 94% sealing after seal
+<s> [webpack.Progress] 95% emitting emit
+<s> [webpack.Progress] 95% emitting emit
+<s> [webpack.Progress] 98% emitting after emit
+<s> [webpack.Progress] 98% emitting after emit SizeLimitsPlugin
+<s> [webpack.Progress] 98% emitting after emit
+<s> [webpack.Progress] 99% done plugins
+<s> [webpack.Progress] 99% done plugins CaseSensitivePathsPlugin
+<s> [webpack.Progress] 99% done plugins
+<s> [webpack.Progress] 99%
+
+<s> [webpack.Progress] 99% cache store build dependencies
+<s> [webpack.Progress] 99% cache store build dependencies
+<s> [webpack.Progress] 99% cache begin idle
+<s> [webpack.Progress] 99% cache begin idle
+<s> [webpack.Progress] 100%
+
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (1:59292) from "autoprefixer" plugin: end value has mixed support, consider using flex-end instead
+WARN
+WARN Code:
+WARN   align-items:end
+WARN
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (1:60493) from "autoprefixer" plugin: start value has mixed support, consider using flex-start instead
+WARN
+WARN Code:
+WARN   align-items:start
+WARN
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (1:61358) from "autoprefixer" plugin: start value has mixed support, consider using flex-start instead
+WARN
+WARN Code:
+WARN   align-items:start
+WARN
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (1:72214) from "autoprefixer" plugin: end value has mixed support, consider using flex-end instead
+WARN
+WARN Code:
+WARN   align-items:end
+WARN
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (4:557197) from "autoprefixer" plugin: end value has mixed support, consider using flex-end instead
+WARN
+WARN Code:
+WARN   justify-content:end
+WARN
+WARN asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+WARN This can impact web performance.
+WARN Assets:
+WARN   json.fd016677.worker.js (380 KiB)
+WARN   html.9d29f0bb.worker.js (689 KiB)
+WARN   css.ae5b8118.worker.js (1020 KiB)
+WARN   ts.ec6c455b.worker.js (6.42 MiB)
+WARN   yaml.fe43b05f.worker.js (1.24 MiB)
+WARN   static/media/bloom-grand-ambient.16fbfcee.png (315 KiB)
+WARN   static/media/icons.f4e9d352.svg (244 KiB)
+WARN   main.7f4e4eef.iframe.bundle.js (3.46 MiB)
+WARN   fountain_media_menu-stories.b6afe1b3.iframe.bundle.js (1.43 MiB)
+WARN   617.9fb55b7f.iframe.bundle.js (294 KiB)
+WARN   683.cb5efe6a.iframe.bundle.js (827 KiB)
+WARN   71.56641d2f.iframe.bundle.js (583 KiB)
+WARN   42.cb5c3974.iframe.bundle.js (514 KiB)
+WARN   999.af519c3a.iframe.bundle.js (598 KiB)
+WARN   997.8d650047.iframe.bundle.js (859 KiB)
+WARN entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+WARN Entrypoints:
+WARN   main (4.05 MiB)
+WARN       runtime~main.5d9ce8d4.iframe.bundle.js
+WARN       999.af519c3a.iframe.bundle.js
+WARN       main.7f4e4eef.iframe.bundle.js
+WARN
+<s> [webpack.Progress] 99% cache shutdown
+<s> [webpack.Progress] 99% cache shutdown
+<s> [webpack.Progress] 100%
+
+info => Preview built (1.42 min)
+info => Output directory: /home/eddolo/.cache/fountainjs-gitlab-product/media-storybook

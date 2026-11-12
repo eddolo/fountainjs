@@ -1,4 +1,4 @@
-import { NodeSelection, closeHistory, deleteSelection, mapSelection, type Editor, type Node, type Transaction } from 'fountainjs-editor';
+import { MarkdownImporter, NodeSelection, closeHistory, deleteSelection, mapSelection, type Editor, type Node, type Transaction } from 'fountainjs-editor';
 import { gitlabMediaSource, gitlabMediaCSSDimension, type GitLabMediaFields } from './media';
 
 export interface GitLabMediaContext extends GitLabMediaFields {
@@ -80,6 +80,30 @@ export class GitLabMediaEditingSession {
     if (this.conflict || this.options.editor.state.doc !== this.doc) throw new Error('GITLAB_MEDIA_TARGET_CHANGED');
     return this.options;
   }
+  get replacementSelection(): NodeSelection {
+    this.ready();
+    return this.selected;
+  }
+  projectFileReplacement(document: Node, markdown: string): Node {
+    const { editor } = this.ready();
+    const block = document.content[0], replacement = block?.content[0];
+    if (document.type !== editor.state.schema.topNodeType || document.childCount !== 1
+      || block?.type.name !== 'paragraph' || block.childCount !== 1 || !replacement
+      || replacement.type !== this.node!.type || replacement.attrs.kind !== this.node!.attrs.kind)
+      throw new Error('GITLAB_MEDIA_REPLACEMENT_KIND_MISMATCH');
+    const source = new MarkdownImporter().parse(markdown, editor.state.schema, { autolinkLiterals: false });
+    const sourceBlock = source.content[0];
+    const image = sourceBlock?.type.name === 'image_super' ? sourceBlock
+      : sourceBlock?.type.name === 'paragraph' && sourceBlock.childCount === 1 && sourceBlock.child(0).type.name === 'inline_image'
+        ? sourceBlock.child(0) : undefined;
+    if (source.childCount !== 1 || !image || image.attrs.src !== replacement.attrs.gitlabCanonicalSrc)
+      throw new Error('GITLAB_MEDIA_REPLACEMENT_SOURCE_MISMATCH');
+    const updated = this.node!.type.create({ ...this.node!.attrs,
+      src: replacement.attrs.src, gitlabCanonicalSrc: replacement.attrs.gitlabCanonicalSrc,
+      ...(this.initial.kind === 'image' ? { gitlabCanonicalMissing: false } : {}),
+    }, this.node!.content, this.node!.text, this.node!.marks);
+    return document.copy([block.copy([updated])]);
+  }
   async apply(fields: GitLabMediaFields): Promise<{ status: 'applied' | 'closed' }> {
     const options = this.ready(), { editor } = options;
     if (this.pending) throw new Error('GITLAB_MEDIA_UPDATE_PENDING');
@@ -146,7 +170,9 @@ export class GitLabMediaEditingSession {
     if (!options) return;
     this.cancel.abort(); this.release?.(); this.release = undefined;
     this.options = undefined; this.doc = undefined; this.node = undefined;
-    try { options.changed?.(this.snapshot); options.closed?.(); }
-    catch (error) { try { options.onListenerError?.(error); } catch { /* Closing cannot reverse a committed update. */ } }
+    for (const notify of [() => options.changed?.(this.snapshot), () => options.closed?.()]) {
+      try { notify(); }
+      catch (error) { try { options.onListenerError?.(error); } catch { /* Closing cannot reverse a committed update. */ } }
+    }
   }
 }

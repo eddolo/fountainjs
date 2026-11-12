@@ -1,0 +1,10 @@
+diff --git a/scripts/check-build-budgets.mjs b/scripts/check-build-budgets.mjs
+index 28abf499..abdb97f3 100644
+--- a/scripts/check-build-budgets.mjs
++++ b/scripts/check-build-budgets.mjs
+@@ -728 +728,4 @@ const limits = Object.freeze({
+-  'all CommonJS runtime code': 1424 * kibibyte,
++  // Pipe-table reporting, default/physical-left reimport and nested HTML flow
++  // add 556 bytes, reaching 1,458,674. Add 512 bytes over the previous ceiling;
++  // all other limits stay unchanged.
++  'all CommonJS runtime code': 1424.5 * kibibyte,

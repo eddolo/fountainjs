@@ -252,6 +252,23 @@ playback; a separate keyboard-accessible button selects the document atom.
 Widths/heights accept pixels, percentages or `auto`. Image source projection
 also retains explicit dimensions and surrounding link marks after other edits.
 
+File replacement captures its own media session before opening the native picker.
+`replaceMediaAttachment(file, target)` routes the real upload through the existing
+insertion coordinator, maps the original target through unrelated edits and
+projects only the new canonical/display URL onto the original media node.
+Description, title, dimensions, link marks and custom attributes remain intact.
+Network/render failures retain that same target for retry; a cached upload is not
+uploaded again after a renderer failure. Target conflicts or a different media
+kind refuse replacement, retain the source and expose removal instead of a
+misleading retry. Cancel, permission/capacity refusal and disposal release owned
+sessions. These are private integration interfaces.
+
+GitLab's reader omits audio dimensions from its rendered HTML and uses its own
+standard player size. The codec recovers authored dimensions from unambiguous
+Markdown source, and the properties dialog explains this reader boundary.
+Conflicting/duplicate source dimensions refuse conversion. Dimension retention
+in the editor does not establish audio sizing parity in GitLab's reader.
+
 These contracts cover images, WAV audio and VP8 WebM video in the scoped audits.
 They do not close the original media-menu requirement: iframe/diagram editing,
 drag resizing, all supported codecs, captions/tracks and complete application

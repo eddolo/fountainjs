@@ -67,7 +67,8 @@ export type MarkdownHTMLFlowBlockSource = MarkdownHTMLFlowTextBlockSource
   | { readonly kind: 'image'; readonly src: string; readonly alt: string; readonly title: string; readonly blocks: readonly Node[] }
   | { readonly kind: 'table'; readonly blocks: readonly Node[]; readonly rows: readonly {
     readonly header: boolean; readonly cells: readonly {
-      readonly source: string; readonly align: string; readonly segments: readonly MarkdownHTMLInlineSegment[];
+      readonly source: string; readonly align: string; /** Physical-left pipe delimiter, distinct from inherited default. */ readonly explicitLeft?: true;
+      readonly segments: readonly MarkdownHTMLInlineSegment[];
     }[];
   }[] }
   | { readonly kind: 'container'; readonly tag: 'blockquote' | 'ul' | 'ol' | 'li'; readonly start?: number;
@@ -1856,8 +1857,8 @@ function projectInline(text: string, schema: Schema, references: References, opt
   return inline(text, schema, references, [], undefined, options);
 }
 
-function paragraph(schema: Schema, value: string, references: References, align = 'left', options: MarkdownImportOptions = {}): Node {
-  return schema.node('paragraph', { align }, projectInline(value, schema, references, options));
+function paragraph(schema: Schema, value: string, references: References, align = 'left', options: MarkdownImportOptions = {}, explicitLeft = false): Node {
+  return schema.node('paragraph', { align, ...(explicitLeft && schema.nodes.paragraph?.spec.attrs?.alignExplicit ? { alignExplicit: true } : {}) }, projectInline(value, schema, references, options));
 }
 
 export interface MarkdownHTMLParagraphContext {
@@ -1926,14 +1927,14 @@ function tableAlignment(value: string): 'left' | 'center' | 'right' | null {
   return delimiter.endsWith(':') ? 'right' : 'left';
 }
 
-function tableStart(lines: readonly string[], index: number): { headers: string[]; alignments: ('left' | 'center' | 'right')[] } | null {
+function tableStart(lines: readonly string[], index: number): { headers: string[]; alignments: ('left' | 'center' | 'right')[]; explicitLeft: boolean[] } | null {
   if (index + 1 >= lines.length || !/(^|[^\\])\|/u.test(lines[index])) return null;
   const headers = tableCells(lines[index]);
   const delimiters = tableCells(lines[index + 1]);
   if (headers.length !== delimiters.length) return null;
   const alignments = delimiters.map(tableAlignment);
   return alignments.every((align): align is 'left' | 'center' | 'right' => Boolean(align))
-    ? { headers, alignments }
+    ? { headers, alignments, explicitLeft: delimiters.map((delimiter, cell) => alignments[cell] === 'left' && delimiter.trim().startsWith(':')) }
     : null;
 }
 
@@ -2282,7 +2283,7 @@ type PendingHTMLTextBlockSource =
   | (Omit<PendingHTMLParagraphSource, 'tightList'> & { readonly kind: 'code'; readonly language: string; readonly finalLineBreak: boolean });
 type PendingHTMLBlockSource = PendingHTMLTextBlockSource
   | { readonly kind: 'table'; readonly blocks: readonly Node[]; readonly rows: readonly {
-    readonly header: boolean; readonly cells: readonly { readonly source: string; readonly align: string }[];
+    readonly header: boolean; readonly cells: readonly { readonly source: string; readonly align: string; readonly explicitLeft?: true }[];
   }[] }
   | (Omit<Extract<MarkdownHTMLFlowBlockSource, { kind: 'container' }>, 'children'> & { readonly children: readonly PendingHTMLBlockSource[] })
   | (Omit<Extract<MarkdownHTMLFlowBlockSource, { kind: 'taskList' }>, 'children'> & { readonly children: readonly PendingHTMLBlockSource[] })
@@ -2532,10 +2533,11 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         if (options.parseHTMLFlow) sourceRows.push(Object.freeze({ header: type === 'table_header',
           cells: Object.freeze(table.headers.map((_, cellIndex) => Object.freeze({
             source: values[cellIndex] ?? '', align: table.alignments[cellIndex],
+            ...(table.explicitLeft[cellIndex] ? { explicitLeft: true as const } : {}),
           }))),
         }));
         return table.headers.map((_, cellIndex) => schema.node(type, {}, [paragraph(schema,
-          values[cellIndex] ?? '', references, table.alignments[cellIndex], options)]));
+          values[cellIndex] ?? '', references, table.alignments[cellIndex], options, table.explicitLeft[cellIndex])]));
       };
       rows.push(schema.node('table_row', {}, cells(table.headers, 'table_header')));
       index += 2;

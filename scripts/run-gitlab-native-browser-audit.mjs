@@ -31,7 +31,8 @@ try {
     [
       resolve(root, process.argv.includes('--alert-fixtures') || process.argv.includes('--media-fixtures') ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
-      process.argv.includes('--media') ? '--native-media'
+      process.argv.includes('--media-files') ? '--native-media-files'
+        : process.argv.includes('--media') ? '--native-media'
         : process.argv.includes('--alerts') ? '--native-alerts'
         : process.argv.includes('--code') ? '--native-code'
         : process.argv.includes('--links') ? '--native-links'

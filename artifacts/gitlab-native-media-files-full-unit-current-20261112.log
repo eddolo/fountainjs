@@ -1,0 +1,116 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-protected-table-flow.test.ts (17 tests | 4 failed) 195ms
+   ❯ protected Markdown tables inside optional HTML source flow (17)
+     × retains the complete table, reference marks and alignment through "\n" source and canonical reopening 38ms
+     × retains the complete table, reference marks and alignment through "\r\n" source and canonical reopening 5ms
+     × keeps table identity during surrounding editing and restores cell edits through history/reopening 3ms
+     × keeps complete custom schema defaults instead of using host HTML table readers 5ms
+ ❯ tests/explicit-text-alignment.test.ts (8 tests | 1 failed) 157ms
+   × exports physical left in Word and reports its Markdown loss, including cells 47ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/explicit-text-alignment.test.ts > exports physical left in Word and reports its Markdown loss, including cells
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "detail": StringContaining "physical-left alignment",
+}
+
++ Received:
+[]
+
+ ❯ tests/explicit-text-alignment.test.ts:89:6
+     87|   const table = schema.node('doc', {}, [schema.node('table', {}, [sche…
+     88|   for (const document of [doc, table]) expect(MarkdownExporter.exportW…
+     89|     .toContainEqual(expect.objectContaining({ detail: expect.stringCon…
+       |      ^
+     90| });
+     91|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/markdown-protected-table-flow.test.ts > protected Markdown tables inside optional HTML source flow > retains the complete table, reference marks and alignment through "\n" source and canonical reopening
+ FAIL  tests/markdown-protected-table-flow.test.ts > protected Markdown tables inside optional HTML source flow > retains the complete table, reference marks and alignment through "\r\n" source and canonical reopening
+AssertionError: expected [ { reason: 'error', …(1) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "message": "Structural flow refuses modified Markdown table projections.",
++     "reason": "error",
++   },
++ ]
+
+ ❯ tests/markdown-protected-table-flow.test.ts:23:30
+     21|     const input = source.replaceAll('\n', ending);
+     22|     const parsed = parse(input);
+     23|     expect(parsed.fallbacks).toEqual([]);
+       |                              ^
+     24|     const section = parsed.document.child(0);
+     25|     expect(section.type.name).toBe('html_container');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/markdown-protected-table-flow.test.ts > protected Markdown tables inside optional HTML source flow > keeps table identity during surrounding editing and restores cell edits through history/reopening
+AssertionError: expected [ { reason: 'error', …(1) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "message": "Structural flow refuses modified Markdown table projections.",
++     "reason": "error",
++   },
++ ]
+
+ ❯ tests/markdown-protected-table-flow.test.ts:36:30
+     34|   it('keeps table identity during surrounding editing and restores cel…
+     35|     const parsed = parse(source);
+     36|     expect(parsed.fallbacks).toEqual([]);
+       |                              ^
+     37|     const original = parsed.document.child(0).child(1);
+     38|     const editor = createEditor({ schema: spec, state: EditorState.cre…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/markdown-protected-table-flow.test.ts > protected Markdown tables inside optional HTML source flow > keeps complete custom schema defaults instead of using host HTML table readers
+AssertionError: expected [ { reason: 'error', …(1) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "message": "Structural flow refuses modified Markdown table projections.",
++     "reason": "error",
++   },
++ ]
+
+ ❯ tests/markdown-protected-table-flow.test.ts:93:30
+     91|     } });
+     92|     const parsed = parse(source, target);
+     93|     expect(parsed.fallbacks).toEqual([]);
+       |                              ^
+     94|     expect(parsed.document.child(0).child(1).attrs.applicationId).toBe…
+     95|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  2 failed | 353 passed (355)
+      Tests  5 failed | 5781 passed (5786)
+   Start at  21:25:48
+   Duration  156.72s (environment 44%, import 30%, tests 21%, transform 4%, worker 1%)
+
+    Isolate  355 workers spawned · ~907ms startup each (spawn + environment, per file)
+             at least ~79.63s faster with isolate: false — reuses workers across files instead of one per file

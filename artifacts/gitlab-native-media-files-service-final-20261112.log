@@ -1,0 +1,33 @@
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{
+  "status": "passed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Real picker upload yields a decoded image; invalid size retains its property draft; description/title/width changes, undo/redo and actual clipboard copy preserve the canonical source",
+    "Actual source-mode editing adds an image link; real GitLab rendering reopens the linked image with its title and width intact",
+    "A real empty picker selection leaves the media unchanged; an actual WAV upload cannot replace a linked image, exposes retained upload recovery without a misleading retry, and is removable",
+    "Real offline replacement upload retains its original target; after typing elsewhere, Retry uploads and replaces that same media instead of inserting at the new cursor",
+    "Delete and actual typing stay in the original paragraph; undo restores the image; replacement picker uploads a new file; real offline URL failure retains the draft and online retry applies it",
+    "Actual WAV/VP8 files upload and play through native controls using user clicks; separate selection buttons expose properties without intercepting playback; descriptions, source-only titles and video width remain editable",
+    "Actual native toolbar file chooser uploads an image and text file through authenticated GitLab HTTP; canonical native insertion and one-step image undo/redo pass",
+    "Actual browser image clipboard and native paste upload through GitLab instead of embedding binary data in document JSON",
+    "A real over-limit file blocks Save without changing the server original; explicit removal immediately saves the intact draft and uploads without generated empty formatting carriers",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Actual UI Save retains native media URLs, descriptions, titles and dimensions; the GitLab reader decodes the saved image/audio/video files",
+    "Saved native upload Markdown survives reader rendering; the actual text attachment returns its original bytes through GitLab",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Unauthenticated upload into the private real project is refused by GitLab",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ]
+}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped

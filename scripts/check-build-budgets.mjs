@@ -725,7 +725,10 @@ const limits = Object.freeze({
   // changing document attributes or bypassing custom renderers. Together with
   // caret recovery and explicit node reveal: 1,458,118 bytes (+979 from alerts).
   // Allow 1 KiB total; entry, ESM, CSS and performance limits stay fixed.
-  'all CommonJS runtime code': 1424 * kibibyte,
+  // Pipe-table reporting, default/physical-left reimport and nested HTML flow
+  // add 556 bytes, reaching 1,458,674. Add 512 bytes over the previous ceiling;
+  // all other limits stay unchanged.
+  'all CommonJS runtime code': 1424.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

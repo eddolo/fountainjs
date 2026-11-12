@@ -71,10 +71,19 @@ export function gitlabMediaNodes(labels: Readonly<Record<GitLabPlayableKind, str
 type Element = DefaultTreeAdapterMap['element'];
 const attr = (element: Element, name: string): string | undefined => element.attrs.find(item => item.name === name)?.value;
 const classes = (element: Element): string[] => (attr(element, 'class') ?? '').split(/\s+/u).filter(Boolean);
+function sourceDimensions(text: string | undefined): { width?: string; height?: string } {
+  const declaration = text?.match(/^\{([^{}\r\n]{1,200})\}/u)?.[1];
+  if (!declaration) return {};
+  const attribute = /(?:^|\s+)(width|height)=(?:"([^"]*)"|'([^']*)'|([^\s"'=]+))/gu;
+  const entries = [...declaration.matchAll(attribute)];
+  if (!entries.length || declaration.replace(attribute, '').trim()) return {};
+  if (new Set(entries.map(entry => entry[1])).size !== entries.length) throw new Error('Ambiguous media source dimensions.');
+  return Object.fromEntries(entries.map(entry => [entry[1], gitlabMediaCSSDimension(entry[2] ?? entry[3] ?? entry[4])])) as { width?: string; height?: string };
+}
 export function normalizeGitLabMedia(elements: readonly Element[], source: string, schema: Schema): { handled: Set<Element>; issues: GitLabMarkdownIssue[] } {
   const handled = new Set<Element>(), issues: GitLabMarkdownIssue[] = [];
   const hasPlayable = elements.some(element => classes(element).some(name => ['audio-container', 'video-container'].includes(name)));
-  const candidates: { canonical: string; alt: string; title: string }[] = [];
+  const candidates: { canonical: string; alt: string; title: string; width?: string; height?: string }[] = [];
   if (hasPlayable || source.includes('<')) {
     // GitLab alert titles are literal; keep their syntax out of Markdown source analysis.
     const lines = source.split(/\r\n|\r|\n/u);
@@ -96,7 +105,12 @@ export function normalizeGitLabMedia(elements: readonly Element[], source: strin
       parseHTMLBlock: html => { inspect(html); return null; },
       parseHTMLInline: segments => { segments.forEach(segment => { if (segment.kind === 'html') inspect(segment.html); }); return null; },
     });
-    parsed.descendants(node => { if (['inline_image', 'image_super'].includes(node.type.name)) candidates.push({ canonical: String(node.attrs.src), alt: String(node.attrs.alt), title: String(node.attrs.title ?? '') }); });
+    parsed.descendants((node, path, parent) => {
+      if (!['inline_image', 'image_super'].includes(node.type.name)) return;
+      const following = parent?.content[(path.at(-1) ?? -1) + 1];
+      candidates.push({ canonical: String(node.attrs.src), alt: String(node.attrs.alt), title: String(node.attrs.title ?? ''),
+        ...(following?.isText ? sourceDimensions(following.text) : {}) });
+    });
     if (rawMedia) issues.push({ stage: 'import', code: 'raw-media-source', message: 'The pinned GitLab renderer does not retain raw HTML media. Keep the original source instead of editing an incomplete rendering.' });
   }
   for (const root of elements) {
@@ -117,10 +131,10 @@ export function normalizeGitLabMedia(elements: readonly Element[], source: strin
       if (!isGitLabMediaURL(src) || !isGitLabMediaURL(canonical) || !literal(label)) throw new Error('Invalid media source or description.');
       // GitLab renders title || alt into data-title, omitting the other field.
       const descriptions = new Map(candidates.filter(item => item.canonical === canonical && (item.title || item.alt) === label)
-        .map(item => [JSON.stringify([item.alt, item.title]), item]));
+        .map(item => [JSON.stringify([item.alt, item.title, ...(kinds[0] === 'audio' ? [item.width, item.height] : [])]), item]));
       if (descriptions.size !== 1) throw new Error('The media source description/title cannot be mapped unambiguously.');
-      const { alt, title } = [...descriptions.values()][0]!;
-      const width = gitlabMediaCSSDimension(attr(media, 'width') ?? 'auto'), height = gitlabMediaCSSDimension(attr(media, 'height') ?? 'auto');
+      const matched = [...descriptions.values()][0]!, { alt, title } = matched;
+      const width = gitlabMediaCSSDimension(attr(media, 'width') ?? matched.width ?? 'auto'), height = gitlabMediaCSSDimension(attr(media, 'height') ?? matched.height ?? 'auto');
       root.attrs = [
         ['data-fountain-gitlab-media', kinds[0]!], ['data-media-src', src], ['data-media-canonical', canonical],
         ['data-media-alt', alt], ['data-media-title', title], ['data-media-width', width], ['data-media-height', height],

@@ -31,7 +31,8 @@ const after = JSON.parse(await readFile(manifest));
 for (const [path, digest] of Object.entries(before.files))
   if (after.files[path] !== digest || createHash('sha256').update(await readFile(`${source}/${path}`)).digest('hex') !== digest)
     throw new Error(`Reinstalled source differs: ${path}`);
-await writeFile(new URL(`artifacts/gitlab-native-${before.formatVersion === 5 ? 'media' : 'alert'}-install-roundtrip-20261112.json`, root), JSON.stringify({
+const profile = process.argv.includes('--media-files') ? 'media-files' : before.formatVersion === 5 ? 'media' : 'alert';
+await writeFile(new URL(`artifacts/gitlab-native-${profile}-install-roundtrip-20261112.json`, root), JSON.stringify({
   status: 'passed', formatVersion: before.formatVersion, files, revision: after.revision,
   checks: [`Guarded ${files}-file source rollback succeeds`, `${files - prepared.length} verified additions are removed`,
     'Exact current source generation is reinstalled', `All ${files} source digests match`],

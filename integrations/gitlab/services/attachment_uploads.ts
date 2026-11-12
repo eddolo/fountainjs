@@ -6,6 +6,11 @@ export interface GitLabUploadContext {
   reportProgress(fraction: number): void;
 }
 export type GitLabUploadHandler = (file: File, context: GitLabUploadContext) => Promise<string>;
+export interface GitLabUploadInsertion {
+  readonly operation: 'replace-media';
+  insert(source: (signal: AbortSignal) => Promise<string>, signal: AbortSignal): Promise<SerializedContentResult>;
+  close(): void;
+}
 export interface GitLabUploadSnapshot {
   readonly id: string;
   readonly fileName: string;
@@ -13,6 +18,7 @@ export interface GitLabUploadSnapshot {
   readonly progress: number;
   readonly errorCode?: string;
   readonly source?: string;
+  readonly operation?: 'replace-media';
 }
 interface UploadEntry {
   id: string;
@@ -22,6 +28,7 @@ interface UploadEntry {
   markdown?: string;
   errorCode?: string;
   cancel: AbortController;
+  insertion?: GitLabUploadInsertion;
 }
 
 /** Files remain outside document state; completed tasks release their file handles. */
@@ -45,6 +52,7 @@ export class GitLabAttachmentUploads {
       id: entry.id, fileName: entry.file.name, status: entry.status,
       progress: entry.progress, errorCode: entry.errorCode,
       source: entry.status === 'failed' ? entry.markdown : undefined,
+      ...(entry.insertion ? { operation: entry.insertion.operation } : {}),
     })));
   }
   get hasFailures(): boolean {
@@ -54,15 +62,17 @@ export class GitLabAttachmentUploads {
     return this.destroyed ? 0 : this.capacity - this.entries.size;
   }
 
-  async add(file: File): Promise<SerializedContentResult> {
-    if (this.destroyed) throw new Error('GITLAB_UPLOADS_DESTROYED');
-    if (!this.upload) throw new Error('GITLAB_UPLOAD_ADAPTER_REQUIRED');
-    if (!file || typeof file.name !== 'string' || !file.name || file.name.length > 1024
-      || !Number.isSafeInteger(file.size) || file.size < 0 || typeof file.type !== 'string')
-      throw new TypeError('GITLAB_INVALID_UPLOAD_FILE');
-    if (this.entries.size >= this.capacity) throw new Error('GITLAB_UPLOAD_QUEUE_FULL');
+  async add(file: File, insertion?: GitLabUploadInsertion): Promise<SerializedContentResult> {
+    try {
+      if (this.destroyed) throw new Error('GITLAB_UPLOADS_DESTROYED');
+      if (!this.upload) throw new Error('GITLAB_UPLOAD_ADAPTER_REQUIRED');
+      if (!file || typeof file.name !== 'string' || !file.name || file.name.length > 1024
+        || !Number.isSafeInteger(file.size) || file.size < 0 || typeof file.type !== 'string')
+        throw new TypeError('GITLAB_INVALID_UPLOAD_FILE');
+      if (this.entries.size >= this.capacity) throw new Error('GITLAB_UPLOAD_QUEUE_FULL');
+    } catch (error) { insertion?.close(); throw error; }
     const entry: UploadEntry = { id: `gitlab-upload-${++this.nextId}`, file,
-      status: 'queued', progress: 0, cancel: new AbortController() };
+      status: 'queued', progress: 0, cancel: new AbortController(), insertion };
     this.entries.set(entry.id, entry);
     return this.run(entry);
   }
@@ -82,13 +92,14 @@ export class GitLabAttachmentUploads {
     if (!entry) return false;
     this.entries.delete(id);
     entry.cancel.abort();
+    entry.insertion?.close();
     this.notify();
     return true;
   }
 
   private async run(entry: UploadEntry): Promise<SerializedContentResult> {
     try {
-      const pending = this.insertions.insertFrom(async signal => {
+      const resolveSource = async (signal: AbortSignal): Promise<string> => {
         if (entry.markdown === undefined) {
           entry.status = 'uploading';
           entry.progress = 0;
@@ -111,10 +122,14 @@ export class GitLabAttachmentUploads {
         entry.progress = 1;
         this.notify();
         return entry.markdown;
-      }, entry.cancel.signal);
+      };
+      const pending = entry.insertion
+        ? entry.insertion.insert(resolveSource, entry.cancel.signal)
+        : this.insertions.insertFrom(resolveSource, entry.cancel.signal);
       this.notify();
       const result = await pending;
       this.entries.delete(entry.id);
+      entry.insertion?.close();
       return result;
     } catch (error) {
       if (this.destroyed || entry.cancel.signal.aborted) return { status: 'superseded' };
@@ -132,7 +147,7 @@ export class GitLabAttachmentUploads {
   }
   dispose(): void {
     this.destroyed = true;
-    for (const entry of this.entries.values()) entry.cancel.abort();
+    for (const entry of this.entries.values()) { entry.cancel.abort(); entry.insertion?.close(); }
     this.entries.clear();
   }
 }

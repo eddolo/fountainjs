@@ -29,6 +29,19 @@ it('stores inline playback source separately from its canonical Markdown address
   expect(video.attrs).toMatchObject({ kind: 'video', src: '/-/project/1/uploads/media-fixture/recording.webm',
     gitlabCanonicalSrc: '/uploads/media-fixture/recording.webm', alt: 'Sized video', width: '320px', height: '180px' });
 });
+it('recovers audio dimensions omitted by the actual GitLab renderer instead of losing them after an edit', async () => {
+  const { codec, document, row } = await parse('audio-sized');
+  expect(document.child(0).child(0).attrs).toMatchObject({ width: '240px', height: '54px', title: 'Retained audio title', alt: 'Audio description' });
+  expect(codec.serialize({ doc: append(document) })).toBe(row.source + '\n\nAdded.');
+});
+it('refuses indistinguishable audio with different omitted dimensions instead of assigning the wrong metadata', async () => {
+  const source = fixture('audio-sized').source + '\n\n' + fixture('audio-sized').source.replace('width="240"', 'width="320"');
+  await expect(parse('audio-sized', source)).rejects.toMatchObject({ name: 'GitLabMarkdownConversionError', originalMarkdown: source });
+});
+it('refuses duplicate source dimension declarations without changing or dropping the original source', async () => {
+  const source = fixture('audio-sized').source.replace('width="240"', 'width="240" width="320"');
+  await expect(parse('audio-sized', source)).rejects.toMatchObject({ name: 'GitLabMarkdownConversionError', originalMarkdown: source });
+});
 it('recovers the playable description/title pair when GitLab folds its title into the rendered label', async () => {
   const { codec, document } = await parse('audio-titled');
   expect(document.child(0).child(0).attrs).toMatchObject({ title: 'Retained audio title', alt: 'Audio description' });
