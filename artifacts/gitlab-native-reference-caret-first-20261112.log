@@ -1,0 +1,53 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-reference-editing.test.ts (18 tests | 1 failed) 138ms
+   × blocks saving while resolving, maps surrounding edits and preserves a cursor moved elsewhere 64ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-reference-editing.test.ts > blocks saving while resolving, maps surrounding edits and preserves a cursor moved elsewhere
+AssertionError: expected t{ path: [ +0, 2 ], …(8) } to deeply equal t{ path: [ +0, 2 ], …(4) }
+
+- Expected
++ Received
+
+  t {
+    "endPath": [
+      0,
+      2,
+    ],
+-   "from": 14,
+-   "kind": "text",
++   "from": 0,
++   "kind": "node",
++   "nodePath": [
++     0,
++     1,
++   ],
++   "nodeType": "gitlab_reference",
+    "path": [
+      0,
+      2,
+    ],
+-   "to": 14,
++   "structuralFrom": 8,
++   "structuralTo": 10,
++   "to": 0,
+  }
+
+ ❯ tests/gitlab-reference-editing.test.ts:76:34
+     74|   release({ body: fixture('issue-+').body });
+     75|   await expect(pending).resolves.toEqual({ status: 'applied' });
+     76|   expect(editor.state.selection).toEqual(cursor);
+       |                                  ^
+     77|   expect(service.getSerializedContent()).toContain('still typing');
+     78|   expect(service.getSerializedContent()).toContain(fixture('issue-+').…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  22:03:43
+   Duration  1.33s (transform 73%, import 15%, tests 12%)

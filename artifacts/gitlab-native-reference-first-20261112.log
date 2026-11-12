@@ -1,0 +1,74 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-reference-editing.test.ts (17 tests | 17 failed) 52ms
+   × retains actual renderer source and identifies the selected issue-id reference 22ms
+   × retains actual renderer source and identifies the selected issue-+ reference 5ms
+   × retains actual renderer source and identifies the selected issue-+s reference 3ms
+   × retains actual renderer source and identifies the selected merge-request-id reference 2ms
+   × retains actual renderer source and identifies the selected merge-request-+ reference 2ms
+   × retains actual renderer source and identifies the selected merge-request-+s reference 1ms
+   × retains actual renderer source and identifies the selected qualified-issue reference 1ms
+   × retains actual renderer source and identifies the selected qualified-issue-title reference 2ms
+   × retains actual renderer source and identifies the selected user reference 2ms
+   × retains actual renderer source and identifies the selected label reference 2ms
+   × formats issue-id through the real renderer fixture, saves and undoes exactly once 2ms
+   × formats issue-id through the real renderer fixture, saves and undoes exactly once 1ms
+   × formats issue-+s through the real renderer fixture, saves and undoes exactly once 1ms
+   × formats merge-request-id through the real renderer fixture, saves and undoes exactly once 1ms
+   × formats merge-request-id through the real renderer fixture, saves and undoes exactly once 1ms
+   × formats qualified-issue through the real renderer fixture, saves and undoes exactly once 1ms
+   × deletes only the captured reference and leaves the surrounding paragraph editable, with undo 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected issue-id reference
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected issue-+ reference
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected issue-+s reference
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected merge-request-id reference
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected merge-request-+ reference
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected merge-request-+s reference
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected qualified-issue reference
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected qualified-issue-title reference
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected user reference
+ FAIL  tests/gitlab-reference-editing.test.ts > retains actual renderer source and identifies the selected label reference
+TypeError: service.beginReferenceEdit is not a function
+ ❯ tests/gitlab-reference-editing.test.ts:29:27
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL  tests/gitlab-reference-editing.test.ts > formats issue-id through the real renderer fixture, saves and undoes exactly once
+ FAIL  tests/gitlab-reference-editing.test.ts > formats issue-id through the real renderer fixture, saves and undoes exactly once
+ FAIL  tests/gitlab-reference-editing.test.ts > formats issue-+s through the real renderer fixture, saves and undoes exactly once
+ FAIL  tests/gitlab-reference-editing.test.ts > formats merge-request-id through the real renderer fixture, saves and undoes exactly once
+ FAIL  tests/gitlab-reference-editing.test.ts > formats merge-request-id through the real renderer fixture, saves and undoes exactly once
+ FAIL  tests/gitlab-reference-editing.test.ts > formats qualified-issue through the real renderer fixture, saves and undoes exactly once
+TypeError: service.beginReferenceEdit is not a function
+ ❯ tests/gitlab-reference-editing.test.ts:41:24
+     39|   const { service, editor, calls } = await create(from);
+     40|   const before = editor.state.doc.toJSON();
+     41|   await expect(service.beginReferenceEdit().applyFormat(format)).resol…
+       |                        ^
+     42|   expect(calls.mock.calls.at(-1)?.[0]).toBe(fixture(to).source);
+     43|   expect(service.getSerializedContent()).toBe(fixture(to).source);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL  tests/gitlab-reference-editing.test.ts > deletes only the captured reference and leaves the surrounding paragraph editable, with undo
+TypeError: service.beginReferenceEdit is not a function
+ ❯ tests/gitlab-reference-editing.test.ts:54:18
+     52|   const { service, editor } = await create('mixed');
+     53|   const before = service.getSerializedContent();
+     54|   expect(service.beginReferenceEdit().remove()).toBe(true);
+       |                  ^
+     55|   expect(editor.state.doc.textContent).toBe('Before  after.');
+     56|   expect(insertText(editor, 'replacement')).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  17 failed (17)
+   Start at  22:00:42
+   Duration  1.28s (transform 78%, import 16%, tests 5%, worker 1%)

@@ -4,6 +4,7 @@ export { getGitLabLinkContext } from '../services/link_editing';
 export { getGitLabCodeContext } from '../services/code_editing';
 export { getGitLabAlertContext } from '../services/alert_editing';
 export { getGitLabMediaContext } from '../services/media_editing';
+export { getGitLabReferenceContext } from '../services/reference_editing';
 export {
   EditorView,
   Selection,

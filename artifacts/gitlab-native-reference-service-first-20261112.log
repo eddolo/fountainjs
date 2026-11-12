@@ -1,0 +1,36 @@
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{
+  "status": "failed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Real issue references select without navigating; ID/title/summary changes use the live renderer, retain literal title text and participate in one-step undo/redo",
+    "Actual offline reference resolution retains the draft and source; after typing elsewhere, online retry updates the captured reference and subsequent typing stays at the moved cursor",
+    "An actual merge request supports title/summary display; a project-qualified issue reference retains its qualified source while changing display"
+  ],
+  "error": "Error: expect(locator).toBeVisible() failed\n\nLocator:  getByText('Fountain reference controls fixture: & <review>', { exact: true }).first()\nExpected: visible\nReceived: hidden\nTimeout:  5000ms\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for getByText('Fountain reference controls fixture: & <review>', { exact: true }).first()\n    11 × locator resolved to <div class=\"params-title\">↵Fountain reference controls fixture: & <review>↵</div>\n       - unexpected value \"hidden\"\n"
+}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+node:internal/errors:983
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /home/eddolo/.cache/fountainjs-gitlab-product/toolchain/node-v22.23.1-linux-x64/bin/node /mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/audit-gitlab-product-baseline.mjs --native-references --verify-restart
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:916:11)
+    at execFileSync (node:child_process:952:15)
+    at file:///mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/run-gitlab-native-browser-audit.mjs:29:3 {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 1021,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v22.23.1

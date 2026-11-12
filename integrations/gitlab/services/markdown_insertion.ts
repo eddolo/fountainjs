@@ -13,6 +13,8 @@ import type { SerializedContentCodec, SerializedContentResult } from './serializ
 export interface GitLabInsertionProjection {
   readonly selection: AnySelection;
   project(document: Node, markdown: string): Node;
+  /** Attribute-only replacements retain the user's current selection. */
+  apply?(document: Node): boolean;
 }
 
 export class GitLabInsertionConflict extends Error {
@@ -175,17 +177,21 @@ export class GitLabMarkdownInsertion {
       this.pending.delete(request);
       closeHistory(this.editor);
       const accepted = this.editor.runCommandBatch(() => {
-        if (
-          !this.editor.dispatch(
-            this.editor
-              .createTransaction()
-              .setSelection(target)
-              .setStoredMarks(targetMarks)
-              .setMeta('gitlab$insertionOrigin', { owner: this.origin, target }),
+        if (projection?.apply) {
+          if (!projection.apply(document)) return false;
+        } else {
+          if (
+            !this.editor.dispatch(
+              this.editor
+                .createTransaction()
+                .setSelection(target)
+                .setStoredMarks(targetMarks)
+                .setMeta('gitlab$insertionOrigin', { owner: this.origin, target }),
+            )
           )
-        )
-          return false;
-        if (!insertDocument(this.editor, document)) return false;
+            return false;
+          if (!insertDocument(this.editor, document)) return false;
+        }
         this.codec.serialize({ doc: this.editor.state.doc });
         return true;
       });

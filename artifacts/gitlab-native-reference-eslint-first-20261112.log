@@ -1,0 +1,19 @@
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/content_editor/components/fountain_reference_menu.stories.js
+  23:3   error  Do not nest ternary expressions                      no-nested-ternary
+  25:7   error  Do not nest ternary expressions                      no-nested-ternary
+  31:20  error  Do not nest ternary expressions                      no-nested-ternary
+  49:5   error  Split 'const' declarations into multiple statements  one-var
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/spec/frontend/content_editor/components/fountain_reference_menu_spec.js
+   40:11  error  Use object destructuring                                             prefer-destructuring
+   41:39  error  Async arrow function has no 'await' expression                       require-await
+  137:7   error  Async method 'resolve' has no 'await' expression                     require-await
+  160:22  error  Promise constructor parameters must be named to match "^_?resolve$"  promise/param-names
+  188:22  error  Promise constructor parameters must be named to match "^_?resolve$"  promise/param-names
+  220:22  error  Promise constructor parameters must be named to match "^_?resolve$"  promise/param-names
+
+✖ 10 problems (10 errors, 0 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.

@@ -1,0 +1,241 @@
+FAIL spec/frontend/content_editor/components/fountain_reference_menu_spec.js
+  FountainReferenceMenu
+    ✓ applies the title choice and retains the actual source token (170 ms)
+    ✓ applies the summary choice and retains the actual source token (88 ms)
+    ✓ changes a summary back to its ID (74 ms)
+    ✓ supports merge-request display choices (59 ms)
+    ✓ shows navigation/copy/removal without invented formatting for user (34 ms)
+    ✓ shows navigation/copy/removal without invented formatting for label (28 ms)
+    ✓ keeps read-only navigation/copy available and disables mutations (64 ms)
+    ✓ removes only the reference from surrounding text (26 ms)
+    ✓ retains a failed choice and retries it (88 ms)
+    ✕ keeps a pending draft visible after selection moves and does not steal external focus on completion (57 ms)
+    ✓ Escape cancels a pending request and a late response cannot apply (66 ms)
+    ✓ retains an owned display draft after a conflicting reference update (83 ms)
+    ✓ teardown aborts a pending update (54 ms)
+
+  ● FountainReferenceMenu › keeps a pending draft visible after selection moves and does not steal external focus on completion
+
+    TestingLibraryElementError: Found multiple elements with the role "status"
+
+    Here are the matching elements:
+
+    Ignored nodes: comments, script, style
+    <span
+      aria-label="Loading"
+      class="gl-spinner-container gl-button-icon gl-button-loading-indicator"
+      role="status"
+    >
+      <span
+        class="!gl-align-text-bottom gl-spinner gl-spinner-dark gl-spinner-sm"
+      />
+    </span>
+
+    Ignored nodes: comments, script, style
+    <p
+      class="gl-mb-0 gl-mt-3"
+      role="status"
+    >
+
+        Resolving reference display…
+
+    </p>
+
+    (If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+    Ignored nodes: comments, script, style
+    <section
+      aria-label="Reference controls"
+      class="gl-border-t gl-w-full gl-pt-3"
+      data-testid="native-reference-menu"
+    >
+      <p
+        class="gl-mb-3 gl-break-words"
+      >
+        #75
+      </p>
+
+
+      <form
+        class="gl-flex gl-flex-wrap gl-items-end gl-gap-3"
+      >
+        <div
+          class="form-group gl-form-group gl-mb-0 gl-max-w-full"
+          id="__BVID__119"
+          role="group"
+        >
+          <label
+            class="!gl-block col-form-label"
+            for="fountain-reference-format-1"
+            id="gl-form-group-label-2"
+          >
+
+          Reference display
+
+
+          </label>
+          <div>
+            <span
+              class="gl-form-select-wrapper"
+            >
+              <select
+                class="gl-form-select custom-select"
+                disabled="disabled"
+                id="fountain-reference-format-1"
+              >
+
+                <option
+                  value="id"
+                >
+
+              ID
+
+                </option>
+                <option
+                  value="title"
+                >
+
+              Title
+
+                </option>
+                <option
+                  value="summary"
+                >
+
+              Summary
+
+                </option>
+
+              </select>
+            </span>
+          </div>
+        </div>
+
+        <button
+          aria-disabled="true"
+          class="btn gl-button btn-default btn-sm disabled"
+          type="submit"
+        >
+          <span
+            aria-label="Loading"
+            class="gl-spinner-container gl-button-icon gl-button-loading-indicator"
+            role="status"
+          >
+            <span
+              class="!gl-align-text-bottom gl-spinner gl-spinner-dark gl-spinner-sm"
+            />
+          </span>
+
+
+          <span
+            class="gl-button-text"
+          >
+            Apply reference display
+          </span>
+        </button>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Cancel reference edit
+          </span>
+        </button>
+
+        <a
+          class="btn gl-button btn-default btn-sm"
+          href="/root/fountain-product-integration/-/work_items/75"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Open reference
+          </span>
+        </a>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Copy reference URL
+          </span>
+        </button>
+
+        <button
+          aria-disabled="true"
+          class="btn gl-button btn-danger btn-sm btn-danger-secondary disabled"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Remove reference
+          </span>
+        </button>
+      </form>
+
+      <p
+        class="gl-mb-0 gl-mt-3"
+        role="status"
+      >
+
+        Resolving reference display…
+
+      </p>
+
+
+    </section>
+
+      168 |     fireEvent.click(button('Apply reference display'));
+      169 |     await settle();
+    > 170 |     expect(getByRole(wrapper.element, 'status').textContent).toContain('Resolving reference');
+          |                     ^
+      171 |     service.editor.dispatch(
+      172 |       service.editor.createTransaction().setSelection(Selection.cursor([0, 0], 0)),
+      173 |     );
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getElementError (node_modules/@testing-library/dom/dist/query-helpers.js:20:35)
+      at getMultipleElementsFoundError (node_modules/@testing-library/dom/dist/query-helpers.js:23:10)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:170:21)
+
+  ● FountainReferenceMenu › keeps a pending draft visible after selection moves and does not steal external focus on completion
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 12 passed, 13 total
+Snapshots:   0 total
+Time:        4.355 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/fountain_reference_menu_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-reference-jest-current-20261112.json

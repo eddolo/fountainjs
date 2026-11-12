@@ -1,0 +1,96 @@
+{
+  "scope": "Isolated native reference component states with fixed renderer fixtures; separate from actual GitLab product acceptance",
+  "status": "failed",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "f08fddd36225644e1ba88e2ab4136a2fad0afae91b83a6df1af40c64806c5247",
+  "checks": [
+    "issue/1280px: keyboard submission applies the selected display while retaining its source suffix",
+    "issue/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "title/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "summary/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "merge-request/1280px: keyboard submission applies the selected display while retaining its source suffix",
+    "merge-request/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "user/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "label/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "read-only/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "1280px: failed resolution retains its draft; Escape restores the current reference choice",
+    "failed-resolution/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "conflict/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow"
+  ],
+  "pages": [
+    {
+      "id": "issue",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@5afca1797613952d2b9e7d76b3399236.webm"
+    },
+    {
+      "id": "title",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@b8566f49e910aa16b1faeb116f8813e2.webm"
+    },
+    {
+      "id": "summary",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@30f8738760007f1b9c9c40696a774963.webm"
+    },
+    {
+      "id": "merge-request",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@294b4c6d081c509ad69f682670b4e201.webm"
+    },
+    {
+      "id": "user",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@cbfaa20d52544fc46acc9d4456ede2a5.webm"
+    },
+    {
+      "id": "label",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@c9fb4013399387a06ae4689bc852251c.webm"
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@51deaaf85a8cffa29f92145e5a831d80.webm"
+    },
+    {
+      "id": "failed-resolution",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@308ba6e2c45e917d3172daba63494bc3.webm"
+    },
+    {
+      "id": "conflict",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@59455f9583b60a7e21e4e32c8e576f0c.webm"
+    }
+  ],
+  "sources": {},
+  "error": "Error: expect(locator).toBeDisabled() failed\n\nLocator: getByRole('region', { name: 'Reference controls', exact: true }).getByRole('button', { name: 'Apply reference display', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.disabled\" with timeout 5000ms\n  - waiting for getByRole('region', { name: 'Reference controls', exact: true }).getByRole('button', { name: 'Apply reference display', exact: true })\n"
+}

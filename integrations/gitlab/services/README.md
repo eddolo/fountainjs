@@ -275,6 +275,36 @@ drag resizing, all supported codecs, captions/tracks and complete application
 coverage still require implementation or acceptance evidence. Component renderer
 fixtures are separate from actual upload, playback and persistence journeys.
 
+## Native reference controls
+
+`reference_editing.ts` owns one selected `gitlab_reference` atom. Issue, work-item,
+merge-request and supported epic kinds expose their ID/title choices; summary is
+limited to the kinds for which GitLab defines it. User/label references retain
+copy/navigation/removal without invented display variants. The pinned FOSS
+service acceptance covers actual issue/MR/user/label records and qualified issue
+source; EE-only epic behavior is not established by that journey.
+
+`beginReferenceEdit()` captures the target and `getGitLabReferenceContext(editor)`
+reads its current context. `applyFormat('id' | 'title' | 'summary')` resolves the
+corresponding source through the existing real GitLab renderer. A response must
+contain exactly the expected atom, source, type and destination. Mismatched,
+unresolved or additional content refuses the change with the draft retained.
+
+The insertion coordinator owns request ordering, cancellation and the pending
+save guard. Its optional private `apply` projection commits reference attributes
+without inserting a fragment or moving the user's current selection. Unrelated
+edits map the target; target edits and document replacement conflict/supersede the
+request. Formatting/removal use native history. Network failures remain retryable;
+cancel, supersession, read-only changes and disposal cannot commit a late result.
+Both the service and codec work in pure Node without a fake DOM.
+
+The Vue form captures drafts through a DOM `focusin` event because GitLab's
+select does not forward a component focus event. Open uses a separate tab;
+Copy produces an absolute URL for use outside the editor. Async completion
+preserves external focus. Reference autocomplete, hover cards and broader
+application/role coverage remain separate work. These are private integration
+interfaces, not new public npm exports.
+
 ## Build and real-service evidence
 
 ```sh

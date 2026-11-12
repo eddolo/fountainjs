@@ -1,0 +1,192 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-native-product-integration",
+  "parentRevision": "ff24d0e2c51d7989b81ac126bf57b24e0d4c4300",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Native selected-reference ID/title/summary display through real GitLab rendering, qualified source retention and literal title safety",
+    "Absolute clipboard URLs and real authenticated new-tab navigation, plus user/label removal and native typing/undo",
+    "Mapped draft ownership, pending-save guard, cancellation/supersession, wrong-response refusal and late read-only refusal",
+    "Attribute-only coordinated commits retain the current cursor; async UI completion preserves external focus",
+    "Pure-Node reference editing and DOM-only controls with delegated focus capture for GitLab select widgets"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Linux Chromium",
+    "checks": 18,
+    "issueIID": 77,
+    "report": "artifacts/gitlab-native-references-20261112/report.json",
+    "runtimeSHA256": "f08fddd36225644e1ba88e2ab4136a2fad0afae91b83a6df1af40c64806c5247",
+    "references": {
+      "records": {
+        "projectId": 1,
+        "projectPath": "root/fountain-product-integration",
+        "issueIID": 75,
+        "mergeRequestIID": 1,
+        "label": "Fountain reference & review"
+      },
+      "labelSource": "~\"Fountain reference & review\"",
+      "paragraphSource": "Reference controls: #75+s !1+s @root ~\"Fountain reference & review\"",
+      "expected": [
+        {
+          "original": "#75+s",
+          "type": "issue",
+          "href": "/root/fountain-product-integration/-/work_items/75",
+          "text": "Unassigned"
+        },
+        {
+          "original": "!1+s",
+          "type": "merge_request",
+          "href": "/root/fountain-product-integration/-/merge_requests/1",
+          "text": "Unassigned"
+        },
+        {
+          "original": "root/fountain-product-integration#75+",
+          "type": "issue",
+          "href": "/root/fountain-product-integration/-/work_items/75",
+          "text": "Fountain reference controls fixture: & <review>"
+        }
+      ],
+      "authorURL": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/77",
+      "copiedURL": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/75"
+    },
+    "readerPhases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "errors": [],
+    "recordings": [
+      {
+        "path": "artifacts/gitlab-native-references-20261112/recordings/page@3cba387f771de249291465378c7e2a3f.webm",
+        "bytes": 80730,
+        "sha256": "daeeaf0ea05588ba46ae5c24339275760f15821bf2f569aad31a59a7e3f83c89"
+      },
+      {
+        "path": "artifacts/gitlab-native-references-20261112/recordings/page@8f3ebc4f6eb21802c2a2b055466ceae6.webm",
+        "bytes": 4870700,
+        "sha256": "c1be3f5e240c6744ecbd1c2faaff1ef90988cd4d5ee67fa528dc7788139de8c9"
+      }
+    ],
+    "visualReview": "Title and offline-draft editor states, native controls, saved/reopened/restarted reader, author/new-tab recording evidence and desktop/narrow component states inspected",
+    "scope": "Actual authenticated GitLab renderer, clipboard, navigation, source saving, permissions/reopen/restart; no backend success response fabricated"
+  },
+  "components": {
+    "status": "passed",
+    "states": 12,
+    "checks": 18,
+    "report": "artifacts/gitlab-native-reference-storybook-20261112/report.json",
+    "scope": "Isolated native reference component states with fixed renderer fixtures; separate from actual GitLab product acceptance"
+  },
+  "upstream": {
+    "report": "artifacts/gitlab-native-reference-jest-final-20261112.json",
+    "suites": 9,
+    "passed": 304,
+    "failed": 2,
+    "total": 306,
+    "remainingFailures": [
+      "ContentEditor renders media bubble menu",
+      "ContentEditor renders codeBlock bubble menu"
+    ],
+    "referenceBoundary": "The original existence assertion targets the verified native reference menu, as existing link/alert assertions do; thirteen behavioral component cases and actual service evidence support the adaptation. Code/media requirements remain unchanged and unskipped."
+  },
+  "rootGates": {
+    "units": 5826,
+    "files": 356,
+    "unitLog": "artifacts/gitlab-native-reference-full-unit-complete-20261112.log",
+    "api": "artifacts/gitlab-native-reference-api-final-20261112.log",
+    "declarations": 450,
+    "types": "artifacts/gitlab-native-reference-types-final-20261112.log",
+    "budget": "artifacts/gitlab-native-reference-budget-final-20261112.log",
+    "aggregateCommonJSBytes": 1458674,
+    "aggregateCommonJSLimitBytes": 1458688,
+    "publicLibraryChanges": [],
+    "inheritedPublicGates": "artifacts/gitlab-native-media-files-integration-20261112.json",
+    "inheritedScope": "Package, runtime/headless, format and performance checks belong to the unchanged preceding public-library checkpoint; no public implementation, API, dependency or acceptance-limit change is introduced.",
+    "nativeRuntimeBytes": 1513298,
+    "privateRuntimeGrowthBytes": 9340
+  },
+  "installation": {
+    "files": 17,
+    "formatVersion": 6,
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "sourceRoundtrip": "artifacts/gitlab-native-reference-install-roundtrip-20261112.json",
+    "patchVerification": "artifacts/gitlab-native-reference-patch-verification-20261112.json",
+    "sourceLint": "artifacts/gitlab-native-reference-eslint-final-20261112.log",
+    "build": "artifacts/gitlab-native-reference-rspack-first-20261112.log",
+    "formattingVerification": "artifacts/gitlab-native-reference-lf-verification-20261112.log",
+    "rollbackScope": "Guarded source rollback/reinstall; compiled deployment rollback remains open"
+  },
+  "retainedFindings": [
+    {
+      "path": "artifacts/gitlab-native-reference-first-20261112.log",
+      "finding": "Reference editing API absent before implementation"
+    },
+    {
+      "path": "artifacts/gitlab-native-reference-caret-first-20261112.log",
+      "finding": "Fragment insertion moved the current cursor; fixed with coordinated attribute updates"
+    },
+    {
+      "path": "artifacts/gitlab-native-reference-jest-first-20261112.log",
+      "finding": "Select component did not forward focus; delegated DOM focus capture now owns the draft. Component tests also account for native asynchronous select updates and GitLab disabled semantics."
+    },
+    {
+      "path": "artifacts/gitlab-native-reference-title-locator-failure-20261112/report.json",
+      "finding": "New-tab check selected hidden title metadata; corrected to the actual work-item title"
+    },
+    {
+      "path": "artifacts/gitlab-native-reference-storybook-loading-locator-failure-20261112/report.json",
+      "finding": "Loading announcement changed the button accessible name; corrected the scoped action locator without changing disabled/accessibility assertions"
+    },
+    {
+      "path": "artifacts/gitlab-native-reference-full-unit-first-20261112.log",
+      "finding": "Five-second retained-Yjs timeout during overlapping compilation; unchanged case passes serially and in the quiet complete suite"
+    },
+    {
+      "path": "artifacts/gitlab-native-reference-storybook-build-first-20261112.log",
+      "finding": "Filtered Storybook configuration omitted upstream webpack aliases/preview; reproducible preparation now inherits both"
+    }
+  ],
+  "remaining": [
+    "Reference autocomplete/hover cards, EE-only epic and all-editor-surface acceptance",
+    "Exact untouched-section Markdown spelling after edits in the GitLab bridge; canonical projection remains explicit",
+    "Complete specialized-code and media menus",
+    "Roles, concurrent users, reconnect and complete product workflows",
+    "Full-application cross-engine, physical-device/IME and assistive-technology acceptance",
+    "Earlier reader image intermittency",
+    "Compiled deployment rollback",
+    "Other two complete reference products",
+    "Hosted CI/release/publication"
+  ],
+  "publication": "None; no complete-product or full-parity claim",
+  "sourceHashes": {
+    "docs/ROADMAP.md": "aa5e6af6245e0655f62033ca91cf65b9eab70267df19f2d8da3410ee7413966b",
+    "integrations/gitlab/README.md": "cbbd18ccdd2ff7ec75609ca4e861955a915691d99de26e5cc881a3297696e0d7",
+    "integrations/gitlab/components/fountain_content_editor.vue": "8ffe13ede79102c1d9b39b676caa713f0fc7fa65a8245e04e05b3d84225fb849",
+    "integrations/gitlab/components/fountain_reference_menu.stories.js": "54c6f1489f529e5f325432eed8468b0227e949b53905922fd1c62f5a4c476177",
+    "integrations/gitlab/components/fountain_reference_menu.vue": "a9f04ce0c4faf21f2333db1f598a0fe8c9fe62f72a5e9f638c63282c4e648cd3",
+    "integrations/gitlab/fixtures/reference-live-html.json": "3959b16f2a665b7a80194d1e353b0f34bedcb4e202c891a332afb12eb8ce6192",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-reference-tests.patch": "09d49fe57ea5e480126d7a268df8429e33d4aaf2d2c15c632cc6213f8eb014ae",
+    "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+    "integrations/gitlab/runtime/browser.ts": "a653302816da4909774f42824768a373e93bc9972be11a948ba7cfccf8f573fa",
+    "integrations/gitlab/services/README.md": "c9b90dcbfe31574842c6c1cbfc8e3d1082ec9e8dc198bdc768f7299a9d98b52b",
+    "integrations/gitlab/services/content_editor.ts": "9e4a55618da283c4bbf03af2d0b1c0ee7553914c4693588d01f0c2255da12769",
+    "integrations/gitlab/services/markdown_insertion.ts": "b782f4d206cd062a63992e85b57b1264b8bf7365c437c72994b6aa1e8bd1726c",
+    "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+    "integrations/gitlab/specs/fountain_reference_menu_spec.js": "faebcffbfe2a3a1626cb604ed33a08c0b786698eea39f08ec7a354650025ddd7",
+    "scripts/audit-gitlab-native-references.mjs": "56f46a4028de4fdc630063995d75f611557cf4585c491d71b2e9fa8dcf7b9f47",
+    "scripts/audit-gitlab-product-baseline.mjs": "884b67253d04459b2db803d32220d5153d46b868f5a8a5b8cfdc93cf23ecdd18",
+    "scripts/audit-gitlab-reference-storybook.mjs": "4414501498e47c418b60e0d7c3e9e7d9b2607e907d0131ce5a960fa20dda745e",
+    "scripts/build-gitlab-native-runtime.mjs": "99fc387adcb02869a7193fb503ac75c686fc06fc063f12ffd3b14b8b3bafb5d7",
+    "scripts/capture-gitlab-alert-rendering.mjs": "3e50d28398857d6f9bf76381a3292010c3b85f4bd592c48439ae92007cc7a173",
+    "scripts/check-gitlab-native-install.mjs": "ba3b102427c2ec4d6eeeb497b23807c7d006ef139e66d3a828d91284ee5d57d2",
+    "scripts/check-gitlab-native-patches.mjs": "6fd2d285c233176c564f3af9b0286d7cd69535c19550f6eada6c0274e4a0bd6c",
+    "scripts/install-gitlab-native-browser.mjs": "a8365a0e80871def74cb97c97422047be0e8dfb072f537a535b78a4ea588d91f",
+    "scripts/prepare-gitlab-reference-storybook.mjs": "ebfaf49a9184751c98e427e7ad349f1b5f71283a52e06674a150c622f467cce2",
+    "scripts/prepare-gitlab-reference-tests.mjs": "a78d99e364a0d8a7c843cb780cb14c79ad7d3bfeb20baf09919e92a1fd9c76df",
+    "scripts/run-gitlab-native-browser-audit.mjs": "782527b01990e4977380c377c03c94eb440ec2b9e4a4d0c057647b4d9a438f7f",
+    "tests/gitlab-reference-editing.test.ts": "063da0f1c426610e37eada2b729fcdd98348db2ee70248bd02d6dc484da7897f",
+    "tests/gitlab-reference-navigation.test.ts": "09eb51d04278b72b23bfcef3454fd7e4d027f4dfba74ad2277f16212fa26a152"
+  }
+}

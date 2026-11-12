@@ -29,9 +29,11 @@ try {
   execFileSync(
     process.execPath,
     [
-      resolve(root, process.argv.includes('--alert-fixtures') || process.argv.includes('--media-fixtures') ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      resolve(root, process.argv.includes('--alert-fixtures') || process.argv.includes('--media-fixtures') || process.argv.includes('--reference-fixtures') ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
-      process.argv.includes('--media-files') ? '--native-media-files'
+      ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
+      process.argv.includes('--references') ? '--native-references'
+        : process.argv.includes('--media-files') ? '--native-media-files'
         : process.argv.includes('--media') ? '--native-media'
         : process.argv.includes('--alerts') ? '--native-alerts'
         : process.argv.includes('--code') ? '--native-code'

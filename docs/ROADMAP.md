@@ -2,7 +2,22 @@
 
 Updated 2026-11-12.
 
-Current work hardens real media-file replacement: picker ownership, mapped retry
+The latest GitLab work adds native reference controls: ID/title/summary display,
+absolute URL copy, real new-tab navigation, removal/undo, retained qualified
+source and offline draft recovery without stealing the current cursor. The
+actual-service journey passes **18 checks**, including save/reopen/restart;
+twelve isolated component states pass 18 checks with zero accessibility violations.
+All **5,826 unit tests/356 files**, current types/API and unchanged size checks pass.
+The native reference-render boundary and thirteen new component cases pass.
+GitLab's nine-suite set is **304 passed / 2 failed / 306 total**; specialized code
+and full media requirements remain open. Reference autocomplete/hover cards,
+EE-only epic acceptance, full roles/workflows and the other two complete products
+also remain open. The GitLab bridge still uses canonical serialization after
+edits; exact untouched-section source retention remains separate work. No public
+library/API or size-limit change is introduced.
+[Reference evidence and limits](../integrations/gitlab/README.md#native-reference-controls).
+
+The preceding work hardens real media-file replacement: picker ownership, mapped retry
 targets, preservation of image links/title/description/dimensions, wrong-kind
 refusal and cleanup. The real workflow exposed a shared pipe-table alignment
 defect; direct and nested imports now distinguish implicit/default from explicit

@@ -124,8 +124,8 @@
   "installation": {
     "files": 15,
     "formatVersion": 5,
-    "manifest": "artifacts/gitlab-native-browser-install/install.json",
-    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "manifest": "artifacts/gitlab-native-media-files-checkpoint-install-20261112.json",
+    "runtimeManifest": "artifacts/gitlab-native-media-files-checkpoint-build-20261112.json",
     "sourceRoundtrip": "artifacts/gitlab-native-media-files-install-roundtrip-20261112.json",
     "patchVerification": "artifacts/gitlab-native-media-files-patch-verification-20261112.json",
     "sourceLint": "artifacts/gitlab-native-media-files-eslint-current-20261112.log",

@@ -42,6 +42,7 @@ for (const path of [
   'integrations/gitlab/services/markdown_codec.ts',
   'integrations/gitlab/services/math.ts',
   'integrations/gitlab/services/asset_resolver.ts',
+  'integrations/gitlab/services/reference_editing.ts',
   'integrations/gitlab/plugins/reference_navigation.ts',
   'dist/index.js',
 ])

@@ -23,6 +23,7 @@ import { GitLabCodeEditingSession } from './code_editing';
 import { GitLabAlertEditing } from './alert_editing';
 import type { GitLabPlayableKind } from './media';
 import { GitLabMediaEditingSession, type GitLabMediaSnapshot } from './media_editing';
+import { GitLabReferenceEditingSession, type GitLabReferenceSnapshot } from './reference_editing';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -53,6 +54,7 @@ export class GitLabContentEditor {
   private readonly mediaSessions = new Set<GitLabMediaEditingSession>();
   private linkSession?: GitLabLinkEditingSession;
   private codeSession?: GitLabCodeEditingSession;
+  private referenceSession?: GitLabReferenceEditingSession;
   readonly alerts: GitLabAlertEditing;
   private readonly uploadListeners = new Set<(uploads: readonly GitLabUploadSnapshot[]) => void>();
   private readonly releaseChanges: () => void;
@@ -265,6 +267,21 @@ export class GitLabContentEditor {
     this.codeSession = session;
     return session;
   }
+  beginReferenceEdit(changed?: (snapshot: GitLabReferenceSnapshot) => void): GitLabReferenceEditingSession {
+    this.referenceSession?.close();
+    const session = new GitLabReferenceEditingSession({ editor: this.editor,
+      ensureReady: () => {
+        this.assertAlive();
+        if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
+          throw new GitLabEditorNotReady(this.status);
+      },
+      replace: ({ source, signal, projection }) => this.insertions.insertFrom(() => source, signal, source, projection),
+      validate: doc => { this.codec.serialize({ doc }); },
+      changed, closed: () => { if (this.referenceSession === session) this.referenceSession = undefined; },
+      onListenerError: error => { this.listenerFailure = error; this.reportListenerError?.(error); },
+    });
+    this.referenceSession = session; return session;
+  }
   beginLinkEdit(changed?: (snapshot: GitLabLinkSnapshot) => void): GitLabLinkEditingSession {
     this.linkSession?.close();
     const session = new GitLabLinkEditingSession({ editor: this.editor,
@@ -425,6 +442,8 @@ export class GitLabContentEditor {
     this.linkSession = undefined;
     this.codeSession?.close();
     this.codeSession = undefined;
+    this.referenceSession?.close();
+    this.referenceSession = undefined;
     for (const session of this.mediaSessions) session.close();
     this.mediaSessions.clear();
     this.mediaSession = undefined;

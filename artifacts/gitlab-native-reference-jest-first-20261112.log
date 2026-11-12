@@ -1,0 +1,1070 @@
+FAIL spec/frontend/content_editor/components/fountain_reference_menu_spec.js
+  FountainReferenceMenu
+    ✕ applies the title choice and retains the actual source token (147 ms)
+    ✕ applies the summary choice and retains the actual source token (56 ms)
+    ✕ changes a summary back to its ID (63 ms)
+    ✕ supports merge-request display choices (55 ms)
+    ✓ shows navigation/copy/removal without invented formatting for user (30 ms)
+    ✓ shows navigation/copy/removal without invented formatting for label (28 ms)
+    ✕ keeps read-only navigation/copy available and disables mutations (32 ms)
+    ✓ removes only the reference from surrounding text (27 ms)
+    ✕ retains a failed choice and retries it (92 ms)
+    ✕ keeps a pending draft visible after selection moves and does not steal external focus on completion (91 ms)
+    ✕ Escape cancels a pending request and a late response cannot apply (112 ms)
+    ✕ retains an owned display draft after a conflicting reference update (116 ms)
+    ✕ teardown aborts a pending update (39 ms)
+
+  ● FountainReferenceMenu › applies the title choice and retains the actual source token
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "#75+"
+    Received: "#75"
+
+      76 |     fireEvent.click(button('Apply reference display'));
+      77 |     await settle();
+    > 78 |     expect(service.getSerializedContent()).toBe(fixture(target).source);
+         |                                            ^
+      79 |     expect(
+      80 |       getByRole(wrapper.element, 'link', { name: 'Open reference' }).getAttribute('href'),
+      81 |     ).toContain('/-/work_items/');
+
+      at toBe (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:78:44)
+
+  ● FountainReferenceMenu › applies the summary choice and retains the actual source token
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "#75+s"
+    Received: "#75"
+
+      76 |     fireEvent.click(button('Apply reference display'));
+      77 |     await settle();
+    > 78 |     expect(service.getSerializedContent()).toBe(fixture(target).source);
+         |                                            ^
+      79 |     expect(
+      80 |       getByRole(wrapper.element, 'link', { name: 'Open reference' }).getAttribute('href'),
+      81 |     ).toContain('/-/work_items/');
+
+      at toBe (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:78:44)
+
+  ● FountainReferenceMenu › changes a summary back to its ID
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "#75"
+    Received: "#75+s"
+
+      89 |     fireEvent.submit(field().form);
+      90 |     await settle();
+    > 91 |     expect(service.getSerializedContent()).toBe(fixture('issue-id').source);
+         |                                            ^
+      92 |   });
+      93 |   it('supports merge-request display choices', async () => {
+      94 |     await createComponent({ name: 'merge-request-id' });
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:91:44)
+
+  ● FountainReferenceMenu › supports merge-request display choices
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "!1+s"
+    Received: "!1"
+
+       96 |     fireEvent.submit(field().form);
+       97 |     await settle();
+    >  98 |     expect(service.getSerializedContent()).toBe(fixture('merge-request-+s').source);
+          |                                            ^
+       99 |   });
+      100 |   it.each(['user', 'label'])(
+      101 |     'shows navigation/copy/removal without invented formatting for %s',
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:98:44)
+
+  ● FountainReferenceMenu › keeps read-only navigation/copy available and disables mutations
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      117 |     await createComponent({ editable: false });
+      118 |     expect(field().disabled).toBe(true);
+    > 119 |     expect(button('Apply reference display').disabled).toBe(true);
+          |                                                        ^
+      120 |     expect(button('Remove reference').disabled).toBe(true);
+      121 |     fireEvent.click(button('Copy reference URL'));
+      122 |     await settle();
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:119:56)
+
+  ● FountainReferenceMenu › retains a failed choice and retries it
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "alert"
+
+    Here are the accessible roles:
+
+      group:
+
+      Name "":
+      <div
+        class="form-group gl-form-group gl-mb-0 gl-max-w-full"
+        id="__BVID__99"
+        role="group"
+      />
+
+      --------------------------------------------------
+      combobox:
+
+      Name "Reference display":
+      <select
+        class="gl-form-select custom-select"
+        id="fountain-reference-format-1"
+      />
+
+      --------------------------------------------------
+      option:
+
+      Name "ID":
+      <option
+        value="id"
+      />
+
+      Name "Title":
+      <option
+        value="title"
+      />
+
+      Name "Summary":
+      <option
+        value="summary"
+      />
+
+      --------------------------------------------------
+      button:
+
+      Name "Apply reference display":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="submit"
+      />
+
+      Name "Copy reference URL":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Remove reference":
+      <button
+        class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+        type="button"
+      />
+
+      --------------------------------------------------
+      link:
+
+      Name "Open reference":
+      <a
+        class="btn gl-button btn-default btn-sm"
+        href="/root/fountain-product-integration/-/work_items/75"
+        rel="noopener noreferrer"
+        target="_blank"
+      />
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    <section
+      aria-label="Reference controls"
+      class="gl-border-t gl-w-full gl-pt-3"
+      data-testid="native-reference-menu"
+    >
+      <p
+        class="gl-mb-3 gl-break-words"
+      >
+        #75
+      </p>
+
+
+      <form
+        class="gl-flex gl-flex-wrap gl-items-end gl-gap-3"
+      >
+        <div
+          class="form-group gl-form-group gl-mb-0 gl-max-w-full"
+          id="__BVID__99"
+          role="group"
+        >
+          <label
+            class="!gl-block col-form-label"
+            for="fountain-reference-format-1"
+            id="gl-form-group-label-2"
+          >
+
+          Reference display
+
+
+          </label>
+          <div>
+            <span
+              class="gl-form-select-wrapper"
+            >
+              <select
+                class="gl-form-select custom-select"
+                id="fountain-reference-format-1"
+              >
+
+                <option
+                  value="id"
+                >
+
+              ID
+
+                </option>
+                <option
+                  value="title"
+                >
+
+              Title
+
+                </option>
+                <option
+                  value="summary"
+                >
+
+              Summary
+
+                </option>
+
+              </select>
+            </span>
+          </div>
+        </div>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="submit"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Apply reference display
+          </span>
+        </button>
+
+
+        <a
+          class="btn gl-button btn-default btn-sm"
+          href="/root/fountain-product-integration/-/work_items/75"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Open reference
+          </span>
+        </a>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Copy reference URL
+          </span>
+        </button>
+
+        <button
+          class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Remove reference
+          </span>
+        </button>
+      </form>
+
+
+
+    </section>
+
+      143 |     fireEvent.click(button('Apply reference display'));
+      144 |     await settle();
+    > 145 |     expect(getByRole(wrapper.element, 'alert').textContent).toContain(
+          |                     ^
+      146 |       'display choice are retained',
+      147 |     );
+      148 |     expect(field().value).toBe('title');
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:145:21)
+
+  ● FountainReferenceMenu › retains a failed choice and retries it
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● FountainReferenceMenu › keeps a pending draft visible after selection moves and does not steal external focus on completion
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "status"
+
+    Here are the accessible roles:
+
+      group:
+
+      Name "":
+      <div
+        class="form-group gl-form-group gl-mb-0 gl-max-w-full"
+        id="__BVID__111"
+        role="group"
+      />
+
+      --------------------------------------------------
+      combobox:
+
+      Name "Reference display":
+      <select
+        class="gl-form-select custom-select"
+        id="fountain-reference-format-1"
+      />
+
+      --------------------------------------------------
+      option:
+
+      Name "ID":
+      <option
+        value="id"
+      />
+
+      Name "Title":
+      <option
+        value="title"
+      />
+
+      Name "Summary":
+      <option
+        value="summary"
+      />
+
+      --------------------------------------------------
+      button:
+
+      Name "Apply reference display":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="submit"
+      />
+
+      Name "Copy reference URL":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Remove reference":
+      <button
+        class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+        type="button"
+      />
+
+      --------------------------------------------------
+      link:
+
+      Name "Open reference":
+      <a
+        class="btn gl-button btn-default btn-sm"
+        href="/root/fountain-product-integration/-/work_items/75"
+        rel="noopener noreferrer"
+        target="_blank"
+      />
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    <section
+      aria-label="Reference controls"
+      class="gl-border-t gl-w-full gl-pt-3"
+      data-testid="native-reference-menu"
+    >
+      <p
+        class="gl-mb-3 gl-break-words"
+      >
+        #75
+      </p>
+
+
+      <form
+        class="gl-flex gl-flex-wrap gl-items-end gl-gap-3"
+      >
+        <div
+          class="form-group gl-form-group gl-mb-0 gl-max-w-full"
+          id="__BVID__111"
+          role="group"
+        >
+          <label
+            class="!gl-block col-form-label"
+            for="fountain-reference-format-1"
+            id="gl-form-group-label-2"
+          >
+
+          Reference display
+
+
+          </label>
+          <div>
+            <span
+              class="gl-form-select-wrapper"
+            >
+              <select
+                class="gl-form-select custom-select"
+                id="fountain-reference-format-1"
+              >
+
+                <option
+                  value="id"
+                >
+
+              ID
+
+                </option>
+                <option
+                  value="title"
+                >
+
+              Title
+
+                </option>
+                <option
+                  value="summary"
+                >
+
+              Summary
+
+                </option>
+
+              </select>
+            </span>
+          </div>
+        </div>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="submit"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Apply reference display
+          </span>
+        </button>
+
+
+        <a
+          class="btn gl-button btn-default btn-sm"
+          href="/root/fountain-product-integration/-/work_items/75"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Open reference
+          </span>
+        </a>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Copy reference URL
+          </span>
+        </button>
+
+        <button
+          class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Remove reference
+          </span>
+        </button>
+      </form>
+
+
+
+    </section>
+
+      165 |     fireEvent.click(button('Apply reference display'));
+      166 |     await settle();
+    > 167 |     expect(getByRole(wrapper.element, 'status').textContent).toContain('Resolving reference');
+          |                     ^
+      168 |     service.editor.dispatch(
+      169 |       service.editor.createTransaction().setSelection(Selection.cursor([0, 0], 0)),
+      170 |     );
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:167:21)
+
+  ● FountainReferenceMenu › keeps a pending draft visible after selection moves and does not steal external focus on completion
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● FountainReferenceMenu › Escape cancels a pending request and a late response cannot apply
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Cancel reference edit"
+
+    Here are the accessible roles:
+
+      group:
+
+      Name "":
+      <div
+        class="form-group gl-form-group gl-mb-0 gl-max-w-full"
+        id="__BVID__123"
+        role="group"
+      />
+
+      --------------------------------------------------
+      combobox:
+
+      Name "Reference display":
+      <select
+        class="gl-form-select custom-select"
+        id="fountain-reference-format-1"
+      />
+
+      --------------------------------------------------
+      option:
+
+      Name "ID":
+      <option
+        value="id"
+      />
+
+      Name "Title":
+      <option
+        value="title"
+      />
+
+      Name "Summary":
+      <option
+        value="summary"
+      />
+
+      --------------------------------------------------
+      button:
+
+      Name "Apply reference display":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="submit"
+      />
+
+      Name "Copy reference URL":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Remove reference":
+      <button
+        class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+        type="button"
+      />
+
+      --------------------------------------------------
+      link:
+
+      Name "Open reference":
+      <a
+        class="btn gl-button btn-default btn-sm"
+        href="/root/fountain-product-integration/-/work_items/75"
+        rel="noopener noreferrer"
+        target="_blank"
+      />
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    <section
+      aria-label="Reference controls"
+      class="gl-border-t gl-w-full gl-pt-3"
+      data-testid="native-reference-menu"
+    >
+      <p
+        class="gl-mb-3 gl-break-words"
+      >
+        #75
+      </p>
+
+
+      <form
+        class="gl-flex gl-flex-wrap gl-items-end gl-gap-3"
+      >
+        <div
+          class="form-group gl-form-group gl-mb-0 gl-max-w-full"
+          id="__BVID__123"
+          role="group"
+        >
+          <label
+            class="!gl-block col-form-label"
+            for="fountain-reference-format-1"
+            id="gl-form-group-label-2"
+          >
+
+          Reference display
+
+
+          </label>
+          <div>
+            <span
+              class="gl-form-select-wrapper"
+            >
+              <select
+                class="gl-form-select custom-select"
+                id="fountain-reference-format-1"
+              >
+
+                <option
+                  value="id"
+                >
+
+              ID
+
+                </option>
+                <option
+                  value="title"
+                >
+
+              Title
+
+                </option>
+                <option
+                  value="summary"
+                >
+
+              Summary
+
+                </option>
+
+              </select>
+            </span>
+          </div>
+        </div>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="submit"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Apply reference display
+          </span>
+        </button>
+
+
+        <a
+          class="btn gl-button btn-default btn-sm"
+          href="/root/fountain-product-integration/-/work_items/75"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Open reference
+          </span>
+        </a>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Copy reference URL
+          </span>
+        </button>
+
+        <button
+          class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Remove reference
+          </span>
+        </button>
+      </form>
+
+
+
+    </section>
+
+      22 |   let service;
+      23 |   let render;
+    > 24 |   const button = (name) => getByRole(wrapper.element, 'button', { name });
+         |                                     ^
+      25 |   const field = () => getByRole(wrapper.element, 'combobox', { name: 'Reference display' });
+      26 |   const settle = async () => {
+      27 |     await waitForPromises();
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at button (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:24:37)
+      at Object.button (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:195:23)
+
+  ● FountainReferenceMenu › Escape cancels a pending request and a late response cannot apply
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● FountainReferenceMenu › retains an owned display draft after a conflicting reference update
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "alert"
+
+    Here are the accessible roles:
+
+      group:
+
+      Name "":
+      <div
+        class="form-group gl-form-group gl-mb-0 gl-max-w-full"
+        id="__BVID__135"
+        role="group"
+      />
+
+      --------------------------------------------------
+      combobox:
+
+      Name "Reference display":
+      <select
+        class="gl-form-select custom-select"
+        id="fountain-reference-format-1"
+      />
+
+      --------------------------------------------------
+      option:
+
+      Name "ID":
+      <option
+        value="id"
+      />
+
+      Name "Title":
+      <option
+        value="title"
+      />
+
+      Name "Summary":
+      <option
+        value="summary"
+      />
+
+      --------------------------------------------------
+      button:
+
+      Name "Apply reference display":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="submit"
+      />
+
+      Name "Copy reference URL":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Remove reference":
+      <button
+        class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+        type="button"
+      />
+
+      --------------------------------------------------
+      link:
+
+      Name "Open reference":
+      <a
+        class="btn gl-button btn-default btn-sm"
+        href="/root/fountain-product-integration/-/work_items/75"
+        rel="noopener noreferrer"
+        target="_blank"
+      />
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    <section
+      aria-label="Reference controls"
+      class="gl-border-t gl-w-full gl-pt-3"
+      data-testid="native-reference-menu"
+    >
+      <p
+        class="gl-mb-3 gl-break-words"
+      >
+        Updated elsewhere
+      </p>
+
+
+      <form
+        class="gl-flex gl-flex-wrap gl-items-end gl-gap-3"
+      >
+        <div
+          class="form-group gl-form-group gl-mb-0 gl-max-w-full"
+          id="__BVID__135"
+          role="group"
+        >
+          <label
+            class="!gl-block col-form-label"
+            for="fountain-reference-format-1"
+            id="gl-form-group-label-2"
+          >
+
+          Reference display
+
+
+          </label>
+          <div>
+            <span
+              class="gl-form-select-wrapper"
+            >
+              <select
+                class="gl-form-select custom-select"
+                id="fountain-reference-format-1"
+              >
+
+                <option
+                  value="id"
+                >
+
+              ID
+
+                </option>
+                <option
+                  value="title"
+                >
+
+              Title
+
+                </option>
+                <option
+                  value="summary"
+                >
+
+              Summary
+
+                </option>
+
+              </select>
+            </span>
+          </div>
+        </div>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="submit"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Apply reference display
+          </span>
+        </button>
+
+
+        <a
+          class="btn gl-button btn-default btn-sm"
+          href="/root/fountain-product-integration/-/work_items/75"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Open reference
+          </span>
+        </a>
+
+        <button
+          class="btn gl-button btn-default btn-sm"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Copy reference URL
+          </span>
+        </button>
+
+        <button
+          class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+          type="button"
+        >
+
+
+          <span
+            class="gl-button-text"
+          >
+            Remove reference
+          </span>
+        </button>
+      </form>
+
+
+
+    </section>
+
+      207 |     );
+      208 |     await settle();
+    > 209 |     expect(getByRole(wrapper.element, 'alert').textContent).toContain('reference changed');
+          |                     ^
+      210 |     expect(field().value).toBe('title');
+      211 |     expect(button('Apply reference display').disabled).toBe(true);
+      212 |     fireEvent.click(button('Cancel reference edit'));
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:209:21)
+
+  ● FountainReferenceMenu › retains an owned display draft after a conflicting reference update
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● FountainReferenceMenu › teardown aborts a pending update
+
+    TypeError: resolve is not a function
+
+      227 |     const before = service.editor.state.doc;
+      228 |     wrapper.destroy();
+    > 229 |     resolve({ body: fixture('issue-+').body });
+          |     ^
+      230 |     await settle();
+      231 |     expect(service.editor.state.doc).toBe(before);
+      232 |     expect(service.pendingInsertions).toBe(0);
+
+      at Object.resolve (spec/frontend/content_editor/components/fountain_reference_menu_spec.js:229:5)
+
+  ● FountainReferenceMenu › teardown aborts a pending update
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+Test Suites: 1 failed, 1 total
+Tests:       10 failed, 3 passed, 13 total
+Snapshots:   0 total
+Time:        6.888 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/fountain_reference_menu_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-reference-jest-first-20261112.json

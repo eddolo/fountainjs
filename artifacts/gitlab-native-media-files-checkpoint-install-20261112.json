@@ -1,0 +1,53 @@
+{
+  "formatVersion": 5,
+  "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source",
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "scope": "Native browser integration in progress; full toolbar/providers/dialect acceptance remains open",
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1503958,
+    "sha256": "5d9338b596e7de7a14133931fd759df492907cb6b66c10f404fa00411792ac67",
+    "parentRevision": "062249ef47ce9e5014107d23763621b44adf4b6b",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "3302c3a2afbba6794ee7f3f8f21f8116459114dfb23409b29e662856f77e8eb1",
+      "integrations/gitlab/services/content_editor.ts": "3192a0e087a4b1a252fec7ca9a82d674b2dd293eb522bb2aaca20ed4d1b7b4fa",
+      "integrations/gitlab/services/markdown_insertion.ts": "688526b5c6bb60a5f3dc2c38a5e7874cccc19c71c80309524ceae059967affb7",
+      "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+      "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+      "integrations/gitlab/services/code_editing.ts": "437a6f4740d6b28287d0902b4f2d6913d8ff5ce294be6687b6ca160af7479763",
+      "integrations/gitlab/services/code_rendering.ts": "624aaf0515f5f91950918becf919c1a4e9c8e1c1bab98a18d775af87df2584ea",
+      "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+      "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+      "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+      "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+      "integrations/gitlab/services/media_editing.ts": "e49a88c4fb95c43b4f58b4490241429c7e7fd15783d99d2dd84c65dc2097f671",
+      "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+      "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+      "integrations/gitlab/services/markdown_codec.ts": "c3cbcb50d0b8a8d69069b6f4d1f078f6905ad20a7964d169dcc25bce6e40cf0f",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "caea8f3c22f3bd3ca90fa7015ff2260cb0c8d5d9974fb9906c7cdbe2a79189f3",
+      "integrations/gitlab/plugins/reference_navigation.ts": "7c7137d249f8887a93f7fe089961a0377115f8d6c71323e8d4165d21e384d4b0",
+      "dist/index.js": "6ac62e3acacc8735fffc4851fe091734de6fe791c42ff3938a15ad84c128be69"
+    }
+  },
+  "preparedComponentSHA256": "cdd3091a8a8cddccbd9b48c231edb38197f73a26fd8e35d9932b90d3579d6bad",
+  "files": {
+    "babel.config.js": "7cc8ec862fb6e42c7e26b3fb29410094b4f49f602f2ed02e6ec6132ac32a20a4",
+    "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "f4d35a1425d46cc0e4de1caae146f3a035c9c853da8ba08d241c8e12c3cffe10",
+    "app/assets/javascripts/content_editor/components/content_editor.vue": "9003bc8c21bd609f1f9df68da387aff5476e4db5d127762fa7454042e5ad1b97",
+    "app/assets/javascripts/content_editor/components/fountain_editor_surface.vue": "3ee0a4a3f8de0bcfd0efc009c16663cca696b0679d41f1d6c031706d117aff27",
+    "app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue": "24cabb9dae910b90b7e05752f5e3eb831d63eb28df8cdac3ea91107b4adc0cca",
+    "app/assets/javascripts/content_editor/components/fountain_link_menu.vue": "9bdf449c4181c9d8ae9c4aecd5bc8a2c6849235a6fdc17d7885b0b3180a712c9",
+    "app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js": "da2df3c21cc67b6062c9e8877f04c43567058d8d20655c1ee559593202180889",
+    "app/assets/javascripts/content_editor/components/fountain_code_menu.vue": "c520e1ea45188e7a9847cf46fdac3dac2a2b5b251262b41a16103698767fd5f7",
+    "app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js": "31bfae7301e808c3dedffcb69903f1dc686d625d2b3ffbe37406c91bce165e01",
+    "app/assets/javascripts/content_editor/components/fountain_alert_menu.vue": "c2a7215049f554af61e0f7d219fb8d873c3f33bea0064fb833acece195f797e9",
+    "app/assets/javascripts/content_editor/components/fountain_alert_menu.stories.js": "2fd80eeed8427dcf46ccbb6f90033f00a6e6820add2eafb6ff471ab5ceb5d426",
+    "app/assets/javascripts/content_editor/components/fountain_media_menu.vue": "e82d339aa84952dbd5a03835fa53076e543c50d127d6670c7c21d640528b0398",
+    "app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js": "c21780ebdac982dd08df5335214ea013eb07cdc68bf77e1b3f4db3cddce02565",
+    "app/assets/javascripts/content_editor/services/fountain_runtime.js": "5d9338b596e7de7a14133931fd759df492907cb6b66c10f404fa00411792ac67",
+    "app/assets/javascripts/content_editor/services/fountain_runtime.css": "d6e6fb3226b609645cb19791d4351cbf45f7ac6f2de42a6e85157865806f7e26"
+  }
+}

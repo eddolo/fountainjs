@@ -1016,6 +1016,53 @@ component states, including native picker ownership after cursor movement at
 desktop/360px widths. Those fixtures do not substitute for real service evidence.
 No full-product/parity completion or publication is claimed.
 
+### Native reference controls
+
+Native reference selection now exposes ID/title/summary choices, URL copy/open
+and removal. Real GitLab issue and merge-request records supply the rendered
+labels; the saved source retains `+`/`+s` and explicit project qualification.
+User and label references offer navigation/copy/removal without unsupported
+format choices. Formatting preserves surrounding marks and the user's current
+cursor. Pending requests block saving; offline failure retains the draft, and
+retry updates its captured target after unrelated editing. Cancellation,
+supersession, target conflict and late read-only changes cannot apply stale data.
+
+The recorded actual-service journey passes **18 checks** on issue 77, including
+real renderer calls, actual clipboard copy/new-tab navigation, remove/type/undo,
+offline recovery, persistence of the final serialized bytes, reader reopen, anonymous refusal and
+application restart. The issue/MR/user/label fixtures come from actual seeded
+records in the pinned private task project. Twelve isolated desktop/360px states
+pass **18 checks** with zero accessibility violations and page errors; those fixed
+component fixtures are separate from service acceptance.
+
+The bridge retains exact Markdown for unchanged documents; edits can use its
+canonical projection. This checkpoint preserves reference tokens/qualification
+and final saved bytes, and does not establish exact spelling retention for every
+untouched section after editing. That remains additional bridge work.
+
+The native host-render assertion now targets `FountainReferenceMenu`, following
+the existing link/alert adapters. It still requires the component to exist, and
+thirteen additional component cases verify behavior. The nine-suite upstream set
+is **304 passed / 2 failed / 306 total**; the original incomplete specialized-code
+and media-menu requirements remain unchanged and unskipped. The reference test
+patch also retains actual renderer fixtures and reconstructs its native boundary
+after the preceding nine ordered patches.
+
+Source installation now guards seventeen owned files (format 6), including the
+new component/stories. No public library code, API surface or size ceiling changes
+are required. All **5,826 root tests/356 files**, current types, 450-file public
+API verification and unchanged size checks pass. The inherited package/runtime/
+format/performance results belong to the preceding public-library checkpoint;
+this private integration does not rebuild or change those library sources.
+Reference autocomplete/hover cards, EE-only epic acceptance, all
+editor surfaces, real role/concurrency coverage and full-product release checks
+remain open. This does not complete GitLab or either other reference product.
+
+[Reference contracts](services/README.md#native-reference-controls),
+[checkpoint evidence](../../artifacts/gitlab-native-reference-integration-20261112.json),
+[actual journey](../../artifacts/gitlab-native-references-20261112/report.json),
+[component evidence](../../artifacts/gitlab-native-reference-storybook-20261112/report.json).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

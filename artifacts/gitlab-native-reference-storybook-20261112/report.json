@@ -1,0 +1,128 @@
+{
+  "scope": "Isolated native reference component states with fixed renderer fixtures; separate from actual GitLab product acceptance",
+  "status": "passed",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "f08fddd36225644e1ba88e2ab4136a2fad0afae91b83a6df1af40c64806c5247",
+  "checks": [
+    "issue/1280px: keyboard submission applies the selected display while retaining its source suffix",
+    "issue/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "title/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "summary/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "merge-request/1280px: keyboard submission applies the selected display while retaining its source suffix",
+    "merge-request/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "user/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "label/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "read-only/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "1280px: failed resolution retains its draft; Escape restores the current reference choice",
+    "failed-resolution/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "conflict/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "Pending display ownership survives movement to unrelated text; Cancel releases it without changing the reference",
+    "pending/1280px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "issue/360px: keyboard submission applies the selected display while retaining its source suffix",
+    "issue/360px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow",
+    "360px: failed resolution retains its draft; Escape restores the current reference choice",
+    "failed-resolution/360px: absolute clipboard URL, zero accessibility violations/page errors and no horizontal overflow"
+  ],
+  "pages": [
+    {
+      "id": "issue",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@28ff9a74336d6af443c846189a389c05.webm"
+    },
+    {
+      "id": "title",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@75ba7b0453da71445ab93a0b12d1ac71.webm"
+    },
+    {
+      "id": "summary",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@a74554ac09b7f9465578a118fd55ec60.webm"
+    },
+    {
+      "id": "merge-request",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@8005f0266ba564b81011801458c7d895.webm"
+    },
+    {
+      "id": "user",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@aa0fad8debc1099e268b3ef8afe082fc.webm"
+    },
+    {
+      "id": "label",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@f72c481e8d52712ae02a61140f1a9c07.webm"
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@52b05171ebe5e0590964da3ca725cee2.webm"
+    },
+    {
+      "id": "failed-resolution",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@3fd93c91e07af7274e945a2e9369be7a.webm"
+    },
+    {
+      "id": "conflict",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@4db39c7e6b387bc94968c96d460a6345.webm"
+    },
+    {
+      "id": "pending",
+      "width": 1280,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@f9cfb09e6ea07bcd440ad72a9d47982c.webm"
+    },
+    {
+      "id": "issue",
+      "width": 360,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@62653b8d6d9c80a07b07a995e42fc03e.webm"
+    },
+    {
+      "id": "failed-resolution",
+      "width": 360,
+      "initialViolations": [],
+      "violations": [],
+      "errors": [],
+      "recording": "artifacts/gitlab-native-reference-storybook-20261112/recordings/page@c3d58bea0640bd2a393197c71417b829.webm"
+    }
+  ],
+  "sources": {
+    "app/assets/javascripts/content_editor/components/fountain_reference_menu.vue": "1a835e04f0e20c7cca1352bb62815645254c4edef0c1c2cd4d6077194b8aad26",
+    "app/assets/javascripts/content_editor/components/fountain_reference_menu.stories.js": "413153d4013334b0a188a280b7b01e3b83b918af2113f5e6db1b466bc596bd29"
+  }
+}

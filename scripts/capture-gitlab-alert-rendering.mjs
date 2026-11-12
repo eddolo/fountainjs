@@ -6,6 +6,8 @@ import { chromium, expect } from '@playwright/test';
 if (process.platform !== 'linux') throw new Error('Run beside the isolated Linux GitLab deployment.');
 const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
 const media = process.argv.includes('--media');
+const references = process.argv.includes('--references');
+if (media && references) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -42,7 +44,44 @@ try {
   const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
   if (preview.origin !== base) throw new Error('Nonlocal preview');
   preview.searchParams.set('no_header_anchors', 'true');
-  const inputs = media ? [
+  let referenceRecords;
+  if (references) {
+    const title = 'Fountain reference controls fixture: & <review>';
+    const issues = await request(`/api/v4/projects/${project.id}/issues?search=Fountain%20reference%20controls%20fixture&in=title`);
+    const issue = issues.find(item => item.title === title) ?? await request(`/api/v4/projects/${project.id}/issues`, {
+      title, description: 'Real issue used to verify native reference ID, title and summary controls.',
+    });
+    const branch = 'fountain-reference-controls';
+    const requests = await request(`/api/v4/projects/${project.id}/merge_requests?state=all&source_branch=${branch}`);
+    let mergeRequest = requests.find(item => item.title === title);
+    if (!mergeRequest) {
+      const branches = await request(`/api/v4/projects/${project.id}/repository/branches?search=${branch}`);
+      if (!branches.some(item => item.name === branch)) await request(`/api/v4/projects/${project.id}/repository/commits`, {
+        branch, start_branch: project.default_branch, commit_message: 'Add real reference-control fixture',
+        actions: [{ action: 'create', file_path: '.fountain/reference-controls.md', content: 'Native Fountain reference-control acceptance fixture.\n' }],
+      });
+      mergeRequest = await request(`/api/v4/projects/${project.id}/merge_requests`, {
+        source_branch: branch, target_branch: project.default_branch, title,
+        description: 'Real merge request for native editor reference formatting acceptance.',
+      });
+    }
+    const labels = await request(`/api/v4/projects/${project.id}/labels?search=Fountain%20reference`);
+    const label = labels.find(item => item.name === 'Fountain reference & review') ?? await request(`/api/v4/projects/${project.id}/labels`, {
+      name: 'Fountain reference & review', color: '#6699cc',
+    });
+    referenceRecords = { projectId: project.id, projectPath: project.path_with_namespace,
+      issueIID: issue.iid, mergeRequestIID: mergeRequest.iid, label: label.name };
+  }
+  const inputs = references ? [
+    ...['', '+', '+s'].map(suffix => [`issue-${suffix || 'id'}`, `#${referenceRecords.issueIID}${suffix}`]),
+    ...['', '+', '+s'].map(suffix => [`merge-request-${suffix || 'id'}`, `!${referenceRecords.mergeRequestIID}${suffix}`]),
+    ['qualified-issue', `${project.path_with_namespace}#${referenceRecords.issueIID}`],
+    ['qualified-issue-title', `${project.path_with_namespace}#${referenceRecords.issueIID}+`],
+    ['user', '@root'], ['label', `~"${referenceRecords.label}"`],
+    ['not-found', '#999999'], ['not-found-expanded', '#999999+s'],
+    ['mixed', `Before #${referenceRecords.issueIID} after.`], ['code', `\`#${referenceRecords.issueIID}\``],
+    ['issue-link', `[Issue](${project.web_url}/-/issues/${referenceRecords.issueIID})`],
+  ] : media ? [
     ['image', '![Original figure](/uploads/media-fixture/figure.png "Figure title")'],
     ['image-sized', '![Sized figure](/uploads/media-fixture/figure.png){width="320" height="180"}'],
     ['image-percent', '![Responsive figure](/uploads/media-fixture/figure.png){width="50%"}'],
@@ -81,10 +120,11 @@ try {
     if (typeof result.body !== 'string') throw new Error('Missing renderer body');
     fixtures.push({ name, source, body: result.body });
   }
-  await writeFile(new URL(`integrations/gitlab/fixtures/${media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
+  await writeFile(new URL(`integrations/gitlab/fixtures/${references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
     scope: media ? 'Authenticated renderer structure fixtures; asset URLs are illustrative, not uploaded/playback acceptance' : 'Authenticated pinned GitLab renderer fixtures; not browser product acceptance',
+    ...(references ? { referenceRecords } : {}),
     upstream: { revision: pin.commit, version: version.version, packagedRevision: version.revision }, fixtures,
   }, null, 2) + '\n');
-  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: media ? 'media' : 'alerts' }));
+  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: references ? 'references' : media ? 'media' : 'alerts' }));
 } catch (error) { console.error(String(error).replaceAll(password, '[redacted]')); process.exitCode = 1; }
 finally { await context.close(); await browser.close(); }

@@ -1,9 +1,25 @@
 // @vitest-environment jsdom
 import { afterEach, expect, it } from 'vitest';
-import { CoreSchemaSpec, EditorView, createEditor } from 'fountainjs-editor';
+import { CoreSchemaSpec, EditorView, NodeSelection, createEditor } from 'fountainjs-editor';
 import { createGitLabReferenceNavigationPlugin } from '../integrations/gitlab/plugins/reference_navigation';
+import { createGitLabSchemaSpec } from '../integrations/gitlab/services/markdown_codec';
+import { getGitLabReferenceContext } from '../integrations/gitlab/services/reference_editing';
 
 const dispose: (() => void)[] = [];
+
+it('selects the whole native reference on an ordinary click so its contextual controls are available', () => {
+  const editor = createEditor({ schema: createGitLabSchemaSpec(), plugins: [createGitLabReferenceNavigationPlugin()],
+    content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'gitlab_reference',
+      attrs: { original: '#1', label: '#1', href: '/issues/1', referenceType: 'issue' } }] }] } });
+  const mount = document.createElement('div'); document.body.append(mount);
+  const view = new EditorView(mount, editor);
+  dispose.push(() => { view.destroy(); editor.destroy(); mount.remove(); });
+  const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 });
+  view.dom.querySelector('a')!.dispatchEvent(event);
+  expect(event.defaultPrevented).toBe(true);
+  expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+  expect(getGitLabReferenceContext(editor)).toMatchObject({ original: '#1', path: [0, 0], formats: ['id', 'title', 'summary'] });
+});
 afterEach(() => dispose.splice(0).forEach(action => action()));
 
 it('prevents native reference navigation in the editable view without removing its link', () => {
