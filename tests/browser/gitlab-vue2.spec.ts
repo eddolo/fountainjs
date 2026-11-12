@@ -2,6 +2,41 @@ import { expect, test } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';
 import mathFixtures from '../../integrations/gitlab/fixtures/math-html.json' with { type: 'json' };
 
+test('paints the empty native document placeholder and follows real focus, typing, deletion and undo', async ({ page }, info) => {
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  const source = page.getByRole('textbox', { name: 'Markdown replacement source', exact: true });
+  const paint = () => editor.evaluate(element => {
+    const content = getComputedStyle(element, '::before').content;
+    // Firefox retains attr() in computed content; the screenshot verifies paint.
+    return content === 'attr(data-placeholder)' ? JSON.stringify(element.getAttribute('data-placeholder')) : content;
+  });
+  await source.fill('');
+  await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+  await expect(editor).toHaveAttribute('data-fountain-empty', '');
+  await expect.poll(paint).toBe('"Write your document"');
+  await page.screenshot({ path: info.outputPath('empty-placeholder.png') });
+  await editor.click();
+  await expect.poll(paint).toBe('none');
+  await page.keyboard.type('A real draft');
+  await expect(editor).not.toHaveAttribute('data-fountain-empty');
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.press('Backspace');
+  await expect(editor).toHaveAttribute('data-fountain-empty', '');
+  await expect.poll(paint).toBe('none');
+  await source.focus();
+  await expect.poll(paint).toBe('"Write your document"');
+  await page.getByRole('button', { name: 'Undo document', exact: true }).click();
+  await expect(editor).toHaveText('A real draft');
+  await expect(editor).not.toHaveAttribute('data-fountain-empty');
+  await expect.poll(paint).toBe('none');
+  await source.fill('---');
+  await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+  await expect(editor.locator('hr')).toBeVisible();
+  await expect(editor).not.toHaveAttribute('data-fountain-empty');
+  await expect.poll(paint).toBe('none');
+});
+
 test('keeps actual Vue 2 host mode changes and view remounts on one Fountain document history', async ({
   page,
 }, info) => {

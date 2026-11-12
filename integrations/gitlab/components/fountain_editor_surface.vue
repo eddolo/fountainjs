@@ -53,6 +53,7 @@ export default {
         if (this.editor.isDestroyed) throw new Error('FOUNTAIN_EDITOR_DESTROYED');
         this.fountainView = new EditorView(this.$refs.mount, this.editor, this.options);
         const { dom } = this.fountainView;
+        if (dom.hasAttribute('aria-labelledby')) dom.removeAttribute('aria-label');
         dom.addEventListener('focusin', this.onFocus);
         dom.addEventListener('focusout', this.onBlur);
         dom.addEventListener('keydown', this.onKeydown);

@@ -385,6 +385,9 @@ export class EditorView {
       : undefined;
     const reusableNodeViews = allowReuse ? this.reusableNodeViewMap(document, transaction) : new Map<string, MountedNodeView>();
     this.mutationObserver?.disconnect();
+    this.dom.toggleAttribute('data-fountain-empty', document.childCount === 0 || document.childCount === 1
+      && document.child(0).type === this.editor.state.schema.nodes.paragraph
+      && document.child(0).content.every(node => node.isText && !node.text));
     const mounted: MountedNodeView[] = [];
     const context = { view: this, nodeViews: mounted, reusableNodeViews, decorations: contentDecorations };
     const virtualPlan = this.virtualPlan(document);

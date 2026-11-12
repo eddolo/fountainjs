@@ -1,0 +1,5 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/mathjax-document-renderer.test.ts (0 test)
+ ❯ tests/headless-docx-demo.test.tsx (0 test)

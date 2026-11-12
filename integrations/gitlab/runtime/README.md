@@ -164,9 +164,12 @@ For upstream host tests, apply
 `integrations/gitlab/patches/gitlab-19.5.3-native-host-tests.patch` after the
 prepared current-document patch and native installation. It mounts the actual
 native surface and replaces two Tiptap-only test setup calls with native
-transactions. All 75 host cases pass; other upstream component/form suites still
-need native migration and verification. Forward/reverse application and exact
-live-spec identity are checked without changing the main Git index.
+transactions. Then apply `gitlab-19.5.3-native-component-tests.patch` from the same
+directory. It migrates the actual surface, service, history and event setup while
+retaining attachment/contextual-menu requirements. The three suites currently
+pass 163 of 170 cases; seven feature cases remain failing. All 75 host and 40
+form cases pass. Forward/reverse checks reconstruct both native specs exactly
+without changing the main index; no skips or timeout increases waive failures.
 
 The installer checks source revision, prepared-file digests, runtime input hashes
 and existing owned-file hashes. It rejects unrecognized edits and symlinks. It
@@ -186,6 +189,8 @@ Run the real-service audit inside Linux from the Fountain checkout:
 node scripts/run-gitlab-native-browser-audit.mjs
 # Include real clipboard insertion, unsupported-source recovery and undo/redo:
 node scripts/run-gitlab-native-browser-audit.mjs --insertion
+# Also inspect actual empty-comment paint and failed document-load recovery:
+node scripts/run-gitlab-native-browser-audit.mjs --component
 ```
 
 Use `PLAYWRIGHT_BROWSERS_PATH` when the installed Linux browser lives outside
@@ -202,8 +207,8 @@ node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source --restore
 Restore refuses changed installed files, restores the recorded host/configuration
 files and removes only verified installer-owned files. Rebuild before serving
 that restored frontend, or recreate with the original base Compose profile.
-Full native toolbar/menus, upload/suggestion/provider adapters, replacement-source
-recovery controls, remaining upstream native-test migration, accessibility and
+Full native toolbar/menus, upload/suggestion/provider adapters, direct source-mode
+recovery, remaining upstream native-test migration, accessibility and
 cross-browser/product acceptance remain necessary. Passing a selected real
 journey does not close them.
 

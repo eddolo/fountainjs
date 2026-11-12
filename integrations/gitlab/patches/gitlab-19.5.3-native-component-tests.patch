@@ -1,0 +1,519 @@
+diff --git a/spec/frontend/content_editor/components/content_editor_spec.js b/spec/frontend/content_editor/components/content_editor_spec.js
+index f173eb8a..13d27040
+--- a/spec/frontend/content_editor/components/content_editor_spec.js
++++ b/spec/frontend/content_editor/components/content_editor_spec.js
+@@ -1,27 +1,27 @@
+-import { GlAlert, GlLink, GlSprintf, GlLoadingIcon } from '@gitlab/ui';
+-import { EditorContent, Editor } from '@tiptap/vue-2';
+-import { nextTick } from 'vue';
++import { GlAlert, GlButton, GlLoadingIcon } from '@gitlab/ui';
+ import MockAdapter from 'axios-mock-adapter';
+ import axios from '~/lib/utils/axios_utils';
+ import { shallowMountExtended } from 'helpers/vue_test_utils_helper';
+ import { CONTENT_EDITOR_PASTE } from '~/vue_shared/constants';
+ import markdownEditorEventHub from '~/vue_shared/components/markdown/eventhub';
+ import ContentEditor from '~/content_editor/components/content_editor.vue';
+-import { ContentEditor as ContentEditorService } from '~/content_editor/services/content_editor';
+-import ContentEditorAlert from '~/content_editor/components/content_editor_alert.vue';
+-import ContentEditorProvider from '~/content_editor/components/content_editor_provider.vue';
+-import EditorStateObserver from '~/content_editor/components/editor_state_observer.vue';
++import {
++  GitLabContentEditor as ContentEditorService,
++  Selection,
++  insertText,
++  undo,
++} from '~/content_editor/services/fountain_runtime';
++import FountainEditorSurface from '~/content_editor/components/fountain_editor_surface.vue';
++import FountainFormattingToolbar from '~/content_editor/components/fountain_formatting_toolbar.vue';
+ import CodeBlockBubbleMenu from '~/content_editor/components/bubble_menus/code_block_bubble_menu.vue';
+ import AlertBubbleMenu from '~/content_editor/components/bubble_menus/alert_bubble_menu.vue';
+ import LinkBubbleMenu from '~/content_editor/components/bubble_menus/link_bubble_menu.vue';
+ import MediaBubbleMenu from '~/content_editor/components/bubble_menus/media_bubble_menu.vue';
+ import ReferenceBubbleMenu from '~/content_editor/components/bubble_menus/reference_bubble_menu.vue';
+-import FormattingToolbar from '~/content_editor/components/formatting_toolbar.vue';
+ import waitForPromises from 'helpers/wait_for_promises';
+ import { KEYDOWN_EVENT } from '~/content_editor/constants';
+ import EditorModeSwitcher from '~/vue_shared/components/markdown/editor_mode_switcher.vue';
+ import { HTTP_STATUS_OK } from '~/lib/utils/http_status';
+-import { mockChainedCommands } from '../test_utils';
+ 
+ describe('ContentEditor', () => {
+   let wrapper;
+@@ -30,11 +30,18 @@ describe('ContentEditor', () => {
+   const uploadsPath = '/uploads';
+ 
+   const findEditorElement = () => wrapper.findByTestId('content-editor');
+-  const findEditorContent = () => wrapper.findComponent(EditorContent);
+-  const findEditorStateObserver = () => wrapper.findComponent(EditorStateObserver);
++  const findEditorContent = () => wrapper.findComponent(FountainEditorSurface);
++  const findEditorModel = () => findEditorContent().props('editor');
+   const findLoadingIndicator = () => wrapper.findComponent(GlLoadingIcon);
+-  const findContentEditorAlert = () => wrapper.findComponent(ContentEditorAlert);
+-  const findEditorDom = () => findEditorContent().props('editor').view.dom;
++  const findContentEditorAlert = () => wrapper.findByTestId('content-editor-error');
++  const retry = async () => {
++    await findContentEditorAlert()
++      .findAllComponents(GlButton)
++      .wrappers.find((button) => button.text() === 'Retry source')
++      .trigger('click');
++    await waitForPromises();
++  };
++  const findEditorDom = () => findEditorContent().element.querySelector('[role="textbox"]');
+   const createWrapper = ({ markdown, autofocus, ...props } = {}) => {
+     wrapper = shallowMountExtended(ContentEditor, {
+       propsData: {
+@@ -46,12 +53,12 @@ describe('ContentEditor', () => {
+         placeholder: 'Enter some text here...',
+         ...props,
+       },
++      attachTo: document.body,
+       stubs: {
+-        EditorStateObserver,
+-        ContentEditorProvider,
+-        ContentEditorAlert,
+-        GlLink,
+-        GlSprintf,
++        FountainEditorSurface,
++        FountainFormattingToolbar,
++        GlAlert,
++        GlButton,
+       },
+     });
+   };
+@@ -61,7 +68,7 @@ describe('ContentEditor', () => {
+     // ignore /-/emojis requests
+     mock.onGet().reply(HTTP_STATUS_OK, []);
+ 
+-    renderMarkdown = jest.fn();
++    renderMarkdown = jest.fn().mockResolvedValue({ body: '<p></p>' });
+   });
+ 
+   afterEach(() => {
+@@ -76,7 +83,17 @@ describe('ContentEditor', () => {
+     });
+ 
+     it('reads the current document before the update observer fires', () => {
+-      findEditorContent().props('editor').commands.setContent('<p>Latest edit</p>', false);
++      const editor = findEditorModel();
++      editor.dispatch(
++        editor
++          .createTransaction()
++          .replaceDocument(
++            editor.state.schema.node('doc', {}, [
++              editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Latest edit')]),
++            ]),
++          )
++          .setMeta('preventUpdate', true),
++      );
+ 
+       expect(wrapper.vm.getSerializedContentForHandoff()).toBe('Latest edit');
+     });
+@@ -99,9 +116,7 @@ describe('ContentEditor', () => {
+     });
+ 
+     it('refuses a handoff while native composition is active', () => {
+-      jest
+-        .spyOn(findEditorContent().props('editor').view, 'composing', 'get')
+-        .mockReturnValue(true);
++      findEditorDom().dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+ 
+       expect(() => wrapper.vm.getSerializedContentForHandoff()).toThrow();
+     });
+@@ -113,51 +128,61 @@ describe('ContentEditor', () => {
+     expect(wrapper.emitted('initialized')).toHaveLength(1);
+   });
+ 
+-  it('renders EditorContent component and provides tiptapEditor instance', async () => {
++  it('renders the actual native Fountain model and document surface', async () => {
+     const markdown = 'hello world';
+ 
+     createWrapper({ markdown });
+ 
+     renderMarkdown.mockResolvedValueOnce({ body: markdown });
+ 
+-    await nextTick();
++    await waitForPromises();
+ 
+     const editorContent = findEditorContent();
+ 
+-    expect(editorContent.props().editor).toBeInstanceOf(Editor);
++    expect(editorContent.props('editor').getJSON().type).toBe('doc');
++    expect(findEditorDom().getAttribute('role')).toBe('textbox');
+     expect(editorContent.classes()).toContain('md');
+   });
+ 
+-  it('allows setting the tiptap editor to autofocus', async () => {
++  it('focuses the native surface when autofocus is requested', async () => {
+     createWrapper({ autofocus: 'start' });
+ 
+-    await nextTick();
++    await waitForPromises();
+ 
+-    expect(findEditorContent().props().editor.options.autofocus).toBe('start');
++    expect(document.activeElement).toBe(findEditorDom());
++    expect(findEditorModel().state.selection.isCollapsed).toBe(true);
++    expect(findEditorModel().state.selection.path).toEqual([0, 0]);
+   });
+ 
+-  it('renders ContentEditorProvider component', () => {
++  it('retains one live native model across surface option changes', async () => {
+     createWrapper();
+-
+-    expect(wrapper.findComponent(ContentEditorProvider).exists()).toBe(true);
++    await waitForPromises();
++    const editor = findEditorModel();
++    await wrapper.setProps({ ariaLabel: 'Updated name' });
++    expect(findEditorModel()).toBe(editor);
++    expect(editor.isDestroyed).toBe(false);
+   });
+ 
+   it('renders toolbar component', () => {
+     createWrapper();
+ 
+-    expect(wrapper.findComponent(FormattingToolbar).exists()).toBe(true);
++    expect(wrapper.findComponent(FountainFormattingToolbar).exists()).toBe(true);
+   });
+ 
+   it('displays an attachment button', () => {
+     createWrapper();
+ 
+-    expect(wrapper.findComponent(FormattingToolbar).props().hideAttachmentButton).toBe(false);
++    expect(wrapper.findComponent(FountainFormattingToolbar).props().hideAttachmentButton).toBe(
++      false,
++    );
+   });
+ 
+   it('hides the attachment button if attachments are disabled', () => {
+     createWrapper({ disableAttachments: true });
+ 
+-    expect(wrapper.findComponent(FormattingToolbar).props().hideAttachmentButton).toBe(true);
++    expect(wrapper.findComponent(FountainFormattingToolbar).props().hideAttachmentButton).toBe(
++      true,
++    );
+   });
+ 
+   it('shows the footer', () => {
+@@ -173,18 +198,26 @@ describe('ContentEditor', () => {
+   });
+ 
+   describe('when setting initial content', () => {
+-    it('displays loading indicator', async () => {
+-      createWrapper();
+-
+-      await nextTick();
+-
++    it('displays loading indicator while the renderer is pending', async () => {
++      let finish;
++      renderMarkdown.mockImplementationOnce(
++        () =>
++          new Promise((resolve) => {
++            finish = resolve;
++          }),
++      );
++      createWrapper({ markdown: 'Pending initial source' });
++      await waitForPromises();
+       expect(findLoadingIndicator().exists()).toBe(true);
++      finish({ body: '<p></p>' });
++      await waitForPromises();
++      expect(findLoadingIndicator().exists()).toBe(false);
+     });
+ 
+     it('emits loading event', async () => {
+       createWrapper();
+ 
+-      await nextTick();
++      await waitForPromises();
+ 
+       expect(wrapper.emitted('loading')).toHaveLength(1);
+     });
+@@ -194,16 +227,17 @@ describe('ContentEditor', () => {
+         renderMarkdown.mockResolvedValueOnce({ body: '' });
+ 
+         createWrapper({ markdown: '' });
+-        await nextTick();
++        await waitForPromises();
+       });
+ 
+       it('hides loading indicator', async () => {
+-        await nextTick();
++        await waitForPromises();
+         expect(findLoadingIndicator().exists()).toBe(false);
+       });
+ 
+       it('shows placeholder text', () => {
+-        expect(wrapper.text()).toContain('Enter some text here...');
++        expect(findEditorDom().dataset.placeholder).toBe('Enter some text here...');
++        expect(Object.hasOwn(findEditorDom().dataset, 'fountainEmpty')).toBe(true);
+       });
+     });
+ 
+@@ -212,41 +246,41 @@ describe('ContentEditor', () => {
+         renderMarkdown.mockRejectedValueOnce(new Error());
+ 
+         createWrapper({ markdown: 'hello world' });
+-        await nextTick();
++        await waitForPromises();
+       });
+ 
+       it('sets the content editor as read only when loading content fails', async () => {
+-        await nextTick();
++        await waitForPromises();
+ 
+-        expect(findEditorContent().props().editor.isEditable).toBe(false);
++        expect(findEditorModel().editable).toBe(false);
+       });
+ 
+       it('hides loading indicator', async () => {
+-        await nextTick();
++        await waitForPromises();
+ 
+         expect(findLoadingIndicator().exists()).toBe(false);
+       });
+ 
+       it('displays error alert indicating that the content editor failed to load', () => {
+         expect(findContentEditorAlert().text()).toContain(
+-          'An error occurred while trying to render the rich text editor. Please try again.',
++          'The editor operation could not be completed. Your source and current document are retained.',
+         );
+       });
+ 
+       describe('when clicking the retry button in the loading error alert and loading succeeds', () => {
+         beforeEach(async () => {
+           renderMarkdown.mockResolvedValueOnce({ body: 'hello markdown' });
+-          await wrapper.findComponent(GlAlert).vm.$emit('primary-action');
++          await retry();
+         });
+ 
+         it('hides the loading error alert', () => {
+-          expect(findContentEditorAlert().text()).toBe('');
++          expect(findContentEditorAlert().exists()).toBe(false);
+         });
+ 
+         it('sets the content editor as writable', async () => {
+-          await nextTick();
++          await waitForPromises();
+ 
+-          expect(findEditorContent().props().editor.isEditable).toBe(true);
++          expect(findEditorModel().editable).toBe(true);
+         });
+       });
+     });
+@@ -255,7 +289,7 @@ describe('ContentEditor', () => {
+   describe('when loading markdown', () => {
+     let setSerializedContent;
+ 
+-    const findTiptapEditor = () => findEditorContent().props('editor');
++    const findNativeEditor = () => findEditorContent().props('editor');
+ 
+     beforeEach(async () => {
+       renderMarkdown.mockResolvedValue({ body: '<p>hello</p>' });
+@@ -283,7 +317,7 @@ describe('ContentEditor', () => {
+         await waitForPromises();
+ 
+         renderMarkdown.mockResolvedValueOnce({ body: '<p>replaced</p>' });
+-        await wrapper.findComponent(GlAlert).vm.$emit('primary-action');
++        await retry();
+         await waitForPromises();
+       });
+ 
+@@ -296,25 +330,53 @@ describe('ContentEditor', () => {
+       });
+ 
+       it('restores the previous content when undo is pressed', () => {
+-        const tiptapEditor = findTiptapEditor();
+-
+-        expect(tiptapEditor.state.doc.textContent).toBe('replaced');
+-
+-        expect(tiptapEditor.commands.undo()).toBe(true);
+-        expect(tiptapEditor.state.doc.textContent).toBe('hello');
+-
+-        expect(tiptapEditor.commands.undo()).toBe(false);
++        const editor = findNativeEditor();
++        expect(editor.state.doc.textContent).toBe('replaced');
++        expect(undo(editor)).toBe(true);
++        expect(editor.state.doc.textContent).toBe('hello');
++        expect(undo(editor)).toBe(false);
+       });
+     });
+   });
+ 
++  it('keeps a failed replacement read-only until the author explicitly keeps the prior document', async () => {
++    renderMarkdown.mockResolvedValueOnce({ body: '<p>Retained original</p>' });
++    createWrapper({ markdown: 'Retained original' });
++    await waitForPromises();
++    renderMarkdown.mockRejectedValueOnce(new Error('Renderer unavailable'));
++    await wrapper.setProps({ markdown: 'Rejected replacement' });
++    await waitForPromises();
++    expect(findEditorDom().contentEditable).toBe('false');
++    expect(findEditorDom().textContent).toBe('Retained original');
++    await findContentEditorAlert()
++      .findAllComponents(GlButton)
++      .wrappers.find((button) => button.text() === 'Keep current document')
++      .trigger('click');
++    await waitForPromises();
++    expect(findEditorDom().contentEditable).toBe('true');
++    expect(wrapper.emitted('change')).toEqual([[{ markdown: 'Retained original' }]]);
++    expect(findContentEditorAlert().exists()).toBe(false);
++  });
++
++  it('preserves the host read-only policy after a successful retry', async () => {
++    renderMarkdown.mockRejectedValueOnce(new Error('Renderer unavailable'));
++    createWrapper({ markdown: 'Read-only source', editable: false });
++    await waitForPromises();
++    renderMarkdown.mockResolvedValueOnce({ body: '<p>Read-only source</p>' });
++    await retry();
++    expect(findEditorDom().textContent).toBe('Read-only source');
++    expect(findEditorDom().contentEditable).toBe('false');
++    expect(findEditorModel().editable).toBe(false);
++    expect(findContentEditorAlert().exists()).toBe(false);
++  });
++
+   describe('when focused event is emitted', () => {
+     beforeEach(async () => {
+       createWrapper();
+ 
+-      findEditorStateObserver().vm.$emit('focus');
++      findEditorDom().dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+ 
+-      await nextTick();
++      await waitForPromises();
+     });
+ 
+     it('adds is-focused class when focus event is emitted', () => {
+@@ -322,15 +384,16 @@ describe('ContentEditor', () => {
+     });
+ 
+     it('removes is-focused class when blur event is emitted', async () => {
+-      findEditorStateObserver().vm.$emit('blur');
++      findEditorDom().dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+ 
+-      await nextTick();
++      await waitForPromises();
+ 
+       expect(findEditorElement().classes()).not.toContain('is-focused');
+     });
+ 
+-    it('hides placeholder text', () => {
+-      expect(wrapper.text()).not.toContain('Enter some text here...');
++    it('keeps placeholder presentation separate from document text while focused', () => {
++      expect(findEditorModel().getText()).toBe('');
++      expect(findEditorDom().dataset.placeholder).toBe('Enter some text here...');
+     });
+ 
+     it('emits focus event', () => {
+@@ -338,9 +401,9 @@ describe('ContentEditor', () => {
+     });
+ 
+     it('emits blur event when editorStateObserver emits blur event', async () => {
+-      findEditorStateObserver().vm.$emit('blur');
++      findEditorDom().dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+ 
+-      await nextTick();
++      await waitForPromises();
+ 
+       expect(wrapper.emitted('blur')).toHaveLength(1);
+     });
+@@ -349,34 +412,37 @@ describe('ContentEditor', () => {
+     let markdown;
+ 
+     beforeEach(async () => {
+-      markdown = 'Loaded content';
++      markdown = 'Loaded content!';
+ 
+-      renderMarkdown.mockResolvedValueOnce({ body: markdown });
++      renderMarkdown.mockResolvedValueOnce({ body: '<p>Loaded content</p>' });
+ 
+-      createWrapper({ markdown: 'initial content' });
++      createWrapper({ markdown: 'Loaded content' });
+ 
+-      await nextTick();
++      await waitForPromises();
+       await waitForPromises();
+ 
+-      findEditorStateObserver().vm.$emit('doc-update');
++      const editor = findEditorModel();
++      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 14)));
++      insertText(editor, '!');
+     });
+ 
+     it('emits change event with the latest markdown', () => {
+       expect(wrapper.emitted('change')).toEqual([[{ markdown }]]);
+     });
+ 
+-    it('hides the placeholder text', () => {
+-      expect(wrapper.text()).not.toContain('Enter some text here...');
++    it('clears empty presentation state after a real document edit', () => {
++      expect(findEditorDom().dataset.fountainEmpty).toBeUndefined();
++      expect(findEditorModel().getText()).toBe('Loaded content!');
+     });
+   });
+ 
+   describe('when editorStateObserver emits keydown event', () => {
+     it('bubbles up event', () => {
+-      const event = new Event('keydown');
++      const event = new KeyboardEvent('keydown', { key: 'Shift', bubbles: true });
+ 
+       createWrapper();
+ 
+-      findEditorStateObserver().vm.$emit(KEYDOWN_EVENT, event);
++      findEditorDom().dispatchEvent(event);
+       expect(wrapper.emitted(KEYDOWN_EVENT)).toEqual([[event]]);
+     });
+   });
+@@ -408,29 +474,17 @@ describe('ContentEditor', () => {
+     expect(wrapper.emitted('enable-markdown-editor')).toEqual([[]]);
+   });
+ 
+-  it('pastes content when CONTENT_EDITOR_READY_PASTE event is emitted', async () => {
+-    const markdown = 'hello world';
+-
+-    createWrapper({ markdown });
+-
+-    renderMarkdown.mockResolvedValueOnce({ body: markdown });
+-
++  it('pastes rendered Markdown through the actual native host event', async () => {
++    renderMarkdown.mockResolvedValueOnce({ body: '<p>hello world</p>' });
++    createWrapper({ markdown: 'hello world' });
+     await waitForPromises();
+-
+-    const editorContent = findEditorContent();
+-    const commands = mockChainedCommands(editorContent.props('editor'), [
+-      'focus',
+-      'pasteContent',
+-      'run',
+-    ]);
+-
+-    markdownEditorEventHub.$emit(CONTENT_EDITOR_PASTE, 'Paste content');
+-
++    renderMarkdown.mockResolvedValueOnce({ body: '<p><strong>Paste content</strong></p>' });
++    markdownEditorEventHub.$emit(CONTENT_EDITOR_PASTE, '**Paste content**');
+     await waitForPromises();
+-
+-    expect(commands.focus).toHaveBeenCalled();
+-    expect(commands.pasteContent).toHaveBeenCalledWith('Paste content');
+-    expect(commands.run).toHaveBeenCalled();
++    expect(findEditorDom().querySelector('strong').textContent).toBe('Paste content');
++    expect(findEditorModel().getText()).toContain('hello world');
++    expect(undo(findEditorModel())).toBe(true);
++    expect(findEditorModel().getText()).toBe('hello world');
+   });
+ 
+   describe('aria attributes', () => {
+@@ -474,7 +528,7 @@ describe('ContentEditor', () => {
+       expect(findEditorDom().getAttribute('aria-label')).toBe('Initial label');
+ 
+       await wrapper.setProps({ ariaLabel: 'Updated label' });
+-      await nextTick();
++      await waitForPromises();
+ 
+       expect(findEditorDom().getAttribute('aria-label')).toBe('Updated label');
+     });
+@@ -486,7 +540,7 @@ describe('ContentEditor', () => {
+       expect(findEditorDom().hasAttribute('aria-labelledby')).toBe(false);
+ 
+       await wrapper.setProps({ ariaLabel: '', ariaLabelledBy: 'work-item-description-label' });
+-      await nextTick();
++      await waitForPromises();
+ 
+       expect(findEditorDom().getAttribute('aria-labelledby')).toBe('work-item-description-label');
+       expect(findEditorDom().hasAttribute('aria-label')).toBe(false);

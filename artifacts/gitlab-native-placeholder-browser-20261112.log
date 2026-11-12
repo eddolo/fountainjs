@@ -1,0 +1,160 @@
+[WebServer] (node:25496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:15788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:20364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo (5.8s)
+(node:25364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo (6.8s)
+(node:3240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo (6.3s)
+
+
+  1) [chromium] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })
+    Expected: ""
+    Received: serializes to the same string
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })
+        14 × locator resolved to <div tabindex="0" role="textbox" spellcheck="true" aria-multiline="true" contenteditable="true" class="fountain-editor" data-placeholder="Write your document" aria-label="GitLab Vue 2 bridge editor">…</div>
+           - unexpected value "null"
+
+
+      10 |   await source.fill('');
+      11 |   await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+    > 12 |   await expect(editor).toHaveAttribute('data-fountain-empty', '');
+         |                        ^
+      13 |   await expect.poll(paint).toBe('"Write your document"');
+      14 |   await page.screenshot({ path: info.outputPath('empty-placeholder.png') });
+      15 |   await editor.click();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:12:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })
+    Expected: ""
+    Received: serializes to the same string
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })
+        14 × locator resolved to <div tabindex="0" role="textbox" spellcheck="true" aria-multiline="true" contenteditable="true" class="fountain-editor" data-placeholder="Write your document" aria-label="GitLab Vue 2 bridge editor">…</div>
+           - unexpected value "null"
+
+
+      10 |   await source.fill('');
+      11 |   await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+    > 12 |   await expect(editor).toHaveAttribute('data-fountain-empty', '');
+         |                        ^
+      13 |   await expect.poll(paint).toBe('"Write your document"');
+      14 |   await page.screenshot({ path: info.outputPath('empty-placeholder.png') });
+      15 |   await editor.click();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:12:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })
+    Expected: ""
+    Received: serializes to the same string
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })
+        13 × locator resolved to <div tabindex="0" role="textbox" spellcheck="true" aria-multiline="true" contenteditable="true" class="fountain-editor" data-placeholder="Write your document" aria-label="GitLab Vue 2 bridge editor">…</div>
+           - unexpected value "null"
+
+
+      10 |   await source.fill('');
+      11 |   await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+    > 12 |   await expect(editor).toHaveAttribute('data-fountain-empty', '');
+         |                        ^
+      13 |   await expect.poll(paint).toBe('"Write your document"');
+      14 |   await page.screenshot({ path: info.outputPath('empty-placeholder.png') });
+      15 |   await editor.click();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:12:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-native-placeholder-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo 
+    [firefox] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo 
+    [webkit] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo 

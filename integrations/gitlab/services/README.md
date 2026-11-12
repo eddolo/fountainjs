@@ -43,7 +43,10 @@ Failing listeners are isolated from later editor subscribers and reported throug
 An unsuccessful replacement retains the visible document and the rejected source
 in `recovery`. The author can retry that source or explicitly choose
 `keepCurrentDocument()`. That action validates and publishes the current document
-while keeping rejected source available for inspection/download. User edits during
+while keeping rejected source available for host inspection. The native component
+shows it in a read-only source panel before and after explicit recovery, for as
+long as the editor remains open. Retry preserves the original replacement's
+history policy; failed loads keep the browser surface read-only. User edits during
 a load are preserved and cause a conflict instead of being overwritten by a late
 response. Superseded loads cannot change the newest request's status. Disposal
 cancels pending loads, removes subscriptions, destroys the owned model and clears

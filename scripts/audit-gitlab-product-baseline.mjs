@@ -6,11 +6,14 @@ import { chromium, expect } from '@playwright/test';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
-const nativeInsertion = process.argv.includes('--native-insertion');
+const nativeComponent = process.argv.includes('--native-component');
+const nativeInsertion = process.argv.includes('--native-insertion') || nativeComponent;
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeInsertion
+  nativeComponent
+    ? 'artifacts/gitlab-native-component-20261112/'
+    : nativeInsertion
     ? 'artifacts/gitlab-native-insertion-20261112/'
     : nativeBrowser
     ? 'artifacts/gitlab-native-browser-20261112/'
@@ -81,6 +84,7 @@ const report = {
   preparedHost,
   nativeBrowser,
   nativeInsertion,
+  nativeComponent,
 };
 if (nativeBrowser)
   report.nativeRuntime = JSON.parse(
@@ -396,18 +400,71 @@ try {
       '[data-fountain-integration="native"] [contenteditable="true"]',
     );
     await expect(composer).toBeVisible();
+    if (nativeComponent) {
+      await expect(composer).toHaveAttribute('data-fountain-empty', '');
+      const placeholder = await composer.getAttribute('data-placeholder');
+      expect(placeholder).toBeTruthy();
+      await expect.poll(() => composer.evaluate((element) => getComputedStyle(element, '::before').content))
+        .toBe(JSON.stringify(placeholder));
+      await composer.scrollIntoViewIfNeeded();
+      await page.screenshot({ path: fileURLToPath(new URL('empty-comment-placeholder.png', output)), fullPage: true });
+    }
     await composer.click();
+    if (nativeComponent)
+      expect(await composer.evaluate((element) => getComputedStyle(element, '::before').content))
+        .toBe('none');
     const note = 'Native Fountain discussion: created through the actual GitLab comment form.';
     await composer.pressSequentially(note);
+    if (nativeComponent) await expect(composer).not.toHaveAttribute('data-fountain-empty');
     await activity.getByRole('button', { name: 'Comment', exact: true }).click();
     await expect(composer).toHaveText('');
     await expect(activity.getByText(note, { exact: true })).toBeVisible();
     const notes = await api('GET', `/projects/${project.id}/issues/${issue.iid}/notes`);
     expect(notes.some((value) => value.body === note)).toBe(true);
     report.comment = { body: note, persisted: true };
+    if (nativeComponent) {
+      await expect(composer).toHaveAttribute('data-fountain-empty', '');
+      report.checks.push('An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence');
+    }
     report.checks.push(
       'An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence',
     );
+  }
+  if (nativeComponent) {
+    const rejectedSource = 'Unsupported footnote [^original].\n\n[^original]: Keep the saved original unchanged.';
+    const rejectedIssue = await api('POST', `/projects/${project.id}/issues`, {
+      data: { title: 'Native failed-load recovery audit', description: rejectedSource },
+    });
+    await page.goto(rejectedIssue.web_url);
+    await page.getByTestId('work-item-edit-form-button').click();
+    const native = page.getByTestId('work-item-description-wrapper').locator('[data-fountain-integration="native"]');
+    const failedEditor = native.locator('[contenteditable]');
+    await expect(native.getByTestId('content-editor-error')).toBeVisible();
+    await expect(failedEditor).toHaveAttribute('contenteditable', 'false');
+    await expect(failedEditor).toHaveAttribute('aria-readonly', 'true');
+    await native.getByText('Retained document source', { exact: true }).click();
+    await expect(native.getByRole('textbox', { name: 'Retained document Markdown', exact: true })).toHaveValue(rejectedSource);
+    const retryResponse = page.waitForResponse(response => response.request().method() === 'POST'
+      && response.url().includes('no_header_anchors='));
+    await native.getByRole('button', { name: 'Retry source', exact: true }).click();
+    await (await retryResponse).finished();
+    await expect(native.getByTestId('content-editor-error')).toBeVisible();
+    await expect(failedEditor).toHaveAttribute('contenteditable', 'false');
+    expect((await api('GET', `/projects/${project.id}/issues/${rejectedIssue.iid}`)).description).toBe(rejectedSource);
+    await failedEditor.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: fileURLToPath(new URL('failed-load-readonly.png', output)), fullPage: true });
+    await native.getByRole('button', { name: 'Keep current document', exact: true }).click();
+    await expect(failedEditor).toHaveAttribute('contenteditable', 'true');
+    await failedEditor.click();
+    await failedEditor.pressSequentially('A deliberately recovered local draft.');
+    await expect(failedEditor).toHaveText('A deliberately recovered local draft.');
+    await expect(native.getByRole('textbox', { name: 'Retained document Markdown', exact: true })).toHaveValue(rejectedSource);
+    expect((await api('GET', `/projects/${project.id}/issues/${rejectedIssue.iid}`)).description).toBe(rejectedSource);
+    await page.screenshot({ path: fileURLToPath(new URL('failed-load-explicit-recovery.png', output)), fullPage: true });
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await page.goto(issue.web_url);
+    report.recoveryIssue = { iid: rejectedIssue.iid, originalSourceUnchanged: true, recoveryDraftCancelled: true };
+    report.checks.push('Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original');
   }
   await page.reload();
   await expect(page.getByText(marker, { exact: true })).toBeVisible();

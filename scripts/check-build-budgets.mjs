@@ -259,7 +259,9 @@ const limits = Object.freeze({
   // highlights add ~0.2 KiB. Bound the stylesheet at 86.4 KiB.
   // A separate accessible CSS code gutter replaces inline line-number widgets:
   // +612 bytes, measured 87.330 KiB. Keep only 174 bytes of raw CSS headroom.
-  'dist/styles.css': 88.75 * kibibyte,
+  // Native empty-document/focus placeholder rendering measures 90,906 bytes.
+  // Add 64 bytes over 90,880; other size/performance limits remain unchanged.
+  'dist/styles.css': 88.8125 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another

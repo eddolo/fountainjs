@@ -2,16 +2,16 @@
 
 Updated 2026-11-12.
 
-The latest real GitLab checkpoint adds native asynchronous Markdown insertion,
-ordered/mapped targets, one-step undo and visible rejected-source recovery. A
-recorded **ten-check** Linux Chromium journey passes real clipboard, save/comment,
-source handoff, access denial and restart; editor/recovery/reader receive visual
-review. All **5,507 unit tests/341 files**, framework types, API snapshot, builds,
-performance/retention and measured size checks pass. The upstream host suite is
-now **75/75**; the broader native set is **126 passed / 42 failed**, with component
-fixture migration and actual missing features still required. Full product and
-release acceptance remain open. No parity row is promoted.
-[Current scope and remaining work](../integrations/gitlab/README.md#native-markdown-insertion-and-current-acceptance).
+The latest real GitLab checkpoint repairs Retry history/read-only recovery,
+immersive layout, accessible naming and native empty-document placeholder paint.
+The native three-suite set is **163 passed / 7 failed / 170 total**, including two
+new recovery cases. Missing attachment/contextual-menu controls remain open.
+All **5,507 root unit tests/341 files**, types/API, builds, performance/retention
+and measured size checks pass. The placeholder is visibly reviewed in all three
+desktop engines. Recorded real-service journeys cover native paste, comments,
+source recovery, saving, permissions and restart; exact scope is retained below.
+Full product/release acceptance remains open. No parity row is promoted.
+[Current scope and remaining work](../integrations/gitlab/README.md#native-component-foundations-and-remaining-controls).
 
 FountainJS is an MIT-licensed structured-document engine with a web editor,
 framework bindings, and optional document modules. The immediate goal is a

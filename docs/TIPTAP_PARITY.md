@@ -2,17 +2,17 @@
 
 ## Current programme status — 2026-11-12
 
-Fountain mounts in real GitLab issue/discussion editors. The current recorded
-native Chromium journey passes **ten checks**, adding actual clipboard Markdown
-insertion/undo and visibly retained unsupported source to real saves/comments,
-source handoff, access denial and restart persistence. All **5,507 unit tests/341
-files**, types, API, builds, performance/retention and measured size checks pass.
-The upstream host suite now passes **75/75**; the broader native set remains
-**126 passed / 42 failed** in the component suite. Native fixture migration and
-missing feature contracts remain required. Full menus, uploads/suggestions,
-providers, source fidelity and product/release acceptance are open. No capability
-row or superiority claim is promoted. Following checkpoints are historical.
-[Current native evidence](../artifacts/gitlab-native-insertion-integration-20261112.json).
+Fountain mounts in real GitLab issue/discussion editors. Native component
+fixtures now use the actual Fountain view/service/transactions; five defects in
+Retry history, load recovery, immersive classes, accessible labels and placeholder
+paint are repaired. The three upstream suites are **163 passed / 7 failed / 170
+total**, with attachments and contextual menus still required. All **5,507 root
+unit tests/341 files**, types/API, builds, performance/retention and measured size
+checks pass. Placeholder paint is reviewed across three desktop engines; real
+GitLab journeys cover native edits, paste, source recovery, saving/comments,
+permissions and restart. Full product/release acceptance remains open. No row
+or superiority claim is promoted. Following checkpoints are historical.
+[Current native evidence](../artifacts/gitlab-native-component-integration-20261112.json).
 
 The full matching GitLab frontend now builds and serves the prepared host patch;
 the recorded real rich/source/rich save/restart journey passes on its final run.

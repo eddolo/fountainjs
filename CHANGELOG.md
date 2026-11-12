@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Show placeholders for an actually empty document, including its normal empty
+  paragraph/text node. Hide the hint during focus and typing, restore it after
+  deletion, and keep it out of document content and exports.
+
 - Preserve authored paragraph attributes when inserting rich content. Alignment,
   explicit direction and custom structured metadata stay attached to their block
   instead of disappearing when a single paragraph is merged into surrounding text.

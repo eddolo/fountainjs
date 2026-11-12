@@ -30,7 +30,8 @@ try {
     process.execPath,
     [
       resolve(root, 'scripts/audit-gitlab-product-baseline.mjs'),
-      process.argv.includes('--insertion') ? '--native-insertion' : '--native-browser',
+      process.argv.includes('--component') ? '--native-component'
+        : process.argv.includes('--insertion') ? '--native-insertion' : '--native-browser',
       '--verify-restart',
     ],
     { env, stdio: 'inherit', timeout: 900000 },

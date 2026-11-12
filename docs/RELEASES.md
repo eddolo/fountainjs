@@ -1341,6 +1341,33 @@ limits stay unchanged. This checkpoint is local, not a complete `pnpm check`,
 hosted CI, release or parity promotion. Evidence and open requirements:
 `artifacts/gitlab-native-insertion-integration-20261112.json`.
 
+### Native GitLab component foundations — 2026-11-12
+
+Retry retains replacement history options, failed loads stay read-only until
+explicit recovery, immersive layout/sticky-header classes are restored and
+labelled-by names replace the default accessible label. Original rejected
+document Markdown is inspectable/copyable while the editor stays open. The
+source panel does not create a persistent second source record in GitLab.
+
+Native component fixtures preserve 53 existing cases with equivalent Fountain
+setup/assertions and add two recovery cases. Across host/component/form suites,
+163 cases pass and seven attachment/contextual-menu cases fail. These failures
+are retained; no skips, timeout increases or complete-product claims. Passing
+native setup replaces obsolete Tiptap setup, not its engine with a fake facade.
+
+The shared view's placeholder now recognizes empty paragraphs/text nodes, stays
+out of document content, hides on focus/typing and restores after deletion. Three
+recorded desktop browser journeys pass and receive screenshot review. Actual
+GitLab also exercises empty comments and unsupported saved-source recovery using
+its real renderer, backend and records. The report records final build/journey
+identity and remaining gaps.
+
+All 5,507 root unit cases/341 files, current types/API, package/frontend builds,
+performance/retention and measured size checks pass. CSS capacity rises 64 bytes
+(88.75 to 88.8125 KiB) for 90,906 measured bytes. Every JavaScript, performance
+and retention limit stays unchanged. Full release/hosted gates and publication
+remain pending. Evidence: `artifacts/gitlab-native-component-integration-20261112.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

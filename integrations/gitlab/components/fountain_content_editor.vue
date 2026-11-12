@@ -37,11 +37,16 @@ export default {
       failure: null,
       fatal: false,
       hasRecovery: false,
+      replacementSource: null,
       inserting: false,
       failedInsertionSource: null,
+      loadFailed: false,
     };
   },
   computed: {
+    surfaceEditable() {
+      return this.editable && !this.isLoading && !this.loadFailed && !this.fatal;
+    },
     failureMessage() {
       if (this.failureCode === 'GITLAB_CLIPBOARD_READ_FAILED')
         return s__(
@@ -95,6 +100,7 @@ export default {
     this.releaseChange = null;
     this.releaseStatus = null;
     this.loadRequest = 0;
+    this.loadOptions = undefined;
     this.disposed = false;
     try {
       assertGitLabNativeHostConfiguration({
@@ -116,6 +122,7 @@ export default {
       this.releaseChange = this.contentEditor.subscribeChange(this.onDocumentChange);
       this.releaseStatus = this.contentEditor.subscribeStatus(() => {
         this.hasRecovery = Boolean(this.contentEditor.recovery);
+        this.replacementSource = this.contentEditor.recovery?.markdown ?? null;
         this.inserting = this.contentEditor.pendingInsertions > 0;
       });
     } catch (error) {
@@ -164,6 +171,7 @@ export default {
     async setSerializedContent(markdown, options) {
       this.loadRequest += 1;
       const request = this.loadRequest;
+      this.loadOptions = options && { ...options };
       this.isLoading = true;
       this.$emit('loading');
       try {
@@ -171,6 +179,7 @@ export default {
         if (this.disposed || request !== this.loadRequest || result.status !== 'applied') return;
         this.latestMarkdown = markdown;
         this.failure = null;
+        this.loadFailed = false;
         this.isLoading = false;
         await this.$nextTick();
         if (this.disposed || request !== this.loadRequest) return;
@@ -181,7 +190,10 @@ export default {
           this.$refs.surface?.focus(position);
         }
       } catch (error) {
-        if (!this.disposed && request === this.loadRequest) this.onSurfaceError(error);
+        if (!this.disposed && request === this.loadRequest) {
+          this.loadFailed = true;
+          this.onSurfaceError(error);
+        }
       } finally {
         if (!this.disposed && request === this.loadRequest) {
           this.isLoading = false;
@@ -223,12 +235,16 @@ export default {
       }
     },
     retryLoad() {
-      return this.setSerializedContent(this.contentEditor.recovery?.markdown ?? this.markdown);
+      return this.setSerializedContent(
+        this.contentEditor.recovery?.markdown ?? this.markdown,
+        this.loadOptions,
+      );
     },
     keepCurrentDocument() {
       try {
         this.contentEditor.keepCurrentDocument();
         this.failure = null;
+        this.loadFailed = false;
       } catch (error) {
         this.onSurfaceError(error);
       }
@@ -252,7 +268,8 @@ export default {
 </script>
 <template>
   <div
-    class="md-area gl-relative"
+    class="md-area"
+    :class="{ 'immersive !gl-border-none !gl-bg-inherit': immersive, 'gl-relative': !immersive }"
     data-testid="content-editor-container"
     data-fountain-integration="native"
     :data-fountain-error="failureCode"
@@ -264,7 +281,7 @@ export default {
         )
       }}
     </gl-alert>
-    <gl-alert v-if="failure" variant="danger" :dismissible="false">
+    <gl-alert v-if="failure" data-testid="content-editor-error" variant="danger" :dismissible="false">
       {{ failureMessage }}
       <gl-button v-if="hasRecovery" size="small" @click="retryLoad">{{
         s__('ContentEditor|Retry source')
@@ -273,6 +290,19 @@ export default {
         s__('ContentEditor|Keep current document')
       }}</gl-button>
     </gl-alert>
+    <details v-if="hasRecovery" class="gl-p-3">
+      <summary>{{ s__('ContentEditor|Retained document source') }}</summary>
+      <p class="gl-mt-3">
+        {{ s__('ContentEditor|You can copy this original Markdown before choosing a recovery action. It remains available here while this editor is open.') }}
+      </p>
+      <textarea
+        :value="replacementSource"
+        :aria-label="s__('ContentEditor|Retained document Markdown')"
+        readonly
+        class="gl-w-full"
+        rows="6"
+      ></textarea>
+    </details>
     <details v-if="failedInsertionSource !== null" class="gl-p-3">
       <summary>{{ s__('ContentEditor|Retained paste source') }}</summary>
       <textarea
@@ -294,12 +324,15 @@ export default {
       class="content-editor-body gl-relative"
       :class="{ 'is-focused': focused }"
     >
-      <div data-testid="content-editor-header">
+      <div
+        data-testid="content-editor-header"
+        :class="{ 'gl-sticky gl-top-0 gl-z-3 gl-bg-default': immersive }"
+      >
         <slot name="header"></slot>
         <fountain-formatting-toolbar
           v-if="contentEditor"
           :editor="contentEditor.editor"
-          :disabled="!editable || isLoading"
+          :disabled="!surfaceEditable"
           @focus="focus"
           @error="onSurfaceError"
           @paste-markdown="pasteContent"
@@ -323,7 +356,7 @@ export default {
         data-testid="content_editor_editablebox"
         :editor="contentEditor.editor"
         :options="surfaceOptions"
-        :editable="editable && !isLoading"
+        :editable="surfaceEditable"
         :read-serialized-content="readSerializedContent"
         @error="onSurfaceError"
         @focus="onFocus"

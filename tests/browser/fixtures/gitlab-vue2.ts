@@ -70,7 +70,7 @@ const editor = createEditor({
     content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Vue 2 integration.' }] }],
   },
 });
-const options = Object.freeze({ ariaLabel: 'GitLab Vue 2 bridge editor' });
+const options = Object.freeze({ ariaLabel: 'GitLab Vue 2 bridge editor', placeholder: 'Write your document' });
 // Real ordinary-Markdown codec for lifecycle tests only. The actual GitLab
 // dialect/service adapter remains required before application integration.
 const ordinaryCodec = {

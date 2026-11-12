@@ -1,0 +1,67 @@
+[WebServer] (node:9172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:8892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:21944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo (917ms)
+(node:18392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo (6.2s)
+(node:10676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo (2.5s)
+
+
+  1) [firefox] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "\"Write your document\""
+    Received: "attr(data-placeholder)"
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      11 |   await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+      12 |   await expect(editor).toHaveAttribute('data-fountain-empty', '');
+    > 13 |   await expect.poll(paint).toBe('"Write your document"');
+         |                            ^
+      14 |   await page.screenshot({ path: info.outputPath('empty-placeholder.png') });
+      15 |   await editor.click();
+      16 |   await expect.poll(paint).toBe('none');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:13:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-reviewed-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-reviewed-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-native-placeholder-reviewed-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-native-placeholder-reviewed-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-native-placeholder-reviewed-browser-20261112\gitlab-vue2-paints-the-emp-202dc-us-typing-deletion-and-undo-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox] › tests\browser\gitlab-vue2.spec.ts:5:1 › paints the empty native document placeholder and follows real focus, typing, deletion and undo 
+  2 passed (16.0s)

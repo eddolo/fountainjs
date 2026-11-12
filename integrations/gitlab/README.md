@@ -585,6 +585,44 @@ No capability row or superiority claim is promoted.
 [recorded real journey](../../artifacts/gitlab-native-insertion-20261112/report.json)
 and [current evidence and remaining failures](../../artifacts/gitlab-native-insertion-integration-20261112.json).
 
+### Native component foundations and remaining controls
+
+The native component migration preserves the original 53 component cases with
+Fountain setup/assertions, plus two new recovery cases. The current three-suite
+result is **163 passed / 7 failed / 170 total**: all 75 host and 40 form cases
+pass; 48 of 55 component cases pass. No cases are skipped. The seven open cases
+cover attachments and alert/link/media/code/reference contextual menus. Those
+native controls still require implementation and user-facing acceptance, not a
+Tiptap-shaped facade. The change from 42 to seven failures includes fixture
+migration; it is not a claim of 35 product bugs repaired.
+
+Actual fixes preserve replacement history options during Retry, keep failed
+loads read-only until explicit recovery, restore immersive layout/sticky-header
+classes and remove the default accessible label when `aria-labelledby` owns the
+name. Host read-only policy remains authoritative after retry. Rejected document
+Markdown is inspectable/copyable before and after recovery while the editor is
+open. This panel does not persist a second source attachment in GitLab.
+
+The shared browser view now identifies an empty document semantically, including
+an empty paragraph containing an empty text node. Its placeholder paints without
+becoming document text; real focus, typing, deletion, undo and non-text content
+are verified in Chromium, Firefox and WebKit, with screenshots visually reviewed.
+Firefox's computed CSS retains `attr()`; its visible screenshot confirms paint.
+
+The expanded real-service journey also covers the actual empty comment hint and
+failed-load Retry/explicit recovery/cancel against an unsupported saved record.
+Server source stays unchanged; normal native paste, saves, comments, permissions
+and restart remain covered. See the final report for the exact installed build,
+recording, screenshots and test scope. Five core/component defects are addressed;
+this is not complete toolbar, dialect, accessibility or product certification.
+
+All 5,507 root unit tests/341 files, current types/API, builds, performance/retention
+and measured size checks pass. The stylesheet needs 64 bytes of extra capacity
+(90,906 measured bytes against 90,880 previously); JavaScript and performance
+limits remain unchanged. Broader release/hosted gates and publication are pending.
+
+[Component evidence and remaining failures](../../artifacts/gitlab-native-component-integration-20261112.json).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline
