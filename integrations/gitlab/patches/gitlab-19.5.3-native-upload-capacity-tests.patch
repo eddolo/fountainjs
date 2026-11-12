@@ -1,0 +1,74 @@
+diff --git a/spec/frontend/content_editor/components/content_editor_spec.js b/spec/frontend/content_editor/components/content_editor_spec.js
+index 89966f83..57977e8f
+--- a/spec/frontend/content_editor/components/content_editor_spec.js
++++ b/spec/frontend/content_editor/components/content_editor_spec.js
+@@ -504,6 +504,69 @@ describe('ContentEditor', () => {
+       anotherField.remove();
+     });
+ 
++    it('rejects an entire oversized file selection before HTTP and accepts a smaller retry', async () => {
++      prepareRenderer();
++      mock.onPost(/\/uploads$/).reply(200, { link: { markdown: imageMarkdown } });
++      createWrapper({ markdown: 'Original document' });
++      await waitForPromises();
++      const input = wrapper.findByTestId('file-upload-field');
++      Object.defineProperty(input.element, 'files', {
++        configurable: true,
++        value: Array.from(
++          { length: 101 },
++          (_, index) => new File(['Refused'], `${index  }.txt`, { type: 'text/plain' }),
++        ),
++      });
++      await input.trigger('change');
++      await waitForPromises();
++      expect(mock.history.post).toHaveLength(0);
++      expect(findEditorModel().getText()).toBe('Original document');
++      expect(wrapper.findByRole('list', { name: 'Attachment uploads' }).exists()).toBe(false);
++      expect(wrapper.findByTestId('content-editor-error').text()).toContain(
++        'None of this selection was uploaded',
++      );
++      await choose();
++      expect(mock.history.post).toHaveLength(1);
++      expect(findEditorDom().querySelector('img')).not.toBeNull();
++      expect(wrapper.findByTestId('content-editor-error').exists()).toBe(false);
++    });
++
++    it('counts pending files before admitting another selection without cancelling the active upload', async () => {
++      prepareRenderer();
++      let finish;
++      mock.onPost(/\/uploads$/).reply(
++        () =>
++          new Promise((resolve) => {
++            finish = () => resolve([200, { link: { markdown: imageMarkdown } }]);
++          }),
++      );
++      createWrapper({ markdown: 'Original document' });
++      await waitForPromises();
++      await choose();
++      const input = wrapper.findByTestId('file-upload-field');
++      Object.defineProperty(input.element, 'files', {
++        configurable: true,
++        value: Array.from(
++          { length: 100 },
++          (_, index) => new File(['Refused'], `${index  }.txt`, { type: 'text/plain' }),
++        ),
++      });
++      await input.trigger('change');
++      await waitForPromises();
++      expect(mock.history.post).toHaveLength(1);
++      expect(wrapper.findByTestId('content-editor-error').text()).toContain(
++        'None of this selection was uploaded',
++      );
++      expect(findEditorModel().getText()).toBe('Original document');
++      expect(wrapper.findByRole('list', { name: 'Attachment uploads' }).text()).toContain(
++        'figure.png',
++      );
++      finish();
++      await waitForPromises();
++      expect(findEditorDom().querySelectorAll('img')).toHaveLength(1);
++      expect(wrapper.findByRole('list', { name: 'Attachment uploads' }).exists()).toBe(false);
++    });
++
+     it('retains a malformed upload result as a failed task without changing content', async () => {
+       prepareRenderer();
+       mock.onPost(/\/uploads$/).reply(200, { link: {} });

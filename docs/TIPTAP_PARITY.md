@@ -4,19 +4,21 @@
 
 Fountain mounts in real GitLab issue/discussion editors. Native picker/image
 clipboard uploads now use actual authenticated GitLab storage and rendering APIs,
-with queued insertion, cancellation/retry and failed-file save recovery. The final
-real journey passes **17 checks**, including saved asset source, downloaded file
+with queued insertion, cancellation/retry and failed-file save recovery. Whole-batch
+capacity refusal is now visible and happens before any of those files upload.
+The final real journey passes **18 checks**, including saved asset source, downloaded file
 bytes, reader/reopen, anonymous refusal and service restart. It also exposed and
 repaired image-paste caret placement and local-history typing-format restoration.
-The three upstream suites are **174 passed / 5 failed / 179 total**; the five
+The three upstream suites are **176 passed / 5 failed / 181 total**; the five
 remaining failures require alert/link/media/code/reference contextual menus.
-All **5,530 root unit tests/342 files**, types/API, package/headless/runtime,
-performance/retention and measured size checks pass. Nine event-authored native
+The unchanged public engine retains the prior **5,530 root tests/342 files**,
+types/API, package/headless/runtime, performance/retention and size passes.
+Current private changes pass 38 focused cases and root TypeScript. Nine event-authored native
 file-input boundary cases pass across three desktop engines; full GitLab upload
 acceptance is Chromium-only. Full product/release acceptance and the other two
 professional products remain open. No row or superiority claim is promoted.
 Following checkpoints are historical.
-[Current native evidence](../artifacts/gitlab-native-attachments-integration-20261112.json).
+[Current native evidence](../artifacts/gitlab-native-upload-capacity-integration-20261112.json).
 
 The full matching GitLab frontend now builds and serves the prepared host patch;
 the recorded real rich/source/rich save/restart journey passes on its final run.

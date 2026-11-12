@@ -1,0 +1,14 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/content_editor/components/content_editor.vue app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue app/assets/javascripts/content_editor/components/fountain_editor_surface.vue spec/frontend/content_editor/components/content_editor_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/spec/frontend/content_editor/components/content_editor_spec.js
+  517:47  error  Unexpected string concatenation  prefer-template
+  551:47  error  Unexpected string concatenation  prefer-template
+
+✖ 2 problems (2 errors, 0 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

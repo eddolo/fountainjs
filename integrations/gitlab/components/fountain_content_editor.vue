@@ -53,6 +53,8 @@ export default {
       return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
     },
     failureMessage() {
+      if (this.failureCode === 'GITLAB_UPLOAD_QUEUE_FULL')
+        return s__('ContentEditor|Too many files were selected. None of this selection was uploaded. Wait for uploads to finish or remove failed files, then select fewer files.');
       if (this.failureCode === 'GITLAB_UPLOAD_DISABLED')
         return s__('ContentEditor|File uploads are unavailable in this editor.');
       if (this.failureCode === 'GITLAB_CLIPBOARD_READ_FAILED')
@@ -175,6 +177,11 @@ export default {
     },
     async attachFiles(files) {
       if (!this.canUpload) throw new Error('GITLAB_UPLOAD_DISABLED');
+      if (files.length > this.contentEditor.availableUploadSlots) {
+        this.onSurfaceError(new Error('GITLAB_UPLOAD_QUEUE_FULL'));
+        return;
+      }
+      if (this.failureCode === 'GITLAB_UPLOAD_QUEUE_FULL') this.failure = null;
       const active = document.activeElement;
       const ownsFocus = active === document.body || this.$refs.surface.$el.contains(active)
         || this.$el.querySelector('[data-testid="formatting-toolbar"]').contains(active);

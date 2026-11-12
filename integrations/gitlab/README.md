@@ -675,10 +675,8 @@ lazy-image decode timed out despite valid HTTP bytes and painted failure pixels;
 this intermittent reader finding remains unresolved. The final tests verify
 these behaviors without relaxing timeouts or semantic/visual expectations.
 
-Code review also found that a selection batch exceeding available queue slots can
-swallow individual pre-entry refusals in the component. The service capacity guard
-is tested; atomic batch preflight and a visible refusal still need implementation
-before shipping. This takes priority before the missing contextual menus.
+Code review also found a whole-batch admission gap; the following checkpoint
+repairs it. The earlier evidence retains the finding as it stood at that revision.
 
 Full menus, reader image intermittency, dialect/source fidelity, templates/autocomplete, all media,
 persistent recovery/orphan cleanup, collaboration/MR/wiki/multi-user workflows,
@@ -689,6 +687,35 @@ Nothing is published and no parity or superiority row is promoted.
 [Attachment contracts](services/README.md#native-attachment-insertion),
 [real journey](../../artifacts/gitlab-native-attachments-20261112/report.json)
 and [checkpoint evidence](../../artifacts/gitlab-native-attachments-integration-20261112.json).
+
+### Whole-batch upload admission
+
+Before any file in a selection is queued, the native component checks the actual
+remaining capacity. If the selection will not fit, it refuses the whole batch
+with a visible message. Existing pending/failed jobs count toward capacity;
+cancellation/completion releases it, and a disposed service has no available
+slots. No partial batch is uploaded silently. Choosing a smaller selection clears
+the refusal and uses the normal real upload path.
+
+Two new actual component cases pass: an empty queue rejects 101 files and accepts
+a smaller retry; an existing pending upload survives a second refused selection.
+The upstream total is **176 passed / 5 failed / 181 cases**. The same five native
+contextual-menu cases still fail. A fifth ordered patch reconstructs the new specs.
+The service set passes 38 focused cases and root TypeScript/ESLint pass.
+
+The final real-service profile passes **18 checks**. Its actual file chooser sends
+101 File objects to the native handler; the visible refusal occurs with zero
+upload HTTP requests and unchanged content. A smaller file then uploads/inserts
+successfully, saves and reopens with the other assets, and survives actual restart.
+The refusal and native/reader screenshots are visually reviewed.
+
+Public package code/API/capacities are unchanged from `16721038`; its 5,530-unit,
+package/runtime/type/performance evidence remains historical and applicable to
+that unchanged public build. Current integration acceptance is scoped above,
+not a fresh full release gate. Reader image intermittency and all broader product
+gaps remain open; nothing is published or promoted as full product/parity readiness.
+
+[Current capacity evidence](../../artifacts/gitlab-native-upload-capacity-integration-20261112.json).
 
 ### Remaining full application acceptance
 

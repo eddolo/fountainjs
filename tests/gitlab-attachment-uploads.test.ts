@@ -196,14 +196,20 @@ it('refuses invalid upload responses and releases retained jobs on explicit remo
 it('bounds retained upload entries and lets explicit cancellation release capacity', async () => {
   const pending = deferred<string>();
   const { service } = await setup(vi.fn(() => pending.promise), 1);
+  expect(service.availableUploadSlots).toBe(1);
   const first = service.uploadAttachment(file());
   await flush();
+  expect(service.availableUploadSlots).toBe(0);
   await expect(service.uploadAttachment(file())).rejects.toThrow('GITLAB_UPLOAD_QUEUE_FULL');
   service.cancelUpload(service.attachmentUploads[0]!.id);
   await first;
+  expect(service.availableUploadSlots).toBe(1);
   const second = service.uploadAttachment(file());
   pending.resolve('![figure](/uploads/figure.png)');
   await expect(second).resolves.toEqual({ status: 'applied' });
+  expect(service.availableUploadSlots).toBe(1);
+  service.dispose();
+  expect(service.availableUploadSlots).toBe(0);
 });
 
 it('captures the insertion target before a host status observer types elsewhere', async () => {

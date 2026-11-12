@@ -93,6 +93,10 @@ cancelled entries release File handles; failed files remain available for
 Markdown if only rendering/insertion failed; it does not upload the binary twice.
 That Markdown is copyable in failed snapshots. Late results/progress from aborted
 tasks are ignored, and disposal cancels remaining tasks. The queue is bounded.
+`availableUploadSlots` reports remaining capacity (zero after disposal). The native
+component preflights a complete selected batch before starting any task, refusing
+it visibly if it will not fit. It includes already pending/failed entries and
+allows a smaller subsequent selection without disturbing existing uploads.
 
 Saving and host change publications refuse pending insertions and unresolved
 failed files. Removing the last failed file republishes the intact current draft,

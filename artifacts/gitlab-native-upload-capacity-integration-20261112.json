@@ -1,0 +1,153 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-native-product-integration",
+  "parentRevision": "167210387aded196adbd2b2834e045127832e404",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "repair": "Atomic native selection-batch admission before registering or uploading any file; visible refusal rather than swallowed individual queue-full rejection",
+  "behavior": [
+    "Pending/failed jobs count toward remaining capacity",
+    "Cancellation/completion releases capacity; disposal exposes zero available slots",
+    "An oversized selection leaves all current jobs and document content intact",
+    "A smaller subsequent selection clears the error and follows normal host uploads"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Native Linux Chromium",
+    "checks": 18,
+    "report": "artifacts/gitlab-native-attachment-capacity-20261112/report.json",
+    "log": "artifacts/gitlab-native-upload-capacity-live-20261112.log",
+    "issueIID": 34,
+    "batchRefusal": {
+      "files": 101,
+      "uploadRequests": 0,
+      "documentUnchanged": true,
+      "smallerSelectionUploaded": true
+    },
+    "recording": "artifacts/gitlab-native-attachment-capacity-20261112/recordings/page@7903e92479d91671bfccdf8c10e57630.webm",
+    "screenshots": [
+      "artifacts/gitlab-native-attachment-capacity-20261112/whole-batch-refused.png",
+      "artifacts/gitlab-native-attachment-capacity-20261112/original-rich-edit.png",
+      "artifacts/gitlab-native-attachment-capacity-20261112/original-reopened.png",
+      "artifacts/gitlab-native-attachment-capacity-20261112/original-after-restart.png",
+      "artifacts/gitlab-native-attachment-capacity-20261112/oversize-source-retained.png"
+    ],
+    "visualReview": "Actual refusal banner is readable immediately above the toolbar; document remains intact. Native editor and reader show the subsequent after-capacity.txt file with existing images/file/table/math/tasks/text. Final save/reopen and restart screenshots inspected; reader folding remains GitLab behavior.",
+    "uploadLimit": {
+      "originalMiB": 100,
+      "auditMiB": 10,
+      "restored": true
+    },
+    "pageErrors": [],
+    "runtimeSHA256": "77d11a309ba117d796d3729e1954d43e88f89175159c71114ceca3cf02e57c64",
+    "loadedScripts": [
+      {
+        "path": "/assets/webpack/content_editor.cd594549.chunk.js",
+        "sha256": "9a4986d0f0abf576f0311dfb44391482656f5e97476da9423d2a674fe685e235"
+      },
+      {
+        "path": "/assets/webpack/content_editor.cd594549.chunk.js",
+        "sha256": "9a4986d0f0abf576f0311dfb44391482656f5e97476da9423d2a674fe685e235"
+      },
+      {
+        "path": "/assets/webpack/content_editor.cd594549.chunk.js",
+        "sha256": "9a4986d0f0abf576f0311dfb44391482656f5e97476da9423d2a674fe685e235"
+      },
+      {
+        "path": "/assets/webpack/content_editor.cd594549.chunk.js",
+        "sha256": "9a4986d0f0abf576f0311dfb44391482656f5e97476da9423d2a674fe685e235"
+      }
+    ],
+    "scope": "Real authenticated GitLab picker/uploads/save/reopen/restart; not full product or multi-engine certification"
+  },
+  "currentChecks": {
+    "focusedUnits": {
+      "status": "passed",
+      "tests": 38,
+      "files": 3,
+      "log": "artifacts/gitlab-native-upload-capacity-focused-20261112.log"
+    },
+    "upstream": {
+      "status": "failed-with-retained-feature-cases",
+      "passed": 176,
+      "failed": 5,
+      "total": 181,
+      "component": {
+        "passed": 61,
+        "total": 66
+      },
+      "host": {
+        "passed": 75,
+        "total": 75
+      },
+      "form": {
+        "passed": 40,
+        "total": 40
+      },
+      "newCapacityCases": 2,
+      "log": "artifacts/gitlab-native-upload-capacity-upstream-final-20261112.log",
+      "remaining": [
+        "Alert contextual menu",
+        "Link contextual menu",
+        "Media contextual menu",
+        "Code-block contextual menu",
+        "Reference contextual menu"
+      ],
+      "skips": 0,
+      "timeoutChanges": 0
+    },
+    "types": {
+      "status": "passed",
+      "log": "artifacts/gitlab-native-upload-capacity-types-20261112.log"
+    },
+    "sourceBuild": {
+      "status": "passed",
+      "compilerSeconds": 55.68,
+      "warnings": [
+        "asset size",
+        "entrypoint size"
+      ],
+      "log": "artifacts/gitlab-native-upload-capacity-source-build-20261112.log"
+    },
+    "eslint": {
+      "status": "passed",
+      "log": "artifacts/gitlab-native-upload-capacity-eslint-final-20261112.log",
+      "initialFailure": "artifacts/gitlab-native-upload-capacity-eslint-20261112.log",
+      "correction": "Two test filename concatenations changed to template strings per upstream prefer-template"
+    },
+    "patchVerification": "artifacts/gitlab-native-upload-capacity-patch-verification-20261112.json"
+  },
+  "publicEngine": {
+    "unchangedFrom": "16721038",
+    "sourceAndDependencyDiff": "empty",
+    "distIndexSHA256": "a499975bd9c9924da8b7e248e454ddfd3223881f7f07cd84c357b10102c3c17a",
+    "previousEvidence": "artifacts/gitlab-native-attachments-integration-20261112.json",
+    "scope": "The prior full 5530-unit/342-file, package/API, runtime, framework, size and performance passes remain evidence for the unchanged public engine. This private integration follow-up refreshes the checks listed above, not a combined full release gate.",
+    "acceptanceLimitChanges": "None"
+  },
+  "installation": {
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "previousManifest": "artifacts/gitlab-native-browser-install/attachment-checkpoint-install-20261112.json",
+    "previousRuntimeManifest": "artifacts/gitlab-native-runtime/attachment-checkpoint-build-20261112.json",
+    "ownedFiles": 7
+  },
+  "remaining": [
+    "Five native contextual menus and broader toolbar/dialect/source fidelity",
+    "Retained initial-reader lazy-image intermittency is not closed by this passing run",
+    "All media, autocomplete/templates/providers, persisted recovery/orphan cleanup and all rebasing cases",
+    "MR/wiki/multi-user, localization, mobile/assistive technology/cross-engine product and hosted release gates",
+    "Two additional complete professional products remain unimplemented candidates"
+  ],
+  "runtime": "Own application stopped after audit; dedicated records/volumes retained",
+  "publication": "None; no production/parity/superiority claim",
+  "sourceHashEncoding": "SHA-256 of LF-normalized UTF-8 source",
+  "sourceHashes": {
+    "integrations/gitlab/services/attachment_uploads.ts": "94c88655b81c3d2863369601d92ffad1bdec106e2016949809490b353ca436ca",
+    "integrations/gitlab/services/content_editor.ts": "4858b83ee8633b2f4bd2a2e065ca5f16a0cc3a1ed1fa673d30cec0d4b9e6a885",
+    "integrations/gitlab/components/fountain_content_editor.vue": "de1edf3cc19518985229b70d002663c2ae4645b81e7b1705968395448713b8f1",
+    "scripts/audit-gitlab-product-baseline.mjs": "5aa352120f28e964531d142c86793c1c83a7d456c792f5be1e574af48da26f88",
+    "scripts/run-gitlab-native-browser-audit.mjs": "9dd407983b166d57c6800fb455edd66f0abc9626bf9c1b929d0cd93910cdc62c",
+    "tests/gitlab-attachment-uploads.test.ts": "0a4b1a1ce3eef083115f9e0126f8dc9959e2ec16d0e1250e86196aa1a0463a91",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-upload-capacity-tests.patch": "31f267e9c666dd2e190b83c1611262a86e3fcec16abf5303d77dbdc458f46f7f"
+  }
+}

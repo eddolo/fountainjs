@@ -164,6 +164,7 @@ export class GitLabContentEditor {
     return this.insertions.insert(markdown);
   }
   get attachmentUploads(): readonly GitLabUploadSnapshot[] { return this.uploads.snapshots; }
+  get availableUploadSlots(): number { return this.uploads.availableSlots; }
   uploadAttachment(file: File): Promise<SerializedContentResult> { return this.uploads.add(file); }
   retryUpload(id: string): Promise<SerializedContentResult> { return this.uploads.retry(id); }
   cancelUpload(id: string): boolean {

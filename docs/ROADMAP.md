@@ -4,21 +4,23 @@ Updated 2026-11-12.
 
 The latest real GitLab checkpoint adds native picker and clipboard uploads through
 GitLab's authenticated storage APIs, ordered insertion, progress/cancel/retry and
-failed-file save recovery. The recorded journey passes **17 checks**, including
+failed-file save recovery. Oversized selection batches now refuse visibly before
+any file uploads or document changes. The recorded journey passes **18 checks**, including
 actual save/reopen, file bytes, anonymous refusal and application restart. Native
 image-paste testing also repaired rich-insertion caret placement and local-history
 typing marks; generated caret anchors no longer add empty formatting to Markdown.
-The upstream suite set is **174 passed / 5 failed / 179 total**. Alert, link,
+The upstream suite set is **176 passed / 5 failed / 181 total**. Alert, link,
 media, code-block and reference contextual menus still need implementation.
-All **5,530 root unit tests/342 files**, types/API, package/headless/runtime and
-measured size/performance checks pass. Nine event-authored file-input boundary
+The unchanged public engine retains the preceding **5,530 root tests/342 files**,
+types/API, package/headless/runtime and size/performance passes. Current private
+integration changes pass 38 focused cases and root TypeScript; no new full release
+gate is claimed. Nine event-authored file-input boundary
 cases pass across three desktop engines; actual GitLab binary clipboard acceptance
 is currently Chromium-only. Full product/release acceptance remains open. No
 parity row is promoted, and the other two full products remain unimplemented.
-Immediate follow-up: make whole-batch upload-capacity refusals visible, then
-implement the five missing contextual menus. The service capacity guard passes;
-the component can currently swallow an individual queue-full rejection.
-[Current evidence and remaining work](../integrations/gitlab/README.md#native-attachments-in-the-real-application).
+Immediate follow-up: implement the five missing contextual menus. The reader's
+intermittent initial lazy-image decode remains an open finding despite later passes.
+[Current evidence and remaining work](../integrations/gitlab/README.md#whole-batch-upload-admission).
 
 FountainJS is an MIT-licensed structured-document engine with a web editor,
 framework bindings, and optional document modules. The immediate goal is a

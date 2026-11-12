@@ -239,8 +239,8 @@
     ]
   },
   "installation": {
-    "manifest": "artifacts/gitlab-native-browser-install/install.json",
-    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "manifest": "artifacts/gitlab-native-browser-install/attachment-checkpoint-install-20261112.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/attachment-checkpoint-build-20261112.json",
     "ownedFiles": 7,
     "previousManifest": "artifacts/gitlab-native-browser-install/component-checkpoint-install-20261112.json",
     "previousRuntimeManifest": "artifacts/gitlab-native-runtime/component-checkpoint-build-20261112.json",

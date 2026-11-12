@@ -1405,6 +1405,30 @@ no parity row or superiority claim is promoted.
 
 [Current evidence](../artifacts/gitlab-native-attachments-integration-20261112.json).
 
+### Native GitLab whole-batch admission — 2026-11-12
+
+The component now checks actual available queue capacity before starting any file
+in a selected batch. It visibly refuses a batch that will not fit, counts existing
+pending/failed tasks, preserves an already running upload and admits a smaller
+subsequent selection. This closes the pre-entry refusal gap retained by the prior
+attachment checkpoint.
+
+Current focused units pass 38 cases; root TypeScript, source build and ESLint pass.
+The upstream suites pass 176 of 181 cases, including two new capacity cases; the
+same five contextual-menu requirements still fail. Five ordered patches reproduce
+the exact tested specs. The recorded real-service profile passes 18 checks,
+including 101 actual chooser Files refused with zero upload HTTP requests,
+unchanged content, successful smaller-file recovery, normal saves/reopens and
+actual application restart. The visible refusal and final UI are reviewed.
+
+Public runtime/API/budgets are unchanged from `16721038`. Its full 5,530-unit and
+package/runtime/framework/performance evidence remains the preceding checkpoint;
+this integration follow-up does not claim a new combined release gate. Reader
+image intermittency, full product and hosted release acceptance remain open.
+Nothing is published and no parity row is promoted.
+
+[Current evidence](../artifacts/gitlab-native-upload-capacity-integration-20261112.json).
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

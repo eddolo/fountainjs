@@ -50,6 +50,9 @@ export class GitLabAttachmentUploads {
   get hasFailures(): boolean {
     return [...this.entries.values()].some(entry => entry.status === 'failed');
   }
+  get availableSlots(): number {
+    return this.destroyed ? 0 : this.capacity - this.entries.size;
+  }
 
   async add(file: File): Promise<SerializedContentResult> {
     if (this.destroyed) throw new Error('GITLAB_UPLOADS_DESTROYED');

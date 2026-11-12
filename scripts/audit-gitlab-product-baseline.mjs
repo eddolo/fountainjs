@@ -6,13 +6,16 @@ import { chromium, expect } from '@playwright/test';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
-const nativeAttachments = process.argv.includes('--native-attachments');
+const nativeCapacity = process.argv.includes('--native-attachment-capacity');
+const nativeAttachments = process.argv.includes('--native-attachments') || nativeCapacity;
 const nativeComponent = process.argv.includes('--native-component') || nativeAttachments;
 const nativeInsertion = process.argv.includes('--native-insertion') || nativeComponent;
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeAttachments
+  nativeCapacity
+    ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
+    : nativeAttachments
     ? 'artifacts/gitlab-native-attachments-20261112/'
     : nativeComponent
     ? 'artifacts/gitlab-native-component-20261112/'
@@ -89,6 +92,7 @@ const report = {
   nativeInsertion,
   nativeComponent,
   nativeAttachments,
+  nativeCapacity,
 };
 if (nativeBrowser)
   report.nativeRuntime = JSON.parse(
@@ -397,11 +401,37 @@ try {
       await expect(editor.locator('img')).toHaveCount(3);
       await expect.poll(() => editor.locator('img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
       report.checks.push('Actual browser image clipboard and native paste upload through GitLab instead of embedding binary data in document JSON');
+      if (nativeCapacity) {
+        const before = await editor.innerText();
+        let requests = 0;
+        const count = request => {
+          if (request.method() === 'POST' && new URL(request.url()).pathname.endsWith('/uploads')) requests++;
+        };
+        page.on('request', count);
+        try {
+          await choose(Array.from({ length: 101 }, (_, index) => ({
+            name: `refused-batch-${index}.txt`, mimeType: 'text/plain', buffer: Buffer.from('Refused selection'),
+          })));
+          await expect(page.getByTestId('content-editor-error')).toContainText('None of this selection was uploaded.');
+          expect(await editor.innerText()).toBe(before);
+          await expect(page.getByRole('list', { name: 'Attachment uploads', exact: true })).toHaveCount(0);
+          expect(requests).toBe(0);
+          await page.screenshot({ path: fileURLToPath(new URL('whole-batch-refused.png', output)), fullPage: true });
+        } finally { page.off('request', count); }
+        const recoveryMarkdown = await uploadFromPicker({ name: 'after-capacity.txt', mimeType: 'text/plain',
+          buffer: Buffer.from('A smaller selection works after whole-batch refusal.\n') });
+        await expect(editor.locator('a[href*="after-capacity.txt"]')).toBeVisible();
+        await expect(page.getByTestId('content-editor-error')).toHaveCount(0);
+        report.nativeUploads.push({ source: 'after-batch-refusal', markdown: recoveryMarkdown });
+        report.batchRefusal = { files: 101, uploadRequests: requests, documentUnchanged: true, smallerSelectionUploaded: true };
+        report.checks.push('Actual native picker refuses an entire 101-file selection visibly before HTTP or document changes, then uploads/inserts a smaller selection successfully');
+      }
       const maxMiB = await page.evaluate(() => Number(window.gon.max_file_size) || 10);
       if (maxMiB > 32) throw new Error('Configure the isolated audit instance with a file limit at most 32 MiB before its bounded oversize journey.');
       await choose({ name: 'oversize.bin', mimeType: 'application/octet-stream', buffer: Buffer.alloc(Math.floor(maxMiB * 1024 * 1024) + 1) });
       const failures = page.getByRole('list', { name: 'Attachment uploads', exact: true });
       await expect(failures).toContainText('This file exceeds the upload limit');
+      if (nativeCapacity) await expect(page.getByTestId('content-editor-error')).toHaveCount(0);
       await page.getByRole('button', { name: 'Save changes', exact: true }).click();
       await expect(page.getByRole('alert').filter({ hasText: 'Unable to save the current document.' })).toBeVisible();
       await expect(editor).toBeVisible();

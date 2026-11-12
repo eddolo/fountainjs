@@ -168,8 +168,10 @@ transactions. Then apply `gitlab-19.5.3-native-component-tests.patch` from the s
 directory. It migrates the actual surface, service, history and event setup while
 retaining attachment/contextual-menu requirements. Then apply
 `gitlab-19.5.3-native-attachment-tests.patch` for the native file controls and nine
-additional upload/focus cases. The three suites currently pass 174 of 179 cases;
-five contextual-menu cases remain failing. All 75 host and 40 form cases pass.
+additional upload/focus cases. Then apply
+`gitlab-19.5.3-native-upload-capacity-tests.patch` for two whole-batch admission
+cases. The three suites currently pass 176 of 181 cases; five contextual-menu
+cases remain failing. All 75 host and 40 form cases pass.
 Forward/reverse checks reconstruct both native specs exactly
 without changing the main index; no skips or timeout increases waive failures.
 
@@ -195,6 +197,8 @@ node scripts/run-gitlab-native-browser-audit.mjs --insertion
 node scripts/run-gitlab-native-browser-audit.mjs --component
 # Also exercise real picker/clipboard uploads, failed-file recovery and saving:
 node scripts/run-gitlab-native-browser-audit.mjs --attachments
+# Include whole-batch refusal and smaller-selection recovery through the picker:
+node scripts/run-gitlab-native-browser-audit.mjs --capacity
 ```
 
 Use `PLAYWRIGHT_BROWSERS_PATH` when the installed Linux browser lives outside

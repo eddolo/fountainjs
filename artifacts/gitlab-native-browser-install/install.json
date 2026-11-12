@@ -6,14 +6,14 @@
     "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
     "entry": "integrations/gitlab/runtime/browser.ts",
     "target": "es2018",
-    "bytes": 1422891,
-    "sha256": "6b812e3c2158e6ceedadd0a67172dc0cd42a66419505e7c7835657a08f306d5a",
-    "parentRevision": "38be941307f710895bd1524b722e5c01d043f134",
+    "bytes": 1423054,
+    "sha256": "77d11a309ba117d796d3729e1954d43e88f89175159c71114ceca3cf02e57c64",
+    "parentRevision": "167210387aded196adbd2b2834e045127832e404",
     "inputs": {
       "integrations/gitlab/runtime/browser.ts": "9045a2c87ebd5bad617dd1da4203057b993880bf4bda621473a2a59c430a5c54",
-      "integrations/gitlab/services/content_editor.ts": "cdfec566c381143c306e5452c06f3da264cb46ed171ff08711156974ef9090fa",
+      "integrations/gitlab/services/content_editor.ts": "4858b83ee8633b2f4bd2a2e065ca5f16a0cc3a1ed1fa673d30cec0d4b9e6a885",
       "integrations/gitlab/services/markdown_insertion.ts": "379504ee7216d91e9ed7a8342c637ffda871d08e1648043e23e6428cd57d1621",
-      "integrations/gitlab/services/attachment_uploads.ts": "71b4443632c4cb4a63b504f835a2758db93aab544465fa452a5057683368309c",
+      "integrations/gitlab/services/attachment_uploads.ts": "94c88655b81c3d2863369601d92ffad1bdec106e2016949809490b353ca436ca",
       "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
       "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
       "integrations/gitlab/services/markdown_codec.ts": "ac963f88bfc78b9868950fa0a5ab362ea4bf46d0fbae215478e09c178e0b7852",
@@ -27,10 +27,10 @@
   "files": {
     "babel.config.js": "7cc8ec862fb6e42c7e26b3fb29410094b4f49f602f2ed02e6ec6132ac32a20a4",
     "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "f4d35a1425d46cc0e4de1caae146f3a035c9c853da8ba08d241c8e12c3cffe10",
-    "app/assets/javascripts/content_editor/components/content_editor.vue": "48d0e4c6d15c2525b925ce43a0f8f654f986611c08558f3f4fea6fd534d23940",
+    "app/assets/javascripts/content_editor/components/content_editor.vue": "b22a9400d6368ed023cd9a85ddcb5aa99b00742e3bf197c46d6ff8a26e95096a",
     "app/assets/javascripts/content_editor/components/fountain_editor_surface.vue": "ff2f214fdaec88d6e38a49e07b8079841195f2641789fb0e42ed9f8d7a406813",
     "app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue": "0ad7ea144c2d43543ecb1f1437bf1c054c2eabd670f6d45c7bf2009aab9a8508",
-    "app/assets/javascripts/content_editor/services/fountain_runtime.js": "6b812e3c2158e6ceedadd0a67172dc0cd42a66419505e7c7835657a08f306d5a",
+    "app/assets/javascripts/content_editor/services/fountain_runtime.js": "77d11a309ba117d796d3729e1954d43e88f89175159c71114ceca3cf02e57c64",
     "app/assets/javascripts/content_editor/services/fountain_runtime.css": "d6e6fb3226b609645cb19791d4351cbf45f7ac6f2de42a6e85157865806f7e26"
   }
 }
