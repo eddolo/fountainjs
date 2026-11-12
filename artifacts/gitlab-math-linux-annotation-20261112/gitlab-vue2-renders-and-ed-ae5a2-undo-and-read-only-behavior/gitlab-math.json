@@ -1,0 +1,10 @@
+{
+  "engine": "",
+  "scope": "Real public Fountain math nodes, trusted-off KaTeX, native Vue 2 editing and pinned GitLab HTML inputs. Actual GitLab backend/storage remains unverified.",
+  "sourceEditAndUndo": true,
+  "secondEquation": true,
+  "readerMode": true,
+  "inlineDisplay": true,
+  "fencedMath": true,
+  "errors": []
+}

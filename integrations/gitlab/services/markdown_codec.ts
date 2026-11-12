@@ -4,6 +4,7 @@ import { ServerHTMLImporter, type ServerHTMLImporterOptions } from 'fountainjs-e
 import { parseFragment, serialize, type DefaultTreeAdapterMap } from 'parse5';
 import type { SerializedContentCodec } from './serialized_content';
 import type { GitLabRenderResponse } from './asset_resolver';
+import { gitlabMathNodes, normalizeGitLabMath, serializeGitLabMath } from './math';
 
 export interface GitLabMarkdownIssue { stage: 'import' | 'export'; code: string; message: string; path?: readonly number[] }
 export class GitLabMarkdownConversionError extends Error {
@@ -51,7 +52,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec): Schem
       gitlabIntrinsicSize: !child.getAttribute('width') && !child.getAttribute('height') && !child.style.width && !child.style.height,
       alt: child.getAttribute('alt') ?? '', title: child.getAttribute('title') ?? '', width: size('width'), height: size('height') };
   };
-  return { ...base, nodes: { ...base.nodes,
+  return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base),
     inline_image: { ...image, attrs: { ...image.attrs, gitlabCanonicalSrc: canonical,
       gitlabIntrinsicSize: { default: false, validate: value => typeof value === 'boolean' },
       gitlabCanonicalMissing: { default: false, validate: value => typeof value === 'boolean' } },
@@ -117,8 +118,9 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
       owned.push(input); checkboxes.set(parent, owned);
     }
   }
-  const issues: GitLabMarkdownIssue[] = [];
+  const math = normalizeGitLabMath(elements), issues: GitLabMarkdownIssue[] = [...math.issues];
   for (const element of elements) {
+    if (math.handled.has(element)) continue;
     const classes = (attr(element, 'class') ?? '').split(/\s+/u);
     if (attr(element, 'dir') === 'auto' && (attr(element, 'align')
       || /(?:^|;)\s*text-align\s*:/iu.test(attr(element, 'style') ?? ''))) {
@@ -192,6 +194,21 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const encoded = JSON.stringify(doc.toJSON());
     while (encoded.includes(prefix)) prefix += 'X';
     const project = (node: Node, path: number[]): Node => {
+      if (['inline_math', 'math_block'].includes(node.type.name)) {
+        let ancestor = doc;
+        for (const index of path.slice(0, -1)) {
+          ancestor = ancestor.child(index);
+          if (['table_cell', 'table_header'].includes(ancestor.type.name) && /[|\r\n]/u.test(String(node.attrs.latex ?? ''))) {
+            issues.push({ stage: 'export', code: 'math-table-source', path,
+              message: 'Math with table delimiters or physical newlines needs a source-aware GitLab table adapter.' });
+          }
+        }
+        const parent = path.slice(0, -1).reduce((node, index) => node.child(index), doc);
+        const raw = serializeGitLabMath(node, parent.content[path.at(-1)! + 1], path, issues);
+        const token = `${prefix}${tokens.size}END`; tokens.set(token, raw);
+        if (node.type.name === 'math_block') return doc.type.schema.node('paragraph', {}, [doc.type.schema.text(token)]);
+        return project(doc.type.schema.text(token, node.marks), path);
+      }
       if (['gitlab_reference', 'gitlab_placeholder'].includes(node.type.name)) {
         const token = `${prefix}${tokens.size}END`;
         tokens.set(token, String(node.attrs.original));

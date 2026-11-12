@@ -239,7 +239,8 @@ Current evidence and remaining conversion work:
 | Placeholders | Resolved visible value remains separate from the original placeholder token. |
 | Homogeneous nested task lists | Checkbox state comes from the item's own input, not a checked descendant. Mixed task/bullet lists, task-table cells and inapplicable tasks need dedicated adapters. |
 | Highlight/underline/subscript/superscript | Ordinary text exports the actual GitLab HTML dialect (`mark`, `u`, `sub`, `sup`). Custom highlight colors, certain combined code/atom formatting and authored layout require an explicit retained representation. |
-| Math, diagrams, frontmatter, review suggestions, footnotes, embeds, TOC and other specialized GitLab renderers | Known markers are reported before flattening. Their source-aware GitLab adapters remain required, even when Fountain already has a corresponding native feature. |
+| Math | The source-backed adapter below covers tested dollar, legacy backtick, inline display and fenced forms, plus retained KaTeX annotations. It reuses native editable math nodes. Additional metadata, delimiter collisions and table-sensitive source still require explicit retention. |
+| Diagrams, frontmatter, review suggestions, footnotes, embeds, TOC and other specialized GitLab renderers | Known markers are reported before flattening. Their source-aware GitLab adapters remain required, even when Fountain already has a corresponding native feature. |
 | Quick actions | A preview response containing command metadata is refused until a dedicated document/source adapter is implemented. Source is retained; nothing is executed by the codec. |
 | Error/recovery and host workflow | Typed import/export issues are available. Complete host error presentation/source-mode recovery, provider/auth context, uploads, collaboration and the full application are still required. |
 
@@ -260,6 +261,76 @@ entries, ESM, CSS, latency and heap ceilings remain unchanged. Earlier archives
 are stale. Final packed consumers/hosted CI and publication are still required.
 
 [Codec and caret evidence](../../artifacts/gitlab-codec-integration-20261111.json).
+
+## GitLab math adapter
+
+`services/math.ts` connects GitLab's renderer carriers to Fountain's existing
+`inline_math`/`math_block` nodes. `createGitLabSchemaSpec(base?)` supplies the
+native defaults and preserves math node views/renderers already registered in
+the base schema. Keep using the public native source controls and math commands;
+the adapter does not introduce a second editing engine or a ProseMirror schema.
+
+The adapter retains TeX and syntax separately: `$x$`, legacy ``$`x`$``, display
+`$$x$$` within prose, and fenced `math` blocks. Rendered KaTeX requires exactly
+one retained TeX annotation; glyph text alone is not accepted as source. Known
+inline render wrappers use that annotation too, including GitLab's generated
+`math-content-inline` wrapper. When a bare rendered KaTeX span no longer carries
+its original delimiter kind, edited output uses the legacy form. Fenced
+code controls are removed only from the recognized renderer-owned wrapper.
+Unrelated edits preserve the tested TeX form; unchanged documents still return
+their exact source through the import-local snapshot. Native math source edits
+participate in normal undo/redo. Before a following digit, inline dollar math
+uses the same legacy-delimiter fallback as GitLab's pinned serializer.
+
+For a visual renderer, supply the existing caller-owned KaTeX adapter. Inline
+display syntax needs document context so its TeX display style is retained:
+
+```ts
+import { CoreExtension, composeExtensions, createMathExtension, createKaTeXRenderer } from 'fountainjs-editor';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+import { createGitLabSchemaSpec } from './services/markdown_codec';
+
+const renderMath = createKaTeXRenderer(katex);
+const math = createMathExtension({
+  documentRenderer: (latex, context) => renderMath(latex, {
+    ...context,
+    displayMode: context.displayMode || context.node.attrs.gitlabMathSyntax === 'display',
+  }),
+});
+const kit = composeExtensions([CoreExtension, math]);
+const schema = createGitLabSchemaSpec(kit.schema);
+// Create the host editor with schema and kit.plugins, plus reference navigation.
+```
+
+This uses `createKaTeXRenderer`'s denied-trust boundary. KaTeX remains a host
+dependency; no renderer is fetched or installed by a document. Without a supplied
+renderer, the native view shows literal TeX with source editing. A complete
+`.tex` project/importer is a separate feature.
+
+Malformed/oversized/ambiguous math reports `math-source`. Edited syntax collisions,
+extra accessible/semantic/layout metadata and math that could break a Markdown
+table produce explicit export issues. The original document/source is retained;
+these refusals remain missing conversion capabilities, not parity completions.
+
+`scripts/update-gitlab-math-fixtures.mjs` extracts ten actual upstream
+Markdown/rendered-HTML rows and one KaTeX annotation fixture from the pinned
+tests, with five source-file hashes (including the actual browser renderer) and
+the retained GitLab license. It parses
+whitelisted expression-free AST literals without executing upstream code.
+
+Final verification passes 5,437 unit tests/335 files, including 37 math cases;
+the focused GitLab set passes 91 cases and root TypeScript passes. Fifteen
+compiled Windows journeys pass before the final annotation/description guards,
+and a fresh three-engine math journey passes after those guards. All six current
+Linux WebKit/Xvfb component journeys pass, including native external copy. The
+Windows external-copy failure remains open and is outside the fifteen-case
+profile. The targeted math cases overlap the broader profile. Final Firefox
+inline/display/block states and Linux block rendering receive visual review;
+recordings are retained. This is still private component/service-boundary
+evidence, not a running GitLab application or a new combined release gate.
+
+[Math verification and limits](../../artifacts/gitlab-math-integration-20261112.json).
 
 ## Full application completion requirements
 

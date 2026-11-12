@@ -1,6 +1,6 @@
 # FountainJS roadmap
 
-Updated 2026-11-11.
+Updated 2026-11-12.
 
 FountainJS is an MIT-licensed structured-document engine with a web editor,
 framework bindings, and optional document modules. The immediate goal is a
@@ -62,6 +62,15 @@ and five Linux WebKit native journeys pass. The 5,393-test full unit run precede
 the seven added interaction cases; the full package gate above remains the
 5,389-test checkpoint. Actual host save/storage/auth and full product integration
 remain unfinished. [Recovery evidence](../integrations/gitlab/README.md#serialized-content-lifecycle).
+
+The subsequent GitLab math adapter reuses native editable math for the tested
+dollar, legacy-backtick, inline-display, fenced and retained-annotation forms.
+The final complete unit suite passes **5,437 tests in 335 files**, including 37
+math cases; 91 focused cases and root types pass. Recorded current math journeys
+pass in all desktop engines and all six Linux WebKit component journeys pass.
+Known conversion refusals remain explicit. This is not a full GitLab application
+or a refreshed complete package/hosted gate, and parity-row counts are unchanged.
+[Math evidence and limits](../integrations/gitlab/README.md#gitlab-math-adapter).
 
 The earlier complete local source check is the November 11 runtime-editability
 repair: **5,300 tests in 327 files**, with all package, server, type, conformance,

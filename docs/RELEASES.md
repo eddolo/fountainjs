@@ -1113,6 +1113,46 @@ application, actual save/permissions/services, source-mode recovery and the
 other flagship products remain unfinished. Evidence:
 `artifacts/gitlab-export-recovery-20261111.json`.
 
+### GitLab source-backed math integration — 2026-11-12
+
+The private GitLab adapter now reuses native Fountain math nodes/source controls
+for tested dollar, legacy-backtick, inline-display and fenced math, with explicit
+syntax attributes. It recovers TeX from a rendered KaTeX annotation rather than
+copying visual glyph text. Pure Node import/export does not create a DOM or
+reparse the document through another Markdown dialect. Existing host-supplied
+math views/renderers remain usable; the native fixture supplies denied-trust
+KaTeX and verifies real formula editing, second insertion, history and read-only
+behavior. This is not full LaTeX-project import or live GitLab service evidence.
+
+The pinned upstream extraction records ten Markdown/HTML rows, one rendered
+KaTeX fixture and five source hashes. Tests cover unrelated edits, math source
+changes/history, raw HTML-looking source, the digit-boundary delimiter fallback,
+longer block fences, raw/rendered wrapper distinctions, malformed input and
+explicit loss reporting. Accessible math descriptions remain in the model and require a retained representation
+for edited GitLab export. Delimiter collisions and table-sensitive math source
+are refused rather than emitting corrupt Markdown.
+
+Initial failures are retained: eighteen of twenty initial cases fail before implementation;
+a foreign-schema test setup corrected by using its actual EditorState; the
+Playwright JSON fixture import missing its required import attribute; and a
+Chromium attempt to click a pointer-transparent output child corrected to click
+the actual math atom. Native assertions and timeouts remain unchanged.
+
+The final complete unit suite passes **5,437 tests in 335 files**; 91 focused
+cases (including 37 math cases) and root TypeScript pass. Fifteen compiled
+Windows cases pass before the final annotation guards; three current targeted
+math journeys then pass in Chromium/Firefox/WebKit. All six current Linux
+WebKit/Xvfb journeys pass, including native external copy. Targeted math cases
+overlap the broader profile. The earlier Windows native-copy failure is retained
+outside that fifteen-case profile. Final Firefox inline/display/block frames and
+a Linux block frame receive visual review; recordings are retained. This is not
+a refreshed combined full package/hosted release gate.
+
+No shipped engine runtime, npm API, dependency, declaration hash or acceptance
+limit changes. Full application integration, remaining GitLab dialect adapters,
+fresh packed consumers and combined hosted CI remain required. Evidence:
+`artifacts/gitlab-math-integration-20261112.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

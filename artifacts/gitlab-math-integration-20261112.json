@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-12",
+  "baseCommit": "d0a36322",
+  "status": "Verified private GitLab math adapter; full GitLab application remains unfinished",
+  "implementation": {
+    "files": ["integrations/gitlab/services/math.ts", "integrations/gitlab/services/markdown_codec.ts"],
+    "engine": "Existing public Fountain inline_math and math_block nodes, source controls, source commands, native view and history",
+    "import": ["GitLab dollar and legacy-backtick inline math", "Display math inside prose", "Fenced math with renderer-owned code controls", "Single retained KaTeX annotation, including known inline render wrappers", "Separate TeX, delimiter-kind and optional accessible description"],
+    "editedExport": ["Tested source form retained after unrelated edits", "GitLab legacy delimiter fallback before an immediately following digit", "Longer fence when block source contains backticks", "Explicit metadata, delimiter and table-sensitive source issues"],
+    "sourceRetention": "Unchanged documents exact through import-local capture; edited output canonical. Bare rendered KaTeX without a delimiter carrier uses a legacy-form fallback.",
+    "renderer": "Caller-owned KaTeX via existing denied-trust adapter; not installed or fetched by a document"
+  },
+  "fixtures": {
+    "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+    "file": "integrations/gitlab/fixtures/math-html.json",
+    "markdownHTMLRows": 10,
+    "renderedKaTeXFixture": 1,
+    "sourceFilesHashed": 5,
+    "license": "integrations/gitlab/fixtures/GITLAB-LICENSE.txt",
+    "extraction": "Whitelisted expression-free AST literals only, no upstream code execution",
+    "script": "scripts/update-gitlab-math-fixtures.mjs",
+    "refreshLog": "artifacts/gitlab-math-fixture-refresh-current-20261112.log"
+  },
+  "verification": {
+    "completeUnitSuite": { "passed": 5437, "files": 335, "log": "artifacts/gitlab-math-full-unit-annotation-20261112.log", "scope": "Current private integration code. Last complete package/build/performance gate remains the preceding 5389-test runtime checkpoint; packed consumers and hosted release checks remain required." },
+    "focused": { "passed": 91, "files": 5, "mathCasesIncludingRefusals": 37, "log": "artifacts/gitlab-math-focused-current-20261112.log" },
+    "rootTypes": { "passed": true, "log": "artifacts/gitlab-math-types-annotation-20261112.log" },
+    "compiledWindowsBroaderProfile": { "passed": 15, "failed": 0, "log": "artifacts/gitlab-math-native-final-20261112.log", "scope": "Five journeys per desktop engine, before the final annotation/description guards. Windows native external-copy journey excluded; its previous failure remains open." },
+    "compiledWindowsCurrentMath": { "passed": 3, "failed": 0, "log": "artifacts/gitlab-math-native-annotation-20261112.log", "scope": "Fresh current converter build; overlaps the broader math cases, not three additional capabilities." },
+    "compiledLinuxCurrentProfile": { "passed": 6, "failed": 0, "display": "GDK_BACKEND=x11 and Xvfb", "log": "artifacts/gitlab-math-linux-annotation-20261112.log", "scope": "All six component journeys including native external copy and math; no skips/flaky cases." },
+    "visualReview": {
+      "currentFrames": "artifacts/gitlab-math-native-annotation-20261112/gitlab-vue2-renders-and-ed-ae5a2-undo-and-read-only-behavior-firefox",
+      "states": ["gitlab-math-inline-edited.png", "gitlab-math-inline-display.png", "gitlab-math-block-edited.png"],
+      "review": "Viewed initial and final Firefox inline/display/block images and the final Linux block image. Videos retained; no continuous playback claim."
+    }
+  },
+  "failuresRetained": [
+    { "log": "artifacts/gitlab-math-codec-before-20261111.log", "result": "18 of 20 cases fail before implementation, including unsupported conversion and different refusal codes; two ordinary prose/code controls pass." },
+    { "log": "artifacts/gitlab-math-codec-first-20261111.log", "result": "17 passes/three native-history setup failures: constructing a new schema around foreign nodes. Corrected to use the document's actual EditorState/schema." },
+    { "log": "artifacts/gitlab-math-codec-second-20261111.log", "result": "54 passes/two old negative-contract failures. Valid math is now a supported positive case; missing TeX uses the new specific math-source issue. Unknown-style negative coverage retained." },
+    { "log": "artifacts/gitlab-math-native-first-20261111.log", "result": "Playwright JSON import needs a type:json import attribute; fixed setup before running native cases." },
+    { "log": "artifacts/gitlab-math-native-second-20261111.log", "result": "Firefox/WebKit pass; Chromium refuses a click on a pointer-transparent output child. Target corrected to the actual user-facing math atom, with no forced clicks or weakened assertions/timeouts." }
+  ],
+  "unchanged": ["Shipped Fountain runtime", "Public npm API/declaration hashes", "Dependencies/lockfile", "Bundle/performance/heap/semantic acceptance limits", "Overall parity ledger statuses"],
+  "remaining": ["Exact untouched-block retention after edits", "Remaining math metadata/table-source/delimiter recovery", "Ambiguous post-rendered display containers without a source-form carrier", "Full .tex projects and compiler/package semantics", "Remaining GitLab specialized dialect adapters", "Actual authenticated GitLab host, save/storage/uploads/permissions and collaboration", "Full application acceptance and the other two professional reference products", "Fresh archive consumers, combined hosted CI and publication"]
+}

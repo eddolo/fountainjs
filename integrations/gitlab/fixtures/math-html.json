@@ -1,0 +1,87 @@
+{
+  "provenance": {
+    "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+    "files": [
+      {
+        "path": "spec/frontend/content_editor/services/gl_api_markdown_deserializer_spec.js",
+        "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/spec/frontend/content_editor/services/gl_api_markdown_deserializer_spec.js",
+        "sha256": "d4a4f1180bf509a7d4511b5a8677a72797c87c14465cac78fdec1ff27329474e"
+      },
+      {
+        "path": "spec/frontend/content_editor/extensions/math_inline_spec.js",
+        "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/spec/frontend/content_editor/extensions/math_inline_spec.js",
+        "sha256": "a0da160ece246d0ce9cc2a824ba6293214306afca901bf3191825086794b45de"
+      },
+      {
+        "path": "app/assets/javascripts/content_editor/extensions/math_inline.js",
+        "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/extensions/math_inline.js",
+        "sha256": "f29e7acd1b72f3a3e0be0fe17103ad6874c68e9d37be1d07741936b4ece13653"
+      },
+      {
+        "path": "app/assets/javascripts/content_editor/services/serializer/math_inline.js",
+        "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/services/serializer/math_inline.js",
+        "sha256": "a8c92dc7db153048cb1a893c7de7cb64f46323c97490555b9ce08baa71c2310e"
+      },
+      {
+        "path": "app/assets/javascripts/behaviors/markdown/render_math.js",
+        "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/behaviors/markdown/render_math.js",
+        "sha256": "dd1eb29dd570f8eedc8384a9e3cb00dbfe7be965fe1a57d438613d52a3397cd9"
+      }
+    ],
+    "license": "GITLAB-LICENSE.txt",
+    "method": "Only whitelisted expression-free AST literals extracted; no upstream code executed."
+  },
+  "rows": [
+    {
+      "description": "inline math with dollars",
+      "markdown": "The energy is $E = mc^2$ here",
+      "html": "<p data-sourcepos=\"1:1-1:29\" dir=\"auto\">The energy is <span data-math-style=\"inline\" data-sourcepos=\"1:15-1:24\" class=\"js-render-math\">E = mc^2</span> here</p>"
+    },
+    {
+      "description": "inline math with backticks",
+      "markdown": "Legacy $`a^2 + b^2 = c^2`$ end",
+      "html": "<p data-sourcepos=\"1:1-1:30\" dir=\"auto\">Legacy <code data-math-style=\"inline\" data-sourcepos=\"1:8-1:26\" class=\"js-render-math\">a^2 + b^2 = c^2</code> end</p>"
+    },
+    {
+      "description": "backtick math before a digit",
+      "markdown": "Energy $`E = mc^2`$5",
+      "html": "<p data-sourcepos=\"1:1-1:20\" dir=\"auto\">Energy <code data-math-style=\"inline\" data-sourcepos=\"1:8-1:19\" class=\"js-render-math\">E = mc^2</code>5</p>"
+    },
+    {
+      "description": "display math inside prose",
+      "markdown": "Inline display $$a+b$$ here",
+      "html": "<p data-sourcepos=\"1:1-1:27\" dir=\"auto\">Inline display <span data-math-style=\"display\" data-sourcepos=\"1:16-1:22\" class=\"js-render-math\">a+b</span> here</p>"
+    },
+    {
+      "description": "math with underscores, braces",
+      "markdown": "Frac $a_1 + \\frac{x}{y}$ here",
+      "html": "<p data-sourcepos=\"1:1-1:29\" dir=\"auto\">Frac <span data-math-style=\"inline\" data-sourcepos=\"1:6-1:24\" class=\"js-render-math\">a_1 + \\frac{x}{y}</span> here</p>"
+    },
+    {
+      "description": "math inside a list item",
+      "markdown": "* item with $x^2$ math\n* plain item",
+      "html": "<ul data-sourcepos=\"1:1-2:12\" dir=\"auto\">\n<li data-sourcepos=\"1:1-1:22\">item with <span data-math-style=\"inline\" data-sourcepos=\"1:13-1:17\" class=\"js-render-math\">x^2</span> math</li>\n<li data-sourcepos=\"2:1-2:12\">plain item</li>\n</ul>"
+    },
+    {
+      "description": "math inside a table cell",
+      "markdown": "| a | b |\n|---|---|\n| $x^2$ | plain |\n\nAfter",
+      "html": "<table data-sourcepos=\"1:1-3:17\" dir=\"auto\">\n<thead>\n<tr data-sourcepos=\"1:1-1:9\">\n<th data-sourcepos=\"1:2-1:4\">a</th>\n<th data-sourcepos=\"1:6-1:8\">b</th>\n</tr>\n</thead>\n<tbody>\n<tr data-sourcepos=\"3:1-3:17\">\n<td data-sourcepos=\"3:2-3:8\"><span data-math-style=\"inline\" data-sourcepos=\"3:3-3:7\" class=\"js-render-math\">x^2</span></td>\n<td data-sourcepos=\"3:10-3:16\">plain</td>\n</tr>\n</tbody>\n</table>\n<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">After</p>"
+    },
+    {
+      "description": "fenced math block",
+      "markdown": "```math\n\\sum_{i=1}^n i\n```",
+      "html": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-math-style=\"display\" data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"math\" class=\"js-render-math code highlight js-syntax-highlight language-math\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"math\">\\sum_{i=1}^n i</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
+    },
+    {
+      "description": "prose with dollar amounts",
+      "markdown": "costs $5 and $10",
+      "html": "<p data-sourcepos=\"1:1-1:16\" dir=\"auto\">costs $5 and $10</p>"
+    },
+    {
+      "description": "inline code with a dollar",
+      "markdown": "code `$HOME` here",
+      "html": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">code <code data-sourcepos=\"1:6-1:12\">$HOME</code> here</p>"
+    }
+  ],
+  "katexHTML": "<span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow></mrow><annotation encoding=\"application/x-tex\">x^2</annotation></semantics></math></span></span>"
+}

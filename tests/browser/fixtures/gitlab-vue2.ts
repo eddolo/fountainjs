@@ -1,15 +1,24 @@
 import Vue from '../../../tools/gitlab-bridge/runtime';
 import Surface from '../../../integrations/gitlab/components/fountain_editor_surface.vue?gitlab-vue2';
-import { CoreSchemaSpec, MarkdownExporter, MarkdownImporter, Plugin, createEditor, createHistoryPlugin, canUndo, canRedo, undo, redo, setTextAlignment } from 'fountainjs-editor';
+import { CoreSchemaSpec, MarkdownExporter, MarkdownImporter, Plugin, createEditor, createHistoryPlugin, canUndo, canRedo, undo, redo, setTextAlignment,
+  createMathExtension, createKaTeXRenderer, insertInlineMath } from 'fountainjs-editor';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 import { SerializedContentController } from '../../../integrations/gitlab/services/serialized_content';
 import { GitLabMarkdownCodec, createGitLabSchemaSpec } from '../../../integrations/gitlab/services/markdown_codec';
 import { createGitLabReferenceNavigationPlugin } from '../../../integrations/gitlab/plugins/reference_navigation';
 import gitlabHTML from '../../../integrations/gitlab/fixtures/service-html.json';
+import gitlabMath from '../../../integrations/gitlab/fixtures/math-html.json';
 import 'fountainjs-editor/styles.css';
 
 const vetoMode = new URLSearchParams(location.search).has('reject-mode');
 const gitlabRendered = new URLSearchParams(location.search).has('gitlab-rendered');
-const editor = createEditor({ schema: gitlabRendered ? createGitLabSchemaSpec() : CoreSchemaSpec, plugins: [createHistoryPlugin(), ...(gitlabRendered ? [createGitLabReferenceNavigationPlugin()] : []), ...(vetoMode ? [new Plugin({
+const mathRenderer = createKaTeXRenderer(katex);
+const nativeMath = createMathExtension({ inputRules: false, pasteRules: false,
+  documentRenderer: (latex, context) => mathRenderer(latex, { ...context,
+    displayMode: context.displayMode || context.node.attrs.gitlabMathSyntax === 'display' }) });
+const gitlabSchema = createGitLabSchemaSpec({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...nativeMath.nodes } });
+const editor = createEditor({ schema: gitlabRendered ? gitlabSchema : CoreSchemaSpec, plugins: [createHistoryPlugin(), ...(gitlabRendered ? [createGitLabReferenceNavigationPlugin()] : []), ...(vetoMode ? [new Plugin({
   filterTransaction: transaction => transaction.docChanged || transaction.getMeta('force') !== true,
 })] : [])], content: { type: 'doc', content: [
   { type: 'paragraph', content: [{ type: 'text', text: 'Vue 2 integration.' }] },
@@ -24,6 +33,8 @@ const ordinaryCodec = {
 // Private contract input, not a simulated GitLab product/service. This branch
 // verifies real converter/view behavior against immutable upstream HTML only.
 const pinnedGitLabCodec = new GitLabMarkdownCodec({ renderMarkdown: async markdown => {
+  const math = gitlabMath.rows.find(row => row.markdown === markdown);
+  if (math) return { body: math.html };
   if (markdown !== 'See #1 and !1 by @root with ~bug in b51c8ef20575') throw new Error('This private contract fixture has no live GitLab renderer.');
   return { body: gitlabHTML.fixtures.RESOLVED_REFERENCES_PARAGRAPH_HTML };
 } });
@@ -58,6 +69,8 @@ const app = new Vue({
         h('button', { attrs: { type: 'button', disabled: !this.editable || !canRedo(editor) }, on: { click: () => redo(editor) } }, 'Redo document'),
         h('button', { attrs: { type: 'button', disabled: !this.editable },
           on: { mousedown: (event: MouseEvent) => event.preventDefault(), click: () => setTextAlignment(editor, 'center') } }, 'Centre paragraph'),
+        gitlabRendered ? h('button', { attrs: { type: 'button', disabled: !this.editable },
+          on: { mousedown: (event: MouseEvent) => event.preventDefault(), click: () => insertInlineMath(editor, 'x^2') } }, 'Insert inline math') : null,
       ]),
       h('output', { attrs: { 'aria-label': 'View mount count' } }, String(this.ready)),
       this.error ? h('p', { attrs: { role: 'alert' } }, this.error) : null,

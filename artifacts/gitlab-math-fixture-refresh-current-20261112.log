@@ -1,0 +1,32 @@
+{
+  "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+  "rows": 10,
+  "renderedKaTeXFixtures": 1,
+  "sources": [
+    {
+      "path": "spec/frontend/content_editor/services/gl_api_markdown_deserializer_spec.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/spec/frontend/content_editor/services/gl_api_markdown_deserializer_spec.js",
+      "sha256": "d4a4f1180bf509a7d4511b5a8677a72797c87c14465cac78fdec1ff27329474e"
+    },
+    {
+      "path": "spec/frontend/content_editor/extensions/math_inline_spec.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/spec/frontend/content_editor/extensions/math_inline_spec.js",
+      "sha256": "a0da160ece246d0ce9cc2a824ba6293214306afca901bf3191825086794b45de"
+    },
+    {
+      "path": "app/assets/javascripts/content_editor/extensions/math_inline.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/extensions/math_inline.js",
+      "sha256": "f29e7acd1b72f3a3e0be0fe17103ad6874c68e9d37be1d07741936b4ece13653"
+    },
+    {
+      "path": "app/assets/javascripts/content_editor/services/serializer/math_inline.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/content_editor/services/serializer/math_inline.js",
+      "sha256": "a8c92dc7db153048cb1a893c7de7cb64f46323c97490555b9ce08baa71c2310e"
+    },
+    {
+      "path": "app/assets/javascripts/behaviors/markdown/render_math.js",
+      "url": "https://raw.githubusercontent.com/gitlabhq/gitlabhq/d7b9a6176ab4e279465ba3ee09922cde2b74de47/app/assets/javascripts/behaviors/markdown/render_math.js",
+      "sha256": "dd1eb29dd570f8eedc8384a9e3cb00dbfe7be965fe1a57d438613d52a3397cd9"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+$ playwright test -c playwright.gitlab-bridge.config.ts "--grep" "renders and edits GitLab math" "--output" "artifacts/gitlab-math-native-second-20261111"
+[WebServer] (node:7144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:20808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:10720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\gitlab-vue2.spec.ts:211:1 › renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior (31.2s)
+(node:3664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\browser\gitlab-vue2.spec.ts:211:1 › renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior (3.9s)
+(node:18676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\browser\gitlab-vue2.spec.ts:211:1 › renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior (4.1s)
+
+
+  1) [chromium] › tests\browser\gitlab-vue2.spec.ts:211:1 › renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true }).locator('[data-fountain-math="inline"]').locator('.fountain-math__output')
+        - locator resolved to <span class="fountain-math__output">…</span>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span role="math" title="E = mc^2" data-latex="E = mc^2" contenteditable="false" data-fountain-path="0.1" data-fountain-math="inline" data-fountain-node="inline_math" data-fountain-math-appearance="plain" aria-label="Math expression: E = mc^2" class="fountain-math fountain-math--inline">…</span> intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span role="math" title="E = mc^2" data-latex="E = mc^2" contenteditable="false" data-fountain-path="0.1" data-fountain-math="inline" data-fountain-node="inline_math" data-fountain-math-appearance="plain" aria-label="Math expression: E = mc^2" class="fountain-math fountain-math--inline">…</span> intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        59 × waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <span role="math" title="E = mc^2" data-latex="E = mc^2" contenteditable="false" data-fountain-path="0.1" data-fountain-math="inline" data-fountain-node="inline_math" data-fountain-math-appearance="plain" aria-label="Math expression: E = mc^2" class="fountain-math fountain-math--inline">…</span> intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+
+
+      223 |   await expect(inline.locator('.katex')).toHaveCount(1);
+      224 |   await expect(inline).toHaveAttribute('data-latex', 'E = mc^2');
+    > 225 |   await inline.locator('.fountain-math__output').click();
+          |                                                  ^
+      226 |   const input = editor.getByRole('textbox', { name: 'Edit math source', exact: true });
+      227 |   await expect(input).toHaveValue('E = mc^2');
+      228 |   await input.fill('E = mc^3'); await input.press('Enter');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:225:50
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-math-native-second-20261111\gitlab-vue2-renders-and-ed-ae5a2-undo-and-read-only-behavior-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-math-native-second-20261111\gitlab-vue2-renders-and-ed-ae5a2-undo-and-read-only-behavior-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-math-native-second-20261111\gitlab-vue2-renders-and-ed-ae5a2-undo-and-read-only-behavior-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-math-native-second-20261111\gitlab-vue2-renders-and-ed-ae5a2-undo-and-read-only-behavior-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-math-native-second-20261111\gitlab-vue2-renders-and-ed-ae5a2-undo-and-read-only-behavior-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\browser\gitlab-vue2.spec.ts:211:1 › renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior 
+  2 passed (45.1s)
+[ELIFECYCLE] Command failed with exit code 1.

@@ -1,0 +1,50 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-markdown-codec.test.ts (32 tests | 2 failed) 97ms
+   × reports specialized-renderer as unimplemented/invalid instead of silently flattening it 6ms
+   × reports specialized-renderer as unimplemented/invalid instead of silently flattening it 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-markdown-codec.test.ts > reports specialized-renderer as unimplemented/invalid instead of silently flattening it
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/gitlab-markdown-codec.test.ts:112:96
+    110|     expect(error).toBeInstanceOf(GitLabMarkdownConversionError);
+    111|     expect((error as GitLabMarkdownConversionError).originalMarkdown).…
+    112|     expect((error as GitLabMarkdownConversionError).issues.some(issue …
+       |                                                                                                ^
+    113|   }
+    114| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/gitlab-markdown-codec.test.ts > reports specialized-renderer as unimplemented/invalid instead of silently flattening it
+AssertionError: expected Error: Expected conversion to refuse the … to be an instance of GitLabMarkdownConversionError
+ ❯ tests/gitlab-markdown-codec.test.ts:110:19
+    108|   try { await convert('Original technical source', html); throw new Er…
+    109|   catch (error) {
+    110|     expect(error).toBeInstanceOf(GitLabMarkdownConversionError);
+       |                   ^
+    111|     expect((error as GitLabMarkdownConversionError).originalMarkdown).…
+    112|     expect((error as GitLabMarkdownConversionError).issues.some(issue …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 54 passed (56)
+   Start at  23:55:22
+   Duration  1.38s (transform 70%, import 23%, tests 6%, worker 1%)
+
+  Transform  transforming modules took 2.42s · 70% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

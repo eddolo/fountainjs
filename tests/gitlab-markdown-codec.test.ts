@@ -95,8 +95,8 @@ it('reports missing canonical image metadata after edits while leaving untouched
 });
 
 it.each([
-  ['specialized-renderer', '<span class="katex">Flattened equation</span>'],
-  ['specialized-renderer', '<code data-math-style="inline">x^2</code>'],
+  ['math-source', '<span class="katex">Flattened equation</span>'],
+  ['math-source', '<code data-math-style="unknown">x^2</code>'],
   ['specialized-renderer', '<pre data-canonical-lang="mermaid">graph TD</pre>'],
   ['specialized-renderer', '<pre data-lang-params="frontmatter">title: Paper</pre>'],
   ['specialized-renderer', '<sup class="footnote-ref"><a href="#fn1">1</a></sup>'],

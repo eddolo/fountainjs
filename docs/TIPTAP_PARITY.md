@@ -1,8 +1,17 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-## Current programme status — 2026-11-11
+## Current programme status — 2026-11-12
 
-The latest local full `pnpm check` passes **5,389 tests in 332 files**, including
+The latest private GitLab integration checkpoint adds native editable math
+without changing Fountain's shipped runtime. The complete unit suite passes
+**5,437 tests in 335 files**, with 91 focused integration cases and root types
+passing. Current recorded math edits/history pass in all three desktop engines;
+all six Linux WebKit component journeys pass. Supported source forms and
+explicit conversion gaps are documented. The full application and service
+workflows remain unfinished; capability-row counts remain unchanged.
+[Math scope](RELEASES.md#gitlab-source-backed-math-integration--2026-11-12).
+
+The latest local full `pnpm check` checkpoint passes **5,389 tests in 332 files**, including
 external Markdown source binding and native inline-atom End/typing repairs.
 Package/API, runtime/headless, format, type, size, performance and retention gates
 pass. Native reference edits/delete/undo pass in Chromium, Firefox and WebKit;

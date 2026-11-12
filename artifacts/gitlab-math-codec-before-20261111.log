@@ -1,0 +1,143 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-math-codec.test.ts (20 tests | 18 failed) 50ms
+   × imports upstream inline math with dollars and keeps math source after an unrelated edit 9ms
+   × imports upstream inline math with backticks and keeps math source after an unrelated edit 2ms
+   × imports upstream backtick math before a digit and keeps math source after an unrelated edit 1ms
+   × imports upstream display math inside prose and keeps math source after an unrelated edit 1ms
+   × imports upstream math with underscores, braces and keeps math source after an unrelated edit 1ms
+   × imports upstream math inside a list item and keeps math source after an unrelated edit 1ms
+   × imports upstream math inside a table cell and keeps math source after an unrelated edit 1ms
+   × imports upstream fenced math block and keeps math source after an unrelated edit 1ms
+   × edits native legacy math with normal history while retaining the GitLab syntax 1ms
+   × edits native dollar math with normal history while retaining the GitLab syntax 0ms
+   × edits native display math with normal history while retaining the GitLab syntax 0ms
+   × uses the actual GitLab digit-boundary fallback when edited inline dollar math precedes a digit 0ms
+   × recovers original TeX from the pinned rendered KaTeX annotation instead of its visual glyphs 1ms
+   × reports malformed or unsupported math instead of flattening its text 7ms
+   × reports malformed or unsupported math instead of flattening its text 1ms
+   × reports malformed or unsupported math instead of flattening its text 1ms
+   × reports malformed or unsupported math instead of flattening its text 4ms
+   × reports additional math semantics that ordinary GitLab syntax cannot retain 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-math-codec.test.ts > imports upstream inline math with dollars and keeps math source after an unrelated edit
+ FAIL  tests/gitlab-math-codec.test.ts > imports upstream inline math with backticks and keeps math source after an unrelated edit
+ FAIL  tests/gitlab-math-codec.test.ts > imports upstream backtick math before a digit and keeps math source after an unrelated edit
+ FAIL  tests/gitlab-math-codec.test.ts > imports upstream display math inside prose and keeps math source after an unrelated edit
+ FAIL  tests/gitlab-math-codec.test.ts > imports upstream math with underscores, braces and keeps math source after an unrelated edit
+ FAIL  tests/gitlab-math-codec.test.ts > imports upstream math inside a list item and keeps math source after an unrelated edit
+ FAIL  tests/gitlab-math-codec.test.ts > imports upstream math inside a table cell and keeps math source after an unrelated edit
+ FAIL  tests/gitlab-math-codec.test.ts > imports upstream fenced math block and keeps math source after an unrelated edit
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:177:65
+    175|       return { document: result.document };
+    176|     } catch (error) {
+    177|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    178|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    179|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ convert tests/gitlab-math-codec.test.ts:11:24
+ ❯ tests/gitlab-math-codec.test.ts:22:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/18]⎯
+
+ FAIL  tests/gitlab-math-codec.test.ts > edits native legacy math with normal history while retaining the GitLab syntax
+ FAIL  tests/gitlab-math-codec.test.ts > edits native dollar math with normal history while retaining the GitLab syntax
+ FAIL  tests/gitlab-math-codec.test.ts > edits native display math with normal history while retaining the GitLab syntax
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:177:65
+    175|       return { document: result.document };
+    176|     } catch (error) {
+    177|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    178|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    179|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ convert tests/gitlab-math-codec.test.ts:11:24
+ ❯ tests/gitlab-math-codec.test.ts:41:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/18]⎯
+
+ FAIL  tests/gitlab-math-codec.test.ts > uses the actual GitLab digit-boundary fallback when edited inline dollar math precedes a digit
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:177:65
+    175|       return { document: result.document };
+    176|     } catch (error) {
+    177|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    178|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    179|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ convert tests/gitlab-math-codec.test.ts:11:24
+ ❯ tests/gitlab-math-codec.test.ts:53:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/18]⎯
+
+ FAIL  tests/gitlab-math-codec.test.ts > recovers original TeX from the pinned rendered KaTeX annotation instead of its visual glyphs
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:177:65
+    175|       return { document: result.document };
+    176|     } catch (error) {
+    177|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    178|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    179|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ convert tests/gitlab-math-codec.test.ts:11:24
+ ❯ tests/gitlab-math-codec.test.ts:58:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/18]⎯
+
+ FAIL  tests/gitlab-math-codec.test.ts > reports malformed or unsupported math instead of flattening its text
+ FAIL  tests/gitlab-math-codec.test.ts > reports malformed or unsupported math instead of flattening its text
+ FAIL  tests/gitlab-math-codec.test.ts > reports malformed or unsupported math instead of flattening its text
+ FAIL  tests/gitlab-math-codec.test.ts > reports malformed or unsupported math instead of flattening its text
+AssertionError: expected GitLabMarkdownConversionError: GitLab Mar… { …(2) } to match object { …(2) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
++ GitLabMarkdownConversionError {
+    "issues": [
+      {
+-       "code": "math-source",
++       "code": "specialized-renderer",
++       "message": "This specialized GitLab rendering requires a source-aware document adapter before visual editing.",
++       "stage": "import",
+      },
+    ],
+    "originalMarkdown": "Retain original",
+  }
+
+ ❯ tests/gitlab-math-codec.test.ts:69:61
+     67|   '<span data-math-style="inline">' + 'x'.repeat(20_001) + '</span>',
+     68| ])('reports malformed or unsupported math instead of flattening its te…
+     69|   await expect(convert('Retain original', `<p>${html}</p>`)).rejects.t…
+       |                                                             ^
+     70|     originalMarkdown: 'Retain original', issues: [expect.objectContain…
+     71|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/18]⎯
+
+ FAIL  tests/gitlab-math-codec.test.ts > reports additional math semantics that ordinary GitLab syntax cannot retain
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:177:65
+    175|       return { document: result.document };
+    176|     } catch (error) {
+    177|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    178|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    179|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ convert tests/gitlab-math-codec.test.ts:11:24
+ ❯ tests/gitlab-math-codec.test.ts:75:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/18]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  18 failed | 2 passed (20)
+   Start at  23:52:58
+   Duration  1.73s (transform 79%, import 17%, tests 4%, worker 1%)
+
