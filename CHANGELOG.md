@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Preserve the nesting order of existing marks when their attributes change.
+  Markdown export keeps a continuous outer link across differently formatted
+  text, including reference links, instead of creating separate reader links.
+
 - Add `EditorViewOptions.handleFiles` for host-owned upload/insertion after native
   paste selection and drop positioning. Configured handlers receive all file
   types; rejection reports an error without default image embedding. Existing

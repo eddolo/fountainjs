@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "formatVersion": 2,
+  "files": 9,
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "checks": [
+    "Versioned nine-file source rollback succeeds",
+    "Six verified installer-owned additions are removed",
+    "Exact current nine-file source installation is restored",
+    "Every reinstalled source digest matches the tested generation"
+  ],
+  "scope": "Source installation round trip with task application stopped; application persistence/deployment verified separately"
+}

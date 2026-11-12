@@ -1368,8 +1368,8 @@ describe('Markdown interchange', () => {
     const document = MarkdownImporter.parse(source, schema);
     const markdown = MarkdownExporter.export(document, { linkStyle: 'reference' });
 
-    expect(markdown).toContain('[<span data-fountain-text-style="true" style=""><strong>bold </strong></span>][ref-1]');
-    expect(markdown).toContain('[<span data-fountain-text-style="true" style=""><strong><em>and italic</em></strong></span>][ref-1]');
+    expect(markdown).toContain('[<span data-fountain-text-style="true" style=""><strong>bold </strong></span><span data-fountain-text-style="true" style=""><strong><em>and italic</em></strong></span>][ref-1]');
+    expect(markdown.match(/\]\[ref-1\]/gu)).toHaveLength(1);
     expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
   });
 

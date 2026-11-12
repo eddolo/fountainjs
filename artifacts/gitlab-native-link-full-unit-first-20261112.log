@@ -1,0 +1,39 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-format.test.ts (126 tests | 1 failed) 274ms
+   ❯ Markdown interchange (126)
+     × keeps nested mark order inside links across reference export 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-format.test.ts > Markdown interchange > keeps nested mark order inside links across reference export
+AssertionError: expected 'A [<span data-fountain-text-style="tr…' to contain '[<span data-fountain-text-style="true…'
+
+- Expected
++ Received
+
+- [<span data-fountain-text-style="true" style=""><strong>bold </strong></span>][ref-1]
++ A [<span data-fountain-text-style="true" style=""><strong>bold </strong></span><span data-fountain-text-style="true" style=""><strong><em>and italic</em></strong></span>][ref-1].
++
++ [ref-1]: https://example.com/guide "Nested marks"
+
+ ❯ tests/markdown-format.test.ts:1371:22
+    1369|     const markdown = MarkdownExporter.export(document, { linkStyle: 'r…
+    1370|
+    1371|     expect(markdown).toContain('[<span data-fountain-text-style="true"…
+       |                      ^
+    1372|     expect(markdown).toContain('[<span data-fountain-text-style="true"…
+    1373|     expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 343 passed (344)
+      Tests  1 failed | 5552 passed (5553)
+   Start at  13:48:56
+   Duration  202.88s (environment 45%, import 28%, tests 23%, transform 4%, worker 1%)
+
+     Import  812 modules were evaluated 1622 times · 98.56s total, 28% of tracked time
+             ~14.13s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

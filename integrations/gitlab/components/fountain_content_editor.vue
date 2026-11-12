@@ -16,6 +16,7 @@ import {
 } from '../runtime/browser';
 import FountainEditorSurface from './fountain_editor_surface.vue';
 import FountainFormattingToolbar from './fountain_formatting_toolbar.vue';
+import FountainLinkMenu from './fountain_link_menu.vue';
 
 export default {
   name: 'FountainContentEditor',
@@ -26,6 +27,7 @@ export default {
     EditorModeSwitcher,
     FountainEditorSurface,
     FountainFormattingToolbar,
+    FountainLinkMenu,
   },
   // The installer inserts the pinned host's exact public prop definitions here.
   props: {},
@@ -55,6 +57,8 @@ export default {
     failureMessage() {
       if (this.failureCode === 'GITLAB_UPLOAD_QUEUE_FULL')
         return s__('ContentEditor|Too many files were selected. None of this selection was uploaded. Wait for uploads to finish or remove failed files, then select fewer files.');
+      if (this.failureCode === 'GITLAB_LINK_TEXT_SELECTION_REQUIRED')
+        return s__('ContentEditor|Select text within one paragraph, or place the cursor where the link should go.');
       if (this.failureCode === 'GITLAB_UPLOAD_DISABLED')
         return s__('ContentEditor|File uploads are unavailable in this editor.');
       if (this.failureCode === 'GITLAB_CLIPBOARD_READ_FAILED')
@@ -156,6 +160,15 @@ export default {
     this.contentEditor?.dispose();
   },
   methods: {
+    getEditorRoot() { return this.$refs.surface?.getRootElement(); },
+    onSurfaceReady() { this.$refs.linkMenu?.refreshRoot?.(); },
+    onSurfaceKeydown(event) {
+      if (this.surfaceEditable && !event.defaultPrevented && !event.isComposing && !event.altKey
+        && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault(); event.stopPropagation(); this.$refs.linkMenu?.open?.();
+      }
+      this.$emit('keydown', event);
+    },
     async uploadFile(file, { signal, reportProgress }) {
       if (!this.canUpload) throw new Error('GITLAB_UPLOAD_DISABLED');
       const url = new URL(this.uploadsPath, window.location.href);
@@ -292,6 +305,7 @@ export default {
       this.$emit('change', { markdown: change.markdown });
     },
     onSurfaceError(error) {
+      this.$refs.linkMenu?.refreshRoot?.();
       this.failure = error;
       this.failedInsertionSource = this.contentEditor?.insertionRecovery?.markdown ?? null;
     },
@@ -424,6 +438,9 @@ export default {
           @paste-markdown="pasteContent"
           @attach-files="attachFiles"
         >
+          <template #context-actions>
+            <fountain-link-menu ref="linkMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
+          </template>
           <template #header-buttons>
             <slot name="header-buttons"></slot>
             <editor-mode-switcher
@@ -448,7 +465,8 @@ export default {
         @error="onSurfaceError"
         @focus="onFocus"
         @blur="onBlur"
-        @keydown="$emit('keydown', $event)"
+        @keydown="onSurfaceKeydown"
+        @ready="onSurfaceReady"
       />
     </div>
     <div

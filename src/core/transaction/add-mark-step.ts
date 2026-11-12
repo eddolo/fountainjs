@@ -1,6 +1,7 @@
 import { Mark, Node } from '../schema';
 import { assertTextRange, getNodeAtPath, replaceNodeWithNodes } from './path';
 import { Step } from './step';
+import { replaceOrAppendMark } from './mark-set';
 
 export class AddMarkStep extends Step {
   constructor(
@@ -15,10 +16,7 @@ export class AddMarkStep extends Step {
     assertTextRange(node, this.from, this.to);
     if (this.from === this.to) return doc;
     const text = node.text ?? '';
-    const marked = node.withText(text.slice(this.from, this.to)).withMarks([
-      ...node.marks.filter((existing) => existing.type !== this.mark.type),
-      this.mark,
-    ]);
+    const marked = node.withText(text.slice(this.from, this.to)).withMarks(replaceOrAppendMark(node.marks, this.mark));
     const nodes = [
       ...(this.from ? [node.withText(text.slice(0, this.from))] : []),
       marked,

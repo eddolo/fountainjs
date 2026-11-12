@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual popover first edit, undo/redo, browser clipboard copy, repeated edit and cancel",
+    "preview: visible native component state and full-body/portal accessibility",
+    "empty: visible native component state and full-body/portal accessibility",
+    "readonly: visible native component state and full-body/portal accessibility",
+    "form: visible native component state and full-body/portal accessibility",
+    "pending: visible native component state and full-body/portal accessibility",
+    "failed: visible native component state and full-body/portal accessibility",
+    "conflict: visible native component state and full-body/portal accessibility",
+    "narrow-preview: visible native component state and full-body/portal accessibility"
+  ]
+}

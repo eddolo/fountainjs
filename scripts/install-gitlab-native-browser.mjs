@@ -43,8 +43,7 @@ try {
 }
 if (previous && previous.source !== source)
   throw new Error('The retained install belongs to a different checkout.');
-if (restore) {
-  if (!previous || previous.restored) throw new Error('No active retained install to restore.');
+if (previous) {
   const allowed = new Set([
     hostPath,
     rendererPath,
@@ -54,9 +53,16 @@ if (restore) {
     'app/assets/javascripts/content_editor/services/fountain_runtime.js',
     'app/assets/javascripts/content_editor/services/fountain_runtime.css',
   ]);
+  if (previous.formatVersion === 2) {
+    allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.vue');
+    allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js');
+  } else if (previous.formatVersion !== undefined) throw new Error('Unknown retained install format.');
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
+  if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
+}
+if (restore) {
+  if (!previous || previous.restored) throw new Error('No active retained install to restore.');
   for (const [path, digest] of Object.entries(previous.files)) {
-    if (!allowed.has(path)) throw new Error('Unrecognized path in retained install.');
     const target = resolve(source, path);
     if (
       (await realpath(target)) !== target ||
@@ -172,7 +178,7 @@ component = component
   .replace('  props: {},', `  props: ${propsSource},`)
   .replace("from '../runtime/browser'", "from '../services/fountain_runtime'");
 files.set(hostPath, component);
-for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue']) {
+for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue', 'fountain_link_menu.vue', 'fountain_link_menu.stories.js']) {
   let value = await readFile(resolve(root, `integrations/gitlab/components/${name}`), 'utf8');
   value = value
     .replace("from 'fountainjs-editor'", "from '../services/fountain_runtime'")
@@ -196,7 +202,7 @@ const requireUpstream = createRequire(resolve(source, 'package.json'));
 const prettier = requireUpstream('prettier');
 const formatOptions = await prettier.resolveConfig(resolve(source, hostPath));
 for (const [path, bytes] of files) {
-  if (!path.endsWith('.vue') && path !== babelPath) continue;
+  if (!path.endsWith('.vue') && !path.endsWith('.stories.js') && path !== babelPath) continue;
   files.set(
     path,
     await prettier.format(bytes.toString(), {
@@ -236,6 +242,7 @@ await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
+      formatVersion: 2,
       source,
       revision: pin.commit,
       scope:

@@ -180,6 +180,7 @@ export default {
       size="small"
       @click="execute(control)"
     />
+    <slot name="context-actions"></slot>
     <slot name="header-buttons"></slot>
     <template v-if="!hideAttachmentButton">
       <gl-button

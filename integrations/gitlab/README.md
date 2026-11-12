@@ -717,6 +717,56 @@ gaps remain open; nothing is published or promoted as full product/parity readin
 
 [Current capacity evidence](../../artifacts/gitlab-native-upload-capacity-integration-20261112.json).
 
+### Native text-link controls
+
+The actual GitLab editor now creates, previews, copies, edits and removes text
+links through native GitLab controls and the authenticated renderer. The form
+prefills the entire label across mixed formatting and the canonical source URL.
+Network failure retains both draft fields and leaves the document intact; retry
+uses the real renderer after reconnect. Cancel/Escape returns focus through the
+editor selection API. Selection bookmarks map unrelated edits; target conflicts,
+replacement and disposal refuse stale changes. A new session supersedes old work.
+
+Real use exposed additional failures: prevented modal submission also emitted
+hide; popovers retained replaced DOM targets; DOM-only view repairs needed scoped
+anchor observation; direct root focus reset the caret; preview actions could be
+ellipsized. These are repaired and covered by native component/browser checks.
+Mark-attribute updates now preserve mark order, and Markdown export keeps one
+outer link across adjacent mixed-format text instead of splitting the reader link.
+
+The final recorded actual-service journey passes **17 checks**, with real clipboard,
+offline failure/retry, keyboard focus, undo/redo, exact server source, native reader,
+private access refusal and application restart. Its video/screenshots are retained
+and the settled popup and reopened reader were visually inspected. This is Linux
+Chromium evidence; the earlier upload profile separately passes 18 checks.
+
+The actual upstream suites are **250 passed / 4 failed / 254 total**: component,
+Markdown host, issuable form, eight new native link cases and 64 work-item
+description cases. The comparable earlier three suites plus link cases are
+186 passed / 4 failed / 190 total. Alert, media, code-block and reference menu
+requirements still fail; no cases are skipped. Six ordered patches reconstruct
+the tested specs from pinned GitLab 19.5.3. The versioned nine-file installer also
+passes source rollback/reinstall with identical file digests.
+
+Seven isolated Storybook states plus a 360-pixel preview pass full-body/portal
+accessibility scans and real control interactions (nine checks). Their fixed
+renderer fixtures exercise component states; they are not product acceptance.
+All **5,560 root tests/344 files**, 27 focused link-service cases, current types,
+450 API contracts, packed export smoke, headless/server runtimes, builds,
+performance/retention and size checks pass. Aggregate CommonJS grows 365 bytes;
+its allowance increases 256 bytes using existing headroom. All other capacities
+and semantic/performance expectations remain unchanged.
+
+Scope is same-inline-parent text links. Inline atoms, hard breaks and cross-block
+link editing remain unsupported; multiline table labels refuse conversion.
+GitLab dialect/source fidelity, other menus, reader image intermittency, complete
+role/surface coverage, mobile/cross-engine/assistive-technology acceptance and
+hosted release remain open. No full-product or superiority claim is made.
+
+[Checkpoint evidence](../../artifacts/gitlab-native-link-integration-20261112.json),
+[real journey](../../artifacts/gitlab-native-links-20261112/report.json),
+[link contracts](services/README.md).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

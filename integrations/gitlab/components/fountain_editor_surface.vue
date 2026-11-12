@@ -86,6 +86,10 @@ export default {
       this.fountainView?.focus();
       this.fountainView?.scrollSelectionIntoView();
     },
+    // eslint-disable-next-line vue/no-unused-properties -- Public native menu mounting boundary.
+    getRootElement() {
+      return this.fountainView?.dom ?? null;
+    },
     // eslint-disable-next-line vue/no-unused-properties -- Called before host mode switches and saves.
     getSerializedContentForHandoff() {
       if (!this.fountainView || this.composing || !this.readSerializedContent) {

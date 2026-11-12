@@ -3,17 +3,22 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
+import { auditNativeLinks } from './audit-gitlab-native-links.mjs';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const nativeCapacity = process.argv.includes('--native-attachment-capacity');
+const nativeLinks = process.argv.includes('--native-links');
+const debugLinks = nativeLinks && process.argv.includes('--debug-links');
 const nativeAttachments = process.argv.includes('--native-attachments') || nativeCapacity;
-const nativeComponent = process.argv.includes('--native-component') || nativeAttachments;
+const nativeComponent = process.argv.includes('--native-component') || nativeAttachments || nativeLinks;
 const nativeInsertion = process.argv.includes('--native-insertion') || nativeComponent;
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeCapacity
+  nativeLinks
+    ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
+    : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
     : nativeAttachments
     ? 'artifacts/gitlab-native-attachments-20261112/'
@@ -93,12 +98,13 @@ const report = {
   nativeComponent,
   nativeAttachments,
   nativeCapacity,
+  nativeLinks,
 };
 if (nativeBrowser)
   report.nativeRuntime = JSON.parse(
     await readFile(new URL('artifacts/gitlab-native-runtime/build.json', root)),
   );
-const browser = await chromium.launch();
+const browser = await chromium.launch(debugLinks ? { args: ['--remote-debugging-port=9331'] } : {});
 let context;
 let restoreUploadLimit;
 try {
@@ -331,6 +337,7 @@ try {
         'An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste',
       );
     }
+    if (nativeLinks) await auditNativeLinks({ page, context, editor, toolbar, output, report });
     if (nativeAttachments) {
       if (process.argv.includes('--probe-upload-focus')) await editor.evaluate(element => {
         const root = element.closest('[data-fountain-integration="native"]');
@@ -522,6 +529,14 @@ try {
   await expect(page.getByText(marker, { exact: true })).toBeVisible();
   const saved = await api('GET', `/projects/${project.id}/issues/${issue.iid}`);
   expect(saved.description).toContain(marker);
+  if (nativeLinks) {
+    expect(saved.description).toContain('[Fountain link **bold** tail](/help/offline-retry)');
+    const readerLink = page.locator('main a').filter({ hasText: report.nativeLink.label });
+    await expect(readerLink).toHaveCount(1);
+    await expect(readerLink).toHaveAttribute('href', report.nativeLink.displayHref);
+    await expect(readerLink.locator('strong')).toHaveText('bold');
+    report.checks.push('UI Save persists one enclosing Markdown link with its original formatting and the actual GitLab reader renders one matching anchor');
+  }
   if (nativeInsertion)
     expect(saved.description).toContain('Pasted **GitLab Markdown** with @root.');
   if (nativeAttachments) {
@@ -694,6 +709,22 @@ try {
 } catch (error) {
   report.status = 'failed';
   report.error = String(error).replaceAll(password, '[redacted]');
+  if (nativeLinks) {
+    report.nativeLinkEvents = await context.pages()[0]?.evaluate(() => window.fountainLinkEvents ?? []);
+    report.nativeLinkFailureState = await context.pages()[0]?.evaluate(() => {
+      const owner = document.querySelector('[data-testid="native-link-menu"]');
+      const menu = owner?.__vue__ ?? owner?.__vueParentComponent?.proxy;
+      const modal = menu?.$children?.find(child => child.$options.name === 'GlModal');
+      const internal = modal?.$children?.find(child => child.$options.name === 'BModal');
+      return { name: menu?.$options?.name, open: menu?.dialogOpen, disabled: menu?.disabled,
+        available: menu?.available, connected: menu?.root?.isConnected,
+        sessionClosed: menu?.sessionState?.closed, conflict: menu?.sessionState?.conflict,
+        serviceStatus: menu?.contentEditor?.status,
+        hostError: owner?.closest('[data-fountain-integration]')?.getAttribute('data-fountain-error'),
+        modal: modal ? { visible: modal.visible, closing: internal?.isClosing,
+          opening: internal?.isOpening, shown: internal?.isVisible, hidden: internal?.isHidden } : null };
+    });
+  }
   if (nativeAttachments && process.argv.includes('--probe-upload-focus')) {
     report.uploadFocusProbe = await context.pages()[0].evaluate(() => ({ probe: window.fountainUploadFocusProbe,
       selection: { focusType: getSelection()?.focusNode?.nodeType, focusText: getSelection()?.focusNode?.textContent?.slice(0, 50), offset: getSelection()?.focusOffset },
@@ -742,6 +773,20 @@ try {
       .getByRole('img', { name: 'Uploaded baseline figure', exact: true })
       .evaluateAll(images => images.map(image => ({ complete: image.complete,
         width: image.naturalWidth, currentSrc: image.currentSrc })));
+  }
+  if (debugLinks) {
+    const { createServer } = await import('node:http');
+    let finish;
+    const done = new Promise(resolve => { finish = resolve; });
+    const server = createServer((request, response) => {
+      if (request.method !== 'POST' || request.url !== '/finish') { response.writeHead(404).end(); return; }
+      response.end('Closing the diagnostic session.'); finish();
+    });
+    await new Promise((resolve, reject) => { server.once('error', reject); server.listen(9332, '127.0.0.1', resolve); });
+    console.log('Link diagnostic ready on loopback CDP 9331; POST loopback 9332/finish to close. This failed run is not acceptance evidence.');
+    report.debugSession = true;
+    await done;
+    await new Promise(resolve => server.close(resolve));
   }
   process.exitCode = 1;
 } finally {

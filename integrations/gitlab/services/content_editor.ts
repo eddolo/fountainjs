@@ -17,6 +17,7 @@ import {
 import { createGitLabReferenceNavigationPlugin } from '../plugins/reference_navigation';
 import { GitLabMarkdownInsertion } from './markdown_insertion';
 import { GitLabAttachmentUploads, type GitLabUploadHandler, type GitLabUploadSnapshot } from './attachment_uploads';
+import { GitLabLinkEditingSession, type GitLabLinkSnapshot } from './link_editing';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -39,8 +40,10 @@ export class GitLabContentEditor {
   readonly editor: Editor;
   readonly assetResolver: GitLabAssetResolver;
   private readonly controller: SerializedContentController;
+  private readonly codec: GitLabMarkdownCodec;
   private readonly insertions: GitLabMarkdownInsertion;
   private readonly uploads: GitLabAttachmentUploads;
+  private linkSession?: GitLabLinkEditingSession;
   private readonly uploadListeners = new Set<(uploads: readonly GitLabUploadSnapshot[]) => void>();
   private readonly releaseChanges: () => void;
   private readonly listeners = new Set<(change: SerializedContentChange) => void>();
@@ -106,7 +109,7 @@ export class GitLabContentEditor {
       this.assetResolver.dispose();
       throw error;
     }
-    const codec = new GitLabMarkdownCodec(options);
+    const codec = this.codec = new GitLabMarkdownCodec(options);
     this.controller = new SerializedContentController(this.editor, codec);
     this.insertions = new GitLabMarkdownInsertion(
       this.editor,
@@ -167,6 +170,42 @@ export class GitLabContentEditor {
   get availableUploadSlots(): number { return this.uploads.availableSlots; }
   uploadAttachment(file: File): Promise<SerializedContentResult> { return this.uploads.add(file); }
   retryUpload(id: string): Promise<SerializedContentResult> { return this.uploads.retry(id); }
+  beginLinkEdit(changed?: (snapshot: GitLabLinkSnapshot) => void): GitLabLinkEditingSession {
+    this.linkSession?.close();
+    const session = new GitLabLinkEditingSession({ editor: this.editor,
+      ensureReady: () => {
+        this.assertAlive();
+        if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
+          throw new GitLabEditorNotReady(this.status);
+      },
+      resolveURL: async (href, signal) => {
+        const { schema } = this.editor.state;
+        const document = schema.node('doc', {}, [schema.node('paragraph', {}, [
+          schema.text('link', [schema.mark('link', { href })]),
+        ])]);
+        const markdown = this.codec.serialize({ doc: document });
+        const result = await this.codec.deserialize({ schema, markdown, signal });
+        let resolved: string | undefined;
+        result.document.descendants(node => {
+          if (!node.isText || !node.text) return;
+          const link = node.marks.find(mark => mark.type.name === 'link');
+          if (!link || resolved !== undefined && resolved !== link.attrs.href)
+            throw new Error('GITLAB_LINK_RESOLUTION_FAILED');
+          resolved = String(link.attrs.href);
+        });
+        if (!resolved || result.document.textContent !== 'link') throw new Error('GITLAB_LINK_RESOLUTION_FAILED');
+        return resolved;
+      },
+      validate: doc => { this.codec.serialize({ doc }); },
+      changed, closed: () => { if (this.linkSession === session) this.linkSession = undefined; },
+      onListenerError: error => {
+        this.listenerFailure = error;
+        this.reportListenerError?.(error);
+      },
+    });
+    this.linkSession = session;
+    return session;
+  }
   cancelUpload(id: string): boolean {
     const removed = this.uploads.cancel(id);
     if (removed && !this.uploads.hasFailures && !this.pendingInsertions && !this.loading
@@ -287,6 +326,8 @@ export class GitLabContentEditor {
     if (this.destroyed) return;
     this.destroyed = true;
     this.request++;
+    this.linkSession?.close();
+    this.linkSession = undefined;
     this.insertions.dispose();
     this.uploads.dispose();
     this.uploadListeners.clear();

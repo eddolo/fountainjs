@@ -3,6 +3,7 @@ import { AddMarkStep } from './add-mark-step';
 import { getTextRangeSegments } from './path';
 import { RemoveMarkStep } from './remove-mark-step';
 import { Step } from './step';
+import { replaceOrAppendMark } from './mark-set';
 
 function samePath(left: readonly number[], right: readonly number[]): boolean {
   return left.length === right.length && left.every((part, index) => part === right[index]);
@@ -89,10 +90,8 @@ export class AddMarkRangeStep extends Step {
     if (samePath(this.startPath, this.endPath)) {
       return new AddMarkStep(this.startPath, this.from, this.to, this.mark).apply(doc);
     }
-    return transformRange(doc, this.startPath, this.from, this.endPath, this.to, (node) => node.withMarks([
-      ...node.marks.filter((existing) => existing.type !== this.mark.type),
-      this.mark,
-    ]));
+    return transformRange(doc, this.startPath, this.from, this.endPath, this.to,
+      node => node.withMarks(replaceOrAppendMark(node.marks, this.mark)));
   }
 }
 

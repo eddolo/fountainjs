@@ -439,17 +439,35 @@ function hardBreakMarkRunEnd(content: readonly Node[], start: number): number {
   return containsHardBreak && end - start > 1 ? end : start;
 }
 
-function inlineContent(node: Node, context: RenderContext, path: readonly number[]): string {
+function inlineContent(node: Node, context: RenderContext, path: readonly number[], indexOffset = 0): string {
   const result: string[] = [];
   for (let index = 0; index < node.content.length;) {
     const child = node.content[index]!;
+    const outerLink = child.isText && child.marks[0]?.type.name === 'link' && child.marks[0].attrs.htmlHref === undefined
+      ? child.marks[0] : undefined;
+    let linkEnd = index;
+    if (outerLink) {
+      while (linkEnd < node.content.length) {
+        const candidate = node.content[linkEnd]!;
+        if (!candidate.isText || !candidate.marks[0]?.eq(outerLink)
+          || !candidate.marks.slice(1).every(mark => DELIMITED_MARKS.has(mark.type.name) || mark.type.name === 'code')) break;
+        linkEnd++;
+      }
+    }
+    if (outerLink && linkEnd > index + 1) {
+      const inner = node.copy(node.content.slice(index, linkEnd).map(item => item.withMarks(item.marks.slice(1))));
+      const value = inlineContent(inner, context, path, indexOffset + index);
+      result.push(markdownMarks(child.withMarks([outerLink]), value, context, [...path, indexOffset + index], true));
+      index = linkEnd;
+      continue;
+    }
     const runEnd = hardBreakMarkRunEnd(node.content, index);
     if (runEnd > index) {
       const value = node.content
         .slice(index, runEnd)
-        .map((item, offset) => inline(item.withMarks([]), context, [...path, index + offset]))
+        .map((item, offset) => inline(item.withMarks([]), context, [...path, indexOffset + index + offset]))
         .join('');
-      result.push(markdownMarks(child, value, context, [...path, index]));
+      result.push(markdownMarks(child, value, context, [...path, indexOffset + index]));
       index = runEnd;
       continue;
     }
@@ -460,7 +478,7 @@ function inlineContent(node: Node, context: RenderContext, path: readonly number
       || sharedDelimitedMark(child, node.content[index + 1])
       || child.marks.some((mark, markIndex) => child.marks.findIndex((candidate) => candidate.type === mark.type) < markIndex)
     );
-    let rendered = inline(child, context, [...path, index], preserve);
+    let rendered = inline(child, context, [...path, indexOffset + index], preserve);
     const previous = node.content[index - 1];
     const next = node.content[index + 1];
     if (child.type.name === 'hard_break' && previous?.type.name === 'hard_break') rendered = '\\\n';

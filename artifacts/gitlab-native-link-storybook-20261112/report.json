@@ -1,0 +1,231 @@
+{
+  "scope": "Seven isolated native link component states plus narrow-screen preview with fixed renderer fixtures; not real-service product acceptance",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "checks": [
+    "Actual popover first edit, undo/redo, browser clipboard copy, repeated edit and cancel",
+    "preview: visible native component state and full-body/portal accessibility",
+    "empty: visible native component state and full-body/portal accessibility",
+    "readonly: visible native component state and full-body/portal accessibility",
+    "form: visible native component state and full-body/portal accessibility",
+    "pending: visible native component state and full-body/portal accessibility",
+    "failed: visible native component state and full-body/portal accessibility",
+    "conflict: visible native component state and full-body/portal accessibility",
+    "narrow-preview: visible native component state and full-body/portal accessibility"
+  ],
+  "pages": [
+    {
+      "id": "existing-link",
+      "state": "preview",
+      "width": 1280,
+      "violations": [],
+      "passes": 25,
+      "errors": [],
+      "containers": [
+        [
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "SECTION",
+            "role": null,
+            "label": "Link component states",
+            "editable": null
+          },
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "BODY",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "HTML",
+            "role": null,
+            "label": null,
+            "editable": null
+          }
+        ]
+      ]
+    },
+    {
+      "id": "empty-document",
+      "state": "empty",
+      "width": 1280,
+      "violations": [],
+      "passes": 20,
+      "errors": [],
+      "containers": []
+    },
+    {
+      "id": "read-only",
+      "state": "readonly",
+      "width": 1280,
+      "violations": [],
+      "passes": 25,
+      "errors": [],
+      "containers": [
+        [
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "SECTION",
+            "role": null,
+            "label": "Link component states",
+            "editable": null
+          },
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "BODY",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "HTML",
+            "role": null,
+            "label": null,
+            "editable": null
+          }
+        ]
+      ]
+    },
+    {
+      "id": "edit-form",
+      "state": "form",
+      "width": 1280,
+      "violations": [],
+      "passes": 27,
+      "errors": [],
+      "containers": []
+    },
+    {
+      "id": "pending",
+      "state": "pending",
+      "width": 1280,
+      "violations": [],
+      "passes": 27,
+      "errors": [],
+      "containers": []
+    },
+    {
+      "id": "failed-resolution",
+      "state": "failed",
+      "width": 1280,
+      "violations": [],
+      "passes": 27,
+      "errors": [],
+      "containers": []
+    },
+    {
+      "id": "conflict",
+      "state": "conflict",
+      "width": 1280,
+      "violations": [],
+      "passes": 27,
+      "errors": [],
+      "containers": []
+    },
+    {
+      "id": "existing-link",
+      "state": "narrow-preview",
+      "width": 360,
+      "violations": [],
+      "passes": 25,
+      "errors": [],
+      "containers": [
+        [
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "SECTION",
+            "role": null,
+            "label": "Link component states",
+            "editable": null
+          },
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "DIV",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "BODY",
+            "role": null,
+            "label": null,
+            "editable": null
+          },
+          {
+            "tag": "HTML",
+            "role": null,
+            "label": null,
+            "editable": null
+          }
+        ]
+      ]
+    }
+  ],
+  "status": "passed",
+  "rules": "Full body/portal axe scan; only the existing GitLab GlLink link-in-text-block exception is inherited",
+  "historyClipboardWritten": true,
+  "sources": {
+    "app/assets/javascripts/content_editor/components/fountain_link_menu.vue": "fb66a27067b0045f3923f9d75f8d3cfd72154e67ca61aec404416e63dc331fc3",
+    "app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js": "da2df3c21cc67b6062c9e8877f04c43567058d8d20655c1ee559593202180889"
+  }
+}

@@ -2,25 +2,24 @@
 
 Updated 2026-11-12.
 
-The latest real GitLab checkpoint adds native picker and clipboard uploads through
-GitLab's authenticated storage APIs, ordered insertion, progress/cancel/retry and
-failed-file save recovery. Oversized selection batches now refuse visibly before
-any file uploads or document changes. The recorded journey passes **18 checks**, including
-actual save/reopen, file bytes, anonymous refusal and application restart. Native
-image-paste testing also repaired rich-insertion caret placement and local-history
-typing marks; generated caret anchors no longer add empty formatting to Markdown.
-The upstream suite set is **176 passed / 5 failed / 181 total**. Alert, link,
-media, code-block and reference contextual menus still need implementation.
-The unchanged public engine retains the preceding **5,530 root tests/342 files**,
-types/API, package/headless/runtime and size/performance passes. Current private
-integration changes pass 38 focused cases and root TypeScript; no new full release
-gate is claimed. Nine event-authored file-input boundary
-cases pass across three desktop engines; actual GitLab binary clipboard acceptance
-is currently Chromium-only. Full product/release acceptance remains open. No
-parity row is promoted, and the other two full products remain unimplemented.
-Immediate follow-up: implement the five missing contextual menus. The reader's
-intermittent initial lazy-image decode remains an open finding despite later passes.
-[Current evidence and remaining work](../integrations/gitlab/README.md#whole-batch-upload-admission).
+The latest real GitLab checkpoint adds native text-link creation, preview, copy,
+editing and removal, with mapped selection, one-step undo/redo, strict host URL
+resolution and retained drafts during real network failure. Its recorded journey
+passes **17 checks**, including actual save/reopen, anonymous refusal and application
+restart. The preceding upload profile separately passed 18 checks; those scenarios
+are not all rerun by the link profile. Public repairs preserve mark order during
+attribute updates and serialize one continuous link across mixed text formatting.
+The full unit suite passes **5,560 tests/344 files**; types/API, package/headless/
+server runtimes, size and performance/retention checks pass. The actual upstream
+set is **250 passed / 4 failed / 254 total** (includes 64 additional work-item
+description cases). Alert, media, code-block and reference menus remain unfinished.
+Seven isolated component states plus a narrow preview pass portal-inclusive
+accessibility checks; these fixtures are separate from real GitLab acceptance.
+Actual link acceptance is currently Linux Chromium-only. Full product/release
+acceptance remains open. No parity row is promoted, and the other two full products
+remain unimplemented. Immediate follow-up: the four remaining contextual menus.
+The reader's intermittent initial lazy-image decode remains open despite later passes.
+[Current evidence and remaining work](../integrations/gitlab/README.md#native-text-link-controls).
 
 FountainJS is an MIT-licensed structured-document engine with a web editor,
 framework bindings, and optional document modules. The immediate goal is a

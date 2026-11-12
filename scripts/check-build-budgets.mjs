@@ -714,7 +714,10 @@ const limits = Object.freeze({
   // history typing marks measure 1,456,419 CJS bytes (+308 bytes). Add 512 bytes
   // aggregate capacity over the preceding component checkpoint;
   // entry/ESM/CSS/performance limits stay fixed.
-  'all CommonJS runtime code': 1422.5 * kibibyte,
+  // Preserve mark nesting during attribute updates and export one logical link
+  // across differently formatted text: 1,456,784 bytes (+365 bytes). Add 256
+  // bytes capacity; every entry/ESM/CSS/performance/retention limit stays fixed.
+  'all CommonJS runtime code': 1422.75 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

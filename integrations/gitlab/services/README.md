@@ -106,6 +106,42 @@ Persistent recovery across navigation, server orphan cleanup, every media type,
 every collaboration/rebasing case and native OS drop on all browsers remain
 separate acceptance work.
 
+## Native text-link editing
+
+`beginLinkEdit(changed?)` opens one owned session against the current native text
+selection. A caret inside a link captures its complete label, including adjacent
+differently formatted text. The snapshot exposes the canonical source URL,
+resolved display URL, mapped selection, pending state and conflicts. Opening a
+second session closes the first; `close()` cancels pending resolution and ignores
+late results. Disposal also closes the session.
+
+`apply({ href, text })` resolves through the real host Markdown renderer, validates
+the returned link, and preflights serialization inside an atomic native command.
+It preserves formatting when the label is unchanged. `remove()` preserves text
+and other marks. Successful changes have one-step undo/redo; unchanged values are
+a no-op. Unrelated edits map the target; changes inside it refuse the operation
+and retain the form draft. Renderer failures and a host becoming read-only cannot
+silently commit an edit. A host serialization refusal rolls back state/history.
+
+The component exposes toolbar and Ctrl/Meta+K entry, an editable modal, preview,
+copy, removal and cancellation. Its controls live outside contenteditable.
+The popover is remounted when the actual anchor element changes; undo/redo can
+replace that element while retaining the document link. Reusing the previous
+popover would retain its old placement target and visibility listeners.
+A scoped child-list observer also handles DOM-only view repairs; it disconnects
+on root replacement and disposal. Dialog focus returns through the native view
+API so cancellation preserves the document caret. Ctrl/Meta+K leaves active IME
+composition to the browser.
+GitLab's modal emits `hide` for a prevented Apply as well as a real close; only an
+actual close cancels the session. Failed Apply retains both fields for retry.
+
+This first boundary supports text within one inline parent. Cross-block ranges,
+inline atoms and hard breaks still need dedicated link handling. Text is bounded
+at 10,000 characters, input URLs at 2,048 and resolved URLs at 8,192. Multiline
+table labels refuse before conversion rather than silently folding their source.
+These are private integration contracts, not new public npm APIs or full GitLab
+link/dialect acceptance.
+
 ## Build and real-service evidence
 
 ```sh
