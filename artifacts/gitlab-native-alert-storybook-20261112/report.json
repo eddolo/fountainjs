@@ -1,0 +1,53 @@
+{
+  "scope": "Four isolated actual-component states and narrow keyboard editing using renderer fixtures; separate from actual GitLab product persistence acceptance",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "a786dfa92ec8d6c3ca32704aaa6d4e4b72ab3a19ff95bd1742525fe986e035a7",
+  "status": "passed",
+  "checks": [
+    "default-title/1280px: native selection changes severity, retains custom title or permits direct title typing and Enter into the body",
+    "default-title/1280px: no accessibility violations, page errors or horizontal overflow",
+    "custom-title/1280px: native selection changes severity, retains custom title or permits direct title typing and Enter into the body",
+    "custom-title/1280px: no accessibility violations, page errors or horizontal overflow",
+    "read-only/1280px: no accessibility violations, page errors or horizontal overflow",
+    "caution/1280px: no accessibility violations, page errors or horizontal overflow",
+    "default-title/360px: native selection changes severity, retains custom title or permits direct title typing and Enter into the body",
+    "default-title/360px: no accessibility violations, page errors or horizontal overflow"
+  ],
+  "pages": [
+    {
+      "id": "default-title",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "id": "custom-title",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "id": "caution",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "id": "default-title",
+      "width": 360,
+      "violations": [],
+      "errors": []
+    }
+  ],
+  "sources": {
+    "app/assets/javascripts/content_editor/components/fountain_alert_menu.vue": "c2a7215049f554af61e0f7d219fb8d873c3f33bea0064fb833acece195f797e9",
+    "app/assets/javascripts/content_editor/components/fountain_alert_menu.stories.js": "2fd80eeed8427dcf46ccbb6f90033f00a6e6820add2eafb6ff471ab5ceb5d426",
+    "app/assets/javascripts/content_editor/components/fountain_editor_surface.vue": "3ee0a4a3f8de0bcfd0efc009c16663cca696b0679d41f1d6c031706d117aff27"
+  }
+}

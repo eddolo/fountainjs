@@ -1,0 +1,196 @@
+{
+  "date": "2026-11-12T18:01:54.138Z",
+  "scope": "Native Fountain browser editor in the actual GitLab application; partial toolbar/providers, not full product acceptance",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Actual toolbar inserts an editable alert and all five kinds update the generated visible title without storing a fake custom title",
+    "Actual title editing preserves explicit default words, disables incompatible formatting and links, and Enter moves into the body without losing existing text",
+    "Actual Convert to text and Delete alert retain their distinct behavior and both restore the complete title/body through one-step undo",
+    "Actual GitLab renderer imports a list-nested alert containing fenced math and code; kind change, full removal and undo preserve both typed blocks and its neighboring item",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Actual UI Save persists native alert kinds, custom titles, nested math/code and body text, and the GitLab reader renders them from saved server source",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Private issue is unavailable to an unauthenticated browser context"
+  ],
+  "secrets": "Password/session used in memory only; no traces or storage-state files",
+  "preparedHost": true,
+  "nativeBrowser": true,
+  "nativeInsertion": true,
+  "nativeComponent": true,
+  "nativeAttachments": false,
+  "nativeCapacity": false,
+  "nativeLinks": false,
+  "nativeCodeProfile": false,
+  "nativeAlertsProfile": true,
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1469367,
+    "sha256": "8aff13cf064cb6abce9ca29437d38c63dac0989ed359943c5d375d195bd79af4",
+    "parentRevision": "131328edbe707774f68a862d836f304ee78f404e",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "6fd1c7cff746b941c72008e3bd0f6f8544b9c146d8c8888fea1892e567c7d9ed",
+      "integrations/gitlab/services/content_editor.ts": "bec3e745245344e21e51149c516da2c4e178a6ffa9ddebcfc014c2ef9745ed8a",
+      "integrations/gitlab/services/markdown_insertion.ts": "379504ee7216d91e9ed7a8342c637ffda871d08e1648043e23e6428cd57d1621",
+      "integrations/gitlab/services/attachment_uploads.ts": "94c88655b81c3d2863369601d92ffad1bdec106e2016949809490b353ca436ca",
+      "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+      "integrations/gitlab/services/code_editing.ts": "437a6f4740d6b28287d0902b4f2d6913d8ff5ce294be6687b6ca160af7479763",
+      "integrations/gitlab/services/code_rendering.ts": "624aaf0515f5f91950918becf919c1a4e9c8e1c1bab98a18d775af87df2584ea",
+      "integrations/gitlab/services/alerts.ts": "4e776417751d50509e2fa6a9ce153e16a84a795b1abdd2b1caa7281e415d1c1c",
+      "integrations/gitlab/services/alert_editing.ts": "8fbcbbf8cff01b08dca04d8b5ce2a607c4b4b62e4ad66cfe9f67d08eb6c51fd7",
+      "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+      "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+      "integrations/gitlab/services/markdown_codec.ts": "15565ac57e4074b5284b2fd4c60d1b83046b3ece09ae7019925027cf2b5dd5d7",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "caea8f3c22f3bd3ca90fa7015ff2260cb0c8d5d9974fb9906c7cdbe2a79189f3",
+      "integrations/gitlab/plugins/reference_navigation.ts": "7c7137d249f8887a93f7fe089961a0377115f8d6c71323e8d4165d21e384d4b0",
+      "dist/index.js": "7f70290bcf593e58e277d2402e2d6ad1d618caa747faa3d346ee85941614bc14"
+    }
+  },
+  "browserErrors": [],
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/c86ad78a64ce48fa0c5ef71b65a00e96/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/c86ad78a64ce48fa0c5ef71b65a00e96/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/c86ad78a64ce48fa0c5ef71b65a00e96/fountain-baseline-figure.png",
+      "status": 304
+    }
+  ],
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 54,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/54"
+  },
+  "originalServerDescription": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/c86ad78a64ce48fa0c5ef71b65a00e96/fountain-baseline-figure.png)\n\nEnd of the original description.",
+  "nativeAlertRendering": "<ul data-sourcepos=\"1:1-12:21\" dir=\"auto\">&#x000A;<li data-sourcepos=\"1:1-11:7\">&#x000A;<div class=\"markdown-alert markdown-alert-tip\" data-sourcepos=\"1:3-11:7\">&#x000A;<p class=\"markdown-alert-title\">Nested deployment</p>&#x000A;<p data-sourcepos=\"3:5-3:16\">Nested body.</p>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-math-style=\"display\" data-sourcepos=\"5:5-7:7\" data-canonical-lang=\"math\" class=\"js-render-math code highlight js-syntax-highlight language-math\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"math\">a^2+b^2=c^2</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"9:5-11:7\" data-canonical-lang=\"python\" class=\"code highlight js-syntax-highlight language-python\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"python\"><span class=\"k\">print</span><span class=\"p\">(</span><span class=\"sh\">\"</span><span class=\"s\">ready</span><span class=\"sh\">\"</span><span class=\"p\">)</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;</div>&#x000A;</li>&#x000A;<li data-sourcepos=\"12:1-12:21\">Neighbor alert item</li>&#x000A;</ul>",
+  "nativeAlerts": {
+    "customTitle": "Deployment status",
+    "kind": "warning",
+    "body": [
+      "Rollback owner: Ada.",
+      "Deployment procedure ready."
+    ],
+    "nestedTitle": "Nested deployment",
+    "nestedKind": "important",
+    "nestedFormula": "a^2+b^2=c^2",
+    "nestedCode": "print(\"ready\")"
+  },
+  "preparedScripts": [
+    {
+      "path": "/assets/webpack/content_editor.9a915810.chunk.js",
+      "sha256": "e68d73242c2d246fc134b152ce7b50579bf950501dbfd859e1d5095f0fda7e5e"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9a915810.chunk.js",
+      "sha256": "e68d73242c2d246fc134b152ce7b50579bf950501dbfd859e1d5095f0fda7e5e"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9a915810.chunk.js",
+      "sha256": "e68d73242c2d246fc134b152ce7b50579bf950501dbfd859e1d5095f0fda7e5e"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9a915810.chunk.js",
+      "sha256": "e68d73242c2d246fc134b152ce7b50579bf950501dbfd859e1d5095f0fda7e5e"
+    }
+  ],
+  "frontendMount": {
+    "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+    "readOnly": true
+  },
+  "nativeTaskControls": [
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    },
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    }
+  ],
+  "source": {
+    "original": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/c86ad78a64ce48fa0c5ef71b65a00e96/fountain-baseline-figure.png)\n\nEnd of the original description.\n",
+    "saved": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| :--- | :--- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/c86ad78a64ce48fa0c5ef71b65a00e96/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with @root.\n\n**Recovered paste**\n\n- > [!important] Nested deployment\n  > \n  > Nested body.\n  > \n  > ```math\n  > a^2+b^2=c^2\n  > ```\n  > \n  > ```python\n  > print(\"ready\")\n  > ```\n- Neighbor alert item\n\n> [!warning] Deployment status\n> \n> Rollback owner: Ada.\n> \n> Deployment procedure ready."
+  },
+  "comment": {
+    "body": "Native Fountain discussion: created through the actual GitLab comment form.",
+    "persisted": true
+  },
+  "recoveryIssue": {
+    "iid": 55,
+    "originalSourceUnchanged": true,
+    "recoveryDraftCancelled": true
+  },
+  "status": "failed",
+  "error": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+  "failedImages": [
+    {
+      "src": "http://127.0.0.1:5080/-/project/1/uploads/c86ad78a64ce48fa0c5ef71b65a00e96/fountain-baseline-figure.png",
+      "currentSrc": "http://127.0.0.1:5080/-/project/1/uploads/c86ad78a64ce48fa0c5ef71b65a00e96/fountain-baseline-figure.png",
+      "complete": false,
+      "width": 400,
+      "loading": "lazy",
+      "rect": {
+        "x": 253,
+        "y": 480.484375,
+        "width": 1,
+        "height": 1,
+        "top": 480.484375,
+        "right": 254,
+        "bottom": 481.484375,
+        "left": 253
+      },
+      "visibility": "visible",
+      "display": "inline",
+      "contentVisibility": "visible"
+    }
+  ],
+  "failedImageRequests": [
+    {
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 3149
+    }
+  ],
+  "imagesAfterFailureScreenshot": [
+    {
+      "complete": true,
+      "width": 400,
+      "currentSrc": "http://127.0.0.1:5080/-/project/1/uploads/c86ad78a64ce48fa0c5ef71b65a00e96/fountain-baseline-figure.png"
+    }
+  ]
+}

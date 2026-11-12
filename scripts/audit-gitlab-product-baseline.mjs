@@ -5,20 +5,22 @@ import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
 import { auditNativeLinks } from './audit-gitlab-native-links.mjs';
 import { auditNativeCode } from './audit-gitlab-native-code.mjs';
+import { auditNativeAlerts, assertSavedNativeAlerts } from './audit-gitlab-native-alerts.mjs';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const nativeCapacity = process.argv.includes('--native-attachment-capacity');
 const nativeLinks = process.argv.includes('--native-links');
 const nativeCode = process.argv.includes('--native-code');
+const nativeAlerts = process.argv.includes('--native-alerts');
 const debugLinks = nativeLinks && process.argv.includes('--debug-links');
 const nativeAttachments = process.argv.includes('--native-attachments') || nativeCapacity;
-const nativeComponent = process.argv.includes('--native-component') || nativeAttachments || nativeLinks || nativeCode;
+const nativeComponent = process.argv.includes('--native-component') || nativeAttachments || nativeLinks || nativeCode || nativeAlerts;
 const nativeInsertion = process.argv.includes('--native-insertion') || nativeComponent;
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -102,6 +104,7 @@ const report = {
   nativeCapacity,
   nativeLinks,
   nativeCodeProfile: nativeCode,
+  nativeAlertsProfile: nativeAlerts,
 };
 if (nativeBrowser)
   report.nativeRuntime = JSON.parse(
@@ -342,6 +345,7 @@ try {
     }
     if (nativeLinks) await auditNativeLinks({ page, context, editor, toolbar, output, report });
     if (nativeCode) await auditNativeCode({ page, editor, toolbar, output, report });
+    if (nativeAlerts) await auditNativeAlerts({ page, editor, toolbar, output, report });
     if (nativeAttachments) {
       if (process.argv.includes('--probe-upload-focus')) await editor.evaluate(element => {
         const root = element.closest('[data-fountain-integration="native"]');
@@ -549,6 +553,10 @@ try {
     await expect(rendered).toContainText('// reviewed');
     report.checks.push('Native UI Save persists the changed code language and exact source; the actual GitLab reader renders the edited code');
   }
+  if (nativeAlerts) {
+    await assertSavedNativeAlerts({ page, description: saved.description, report, output, phase: 'saved' });
+    report.checks.push('Actual UI Save persists native alert kinds, custom titles, nested math/code and body text, and the GitLab reader renders them from saved server source');
+  }
   if (nativeInsertion)
     expect(saved.description).toContain('Pasted **GitLab Markdown** with @root.');
   if (nativeAttachments) {
@@ -618,7 +626,13 @@ try {
       data: { title: 'Native failed-load recovery audit', description: rejectedSource },
     });
     await page.goto(rejectedIssue.web_url);
+    const rejectedRendering = page.waitForResponse(response => {
+      if (response.request().method() !== 'POST' || !response.ok()) return false;
+      try { return response.request().postDataJSON()?.text === rejectedSource; }
+      catch { return false; }
+    });
     await page.getByTestId('work-item-edit-form-button').click();
+    await (await rejectedRendering).finished();
     const native = page.getByTestId('work-item-description-wrapper').locator('[data-fountain-integration="native"]');
     const failedEditor = native.locator('[contenteditable]');
     await expect(native.getByTestId('content-editor-error')).toBeVisible();
@@ -650,6 +664,7 @@ try {
   }
   await page.reload();
   await expect(page.getByText(marker, { exact: true })).toBeVisible();
+  if (nativeAlerts) await assertSavedNativeAlerts({ page, description: saved.description, report, output, phase: 'reopened' });
   await page
     .getByRole('img', { name: 'Uploaded baseline figure', exact: true })
     .scrollIntoViewIfNeeded();
@@ -698,6 +713,7 @@ try {
     expect(reopened.description).toBe(saved.description);
     await page.goto(issue.web_url);
     await expect(page.getByText(marker, { exact: true })).toBeVisible();
+    if (nativeAlerts) await assertSavedNativeAlerts({ page, description: reopened.description, report, output, phase: 'restart' });
     const reopenedImage = page.getByRole('img', {
       name: 'Uploaded baseline figure',
       exact: true,
@@ -721,6 +737,16 @@ try {
 } catch (error) {
   report.status = 'failed';
   report.error = String(error).replaceAll(password, '[redacted]');
+  if (nativeAlerts) report.nativeAlertFailure = await context.pages()[0]?.evaluate(() => {
+    const owner = document.querySelector('[data-fountain-integration="native"]');
+    const component = owner?.__vue__ ?? owner?.__vueParentComponent?.proxy;
+    const image = document.querySelector('img[alt="Uploaded baseline figure"]');
+    return { hostError: owner?.getAttribute('data-fountain-error'), message: component?.failure?.message,
+      issues: component?.failure?.issues, image: image && { src: image.getAttribute('src'),
+        currentSrc: image.currentSrc, complete: image.complete, width: image.naturalWidth,
+        loading: image.loading, attributes: Array.from(image.attributes, item => [item.name, item.value]),
+        box: image.getBoundingClientRect().toJSON() } };
+  });
   if (nativeCode) report.nativeCodeFailure = await context.pages()[0]?.evaluate(() => {
     const owner = document.querySelector('[data-fountain-integration="native"]');
     const component = owner?.__vue__ ?? owner?.__vueParentComponent?.proxy;

@@ -129,4 +129,8 @@ export default {
   background: transparent;
   color: inherit;
 }
+[data-fountain-root='gitlab'] [data-fountain-default-title]::before {
+  content: attr(data-fountain-default-title);
+  pointer-events: none;
+}
 </style>

@@ -15,10 +15,12 @@ Replace the document/editor layer and prove the complete connected workflows
 still work. Reimplementing their interfaces with local-only state is insufficient.
 
 The [GitLab integration work area](../integrations/gitlab/README.md) pins the
-upstream revision and documents completion requirements. Its reproducible
-source audit identifies the real Vue 2 component, host events, serializers,
-service boundaries and exported extensions. This is preparation for integration,
-not a completed replacement or a public capability claim.
+upstream revision and documents completion requirements. Fountain now mounts in
+the actual GitLab issue and discussion composers, with real rendering, uploads,
+links, ordinary code and alert editing under verification. Normal account sign-in,
+server persistence, private access checks and application restarts are exercised
+against the real local GitLab installation. This remains an incomplete integration;
+the full workflow/role/surface matrix below is the completion requirement.
 
 ## Same standard for the other two
 

@@ -18,6 +18,7 @@ import FountainEditorSurface from './fountain_editor_surface.vue';
 import FountainFormattingToolbar from './fountain_formatting_toolbar.vue';
 import FountainLinkMenu from './fountain_link_menu.vue';
 import FountainCodeMenu from './fountain_code_menu.vue';
+import FountainAlertMenu from './fountain_alert_menu.vue';
 
 export default {
   name: 'FountainContentEditor',
@@ -30,6 +31,7 @@ export default {
     FountainFormattingToolbar,
     FountainLinkMenu,
     FountainCodeMenu,
+    FountainAlertMenu,
   },
   // The installer inserts the pinned host's exact public prop definitions here.
   props: {},
@@ -57,6 +59,8 @@ export default {
       return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
     },
     failureMessage() {
+      if (this.failureCode === 'GITLAB_ALERT_TITLE_SINGLE_LINE')
+        return s__('ContentEditor|Alert titles must stay on one line. Paste multiple paragraphs into the alert body instead.');
       if (this.failureCode === 'GITLAB_UPLOAD_QUEUE_FULL')
         return s__('ContentEditor|Too many files were selected. None of this selection was uploaded. Wait for uploads to finish or remove failed files, then select fewer files.');
       if (this.failureCode === 'GITLAB_LINK_TEXT_SELECTION_REQUIRED')
@@ -443,6 +447,7 @@ export default {
           <template #context-actions>
             <fountain-link-menu ref="linkMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-code-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
+            <fountain-alert-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
           </template>
           <template #header-buttons>
             <slot name="header-buttons"></slot>

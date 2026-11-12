@@ -6,6 +6,7 @@ import type { SerializedContentCodec } from './serialized_content';
 import type { GitLabRenderResponse } from './asset_resolver';
 import { gitlabMathNodes, normalizeGitLabMath, serializeGitLabMath } from './math';
 import { normalizeGitLabCodeRendering } from './code_rendering';
+import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 
 export interface GitLabMarkdownIssue { stage: 'import' | 'export'; code: string; message: string; path?: readonly number[] }
 export class GitLabMarkdownConversionError extends Error {
@@ -53,7 +54,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec): Schem
       gitlabIntrinsicSize: !child.getAttribute('width') && !child.getAttribute('height') && !child.style.width && !child.style.height,
       alt: child.getAttribute('alt') ?? '', title: child.getAttribute('title') ?? '', width: size('width'), height: size('height') };
   };
-  return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base),
+  return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base), ...gitlabAlertNodes(),
     inline_image: { ...image, attrs: { ...image.attrs, gitlabCanonicalSrc: canonical,
       gitlabIntrinsicSize: { default: false, validate: value => typeof value === 'boolean' },
       gitlabCanonicalMissing: { default: false, validate: value => typeof value === 'boolean' } },
@@ -98,7 +99,7 @@ const setAttr = (element: RawElement, name: string, value: string): void => {
   if (existing) existing.value = value;
   else element.attrs.push({ name, value });
 };
-function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions): string {
+function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string): string {
   const maxBytes = options.maxInputBytes ?? 1_048_576;
   if (new TextEncoder().encode(html).length > maxBytes) throw new Error('GitLab rendering exceeds the configured HTML byte limit.');
   const fragment = parseFragment(html), elements: RawElement[] = [], stack: [RawNode, number][] = [[fragment, 0]];
@@ -120,12 +121,13 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
     }
   }
   const math = normalizeGitLabMath(elements);
+  const alerts = normalizeGitLabAlerts(elements, source);
   const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element)));
   const issues: GitLabMarkdownIssue[] = [
-    ...math.issues, ...codeIssues.map(issue => ({ stage: 'import' as const, ...issue })),
+    ...math.issues, ...alerts.issues, ...codeIssues.map(issue => ({ stage: 'import' as const, ...issue })),
   ];
   for (const element of elements) {
-    if (math.handled.has(element)) continue;
+    if (math.handled.has(element) || alerts.handled.has(element)) continue;
     const classes = (attr(element, 'class') ?? '').split(/\s+/u);
     if (attr(element, 'dir') === 'auto' && (attr(element, 'align')
       || /(?:^|;)\s*text-align\s*:/iu.test(attr(element, 'style') ?? ''))) {
@@ -175,11 +177,13 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       if (signal.aborted) throw new Error('GitLab Markdown rendering was cancelled.');
       if (!response || typeof response.body !== 'string') throw new Error('The actual GitLab host renderer must return a body string.');
       if (response.references?.commands) throw new GitLabMarkdownConversionError([{ stage: 'import', code: 'quick-actions', message: 'Quick-action source requires a dedicated document adapter before visual editing.' }]);
-      const result = parser.parseWithReport(normalizeGitLabRendering(response.body, parser.options), schema);
+      const result = parser.parseWithReport(normalizeGitLabRendering(response.body, parser.options, markdown), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
-      const source = MarkdownSourceSnapshot.capture(markdown, result.document);
-      result.document.descendants(node => { this.sources.set(node, source); });
-      return { document: result.document };
+      const document = hydrateGitLabAlertTitles(result.document);
+      schema.validate(document);
+      const source = MarkdownSourceSnapshot.capture(markdown, document);
+      document.descendants(node => { this.sources.set(node, source); });
+      return { document };
     } catch (error) {
       if (error instanceof GitLabMarkdownConversionError) throw new GitLabMarkdownConversionError(error.issues, markdown);
       throw new GitLabMarkdownConversionError([{ stage: 'import', code: signal.aborted ? 'cancelled' : 'render-or-parse-failed',
@@ -199,6 +203,15 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const encoded = JSON.stringify(doc.toJSON());
     while (encoded.includes(prefix)) prefix += 'X';
     const project = (node: Node, path: number[]): Node => {
+      if (node.type.name === 'gitlab_alert') {
+        if (path.some((_, index) => ['table_cell', 'table_header'].includes(path.slice(0, index).reduce((value, part) => value.child(part), doc).type.name)))
+          issues.push({ stage: 'export', code: 'alert-table-source', path, message: 'Alerts in table cells need a dedicated GitLab table representation.' });
+        const title = node.child(0).textContent.trim();
+        const token = `${prefix}${tokens.size}END`;
+        tokens.set(token, `[!${String(node.attrs.kind)}]${title ? ` ${title}` : ''}`);
+        return node.type.schema.node('blockquote', {}, [node.type.schema.node('paragraph', {}, [node.type.schema.text(token)]),
+          ...node.content.slice(1).map((child, index) => project(child, [...path, index + 1]))]);
+      }
       if (['inline_math', 'math_block'].includes(node.type.name)) {
         let ancestor = doc;
         for (const index of path.slice(0, -1)) {
@@ -210,8 +223,13 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         }
         const parent = path.slice(0, -1).reduce((node, index) => node.child(index), doc);
         const raw = serializeGitLabMath(node, parent.content[path.at(-1)! + 1], path, issues);
+        if (node.type.name === 'math_block') {
+          const latex = String(node.attrs.latex ?? '');
+          return node.type.schema.node('code_block', { language: 'math' }, [
+            node.type.schema.text(latex.endsWith('\n') ? latex.slice(0, -1) : latex),
+          ]);
+        }
         const token = `${prefix}${tokens.size}END`; tokens.set(token, raw);
-        if (node.type.name === 'math_block') return doc.type.schema.node('paragraph', {}, [doc.type.schema.text(token)]);
         return project(doc.type.schema.text(token, node.marks), path);
       }
       if (['gitlab_reference', 'gitlab_placeholder'].includes(node.type.name)) {
@@ -251,9 +269,13 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         return false;
       });
       const content = node.content.map((child, index) => project(child, [...path, index]));
+      if (text === node.text && retainedMarks.length === node.marks.length && retainedMarks.every((mark, index) => mark === node.marks[index])
+        && content.every((child, index) => child === node.child(index))
+        && Object.keys(attrs).length === Object.keys(node.attrs).length
+        && Object.entries(attrs).every(([key, value]) => value === node.attrs[key])) return node;
       return node.type.create(attrs, content, text, retainedMarks);
     };
-    const exported = new MarkdownExporter().exportWithReport(project(doc, []));
+    const exported = new MarkdownExporter().exportWithReport(project(doc, []), { omitTrailingCaret: true });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
     let markdown = exported.markdown;
     for (const [token, original] of tokens) markdown = markdown.replaceAll(token, () => original);

@@ -3,6 +3,7 @@ import {
   composeExtensions,
   createEditor,
   createMathExtension,
+  Plugin,
   type Editor,
   type FountainExtension,
   type MathDocumentRenderer,
@@ -19,6 +20,7 @@ import { GitLabMarkdownInsertion } from './markdown_insertion';
 import { GitLabAttachmentUploads, type GitLabUploadHandler, type GitLabUploadSnapshot } from './attachment_uploads';
 import { GitLabLinkEditingSession, type GitLabLinkSnapshot } from './link_editing';
 import { GitLabCodeEditingSession } from './code_editing';
+import { GitLabAlertEditing } from './alert_editing';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -46,6 +48,7 @@ export class GitLabContentEditor {
   private readonly uploads: GitLabAttachmentUploads;
   private linkSession?: GitLabLinkEditingSession;
   private codeSession?: GitLabCodeEditingSession;
+  readonly alerts: GitLabAlertEditing;
   private readonly uploadListeners = new Set<(uploads: readonly GitLabUploadSnapshot[]) => void>();
   private readonly releaseChanges: () => void;
   private readonly listeners = new Set<(change: SerializedContentChange) => void>();
@@ -101,10 +104,15 @@ export class GitLabContentEditor {
     });
     const kit = composeExtensions([...StarterKit.extensions, math, ...(options.extensions ?? [])]);
     this.assetResolver = new GitLabAssetResolver(options);
+    let alertInput: Plugin | undefined;
     try {
       this.editor = createEditor({
         schema: createGitLabSchemaSpec(kit.schema),
-        plugins: [...kit.plugins, createGitLabReferenceNavigationPlugin()],
+        plugins: [new Plugin({ props: {
+          handleKeyDown: (editor, event) => alertInput?.spec.props?.handleKeyDown?.(editor, event) ?? false,
+          handleBeforeInput: (editor, event) => alertInput?.spec.props?.handleBeforeInput?.(editor, event) ?? false,
+          handlePaste: (editor, event) => alertInput?.spec.props?.handlePaste?.(editor, event) ?? false,
+        } }), ...kit.plugins, createGitLabReferenceNavigationPlugin()],
         editable: options.editable,
       });
     } catch (error) {
@@ -113,6 +121,19 @@ export class GitLabContentEditor {
     }
     const codec = this.codec = new GitLabMarkdownCodec(options);
     this.controller = new SerializedContentController(this.editor, codec);
+    this.alerts = new GitLabAlertEditing({ editor: this.editor,
+      ensureReady: () => {
+        this.assertAlive();
+        if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
+          throw new GitLabEditorNotReady(this.status);
+      },
+      validate: doc => { this.codec.serialize({ doc }); },
+      onError: error => {
+        this.listenerFailure = error;
+        try { this.reportListenerError?.(error); } catch { /* Host error observers cannot change input ownership. */ }
+      },
+    });
+    alertInput = this.alerts.plugin();
     this.insertions = new GitLabMarkdownInsertion(
       this.editor,
       codec,

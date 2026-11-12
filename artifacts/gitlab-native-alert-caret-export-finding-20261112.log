@@ -1,0 +1,36 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-alert-editing.test.ts (28 tests | 1 failed | 27 skipped) 27ms
+   × does not serialize the editor-only trailing caret paragraph as authored document content 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-alert-editing.test.ts > does not serialize the editor-only trailing caret paragraph as authored document content
+AssertionError: expected '> [!tip]\n> \n> Body **with marks**.\…' not to contain 'data-fountain-empty'
+
+- Expected
++ Received
+
+- data-fountain-empty
++ > [!tip]
++ >
++ > Body **with marks**.
++
++ <p data-fountain-empty="text"></p>
+
+ ❯ tests/gitlab-alert-editing.test.ts:50:46
+     48| it('does not serialize the editor-only trailing caret paragraph as aut…
+     49|   const { service } = await setup(); service.alerts.setKind('tip');
+     50|   expect(service.getSerializedContent()).not.toContain('data-fountain-…
+       |                                              ^
+     51| });
+     52|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 skipped (28)
+   Start at  17:46:11
+   Duration  1.20s (transform 79%, import 17%, tests 3%, worker 1%)

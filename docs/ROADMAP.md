@@ -2,7 +2,26 @@
 
 Updated 2026-11-12.
 
-The latest GitLab work adds native ordinary-code language controls, full-source
+The latest GitLab checkpoint adds native alerts: all five types, direct literal
+title/body editing, insertion, conversion to text, deletion, undo/redo and keyboard/
+mobile input boundaries. Actual renderer fixtures preserve generated versus
+authored default-word titles. Structural export retains nested list, code and
+fenced-math prefixes. A public opt-in export repair omits only the editor-owned
+trailing caret paragraph; authored blank paragraphs remain intact. All **5,685
+unit tests/350 files** and existing package/API, runtime/headless, format, size,
+performance/retention and framework gates pass without changing acceptance limits.
+GitLab's seven-suite set is **272 passed / 3 failed / 275 total**, including eleven
+native alert cases; media, specialized code and reference-menu requirements remain
+open. The final actual-service journey passes **17 checks**, including real
+save/expanded-reader/reopen, private access refusal and application restart.
+Thirteen-file source rollback/reinstall preserves every digest. An earlier reader
+image-decode failure and an incorrectly synchronized loading assertion remain
+recorded; the later pass does not establish that image intermittency is fixed.
+This is Linux Chromium evidence and incomplete product work, with no parity-row
+promotion or publication.
+[Current evidence and limits](../integrations/gitlab/README.md#native-gitlab-alerts).
+
+The preceding GitLab checkpoint adds native ordinary-code language controls, full-source
 copy, deletion and undo/redo, with mapped targets and retained invalid/conflicting
 drafts. Real renderer output is normalized through an explicit code adapter.
 Public engine repairs retain required containers when deleting their final block

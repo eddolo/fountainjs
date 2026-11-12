@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add opt-in `MarkdownExportOptions.omitTrailingCaret` to omit only the editor's
+  still-empty automatic trailing paragraph. Authored blank paragraphs and the
+  document itself remain unchanged; default export behavior is preserved.
+
 - Preserve required list, quote and table-cell containers when removing their
   final block, recover selection through empty intermediate containers, and land
   the caret in the immediate replacement or following block.

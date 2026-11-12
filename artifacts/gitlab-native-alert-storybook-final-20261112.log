@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "checks": [
+    "default-title/1280px: native selection changes severity, retains custom title or permits direct title typing and Enter into the body",
+    "default-title/1280px: no accessibility violations, page errors or horizontal overflow",
+    "custom-title/1280px: native selection changes severity, retains custom title or permits direct title typing and Enter into the body",
+    "custom-title/1280px: no accessibility violations, page errors or horizontal overflow",
+    "read-only/1280px: no accessibility violations, page errors or horizontal overflow",
+    "caution/1280px: no accessibility violations, page errors or horizontal overflow",
+    "default-title/360px: native selection changes severity, retains custom title or permits direct title typing and Enter into the body",
+    "default-title/360px: no accessibility violations, page errors or horizontal overflow"
+  ],
+  "pages": [
+    {
+      "id": "default-title",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "custom-title",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "read-only",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "caution",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "id": "default-title",
+      "width": 360,
+      "violations": []
+    }
+  ]
+}

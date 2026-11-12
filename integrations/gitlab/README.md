@@ -832,6 +832,61 @@ still unimplemented and nothing from this checkpoint is published.
 [actual journey](../../artifacts/gitlab-native-code-20261112/report.json),
 [code contracts](services/README.md#native-ordinary-code-controls).
 
+### Native GitLab alerts
+
+The real GitLab component now exposes Insert alert, all five kinds, Convert to
+text and Delete alert. Titles and bodies edit directly in the native view.
+Generated titles follow their kind, while explicitly authored words such as
+`Tip` remain unchanged when the kind changes. The converter uses fourteen
+responses captured from the authenticated pinned GitLab renderer. Unknown or
+ambiguous alert markup is refused with source retained.
+
+Titles are plain, single-line text (up to 1,000 characters), matching the host
+format. Rich formatting and link controls/shortcuts are unavailable there;
+body formatting remains normal. Enter, Delete, Backspace, literal title paste,
+mobile input events, empty-body exit and undo/redo have native boundary tests.
+Active composition stays on the existing input path. These checks do not close
+physical-device IME or arbitrary cross-block selection acceptance.
+
+Structural Markdown projection keeps every quote/list prefix on nested code
+and fenced math. Testing also exposed an editor-generated trailing caret
+paragraph leaking into saved Markdown. The additive public
+`MarkdownExportOptions.omitTrailingCaret` option removes only that known empty
+repair node; authored, copied and JSON-reopened blanks are preserved. The
+GitLab projection retains unchanged node identity so that ownership evidence
+survives export. Default public export behavior stays unchanged.
+
+All **5,685 tests/350 files** and the existing package/API, server/Worker,
+headless, format, build-size, performance/retention and framework gates pass.
+The public CommonJS total grows 107 bytes to 1,457,139 bytes, below its unchanged
+1,457,152-byte limit. The seven upstream suites have **272 passed / 3 failed /
+275 total**, including eleven native alert cases. Media, specialized code and
+reference-menu requirements remain failing. Eight ordered patches reconstruct
+the tested specs exactly; source lint passes without disabling rules.
+
+The final real-service journey passes **17 checks**: normal sign-in, actual
+renderer responses, native insertion/editing/kind changes, conversion/deletion/
+undo, nested math/code, exact saved server source, the expanded reader, real
+discussion creation, unsupported-source recovery, private access refusal and
+application restart. Editor, reader and restart screenshots are visually
+inspected, and browser recordings are retained. This is Linux Chromium evidence.
+The version-4, thirteen-file source installer passes guarded rollback/reinstall;
+all thirteen digests remain identical. Compiled deployment rollback is separate
+acceptance work.
+
+An earlier run failed on reader image decoding after restart; the failure is
+retained and image intermittency remains open. Another run checked for a
+conversion warning while the actual renderer was still loading. The audit now
+waits for that real response before applying the same warning assertion and
+timeout. No render/save responses, warnings or success outcomes are fabricated.
+Neither later passing evidence nor isolated component checks establish full
+GitLab product readiness, cross-engine acceptance or readiness of the other two
+products. Nothing in this checkpoint is published.
+
+[Checkpoint evidence](../../artifacts/gitlab-native-alert-integration-20261112.json),
+[real journey](../../artifacts/gitlab-native-alerts-20261112/report.json),
+[alert contracts](services/README.md#native-gitlab-alerts).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

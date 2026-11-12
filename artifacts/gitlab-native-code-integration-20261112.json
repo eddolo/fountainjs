@@ -129,8 +129,8 @@
     "scope": "Recorded local prerequisite gates plus repaired full unit/type runs; hosted release and whole-product browser acceptance remain open"
   },
   "installation": {
-    "manifest": "artifacts/gitlab-native-browser-install/install.json",
-    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "manifest": "artifacts/gitlab-native-code-checkpoint-install-20261112.json",
+    "runtimeManifest": "artifacts/gitlab-native-code-checkpoint-build-20261112.json",
     "previousManifest": "artifacts/gitlab-native-browser-install/link-checkpoint-install-20261112.json",
     "previousRuntimeManifest": "artifacts/gitlab-native-runtime/link-checkpoint-build-20261112.json",
     "patchVerification": "artifacts/gitlab-native-code-patch-verification-20261112.json",

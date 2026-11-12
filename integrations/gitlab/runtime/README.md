@@ -171,11 +171,12 @@ retaining attachment/contextual-menu requirements. Then apply
 additional upload/focus cases. Then apply
 `gitlab-19.5.3-native-upload-capacity-tests.patch` for two whole-batch admission
 cases. Then apply `gitlab-19.5.3-native-link-tests.patch` and
-`gitlab-19.5.3-native-code-tests.patch` in that order. They add native link and
-ordinary-code component behavior tests. The current six-suite set is 260 passed /
-4 failed / 264 cases, including 64 work-item description cases, eight link cases
-and ten code cases. Alert, media, code-block and reference legacy-menu requirements
-remain failing; ordinary code controls do not implement diagrams/frontmatter.
+`gitlab-19.5.3-native-code-tests.patch` in that order, then
+`gitlab-19.5.3-native-alert-tests.patch`. They add native link, alert and
+ordinary-code component behavior tests. The current seven-suite set is 272 passed /
+3 failed / 275 cases, including 64 work-item description cases, eight link cases,
+ten code cases and eleven alert cases. Media, code-block and reference legacy-menu
+requirements remain failing; ordinary code controls do not implement diagrams/frontmatter.
 All 75 host and 40 form cases pass.
 Forward/reverse checks reconstruct the native specs exactly
 without changing the main index; no skips or timeout increases waive failures.
@@ -185,6 +186,7 @@ corepack yarn jest --runInBand \
   spec/frontend/content_editor/components/content_editor_spec.js \
   spec/frontend/content_editor/components/fountain_link_menu_spec.js \
   spec/frontend/content_editor/components/fountain_code_menu_spec.js \
+  spec/frontend/content_editor/components/fountain_alert_menu_spec.js \
   spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js \
   spec/frontend/issuable/issuable_form_spec.js \
   spec/frontend/work_items/components/work_item_description_spec.js
@@ -194,10 +196,17 @@ The installer checks source revision, prepared-file digests, runtime input hashe
 and existing owned-file hashes. It rejects unrecognized edits and symlinks. It
 retains original source files for rollback and formats installed components with
 GitLab's own Prettier/Tailwind configuration. Its install manifest identifies
-every changed file. Format 3 owns exactly eleven files, including both native
+every changed file. Format 4 owns exactly thirteen files, including all three native
 menu components and their isolated Storybook states; earlier retained generations
 remain recognizable for guarded upgrade/restore. The native runtime and renderer
 CSS are local build inputs.
+
+Verify the eight ordered test patches without changing the upstream worktree or
+its main index:
+
+```sh
+node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source
+```
 
 Native imports request `no_header_anchors` through the real host callback;
 reader navigation decorations must not become source links. Cancellation is
@@ -221,6 +230,10 @@ node scripts/run-gitlab-native-browser-audit.mjs --capacity
 node scripts/run-gitlab-native-browser-audit.mjs --links
 # Ordinary code, languages, clipboard, nested removal and visible caret recovery:
 node scripts/run-gitlab-native-browser-audit.mjs --code
+# Alerts, direct titles/body, all kinds, nested math/code and real saved rendering:
+node scripts/run-gitlab-native-browser-audit.mjs --alerts
+# Read-only renderer fixture capture (not a product acceptance run):
+node scripts/run-gitlab-native-browser-audit.mjs --alert-fixtures
 ```
 
 Use `PLAYWRIGHT_BROWSERS_PATH` when the installed Linux browser lives outside
@@ -242,6 +255,10 @@ node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source --restore
 Restore refuses changed installed files, restores the recorded host/configuration
 files and removes only verified installer-owned files. Rebuild before serving
 that restored frontend, or recreate with the original base Compose profile.
+With the task application stopped, `node scripts/check-gitlab-native-install.mjs
+/absolute/gitlab-source` exercises the guarded source restore/reinstall and checks
+every digest. This is source rollback evidence; compiled deployment rollback still
+needs a separate exercise.
 Full native toolbar/menus, remaining media/suggestion/provider adapters, direct
 source-mode recovery, remaining upstream feature cases, accessibility and
 cross-browser/product acceptance remain necessary. Passing a selected real

@@ -1,0 +1,57 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-alert-editing.test.ts (30 tests | 1 failed) 312ms
+   × does not add an undo step when Enter only moves from an empty title into its existing empty body 28ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-alert-editing.test.ts > does not add an undo step when Enter only moves from an empty title into its existing empty body
+AssertionError: expected o{ type: d{ name: 'doc', …(4) }, …(4) } to be o{ type: d{ name: 'doc', …(4) }, …(4) } // Object.is equality
+
+- Expected
++ Received
+
+@@ -12,10 +12,22 @@
+                "type": "text",
+              },
+            ],
+            "type": "gitlab_alert_title",
+          },
++         {
++           "attrs": {
++             "align": "left",
++           },
++           "content": [
++             {
++               "text": "",
++               "type": "text",
++             },
++           ],
++           "type": "paragraph",
++         },
+        ],
+        "type": "gitlab_alert",
+      },
+      {
+        "attrs": {
+
+ ❯ tests/gitlab-alert-editing.test.ts:97:61
+     95| it('does not add an undo step when Enter only moves from an empty titl…
+     96|   const { editor, key } = await setup('empty'), alert = editor.state.d…
+     97|   editor.dispatch(editor.createTransaction().replaceNode([0], [alert.c…
+       |                                                             ^
+     98|     .setSelection(Selection.cursor([0, 0, 0], 0)).setMeta('addToHistor…
+     99|   const doc = editor.state.doc;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 349 passed (350)
+      Tests  1 failed | 5684 passed (5685)
+   Start at  18:02:36
+   Duration  294.86s (environment 46%, import 27%, tests 22%, transform 4%, worker 1%)
+
+     Import  825 modules were evaluated 1862 times · 140.51s total, 27% of tracked time
+             ~25.70s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

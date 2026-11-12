@@ -182,6 +182,51 @@ Intermediate structural selection mapping can recover without inventing an
 invalid gap. These are public engine repairs; the GitLab controls remain private
 integration code.
 
+## Native GitLab alerts
+
+`alerts.ts` owns native `gitlab_alert` and `gitlab_alert_title` schema nodes.
+The five supported kinds are note, tip, important, warning and caution. The
+actual GitLab renderer fixtures include every kind, custom/default-word titles,
+empty alerts, nested alerts/lists, literal title characters and code/math bodies.
+`data-sourcepos` maps the rendered header back to its original source line so an
+omitted generated title remains distinct from an explicitly authored `Note` or
+`Tip`. Without that source evidence the visible title is preserved literally.
+Unknown or ambiguous carrier metadata refuses conversion with retained source.
+
+`getGitLabAlertContext(editor)` identifies the innermost alert containing the
+whole selection. `contentEditor.alerts.insert(kind?)`, `.setKind(kind)`,
+`.remove()` and `.unwrap()` use native transactions with serialization preflight,
+filter refusal, one-step undo and read-only/lifecycle checks. Unwrap retains an
+authored title as a paragraph and keeps its body; Delete removes the whole alert.
+Insertion lands in the body. The contextual controls use the same operations;
+there is no parallel Vue document state or server-side alert emulation.
+
+Titles are literal, single-line plain text, bounded to 1,000 characters. Their
+empty model text leaf is editable; a view-only generated label follows the kind.
+Formatting/style/link controls are unavailable inside titles. Keyboard and
+mobile formatting input is consumed there without enabling stored marks; the
+body retains ordinary rich-text formatting. Single-line paste remains literal;
+multiline title paste refuses with an explanation and leaves the content intact.
+Enter splits a title into a title and body, Delete at its end enters the existing
+body, and Backspace at its start converts the alert to text. Backspace at the
+first body boundary either unwraps a default-titled alert or returns to a custom
+title without destroying body formatting. Enter in a final empty body paragraph
+exits the alert, reusing a following empty paragraph where possible. Active IME
+composition and ordinary body input remain on their existing paths.
+
+Export projects alerts to native blockquote structure, retaining correct quote
+prefixes within lists and nested alerts. Fenced math also uses a structural code
+projection after math-adapter validation, so every line receives its actual
+container indentation. Alerts in table cells refuse export rather than silently
+flattening. These contracts do not establish complete GitLab Markdown, arbitrary
+cross-block selection, mobile IME or all-surface product acceptance.
+
+The GitLab codec opts into `MarkdownExportOptions.omitTrailingCaret`: only a
+known, still-empty editor-generated trailing caret paragraph is omitted. The
+projection reuses unchanged node objects to retain that ownership evidence.
+Authored, copied and JSON-reopened blank paragraphs are preserved. The public
+option is additive and defaults off; it does not mutate the document.
+
 ## Build and real-service evidence
 
 ```sh

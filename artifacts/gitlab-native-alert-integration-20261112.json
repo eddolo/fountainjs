@@ -1,0 +1,170 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-native-product-integration",
+  "parentRevision": "131328edbe707774f68a862d836f304ee78f404e",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Native five-kind alert schema, generated/authored literal titles and strict actual-renderer normalization",
+    "Direct title/body editing, keyboard/mobile/paste boundaries, insertion, kind changes, removal and conversion to text with native undo/redo",
+    "Structural list/quote/code/fenced-math projection without losing container prefixes",
+    "Opt-in public automatic-caret export omission with authored/copied/reopened blank retention"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Linux Chromium",
+    "checks": 17,
+    "report": "artifacts/gitlab-native-alerts-20261112/report.json",
+    "issueIID": 58,
+    "runtimeSHA256": "a786dfa92ec8d6c3ca32704aaa6d4e4b72ab3a19ff95bd1742525fe986e035a7",
+    "errors": [],
+    "screenshots": [
+      "artifacts/gitlab-native-alerts-20261112/alert-custom-title.png",
+      "artifacts/gitlab-native-alerts-20261112/alert-nested-math-code.png",
+      "artifacts/gitlab-native-alerts-20261112/alert-reader-saved.png",
+      "artifacts/gitlab-native-alerts-20261112/alert-reader-reopened.png",
+      "artifacts/gitlab-native-alerts-20261112/alert-reader-restart.png",
+      "artifacts/gitlab-native-alerts-20261112/original-after-restart.png"
+    ],
+    "recordings": [
+      "artifacts/gitlab-native-alerts-20261112/recordings/page@0259cfdab68f35d94441be5d8b46e6ca.webm"
+    ],
+    "visualReview": "Editor title/body and nested math/code, expanded reader at save/reopen/restart and the later decoded original image were visually inspected; screenshots capture different scroll/decoding states",
+    "imageIntermittency": "Earlier failed restart image-decode run retained; a later pass does not establish this is fixed"
+  },
+  "components": {
+    "status": "passed",
+    "report": "artifacts/gitlab-native-alert-storybook-20261112/report.json",
+    "checks": 8,
+    "states": 4,
+    "pages": 5,
+    "widths": [
+      1280,
+      360
+    ],
+    "violations": 0,
+    "runtimeSHA256": "a786dfa92ec8d6c3ca32704aaa6d4e4b72ab3a19ff95bd1742525fe986e035a7",
+    "scope": "Isolated fixed-renderer component states, separate from real-service product acceptance"
+  },
+  "upstream": {
+    "report": "artifacts/gitlab-native-alert-jest-final-20261112.json",
+    "suites": 7,
+    "passed": 272,
+    "failed": 3,
+    "total": 275,
+    "pending": 0,
+    "nativeAlertCases": 11,
+    "remainingFailures": [
+      "ContentEditor renders media bubble menu",
+      "ContentEditor renders codeBlock bubble menu",
+      "ContentEditor renders reference bubble menu"
+    ],
+    "interpretation": "The complete selected suite still fails. No skip, timeout increase or replacement of unfinished-domain requirements makes it green."
+  },
+  "rootGates": {
+    "units": 5685,
+    "files": 350,
+    "unitLog": "artifacts/gitlab-native-alert-full-unit-final-20261112.log",
+    "prerequisites": "artifacts/gitlab-native-alert-prerequisites-20261112.log",
+    "build": "artifacts/gitlab-native-alert-package-build-20261112.log",
+    "performance": "artifacts/gitlab-native-alert-performance-final-20261112.log",
+    "passed": [
+      "Build",
+      "450 public declaration files",
+      "Package exports",
+      "Server/Worker runtimes",
+      "Pure Node headless boundary",
+      "Scoped Markdown conformance",
+      "Math reference",
+      "DOCX interoperability",
+      "Build budgets",
+      "Performance/retention",
+      "Root/Svelte/Angular types",
+      "Full unit suite"
+    ],
+    "aggregateCommonJSBytes": 1457139,
+    "aggregateCommonJSLimitBytes": 1457152,
+    "commonJSGrowthBytes": 107,
+    "acceptanceLimits": "unchanged",
+    "performanceIsolation": "Application, browsers and frontend compilers stopped during performance/retention gates"
+  },
+  "installation": {
+    "formatVersion": 4,
+    "files": 13,
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "testedRuntimeManifest": "artifacts/gitlab-native-alert-tested-build-20261112.json",
+    "finalWhitespaceCleanup": "Removing an extra EOF blank line changes one source-input hash; rebuilt runtime bytes and all installed file digests remain identical to the tested generation",
+    "previousManifest": "artifacts/gitlab-native-code-checkpoint-install-20261112.json",
+    "previousRuntimeManifest": "artifacts/gitlab-native-code-checkpoint-build-20261112.json",
+    "roundtrip": "artifacts/gitlab-native-alert-install-roundtrip-20261112.json",
+    "patchVerification": "artifacts/gitlab-native-alert-patch-verification-20261112.json",
+    "sourceLint": "artifacts/gitlab-native-alert-eslint-final-20261112.log",
+    "rollbackScope": "Source restoration and exact reinstall; compiled deployment rollback remains open"
+  },
+  "retainedFailures": [
+    {
+      "path": "artifacts/gitlab-native-alert-caret-export-finding-20261112.log",
+      "finding": "Automatic trailing caret paragraph leaked into canonical saved Markdown; repaired with public opt-in ownership-aware omission"
+    },
+    {
+      "path": "artifacts/gitlab-native-alert-full-unit-first-20261112.log",
+      "finding": "No-op title Enter test lacked the existing empty body it required; corrected fixture and current full suite passes"
+    },
+    {
+      "path": "artifacts/gitlab-native-alerts-first-failure-20261112/report.json",
+      "finding": "Reader image decode failed after restart; still open"
+    },
+    {
+      "path": "artifacts/gitlab-native-alerts-render-wait-failure-20261112/report.json",
+      "finding": "Warning assertion ran while actual renderer was loading; now waits for actual response before unchanged assertion and timeout"
+    }
+  ],
+  "remaining": [
+    "Media, specialized-code and reference controls",
+    "Complete GitLab dialect and all editor surfaces",
+    "Roles/multi-user/reconnect and full workflow acceptance",
+    "Cross-engine, physical mobile/IME and assistive technology",
+    "Reader image intermittency",
+    "Compiled deployment rollback",
+    "Other two reference products",
+    "Hosted CI/release/publication"
+  ],
+  "publication": "None; no parity row promoted",
+  "sourceHashes": {
+    "CHANGELOG.md": "2699bb5086e378ca6af08cf76a6d156f43b8b84db4b1fe9e36cac7a2c62eec3a",
+    "api-surface.json": "4a036a21651ccbe5f19d6e1adad67a54506f676102aa7d00fe2befca64f9b631",
+    "docs/PROFESSIONAL_REFERENCE_PRODUCTS.md": "9b902524502d172d9933e3efb448cee41f557f076dd8b54a5709e12c66b0662d",
+    "docs/ROADMAP.md": "9f07812e7e76c19ed0e5cc536375922a4d0c5b3f360b8c755d52a1b0eaf65d15",
+    "integrations/gitlab/README.md": "f531e4023a5b86aaabe859ec4553ca3c4b0e448320627bec0464aac3374bc123",
+    "integrations/gitlab/components/fountain_alert_menu.stories.js": "cff1d8b09e1dd42808de83773ef050458e4e29b17dd22edb03bab00efe42df68",
+    "integrations/gitlab/components/fountain_alert_menu.vue": "e70ae351913e3c9fef095a77f558629c9b721c697f96b1cb46defdb69fd0f70c",
+    "integrations/gitlab/components/fountain_content_editor.vue": "d88fd6261f0b909f17a113de984653483ce9b9acb0093fb45a4f1853d80c318d",
+    "integrations/gitlab/components/fountain_editor_surface.vue": "01e98791fa4a1a466b990c42cc42b2de9b73dcfbea90c85089e667b6f2f77cd2",
+    "integrations/gitlab/components/fountain_formatting_toolbar.vue": "a3f2137813984cb607c22416c7ec74e6763700d0950da08bcb92be07662aa7e8",
+    "integrations/gitlab/components/fountain_link_menu.vue": "0c2365509fb2123057f139eee72d48fe7efa1fa59854262f7be5c1ede4fc80f0",
+    "integrations/gitlab/fixtures/alert-live-html.json": "3d148ab518db0c0e657bbb7ad905cd2fceaceb2ecf9d457ca7537d133c282971",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-alert-tests.patch": "1a3121c62fb7b8ab3a3a32581a60dce7427d61bffa5ffaa31f2a4c70a0e21780",
+    "integrations/gitlab/runtime/README.md": "46834d58ca65cb51a44edf3df4ff1d19361ea9e3d3095a8e28c576c804ecd1c2",
+    "integrations/gitlab/runtime/browser.ts": "6fd1c7cff746b941c72008e3bd0f6f8544b9c146d8c8888fea1892e567c7d9ed",
+    "integrations/gitlab/services/README.md": "980dae4ae4006e3c23e0dc178afdc3b8499e02d311a1ae230c27c60c8a6f4172",
+    "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+    "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+    "integrations/gitlab/services/content_editor.ts": "bec3e745245344e21e51149c516da2c4e178a6ffa9ddebcfc014c2ef9745ed8a",
+    "integrations/gitlab/services/markdown_codec.ts": "15565ac57e4074b5284b2fd4c60d1b83046b3ece09ae7019925027cf2b5dd5d7",
+    "integrations/gitlab/specs/fountain_alert_menu_spec.js": "bdb1f4f5a92b14a33b42094b0b5d93996df4979b85f81ac863900e72ff5a2c42",
+    "scripts/audit-gitlab-alert-storybook.mjs": "65d861d34310accf3430201ce317d0eb8eeca22a0189369c6cbe8d3f1222b9fe",
+    "scripts/audit-gitlab-native-alerts.mjs": "a35d951b9d98d3fc83e1d103f3486dfaddfdcc15427be9bebcf49f6f040d32ef",
+    "scripts/audit-gitlab-product-baseline.mjs": "4b1b69b579542e158e470ec922bc3d7ff6863b10b021823ea899ad3c8b045c72",
+    "scripts/build-gitlab-native-runtime.mjs": "6de40d20a3c92c6ffe0af8cedb34e3ec5035e1805c1b3b113fbf0e198154aaf8",
+    "scripts/capture-gitlab-alert-rendering.mjs": "8748fa6d291a78d2320221fbaab5be94afb3176c4beb3dec282f2885546c80c7",
+    "scripts/check-gitlab-native-install.mjs": "307003da910e3b7f3a3065b42283b50c1b8b9032a3c3eefe1332c29a895c639a",
+    "scripts/check-gitlab-native-patches.mjs": "63bff106ce6171ea67159df2703301cd3d01a8ee6e8aefc58473f4f66f11ca54",
+    "scripts/install-gitlab-native-browser.mjs": "9bfcbb3b79fd1818e91a7c3fd4b7fe3d3a8b29b3d02cf349b4ebe6527db2b0dc",
+    "scripts/prepare-gitlab-link-storybook.mjs": "d897fb697f38454da96bb1a1e88b4c71836a27ca6da3436f1173beb2ab0a1405",
+    "scripts/run-gitlab-native-browser-audit.mjs": "481ae11f62eac0e96da9813a4792afce37108a3e447fc871115cbfef26c4e33a",
+    "src/core/exporters/markdown-exporter.ts": "9b2da162d6a59b6bce563a00d940a61f416ab4c31d99a1fabd26b113f3522c1a",
+    "tests/gitlab-alert-codec.test.ts": "bc6fe01208798e728cf9a1d36d4047758b09b69e8259840df15205b4ba471d62",
+    "tests/gitlab-alert-editing.test.ts": "6f164aab9dfa2d62d5065cbf734850b403f06fda3a82a3fa6e0346d61d0c63d0",
+    "tests/markdown-trailing-caret.test.ts": "f3f7ffb774a4b9a126902bb5ec21ea25a9f0251f81c3135d608ec335445a607a"
+  }
+}

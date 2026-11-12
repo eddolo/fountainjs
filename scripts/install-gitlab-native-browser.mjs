@@ -53,13 +53,17 @@ if (previous) {
     'app/assets/javascripts/content_editor/services/fountain_runtime.js',
     'app/assets/javascripts/content_editor/services/fountain_runtime.css',
   ]);
-  if (previous.formatVersion === 2 || previous.formatVersion === 3) {
+  if ([2, 3, 4].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js');
   } else if (previous.formatVersion !== undefined) throw new Error('Unknown retained install format.');
-  if (previous.formatVersion === 3) {
+  if ([3, 4].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js');
+  }
+  if (previous.formatVersion === 4) {
+    allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.vue');
+    allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.stories.js');
   }
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
@@ -182,7 +186,7 @@ component = component
   .replace('  props: {},', `  props: ${propsSource},`)
   .replace("from '../runtime/browser'", "from '../services/fountain_runtime'");
 files.set(hostPath, component);
-for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue', 'fountain_link_menu.vue', 'fountain_link_menu.stories.js', 'fountain_code_menu.vue', 'fountain_code_menu.stories.js']) {
+for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue', 'fountain_link_menu.vue', 'fountain_link_menu.stories.js', 'fountain_code_menu.vue', 'fountain_code_menu.stories.js', 'fountain_alert_menu.vue', 'fountain_alert_menu.stories.js']) {
   let value = await readFile(resolve(root, `integrations/gitlab/components/${name}`), 'utf8');
   value = value
     .replace("from 'fountainjs-editor'", "from '../services/fountain_runtime'")
@@ -246,7 +250,7 @@ await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 3,
+      formatVersion: 4,
       source,
       revision: pin.commit,
       scope:

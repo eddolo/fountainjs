@@ -24,6 +24,8 @@ export interface MarkdownExportOptions {
   linkStyle?: MarkdownLinkStyle;
   /** Preserve blank paragraphs as inert HTML markers (default), or omit with loss reports. */
   emptyParagraphs?: 'preserve' | 'omit';
+  /** Omit only the known, still-empty root caret repair; authored blanks remain. */
+  omitTrailingCaret?: boolean;
   /** Pipe tables (default), or safe HTML preserving supported block content and cell layout. */
   tableFormat?: 'pipe' | 'html';
   /** Receives each lossy projection after it is recorded in the returned report. */
@@ -721,7 +723,9 @@ function definitions(context: RenderContext): string {
 
 export class MarkdownExporter {
   exportWithReport(stateOrNode: EditorState | Node, options: MarkdownExportOptions = {}): MarkdownExportResult {
-    const node = 'doc' in stateOrNode ? stateOrNode.doc : stateOrNode;
+    let node = 'doc' in stateOrNode ? stateOrNode.doc : stateOrNode;
+    if (options.omitTrailingCaret && node.type.name === node.type.schema.topNodeType.name
+      && isAutomaticTrailingParagraph(node.content.at(-1))) node = node.copy(node.content.slice(0, -1));
     const context: RenderContext = { options, losses: [], references: new Map() };
     const body = render(node, context).trimEnd();
     const referenceDefinitions = definitions(context);

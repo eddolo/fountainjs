@@ -29,8 +29,9 @@ try {
   execFileSync(
     process.execPath,
     [
-      resolve(root, 'scripts/audit-gitlab-product-baseline.mjs'),
-      process.argv.includes('--code') ? '--native-code'
+      resolve(root, process.argv.includes('--alert-fixtures') ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      process.argv.includes('--alerts') ? '--native-alerts'
+        : process.argv.includes('--code') ? '--native-code'
         : process.argv.includes('--links') ? '--native-links'
         : process.argv.includes('--capacity') ? '--native-attachment-capacity'
         : process.argv.includes('--attachments') ? '--native-attachments'

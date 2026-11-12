@@ -12,6 +12,7 @@ import {
   redo,
   canUndo,
   canRedo,
+  getGitLabAlertContext,
 } from '../runtime/browser';
 
 export default {
@@ -27,6 +28,9 @@ export default {
     return { state: null };
   },
   computed: {
+    plainTitle() {
+      return Boolean(this.state && getGitLabAlertContext(this.editor)?.inTitle);
+    },
     controls() {
       if (!this.state) return [];
       return [
@@ -54,12 +58,14 @@ export default {
           label,
           icon,
           active: isMarkActive(this.editor, mark),
+          disabled: this.plainTitle,
           run: () => toggleMark(this.editor, mark),
         })),
         {
           key: 'blockquote',
           label: s__('ContentEditor|Insert a quote'),
           icon: 'quote',
+          disabled: this.plainTitle,
           run: () => toggleQuote(this.editor),
         },
         ...[
@@ -70,6 +76,7 @@ export default {
           key: kind,
           label,
           icon,
+          disabled: this.plainTitle,
           run: () => toggleList(this.editor, kind),
         })),
       ];
@@ -139,6 +146,7 @@ export default {
       }
     },
     changeStyle(value) {
+      if (this.plainTitle) return;
       let type = 'heading';
       if (value === 'code') type = 'code_block';
       if (value === 'paragraph') type = 'paragraph';
@@ -161,7 +169,7 @@ export default {
     <gl-form-select
       :value="activeStyle"
       :options="styles"
-      :disabled="disabled"
+      :disabled="disabled || plainTitle"
       :aria-label="s__('ContentEditor|Text style')"
       class="gl-w-auto"
       @change="changeStyle"

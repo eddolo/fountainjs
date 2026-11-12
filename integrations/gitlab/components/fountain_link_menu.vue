@@ -4,7 +4,7 @@ import { uniqueId } from 'lodash-es';
 import { markRaw } from 'vue';
 import { s__ } from '~/locale';
 import { copyToClipboard } from '~/lib/utils/copy_to_clipboard';
-import { getGitLabLinkContext } from '../runtime/browser';
+import { getGitLabLinkContext, getGitLabAlertContext } from '../runtime/browser';
 
 export default {
   name: 'FountainLinkMenu',
@@ -16,7 +16,7 @@ export default {
   },
   emits: ['focus', 'error'],
   data() {
-    return { context: null, anchor: null, anchorVersion: 0, root: null, focused: false, available: false,
+    return { context: null, anchor: null, anchorVersion: 0, root: null, focused: false, available: false, plainTitle: false,
       modalId: uniqueId('fountain-link-'), dialogOpen: false, sessionState: null,
       draftText: '', draftHref: '', errorCode: null, applying: false, copyState: null };
   },
@@ -87,6 +87,7 @@ export default {
     },
     refresh() {
       if (this.disposed) return;
+      this.plainTitle = Boolean(getGitLabAlertContext(this.contentEditor.editor)?.inTitle);
       const context = this.available ? getGitLabLinkContext(this.contentEditor.editor) : null;
       if (context?.displayHref !== this.context?.displayHref) this.copyState = null;
       this.context = context || null;
@@ -110,7 +111,7 @@ export default {
       this.focused = false;
     },
     open() {
-      if (this.disabled || !this.available || !this.root?.isConnected) return false;
+      if (this.disabled || this.plainTitle || !this.available || !this.root?.isConnected) return false;
       try {
         this.session = markRaw(this.contentEditor.beginLinkEdit(snapshot => {
           if (!this.disposed) this.sessionState = snapshot;
@@ -162,7 +163,7 @@ export default {
 </script>
 <template>
   <div :id="`${modalId}-preview-host`" data-testid="native-link-menu" class="gl-inline-flex">
-    <gl-button :disabled="disabled || !available" size="small" icon="link" :aria-label="s__('ContentEditor|Insert or edit link')" :title="s__('ContentEditor|Insert or edit link')" @click="open" />
+    <gl-button :disabled="disabled || plainTitle || !available" size="small" icon="link" :aria-label="s__('ContentEditor|Insert or edit link')" :title="s__('ContentEditor|Insert or edit link')" @click="open" />
     <gl-popover v-if="anchor && previewVisible" :key="anchorVersion" :target="anchor" :show="true" triggers="manual" placement="bottom" :title="s__('ContentEditor|Link')" :container="`${modalId}-preview-host`">
       <div ref="preview" @mousedown="preserveSelection" @focusin="onFocusIn" @focusout="onFocusOut">
         <gl-link :href="context.displayHref" :title="displayURL" target="_blank" rel="noopener noreferrer" class="gl-break-all">{{ displayURL }}</gl-link>
