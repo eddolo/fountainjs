@@ -4,11 +4,7 @@ const snapshots = new WeakMap();
 
 class SubmissionError extends Error {
   constructor(code) {
-    super(
-      code === 'changed'
-        ? 'The document changed while submission was being checked.'
-        : 'The editor is not ready for submission.',
-    );
+    super(code);
     this.code = code;
   }
 }

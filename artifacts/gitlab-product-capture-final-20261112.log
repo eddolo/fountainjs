@@ -1,0 +1,54 @@
+warning: in the working copy of 'app/assets/javascripts/issuable/issuable_form.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/assets/javascripts/vue_shared/components/markdown/mount_markdown_editor.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'spec/frontend/content_editor/components/content_editor_spec.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'spec/frontend/issuable/issuable_form_spec.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js', LF will be replaced by CRLF the next time Git touches it
+{
+  "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+  "templatesCompile": true,
+  "patchPath": "integrations/gitlab/patches/0001-guard-markdown-handoff.patch",
+  "upstreamJestExecuted": false,
+  "methods": [
+    {
+      "kind": "host",
+      "method": "onEditingModeChange",
+      "present": true
+    },
+    {
+      "kind": "restored",
+      "method": "onEditingModeRestored",
+      "present": true
+    },
+    {
+      "kind": "component",
+      "method": "getSerializedContentForHandoff",
+      "present": true
+    },
+    {
+      "kind": "submission-binding",
+      "method": "setupSubmissionBinding",
+      "present": true
+    },
+    {
+      "kind": "submission-value",
+      "method": "getValue",
+      "present": true
+    },
+    {
+      "kind": "legacy-submit",
+      "method": "handleSubmit",
+      "present": true
+    },
+    {
+      "kind": "description-field",
+      "method": "descriptionField",
+      "present": true
+    },
+    {
+      "kind": "draft-reset-binding",
+      "method": "mountAutosaveClearOnSubmit",
+      "present": true
+    }
+  ]
+}

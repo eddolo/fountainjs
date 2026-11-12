@@ -90,9 +90,10 @@ journey below, and uploads evidence.
 
 This component is **not** GitLab's complete `ContentEditor` contract: it does not
 yet replace its Markdown service, extension/toolbars, upload handling,
-collaboration provider or host draft/template behavior. No GitLab backend has
-been started or verified. Those integrations and the requirements below remain
-necessary before describing the product as ready.
+collaboration provider or host draft/template behavior. The later original-product
+baseline below runs a real backend, but Fountain is not deployed into its frontend.
+Those integrations and the requirements below remain necessary before describing
+the replacement product as ready.
 
 ## Serialized-content lifecycle
 
@@ -375,8 +376,9 @@ upstream Jest additions. The patch is checked against a separate baseline index
 at the pin and against the edited working tree in reverse. The selected-method fixtures are
 test-only code used by the isolated regression/native page; they are not the
 full GitLab component or runtime-evaluated code for a production application.
-The upstream Jest suite still needs its full dependency/runtime environment;
-parsing the additions is not an executed upstream-test result.
+The development-pin upstream suites remain parsed-only. The packaged release's
+actual source suites now run as described below; parsing alone is not an
+executed upstream-test result.
 
 The complete local unit suite passes 5,452 cases/336 files; fifteen handoff
 cases plus controller regressions pass all thirty focused cases. Root types pass.
@@ -423,16 +425,50 @@ external-copy failure. All 12 current Linux WebKit/Xvfb journeys pass, including
 external copy. These profiles overlap and remain private integration tests:
 the browser page collects real `FormData` into an in-memory transport observer,
 not GitLab's server. Composition events are synthetic. Refusal/recovery screens
-receive visual review and recordings are retained. Three upstream Jest files
-parse and both SFC templates compile; the upstream suites are not yet executed.
+receive visual review and recordings are retained. Three development-pin Jest
+files parse and both SFC templates compile; the release-pin results below are separate.
 The paused full-unit attempt was interrupted intentionally; the resumed run is
 the authoritative complete result.
 
 [Submission evidence and limits](../../artifacts/gitlab-submission-integration-20261112.json).
 
-A [pinned real GitLab baseline environment](runtime/README.md) is now prepared
-for product testing. Its packaged release and the earlier source-audit commit
-are different pins; source matching and actual replacement testing are required.
+### Real GitLab original-product baseline
+
+The [pinned GitLab environment](runtime/README.md) now runs the actual original
+application at `19.5.3`, matched to official source commit
+`0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf`. The recorded native Linux Chromium
+journey signs in normally, creates a private project and issue, uploads a PNG,
+edits through the original rich editor, saves through the UI and reopens. The
+same server source, authenticated session and image survive a real container
+restart. An unauthenticated browser receives 404 for the private issue. The
+image URL and KaTeX rendering are checked before screenshots, and the final
+reopened screen receives visual review. The original editor canonicalizes its
+table separator. This is an original-product baseline, not a Fountain result.
+
+The release source's unmodified suites pass 160 cases; the prepared release-pin
+patch passes all 168 cases in those same three upstream Jest suites. Running them
+exposed optional alert handlers causing Vue warnings and incomplete unit setup
+(failed Markdown-render requests and a default-mode setting applied after mount).
+The source now guards optional alert actions and supplies valid unit inputs.
+No test timeout, assertion or console-error policy is relaxed. The earlier
+development pin remains a separate capture; both source patches are retained.
+
+The complete Fountain unit suite still passes 5,472 cases/338 files. The real
+GitLab container continues to use its original frontend; the patched source and
+Fountain replacement are not deployed. Full toolbars/dialect coverage, real
+MR/wiki/discussion flows, concurrent users and broader browser/product acceptance
+remain open. The baseline is stopped after testing, with records retained in its
+own volumes. Credentials and session state are not committed.
+
+The release-pin source also passes GitLab's actual Prettier/Tailwind and ESLint
+checks on the eight edited files. Technical submission errors carry codes while
+the host supplies translated UI messages. The loading regression now changes the
+public Markdown prop and waits on a pending renderer instead of assigning Vue
+state directly. The public handoff method's lint annotation documents its
+cross-component caller; unused-disable directives remain checked.
+
+[Original-product report](../../artifacts/gitlab-product-baseline-20261112/report.json)
+and [source/runtime verification scope](../../artifacts/gitlab-product-integration-20261112.json).
 
 ### Remaining full application acceptance
 

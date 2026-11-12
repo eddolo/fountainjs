@@ -2,6 +2,16 @@
 
 ## Current programme status — 2026-11-12
 
+The original GitLab product now has a recorded real-service baseline at a matched
+image/source pin: authenticated rich editing/save/reopen, actual image upload,
+anonymous denial and persistence after container restart pass in Linux Chromium.
+The original upstream suites pass 160 cases; the prepared release-pin host patch
+passes 168 in those same three suites. Full Fountain units remain 5,472/338 files.
+Fountain is not deployed into that application's frontend yet. This establishes
+the environment and baseline for the full replacement; it is not product parity
+or superiority evidence. Capability-row counts are unchanged.
+[Product baseline](RELEASES.md#real-gitlab-baseline-and-upstream-source-suites--2026-11-12).
+
 The current GitLab host patch also guards current-document submission through
 native forms, the fresh-value facade and the actual legacy asynchronous handler.
 It synchronously publishes fields and refuses invalid/changed content or

@@ -1,0 +1,112 @@
+{
+  "date": "2026-11-12",
+  "parentFountainCommit": "836c2531",
+  "scope": "Original real GitLab product baseline and prepared matching source patch; Fountain frontend not deployed",
+  "productPin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "productBaseline": {
+    "status": "passed",
+    "report": "artifacts/gitlab-product-baseline-20261112/report.json",
+    "log": "artifacts/gitlab-product-baseline-linux-final-20261112.log",
+    "engine": "Native Linux Chromium",
+    "checks": [
+      "Normal web sign-in and authenticated API version match the image/source pin",
+      "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+      "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+      "Private issue is unavailable to an unauthenticated browser context",
+      "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+    ],
+    "recording": "artifacts/gitlab-product-baseline-20261112/recordings/page@edbef0eed56285bfa4eca8fb4212e97e.webm",
+    "visualReview": "Final post-restart screen inspected: table, checklist, mention, rendered equation, real uploaded figure and saved new paragraph visible",
+    "sourceDifference": "Original GitLab rich save canonicalizes the untouched table separator",
+    "credentials": "Generated password/session used in memory; no trace or storage-state file committed",
+    "deploymentStatus": "Test instance stopped; own named volumes retained. WSL session lifetime may end a detached container with exit 255."
+  },
+  "matchingSource": {
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "patch": "integrations/gitlab/patches/gitlab-19.5.3-current-document.patch",
+    "sha256": "6c2c7b2dee50fa655f39ae0663c01f7fa9a14f14ddc1763f30237dfefec74d4a",
+    "originalJest": {
+      "passed": 160,
+      "suites": 3,
+      "log": "artifacts/gitlab-product-upstream-original-jest-20261112.log"
+    },
+    "patchedJest": {
+      "passed": 168,
+      "suites": 3,
+      "log": "artifacts/gitlab-product-upstream-jest-checked-20261112.log"
+    },
+    "eslint": {
+      "status": "Passed on eight edited files",
+      "log": "artifacts/gitlab-product-upstream-eslint-verified-20261112.log"
+    },
+    "prettier": {
+      "status": "Passed with actual upstream Tailwind plugin",
+      "log": "artifacts/gitlab-product-upstream-prettier-verified-20261112.log"
+    },
+    "applicability": "Forward check against a separate index loaded from HEAD; reverse check against edited source",
+    "helperSHA256": "39c8c9d3f0a8fc0cdd492a25020b28a5b16949500ab74aa2feb55057ba2a54b3",
+    "workingState": "Eight intentional source/spec changes at pinned HEAD; new helper staged; no upstream commit or push",
+    "toolchain": {
+      "node": "22.23.1",
+      "yarn": "1.22.22, packageManager-pinned integrity",
+      "nodeArchiveChecksum": "Verified against official Node SHASUMS256",
+      "frozenLockfileInstall": "Passed with actual upstream dependency patches"
+    }
+  },
+  "developmentPin": {
+    "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+    "patch": "integrations/gitlab/patches/0001-guard-markdown-handoff.patch",
+    "sha256": "17a2b4d8cbf81cfa414a0ab691102d148b00ccc13363f05e579d8bccdd7a50c5",
+    "templatesCompiled": 2,
+    "upstreamJest": "Not executed at this separate development pin; release-pin results above must not be relabeled",
+    "captureLog": "artifacts/gitlab-product-capture-final-20261112.log"
+  },
+  "fountainChecks": {
+    "fullUnit": {
+      "passed": 5472,
+      "files": 338,
+      "log": "artifacts/gitlab-product-root-full-unit-final-20261112.log"
+    },
+    "focused": {
+      "passed": 35,
+      "files": 3,
+      "log": "artifacts/gitlab-product-focused-final-20261112.log"
+    },
+    "typescript": {
+      "status": "Passed",
+      "log": "artifacts/gitlab-product-root-types-final-20261112.log"
+    },
+    "publicRuntimeChanged": false,
+    "capacityLimitsChanged": false,
+    "publication": false
+  },
+  "findings": [
+    "Undefined optional alert action handlers produced Vue warnings; guarded without suppressing console checks",
+    "Unit render requests lacked successful responses and default-mode input was assigned after computed state was cached; unit inputs fixed without assertion/timeout relaxation",
+    "Loading regression now drives public Markdown replacement with a pending renderer and verifies recovery instead of assigning Vue data",
+    "Technical errors use machine-readable codes with translated host alerts; restored-mode guard consistently awaited",
+    "External monitoring endpoint rejects untrusted source addresses; audit now uses private container health and normal sign-in without changing the allowlist",
+    "Center-click plus Control+End landed in a table; intended paragraph is now targeted through native clicks/keys before asserting its new paragraph",
+    "Image complete/naturalWidth could describe a placeholder; audit now also requires actual uploaded image URL and completed KaTeX rendering",
+    "WSL foreground Compose can exit on an externally requested restart; complete restart audit runs inside Linux so its process retains the session"
+  ],
+  "remaining": [
+    "Deploy and verify the complete Fountain component, toolbar, dialect and real-service adapters in this exact application build",
+    "Browser acceptance of the prepared source patch and the Fountain replacement; current running image is the unmodified original frontend",
+    "Real MR/wiki/discussion/templates/drafts, permissions, multiple users, reconnect/conflict and upload editing workflows",
+    "Complete source recovery and persistent backup when content is not representable",
+    "Other two professional product integrations and full parity/release gates",
+    "No overall parity, full-product, production-readiness or superiority completion claim"
+  ]
+}

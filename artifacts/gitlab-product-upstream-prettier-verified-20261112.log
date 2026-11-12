@@ -1,0 +1,5 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/prettier --check app/assets/javascripts/content_editor/components/content_editor.vue app/assets/javascripts/issuable/issuable_form.js app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue app/assets/javascripts/vue_shared/components/markdown/mount_markdown_editor.js app/assets/javascripts/vue_shared/components/markdown/submission.js spec/frontend/content_editor/components/content_editor_spec.js spec/frontend/issuable/issuable_form_spec.js spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+Checking formatting...
+All matched files use Prettier code style!
+Done in 1.48s.

@@ -1,0 +1,14 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/issuable/issuable_form_spec.js spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js spec/frontend/content_editor/components/content_editor_spec.js
+PASS spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+PASS spec/frontend/content_editor/components/content_editor_spec.js
+PASS spec/frontend/issuable/issuable_form_spec.js
+
+Test Suites: 3 passed, 3 total
+Tests:       168 passed, 168 total
+Snapshots:   0 total
+Time:        15.142 s
+Ran all test suites matching /spec\/frontend\/issuable\/issuable_form_spec.js|spec\/frontend\/vue_shared\/components\/markdown\/markdown_editor_spec.js|spec\/frontend\/content_editor\/components\/content_editor_spec.js/i.
+Done in 17.89s.

@@ -1226,6 +1226,42 @@ or a production deployment. No engine runtime, public npm API, dependency,
 capacity limit or parity-row changes. Evidence:
 `artifacts/gitlab-submission-integration-20261112.json`.
 
+### Real GitLab baseline and upstream source suites — 2026-11-12
+
+The isolated Linux Docker environment uses Community Edition `19.5.3`, pinned to
+its amd64 manifest digest and matched to official source commit
+`0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf`. The native Linux Chromium audit uses
+normal web authentication and real GitLab HTTP APIs/storage. A private project,
+uploaded PNG, rich issue edit, UI save, reopen and anonymous denial pass. Exact
+saved server text, the authenticated session and the image survive a real
+container restart. Screenshots wait for the actual image URL and KaTeX rendering
+before visual review. The original table separator is canonicalized on save.
+One original workflow does not certify all GitLab capabilities or Fountain.
+
+The official source's original three selected Jest suites pass 160 cases. The
+matching prepared host patch passes 168 cases under that same configuration and
+installed dependency patches. Executing those suites exposed undefined optional
+alert actions in the new error state, failed render requests in unit setup and
+a nonreactive default-mode setting applied after mount. Optional actions are
+guarded and valid unit setup is explicit. Assertions, console policy and test
+timeouts remain enforced. A separate cumulative patch is retained for this
+release; the earlier development-pin capture is not claimed as an executed suite.
+All eight edited release-source files pass the real upstream Prettier/Tailwind
+and ESLint checks. Loading coverage uses the actual Markdown prop/render promise;
+technical errors use codes with translated host alerts, and restored-mode calls
+retain a consistently awaited contract.
+
+The refreshed complete Fountain unit run passes 5,472 tests/338 files and the
+35 focused cases pass. The application image still serves its original frontend;
+neither the source patch nor Fountain is deployed into it. Full component,
+toolbars, dialect/service adapters, MR/wiki/discussion workflows, concurrent
+users and broader product checks remain required. No shipped engine/API,
+capacity-limit or parity-row changes. The test instance is stopped afterward;
+its own volumes retain the records and no credential/session-state file is
+committed. Current evidence:
+`artifacts/gitlab-product-integration-20261112.json` and
+`artifacts/gitlab-product-baseline-20261112/report.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

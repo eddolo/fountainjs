@@ -94,6 +94,18 @@ still need verification. A separately pinned real GitLab baseline is prepared;
 the matching replacement build is not finished. Capability counts are unchanged.
 [Submission scope](../integrations/gitlab/README.md#prepared-current-document-submission-patch).
 
+The real original GitLab baseline now runs at the matched `19.5.3` image/source
+pin. Recorded native Linux Chromium verifies authenticated issue creation,
+image upload, rich editing, UI save/reopen, anonymous denial and exact saved
+source/image retention after a container restart. The original source passes
+160 tests; the matching prepared host patch passes 168 in the same three GitLab
+Jest suites. Optional alert handlers and incomplete unit setup were repaired
+without relaxing assertions or timeouts. The refreshed Fountain unit suite
+passes 5,472 cases/338 files. The running application still uses its original
+frontend; deployment of the complete Fountain component/toolbars/adapters and
+broader product acceptance remain unfinished. No parity row is promoted.
+[Real-product baseline and remaining scope](../integrations/gitlab/README.md#real-gitlab-original-product-baseline).
+
 The earlier complete local source check is the November 11 runtime-editability
 repair: **5,300 tests in 327 files**, with all package, server, type, conformance,
 size, performance and retention gates passing. Three native interaction-mode

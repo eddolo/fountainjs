@@ -1,38 +1,38 @@
 {
   "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
   "license": "GITLAB-LICENSE.txt",
-  "patchSHA256": "ffbdd393046b552eebe70b8b86ac982c12b311380f6b59c058771c9cdbc744dd",
+  "patchSHA256": "17a2b4d8cbf81cfa414a0ab691102d148b00ccc13363f05e579d8bccdd7a50c5",
   "scope": "Selected actual host methods for isolated contract regression; not full Vue/GitLab application validation.",
   "files": [
     {
       "kind": "host",
       "path": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
       "originalSHA256": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
-      "patchedSHA256": "29e82c646e657f9280fab206352a864aed57b99639728534336b7f9798df25e4",
+      "patchedSHA256": "697704a24572acc75d9f4d5b6225f3ad9c32a3b32410fabc09a6743d8aa0fca9",
       "method": "onEditingModeChange",
-      "code": "async onEditingModeChange(editingMode) {\n      if (this.isContentEditorActive && editingMode === EDITING_MODE_MARKDOWN_FIELD) {\n        try {\n          // The observer is debounced; read before unmounting the rich editor.\n          const markdown = this.$refs.contentEditor.getSerializedContentForHandoff();\n          if (typeof markdown !== 'string') throw new Error('Expected current Markdown.');\n          this.updateMarkdownFromContentEditor({ markdown });\n          if (this.alert?.handoffError) this.alert = null;\n        } catch {\n          this.alert = {\n            message: s__(\n              'MarkdownEditor|Unable to switch to Markdown. Your document is still open in the rich text editor. Finish the current edit or resolve the conversion error, then try again.',\n            ),\n            variant: 'danger',\n            handoffError: true,\n            dismiss: () => {\n              this.alert = null;\n            },\n          };\n          return;\n        }\n      }\n\n      if (\n        editingMode === EDITING_MODE_CONTENT_EDITOR &&\n        this.beforeContentEditor &&\n        !(await this.beforeContentEditor(this.markdown))\n      ) {\n        return;\n      }\n\n      this.editingMode = editingMode;\n      this.notifyEditingModeChange(editingMode);\n    }"
+      "code": "async onEditingModeChange(editingMode) {\n      if (this.isContentEditorActive && editingMode === EDITING_MODE_MARKDOWN_FIELD) {\n        try {\n          // The observer is debounced; read before unmounting the rich editor.\n          const markdown = this.$refs.contentEditor.getSerializedContentForHandoff();\n          if (typeof markdown !== 'string') throw new TypeError('EXPECTED_CURRENT_MARKDOWN');\n          this.updateMarkdownFromContentEditor({ markdown });\n          if (this.alert?.handoffError) this.alert = null;\n        } catch {\n          this.alert = {\n            message: s__(\n              'MarkdownEditor|Unable to switch to Markdown. Your document is still open in the rich text editor. Finish the current edit or resolve the conversion error, then try again.',\n            ),\n            variant: 'danger',\n            handoffError: true,\n            dismiss: () => {\n              this.alert = null;\n            },\n          };\n          return;\n        }\n      }\n\n      if (\n        editingMode === EDITING_MODE_CONTENT_EDITOR &&\n        this.beforeContentEditor &&\n        !(await this.beforeContentEditor(this.markdown))\n      ) {\n        return;\n      }\n\n      this.editingMode = editingMode;\n      this.notifyEditingModeChange(editingMode);\n    }"
     },
     {
       "kind": "restored",
       "path": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
       "originalSHA256": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
-      "patchedSHA256": "29e82c646e657f9280fab206352a864aed57b99639728534336b7f9798df25e4",
+      "patchedSHA256": "697704a24572acc75d9f4d5b6225f3ad9c32a3b32410fabc09a6743d8aa0fca9",
       "method": "onEditingModeRestored",
-      "code": "onEditingModeRestored(editingMode) {\n      if (!this.isDefaultEditorEnabled) return;\n      if (this.isContentEditorActive && editingMode === EDITING_MODE_MARKDOWN_FIELD) {\n        return this.onEditingModeChange(editingMode);\n      }\n      if (editingMode === EDITING_MODE_CONTENT_EDITOR && !this.enableContentEditor) {\n        this.editingMode = EDITING_MODE_MARKDOWN_FIELD;\n        return;\n      }\n\n      this.editingMode = editingMode;\n      this.$emit(EDITING_MODE_EVENTS[editingMode]);\n      this.notifyEditingModeChange(editingMode);\n    }"
+      "code": "async onEditingModeRestored(editingMode) {\n      if (!this.isDefaultEditorEnabled) return;\n      if (this.isContentEditorActive && editingMode === EDITING_MODE_MARKDOWN_FIELD) {\n        await this.onEditingModeChange(editingMode);\n        return;\n      }\n      if (editingMode === EDITING_MODE_CONTENT_EDITOR && !this.enableContentEditor) {\n        this.editingMode = EDITING_MODE_MARKDOWN_FIELD;\n        return;\n      }\n\n      this.editingMode = editingMode;\n      this.$emit(EDITING_MODE_EVENTS[editingMode]);\n      this.notifyEditingModeChange(editingMode);\n    }"
     },
     {
       "kind": "component",
       "path": "app/assets/javascripts/content_editor/components/content_editor.vue",
       "originalSHA256": "2fbd71b6ca81e24b6c7f6066493e22d3ba8d715ddff8da8d66a0b7517802e13c",
-      "patchedSHA256": "f7bd1c156d9fc1298f939150f9efa3f4722366ef00e74cdefb1ebae4c29f0c67",
+      "patchedSHA256": "ef8da066ec8bbdf1c4f475cf77f1a1f71f283cd8035d908fb9da586d0fba99d7",
       "method": "getSerializedContentForHandoff",
-      "code": "getSerializedContentForHandoff() {\r\n      if (\r\n        this.isLoading ||\r\n        !this.contentEditor?.tiptapEditor?.view ||\r\n        this.contentEditor.tiptapEditor.view.composing ||\r\n        (!this.collaborationProvider && this.latestMarkdown !== this.markdown)\r\n      ) {\r\n        throw new Error('The rich text editor is not ready for serialization.');\r\n      }\r\n      return this.contentEditor.getSerializedContent();\r\n    }"
+      "code": "getSerializedContentForHandoff() {\r\n      if (\r\n        this.isLoading ||\r\n        !this.contentEditor?.tiptapEditor?.view ||\r\n        this.contentEditor.tiptapEditor.view.composing ||\r\n        (!this.collaborationProvider && this.latestMarkdown !== this.markdown)\r\n      ) {\r\n        throw new Error('MARKDOWN_SERIALIZATION_NOT_READY');\r\n      }\r\n      return this.contentEditor.getSerializedContent();\r\n    }"
     },
     {
       "kind": "submission-binding",
       "path": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
       "originalSHA256": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
-      "patchedSHA256": "29e82c646e657f9280fab206352a864aed57b99639728534336b7f9798df25e4",
+      "patchedSHA256": "697704a24572acc75d9f4d5b6225f3ad9c32a3b32410fabc09a6743d8aa0fca9",
       "method": "setupSubmissionBinding",
       "code": "setupSubmissionBinding() {\n      this.submissionBinding = bindMarkdownSubmission({\n        element: this.$el,\n        read: () =>\n          this.isContentEditorActive\n            ? this.$refs.contentEditor.getSerializedContentForHandoff()\n            : this.markdown,\n        write: (markdown) => {\n          if (markdown !== this.markdown) this.updateMarkdownFromContentEditor({ markdown });\n          const field = this.$refs.submissionField || this.$refs.textarea;\n          if (field) field.value = markdown;\n        },\n        onReady: () => {\n          if (this.alert?.submissionError) this.alert = null;\n        },\n        onError: (error) => {\n          let message = s__(\n            'MarkdownEditor|Unable to save the current document. Finish the current edit or resolve the conversion error, then try again.',\n          );\n          if (error?.code === 'changed')\n            message = s__(\n              'MarkdownEditor|The document changed while saving was being checked. Review the current text and save again.',\n            );\n          if (error?.code === 'draft-clear')\n            message = s__(\n              'MarkdownEditor|Submission started, but the local draft could not be cleared.',\n            );\n          this.alert = {\n            message,\n            variant: 'danger',\n            submissionError: true,\n            dismiss: () => {\n              this.alert = null;\n            },\n          };\n        },\n        clearDraft: () => this.clearDraft(this.autosaveKey),\n        restoreDraft: () => this.saveDraft(),\n      });\n    }"
     },
@@ -40,9 +40,9 @@
       "kind": "submission-value",
       "path": "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue",
       "originalSHA256": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
-      "patchedSHA256": "29e82c646e657f9280fab206352a864aed57b99639728534336b7f9798df25e4",
+      "patchedSHA256": "697704a24572acc75d9f4d5b6225f3ad9c32a3b32410fabc09a6743d8aa0fca9",
       "method": "getValue",
-      "code": "getValue() {\n      if (!this.submissionBinding) throw new Error('The editor is not ready for submission.');\n      return this.submissionBinding.getValue();\n    }"
+      "code": "getValue() {\n      if (!this.submissionBinding) throw new Error('MARKDOWN_SUBMISSION_NOT_READY');\n      return this.submissionBinding.getValue();\n    }"
     },
     {
       "kind": "legacy-submit",
@@ -66,17 +66,17 @@
   "tests": [
     {
       "path": "spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js",
-      "sha256": "8f3f17868877428a5dacc400bc64556b2817fa4cb2430e013594480aaf6cfc86",
+      "sha256": "3cb4526bb959afe458369a1c302c584c6278fd2dfd47806772cc5cd37ea52607",
       "status": "Parsed, not executed"
     },
     {
       "path": "spec/frontend/content_editor/components/content_editor_spec.js",
-      "sha256": "a7ee4a9ea277cc486a2ae123c4c446dda214cdbe6dc450449f4ff0725923ba2b",
+      "sha256": "57d90d2bacfa10750a1ec17bcdfd9e13400549c2b2845b16700ba4b9dd84d3fc",
       "status": "Parsed, not executed"
     },
     {
       "path": "spec/frontend/issuable/issuable_form_spec.js",
-      "sha256": "dc95961abb5bcf50918b58fc37757c08fe28523d17f4c3d34ffdebcdf9dd175f",
+      "sha256": "57d0212b2d34bb6218e54672fe895f14f450438c9819fc56865339884c1d26d1",
       "status": "Parsed, not executed"
     }
   ],
@@ -91,7 +91,7 @@
     },
     {
       "path": "app/assets/javascripts/vue_shared/components/markdown/submission.js",
-      "sha256": "95559297eff0d994ddfadc5de253dd6ac5ceabe1c3e1a2b5544a4721d775f36b"
+      "sha256": "39c8c9d3f0a8fc0cdd492a25020b28a5b16949500ab74aa2feb55057ba2a54b3"
     }
   ]
 }

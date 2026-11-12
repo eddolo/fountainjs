@@ -1,0 +1,12 @@
+{
+  "edition": "Community Edition",
+  "version": "19.5.3",
+  "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+  "platform": "linux/amd64",
+  "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+  "tag": "v19.5.3",
+  "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+  "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "packagedRevision": "0d4c9a9a2fa",
+  "fountainReplacementInstalled": false
+}

@@ -1,0 +1,39 @@
+name: fountain-gitlab-integration
+
+services:
+  baseline:
+    image: gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615
+    platform: linux/amd64
+    hostname: fountain-gitlab-baseline
+    restart: "no"
+    cpus: 2
+    mem_limit: 4g
+    memswap_limit: 6g
+    shm_size: 256m
+    ports:
+      - "127.0.0.1:5080:5080"
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://127.0.0.1:5080'
+        letsencrypt['enable'] = false
+        puma['worker_processes'] = 0
+        puma['min_threads'] = 2
+        puma['max_threads'] = 2
+        sidekiq['concurrency'] = 3
+        postgresql['shared_buffers'] = '128MB'
+        prometheus_monitoring['enable'] = false
+    volumes:
+      - baseline-config:/etc/gitlab
+      - baseline-logs:/var/log/gitlab
+      - baseline-data:/var/opt/gitlab
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS 'http://127.0.0.1:5080/-/readiness?all=1' > /dev/null"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10m
+      retries: 10
+
+volumes:
+  baseline-config:
+  baseline-logs:
+  baseline-data:

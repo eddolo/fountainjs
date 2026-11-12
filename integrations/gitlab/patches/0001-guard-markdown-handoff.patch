@@ -1,12 +1,12 @@
 diff --git a/app/assets/javascripts/content_editor/components/content_editor.vue b/app/assets/javascripts/content_editor/components/content_editor.vue
-index f82bed1..a5a1620 100644
+index f82bed1..264d24e 100644
 --- a/app/assets/javascripts/content_editor/components/content_editor.vue
 +++ b/app/assets/javascripts/content_editor/components/content_editor.vue
 @@ -280,6 +280,18 @@ export default {
      this.contentEditor.dispose();
    },
    methods: {
-+    // Read the live document before the host removes this component.
++    // eslint-disable-next-line vue/no-unused-properties -- read by MarkdownEditor before handoff.
 +    getSerializedContentForHandoff() {
 +      if (
 +        this.isLoading ||
@@ -14,7 +14,7 @@ index f82bed1..a5a1620 100644
 +        this.contentEditor.tiptapEditor.view.composing ||
 +        (!this.collaborationProvider && this.latestMarkdown !== this.markdown)
 +      ) {
-+        throw new Error('The rich text editor is not ready for serialization.');
++        throw new Error('MARKDOWN_SERIALIZATION_NOT_READY');
 +      }
 +      return this.contentEditor.getSerializedContent();
 +    },
@@ -145,7 +145,7 @@ index 652414d..d0c3b4d 100644
  
    showSubmitLoading() {
 diff --git a/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue b/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
-index ecebe2e..7f237ad 100644
+index ecebe2e..7375061 100644
 --- a/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
 +++ b/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
 @@ -2,7 +2,7 @@
@@ -183,7 +183,7 @@ index ecebe2e..7f237ad 100644
    methods: {
      getValue() {
 -      return this.markdown;
-+      if (!this.submissionBinding) throw new Error('The editor is not ready for submission.');
++      if (!this.submissionBinding) throw new Error('MARKDOWN_SUBMISSION_NOT_READY');
 +      return this.submissionBinding.getValue();
 +    },
 +    setupSubmissionBinding() {
@@ -236,7 +236,7 @@ index ecebe2e..7f237ad 100644
 +        try {
 +          // The observer is debounced; read before unmounting the rich editor.
 +          const markdown = this.$refs.contentEditor.getSerializedContentForHandoff();
-+          if (typeof markdown !== 'string') throw new Error('Expected current Markdown.');
++          if (typeof markdown !== 'string') throw new TypeError('EXPECTED_CURRENT_MARKDOWN');
 +          this.updateMarkdownFromContentEditor({ markdown });
 +          if (this.alert?.handoffError) this.alert = null;
 +        } catch {
@@ -257,17 +257,32 @@ index ecebe2e..7f237ad 100644
        if (
          editingMode === EDITING_MODE_CONTENT_EDITOR &&
          this.beforeContentEditor &&
-@@ -335,6 +401,9 @@ export default {
+@@ -333,8 +399,12 @@ export default {
+       this.editingMode = editingMode;
+       this.notifyEditingModeChange(editingMode);
      },
-     onEditingModeRestored(editingMode) {
+-    onEditingModeRestored(editingMode) {
++    async onEditingModeRestored(editingMode) {
        if (!this.isDefaultEditorEnabled) return;
 +      if (this.isContentEditorActive && editingMode === EDITING_MODE_MARKDOWN_FIELD) {
-+        return this.onEditingModeChange(editingMode);
++        await this.onEditingModeChange(editingMode);
++        return;
 +      }
        if (editingMode === EDITING_MODE_CONTENT_EDITOR && !this.enableContentEditor) {
          this.editingMode = EDITING_MODE_MARKDOWN_FIELD;
          return;
-@@ -528,7 +597,7 @@ export default {
+@@ -433,8 +503,8 @@ export default {
+       :variant="alert.variant"
+       :primary-button-text="alert.primaryButtonText"
+       :secondary-button-text="alert.secondaryButtonText"
+-      @primary-action="alert.primaryAction"
+-      @secondary-action="alert.secondaryAction"
++      @primary-action="alert.primaryAction && alert.primaryAction($event)"
++      @secondary-action="alert.secondaryAction && alert.secondaryAction($event)"
+       @dismiss="alert.dismiss"
+     >
+       {{ alert.message }}
+@@ -528,7 +598,7 @@ export default {
          ></template>
          <template v-if="glSlots().toolbar" #toolbar><slot name="toolbar"></slot></template>
        </content-editor>
@@ -290,21 +305,17 @@ index 8370af0..ffe81a4 100644
      });
 diff --git a/app/assets/javascripts/vue_shared/components/markdown/submission.js b/app/assets/javascripts/vue_shared/components/markdown/submission.js
 new file mode 100644
-index 0000000..bcc1d4f
+index 0000000..12591b4
 --- /dev/null
 +++ b/app/assets/javascripts/vue_shared/components/markdown/submission.js
-@@ -0,0 +1,189 @@
+@@ -0,0 +1,185 @@
 +// Copyright Paolo Cappuccini. SPDX-License-Identifier: MIT
 +const forms = new WeakMap();
 +const snapshots = new WeakMap();
 +
 +class SubmissionError extends Error {
 +  constructor(code) {
-+    super(
-+      code === 'changed'
-+        ? 'The document changed while submission was being checked.'
-+        : 'The editor is not ready for submission.',
-+    );
++    super(code);
 +    this.code = code;
 +  }
 +}
@@ -484,10 +495,10 @@ index 0000000..bcc1d4f
 +  };
 +}
 diff --git a/spec/frontend/content_editor/components/content_editor_spec.js b/spec/frontend/content_editor/components/content_editor_spec.js
-index 3016973..91cd54e 100644
+index 3016973..f173eb8 100644
 --- a/spec/frontend/content_editor/components/content_editor_spec.js
 +++ b/spec/frontend/content_editor/components/content_editor_spec.js
-@@ -68,6 +68,32 @@ describe('ContentEditor', () => {
+@@ -68,6 +68,45 @@ describe('ContentEditor', () => {
      mock.restore();
    });
  
@@ -505,13 +516,26 @@ index 3016973..91cd54e 100644
 +    });
 +
 +    it('refuses a handoff while a document is loading', async () => {
-+      await wrapper.setData({ isLoading: true });
++      let finishRendering;
++      renderMarkdown.mockImplementationOnce(
++        () =>
++          new Promise((resolve) => {
++            finishRendering = resolve;
++          }),
++      );
++      await wrapper.setProps({ markdown: 'Replacement' });
 +
++      expect(findLoadingIndicator().exists()).toBe(true);
 +      expect(() => wrapper.vm.getSerializedContentForHandoff()).toThrow();
++      finishRendering({ body: '<p>Replacement</p>' });
++      await waitForPromises();
++      expect(wrapper.vm.getSerializedContentForHandoff()).toBe('Replacement');
 +    });
 +
 +    it('refuses a handoff while native composition is active', () => {
-+      jest.spyOn(findEditorContent().props('editor').view, 'composing', 'get').mockReturnValue(true);
++      jest
++        .spyOn(findEditorContent().props('editor').view, 'composing', 'get')
++        .mockReturnValue(true);
 +
 +      expect(() => wrapper.vm.getSerializedContentForHandoff()).toThrow();
 +    });
@@ -521,17 +545,17 @@ index 3016973..91cd54e 100644
      createWrapper();
  
 diff --git a/spec/frontend/issuable/issuable_form_spec.js b/spec/frontend/issuable/issuable_form_spec.js
-index 0d4ecd5..0a3e0a0 100644
+index 0d4ecd5..282a097 100644
 --- a/spec/frontend/issuable/issuable_form_spec.js
 +++ b/spec/frontend/issuable/issuable_form_spec.js
-@@ -9,6 +9,7 @@ import { TEST_HOST } from 'helpers/test_constants';
+@@ -8,6 +8,7 @@ import { useLocalStorageSpy } from 'helpers/local_storage_helper';
+ import { TEST_HOST } from 'helpers/test_constants';
  import waitForPromises from 'helpers/wait_for_promises';
  import { confirmAction } from '~/lib/utils/confirm_via_gl_modal/confirm_via_gl_modal';
- import { getSaveableFormChildren } from './helpers';
 +import { bindMarkdownSubmission } from '~/vue_shared/components/markdown/submission';
+ import { getSaveableFormChildren } from './helpers';
  
  jest.mock('~/autosave');
- jest.mock('~/lib/utils/confirm_via_gl_modal/confirm_via_gl_modal');
 @@ -314,6 +315,65 @@ describe('IssuableForm', () => {
      });
    });
@@ -599,17 +623,27 @@ index 0d4ecd5..0a3e0a0 100644
      let submitButton;
  
 diff --git a/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js b/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
-index 076195e..af90c22 100644
+index 076195e..8499c68 100644
 --- a/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
 +++ b/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
-@@ -454,6 +454,52 @@ describe('vue_shared/component/markdown/markdown_editor', () => {
+@@ -100,6 +100,7 @@ describe('vue_shared/component/markdown/markdown_editor', () => {
+   beforeEach(() => {
+     window.uploads_path = 'uploads';
+     mock = new MockAdapter(axios);
++    mock.onPost().reply(200, { body: '<p>test markdown</p>' });
+   });
+ 
+   afterEach(() => {
+@@ -454,6 +455,56 @@ describe('vue_shared/component/markdown/markdown_editor', () => {
      expect(wrapper.emitted(EDITING_MODE_EVENTS[EDITING_MODE_CONTENT_EDITOR])).toHaveLength(1);
    });
  
 +  describe('when handing current rich content to Markdown', () => {
 +    beforeEach(async () => {
++      window.gon = { text_editor: 'plain_text_editor' };
 +      buildWrapper({ propsData: { autosaveKey: 'issue/handoff' } });
 +      await enableContentEditor();
++      await waitForPromises();
 +    });
 +
 +    it('reads the document before a delayed observer can publish it', async () => {
@@ -626,9 +660,11 @@ index 076195e..af90c22 100644
 +
 +    it('keeps the rich editor and draft when conversion refuses the handoff', async () => {
 +      const previousDraft = localStorage.getItem('autosave/issue/handoff');
-+      jest.spyOn(findContentEditor().vm, 'getSerializedContentForHandoff').mockImplementation(() => {
-+        throw new Error('Conversion refused');
-+      });
++      jest
++        .spyOn(findContentEditor().vm, 'getSerializedContentForHandoff')
++        .mockImplementation(() => {
++          throw new Error('Conversion refused');
++        });
 +
 +      findContentEditor().vm.$emit('enable-markdown-editor');
 +      await waitForPromises();
