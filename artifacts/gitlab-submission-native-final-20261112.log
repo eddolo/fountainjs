@@ -1,0 +1,58 @@
+$ playwright test -c playwright.gitlab-bridge.config.ts "--grep-invert" "keeps actual Vue 2 host" "--output" "artifacts/gitlab-submission-native-final-20261112"
+[WebServer] (node:23872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:22848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 33 tests using 1 worker
+
+(node:8928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\gitlab-vue2.spec.ts:117:1 › removes the surface when a host filter refuses read-only mode and recovers without losing the document (556ms)
+  ok  2 [chromium] › tests\browser\gitlab-vue2.spec.ts:139:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (811ms)
+  ok  3 [chromium] › tests\browser\gitlab-vue2.spec.ts:199:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (796ms)
+  ok  4 [chromium] › tests\browser\gitlab-vue2.spec.ts:280:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload (1.1s)
+  ok  5 [chromium] › tests\browser\gitlab-vue2.spec.ts:346:1 › renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior (1.2s)
+  ok  6 [chromium] › tests\browser\gitlab-vue2.spec.ts:438:1 › hands the latest rich edit to the actual patched host mode method before unmounting (597ms)
+  ok  7 [chromium] › tests\browser\gitlab-vue2.spec.ts:467:1 › blocks a lossy handoff without dropping the rich document and recovers after undo (700ms)
+  ok  8 [chromium] › tests\browser\gitlab-vue2.spec.ts:499:1 › retains the surface during an unfinished composition handoff (815ms)
+  ok  9 [chromium] › tests\browser\gitlab-vue2.spec.ts:547:1 › collects the current rich value in real browser FormData before the Vue field patch (561ms)
+  ok 10 [chromium] › tests\browser\gitlab-vue2.spec.ts:568:1 › refuses native form submission without destroying the rich document or its safe draft (685ms)
+  ok 11 [chromium] › tests\browser\gitlab-vue2.spec.ts:597:1 › blocks an unfinished-composition save until the editor settles (408ms)
+(node:20688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 12 [firefox] › tests\browser\gitlab-vue2.spec.ts:117:1 › removes the surface when a host filter refuses read-only mode and recovers without losing the document (2.1s)
+  ok 13 [firefox] › tests\browser\gitlab-vue2.spec.ts:139:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (2.3s)
+  ok 14 [firefox] › tests\browser\gitlab-vue2.spec.ts:199:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (1.2s)
+  ok 15 [firefox] › tests\browser\gitlab-vue2.spec.ts:280:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload (1.4s)
+  ok 16 [firefox] › tests\browser\gitlab-vue2.spec.ts:346:1 › renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior (1.9s)
+  ok 17 [firefox] › tests\browser\gitlab-vue2.spec.ts:438:1 › hands the latest rich edit to the actual patched host mode method before unmounting (953ms)
+  ok 18 [firefox] › tests\browser\gitlab-vue2.spec.ts:467:1 › blocks a lossy handoff without dropping the rich document and recovers after undo (1.1s)
+  ok 19 [firefox] › tests\browser\gitlab-vue2.spec.ts:499:1 › retains the surface during an unfinished composition handoff (1.3s)
+  ok 20 [firefox] › tests\browser\gitlab-vue2.spec.ts:547:1 › collects the current rich value in real browser FormData before the Vue field patch (735ms)
+  ok 21 [firefox] › tests\browser\gitlab-vue2.spec.ts:568:1 › refuses native form submission without destroying the rich document or its safe draft (1.6s)
+  ok 22 [firefox] › tests\browser\gitlab-vue2.spec.ts:597:1 › blocks an unfinished-composition save until the editor settles (865ms)
+(node:24424) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 23 [webkit] › tests\browser\gitlab-vue2.spec.ts:117:1 › removes the surface when a host filter refuses read-only mode and recovers without losing the document (1.8s)
+  ok 24 [webkit] › tests\browser\gitlab-vue2.spec.ts:139:1 › loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host (3.4s)
+  ok 25 [webkit] › tests\browser\gitlab-vue2.spec.ts:199:1 › edits pinned GitLab reference rendering without replacing source tokens with display labels (2.8s)
+  ok 26 [webkit] › tests\browser\gitlab-vue2.spec.ts:280:1 › keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload (2.8s)
+  ok 27 [webkit] › tests\browser\gitlab-vue2.spec.ts:346:1 › renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior (3.6s)
+  ok 28 [webkit] › tests\browser\gitlab-vue2.spec.ts:438:1 › hands the latest rich edit to the actual patched host mode method before unmounting (1.7s)
+  ok 29 [webkit] › tests\browser\gitlab-vue2.spec.ts:467:1 › blocks a lossy handoff without dropping the rich document and recovers after undo (2.0s)
+  ok 30 [webkit] › tests\browser\gitlab-vue2.spec.ts:499:1 › retains the surface during an unfinished composition handoff (2.0s)
+  ok 31 [webkit] › tests\browser\gitlab-vue2.spec.ts:547:1 › collects the current rich value in real browser FormData before the Vue field patch (1.3s)
+  ok 32 [webkit] › tests\browser\gitlab-vue2.spec.ts:568:1 › refuses native form submission without destroying the rich document or its safe draft (2.0s)
+  ok 33 [webkit] › tests\browser\gitlab-vue2.spec.ts:597:1 › blocks an unfinished-composition save until the editor settles (1.0s)
+
+  33 passed (54.7s)

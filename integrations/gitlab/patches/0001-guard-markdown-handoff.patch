@@ -21,8 +21,131 @@ index f82bed1..a5a1620 100644
      editorSelector() {
        return this.contentEditor?.tiptapEditor?.view?.dom?.closest('.js-editor');
      },
+diff --git a/app/assets/javascripts/issuable/issuable_form.js b/app/assets/javascripts/issuable/issuable_form.js
+index 652414d..d0c3b4d 100644
+--- a/app/assets/javascripts/issuable/issuable_form.js
++++ b/app/assets/javascripts/issuable/issuable_form.js
+@@ -11,6 +11,14 @@ import { trackSavedUsingEditor } from '~/vue_shared/components/markdown/tracking
+ import { EDITING_MODE_CONTENT_EDITOR } from '~/vue_shared/constants';
+ import { ISSUE_NOTEABLE_TYPE, MERGE_REQUEST_NOTEABLE_TYPE } from '~/notes/constants';
+ import { loadingIconForLegacyJS } from '~/loading_icon_for_legacy_js';
++import { createAlert } from '~/alert';
++import { __ } from '~/locale';
++import {
++  prepareMarkdownSubmission,
++  validateMarkdownSubmission,
++  restoreMarkdownSubmissionDrafts,
++  completeMarkdownSubmission,
++} from '~/vue_shared/components/markdown/submission';
+ 
+ const MR_SOURCE_BRANCH = 'merge_request[source_branch]';
+ const MR_TARGET_BRANCH = 'merge_request[target_branch]';
+@@ -96,14 +104,20 @@ export default class IssuableForm {
+     this.searchTerm = getSearchTerm(form[0].getAttribute(DATA_ISSUES_NEW_PATH));
+     this.fallbackKey = getFallbackKey();
+     this.titleField = this.form.find('input[name*="[title]"]');
+-    this.descriptionField = () => this.form.find('textarea[name*="[description]"]');
++    this.descriptionField = () =>
++      this.form.find(
++        'textarea[name*="[description]"], input[type="hidden"][name*="[description]"]',
++      );
+     this.submitButton = this.form.find('.js-issuable-submit-button');
+     this.draftCheck = document.querySelector('input.js-toggle-draft');
+     if (!this.titleField.length) return;
+ 
+     this.autosaves = this.initAutosave();
+     this.form.on('submit', this.handleSubmit);
+-    this.form.on('click', '.btn-cancel, .js-reset-autosave', this.resetAutosave);
++    this.form.on('click', '.btn-cancel, .js-reset-autosave', (event) => {
++      if (['submit', 'image'].includes(event.currentTarget.type)) return;
++      this.resetAutosave();
++    });
+     this.initDraft();
+ 
+     const $issuableDueDate = $('#issuable-due-date');
+@@ -155,29 +169,59 @@ export default class IssuableForm {
+ 
+   async handleSubmit(event) {
+     event.preventDefault();
+-
+-    trackSavedUsingEditor(
+-      localStorage.getItem('gl-markdown-editor-mode') === EDITING_MODE_CONTENT_EDITOR,
+-      getIssuableType(),
+-    );
+-
++    if (this.submissionPending) return false;
++    this.submissionPending = true;
+     const form = event.target;
+-    const descriptionText = this.descriptionField().val();
+-
+-    const confirmSubmit = await detectAndConfirmSensitiveTokens({
+-      content: descriptionText,
+-      contentType: CONTENT_TYPE.DESCRIPTION,
+-    });
+-
+-    if (!confirmSubmit) {
+-      this.submitButton.removeAttr('disabled');
+-      this.submitButton.removeClass('disabled');
+-      return false;
++    let snapshot;
++    let submitted = false;
++    try {
++      trackSavedUsingEditor(
++        localStorage.getItem('gl-markdown-editor-mode') === EDITING_MODE_CONTENT_EDITOR,
++        getIssuableType(),
++      );
++      snapshot = prepareMarkdownSubmission(form);
++      if (!snapshot) return false;
++      const descriptionText = this.descriptionField().val() || '';
++      const confirmSubmit = await detectAndConfirmSensitiveTokens({
++        content: descriptionText,
++        contentType: CONTENT_TYPE.DESCRIPTION,
++      });
++      if (!confirmSubmit) return false;
++      if (
++        !validateMarkdownSubmission(snapshot) ||
++        (this.descriptionField().val() || '') !== descriptionText
++      ) {
++        createAlert({
++          message: __(
++            'The description changed while saving was being checked. Review it and submit again.',
++          ),
++        });
++        return false;
++      }
++      this.showSubmitLoading();
++      form.submit();
++      submitted = true;
++      completeMarkdownSubmission(snapshot);
++      this.resetAutosave();
++      return true;
++    } catch {
++      createAlert({
++        message: submitted
++          ? __('Submission started, but local draft cleanup could not finish.')
++          : __('Unable to submit the current document. Please try again.'),
++      });
++      return submitted;
++    } finally {
++      if (!submitted) {
++        try {
++          if (snapshot) restoreMarkdownSubmissionDrafts(snapshot);
++        } finally {
++          this.submissionPending = false;
++          this.submitButton.removeAttr('disabled');
++          this.submitButton.removeClass('disabled');
++        }
++      }
+     }
+-
+-    this.showSubmitLoading();
+-    form.submit();
+-    return this.resetAutosave();
+   }
+ 
+   showSubmitLoading() {
 diff --git a/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue b/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
-index ecebe2e..297021b 100644
+index ecebe2e..7f237ad 100644
 --- a/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
 +++ b/app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
 @@ -2,7 +2,7 @@
@@ -34,7 +157,78 @@ index ecebe2e..297021b 100644
  import axios from '~/lib/utils/axios_utils';
  import { updateDraft, clearDraft, getDraft } from '~/lib/utils/autosave';
  import { setUrlParams, joinPaths } from '~/lib/utils/url_utility';
-@@ -322,6 +322,26 @@ export default {
+@@ -18,6 +18,7 @@ import {
+ import { getInitialEditingMode } from './utils';
+ import MarkdownField from './field.vue';
+ import eventHub from './eventhub';
++import { bindMarkdownSubmission } from './submission';
+ 
+ async function sleep(t = 10) {
+   return new Promise((resolve) => {
+@@ -229,6 +230,7 @@ export default {
+     },
+   },
+   mounted() {
++    this.setupSubmissionBinding();
+     this.autofocusTextarea();
+ 
+     // Second argument (`true`) is passed to identify
+@@ -245,11 +247,53 @@ export default {
+     eventHub.$on(CLEAR_AUTOSAVE_ENTRY_EVENT, this.clearDraft);
+   },
+   beforeDestroy() {
++    this.submissionBinding?.dispose();
+     eventHub.$off(CLEAR_AUTOSAVE_ENTRY_EVENT, this.clearDraft);
+   },
+   methods: {
+     getValue() {
+-      return this.markdown;
++      if (!this.submissionBinding) throw new Error('The editor is not ready for submission.');
++      return this.submissionBinding.getValue();
++    },
++    setupSubmissionBinding() {
++      this.submissionBinding = bindMarkdownSubmission({
++        element: this.$el,
++        read: () =>
++          this.isContentEditorActive
++            ? this.$refs.contentEditor.getSerializedContentForHandoff()
++            : this.markdown,
++        write: (markdown) => {
++          if (markdown !== this.markdown) this.updateMarkdownFromContentEditor({ markdown });
++          const field = this.$refs.submissionField || this.$refs.textarea;
++          if (field) field.value = markdown;
++        },
++        onReady: () => {
++          if (this.alert?.submissionError) this.alert = null;
++        },
++        onError: (error) => {
++          let message = s__(
++            'MarkdownEditor|Unable to save the current document. Finish the current edit or resolve the conversion error, then try again.',
++          );
++          if (error?.code === 'changed')
++            message = s__(
++              'MarkdownEditor|The document changed while saving was being checked. Review the current text and save again.',
++            );
++          if (error?.code === 'draft-clear')
++            message = s__(
++              'MarkdownEditor|Submission started, but the local draft could not be cleared.',
++            );
++          this.alert = {
++            message,
++            variant: 'danger',
++            submissionError: true,
++            dismiss: () => {
++              this.alert = null;
++            },
++          };
++        },
++        clearDraft: () => this.clearDraft(this.autosaveKey),
++        restoreDraft: () => this.saveDraft(),
++      });
+     },
+     setValue(value) {
+       this.$emit('input', value);
+@@ -322,6 +366,28 @@ export default {
          }));
      },
      async onEditingModeChange(editingMode) {
@@ -52,7 +246,9 @@ index ecebe2e..297021b 100644
 +            ),
 +            variant: 'danger',
 +            handoffError: true,
-+            dismiss: () => { this.alert = null; },
++            dismiss: () => {
++              this.alert = null;
++            },
 +          };
 +          return;
 +        }
@@ -61,7 +257,7 @@ index ecebe2e..297021b 100644
        if (
          editingMode === EDITING_MODE_CONTENT_EDITOR &&
          this.beforeContentEditor &&
-@@ -335,6 +355,9 @@ export default {
+@@ -335,6 +401,9 @@ export default {
      },
      onEditingModeRestored(editingMode) {
        if (!this.isDefaultEditorEnabled) return;
@@ -71,6 +267,222 @@ index ecebe2e..297021b 100644
        if (editingMode === EDITING_MODE_CONTENT_EDITOR && !this.enableContentEditor) {
          this.editingMode = EDITING_MODE_MARKDOWN_FIELD;
          return;
+@@ -528,7 +597,7 @@ export default {
+         ></template>
+         <template v-if="glSlots().toolbar" #toolbar><slot name="toolbar"></slot></template>
+       </content-editor>
+-      <input v-bind="formFieldProps" :value="markdown" type="hidden" />
++      <input ref="submissionField" v-bind="formFieldProps" :value="markdown" type="hidden" />
+     </div>
+   </div>
+ </template>
+diff --git a/app/assets/javascripts/vue_shared/components/markdown/mount_markdown_editor.js b/app/assets/javascripts/vue_shared/components/markdown/mount_markdown_editor.js
+index 8370af0..ffe81a4 100644
+--- a/app/assets/javascripts/vue_shared/components/markdown/mount_markdown_editor.js
++++ b/app/assets/javascripts/vue_shared/components/markdown/mount_markdown_editor.js
+@@ -51,6 +51,7 @@ function mountAutosaveClearOnSubmit(autosaveKey) {
+   }
+ 
+   for (const resetAutosaveButton of resetAutosaveButtons) {
++    if (['submit', 'image'].includes(resetAutosaveButton.type)) continue;
+     resetAutosaveButton.addEventListener('click', () => {
+       eventHub.$emit(CLEAR_AUTOSAVE_ENTRY_EVENT, autosaveKey);
+     });
+diff --git a/app/assets/javascripts/vue_shared/components/markdown/submission.js b/app/assets/javascripts/vue_shared/components/markdown/submission.js
+new file mode 100644
+index 0000000..bcc1d4f
+--- /dev/null
++++ b/app/assets/javascripts/vue_shared/components/markdown/submission.js
+@@ -0,0 +1,189 @@
++// Copyright Paolo Cappuccini. SPDX-License-Identifier: MIT
++const forms = new WeakMap();
++const snapshots = new WeakMap();
++
++class SubmissionError extends Error {
++  constructor(code) {
++    super(
++      code === 'changed'
++        ? 'The document changed while submission was being checked.'
++        : 'The editor is not ready for submission.',
++    );
++    this.code = code;
++  }
++}
++
++function read(entry) {
++  if (entry.composing) throw new SubmissionError('not-ready');
++  const value = entry.read();
++  if (typeof value !== 'string') throw new SubmissionError('not-ready');
++  return value;
++}
++
++function notify(entry, error) {
++  entry.onError(error);
++}
++
++function cancel(event) {
++  event.preventDefault();
++  event.stopImmediatePropagation();
++}
++
++export function prepareMarkdownSubmission(form) {
++  const entries = [...(forms.get(form)?.entries ?? [])];
++  const values = new Map();
++  let failed = false;
++  for (const entry of entries) {
++    try {
++      values.set(entry, read(entry));
++    } catch (error) {
++      failed = true;
++      notify(entry, error);
++    }
++  }
++  if (failed) return null;
++  for (const [entry, value] of values) {
++    try {
++      entry.write(value);
++      entry.onReady();
++    } catch (error) {
++      failed = true;
++      notify(entry, error);
++    }
++  }
++  if (failed) return null;
++  const current = forms.get(form)?.entries ?? new Set();
++  if (current.size !== values.size || [...current].some((entry) => !values.has(entry))) {
++    for (const entry of current) notify(entry, new SubmissionError('changed'));
++    return null;
++  }
++  const snapshot = Object.freeze({ form });
++  snapshots.set(snapshot, values);
++  return snapshot;
++}
++
++export function validateMarkdownSubmission(snapshot) {
++  const values = snapshots.get(snapshot);
++  if (!values) return false;
++  const current = forms.get(snapshot.form)?.entries ?? new Set();
++  let valid = current.size === values.size;
++  for (const entry of current) {
++    try {
++      if (!values.has(entry) || read(entry) !== values.get(entry)) valid = false;
++    } catch (error) {
++      valid = false;
++      notify(entry, error);
++    }
++  }
++  if (!valid) for (const entry of current) notify(entry, new SubmissionError('changed'));
++  return valid;
++}
++
++export function restoreMarkdownSubmissionDrafts(snapshot) {
++  if (!snapshot || !snapshots.has(snapshot)) return;
++  for (const entry of forms.get(snapshot.form)?.entries ?? []) {
++    try {
++      entry.write(read(entry));
++      entry.restoreDraft();
++    } catch {
++      /* Never replace an existing newer draft with an older cached value. */
++    }
++  }
++}
++
++export function completeMarkdownSubmission(snapshot) {
++  const values = snapshots.get(snapshot);
++  if (!values) return false;
++  const entries = forms.get(snapshot.form)?.entries ?? new Set();
++  let complete = entries.size === values.size;
++  for (const entry of entries) {
++    try {
++      if (!values.has(entry) || read(entry) !== values.get(entry)) {
++        complete = false;
++        continue;
++      }
++      entry.clearDraft();
++    } catch {
++      complete = false;
++      notify(entry, new SubmissionError('draft-clear'));
++    }
++  }
++  return complete;
++}
++
++function attachForm(form) {
++  let record = forms.get(form);
++  if (record) return record;
++  const click = (event) => {
++    const target = event.target?.closest?.('button, input');
++    if (target?.form !== form || !['submit', 'image'].includes(target.type)) return;
++    try {
++      if (!prepareMarkdownSubmission(form)) cancel(event);
++    } catch {
++      cancel(event);
++    }
++  };
++  const submit = (event) => {
++    let snapshot;
++    try {
++      snapshot = prepareMarkdownSubmission(form);
++    } catch {
++      cancel(event);
++      return;
++    }
++    if (!snapshot) {
++      cancel(event);
++      return;
++    }
++    // Custom transports prevent the native submit and acknowledge success themselves.
++    queueMicrotask(() => {
++      if (!event.defaultPrevented && event.isTrusted) completeMarkdownSubmission(snapshot);
++    });
++  };
++  record = { entries: new Set(), click, submit };
++  forms.set(form, record);
++  form.addEventListener('click', click, true);
++  form.addEventListener('submit', submit, true);
++  return record;
++}
++
++export function bindMarkdownSubmission(options) {
++  const entry = { ...options, composing: false };
++  const form = options.element.closest('form');
++  const record = form ? attachForm(form) : null;
++  record?.entries.add(entry);
++  const start = () => {
++    entry.composing = true;
++  };
++  const end = () => {
++    entry.composing = false;
++  };
++  options.element.addEventListener('compositionstart', start, true);
++  options.element.addEventListener('compositionend', end, true);
++  let disposed = false;
++  return {
++    getValue() {
++      if (disposed) throw new SubmissionError('not-ready');
++      try {
++        const value = read(entry);
++        entry.onReady();
++        return value;
++      } catch (error) {
++        notify(entry, error);
++        throw error;
++      }
++    },
++    dispose() {
++      if (disposed) return;
++      disposed = true;
++      options.element.removeEventListener('compositionstart', start, true);
++      options.element.removeEventListener('compositionend', end, true);
++      record?.entries.delete(entry);
++      if (record && record.entries.size === 0) {
++        form.removeEventListener('click', record.click, true);
++        form.removeEventListener('submit', record.submit, true);
++        forms.delete(form);
++      }
++    },
++  };
++}
 diff --git a/spec/frontend/content_editor/components/content_editor_spec.js b/spec/frontend/content_editor/components/content_editor_spec.js
 index 3016973..91cd54e 100644
 --- a/spec/frontend/content_editor/components/content_editor_spec.js
@@ -107,6 +519,84 @@ index 3016973..91cd54e 100644
 +
    it('triggers initialized event', () => {
      createWrapper();
+ 
+diff --git a/spec/frontend/issuable/issuable_form_spec.js b/spec/frontend/issuable/issuable_form_spec.js
+index 0d4ecd5..0a3e0a0 100644
+--- a/spec/frontend/issuable/issuable_form_spec.js
++++ b/spec/frontend/issuable/issuable_form_spec.js
+@@ -9,6 +9,7 @@ import { TEST_HOST } from 'helpers/test_constants';
+ import waitForPromises from 'helpers/wait_for_promises';
+ import { confirmAction } from '~/lib/utils/confirm_via_gl_modal/confirm_via_gl_modal';
+ import { getSaveableFormChildren } from './helpers';
++import { bindMarkdownSubmission } from '~/vue_shared/components/markdown/submission';
+ 
+ jest.mock('~/autosave');
+ jest.mock('~/lib/utils/confirm_via_gl_modal/confirm_via_gl_modal');
+@@ -314,6 +315,65 @@ describe('IssuableForm', () => {
+     });
+   });
+ 
++  describe('current Markdown submission', () => {
++    let binding;
++    let value;
++    let fail;
++    let clearDraft;
++
++    beforeEach(() => {
++      $form
++        .find('textarea')
++        .replaceWith(
++          '<section><input type="hidden" name="issue[description]" value="Old" /></section>',
++        );
++      value = 'Current rich document';
++      fail = false;
++      clearDraft = jest.fn();
++      binding = bindMarkdownSubmission({
++        element: $form.find('section').get(0),
++        read: () => {
++          if (fail) throw new Error('Conversion refused');
++          return value;
++        },
++        write: (markdown) => {
++          $form.find('input[type="hidden"]').val(markdown);
++        },
++        onReady: jest.fn(),
++        onError: jest.fn(),
++        clearDraft,
++        restoreDraft: jest.fn(),
++      });
++    });
++
++    afterEach(() => {
++      binding.dispose();
++    });
++
++    it('collects the current hidden rich-description field before submission', async () => {
++      instance = createIssuable($form);
++      const submit = jest.spyOn($form.get(0), 'submit').mockImplementation(() => {});
++
++      await instance.handleSubmit({ target: $form.get(0), preventDefault: jest.fn() });
++
++      expect(new FormData($form.get(0)).get('issue[description]')).toBe(value);
++      expect(submit).toHaveBeenCalledTimes(1);
++      expect(clearDraft).toHaveBeenCalledTimes(1);
++    });
++
++    it('refuses a stale save and retains drafts when current conversion fails', async () => {
++      fail = true;
++      instance = createIssuable($form);
++      const submit = jest.spyOn($form.get(0), 'submit').mockImplementation(() => {});
++
++      expect(await instance.handleSubmit({ target: $form.get(0), preventDefault: jest.fn() })).toBe(
++        false,
++      );
++      expect(submit).not.toHaveBeenCalled();
++      expect(clearDraft).not.toHaveBeenCalled();
++    });
++  });
++
+   describe('Submit button loading state', () => {
+     let submitButton;
  
 diff --git a/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js b/spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
 index 076195e..af90c22 100644

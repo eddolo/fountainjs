@@ -353,11 +353,10 @@ surface supplies the same handoff method using an optional trusted-host
 must also enforce host loading/replacement state. No ProseMirror compatibility
 layer is added to Fountain.
 
-The parent-gate and autosave paths remain the real GitLab paths; this patch does
-not replace storage, authentication, permission checks or the submit pipeline.
-In particular, blocking stale form/AJAX submissions while conversion is invalid
-is still required separately. Full source-mode recovery is not certified by
-these isolated checks.
+The parent-gate and autosave paths remain the real GitLab paths. The cumulative
+patch also includes the submission changes described below. It does not replace
+storage, authentication or permission checks. Full source-mode recovery is not
+certified by these isolated checks.
 
 Check and apply the reviewed patch to a clean checkout at the exact pin:
 
@@ -372,8 +371,8 @@ Capture refuses an unpatched checkout or empty diff before replacing outputs.
 
 The capture requires the pinned HEAD, records original/patched source hashes,
 compiles the two SFC templates with the isolated Vue 2.7 compiler, and parses the
-upstream Jest additions. The patch is checked against the unchanged index and
-against the edited working tree in reverse. The selected-method fixtures are
+upstream Jest additions. The patch is checked against a separate baseline index
+at the pin and against the edited working tree in reverse. The selected-method fixtures are
 test-only code used by the isolated regression/native page; they are not the
 full GitLab component or runtime-evaluated code for a production application.
 The upstream Jest suite still needs its full dependency/runtime environment;
@@ -392,6 +391,48 @@ baseline worktree proves that capture refuses an unpatched source tree without
 overwriting the prepared patch or fixtures.
 
 [Handoff evidence and remaining host work](../../artifacts/gitlab-handoff-integration-20261112.json).
+
+### Prepared current-document submission patch
+
+The cumulative patch now changes the actual `MarkdownEditor.getValue()` facade,
+native form binding, legacy `IssuableForm.handleSubmit()` and draft-clear click
+binding. It includes a private first-party `submission.js` helper, vendored
+unchanged into the pinned application. Native submits synchronously read all
+editors and publish their current values into the actual form fields before
+collection. Facade reads return current content without publishing fields or
+writing drafts. Conversion, readiness or composition refusal prevents transport.
+
+The legacy handler reads hidden rich-editor inputs as well as textareas, checks
+the fresh content for sensitive tokens, then revalidates after that asynchronous
+check. It refuses changed content and duplicate pending attempts. Cancellation
+or failure retains the current safe draft; a conversion failure never restores
+an older cached value over a newer draft. Submit clicks no longer clear drafts
+before validation. Explicit discard actions retain their previous behavior.
+
+For native navigation, cleanup means submission has started, not that the server
+accepted it. Custom AJAX transports must use the fresh facade/prepare interface
+and acknowledge acceptance explicitly before draft cleanup. Arbitrary custom
+handlers bypassing both that interface and the native submit event still need
+adoption and verification. Actual HTTP rejection, authentication, permissions,
+storage and full-application lifecycle remain unverified by this patch.
+
+The final full unit suite passes **5,472 cases in 338 files**; 35 focused cases
+and root TypeScript pass. The current Windows component profile passes 33
+journeys across three desktop engines, excluding the retained Windows WebKit
+external-copy failure. All 12 current Linux WebKit/Xvfb journeys pass, including
+external copy. These profiles overlap and remain private integration tests:
+the browser page collects real `FormData` into an in-memory transport observer,
+not GitLab's server. Composition events are synthetic. Refusal/recovery screens
+receive visual review and recordings are retained. Three upstream Jest files
+parse and both SFC templates compile; the upstream suites are not yet executed.
+The paused full-unit attempt was interrupted intentionally; the resumed run is
+the authoritative complete result.
+
+[Submission evidence and limits](../../artifacts/gitlab-submission-integration-20261112.json).
+
+A [pinned real GitLab baseline environment](runtime/README.md) is now prepared
+for product testing. Its packaged release and the earlier source-audit commit
+are different pins; source matching and actual replacement testing are required.
 
 ### Remaining full application acceptance
 

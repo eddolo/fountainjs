@@ -78,9 +78,21 @@ refusal, and route restored-mode preferences through the same check. The native
 Fountain surface provides this protocol through a host-owned reader and
 composition tracking. The full unit suite passes **5,452 cases/336 files**;
 fifteen handoff cases, thirty focused cases, current native journeys and root
-types pass. The actual GitLab application/upstream Jest suite and native-form/
-AJAX submission safety remain unfinished. No parity row is promoted.
+types pass. The actual GitLab application/upstream Jest suite remains unfinished.
+No parity row is promoted.
 [Host patch and scope](../integrations/gitlab/README.md#prepared-host-markdown-handoff-patch).
+
+The cumulative patch now also guards native submission, the fresh-value facade
+and the actual legacy asynchronous submit handler. Current fields are published
+synchronously; conversion/composition refusal, changed content during checks and
+duplicate attempts stop submission without clearing newer drafts. The complete
+unit suite passes **5,472 cases/338 files**, 35 focused cases and root types pass,
+and current Windows/Linux component journeys pass in their documented profiles.
+These are selected-host/component checks, not real server acceptance. Arbitrary
+custom AJAX handlers, upstream suites and authenticated application workflows
+still need verification. A separately pinned real GitLab baseline is prepared;
+the matching replacement build is not finished. Capability counts are unchanged.
+[Submission scope](../integrations/gitlab/README.md#prepared-current-document-submission-patch).
 
 The earlier complete local source check is the November 11 runtime-editability
 repair: **5,300 tests in 327 files**, with all package, server, type, conformance,

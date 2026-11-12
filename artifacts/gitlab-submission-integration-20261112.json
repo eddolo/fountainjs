@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-12",
+  "scope": "Prepared actual GitLab source patch plus private component/selected-method verification; not a running replacement product",
+  "sourceCommit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+  "parentFountainCommit": "542c7373",
+  "patch": {
+    "path": "integrations/gitlab/patches/0001-guard-markdown-handoff.patch",
+    "sha256": "ffbdd393046b552eebe70b8b86ac982c12b311380f6b59c058771c9cdbc744dd",
+    "forwardCheck": "Clean baseline index at the pin",
+    "reverseCheck": "Edited upstream working tree",
+    "upstreamFiles": 8
+  },
+  "helper": {
+    "path": "integrations/gitlab/services/submission.js",
+    "sha256": "95559297eff0d994ddfadc5de253dd6ac5ceabe1c3e1a2b5544a4721d775f36b",
+    "vendoredPath": "app/assets/javascripts/vue_shared/components/markdown/submission.js",
+    "identicalToVendoredSource": true
+  },
+  "checks": {
+    "fullUnit": {
+      "passed": 5472,
+      "files": 338,
+      "log": "artifacts/gitlab-submission-full-unit-resumed-20261112.log",
+      "status": "Completed, exit 0",
+      "previousAttempt": "Intentionally terminated when user paused; not a regression result"
+    },
+    "focused": {
+      "passed": 35,
+      "files": 3,
+      "log": "artifacts/gitlab-submission-focused-final-20261112.log"
+    },
+    "types": {
+      "status": "Passed",
+      "log": "artifacts/gitlab-submission-types-final-20261112.log"
+    },
+    "windows": {
+      "passed": 33,
+      "engines": [
+        "Chromium",
+        "Firefox",
+        "WebKit"
+      ],
+      "log": "artifacts/gitlab-submission-native-final-20261112.log",
+      "evidenceDirectory": "artifacts/gitlab-submission-native-final-20261112",
+      "excluded": "Retained Windows WebKit external native-copy failure; no assertion weakened"
+    },
+    "linux": {
+      "passed": 12,
+      "engine": "WebKit on native X11/Xvfb",
+      "log": "artifacts/gitlab-submission-linux-final-20261112.log",
+      "evidenceDirectory": "artifacts/gitlab-submission-linux-final-20261112",
+      "includesExternalCopy": true
+    },
+    "upstream": {
+      "templatesCompile": 2,
+      "parsedJestFiles": [
+        {
+          "path": "spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js",
+          "sha256": "8f3f17868877428a5dacc400bc64556b2817fa4cb2430e013594480aaf6cfc86",
+          "status": "Parsed, not executed"
+        },
+        {
+          "path": "spec/frontend/content_editor/components/content_editor_spec.js",
+          "sha256": "a7ee4a9ea277cc486a2ae123c4c446dda214cdbe6dc450449f4ff0725923ba2b",
+          "status": "Parsed, not executed"
+        },
+        {
+          "path": "spec/frontend/issuable/issuable_form_spec.js",
+          "sha256": "dc95961abb5bcf50918b58fc37757c08fe28523d17f4c3d34ffdebcdf9dd175f",
+          "status": "Parsed, not executed"
+        }
+      ],
+      "executedJestSuites": false,
+      "format": "Prettier 3.9.5 with upstream print/string/arrow/comma options; Tailwind plugin not run"
+    }
+  },
+  "behavior": [
+    "Fresh facade reads without field/draft writes",
+    "Synchronous current native FormData fields",
+    "Fail-closed conversion/readiness/composition",
+    "Actual legacy asynchronous confirmation revalidation",
+    "Duplicate pending-submit prevention",
+    "Retain drafts on cancellation, check or transport failure",
+    "Never restore stale cached text over a newer safe draft",
+    "Skip premature submit-click draft clearing; retain explicit discard behavior",
+    "Shared form membership and binding disposal checks"
+  ],
+  "visualReview": [
+    "WebKit gitlab-submit-refused-draft-retained.png: refusal visible, current rich document and safe draft retained, zero transports",
+    "WebKit gitlab-submit-after-undo.png: valid content restored, one accepted local observer collection, draft cleared"
+  ],
+  "limits": [
+    "Browser transport is an in-memory observer of real FormData, not GitLab HTTP",
+    "Selected actual methods are executed in controlled test contexts, not the full upstream component tree",
+    "Composition events are synthetic; no physical IME/mobile certification",
+    "Native navigation initiation is not HTTP/server acceptance",
+    "Arbitrary custom AJAX handlers bypassing facade/prepare/native submit need explicit adoption",
+    "Real authenticated create/update/reopen/upload/permissions/restart and collaboration remain unverified",
+    "Unsupported current Fountain content is retained in memory; persistent full-document recovery still needs completion",
+    "No refreshed complete package gate, packed consumers, hosted CI or publication",
+    "No product/superiority/parity-row completion claim"
+  ],
+  "runtimeBaseline": {
+    "compose": "integrations/gitlab/runtime/compose.yaml",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0",
+    "manifestDigest": "sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "sameRevisionAsSourceAudit": false,
+    "replacementInstalled": false
+  }
+}

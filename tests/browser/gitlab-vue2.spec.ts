@@ -2,43 +2,82 @@ import { expect, test } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';
 import mathFixtures from '../../integrations/gitlab/fixtures/math-html.json' with { type: 'json' };
 
-test('keeps actual Vue 2 host mode changes and view remounts on one Fountain document history', async ({ page }, info) => {
+test('keeps actual Vue 2 host mode changes and view remounts on one Fountain document history', async ({
+  page,
+}, info) => {
   const errors: string[] = [];
-  page.on('pageerror', error => errors.push(error.message));
+  page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
   await page.evaluate(() => {
     const events: unknown[] = [];
     Object.assign(globalThis, { bridgeClipboardProbe: events });
-    document.addEventListener('copy', event => events.push({ type: 'copy', prevented: event.defaultPrevented,
-      target: (event.target as Element)?.tagName, active: document.activeElement?.tagName,
-      selected: getSelection()?.rangeCount ? getSelection()!.getRangeAt(0).cloneContents().textContent : null,
-      types: [...(event.clipboardData?.types ?? [])], writtenLength: event.clipboardData?.getData('text/plain').length }));
-    document.addEventListener('paste', event => events.push({ type: 'paste', target: (event.target as Element)?.tagName,
-      types: [...(event.clipboardData?.types ?? [])], receivedLength: event.clipboardData?.getData('text/plain').length }));
+    document.addEventListener('copy', (event) =>
+      events.push({
+        type: 'copy',
+        prevented: event.defaultPrevented,
+        target: (event.target as Element)?.tagName,
+        active: document.activeElement?.tagName,
+        selected: getSelection()?.rangeCount
+          ? getSelection()!.getRangeAt(0).cloneContents().textContent
+          : null,
+        types: [...(event.clipboardData?.types ?? [])],
+        writtenLength: event.clipboardData?.getData('text/plain').length,
+      }),
+    );
+    document.addEventListener('paste', (event) =>
+      events.push({
+        type: 'paste',
+        target: (event.target as Element)?.tagName,
+        types: [...(event.clipboardData?.types ?? [])],
+        receivedLength: event.clipboardData?.getData('text/plain').length,
+      }),
+    );
   });
   const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
   const mounts = page.getByLabel('View mount count', { exact: true });
   await expect(editor).toHaveText('Vue 2 integration.');
   await expect(mounts).toHaveText('1');
-  await editor.click(); await page.keyboard.press('End'); await page.keyboard.type('A');
+  await editor.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type('A');
   await expect(editor).toHaveText('Vue 2 integration.A');
   await page.getByRole('button', { name: 'Use read-only mode', exact: true }).click();
   await expect(editor).toHaveAttribute('contenteditable', 'false');
   await expect(editor).toHaveAttribute('aria-readonly', 'true');
-  await editor.click(); await page.keyboard.type('blocked'); await page.keyboard.press('Backspace');
+  await editor.click();
+  await page.keyboard.type('blocked');
+  await page.keyboard.press('Backspace');
   await expect(editor).toHaveText('Vue 2 integration.A');
   await expect(page.getByRole('button', { name: 'Undo document', exact: true })).toBeDisabled();
   await expect(mounts).toHaveText('1');
   await page.keyboard.press('ControlOrMeta+a');
-  await expect.poll(() => page.evaluate(() => getSelection()?.rangeCount
-    ? getSelection()!.getRangeAt(0).cloneContents().textContent : null)).toBe('Vue 2 integration.A');
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        getSelection()?.rangeCount
+          ? getSelection()!.getRangeAt(0).cloneContents().textContent
+          : null,
+      ),
+    )
+    .toBe('Vue 2 integration.A');
   await page.keyboard.press('ControlOrMeta+c');
   await page.getByRole('textbox', { name: 'External copy target', exact: true }).focus();
   await page.keyboard.press('ControlOrMeta+v');
-  await writeFile(info.outputPath('read-only-clipboard.json'), JSON.stringify(await page.evaluate(() => (
-    globalThis as typeof globalThis & { bridgeClipboardProbe: unknown[] }
-  ).bridgeClipboardProbe), null, 2));
-  await expect(page.getByRole('textbox', { name: 'External copy target', exact: true })).toHaveValue('Vue 2 integration.A');
+  await writeFile(
+    info.outputPath('read-only-clipboard.json'),
+    JSON.stringify(
+      await page.evaluate(
+        () =>
+          (globalThis as typeof globalThis & { bridgeClipboardProbe: unknown[] })
+            .bridgeClipboardProbe,
+      ),
+      null,
+      2,
+    ),
+  );
+  await expect(
+    page.getByRole('textbox', { name: 'External copy target', exact: true }),
+  ).toHaveValue('Vue 2 integration.A');
   await page.screenshot({ path: info.outputPath('vue2-read-only.png') });
   await page.getByRole('button', { name: 'Enable editing', exact: true }).click();
   await expect(editor).toHaveAttribute('contenteditable', 'true');
@@ -55,17 +94,35 @@ test('keeps actual Vue 2 host mode changes and view remounts on one Fountain doc
   await expect(editor).toHaveText('Vue 2 integration.');
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.screenshot({ path: info.outputPath('vue2-remounted-history.png') });
-  await writeFile(info.outputPath('gitlab-vue2.json'), JSON.stringify({ engine: info.project.name, runtime: 'Real Vue 2.7.16 and its SFC compiler',
-    scope: 'Compiled surface component against the package build; not the full GitLab application, Markdown service, auth, upload or collaboration verification.',
-    modePreservesMount: true, remountPreservesHistory: true, nativeReadOnlyCopy: true, errors }, null, 2));
+  await writeFile(
+    info.outputPath('gitlab-vue2.json'),
+    JSON.stringify(
+      {
+        engine: info.project.name,
+        runtime: 'Real Vue 2.7.16 and its SFC compiler',
+        scope:
+          'Compiled surface component against the package build; not the full GitLab application, Markdown service, auth, upload or collaboration verification.',
+        modePreservesMount: true,
+        remountPreservesHistory: true,
+        nativeReadOnlyCopy: true,
+        errors,
+      },
+      null,
+      2,
+    ),
+  );
   expect(errors).toEqual([]);
 });
 
-test('removes the surface when a host filter refuses read-only mode and recovers without losing the document', async ({ page }) => {
+test('removes the surface when a host filter refuses read-only mode and recovers without losing the document', async ({
+  page,
+}) => {
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html?reject-mode=1');
   const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
   await expect(editor).toHaveText('Vue 2 integration.');
-  await editor.click(); await page.keyboard.press('End'); await page.keyboard.type('A');
+  await editor.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type('A');
   await expect(editor).toHaveText('Vue 2 integration.A');
   await page.getByRole('button', { name: 'Use read-only mode', exact: true }).click();
   await expect(editor).toHaveCount(0);
@@ -79,7 +136,9 @@ test('removes the surface when a host filter refuses read-only mode and recovers
   await expect(editor).toHaveText('Vue 2 integration.');
 });
 
-test('loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host', async ({ page }, info) => {
+test('loads real Markdown, retains template undo and sends only actual user changes to the Vue 2 host', async ({
+  page,
+}, info) => {
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
   const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
   const source = page.getByRole('textbox', { name: 'Markdown replacement source', exact: true });
@@ -92,8 +151,12 @@ test('loads real Markdown, retains template undo and sends only actual user chan
   await expect(changes).toHaveText('0');
   await expect(undo).toBeDisabled();
   await page.screenshot({ path: info.outputPath('vue2-loaded-heading.png') });
-  await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type('A');
-  await expect(page.getByLabel('Latest host Markdown', { exact: true })).toHaveText('## Loaded heading\n\n**Baseline** text.A');
+  await editor.locator('p').click();
+  await page.keyboard.press('End');
+  await page.keyboard.type('A');
+  await expect(page.getByLabel('Latest host Markdown', { exact: true })).toHaveText(
+    '## Loaded heading\n\n**Baseline** text.A',
+  );
   await expect(changes).toHaveText('1');
   await source.fill('## Template\n\n> Retain this quote.');
   await page.getByRole('button', { name: 'Apply Markdown template', exact: true }).click();
@@ -115,14 +178,29 @@ test('loads real Markdown, retains template undo and sends only actual user chan
   await expect(page.getByLabel('View mount count', { exact: true })).toHaveText('1');
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.screenshot({ path: info.outputPath('vue2-loaded-baseline.png') });
-  await writeFile(info.outputPath('serialized-content.json'), JSON.stringify({ engine: info.project.name,
-    scope: 'Real compiled Vue 2 component, public Fountain engine and ordinary Markdown importer/exporter. Not GitLab dialect, real backend or full application verification.',
-    silentInitialLoad: true, undoableTemplate: true, baselineClearsHistory: true, viewRetained: true }, null, 2));
+  await writeFile(
+    info.outputPath('serialized-content.json'),
+    JSON.stringify(
+      {
+        engine: info.project.name,
+        scope:
+          'Real compiled Vue 2 component, public Fountain engine and ordinary Markdown importer/exporter. Not GitLab dialect, real backend or full application verification.',
+        silentInitialLoad: true,
+        undoableTemplate: true,
+        baselineClearsHistory: true,
+        viewRetained: true,
+      },
+      null,
+      2,
+    ),
+  );
 });
 
-test('edits pinned GitLab reference rendering without replacing source tokens with display labels', async ({ page }, info) => {
+test('edits pinned GitLab reference rendering without replacing source tokens with display labels', async ({
+  page,
+}, info) => {
   const errors: string[] = [];
-  page.on('pageerror', error => errors.push(error.message));
+  page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
   const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
   const original = 'See #1 and !1 by @root with ~bug in b51c8ef20575';
@@ -133,22 +211,45 @@ test('edits pinned GitLab reference rendering without replacing source tokens wi
   await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
   await expect(references).toHaveCount(5);
   await expect(references.last()).toHaveText('b51c8ef2');
-  await expect(editor.locator('[data-fountain-gitlab-reference="label"]')).toHaveCSS('background-color', 'rgb(102, 153, 204)');
-  await expect(editor.locator('[data-fountain-gitlab-reference="label"]')).toHaveCSS('color', 'rgb(0, 0, 0)');
+  await expect(editor.locator('[data-fountain-gitlab-reference="label"]')).toHaveCSS(
+    'background-color',
+    'rgb(102, 153, 204)',
+  );
+  await expect(editor.locator('[data-fountain-gitlab-reference="label"]')).toHaveCSS(
+    'color',
+    'rgb(0, 0, 0)',
+  );
   await expect(page.getByLabel('Host document change count', { exact: true })).toHaveText('0');
-  await editor.locator('p').click(); await page.keyboard.press('End');
-  await writeFile(info.outputPath('native-end-caret.json'), JSON.stringify(await page.evaluate(() => {
-    const selection = getSelection(), node = selection?.anchorNode;
-    return { name: node?.nodeName, offset: selection?.anchorOffset, text: node?.textContent,
-      parentPath: node?.parentElement?.closest('[data-fountain-path]')?.getAttribute('data-fountain-path'),
-      html: node instanceof Element ? node.outerHTML : node?.parentElement?.outerHTML };
-  }), null, 2));
+  await editor.locator('p').click();
+  await page.keyboard.press('End');
+  await writeFile(
+    info.outputPath('native-end-caret.json'),
+    JSON.stringify(
+      await page.evaluate(() => {
+        const selection = getSelection(),
+          node = selection?.anchorNode;
+        return {
+          name: node?.nodeName,
+          offset: selection?.anchorOffset,
+          text: node?.textContent,
+          parentPath: node?.parentElement
+            ?.closest('[data-fountain-path]')
+            ?.getAttribute('data-fountain-path'),
+          html: node instanceof Element ? node.outerHTML : node?.parentElement?.outerHTML,
+        };
+      }),
+      null,
+      2,
+    ),
+  );
   await page.keyboard.type(' added');
   await expect(host).toHaveText(original + ' added');
   await page.screenshot({ path: info.outputPath('gitlab-reference-edit.png') });
   await page.getByRole('button', { name: 'Undo document', exact: true }).click();
   await expect(host).toHaveText(original);
-  await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.press('Backspace');
+  await editor.locator('p').click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Backspace');
   await expect(references).toHaveCount(4);
   expect(await host.textContent()).not.toContain('b51c8ef20575');
   await page.screenshot({ path: info.outputPath('gitlab-reference-deleted.png') });
@@ -158,31 +259,51 @@ test('edits pinned GitLab reference rendering without replacing source tokens wi
   await page.screenshot({ path: info.outputPath('gitlab-reference-restored.png') });
   await expect(page.getByRole('alert')).toHaveCount(0);
   expect(errors).toEqual([]);
-  await writeFile(info.outputPath('gitlab-rendered-source.json'), JSON.stringify({ engine: info.project.name,
-    scope: 'Real compiled Fountain conversion, Vue 2 view and native editing over pinned GitLab HTML response data. Not a live GitLab service or full product.',
-    rawReferenceTokensRetained: true, shortDisplayCommit: true, labelColor: true, nativeDeleteAndUndo: true }, null, 2));
+  await writeFile(
+    info.outputPath('gitlab-rendered-source.json'),
+    JSON.stringify(
+      {
+        engine: info.project.name,
+        scope:
+          'Real compiled Fountain conversion, Vue 2 view and native editing over pinned GitLab HTML response data. Not a live GitLab service or full product.',
+        rawReferenceTokensRetained: true,
+        shortDisplayCommit: true,
+        labelColor: true,
+        nativeDeleteAndUndo: true,
+      },
+      null,
+      2,
+    ),
+  );
 });
 
-test('keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload', async ({ page }, info) => {
+test('keeps the visible document current on GitLab export refusal and restores usable Markdown through undo or reload', async ({
+  page,
+}, info) => {
   const errors: string[] = [];
-  page.on('pageerror', error => errors.push(error.message));
+  page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
   const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
   const original = 'See #1 and !1 by @root with ~bug in b51c8ef20575';
   const host = page.getByLabel('Latest host Markdown', { exact: true });
   const load = page.getByRole('button', { name: 'Load Markdown baseline', exact: true });
   const undo = page.getByRole('button', { name: 'Undo document', exact: true });
-  await page.getByRole('textbox', { name: 'Markdown replacement source', exact: true }).fill(original);
+  await page
+    .getByRole('textbox', { name: 'Markdown replacement source', exact: true })
+    .fill(original);
   await load.click();
   await expect(host).toHaveText(original);
   await editor.locator('[data-fountain-gitlab-reference="user"]').click();
   await expect(page).toHaveURL(/\/tests\/browser\/fixtures\/gitlab-vue2\.html\?gitlab-rendered=1$/);
-  await editor.locator('p').click(); await page.keyboard.press('End');
+  await editor.locator('p').click();
+  await page.keyboard.press('End');
   await page.getByRole('button', { name: 'Centre paragraph', exact: true }).click();
   await expect(editor.locator('p')).toHaveCSS('text-align', 'center');
   await expect(page.getByRole('alert')).toContainText('GitLab Markdown conversion cannot complete');
   await expect(host).toHaveText('');
-  await editor.locator('p').click(); await page.keyboard.press('End'); await page.keyboard.type(' added');
+  await editor.locator('p').click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' added');
   await expect(editor.locator('p')).toContainText('b51c8ef2 added');
   await expect(host).toHaveText('');
   await page.screenshot({ path: info.outputPath('gitlab-export-refused-current-document.png') });
@@ -203,77 +324,131 @@ test('keeps the visible document current on GitLab export refusal and restores u
   await expect(page.getByLabel('View mount count', { exact: true })).toHaveText('1');
   await page.screenshot({ path: info.outputPath('gitlab-export-reload-recovered.png') });
   expect(errors).toEqual([]);
-  await writeFile(info.outputPath('gitlab-export-recovery.json'), JSON.stringify({ engine: info.project.name,
-    scope: 'Compiled Vue 2 host/codec integration with pinned HTML input. Full GitLab application submission, storage and authorization remain unverified.',
-    staleMarkdownCleared: true, failedExportDoesNotFreezeView: true, undoAndReloadRecovery: true, noRemount: true, errors }, null, 2));
+  await writeFile(
+    info.outputPath('gitlab-export-recovery.json'),
+    JSON.stringify(
+      {
+        engine: info.project.name,
+        scope:
+          'Compiled Vue 2 host/codec integration with pinned HTML input. Full GitLab application submission, storage and authorization remain unverified.',
+        staleMarkdownCleared: true,
+        failedExportDoesNotFreezeView: true,
+        undoAndReloadRecovery: true,
+        noRemount: true,
+        errors,
+      },
+      null,
+      2,
+    ),
+  );
 });
 
-test('renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior', async ({ page }, info) => {
+test('renders and edits GitLab math as real Fountain source-backed nodes with undo and read-only behavior', async ({
+  page,
+}, info) => {
   const errors: string[] = [];
-  page.on('pageerror', error => errors.push(error.message));
+  page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
   const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
   const source = page.getByRole('textbox', { name: 'Markdown replacement source', exact: true });
   const host = page.getByLabel('Latest host Markdown', { exact: true });
   const load = page.getByRole('button', { name: 'Load Markdown baseline', exact: true });
   const undo = page.getByRole('button', { name: 'Undo document', exact: true });
-  const inlineSource = mathFixtures.rows.find(row => row.description === 'inline math with dollars')!.markdown;
-  await source.fill(inlineSource); await load.click();
+  const inlineSource = mathFixtures.rows.find(
+    (row) => row.description === 'inline math with dollars',
+  )!.markdown;
+  await source.fill(inlineSource);
+  await load.click();
   const inline = editor.locator('[data-fountain-math="inline"]');
   await expect(inline.locator('.katex')).toHaveCount(1);
   await expect(inline).toHaveAttribute('data-latex', 'E = mc^2');
   await inline.click();
   const input = editor.getByRole('textbox', { name: 'Edit math source', exact: true });
   await expect(input).toHaveValue('E = mc^2');
-  await input.fill('E = mc^3'); await input.press('Enter');
+  await input.fill('E = mc^3');
+  await input.press('Enter');
   await expect(host).toHaveText('The energy is $E = mc^3$ here');
   await expect(inline).toHaveAttribute('data-latex', 'E = mc^3');
   await expect(editor.locator('[data-fountain-math-error]')).toHaveCount(0);
   await page.screenshot({ path: info.outputPath('gitlab-math-inline-edited.png') });
   await undo.click();
   await expect(host).toHaveText(inlineSource);
-  await editor.locator('p').click({ position: { x: 10, y: 10 } }); await page.keyboard.press('End');
+  await editor.locator('p').click({ position: { x: 10, y: 10 } });
+  await page.keyboard.press('End');
   await page.getByRole('button', { name: 'Insert inline math', exact: true }).click();
   await expect(inline).toHaveCount(2);
   await expect(inline.last().locator('.katex')).toHaveCount(1);
   await expect(host).toContainText('here$x^2$');
-  await undo.click(); await expect(inline).toHaveCount(1);
+  await undo.click();
+  await expect(inline).toHaveCount(1);
   await page.getByRole('button', { name: 'Use read-only mode', exact: true }).click();
   await inline.click();
   await expect(input).toBeHidden();
-  await expect(page.getByRole('button', { name: 'Insert inline math', exact: true })).toBeDisabled();
+  await expect(
+    page.getByRole('button', { name: 'Insert inline math', exact: true }),
+  ).toBeDisabled();
   await page.getByRole('button', { name: 'Enable editing', exact: true }).click();
-  const displaySource = mathFixtures.rows.find(row => row.description === 'display math inside prose')!.markdown;
-  await source.fill(displaySource); await load.click();
+  const displaySource = mathFixtures.rows.find(
+    (row) => row.description === 'display math inside prose',
+  )!.markdown;
+  await source.fill(displaySource);
+  await load.click();
   await expect(inline.locator('.katex-display')).toHaveCount(1);
   await page.screenshot({ path: info.outputPath('gitlab-math-inline-display.png') });
-  const fencedSource = mathFixtures.rows.find(row => row.description === 'fenced math block')!.markdown;
-  await source.fill(fencedSource); await load.click();
+  const fencedSource = mathFixtures.rows.find(
+    (row) => row.description === 'fenced math block',
+  )!.markdown;
+  await source.fill(fencedSource);
+  await load.click();
   const block = editor.locator('[data-fountain-math="block"]');
   await expect(block.locator('.katex-display')).toHaveCount(1);
   await block.click();
   const blockInput = block.getByRole('textbox', { name: 'Edit math source', exact: true });
   await expect(blockInput).toHaveValue('\\sum_{i=1}^n i');
-  await blockInput.fill('\\sum_{i=1}^n i^2'); await blockInput.press('ControlOrMeta+Enter');
+  await blockInput.fill('\\sum_{i=1}^n i^2');
+  await blockInput.press('ControlOrMeta+Enter');
   await expect(host).toHaveText('```math\n\\sum_{i=1}^n i^2\n```');
   await expect(block).toHaveAttribute('data-latex', '\\sum_{i=1}^n i^2');
   await page.screenshot({ path: info.outputPath('gitlab-math-block-edited.png') });
-  await undo.click(); await expect(host).toHaveText(fencedSource);
+  await undo.click();
+  await expect(host).toHaveText(fencedSource);
   await expect(editor.locator('[data-fountain-math-error]')).toHaveCount(0);
   await expect(page.getByRole('alert')).toHaveCount(0);
   expect(errors).toEqual([]);
-  await writeFile(info.outputPath('gitlab-math.json'), JSON.stringify({ engine: info.project.name,
-    scope: 'Real public Fountain math nodes, trusted-off KaTeX, native Vue 2 editing and pinned GitLab HTML inputs. Actual GitLab backend/storage remains unverified.',
-    sourceEditAndUndo: true, secondEquation: true, readerMode: true, inlineDisplay: true, fencedMath: true, errors }, null, 2));
+  await writeFile(
+    info.outputPath('gitlab-math.json'),
+    JSON.stringify(
+      {
+        engine: info.project.name,
+        scope:
+          'Real public Fountain math nodes, trusted-off KaTeX, native Vue 2 editing and pinned GitLab HTML inputs. Actual GitLab backend/storage remains unverified.',
+        sourceEditAndUndo: true,
+        secondEquation: true,
+        readerMode: true,
+        inlineDisplay: true,
+        fencedMath: true,
+        errors,
+      },
+      null,
+      2,
+    ),
+  );
 });
 
-test('hands the latest rich edit to the actual patched host mode method before unmounting', async ({ page }, info) => {
+test('hands the latest rich edit to the actual patched host mode method before unmounting', async ({
+  page,
+}, info) => {
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
   const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
-  const replacement = page.getByRole('textbox', { name: 'Markdown replacement source', exact: true });
+  const replacement = page.getByRole('textbox', {
+    name: 'Markdown replacement source',
+    exact: true,
+  });
   await replacement.fill('Original baseline.');
   await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
-  await editor.click(); await page.keyboard.press('End'); await page.keyboard.type(' Latest edit.');
+  await editor.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Latest edit.');
   // The parent draft is deliberately still stale, as it can be before debounce.
   await expect(replacement).toHaveValue('Original baseline.');
   await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
@@ -289,23 +464,34 @@ test('hands the latest rich edit to the actual patched host mode method before u
   await page.screenshot({ path: info.outputPath('gitlab-handoff-reopened-rich.png') });
 });
 
-test('blocks a lossy handoff without dropping the rich document and recovers after undo', async ({ page }, info) => {
+test('blocks a lossy handoff without dropping the rich document and recovers after undo', async ({
+  page,
+}, info) => {
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
   const original = 'See #1 and !1 by @root with ~bug in b51c8ef20575';
   const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
-  await page.getByRole('textbox', { name: 'Markdown replacement source', exact: true }).fill(original);
+  await page
+    .getByRole('textbox', { name: 'Markdown replacement source', exact: true })
+    .fill(original);
   await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
-  await editor.locator('p').click(); await page.keyboard.press('End');
+  await editor.locator('p').click();
+  await page.keyboard.press('End');
   await page.getByRole('button', { name: 'Centre paragraph', exact: true }).click();
   await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
   await expect(editor).toBeVisible();
   await expect(editor.locator('p')).toHaveCSS('text-align', 'center');
-  await expect(page.getByRole('textbox', { name: 'Current Markdown editor', exact: true })).toHaveCount(0);
-  await expect(page.getByRole('alert').filter({ hasText: 'Unable to switch to Markdown' })).toBeVisible();
+  await expect(
+    page.getByRole('textbox', { name: 'Current Markdown editor', exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'Unable to switch to Markdown' }),
+  ).toBeVisible();
   await page.screenshot({ path: info.outputPath('gitlab-handoff-refused-document-retained.png') });
   await page.getByRole('button', { name: 'Undo document', exact: true }).click();
   await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
-  await expect(page.getByRole('textbox', { name: 'Current Markdown editor', exact: true })).toHaveValue(original);
+  await expect(
+    page.getByRole('textbox', { name: 'Current Markdown editor', exact: true }),
+  ).toHaveValue(original);
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.screenshot({ path: info.outputPath('gitlab-handoff-after-undo.png') });
 });
@@ -319,11 +505,17 @@ test('retains the surface during an unfinished composition handoff', async ({ pa
   await expect(page.getByRole('alert')).toContainText('Unable to switch to Markdown');
   await editor.dispatchEvent('compositionend', { data: '' });
   await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
-  await expect(page.getByRole('textbox', { name: 'Current Markdown editor', exact: true })).toHaveValue('Vue 2 integration.');
+  await expect(
+    page.getByRole('textbox', { name: 'Current Markdown editor', exact: true }),
+  ).toHaveValue('Vue 2 integration.');
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
-  const original = mathFixtures.rows.find(row => row.description === 'inline math with dollars')!.markdown;
-  await page.getByRole('textbox', { name: 'Markdown replacement source', exact: true }).fill(original);
+  const original = mathFixtures.rows.find(
+    (row) => row.description === 'inline math with dollars',
+  )!.markdown;
+  await page
+    .getByRole('textbox', { name: 'Markdown replacement source', exact: true })
+    .fill(original);
   await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
   await editor.locator('[data-fountain-math="inline"]').click();
   const mathInput = editor.getByRole('textbox', { name: 'Edit math source', exact: true });
@@ -333,9 +525,98 @@ test('retains the surface during an unfinished composition handoff', async ({ pa
   await expect(page.getByRole('alert')).toContainText('Unable to switch to Markdown');
   await mathInput.dispatchEvent('compositionend', { data: '' });
   await page.getByRole('button', { name: 'Use Markdown mode', exact: true }).click();
-  await expect(page.getByRole('textbox', { name: 'Current Markdown editor', exact: true })).toHaveValue(original);
+  await expect(
+    page.getByRole('textbox', { name: 'Current Markdown editor', exact: true }),
+  ).toHaveValue(original);
   await expect(page.getByRole('alert')).toHaveCount(0);
-  await writeFile(info.outputPath('gitlab-handoff-composition.json'), JSON.stringify({ engine: info.project.name,
-    targets: ['editor root', 'native math source control'],
-    scope: 'Synthetic composition-event guard in native browser; not physical IME certification or full GitLab product verification.' }, null, 2));
+  await writeFile(
+    info.outputPath('gitlab-handoff-composition.json'),
+    JSON.stringify(
+      {
+        engine: info.project.name,
+        targets: ['editor root', 'native math source control'],
+        scope:
+          'Synthetic composition-event guard in native browser; not physical IME certification or full GitLab product verification.',
+      },
+      null,
+      2,
+    ),
+  );
+});
+
+test('collects the current rich value in real browser FormData before the Vue field patch', async ({
+  page,
+}, info) => {
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Latest save.');
+  await expect(
+    page.getByRole('textbox', { name: 'Markdown replacement source', exact: true }),
+  ).toHaveValue('');
+  await page.getByRole('button', { name: 'Save current document', exact: true }).click();
+  await expect(page.getByLabel('Private submitted Markdown', { exact: true })).toHaveText(
+    'Vue 2 integration. Latest save.',
+  );
+  await expect(page.getByLabel('Private transport count', { exact: true })).toHaveText('1');
+  await expect(page.getByLabel('Private retained draft', { exact: true })).toHaveText('');
+  await expect(editor).toHaveText('Vue 2 integration. Latest save.');
+  await page.screenshot({ path: info.outputPath('gitlab-submit-current-field.png') });
+});
+
+test('refuses native form submission without destroying the rich document or its safe draft', async ({
+  page,
+}, info) => {
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
+  const original = 'See #1 and !1 by @root with ~bug in b51c8ef20575';
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  await page
+    .getByRole('textbox', { name: 'Markdown replacement source', exact: true })
+    .fill(original);
+  await page.getByRole('button', { name: 'Load Markdown baseline', exact: true }).click();
+  await editor.locator('p').click();
+  await page.keyboard.press('End');
+  await page.getByRole('button', { name: 'Centre paragraph', exact: true }).click();
+  await page.getByRole('button', { name: 'Save current document', exact: true }).click();
+  await expect(page.getByLabel('Private transport count', { exact: true })).toHaveText('0');
+  await expect(page.getByLabel('Private retained draft', { exact: true })).toHaveText(original);
+  await expect(editor.locator('p')).toHaveCSS('text-align', 'center');
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'Unable to save the current document' }),
+  ).toBeVisible();
+  await page.screenshot({ path: info.outputPath('gitlab-submit-refused-draft-retained.png') });
+  await page.getByRole('button', { name: 'Undo document', exact: true }).click();
+  await page.getByRole('button', { name: 'Save current document', exact: true }).click();
+  await expect(page.getByLabel('Private submitted Markdown', { exact: true })).toHaveText(original);
+  await expect(page.getByLabel('Private transport count', { exact: true })).toHaveText('1');
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('gitlab-submit-after-undo.png') });
+});
+
+test('blocks an unfinished-composition save until the editor settles', async ({ page }, info) => {
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  await editor.dispatchEvent('compositionstart', { data: '' });
+  await page.getByRole('button', { name: 'Save current document', exact: true }).click();
+  await expect(page.getByLabel('Private transport count', { exact: true })).toHaveText('0');
+  await expect(editor).toBeVisible();
+  await editor.dispatchEvent('compositionend', { data: '' });
+  await page.getByRole('button', { name: 'Save current document', exact: true }).click();
+  await expect(page.getByLabel('Private submitted Markdown', { exact: true })).toHaveText(
+    'Vue 2 integration.',
+  );
+  await expect(page.getByLabel('Private transport count', { exact: true })).toHaveText('1');
+  await writeFile(
+    info.outputPath('gitlab-submit-composition.json'),
+    JSON.stringify(
+      {
+        engine: info.project.name,
+        scope:
+          'Synthetic composition event readiness in a native browser; private transport capture, no actual GitLab API/storage or physical IME certification.',
+      },
+      null,
+      2,
+    ),
+  );
 });

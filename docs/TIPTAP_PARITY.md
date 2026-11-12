@@ -2,6 +2,18 @@
 
 ## Current programme status — 2026-11-12
 
+The current GitLab host patch also guards current-document submission through
+native forms, the fresh-value facade and the actual legacy asynchronous handler.
+It synchronously publishes fields and refuses invalid/changed content or
+duplicate pending submissions while retaining safe drafts. All **5,472 unit
+tests/338 files**, 35 focused cases and root types pass. The selected Windows
+profile passes 33 journeys; all 12 Linux WebKit component journeys pass. Native
+navigation initiation is not server acceptance, and arbitrary custom AJAX paths
+still need adoption. Upstream Jest suites and real authenticated application
+workflows remain unfinished. A separately pinned original GitLab environment is
+prepared for those tests. No capability row is promoted.
+[Submission scope](RELEASES.md#gitlab-current-document-submission--2026-11-12).
+
 The latest integration checkpoint prepares an actual GitLab host patch to read
 current Markdown before a rich editor is removed, retain the document on refused
 handoff, and guard restored-mode preferences. Fountain's native Vue surface

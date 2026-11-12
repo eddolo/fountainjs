@@ -1190,6 +1190,42 @@ upstream source whitespace checks remain enforced. Fresh package/hosted release
 gates and publication remain required. Evidence:
 `artifacts/gitlab-handoff-integration-20261112.json`.
 
+### GitLab current-document submission — 2026-11-12
+
+The cumulative prepared source patch now reads current values through the
+actual Markdown facade and flushes native form fields synchronously. The legacy
+handler checks the fresh hidden-input/textarea value, then revalidates after its
+asynchronous sensitive-token confirmation. Refused conversion/composition,
+changed content and duplicate pending attempts stop transport. Cancelled/failed
+attempts retain the safe draft; conversion refusal cannot restore stale cached
+text over newer work. Submit-button clicks no longer clear drafts prematurely.
+Explicit discard controls keep their previous behavior. The private first-party
+submission helper is vendored unchanged into the pinned upstream application.
+
+The complete local unit suite passes **5,472 tests in 338 files**, including 35
+focused handoff/submission cases. Root types pass. The earlier paused full run
+was deliberately interrupted; the resumed run completes successfully. The final
+Windows profile passes 33 journeys across desktop engines, excluding the retained
+external-copy failure. All 12 current Linux WebKit/Xvfb component journeys pass.
+The profiles overlap. Refusal and undo-recovery frames receive visual review;
+videos are retained. Composition events are synthetic. The browser transport
+observer captures actual FormData locally, not an authenticated GitLab request.
+
+The patch applies against a separate clean index at the original source pin and
+in reverse against the edited checkout. Two SFC templates compile and three
+upstream Jest files parse. Upstream suites are not executed. Custom AJAX handlers
+must adopt the fresh-value/prepare contract and confirm acceptance before cleanup;
+handlers bypassing it and native submit remain open integration work. Native
+navigation initiation does not establish server acceptance. Auth/storage,
+permissions and full product/release gates remain outstanding.
+
+A digest-pinned real GitLab baseline Compose environment is prepared separately
+from the `19.6.0-pre` source audit. Its packaged version is `19.5.3-ce.0`; matching
+the replacement source/build remains required. It is not a shipped replacement
+or a production deployment. No engine runtime, public npm API, dependency,
+capacity limit or parity-row changes. Evidence:
+`artifacts/gitlab-submission-integration-20261112.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad
