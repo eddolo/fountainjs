@@ -41,7 +41,7 @@ import { InputManager } from './input';
 import { BlockHandleManager, type BlockHandleOptions } from './block-handles';
 import { DropCursorManager, type DropCursorOptions } from './drop-cursor';
 import { WidgetOverlayLayer } from './widget-overlays';
-import type { AssetUploadHandler, ImageUploadHandler } from './media';
+import type { AssetUploadHandler, FileInputHandler, ImageUploadHandler } from './media';
 import type { ExternalPasteOptions } from './paste';
 import { SelectionHandler } from './selection-handler';
 import { registerTableDirectionRoot } from './table-direction';
@@ -66,6 +66,8 @@ export interface EditorViewOptions {
   attributes?: Record<string, string>;
   imageUpload?: ImageUploadHandler;
   assetUpload?: AssetUploadHandler;
+  /** Uses native paste/drop selection handling with host-owned upload/insertion. */
+  handleFiles?: FileInputHandler;
   maxInlineImageBytes?: number;
   /** Enables framework-neutral drag, keyboard, and touch block controls. */
   blockHandles?: boolean | BlockHandleOptions;
@@ -188,6 +190,7 @@ export class EditorView {
     this.input = new InputManager(editor, this.dom, this.selections, {
       imageUpload: options.imageUpload,
       assetUpload: options.assetUpload,
+      handleFiles: options.handleFiles,
       maxInlineImageBytes: options.maxInlineImageBytes,
       onError: options.onError,
       shouldStopEvent: this.shouldStopNodeViewEvent,
@@ -213,6 +216,11 @@ export class EditorView {
     this.moveSelection(position);
     this.dom.focus();
     this.selections.sync(this.editor.state.selection);
+  }
+
+  /** Reveal the current DOM selection without changing document state. */
+  scrollSelectionIntoView(): void {
+    if (!this.destroyed) this.revealCaret();
   }
 
   /** True while the view is currently rendering a reduced viewport window. */
@@ -359,7 +367,8 @@ export class EditorView {
     const element = native.focusNode.nodeType === 1 ? native.focusNode as HTMLElement : native.focusNode.parentElement;
     if (!element) return;
     const range = native.getRangeAt(0);
-    const bounds = typeof range.getBoundingClientRect === 'function' ? range.getBoundingClientRect() : element.getBoundingClientRect();
+    const caret = typeof range.getBoundingClientRect === 'function' ? range.getBoundingClientRect() : undefined;
+    const bounds = caret?.height ? caret : element.getBoundingClientRect();
     if (bounds.top < 0 || bounds.bottom > ownerWindow.innerHeight) {
       element.scrollIntoView?.({ block: 'center', inline: 'nearest' });
     }

@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-attachment-uploads.test.ts (15 tests | 1 failed) 97ms
+   × keeps an image upload and its undo/redo caret in the empty destination paragraph 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-attachment-uploads.test.ts > keeps an image upload and its undo/redo caret in the empty destination paragraph
+AssertionError: expected 'Previous\n\n![figure](/uploads/figure…' to contain '**After upload**'
+
+- Expected
++ Received
+
+- **After upload**
++ Previous
++
++ ![figure](/uploads/figure.png)After upload
+
+ ❯ tests/gitlab-attachment-uploads.test.ts:82:42
+     80|   expect(editor.state.doc.child(0).textContent).toBe('Previous');
+     81|   expect(editor.state.doc.child(1).child(1).text).toBe('After upload');
+     82|   expect(service.getSerializedContent()).toContain('**After upload**');
+       |                                          ^
+     83| });
+     84|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 130 passed (131)
+   Start at  12:53:36
+   Duration  3.17s (transform 61%, import 26%, tests 12%, worker 1%)
+
+  Transform  transforming modules took 3.28s · 61% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

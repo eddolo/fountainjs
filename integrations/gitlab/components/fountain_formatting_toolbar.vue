@@ -20,8 +20,9 @@ export default {
   props: {
     editor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
+    hideAttachmentButton: { type: Boolean, required: false, default: false },
   },
-  emits: ['focus', 'error', 'paste-markdown'],
+  emits: ['focus', 'error', 'paste-markdown', 'attach-files'],
   data() {
     return { state: null };
   },
@@ -104,6 +105,15 @@ export default {
     this.releaseState();
   },
   methods: {
+    openAttachments() {
+      if (!this.disabled && this.editor.editable) this.$refs.attachments.click();
+    },
+    attachFiles(event) {
+      const input = event.target;
+      const files = Array.from(input.files);
+      input.value = '';
+      if (!this.disabled && this.editor.editable && files.length) this.$emit('attach-files', files);
+    },
     async pasteMarkdown() {
       if (this.disabled || !this.editor.editable) return;
       try {
@@ -171,6 +181,27 @@ export default {
       @click="execute(control)"
     />
     <slot name="header-buttons"></slot>
+    <template v-if="!hideAttachmentButton">
+      <gl-button
+        :disabled="disabled"
+        :aria-label="s__('ContentEditor|Attach a file or image')"
+        :title="s__('ContentEditor|Attach a file or image')"
+        icon="paperclip"
+        category="tertiary"
+        size="small"
+        @click="openAttachments"
+      />
+      <input
+        ref="attachments"
+        type="file"
+        multiple
+        class="gl-hidden"
+        :aria-label="s__('ContentEditor|Attach a file or image')"
+        data-testid="file-upload-field"
+        :disabled="disabled"
+        @change="attachFiles"
+      />
+    </template>
     <gl-button :disabled="disabled" category="tertiary" size="small" @click="pasteMarkdown">{{
       s__('ContentEditor|Paste Markdown')
     }}</gl-button>

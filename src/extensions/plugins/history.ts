@@ -1,5 +1,5 @@
 import { Editor, InsertTextStep, Mapping, Node, Plugin, PluginKey, ReplaceDocumentStep, ReplaceTextStep, StepMap,
-  mapSelection, positionToTextPoint, textPointToPosition, type AnySelection, type Transaction } from '../../core';
+  mapSelection, positionToTextPoint, textPointToPosition, type AnySelection, type Mark, type Transaction } from '../../core';
 import { rebaseInsertion } from '../../core/transaction/rebase-insertion';
 import { rebaseDeletion, type DeletedRange } from '../../core/transaction/rebase-deletion';
 import { getCollaborationAdapter } from '../collaboration-core';
@@ -7,6 +7,8 @@ import { getCollaborationAdapter } from '../collaboration-core';
 export interface HistorySnapshot {
   doc: Node;
   selection: AnySelection;
+  /** Typing format at this history point; optional for external/legacy snapshots. */
+  storedMarks?: readonly Mark[];
 }
 
 export interface HistoryState {
@@ -72,7 +74,7 @@ function rebaseInsertedText(snapshots: readonly HistorySnapshot[], sourceSize: n
     if (textPointToPosition(snapshot.doc, point.path, point.offset) !== position) return undefined;
     const insertion = new InsertTextStep(point.path, point.offset, text), doc = insertion.apply(snapshot.doc);
     doc.type.schema.validate(doc);
-    const rebasedSnapshot = { doc, selection: mapSelection(snapshot.selection, snapshot.doc, doc, insertion.getMap(snapshot.doc)) };
+    const rebasedSnapshot = { ...snapshot, doc, selection: mapSelection(snapshot.selection, snapshot.doc, doc, insertion.getMap(snapshot.doc)) };
     snapshotMaps.set(rebasedSnapshot, { maps: Object.freeze(maps) });
     updated[index] = rebasedSnapshot;
   }
@@ -108,7 +110,7 @@ function deleteSnapshotText(snapshot: HistorySnapshot, ranges: readonly DeletedR
   }
   doc.type.schema.validate(doc);
   const mapping = new Mapping([...ranges].reverse().map(range => new StepMap([range.from, range.to - range.from, 0])));
-  return { doc, selection: mapSelection(snapshot.selection, snapshot.doc, doc, mapping) };
+  return { ...snapshot, doc, selection: mapSelection(snapshot.selection, snapshot.doc, doc, mapping) };
 }
 
 function rebaseDeletedText(snapshots: readonly HistorySnapshot[], sourceSize: number,
@@ -178,7 +180,7 @@ export function createHistoryPlugin(options: HistoryOptions = {}): Plugin<Histor
       apply: (transaction, value, oldState) => {
         if (transaction.getMeta('history$reset') === true) return { done: [], undone: [] };
         const action = transaction.getMeta<'undo' | 'redo'>(HISTORY_ACTION);
-        const current = { doc: oldState.doc, selection: oldState.selection };
+        const current = { doc: oldState.doc, selection: oldState.selection, storedMarks: oldState.storedMarks };
         const inverse = transaction.docChanged ? inverseMaps(transaction) : [];
         if (action === 'undo' || action === 'redo') {
           snapshotMaps.set(current, { maps: inverse });
@@ -266,6 +268,7 @@ function restore(editor: Editor, snapshot: HistorySnapshot, action: 'undo' | 're
     .setSelection(snapshot.selection)
     .setMeta(HISTORY_ACTION, action)
     .setMeta('addToHistory', false);
+  if (snapshot.storedMarks) transaction.setStoredMarks(snapshot.storedMarks);
   return editor.dispatch(transaction);
 }
 

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Add `EditorViewOptions.handleFiles` for host-owned upload/insertion after native
+  paste selection and drop positioning. Configured handlers receive all file
+  types; rejection reports an error without default image embedding. Existing
+  image/asset upload behavior remains the default when no handler is configured.
+- Add `view.scrollSelectionIntoView()` for explicit post-insertion reveal,
+  including collapsed native ranges without a measurable caret rectangle.
+- Keep the caret after the final inline item in rich paste, including image-only
+  fragments in empty paragraphs and insertion into a non-first formatted text
+  fragment. Preserve its location through undo/redo and report host-filter refusal.
+- Keep generated empty caret anchors unformatted in exports while preserving the
+  next typing format. Local history snapshots now retain optional `storedMarks`
+  so undo/redo restores that format as well as the document and selection.
+
 - Show placeholders for an actually empty document, including its normal empty
   paragraph/text node. Hide the hint during focus and typing, restore it after
   deletion, and keep it out of document content and exports.

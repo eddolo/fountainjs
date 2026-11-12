@@ -81,6 +81,11 @@ export default {
     focus(position) {
       this.fountainView?.focus(position);
     },
+    // eslint-disable-next-line vue/no-unused-properties -- Called after a host-owned file insertion.
+    revealSelection() {
+      this.fountainView?.focus();
+      this.fountainView?.scrollSelectionIntoView();
+    },
     // eslint-disable-next-line vue/no-unused-properties -- Called before host mode switches and saves.
     getSerializedContentForHandoff() {
       if (!this.fountainView || this.composing || !this.readSerializedContent) {

@@ -1,0 +1,30 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/core.test.ts (67 tests | 1 failed) 84ms
+   ❯ document model and transactions (63)
+     × keeps typing marks after an image without exporting a formatted empty caret 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/core.test.ts > document model and transactions > keeps typing marks after an image without exporting a formatted empty caret
+AssertionError: expected '**Before**![Figure](/figure.png)After' to be '**Before**![Figure](/figure.png)**Aft…' // Object.is equality
+
+Expected: "**Before**![Figure](/figure.png)**After**"
+Received: "**Before**![Figure](/figure.png)After"
+
+ ❯ tests/core.test.ts:1003:51
+    1001|     expect(MarkdownExporter.export(editor.state)).toBe('**Before**![Fi…
+    1002|     insertText(editor, 'After');
+    1003|     expect(MarkdownExporter.export(editor.state)).toBe('**Before**![Fi…
+       |                                                   ^
+    1004|   });
+    1005|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 66 passed (67)
+   Start at  12:51:21
+   Duration  1.90s (transform 77%, import 18%, tests 5%)

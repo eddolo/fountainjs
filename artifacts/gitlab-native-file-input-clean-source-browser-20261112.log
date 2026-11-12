@@ -1,0 +1,33 @@
+[WebServer] (node:11288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter]
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:10824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:6944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native paste selection (861ms)
+  ok 2 [chromium] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native drop selection (708ms)
+  ok 3 [chromium] › tests\browser\gitlab-vue2.spec.ts:36:1 › does not fall back to image embedding when a host-owned file input handler refuses it (719ms)
+(node:12880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native paste selection (3.5s)
+  ok 5 [firefox] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native drop selection (16.4s)
+  ok 6 [firefox] › tests\browser\gitlab-vue2.spec.ts:36:1 › does not fall back to image embedding when a host-owned file input handler refuses it (1.2s)
+(node:24760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native paste selection (1.7s)
+  ok 8 [webkit] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native drop selection (1.7s)
+  ok 9 [webkit] › tests\browser\gitlab-vue2.spec.ts:36:1 › does not fall back to image embedding when a host-owned file input handler refuses it (1.3s)
+
+  9 passed (37.5s)

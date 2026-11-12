@@ -1,0 +1,125 @@
+[WebServer] (node:19504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin builtin:vite-reporter]
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:19756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:20496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native paste selection (608ms)
+  ok 2 [chromium] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native drop selection (420ms)
+  ok 3 [chromium] › tests\browser\gitlab-vue2.spec.ts:31:1 › does not fall back to image embedding when a host-owned file input handler refuses it (367ms)
+(node:9172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [firefox] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native paste selection (6.7s)
+(node:6868) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [firefox] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native drop selection (2.3s)
+  x  6 [firefox] › tests\browser\gitlab-vue2.spec.ts:31:1 › does not fall back to image embedding when a host-owned file input handler refuses it (5.9s)
+(node:3272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native paste selection (997ms)
+  ok 8 [webkit] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native drop selection (908ms)
+  ok 9 [webkit] › tests\browser\gitlab-vue2.spec.ts:31:1 › does not fall back to image embedding when a host-owned file input handler refuses it (843ms)
+
+
+  1) [firefox] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native paste selection
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })
+    Expected: "Vue [file:report.txt]2 integration."
+    Received: "Vue 2 integration."
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })
+        14 × locator resolved to <div tabindex="0" role="textbox" spellcheck="true" aria-multiline="true" contenteditable="true" class="fountain-editor" data-placeholder="Write your document" aria-label="GitLab Vue 2 bridge editor">…</div>
+           - unexpected value "Vue 2 integration."
+
+
+      22 |       }
+      23 |     }, source);
+    > 24 |     await expect(editor).toHaveText('Vue [file:report.txt]2 integration.');
+         |                          ^
+      25 |     await expect(page.getByLabel('Host file input events', { exact: true }))
+      26 |       .toHaveText(JSON.stringify([{ source, names: ['report.txt'] }]));
+      27 |     await expect(editor.locator('img')).toHaveCount(0);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:24:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-routes-host-ow-3d441--the-native-paste-selection-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-routes-host-ow-3d441--the-native-paste-selection-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-routes-host-ow-3d441--the-native-paste-selection-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-routes-host-ow-3d441--the-native-paste-selection-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-routes-host-ow-3d441--the-native-paste-selection-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\gitlab-vue2.spec.ts:31:1 › does not fall back to image embedding when a host-owned file input handler refuses it
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('body')
+    Expected: "HOST_FILE_INPUT_REFUSED"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for locator('body')
+        14 × locator resolved to <body>…</body>
+           - unexpected value "null"
+
+
+      41 |     element.dispatchEvent(new ClipboardEvent('paste', { clipboardData: transfer, bubbles: true, cancelable: true }));
+      42 |   });
+    > 43 |   await expect(page.locator('body')).toHaveAttribute('data-file-input-error', 'HOST_FILE_INPUT_REFUSED');
+         |                                      ^
+      44 |   await expect(editor).toHaveText('Vue 2 integration.');
+      45 |   await expect(editor.locator('img')).toHaveCount(0);
+      46 | });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\gitlab-vue2.spec.ts:43:38
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-does-not-fall--6122e-le-input-handler-refuses-it-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-does-not-fall--6122e-le-input-handler-refuses-it-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-does-not-fall--6122e-le-input-handler-refuses-it-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-does-not-fall--6122e-le-input-handler-refuses-it-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\gitlab-native-file-input-browser-20261112\gitlab-vue2-does-not-fall--6122e-le-input-handler-refuses-it-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [firefox] › tests\browser\gitlab-vue2.spec.ts:6:3 › routes host-owned file input at the native paste selection
+    [firefox] › tests\browser\gitlab-vue2.spec.ts:31:1 › does not fall back to image embedding when a host-owned file input handler refuses it
+  7 passed (25.8s)

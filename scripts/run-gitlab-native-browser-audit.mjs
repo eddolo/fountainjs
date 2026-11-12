@@ -30,9 +30,11 @@ try {
     process.execPath,
     [
       resolve(root, 'scripts/audit-gitlab-product-baseline.mjs'),
-      process.argv.includes('--component') ? '--native-component'
+      process.argv.includes('--attachments') ? '--native-attachments'
+        : process.argv.includes('--component') ? '--native-component'
         : process.argv.includes('--insertion') ? '--native-insertion' : '--native-browser',
       '--verify-restart',
+      ...(process.argv.includes('--probe-upload-focus') ? ['--probe-upload-focus'] : []),
     ],
     { env, stdio: 'inherit', timeout: 900000 },
   );

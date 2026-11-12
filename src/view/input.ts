@@ -42,6 +42,7 @@ import {
   insertAssetFile,
   insertImageFile,
   type AssetUploadHandler,
+  type FileInputHandler,
   type ImageUploadHandler,
 } from './media';
 import {
@@ -147,6 +148,7 @@ function sameMarks(left: readonly import('../core').Mark[], right: readonly impo
 export interface InputManagerOptions {
   imageUpload?: ImageUploadHandler;
   assetUpload?: AssetUploadHandler;
+  handleFiles?: FileInputHandler;
   maxInlineImageBytes?: number;
   onError?: (error: unknown) => void;
   shouldStopEvent?: (event: Event) => boolean;
@@ -525,10 +527,10 @@ export class InputManager {
       return;
     }
     const files = Array.from(event.clipboardData?.files ?? [])
-      .filter((file) => file.type.startsWith('image/') || Boolean(this.options.assetUpload));
+      .filter((file) => file.type.startsWith('image/') || Boolean(this.options.assetUpload || this.options.handleFiles));
     if (files.length) {
       event.preventDefault();
-      void this.insertFiles(files);
+      void this.insertFiles(files, 'paste');
       return;
     }
     if (!clipboardHTML.trim() && !fountain && event.clipboardData?.types?.includes('text/html')) {
@@ -871,7 +873,7 @@ export class InputManager {
       || types.includes(FOUNTAIN_NODE_DRAG_TYPE)
       || types.includes(FOUNTAIN_LEGACY_BLOCK_DRAG_TYPE);
     const uploadable = Array.from(event.dataTransfer?.items ?? []).some((item) => (
-      item.kind === 'file' && (item.type.startsWith('image/') || Boolean(this.options.assetUpload))
+      item.kind === 'file' && (item.type.startsWith('image/') || Boolean(this.options.assetUpload || this.options.handleFiles))
     ));
     if (this.editor.editable && (internal || uploadable)) {
       event.preventDefault();
@@ -963,12 +965,12 @@ export class InputManager {
       return;
     }
     const files = Array.from(event.dataTransfer?.files ?? [])
-      .filter((file) => file.type.startsWith('image/') || Boolean(this.options.assetUpload));
+      .filter((file) => file.type.startsWith('image/') || Boolean(this.options.assetUpload || this.options.handleFiles));
     if (!files.length) return;
     event.preventDefault();
     this.placeCaret(event.clientX, event.clientY);
     this.selections.capture();
-    void this.insertFiles(files);
+    void this.insertFiles(files, 'drop');
   };
 
   private placeCaret(x: number, y: number): void {
@@ -988,8 +990,12 @@ export class InputManager {
     selection?.addRange(range);
   }
 
-  private async insertFiles(files: readonly File[]): Promise<void> {
+  private async insertFiles(files: readonly File[], source: 'paste' | 'drop'): Promise<void> {
     try {
+      if (this.options.handleFiles) {
+        await this.options.handleFiles(files, { editor: this.editor, source });
+        return;
+      }
       for (const file of files) {
         if (file.type.startsWith('image/')) {
           await insertImageFile(this.editor, file, {

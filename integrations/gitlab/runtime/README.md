@@ -166,9 +166,11 @@ prepared current-document patch and native installation. It mounts the actual
 native surface and replaces two Tiptap-only test setup calls with native
 transactions. Then apply `gitlab-19.5.3-native-component-tests.patch` from the same
 directory. It migrates the actual surface, service, history and event setup while
-retaining attachment/contextual-menu requirements. The three suites currently
-pass 163 of 170 cases; seven feature cases remain failing. All 75 host and 40
-form cases pass. Forward/reverse checks reconstruct both native specs exactly
+retaining attachment/contextual-menu requirements. Then apply
+`gitlab-19.5.3-native-attachment-tests.patch` for the native file controls and nine
+additional upload/focus cases. The three suites currently pass 174 of 179 cases;
+five contextual-menu cases remain failing. All 75 host and 40 form cases pass.
+Forward/reverse checks reconstruct both native specs exactly
 without changing the main index; no skips or timeout increases waive failures.
 
 The installer checks source revision, prepared-file digests, runtime input hashes
@@ -191,12 +193,19 @@ node scripts/run-gitlab-native-browser-audit.mjs
 node scripts/run-gitlab-native-browser-audit.mjs --insertion
 # Also inspect actual empty-comment paint and failed document-load recovery:
 node scripts/run-gitlab-native-browser-audit.mjs --component
+# Also exercise real picker/clipboard uploads, failed-file recovery and saving:
+node scripts/run-gitlab-native-browser-audit.mjs --attachments
 ```
 
 Use `PLAYWRIGHT_BROWSERS_PATH` when the installed Linux browser lives outside
 Playwright's default location. The runner keeps WSL alive across restart,
 selects the recorded source's complete read-only frontend build, and stops its
 own application afterward. It does not remove the dedicated records/volumes.
+The attachment profile temporarily sets this isolated instance's attachment
+limit to 10 MiB through GitLab's administrator API and restores the original
+value in `finally`. It records both values and restoration status, without
+recording other application settings. This bounds the over-limit test allocation.
+See the official [application settings API](https://docs.gitlab.com/api/settings/).
 
 To restore the exact prepared host source:
 
@@ -207,8 +216,8 @@ node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source --restore
 Restore refuses changed installed files, restores the recorded host/configuration
 files and removes only verified installer-owned files. Rebuild before serving
 that restored frontend, or recreate with the original base Compose profile.
-Full native toolbar/menus, upload/suggestion/provider adapters, direct source-mode
-recovery, remaining upstream native-test migration, accessibility and
+Full native toolbar/menus, remaining media/suggestion/provider adapters, direct
+source-mode recovery, remaining upstream feature cases, accessibility and
 cross-browser/product acceptance remain necessary. Passing a selected real
 journey does not close them.
 

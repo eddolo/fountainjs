@@ -72,6 +72,36 @@ read-only textarea with an explicit retry action. A later successful paste clear
 the recovery alert. This is Markdown insertion, not certification of arbitrary
 HTML/Word clipboard content or of the unfinished saved-reply picker.
 
+## Native attachment insertion
+
+Supply `uploadAttachment(file, { signal, reportProgress })` when creating the
+service. The application must upload through its authenticated host client and
+return the server's authoritative Markdown. Call `content.uploadAttachment(file)`
+from the toolbar or `EditorView.handleFiles`. The native GitLab component uses its
+CSRF-aware Axios wrapper, instance file-size limit and a same-origin upload
+endpoint. Files stay outside document state and history.
+
+The insertion captures the native selection and typing marks before uploading, shares the ordered
+Markdown queue and maps the target through unrelated edits. Conversion and
+serialization must succeed before the document transaction commits. One successful
+file insertion is one undo step. Server storage is separate: undo/cancellation
+does not delete a previously uploaded binary from GitLab.
+
+`subscribeUploads()` exposes frozen status/progress snapshots. Completed and
+cancelled entries release File handles; failed files remain available for
+`retryUpload(id)` or explicit `cancelUpload(id)`. A retry reuses completed upload
+Markdown if only rendering/insertion failed; it does not upload the binary twice.
+That Markdown is copyable in failed snapshots. Late results/progress from aborted
+tasks are ignored, and disposal cancels remaining tasks. The queue is bounded.
+
+Saving and host change publications refuse pending insertions and unresolved
+failed files. Removing the last failed file republishes the intact current draft,
+so the host can save immediately without switching editor modes. Pending tasks
+cancel on document replacement; failed retained tasks require an explicit decision.
+Persistent recovery across navigation, server orphan cleanup, every media type,
+every collaboration/rebasing case and native OS drop on all browsers remain
+separate acceptance work.
+
 ## Build and real-service evidence
 
 ```sh
@@ -91,6 +121,6 @@ That service-boundary audit displays GitLab's own reader. The subsequent native
 browser audit mounts Fountain in the real issue/discussion composers; run
 `scripts/run-gitlab-native-browser-audit.mjs --insertion` inside Linux to exercise
 clipboard insertion, retained-source recovery, real saving and restart. The full
-toolbar, suggestions, upload controls and provider integration remain unfinished.
+toolbar, contextual menus, remaining media, suggestions and provider integration remain unfinished.
 Unknown/unrepresentable content is an explicit conversion error, not feature
 parity. This service is private integration code, not a newly published npm API.

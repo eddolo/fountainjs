@@ -1368,6 +1368,43 @@ performance/retention and measured size checks pass. CSS capacity rises 64 bytes
 and retention limit stays unchanged. Full release/hosted gates and publication
 remain pending. Evidence: `artifacts/gitlab-native-component-integration-20261112.json`.
 
+### Native GitLab attachment checkpoint — 2026-11-12
+
+The real native integration now connects its picker and binary image clipboard
+to GitLab's own authenticated upload/render APIs, with ordered mapped insertion,
+progress/cancel/retry, retained failed files and immediate save recovery after
+explicit removal. The final real-service journey passes 17 checks, including
+decoded images, exact uploaded Markdown, downloaded file bytes, discussions,
+reader/reopen, anonymous refusal and application restart. The temporary bounded
+upload-limit setting is restored. Native editor/reader screenshots are reviewed.
+
+Rich insertion now lands after final inline atoms and correctly indexes non-first
+text fragments. Empty generated caret anchors no longer emit formatting carriers;
+typing format remains in state. Optional local-history `storedMarks` restores
+that format through undo/redo and independent snapshot rebasing. The asynchronous
+native insertion also captures typing marks before uploading. The optional view
+APIs `handleFiles` and `scrollSelectionIntoView()` are additive and documented.
+
+All 5,530 root tests/342 files, framework types/API, built package exports,
+headless/server runtimes, builds, performance/retention and measured size checks
+pass. Nine event-authored file-input contract cases pass in three desktop engines;
+they do not certify native OS drops or full GitLab Firefox/WebKit clipboard.
+The actual upstream set is 174 passed / 5 failed / 179 total. Nine new native
+attachment cases pass; the five alert/link/media/code/reference menu requirements
+still fail. Four patches reconstruct the tested native specs from the pinned tag.
+
+CJS aggregate capacity grows from 1422 to 1422.5 KiB (+512 bytes); measured code
+grows 308 bytes to 1,456,419. All individual-entry, ESM, CSS, latency and retention
+limits stay fixed. Earlier failures, audit corrections and the passing journey
+before final source cleanup are retained. An intermittent initial reader image
+decode timeout remains unresolved even though its HTTP response and screenshot
+contain the correct image; a later pass does not close that finding. Complete product and hosted release
+gates, all media/dialects/providers, MR/wiki/multi-user/mobile/accessibility and
+the other two professional integrations remain pending. Nothing is published;
+no parity row or superiority claim is promoted.
+
+[Current evidence](../artifacts/gitlab-native-attachments-integration-20261112.json).
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

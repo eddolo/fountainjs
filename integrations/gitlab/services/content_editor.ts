@@ -16,6 +16,7 @@ import {
 } from './serialized_content';
 import { createGitLabReferenceNavigationPlugin } from '../plugins/reference_navigation';
 import { GitLabMarkdownInsertion } from './markdown_insertion';
+import { GitLabAttachmentUploads, type GitLabUploadHandler, type GitLabUploadSnapshot } from './attachment_uploads';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -23,6 +24,8 @@ export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
   extensions?: readonly FountainExtension[];
   renderMath?: MathDocumentRenderer;
   onListenerError?(error: unknown): void;
+  uploadAttachment?: GitLabUploadHandler;
+  maxUploadEntries?: number;
 }
 export class GitLabEditorNotReady extends Error {
   constructor(readonly status: GitLabEditorStatus) {
@@ -37,6 +40,8 @@ export class GitLabContentEditor {
   readonly assetResolver: GitLabAssetResolver;
   private readonly controller: SerializedContentController;
   private readonly insertions: GitLabMarkdownInsertion;
+  private readonly uploads: GitLabAttachmentUploads;
+  private readonly uploadListeners = new Set<(uploads: readonly GitLabUploadSnapshot[]) => void>();
   private readonly releaseChanges: () => void;
   private readonly listeners = new Set<(change: SerializedContentChange) => void>();
   private readonly statusListeners = new Set<(status: GitLabEditorStatus) => void>();
@@ -63,10 +68,17 @@ export class GitLabContentEditor {
       'extensions',
       'renderMath',
       'onListenerError',
+      'uploadAttachment',
+      'maxUploadEntries',
     ]);
     for (const key of Object.keys(options)) {
       if (!supported.has(key)) throw new TypeError(`UNSUPPORTED_GITLAB_NATIVE_OPTION:${key}`);
     }
+    if (options.uploadAttachment !== undefined && typeof options.uploadAttachment !== 'function')
+      throw new TypeError('EXPECTED_GITLAB_UPLOAD_HANDLER');
+    if (options.maxUploadEntries !== undefined && (!Number.isInteger(options.maxUploadEntries)
+      || options.maxUploadEntries < 1 || options.maxUploadEntries > 1000))
+      throw new RangeError('INVALID_GITLAB_UPLOAD_CAPACITY');
     for (const extension of options.extensions ?? []) {
       if ('config' in extension) throw new TypeError('EXPECTED_NATIVE_FOUNTAIN_EXTENSION');
     }
@@ -112,12 +124,14 @@ export class GitLabContentEditor {
       },
       () => this.notifyStatus(),
     );
+    this.uploads = new GitLabAttachmentUploads(this.insertions, options.uploadAttachment,
+      uploads => { this.notifyStatus(); this.notify(this.uploadListeners, uploads); }, options.maxUploadEntries);
     this.releaseChanges = this.controller.subscribeChange((change) => {
       if (this.destroyed) return;
       this.exportFailure = change.status === 'error';
       this.notifyStatus();
       const current: SerializedContentChange =
-        this.loading || this.loadFailure || !this.loaded
+        this.loading || this.loadFailure || this.uploads.hasFailures || !this.loaded
           ? { status: 'error', error: new GitLabEditorNotReady(this.status) }
           : change;
       this.notify(this.listeners, current);
@@ -127,7 +141,7 @@ export class GitLabContentEditor {
   get status(): GitLabEditorStatus {
     if (this.destroyed) return 'destroyed';
     if (this.loading || this.insertions.pendingCount > 0) return 'loading';
-    if (this.loadFailure || this.exportFailure) return 'error';
+    if (this.loadFailure || this.exportFailure || this.uploads.hasFailures) return 'error';
     return this.loaded ? 'ready' : 'unloaded';
   }
   /** Failed source remains available even after deliberately keeping the visible document. */
@@ -149,10 +163,27 @@ export class GitLabContentEditor {
   pasteMarkdown(markdown: string): Promise<SerializedContentResult> {
     return this.insertions.insert(markdown);
   }
+  get attachmentUploads(): readonly GitLabUploadSnapshot[] { return this.uploads.snapshots; }
+  uploadAttachment(file: File): Promise<SerializedContentResult> { return this.uploads.add(file); }
+  retryUpload(id: string): Promise<SerializedContentResult> { return this.uploads.retry(id); }
+  cancelUpload(id: string): boolean {
+    const removed = this.uploads.cancel(id);
+    if (removed && !this.uploads.hasFailures && !this.pendingInsertions && !this.loading
+      && !this.loadFailure && this.loaded) {
+      try { this.notify(this.listeners, { status: 'ready', markdown: this.getSerializedContent() }); }
+      catch (error) { this.notify(this.listeners, { status: 'error', error }); }
+    }
+    return removed;
+  }
+  subscribeUploads(listener: (uploads: readonly GitLabUploadSnapshot[]) => void): () => void {
+    this.assertAlive();
+    this.uploadListeners.add(listener);
+    return () => { this.uploadListeners.delete(listener); };
+  }
 
   getSerializedContent(): string {
     this.assertAlive();
-    if (this.loading || this.pendingInsertions > 0 || this.loadFailure || !this.loaded)
+    if (this.loading || this.pendingInsertions > 0 || this.uploads.hasFailures || this.loadFailure || !this.loaded)
       throw new GitLabEditorNotReady(this.status);
     try {
       const markdown = this.controller.getSerializedContent();
@@ -256,6 +287,8 @@ export class GitLabContentEditor {
     this.destroyed = true;
     this.request++;
     this.insertions.dispose();
+    this.uploads.dispose();
+    this.uploadListeners.clear();
     this.releaseChanges();
     this.controller.dispose();
     this.assetResolver.dispose();

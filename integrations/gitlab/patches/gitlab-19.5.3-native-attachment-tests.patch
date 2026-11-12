@@ -1,0 +1,157 @@
+diff --git a/spec/frontend/content_editor/components/content_editor_spec.js b/spec/frontend/content_editor/components/content_editor_spec.js
+index 13d27040..89966f83
+--- a/spec/frontend/content_editor/components/content_editor_spec.js
++++ b/spec/frontend/content_editor/components/content_editor_spec.js
+@@ -370,6 +370,152 @@ describe('ContentEditor', () => {
+     expect(findContentEditorAlert().exists()).toBe(false);
+   });
+ 
++  describe('native attachments', () => {
++    const imageMarkdown = '![Uploaded figure](/uploads/figure.png)';
++    const imageHTML =
++      '<p><img src="/uploads/figure.png" data-canonical-src="/uploads/figure.png" alt="Uploaded figure"></p>';
++    const choose = async (
++      file = new File(['image bytes'], 'figure.png', { type: 'image/png' }),
++    ) => {
++      const input = wrapper.findByTestId('file-upload-field');
++      Object.defineProperty(input.element, 'files', { configurable: true, value: [file] });
++      await input.trigger('change');
++      await waitForPromises();
++    };
++    const prepareRenderer = () =>
++      renderMarkdown.mockImplementation((markdown) =>
++        Promise.resolve({
++          body: markdown === imageMarkdown ? imageHTML : '<p>Original document</p>',
++        }),
++      );
++
++    it('uploads through the real native adapter and inserts the rendered canonical image', async () => {
++      prepareRenderer();
++      mock.onPost(/\/uploads$/).reply(200, { link: { markdown: imageMarkdown } });
++      createWrapper({ markdown: 'Original document' });
++      await waitForPromises();
++      await choose();
++      expect(mock.history.post).toHaveLength(1);
++      expect(mock.history.post[0].data.get('file').name).toBe('figure.png');
++      expect(findEditorDom().querySelector('img').getAttribute('src')).toBe('/uploads/figure.png');
++      expect(wrapper.emitted('change').at(-1)[0].markdown).toContain(imageMarkdown);
++      expect(wrapper.findByRole('list', { name: 'Attachment uploads' }).exists()).toBe(false);
++      expect(undo(findEditorModel())).toBe(true);
++      expect(findEditorModel().getText()).toBe('Original document');
++    });
++
++    it('resets its picker and accepts the same file in a second selection', async () => {
++      prepareRenderer();
++      mock.onPost(/\/uploads$/).reply(200, { link: { markdown: imageMarkdown } });
++      createWrapper({ markdown: 'Original document' });
++      await waitForPromises();
++      const file = new File(['image bytes'], 'figure.png', { type: 'image/png' });
++      await choose(file);
++      expect(wrapper.findByTestId('file-upload-field').element.value).toBe('');
++      await choose(file);
++      expect(mock.history.post).toHaveLength(2);
++      expect(findEditorDom().querySelectorAll('img')).toHaveLength(2);
++    });
++
++    it('refuses an over-limit file locally and retains the document and removable task', async () => {
++      prepareRenderer();
++      window.gon.max_file_size = 1;
++      createWrapper({ markdown: 'Original document' });
++      await waitForPromises();
++      const file = new File(['bytes'], 'oversize.png', { type: 'image/png' });
++      Object.defineProperty(file, 'size', { value: 1024 * 1024 + 1 });
++      await choose(file);
++      expect(mock.history.post).toHaveLength(0);
++      expect(findEditorModel().getText()).toBe('Original document');
++      expect(wrapper.text()).toContain(
++        'This file exceeds the upload limit for this GitLab instance.',
++      );
++      await wrapper.findByRole('button', { name: 'Remove upload' }).trigger('click');
++      expect(wrapper.findByRole('list', { name: 'Attachment uploads' }).exists()).toBe(false);
++    });
++
++    it('refuses cross-origin upload endpoints before sending any file', async () => {
++      prepareRenderer();
++      createWrapper({
++        markdown: 'Original document',
++        uploadsPath: 'https://untrusted.example/uploads',
++      });
++      await waitForPromises();
++      await choose();
++      expect(mock.history.post).toHaveLength(0);
++      expect(findEditorModel().getText()).toBe('Original document');
++      expect(wrapper.findByRole('button', { name: 'Retry upload' }).exists()).toBe(true);
++    });
++
++    it('hides upload controls when no upload endpoint is configured', () => {
++      createWrapper({ uploadsPath: '' });
++      expect(wrapper.findByRole('button', { name: 'Attach a file or image' }).exists()).toBe(false);
++      expect(wrapper.findByTestId('file-upload-field').exists()).toBe(false);
++    });
++
++    it('respects the host read-only mode for the file picker', async () => {
++      prepareRenderer();
++      createWrapper({ markdown: 'Original document', editable: false });
++      await waitForPromises();
++      expect(
++        wrapper
++          .findByRole('button', { name: 'Attach a file or image' })
++          .attributes('aria-disabled'),
++      ).toBe('true');
++      await choose();
++      expect(mock.history.post).toHaveLength(0);
++      expect(findEditorDom().querySelector('img')).toBeNull();
++    });
++
++    it('retries a refused upload without losing the original document', async () => {
++      prepareRenderer();
++      mock.onPost(/\/uploads$/).replyOnce(503);
++      mock.onPost(/\/uploads$/).reply(200, { link: { markdown: imageMarkdown } });
++      createWrapper({ markdown: 'Original document' });
++      await waitForPromises();
++      await choose();
++      expect(findEditorModel().getText()).toBe('Original document');
++      await wrapper.findByRole('button', { name: 'Retry upload' }).trigger('click');
++      await waitForPromises();
++      expect(mock.history.post).toHaveLength(2);
++      expect(findEditorDom().querySelector('img').getAttribute('src')).toBe('/uploads/figure.png');
++    });
++
++    it('keeps focus in another field when an asynchronous upload completes', async () => {
++      prepareRenderer();
++      let finish;
++      mock.onPost(/\/uploads$/).reply(
++        () =>
++          new Promise((resolve) => {
++            finish = () => resolve([200, { link: { markdown: imageMarkdown } }]);
++          }),
++      );
++      createWrapper({ markdown: 'Original document' });
++      await waitForPromises();
++      await choose();
++      const anotherField = document.createElement('input');
++      anotherField.setAttribute('aria-label', 'Another field');
++      document.body.appendChild(anotherField);
++      anotherField.focus();
++      finish();
++      await waitForPromises();
++      expect(findEditorDom().querySelector('img').getAttribute('src')).toBe('/uploads/figure.png');
++      expect(document.activeElement).toBe(anotherField);
++      anotherField.remove();
++    });
++
++    it('retains a malformed upload result as a failed task without changing content', async () => {
++      prepareRenderer();
++      mock.onPost(/\/uploads$/).reply(200, { link: {} });
++      createWrapper({ markdown: 'Original document' });
++      await waitForPromises();
++      await choose();
++      expect(findEditorModel().getText()).toBe('Original document');
++      expect(wrapper.findByRole('button', { name: 'Retry upload' }).exists()).toBe(true);
++      expect(wrapper.emitted('change')).toBeUndefined();
++    });
++  });
++
+   describe('when focused event is emitted', () => {
+     beforeEach(async () => {
+       createWrapper();

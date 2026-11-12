@@ -1,0 +1,275 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-native-attachment-integration",
+  "parentRevision": "38be941307f710895bd1524b722e5c01d043f134",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "scope": "Native uploads in actual GitLab CE 19.5.3; full products remain the standard, not a completed-product claim",
+  "browser": {
+    "status": "passed",
+    "engine": "Native Linux Chromium",
+    "checks": 17,
+    "issueIID": 32,
+    "report": "artifacts/gitlab-native-attachments-20261112/report.json",
+    "log": "artifacts/gitlab-native-attachments-live-clean-source-quiet-20261112.log",
+    "recording": "artifacts/gitlab-native-attachments-20261112/recordings/page@3c7b692cad089715deab74f25cb54281.webm",
+    "screenshots": [
+      "artifacts/gitlab-native-attachments-20261112/original-rendered.png",
+      "artifacts/gitlab-native-attachments-20261112/original-rich-edit.png",
+      "artifacts/gitlab-native-attachments-20261112/oversize-source-retained.png",
+      "artifacts/gitlab-native-attachments-20261112/original-reopened.png",
+      "artifacts/gitlab-native-attachments-20261112/original-after-restart.png",
+      "artifacts/gitlab-native-attachments-20261112/failed-load-readonly.png",
+      "artifacts/gitlab-native-attachments-20261112/failed-load-explicit-recovery.png"
+    ],
+    "visualReview": "Native editor and actual GitLab reader visibly retain original/new decoded PNGs, the file link, table, tasks, math, source-backed references and authored text. The oversized file remains removable/retryable and blocks Save. Reader Read more folding remains GitLab behavior. Final screenshots reviewed after the run.",
+    "uploads": [
+      {
+        "source": "picker-image",
+        "markdown": "![native-uploaded-plot](/uploads/7c6252d67e80b3433cc9600f5363be8d/native-uploaded-plot.png)"
+      },
+      {
+        "source": "picker-file",
+        "markdown": "[native-attachment.txt](/uploads/49c7768e8c74132459f0f4df7407add5/native-attachment.txt)"
+      },
+      {
+        "source": "native-clipboard-image",
+        "markdown": "![image](/uploads/e0001038a8265a8074b692232cb9daa0/image.png)"
+      }
+    ],
+    "directSaveRecovery": true,
+    "uploadLimit": {
+      "originalMiB": 100,
+      "auditMiB": 10,
+      "restored": true
+    },
+    "anonymousUploadStatus": 401,
+    "runtimeSHA256": "6b812e3c2158e6ceedadd0a67172dc0cd42a66419505e7c7835657a08f306d5a",
+    "loadedScripts": [
+      {
+        "path": "/assets/webpack/content_editor.9743869b.chunk.js",
+        "sha256": "1a0298ee72cc62b637ccbe5339f89ee4518f78c5c9cd494bc80d75d4fc794dd1"
+      },
+      {
+        "path": "/assets/webpack/content_editor.9743869b.chunk.js",
+        "sha256": "1a0298ee72cc62b637ccbe5339f89ee4518f78c5c9cd494bc80d75d4fc794dd1"
+      },
+      {
+        "path": "/assets/webpack/content_editor.9743869b.chunk.js",
+        "sha256": "1a0298ee72cc62b637ccbe5339f89ee4518f78c5c9cd494bc80d75d4fc794dd1"
+      },
+      {
+        "path": "/assets/webpack/content_editor.9743869b.chunk.js",
+        "sha256": "1a0298ee72cc62b637ccbe5339f89ee4518f78c5c9cd494bc80d75d4fc794dd1"
+      }
+    ],
+    "pageErrors": [],
+    "scopeLimit": "Actual image clipboard/picker/save acceptance is Chromium-only; no OS file-drop or full product certification"
+  },
+  "repairs": [
+    "Image-only rich fragments land in the target paragraph after the final inline atom, not in the preceding paragraph",
+    "Rich insertion into a non-first formatted text fragment includes its actual sibling index",
+    "Rich insertion returns host transaction-filter refusal",
+    "Generated trailing caret anchors stay unformatted in serialized source; immediate typing keeps its captured format",
+    "Local history restores optional typing marks as well as document/selection; independent snapshot rebasing retains those marks",
+    "Ordered async insertion captures selection and typing marks before upload, follows unrelated native maps and refuses overlapping changes",
+    "Failed file jobs block serialization and host change publication until an explicit retry/removal; removal republishes the intact current draft"
+  ],
+  "attachmentBoundary": {
+    "hostClient": "GitLab CSRF-aware axios_utils",
+    "source": "Authoritative Markdown returned by the actual Rails upload endpoint",
+    "controls": [
+      "Native picker",
+      "Paste files",
+      "Drop boundary",
+      "Progress",
+      "Cancel/Remove",
+      "Retry",
+      "Retained uploaded Markdown"
+    ],
+    "lifecycle": "File handles are bounded and outside document/history, released on success/cancel/dispose; completed upload Markdown is reused on conversion retry; aborted late results are ignored",
+    "retentionLimits": "Failed tasks currently live while the editor service stays open. Uploaded binaries can outlive undo/cancel; navigation recovery and server orphan cleanup remain host policies."
+  },
+  "upstream": {
+    "status": "failed-with-retained-feature-cases",
+    "total": 179,
+    "passed": 174,
+    "failed": 5,
+    "host": {
+      "passed": 75,
+      "total": 75
+    },
+    "form": {
+      "passed": 40,
+      "total": 40
+    },
+    "component": {
+      "passed": 59,
+      "total": 64
+    },
+    "newUploadCases": 9,
+    "log": "artifacts/gitlab-native-attachments-upstream-clean-source-20261112.log",
+    "failures": [
+      "Alert contextual menu",
+      "Link contextual menu",
+      "Media contextual menu",
+      "Code-block contextual menu",
+      "Reference contextual menu"
+    ],
+    "migrationScope": "Two existing attachment cases now assert the actual native controls. Nine new upload/focus cases use actual Fountain state/view with mocked HTTP at the unit transport boundary; the separate browser journey uses real GitLab HTTP.",
+    "skips": 0,
+    "timeoutChanges": 0,
+    "patchVerification": "artifacts/gitlab-native-attachment-patch-verification-20261112.json",
+    "patches": {
+      "integrations/gitlab/patches/gitlab-19.5.3-current-document.patch": "6c2c7b2dee50fa655f39ae0663c01f7fa9a14f14ddc1763f30237dfefec74d4a",
+      "integrations/gitlab/patches/gitlab-19.5.3-native-host-tests.patch": "f91fee895107e0f6bb1fd6fb1728e7142b25dc6fe399715aadf5cc2f34565ffd",
+      "integrations/gitlab/patches/gitlab-19.5.3-native-component-tests.patch": "7d8fd194e54d0de564f3bc98a13dea80b9034e965f07147bd326b808ee5de03b",
+      "integrations/gitlab/patches/gitlab-19.5.3-native-attachment-tests.patch": "55726b99a1931d4f027768e1f67c00dcf1679504a9a6fd804ae8bfe1db18f3f0"
+    }
+  },
+  "gates": {
+    "units": {
+      "status": "passed",
+      "tests": 5530,
+      "files": 342,
+      "log": "artifacts/gitlab-native-attachments-full-unit-clean-source-20261112.log"
+    },
+    "focused": {
+      "status": "passed",
+      "tests": 131,
+      "files": 5,
+      "newUploadCases": 15,
+      "newCoreCases": 8,
+      "log": "artifacts/gitlab-native-attachments-clean-source-focused-final-20261112.log"
+    },
+    "eventAuthoredFileInput": {
+      "status": "passed",
+      "tests": 9,
+      "engines": [
+        "Chromium",
+        "Firefox",
+        "WebKit"
+      ],
+      "log": "artifacts/gitlab-native-file-input-clean-source-browser-20261112.log",
+      "scope": "Native callback/selection/drop/refusal contract; not OS clipboard/drop or full GitLab multi-engine acceptance"
+    },
+    "passed": {
+      "types": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-types-clean-source-20261112.log"
+      },
+      "api": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-api-clean-source-final-20261112.log"
+      },
+      "budget": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-budget-clean-source-final-20261112.log"
+      },
+      "package": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-package-clean-source-20261112.log"
+      },
+      "headless": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-headless-clean-source-20261112.log"
+      },
+      "server": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-server-clean-source-20261112.log"
+      },
+      "performance": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-performance-clean-source-20261112.log"
+      },
+      "build": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-package-build-clean-source-20261112.log"
+      },
+      "sourceBuild": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-source-build-clean-source-20261112.log"
+      },
+      "eslint": {
+        "status": "passed",
+        "log": "artifacts/gitlab-native-attachments-eslint-final-20261112.log"
+      }
+    },
+    "size": {
+      "cjsMeasuredBytes": 1456419,
+      "previousCjsMeasuredBytes": 1456111,
+      "measuredGrowthBytes": 308,
+      "cjsCapacityBytes": 1456640,
+      "previousCjsCapacityBytes": 1456128,
+      "addedCapacityBytes": 512,
+      "cssMeasuredBytes": 90906,
+      "cssUnchangedCapacityBytes": 90944,
+      "failedPriorCapacity": "artifacts/gitlab-native-attachments-budget-clean-source-first-20261112.log",
+      "unchanged": "Every individual entry, ESM, CSS, latency, heap/retention and semantic expectation"
+    },
+    "releaseGate": "No fresh combined pnpm check, hosted CI, final packed-consumer matrix or publication claim"
+  },
+  "retainedFindings": [
+    "Five native contextual-menu requirements remain failing; no parity row promoted",
+    "Code review found that selecting more files than available queue slots can swallow pre-entry queue-full refusals in the component Promise.allSettled path. Add atomic batch preflight and a visible refusal before shipping; the service capacity guard itself is tested.",
+    "Initial original/prepared reader image intermittency remains unresolved: the final-build first attempt timed out before issue editing despite valid PNG HTTP bytes and visible failure pixels; a later passing run does not close the finding",
+    "Native Firefox/WebKit OS binary clipboard/drop and all media MIME types remain unverified",
+    "Canonical changed-document export still changes untouched task/table source; complete GitLab dialect and partial-source fidelity remain open",
+    "Full recovery persistence, room/navigation policy, upload orphan cleanup and every collaboration/typing-rebase case remain open",
+    "Full menus/providers/templates/autocomplete, MR/wiki/multi-user, localization, mobile/AT and hosted release acceptance remain open",
+    "The other two complete professional products remain unimplemented candidates"
+  ],
+  "earlierEvidence": {
+    "beforeCleanupPass": "artifacts/gitlab-native-attachments-20261112/pre-cleanup-pass-report.json",
+    "beforeCleanupRecording": "artifacts/gitlab-native-attachments-20261112/recordings/page@827a7e5f272d12895b3c91061a911f52.webm",
+    "failures": [
+      "artifacts/gitlab-native-attachments-20261112/first-failed-report.json",
+      "artifacts/gitlab-native-attachments-20261112/reveal-failed-report.json",
+      "artifacts/gitlab-native-attachments-20261112/capacity-fixture-failed-report.json",
+      "artifacts/gitlab-native-attachments-20261112/creation-whitespace-failed-report.json",
+      "artifacts/gitlab-native-attachments-20261112/save-wait-failed-report.json",
+      "artifacts/gitlab-native-attachments-20261112/reader-image-intermittent-report.json"
+    ],
+    "explanations": [
+      "Image visibility exposed the wrong insertion caret; the final regression asserts placement/undo/redo and actual decoded upload visibility",
+      "Firefox discards constructor ClipboardEvent data; the event-authored fixture now explicitly supplies its transfer and is not claimed as OS clipboard coverage",
+      "The 100 MiB isolated upload limit exceeded the audit allocation guard; the bounded 10 MiB setting is changed/restored through the real admin API",
+      "GitLab trims the seed final newline during creation; unchanged-save checks now compare its exact actual server record",
+      "A direct-save assertion read the record before asynchronous save completion; it now waits for the actual form-to-reader transition",
+      "Source inspection exposed empty formatted caret carriers. Cleanup exposed missing typing marks on redo and async target restoration; final focused/native checks cover these repairs"
+    ]
+  },
+  "installation": {
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "ownedFiles": 7,
+    "previousManifest": "artifacts/gitlab-native-browser-install/component-checkpoint-install-20261112.json",
+    "previousRuntimeManifest": "artifacts/gitlab-native-runtime/component-checkpoint-build-20261112.json",
+    "previousRuntimeSHA256": "dc554326ebbeec2e43ce8cc4d90a173726eab4dfb605803deaaeb1da7cb6356a"
+  },
+  "runtime": "Own application stopped after the recorded audit; dedicated private records/volumes retained",
+  "publication": "None; no production-ready or superiority claim",
+  "sourceHashEncoding": "SHA-256 of LF-normalized UTF-8 source",
+  "sourceHashes": {
+    "src/core/commands.ts": "22e5d99e15cb15f5994f2273da71720365fc1753b92ae0aab61428d78977a6aa",
+    "src/extensions/plugins/history.ts": "385bd5b66df1b58e55f2b85bc3d8524eb9509428fb750c32defdc37c0874a903",
+    "src/view/input.ts": "940d978c8c202e6f80bef8b91b08ab71bb0c6f0666a849d4b5698e29355bd056",
+    "src/view/media.ts": "42468c35e56960553a4ba9db1ac4e14cba182c32d560604c9fcec375e781bd24",
+    "src/view/view.ts": "4f238656d8d46b9049494df3d689f11ba8f69b763fe55cb2d17755fd97da1303",
+    "api-surface.json": "07a631a0cc6c71a081a9dd278e9f1d6b70cbe9c2a8ea8df7653759744638b923",
+    "scripts/check-build-budgets.mjs": "5149134393f3bb3ed7e5f6b8e6681227f4a1aa6489287edc72ed840d4aa6ab89",
+    "integrations/gitlab/components/fountain_content_editor.vue": "385940a7f13d33c518d393cd58b7b28e5809800a508ca898e9286f110c746775",
+    "integrations/gitlab/components/fountain_editor_surface.vue": "bb0ed66ba134a35312eab8348756485c2d95a7262a0c3b27964844be778c2769",
+    "integrations/gitlab/components/fountain_formatting_toolbar.vue": "7ab0db54b4446580e30b62659506da3da964db3f20e71565f2f5c6dc50bb75ce",
+    "integrations/gitlab/services/attachment_uploads.ts": "71b4443632c4cb4a63b504f835a2758db93aab544465fa452a5057683368309c",
+    "integrations/gitlab/services/content_editor.ts": "cdfec566c381143c306e5452c06f3da264cb46ed171ff08711156974ef9090fa",
+    "integrations/gitlab/services/markdown_insertion.ts": "379504ee7216d91e9ed7a8342c637ffda871d08e1648043e23e6428cd57d1621",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-attachment-tests.patch": "55726b99a1931d4f027768e1f67c00dcf1679504a9a6fd804ae8bfe1db18f3f0",
+    "scripts/audit-gitlab-product-baseline.mjs": "e143e3209421c5c572f50ff2dd07a21f831442ddd2a816bcb3f5820b3adb0761",
+    "scripts/build-gitlab-native-runtime.mjs": "f6d0c64de3b60d65c52c000d15a0d1a087d4e29aba5db30303d6084bfe9206e0",
+    "scripts/run-gitlab-native-browser-audit.mjs": "cd5eac4baaa3ff975e39468dfb32761b57a96fa31f4e2fe25c9911fee867ebd2",
+    "tests/core.test.ts": "5a202cd59e23951a3099241667d7f5535e347f9e80084c139adb05dbcf5a8c1e",
+    "tests/gitlab-attachment-uploads.test.ts": "9358c6c247222c75ddfa374d6d749e887c959cb65a4d609bc81f9f43121486d1",
+    "tests/browser/gitlab-vue2.spec.ts": "f2a0203a13235fc7335dd8d4b2fce05852f742a140e5cc4b99c1b24185838752",
+    "tests/browser/fixtures/gitlab-vue2.ts": "496a8d94967367b9b06cf48b93ff594af9eff2d3861633e107a5976726a93b2f"
+  }
+}

@@ -2,6 +2,7 @@
 import { GlAlert, GlButton, GlLoadingIcon } from '@gitlab/ui';
 import { markRaw } from 'vue';
 import katex from 'katex';
+import axios from '~/lib/utils/axios_utils';
 import { s__, n__, sprintf } from '~/locale';
 import EditorModeSwitcher from '~/vue_shared/components/markdown/editor_mode_switcher.vue';
 import { CONTENT_EDITOR_READY_EVENT, CONTENT_EDITOR_PASTE } from '~/vue_shared/constants';
@@ -41,13 +42,19 @@ export default {
       inserting: false,
       failedInsertionSource: null,
       loadFailed: false,
+      uploads: [],
     };
   },
   computed: {
     surfaceEditable() {
       return this.editable && !this.isLoading && !this.loadFailed && !this.fatal;
     },
+    canUpload() {
+      return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
+    },
     failureMessage() {
+      if (this.failureCode === 'GITLAB_UPLOAD_DISABLED')
+        return s__('ContentEditor|File uploads are unavailable in this editor.');
       if (this.failureCode === 'GITLAB_CLIPBOARD_READ_FAILED')
         return s__(
           'ContentEditor|Unable to read the clipboard. Check browser clipboard permissions, or use your browser paste command.',
@@ -75,6 +82,7 @@ export default {
           ...(this.ariaDescribedBy ? { 'aria-describedby': this.ariaDescribedBy } : {}),
         },
         onError: this.onSurfaceError,
+        handleFiles: this.attachFiles,
       };
     },
     adapterGaps() {
@@ -84,7 +92,6 @@ export default {
         this.supportsQuickActions ||
         this.supportsTableOfContents ||
         this.drawioEnabled ||
-        (!this.disableAttachments && Boolean(this.uploadsPath)) ||
         this.newCommentTemplatePaths.length > 0
       );
     },
@@ -117,6 +124,7 @@ export default {
           extensions: this.extensions,
           renderMath: createKaTeXRenderer(katex),
           onListenerError: this.onSurfaceError,
+          uploadAttachment: this.uploadFile,
         }),
       );
       this.releaseChange = this.contentEditor.subscribeChange(this.onDocumentChange);
@@ -125,6 +133,7 @@ export default {
         this.replacementSource = this.contentEditor.recovery?.markdown ?? null;
         this.inserting = this.contentEditor.pendingInsertions > 0;
       });
+      this.releaseUploads = this.contentEditor.subscribeUploads(uploads => { this.uploads = uploads; });
     } catch (error) {
       this.fatal = true;
       this.onSurfaceError(error);
@@ -141,9 +150,65 @@ export default {
     this.loadRequest += 1;
     this.releaseChange?.();
     this.releaseStatus?.();
+    this.releaseUploads?.();
     this.contentEditor?.dispose();
   },
   methods: {
+    async uploadFile(file, { signal, reportProgress }) {
+      if (!this.canUpload) throw new Error('GITLAB_UPLOAD_DISABLED');
+      const url = new URL(this.uploadsPath, window.location.href);
+      if (!['http:', 'https:'].includes(url.protocol) || url.origin !== window.location.origin
+        || url.username || url.password || url.hash)
+        throw new Error('GITLAB_UPLOAD_ENDPOINT_REFUSED');
+      const configured = Number(gon.max_file_size);
+      const limit = Number.isFinite(configured) && configured > 0 ? configured : 10;
+      if (file.size > limit * 1024 * 1024) throw new Error('GITLAB_UPLOAD_TOO_LARGE');
+      const body = new FormData();
+      body.append('file', file, file.name);
+      const { data } = await axios.post(url.href, body, { signal,
+        onUploadProgress: event => { if (event.total > 0) reportProgress(event.loaded / event.total); },
+      });
+      const response = data?.link ?? data;
+      if (typeof response?.markdown !== 'string' || !response.markdown || response.markdown.length > 16384)
+        throw new Error('GITLAB_INVALID_UPLOAD_RESPONSE');
+      return response.markdown;
+    },
+    async attachFiles(files) {
+      if (!this.canUpload) throw new Error('GITLAB_UPLOAD_DISABLED');
+      const active = document.activeElement;
+      const ownsFocus = active === document.body || this.$refs.surface.$el.contains(active)
+        || this.$el.querySelector('[data-testid="formatting-toolbar"]').contains(active);
+      let selectionMoved = false;
+      let previous = this.contentEditor.editor.state.selection;
+      const release = this.contentEditor.editor.subscribe((state, transaction) => {
+        if (transaction.selectionSet && !transaction.getMeta('gitlab$insertionOrigin')
+          && !state.selection.eq(previous)) selectionMoved = true;
+        previous = state.selection;
+      });
+      try {
+        const results = await Promise.allSettled(files.map(file => this.contentEditor.uploadAttachment(file)));
+        if (!this.disposed && !selectionMoved && ownsFocus && document.activeElement === active
+          && results.length && results.every(result => result.status === 'fulfilled' && result.value.status === 'applied'))
+          this.$refs.surface.revealSelection();
+      } finally { release(); }
+    },
+    async retryUpload(id) {
+      await Promise.allSettled([this.contentEditor.retryUpload(id)]);
+    },
+    cancelUpload(id) {
+      this.contentEditor.cancelUpload(id);
+    },
+    uploadMessage(upload) {
+      if (upload.errorCode === 'GITLAB_UPLOAD_TOO_LARGE')
+        return s__('ContentEditor|This file exceeds the upload limit for this GitLab instance.');
+      if (upload.errorCode === 'GITLAB_INSERTION_TARGET_CHANGED')
+        return s__('ContentEditor|The insertion target changed. Your file is retained; retry at the current cursor.');
+      if (upload.status === 'failed')
+        return s__('ContentEditor|Upload or insertion failed. Retry or remove this file.');
+      if (upload.status === 'queued') return s__('ContentEditor|Queued');
+      if (upload.status === 'inserting') return s__('ContentEditor|Inserting uploaded content');
+      return s__('ContentEditor|Uploading');
+    },
     describeLabels(action, count) {
       if (action === 'add')
         return sprintf(
@@ -277,7 +342,7 @@ export default {
     <gl-alert v-if="adapterGaps && !fatal" variant="warning" :dismissible="false">
       {{
         s__(
-          'ContentEditor|This integration is unfinished. Autocomplete, attachments, saved replies, quick actions and specialized menus are not connected yet. Use source editing for those workflows.',
+          'ContentEditor|This integration is unfinished. Autocomplete, saved replies, quick actions and specialized menus are not connected yet. Use source editing for those workflows.',
         )
       }}
     </gl-alert>
@@ -303,6 +368,19 @@ export default {
         rows="6"
       ></textarea>
     </details>
+    <ul v-if="uploads.length" :aria-label="s__('ContentEditor|Attachment uploads')" class="gl-m-3 gl-list-none gl-p-0">
+      <li v-for="upload in uploads" :key="upload.id" class="gl-mb-3 gl-rounded-base gl-border gl-p-3">
+        <span class="gl-font-bold">{{ upload.fileName }}</span>
+        <span role="status">{{ uploadMessage(upload) }}</span>
+        <details v-if="upload.source" class="gl-mt-3">
+          <summary>{{ s__('ContentEditor|Uploaded file Markdown') }}</summary>
+          <textarea :value="upload.source" :aria-label="s__('ContentEditor|Uploaded file source')" readonly class="gl-w-full" rows="3"></textarea>
+        </details>
+        <progress v-if="upload.status === 'uploading'" :value="upload.progress" max="1" :aria-label="s__('ContentEditor|File upload progress')"></progress>
+        <gl-button v-if="upload.status === 'failed'" :disabled="!canUpload" size="small" @click="retryUpload(upload.id)">{{ s__('ContentEditor|Retry upload') }}</gl-button>
+        <gl-button size="small" @click="cancelUpload(upload.id)">{{ upload.status === 'failed' ? s__('ContentEditor|Remove upload') : s__('ContentEditor|Cancel upload') }}</gl-button>
+      </li>
+    </ul>
     <details v-if="failedInsertionSource !== null" class="gl-p-3">
       <summary>{{ s__('ContentEditor|Retained paste source') }}</summary>
       <textarea
@@ -333,9 +411,11 @@ export default {
           v-if="contentEditor"
           :editor="contentEditor.editor"
           :disabled="!surfaceEditable"
+          :hide-attachment-button="disableAttachments || !uploadsPath"
           @focus="focus"
           @error="onSurfaceError"
           @paste-markdown="pasteContent"
+          @attach-files="attachFiles"
         >
           <template #header-buttons>
             <slot name="header-buttons"></slot>

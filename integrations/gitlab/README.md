@@ -623,6 +623,73 @@ limits remain unchanged. Broader release/hosted gates and publication are pendin
 
 [Component evidence and remaining failures](../../artifacts/gitlab-native-component-integration-20261112.json).
 
+### Native attachments in the real application
+
+The native paperclip button, file picker and image clipboard now upload through
+GitLab's authenticated, CSRF-aware HTTP client. The host's actual returned
+Markdown passes through its renderer and the native Fountain insertion queue.
+File objects remain outside document/history. Native selection and typing marks
+are captured before upload; unrelated edits map the target, and conflicts retain
+the failed file for an explicit decision. Progress, cancellation, retry and
+completed-upload reuse are connected to visible controls. Save refuses pending
+or failed files; removing a failed file republishes the intact draft immediately.
+
+The final real-service journey passes **17 checks**: image/file picker uploads,
+decoded native images, one-step image undo/redo, actual Chromium image clipboard,
+over-limit rejection and save recovery, exact uploaded Markdown in saved records,
+downloaded text bytes, reader/reopen, private-project access refusal, discussions,
+source recovery and an actual application restart. The original attachment limit
+is restored after the bounded rejection test. Native editor and reader screenshots
+are visually reviewed. GitLab's reader still applies its own Read more folding.
+
+This testing found an engine bug: image-only rich insertion could leave the caret
+in the preceding paragraph; non-first text fragments also used the wrong sibling
+index. The command now lands after the last inserted item and preserves undo/redo.
+Generated empty caret anchors do not export spurious formatting. Local history
+captures optional typing marks, including through independently rebased snapshots.
+Async host insertion preserves the captured typing format as well as selection.
+
+The three actual upstream suites are **174 passed / 5 failed / 179 total**, with
+all 75 host and 40 form cases passing. Two attachment requirements now use native
+control assertions, and nine new upload/focus cases pass against the actual native
+service/view. The five remaining alert/link/media/code/reference menu cases still
+fail. They are not skipped or replaced by a Tiptap-shaped facade. Four ordered
+patches reconstruct the tested specs exactly from pinned GitLab source.
+
+All **5,530 root tests/342 files**, current types/API, built package-export smoke,
+headless/server runtimes, builds, performance/retention and size checks pass.
+Nine event-authored file-input contract cases pass in Chromium, Firefox and
+WebKit. They do not certify native OS file drops or Firefox/WebKit image clipboard
+in the full GitLab application. The public additions are optional `handleFiles`,
+explicit `scrollSelectionIntoView()` and optional local-history `storedMarks`.
+The aggregate CJS allowance grows by 512 bytes over the preceding component
+checkpoint; measured growth is 308 bytes. Other acceptance limits stay fixed.
+
+Earlier failures and audit corrections are retained: image visibility exposed the
+caret defect; Firefox discarded constructor clipboard data in an event-authored
+contract fixture; the isolated upload limit needed a bounded test setting;
+server creation trims the seed's final newline; and direct-save assertions must
+wait for the actual form-to-reader transition. An initial clean-caret regression
+also exposed lost typing marks on redo and async insertion. A later initial-reader
+lazy-image decode timed out despite valid HTTP bytes and painted failure pixels;
+this intermittent reader finding remains unresolved. The final tests verify
+these behaviors without relaxing timeouts or semantic/visual expectations.
+
+Code review also found that a selection batch exceeding available queue slots can
+swallow individual pre-entry refusals in the component. The service capacity guard
+is tested; atomic batch preflight and a visible refusal still need implementation
+before shipping. This takes priority before the missing contextual menus.
+
+Full menus, reader image intermittency, dialect/source fidelity, templates/autocomplete, all media,
+persistent recovery/orphan cleanup, collaboration/MR/wiki/multi-user workflows,
+localization, assistive technology, mobile/cross-engine product and hosted release
+acceptance remain open. The other two products are still unimplemented candidates.
+Nothing is published and no parity or superiority row is promoted.
+
+[Attachment contracts](services/README.md#native-attachment-insertion),
+[real journey](../../artifacts/gitlab-native-attachments-20261112/report.json)
+and [checkpoint evidence](../../artifacts/gitlab-native-attachments-integration-20261112.json).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

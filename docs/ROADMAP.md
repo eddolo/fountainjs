@@ -2,16 +2,23 @@
 
 Updated 2026-11-12.
 
-The latest real GitLab checkpoint repairs Retry history/read-only recovery,
-immersive layout, accessible naming and native empty-document placeholder paint.
-The native three-suite set is **163 passed / 7 failed / 170 total**, including two
-new recovery cases. Missing attachment/contextual-menu controls remain open.
-All **5,507 root unit tests/341 files**, types/API, builds, performance/retention
-and measured size checks pass. The placeholder is visibly reviewed in all three
-desktop engines. Recorded real-service journeys cover native paste, comments,
-source recovery, saving, permissions and restart; exact scope is retained below.
-Full product/release acceptance remains open. No parity row is promoted.
-[Current scope and remaining work](../integrations/gitlab/README.md#native-component-foundations-and-remaining-controls).
+The latest real GitLab checkpoint adds native picker and clipboard uploads through
+GitLab's authenticated storage APIs, ordered insertion, progress/cancel/retry and
+failed-file save recovery. The recorded journey passes **17 checks**, including
+actual save/reopen, file bytes, anonymous refusal and application restart. Native
+image-paste testing also repaired rich-insertion caret placement and local-history
+typing marks; generated caret anchors no longer add empty formatting to Markdown.
+The upstream suite set is **174 passed / 5 failed / 179 total**. Alert, link,
+media, code-block and reference contextual menus still need implementation.
+All **5,530 root unit tests/342 files**, types/API, package/headless/runtime and
+measured size/performance checks pass. Nine event-authored file-input boundary
+cases pass across three desktop engines; actual GitLab binary clipboard acceptance
+is currently Chromium-only. Full product/release acceptance remains open. No
+parity row is promoted, and the other two full products remain unimplemented.
+Immediate follow-up: make whole-batch upload-capacity refusals visible, then
+implement the five missing contextual menus. The service capacity guard passes;
+the component can currently swallow an individual queue-full rejection.
+[Current evidence and remaining work](../integrations/gitlab/README.md#native-attachments-in-the-real-application).
 
 FountainJS is an MIT-licensed structured-document engine with a web editor,
 framework bindings, and optional document modules. The immediate goal is a

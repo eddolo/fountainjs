@@ -710,7 +710,11 @@ const limits = Object.freeze({
   // evidence and every entry/ESM/CSS/performance acceptance limit unchanged.
   // Preserving authored paragraph attributes during rich insertion measures
   // 1,455,980 bytes. Add 256 bytes capacity; other limits remain unchanged.
-  'all CommonJS runtime code': 1422 * kibibyte,
+  // Native file input, explicit reveal, clean inline-atom landing and local
+  // history typing marks measure 1,456,419 CJS bytes (+308 bytes). Add 512 bytes
+  // aggregate capacity over the preceding component checkpoint;
+  // entry/ESM/CSS/performance limits stay fixed.
+  'all CommonJS runtime code': 1422.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

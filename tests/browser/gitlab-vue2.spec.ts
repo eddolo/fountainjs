@@ -2,6 +2,56 @@ import { expect, test } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';
 import mathFixtures from '../../integrations/gitlab/fixtures/math-html.json' with { type: 'json' };
 
+for (const source of ['paste', 'drop'] as const) {
+  test(`routes host-owned file input at the native ${source} selection`, async ({ page }) => {
+    await page.goto('/tests/browser/fixtures/gitlab-vue2.html?file-input-contract=1');
+    const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+    await editor.click();
+    await page.keyboard.press('Home');
+    for (let index = 0; index < 4; index++) await page.keyboard.press('ArrowRight');
+    await editor.evaluate((element, mode) => {
+      const transfer = new DataTransfer();
+      transfer.items.add(new File(['Report contents'], 'report.txt', { type: 'text/plain' }));
+      if (mode === 'paste') {
+        // This event-authored contract supplies data explicitly; Firefox drops constructor data.
+        const event = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+        Object.defineProperty(event, 'clipboardData', { value: transfer });
+        element.dispatchEvent(event);
+      }
+      else {
+        const selection = getSelection()!;
+        const range = selection.getRangeAt(0);
+        const bounds = range.getBoundingClientRect();
+        element.dispatchEvent(new DragEvent('drop', { dataTransfer: transfer, bubbles: true, cancelable: true,
+          clientX: bounds.left, clientY: bounds.top + bounds.height / 2 }));
+      }
+    }, source);
+    await expect(editor).toHaveText('Vue [file:report.txt]2 integration.');
+    await expect(page.getByLabel('Host file input events', { exact: true }))
+      .toHaveText(JSON.stringify([{ source, names: ['report.txt'] }]));
+    await expect(editor.locator('img')).toHaveCount(0);
+  });
+}
+
+test('does not fall back to image embedding when a host-owned file input handler refuses it', async ({ page }) => {
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html?file-input-contract=1&reject-files=1');
+  const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
+  await editor.click();
+  await editor.evaluate(element => {
+    element.addEventListener('fountain-error', event => {
+      document.body.dataset.fileInputError = (event as CustomEvent<Error>).detail.message;
+    });
+    const transfer = new DataTransfer();
+    transfer.items.add(new File(['Binary'], 'refused.png', { type: 'image/png' }));
+    const event = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: transfer });
+    element.dispatchEvent(event);
+  });
+  await expect(page.locator('body')).toHaveAttribute('data-file-input-error', 'HOST_FILE_INPUT_REFUSED');
+  await expect(editor).toHaveText('Vue 2 integration.');
+  await expect(editor.locator('img')).toHaveCount(0);
+});
+
 test('paints the empty native document placeholder and follows real focus, typing, deletion and undo', async ({ page }, info) => {
   await page.goto('/tests/browser/fixtures/gitlab-vue2.html');
   const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });

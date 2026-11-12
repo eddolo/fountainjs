@@ -921,6 +921,95 @@ describe('document model and transactions', () => {
     expect(editor.state.doc.child(1).attrs).toMatchObject(attrs);
   });
 
+  it('keeps an image-only rich insertion and its undo/redo caret in the empty destination paragraph', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [createHistoryPlugin()], content: {
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Previous' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '' }] }],
+    } });
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([1, 0], 0)));
+    const { schema } = editor.state;
+    const fragment = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.node('inline_image', { src: '/figure.png', alt: 'Figure' })])]);
+    expect(insertDocument(editor, fragment)).toBe(true);
+    expect(editor.state.selection.eq(Selection.cursor([1, 1], 0))).toBe(true);
+    expect(undo(editor)).toBe(true);
+    expect(editor.getText()).toBe('Previous\n');
+    expect(redo(editor)).toBe(true);
+    expect(editor.state.selection.eq(Selection.cursor([1, 1], 0))).toBe(true);
+    expect(insertText(editor, 'After image')).toBe(true);
+    expect(editor.state.doc.child(0).textContent).toBe('Previous');
+    expect(editor.state.doc.child(1).child(1).text).toBe('After image');
+  });
+
+  it.each([0, 4, 8])('lands after an inline image pasted into a non-first text fragment at offset %i', from => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Prefix ' },
+        { type: 'text', text: 'boldtail', marks: [{ type: 'strong' }] }] },
+    ] } });
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 1], from)));
+    const { schema } = editor.state;
+    expect(insertDocument(editor, schema.node('doc', {}, [schema.node('paragraph', {}, [
+      schema.node('inline_image', { src: '/figure.png' }),
+    ])]))).toBe(true);
+    expect(editor.state.selection.eq(Selection.cursor([0, from ? 3 : 2], 0))).toBe(true);
+    insertText(editor, 'After');
+    expect(editor.getText()).toBe(`Prefix ${'boldtail'.slice(0, from)}[Image]After${'boldtail'.slice(from)}`);
+  });
+
+  it('lands after the final atom when a rich fragment contains text followed by an image', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    insertText(editor, 'Before after');
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 7)));
+    const { schema } = editor.state;
+    expect(insertDocument(editor, schema.node('doc', {}, [schema.node('paragraph', {}, [
+      schema.text('Label'), schema.node('inline_image', { src: '/figure.png' }),
+    ])]))).toBe(true);
+    expect(editor.state.selection.eq(Selection.cursor([0, 3], 0))).toBe(true);
+    insertText(editor, 'After image ');
+    expect(editor.state.doc.child(0).child(3).text).toBe('After image after');
+  });
+
+  it('lands on inserted marked text after preceding sibling fragments', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Prefix ' },
+        { type: 'text', text: 'target', marks: [{ type: 'strong' }] }] },
+    ] } });
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 1], 2)));
+    const { schema } = editor.state;
+    expect(insertDocument(editor, schema.node('doc', {}, [schema.node('paragraph', {}, [
+      schema.text('inserted', [schema.mark('em')]),
+    ])]))).toBe(true);
+    expect(editor.state.selection.eq(Selection.cursor([0, 2], 8))).toBe(true);
+    insertText(editor, '!');
+    expect(editor.state.doc.child(0).child(2).text).toBe('inserted!');
+    expect(editor.state.doc.child(0).child(2).marks[0].type.name).toBe('em');
+  });
+
+  it('keeps typing marks after an image without exporting a formatted empty caret', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [createHistoryPlugin()], content: {
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Before', marks: [{ type: 'strong' }] }] }],
+    } });
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 6)));
+    const { schema } = editor.state;
+    expect(insertDocument(editor, schema.node('doc', {}, [schema.node('paragraph', {}, [
+      schema.node('inline_image', { src: '/figure.png', alt: 'Figure' }),
+    ])]))).toBe(true);
+    expect(MarkdownExporter.export(editor.state)).toBe('**Before**![Figure](/figure.png)');
+    expect(editor.state.doc.child(0).child(2).marks).toEqual([]);
+    expect(editor.state.storedMarks.map(mark => mark.type.name)).toEqual(['strong']);
+    expect(undo(editor)).toBe(true);
+    expect(redo(editor)).toBe(true);
+    expect(MarkdownExporter.export(editor.state)).toBe('**Before**![Figure](/figure.png)');
+    insertText(editor, 'After');
+    expect(MarkdownExporter.export(editor.state)).toBe('**Before**![Figure](/figure.png)**After**');
+  });
+
+  it('reports an inline rich insertion refused by a host transaction filter', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [new Plugin({ filterTransaction: transaction => !transaction.docChanged })] });
+    const { schema } = editor.state;
+    expect(insertDocument(editor, schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('Refused')])]))).toBe(false);
+    expect(editor.getText()).toBe('');
+  });
+
   it('turns multiline plain text into visible blocks when replacing a selected node', () => {
     const editor = createEditor({ schema: CoreSchemaSpec });
     expect(insertImage(editor, { src: '/selected.png', alt: 'selected' })).toBe(true);

@@ -15,6 +15,7 @@ import {
   createMathExtension,
   createKaTeXRenderer,
   insertInlineMath,
+  insertText,
 } from 'fountainjs-editor';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
@@ -70,7 +71,16 @@ const editor = createEditor({
     content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Vue 2 integration.' }] }],
   },
 });
-const options = Object.freeze({ ariaLabel: 'GitLab Vue 2 bridge editor', placeholder: 'Write your document' });
+const fileInputs: { source: string; names: string[] }[] = [];
+const fileContract = new URLSearchParams(location.search).has('file-input-contract');
+const rejectFiles = new URLSearchParams(location.search).has('reject-files');
+const options = Object.freeze({ ariaLabel: 'GitLab Vue 2 bridge editor', placeholder: 'Write your document',
+  ...(fileContract ? { handleFiles: (files: readonly File[], context: import('fountainjs-editor').FileInputContext) => {
+    fileInputs.push({ source: context.source, names: files.map(file => file.name) });
+    if (rejectFiles) throw new Error('HOST_FILE_INPUT_REFUSED');
+    for (const file of files) insertText(context.editor, `[file:${file.name}]`);
+  } } : {}),
+});
 // Real ordinary-Markdown codec for lifecycle tests only. The actual GitLab
 // dialect/service adapter remains required before application integration.
 const ordinaryCodec = {
@@ -115,6 +125,7 @@ let releaseTransport: (() => void) | undefined;
 const app = new Vue({
   data: () => ({
     editable: true,
+    fileInputs,
     visible: true,
     ready: 0,
     revision: 0,
@@ -206,6 +217,7 @@ const app = new Vue({
   render(h) {
     void this.revision;
     return h('section', [
+      h('output', { attrs: { 'aria-label': 'Host file input events' } }, JSON.stringify(this.fileInputs)),
       h('nav', { attrs: { 'aria-label': 'Bridge host controls' } }, [
         h(
           'button',

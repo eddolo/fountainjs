@@ -562,21 +562,22 @@ export function insertDocument(editor: Editor, document: Node): boolean {
     const text = target.text ?? '';
     const prefix = text.slice(0, from);
     const suffix = text.slice(from);
+    const lastInserted = single.content.at(-1);
     const content = [
       ...(prefix ? [target.withText(prefix)] : []),
       ...single.content,
-      ...(suffix ? [target.withText(suffix)] : []),
+      ...(suffix ? [target.withText(suffix)]
+        : lastInserted && !lastInserted.isText ? [state.schema.text('')] : []),
     ];
     if (!content.length) content.push(target.withText(''));
-    const insertedTextLeaves = single.content.flatMap((node, index) => getTextLeaves(node).map((leaf) => ({
-      path: [...path.slice(0, -1), (prefix ? 1 : 0) + index, ...leaf.path],
-      node: leaf.node,
-    })));
-    const landing = insertedTextLeaves.at(-1);
     const transaction = state.createTransaction().replaceNode(path, content);
-    if (landing) transaction.setSelection(Selection.cursor(landing.path, landing.node.text?.length ?? 0));
-    editor.dispatch(transaction);
-    return true;
+    if (lastInserted) {
+      const index = (path.at(-1) as number) + (prefix ? 1 : 0) + single.content.length - 1;
+      transaction.setSelection(Selection.cursor([...path.slice(0, -1), index + (lastInserted.isText ? 0 : 1)],
+        lastInserted.isText ? lastInserted.text?.length ?? 0 : 0));
+      if (!suffix && !lastInserted.isText) transaction.setStoredMarks(state.storedMarks);
+    }
+    return editor.dispatch(transaction);
   }
 
   const blockPath = path.slice(0, -1);

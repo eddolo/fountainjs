@@ -62,7 +62,20 @@ export class GitLabMarkdownInsertion {
     if (typeof markdown !== 'string') throw new TypeError('EXPECTED_MARKDOWN_STRING');
     this.ensureReady();
     if (markdown === '') return { status: 'applied' };
+    return this.insertFrom(() => markdown, undefined, markdown);
+  }
+
+  async insertFrom(
+    resolveSource: (signal: AbortSignal) => string | Promise<string>,
+    signal?: AbortSignal,
+    markdown?: string,
+  ): Promise<SerializedContentResult> {
+    if (this.destroyed) throw new Error('GITLAB_INSERTION_DESTROYED');
+    this.ensureReady();
+    if (signal?.aborted) return { status: 'superseded' };
     const request = new AbortController();
+    const cancel = () => request.abort();
+    signal?.addEventListener('abort', cancel, { once: true });
     const previous = this.turn;
     let finishTurn!: () => void;
     const complete = new Promise<void>((resolve) => {
@@ -70,9 +83,9 @@ export class GitLabMarkdownInsertion {
     });
     this.turn = previous.then(() => complete);
     this.pending.add(request);
-    this.notify();
     let target = this.editor.state.selection,
       targetDoc = this.editor.state.doc;
+    const targetMarks = this.editor.state.storedMarks;
     let conflict = false;
     const release = this.editor.subscribe((state, transaction) => {
       if (!transaction.docChanged) return;
@@ -130,10 +143,16 @@ export class GitLabMarkdownInsertion {
       request.signal.addEventListener('abort', onAbort, { once: true });
       if (request.signal.aborted) onAbort();
     });
+    this.notify();
     try {
       await Promise.race([previous, aborted]);
       if (conflict && !this.destroyed) throw new GitLabInsertionConflict();
       if (request.signal.aborted || this.destroyed) return { status: 'superseded' };
+      const source = resolveSource(request.signal);
+      markdown = typeof source === 'string' ? source : await Promise.race([source, aborted]);
+      if (conflict && !this.destroyed) throw new GitLabInsertionConflict();
+      if (request.signal.aborted || this.destroyed) return { status: 'superseded' };
+      if (typeof markdown !== 'string' || !markdown) throw new Error('GITLAB_INVALID_INSERTION_SOURCE');
       const decoded = await Promise.race([
         this.codec.deserialize({
           schema: this.editor.state.schema,
@@ -154,6 +173,7 @@ export class GitLabMarkdownInsertion {
             this.editor
               .createTransaction()
               .setSelection(target)
+              .setStoredMarks(targetMarks)
               .setMeta('gitlab$insertionOrigin', { owner: this.origin, target }),
           )
         )
@@ -167,11 +187,12 @@ export class GitLabMarkdownInsertion {
       return { status: 'applied' };
     } catch (error) {
       if (this.destroyed || (request.signal.aborted && !conflict)) return { status: 'superseded' };
-      this.failure = Object.freeze({ markdown, error });
+      if (markdown !== undefined) this.failure = Object.freeze({ markdown, error });
       throw error;
     } finally {
       release();
       request.signal.removeEventListener('abort', onAbort);
+      signal?.removeEventListener('abort', cancel);
       this.pending.delete(request);
       finishTurn();
       this.notify();

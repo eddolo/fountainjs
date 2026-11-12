@@ -2,17 +2,21 @@
 
 ## Current programme status — 2026-11-12
 
-Fountain mounts in real GitLab issue/discussion editors. Native component
-fixtures now use the actual Fountain view/service/transactions; five defects in
-Retry history, load recovery, immersive classes, accessible labels and placeholder
-paint are repaired. The three upstream suites are **163 passed / 7 failed / 170
-total**, with attachments and contextual menus still required. All **5,507 root
-unit tests/341 files**, types/API, builds, performance/retention and measured size
-checks pass. Placeholder paint is reviewed across three desktop engines; real
-GitLab journeys cover native edits, paste, source recovery, saving/comments,
-permissions and restart. Full product/release acceptance remains open. No row
-or superiority claim is promoted. Following checkpoints are historical.
-[Current native evidence](../artifacts/gitlab-native-component-integration-20261112.json).
+Fountain mounts in real GitLab issue/discussion editors. Native picker/image
+clipboard uploads now use actual authenticated GitLab storage and rendering APIs,
+with queued insertion, cancellation/retry and failed-file save recovery. The final
+real journey passes **17 checks**, including saved asset source, downloaded file
+bytes, reader/reopen, anonymous refusal and service restart. It also exposed and
+repaired image-paste caret placement and local-history typing-format restoration.
+The three upstream suites are **174 passed / 5 failed / 179 total**; the five
+remaining failures require alert/link/media/code/reference contextual menus.
+All **5,530 root unit tests/342 files**, types/API, package/headless/runtime,
+performance/retention and measured size checks pass. Nine event-authored native
+file-input boundary cases pass across three desktop engines; full GitLab upload
+acceptance is Chromium-only. Full product/release acceptance and the other two
+professional products remain open. No row or superiority claim is promoted.
+Following checkpoints are historical.
+[Current native evidence](../artifacts/gitlab-native-attachments-integration-20261112.json).
 
 The full matching GitLab frontend now builds and serves the prepared host patch;
 the recorded real rich/source/rich save/restart journey passes on its final run.

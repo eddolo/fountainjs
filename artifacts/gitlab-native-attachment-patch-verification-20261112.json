@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "patches": {
+    "integrations/gitlab/patches/gitlab-19.5.3-current-document.patch": "6c2c7b2dee50fa655f39ae0663c01f7fa9a14f14ddc1763f30237dfefec74d4a",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-host-tests.patch": "f91fee895107e0f6bb1fd6fb1728e7142b25dc6fe399715aadf5cc2f34565ffd",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-component-tests.patch": "7d8fd194e54d0de564f3bc98a13dea80b9034e965f07147bd326b808ee5de03b",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-attachment-tests.patch": "55726b99a1931d4f027768e1f67c00dcf1679504a9a6fd804ae8bfe1db18f3f0"
+  },
+  "checks": [
+    "Four patches apply in order to pinned HEAD using a separate temporary index",
+    "Reconstructed native component and host specs exactly match tested live source",
+    "Attachment test patch reverse-check succeeds against installed source"
+  ],
+  "isolation": "Source worktree and main index untouched; temporary index removed"
+}

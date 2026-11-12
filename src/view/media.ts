@@ -30,6 +30,14 @@ export interface ImageUploadContext {
   reportProgress(progress: number): void;
 }
 
+export interface FileInputContext {
+  editor: Editor;
+  source: 'paste' | 'drop';
+}
+
+/** Host-owned document insertion; a configured handler replaces default file insertion. */
+export type FileInputHandler = (files: readonly File[], context: FileInputContext) => void | Promise<void>;
+
 export type ImageUploadResult = string | ImageAttributes;
 export type ImageUploadHandler = (file: File, context: ImageUploadContext) => Promise<ImageUploadResult>;
 export type ImageUploadStatus = 'uploading' | 'succeeded' | 'failed' | 'cancelled';

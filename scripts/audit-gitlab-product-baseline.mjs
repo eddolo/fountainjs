@@ -6,12 +6,15 @@ import { chromium, expect } from '@playwright/test';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
-const nativeComponent = process.argv.includes('--native-component');
+const nativeAttachments = process.argv.includes('--native-attachments');
+const nativeComponent = process.argv.includes('--native-component') || nativeAttachments;
 const nativeInsertion = process.argv.includes('--native-insertion') || nativeComponent;
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeComponent
+  nativeAttachments
+    ? 'artifacts/gitlab-native-attachments-20261112/'
+    : nativeComponent
     ? 'artifacts/gitlab-native-component-20261112/'
     : nativeInsertion
     ? 'artifacts/gitlab-native-insertion-20261112/'
@@ -85,6 +88,7 @@ const report = {
   nativeBrowser,
   nativeInsertion,
   nativeComponent,
+  nativeAttachments,
 };
 if (nativeBrowser)
   report.nativeRuntime = JSON.parse(
@@ -92,6 +96,7 @@ if (nativeBrowser)
   );
 const browser = await chromium.launch();
 let context;
+let restoreUploadLimit;
 try {
   context = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
@@ -175,6 +180,22 @@ try {
   expect(version.version).toBe(pin.version);
   expect(version.revision).toBe(pin.packagedRevision);
   report.checks.push('Normal web sign-in and authenticated API version match the image/source pin');
+  if (nativeAttachments) {
+    // This driver has already refused every image/project outside its own isolated runtime.
+    // Bound the oversize fixture rather than allocating the default 100 MiB limit.
+    const settings = await api('GET', '/application/settings');
+    const originalMiB = settings.max_attachment_size;
+    if (!Number.isSafeInteger(originalMiB) || originalMiB < 1)
+      throw new Error('Unexpected isolated GitLab attachment limit.');
+    restoreUploadLimit = async () => {
+      const restored = await api('PUT', '/application/settings', { data: { max_attachment_size: originalMiB } });
+      expect(restored.max_attachment_size).toBe(originalMiB);
+      report.uploadLimit.restored = true;
+    };
+    report.uploadLimit = { originalMiB, auditMiB: 10, restored: false };
+    const updated = await api('PUT', '/application/settings', { data: { max_attachment_size: 10 } });
+    expect(updated.max_attachment_size).toBe(10);
+  }
 
   let response = await page.request.get(
     `${baseURL}/api/v4/projects/root%2Ffountain-product-integration`,
@@ -212,6 +233,7 @@ try {
   });
   report.project = { id: project.id, path: project.path_with_namespace };
   report.issue = { iid: issue.iid, url: issue.web_url };
+  report.originalServerDescription = issue.description;
   report.checks.push(
     'Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs',
   );
@@ -305,6 +327,100 @@ try {
         'An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste',
       );
     }
+    if (nativeAttachments) {
+      if (process.argv.includes('--probe-upload-focus')) await editor.evaluate(element => {
+        const root = element.closest('[data-fountain-integration="native"]');
+        const vm = root.__vue__ ?? root.__vueParentComponent?.proxy;
+        const probe = { reveals: 0, changes: [], active: document.activeElement?.tagName, found: Boolean(vm?.contentEditor) };
+        window.fountainUploadFocusProbe = probe;
+        if (!vm?.contentEditor) return;
+        const surface = vm.$refs.surface;
+        const reveal = surface.revealSelection.bind(surface);
+        surface.revealSelection = () => { probe.reveals++; reveal(); };
+        vm.contentEditor.editor.subscribe((state, transaction) => {
+          if (probe.changes.length < 40) probe.changes.push({ selectionSet: transaction.selectionSet,
+            document: transaction.docChanged, origin: Boolean(transaction.getMeta('gitlab$insertionOrigin')),
+            path: state.selection.path, from: state.selection.from, kind: state.selection.kind,
+            active: document.activeElement?.tagName, activeType: document.activeElement?.getAttribute('type') });
+        });
+      });
+      const figure = await readFile(new URL('tests/fixtures/cross-container-figure.png', root));
+      const receipt = response => response.request().method() === 'POST'
+        && new URL(response.url()).pathname.endsWith('/uploads');
+      const choose = async payload => {
+        const selected = page.waitForEvent('filechooser');
+        await toolbar.getByRole('button', { name: 'Attach a file or image', exact: true }).click();
+        await (await selected).setFiles(payload);
+      };
+      const uploadFromPicker = async payload => {
+        const response = page.waitForResponse(receipt);
+        await choose(payload);
+        const completed = await response;
+        expect(completed.ok()).toBe(true);
+        const body = await completed.json();
+        const markdown = (body.link ?? body).markdown;
+        expect(typeof markdown).toBe('string');
+        return markdown;
+      };
+      await editor.getByText('Recovered paste', { exact: true }).click();
+      await page.keyboard.press('End');
+      await page.keyboard.press('Enter');
+      const imageMarkdown = await uploadFromPicker({ name: 'native-uploaded-plot.png', mimeType: 'image/png', buffer: figure });
+      const image = editor.locator('img[src*="native-uploaded-plot.png"]');
+      await expect(image).toBeVisible();
+      await expect.poll(() => image.evaluate(element => element.complete && element.naturalWidth > 0)).toBe(true);
+      await expect(toolbar.getByTestId('file-upload-field')).toHaveValue('');
+      await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
+      await expect(image).toHaveCount(0);
+      await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
+      await expect(image).toBeVisible();
+      await editor.getByText('Recovered paste', { exact: true }).click();
+      await page.keyboard.press('End');
+      await page.keyboard.press('Enter');
+      const textMarkdown = await uploadFromPicker({ name: 'native-attachment.txt', mimeType: 'text/plain',
+        buffer: Buffer.from('Native GitLab attachment round trip.\n') });
+      await expect(editor.locator('a[href*="native-attachment.txt"]')).toBeVisible();
+      report.nativeUploads = [{ source: 'picker-image', markdown: imageMarkdown }, { source: 'picker-file', markdown: textMarkdown }];
+      report.checks.push('Actual native toolbar file chooser uploads an image and text file through authenticated GitLab HTTP; canonical native insertion and one-step image undo/redo pass');
+      await editor.getByText('Recovered paste', { exact: true }).click();
+      await page.keyboard.press('End');
+      await page.keyboard.press('Enter');
+      await page.evaluate(async bytes => {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': new Blob([new Uint8Array(bytes)], { type: 'image/png' }) })]);
+      }, [...figure]);
+      const pastedUpload = page.waitForResponse(receipt);
+      await page.keyboard.press('Control+v');
+      const pastedResponse = await pastedUpload;
+      expect(pastedResponse.ok()).toBe(true);
+      const pastedBody = await pastedResponse.json();
+      report.nativeUploads.push({ source: 'native-clipboard-image', markdown: (pastedBody.link ?? pastedBody).markdown });
+      await expect(editor.locator('img')).toHaveCount(3);
+      await expect.poll(() => editor.locator('img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
+      report.checks.push('Actual browser image clipboard and native paste upload through GitLab instead of embedding binary data in document JSON');
+      const maxMiB = await page.evaluate(() => Number(window.gon.max_file_size) || 10);
+      if (maxMiB > 32) throw new Error('Configure the isolated audit instance with a file limit at most 32 MiB before its bounded oversize journey.');
+      await choose({ name: 'oversize.bin', mimeType: 'application/octet-stream', buffer: Buffer.alloc(Math.floor(maxMiB * 1024 * 1024) + 1) });
+      const failures = page.getByRole('list', { name: 'Attachment uploads', exact: true });
+      await expect(failures).toContainText('This file exceeds the upload limit');
+      await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+      await expect(page.getByRole('alert').filter({ hasText: 'Unable to save the current document.' })).toBeVisible();
+      await expect(editor).toBeVisible();
+      expect((await api('GET', `/projects/${project.id}/issues/${issue.iid}`)).description).toBe(issue.description);
+      await failures.scrollIntoViewIfNeeded();
+      await page.screenshot({ path: fileURLToPath(new URL('oversize-source-retained.png', output)), fullPage: true });
+      await failures.getByRole('button', { name: 'Remove upload', exact: true }).click();
+      await expect(failures).toHaveCount(0);
+      await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+      await expect(page.getByTestId('work-item-edit-form-button')).toBeVisible();
+      await expect(page.getByText(marker, { exact: true })).toBeVisible();
+      const recoveredSave = await api('GET', `/projects/${project.id}/issues/${issue.iid}`);
+      for (const uploaded of report.nativeUploads) expect(recoveredSave.description).toContain(uploaded.markdown);
+      expect(recoveredSave.description).not.toContain('data-fountain-text-style');
+      await page.getByTestId('work-item-edit-form-button').click();
+      await expect(editor).toBeVisible();
+      report.directUploadSaveRecovery = true;
+      report.checks.push('A real over-limit file blocks Save without changing the server original; explicit removal immediately saves the intact draft and uploads without generated empty formatting carriers');
+    }
     report.checks.push(
       'Native Fountain toolbar formats actual browser selection; undo and redo update both document and view',
     );
@@ -378,6 +494,15 @@ try {
   expect(saved.description).toContain(marker);
   if (nativeInsertion)
     expect(saved.description).toContain('Pasted **GitLab Markdown** with @root.');
+  if (nativeAttachments) {
+    for (const uploaded of report.nativeUploads) expect(saved.description).toContain(uploaded.markdown);
+    const link = page.locator('main a[href*="native-attachment.txt"]').first();
+    await expect(link).toBeVisible();
+    const download = await page.request.get(new URL(await link.getAttribute('href'), baseURL).href);
+    expect(download.ok()).toBe(true);
+    expect(await download.text()).toBe('Native GitLab attachment round trip.\n');
+    report.checks.push('Saved native upload Markdown survives reader rendering; the actual text attachment returns its original bytes through GitLab');
+  }
   if (nativeBrowser) expect(saved.description).not.toContain('[](#source-retention-investigation)');
   for (const value of [
     'formatted content',
@@ -496,6 +621,14 @@ try {
       `${baseURL}/api/v4/projects/${project.id}/issues/${issue.iid}`,
     );
     expect(denied.status()).toBe(404);
+    if (nativeAttachments) {
+      const deniedUpload = await anonymous.request.post(`${baseURL}/api/v4/projects/${project.id}/uploads`, {
+        multipart: { file: { name: 'denied.txt', mimeType: 'text/plain', buffer: Buffer.from('Denied upload') } },
+      });
+      expect([401, 403, 404]).toContain(deniedUpload.status());
+      report.anonymousUploadStatus = deniedUpload.status();
+      report.checks.push('Unauthenticated upload into the private real project is refused by GitLab');
+    }
   } finally {
     await anonymous.close();
   }
@@ -531,6 +664,16 @@ try {
 } catch (error) {
   report.status = 'failed';
   report.error = String(error).replaceAll(password, '[redacted]');
+  if (nativeAttachments && process.argv.includes('--probe-upload-focus')) {
+    report.uploadFocusProbe = await context.pages()[0].evaluate(() => ({ probe: window.fountainUploadFocusProbe,
+      selection: { focusType: getSelection()?.focusNode?.nodeType, focusText: getSelection()?.focusNode?.textContent?.slice(0, 50), offset: getSelection()?.focusOffset },
+      images: [...document.querySelectorAll('img[src*="native-uploaded-plot.png"]')].map(image => ({
+        complete: image.complete, width: image.naturalWidth, rect: image.getBoundingClientRect().toJSON(),
+        parentRect: image.parentElement.getBoundingClientRect().toJSON(), parentTag: image.parentElement.tagName,
+        active: document.activeElement?.tagName,
+      })),
+    }));
+  }
   if (preparedHost && report.checks.length > 1) {
     const active = context.pages()[0];
     report.failedImages = await active
@@ -542,6 +685,10 @@ try {
           complete: image.complete,
           width: image.naturalWidth,
           loading: image.loading,
+          rect: image.getBoundingClientRect().toJSON(),
+          visibility: document.visibilityState,
+          display: getComputedStyle(image).display,
+          contentVisibility: getComputedStyle(image).contentVisibility,
         })),
       );
     report.failedImageRequests = [];
@@ -561,9 +708,17 @@ try {
         fullPage: true,
       })
       .catch(() => {});
+    report.imagesAfterFailureScreenshot = await active
+      .getByRole('img', { name: 'Uploaded baseline figure', exact: true })
+      .evaluateAll(images => images.map(image => ({ complete: image.complete,
+        width: image.naturalWidth, currentSrc: image.currentSrc })));
   }
   process.exitCode = 1;
 } finally {
+  if (restoreUploadLimit) {
+    try { await restoreUploadLimit(); }
+    catch { report.status = 'failed'; report.settingsRestoreFailed = true; process.exitCode = 1; }
+  }
   await context?.close();
   await browser.close();
   await writeFile(new URL('report.json', output), JSON.stringify(report, null, 2) + '\n');
