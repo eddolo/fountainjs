@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-native-browser-integration",
+  "parentRevision": "ae3c8571f8a10d14f8588c7283923e7038f641ec",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "scope": "Native Fountain issue-description and discussion composer in the real GitLab CE 19.5.3 application; not a complete product or full component/toolbar replacement",
+  "browser": {
+    "status": "passed",
+    "checks": 8,
+    "engine": "Native Linux Chromium",
+    "issueIID": 15,
+    "report": "artifacts/gitlab-native-browser-20261112/report.json",
+    "log": "artifacts/gitlab-native-browser-live-final-reviewed-20261112.log",
+    "recording": "artifacts/gitlab-native-browser-20261112/recordings/page@50b98446003220047ca7566aaada7fa3.webm",
+    "editorScreenshot": "artifacts/gitlab-native-browser-20261112/original-rich-edit.png",
+    "restartScreenshot": "artifacts/gitlab-native-browser-20261112/original-after-restart.png",
+    "loadedScriptSHA256": "206541e35f05d162daa406faf27b1dcff126cd574181ac7e2d12dfa76a7ce643",
+    "runtimeSHA256": "c450e9cce3b82f7a4e5940c3efab46a0081872d935a450ad0de6433626c0bc91",
+    "visualReview": "Native form and post-restart reader inspected: heading, bold selection, checklist controls, table, rendered equation, decoded real uploaded PNG and saved paragraph visible; Undo icon repaired",
+    "scopeDetail": "Normal sign-in, actual project/upload/issue APIs, native keyboard input/formatting/undo/redo, checkbox toggle/reset, rich/source/rich, UI save/reopen, actual discussion comment, anonymous denial and service restart. No fabricated render/save/service responses.",
+    "pinFlagScope": "The nested immutable image pin retains its original fountainReplacementInstalled=false metadata; nativeBrowser, mounted native DOM, loaded-script digests and read-only frontend overlay identify the exercised replacement."
+  },
+  "sourceBuild": {
+    "command": "corepack yarn rspack-prod",
+    "status": "passed",
+    "compileSeconds": 55.67,
+    "commandSeconds": 57.53,
+    "warnings": ["asset size limit", "entrypoint size limit"],
+    "summary": "artifacts/gitlab-native-browser-build-summary-20261112.txt"
+  },
+  "validation": {
+    "integrationUnits": { "status": "passed", "tests": 183, "files": 11, "log": "artifacts/gitlab-native-browser-all-integration-unit-20261112.log" },
+    "rootTypes": { "status": "passed", "log": "artifacts/gitlab-native-browser-types-20261112.log" },
+    "surfaceRegression": { "status": "passed", "cases": 1, "engine": "Chromium", "log": "artifacts/gitlab-native-browser-surface-regression-20261112.log" },
+    "upstreamESLint": { "status": "passed", "files": 5, "log": "artifacts/gitlab-native-browser-eslint-final-20261112.log" },
+    "upstreamPrettier": { "status": "passed", "files": 5, "log": "artifacts/gitlab-native-browser-prettier-final-20261112.log" },
+    "upstreamHostJest": {
+      "status": "failed",
+      "passed": 61,
+      "failed": 14,
+      "log": "artifacts/gitlab-native-browser-upstream-host-jest-current-20261112.log",
+      "scope": "Native candidate before final formatting; legacy Tiptap fixture accesses and shallow-view setup require migration, while host append/paste and complete contract behavior remain unfinished. These failures are retained, not waived."
+    },
+    "fullRootSuiteAndReleaseGate": "Not refreshed; the preceding 5483-test checkpoint remains historical, not a current whole-repository gate",
+    "hostedCI": "not-run"
+  },
+  "repairs": [
+    "Accept actual inactive GitLab code-suggestion defaults while rejecting active/unknown legacy adapters",
+    "Empty/equal Markdown loads adopt decoded node identities and process history-reset metadata while still respecting plugin vetoes",
+    "Exclude only the generated third-party runtime from GitLab's own-code arrow-only Babel override; remaining build/test transformations still apply",
+    "Request no_header_anchors through the real host render callback and forward cancellation to Axios",
+    "Use an existing GitLab Undo icon and require decoded native/reader images before reviewed captures"
+  ],
+  "retainedFindings": [
+    "First native constructor rejected the real host's inactive defaults; its failed report/screenshot are retained",
+    "First complete native pass exported a generated heading anchor; the final stricter pass proves its absence",
+    "Edited Markdown still canonicalizes task whitespace and table separators; full untouched-region source fidelity is not claimed",
+    "Earlier original/prepared-reader image intermittency has not been causally resolved or closed",
+    "Upstream native host suite still fails; full native component/toolbar/provider parity is not complete"
+  ],
+  "installation": {
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "ownedFiles": 7,
+    "rollback": "passed",
+    "rollbackLog": "artifacts/gitlab-native-browser-rollback-20261112.log",
+    "reinstallLog": "artifacts/gitlab-native-browser-reinstall-20261112.log",
+    "changedFileGuard": "Both install and restore refused an altered owned file without changing other inputs; probe restored and all seven file digests reverified",
+    "guardLog": "artifacts/gitlab-native-browser-install-guard-20261112.log",
+    "guardScript": "artifacts/verify-gitlab-native-install-20261112.mjs"
+  },
+  "remaining": [
+    "Complete native toolbar, table/link/media menus, attachments, autocomplete, templates/append/paste and specialized GitLab dialect adapters",
+    "Finish source inspection/recovery controls and preserve more untouched Markdown regions after edits",
+    "Migrate native upstream fixtures without weakening their behavior assertions; fix remaining actual host-contract failures",
+    "Native collaboration/session providers, MR/wiki/threaded discussion and multi-user permission/recovery workflows",
+    "Independent editor-only math assets, keyboard/assistive technology, mobile and cross-engine acceptance",
+    "Localization extraction, performance, packed consumers, hosted CI, migration/deployment and release gates",
+    "Two additional complete professional reference products"
+  ],
+  "runtime": "Own application stopped after audit; private records/volumes retained. Source restored/reinstalled with matching digests; no credential/session files committed.",
+  "publication": "None; public package/API and capacity budgets unchanged; no parity row or production/superiority claim promoted"
+}

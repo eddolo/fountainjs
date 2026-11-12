@@ -40,6 +40,20 @@ it('owns a native model without requiring DOM globals and reads only a loaded cu
   expect(service.getSerializedContent()).toBe('Original');
 });
 
+it('loads an empty new comment and retains the latest source for equal-document reloads', async () => {
+  const { service, renderMarkdown } = setup();
+  await expect(service.setSerializedContent('')).resolves.toEqual({ status: 'applied' });
+  expect(renderMarkdown).not.toHaveBeenCalled();
+  expect(service.status).toBe('ready');
+  expect(service.getSerializedContent()).toBe('');
+  type(service, 'Same');
+  await service.setSerializedContent('Same');
+  expect(undo(service.editor)).toBe(false);
+  renderMarkdown.mockResolvedValueOnce({ body: '<p>Same</p>' });
+  await service.setSerializedContent('Same\n');
+  expect(service.getSerializedContent()).toBe('Same\n');
+});
+
 it('keeps templates undoable but establishes a new history baseline on reopen', async () => {
   const { service } = setup();
   await service.setSerializedContent('Original');

@@ -79,7 +79,10 @@ export class SerializedContentController {
       }
       const transaction = this.editor.createTransaction().replaceDocument(document)
         .setMeta('preventUpdate', true).setMeta('content$replace', true)
-        .setMeta('addToHistory', addToHistory);
+        .setMeta('addToHistory', addToHistory).setMeta('force', true);
+      // Equal replacements have no structural step; adopt their decoded node
+      // identities so source ownership is current. Normal plugin vetoes remain.
+      transaction.doc = document;
       // A load establishes a fresh baseline, including when replacing a
       // previously edited document. Template replacement retains prior undo.
       if (!addToHistory) transaction.setMeta('history$reset', true);

@@ -143,6 +143,18 @@ it('keeps document/history when the host rejects a replacement', async () => {
   expect(editor.getText()).toBe('Original');
 });
 
+it('still honors plugin vetoes when loading an identical document', async () => {
+  let refuse = false;
+  const { editor, controller } = setup(ordinaryMarkdownCodec, [new Plugin({ filterTransaction: () => !refuse })]);
+  await controller.setSerializedContent('Same');
+  typeAtEnd(editor, '!');
+  refuse = true;
+  await expect(controller.setSerializedContent('Same!')).rejects.toThrow('refused');
+  refuse = false;
+  expect(undo(editor)).toBe(true);
+  expect(editor.getText()).toBe('Same');
+});
+
 it('rejects a document from another schema without clearing existing history', async () => {
   const pending = deferredCodec(), { editor, controller } = setup(pending.codec);
   const first = controller.setSerializedContent('Original'); pending.resolve(0); await first;

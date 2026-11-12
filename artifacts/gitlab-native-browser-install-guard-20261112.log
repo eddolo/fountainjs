@@ -1,0 +1,1 @@
+Passed: install and restore both refuse a changed owned file without modifying any input; the guard probe was restored and all seven source digests match.

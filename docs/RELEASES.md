@@ -1295,6 +1295,28 @@ test key/certificate was replaced, installation/pairing was verified, and no key
 credential, raw configuration dump or session-state file is committed.
 Evidence: `artifacts/gitlab-native-service-integration-20261112.json`.
 
+### Native GitLab browser checkpoint — 2026-11-12
+
+The real matching GitLab application now mounts Fountain's native document
+service/view and formatting toolbar in issue descriptions and discussion
+composers. Its eight-check Linux Chromium recording verifies native input,
+formatting/undo/redo, checkbox toggles, rich/source/rich, UI save/reopen, a real
+comment, private-access denial and restart persistence. The native form and
+restored reader are visually reviewed with decoded image, table and equation.
+
+Real use repaired inactive-host-default rejection, empty/equal loads, Undo icon
+selection and generated heading links entering source. The host forwards native
+render options/cancellation; the build treats the generated library as third-party
+code at its existing Babel boundary. No engine API or capacity limit changes.
+
+183 integration unit cases, root types, one Chromium surface regression and five
+actual upstream lint/format checks pass; the complete frontend builds. Installer
+rollback/reinstall and changed-file refusal preserve all seven source digests.
+The upstream host Jest suite still fails 14 of 75 cases. Native fixture migration
+and actual append/paste/full-contract work remain required, alongside the missing
+feature adapters and broader product/release gates. No publication or parity
+promotion. Evidence: `artifacts/gitlab-native-browser-integration-20261112.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

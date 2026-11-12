@@ -6,11 +6,22 @@ export default {
   inheritAttrs: false,
   props: {
     editor: { type: Object, required: true },
-    options: { type: Object, default: () => ({}) },
-    editable: { type: Boolean, default: undefined },
-    readSerializedContent: { type: Function, default: undefined },
+    options: { type: Object, required: false, default: () => ({}) },
+    editable: { type: Boolean, required: false, default: undefined },
+    readSerializedContent: { type: Function, required: false, default: undefined },
   },
   emits: ['ready', 'error', 'focus', 'blur', 'keydown'],
+  watch: {
+    editor() {
+      this.mountSurface();
+    },
+    options() {
+      this.mountSurface();
+    },
+    editable() {
+      if (this.syncInteractionMode() && !this.fountainView) this.mountSurface();
+    },
+  },
   created() {
     // The host service owns the model; Vue owns only this browser view.
     this.fountainView = null;
@@ -22,18 +33,12 @@ export default {
   beforeDestroy() {
     this.releaseSurface();
   },
-  watch: {
-    editor() { this.mountSurface(); },
-    options() { this.mountSurface(); },
-    editable() {
-      if (this.syncInteractionMode() && !this.fountainView) this.mountSurface();
-    },
-  },
   methods: {
     syncInteractionMode() {
       if (typeof this.editable !== 'boolean' || this.editor.editable === this.editable) return true;
       try {
-        if (!this.editor.setEditable(this.editable)) throw new Error('The editor refused the interaction-mode change.');
+        if (!this.editor.setEditable(this.editable))
+          throw new Error('FOUNTAIN_EDITABILITY_REFUSED');
         return true;
       } catch (error) {
         this.releaseSurface();
@@ -45,7 +50,7 @@ export default {
       this.releaseSurface();
       if (!this.$refs.mount || !this.syncInteractionMode()) return;
       try {
-        if (this.editor.isDestroyed) throw new Error('Cannot mount a destroyed Fountain editor.');
+        if (this.editor.isDestroyed) throw new Error('FOUNTAIN_EDITOR_DESTROYED');
         this.fountainView = new EditorView(this.$refs.mount, this.editor, this.options);
         const { dom } = this.fountainView;
         dom.addEventListener('focusin', this.onFocus);
@@ -71,22 +76,32 @@ export default {
       view.dom.removeEventListener('compositionend', this.onCompositionEnd);
       view.destroy();
     },
-    focus(position) { this.fountainView?.focus(position); },
+    // eslint-disable-next-line vue/no-unused-properties -- Called by the owning ContentEditor.
+    focus(position) {
+      this.fountainView?.focus(position);
+    },
+    // eslint-disable-next-line vue/no-unused-properties -- Called before host mode switches and saves.
     getSerializedContentForHandoff() {
       if (!this.fountainView || this.composing || !this.readSerializedContent) {
-        throw new Error('The rich text surface is not ready for serialization.');
+        throw new Error('FOUNTAIN_SURFACE_NOT_READY');
       }
       return this.readSerializedContent();
     },
-    onCompositionStart() { this.composing = true; },
-    onCompositionEnd() { this.composing = false; },
+    onCompositionStart() {
+      this.composing = true;
+    },
+    onCompositionEnd() {
+      this.composing = false;
+    },
     onFocus(event) {
       if (!this.fountainView?.dom.contains(event.relatedTarget)) this.$emit('focus', event);
     },
     onBlur(event) {
       if (!this.fountainView?.dom.contains(event.relatedTarget)) this.$emit('blur', event);
     },
-    onKeydown(event) { this.$emit('keydown', event); },
+    onKeydown(event) {
+      this.$emit('keydown', event);
+    },
   },
 };
 </script>

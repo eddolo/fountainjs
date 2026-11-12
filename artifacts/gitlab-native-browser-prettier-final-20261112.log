@@ -1,0 +1,5 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/prettier --check babel.config.js app/assets/javascripts/content_editor/components/content_editor.vue app/assets/javascripts/content_editor/components/fountain_editor_surface.vue app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue
+Checking formatting...
+All matched files use Prettier code style!
+Done in 0.88s.

@@ -90,10 +90,10 @@ journey below, and uploads evidence.
 
 This component is **not** GitLab's complete `ContentEditor` contract: it does not
 yet replace its Markdown service, extension/toolbars, upload handling,
-collaboration provider or host draft/template behavior. The later original-product
-baseline below runs a real backend, but Fountain is not deployed into its frontend.
-Those integrations and the requirements below remain necessary before describing
-the replacement product as ready.
+collaboration provider or host draft/template behavior. The original-product
+baseline below runs the real backend. The later native browser checkpoint mounts
+Fountain in that application; the complete contract and feature adapters remain
+unfinished. Those requirements still apply before describing the product as ready.
 
 ## Serialized-content lifecycle
 
@@ -508,6 +508,44 @@ coverage remain required. No capability row or product readiness claim is promot
 [real-service report](../../artifacts/gitlab-native-service-20261112/report.json),
 [prepared-host report](../../artifacts/gitlab-prepared-host-20261112/report.json)
 and [checkpoint scope](../../artifacts/gitlab-native-service-integration-20261112.json).
+
+### Native browser deployment — partial
+
+The matching application now mounts the native Fountain service/view and a native
+formatting toolbar in its actual issue-description and discussion composers. It
+uses GitLab's real accounts, project, upload, render, issue and comment services;
+there is no Tiptap-shaped editor facade. The installer retains the pinned public
+props, slots, focus/change events, current-value handoff and interaction modes.
+
+The final Linux Chromium journey passes eight checks: real sign-in/resources,
+native typing/formatting/undo/redo, working checkbox controls, rich/source/rich,
+UI save/reopen, a real discussion comment, anonymous denial and restart
+persistence. Loaded script digests identify the native frontend. The native form
+and post-restart reader receive visual review after the real image decodes.
+
+Actual use found and repaired rejection of GitLab's inactive suggestion defaults,
+empty/equal-document load failures, a missing Undo icon and generated heading
+anchors leaking into Markdown. Equal loads adopt decoded node identities and
+history-reset metadata; plugin vetoes still apply. The host requests undecorated
+input HTML and forwards cancellation. Its arrow-only Babel override now correctly
+treats the generated library as third-party code rather than application source.
+
+All **183 integration unit cases in eleven files**, root types, one targeted
+Chromium surface regression, and five-file upstream ESLint/Prettier checks pass.
+The complete source frontend builds. Installer rollback/reinstall and refusal of
+changed owned files pass, with all seven installed file digests restored.
+
+The upstream host Jest suite remains **61 passed / 14 failed** on the native
+candidate. Legacy Tiptap fixtures and shallow view setup need migration; actual
+append/paste and full host-contract behavior remain unfinished. These failures
+are not waived. Native upload/autocomplete/template/provider adapters, complete
+toolbars/menus, source-recovery controls, dialect/untouched-region fidelity,
+localization, MR/wiki/multi-user and broader browser/accessibility/release checks
+remain open. The beta/public package is unchanged and no parity row is promoted.
+
+[Install and rollback](runtime/README.md#native-browser-installation-in-progress),
+[native browser report](../../artifacts/gitlab-native-browser-20261112/report.json)
+and [checkpoint scope and retained failures](../../artifacts/gitlab-native-browser-integration-20261112.json).
 
 ### Remaining full application acceptance
 

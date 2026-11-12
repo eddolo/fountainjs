@@ -1,4 +1,5 @@
 export { GitLabContentEditor, GitLabEditorNotReady } from '../services/content_editor';
+export { assertGitLabNativeHostConfiguration } from '../services/host_configuration';
 export {
   EditorView,
   Selection,
@@ -7,6 +8,8 @@ export {
   setBlockType,
   toggleQuote,
   insertList,
+  toggleList,
+  selectAll,
   insertTable,
   insertInlineImage,
   setLink,

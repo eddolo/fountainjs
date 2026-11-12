@@ -2,6 +2,16 @@
 
 Updated 2026-11-12.
 
+The latest GitLab checkpoint mounts Fountain's native editor and toolbar in the
+real application. A recorded eight-check Linux Chromium journey passes native
+issue editing, checkbox/formatting/history controls, rich/source handoff, UI
+save/reopen, a real comment, access denial and restart persistence. Native and
+reader images receive visual review. **183 integration unit cases**, root types,
+five-file upstream lint/format and the full frontend build pass. The native host
+Jest suite still has **14 failures**; feature adapters and full product/release
+acceptance remain open. No parity row is promoted.
+[Native browser scope and remaining work](../integrations/gitlab/README.md#native-browser-deployment--partial).
+
 FountainJS is an MIT-licensed structured-document engine with a web editor,
 framework bindings, and optional document modules. The immediate goal is a
 reliable beta that developers can install, integrate, and evaluate through

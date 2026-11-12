@@ -126,7 +126,7 @@ test('removes the surface when a host filter refuses read-only mode and recovers
   await expect(editor).toHaveText('Vue 2 integration.A');
   await page.getByRole('button', { name: 'Use read-only mode', exact: true }).click();
   await expect(editor).toHaveCount(0);
-  await expect(page.getByRole('alert')).toContainText('refused the interaction-mode change');
+  await expect(page.getByRole('alert')).toContainText('FOUNTAIN_EDITABILITY_REFUSED');
   await expect(page.getByRole('button', { name: 'Undo document', exact: true })).toBeDisabled();
   await page.getByRole('button', { name: 'Enable editing', exact: true }).click();
   await expect(editor).toHaveText('Vue 2 integration.A');

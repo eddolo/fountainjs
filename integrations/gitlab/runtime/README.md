@@ -142,5 +142,59 @@ discussion workflows, permissions, concurrent users, recovery and broader browse
 coverage. A healthy container or passing selected suites cannot replace those
 product checks.
 
+## Native browser installation in progress
+
+`fountain_content_editor.vue` and `fountain_formatting_toolbar.vue` are private
+integration sources, not a complete public GitLab replacement. The installer
+extracts the exact public props from the pinned prepared host component, mounts
+the native service/view and preserves its slots and focus/change/handoff events.
+Unsupported adapters remain visible as unfinished; active legacy collaboration,
+serializer hooks and code suggestions are refused rather than ignored.
+
+After preparing the matching source and installing its locked dependencies:
+
+```sh
+node scripts/build-gitlab-native-runtime.mjs
+node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source
+cd /absolute/gitlab-source
+corepack yarn rspack-prod
+```
+
+The installer checks source revision, prepared-file digests, runtime input hashes
+and existing owned-file hashes. It rejects unrecognized edits and symlinks. It
+retains original source files for rollback and formats installed components with
+GitLab's own Prettier/Tailwind configuration. Its install manifest identifies
+every changed file. The native runtime and renderer CSS are local build inputs.
+
+Native imports request `no_header_anchors` through the real host callback;
+reader navigation decorations must not become source links. Cancellation is
+forwarded to Axios. The generated runtime is excluded from GitLab's arrow-only
+Babel override, matching that override's existing third-party-code boundary.
+It still runs through the remaining application build and test configuration.
+
+Run the real-service audit inside Linux from the Fountain checkout:
+
+```sh
+node scripts/run-gitlab-native-browser-audit.mjs
+```
+
+Use `PLAYWRIGHT_BROWSERS_PATH` when the installed Linux browser lives outside
+Playwright's default location. The runner keeps WSL alive across restart,
+selects the recorded source's complete read-only frontend build, and stops its
+own application afterward. It does not remove the dedicated records/volumes.
+
+To restore the exact prepared host source:
+
+```sh
+node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source --restore
+```
+
+Restore refuses changed installed files, restores the recorded host/configuration
+files and removes only verified installer-owned files. Rebuild before serving
+that restored frontend, or recreate with the original base Compose profile.
+Full native toolbar/menus, upload/suggestion/provider adapters, source-recovery
+controls, upstream native-test migration, accessibility and cross-browser/product
+acceptance remain necessary. Passing a selected real journey does not close them.
+
 Configuration references: [GitLab Docker installation](https://docs.gitlab.com/install/docker/installation/)
 and [memory-constrained environments](https://docs.gitlab.com/omnibus/settings/memory_constrained_envs/).

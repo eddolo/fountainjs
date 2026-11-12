@@ -1,0 +1,10 @@
+GitLab CE/FOSS v19.5.3, source 0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf
+Command: corepack yarn rspack-prod
+Local authoritative log: artifacts/gitlab-native-browser-source-build-final-reviewed-20261112.log
+Complete production frontend with the native Fountain component, native toolbar/service and host rendering adapter.
+
+Rspack 2.2.8 compiled with 2 warnings in 55.67 s
+Done in 57.53s.
+Warnings: asset size limit; entrypoint size limit. No acceptance threshold changed.
+Five edited source/config files also pass actual upstream ESLint and Prettier.
+The native upstream host Jest suite remains failing; this build is not a full release gate.

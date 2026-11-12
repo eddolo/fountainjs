@@ -2,6 +2,16 @@
 
 ## Current programme status — 2026-11-12
 
+Fountain now mounts in the real GitLab issue and discussion editors. The latest
+native Chromium journey passes eight checks over actual services, including
+formatting/history, source handoff, real saves/comments and restart persistence.
+183 integration unit cases, types, source build and upstream lint/format pass.
+The native upstream host suite remains **61 passed / 14 failed**; full toolbar,
+upload/suggestion/provider, source fidelity and product acceptance remain open.
+No capability row or superiority claim is promoted. The earlier service-only
+checkpoint below describes its historical scope.
+[Native browser evidence](../artifacts/gitlab-native-browser-integration-20261112.json).
+
 The full matching GitLab frontend now builds and serves the prepared host patch;
 the recorded real rich/source/rich save/restart journey passes on its final run.
 Earlier post-restart image failures remain unresolved. A native Fountain service

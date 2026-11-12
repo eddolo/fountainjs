@@ -6,7 +6,7 @@
   "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
   "upstreamTag": "v19.5.3",
   "nativeRuntime": {
-    "manifest": "artifacts/gitlab-native-runtime/build.json",
+    "manifest": "artifacts/gitlab-native-runtime/service-checkpoint-build-20261112.json",
     "sha256": "5b7d0a44520105874af15fa64a8006dcb1b71dc8181e1e1f7d0dd82b86f03063",
     "serviceSHA256": "c4905e1e5f65bdc5f1a878fafc37f41e18ce3e08a81263265d4e33dbd09d8599",
     "publishedAPI": false

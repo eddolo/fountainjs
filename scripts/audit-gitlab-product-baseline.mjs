@@ -6,9 +6,12 @@ import { chromium, expect } from '@playwright/test';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
-const preparedHost = process.argv.includes('--prepared-host');
+const nativeBrowser = process.argv.includes('--native-browser');
+const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  preparedHost
+  nativeBrowser
+    ? 'artifacts/gitlab-native-browser-20261112/'
+    : preparedHost
     ? 'artifacts/gitlab-prepared-host-20261112/'
     : 'artifacts/gitlab-product-baseline-20261112/',
   root,
@@ -64,14 +67,21 @@ if (!password)
 
 const report = {
   date: new Date().toISOString(),
-  scope: preparedHost
+  scope: nativeBrowser
+    ? 'Native Fountain browser editor in the actual GitLab application; partial toolbar/providers, not full product acceptance'
+    : preparedHost
     ? 'Actual GitLab original editor with rebuilt prepared host changes; Fountain browser editor not installed'
     : 'Original GitLab product baseline; Fountain is not installed in this application',
   pin,
   checks: [],
   secrets: 'Password/session used in memory only; no traces or storage-state files',
   preparedHost,
+  nativeBrowser,
 };
+if (nativeBrowser)
+  report.nativeRuntime = JSON.parse(
+    await readFile(new URL('artifacts/gitlab-native-runtime/build.json', root)),
+  );
 const browser = await chromium.launch();
 let context;
 try {
@@ -80,10 +90,13 @@ try {
     recordVideo: { dir: fileURLToPath(new URL('recordings/', output)) },
   });
   const page = await context.newPage();
+  const browserErrors = [];
+  page.on('pageerror', (error) => browserErrors.push(error.message));
+  report.browserErrors = browserErrors;
   const preparedScriptReads = [];
   const preparedScripts = [];
   const imageResponses = [];
-  page.on('response', response => {
+  page.on('response', (response) => {
     const url = new URL(response.url());
     if (url.origin === baseURL && url.pathname.endsWith('/fountain-baseline-figure.png')) {
       imageResponses.push({ path: url.pathname, status: response.status() });
@@ -105,8 +118,11 @@ try {
           .then((bytes) => {
             const source = bytes.toString('utf8');
             if (
-              source.includes('MARKDOWN_SUBMISSION_NOT_READY') &&
-              source.includes('EXPECTED_CURRENT_MARKDOWN')
+              nativeBrowser
+                ? source.includes('GITLAB_EDITOR_NOT_READY') &&
+                  source.includes('FountainContentEditor')
+                : source.includes('MARKDOWN_SUBMISSION_NOT_READY') &&
+                  source.includes('EXPECTED_CURRENT_MARKDOWN')
             ) {
               preparedScripts.push({
                 path: url.pathname,
@@ -121,7 +137,9 @@ try {
     await expect(async () => {
       const state = JSON.parse(docker('inspect', '--format', '{{json .State}}', container));
       expect(state.Health?.Status).toBe('healthy');
-      const response = await page.request.get(`${baseURL}/users/sign_in`, { timeout: 5000 });
+      const response = await page.request.get(`${baseURL}/users/sign_in`, {
+        timeout: 5000,
+      });
       expect(response.status()).toBe(200);
     }).toPass({ timeout: 180_000, intervals: [1000, 2000, 5000] });
   };
@@ -177,7 +195,10 @@ try {
     '# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n' +
     `![Uploaded baseline figure](${upload.url})\n\nEnd of the original description.\n`;
   const issue = await api('POST', `/projects/${project.id}/issues`, {
-    data: { title: 'Original editor baseline: rich save and reopen', description },
+    data: {
+      title: 'Original editor baseline: rich save and reopen',
+      description,
+    },
   });
   report.project = { id: project.id, path: project.path_with_namespace };
   report.issue = { iid: issue.iid, url: issue.web_url };
@@ -186,7 +207,10 @@ try {
   );
   await page.goto(issue.web_url);
   await expect(page.getByRole('heading', { name: issue.title, exact: true })).toBeVisible();
-  const image = page.getByRole('img', { name: 'Uploaded baseline figure', exact: true });
+  const image = page.getByRole('img', {
+    name: 'Uploaded baseline figure',
+    exact: true,
+  });
   await expect(image).toBeVisible();
   await image.scrollIntoViewIfNeeded();
   await expect(image).toHaveAttribute('src', /\/fountain-baseline-figure\.png(?:\?|$)/);
@@ -204,21 +228,51 @@ try {
     .getByTestId('work-item-description-wrapper')
     .locator('[contenteditable="true"]');
   await expect(editor).toBeVisible();
-  await expect(editor).toHaveClass(/ProseMirror/);
+  await expect(editor).toHaveClass(nativeBrowser ? /fountain-editor/ : /ProseMirror/);
+  if (nativeBrowser)
+    await expect(
+      page
+        .getByTestId('work-item-description-wrapper')
+        .locator('[data-fountain-integration="native"]'),
+    ).toBeVisible();
   await expect(editor).toContainText('End of the original description.');
   await editor.getByText('End of the original description.', { exact: true }).click();
   await page.keyboard.press('End');
   await page.keyboard.press('Enter');
-  const marker = 'Edited through the original GitLab rich editor; persisted after restart.';
+  const marker = nativeBrowser
+    ? 'Edited through native Fountain in GitLab; persisted after restart.'
+    : 'Edited through the original GitLab rich editor; persisted after restart.';
   await editor.pressSequentially(marker);
+  if (nativeBrowser) {
+    await page.keyboard.press('Home');
+    await page.keyboard.press('Shift+End');
+    const toolbar = page
+      .getByTestId('work-item-description-wrapper')
+      .getByTestId('formatting-toolbar');
+    await toolbar.getByRole('button', { name: 'Bold', exact: true }).click();
+    await expect(editor.locator('strong').filter({ hasText: marker })).toBeVisible();
+    await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
+    await expect(editor.locator('strong').filter({ hasText: marker })).toHaveCount(0);
+    await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
+    await expect(editor.locator('strong').filter({ hasText: marker })).toBeVisible();
+    report.checks.push(
+      'Native Fountain toolbar formats actual browser selection; undo and redo update both document and view',
+    );
+  }
   if (preparedHost) {
     await Promise.all(preparedScriptReads);
     expect(preparedScripts.length).toBeGreaterThan(0);
     report.preparedScripts = preparedScripts;
-    report.frontendMount = { source: frontendMount.Source, readOnly: !frontendMount.RW };
+    report.frontendMount = {
+      source: frontendMount.Source,
+      readOnly: !frontendMount.RW,
+    };
     const description = page.getByTestId('work-item-description-wrapper');
     await description
-      .getByRole('button', { name: 'Switch to plain text editing', exact: true })
+      .getByRole('button', {
+        name: 'Switch to plain text editing',
+        exact: true,
+      })
       .click();
     const source = description.locator('textarea');
     await expect(source).toBeVisible();
@@ -228,6 +282,36 @@ try {
       .click();
     await expect(editor).toBeVisible();
     await expect(editor.getByText(marker, { exact: true })).toBeVisible();
+    if (nativeBrowser) {
+      const checks = editor.locator('input[data-fountain-task-toggle]');
+      await expect(checks).toHaveCount(2);
+      await expect(checks.nth(0)).toBeVisible();
+      await expect(checks.nth(1)).toBeVisible();
+      report.nativeTaskControls = await checks.evaluateAll((inputs) =>
+        inputs.map((input) => {
+          const style = getComputedStyle(input);
+          return {
+            appearance: style.appearance,
+            opacity: style.opacity,
+            display: style.display,
+            width: style.width,
+            height: style.height,
+          };
+        }),
+      );
+      await checks.nth(0).check();
+      await expect(checks.nth(0)).toBeChecked();
+      await checks.nth(0).uncheck();
+      await expect(checks.nth(0)).not.toBeChecked();
+      const nativeImage = editor.getByRole('img', {
+        name: 'Uploaded baseline figure',
+        exact: true,
+      });
+      await nativeImage.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => nativeImage.evaluate((image) => image.complete && image.naturalWidth > 0))
+        .toBe(true);
+    }
     report.checks.push(
       'Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value',
     );
@@ -242,6 +326,7 @@ try {
   await expect(page.getByText(marker, { exact: true })).toBeVisible();
   const saved = await api('GET', `/projects/${project.id}/issues/${issue.iid}`);
   expect(saved.description).toContain(marker);
+  if (nativeBrowser) expect(saved.description).not.toContain('[](#source-retention-investigation)');
   for (const value of [
     'formatted content',
     '@root',
@@ -257,6 +342,25 @@ try {
   report.checks.push(
     'Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record',
   );
+  if (nativeBrowser) {
+    const activity = page.getByTestId('detail-layout-activity');
+    const composer = activity.locator(
+      '[data-fountain-integration="native"] [contenteditable="true"]',
+    );
+    await expect(composer).toBeVisible();
+    await composer.click();
+    const note = 'Native Fountain discussion: created through the actual GitLab comment form.';
+    await composer.pressSequentially(note);
+    await activity.getByRole('button', { name: 'Comment', exact: true }).click();
+    await expect(composer).toHaveText('');
+    await expect(activity.getByText(note, { exact: true })).toBeVisible();
+    const notes = await api('GET', `/projects/${project.id}/issues/${issue.iid}/notes`);
+    expect(notes.some((value) => value.body === note)).toBe(true);
+    report.comment = { body: note, persisted: true };
+    report.checks.push(
+      'An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence',
+    );
+  }
   await page.reload();
   await expect(page.getByText(marker, { exact: true })).toBeVisible();
   await page
@@ -269,6 +373,14 @@ try {
     page.getByRole('img', { name: 'Uploaded baseline figure', exact: true }),
   ).toHaveAttribute('src', /\/fountain-baseline-figure\.png(?:\?|$)/);
   await expect(page.locator('main .katex').first()).toBeVisible();
+  if (nativeBrowser)
+    await expect
+      .poll(() =>
+        page
+          .getByRole('img', { name: 'Uploaded baseline figure', exact: true })
+          .evaluate((image) => image.complete && image.naturalWidth > 0),
+      )
+      .toBe(true);
   await page.screenshot({
     path: fileURLToPath(new URL('original-reopened.png', output)),
     fullPage: true,
@@ -291,7 +403,10 @@ try {
     expect(reopened.description).toBe(saved.description);
     await page.goto(issue.web_url);
     await expect(page.getByText(marker, { exact: true })).toBeVisible();
-    const reopenedImage = page.getByRole('img', { name: 'Uploaded baseline figure', exact: true });
+    const reopenedImage = page.getByRole('img', {
+      name: 'Uploaded baseline figure',
+      exact: true,
+    });
     await reopenedImage.scrollIntoViewIfNeeded();
     await expect(reopenedImage).toHaveAttribute('src', /\/fountain-baseline-figure\.png(?:\?|$)/);
     await expect
@@ -306,24 +421,40 @@ try {
       'Exact saved server source, authenticated session and uploaded image survive an actual application-container restart',
     );
   }
+  expect(browserErrors).toEqual([]);
   report.status = 'passed';
 } catch (error) {
   report.status = 'failed';
   report.error = String(error).replaceAll(password, '[redacted]');
   if (preparedHost && report.checks.length > 1) {
     const active = context.pages()[0];
-    report.failedImages = await active.getByRole('img', { name: 'Uploaded baseline figure', exact: true }).evaluateAll(images => images.map(image => ({
-      src: image.src, currentSrc: image.currentSrc, complete: image.complete, width: image.naturalWidth, loading: image.loading,
-    })));
+    report.failedImages = await active
+      .getByRole('img', { name: 'Uploaded baseline figure', exact: true })
+      .evaluateAll((images) =>
+        images.map((image) => ({
+          src: image.src,
+          currentSrc: image.currentSrc,
+          complete: image.complete,
+          width: image.naturalWidth,
+          loading: image.loading,
+        })),
+      );
     report.failedImageRequests = [];
     for (const image of report.failedImages) {
       if (new URL(image.src).origin !== baseURL) continue;
       const response = await active.request.get(image.src);
-      report.failedImageRequests.push({ status: response.status(), contentType: response.headers()['content-type'], bytes: (await response.body()).length });
+      report.failedImageRequests.push({
+        status: response.status(),
+        contentType: response.headers()['content-type'],
+        bytes: (await response.body()).length,
+      });
     }
     await context
       .pages()[0]
-      ?.screenshot({ path: fileURLToPath(new URL('failure.png', output)), fullPage: true })
+      ?.screenshot({
+        path: fileURLToPath(new URL('failure.png', output)),
+        fullPage: true,
+      })
       .catch(() => {});
   }
   process.exitCode = 1;

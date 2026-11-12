@@ -1,0 +1,462 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+FAIL spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+  vue_shared/component/markdown/markdown_editor
+    ✓ displays markdown field by default (38 ms)
+    ✓ passes render_quick_actions param to renderMarkdownPath if quick actions are enabled (44 ms)
+    ✓ does not pass render_quick_actions param to renderMarkdownPath if quick actions are disabled (22 ms)
+    ✕ passes no_header_anchors=false to renderMarkdownPath if table of contents are supported (27 ms)
+    ✓ enables content editor switcher when contentEditorEnabled prop is true (12 ms)
+    ✓ hides content editor switcher when contentEditorEnabled prop is false (15 ms)
+    ✓ passes codeSuggestionsConfig as a single prop to markdown field component (11 ms)
+    ✓ renders markdown field textarea (8 ms)
+    ✓ renders data on textarea for noteable type (14 ms)
+    ✓ renders data on textarea for can suggest (8 ms)
+    ✓ emits `content-editor` when enable-content-editor emitted from markdown editor (14 ms)
+    ✕ emits `markdown-field` when `enable-markdown-editor` emitted from content editor (5026 ms)
+    ✕ emits initial editing mode on mount so parents can sync custom UI (9 ms)
+    ✕ does not enable immersive mode on content editor by default (17 ms)
+    when attachments are disabled
+      ✓ disables canAttachFile (9 ms)
+      ✓ passes `attach-file` to restrictedToolBarItems (11 ms)
+    when additional restricted tool bar items are given
+      ✓ passes them to restrictedToolBarItems (15 ms)
+      when attachments are disabled
+        ✓ passes `attach-file` and `full-screen` restrictedToolBarItems (26 ms)
+    disabled
+      ✓ disables markdown field when disabled prop is true (10 ms)
+      ✓ enables markdown field when disabled prop is false (9 ms)
+      ✓ disables content editor when disabled prop is true (19 ms)
+      ✓ enables content editor when disabled prop is false (23 ms)
+    fillContainer
+      by default
+        ✓ does not put the fill class on the root (9 ms)
+      when fillContainer is true
+        ✓ puts `md-area-wrapper-fill` on the root (10 ms)
+    hideModeSwitcher
+      by default
+        ✓ shows the content editor switcher in markdown field (10 ms)
+        ✓ does not pass hideModeSwitcher to content editor (21 ms)
+      when hideModeSwitcher is true
+        ✓ hides the content editor switcher in markdown field (8 ms)
+        ✓ passes hideModeSwitcher to content editor (16 ms)
+    autosize
+      ✓ autosizes the textarea when the value changes from outside the component (10 ms)
+      ✓ does not autosize the textarea if markdown editor is disabled (24 ms)
+    autosave
+      ✓ automatically saves the textarea value to local storage if autosaveKey is defined (8 ms)
+      ✓ loads value from local storage if autosaveKey is defined, and value isn't (9 ms)
+      ✓ doesn't load value from local storage if autosaveKey is defined, and value is (8 ms)
+      ✓ does not save the textarea value to local storage if autosaveKey is not defined (8 ms)
+      ✓ does not save the textarea value to local storage if value is empty (8 ms)
+      ✓ can restore note directly from autosave (13 ms)
+      clear local storage event handler
+        ✓ does not clear the local storage if the autosave key is not defined (9 ms)
+        ✓ does not clear the local storage if the event autosave key does not match (8 ms)
+        ✓ clears the local storage if the event autosave key matches (8 ms)
+    when handing current rich content to Markdown
+      ✕ reads the document before a delayed observer can publish it (21 ms)
+      ✓ keeps the rich editor and draft when conversion refuses the handoff (17 ms)
+      ✕ reads current content when a restored preference requests Markdown (14 ms)
+    when the parent guards a switch to rich text
+      when the parent declines
+        ✓ keeps the plain text draft (15 ms)
+      when the parent confirms
+        ✓ enters rich text (14 ms)
+    when editingMode is markdownField
+      ✓ emits input event when markdown field textarea changes (16 ms)
+      ✓ autosaves the markdown value to local storage (10 ms)
+      ✓ bubbles up keydown event (9 ms)
+      when autofocus is true
+        ✓ sets the markdown field as the active element in the document (14 ms)
+      when markdown field triggers enable-content-editor event
+        ✓ displays the content editor (14 ms)
+        ✓ adds hidden field with current markdown (19 ms)
+        ✓ hides the markdown field (16 ms)
+    when contentEditor is disabled
+      ✓ resets the editingMode to markdownField (8 ms)
+    when editingMode is contentEditor
+      ✓ emits input event when content editor emits change event (17 ms)
+      ✓ autosaves the content editor value to local storage (17 ms)
+      ✓ does not autofocus the content editor (25 ms)
+      when autofocus is true
+        ✓ sets the content editor autofocus property to end (23 ms)
+      when keydown event is fired
+        ✓ bubbles up keydown event (16 ms)
+        ✓ bubbles up keydown event for meta key with default behaviour intact (14 ms)
+        ✓ bubbles up keydown event for meta + k key on selected text with default behaviour prevented (19 ms)
+        ✓ bubbles up keydown event for meta + k key without text selection with default behaviour prevented (14 ms)
+        ✓ bubbles up keydown event for meta + non-k key with default behaviour intact (16 ms)
+      when richText editor triggers `enable-markdown-editor` event
+        ✕ hides the content editor (5023 ms)
+        ✕ shows the markdown field (5028 ms)
+    setTemplate
+      ✓ sets the value of markdown when markdown is empty (14 ms)
+      ✓ does not set the value of markdown when markdown is not empty and force is false (17 ms)
+      ✓ sets the value of markdown when markdown is not empty and force is true (14 ms)
+      ✓ dismisses a pending confirmation when a collaboration provider arrives (20 ms)
+      ✓ shows a warning alert when markdown is not empty (10 ms)
+    append public API
+      ✓ updates editor value (12 ms)
+      ✕ updates rich text editor value (40 ms)
+      ✕ appends to existing value (11 ms)
+      ✕ apples focus when no value is given (7 ms)
+    immersive mode
+      ✕ passes on immersive mode to content editor (13 ms)
+      ✕ passes on immersive mode to plain text editor (8 ms)
+      ✕ removes the focus outline on the textarea (10 ms)
+
+  ● vue_shared/component/markdown/markdown_editor › passes no_header_anchors=false to renderMarkdownPath if table of contents are supported
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "http://test.host/api/markdown?render_quick_actions=false&no_header_anchors=false"
+    Received: "http://test.host/api/markdown?render_quick_actions=false&no_header_anchors=true"
+
+      154 |
+      155 |     expect(mock.history.post).toHaveLength(1);
+    > 156 |     expect(mock.history.post[0].url).toBe(
+          |                                      ^
+      157 |       `${window.location.origin}/api/markdown?render_quick_actions=false&no_header_anchors=false`,
+      158 |     );
+      159 |   });
+
+      at Object.toBe (spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js:156:38)
+
+  ● vue_shared/component/markdown/markdown_editor › when handing current rich content to Markdown › reads the document before a delayed observer can publish it
+
+    TypeError: Cannot read properties of undefined (reading 'commands')
+
+      465 |
+      466 |     it('reads the document before a delayed observer can publish it', async () => {
+    > 467 |       findContentEditor().vm.contentEditor.tiptapEditor.commands.setContent(
+          |                                                        ^
+      468 |         '<p>Latest unreported edit</p>',
+      469 |         false,
+      470 |       );
+
+      at Object.<anonymous> (spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js:467:56)
+
+  ● vue_shared/component/markdown/markdown_editor › when handing current rich content to Markdown › reads the document before a delayed observer can publish it
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● vue_shared/component/markdown/markdown_editor › when handing current rich content to Markdown › reads current content when a restored preference requests Markdown
+
+    TypeError: Cannot read properties of undefined (reading 'commands')
+
+      494 |
+      495 |     it('reads current content when a restored preference requests Markdown', async () => {
+    > 496 |       findContentEditor().vm.contentEditor.tiptapEditor.commands.setContent(
+          |                                                        ^
+      497 |         '<p>Latest restored-mode edit</p>',
+      498 |         false,
+      499 |       );
+
+      at Object.<anonymous> (spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js:496:56)
+
+  ● vue_shared/component/markdown/markdown_editor › when handing current rich content to Markdown › reads current content when a restored preference requests Markdown
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● vue_shared/component/markdown/markdown_editor › emits `markdown-field` when `enable-markdown-editor` emitted from content editor
+
+    Timeout - Async callback was not invoked within the 5000 ms timeout specified by jest.setTimeout.Error:
+
+      535 |   });
+      536 |
+    > 537 |   it(`emits \`markdown-field\` when \`enable-markdown-editor\` emitted from content editor`, async () => {
+          |   ^
+      538 |     buildWrapper();
+      539 |
+      540 |     await enableContentEditor();
+
+      at new Spec (node_modules/jest-jasmine2/build/jasmine/Spec.js:107:22)
+      at Suite.it (spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js:537:3)
+      at Object.describe (spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js:28:1)
+
+  ● vue_shared/component/markdown/markdown_editor › emits `markdown-field` when `enable-markdown-editor` emitted from content editor
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● vue_shared/component/markdown/markdown_editor › emits initial editing mode on mount so parents can sync custom UI
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 2
+    Received length: 1
+    Received array:  [[]]
+
+      541 |     await enableMarkdownEditor();
+      542 |
+    > 543 |     expect(wrapper.emitted(EDITING_MODE_EVENTS[EDITING_MODE_MARKDOWN_FIELD])).toHaveLength(2);
+          |                                                                               ^
+      544 |   });
+      545 |
+      546 |   it('emits initial editing mode on mount so parents can sync custom UI', () => {
+
+      at Object.toHaveLength (spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js:543:79)
+
+  ● vue_shared/component/markdown/markdown_editor › when editingMode is contentEditor › when richText editor triggers `enable-markdown-editor` event › hides the content editor
+
+    Timeout - Async callback was not invoked within the 5000 ms timeout specified by jest.setTimeout.Error: Timeout - Async callback was not invoked within the 5000 ms timeout specified by jest.setTimeout.
+
+      at mapper (node_modules/jest-jasmine2/build/queueRunner.js:27:45)
+
+  ● vue_shared/component/markdown/markdown_editor › when editingMode is contentEditor › when richText editor triggers `enable-markdown-editor` event › hides the content editor
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      737 |
+      738 |       it('hides the content editor', () => {
+    > 739 |         expect(findContentEditor().exists()).toBe(false);
+          |                                              ^
+      740 |       });
+      741 |
+      742 |       it('shows the markdown field', () => {
+
+      at Object.toBe (spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js:739:46)
+
+  ● vue_shared/component/markdown/markdown_editor › when editingMode is contentEditor › when richText editor triggers `enable-markdown-editor` event › shows the markdown field
+
+    Timeout - Async callback was not invoked within the 5000 ms timeout specified by jest.setTimeout.Error: Timeout - Async callback was not invoked within the 5000 ms timeout specified by jest.setTimeout.
+
+      at mapper (node_modules/jest-jasmine2/build/queueRunner.js:27:45)
+
+  ● vue_shared/component/markdown/markdown_editor › when editingMode is contentEditor › when richText editor triggers `enable-markdown-editor` event › shows the markdown field
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      741 |
+      742 |       it('shows the markdown field', () => {
+    > 743 |         expect(findMarkdownField().exists()).toBe(true);
+          |                                              ^
+      744 |       });
+      745 |     });
+      746 |   });
+
+      at Object.toBe (spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js:743:46)
+
+  ● vue_shared/component/markdown/markdown_editor › append public API › updates rich text editor value
+
+    Unexpected calls to console (1) with:
+    	
+    	[1] error: [Vue warn]: Error in nextTick: "TypeError: _this$$refs$surface2.focus is not a function"
+    	
+    	found in
+    	
+    	---> <MarkdownEditor>
+    	       <Root>
+
+      23 |     .join('\n');
+      24 |
+    > 25 |   throw new Error(
+         |         ^
+      26 |     `Unexpected calls to console (${consoleCalls.length}) with:\n${consoleCallsList}\n`,
+      27 |   );
+      28 | };
+
+      	
+      at throwErrorFromCalls (spec/frontend/__helpers__/console_watcher.js:25:9)
+      at ConsoleWatcher.throwErrorFromCalls (spec/frontend/__helpers__/console_watcher.js:127:7)
+      at console.call [as error] (spec/frontend/__helpers__/console_watcher.js:81:15)
+      at warn (node_modules/vue/dist/vue.runtime.common.dev.js:4564:21)
+      at logError (node_modules/vue/dist/vue.runtime.common.dev.js:2959:9)
+      at globalHandleError (node_modules/vue/dist/vue.runtime.common.dev.js:2955:5)
+      at handleError (node_modules/vue/dist/vue.runtime.common.dev.js:2922:9)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3060:17)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● vue_shared/component/markdown/markdown_editor › append public API › updates rich text editor value
+
+    TypeError: _this$$refs$surface2.focus is not a function
+
+      325 |       }
+      326 |     },
+    > 327 |     focus() {
+          |              ^
+      328 |       this.$refs.surface?.focus();
+      329 |     },
+      330 |     onFocus() {
+
+      at VueComponent.focus (app/assets/javascripts/content_editor/components/content_editor.vue:327:27)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:437:34)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:316:14)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● vue_shared/component/markdown/markdown_editor › append public API › updates rich text editor value
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● vue_shared/component/markdown/markdown_editor › append public API › appends to existing value
+
+    TypeError: _this$$refs$surface2.focus is not a function
+
+      325 |       }
+      326 |     },
+    > 327 |     focus() {
+          |              ^
+      328 |       this.$refs.surface?.focus();
+      329 |     },
+      330 |     onFocus() {
+
+      at VueComponent.focus (app/assets/javascripts/content_editor/components/content_editor.vue:327:27)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:437:34)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:316:14)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● vue_shared/component/markdown/markdown_editor › append public API › apples focus when no value is given
+
+    TypeError: _this$$refs$surface2.focus is not a function
+
+      325 |       }
+      326 |     },
+    > 327 |     focus() {
+          |              ^
+      328 |       this.$refs.surface?.focus();
+      329 |     },
+      330 |     onFocus() {
+
+      at VueComponent.focus (app/assets/javascripts/content_editor/components/content_editor.vue:327:27)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:437:34)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:316:14)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● vue_shared/component/markdown/markdown_editor › does not enable immersive mode on content editor by default
+
+    TypeError: _this$$refs$surface2.focus is not a function
+
+      325 |       }
+      326 |     },
+    > 327 |     focus() {
+          |              ^
+      328 |       this.$refs.surface?.focus();
+      329 |     },
+      330 |     onFocus() {
+
+      at VueComponent.focus (app/assets/javascripts/content_editor/components/content_editor.vue:327:27)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:437:34)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:316:14)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● vue_shared/component/markdown/markdown_editor › immersive mode › passes on immersive mode to content editor
+
+    TypeError: _this$$refs$surface2.focus is not a function
+
+      325 |       }
+      326 |     },
+    > 327 |     focus() {
+          |              ^
+      328 |       this.$refs.surface?.focus();
+      329 |     },
+      330 |     onFocus() {
+
+      at VueComponent.focus (app/assets/javascripts/content_editor/components/content_editor.vue:327:27)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:437:34)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:316:14)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● vue_shared/component/markdown/markdown_editor › immersive mode › passes on immersive mode to plain text editor
+
+    TypeError: _this$$refs$surface2.focus is not a function
+
+      325 |       }
+      326 |     },
+    > 327 |     focus() {
+          |              ^
+      328 |       this.$refs.surface?.focus();
+      329 |     },
+      330 |     onFocus() {
+
+      at VueComponent.focus (app/assets/javascripts/content_editor/components/content_editor.vue:327:27)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:437:34)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:316:14)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● vue_shared/component/markdown/markdown_editor › immersive mode › removes the focus outline on the textarea
+
+    TypeError: _this$$refs$surface2.focus is not a function
+
+      325 |       }
+      326 |     },
+    > 327 |     focus() {
+          |              ^
+      328 |       this.$refs.surface?.focus();
+      329 |     },
+      330 |     onFocus() {
+
+      at VueComponent.focus (app/assets/javascripts/content_editor/components/content_editor.vue:327:27)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:437:34)
+      at VueComponent.focus (app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue:316:14)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+Test Suites: 1 failed, 1 total
+Tests:       14 failed, 61 passed, 75 total
+Snapshots:   0 total
+Time:        21.881 s
+Ran all test suites matching /spec\/frontend\/vue_shared\/components\/markdown\/markdown_editor_spec.js/i.
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
