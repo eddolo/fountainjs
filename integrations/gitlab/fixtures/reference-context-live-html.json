@@ -1,0 +1,167 @@
+{
+  "scope": "Authenticated pinned GitLab renderer fixtures; not browser product acceptance",
+  "referenceRecords": {
+    "projectId": 1,
+    "projectPath": "root/fountain-product-integration",
+    "issueIID": 75,
+    "mergeRequestIID": 1,
+    "label": "Fountain reference & review"
+  },
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "fixtures": [
+    {
+      "name": "issue-alone",
+      "source": "#75",
+      "body": "<p data-sourcepos=\"1:1-1:3\" dir=\"auto\"><a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a></p>"
+    },
+    {
+      "name": "issue-word-before",
+      "source": "prefix#75",
+      "body": "<p data-sourcepos=\"1:1-1:9\" dir=\"auto\">prefix#75</p>"
+    },
+    {
+      "name": "issue-word-after",
+      "source": "#75suffix",
+      "body": "<p data-sourcepos=\"1:1-1:9\" dir=\"auto\">#75suffix</p>"
+    },
+    {
+      "name": "issue-dash-before",
+      "source": "prefix-#75",
+      "body": "<p data-sourcepos=\"1:1-1:10\" dir=\"auto\">prefix-#75</p>"
+    },
+    {
+      "name": "issue-slash-before",
+      "source": "prefix/#75",
+      "body": "<p data-sourcepos=\"1:1-1:10\" dir=\"auto\">prefix/<a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a></p>"
+    },
+    {
+      "name": "issue-underscore-before",
+      "source": "prefix_#75",
+      "body": "<p data-sourcepos=\"1:1-1:10\" dir=\"auto\">prefix_#75</p>"
+    },
+    {
+      "name": "issue-unicode-before",
+      "source": "語#75",
+      "body": "<p data-sourcepos=\"1:1-1:6\" dir=\"auto\">語<a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a></p>"
+    },
+    {
+      "name": "issue-parentheses",
+      "source": "(#75)",
+      "body": "<p data-sourcepos=\"1:1-1:5\" dir=\"auto\">(<a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a>)</p>"
+    },
+    {
+      "name": "issue-punctuation",
+      "source": "See: #75.",
+      "body": "<p data-sourcepos=\"1:1-1:9\" dir=\"auto\">See: <a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a>.</p>"
+    },
+    {
+      "name": "issue-mark-before",
+      "source": "**prefix**#75",
+      "body": "<p data-sourcepos=\"1:1-1:13\" dir=\"auto\"><strong data-sourcepos=\"1:1-1:10\">prefix</strong><a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a></p>"
+    },
+    {
+      "name": "issue-mark-after",
+      "source": "#75**suffix**",
+      "body": "<p data-sourcepos=\"1:1-1:13\" dir=\"auto\"><a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a><strong data-sourcepos=\"1:4-1:13\">suffix</strong></p>"
+    },
+    {
+      "name": "issue-marked",
+      "source": "__#75__",
+      "body": "<p data-sourcepos=\"1:1-1:7\" dir=\"auto\"><strong data-sourcepos=\"1:1-1:7\"><a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a></strong></p>"
+    },
+    {
+      "name": "issue-link-label",
+      "source": "[#75](/help/user/project)",
+      "body": "<p data-sourcepos=\"1:1-1:25\" dir=\"auto\"><a data-sourcepos=\"1:1-1:25\" href=\"/root/fountain-product-integration/-/blob/main/help/user/project\" data-canonical-src=\"/help/user/project\" class=\"gfm\">#75</a></p>"
+    },
+    {
+      "name": "issue-code",
+      "source": "`#75`",
+      "body": "<p data-sourcepos=\"1:1-1:5\" dir=\"auto\"><code data-sourcepos=\"1:1-1:5\">#75</code></p>"
+    },
+    {
+      "name": "issue-escaped",
+      "source": "\\#75",
+      "body": "<p data-sourcepos=\"1:1-1:4\" dir=\"auto\"><span data-escaped-char=\"\" data-sourcepos=\"1:1-1:2\">#</span>75</p>"
+    },
+    {
+      "name": "mr-word-before",
+      "source": "prefix!1",
+      "body": "<p data-sourcepos=\"1:1-1:8\" dir=\"auto\">prefix!1</p>"
+    },
+    {
+      "name": "mr-word-after",
+      "source": "!1suffix",
+      "body": "<p data-sourcepos=\"1:1-1:8\" dir=\"auto\"><a href=\"/root/fountain-product-integration/-/merge_requests/1\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-merge_request\" data-original=\"!1\" data-link=\"false\" data-link-reference=\"false\" data-merge-request=\"1\" data-project=\"1\" data-project-path=\"root/fountain-product-integration\" data-iid=\"1\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"merge_request\">!1</a>suffix</p>"
+    },
+    {
+      "name": "user-word-before",
+      "source": "prefix@root",
+      "body": "<p data-sourcepos=\"1:1-1:11\" dir=\"auto\">prefix@root</p>"
+    },
+    {
+      "name": "user-word-after",
+      "source": "@rootsuffix",
+      "body": "<p data-sourcepos=\"1:1-1:11\" dir=\"auto\">@rootsuffix</p>"
+    },
+    {
+      "name": "user-marked",
+      "source": "**@root**",
+      "body": "<p data-sourcepos=\"1:1-1:9\" dir=\"auto\"><strong data-sourcepos=\"1:1-1:9\"><a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a></strong></p>"
+    },
+    {
+      "name": "label-word-before",
+      "source": "prefix~\"Fountain reference & review\"",
+      "body": "<p data-sourcepos=\"1:1-1:36\" dir=\"auto\">prefix~\"Fountain reference &amp; review\"</p>"
+    },
+    {
+      "name": "label-word-after",
+      "source": "~\"Fountain reference & review\"suffix",
+      "body": "<p data-sourcepos=\"1:1-1:36\" dir=\"auto\"><span class=\"gl-label\"><a href=\"/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review\" title=\"\" class=\"gfm gfm-label has-tooltip gl-link gl-label-link\" data-original=\"~&amp;quot;Fountain reference &amp;amp; review&amp;quot;\" data-link=\"false\" data-link-reference=\"false\" data-label=\"1\" data-project=\"1\" data-html=\"true\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"label\"><span class=\"gl-label-text gl-label-text-light\" data-container=\"body\" data-html=\"true\" style=\"background-color: #6699cc\">Fountain reference &amp; review</span></a></span>suffix</p>"
+    },
+    {
+      "name": "label-marked",
+      "source": "**~\"Fountain reference & review\"**",
+      "body": "<p data-sourcepos=\"1:1-1:34\" dir=\"auto\"><strong data-sourcepos=\"1:1-1:34\"><span class=\"gl-label\"><a href=\"/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review\" title=\"\" class=\"gfm gfm-label has-tooltip gl-link gl-label-link\" data-original=\"~&amp;quot;Fountain reference &amp;amp; review&amp;quot;\" data-link=\"false\" data-link-reference=\"false\" data-label=\"1\" data-project=\"1\" data-html=\"true\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"label\"><span class=\"gl-label-text gl-label-text-light\" data-container=\"body\" data-html=\"true\" style=\"background-color: #6699cc\">Fountain reference &amp; review</span></a></span></strong></p>"
+    },
+    {
+      "name": "issue-span-boundary",
+      "source": "prefix<span>#75</span>suffix",
+      "body": "<p data-sourcepos=\"1:1-1:28\" dir=\"auto\">prefix<span><a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a></span>suffix</p>"
+    },
+    {
+      "name": "user-span-boundary",
+      "source": "prefix<span>@root</span>suffix",
+      "body": "<p data-sourcepos=\"1:1-1:30\" dir=\"auto\">prefix<span><a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a></span>suffix</p>"
+    },
+    {
+      "name": "label-span-boundary",
+      "source": "prefix<span>~\"Fountain reference & review\"</span>suffix",
+      "body": "<p data-sourcepos=\"1:1-1:55\" dir=\"auto\">prefix<span><span class=\"gl-label\"><a href=\"/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review\" title=\"\" class=\"gfm gfm-label has-tooltip gl-link gl-label-link\" data-original=\"~&amp;quot;Fountain reference &amp;amp; review&amp;quot;\" data-link=\"false\" data-link-reference=\"false\" data-label=\"1\" data-project=\"1\" data-html=\"true\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"label\"><span class=\"gl-label-text gl-label-text-light\" data-container=\"body\" data-html=\"true\" style=\"background-color: #6699cc\">Fountain reference &amp; review</span></a></span></span>suffix</p>"
+    },
+    {
+      "name": "mr-span-boundary",
+      "source": "prefix<span>!1</span>suffix",
+      "body": "<p data-sourcepos=\"1:1-1:27\" dir=\"auto\">prefix<span><a href=\"/root/fountain-product-integration/-/merge_requests/1\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-merge_request\" data-original=\"!1\" data-link=\"false\" data-link-reference=\"false\" data-merge-request=\"1\" data-project=\"1\" data-project-path=\"root/fountain-product-integration\" data-iid=\"1\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"merge_request\">!1</a></span>suffix</p>"
+    },
+    {
+      "name": "source-spelling",
+      "source": "Title\n=====\n\nKeep __bold__ and [guide][g].\n\nReference #75.\n\nEdit here.\n\n[g]: /help/user/project 'Guide title'\n",
+      "body": "<h1 data-sourcepos=\"1:1-2:5\" dir=\"auto\">Title</h1>&#x000A;<p data-sourcepos=\"4:1-4:29\" dir=\"auto\">Keep <strong data-sourcepos=\"4:6-4:13\">bold</strong> and <a data-sourcepos=\"4:19-4:28\" href=\"/root/fountain-product-integration/-/blob/main/help/user/project\" title=\"Guide title\" data-canonical-src=\"/help/user/project\" class=\"gfm\">guide</a>.</p>&#x000A;<p data-sourcepos=\"6:1-6:14\" dir=\"auto\">Reference <a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a>.</p>&#x000A;<p data-sourcepos=\"8:1-8:10\" dir=\"auto\">Edit here.</p>"
+    },
+    {
+      "name": "source-crlf",
+      "source": "Title\r\n=====\r\n\r\nKeep __bold__.\r\n\r\nReference #75.\r\n\r\nEdit here.\r\n",
+      "body": "<h1 data-sourcepos=\"1:1-2:5\" dir=\"auto\">Title</h1>&#x000A;<p data-sourcepos=\"4:1-4:14\" dir=\"auto\">Keep <strong data-sourcepos=\"4:6-4:13\">bold</strong>.</p>&#x000A;<p data-sourcepos=\"6:1-6:14\" dir=\"auto\">Reference <a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a>.</p>&#x000A;<p data-sourcepos=\"8:1-8:10\" dir=\"auto\">Edit here.</p>"
+    },
+    {
+      "name": "source-soft-break",
+      "source": "Keep first line\nsecond __line__.\n\nReference #75.\n\nEdit here.\n",
+      "body": "<p data-sourcepos=\"1:1-2:16\" dir=\"auto\">Keep first line&#x000A;second <strong data-sourcepos=\"2:8-2:15\">line</strong>.</p>&#x000A;<p data-sourcepos=\"4:1-4:14\" dir=\"auto\">Reference <a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a>.</p>&#x000A;<p data-sourcepos=\"6:1-6:10\" dir=\"auto\">Edit here.</p>"
+    }
+  ]
+}

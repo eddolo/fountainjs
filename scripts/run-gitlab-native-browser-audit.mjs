@@ -29,9 +29,10 @@ try {
   execFileSync(
     process.execPath,
     [
-      resolve(root, process.argv.includes('--alert-fixtures') || process.argv.includes('--media-fixtures') || process.argv.includes('--reference-fixtures') ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      resolve(root, process.argv.includes('--alert-fixtures') || process.argv.includes('--media-fixtures') || process.argv.includes('--reference-fixtures') || process.argv.includes('--reference-context-fixtures') ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
+      ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
       process.argv.includes('--references') ? '--native-references'
         : process.argv.includes('--media-files') ? '--native-media-files'
         : process.argv.includes('--media') ? '--native-media'
@@ -43,6 +44,7 @@ try {
         : process.argv.includes('--component') ? '--native-component'
         : process.argv.includes('--insertion') ? '--native-insertion' : '--native-browser',
       '--verify-restart',
+      ...(process.argv.includes('--reference-contexts') ? ['--reference-contexts'] : []),
       ...(process.argv.includes('--probe-upload-focus') ? ['--probe-upload-focus'] : []),
       ...(process.argv.includes('--debug-links') ? ['--debug-links'] : []),
     ],

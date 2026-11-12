@@ -8,7 +8,9 @@ export async function auditNativeReferences({ page, context, editor, toolbar, ou
   const records = fixtures.referenceRecords;
   const issue = `#${records.issueIID}`, mr = `!${records.mergeRequestIID}`;
   const qualified = `${records.projectPath}${issue}`, label = `~"${records.label}"`;
-  const source = `Reference controls: ${issue} ${mr} @root ${label}\n\nQualified reference: ${qualified}`;
+  const boundaries = process.argv.includes('--reference-contexts');
+  const source = `Reference controls: ${issue} ${mr} @root ${label}\n\nQualified reference: ${qualified}`
+    + (boundaries ? `\n\nContext boundaries: ${issue} ${mr} @root ${label}` : '');
   const origin = new URL(page.url()).origin;
   const section = toolbar.getByRole('region', { name: 'Reference controls', exact: true });
   const field = () => section.getByRole('combobox', { name: 'Reference display', exact: true });
@@ -94,6 +96,23 @@ export async function auditNativeReferences({ page, context, editor, toolbar, ou
       { original: mr + '+s', type: 'merge_request', href: await reference(mr + '+s').getAttribute('href'), text: 'Unassigned' },
       { original: qualified + '+', type: 'issue', href: await reference(qualified + '+', qualifiedParagraph).getAttribute('href'), text: 'Fountain reference controls fixture: & <review>' },
     ], authorURL, copiedURL: address };
+  if (boundaries) {
+    const boundaryParagraph = editor.locator(':scope > p').filter({ hasText: 'Context boundaries:' });
+    const expected = [];
+    for (const original of [issue, mr, '@root', label]) {
+      const atom = reference(original, boundaryParagraph);
+      const type = await atom.getAttribute('data-fountain-gitlab-reference');
+      const href = await atom.getAttribute('href'), text = await atom.textContent();
+      await atom.click(); await page.keyboard.press('ArrowLeft'); await page.keyboard.type('prefix');
+      await atom.click(); await page.keyboard.press('ArrowRight'); await page.keyboard.type('suffix');
+      await expect(boundaryParagraph).toContainText(`prefix${text}suffix`);
+      await expect(atom).toHaveCount(1);
+      expected.push({ original, type, href, text });
+    }
+    report.nativeReferences.boundaries = expected;
+    await screenshot('reference-context-native-edits.png');
+    report.checks.push('Native keyboard typing immediately before and after issue/MR/user/label atoms preserves each reference without inserting visible separators');
+  }
 }
 
 export async function assertSavedNativeReferences({ page, description, report, output, phase }) {
@@ -107,7 +126,21 @@ export async function assertSavedNativeReferences({ page, description, report, o
     await expect(anchor).toHaveCount(1); await expect(anchor).toContainText(expected.text);
     await expect(anchor).toHaveAttribute('href', expected.href);
   }
-  await expect(reader.locator('a[data-reference-type="label"]').filter({ hasText: data.records.label })).toHaveCount(1);
+  await expect(reader.locator('p').filter({ hasText: 'Reference controls:' }).locator('a[data-reference-type="label"]').filter({ hasText: data.records.label })).toHaveCount(1);
+  if (data.boundaries) {
+    const paragraph = reader.locator('p').filter({ hasText: 'Context boundaries:' });
+    for (const expected of data.boundaries) {
+      const escaped = expected.original.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+      expect(description).toContain(`prefix<span>${escaped}</span>suffix`);
+      const anchor = paragraph.locator(`a[data-reference-type=${JSON.stringify(expected.type)}]`);
+      await expect(anchor).toHaveCount(1); await expect(anchor).toHaveText(expected.text);
+      await expect(anchor).toHaveAttribute('href', expected.href);
+      await expect(paragraph).toContainText(`prefix${expected.text}suffix`);
+    }
+    await paragraph.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: fileURLToPath(new URL(`reference-context-reader-${phase}.png`, output)), fullPage: true });
+    (report.nativeReferenceContextReaderPhases ??= []).push(phase);
+  }
   await reader.locator(`a[data-original=${JSON.stringify(data.expected[2].original)}]`).scrollIntoViewIfNeeded();
   await page.screenshot({ path: fileURLToPath(new URL(`references-reader-${phase}.png`, output)), fullPage: true });
   (report.nativeReferenceReaderPhases ??= []).push(phase);

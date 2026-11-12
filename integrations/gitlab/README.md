@@ -1063,6 +1063,46 @@ remain open. This does not complete GitLab or either other reference product.
 [actual journey](../../artifacts/gitlab-native-references-20261112/report.json),
 [component evidence](../../artifacts/gitlab-native-reference-storybook-20261112/report.json).
 
+### Reference text boundaries
+
+Typing directly beside a native reference previously joined its source to the
+neighboring text during canonical export. The actual GitLab renderer stops
+recognizing some of those strings; user mentions can also resolve to a different
+account. The codec now retains the atom's text-node boundary with a plain inline
+span, escaping its HTML text and adding no visible characters. Different marks
+and existing whitespace retain their own boundaries. Code/link marks that would
+suppress reference recognition are reported as export errors; correction leaves
+the same document editable and restores serialization.
+
+Thirty authenticated pinned-renderer fixtures capture the differing lexical
+contexts rather than assuming all reference types share one rule. Twenty-nine
+new pure-Node regressions cover loss prevention, literal HTML, neighboring atoms,
+marked text and error recovery. The actual UI journey types `prefix`/`suffix`
+beside issue, MR, user and colored-label references, saves through GitLab, then
+checks the real reader after reopening and restarting the application. It passes
+**19 checks** with zero browser errors. Native and final reader screenshots and
+the recorded journey are visually reviewed; the final settled reader retains
+the baseline typeset math, table and image as well as the four references.
+
+All **5,855 root tests/357 files**, current TypeScript, API and unchanged size
+checks pass. The seventeen-file guarded source rollback/reinstall passes. The
+fresh upstream nine-suite set remains **304 passed / 2 failed / 306 total**;
+the original media/code-menu requirements remain failed and unskipped. No
+public library, API or size-ceiling changes are required. The first live run's
+old literal-source assertion rejected the new span spelling after a successful
+save; its evidence is retained, and the updated assertion additionally verifies
+the actual rendered user-reference identity. The final run includes restart.
+
+This is reference-boundary hardening, not exact untouched-section source
+preservation or full-product completion. Broader dialect, surfaces, roles,
+concurrency, deployment/rollback and the other two complete products remain open.
+The professional-product requirements explicitly retain clean-environment
+deployment and real connected workflows as release requirements.
+
+[Checkpoint evidence](../../artifacts/gitlab-native-reference-context-integration-20261112.json),
+[actual recorded journey](../../artifacts/gitlab-native-reference-contexts-20261112/report.json),
+[boundary contract](services/README.md#reference-text-boundaries).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

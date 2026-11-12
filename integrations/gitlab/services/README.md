@@ -305,6 +305,30 @@ preserves external focus. Reference autocomplete, hover cards and broader
 application/role coverage remain separate work. These are private integration
 interfaces, not new public npm exports.
 
+### Reference text boundaries
+
+GitLab resolves references within individual rendered HTML text nodes. A native
+reference atom must retain that boundary after editing: `prefix` + issue `#75` +
+`suffix` cannot become raw `prefix#75suffix`, which the real renderer treats as
+ordinary text. Usernames can also resolve to a different account when suffix
+text joins their source. Issue, MR, user and label lexical rules differ.
+
+The canonical codec emits a plain inline `<span>` around a reference touching
+non-whitespace text or another reference/placeholder with the same marks. This
+preserves the text-node boundary without adding visible separators or
+reimplementing GitLab's per-type reference lexer. HTML text within the span is
+escaped. Existing whitespace and different-mark element boundaries remain
+usable without that wrapper. The actual pinned renderer corpus covers these
+contrasting contexts; the live UI journey types beside all four reference kinds
+and checks the saved reader after reopening and service restart.
+
+Code/link marks on a reference are an export error, because those ancestor
+elements suppress reference recognition. The current document stays editable;
+removing that formatting or undoing the change restores serialization. This is
+a conversion guard, not support for combining arbitrary link/code semantics
+with references. It does not establish exact source-spelling preservation for
+untouched sections after edits.
+
 ## Build and real-service evidence
 
 ```sh

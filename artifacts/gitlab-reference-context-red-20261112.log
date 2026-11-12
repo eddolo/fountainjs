@@ -1,0 +1,109 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-reference-context.test.ts (24 tests | 6 failed) 76ms
+   × retains an edited issue atom between adjacent words through actual GitLab HTML 16ms
+   × retains an edited mr atom between adjacent words through actual GitLab HTML 3ms
+   × retains an edited user atom between adjacent words through actual GitLab HTML 2ms
+   × retains an edited label atom between adjacent words through actual GitLab HTML 3ms
+   × reports code formatting that would turn a reference into literal text or an ordinary link 3ms
+   × reports link formatting that would turn a reference into literal text or an ordinary link 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-reference-context.test.ts > retains an edited issue atom between adjacent words through actual GitLab HTML
+AssertionError: expected 'prefix#75suffix' to be 'prefix<span>#75</span>suffix' // Object.is equality
+
+Expected: "prefix<span>#75</span>suffix"
+Received: "prefix#75suffix"
+
+ ❯ tests/gitlab-reference-context.test.ts:42:27
+     40|   const result = codec.serializeWithReport({ doc: edited });
+     41|   expect(result.issues).toEqual([]);
+     42|   expect(result.markdown).toBe(fixture.source);
+       |                           ^
+     43|   expect(result.preservation).toBe('canonical');
+     44|   expect(edited.toJSON()).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/gitlab-reference-context.test.ts > retains an edited mr atom between adjacent words through actual GitLab HTML
+AssertionError: expected 'prefix!1suffix' to be 'prefix<span>!1</span>suffix' // Object.is equality
+
+Expected: "prefix<span>!1</span>suffix"
+Received: "prefix!1suffix"
+
+ ❯ tests/gitlab-reference-context.test.ts:42:27
+     40|   const result = codec.serializeWithReport({ doc: edited });
+     41|   expect(result.issues).toEqual([]);
+     42|   expect(result.markdown).toBe(fixture.source);
+       |                           ^
+     43|   expect(result.preservation).toBe('canonical');
+     44|   expect(edited.toJSON()).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/gitlab-reference-context.test.ts > retains an edited user atom between adjacent words through actual GitLab HTML
+AssertionError: expected 'prefix@rootsuffix' to be 'prefix<span>@root</span>suffix' // Object.is equality
+
+Expected: "prefix<span>@root</span>suffix"
+Received: "prefix@rootsuffix"
+
+ ❯ tests/gitlab-reference-context.test.ts:42:27
+     40|   const result = codec.serializeWithReport({ doc: edited });
+     41|   expect(result.issues).toEqual([]);
+     42|   expect(result.markdown).toBe(fixture.source);
+       |                           ^
+     43|   expect(result.preservation).toBe('canonical');
+     44|   expect(edited.toJSON()).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/gitlab-reference-context.test.ts > retains an edited label atom between adjacent words through actual GitLab HTML
+AssertionError: expected 'prefix~"Fountain reference & review"s…' to be 'prefix<span>~"Fountain reference & re…' // Object.is equality
+
+Expected: "prefix<span>~"Fountain reference & review"</span>suffix"
+Received: "prefix~"Fountain reference & review"suffix"
+
+ ❯ tests/gitlab-reference-context.test.ts:42:27
+     40|   const result = codec.serializeWithReport({ doc: edited });
+     41|   expect(result.issues).toEqual([]);
+     42|   expect(result.markdown).toBe(fixture.source);
+       |                           ^
+     43|   expect(result.preservation).toBe('canonical');
+     44|   expect(edited.toJSON()).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/gitlab-reference-context.test.ts > reports code formatting that would turn a reference into literal text or an ordinary link
+ FAIL  tests/gitlab-reference-context.test.ts > reports link formatting that would turn a reference into literal text or an ordinary link
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "reference-mark-context",
+  "path": [
+    0,
+    0,
+  ],
+  "stage": "export",
+}
+
++ Received:
+[]
+
+ ❯ tests/gitlab-reference-context.test.ts:56:61
+     54|   const mark = schema.marks[kind]!.create(kind === 'link' ? { href: '/…
+     55|   const edited = schema.node('doc', {}, [schema.node('paragraph', {}, …
+     56|   expect(codec.serializeWithReport({ doc: edited }).issues).toContainE…
+       |                                                             ^
+     57|     stage: 'export', code: 'reference-mark-context', path: [0, 0],
+     58|   }));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 18 passed (24)
+   Start at  23:15:00
+   Duration  1.52s (transform 76%, import 18%, tests 6%)

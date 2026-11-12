@@ -6,6 +6,13 @@ seeded-only interaction, fake network/collaboration or a description field
 inside a branded frame do not satisfy this requirement. The small Todoist-style
 task brief remains an integration example; it is not a flagship candidate.
 
+The delivery target is a product a professional team can install, deploy,
+operate and evaluate as a replacement for its current editor stack. A polished
+showcase is a view into that working product, not a substitute for it. Fixed
+fixtures and service doubles remain useful for isolated tests, but cannot be
+the evidence for authentication, persistence, collaboration or connected
+product workflows.
+
 ## GitLab first
 
 The strongest verification route is Fountain inside the real GitLab application.
@@ -66,6 +73,13 @@ For each product:
 7. Put completed products prominently in the examples hub and developer guide.
    Keep unfinished integration work clearly identified. Do not turn a proposed
    capability matrix or a green isolated test into a claim of 100% readiness.
+
+Release each flagship only after its pinned capability/workflow matrix has
+acceptance evidence and its deployment, migration, recovery and rollback
+instructions work from a clean environment. Keep unmet original capabilities
+visible as blockers. Disabling an action, refusing its content or narrowing the
+matrix does not establish replacement parity. Demonstrate any claimed Fountain
+advantage against the same original workflow and document workload.
 
 Git hosting, CI runners and other application services remain real host services
 in an integrated product. They are not capabilities supplied by the editor engine.

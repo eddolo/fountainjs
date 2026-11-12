@@ -1,0 +1,29 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-reference-context.test.ts (29 tests | 1 failed | 28 skipped) 40ms
+   × blocks lossy submission while keeping the document editable and recovers after removing invalid formatting 38ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-reference-context.test.ts > blocks lossy submission while keeping the document editable and recovers after removing invalid formatting
+TypeError: Cannot read properties of undefined (reading 'mark')
+ ❯ tests/gitlab-reference-context.test.ts:92:55
+     90|     const { editor } = service, original = editor.state.doc;
+     91|     const reference = references(original)[0]!;
+     92|     const marked = reference.withMarks([editor.schema.mark('code')]);
+       |                                                       ^
+     93|     const invalid = editor.schema.node('doc', {}, [editor.schema.node(…
+     94|     editor.dispatch(editor.createTransaction().replaceDocument(invalid…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 skipped (29)
+   Start at  23:20:38
+   Duration  2.96s (transform 84%, import 14%, tests 2%)
+
+  Transform  transforming modules took 2.17s · 84% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

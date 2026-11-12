@@ -1,0 +1,28 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-reference-context.test.ts (29 tests | 1 failed) 192ms
+   × blocks lossy submission while keeping the document editable and recovers after removing invalid formatting 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-reference-context.test.ts > blocks lossy submission while keeping the document editable and recovers after removing invalid formatting
+TypeError: Cannot read properties of undefined (reading 'mark')
+ ❯ tests/gitlab-reference-context.test.ts:92:55
+     90|     const { editor } = service, original = editor.state.doc, schema = …
+     91|     const reference = references(original)[0]!;
+     92|     const marked = reference.withMarks([schema.mark('code')]);
+       |                                                       ^
+     93|     const invalid = schema.node('doc', {}, [schema.node('paragraph', {…
+     94|     editor.dispatch(editor.createTransaction().replaceDocument(invalid…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 356 passed (357)
+      Tests  1 failed | 5854 passed (5855)
+   Start at  23:17:28
+   Duration  211.82s (environment 47%, import 30%, tests 18%, transform 4%, worker 1%)
+
+    Isolate  357 workers spawned · ~2.15s startup each (spawn + environment, per file)
+             at least ~107.53s faster with isolate: false — reuses workers across files instead of one per file

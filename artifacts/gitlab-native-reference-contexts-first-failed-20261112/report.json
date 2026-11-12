@@ -1,0 +1,220 @@
+{
+  "date": "2026-11-12T23:25:38.426Z",
+  "scope": "Native Fountain browser editor in the actual GitLab application; partial toolbar/providers, not full product acceptance",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Real issue references select without navigating; ID/title/summary changes use the live renderer, retain literal title text and participate in one-step undo/redo",
+    "Actual offline reference resolution retains the draft and source; after typing elsewhere, online retry updates the captured reference and subsequent typing stays at the moved cursor",
+    "An actual merge request supports title/summary display; a project-qualified issue reference retains its qualified source while changing display",
+    "Copy writes the actual absolute reference URL to the system clipboard; Open navigates an authenticated new tab to the real issue without losing the author draft",
+    "Real user/colored-label references offer copy/navigation/removal without unsupported display choices; removal, native typing and undo preserve their paragraph and restore the original source",
+    "Native keyboard typing immediately before and after issue/MR/user/label atoms preserves each reference without inserting visible separators",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Actual UI Save retains reference display source and qualification; the real GitLab reader renders the issue, merge-request and colored-label references"
+  ],
+  "secrets": "Password/session used in memory only; no traces or storage-state files",
+  "preparedHost": true,
+  "nativeBrowser": true,
+  "nativeInsertion": true,
+  "nativeComponent": true,
+  "nativeAttachments": false,
+  "nativeCapacity": false,
+  "nativeLinks": false,
+  "nativeCodeProfile": false,
+  "nativeAlertsProfile": false,
+  "nativeMediaProfile": false,
+  "nativeMediaFilesProfile": false,
+  "nativeReferencesProfile": true,
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1514526,
+    "sha256": "263ab7319a9b5b23ee16a6fffb683f92ed607cef0be633cdb511a8cabc25015b",
+    "parentRevision": "0b49f8e92b42a84234ba4f9b67c86bfc250357f7",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "a653302816da4909774f42824768a373e93bc9972be11a948ba7cfccf8f573fa",
+      "integrations/gitlab/services/content_editor.ts": "9e4a55618da283c4bbf03af2d0b1c0ee7553914c4693588d01f0c2255da12769",
+      "integrations/gitlab/services/markdown_insertion.ts": "b782f4d206cd062a63992e85b57b1264b8bf7365c437c72994b6aa1e8bd1726c",
+      "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+      "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+      "integrations/gitlab/services/code_editing.ts": "437a6f4740d6b28287d0902b4f2d6913d8ff5ce294be6687b6ca160af7479763",
+      "integrations/gitlab/services/code_rendering.ts": "624aaf0515f5f91950918becf919c1a4e9c8e1c1bab98a18d775af87df2584ea",
+      "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+      "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+      "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+      "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+      "integrations/gitlab/services/media_editing.ts": "e49a88c4fb95c43b4f58b4490241429c7e7fd15783d99d2dd84c65dc2097f671",
+      "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+      "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+      "integrations/gitlab/services/markdown_codec.ts": "6d987bad3f3bb056d45421f8d1d258c19d453e0e29b64e19166abf09135d5db2",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "caea8f3c22f3bd3ca90fa7015ff2260cb0c8d5d9974fb9906c7cdbe2a79189f3",
+      "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+      "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+      "dist/index.js": "6ac62e3acacc8735fffc4851fe091734de6fe791c42ff3938a15ad84c128be69"
+    }
+  },
+  "browserErrors": [],
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/f7babd5e2463f94a8f65d91373a47257/fountain-baseline-figure.png",
+      "status": 200
+    }
+  ],
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 79,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/79"
+  },
+  "originalServerDescription": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/f7babd5e2463f94a8f65d91373a47257/fountain-baseline-figure.png)\n\nEnd of the original description.",
+  "nativeReferenceRendering": "<p data-sourcepos=\"1:1-1:63\" dir=\"auto\">Reference controls: <a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a> <a href=\"/root/fountain-product-integration/-/merge_requests/1\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-merge_request\" data-original=\"!1\" data-link=\"false\" data-link-reference=\"false\" data-merge-request=\"1\" data-project=\"1\" data-project-path=\"root/fountain-product-integration\" data-iid=\"1\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"merge_request\">!1</a> <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a> <span class=\"gl-label\"><a href=\"/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review\" title=\"\" class=\"gfm gfm-label has-tooltip gl-link gl-label-link\" data-original=\"~&amp;quot;Fountain reference &amp;amp; review&amp;quot;\" data-link=\"false\" data-link-reference=\"false\" data-label=\"1\" data-project=\"1\" data-html=\"true\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"label\"><span class=\"gl-label-text gl-label-text-light\" data-container=\"body\" data-html=\"true\" style=\"background-color: #6699cc\">Fountain reference &amp; review</span></a></span></p>&#x000A;<p data-sourcepos=\"3:1-3:57\" dir=\"auto\">Qualified reference: <a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"root/fountain-product-integration#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a></p>&#x000A;<p data-sourcepos=\"5:1-5:63\" dir=\"auto\">Context boundaries: <a href=\"/root/fountain-product-integration/-/work_items/75\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-issue\" data-original=\"#75\" data-link=\"false\" data-link-reference=\"false\" data-issue=\"139\" data-project=\"1\" data-iid=\"75\" data-namespace-path=\"root/fountain-product-integration\" data-project-path=\"root/fountain-product-integration\" data-issue-type=\"issue\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"issue\">#75</a> <a href=\"/root/fountain-product-integration/-/merge_requests/1\" title=\"Fountain reference controls fixture: &amp; <review>\" class=\"gfm gfm-merge_request\" data-original=\"!1\" data-link=\"false\" data-link-reference=\"false\" data-merge-request=\"1\" data-project=\"1\" data-project-path=\"root/fountain-product-integration\" data-iid=\"1\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"merge_request\">!1</a> <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a> <span class=\"gl-label\"><a href=\"/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review\" title=\"\" class=\"gfm gfm-label has-tooltip gl-link gl-label-link\" data-original=\"~&amp;quot;Fountain reference &amp;amp; review&amp;quot;\" data-link=\"false\" data-link-reference=\"false\" data-label=\"1\" data-project=\"1\" data-html=\"true\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"label\"><span class=\"gl-label-text gl-label-text-light\" data-container=\"body\" data-html=\"true\" style=\"background-color: #6699cc\">Fountain reference &amp; review</span></a></span></p>",
+  "nativeReferences": {
+    "records": {
+      "projectId": 1,
+      "projectPath": "root/fountain-product-integration",
+      "issueIID": 75,
+      "mergeRequestIID": 1,
+      "label": "Fountain reference & review"
+    },
+    "labelSource": "~\"Fountain reference & review\"",
+    "paragraphSource": "Reference controls: #75+s !1+s @root ~\"Fountain reference & review\"",
+    "expected": [
+      {
+        "original": "#75+s",
+        "type": "issue",
+        "href": "/root/fountain-product-integration/-/work_items/75",
+        "text": "Unassigned"
+      },
+      {
+        "original": "!1+s",
+        "type": "merge_request",
+        "href": "/root/fountain-product-integration/-/merge_requests/1",
+        "text": "Unassigned"
+      },
+      {
+        "original": "root/fountain-product-integration#75+",
+        "type": "issue",
+        "href": "/root/fountain-product-integration/-/work_items/75",
+        "text": "Fountain reference controls fixture: & <review>"
+      }
+    ],
+    "authorURL": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/79",
+    "copiedURL": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/75",
+    "boundaries": [
+      {
+        "original": "#75",
+        "type": "issue",
+        "href": "/root/fountain-product-integration/-/work_items/75",
+        "text": "#75"
+      },
+      {
+        "original": "!1",
+        "type": "merge_request",
+        "href": "/root/fountain-product-integration/-/merge_requests/1",
+        "text": "!1"
+      },
+      {
+        "original": "@root",
+        "type": "user",
+        "href": "/root",
+        "text": "@root"
+      },
+      {
+        "original": "~\"Fountain reference & review\"",
+        "type": "label",
+        "href": "/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review",
+        "text": "Fountain reference & review"
+      }
+    ]
+  },
+  "preparedScripts": [
+    {
+      "path": "/assets/webpack/content_editor.3cd515ef.chunk.js",
+      "sha256": "48188c1960940e15eee94e82b86176debbc4c159d583a89f82cb1c6d5575ef3d"
+    }
+  ],
+  "frontendMount": {
+    "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+    "readOnly": true
+  },
+  "nativeTaskControls": [
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    },
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    }
+  ],
+  "nativeReferenceContextReaderPhases": [
+    "saved"
+  ],
+  "nativeReferenceReaderPhases": [
+    "saved"
+  ],
+  "status": "failed",
+  "error": "Error: expect(received).toContain(expected) // indexOf\n\nExpected substring: \"Pasted **GitLab Markdown** with @root.\"\nReceived string:    \"# Source retention investigation·\nKeep **formatted content** and @root references when editing.·\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update·\n| Stage | Status |\n| --- | --- |\n| Save | Pending |·\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.·\n![Uploaded baseline figure](/uploads/f7babd5e2463f94a8f65d91373a47257/fountain-baseline-figure.png)·\nEnd of the original description.·\n**Edited through native Fountain in GitLab; persisted after restart.**·\nPasted **GitLab Markdown** with <span>@root</span>.·\n**Recovered paste Reference retry cursor. Continued after retry.**·\nReference controls: #75+s !1+s @root ~\\\"Fountain reference & review\\\"·\nQualified reference: root/fountain-product-integration#75+·\nContext boundaries: prefix<span>#75</span>suffix prefix<span>!1</span>suffix prefix<span>@root</span>suffix prefix<span>~\\\"Fountain reference &amp; review\\\"</span>suffix\"",
+  "failedImages": [
+    {
+      "src": "http://127.0.0.1:5080/-/project/1/uploads/f7babd5e2463f94a8f65d91373a47257/fountain-baseline-figure.png",
+      "currentSrc": "http://127.0.0.1:5080/-/project/1/uploads/f7babd5e2463f94a8f65d91373a47257/fountain-baseline-figure.png",
+      "complete": true,
+      "width": 400,
+      "loading": "lazy",
+      "rect": {
+        "x": 253,
+        "y": 157.484375,
+        "width": 400,
+        "height": 60,
+        "top": 157.484375,
+        "right": 653,
+        "bottom": 217.484375,
+        "left": 253
+      },
+      "visibility": "visible",
+      "display": "inline",
+      "contentVisibility": "visible"
+    }
+  ],
+  "failedImageRequests": [
+    {
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 3149
+    }
+  ],
+  "imagesAfterFailureScreenshot": [
+    {
+      "complete": true,
+      "width": 400,
+      "currentSrc": "http://127.0.0.1:5080/-/project/1/uploads/f7babd5e2463f94a8f65d91373a47257/fountain-baseline-figure.png"
+    }
+  ]
+}

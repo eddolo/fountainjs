@@ -2,7 +2,20 @@
 
 Updated 2026-11-12.
 
-The latest GitLab work adds native reference controls: ID/title/summary display,
+The latest GitLab checkpoint prevents reference loss when native text is typed
+immediately beside issue/MR/user/label atoms. Canonical source preserves their
+HTML text-node boundaries without adding visible separators; code/link marks
+that would erase reference semantics refuse export while the document remains
+editable. Thirty real-renderer fixtures and 29 new regression cases accompany a
+recorded actual-service journey: **19 checks**, zero browser errors, and all four
+kinds retained after save/reopen/restart. All **5,855 unit tests/357 files**,
+current types/API and unchanged size limits pass. The 17-file source
+rollback/reinstall passes; the nine-suite upstream set remains **304 passed /
+2 failed / 306 total**, with the two unfinished requirements unchanged. Full
+product acceptance and exact untouched-section spelling retention remain open.
+[Boundary evidence and limits](../integrations/gitlab/README.md#reference-text-boundaries).
+
+The preceding GitLab work adds native reference controls: ID/title/summary display,
 absolute URL copy, real new-tab navigation, removal/undo, retained qualified
 source and offline draft recovery without stealing the current cursor. The
 actual-service journey passes **18 checks**, including save/reopen/restart;

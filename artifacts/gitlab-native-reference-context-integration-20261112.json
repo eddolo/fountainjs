@@ -1,0 +1,146 @@
+{
+  "date": "2026-11-12",
+  "status": "partial-native-product-integration",
+  "parentRevision": "0b49f8e92b42a84234ba4f9b67c86bfc250357f7",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Preserve reference atom boundaries after adjacent native text edits using invisible-to-layout HTML spans, rather than changing visible text or guessing per-kind lexical rules",
+    "Escape HTML text within reference boundaries; retain ordinary mark/whitespace boundaries",
+    "Refuse code/link formatting that would erase reference semantics; keep current document editable and recover when formatting is removed",
+    "Thirty authenticated pinned-renderer structure fixtures, twenty-nine new Node regression cases and actual recorded four-kind UI typing/save/reopen/restart verification",
+    "Professional reference products explicitly require real deployable workflows and clean-environment release acceptance"
+  ],
+  "browser": {
+    "report": "artifacts/gitlab-native-reference-contexts-20261112/report.json",
+    "checks": 19,
+    "issueIID": 80,
+    "engine": "Linux Chromium",
+    "runtimeSHA256": "263ab7319a9b5b23ee16a6fffb683f92ed607cef0be633cdb511a8cabc25015b",
+    "readerPhases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "references": [
+      {
+        "original": "#75",
+        "type": "issue",
+        "href": "/root/fountain-product-integration/-/work_items/75",
+        "text": "#75"
+      },
+      {
+        "original": "!1",
+        "type": "merge_request",
+        "href": "/root/fountain-product-integration/-/merge_requests/1",
+        "text": "!1"
+      },
+      {
+        "original": "@root",
+        "type": "user",
+        "href": "/root",
+        "text": "@root"
+      },
+      {
+        "original": "~\"Fountain reference & review\"",
+        "type": "label",
+        "href": "/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review",
+        "text": "Fountain reference & review"
+      }
+    ],
+    "errors": []
+  },
+  "units": {
+    "tests": 5855,
+    "files": 357,
+    "report": "artifacts/gitlab-reference-context-unit-final-20261112.log",
+    "newCases": 29
+  },
+  "upstream": {
+    "passed": 304,
+    "failed": 2,
+    "total": 306,
+    "report": "artifacts/gitlab-native-reference-context-jest-20261112.json",
+    "remaining": [
+      "ContentEditor renders media bubble menu",
+      "ContentEditor renders codeBlock bubble menu"
+    ]
+  },
+  "installation": {
+    "format": 6,
+    "files": 17,
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "roundtrip": "artifacts/gitlab-native-reference-context-install-roundtrip-20261112.json",
+    "build": "artifacts/gitlab-native-reference-context-rspack-final-20261112.log"
+  },
+  "privateRuntime": {
+    "bytes": 1514526,
+    "sha256": "263ab7319a9b5b23ee16a6fffb683f92ed607cef0be633cdb511a8cabc25015b",
+    "addedBytes": 1228
+  },
+  "publicLibrary": {
+    "changed": false,
+    "apiDeclarations": 450,
+    "acceptanceLimitsChanged": false,
+    "packageRuntimeFormatPerformanceEvidence": "Inherited unchanged public-library evidence from ff24d0e2; no new all-library check claim",
+    "fresh": [
+      "5855 unit tests",
+      "Root TypeScript",
+      "Public API surface",
+      "Build budgets"
+    ]
+  },
+  "visualReview": {
+    "native": "artifacts/gitlab-native-reference-contexts-20261112/reference-context-native-edits.png",
+    "settledReader": "artifacts/gitlab-native-reference-contexts-20261112/original-after-restart.png",
+    "recordingFrames": "artifacts/gitlab-native-reference-contexts-20261112/journey-review.jpg",
+    "scope": "Native edit, actual saved reader and settled restart screenshot inspected; representative video frames reviewed"
+  },
+  "retainedRuns": [
+    {
+      "report": "artifacts/gitlab-reference-context-red-20261112.log",
+      "reason": "Four atom-boundary regressions and two unsafe-mark regressions fail before the repair"
+    },
+    {
+      "report": "artifacts/gitlab-reference-context-unit-20261112.log",
+      "reason": "First full run has one new test setup error (Editor.schema); corrected to use the document schema, then full suite passes"
+    },
+    {
+      "report": "artifacts/gitlab-native-reference-contexts-first-failed-20261112/report.json",
+      "reason": "Real four-kind save passed; old raw-source expectation rejected the canonical span. Replaced by exact current bytes plus real reference identity assertions; final full journey passes"
+    }
+  ],
+  "limitations": [
+    "Exact untouched-section source spelling after edits remains separate bridge work",
+    "Four live reference kinds and Linux Chromium acceptance do not establish every reference kind/browser or full application readiness",
+    "The two existing upstream requirements remain failed and unskipped",
+    "All product surfaces, roles/concurrency, complete dialect support, operational deployment/rollback and the other two products remain open",
+    "No publication or parity promotion"
+  ],
+  "recordings": [
+    {
+      "path": "artifacts/gitlab-native-reference-contexts-20261112/recordings/page@31228e4bd8af1727dfc0a5a2d62a7ff1.webm",
+      "bytes": 4620558,
+      "sha256": "3b8e99b86f813da1aeac3c8f910345fb08cd736171768665957fcfe826b1ba09"
+    },
+    {
+      "path": "artifacts/gitlab-native-reference-contexts-20261112/recordings/page@825bd0fe209d174642f1833bc0322b8f.webm",
+      "bytes": 49683,
+      "sha256": "3d8f3991a7a9f2827466fa9303c1ee8e379bd59f06b9087ed9da720063b3ecb9"
+    }
+  ],
+  "sources": {
+    "docs/PROFESSIONAL_REFERENCE_PRODUCTS.md": "76e0aa01a75a76acb81e150ad974210a12bacf056b866cd20b7056ad8c163989",
+    "docs/ROADMAP.md": "3a81a0aab2e52bd6ceb3a6a1100604ada61a5e922f9aaa8eb77ae32cc7943b88",
+    "integrations/gitlab/README.md": "57eb32b9a4b053f3efbdee0c0ab05edd0e36cd624d8960a2e7ea48dc0f9f0cc8",
+    "integrations/gitlab/services/README.md": "41e2ac8bc8dc6a146bac666a9024a7356724fb29d49b22c6076e2a9b3e980034",
+    "integrations/gitlab/services/markdown_codec.ts": "6d987bad3f3bb056d45421f8d1d258c19d453e0e29b64e19166abf09135d5db2",
+    "scripts/audit-gitlab-native-references.mjs": "1d07f995911106d84ccc98c1e0d496e7956c62860cb161039d90972e11b8e1fc",
+    "scripts/audit-gitlab-product-baseline.mjs": "f27576ffdd0d6763f3abc01e939a76734bbb5e1415b505a88cc2ddc2745f6245",
+    "scripts/capture-gitlab-alert-rendering.mjs": "8f2ac6979811511faa292c7aa90d755976a28b7546b717349997359d54adb578",
+    "scripts/check-gitlab-native-install.mjs": "e0ea0187015a4a6aece0338963266f8ee1a9d83725c6e8eb2aa4a4b85d42d659",
+    "scripts/run-gitlab-native-browser-audit.mjs": "6b2fc290ac256016916083e89babe945130b463fbc50197796c5a4596005d299",
+    "integrations/gitlab/fixtures/reference-context-live-html.json": "269da772c3b428426a134466f41a1eb176f3455cac2afbd88403fecd4dfcaf5e",
+    "tests/gitlab-reference-context.test.ts": "f610ff4383662834c9a280449c6cd59e1d7a93244c5ceb93077bd836df7c7c6b"
+  }
+}

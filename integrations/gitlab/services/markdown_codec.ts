@@ -256,7 +256,27 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       }
       if (['gitlab_reference', 'gitlab_placeholder'].includes(node.type.name)) {
         const token = `${prefix}${tokens.size}END`;
-        tokens.set(token, String(node.attrs.original));
+        let original = String(node.attrs.original);
+        if (node.type.name === 'gitlab_reference') {
+          if (node.marks.some(mark => ['code', 'link'].includes(mark.type.name))) {
+            issues.push({ stage: 'export', code: 'reference-mark-context', path,
+              message: 'Code or link formatting would turn this reference into literal text or an ordinary link. Remove that formatting to retain the reference.' });
+          }
+          const parent = path.slice(0, -1).reduce((ancestor, index) => ancestor.child(index), doc);
+          const index = path.at(-1)!;
+          const touches = (neighbor: Node | undefined, before: boolean): boolean => {
+            if (!neighbor || neighbor.marks.length !== node.marks.length
+              || !neighbor.marks.every(mark => node.marks.some(candidate => mark.eq(candidate)))) return false;
+            return neighbor.isText ? (before ? /\S$/u : /^\S/u).test(neighbor.text ?? '')
+              : ['gitlab_reference', 'gitlab_placeholder'].includes(neighbor.type.name);
+          };
+          // GitLab resolves each HTML text node separately. Keep this atom's text
+          // boundary instead of guessing each reference kind's different lexical rules.
+          if (touches(parent.content[index - 1], true) || touches(parent.content[index + 1], false)) {
+            original = `<span>${original.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</span>`;
+          }
+        }
+        tokens.set(token, original);
         return project(doc.type.schema.text(token, node.marks), path);
       }
       const attrs = { ...node.attrs };

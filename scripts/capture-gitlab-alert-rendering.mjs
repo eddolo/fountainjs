@@ -6,7 +6,8 @@ import { chromium, expect } from '@playwright/test';
 if (process.platform !== 'linux') throw new Error('Run beside the isolated Linux GitLab deployment.');
 const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
 const media = process.argv.includes('--media');
-const references = process.argv.includes('--references');
+const referenceContexts = process.argv.includes('--reference-context');
+const references = process.argv.includes('--references') || referenceContexts;
 if (media && references) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
@@ -72,7 +73,29 @@ try {
     referenceRecords = { projectId: project.id, projectPath: project.path_with_namespace,
       issueIID: issue.iid, mergeRequestIID: mergeRequest.iid, label: label.name };
   }
-  const inputs = references ? [
+  const issueToken = referenceRecords ? `#${referenceRecords.issueIID}` : '';
+  const mrToken = referenceRecords ? `!${referenceRecords.mergeRequestIID}` : '';
+  const labelToken = referenceRecords ? `~"${referenceRecords.label}"` : '';
+  const inputs = referenceContexts ? [
+    ['issue-alone', issueToken], ['issue-word-before', `prefix${issueToken}`], ['issue-word-after', `${issueToken}suffix`],
+    ['issue-dash-before', `prefix-${issueToken}`], ['issue-slash-before', `prefix/${issueToken}`],
+    ['issue-underscore-before', `prefix_${issueToken}`], ['issue-unicode-before', `語${issueToken}`],
+    ['issue-parentheses', `(${issueToken})`], ['issue-punctuation', `See: ${issueToken}.`],
+    ['issue-mark-before', `**prefix**${issueToken}`], ['issue-mark-after', `${issueToken}**suffix**`],
+    ['issue-marked', `__${issueToken}__`], ['issue-link-label', `[${issueToken}](/help/user/project)`],
+    ['issue-code', `\`${issueToken}\``], ['issue-escaped', `\\${issueToken}`],
+    ['mr-word-before', `prefix${mrToken}`], ['mr-word-after', `${mrToken}suffix`],
+    ['user-word-before', 'prefix@root'], ['user-word-after', '@rootsuffix'], ['user-marked', '**@root**'],
+    ['label-word-before', `prefix${labelToken}`], ['label-word-after', `${labelToken}suffix`],
+    ['label-marked', `**${labelToken}**`],
+    ['issue-span-boundary', `prefix<span>${issueToken}</span>suffix`],
+    ['user-span-boundary', 'prefix<span>@root</span>suffix'],
+    ['label-span-boundary', `prefix<span>${labelToken}</span>suffix`],
+    ['mr-span-boundary', `prefix<span>${mrToken}</span>suffix`],
+    ['source-spelling', `Title\n=====\n\nKeep __bold__ and [guide][g].\n\nReference ${issueToken}.\n\nEdit here.\n\n[g]: /help/user/project 'Guide title'\n`],
+    ['source-crlf', `Title\r\n=====\r\n\r\nKeep __bold__.\r\n\r\nReference ${issueToken}.\r\n\r\nEdit here.\r\n`],
+    ['source-soft-break', `Keep first line\nsecond __line__.\n\nReference ${issueToken}.\n\nEdit here.\n`],
+  ] : references ? [
     ...['', '+', '+s'].map(suffix => [`issue-${suffix || 'id'}`, `#${referenceRecords.issueIID}${suffix}`]),
     ...['', '+', '+s'].map(suffix => [`merge-request-${suffix || 'id'}`, `!${referenceRecords.mergeRequestIID}${suffix}`]),
     ['qualified-issue', `${project.path_with_namespace}#${referenceRecords.issueIID}`],
@@ -120,11 +143,11 @@ try {
     if (typeof result.body !== 'string') throw new Error('Missing renderer body');
     fixtures.push({ name, source, body: result.body });
   }
-  await writeFile(new URL(`integrations/gitlab/fixtures/${references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
+  await writeFile(new URL(`integrations/gitlab/fixtures/${referenceContexts ? 'reference-context' : references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
     scope: media ? 'Authenticated renderer structure fixtures; asset URLs are illustrative, not uploaded/playback acceptance' : 'Authenticated pinned GitLab renderer fixtures; not browser product acceptance',
     ...(references ? { referenceRecords } : {}),
     upstream: { revision: pin.commit, version: version.version, packagedRevision: version.revision }, fixtures,
   }, null, 2) + '\n');
-  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: references ? 'references' : media ? 'media' : 'alerts' }));
+  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: referenceContexts ? 'reference-context' : references ? 'references' : media ? 'media' : 'alerts' }));
 } catch (error) { console.error(String(error).replaceAll(password, '[redacted]')); process.exitCode = 1; }
 finally { await context.close(); await browser.close(); }

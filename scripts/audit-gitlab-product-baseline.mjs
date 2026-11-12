@@ -15,7 +15,8 @@ const nativeCapacity = process.argv.includes('--native-attachment-capacity');
 const nativeLinks = process.argv.includes('--native-links');
 const nativeCode = process.argv.includes('--native-code');
 const nativeAlerts = process.argv.includes('--native-alerts');
-const nativeReferences = process.argv.includes('--native-references');
+const nativeReferenceContexts = process.argv.includes('--reference-contexts');
+const nativeReferences = process.argv.includes('--native-references') || nativeReferenceContexts;
 const nativeMediaFiles = process.argv.includes('--native-media-files');
 const nativeMedia = process.argv.includes('--native-media') || nativeMediaFiles;
 const debugLinks = nativeLinks && process.argv.includes('--debug-links');
@@ -25,7 +26,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -576,8 +577,14 @@ try {
     await assertSavedNativeReferences({ page, description: saved.description, report, output, phase: 'saved' });
     report.checks.push('Actual UI Save retains reference display source and qualification; the real GitLab reader renders the issue, merge-request and colored-label references');
   }
-  if (nativeInsertion)
-    expect(saved.description).toContain('Pasted **GitLab Markdown** with @root.');
+  if (nativeInsertion) {
+    expect(saved.description).toContain('Pasted **GitLab Markdown** with <span>@root</span>.');
+    const pastedReference = page.getByTestId('work-item-description').locator('p')
+      .filter({ hasText: 'Pasted GitLab Markdown with' }).locator('a[data-reference-type="user"]');
+    await expect(pastedReference).toHaveCount(1);
+    await expect(pastedReference).toHaveAttribute('data-original', '@root');
+    await expect(pastedReference).toHaveAttribute('href', '/root');
+  }
   if (nativeAttachments) {
     for (const uploaded of report.nativeUploads) expect(saved.description).toContain(uploaded.markdown);
     const link = page.locator('main a[href*="native-attachment.txt"]').first();
