@@ -1,0 +1,127 @@
+{
+  "date": "2026-11-13",
+  "status": "partial-native-product-integration",
+  "parentRevision": "edc70437a9a97ef21f6efa2c7db789a6ccf11d4a",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Responsive paired source/live-preview authoring dialog with local drafts, explicit Cancel and one-step Apply/undo/redo",
+    "Literal source edits preserve Unicode and whitespace; captured targets map unrelated edits and refuse changed/deleted/replaced blocks",
+    "Read-only source inspection/copy/preview and composing Escape/Apply guards",
+    "Both native current-content reads and rich-to-Markdown handoff block unapplied source drafts",
+    "Actual real-service Mermaid/PlantUML preview, clipboard, source saving, reopened/restarted readers and restored provider settings"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Linux Chromium",
+    "checks": 24,
+    "issueIID": 87,
+    "report": "artifacts/gitlab-native-diagram-authoring-20261113/report.json",
+    "phases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "errors": [],
+    "accessibilityViolations": [],
+    "settingsRestored": true
+  },
+  "units": {
+    "tests": 5898,
+    "files": 359,
+    "addedSourceCases": 11,
+    "report": "artifacts/gitlab-diagram-authoring-unit-20261113.log"
+  },
+  "upstream": {
+    "suites": 11,
+    "passed": 329,
+    "failed": 2,
+    "total": 331,
+    "failures": [
+      "ContentEditor renders codeBlock bubble menu",
+      "ContentEditor renders media bubble menu"
+    ],
+    "report": "artifacts/gitlab-diagram-authoring-jest-20261113.json"
+  },
+  "installation": {
+    "format": 7,
+    "files": 19,
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "sourceRoundtrip": "artifacts/gitlab-native-diagram-authoring-install-roundtrip-20261113.json",
+    "patchVerification": "artifacts/gitlab-native-diagram-authoring-patch-verification-20261113.json",
+    "build": "artifacts/gitlab-diagram-authoring-rspack-20261113.log",
+    "lint": "artifacts/gitlab-diagram-authoring-eslint-final-20261113.log"
+  },
+  "privateRuntime": {
+    "bytes": 1520072,
+    "sha256": "df34b7aeaf2772e4e11154e5b15967addf76c3f1d1be4ea4702687a9267ff30f",
+    "addedBytes": 493,
+    "scope": "Private model/service bridge only; excludes compiled GitLab Vue/CSS/sandbox assets and optional PlantUML container"
+  },
+  "publicLibrary": {
+    "changed": false,
+    "declarations": 450,
+    "sizeLimitsChanged": false,
+    "freshChecks": [
+      "5898 root unit tests",
+      "Root TypeScript",
+      "Public API surface",
+      "Existing build budgets"
+    ],
+    "inherited": "Unchanged public package/runtime/headless/format/performance evidence; this is not a new complete pnpm check or hosted release run"
+  },
+  "visualReview": [
+    "Desktop paired source/live Mermaid preview, invalid retained draft/copy status and narrow PlantUML source/preview screenshots inspected",
+    "Restarted reader inspected with both updated diagrams, original math/table/image and baseline structured content",
+    "Representative recording contact sheets inspected; detailed screenshots establish the transient dialog states"
+  ],
+  "retainedFailures": [
+    {
+      "path": "artifacts/gitlab-diagram-authoring-components-first-20261113.json",
+      "reason": "Initial modal preview queries searched the toolbar rather than the portalled dialog; corrected DOM queries"
+    },
+    {
+      "path": "artifacts/gitlab-diagram-authoring-components-20261113.json",
+      "reason": "Initial shallow host mount stubbed modal controls; use the actual native host and modal components"
+    },
+    {
+      "path": "artifacts/gitlab-diagram-authoring-components-corrected-20261113.json",
+      "reason": "Host event test expected a string instead of the actual markdown event object; corrected the owning-host handshake"
+    }
+  ],
+  "limitations": [
+    "Saved invalid-diagram reader behavior remains unverified; legacy reader sandbox error behavior is unchanged",
+    "Dialog drafts are local UI state; persistent unsaved-draft storage/navigation recovery is not established",
+    "Broader browser/physical-device/role/concurrent-user and full GitLab workflow/surface acceptance remain open",
+    "Frontmatter, suggestions, GLQL and full specialized code/media requirements remain incomplete; two original upstream tests remain failed and unskipped",
+    "Exact untouched-section source spelling retention, production deployment/rollback and the other two full products remain open",
+    "Private integration; no public npm API, capability-ledger promotion or publication"
+  ],
+  "recordings": [
+    {
+      "path": "artifacts/gitlab-native-diagram-authoring-20261113/recordings/page@8654f09e8d305c00cc32d8baa32bb621.webm",
+      "bytes": 5610220,
+      "sha256": "57d6d4d1c38c29e6ecaf6c59595f88cb2d6e8c4723c17ecc8381ce831be85332",
+      "durationSeconds": 214.56
+    }
+  ],
+  "sources": {
+    "docs/ROADMAP.md": "6e75cfa336b5d05e08b571e6eb20c6cb6254c5928072fe48714c84f1bd59cca4",
+    "integrations/gitlab/README.md": "2178b626c379173b6099a245225632b2b62cd1daaf09a50287095f0fe6415842",
+    "integrations/gitlab/components/fountain_code_menu.vue": "c8f55e18afe8b74dd94bdfbe9eaf0ca7c5f5e37911a1cd9a9520a08a5c87b77c",
+    "integrations/gitlab/components/fountain_content_editor.vue": "7542e58a2f918f45a1af5e75b104f3aed51b9365375b32e12c43f7ac2e7aef27",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-diagram-tests.patch": "27dade649793376899b62532475c48064e2889a02c031f523a46d00717be156a",
+    "integrations/gitlab/runtime/README.md": "79fa29c6bb340546aa71208f279e65bf6f72495b0a54f2726c1725b75ddd26d0",
+    "integrations/gitlab/services/README.md": "18a2c20d2c542d02f66d29caab60ae1ea53d067a76ee83cdc07e013fca9f3c19",
+    "integrations/gitlab/services/code_editing.ts": "296bd55374e51eacd3465fded2eb539a6c08b705cae8205a1e28af1540b4dc37",
+    "integrations/gitlab/specs/fountain_code_menu_spec.js": "bcc29e95708bf7825935c617dc9e5b9be2ac4bcefc35cf8d6d46cc617519cf89",
+    "integrations/gitlab/specs/fountain_diagram_authoring_host_spec.js": "d9438e22759e6cdb2143a505f27bd292285620553be36757d81b37bd350daef1",
+    "scripts/audit-gitlab-native-diagrams.mjs": "2fde8c9b8debd8296632c69b7e99e0fd3b76250c1abe7260fe9ad65665f5cfb8",
+    "scripts/audit-gitlab-product-baseline.mjs": "97fc0c157efa840443ba8149a0089ca5d86418aad5868c6b8717f65f70784c14",
+    "scripts/check-gitlab-native-install.mjs": "f3ad7b4da190304363e9360df664c94484a5af6b5e61db87ba1999d20909001a",
+    "scripts/check-gitlab-native-patches.mjs": "7188c28fdc8054c9cb889e1faa1b5bdcba5c4d0a8cde2af1e15cf50e964a66e1",
+    "scripts/prepare-gitlab-diagram-tests.mjs": "655949387cca9da376f000e28357afd41c26be956e26caab215bc75c23dbf7fb",
+    "scripts/run-gitlab-native-browser-audit.mjs": "6af03f13e23eb374a0781621170bbc85b90e269542775a84e22b9fd1db4fbd74",
+    "tests/gitlab-code-editing.test.ts": "9e3e9fefd94305b6c28d1761394b1566704cf1cf5a26b049c04a98d1db8f54d5"
+  }
+}

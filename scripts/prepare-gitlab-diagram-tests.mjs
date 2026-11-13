@@ -24,6 +24,7 @@ const names = ['current-document', 'native-host-tests', 'native-component-tests'
 const pairs = [
   ['integrations/gitlab/specs/fountain_code_menu_spec.js', 'spec/frontend/content_editor/components/fountain_code_menu_spec.js', true],
   ['integrations/gitlab/specs/fountain_diagram_preview_spec.js', 'spec/frontend/content_editor/components/fountain_diagram_preview_spec.js', false],
+  ['integrations/gitlab/specs/fountain_diagram_authoring_host_spec.js', 'spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js', false],
   ['integrations/gitlab/fixtures/diagram-live-html.json', 'spec/frontend/content_editor/fixtures/fountain_diagram_live_html.json', false],
 ];
 try {

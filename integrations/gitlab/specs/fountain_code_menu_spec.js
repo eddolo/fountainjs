@@ -25,6 +25,13 @@ describe('FountainCodeMenu', () => {
     await waitForPromises();
     await waitForPromises();
   };
+  const dialog = () => getByRole(document.body, 'dialog', { name: 'Diagram source and preview' });
+  const sourceField = () => getByRole(dialog(), 'textbox', { name: 'Diagram source' });
+  const sourceInput = value => fireEvent.input(sourceField(), { target: { value } });
+  const openSource = async (readOnly = false) => {
+    fireEvent.click(button(readOnly ? 'View diagram source' : 'Edit diagram source'));
+    await settle();
+  };
   async function createComponent(editable = true, fixtureName = null) {
     const fixture = diagramData.fixtures.find(item => item.name === fixtureName);
     service = new GitLabContentEditor({
@@ -40,7 +47,10 @@ describe('FountainCodeMenu', () => {
     editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 3)));
     wrapper = mountExtended(FountainCodeMenu, {
       propsData: { contentEditor: service, disabled: !editable },
-      stubs: { FountainDiagramPreview: true },
+      stubs: { FountainDiagramPreview: {
+        name: 'FountainDiagramPreview', props: ['source', 'language', 'contentEditor'],
+        template: '<div data-testid="diagram-preview-stub" :data-source="source" :data-language="language"></div>',
+      } },
       attachTo: document.body,
     });
     await settle();
@@ -120,6 +130,71 @@ describe('FountainCodeMenu', () => {
     expect(wrapper.findComponent(FountainDiagramPreview).exists()).toBe(false);
     expect(service.getSerializedContent()).toBe(before);
     expect(undo(service.editor)).toBe(false);
+  });
+  it.each(['mermaid', 'plantuml'])('previews a local %s draft then applies it as one undoable edit', async language => {
+    await createComponent(true, language);
+    const before = service.getSerializedContent();
+    const original = service.editor.state.doc.child(0).textContent;
+    await openSource();
+    expect(sourceField().value).toBe(original);
+    sourceInput(`${original}\nDraft addition`); await settle();
+    expect(wrapper.vm.hasUnappliedSource).toBe(true);
+    expect(dialog().querySelector('[data-testid="diagram-preview-stub"]').dataset.source).toBe(`${original}\nDraft addition`);
+    expect(service.getSerializedContent()).toBe(before);
+    fireEvent.click(getByRole(dialog(), 'button', { name: 'Apply diagram source' })); await settle();
+    expect(queryByRole(document.body, 'dialog')).toBeNull();
+    expect(service.editor.state.doc.child(0).textContent).toBe(`${original}\nDraft addition`);
+    expect(wrapper.vm.hasUnappliedSource).toBe(false);
+    expect(undo(service.editor)).toBe(true); expect(service.getSerializedContent()).toBe(before);
+    expect(redo(service.editor)).toBe(true); expect(service.getSerializedContent()).toContain('Draft addition');
+  });
+  it('cancels local source changes without changing the document or history', async () => {
+    await createComponent(true, 'mermaid'); const before = service.getSerializedContent();
+    await openSource(); sourceInput('My uncommitted draft'); await settle();
+    fireEvent.click(getByRole(dialog(), 'button', { name: 'Cancel source edit' })); await settle();
+    expect(queryByRole(document.body, 'dialog')).toBeNull();
+    expect(wrapper.vm.hasUnappliedSource).toBe(false);
+    expect(service.getSerializedContent()).toBe(before); expect(undo(service.editor)).toBe(false);
+  });
+  it('retains a source draft when the target changes and disables applying to it', async () => {
+    await createComponent(true, 'mermaid'); await openSource(); sourceInput('My retained draft'); await settle();
+    insertText(service.editor, 'another edit'); await settle();
+    expect(sourceField().value).toBe('My retained draft');
+    expect(getByRole(dialog(), 'alert').textContent).toContain('diagram changed or was replaced');
+    expect(getByRole(dialog(), 'button', { name: 'Apply diagram source' }).getAttribute('aria-disabled')).toBe('true');
+    expect(getByRole(dialog(), 'button', { name: 'Copy source draft' }).getAttribute('aria-disabled')).not.toBe('true');
+    expect(service.editor.state.doc.child(0).textContent).not.toContain('My retained draft');
+  });
+  it('keeps a deleted diagram draft visible and copyable after the editor selection changes', async () => {
+    await createComponent(true, 'mermaid'); await openSource(); sourceInput('Retain after deletion'); await settle();
+    service.editor.dispatch(service.editor.createTransaction().replaceNode([0], [service.editor.state.schema.node('paragraph', {}, [service.editor.state.schema.text('Replacement')])]));
+    await settle(); expect(sourceField().value).toBe('Retain after deletion');
+    expect(getByRole(dialog(), 'alert').textContent).toContain('diagram changed or was replaced');
+  });
+  it('does not dismiss a composing source or apply it until composition ends', async () => {
+    await createComponent(true, 'mermaid'); await openSource();
+    fireEvent.compositionStart(sourceField()); sourceInput('graph LR\n日本語-->B'); await settle();
+    fireEvent.keyDown(sourceField(), { key: 'Escape', isComposing: true }); await settle();
+    expect(sourceField().value).toContain('日本語');
+    expect(getByRole(dialog(), 'button', { name: 'Apply diagram source' }).getAttribute('aria-disabled')).toBe('true');
+    fireEvent.compositionEnd(sourceField()); await settle();
+    fireEvent.click(getByRole(dialog(), 'button', { name: 'Apply diagram source' })); await settle();
+    expect(service.editor.state.doc.child(0).textContent).toBe('graph LR\n日本語-->B');
+  });
+  it('retains an unapplied language draft when source editing is requested', async () => {
+    await createComponent(true, 'mermaid'); draft('my-language'); await settle();
+    fireEvent.click(button('Edit diagram source')); await settle();
+    expect(queryByRole(document.body, 'dialog')).toBeNull();
+    expect(field().value).toBe('my-language');
+    expect(getByRole(wrapper.element, 'alert').textContent).toContain('Apply or cancel your language draft');
+  });
+  it('allows read-only source inspection and preview without authoring controls or history', async () => {
+    await createComponent(false, 'plantuml'); const before = service.getSerializedContent();
+    await openSource(true); expect(sourceField().readOnly).toBe(true);
+    expect(queryByRole(dialog(), 'button', { name: 'Apply diagram source' })).toBeNull();
+    expect(dialog().querySelector('[data-testid="diagram-preview-stub"]').dataset.language).toBe('plantuml');
+    fireEvent.click(getByRole(dialog(), 'button', { name: 'Close diagram source' })); await settle();
+    expect(service.getSerializedContent()).toBe(before); expect(undo(service.editor)).toBe(false);
   });
   it.each(['mermaid', 'plantuml'])('allows a read-only %s preview while mutation controls remain disabled', async language => {
     await createComponent(false, language);

@@ -1,0 +1,62 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-authoring-components-first-20261113.json spec/frontend/content_editor/components/fountain_code_menu_spec.js spec/frontend/content_editor/components/fountain_diagram_preview_spec.js
+PASS spec/frontend/content_editor/components/fountain_diagram_preview_spec.js
+FAIL spec/frontend/content_editor/components/fountain_code_menu_spec.js
+  ● FountainCodeMenu › previews a local mermaid draft then applies it as one undoable edit
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      149 |       await settle();
+      150 |       expect(wrapper.vm.hasUnappliedSource).toBe(true);
+    > 151 |       expect(wrapper.findComponent(FountainDiagramPreview).props('source')).toBe(
+          |                                                            ^
+      152 |         `${original}\nDraft addition`,
+      153 |       );
+      154 |       expect(service.getSerializedContent()).toBe(before);
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/fountain_code_menu_spec.js:151:60)
+
+  ● FountainCodeMenu › previews a local plantuml draft then applies it as one undoable edit
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      149 |       await settle();
+      150 |       expect(wrapper.vm.hasUnappliedSource).toBe(true);
+    > 151 |       expect(wrapper.findComponent(FountainDiagramPreview).props('source')).toBe(
+          |                                                            ^
+      152 |         `${original}\nDraft addition`,
+      153 |       );
+      154 |       expect(service.getSerializedContent()).toBe(before);
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at props (spec/frontend/content_editor/components/fountain_code_menu_spec.js:151:60)
+
+  ● FountainCodeMenu › allows read-only source inspection and preview without authoring controls or history
+
+    [vue-test-utils]: find did not return Component, cannot call props() on empty Wrapper
+
+      251 |     expect(sourceField().readOnly).toBe(true);
+      252 |     expect(queryByRole(dialog(), 'button', { name: 'Apply diagram source' })).toBeNull();
+    > 253 |     expect(wrapper.findComponent(FountainDiagramPreview).props('language')).toBe('plantuml');
+          |                                                          ^
+      254 |     fireEvent.click(getByRole(dialog(), 'button', { name: 'Close diagram source' }));
+      255 |     await settle();
+      256 |     expect(service.getSerializedContent()).toBe(before);
+
+      at throwError (node_modules/@vue/test-utils/dist/vue-test-utils.js:1700:9)
+      at ErrorWrapper.props (node_modules/@vue/test-utils/dist/vue-test-utils.js:8933:3)
+      at Object.props (spec/frontend/content_editor/components/fountain_code_menu_spec.js:253:58)
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       3 failed, 29 passed, 32 total
+Snapshots:   0 total
+Time:        9.318 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_preview_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-authoring-components-first-20261113.json
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

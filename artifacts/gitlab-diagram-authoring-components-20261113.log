@@ -1,0 +1,852 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-authoring-components-20261113.json spec/frontend/content_editor/components/fountain_code_menu_spec.js spec/frontend/content_editor/components/fountain_diagram_preview_spec.js spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js
+PASS spec/frontend/content_editor/components/fountain_code_menu_spec.js
+FAIL spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js
+  ● Native diagram authoring host › blocks both handoff and current-content reads for an unapplied draft; Cancel restores both
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "dialog" and name "Diagram source and preview"
+
+    Here are the accessible roles:
+
+      alert:
+
+      Name "":
+      <div
+        aria-live="polite"
+        class="gl-alert gl-alert-not-dismissible gl-alert-warning"
+        role="alert"
+        tabindex="-1"
+      />
+
+      --------------------------------------------------
+      toolbar:
+
+      Name "Editor toolbar":
+      <div
+        aria-label="Editor toolbar"
+        class="gl-border-b gl-flex gl-flex-wrap gl-items-center gl-gap-2 gl-p-3"
+        data-testid="formatting-toolbar"
+        role="toolbar"
+      />
+
+      --------------------------------------------------
+      button:
+
+      Name "Undo":
+      <button
+        aria-disabled="true"
+        aria-label="Undo"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="undo"
+        title="Undo"
+        type="button"
+      />
+
+      Name "Redo":
+      <button
+        aria-disabled="true"
+        aria-label="Redo"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="redo"
+        title="Redo"
+        type="button"
+      />
+
+      Name "Bold":
+      <button
+        aria-disabled="true"
+        aria-label="Bold"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="bold"
+        title="Bold"
+        type="button"
+      />
+
+      Name "Italic":
+      <button
+        aria-disabled="true"
+        aria-label="Italic"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="italic"
+        title="Italic"
+        type="button"
+      />
+
+      Name "Strikethrough":
+      <button
+        aria-disabled="true"
+        aria-label="Strikethrough"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="strike"
+        title="Strikethrough"
+        type="button"
+      />
+
+      Name "Inline code":
+      <button
+        aria-disabled="true"
+        aria-label="Inline code"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="code"
+        title="Inline code"
+        type="button"
+      />
+
+      Name "Insert a quote":
+      <button
+        aria-label="Insert a quote"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        data-testid="blockquote"
+        title="Insert a quote"
+        type="button"
+      />
+
+      Name "Bullet list":
+      <button
+        aria-label="Bullet list"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        data-testid="bullet"
+        title="Bullet list"
+        type="button"
+      />
+
+      Name "Numbered list":
+      <button
+        aria-label="Numbered list"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        data-testid="ordered"
+        title="Numbered list"
+        type="button"
+      />
+
+      Name "Checklist":
+      <button
+        aria-label="Checklist"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        data-testid="task"
+        title="Checklist"
+        type="button"
+      />
+
+      Name "Apply language":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="submit"
+      />
+
+      Name "Copy code":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Delete code block":
+      <button
+        class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+        type="button"
+      />
+
+      Name "Show diagram preview":
+      <button
+        aria-expanded="false"
+        class="gl-mt-3 btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Edit diagram source":
+      <button
+        class="gl-mt-3 btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Copy source draft":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Attach a file or image":
+      <button
+        aria-label="Attach a file or image"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        title="Attach a file or image"
+        type="button"
+      />
+
+      Name "Paste Markdown":
+      <button
+        class="btn gl-button btn-default btn-sm btn-default-tertiary"
+        type="button"
+      />
+
+      --------------------------------------------------
+      region:
+
+      Name "Code block controls":
+      <section
+        aria-label="Code block controls"
+        class="gl-border-t gl-w-full gl-pt-3"
+        data-testid="native-code-menu"
+      />
+
+      Name "mermaid code":
+      <pre
+        aria-label="mermaid code"
+        class="fjs-code-block fjs-highlight--dark"
+        data-fountain-code-lines="1
+      2"
+        data-fountain-decoration="syntax-block-0"
+        data-fountain-node="code_block"
+        data-fountain-path="0"
+        data-language="mermaid"
+        data-line-numbers="true"
+        role="region"
+        tabindex="0"
+        title="mermaid"
+      />
+
+      --------------------------------------------------
+      heading:
+
+      Name "Draft preview":
+      <h3
+        class="gl-heading-4"
+      />
+
+      --------------------------------------------------
+      textbox:
+
+      Name "Rich text editor":
+      <div
+        aria-label="Rich text editor"
+        aria-multiline="true"
+        class="fountain-editor rte-text-box"
+        role="textbox"
+        spellcheck="true"
+        tabindex="0"
+      />
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div
+        class="md-area gl-relative"
+        data-fountain-integration="native"
+        data-testid="content-editor-container"
+      >
+        <div
+          aria-live="polite"
+          class="gl-alert gl-alert-not-dismissible gl-alert-warning"
+          role="alert"
+          tabindex="-1"
+        >
+          <div
+            class="gl-alert-icon-container"
+          >
+            <gl-icon-stub
+              class="gl-alert-icon"
+              name="warning"
+              size="16"
+              variant="current"
+            />
+          </div>
+
+          <div
+            class="gl-alert-content"
+          >
+
+            <div
+              class="gl-alert-body"
+            >
+
+        This integration is unfinished. Autocomplete, saved replies, quick actions and specialized menus are not connected yet. Use source editing for those workflows.
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+
+
+        <div
+          class="content-editor-body gl-relative"
+          data-testid="content-editor"
+        >
+          <div
+            class=""
+            data-testid="content-editor-header"
+          >
+
+            <div
+              aria-label="Editor toolbar"
+              class="gl-border-b gl-flex gl-flex-wrap gl-items-center gl-gap-2 gl-p-3"
+              data-testid="formatting-toolbar"
+              role="toolbar"
+            >
+              <gl-form-select-stub
+                aria-label="Text style"
+                class="gl-w-auto"
+                disabledfield="disabled"
+                htmlfield="html"
+                labelfield="label"
+                options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                optionsfield="options"
+                selectclass=""
+                selectsize="0"
+                textfield="text"
+                value="mermaid"
+                valuefield="value"
+              />
+
+              <button
+                aria-disabled="true"
+                aria-label="Undo"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="undo"
+                title="Undo"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="go-back"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Redo"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="redo"
+                title="Redo"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="redo"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Bold"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="bold"
+                title="Bold"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="bold"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Italic"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="italic"
+                title="Italic"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="italic"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Strikethrough"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="strike"
+                title="Strikethrough"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="strikethrough"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Inline code"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="code"
+                title="Inline code"
+                type="button"
+              >...
+
+      16 |     await waitForPromises();
+      17 |   };
+    > 18 |   const dialog = () => getByRole(document.body, 'dialog', { name: 'Diagram source and preview' });
+         |                                 ^
+      19 |   const input = (value) =>
+      20 |     fireEvent.input(getByRole(dialog(), 'textbox', { name: 'Diagram source' }), {
+      21 |       target: { value },
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at dialog (spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js:18:33)
+      at dialog (spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js:20:31)
+      at Object.input (spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js:61:5)
+
+  ● Native diagram authoring host › publishes the applied source and clears the draft guard for the owning Markdown host
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "dialog" and name "Diagram source and preview"
+
+    Here are the accessible roles:
+
+      alert:
+
+      Name "":
+      <div
+        aria-live="polite"
+        class="gl-alert gl-alert-not-dismissible gl-alert-warning"
+        role="alert"
+        tabindex="-1"
+      />
+
+      --------------------------------------------------
+      toolbar:
+
+      Name "Editor toolbar":
+      <div
+        aria-label="Editor toolbar"
+        class="gl-border-b gl-flex gl-flex-wrap gl-items-center gl-gap-2 gl-p-3"
+        data-testid="formatting-toolbar"
+        role="toolbar"
+      />
+
+      --------------------------------------------------
+      button:
+
+      Name "Undo":
+      <button
+        aria-disabled="true"
+        aria-label="Undo"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="undo"
+        title="Undo"
+        type="button"
+      />
+
+      Name "Redo":
+      <button
+        aria-disabled="true"
+        aria-label="Redo"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="redo"
+        title="Redo"
+        type="button"
+      />
+
+      Name "Bold":
+      <button
+        aria-disabled="true"
+        aria-label="Bold"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="bold"
+        title="Bold"
+        type="button"
+      />
+
+      Name "Italic":
+      <button
+        aria-disabled="true"
+        aria-label="Italic"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="italic"
+        title="Italic"
+        type="button"
+      />
+
+      Name "Strikethrough":
+      <button
+        aria-disabled="true"
+        aria-label="Strikethrough"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="strike"
+        title="Strikethrough"
+        type="button"
+      />
+
+      Name "Inline code":
+      <button
+        aria-disabled="true"
+        aria-label="Inline code"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+        data-testid="code"
+        title="Inline code"
+        type="button"
+      />
+
+      Name "Insert a quote":
+      <button
+        aria-label="Insert a quote"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        data-testid="blockquote"
+        title="Insert a quote"
+        type="button"
+      />
+
+      Name "Bullet list":
+      <button
+        aria-label="Bullet list"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        data-testid="bullet"
+        title="Bullet list"
+        type="button"
+      />
+
+      Name "Numbered list":
+      <button
+        aria-label="Numbered list"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        data-testid="ordered"
+        title="Numbered list"
+        type="button"
+      />
+
+      Name "Checklist":
+      <button
+        aria-label="Checklist"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        data-testid="task"
+        title="Checklist"
+        type="button"
+      />
+
+      Name "Apply language":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="submit"
+      />
+
+      Name "Copy code":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Delete code block":
+      <button
+        class="btn gl-button btn-danger btn-sm btn-danger-secondary"
+        type="button"
+      />
+
+      Name "Show diagram preview":
+      <button
+        aria-expanded="false"
+        class="gl-mt-3 btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Edit diagram source":
+      <button
+        class="gl-mt-3 btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Copy source draft":
+      <button
+        class="btn gl-button btn-default btn-sm"
+        type="button"
+      />
+
+      Name "Attach a file or image":
+      <button
+        aria-label="Attach a file or image"
+        class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon"
+        title="Attach a file or image"
+        type="button"
+      />
+
+      Name "Paste Markdown":
+      <button
+        class="btn gl-button btn-default btn-sm btn-default-tertiary"
+        type="button"
+      />
+
+      --------------------------------------------------
+      region:
+
+      Name "Code block controls":
+      <section
+        aria-label="Code block controls"
+        class="gl-border-t gl-w-full gl-pt-3"
+        data-testid="native-code-menu"
+      />
+
+      Name "mermaid code":
+      <pre
+        aria-label="mermaid code"
+        class="fjs-code-block fjs-highlight--dark"
+        data-fountain-code-lines="1
+      2"
+        data-fountain-decoration="syntax-block-0"
+        data-fountain-node="code_block"
+        data-fountain-path="0"
+        data-language="mermaid"
+        data-line-numbers="true"
+        role="region"
+        tabindex="0"
+        title="mermaid"
+      />
+
+      --------------------------------------------------
+      heading:
+
+      Name "Draft preview":
+      <h3
+        class="gl-heading-4"
+      />
+
+      --------------------------------------------------
+      textbox:
+
+      Name "Rich text editor":
+      <div
+        aria-label="Rich text editor"
+        aria-multiline="true"
+        class="fountain-editor rte-text-box"
+        role="textbox"
+        spellcheck="true"
+        tabindex="0"
+      />
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div
+        class="md-area gl-relative"
+        data-fountain-integration="native"
+        data-testid="content-editor-container"
+      >
+        <div
+          aria-live="polite"
+          class="gl-alert gl-alert-not-dismissible gl-alert-warning"
+          role="alert"
+          tabindex="-1"
+        >
+          <div
+            class="gl-alert-icon-container"
+          >
+            <gl-icon-stub
+              class="gl-alert-icon"
+              name="warning"
+              size="16"
+              variant="current"
+            />
+          </div>
+
+          <div
+            class="gl-alert-content"
+          >
+
+            <div
+              class="gl-alert-body"
+            >
+
+        This integration is unfinished. Autocomplete, saved replies, quick actions and specialized menus are not connected yet. Use source editing for those workflows.
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+
+
+        <div
+          class="content-editor-body gl-relative"
+          data-testid="content-editor"
+        >
+          <div
+            class=""
+            data-testid="content-editor-header"
+          >
+
+            <div
+              aria-label="Editor toolbar"
+              class="gl-border-b gl-flex gl-flex-wrap gl-items-center gl-gap-2 gl-p-3"
+              data-testid="formatting-toolbar"
+              role="toolbar"
+            >
+              <gl-form-select-stub
+                aria-label="Text style"
+                class="gl-w-auto"
+                disabledfield="disabled"
+                htmlfield="html"
+                labelfield="label"
+                options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+                optionsfield="options"
+                selectclass=""
+                selectsize="0"
+                textfield="text"
+                value="mermaid"
+                valuefield="value"
+              />
+
+              <button
+                aria-disabled="true"
+                aria-label="Undo"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="undo"
+                title="Undo"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="go-back"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Redo"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="redo"
+                title="Redo"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="redo"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Bold"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="bold"
+                title="Bold"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="bold"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Italic"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="italic"
+                title="Italic"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="italic"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Strikethrough"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="strike"
+                title="Strikethrough"
+                type="button"
+              >
+
+                <gl-icon-stub
+                  class="gl-button-icon"
+                  name="strikethrough"
+                  size="16"
+                  variant="current"
+                />
+
+              </button>
+              <button
+                aria-disabled="true"
+                aria-label="Inline code"
+                class="btn gl-button btn-default btn-sm btn-default-tertiary btn-icon disabled"
+                data-testid="code"
+                title="Inline code"
+                type="button"
+              >...
+
+      16 |     await waitForPromises();
+      17 |   };
+    > 18 |   const dialog = () => getByRole(document.body, 'dialog', { name: 'Diagram source and preview' });
+         |                                 ^
+      19 |   const input = (value) =>
+      20 |     fireEvent.input(getByRole(dialog(), 'textbox', { name: 'Diagram source' }), {
+      21 |       target: { value },
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at dialog (spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js:18:33)
+      at dialog (spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js:20:31)
+      at Object.input (spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js:81:5)
+
+  ● Native diagram authoring host › publishes the applied source and clears the draft guard for the owning Markdown host
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+PASS spec/frontend/content_editor/components/fountain_diagram_preview_spec.js
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       2 failed, 33 passed, 35 total
+Snapshots:   0 total
+Time:        8.986 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_preview_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_authoring_host_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-authoring-components-20261113.json
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

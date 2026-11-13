@@ -1,5 +1,5 @@
 <script>
-import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput } from '@gitlab/ui';
+import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormTextarea, GlModal } from '@gitlab/ui';
 import { markRaw } from 'vue';
 import { uniqueId } from 'lodash-es';
 import { s__ } from '~/locale';
@@ -10,7 +10,7 @@ import FountainDiagramPreview from './fountain_diagram_preview.vue';
 
 export default {
   name: 'FountainCodeMenu',
-  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, FountainDiagramPreview },
+  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormTextarea, GlModal, FountainDiagramPreview },
   props: {
     contentEditor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
@@ -18,13 +18,32 @@ export default {
   emits: ['focus', 'error'],
   data() {
     return { context: null, session: null, language: '', errorCode: null, copyState: null, showPreview: false,
-      inputId: uniqueId('fountain-code-language-'), revision: 0 };
+      inputId: uniqueId('fountain-code-language-'), revision: 0,
+      dialogOpen: false, dialogContext: null, sourceSession: null, sourceDraft: '', sourceError: null,
+      sourceCopyState: null, sourceComposing: false, modalId: uniqueId('fountain-diagram-source-') };
   },
   computed: {
-    visible() { return Boolean(this.context || this.session); },
+    visible() { return Boolean(this.context || this.session || this.dialogOpen); },
     conflict() { return this.revision >= 0 && Boolean(this.session?.conflict); },
     languages() { return [{ syntax: 'mermaid', label: s__('ContentEditor|Mermaid diagram') }, { syntax: 'plantuml', label: s__('ContentEditor|PlantUML diagram') }, ...CODE_BLOCK_LANGUAGES]; },
     isDiagram() { return ['mermaid', 'plantuml'].includes(this.context?.language); },
+    // The host reads this before saving or switching editing mode.
+    hasUnappliedSource() { return this.dialogOpen && this.sourceDraft !== this.dialogContext?.text; },
+    sourceConflict() { return this.revision >= 0 && Boolean(this.sourceSession?.conflict || this.sourceSession?.closed); },
+    sourceAction() {
+      if (this.disabled) return null;
+      return { text: s__('ContentEditor|Apply diagram source'), attributes: { variant: 'confirm',
+        disabled: !this.sourceSession || this.sourceConflict || this.sourceComposing } };
+    },
+    sourceCancel() { return { text: this.disabled ? s__('ContentEditor|Close diagram source') : s__('ContentEditor|Cancel source edit') }; },
+    focusTarget() { return { focus: () => { if (!this.disposed) this.$emit('focus'); } }; },
+    sourceMessage() {
+      if (this.sourceConflict)
+        return s__('ContentEditor|This diagram changed or was replaced. Your source draft is retained. Copy it before closing and reopen the current block.');
+      if (this.sourceError)
+        return s__('ContentEditor|The source could not be applied. Your draft and document are retained. Check the editor state and try again.');
+      return '';
+    },
     formError() {
       if (this.conflict)
         return s__('ContentEditor|This code block changed. Your language draft is retained. Cancel and select the block again.');
@@ -32,6 +51,8 @@ export default {
         return s__('ContentEditor|Enter a language label up to 80 characters using letters, numbers, underscores, dots, plus signs, hyphens or hash signs.');
       if (this.errorCode === 'GITLAB_CODE_SPECIALIZED_LANGUAGE')
         return s__('ContentEditor|This language requires a specialized GitLab adapter. The code and your draft are unchanged.');
+      if (this.errorCode === 'GITLAB_CODE_LANGUAGE_DRAFT_PENDING')
+        return s__('ContentEditor|Apply or cancel your language draft before opening the diagram source.');
       if (this.errorCode)
         return s__('ContentEditor|The code block could not be updated. Your document and language draft are retained.');
       return '';
@@ -43,11 +64,11 @@ export default {
     this.refresh();
   },
   beforeDestroy() {
-    this.disposed = true; this.releaseState(); this.session?.close();
+    this.disposed = true; this.releaseState(); this.session?.close(); this.sourceSession?.close();
   },
   methods: {
     onKeydown(event) {
-      if (event.key !== 'Escape' || event.isComposing) return;
+      if (event.key !== 'Escape' || event.isComposing || this.dialogOpen) return;
       event.preventDefault(); event.stopPropagation(); this.cancel();
     },
     refresh() {
@@ -93,6 +114,44 @@ export default {
         if (!this.disposed) this.copyState = 'copied';
       } catch { if (!this.disposed) this.copyState = 'failed'; }
     },
+    openSource() {
+      if (!this.isDiagram || this.dialogOpen) return;
+      if (this.session && this.language !== this.session.initial.language) {
+        this.errorCode = 'GITLAB_CODE_LANGUAGE_DRAFT_PENDING'; return;
+      }
+      this.session?.close(); this.session = null;
+      try {
+        this.sourceSession = this.disabled ? null : markRaw(this.contentEditor.beginCodeEdit());
+        this.dialogContext = this.sourceSession?.initial || this.context;
+        this.sourceDraft = this.dialogContext.text; this.sourceError = null; this.sourceCopyState = null;
+        this.sourceComposing = false; this.showPreview = false; this.errorCode = null; this.dialogOpen = true;
+      } catch (error) { this.errorCode = error.message; }
+    },
+    applySource(event) {
+      event?.preventDefault();
+      if (this.disabled || this.sourceConflict || this.sourceComposing || !this.sourceSession) return;
+      try {
+        this.sourceSession.applySource(this.sourceDraft);
+        this.dialogOpen = false; this.sourceSession = null; this.sourceError = null; this.refresh();
+      } catch (error) { this.sourceError = error.message; }
+    },
+    hideSource(event) {
+      if (event?.defaultPrevented) return;
+      this.sourceSession?.close(); this.sourceSession = null; this.sourceComposing = false;
+    },
+    hiddenSource() { if (!this.disposed && !this.dialogOpen) this.dialogContext = null; },
+    onSourceKeydown(event) {
+      if (event.key === 'Escape' && (event.isComposing || this.sourceComposing)) {
+        event.preventDefault(); event.stopPropagation();
+      }
+    },
+    async copySource(event) {
+      const draft = this.sourceDraft;
+      try {
+        await copyToClipboard(draft, event.currentTarget);
+        if (!this.disposed && this.dialogOpen && this.sourceDraft === draft) this.sourceCopyState = 'copied';
+      } catch { if (!this.disposed && this.dialogOpen) this.sourceCopyState = 'failed'; }
+    },
   },
 };
 </script>
@@ -116,6 +175,33 @@ export default {
     <gl-button v-if="isDiagram" class="gl-mt-3" size="small" :aria-expanded="showPreview ? 'true' : 'false'" @click="showPreview = !showPreview">
       {{ showPreview ? s__('ContentEditor|Hide diagram preview') : s__('ContentEditor|Show diagram preview') }}
     </gl-button>
+    <gl-button v-if="isDiagram" class="gl-mt-3" size="small" @click="openSource">
+      {{ disabled ? s__('ContentEditor|View diagram source') : s__('ContentEditor|Edit diagram source') }}
+    </gl-button>
     <fountain-diagram-preview v-if="isDiagram && showPreview" :content-editor="contentEditor" :source="context.text" :language="context.language" />
+    <gl-modal v-model="dialogOpen" :modal-id="modalId" size="lg" :title="s__('ContentEditor|Diagram source and preview')" :action-primary="sourceAction" :action-cancel="sourceCancel" :return-focus="focusTarget" :no-close-on-esc="sourceComposing" :no-close-on-backdrop="hasUnappliedSource" @primary="applySource" @hide="hideSource" @hidden="hiddenSource">
+      <template v-if="dialogOpen && dialogContext">
+        <p>{{ disabled ? s__('ContentEditor|Read-only source. Previewing does not change the document.') : s__('ContentEditor|Preview your draft here. Apply updates the selected diagram in one undoable change; Cancel leaves the document unchanged.') }}</p>
+        <gl-alert v-if="sourceMessage" variant="danger" :dismissible="false">{{ sourceMessage }}</gl-alert>
+        <div class="fountain-diagram-authoring">
+          <gl-form-group :label="s__('ContentEditor|Diagram source')" :label-for="`${modalId}-source`">
+            <gl-form-textarea :id="`${modalId}-source`" v-model="sourceDraft" :readonly="disabled" :rows="14" wrap="off" spellcheck="false" class="fountain-diagram-source" @input="sourceCopyState = null" @compositionstart="sourceComposing = true" @compositionend="sourceComposing = false" @keydown="onSourceKeydown" />
+          </gl-form-group>
+          <div class="fountain-diagram-draft-preview">
+            <h3 class="gl-heading-4">{{ s__('ContentEditor|Draft preview') }}</h3>
+            <fountain-diagram-preview :content-editor="contentEditor" :source="sourceDraft" :language="dialogContext.language" />
+          </div>
+        </div>
+        <gl-button size="small" @click="copySource">{{ s__('ContentEditor|Copy source draft') }}</gl-button>
+        <p v-if="sourceCopyState === 'copied'" role="status">{{ s__('ContentEditor|Source draft copied.') }}</p>
+        <p v-if="sourceCopyState === 'failed'" role="alert">{{ s__('ContentEditor|Copy failed. Select the source and use your browser copy command.') }}</p>
+      </template>
+    </gl-modal>
   </section>
 </template>
+<style scoped>
+.fountain-diagram-authoring { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+.fountain-diagram-source { font-family: monospace; min-height: 20rem; max-height: 55vh; }
+.fountain-diagram-draft-preview { min-width: 0; overflow: auto; }
+@media (max-width: 767px) { .fountain-diagram-authoring { grid-template-columns: minmax(0, 1fr); } }
+</style>

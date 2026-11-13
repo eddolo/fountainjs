@@ -1,0 +1,36 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-authoring-components-corrected-20261113.json spec/frontend/content_editor/components/fountain_code_menu_spec.js spec/frontend/content_editor/components/fountain_diagram_preview_spec.js spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js
+FAIL spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js
+  ● Native diagram authoring host › publishes the applied source and clears the draft guard for the owning Markdown host
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value:  "Applied-->Published"
+    Received object: {"markdown": "```mermaid
+    graph LR
+      Applied-->Published
+    ```"}
+
+      84 |     await settle();
+      85 |     const latest = wrapper.emitted('change').at(-1)[0];
+    > 86 |     expect(latest).toContain('Applied-->Published');
+         |                    ^
+      87 |     await wrapper.setProps({ markdown: latest });
+      88 |     await settle();
+      89 |     expect(wrapper.vm.getSerializedContentForHandoff()).toBe(latest);
+
+      at Object.toContain (spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js:86:20)
+
+PASS spec/frontend/content_editor/components/fountain_diagram_preview_spec.js
+PASS spec/frontend/content_editor/components/fountain_code_menu_spec.js
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 34 passed, 35 total
+Snapshots:   0 total
+Time:        6.59 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_preview_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_authoring_host_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-authoring-components-corrected-20261113.json
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

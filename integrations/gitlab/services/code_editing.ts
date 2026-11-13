@@ -129,6 +129,17 @@ export class GitLabCodeEditingSession {
     this.close(); return true;
   }
 
+  applySource(input: string): boolean {
+    const { editor } = this.ready();
+    if (typeof input !== 'string') throw new Error('GITLAB_CODE_INVALID_SOURCE');
+    if (input === this.initial.text) { this.close(); return true; }
+    closeHistory(editor); this.ready();
+    const content = [editor.state.schema.text(input)];
+    const transaction = editor.createTransaction().replaceNode(this.selected.nodePath, [this.node!.copy(content)]);
+    this.commit(() => editor.dispatch(transaction));
+    this.close(); return true;
+  }
+
   remove(): boolean {
     const { editor } = this.ready();
     closeHistory(editor); this.ready();

@@ -2,6 +2,20 @@
 
 Updated 2026-11-13.
 
+The latest GitLab follow-up pairs diagram source and live preview in a responsive
+authoring dialog. Draft previews leave the document unchanged; Apply targets the
+captured block in one undoable transaction, Cancel discards the local draft, and
+target changes retain copyable source while refusing overwrite. Unapplied source
+blocks both native current-content reads and rich-to-Markdown handoff. All
+**5,898 unit tests/359 files**, current TypeScript/API and existing size limits
+pass. The eleven-suite upstream set is **329 passed / 2 failed / 331 total**.
+The recorded real GitLab journey passes **24 checks**, including edited diagrams
+after save/reopen/restart, a visually reviewed 360px layout and zero dialog axe
+violations. Nineteen-file source rollback/reinstall and eleven ordered test
+patches verify. Saved invalid-diagram reader behavior, other browser/role/surface
+coverage and both other full products remain open. Nothing is published.
+[Authoring evidence and limits](../artifacts/gitlab-diagram-authoring-integration-20261113.json).
+
 The latest GitLab checkpoint adds native Mermaid/PlantUML source creation and
 editing with real previews, error/retry recovery, copy, language conversion and
 delete/undo/redo. Actual toolbar creation after bold prose exposed inherited
@@ -11,7 +25,7 @@ marks. The recorded real-service run passes **21 checks**, including edited
 reader output after save/reopen/restart. All **5,887 unit tests/359 files** pass;
 the upstream ten-suite set is **318 passed / 2 failed / 320 total**. Guarded
 nineteen-file source rollback/reinstall and eleven ordered patches verify.
-Preview/source pairing in long documents, saved invalid diagrams, remaining
+At that checkpoint, preview/source pairing in long documents, saved invalid diagrams, remaining
 specialized content, full roles/workflows and both other products remain open.
 Public library/API/size limits are unchanged; nothing is published.
 [Diagram evidence and limits](../integrations/gitlab/README.md#native-mermaid-and-plantuml).

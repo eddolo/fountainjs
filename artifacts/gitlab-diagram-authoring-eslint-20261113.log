@@ -1,0 +1,18 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/content_editor/components/content_editor.vue app/assets/javascripts/content_editor/components/fountain_code_menu.vue spec/frontend/content_editor/components/fountain_code_menu_spec.js spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/content_editor/components/fountain_code_menu.vue
+  73:5  warning  Unused eslint-disable directive (no problems were reported from 'vue/no-unused-properties')
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/spec/frontend/content_editor/components/fountain_code_menu_spec.js
+  151:7  error  Split 'const' declarations into multiple statements  one-var
+  159:9  error  Prefer `.dataset` over `getAttribute(…)`             unicorn/prefer-dom-node-dataset
+  261:7  error  Prefer `.dataset` over `getAttribute(…)`             unicorn/prefer-dom-node-dataset
+
+✖ 4 problems (3 errors, 1 warning)
+  3 errors and 1 warning potentially fixable with the `--fix` option.
+
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

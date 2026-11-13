@@ -63,6 +63,8 @@ export default {
       return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
     },
     failureMessage() {
+      if (this.failureCode === 'GITLAB_CODE_SOURCE_DRAFT_PENDING')
+        return s__('ContentEditor|Apply or cancel your diagram source draft before saving or switching editing mode.');
       if (this.failureCode === 'GITLAB_ALERT_TITLE_SINGLE_LINE')
         return s__('ContentEditor|Alert titles must stay on one line. Paste multiple paragraphs into the alert body instead.');
       if (this.failureCode === 'GITLAB_UPLOAD_QUEUE_FULL')
@@ -315,12 +317,17 @@ export default {
     },
     // eslint-disable-next-line vue/no-unused-properties -- Public MarkdownEditor handoff contract.
     getSerializedContentForHandoff() {
+      this.ensureNoSourceDraft();
       if (this.isLoading || this.fatal || this.latestMarkdown !== this.markdown)
         throw new Error('MARKDOWN_SERIALIZATION_NOT_READY');
       return this.$refs.surface.getSerializedContentForHandoff();
     },
     readSerializedContent() {
+      this.ensureNoSourceDraft();
       return this.contentEditor.getSerializedContent();
+    },
+    ensureNoSourceDraft() {
+      if (this.$refs.codeMenu?.hasUnappliedSource) throw new Error('GITLAB_CODE_SOURCE_DRAFT_PENDING');
     },
     onDocumentChange(change) {
       if (change.status !== 'ready') {
@@ -468,7 +475,7 @@ export default {
         >
           <template #context-actions>
             <fountain-link-menu ref="linkMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
-            <fountain-code-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
+            <fountain-code-menu ref="codeMenu" :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-reference-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" />
             <fountain-alert-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-media-menu :content-editor="contentEditor" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />

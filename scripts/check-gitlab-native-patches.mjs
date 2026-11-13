@@ -31,6 +31,7 @@ try {
     ...['link', 'code', 'alert', 'media', 'reference'].map(kind => `spec/frontend/content_editor/components/fountain_${kind}_menu_spec.js`),
     'spec/frontend/content_editor/fixtures/fountain_reference_live_html.json',
     'spec/frontend/content_editor/components/fountain_diagram_preview_spec.js',
+    'spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js',
     'spec/frontend/content_editor/fixtures/fountain_diagram_live_html.json']) {
     if (run('show', `:${path}`) !== await readFile(join(source, path), 'utf8'))
       throw new Error(`Reconstructed test source differs: ${path}`);
@@ -41,7 +42,8 @@ try {
       'Reconstructed host and native menu specs match the tested checkout byte for byte',
       'Native diagram test patch reverse-check passes'],
     isolation: 'Upstream worktree and main index are unchanged; temporary index removed' };
-  const profile = process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
-  await writeFile(new URL(`artifacts/gitlab-native-${profile}-patch-verification-20261112.json`, root), JSON.stringify(report, null, 2) + '\n');
+  const authoring = process.argv.includes('--diagram-authoring');
+  const profile = authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
+  await writeFile(new URL(`artifacts/gitlab-native-${profile}-patch-verification-${authoring ? '20261113' : '20261112'}.json`, root), JSON.stringify(report, null, 2) + '\n');
   console.log('Eleven ordered native patches reconstruct the tested pinned source.');
 } finally { await rm(temporary, { recursive: true, force: true }); }

@@ -193,6 +193,22 @@ editable in the document, with language changes, full-source copy, deletion and
 undo. Preview toggles are view state and add no document/history entries.
 Read-only code can still be previewed and copied.
 
+`Edit diagram source` opens a paired source/preview dialog (stacked on narrow
+screens). Its preview reads only a local draft. Apply uses the captured
+`GitLabCodeEditingSession.applySource()` target and commits one validated,
+undoable replacement; Cancel creates no document/history change. The service
+does not trim or normalize source. Unrelated changes map the captured block,
+while changes/deletion/replacement of that block refuse Apply and retain the
+copyable draft. Read-only inspection has no Apply action. Composition suppresses
+Escape dismissal and Apply until composition ends.
+
+The native host's current-content reader and rich-to-Markdown handoff refuse
+`GITLAB_CODE_SOURCE_DRAFT_PENDING` while the dialog has unapplied changes.
+Opening an unchanged source does not block either path. The committed service
+document stays separate from local dialog fields; previewing does not pretend
+to be a document edit. Apply or Cancel releases the guard. Closing/navigating
+away is not persistent draft storage or broader multi-user conflict resolution.
+
 Mermaid retains GitLab's script-only sandbox and strict renderer configuration.
 The pinned sandbox patch adds correlated request IDs, serialized rendering,
 stale-result rejection and fixed error messages for native previews. The parent
@@ -212,9 +228,9 @@ The reproducible local audit uses the pinned optional service in
 `runtime/compose.diagrams.yaml`, following the [official PlantUML server setup](https://plantuml.com/starting).
 It enables the service only in the isolated task GitLab instance, restores the
 prior application settings, and stops both containers afterward. This is a
-private GitLab adapter, not a new public npm diagram-renderer API. Preview/source
-placement in long documents, saved invalid-diagram reader behavior and broader
-engine/role coverage remain further product acceptance work.
+private GitLab adapter, not a new public npm diagram-renderer API. Saved
+invalid-diagram reader behavior and broader engine/role coverage remain further
+product acceptance work.
 
 Deleting the final block in a required list item, quote or table cell retains an
 editable paragraph. Removing a root block lands at the immediate successor.

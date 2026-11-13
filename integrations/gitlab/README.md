@@ -1135,14 +1135,46 @@ guarded source rollback/reinstall and eleven ordered test patches verify.
 No public library/API/size-ceiling changes or publication are made.
 
 This is Linux Chromium acceptance for the scoped Mermaid/PlantUML workflows.
-Preview/source pairing in long documents still needs UX work. Saved invalid
-diagram reader behavior, broader browsers/roles, frontmatter, suggestions, GLQL,
+The paired-dialog follow-up is described below. Saved invalid diagram reader
+behavior, broader browsers/roles, frontmatter, suggestions, GLQL,
 remaining surfaces and complete product acceptance remain open.
 
 [Evidence and retained failures](../../artifacts/gitlab-native-diagram-integration-20261112.json),
 [recorded real journey](../../artifacts/gitlab-native-diagrams-20261112/report.json),
 [source/preview contract](services/README.md#native-diagram-source-and-preview),
 [reproduction](runtime/README.md#native-browser-installation-in-progress).
+
+### Paired diagram authoring
+
+`Edit diagram source` keeps a local source draft beside its live preview in a
+GitLab modal; narrow screens stack the two. Apply replaces the captured block in
+one undoable transaction. Cancel leaves the document unchanged. Target changes
+retain the draft for copying and refuse Apply; cursor movement cannot redirect
+it to a different block. The read-only component mode supports source inspection,
+copy and preview without an Apply action. The owning host blocks saving and rich-to-Markdown handoff while
+source changes remain unapplied.
+
+Pure-Node tests cover empty source, Unicode/whitespace, target mapping, conflict,
+late read-only state, transaction refusal and serialization rollback. Component
+tests use the actual GitLab modal portal, and separate native-host tests verify
+both guarded content-reading paths. These tests exercise local drafts separately
+from the committed document; they do not establish persistent unsaved-draft storage.
+
+The recorded actual-service journey passes **24 checks** on issue 87, including
+invalid draft/copy/cancel, real Mermaid/PlantUML previews, one-step Apply/undo/redo,
+360px layout and saved reader/reopen/restart. Desktop/narrow/error/restarted-reader
+screenshots and representative recording frames are visually reviewed. The dialog
+has zero scoped axe violations. Settings are restored and both task containers stop.
+All **5,898 unit tests/359 files**, current types/API and existing size limits pass.
+The eleven-suite upstream set is **329 passed / 2 failed / 331 total**; the original
+unfinished code/media requirements stay failed and unskipped. Nineteen-file guarded
+source rollback/reinstall and eleven ordered patches verify.
+
+This establishes Linux Chromium acceptance for the documented flow, not persistent
+draft storage, saved invalid-diagram reader behavior or full product/browser/role
+acceptance. No public API, size limit, npm package or website release is changed.
+The recorded real-service evidence and current acceptance limits are in
+[the authoring checkpoint](../../artifacts/gitlab-diagram-authoring-integration-20261113.json).
 
 ### Remaining full application acceptance
 

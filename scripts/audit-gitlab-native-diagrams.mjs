@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
-export async function auditNativeDiagrams({ page, context, editor, toolbar, output, report }) {
+export async function auditNativeDiagrams({ page, context, editor, toolbar, output, report, pairedAuthoring = false }) {
   const mermaidSource = 'graph LR\n  Draft-->Review';
   const plantumlSource = '@startuml\nAlice -> Bob: Review request\nBob --> Alice: Approved\n@enduml';
   const source = '```mermaid\n' + mermaidSource + '\n```\n\n```plantuml\n' + plantumlSource + '\n```\n\nAfter diagrams.';
@@ -140,6 +140,83 @@ export async function auditNativeDiagrams({ page, context, editor, toolbar, outp
   await page.setViewportSize({ width: 1440, height: 1000 });
   report.checks.push('Diagram deletion/undo retains source; the restored real sandbox works at 360px without horizontal page overflow, and the preview region has no axe violations');
   report.nativeDiagrams = { mermaidText, plantumlText, providerImage, created, accessibilityViolations: accessibility.violations };
+  if (pairedAuthoring) await auditPairedDiagramSource({ page, editor, toolbar, output, report });
+}
+
+async function auditPairedDiagramSource({ page, editor, toolbar, output, report }) {
+  const controls = toolbar.getByRole('region', { name: 'Code block controls', exact: true });
+  const dialog = () => page.getByRole('dialog', { name: 'Diagram source and preview', exact: true });
+  const source = () => dialog().getByRole('textbox', { name: 'Diagram source', exact: true });
+  const preview = () => dialog().getByRole('region', { name: 'Diagram preview', exact: true });
+  const frame = () => preview().frameLocator('iframe[title="Mermaid diagram preview"]');
+  const screenshot = name => page.screenshot({ path: fileURLToPath(new URL(name, output)), fullPage: true });
+  const mermaid = editor.locator('pre[data-language="mermaid"]');
+  const plantuml = editor.locator('pre[data-language="plantuml"]');
+  await mermaid.locator('code').click();
+  await controls.getByRole('button', { name: 'Edit diagram source', exact: true }).click();
+  await expect(source()).toHaveValue(report.nativeDiagrams.mermaidText);
+  await expect(frame().locator('svg')).toContainText('Published');
+  const sourceBox = await source().boundingBox(), previewBox = await preview().boundingBox();
+  expect(sourceBox.width).toBeGreaterThan(250); expect(previewBox.width).toBeGreaterThan(250);
+  expect(previewBox.x).toBeGreaterThan(sourceBox.x + sourceBox.width);
+  expect(Math.abs(sourceBox.y - previewBox.y)).toBeLessThan(100);
+  await screenshot('paired-mermaid-desktop.png');
+
+  await source().fill('! ! ! INVALID');
+  await expect(preview().getByRole('alert')).toContainText('editable source is retained');
+  expect((await mermaid.textContent()).trimEnd()).toBe(report.nativeDiagrams.mermaidText);
+  await dialog().getByRole('button', { name: 'Copy source draft', exact: true }).click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('! ! ! INVALID');
+  await screenshot('paired-invalid-retained-draft.png');
+  await dialog().getByRole('button', { name: 'Cancel source edit', exact: true }).click();
+  await expect(dialog()).toHaveCount(0);
+  expect((await mermaid.textContent()).trimEnd()).toBe(report.nativeDiagrams.mermaidText);
+  report.checks.push('The real paired Mermaid dialog shows source and rendered output together; invalid local source exposes an error and copies exactly, while Cancel leaves the committed diagram unchanged');
+
+  await mermaid.locator('code').click();
+  await controls.getByRole('button', { name: 'Edit diagram source', exact: true }).click();
+  const editedMermaid = report.nativeDiagrams.mermaidText + '\nPublished-->Reviewed';
+  await source().fill(editedMermaid); await expect(frame().locator('svg')).toContainText('Reviewed');
+  expect((await mermaid.textContent()).trimEnd()).toBe(report.nativeDiagrams.mermaidText);
+  const accessibility = await dialog().evaluate(element => window.axe.run(element));
+  expect(accessibility.violations).toEqual([]);
+  await screenshot('paired-mermaid-draft-desktop.png');
+  await dialog().getByRole('button', { name: 'Apply diagram source', exact: true }).click();
+  await expect(dialog()).toHaveCount(0);
+  expect((await mermaid.textContent()).trimEnd()).toBe(editedMermaid);
+  await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
+  expect((await mermaid.textContent()).trimEnd()).toBe(report.nativeDiagrams.mermaidText);
+  await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
+  expect((await mermaid.textContent()).trimEnd()).toBe(editedMermaid);
+  report.nativeDiagrams.mermaidText = editedMermaid;
+  report.checks.push('A valid paired-source draft previews before committing, Apply updates the intended block in one step, Undo/Redo retain the exact source, and the entire dialog has no axe violations');
+
+  await plantuml.locator('code').click();
+  await controls.getByRole('button', { name: 'Edit diagram source', exact: true }).click();
+  const originalPlantuml = report.nativeDiagrams.plantumlText;
+  const editedPlantuml = originalPlantuml.replace('@enduml', 'Alice -> Bob: Paired Published\n@enduml');
+  await source().fill(editedPlantuml);
+  await expect(preview().getByRole('img')).not.toHaveAttribute('src', report.nativeDiagrams.providerImage);
+  await expect.poll(() => preview().getByRole('img').evaluate(element => element.complete && element.naturalWidth > 0)).toBe(true);
+  expect((await plantuml.textContent()).trimEnd()).toBe(originalPlantuml);
+  await screenshot('paired-plantuml-draft-desktop.png');
+  await page.setViewportSize({ width: 360, height: 900 });
+  await expect(source()).toBeVisible();
+  const mobileSourceBox = await source().boundingBox(), mobilePreviewBox = await preview().boundingBox();
+  expect(mobilePreviewBox.y).toBeGreaterThan(mobileSourceBox.y + mobileSourceBox.height);
+  expect(await dialog().evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await screenshot('paired-plantuml-mobile-source.png');
+  await preview().scrollIntoViewIfNeeded(); await screenshot('paired-plantuml-mobile-preview.png');
+  await dialog().getByRole('button', { name: 'Apply diagram source', exact: true }).click();
+  await expect(dialog()).toHaveCount(0);
+  expect((await plantuml.textContent()).trimEnd()).toBe(editedPlantuml);
+  report.nativeDiagrams.plantumlText = editedPlantuml;
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  report.nativeDiagramAuthoring = { mermaidText: editedMermaid, plantumlText: editedPlantuml,
+    desktop: { sourceBox, previewBox }, mobile: { sourceBox: mobileSourceBox, previewBox: mobilePreviewBox },
+    accessibilityViolations: accessibility.violations };
+  report.checks.push('The paired PlantUML draft uses the actual configured image renderer, stacks source and preview at 360px without horizontal overflow, and Apply commits the source for normal GitLab saving');
 }
 
 export async function assertSavedNativeDiagrams({ page, description, report, output, phase }) {

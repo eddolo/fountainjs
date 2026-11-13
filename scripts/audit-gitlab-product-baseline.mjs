@@ -15,7 +15,8 @@ const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstr
 const nativeCapacity = process.argv.includes('--native-attachment-capacity');
 const nativeLinks = process.argv.includes('--native-links');
 const nativeCode = process.argv.includes('--native-code');
-const nativeDiagrams = process.argv.includes('--native-diagrams');
+const nativeDiagramAuthoring = process.argv.includes('--native-diagram-authoring');
+const nativeDiagrams = process.argv.includes('--native-diagrams') || nativeDiagramAuthoring;
 const nativeAlerts = process.argv.includes('--native-alerts');
 const nativeReferenceContexts = process.argv.includes('--reference-contexts');
 const nativeReferences = process.argv.includes('--native-references') || nativeReferenceContexts;
@@ -28,7 +29,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -373,7 +374,7 @@ try {
     if (nativeAlerts) await auditNativeAlerts({ page, editor, toolbar, output, report });
     if (nativeMedia) await auditNativeMedia({ page, context, editor, toolbar, output, report });
     if (nativeReferences) await auditNativeReferences({ page, context, editor, toolbar, output, report });
-    if (nativeDiagrams) await auditNativeDiagrams({ page, context, editor, toolbar, output, report });
+    if (nativeDiagrams) await auditNativeDiagrams({ page, context, editor, toolbar, output, report, pairedAuthoring: nativeDiagramAuthoring });
     if (nativeAttachments) {
       if (process.argv.includes('--probe-upload-focus')) await editor.evaluate(element => {
         const root = element.closest('[data-fountain-integration="native"]');

@@ -140,6 +140,78 @@ it('changes a code language without altering source or neighboring blocks and su
   expect(redo(editor)).toBe(true); expect(editor.state.doc.child(1).attrs.language).toBe('python');
 });
 
+it.each(['', '\n  graph LR\n  A-->B\n\n', '\tα\u200Bβ\u00A0→🖋️\r\n'])('applies literal source %j without trimming, normalization or extra undo steps', async input => {
+  const { service, editor } = await setup(), before = editor.state.doc;
+  const session = service.beginCodeEdit();
+  expect(session.applySource(input)).toBe(true);
+  expect(session.closed).toBe(true);
+  expect(editor.state.doc.child(1).textContent).toBe(input);
+  expect(editor.state.doc.child(1).attrs).toEqual(before.child(1).attrs);
+  expect(editor.state.doc.child(0)).toBe(before.child(0));
+  expect(editor.state.doc.child(2)).toBe(before.child(2));
+  expect(undo(editor)).toBe(true); expect(service.getSerializedContent()).toBe(source);
+  expect(undo(editor)).toBe(false);
+  expect(redo(editor)).toBe(true); expect(editor.state.doc.child(1).textContent).toBe(input);
+});
+
+it('does not create history for an unchanged source or mutate a cancelled source draft', async () => {
+  const { service, editor } = await setup(), before = editor.state;
+  service.beginCodeEdit().close();
+  expect(service.beginCodeEdit().applySource(before.doc.child(1).textContent)).toBe(true);
+  expect(editor.state).toBe(before); expect(undo(editor)).toBe(false);
+});
+
+it('maps a source draft to its captured block after unrelated edits and caret movement', async () => {
+  const { service, editor } = await setup(), session = service.beginCodeEdit();
+  const paragraph = editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Inserted')]);
+  editor.dispatch(editor.createTransaction().replaceNode([0], [paragraph, editor.state.doc.child(0)]));
+  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([3, 0], 2)));
+  expect(session.applySource('Updated source')).toBe(true);
+  expect(editor.state.doc.child(2).textContent).toBe('Updated source');
+  expect(editor.state.doc.child(3).textContent).toBe('After');
+  expect(editor.state.selection.path).toEqual([3, 0]);
+});
+
+it.each(['edited', 'deleted', 'replaced'])('refuses a source draft after its target is %s', async change => {
+  const { service, editor } = await setup(), session = service.beginCodeEdit();
+  if (change === 'edited') insertText(editor, 'changed');
+  if (change === 'deleted') editor.dispatch(editor.createTransaction().replaceNode([1], []));
+  if (change === 'replaced') await service.setSerializedContent(source);
+  const before = editor.state.doc;
+  expect(() => session.applySource('draft')).toThrow('GITLAB_CODE_TARGET_CHANGED');
+  expect(editor.state.doc).toBe(before); expect(session.closed).toBe(false);
+});
+
+it('retains a source session through late read-only refusal and permits retry', async () => {
+  const { service, editor } = await setup(), session = service.beginCodeEdit(), before = editor.state.doc;
+  service.setEditable(false);
+  expect(() => session.applySource('draft')).toThrow('GITLAB_EDITOR_NOT_READY');
+  expect(editor.state.doc).toBe(before); expect(session.closed).toBe(false);
+  service.setEditable(true); expect(session.applySource('draft')).toBe(true);
+});
+
+it('rolls back an unserializable source draft without publishing partial content or history', async () => {
+  const { editor } = await setup(), before = editor.state.doc;
+  let refuse = true;
+  const session = new GitLabCodeEditingSession({ editor, ensureReady() {}, validate() { if (refuse) throw new Error('CONVERSION_REFUSED'); } });
+  const observe = vi.fn(), release = editor.subscribe(observe);
+  expect(() => session.applySource('draft')).toThrow('CONVERSION_REFUSED');
+  expect(editor.state.doc).toBe(before); expect(undo(editor)).toBe(false);
+  expect(observe.mock.calls.every(([, transaction]) => !transaction.docChanged)).toBe(true);
+  expect(session.closed).toBe(false); refuse = false;
+  expect(session.applySource('draft')).toBe(true); release();
+});
+
+it('retains a source draft after a transaction filter refuses it', async () => {
+  let refuse = false;
+  const plugin = new Plugin({ filterTransaction: transaction => !refuse || !transaction.docChanged });
+  const { service, editor } = await setup([{ name: 'source-refusal', plugins: [plugin] }]);
+  const before = editor.state.doc, session = service.beginCodeEdit(); refuse = true;
+  expect(() => session.applySource('draft')).toThrow('GITLAB_CODE_UPDATE_REFUSED');
+  expect(editor.state.doc).toBe(before); expect(undo(editor)).toBe(false);
+  refuse = false; expect(session.applySource('draft')).toBe(true);
+});
+
 it.each(['my-company-dsl', 'c++', 'c#', 'fsharp', 'plain_text', 'text.v2'])('retains the custom non-executing language %s', async language => {
   const { service, editor } = await setup(); service.beginCodeEdit().applyLanguage(language);
   expect(editor.state.doc.child(1).attrs.language).toBe(language);

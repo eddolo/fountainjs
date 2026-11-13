@@ -177,8 +177,9 @@ cases. Then apply `gitlab-19.5.3-native-link-tests.patch` and
 `gitlab-19.5.3-native-reference-tests.patch` and
 `gitlab-19.5.3-native-diagram-tests.patch` in that order. The eleven patches retain
 the original incomplete media/code-menu requirements while adding the native
-behavior tests. The current ten-suite set is **318 passed / 2 failed / 320 cases**,
-including 64 work-item, 75 host-Markdown, 40 form, 16 code-menu, eight diagram-preview,
+behavior tests. The current eleven-suite set is **329 passed / 2 failed / 331 cases**,
+including 64 work-item, 75 host-Markdown, 40 form, 24 code-menu, eight diagram-preview,
+three paired-authoring host,
 18 media, 13 reference, eight link and eleven alert cases. Full specialized-code
 and media requirements remain failed and unskipped; frontmatter, suggestions and
 GLQL are not established by the diagram work.
@@ -194,6 +195,7 @@ corepack yarn jest --runInBand \
   spec/frontend/content_editor/components/fountain_media_menu_spec.js \
   spec/frontend/content_editor/components/fountain_reference_menu_spec.js \
   spec/frontend/content_editor/components/fountain_diagram_preview_spec.js \
+  spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js \
   spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js \
   spec/frontend/issuable/issuable_form_spec.js \
   spec/frontend/work_items/components/work_item_description_spec.js
@@ -214,6 +216,9 @@ its main index:
 
 ```sh
 node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source --diagrams
+# Store this follow-up's verification separately from the earlier diagram run:
+node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source --diagram-authoring
+node scripts/check-gitlab-native-install.mjs /absolute/gitlab-source --diagram-authoring
 ```
 
 Native imports request `no_header_anchors` through the real host callback;
@@ -246,6 +251,8 @@ node scripts/run-gitlab-native-browser-audit.mjs --media-files
 node scripts/run-gitlab-native-browser-audit.mjs --references --reference-contexts
 # Create/type/edit Mermaid and PlantUML with real providers and save/reopen/restart:
 node scripts/run-gitlab-native-browser-audit.mjs --diagrams
+# Paired source/preview draft, cancel/apply/undo and responsive modal journey:
+node scripts/run-gitlab-native-browser-audit.mjs --diagram-authoring
 # Read-only renderer fixture capture (not a product acceptance run):
 node scripts/run-gitlab-native-browser-audit.mjs --alert-fixtures
 # Diagram HTML fixtures use the isolated provider and temporarily enable PlantUML:

@@ -1,0 +1,37 @@
+ Container fountain-gitlab-integration-diagram-server-1  Starting
+ Container fountain-gitlab-integration-diagram-server-1  Started
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{
+  "status": "passed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "mermaid: the actual block-type selector creates a new block; native multiline typing and real preview work, and delete/undo/redo retain every source character",
+    "plantuml: the actual block-type selector creates a new block; native multiline typing and real preview work, and delete/undo/redo retain every source character",
+    "Real GitLab Markdown imports Mermaid code and the enabled PlantUML image/source carrier into native editable source blocks without flattening the diagram",
+    "The script-only real Mermaid sandbox renders a diagram; actual invalid native typing produces a recoverable preview error, and Undo restores source and a working preview without page errors",
+    "Native multiline editing updates the actual Mermaid preview, and Copy code writes the complete updated source to the real browser clipboard",
+    "Actual offline PlantUML preview failure retains the source; explicit online retry uses GitLab rendering and decodes the real isolated PlantUML server image",
+    "Actual PlantUML source editing updates a real image; conversion to ordinary code and one-step undo retain every source character",
+    "Diagram deletion/undo retains source; the restored real sandbox works at 360px without horizontal page overflow, and the preview region has no axe violations",
+    "The real paired Mermaid dialog shows source and rendered output together; invalid local source exposes an error and copies exactly, while Cancel leaves the committed diagram unchanged",
+    "A valid paired-source draft previews before committing, Apply updates the intended block in one step, Undo/Redo retain the exact source, and the entire dialog has no axe violations",
+    "The paired PlantUML draft uses the actual configured image renderer, stacks source and preview at 360px without horizontal overflow, and Apply commits the source for normal GitLab saving",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Actual UI Save retains both edited diagram sources; the GitLab reader renders the published Mermaid node and decodes the actual PlantUML provider image",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ]
+}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+ Container fountain-gitlab-integration-diagram-server-1  Stopping
+ Container fountain-gitlab-integration-diagram-server-1  Stopped
