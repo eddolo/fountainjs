@@ -6,6 +6,7 @@ import type { SerializedContentCodec } from './serialized_content';
 import type { GitLabRenderResponse } from './asset_resolver';
 import { gitlabMathNodes, normalizeGitLabMath, serializeGitLabMath } from './math';
 import { normalizeGitLabCodeRendering, normalizeGitLabDiagrams } from './code_rendering';
+import { getGitLabFrontmatter, gitlabFrontmatterCode, hydrateGitLabFrontmatter, normalizeGitLabFrontmatter, serializeGitLabFrontmatter } from './frontmatter';
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
 
@@ -58,6 +59,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
       alt: child.getAttribute('alt') ?? '', title: child.getAttribute('title') ?? '', width: size('width'), height: size('height') };
   };
   return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base), ...gitlabAlertNodes(), ...gitlabMediaNodes(mediaLabels),
+    code_block: gitlabFrontmatterCode(base.nodes.code_block!),
     inline_image: { ...image, attrs: { ...image.attrs, gitlabCanonicalSrc: canonical,
       gitlabIntrinsicSize: { default: false, validate: value => typeof value === 'boolean' },
       gitlabCanonicalMissing: { default: false, validate: value => typeof value === 'boolean' } },
@@ -127,12 +129,13 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   const diagrams = normalizeGitLabDiagrams(elements);
   const media = normalizeGitLabMedia(elements.filter(element => !diagrams.handled.has(element)), source, schema);
   const alerts = normalizeGitLabAlerts(elements, source);
+  const frontmatter = normalizeGitLabFrontmatter(elements, source);
   const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element) && !diagrams.handled.has(element)));
   const issues: GitLabMarkdownIssue[] = [
-    ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues].map(issue => ({ stage: 'import' as const, ...issue })),
+    ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues, ...frontmatter.issues].map(issue => ({ stage: 'import' as const, ...issue })),
   ];
   for (const element of elements) {
-    if (math.handled.has(element) || alerts.handled.has(element) || media.handled.has(element) || diagrams.handled.has(element)) continue;
+    if (math.handled.has(element) || alerts.handled.has(element) || media.handled.has(element) || diagrams.handled.has(element) || frontmatter.handled.has(element)) continue;
     const classes = (attr(element, 'class') ?? '').split(/\s+/u);
     if (attr(element, 'dir') === 'auto' && (attr(element, 'align')
       || /(?:^|;)\s*text-align\s*:/iu.test(attr(element, 'style') ?? ''))) {
@@ -184,7 +187,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       if (response.references?.commands) throw new GitLabMarkdownConversionError([{ stage: 'import', code: 'quick-actions', message: 'Quick-action source requires a dedicated document adapter before visual editing.' }]);
       const result = parser.parseWithReport(normalizeGitLabRendering(response.body, parser.options, markdown, schema), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
-      const document = hydrateGitLabAlertTitles(result.document);
+      const document = hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown);
       schema.validate(document);
       const source = MarkdownSourceSnapshot.capture(markdown, document);
       document.descendants(node => { this.sources.set(node, source); });
@@ -208,6 +211,23 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const encoded = JSON.stringify(doc.toJSON());
     while (encoded.includes(prefix)) prefix += 'X';
     const project = (node: Node, path: number[]): Node => {
+      if (node.attrs.gitlabFrontmatter) {
+        try {
+          const raw = serializeGitLabFrontmatter(node, path);
+          const token = `${prefix}${tokens.size}END`;
+          if (getGitLabFrontmatter(node)?.kind === 'fence') {
+            // Let the normal exporter indent every source line in nested fences.
+            tokens.set(token, `${String(node.attrs.language)} frontmatter`);
+            return node.type.create({ ...node.attrs, language: token, gitlabFrontmatter: null }, node.content);
+          }
+          tokens.set(token, raw);
+          return node.type.schema.node('paragraph', {}, [node.type.schema.text(token)]);
+        } catch (error) {
+          issues.push({ stage: 'export', code: 'frontmatter-source', path,
+            message: error instanceof Error ? error.message : 'Invalid frontmatter source.' });
+          return node.type.schema.node('paragraph');
+        }
+      }
       if (node.type.name === 'inline_image' || node.type.name === 'gitlab_media') {
         if (node.attrs.gitlabCanonicalMissing) issues.push({ stage: 'export', code: 'canonical-image-source', path,
           message: 'The renderer omitted the canonical image address. Keep source editing until its original address can be mapped exactly.' });

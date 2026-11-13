@@ -1,10 +1,12 @@
-import { NodeSelection, Step, closeHistory, mapSelection, removeNode, setBlockType,
+import { NodeSelection, Selection, Step, closeHistory, mapSelection, removeNode, setBlockType,
   type Editor, type Node, type Transaction } from 'fountainjs-editor';
+import { changeGitLabFrontmatterLanguage, getGitLabFrontmatter, type GitLabFrontmatter } from './frontmatter';
 
 export interface GitLabCodeContext {
   readonly path: readonly number[];
   readonly text: string;
   readonly language: string;
+  readonly frontmatter?: 'header' | 'fence';
 }
 interface CodeEditingOptions {
   editor: Editor;
@@ -67,10 +69,31 @@ export function getGitLabCodeContext(editor: Editor): GitLabCodeContext | undefi
       if (node.type.name !== 'code_block') continue;
       if (!inside(selection.endPath, path) || node.content.some(child => !child.isText)) return undefined;
       return Object.freeze({ path: Object.freeze(path), text: node.textContent,
-        language: String(node.attrs.language) });
+        language: String(node.attrs.language), ...(getGitLabFrontmatter(node) ? { frontmatter: getGitLabFrontmatter(node)!.kind } : {}) });
     }
   } catch { return undefined; }
   return undefined;
+}
+
+/** Document-level insertion is explicit: a header never replaces selected prose. */
+export function insertGitLabFrontmatter(editor: Editor, language: string, validate: (doc: Node) => void): boolean {
+  if (!editor.editable) return false;
+  const delimiter = ({ yaml: '---', toml: '+++', json: ';;;' } as Record<string, string>)[language];
+  if (!delimiter) throw new Error('GITLAB_FRONTMATTER_LANGUAGE');
+  let exists = false;
+  editor.state.doc.descendants(node => { if (getGitLabFrontmatter(node)?.kind === 'header') exists = true; });
+  if (exists) throw new Error('GITLAB_FRONTMATTER_EXISTS');
+  const metadata: GitLabFrontmatter = { kind: 'header', prefix: '', opening: delimiter, closing: delimiter,
+    newline: '\n', blankLine: false };
+  closeHistory(editor);
+  return editor.runCommandBatch(() => {
+    const { schema, doc } = editor.state;
+    const header = schema.node('code_block', { language, gitlabFrontmatter: metadata }, [schema.text('')]);
+    const transaction = editor.createTransaction().replaceNode([0], [header, doc.child(0)])
+      .setSelection(Selection.cursor([0, 0], 0)).setStoredMarks([]);
+    if (!editor.dispatch(transaction)) return false;
+    validate(editor.state.doc); return true;
+  });
 }
 
 /** A form owns one captured block; later selection changes cannot redirect it. */
@@ -123,8 +146,10 @@ export class GitLabCodeEditingSession {
     if (['glql', 'suggestion', 'math'].includes(language))
       throw new Error('GITLAB_CODE_SPECIALIZED_LANGUAGE');
     if (language === this.initial.language) { this.close(); return true; }
+    const metadata = getGitLabFrontmatter(this.node!);
+    const gitlabFrontmatter = metadata ? changeGitLabFrontmatterLanguage(metadata, language) : null;
     closeHistory(editor); this.ready();
-    const transaction = editor.createTransaction().setNodeAttrs(this.selected.nodePath, { ...this.node!.attrs, language });
+    const transaction = editor.createTransaction().setNodeAttrs(this.selected.nodePath, { ...this.node!.attrs, language, gitlabFrontmatter });
     this.commit(() => editor.dispatch(transaction));
     this.close(); return true;
   }
@@ -136,6 +161,20 @@ export class GitLabCodeEditingSession {
     closeHistory(editor); this.ready();
     const content = [editor.state.schema.text(input)];
     const transaction = editor.createTransaction().replaceNode(this.selected.nodePath, [this.node!.copy(content)]);
+    this.commit(() => editor.dispatch(transaction));
+    this.close(); return true;
+  }
+
+  convertToCode(input = this.initial.language): boolean {
+    const { editor } = this.ready();
+    if (!this.node!.attrs.gitlabFrontmatter) return this.applyLanguage(input);
+    if (typeof input !== 'string' || !/^[A-Za-z0-9_+.#-]{1,80}$/u.test(input.trim()))
+      throw new Error('GITLAB_CODE_INVALID_LANGUAGE');
+    const language = input.trim().toLowerCase();
+    if (['glql', 'suggestion', 'math'].includes(language)) throw new Error('GITLAB_CODE_SPECIALIZED_LANGUAGE');
+    closeHistory(editor); this.ready();
+    const transaction = editor.createTransaction().setNodeAttrs(this.selected.nodePath,
+      { ...this.node!.attrs, language, gitlabFrontmatter: null });
     this.commit(() => editor.dispatch(transaction));
     this.close(); return true;
   }

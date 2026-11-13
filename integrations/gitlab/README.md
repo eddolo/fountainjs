@@ -1219,6 +1219,94 @@ engine/API, size-limit, npm or website release changes.
 [Evidence and retained failures](../../artifacts/gitlab-diagram-reader-integration-20261113.json),
 [actual recorded journey](../../artifacts/gitlab-native-diagram-reader-20261113/report.json).
 
+### Native document frontmatter
+
+`services/frontmatter.ts` adds a GitLab-owned attribute to the existing Fountain
+`code_block` schema. It uses the engine's actual code input, selections,
+transactions and history; it does not introduce a second editor or change the
+public Fountain schema. It imports the document/schema types from
+`fountainjs-editor`, the parse5 tree types and the bounded literal-code helpers
+in `services/code_rendering.ts`. It has no browser-global dependency.
+
+The source contract comes from pinned GitLab's `lib/gitlab/front_matter.rb`,
+`lib/banzai/filter/front_matter_filter.rb`,
+`content_editor/extensions/frontmatter.js` and
+`content_editor/services/serializer/frontmatter.js`. Twenty-seven captured
+authenticated renderer responses cover YAML/TOML/JSON, empty headers, comments,
+encoding/blank prefixes, BOM, CRLF, explicit language labels, alternate closing
+markers, malformed literal metadata and labelled code fences.
+
+The distinction between a document header and a fence matters: GitLab emits the
+same `pre[data-lang-params="frontmatter"]` for both. The adapter checks original
+source and renderer positions instead of inferring header semantics from HTML.
+An actual header must remain the first root block. Labelled fences retain their
+fence parameter, including inside a blockquote. Unknown/ambiguous renderer
+carriers remain errors with the original Markdown retained. A CR-only source
+that the actual GitLab renderer flattens is refused rather than advertised as a
+successful metadata import.
+
+**Insert frontmatter** explicitly prepends a new YAML header without replacing
+the selected body content. The selected style reads **Document frontmatter**.
+Context controls offer format selection, literal source editing, copy, delete
+and explicit conversion to ordinary code. Quote/list/inline formatting actions
+are disabled when their selection includes document frontmatter, including
+Select all, so those actions cannot accidentally wrap or style the header.
+The same platform-neutral selection helper protects formatting shortcuts and
+`beforeinput`, including directed ranges, without swallowing body typing or IME.
+YAML/TOML/JSON format changes preserve
+the source text; they do not translate or validate its syntax. The source dialog
+has no diagram preview or code execution, and read-only mode permits inspection.
+Apply makes one captured, validated undoable edit. A changed target refuses
+overwrite and retains the draft; unapplied source blocks host save/mode handoff.
+
+Header spelling, comments, prefixes, delimiters and original header characters
+survive an unrelated body edit. A source edit introducing a premature closing
+delimiter is rejected atomically. Moving/duplicating a document header into body
+content refuses serialization; it is not silently changed to an ordinary fence.
+The complete untouched Markdown still uses the existing exact snapshot, while
+other edited document sections continue to use canonical serialization. This
+does not close the broader partial-edit source-fidelity requirement.
+
+Reproduce the dedicated profiles from the repository root in the pinned Linux
+environment:
+
+```sh
+node scripts/run-gitlab-native-browser-audit.mjs --frontmatter-fixtures
+node scripts/prepare-gitlab-frontmatter-tests.mjs /absolute/pinned/gitlab-source
+node scripts/check-gitlab-native-patches.mjs /absolute/pinned/gitlab-source --frontmatter
+node scripts/check-gitlab-native-install.mjs /absolute/pinned/gitlab-source --frontmatter
+node scripts/run-gitlab-native-browser-audit.mjs --frontmatter
+```
+
+Build/install the current native runtime and matching GitLab frontend before the
+browser profile. Run source rollback with the application stopped and no test or
+build reading the installed source. The dedicated browser profile uses normal
+sign-in and actual issue persistence, checks reopened native source as well as
+the reader, and verifies an application-container restart. It does not enable
+the optional diagram provider.
+
+The final profile passes **18 recorded Linux Chromium checks** on issue 97,
+including exact header source through UI save, reader/native reopen and a real
+application restart. Source/error/mobile dialogs and the settled reader are
+visually reviewed, as are representative frames from the **215-second recording**.
+The source dialog has zero scoped axe violations, the run has zero browser
+errors, and both task containers are stopped afterward. Reader snapshots can
+precede GitLab's asynchronous math/image hydration; the later settled-reader
+checks and `original-after-restart.png` verify the existing equation and image.
+
+All **5,946 root tests/361 files**, root TypeScript, 450 public declaration checks,
+unchanged package size limits, upstream lint and the actual production frontend
+build pass. The eighteen-suite GitLab set is **428 passed / 2 failed / 1 inherited
+skip / 431 total**. The two original code/media menu requirements remain failed;
+the expensive Mermaid-count skip is unchanged from pinned upstream. Format 10
+still owns twenty-two files, source rollback/reinstall verifies their current
+digests, and thirteen ordered patches reconstruct the tested specs/fixtures.
+An invalid overlapping rollback/Jest run and a browser audit dependency-path
+failure are retained, corrected and rerun; neither is treated as acceptance.
+No public engine/API, size allowance, npm or website publication changes.
+[Checkpoint evidence and limits](../../artifacts/gitlab-frontmatter-integration-20261113.json),
+[actual browser report](../../artifacts/gitlab-native-frontmatter-20261113/report.json).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

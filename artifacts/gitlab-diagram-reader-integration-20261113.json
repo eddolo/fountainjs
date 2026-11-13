@@ -72,14 +72,15 @@
   "installation": {
     "format": 10,
     "files": 22,
-    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "manifest": "artifacts/gitlab-diagram-reader-checkpoint-install-20261113.json",
     "sourceRoundtrip": "artifacts/gitlab-native-diagram-reader-install-roundtrip-20261113.json",
     "patchVerification": "artifacts/gitlab-native-diagram-reader-patch-verification-20261113.json",
     "build": "artifacts/gitlab-diagram-reader-loader-rspack-20261113.log",
     "lint": [
       "artifacts/gitlab-diagram-reader-eslint-final-20261113.log",
       "artifacts/gitlab-diagram-reader-loader-eslint-20261113.log"
-    ]
+    ],
+    "runtimeManifest": "artifacts/gitlab-diagram-reader-checkpoint-build-20261113.json"
   },
   "publicLibrary": {
     "changed": false,

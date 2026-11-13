@@ -32,12 +32,14 @@ try {
   execFileSync(
     process.execPath,
     [
-      resolve(root, ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures'].some(flag => process.argv.includes(flag)) ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      resolve(root, ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures'].some(flag => process.argv.includes(flag)) ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      ...(process.argv.includes('--frontmatter-fixtures') ? ['--frontmatter'] : []),
       ...(process.argv.includes('--diagram-fixtures') ? ['--diagrams'] : []),
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--diagram-reader') ? '--native-diagram-reader'
+      process.argv.includes('--frontmatter') ? '--native-frontmatter'
+        : process.argv.includes('--diagram-reader') ? '--native-diagram-reader'
         : process.argv.includes('--diagram-authoring') ? '--native-diagram-authoring'
         : process.argv.includes('--diagrams') ? '--native-diagrams'
         : process.argv.includes('--references') ? '--native-references'

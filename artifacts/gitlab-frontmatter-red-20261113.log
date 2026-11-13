@@ -1,0 +1,132 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-frontmatter.test.ts (20 tests | 18 failed) 45ms
+   × imports actual GitLab yaml header as literal editable source, retaining its delimiters after another edit 10ms
+   × imports actual GitLab toml header as literal editable source, retaining its delimiters after another edit 2ms
+   × imports actual GitLab json header as literal editable source, retaining its delimiters after another edit 2ms
+   × imports actual GitLab yaml-empty header as literal editable source, retaining its delimiters after another edit 1ms
+   × imports actual GitLab toml-empty header as literal editable source, retaining its delimiters after another edit 1ms
+   × imports actual GitLab json-empty header as literal editable source, retaining its delimiters after another edit 1ms
+   × imports actual GitLab yaml-only header as literal editable source, retaining its delimiters after another edit 1ms
+   × imports actual GitLab yaml-crlf header as literal editable source, retaining its delimiters after another edit 1ms
+   × imports actual GitLab yaml-close-dots header as literal editable source, retaining its delimiters after another edit 1ms
+   × imports actual GitLab yaml-bom header as literal editable source, retaining its delimiters after another edit 1ms
+   × imports actual GitLab yaml-invalid header as literal editable source, retaining its delimiters after another edit 0ms
+   × imports actual GitLab yaml-literal header as literal editable source, retaining its delimiters after another edit 7ms
+   × retains fenced-param as a fence instead of inventing document metadata 0ms
+   × retains fenced-param-nested as a fence instead of inventing document metadata 0ms
+   × edits the actual header with ordinary editor input, deletes it and restores exact source through undo 3ms
+   × changes header format deliberately, preserves source and retains one-step undo 1ms
+   × refuses a source edit that would prematurely close the header without publishing partial content 1ms
+   × refuses moving or duplicating a header instead of silently changing it into body text 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab yaml header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab toml header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab json header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab yaml-empty header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab toml-empty header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab json-empty header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab yaml-only header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab yaml-crlf header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab yaml-close-dots header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab yaml-bom header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab yaml-invalid header as literal editable source, retaining its delimiters after another edit
+ FAIL  tests/gitlab-frontmatter.test.ts > imports actual GitLab yaml-literal header as literal editable source, retaining its delimiters after another edit
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:193:65
+    191|       return { document };
+    192|     } catch (error) {
+    193|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    194|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    195|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ convert tests/gitlab-frontmatter.test.ts:17:24
+ ❯ tests/gitlab-frontmatter.test.ts:25:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/18]⎯
+
+ FAIL  tests/gitlab-frontmatter.test.ts > retains fenced-param as a fence instead of inventing document metadata
+ FAIL  tests/gitlab-frontmatter.test.ts > retains fenced-param-nested as a fence instead of inventing document metadata
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:193:65
+    191|       return { document };
+    192|     } catch (error) {
+    193|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    194|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    195|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ convert tests/gitlab-frontmatter.test.ts:17:24
+ ❯ tests/gitlab-frontmatter.test.ts:40:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/18]⎯
+
+ FAIL  tests/gitlab-frontmatter.test.ts > edits the actual header with ordinary editor input, deletes it and restores exact source through undo
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:193:65
+    191|       return { document };
+    192|     } catch (error) {
+    193|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    194|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    195|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ SerializedContentController.setSerializedContent integrations/gitlab/services/serialized_content.ts:63:25
+ ❯ GitLabContentEditor.setSerializedContent integrations/gitlab/services/content_editor.ts:373:22
+ ❯ setup tests/gitlab-frontmatter.test.ts:60:27
+ ❯ tests/gitlab-frontmatter.test.ts:66:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/18]⎯
+
+ FAIL  tests/gitlab-frontmatter.test.ts > changes header format deliberately, preserves source and retains one-step undo
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:193:65
+    191|       return { document };
+    192|     } catch (error) {
+    193|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    194|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    195|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ SerializedContentController.setSerializedContent integrations/gitlab/services/serialized_content.ts:63:25
+ ❯ GitLabContentEditor.setSerializedContent integrations/gitlab/services/content_editor.ts:373:22
+ ❯ setup tests/gitlab-frontmatter.test.ts:60:27
+ ❯ tests/gitlab-frontmatter.test.ts:79:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/18]⎯
+
+ FAIL  tests/gitlab-frontmatter.test.ts > refuses a source edit that would prematurely close the header without publishing partial content
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:193:65
+    191|       return { document };
+    192|     } catch (error) {
+    193|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    194|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    195|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ SerializedContentController.setSerializedContent integrations/gitlab/services/serialized_content.ts:63:25
+ ❯ GitLabContentEditor.setSerializedContent integrations/gitlab/services/content_editor.ts:373:22
+ ❯ setup tests/gitlab-frontmatter.test.ts:60:27
+ ❯ tests/gitlab-frontmatter.test.ts:88:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/18]⎯
+
+ FAIL  tests/gitlab-frontmatter.test.ts > refuses moving or duplicating a header instead of silently changing it into body text
+GitLabMarkdownConversionError: GitLab Markdown conversion cannot complete without the reported adapter. Retain the original source and inspect the current document.
+ ❯ GitLabMarkdownCodec.deserialize integrations/gitlab/services/markdown_codec.ts:193:65
+    191|       return { document };
+    192|     } catch (error) {
+    193|       if (error instanceof GitLabMarkdownConversionError) throw new Gi…
+       |                                                                 ^
+    194|       throw new GitLabMarkdownConversionError([{ stage: 'import', code…
+    195|         message: signal.aborted ? 'GitLab conversion was cancelled.' :…
+ ❯ convert tests/gitlab-frontmatter.test.ts:17:24
+ ❯ tests/gitlab-frontmatter.test.ts:95:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/18]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  18 failed | 2 passed (20)
+   Start at  20:51:18
+   Duration  1.49s (transform 79%, import 16%, tests 4%, worker 1%)

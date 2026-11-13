@@ -1,0 +1,28 @@
+time="2026-11-13T21:41:38Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{
+  "status": "passed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Real toolbar inserts first-root YAML without replacing body content; native source Apply, Undo and Redo preserve comments, literal markup and Unicode",
+    "A premature header delimiter is refused atomically; the visible draft is retained and Cancel leaves the document unchanged",
+    "Real TOML and JSON format/source controls retain text rather than pretending to translate syntax; two deliberate edits undo back to exact YAML",
+    "Browser typing, exact clipboard copy, full-header deletion and explicit regular-code conversion work with one-step undo",
+    "Frontmatter source dialog has no scoped axe violations and remains usable at 360px without dialog overflow",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Actual UI Save retains frontmatter source and delimiters; the GitLab reader and reopened native source agree",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ]
+}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped

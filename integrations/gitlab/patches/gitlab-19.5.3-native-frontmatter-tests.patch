@@ -1,0 +1,416 @@
+diff --git a/spec/frontend/content_editor/components/fountain_frontmatter_spec.js b/spec/frontend/content_editor/components/fountain_frontmatter_spec.js
+new file mode 100644
+index 00000000..1fa5e110
+--- /dev/null
++++ b/spec/frontend/content_editor/components/fountain_frontmatter_spec.js
+@@ -0,0 +1,259 @@
++import { GlAlert, GlButton } from '@gitlab/ui';
++import { fireEvent, getByRole, queryByRole } from '@testing-library/dom';
++import { mountExtended } from 'helpers/vue_test_utils_helper';
++import waitForPromises from 'helpers/wait_for_promises';
++import {
++  GitLabContentEditor,
++  Selection,
++  insertText,
++  selectAll,
++  undo,
++  redo,
++} from '~/content_editor/services/fountain_runtime';
++import FountainCodeMenu from '~/content_editor/components/fountain_code_menu.vue';
++import FountainFormattingToolbar from '~/content_editor/components/fountain_formatting_toolbar.vue';
++import ContentEditor from '~/content_editor/components/content_editor.vue';
++import FountainEditorSurface from '~/content_editor/components/fountain_editor_surface.vue';
++import live from '../fixtures/fountain_frontmatter_live_html.json';
++
++describe('native Fountain frontmatter controls', () => {
++  let service;
++  let wrapper;
++  let toolbar;
++  const settle = async () => {
++    await waitForPromises();
++    await waitForPromises();
++  };
++  const button = (name) => getByRole(wrapper.element, 'button', { name });
++  const field = () => getByRole(wrapper.element, 'combobox', { name: 'Frontmatter format' });
++  const dialog = () => getByRole(document.body, 'dialog', { name: 'Frontmatter source' });
++  const sourceField = () => getByRole(dialog(), 'textbox', { name: 'Frontmatter source' });
++  const fixture = (name) => live.fixtures.find((item) => item.name === name);
++  async function createComponent(name = 'yaml', editable = true) {
++    const value = fixture(name);
++    service = new GitLabContentEditor({
++      editable,
++      describeLabels: () => '',
++      renderMarkdown: () => Promise.resolve({ body: value.body }),
++    });
++    await service.setSerializedContent(value.source);
++    service.editor.dispatch(
++      service.editor.createTransaction().setSelection(Selection.cursor([0, 0], 0)),
++    );
++    wrapper = mountExtended(FountainCodeMenu, {
++      attachTo: document.body,
++      propsData: { contentEditor: service, disabled: !editable },
++      stubs: { FountainDiagramPreview: true },
++    });
++    await settle();
++  }
++  async function openSource(readOnly = false) {
++    fireEvent.click(button(readOnly ? 'View frontmatter source' : 'Edit frontmatter source'));
++    await settle();
++  }
++  afterEach(() => {
++    toolbar?.destroy();
++    toolbar = null;
++    wrapper?.destroy();
++    service?.dispose();
++  });
++
++  it.each(['yaml', 'toml', 'json'])(
++    'identifies the actual %s document header and exposes its literal source',
++    async (language) => {
++      await createComponent(language);
++      expect(field().value).toBe(language);
++      expect(wrapper.text()).toContain('Document frontmatter stays at the beginning');
++      expect(queryByRole(wrapper.element, 'button', { name: 'Show diagram preview' })).toBeNull();
++      await openSource();
++      expect(sourceField().value).toBe(service.editor.state.doc.child(0).textContent);
++      expect(wrapper.findComponent({ name: 'FountainDiagramPreview' }).exists()).toBe(false);
++      expect(service.getSerializedContent()).toBe(fixture(language).source);
++    },
++  );
++  it('changes the format without claiming syntax translation and restores the original header with Undo', async () => {
++    await createComponent();
++    fireEvent.focus(field());
++    fireEvent.input(field(), { target: { value: 'toml' } });
++    fireEvent.click(button('Apply frontmatter format'));
++    await settle();
++    expect(service.getSerializedContent()).toMatch(/^\+\+\+\ntitle: Paper/);
++    expect(wrapper.text()).toContain('does not translate');
++    expect(undo(service.editor)).toBe(true);
++    await settle();
++    expect(field().value).toBe('yaml');
++    expect(service.getSerializedContent()).toBe(fixture('yaml').source);
++  });
++  it('applies a source draft once, keeps literal markup and restores it through Undo and Redo', async () => {
++    await createComponent();
++    await openSource();
++    const value = 'title: "<tag> & preserved"\n# Author comment';
++    fireEvent.input(sourceField(), { target: { value } });
++    expect(wrapper.vm.hasUnappliedSource).toBe(true);
++    fireEvent.click(getByRole(dialog(), 'button', { name: 'Apply frontmatter source' }));
++    await settle();
++    expect(wrapper.vm.hasUnappliedSource).toBe(false);
++    expect(service.getSerializedContent()).toContain(`---\n${value}\n---`);
++    expect(undo(service.editor)).toBe(true);
++    expect(service.getSerializedContent()).toBe(fixture('yaml').source);
++    expect(redo(service.editor)).toBe(true);
++    expect(service.getSerializedContent()).toContain(value);
++  });
++  it('retains a dangerous closing delimiter draft while leaving the current document unchanged', async () => {
++    await createComponent();
++    await openSource();
++    const value = 'title: Paper\n---\nBody pretending to be metadata';
++    fireEvent.input(sourceField(), { target: { value } });
++    fireEvent.click(getByRole(dialog(), 'button', { name: 'Apply frontmatter source' }));
++    await settle();
++    expect(sourceField().value).toBe(value);
++    expect(dialog().textContent).toContain('delimiter on its own line');
++    expect(service.getSerializedContent()).toBe(fixture('yaml').source);
++    fireEvent.click(getByRole(dialog(), 'button', { name: 'Cancel source edit' }));
++    await settle();
++    expect(wrapper.vm.hasUnappliedSource).toBe(false);
++  });
++  it('does not redirect an open draft when the document source changes', async () => {
++    await createComponent();
++    await openSource();
++    fireEvent.input(sourceField(), { target: { value: 'title: Retain draft' } });
++    expect(insertText(service.editor, '# Concurrent edit\n')).toBe(true);
++    await settle();
++    expect(dialog().textContent).toContain('changed or was replaced');
++    expect(sourceField().value).toBe('title: Retain draft');
++    const apply = getByRole(dialog(), 'button', { name: 'Apply frontmatter source' });
++    expect(apply.disabled || apply.getAttribute('aria-disabled') === 'true').toBe(true);
++    const before = service.getSerializedContent();
++    fireEvent.click(apply);
++    await settle();
++    expect(service.getSerializedContent()).toBe(before);
++  });
++  it('offers read-only source inspection without editable fields or an apply action', async () => {
++    await createComponent('yaml', false);
++    await openSource(true);
++    expect(sourceField().readOnly).toBe(true);
++    expect(queryByRole(dialog(), 'button', { name: 'Apply frontmatter source' })).toBeNull();
++    expect(service.getSerializedContent()).toBe(fixture('yaml').source);
++  });
++  it('converts and deletes through explicit native actions, with exact source restored by Undo', async () => {
++    await createComponent();
++    fireEvent.click(button('Convert to regular code block'));
++    await settle();
++    expect(service.getSerializedContent()).toContain('```yaml\ntitle: Paper');
++    expect(undo(service.editor)).toBe(true);
++    await settle();
++    expect(service.getSerializedContent()).toBe(fixture('yaml').source);
++    fireEvent.click(button('Delete code block'));
++    await settle();
++    expect(service.getSerializedContent()).toBe('Body **text**.');
++    expect(undo(service.editor)).toBe(true);
++    expect(service.getSerializedContent()).toBe(fixture('yaml').source);
++  });
++  it('inserts a document header from the toolbar without replacing the selected body text', async () => {
++    await createComponent('after-prose');
++    const before = service.editor.state.doc;
++    toolbar = mountExtended(FountainFormattingToolbar, {
++      attachTo: document.body,
++      propsData: { editor: service.editor, contentEditor: service },
++    });
++    fireEvent.click(getByRole(toolbar.element, 'button', { name: 'Insert frontmatter' }));
++    await settle();
++    expect(service.editor.state.doc.content.slice(1)).toEqual(before.content);
++    expect(field().value).toBe('yaml');
++    expect(getByRole(toolbar.element, 'combobox', { name: 'Text style' }).value).toBe(
++      'frontmatter',
++    );
++    const insert = getByRole(toolbar.element, 'button', { name: 'Insert frontmatter' });
++    expect(insert.disabled || insert.getAttribute('aria-disabled') === 'true').toBe(true);
++    const inserted = service.editor.state.doc;
++    fireEvent.click(insert);
++    await settle();
++    expect(service.editor.state.doc).toBe(inserted);
++    const checkBlockedActions = async () => {
++      for (const name of ['Insert a quote', 'Bullet list', 'Numbered list', 'Checklist', 'Bold']) {
++        const action = getByRole(toolbar.element, 'button', { name });
++        expect(action.disabled || action.getAttribute('aria-disabled') === 'true').toBe(true);
++        fireEvent.click(action);
++      }
++      await settle();
++      expect(service.editor.state.doc).toBe(inserted);
++    };
++    await checkBlockedActions();
++    selectAll(service.editor);
++    await settle();
++    await checkBlockedActions();
++    expect(undo(service.editor)).toBe(true);
++    await settle();
++    expect(service.getSerializedContent()).toBe(fixture('after-prose').source);
++  });
++  it('identifies a frontmatter-labelled fence without promoting it into document metadata', async () => {
++    await createComponent('fenced-param');
++    expect(wrapper.text()).toContain('not a document header');
++    expect(queryByRole(wrapper.element, 'combobox', { name: 'Frontmatter format' })).toBeNull();
++    expect(getByRole(wrapper.element, 'combobox', { name: 'Code language' }).value).toBe('yaml');
++    expect(service.getSerializedContent()).toBe(fixture('fenced-param').source);
++  });
++});
++
++describe('native frontmatter source handoff', () => {
++  let wrapper;
++  const value = live.fixtures.find((item) => item.name === 'yaml');
++  const settle = async () => {
++    await waitForPromises();
++    await waitForPromises();
++  };
++  const dialog = () => getByRole(document.body, 'dialog', { name: 'Frontmatter source' });
++  beforeEach(async () => {
++    wrapper = mountExtended(ContentEditor, {
++      attachTo: document.body,
++      propsData: {
++        markdown: value.source,
++        markdownDocsPath: '/docs/markdown',
++        uploadsPath: '/uploads',
++        renderMarkdown: jest.fn().mockResolvedValue({ body: value.body }),
++      },
++      stubs: {
++        FountainEditorSurface,
++        FountainFormattingToolbar,
++        FountainCodeMenu,
++        GlAlert,
++        GlButton,
++        FountainDiagramPreview: true,
++      },
++    });
++    await settle();
++    const editor = wrapper.findComponent(FountainEditorSurface).props('editor');
++    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
++    await settle();
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Edit frontmatter source' }));
++    await settle();
++    fireEvent.input(getByRole(dialog(), 'textbox', { name: 'Frontmatter source' }), {
++      target: { value: 'title: Authored header' },
++    });
++    await settle();
++  });
++  afterEach(async () => {
++    wrapper?.destroy();
++    await settle();
++  });
++  it('blocks save/mode handoff for an unapplied draft and keeps source unchanged on Cancel', async () => {
++    expect(() => wrapper.vm.getSerializedContentForHandoff()).toThrow(
++      'GITLAB_CODE_SOURCE_DRAFT_PENDING',
++    );
++    expect(() =>
++      wrapper.findComponent(FountainEditorSurface).vm.getSerializedContentForHandoff(),
++    ).toThrow('GITLAB_CODE_SOURCE_DRAFT_PENDING');
++    fireEvent.click(getByRole(dialog(), 'button', { name: 'Cancel source edit' }));
++    await settle();
++    expect(wrapper.vm.getSerializedContentForHandoff()).toBe(value.source);
++  });
++  it('hands off the applied header and preserves the existing body', async () => {
++    fireEvent.click(getByRole(dialog(), 'button', { name: 'Apply frontmatter source' }));
++    await settle();
++    const [{ markdown }] = wrapper.emitted('change').at(-1);
++    expect(markdown).toBe('---\ntitle: Authored header\n---\n\nBody **text**.');
++    await wrapper.setProps({ markdown });
++    await settle();
++    expect(wrapper.vm.getSerializedContentForHandoff()).toBe(markdown);
++  });
++});
+diff --git a/spec/frontend/content_editor/fixtures/fountain_frontmatter_live_html.json b/spec/frontend/content_editor/fixtures/fountain_frontmatter_live_html.json
+new file mode 100644
+index 00000000..4d2f2c03
+--- /dev/null
++++ b/spec/frontend/content_editor/fixtures/fountain_frontmatter_live_html.json
+@@ -0,0 +1,145 @@
++{
++  "scope": "Authenticated pinned GitLab renderer fixtures; not browser product acceptance",
++  "upstream": {
++    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
++    "version": "19.5.3",
++    "packagedRevision": "0d4c9a9a2fa"
++  },
++  "fixtures": [
++    {
++      "name": "yaml",
++      "source": "---\ntitle: Paper\n# Retain comment\ntags:\n  - research\n---\n\nBody **text**.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-6:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"yaml\"><span class=\"c1\"># Retain comment</span></span>&#x000A;<span id=\"LC3\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">tags</span><span class=\"pi\">:</span></span>&#x000A;<span id=\"LC4\" class=\"line\" data-lang=\"yaml\">  <span class=\"pi\">-</span> <span class=\"s\">research</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"8:1-8:14\" dir=\"auto\">Body <strong data-sourcepos=\"8:6-8:13\">text</strong>.</p>"
++    },
++    {
++      "name": "toml",
++      "source": "+++\ntitle = \"Paper\"\n# Retain comment\ntags = [\"research\"]\n+++\n\nBody **text**.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-5:3\" data-canonical-lang=\"toml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-toml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"toml\"><span class=\"n\">title</span> <span class=\"o\">=</span><span class=\"w\"> </span><span class=\"s\">\"Paper\"</span></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"toml\"><span class=\"c\"># Retain comment</span></span>&#x000A;<span id=\"LC3\" class=\"line\" data-lang=\"toml\"><span class=\"n\">tags</span> <span class=\"o\">=</span><span class=\"w\"> </span><span class=\"p\">[</span><span class=\"s\">\"research\"</span><span class=\"p\">]</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"7:1-7:14\" dir=\"auto\">Body <strong data-sourcepos=\"7:6-7:13\">text</strong>.</p>"
++    },
++    {
++      "name": "json",
++      "source": ";;;\n{ \"title\": \"Paper\", \"tags\": [\"research\"] }\n;;;\n\nBody **text**.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"json\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-json\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"json\"><span class=\"p\">{</span><span class=\"w\"> </span><span class=\"nl\">\"title\"</span><span class=\"p\">:</span><span class=\"w\"> </span><span class=\"s2\">\"Paper\"</span><span class=\"p\">,</span><span class=\"w\"> </span><span class=\"nl\">\"tags\"</span><span class=\"p\">:</span><span class=\"w\"> </span><span class=\"p\">[</span><span class=\"s2\">\"research\"</span><span class=\"p\">]</span><span class=\"w\"> </span><span class=\"p\">}</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:14\" dir=\"auto\">Body <strong data-sourcepos=\"5:6-5:13\">text</strong>.</p>"
++    },
++    {
++      "name": "yaml-empty",
++      "source": "---\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-2:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"4:1-4:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "toml-empty",
++      "source": "+++\n+++\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-2:3\" data-canonical-lang=\"toml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-toml\" v-pre=\"true\"><code></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"4:1-4:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "json-empty",
++      "source": ";;;\n;;;\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-2:3\" data-canonical-lang=\"json\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-json\" v-pre=\"true\"><code></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"4:1-4:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "yaml-only",
++      "source": "---\ntitle: Paper\n---",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
++    },
++    {
++      "name": "yaml-crlf",
++      "source": "---\r\ntitle: Paper\r\n---\r\n\r\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "yaml-close-dots",
++      "source": "---\ntitle: Paper\n...\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "yaml-bom",
++      "source": "﻿---\ntitle: Paper\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "yaml-invalid",
++      "source": "---\ntitle: [unfinished\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"pi\">[</span><span class=\"nv\">unfinished</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "nested",
++      "source": "> ---\n> title: Paper\n> ---\n\nBody.",
++      "body": "<blockquote data-sourcepos=\"1:1-3:5\" dir=\"auto\">&#x000A;<hr data-sourcepos=\"1:3-1:3\">&#x000A;<h2 data-sourcepos=\"2:3-3:5\">title: Paper</h2>&#x000A;</blockquote>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "after-prose",
++      "source": "Body.\n\n---\ntitle: Paper\n---",
++      "body": "<p data-sourcepos=\"1:1-1:5\" dir=\"auto\">Body.</p>&#x000A;<hr data-sourcepos=\"3:1-3:3\">&#x000A;<h2 data-sourcepos=\"4:1-5:3\" dir=\"auto\">title: Paper</h2>"
++    },
++    {
++      "name": "fenced-param",
++      "source": "```yaml frontmatter\ntitle: Paper\n```\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "fenced-param-nested",
++      "source": "> ```yaml frontmatter\n> title: Paper\n> ```",
++      "body": "<blockquote data-sourcepos=\"1:1-3:5\" dir=\"auto\">&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:3-3:5\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;</blockquote>"
++    },
++    {
++      "name": "yaml-literal",
++      "source": "---\ntext: |\n  ---\n  <tag> & literal\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-5:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">text</span><span class=\"pi\">:</span> <span class=\"pi\">|</span></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"yaml\">  <span class=\"s\">---</span></span>&#x000A;<span id=\"LC3\" class=\"line\" data-lang=\"yaml\">  <span class=\"s\">&lt;tag&gt; &amp; literal</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"7:1-7:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "encoding",
++      "source": "# -*- coding: utf-8 -*-\n---\ntitle: Paper\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"2:1-4:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"6:1-6:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "blank-prefix",
++      "source": "\n\n  \n---\ntitle: Paper\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"4:1-6:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"8:1-8:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "explicit-language",
++      "source": "---toml\ntitle = \"Paper\"\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"toml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-toml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"toml\"><span class=\"n\">title</span> <span class=\"o\">=</span><span class=\"w\"> </span><span class=\"s\">\"Paper\"</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "different-close",
++      "source": "---\ntitle: Paper\n+++\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "unknown-language",
++      "source": "---custom\nliteral\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"custom\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-plaintext\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"plaintext\">literal</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "yaml-cr",
++      "source": "---\rtitle: Paper\r---\r\rBody.",
++      "body": "<p data-sourcepos=\"1:1-1:23\" dir=\"auto\">---title: Paper---Body.</p>"
++    },
++    {
++      "name": "fenced-colon",
++      "source": "```yaml:frontmatter\ntitle: Paper\n```\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "fenced-after-prose",
++      "source": "Before.\n\n```yaml frontmatter\ntitle: Paper\n```",
++      "body": "<p data-sourcepos=\"1:1-1:7\" dir=\"auto\">Before.</p>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"3:1-5:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
++    },
++    {
++      "name": "two-fenced",
++      "source": "```yaml frontmatter\ntitle: First\n```\n\n```toml frontmatter\ntitle = \"Second\"\n```",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">First</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"5:1-7:3\" data-canonical-lang=\"toml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-toml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"toml\"><span class=\"n\">title</span> <span class=\"o\">=</span><span class=\"w\"> </span><span class=\"s\">\"Second\"</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
++    },
++    {
++      "name": "yaml-blank-content",
++      "source": "---\n\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>"
++    },
++    {
++      "name": "yaml-trailing-blank",
++      "source": "---\ntitle: Paper\n\n---\n\nBody.",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"yaml\"></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"6:1-6:5\" dir=\"auto\">Body.</p>"
++    }
++  ]
++}

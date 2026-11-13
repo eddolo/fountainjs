@@ -25,23 +25,33 @@ export default {
   computed: {
     visible() { return Boolean(this.context || this.session || this.dialogOpen); },
     conflict() { return this.revision >= 0 && Boolean(this.session?.conflict); },
-    languages() { return [{ syntax: 'mermaid', label: s__('ContentEditor|Mermaid diagram') }, { syntax: 'plantuml', label: s__('ContentEditor|PlantUML diagram') }, ...CODE_BLOCK_LANGUAGES]; },
-    isDiagram() { return ['mermaid', 'plantuml'].includes(this.context?.language); },
+    languages() {
+      if (this.context?.frontmatter === 'header') return [{ syntax: 'yaml', label: 'YAML' }, { syntax: 'toml', label: 'TOML' }, { syntax: 'json', label: 'JSON' }];
+      return [{ syntax: 'mermaid', label: s__('ContentEditor|Mermaid diagram') }, { syntax: 'plantuml', label: s__('ContentEditor|PlantUML diagram') }, ...CODE_BLOCK_LANGUAGES];
+    },
+    isFrontmatter() { return Boolean(this.context?.frontmatter); },
+    isDiagram() { return !this.isFrontmatter && ['mermaid', 'plantuml'].includes(this.context?.language); },
+    sourceIsFrontmatter() { return Boolean(this.dialogContext?.frontmatter); },
+    sourceTitle() { return this.sourceIsFrontmatter ? s__('ContentEditor|Frontmatter source') : s__('ContentEditor|Diagram source and preview'); },
+    sourceLabel() { return this.sourceIsFrontmatter ? s__('ContentEditor|Frontmatter source') : s__('ContentEditor|Diagram source'); },
     // The host reads this before saving or switching editing mode.
     hasUnappliedSource() { return this.dialogOpen && this.sourceDraft !== this.dialogContext?.text; },
     sourceConflict() { return this.revision >= 0 && Boolean(this.sourceSession?.conflict || this.sourceSession?.closed); },
     sourceAction() {
       if (this.disabled) return null;
-      return { text: s__('ContentEditor|Apply diagram source'), attributes: { variant: 'confirm',
+      return { text: this.sourceIsFrontmatter ? s__('ContentEditor|Apply frontmatter source') : s__('ContentEditor|Apply diagram source'), attributes: { variant: 'confirm',
         disabled: !this.sourceSession || this.sourceConflict || this.sourceComposing } };
     },
-    sourceCancel() { return { text: this.disabled ? s__('ContentEditor|Close diagram source') : s__('ContentEditor|Cancel source edit') }; },
+    sourceCancel() {
+      if (!this.disabled) return { text: s__('ContentEditor|Cancel source edit') };
+      return { text: this.sourceIsFrontmatter ? s__('ContentEditor|Close frontmatter source') : s__('ContentEditor|Close diagram source') };
+    },
     focusTarget() { return { focus: () => { if (!this.disposed) this.$emit('focus'); } }; },
     sourceMessage() {
       if (this.sourceConflict)
-        return s__('ContentEditor|This diagram changed or was replaced. Your source draft is retained. Copy it before closing and reopen the current block.');
+        return this.sourceIsFrontmatter ? s__('ContentEditor|This frontmatter block changed or was replaced. Your source draft is retained. Copy it before closing and reopen the current block.') : s__('ContentEditor|This diagram changed or was replaced. Your source draft is retained. Copy it before closing and reopen the current block.');
       if (this.sourceError)
-        return s__('ContentEditor|The source could not be applied. Your draft and document are retained. Check the editor state and try again.');
+        return this.sourceIsFrontmatter ? s__('ContentEditor|The header could not be applied. A delimiter on its own line can close frontmatter. Your draft and document are retained. Check the source and try again.') : s__('ContentEditor|The source could not be applied. Your draft and document are retained. Check the editor state and try again.');
       return '';
     },
     formError() {
@@ -51,6 +61,8 @@ export default {
         return s__('ContentEditor|Enter a language label up to 80 characters using letters, numbers, underscores, dots, plus signs, hyphens or hash signs.');
       if (this.errorCode === 'GITLAB_CODE_SPECIALIZED_LANGUAGE')
         return s__('ContentEditor|This language requires a specialized GitLab adapter. The code and your draft are unchanged.');
+      if (this.errorCode === 'GITLAB_FRONTMATTER_LANGUAGE')
+        return s__('ContentEditor|Choose YAML, TOML or JSON for a document header. To keep another language as ordinary code, convert the block to regular code. Changing the format preserves your source; it does not translate its syntax.');
       if (this.errorCode === 'GITLAB_CODE_LANGUAGE_DRAFT_PENDING')
         return s__('ContentEditor|Apply or cancel your language draft before opening the diagram source.');
       if (this.errorCode)
@@ -106,6 +118,14 @@ export default {
         this.refresh(); this.$emit('focus');
       } catch (error) { this.errorCode = error.message; }
     },
+    convertToCode() {
+      if (this.disabled || this.conflict) return;
+      try {
+        const session = this.session || this.contentEditor.beginCodeEdit();
+        session.convertToCode(this.language);
+        this.session = null; this.errorCode = null; this.refresh(); this.$emit('focus');
+      } catch (error) { this.errorCode = error.message; }
+    },
     async copy(event) {
       const { context } = this;
       if (!context) return;
@@ -115,7 +135,7 @@ export default {
       } catch { if (!this.disposed) this.copyState = 'failed'; }
     },
     openSource() {
-      if (!this.isDiagram || this.dialogOpen) return;
+      if ((!this.isDiagram && !this.isFrontmatter) || this.dialogOpen) return;
       if (this.session && this.language !== this.session.initial.language) {
         this.errorCode = 'GITLAB_CODE_LANGUAGE_DRAFT_PENDING'; return;
       }
@@ -158,17 +178,19 @@ export default {
 <template>
   <section v-if="visible" data-testid="native-code-menu" class="gl-w-full gl-border-t gl-pt-3" :aria-label="s__('ContentEditor|Code block controls')" @keydown="onKeydown">
     <gl-alert v-if="formError" variant="danger" :dismissible="false" class="gl-mb-3">{{ formError }}</gl-alert>
+    <p v-if="isFrontmatter" class="gl-mb-3">{{ context.frontmatter === 'header' ? s__('ContentEditor|Document frontmatter stays at the beginning. Edit its literal source here or in the editor. Changing the format preserves the source; it does not translate YAML, TOML or JSON.') : s__('ContentEditor|This is a code fence labelled frontmatter, not a document header. Its fence parameter is preserved when you save.') }}</p>
     <gl-form class="gl-flex gl-flex-wrap gl-items-end gl-gap-3" @submit.stop.prevent="apply">
-      <gl-form-group :label="s__('ContentEditor|Code language')" :label-for="inputId" class="gl-mb-0 gl-max-w-full">
+      <gl-form-group :label="context?.frontmatter === 'header' ? s__('ContentEditor|Frontmatter format') : s__('ContentEditor|Code language')" :label-for="inputId" class="gl-mb-0 gl-max-w-full">
         <gl-form-input :id="inputId" v-model="language" :list="`${inputId}-options`" :disabled="disabled || conflict" :maxlength="80" autocomplete="off" @focus="begin" />
         <datalist :id="`${inputId}-options`">
           <option v-for="item in languages" :key="item.syntax" :value="item.syntax">{{ item.label }}</option>
         </datalist>
       </gl-form-group>
-      <gl-button type="submit" size="small" :disabled="disabled || conflict || !language.trim()">{{ s__('ContentEditor|Apply language') }}</gl-button>
+      <gl-button type="submit" size="small" :disabled="disabled || conflict || !language.trim()">{{ context?.frontmatter === 'header' ? s__('ContentEditor|Apply frontmatter format') : s__('ContentEditor|Apply language') }}</gl-button>
       <gl-button v-if="session" size="small" @click="cancel">{{ s__('ContentEditor|Cancel language edit') }}</gl-button>
       <gl-button size="small" :disabled="!context" @click="copy">{{ s__('ContentEditor|Copy code') }}</gl-button>
       <gl-button size="small" variant="danger" category="secondary" :disabled="disabled || conflict" @click="remove">{{ s__('ContentEditor|Delete code block') }}</gl-button>
+      <gl-button v-if="isFrontmatter" size="small" :disabled="disabled || conflict" @click="convertToCode">{{ s__('ContentEditor|Convert to regular code block') }}</gl-button>
     </gl-form>
     <p v-if="copyState === 'copied'" role="status" class="gl-mb-0 gl-mt-3">{{ s__('ContentEditor|Code copied.') }}</p>
     <p v-if="copyState === 'failed'" role="alert" class="gl-mb-0 gl-mt-3">{{ s__('ContentEditor|The code could not be copied. Select it in the editor and use your browser copy command.') }}</p>
@@ -178,16 +200,18 @@ export default {
     <gl-button v-if="isDiagram" class="gl-mt-3" size="small" @click="openSource">
       {{ disabled ? s__('ContentEditor|View diagram source') : s__('ContentEditor|Edit diagram source') }}
     </gl-button>
+    <gl-button v-if="isFrontmatter" class="gl-mt-3" size="small" @click="openSource">{{ disabled ? s__('ContentEditor|View frontmatter source') : s__('ContentEditor|Edit frontmatter source') }}</gl-button>
     <fountain-diagram-preview v-if="isDiagram && showPreview" :content-editor="contentEditor" :source="context.text" :language="context.language" />
-    <gl-modal v-model="dialogOpen" :modal-id="modalId" size="lg" :title="s__('ContentEditor|Diagram source and preview')" :action-primary="sourceAction" :action-cancel="sourceCancel" :return-focus="focusTarget" :no-close-on-esc="sourceComposing" :no-close-on-backdrop="hasUnappliedSource" @primary="applySource" @hide="hideSource" @hidden="hiddenSource">
+    <gl-modal v-model="dialogOpen" :modal-id="modalId" size="lg" :title="sourceTitle" :action-primary="sourceAction" :action-cancel="sourceCancel" :return-focus="focusTarget" :no-close-on-esc="sourceComposing" :no-close-on-backdrop="hasUnappliedSource" @primary="applySource" @hide="hideSource" @hidden="hiddenSource">
       <template v-if="dialogOpen && dialogContext">
-        <p>{{ disabled ? s__('ContentEditor|Read-only source. Previewing does not change the document.') : s__('ContentEditor|Preview your draft here. Apply updates the selected diagram in one undoable change; Cancel leaves the document unchanged.') }}</p>
+        <p v-if="sourceIsFrontmatter">{{ disabled ? s__('ContentEditor|Read-only frontmatter source. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') : s__('ContentEditor|Edit the source contents without the opening and closing delimiters. Apply makes one undoable change. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') }}</p>
+        <p v-else>{{ disabled ? s__('ContentEditor|Read-only source. Previewing does not change the document.') : s__('ContentEditor|Preview your draft here. Apply updates the selected diagram in one undoable change; Cancel leaves the document unchanged.') }}</p>
         <gl-alert v-if="sourceMessage" variant="danger" :dismissible="false">{{ sourceMessage }}</gl-alert>
-        <div class="fountain-diagram-authoring">
-          <gl-form-group :label="s__('ContentEditor|Diagram source')" :label-for="`${modalId}-source`">
+        <div :class="{ 'fountain-diagram-authoring': !sourceIsFrontmatter }">
+          <gl-form-group :label="sourceLabel" :label-for="`${modalId}-source`">
             <gl-form-textarea :id="`${modalId}-source`" v-model="sourceDraft" :readonly="disabled" :rows="14" wrap="off" spellcheck="false" class="fountain-diagram-source" @input="sourceCopyState = null" @compositionstart="sourceComposing = true" @compositionend="sourceComposing = false" @keydown="onSourceKeydown" />
           </gl-form-group>
-          <div class="fountain-diagram-draft-preview">
+          <div v-if="!sourceIsFrontmatter" class="fountain-diagram-draft-preview">
             <h3 class="gl-heading-4">{{ s__('ContentEditor|Draft preview') }}</h3>
             <fountain-diagram-preview :content-editor="contentEditor" :source="sourceDraft" :language="dialogContext.language" />
           </div>

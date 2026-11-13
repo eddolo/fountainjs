@@ -14,6 +14,7 @@ import {
   canRedo,
   getGitLabAlertContext,
   getGitLabCodeContext,
+  selectionIncludesGitLabFrontmatter,
 } from '../runtime/browser';
 
 export default {
@@ -34,6 +35,9 @@ export default {
       return Boolean(this.state && getGitLabAlertContext(this.editor)?.inTitle);
     },
     codeContext() { return this.state && getGitLabCodeContext(this.editor); },
+    headerSelected() {
+      return Boolean(this.state && selectionIncludesGitLabFrontmatter(this.editor));
+    },
     controls() {
       if (!this.state) return [];
       return [
@@ -61,14 +65,14 @@ export default {
           label,
           icon,
           active: isMarkActive(this.editor, mark),
-          disabled: this.plainTitle || Boolean(this.codeContext),
+          disabled: this.plainTitle || Boolean(this.codeContext) || this.headerSelected,
           run: () => toggleMark(this.editor, mark),
         })),
         {
           key: 'blockquote',
           label: s__('ContentEditor|Insert a quote'),
           icon: 'quote',
-          disabled: this.plainTitle,
+          disabled: this.plainTitle || this.headerSelected,
           run: () => toggleQuote(this.editor),
         },
         ...[
@@ -79,9 +83,12 @@ export default {
           key: kind,
           label,
           icon,
-          disabled: this.plainTitle,
+          disabled: this.plainTitle || this.headerSelected,
           run: () => toggleList(this.editor, kind),
         })),
+        { key: 'frontmatter', label: s__('ContentEditor|Insert frontmatter'), icon: 'code',
+          disabled: this.state.doc.content.some(node => node.attrs.gitlabFrontmatter?.kind === 'header'),
+          run: () => this.contentEditor.insertFrontmatter() },
       ];
     },
     styles() {
@@ -93,6 +100,7 @@ export default {
         { value: 'code', text: s__('ContentEditor|Code block') },
         { value: 'mermaid', text: s__('ContentEditor|Mermaid diagram') },
         { value: 'plantuml', text: s__('ContentEditor|PlantUML diagram') },
+        ...(this.codeContext?.frontmatter === 'header' ? [{ value: 'frontmatter', text: s__('ContentEditor|Document frontmatter'), disabled: true }] : []),
       ];
     },
     activeStyle() {
@@ -102,7 +110,10 @@ export default {
         if (!node.content[index]) break;
         node = node.child(index);
         if (node.type.name === 'heading') return String(node.attrs.level);
-        if (node.type.name === 'code_block') return ['mermaid', 'plantuml'].includes(node.attrs.language) ? node.attrs.language : 'code';
+        if (node.type.name === 'code_block') {
+          if (node.attrs.gitlabFrontmatter?.kind === 'header') return 'frontmatter';
+          return ['mermaid', 'plantuml'].includes(node.attrs.language) ? node.attrs.language : 'code';
+        }
       }
       return 'paragraph';
     },
@@ -151,7 +162,7 @@ export default {
       }
     },
     changeStyle(value) {
-      if (this.plainTitle) return;
+      if (this.plainTitle || value === 'frontmatter') return;
       const code = getGitLabCodeContext(this.editor);
       if (['code', 'mermaid', 'plantuml'].includes(value)) {
         let language = value;

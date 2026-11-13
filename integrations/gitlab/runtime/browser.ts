@@ -2,6 +2,7 @@ export { GitLabContentEditor, GitLabEditorNotReady } from '../services/content_e
 export { assertGitLabNativeHostConfiguration } from '../services/host_configuration';
 export { getGitLabLinkContext } from '../services/link_editing';
 export { getGitLabCodeContext } from '../services/code_editing';
+export { selectionIncludesGitLabFrontmatter } from '../services/frontmatter';
 export { getGitLabAlertContext } from '../services/alert_editing';
 export { getGitLabMediaContext } from '../services/media_editing';
 export { getGitLabReferenceContext } from '../services/reference_editing';

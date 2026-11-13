@@ -2,7 +2,27 @@
 
 Updated 2026-11-13.
 
-The latest GitLab checkpoint verifies saved invalid-diagram recovery. Mermaid
+The latest GitLab checkpoint adds native document frontmatter. Source-aware
+conversion distinguishes YAML/TOML/JSON headers from identically rendered code
+fences; header source, comments, prefixes and delimiters survive unrelated body
+edits. Native insertion, source/format controls, copy, delete, explicit code
+conversion and undo use the existing engine. Premature closing delimiters and
+conflicting drafts refuse silent changes; toolbar, keyboard and beforeinput
+formatting protect header selections, including Select all and directed ranges.
+Twenty-seven real renderer fixtures and **5,946 root tests/361 files** pass, as
+do current TypeScript/API and unchanged public size checks. The eighteen-suite
+GitLab set is **428 passed / 2 failed / 1 inherited skip / 431 total**. The
+recorded Linux Chromium journey passes **18 checks**, including UI save/reopen/
+restart, native source inspection, visually reviewed 360px layout and zero
+scoped axe violations/browser errors. Twenty-two-file source rollback/reinstall
+and thirteen ordered test patches verify. This is private integration work:
+whole-document partial-edit source fidelity, the two original menu requirements,
+other specialized content, remaining surfaces/roles/browsers, compiled deployment
+rollback and both other full products remain open. Nothing is published and no
+acceptance limit is raised.
+[Frontmatter evidence and retained failures](../artifacts/gitlab-frontmatter-integration-20261113.json).
+
+The preceding GitLab checkpoint verifies saved invalid-diagram recovery. Mermaid
 parse errors are caught, the reader exposes its original inert source with Retry,
 and native editing repairs both Mermaid and PlantUML after save/reopen/restart.
 The actual run also reproduced a lazy-image failure: the decoded 1×1 placeholder

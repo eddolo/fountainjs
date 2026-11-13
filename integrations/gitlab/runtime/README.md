@@ -5,10 +5,12 @@ authentication and HTTP APIs. It is a local integration environment, not the
 Fountain replacement or a production deployment.
 
 The Linux/amd64 Community Edition image is pinned to both `19.5.3-ce.0` and its
-platform-manifest digest. Its release differs from the source audit's
-`19.6.0-pre` commit in `../upstream.json`. Do not apply the source patch to this
-image, or use baseline results as replacement-editor results. Record the actual
-application revision before preparing a matching replacement build.
+platform-manifest digest. The source checkout and packaged application are both
+pinned to `0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf` in
+[`upstream.json`](./upstream.json). The guarded native installer prepares that
+matching source, and the frontend overlay mounts its rebuilt assets read-only.
+Original-baseline and replacement-editor results remain separate evidence; the
+browser driver verifies the actual packaged revision and deployment mounts.
 
 Use a native Linux Docker Engine and Docker Compose. On this development
 machine that engine runs inside the Ubuntu WSL distribution. The deployment

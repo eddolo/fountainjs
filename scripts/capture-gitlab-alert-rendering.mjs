@@ -2,22 +2,23 @@ import { execFileSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
+import { readGitLabAuditCredential } from './gitlab-audit-credentials.mjs';
 
 if (process.platform !== 'linux') throw new Error('Run beside the isolated Linux GitLab deployment.');
 const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
 const media = process.argv.includes('--media');
 const diagrams = process.argv.includes('--diagrams');
+const frontmatter = process.argv.includes('--frontmatter');
 const referenceContexts = process.argv.includes('--reference-context');
 const references = process.argv.includes('--references') || referenceContexts;
-if ([media, diagrams, references].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
+if ([media, diagrams, references, frontmatter].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
 const container = docker('compose', '-f', composeFile, 'ps', '--all', '--quiet', 'baseline').trim();
 const config = JSON.parse(docker('inspect', container))[0].Config;
 if (config.Image !== pin.image || config.Labels['com.docker.compose.project'] !== 'fountain-gitlab-integration') throw new Error('Wrong deployment');
-const password = docker('compose', '-f', composeFile, 'exec', '-T', 'baseline', 'cat', '/etc/gitlab/initial_root_password')
-  .match(/^Password:\s*(.+)$/mu)?.[1]?.trim();
+const password = readGitLabAuditCredential(args => docker('exec', '-i', container, ...args))?.password;
 if (!password) throw new Error('Generated task password unavailable');
 const browser = await chromium.launch(), context = await browser.newContext();
 let restorePlantuml;
@@ -89,7 +90,31 @@ try {
   const issueToken = referenceRecords ? `#${referenceRecords.issueIID}` : '';
   const mrToken = referenceRecords ? `!${referenceRecords.mergeRequestIID}` : '';
   const labelToken = referenceRecords ? `~"${referenceRecords.label}"` : '';
-  const inputs = diagrams ? [
+  const inputs = frontmatter ? [
+    ['yaml', '---\ntitle: Paper\n# Retain comment\ntags:\n  - research\n---\n\nBody **text**.'],
+    ['toml', '+++\ntitle = "Paper"\n# Retain comment\ntags = ["research"]\n+++\n\nBody **text**.'],
+    ['json', ';;;\n{ "title": "Paper", "tags": ["research"] }\n;;;\n\nBody **text**.'],
+    ['yaml-empty', '---\n---\n\nBody.'], ['toml-empty', '+++\n+++\n\nBody.'], ['json-empty', ';;;\n;;;\n\nBody.'],
+    ['yaml-only', '---\ntitle: Paper\n---'], ['yaml-crlf', '---\r\ntitle: Paper\r\n---\r\n\r\nBody.'],
+    ['yaml-close-dots', '---\ntitle: Paper\n...\n\nBody.'], ['yaml-bom', '\uFEFF---\ntitle: Paper\n---\n\nBody.'],
+    ['yaml-invalid', '---\ntitle: [unfinished\n---\n\nBody.'],
+    ['nested', '> ---\n> title: Paper\n> ---\n\nBody.'],
+    ['after-prose', 'Body.\n\n---\ntitle: Paper\n---'],
+    ['fenced-param', '```yaml frontmatter\ntitle: Paper\n```\n\nBody.'],
+    ['fenced-param-nested', '> ```yaml frontmatter\n> title: Paper\n> ```'],
+    ['yaml-literal', '---\ntext: |\n  ---\n  <tag> & literal\n---\n\nBody.'],
+    ['encoding', '# -*- coding: utf-8 -*-\n---\ntitle: Paper\n---\n\nBody.'],
+    ['blank-prefix', '\n\n  \n---\ntitle: Paper\n---\n\nBody.'],
+    ['explicit-language', '---toml\ntitle = "Paper"\n---\n\nBody.'],
+    ['different-close', '---\ntitle: Paper\n+++\n\nBody.'],
+    ['unknown-language', '---custom\nliteral\n---\n\nBody.'],
+    ['yaml-cr', '---\rtitle: Paper\r---\r\rBody.'],
+    ['fenced-colon', '```yaml:frontmatter\ntitle: Paper\n```\n\nBody.'],
+    ['fenced-after-prose', 'Before.\n\n```yaml frontmatter\ntitle: Paper\n```'],
+    ['two-fenced', '```yaml frontmatter\ntitle: First\n```\n\n```toml frontmatter\ntitle = "Second"\n```'],
+    ['yaml-blank-content', '---\n\n---\n\nBody.'],
+    ['yaml-trailing-blank', '---\ntitle: Paper\n\n---\n\nBody.'],
+  ] : diagrams ? [
     ['mermaid', '```mermaid\ngraph LR\n  Draft-->Review\n```'],
     ['mermaid-unicode', '```mermaid\ngraph LR\n  A["研究 & review"]-->B["Ready <now>"]\n```'],
     ['mermaid-empty', '```mermaid\n```'],
@@ -167,12 +192,12 @@ try {
     if (typeof result.body !== 'string') throw new Error('Missing renderer body');
     fixtures.push({ name, source, body: result.body });
   }
-  await writeFile(new URL(`integrations/gitlab/fixtures/${diagrams ? 'diagram' : referenceContexts ? 'reference-context' : references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
+  await writeFile(new URL(`integrations/gitlab/fixtures/${frontmatter ? 'frontmatter' : diagrams ? 'diagram' : referenceContexts ? 'reference-context' : references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
     scope: media ? 'Authenticated renderer structure fixtures; asset URLs are illustrative, not uploaded/playback acceptance' : 'Authenticated pinned GitLab renderer fixtures; not browser product acceptance',
     ...(references ? { referenceRecords } : {}),
     ...(diagrams ? { plantumlProvider: { url: 'http://127.0.0.1:5081/', image: 'plantuml/plantuml-server@sha256:3719f4a9b0b061f1aa42d14d130388f831954ca65685d521b6c5b72301e993e6' } } : {}),
     upstream: { revision: pin.commit, version: version.version, packagedRevision: version.revision }, fixtures,
   }, null, 2) + '\n');
-  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: diagrams ? 'diagrams' : referenceContexts ? 'reference-context' : references ? 'references' : media ? 'media' : 'alerts' }));
+  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: frontmatter ? 'frontmatter' : diagrams ? 'diagrams' : referenceContexts ? 'reference-context' : references ? 'references' : media ? 'media' : 'alerts' }));
 } catch (error) { console.error(String(error).replaceAll(password, '[redacted]')); process.exitCode = 1; }
 finally { try { await restorePlantuml?.(); } finally { await context.close(); await browser.close(); } }

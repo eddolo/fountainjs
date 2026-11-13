@@ -1,0 +1,138 @@
+{
+  "date": "2026-11-13",
+  "status": "partial-native-product-integration",
+  "parentRevision": "eff99f1c152d91fa067b9024cb2f4188629cf878",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Source-aware GitLab document headers remain distinct from frontmatter-labelled code fences",
+    "YAML/TOML/JSON insertion, literal editing, format selection, copy, deletion, explicit code conversion and undo/redo use the native engine",
+    "Header source, prefixes and delimiters survive unrelated body edits; premature closure, misplaced/duplicate metadata and conflicting drafts refuse silent changes",
+    "Read-only inspection and unapplied source handoff guards use existing host lifecycle; no metadata evaluator or native diagram preview is enabled"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Linux Chromium",
+    "checks": 18,
+    "issueIID": 97,
+    "report": "artifacts/gitlab-native-frontmatter-20261113/report.json",
+    "phases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "errors": [],
+    "accessibilityViolations": []
+  },
+  "units": {
+    "tests": 5946,
+    "files": 361,
+    "newCases": 46,
+    "report": "artifacts/gitlab-frontmatter-unit-final-20261113.log"
+  },
+  "upstream": {
+    "suites": 18,
+    "passed": 428,
+    "failed": 2,
+    "skipped": 1,
+    "total": 431,
+    "newCases": 13,
+    "failures": [
+      "ContentEditor renders codeBlock bubble menu",
+      "ContentEditor renders media bubble menu"
+    ],
+    "inheritedSkipped": [
+      "Mermaid diagrams renderer dangerous diagrams stops rendering diagrams when the rendered diagrams count exceeds 50"
+    ],
+    "report": "artifacts/gitlab-frontmatter-reviewed-jest-20261113.json",
+    "skipEvidence": "Pinned original expensive Mermaid-count case is unchanged; no new skip, timeout or assertion waiver"
+  },
+  "installation": {
+    "format": 10,
+    "files": 22,
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "sourceRoundtrip": "artifacts/gitlab-native-frontmatter-install-roundtrip-20261113.json",
+    "patchVerification": "artifacts/gitlab-native-frontmatter-patch-verification-20261113.json"
+  },
+  "primaryCode": [
+    "lib/gitlab/front_matter.rb",
+    "lib/banzai/filter/front_matter_filter.rb",
+    "app/assets/javascripts/content_editor/extensions/frontmatter.js",
+    "app/assets/javascripts/content_editor/services/serializer/frontmatter.js"
+  ],
+  "fixtureCases": 27,
+  "recordings": [
+    {
+      "path": "artifacts/gitlab-native-frontmatter-20261113/recordings/page@b2e84bd35e4552df7d6b468daf09c922.webm",
+      "bytes": 5826467,
+      "sha256": "e7451021a841e4fc4e3ac5fbbdfab14e94d9342e3ffd5a8eb6c78dc00008072a",
+      "durationSeconds": 215
+    }
+  ],
+  "sourceHashes": {
+    "docs/ROADMAP.md": "214bf6a134325cdaa5179dfa7a60f6fd1e8a8a1c29e10d0e6ddeaff34cbad357",
+    "integrations/gitlab/README.md": "c76c6eacd2a0957b6bdc6a0cb78f8888dc7ae1c14011592a899a4bc3b5237520",
+    "integrations/gitlab/components/fountain_code_menu.vue": "339f91f5931b7b97353a1be5006cacd19bcdf552a64cf62c3e2b2876cc33ac44",
+    "integrations/gitlab/components/fountain_formatting_toolbar.vue": "bbf40abb8a389039a1f79ab5d1d34c0e826119fd597c3aaab87736ccff553cc6",
+    "integrations/gitlab/runtime/README.md": "522ea2e859d1d9982aea0d7258394b616002c680d787c5d3f8e249f2191e9f66",
+    "integrations/gitlab/runtime/browser.ts": "c048449a300b6cfbfd4841e0520363eefc6212c19dc8cb15bf1ae282c2c3710c",
+    "integrations/gitlab/services/code_editing.ts": "6597e31810606ffc59d14e71bcc98047a3c007284263776a394650dcb964107a",
+    "integrations/gitlab/services/code_rendering.ts": "54e6e4e5e5a0bcb404cd9413e676f2ece3e2d16380099629c204dfd18c8c0054",
+    "integrations/gitlab/services/content_editor.ts": "ffe52cba4755bc12426ca452ec422b4a690af11c4b77cba3f275cc9d8ed53b82",
+    "integrations/gitlab/services/markdown_codec.ts": "fc107a6027eacb35e95506fed35f66f254232c8bc0942420e2f178e8bda76967",
+    "scripts/audit-gitlab-product-baseline.mjs": "65bfbdb94c17ba88ccc148c46e47de0846c13e1fee8db8f7d4583f7cf0ad777e",
+    "scripts/build-gitlab-native-runtime.mjs": "34ad4ab7b6bb3ab21cb68b46a3afadb965c3499b769130a40b1fc7da72fa3f72",
+    "scripts/capture-gitlab-alert-rendering.mjs": "30a5fc117d0f016a257744861d72355c94d743d9a6553fa4d3169b0c9ab8f709",
+    "scripts/check-gitlab-native-install.mjs": "58bb9723ac2e0c67954bc57c04ebdfc98bd609be7da5b13277cd549bdd4e89ca",
+    "scripts/check-gitlab-native-patches.mjs": "bf95118ab647401b1850ec4fced74969b6839e7bb8a36ad8bfa558f965f91100",
+    "scripts/run-gitlab-native-browser-audit.mjs": "a95b33549a71588ce72a811975b523418ef986c495cd7f43ea0ab5df9ec760d4",
+    "integrations/gitlab/fixtures/frontmatter-live-html.json": "38f1ed3b72825ec513eee85229db87ceb3078a48b917d917975b1c02e5c3e0d8",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-frontmatter-tests.patch": "f9c9337b82e95c1334eb88c4b29c273ea9a920e7257fb5672cf0fdccaac7f72c",
+    "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+    "integrations/gitlab/specs/fountain_frontmatter_spec.js": "76f6d67cc375b3cf717a5e4c0c9320ff666b1a7a8c928b64ca6ea7108aa3ecbc",
+    "scripts/audit-gitlab-native-frontmatter.mjs": "461d083bd6e36bfe1df6ddaa25f1a506c1be054a53686cc51dd8d3fb44245b1b",
+    "scripts/gitlab-audit-credentials.d.mts": "514a808cc627d0b4d8bb7a75dfcbd4cb249d9ea40e579566772d25096ddcdd6a",
+    "scripts/gitlab-audit-credentials.mjs": "4cff7087da3edb33b8487d946857afeee51cfd8ca82144fdedf6769a5e396726",
+    "scripts/prepare-gitlab-frontmatter-tests.mjs": "91a28d8b055966a49e363d1ef8a472ee256bd4f096495eebff4b84327f088aee",
+    "tests/gitlab-audit-credentials.test.ts": "f3a86145dda4a5bc408744098546684d731d9071a173be37e6e1e379646ba59c",
+    "tests/gitlab-frontmatter.test.ts": "771f7d7249e0b57dce55a6885b195b24b1e2c4b72bc6d715b9d1d924c6942dc9"
+  },
+  "retainedRuns": [
+    {
+      "path": "artifacts/gitlab-native-frontmatter-harness-failed-20261113/report.json",
+      "reason": "Accessibility dependency resolved from the wrong workspace; eight checks completed before the harness error"
+    },
+    {
+      "path": "artifacts/gitlab-frontmatter-full-jest-20261113.json",
+      "reason": "Invalid test orchestration: source rollback overlapped Jest; retained, then rerun sequentially"
+    }
+  ],
+  "visualReview": {
+    "images": [
+      "frontmatter-edited.png",
+      "frontmatter-mobile-source.png",
+      "frontmatter-retained-delimiter-draft.png",
+      "frontmatter-native-reopened-saved.png",
+      "frontmatter-native-reopened-restart.png",
+      "frontmatter-reader-restart.png",
+      "original-reopened.png",
+      "original-after-restart.png"
+    ],
+    "recording": "Representative recorded frames reviewed; no claim that the whole recording was watched",
+    "stableCapture": "Finite CSS animations finish before screenshots"
+  },
+  "boundaries": {
+    "publicEngineChanged": false,
+    "publicAPIChanged": false,
+    "acceptanceLimitsChanged": false,
+    "published": false,
+    "remaining": [
+      "Two original code/media menu requirements",
+      "Partial-edit full-document source fidelity",
+      "Quick actions, suggestions, GLQL, complete snippet/footnote/table workflows",
+      "All GitLab surfaces, roles, concurrent users and broader browsers",
+      "Compiled deployment rollback and full hosted CI",
+      "Other two complete products"
+    ]
+  }
+}
