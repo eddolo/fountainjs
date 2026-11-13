@@ -2,6 +2,13 @@
 
 ## Current programme status — 2026-11-13
 
+The latest UI follow-up removes the full-width contextual-trigger break in the
+GitLab toolbar, groups attachment/paste controls and gives the media panel a
+clear primary/secondary/destructive hierarchy. It adds measured desktop layout
+checks to the real-service profile. This does not change a capability row or
+the native document model.
+[Presentation evidence and scope](../artifacts/gitlab-context-ui-integration-20261113.json).
+
 Fountain's real GitLab integration now mounts native contextual code/media
 controls through the original component entry points. Captured ownership,
 equal-content replacement conflicts, source-session transfer, keyboard focus,

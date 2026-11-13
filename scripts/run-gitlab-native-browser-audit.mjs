@@ -38,7 +38,8 @@ try {
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--context-menus') ? '--native-context-menus'
+      process.argv.includes('--context-ui') ? '--native-context-ui'
+        : process.argv.includes('--context-menus') ? '--native-context-menus'
         : process.argv.includes('--frontmatter') ? '--native-frontmatter'
         : process.argv.includes('--diagram-reader') ? '--native-diagram-reader'
         : process.argv.includes('--diagram-authoring') ? '--native-diagram-authoring'

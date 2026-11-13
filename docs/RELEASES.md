@@ -1,5 +1,20 @@
 # Release and API stability policy
 
+## GitLab toolbar and media presentation — 2026-11-13
+
+Visual feedback identified a full-width floating-menu trigger that forced
+unnecessary toolbar rows. Floating triggers now use their natural inline width;
+narrow docked controls retain a full row. Attachment and Markdown paste stay
+together, and Markdown paste uses the existing Markdown icon with a descriptive
+title and accessible name. The media panel identifies its selection, emphasizes
+Properties, and separates deletion in its own footer.
+Popup placement respects clipping ancestors so the taller panel can move below
+its selection instead of covering application chrome. Existing interaction,
+keyboard, read-only and persistence behavior remains under the same integration
+checks, with additional measured layout assertions. No public engine, document
+format, API, size allowance or publication changes.
+[Presentation evidence](../artifacts/gitlab-context-ui-integration-20261113.json).
+
 ## Native GitLab contextual controls — 2026-11-13
 
 This private integration checkpoint restores real native code/media menus at

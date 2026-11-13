@@ -107,8 +107,15 @@ export default {
     createPopup() {
       const document = this.root.ownerDocument;
       const { content } = this.$refs;
-      const boundary = this.root.closest('.modal-content, .work-item-detail-panel, .work-item-detail')
+      const host = this.root.closest('.modal-content, .work-item-detail-panel, .work-item-detail')
         || this.root.closest('[role="dialog"]') || this.root.closest('main') || document.documentElement;
+      const boundary = [host];
+      // A scrolled document's own box can extend behind sticky application chrome.
+      // Keep the portal inside every actual clipping ancestor as well as its host.
+      for (let parent = this.root.parentElement; parent && parent !== document.body; parent = parent.parentElement) {
+        const style = document.defaultView.getComputedStyle(parent);
+        if (/(auto|scroll|hidden|clip)/u.test(`${style.overflowX} ${style.overflowY}`) && !boundary.includes(parent)) boundary.push(parent);
+      }
       this.popup = tippy(this.root, {
         trigger: 'manual', interactive: true, animation: false, hideOnClick: false,
         aria: { content: null, expanded: false }, placement: 'top', offset: [0, 8],
@@ -177,8 +184,8 @@ export default {
 };
 </script>
 <template>
-  <div data-testid="native-context-surface" :data-menu-mode="floating ? 'floating' : 'docked'" class="gl-w-full">
-    <gl-button v-if="floating && active" ref="trigger" size="small" :aria-expanded="expanded ? 'true' : 'false'" :aria-controls="expanded ? menuId : undefined" aria-keyshortcuts="Alt+F10" @click="focusMenu">{{ label }}</gl-button>
+  <div data-testid="native-context-surface" :data-menu-mode="floating ? 'floating' : 'docked'" :class="floating ? 'gl-inline-flex gl-shrink-0' : 'gl-w-full'">
+    <gl-button v-if="floating && active" ref="trigger" category="tertiary" size="small" :aria-expanded="expanded ? 'true' : 'false'" :aria-controls="expanded ? menuId : undefined" aria-keyshortcuts="Alt+F10" @click="focusMenu">{{ label }}</gl-button>
     <div ref="home"><div ref="content" @keydown="onKeydown"><slot></slot></div></div>
   </div>
 </template>

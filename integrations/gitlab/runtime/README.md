@@ -271,6 +271,8 @@ node scripts/run-gitlab-native-browser-audit.mjs --links
 node scripts/run-gitlab-native-browser-audit.mjs --code
 # Contextual code/media, captured owners, keyboard/modal isolation and mobile:
 node scripts/run-gitlab-native-browser-audit.mjs --context-menus
+# Reviewed compact toolbar and primary/secondary/destructive media hierarchy:
+node scripts/run-gitlab-native-browser-audit.mjs --context-ui
 # Alerts, direct titles/body, all kinds, nested math/code and real saved rendering:
 node scripts/run-gitlab-native-browser-audit.mjs --alerts
 # Media properties, actual file replacement, playback and recovery:

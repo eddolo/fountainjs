@@ -2,6 +2,18 @@
 
 Updated 2026-11-13.
 
+The latest presentation follow-up addresses the reviewed GitLab toolbar and
+media-panel mismatch. Floating triggers retain their natural width; attachment,
+Markdown paste and the contextual action share the desktop row. Markdown paste
+uses the existing icon with its descriptive title and accessible name. The media
+panel identifies the selection, emphasizes Properties, and separates deletion
+from everyday actions. Popup placement also respects the visible scroll area.
+The recorded UI profile adds explicit layout checks to
+the existing save/reopen/restart journey. This is presentation work; the native
+engine and persisted document format are unchanged. Quick actions and the other
+remaining GitLab workflows stay next in the active integration programme.
+[Presentation evidence](../artifacts/gitlab-context-ui-integration-20261113.json).
+
 The latest GitLab checkpoint restores the original code/media menu entry points
 with real native contextual controls. Captured block ownership now covers the
 displayed actions, source copy, preview and source-session handoff after a later

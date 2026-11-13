@@ -11,7 +11,7 @@ const root = new URL('../', import.meta.url);
 const installed = JSON.parse(await readFile(new URL('artifacts/gitlab-native-browser-install/install.json', root)));
 const require = createRequire(resolve(installed.source, 'storybook/package.json'));
 const directory = resolve(installed.source, '../context-storybook');
-const output = new URL('artifacts/gitlab-native-context-storybook-20261113/', root);
+const output = new URL(process.argv.includes('--refined-ui') ? 'artifacts/gitlab-native-context-ui-storybook-20261113/' : 'artifacts/gitlab-native-context-storybook-20261113/', root);
 await mkdir(output, { recursive: true });
 const types = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.wav': 'audio/wav', '.webm': 'video/webm' };
 const server = createServer(async (request, response) => {

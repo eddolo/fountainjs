@@ -1,0 +1,413 @@
+{
+  "date": "2026-11-13",
+  "status": "partial-native-product-integration",
+  "parentRevision": "33378ec188c095bb2c9acd5da6470d50036b7825",
+  "request": "Refine the fragmented toolbar and cramped media actions following visual feedback",
+  "functionality": [
+    "Floating contextual triggers occupy their natural inline width; narrow/docked controls retain their own full row",
+    "Attachment and Markdown paste form one adjacent toolbar group",
+    "The media panel identifies its selection, emphasizes Properties, uses secondary open/copy actions and separates destructive deletion in its footer",
+    "Popup placement respects both the owning content and its clipping ancestors, leaving application chrome outside the visible scroll area clear",
+    "Native edit, copy, replace, delete, undo, read-only and keyboard behaviors remain available"
+  ],
+  "browser": {
+    "engine": "Linux Chromium",
+    "checks": 22,
+    "issueIID": 111,
+    "report": "artifacts/gitlab-native-context-ui-20261113/report.json",
+    "phases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "errors": [],
+    "layout": {
+      "bar": {
+        "x": 254,
+        "y": -218,
+        "width": 827,
+        "height": 49
+      },
+      "attach": {
+        "x": 738,
+        "y": -206,
+        "width": 24,
+        "height": 24
+      },
+      "paste": {
+        "x": 764,
+        "y": -206,
+        "width": 24,
+        "height": 24
+      },
+      "trigger": {
+        "x": 912,
+        "y": -206,
+        "width": 110,
+        "height": 24
+      },
+      "properties": {
+        "x": 309,
+        "y": 356.5,
+        "width": 115,
+        "height": 32
+      },
+      "copy": {
+        "x": 515,
+        "y": 356.5,
+        "width": 156,
+        "height": 32
+      },
+      "remove": {
+        "x": 309,
+        "y": 449.5,
+        "width": 135,
+        "height": 32
+      }
+    },
+    "bounds": [
+      {
+        "label": "Code block actions",
+        "menu": {
+          "x": 468,
+          "y": 800,
+          "width": 400,
+          "height": 106
+        },
+        "host": {
+          "x": 253,
+          "y": 10,
+          "width": 1151,
+          "height": 2288.96875,
+          "top": 10,
+          "right": 1404,
+          "bottom": 2298.96875,
+          "left": 253,
+          "clipping": [
+            {
+              "x": 241,
+              "y": 85,
+              "width": 1190,
+              "height": 898,
+              "top": 85,
+              "right": 1431,
+              "bottom": 983,
+              "left": 241
+            },
+            {
+              "x": 241,
+              "y": 49,
+              "width": 1190,
+              "height": 942,
+              "top": 49,
+              "right": 1431,
+              "bottom": 991,
+              "left": 241
+            },
+            {
+              "x": 240,
+              "y": 48,
+              "width": 1192,
+              "height": 944,
+              "top": 48,
+              "right": 1432,
+              "bottom": 992,
+              "left": 240
+            }
+          ]
+        }
+      },
+      {
+        "label": "Code block actions",
+        "menu": {
+          "x": 468,
+          "y": 364,
+          "width": 400,
+          "height": 106
+        },
+        "host": {
+          "x": 253,
+          "y": -426,
+          "width": 1151,
+          "height": 2288.96875,
+          "top": -426,
+          "right": 1404,
+          "bottom": 1862.96875,
+          "left": 253,
+          "clipping": [
+            {
+              "x": 241,
+              "y": 85,
+              "width": 1190,
+              "height": 898,
+              "top": 85,
+              "right": 1431,
+              "bottom": 983,
+              "left": 241
+            },
+            {
+              "x": 241,
+              "y": 49,
+              "width": 1190,
+              "height": 942,
+              "top": 49,
+              "right": 1431,
+              "bottom": 991,
+              "left": 241
+            },
+            {
+              "x": 240,
+              "y": 48,
+              "width": 1192,
+              "height": 944,
+              "top": 48,
+              "right": 1432,
+              "bottom": 992,
+              "left": 240
+            }
+          ]
+        }
+      },
+      {
+        "label": "Code block actions",
+        "menu": {
+          "x": 468,
+          "y": 364,
+          "width": 400,
+          "height": 106
+        },
+        "host": {
+          "x": 253,
+          "y": -426,
+          "width": 1151,
+          "height": 2288.96875,
+          "top": -426,
+          "right": 1404,
+          "bottom": 1862.96875,
+          "left": 253,
+          "clipping": [
+            {
+              "x": 241,
+              "y": 85,
+              "width": 1190,
+              "height": 898,
+              "top": 85,
+              "right": 1431,
+              "bottom": 983,
+              "left": 241
+            },
+            {
+              "x": 241,
+              "y": 49,
+              "width": 1190,
+              "height": 942,
+              "top": 49,
+              "right": 1431,
+              "bottom": 991,
+              "left": 241
+            },
+            {
+              "x": 240,
+              "y": 48,
+              "width": 1192,
+              "height": 944,
+              "top": 48,
+              "right": 1432,
+              "bottom": 992,
+              "left": 240
+            }
+          ]
+        }
+      },
+      {
+        "label": "Media actions",
+        "menu": {
+          "x": 300,
+          "y": 293,
+          "width": 400,
+          "height": 197.5
+        },
+        "host": {
+          "x": 253,
+          "y": -426,
+          "width": 1151,
+          "height": 2288.96875,
+          "top": -426,
+          "right": 1404,
+          "bottom": 1862.96875,
+          "left": 253,
+          "clipping": [
+            {
+              "x": 241,
+              "y": 85,
+              "width": 1190,
+              "height": 898,
+              "top": 85,
+              "right": 1431,
+              "bottom": 983,
+              "left": 241
+            },
+            {
+              "x": 241,
+              "y": 49,
+              "width": 1190,
+              "height": 942,
+              "top": 49,
+              "right": 1431,
+              "bottom": 991,
+              "left": 241
+            },
+            {
+              "x": 240,
+              "y": 48,
+              "width": 1192,
+              "height": 944,
+              "top": 48,
+              "right": 1432,
+              "bottom": 992,
+              "left": 240
+            }
+          ]
+        }
+      },
+      {
+        "label": "Media actions",
+        "menu": {
+          "x": 261,
+          "y": 310.5,
+          "width": 400,
+          "height": 197.5
+        },
+        "host": {
+          "x": 253,
+          "y": -135,
+          "width": 1151,
+          "height": 2264.96875,
+          "top": -135,
+          "right": 1404,
+          "bottom": 2129.96875,
+          "left": 253,
+          "clipping": [
+            {
+              "x": 241,
+              "y": 85,
+              "width": 1190,
+              "height": 898,
+              "top": 85,
+              "right": 1431,
+              "bottom": 983,
+              "left": 241
+            },
+            {
+              "x": 241,
+              "y": 49,
+              "width": 1190,
+              "height": 942,
+              "top": 49,
+              "right": 1431,
+              "bottom": 991,
+              "left": 241
+            },
+            {
+              "x": 240,
+              "y": 48,
+              "width": 1192,
+              "height": 944,
+              "top": 48,
+              "right": 1432,
+              "bottom": 992,
+              "left": 240
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "upstream": {
+    "suites": 19,
+    "passed": 439,
+    "failed": 0,
+    "skipped": 1,
+    "total": 440,
+    "report": "artifacts/gitlab-context-ui-jest-20261113.json",
+    "scope": "Selected existing host, native-menu, lifecycle and renderer suites; the expensive upstream Mermaid-count skip is unchanged"
+  },
+  "storybook": {
+    "states": 8,
+    "report": "artifacts/gitlab-native-context-ui-storybook-20261113/report.json",
+    "violations": [],
+    "scope": "Actual native components with fixed renderer fixtures and real local media/clipboard; separate from actual GitLab persistence"
+  },
+  "rootBaseline": {
+    "commit": "33378ec1",
+    "report": "artifacts/gitlab-context-unit-final-20261113.log",
+    "tests": 5949,
+    "files": 361,
+    "rerun": false,
+    "reason": "Presentation and audit changes only; no TypeScript model, public engine, public API or package size input changed"
+  },
+  "installation": {
+    "format": 11,
+    "files": 25,
+    "manifest": "artifacts/gitlab-context-ui-checkpoint-install-20261113.json",
+    "sourceRoundtrip": "artifacts/gitlab-native-context-ui-install-roundtrip-20261113.json",
+    "patchVerification": "artifacts/gitlab-native-context-ui-patch-verification-20261113.json"
+  },
+  "retainedRuns": [
+    {
+      "path": "artifacts/gitlab-context-ui-two-row-report-20261113.json",
+      "reason": "The first refined layout passed save/reopen/restart but still left a contextual action alone on its second row. The final version uses the existing Markdown icon and requires one measured desktop row"
+    },
+    {
+      "path": "artifacts/gitlab-context-ui-pre-clipping-report-20261113.json",
+      "reason": "The one-row toolbar passed, but visual review found the taller popup could cover sticky application chrome. The final placement also intersects actual clipping ancestors"
+    }
+  ],
+  "recordings": [
+    {
+      "path": "artifacts/gitlab-native-context-ui-20261113/recordings/page@6be2c9076315098b1a748a19c0cc16fe.webm",
+      "durationSeconds": 197.36,
+      "bytes": 4915762,
+      "sha256": "70ed6e585dfe8b9d0ed1841b3d9485e035a954cd9090db11fa681f9d1d995438"
+    }
+  ],
+  "sourceHashes": {
+    "docs/RELEASES.md": "6269cbf7663c4e24db81b24c684488b19bc783d4b90fd164df6d46b8c31c1d63",
+    "docs/ROADMAP.md": "24226aa876daaa8812fd629cc7b60f16a2c4e84aa28d7323d7db5edd9a37fe18",
+    "docs/TIPTAP_PARITY.md": "002d4dde16085cf7995bc33a61d2d24292f3eba40823f0d78a6aa1125653fd1c",
+    "integrations/gitlab/README.md": "691a67e1fb5a64e914020d63fc6c9d3f6c3f9128a0511e9f5cf6f35918af6fcb",
+    "integrations/gitlab/components/fountain_context_surface.vue": "387107e735a17430ae54df9ae5efa782ff9858e929dcadf7303e4e72529aa801",
+    "integrations/gitlab/components/fountain_formatting_toolbar.vue": "04aa8c4a76213ffa89919cc86b13920cebe675a992513e1898482f5337a4b3f5",
+    "integrations/gitlab/components/fountain_media_menu.vue": "0d9de6fcbd4d9a9830cf5871e238f34ec85a896950ba897003bbc4bc16164f7d",
+    "integrations/gitlab/runtime/README.md": "1684eca9b0edf9a2e6134cd3abc77757082db0922b4c46824c0f3b529a79e01a",
+    "scripts/audit-gitlab-context-storybook.mjs": "76cecb43c2c705d26e0a7a0b387a95743d8d9fa13d4cd1265a67c6c65ec143bd",
+    "scripts/audit-gitlab-native-context-menus.mjs": "769aa6c6914b874a60db8c69b335b04f830005938146f9247c936bf78d0602ab",
+    "scripts/audit-gitlab-product-baseline.mjs": "e7a32d54ea95b1bad382f094bbc444f58ad7da912b54f723e43094011ef08d6e",
+    "scripts/check-gitlab-native-install.mjs": "2ca87d66c07878b0a0649cdda735d4baa1b31537fab7143fead1bbd0bb41e827",
+    "scripts/check-gitlab-native-patches.mjs": "5e5f9fcec6a27d0bbf6bf5cf6e1b8155a0809a305c7317dbae5a45251ad554bd",
+    "scripts/run-gitlab-native-browser-audit.mjs": "4d518c4a0fae0a2b2a6eaf01861008c784777e73c1e5e7266215ad3501d650d0"
+  },
+  "visualReview": {
+    "screenshots": [
+      "context-toolbar-ui.png",
+      "context-media-panel-ui.png",
+      "context-media-ui.png",
+      "context-mobile-media-properties.png",
+      "context-reopened-restart.png",
+      "original-after-restart.png"
+    ],
+    "scope": "Current screenshots and representative recording frames inspected; not a claim of reviewing every video frame"
+  },
+  "boundaries": {
+    "publicEngineChanged": false,
+    "publicAPIChanged": false,
+    "acceptanceLimitsChanged": false,
+    "published": false,
+    "remaining": [
+      "Quick actions and remaining specialized Markdown workflows",
+      "Full GitLab product, surface, role and broader browser acceptance",
+      "Compiled deployment rollback and hosted CI",
+      "Other two complete products"
+    ]
+  }
+}

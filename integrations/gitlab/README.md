@@ -1389,6 +1389,30 @@ The exact local PNG/WAV/VP8 fixtures are retained in
 `node scripts/create-gitlab-media-test-assets.mjs` can generate fresh sample
 assets in the pinned browser environment for further testing.
 
+### Reviewed toolbar and media presentation
+
+The desktop floating-menu trigger now retains its natural inline width, instead
+of forcing a full-width toolbar row. Attachment and Markdown paste stay in one
+named group. Markdown paste uses the existing Markdown icon with its full title
+and accessible name. The selected media panel identifies the item, emphasizes
+Properties, uses secondary open/copy actions, and separates destructive deletion
+in a footer. Narrow docked controls retain their full row.
+The portal intersects its host boundary with actual clipping ancestors, so a
+taller panel can move below its selection without covering application chrome
+outside the visible scroll area.
+
+Reproduce the dedicated real-service UI journey with
+`node scripts/run-gitlab-native-browser-audit.mjs --context-ui`. It includes the
+existing contextual controls and save/reopen/restart checks, then measures a
+single desktop toolbar row, adjacent clipboard/file controls and clear vertical
+separation for deletion. The exact cropped toolbar and popup screenshots are
+retained alongside the full-page views and recording. Run the isolated component
+audit with `node scripts/audit-gitlab-context-storybook.mjs --refined-ui` after
+building the current filtered Storybook. These presentation changes do not
+alter the engine or document format. The existing root-unit baseline is reused;
+current GitLab component, browser and accessibility checks cover the changed UI.
+[Presentation evidence and scope](../../artifacts/gitlab-context-ui-integration-20261113.json).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

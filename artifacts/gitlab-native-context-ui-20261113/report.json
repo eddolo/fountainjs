@@ -1,0 +1,506 @@
+{
+  "date": "2026-11-13T23:50:52.253Z",
+  "scope": "Native Fountain browser editor in the actual GitLab application; partial toolbar/providers, not full product acceptance",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Actual GitLab-rendered multiline highlighted code imports, changes language and restores through one-step undo/redo",
+    "Real browser clipboard copies the complete code source; invalid/custom drafts and Escape preserve the code and restore editor focus",
+    "Delete removes the full code block, undo restores it, and actual browser typing edits the restored code in place",
+    "Actual nested code deletion/undo/redo retains its list and neighboring item; browser typing lands in the replacement paragraph and the result remains in the viewport",
+    "Actual contextual code controls retain their captured owner after a later caret move: Copy and Apply target the first block, not the second diagram; Undo/Redo restore the exact language",
+    "Real Alt+F10 focuses contextual controls; Escape cancels and restores editor focus, a second Escape dismisses the surface, external focus hides it and the trigger restores an untouched draft",
+    "Resizing the real source dialog to 360px retains its draft, docks code controls without dialog overflow and cancels without changing the published source",
+    "Desktop contextual toolbar keeps attachment, Markdown paste and the contextual action on one row; destructive media actions sit separately below primary/secondary actions",
+    "The actual uploaded image exposes a clamped keyboard-accessible contextual surface, copies its canonical URL, edits properties on mobile, and restores exact media through Undo/Redo and Delete/Undo",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Native UI Save persists the changed code language and exact source; the actual GitLab reader renders the edited code",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ],
+  "secrets": "Credential stays in protected task-container configuration and process memory; no credential values, traces or browser storage-state files are recorded",
+  "preparedHost": true,
+  "nativeBrowser": true,
+  "nativeInsertion": true,
+  "nativeComponent": true,
+  "nativeAttachments": false,
+  "nativeCapacity": false,
+  "nativeLinks": false,
+  "nativeCodeProfile": true,
+  "nativeContextMenusProfile": true,
+  "nativeContextUIProfile": true,
+  "nativeFrontmatterProfile": false,
+  "nativeAlertsProfile": false,
+  "nativeMediaProfile": false,
+  "nativeMediaFilesProfile": false,
+  "nativeReferencesProfile": false,
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1542930,
+    "sha256": "ee8e3068f0d84e882c67be8ade4744cb5ae6ba1ae5249b6c30d596e7a75e94fd",
+    "parentRevision": "62060842543459a66b626836a5f3c4ca2fc21875",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "181e440e0ea44f2d854feb1eedf7f965fe9ff98840599908838f1bed5abc1acb",
+      "integrations/gitlab/services/content_editor.ts": "ffe52cba4755bc12426ca452ec422b4a690af11c4b77cba3f275cc9d8ed53b82",
+      "integrations/gitlab/services/markdown_insertion.ts": "b782f4d206cd062a63992e85b57b1264b8bf7365c437c72994b6aa1e8bd1726c",
+      "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+      "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+      "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+      "integrations/gitlab/services/code_rendering.ts": "54e6e4e5e5a0bcb404cd9413e676f2ece3e2d16380099629c204dfd18c8c0054",
+      "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+      "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+      "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+      "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+      "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+      "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+      "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+      "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+      "integrations/gitlab/services/markdown_codec.ts": "fc107a6027eacb35e95506fed35f66f254232c8bc0942420e2f178e8bda76967",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "caea8f3c22f3bd3ca90fa7015ff2260cb0c8d5d9974fb9906c7cdbe2a79189f3",
+      "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+      "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+      "dist/index.js": "6ac62e3acacc8735fffc4851fe091734de6fe791c42ff3938a15ad84c128be69"
+    }
+  },
+  "browserErrors": [],
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/f6737dc14b3b8d73823e99d44872265e/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/f6737dc14b3b8d73823e99d44872265e/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/f6737dc14b3b8d73823e99d44872265e/fountain-baseline-figure.png",
+      "status": 200
+    }
+  ],
+  "auditCredentialSource": "protected-task-config",
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 111,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/111"
+  },
+  "originalServerDescription": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/f6737dc14b3b8d73823e99d44872265e/fountain-baseline-figure.png)\n\nEnd of the original description.",
+  "nativeCodeRendering": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"javascript\" class=\"code highlight js-syntax-highlight language-javascript\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"javascript\"><span class=\"kd\">const</span> <span class=\"nx\">total</span> <span class=\"o\">=</span> <span class=\"mi\">42</span><span class=\"p\">;</span></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"javascript\"><span class=\"nx\">console</span><span class=\"p\">.</span><span class=\"nf\">log</span><span class=\"p\">(</span><span class=\"nx\">total</span><span class=\"p\">);</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<ul data-sourcepos=\"6:1-9:15\" dir=\"auto\">&#x000A;<li data-sourcepos=\"6:1-8:5\">&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"6:3-8:5\" data-canonical-lang=\"js\" class=\"code highlight js-syntax-highlight language-javascript\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"javascript\"><span class=\"nx\">Nested</span> <span class=\"nx\">console</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;</li>&#x000A;<li data-sourcepos=\"9:1-9:15\">Neighbor item</li>&#x000A;</ul>",
+  "nativeCode": {
+    "originalText": "const total = 42;\nconsole.log(total);",
+    "copiedText": "const total = 42;\nconsole.log(total);",
+    "language": "python",
+    "finalText": "const total = 42;\nconsole.log(total); // reviewed",
+    "nestedReplacement": "Replaced nested code"
+  },
+  "nativeContextRendering": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"js\" class=\"code highlight js-syntax-highlight language-javascript\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"javascript\"><span class=\"kd\">const</span> <span class=\"nx\">owned</span> <span class=\"o\">=</span> <span class=\"mi\">7</span><span class=\"p\">;</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"5:1-8:3\" data-canonical-lang=\"mermaid\" class=\"code highlight js-syntax-highlight language-mermaid\" v-pre=\"true\"><code class=\"js-render-mermaid\"><span id=\"LC1\" class=\"line\" data-lang=\"mermaid\">graph LR</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"mermaid\">  Other--&gt;Diagram</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+  "contextMenuBounds": [
+    {
+      "label": "Code block actions",
+      "menu": {
+        "x": 468,
+        "y": 800,
+        "width": 400,
+        "height": 106
+      },
+      "host": {
+        "x": 253,
+        "y": 10,
+        "width": 1151,
+        "height": 2288.96875,
+        "top": 10,
+        "right": 1404,
+        "bottom": 2298.96875,
+        "left": 253,
+        "clipping": [
+          {
+            "x": 241,
+            "y": 85,
+            "width": 1190,
+            "height": 898,
+            "top": 85,
+            "right": 1431,
+            "bottom": 983,
+            "left": 241
+          },
+          {
+            "x": 241,
+            "y": 49,
+            "width": 1190,
+            "height": 942,
+            "top": 49,
+            "right": 1431,
+            "bottom": 991,
+            "left": 241
+          },
+          {
+            "x": 240,
+            "y": 48,
+            "width": 1192,
+            "height": 944,
+            "top": 48,
+            "right": 1432,
+            "bottom": 992,
+            "left": 240
+          }
+        ]
+      }
+    },
+    {
+      "label": "Code block actions",
+      "menu": {
+        "x": 468,
+        "y": 364,
+        "width": 400,
+        "height": 106
+      },
+      "host": {
+        "x": 253,
+        "y": -426,
+        "width": 1151,
+        "height": 2288.96875,
+        "top": -426,
+        "right": 1404,
+        "bottom": 1862.96875,
+        "left": 253,
+        "clipping": [
+          {
+            "x": 241,
+            "y": 85,
+            "width": 1190,
+            "height": 898,
+            "top": 85,
+            "right": 1431,
+            "bottom": 983,
+            "left": 241
+          },
+          {
+            "x": 241,
+            "y": 49,
+            "width": 1190,
+            "height": 942,
+            "top": 49,
+            "right": 1431,
+            "bottom": 991,
+            "left": 241
+          },
+          {
+            "x": 240,
+            "y": 48,
+            "width": 1192,
+            "height": 944,
+            "top": 48,
+            "right": 1432,
+            "bottom": 992,
+            "left": 240
+          }
+        ]
+      }
+    },
+    {
+      "label": "Code block actions",
+      "menu": {
+        "x": 468,
+        "y": 364,
+        "width": 400,
+        "height": 106
+      },
+      "host": {
+        "x": 253,
+        "y": -426,
+        "width": 1151,
+        "height": 2288.96875,
+        "top": -426,
+        "right": 1404,
+        "bottom": 1862.96875,
+        "left": 253,
+        "clipping": [
+          {
+            "x": 241,
+            "y": 85,
+            "width": 1190,
+            "height": 898,
+            "top": 85,
+            "right": 1431,
+            "bottom": 983,
+            "left": 241
+          },
+          {
+            "x": 241,
+            "y": 49,
+            "width": 1190,
+            "height": 942,
+            "top": 49,
+            "right": 1431,
+            "bottom": 991,
+            "left": 241
+          },
+          {
+            "x": 240,
+            "y": 48,
+            "width": 1192,
+            "height": 944,
+            "top": 48,
+            "right": 1432,
+            "bottom": 992,
+            "left": 240
+          }
+        ]
+      }
+    },
+    {
+      "label": "Media actions",
+      "menu": {
+        "x": 300,
+        "y": 293,
+        "width": 400,
+        "height": 197.5
+      },
+      "host": {
+        "x": 253,
+        "y": -426,
+        "width": 1151,
+        "height": 2288.96875,
+        "top": -426,
+        "right": 1404,
+        "bottom": 1862.96875,
+        "left": 253,
+        "clipping": [
+          {
+            "x": 241,
+            "y": 85,
+            "width": 1190,
+            "height": 898,
+            "top": 85,
+            "right": 1431,
+            "bottom": 983,
+            "left": 241
+          },
+          {
+            "x": 241,
+            "y": 49,
+            "width": 1190,
+            "height": 942,
+            "top": 49,
+            "right": 1431,
+            "bottom": 991,
+            "left": 241
+          },
+          {
+            "x": 240,
+            "y": 48,
+            "width": 1192,
+            "height": 944,
+            "top": 48,
+            "right": 1432,
+            "bottom": 992,
+            "left": 240
+          }
+        ]
+      }
+    },
+    {
+      "label": "Media actions",
+      "menu": {
+        "x": 261,
+        "y": 310.5,
+        "width": 400,
+        "height": 197.5
+      },
+      "host": {
+        "x": 253,
+        "y": -135,
+        "width": 1151,
+        "height": 2264.96875,
+        "top": -135,
+        "right": 1404,
+        "bottom": 2129.96875,
+        "left": 253,
+        "clipping": [
+          {
+            "x": 241,
+            "y": 85,
+            "width": 1190,
+            "height": 898,
+            "top": 85,
+            "right": 1431,
+            "bottom": 983,
+            "left": 241
+          },
+          {
+            "x": 241,
+            "y": 49,
+            "width": 1190,
+            "height": 942,
+            "top": 49,
+            "right": 1431,
+            "bottom": 991,
+            "left": 241
+          },
+          {
+            "x": 240,
+            "y": 48,
+            "width": 1192,
+            "height": 944,
+            "top": 48,
+            "right": 1432,
+            "bottom": 992,
+            "left": 240
+          }
+        ]
+      }
+    }
+  ],
+  "contextToolbarLayout": {
+    "bar": {
+      "x": 254,
+      "y": -218,
+      "width": 827,
+      "height": 49
+    },
+    "attach": {
+      "x": 738,
+      "y": -206,
+      "width": 24,
+      "height": 24
+    },
+    "paste": {
+      "x": 764,
+      "y": -206,
+      "width": 24,
+      "height": 24
+    },
+    "trigger": {
+      "x": 912,
+      "y": -206,
+      "width": 110,
+      "height": 24
+    },
+    "properties": {
+      "x": 309,
+      "y": 356.5,
+      "width": 115,
+      "height": 32
+    },
+    "copy": {
+      "x": 515,
+      "y": 356.5,
+      "width": 156,
+      "height": 32
+    },
+    "remove": {
+      "x": 309,
+      "y": 449.5,
+      "width": 135,
+      "height": 32
+    }
+  },
+  "nativeContextMenus": {
+    "source": "```js\nconst owned = 7;\n```\n\n```mermaid\ngraph LR\n  Other-->Diagram\n```",
+    "text": "const owned = 7;",
+    "copiedCode": "const owned = 7;",
+    "language": "rust",
+    "copiedMediaURL": "/uploads/f6737dc14b3b8d73823e99d44872265e/fountain-baseline-figure.png",
+    "mediaTitle": "Contextual figure reviewed",
+    "mediaWidth": 240,
+    "accessibility": [
+      {
+        "name": "captured-code-context",
+        "violations": []
+      },
+      {
+        "name": "diagram-source-dialog",
+        "violations": []
+      },
+      {
+        "name": "image-context",
+        "violations": []
+      },
+      {
+        "name": "image-properties",
+        "violations": []
+      }
+    ]
+  },
+  "preparedScripts": [
+    {
+      "path": "/assets/webpack/content_editor.1fc0917a.chunk.js",
+      "sha256": "0cc0a33e98e9d44ecd40e61f39cd17dcad653b33a9cdb3476d83120f42049acf"
+    },
+    {
+      "path": "/assets/webpack/content_editor.1fc0917a.chunk.js",
+      "sha256": "0cc0a33e98e9d44ecd40e61f39cd17dcad653b33a9cdb3476d83120f42049acf"
+    },
+    {
+      "path": "/assets/webpack/content_editor.1fc0917a.chunk.js",
+      "sha256": "0cc0a33e98e9d44ecd40e61f39cd17dcad653b33a9cdb3476d83120f42049acf"
+    },
+    {
+      "path": "/assets/webpack/content_editor.1fc0917a.chunk.js",
+      "sha256": "0cc0a33e98e9d44ecd40e61f39cd17dcad653b33a9cdb3476d83120f42049acf"
+    }
+  ],
+  "frontendMount": {
+    "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+    "readOnly": true
+  },
+  "nativeTaskControls": [
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    },
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    }
+  ],
+  "nativeContextMenuPhases": [
+    "saved",
+    "reopened",
+    "restart"
+  ],
+  "source": {
+    "original": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/f6737dc14b3b8d73823e99d44872265e/fountain-baseline-figure.png)\n\nEnd of the original description.\n",
+    "saved": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/f6737dc14b3b8d73823e99d44872265e/fountain-baseline-figure.png \"Contextual figure reviewed\"){width=\"240\"}\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\n```rust\nconst owned = 7;\n```\n\n```mermaid\ngraph LR\n  Other-->Diagram\n```\n\n```python\nconst total = 42;\nconsole.log(total); // reviewed\n```\n\n- Replaced nested code\n- Neighbor item"
+  },
+  "comment": {
+    "body": "Native Fountain discussion: created through the actual GitLab comment form.",
+    "persisted": true
+  },
+  "recoveryIssue": {
+    "iid": 112,
+    "originalSourceUnchanged": true,
+    "recoveryDraftCancelled": true
+  },
+  "status": "passed"
+}

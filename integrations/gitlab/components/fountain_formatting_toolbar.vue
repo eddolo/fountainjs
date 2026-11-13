@@ -211,8 +211,7 @@ export default {
       size="small"
       @click="execute(control)"
     />
-    <slot name="context-actions"></slot>
-    <slot name="header-buttons"></slot>
+    <div class="gl-inline-flex gl-shrink-0 gl-items-center gl-gap-1 gl-border-l gl-pl-2" role="group" :aria-label="s__('ContentEditor|Clipboard and files')">
     <template v-if="!hideAttachmentButton">
       <gl-button
         :disabled="disabled"
@@ -234,8 +233,9 @@ export default {
         @change="attachFiles"
       />
     </template>
-    <gl-button :disabled="disabled" category="tertiary" size="small" @click="pasteMarkdown">{{
-      s__('ContentEditor|Paste Markdown')
-    }}</gl-button>
+    <gl-button :disabled="disabled" category="tertiary" size="small" icon="markdown-mark" :aria-label="s__('ContentEditor|Paste Markdown')" :title="s__('ContentEditor|Paste Markdown')" @click="pasteMarkdown" />
+    </div>
+    <slot name="context-actions"></slot>
+    <slot name="header-buttons"></slot>
   </div>
 </template>

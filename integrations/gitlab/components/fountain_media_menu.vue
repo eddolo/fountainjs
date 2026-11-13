@@ -1,5 +1,5 @@
 <script>
-import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlLink, GlModal } from '@gitlab/ui';
+import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlModal } from '@gitlab/ui';
 import { uniqueId } from 'lodash-es';
 import { markRaw } from 'vue';
 import { s__ } from '~/locale';
@@ -9,7 +9,7 @@ import FountainContextSurface from './fountain_context_surface.vue';
 
 export default {
   name: 'FountainMediaMenu',
-  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlLink, GlModal, FountainContextSurface },
+  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlModal, FountainContextSurface },
   props: {
     contentEditor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
@@ -123,17 +123,23 @@ export default {
 </script>
 <template>
   <fountain-context-surface v-if="displayContext" ref="contextSurface" :editor="contentEditor.editor" :active="Boolean(displayContext)" :anchor-path="displayContext.conflict ? null : displayContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Media actions')" :suspended="dialogOpen" @reveal="$emit('focus')">
-  <div data-testid="native-media-menu" class="gl-inline-flex gl-flex-wrap gl-items-center gl-gap-2" role="group" :aria-label="s__('ContentEditor|Media controls')">
-    <gl-button :disabled="disabled" size="small" @click="open">{{ s__('ContentEditor|Edit media properties') }}</gl-button>
-    <gl-link :href="displayContext.displayURL" target="_blank" rel="noopener noreferrer">{{ s__('ContentEditor|Open media') }}</gl-link>
-    <gl-button size="small" @click="copy">{{ s__('ContentEditor|Copy media URL') }}</gl-button>
-    <gl-button :disabled="disabled" size="small" @click="remove">{{ s__('ContentEditor|Delete media') }}</gl-button>
+  <div data-testid="native-media-menu" class="gl-w-full" role="group" :aria-label="s__('ContentEditor|Media controls')">
+    <h2 class="gl-heading-5 gl-mb-2">{{ s__('ContentEditor|Media') }}</h2>
+    <p v-if="displayContext.alt" class="gl-mb-4 gl-truncate gl-text-subtle" :title="displayContext.alt">{{ displayContext.alt }}</p>
+    <div class="gl-flex gl-flex-wrap gl-items-center gl-gap-2">
+      <gl-button :disabled="disabled" category="primary" variant="confirm" icon="pencil" :aria-label="s__('ContentEditor|Edit media properties')" @click="open">{{ s__('ContentEditor|Properties') }}</gl-button>
+      <gl-button :href="displayContext.displayURL" target="_blank" rel="noopener noreferrer" category="tertiary" icon="external-link" :aria-label="s__('ContentEditor|Open media')">{{ s__('ContentEditor|Open') }}</gl-button>
+      <gl-button category="tertiary" icon="copy-to-clipboard" @click="copy">{{ s__('ContentEditor|Copy media URL') }}</gl-button>
+    </div>
     <template v-if="allowUpload">
-      <gl-button :disabled="disabled" size="small" @click="chooseReplacement">{{ s__('ContentEditor|Replace media file') }}</gl-button>
+      <gl-button :disabled="disabled" category="tertiary" icon="upload" class="gl-mt-3" @click="chooseReplacement">{{ s__('ContentEditor|Replace media file') }}</gl-button>
       <input ref="file" type="file" :accept="`${displayContext.kind}/*`" class="gl-hidden" :disabled="disabled" :aria-label="s__('ContentEditor|Replacement media file')" @change="replaceFile" @cancel="cancelReplacement" />
     </template>
-    <span v-if="copyState === 'copied'" role="status">{{ s__('ContentEditor|Media URL copied.') }}</span>
-    <span v-if="copyState === 'failed'" role="alert">{{ s__('ContentEditor|Unable to copy the media URL. Open the media and copy its address instead.') }}</span>
+    <p v-if="copyState === 'copied'" role="status" class="gl-mb-0 gl-mt-3 gl-text-subtle">{{ s__('ContentEditor|Media URL copied.') }}</p>
+    <p v-if="copyState === 'failed'" role="alert" class="gl-mb-0 gl-mt-3">{{ s__('ContentEditor|Unable to copy the media URL. Open the media and copy its address instead.') }}</p>
+    <div class="gl-mt-4 gl-border-t gl-pt-3">
+      <gl-button :disabled="disabled" category="tertiary" variant="danger" icon="remove" @click="remove">{{ s__('ContentEditor|Delete media') }}</gl-button>
+    </div>
     <gl-modal v-model="dialogOpen" :modal-id="modalId" :title="s__('ContentEditor|Media properties')" :action-primary="primaryAction" :action-cancel="cancelAction" :return-focus="focusTarget" @primary="apply" @hide="onHide" @hidden="onHidden">
       <template v-if="sessionState">
         <img v-if="sessionState.kind === 'image'" :src="sessionState.displayURL" :alt="sessionState.alt" class="gl-mb-4 gl-max-h-48 gl-max-w-full" @error="previewFailed = true" />

@@ -31,15 +31,21 @@ export async function auditNativeContextMenus({ page, editor, toolbar, output, r
     const hostBounds = () => editor.evaluate(element => {
       const container = element.closest('.work-item-detail');
       if (!container) throw new Error('Expected the actual GitLab work-item content container.');
-      return container.getBoundingClientRect().toJSON();
+      const clipping = [];
+      for (let parent = element.parentElement; parent && parent !== element.ownerDocument.body; parent = parent.parentElement) {
+        const style = getComputedStyle(parent);
+        if (/(auto|scroll|hidden|clip)/u.test(`${style.overflowX} ${style.overflowY}`)) clipping.push(parent.getBoundingClientRect().toJSON());
+      }
+      return { ...container.getBoundingClientRect().toJSON(), clipping };
     });
     await expect.poll(async () => {
       const box = await locator.boundingBox();
       const viewport = page.viewportSize();
       const host = await hostBounds();
-      return Boolean(box && box.x >= Math.max(0, host.left) && box.y >= Math.max(0, host.top)
-        && box.x + box.width <= Math.min(viewport.width, host.right) + 1
-        && box.y + box.height <= Math.min(viewport.height, host.bottom) + 1);
+      const bounds = [host, ...host.clipping];
+      return Boolean(box && box.x >= Math.max(0, ...bounds.map(rect => rect.left)) && box.y >= Math.max(0, ...bounds.map(rect => rect.top))
+        && box.x + box.width <= Math.min(viewport.width, ...bounds.map(rect => rect.right)) + 1
+        && box.y + box.height <= Math.min(viewport.height, ...bounds.map(rect => rect.bottom)) + 1);
     }).toBe(true);
     report.contextMenuBounds ??= [];
     report.contextMenuBounds.push({ label: await locator.getAttribute('aria-label'), menu: await locator.boundingBox(), host: await hostBounds() });
@@ -116,6 +122,26 @@ export async function auditNativeContextMenus({ page, editor, toolbar, output, r
   const image = editor.getByRole('img', { name: 'Uploaded baseline figure', exact: true });
   await image.click(); await expect(mediaMenu()).toBeVisible(); await clamped(mediaMenu());
   await expect(toolbar.getByRole('button', { name: 'Media actions', exact: true })).toHaveAttribute('aria-controls', await mediaMenu().getAttribute('id'));
+  if (report.nativeContextUIProfile) {
+    const bar = await toolbar.boundingBox();
+    const attach = await toolbar.getByRole('button', { name: 'Attach a file or image', exact: true }).boundingBox();
+    const paste = await toolbar.getByRole('button', { name: 'Paste Markdown', exact: true }).boundingBox();
+    const trigger = await toolbar.getByRole('button', { name: 'Media actions', exact: true }).boundingBox();
+    expect(Math.abs(attach.y - paste.y)).toBeLessThanOrEqual(2);
+    expect(bar.height).toBeLessThanOrEqual(52);
+    expect(Math.abs(trigger.y - paste.y)).toBeLessThanOrEqual(2);
+    expect(trigger.width).toBeLessThan(220);
+    const properties = await mediaControls().getByRole('button', { name: 'Edit media properties', exact: true }).boundingBox();
+    const copy = await mediaControls().getByRole('button', { name: 'Copy media URL', exact: true }).boundingBox();
+    const remove = await mediaControls().getByRole('button', { name: 'Delete media', exact: true }).boundingBox();
+    expect(remove.y).toBeGreaterThan(copy.y + copy.height + 12);
+    expect(remove.y).toBeGreaterThan(properties.y + properties.height + 12);
+    report.contextToolbarLayout = { bar, attach, paste, trigger, properties, copy, remove };
+    await screenshot('context-media-ui.png');
+    await toolbar.screenshot({ path: fileURLToPath(new URL('context-toolbar-ui.png', output)), animations: 'disabled' });
+    await mediaMenu().screenshot({ path: fileURLToPath(new URL('context-media-panel-ui.png', output)), animations: 'disabled' });
+    report.checks.push('Desktop contextual toolbar keeps attachment, Markdown paste and the contextual action on one row; destructive media actions sit separately below primary/secondary actions');
+  }
   await audit(mediaMenu(), 'image-context');
   await mediaControls().getByRole('button', { name: 'Copy media URL', exact: true }).click();
   const copied = await page.evaluate(() => navigator.clipboard.readText());
