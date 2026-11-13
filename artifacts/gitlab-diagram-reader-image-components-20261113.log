@@ -1,0 +1,33 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-reader-image-components-20261113.json spec/frontend/behaviors/markdown/fountain_reader_images_spec.js spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js spec/frontend/behaviors/markdown/render_gfm_spec.js
+PASS spec/frontend/behaviors/markdown/render_gfm_spec.js
+FAIL spec/frontend/behaviors/markdown/fountain_reader_images_spec.js
+  ● Reader lazy-image loading geometry › releases pending state on an error without changing the original URL or dimensions
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "<img loading=\"lazy\" src=\"/offline.png\">"
+    Received: "<img loading=\"lazy\" src=\"/offline.png\" class=\"\">"
+
+      27 |     prepareFountainReaderImages([element]);
+      28 |     element.dispatchEvent(new Event('error'));
+    > 29 |     expect(element.outerHTML).toBe(before);
+         |                               ^
+      30 |   });
+      31 |   it.each([{ width: '1' }, { height: '1' }, { width: '300', height: '200' }])(
+      32 |     'preserves explicit sizes %j',
+
+      at Object.toBe (spec/frontend/behaviors/markdown/fountain_reader_images_spec.js:29:31)
+
+PASS spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 27 passed, 28 total
+Snapshots:   0 total
+Time:        4.019 s
+Ran all test suites matching /spec\/frontend\/behaviors\/markdown\/fountain_reader_images_spec.js|spec\/frontend\/behaviors\/markdown\/fountain_diagram_reader_spec.js|spec\/frontend\/behaviors\/markdown\/render_gfm_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-reader-image-components-20261113.json
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

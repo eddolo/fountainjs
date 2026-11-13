@@ -1,0 +1,18 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/behaviors/markdown/fountain_reader_images.js app/assets/javascripts/behaviors/markdown/render_gfm.js spec/frontend/behaviors/markdown/fountain_reader_images_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/behaviors/markdown/fountain_reader_images.js
+  21:14  error  Assignment to property of function parameter 'image'  no-param-reassign
+  29:5   error  Assignment to property of function parameter 'image'  no-param-reassign
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/spec/frontend/behaviors/markdown/fountain_reader_images_spec.js
+  60:12  error  Prefer `.dataset` over `hasAttribute(…)`  unicorn/prefer-dom-node-dataset
+  71:12  error  Prefer `.dataset` over `hasAttribute(…)`  unicorn/prefer-dom-node-dataset
+
+✖ 4 problems (4 errors, 0 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

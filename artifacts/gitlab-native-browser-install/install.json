@@ -1,5 +1,5 @@
 {
-  "formatVersion": 7,
+  "formatVersion": 10,
   "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source",
   "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
   "scope": "Native browser integration in progress; full toolbar/providers/dialect acceptance remains open",
@@ -35,7 +35,10 @@
   },
   "preparedComponentSHA256": "cdd3091a8a8cddccbd9b48c231edb38197f73a26fd8e35d9932b90d3579d6bad",
   "files": {
-    "app/assets/javascripts/lib/mermaid_sandbox.js": "b30e98012173829d8178d3b5d8db7476db71ccd2523b49ac36760151276cee7a",
+    "app/assets/javascripts/lib/mermaid_sandbox.js": "633c18fa4f37e6af5ce77caefa799f88b8b5039a0884dfc4859a9b1b6b992560",
+    "app/assets/javascripts/behaviors/markdown/render_sandboxed_mermaid.js": "582a8c90c09de0a06e576dc3e8ff666e08b7592f73552101b7fe18fcaf1ca8ef",
+    "app/assets/javascripts/lazy_loader.js": "5f01e756e44dc97ac052fc5f49e64d9cd09248017ee7ed59f3082dcdf501e885",
+    "app/assets/javascripts/behaviors/markdown/fountain_reader_images.js": "9b36b527c5e271ab97ec41b066446b2441afdb78ca79bc89a2fe34a06ba7b125",
     "babel.config.js": "7cc8ec862fb6e42c7e26b3fb29410094b4f49f602f2ed02e6ec6132ac32a20a4",
     "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "f4d35a1425d46cc0e4de1caae146f3a035c9c853da8ba08d241c8e12c3cffe10",
     "app/assets/javascripts/content_editor/components/content_editor.vue": "3f76ce55c264e9d6824390c02668ab040d89412e161f9479a9b239fe28c8a584",

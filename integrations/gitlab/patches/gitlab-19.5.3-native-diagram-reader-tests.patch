@@ -1,0 +1,211 @@
+diff --git a/spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js b/spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js
+new file mode 100644
+index 00000000..7c8f8ae6
+--- /dev/null
++++ b/spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js
+@@ -0,0 +1,112 @@
++import { fireEvent, getByRole, queryByRole } from '@testing-library/dom';
++import { nextTick } from 'vue';
++import { setHTMLFixture, resetHTMLFixture } from 'helpers/fixtures';
++import renderMermaid from '~/behaviors/markdown/render_sandboxed_mermaid';
++import { PanelBreakpointInstance } from '~/panel_breakpoint_instance';
++
++jest.mock('~/panel_breakpoint_instance', () => ({
++  PanelBreakpointInstance: { addResizeListener: jest.fn(), removeResizeListener: jest.fn() },
++}));
++
++describe('Saved Mermaid failure recovery', () => {
++  const source = '! ! ! INVALID\n<img src=x onerror="alert(1)">';
++  const frame = () => document.querySelector('iframe');
++  const pre = () => document.querySelector('pre');
++  const receive = (data, origin = 'null', sender = frame().contentWindow) =>
++    window.dispatchEvent(new MessageEvent('message', { data, origin, source: sender }));
++  const settle = async () => {
++    await nextTick();
++    await nextTick();
++  };
++  beforeEach(() => {
++    jest.useFakeTimers();
++    window.gon = { features: {} };
++    document.body.dataset.page = '';
++    setHTMLFixture(
++      '<div class="js-markdown-code"><pre><code class="js-render-mermaid"></code></pre></div>',
++    );
++    document.querySelector('code').textContent = source;
++    renderMermaid([...document.querySelectorAll('code')]);
++    jest.runAllTimers();
++  });
++  afterEach(() => {
++    resetHTMLFixture();
++    jest.useRealTimers();
++  });
++  it('reveals exact inert source with a fixed localized alert after its own sandbox fails', async () => {
++    receive({ fountainDiagramError: true });
++    await settle();
++    expect(getByRole(document.body, 'alert').textContent).toContain(
++      'diagram could not be rendered',
++    );
++    expect(pre().textContent).toBe(source);
++    expect(pre().classList.contains('gl-sr-only')).toBe(false);
++    expect(document.querySelector('img')).toBeNull();
++    expect(frame().parentElement.hidden).toBe(true);
++    expect(getByRole(document.body, 'button', { name: 'Retry diagram' }).textContent.trim()).toBe(
++      'Retry diagram',
++    );
++  });
++  it('does not duplicate failure alerts or source when repeated errors arrive', async () => {
++    receive({ fountainDiagramError: true });
++    receive({ fountainDiagramError: true });
++    await settle();
++    expect(document.querySelectorAll('[role="alert"]')).toHaveLength(1);
++    expect(document.querySelectorAll('pre')).toHaveLength(1);
++    expect(pre().textContent).toBe(source);
++  });
++  it('retries the original source and restores a successful diagram without losing the code carrier', async () => {
++    const post = jest.spyOn(frame().contentWindow, 'postMessage');
++    receive({ fountainDiagramError: true });
++    await settle();
++    fireEvent.click(getByRole(document.body, 'button', { name: 'Retry diagram' }));
++    expect(post).toHaveBeenCalledWith(expect.objectContaining({ source }), '*');
++    receive({ h: 120, w: 200 });
++    await settle();
++    expect(queryByRole(document.body, 'alert')).toBeNull();
++    expect(frame().parentElement.hidden).toBe(false);
++    expect(frame().height).toBe('130px');
++    expect(pre().classList.contains('gl-sr-only')).toBe(true);
++    expect(pre().textContent).toBe(source);
++  });
++  it.each([false, 'true', 1])(
++    'ignores a non-boolean error value %s',
++    async (fountainDiagramError) => {
++      receive({ fountainDiagramError });
++      await settle();
++      expect(queryByRole(document.body, 'alert')).toBeNull();
++      expect(pre().classList.contains('gl-sr-only')).toBe(true);
++    },
++  );
++  it('ignores foreign frames/origins and native preview request messages', async () => {
++    receive({ fountainDiagramError: true }, 'https://example.invalid');
++    receive({ fountainDiagramError: true }, 'null', window);
++    receive({ fountainDiagramError: true, fountainRequestId: 3 });
++    await settle();
++    expect(queryByRole(document.body, 'alert')).toBeNull();
++    expect(pre().classList.contains('gl-sr-only')).toBe(true);
++  });
++  it('keeps sibling code and frames isolated from the failed diagram', async () => {
++    const wrapper = document.createElement('div');
++    wrapper.innerHTML = '<pre><code class="js-render-mermaid">graph LR; A--&gt;B</code></pre>';
++    document.body.appendChild(wrapper);
++    renderMermaid([...wrapper.querySelectorAll('code')]);
++    jest.runAllTimers();
++    receive({ fountainDiagramError: true });
++    await settle();
++    expect(wrapper.querySelector('pre').classList.contains('gl-sr-only')).toBe(true);
++    expect(wrapper.querySelector('[role="alert"]')).toBeNull();
++  });
++  it('releases its error UI when the existing resize lifecycle detects a removed diagram', async () => {
++    const remove = jest.spyOn(window, 'removeEventListener');
++    receive({ fountainDiagramError: true });
++    await settle();
++    document.querySelector('.js-markdown-code').remove();
++    const resize = PanelBreakpointInstance.addResizeListener.mock.calls.at(-1)[0];
++    resize();
++    jest.runAllTimers();
++    expect(PanelBreakpointInstance.removeResizeListener).toHaveBeenCalledWith(resize);
++    expect(remove).toHaveBeenCalledWith('message', expect.any(Function), false);
++    expect(queryByRole(document.body, 'alert')).toBeNull();
++  });
++});
+diff --git a/spec/frontend/behaviors/markdown/fountain_reader_images_spec.js b/spec/frontend/behaviors/markdown/fountain_reader_images_spec.js
+new file mode 100644
+index 00000000..37256d7d
+--- /dev/null
++++ b/spec/frontend/behaviors/markdown/fountain_reader_images_spec.js
+@@ -0,0 +1,87 @@
++import { prepareFountainReaderImages } from '~/behaviors/markdown/fountain_reader_images';
++import LazyLoader, { placeholderImage } from '~/lazy_loader';
++
++describe('Reader lazy-image loading geometry', () => {
++  const image = ({ complete = false, loading = 'lazy', attrs = {} } = {}) => {
++    const element = document.createElement('img');
++    element.setAttribute('loading', loading);
++    Object.entries(attrs).forEach(([name, value]) => element.setAttribute(name, value));
++    Object.defineProperty(element, 'complete', { configurable: true, value: complete });
++    return element;
++  };
++  it('reserves pending geometry and restores the exact authored attributes/classes on load', () => {
++    const element = image({
++      attrs: { src: '/real-figure.png', alt: 'Figure', class: 'authored gl-min-w-7' },
++    });
++    const before = element.outerHTML;
++    prepareFountainReaderImages([element]);
++    expect(element.classList.contains('!gl-min-h-7')).toBe(true);
++    expect(element.dataset.fountainReaderImagePending).toBe('');
++    expect(element.getAttribute('src')).toBe('/real-figure.png');
++    element.dispatchEvent(new Event('load'));
++    expect(element.outerHTML).toBe(before);
++  });
++  it('releases pending state on an error without changing the original URL or dimensions', () => {
++    const element = image({ attrs: { src: '/offline.png' } });
++    const before = element.outerHTML;
++    prepareFountainReaderImages([element]);
++    element.dispatchEvent(new Event('error'));
++    expect(element.outerHTML).toBe(before);
++  });
++  it.each([{ width: '1' }, { height: '1' }, { width: '300', height: '200' }])(
++    'preserves explicit sizes %j',
++    (attrs) => {
++      const element = image({ attrs });
++      const before = element.outerHTML;
++      prepareFountainReaderImages([element]);
++      expect(element.outerHTML).toBe(before);
++    },
++  );
++  it.each([{ complete: true }, { loading: 'eager' }])(
++    'leaves already complete or eager images unchanged: %j',
++    (options) => {
++      const element = image(options);
++      const before = element.outerHTML;
++      prepareFountainReaderImages([element]);
++      expect(element.outerHTML).toBe(before);
++    },
++  );
++  it('does not install duplicate pending listeners and can prepare a later image load', () => {
++    const element = image();
++    const add = jest.spyOn(element, 'addEventListener');
++    prepareFountainReaderImages([element]);
++    prepareFountainReaderImages([element]);
++    expect(add).toHaveBeenCalledTimes(2);
++    element.dispatchEvent(new Event('load'));
++    prepareFountainReaderImages([element]);
++    expect(add).toHaveBeenCalledTimes(4);
++    expect(element.dataset.fountainReaderImagePending).toBe('');
++    element.dispatchEvent(new Event('error'));
++    expect(element.dataset.fountainReaderImagePending).toBeUndefined();
++  });
++  it('reserves space at the real placeholder-to-source transition even when the placeholder is already decoded', () => {
++    const container = document.createElement('div');
++    container.className = 'md';
++    container.innerHTML =
++      '<a href="/figure.png"><img class="lazy" data-src="/figure.png" alt="Figure"></a>';
++    const element = container.querySelector('img');
++    element.setAttribute('src', placeholderImage);
++    Object.defineProperty(element, 'complete', {
++      get: () => element.getAttribute('src') === placeholderImage,
++    });
++    LazyLoader.loadImage(element);
++    expect(element.getAttribute('src')).toBe('/figure.png');
++    expect(element.dataset.fountainReaderImagePending).toBe('');
++    element.dispatchEvent(new Event('load'));
++    expect(element.dataset.fountainReaderImagePending).toBeUndefined();
++  });
++  it('does not add reader sizing to lazy-loaded images outside document content', () => {
++    const container = document.createElement('div');
++    container.innerHTML = '<img class="lazy" data-src="/figure.png">';
++    const element = container.querySelector('img');
++    Object.defineProperty(element, 'complete', { value: false });
++    LazyLoader.loadImage(element);
++    expect(element.getAttribute('src')).toBe('/figure.png');
++    expect(element.dataset.fountainReaderImagePending).toBeUndefined();
++  });
++});

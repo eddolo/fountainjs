@@ -1,0 +1,63 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-diagram-sandbox.test.ts (6 tests | 1 failed) 16ms
+   × reports a fixed legacy-reader failure instead of leaking an unhandled parser rejection 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-diagram-sandbox.test.ts > reports a fixed legacy-reader failure instead of leaking an unhandled parser rejection
+AssertionError: expected [] to deeply equal [ { fountainDiagramError: true } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "fountainDiagramError": true,
+-   },
+- ]
++ []
+
+ ❯ tests/gitlab-diagram-sandbox.test.ts:69:20
+     67|   const { send, messages, app, removed } = setup(vi.fn(async () => { t…
+     68|   send('invalid saved diagram'); await settle();
+     69|   expect(messages).toEqual([{ fountainDiagramError: true }]);
+       |                    ^
+     70|   expect(app.textContent).toBe(''); expect(removed).toEqual(['dmermaid…
+     71| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: <img src=x onerror="alert(1)">
+ ❯ Object.<anonymous> tests/gitlab-diagram-sandbox.test.ts:67:76
+     65|
+     66| it('reports a fixed legacy-reader failure instead of leaking an unhand…
+     67|   const { send, messages, app, removed } = setup(vi.fn(async () => { t…
+       |                                                                            ^
+     68|   send('invalid saved diagram'); await settle();
+     69|   expect(messages).toEqual([{ fountainDiagramError: true }]);
+ ❯ Object.Mock [as render] node_modules/.pnpm/vitest@5.0.0_@types+node@26_490c073f955da966c1b29dd53c668f4f/node_modules/vitest/dist/chunks/spy.DPLvp2J7.js:320:40
+ ❯ drawDiagram evalmachine.<anonymous>:62:44
+ ❯ evalmachine.<anonymous>:166:7
+ ❯ send tests/gitlab-diagram-sandbox.test.ts:21:104
+ ❯ tests/gitlab-diagram-sandbox.test.ts:68:3
+ ❯ node_modules/.pnpm/vitest@5.0.0_@types+node@26_490c073f955da966c1b29dd53c668f4f/node_modules/vitest/dist/chunks/run.CQOUYP-x.js:1628:35
+ ❯ node_modules/.pnpm/vitest@5.0.0_@types+node@26_490c073f955da966c1b29dd53c668f4f/node_modules/vitest/dist/chunks/run.CQOUYP-x.js:2783:26
+ ❯ node_modules/.pnpm/vitest@5.0.0_@types+node@26_490c073f955da966c1b29dd53c668f4f/node_modules/vitest/dist/chunks/run.CQOUYP-x.js:3319:20
+
+This error originated in "tests/gitlab-diagram-sandbox.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+     Errors  1 error
+   Start at  19:27:03
+   Duration  593ms (transform 40%, import 35%, tests 14%, worker 11%)

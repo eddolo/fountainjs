@@ -20,7 +20,7 @@ const env = {
   ...process.env,
   FOUNTAIN_GITLAB_FRONTEND_ASSETS: resolve(install.source, 'public/assets/webpack'),
 };
-const diagrams = process.argv.includes('--diagrams') || process.argv.includes('--diagram-fixtures') || process.argv.includes('--diagram-authoring');
+const diagrams = process.argv.includes('--diagrams') || process.argv.includes('--diagram-fixtures') || process.argv.includes('--diagram-authoring') || process.argv.includes('--diagram-reader');
 if (diagrams) compose.push('-f', resolve(root, 'integrations/gitlab/runtime/compose.diagrams.yaml'));
 try {
   if (diagrams) execFileSync('docker', [...compose, 'up', '-d', 'diagram-server'], { env, stdio: 'inherit', timeout: 120000 });
@@ -37,7 +37,8 @@ try {
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--diagram-authoring') ? '--native-diagram-authoring'
+      process.argv.includes('--diagram-reader') ? '--native-diagram-reader'
+        : process.argv.includes('--diagram-authoring') ? '--native-diagram-authoring'
         : process.argv.includes('--diagrams') ? '--native-diagrams'
         : process.argv.includes('--references') ? '--native-references'
         : process.argv.includes('--media-files') ? '--native-media-files'

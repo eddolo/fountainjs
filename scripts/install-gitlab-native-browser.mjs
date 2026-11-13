@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { babelParse, parse as parseSFC } from 'vue/compiler-sfc';
 import { prepareGitLabDiagramSandbox } from '../integrations/gitlab/services/diagram_sandbox_patch.mjs';
+import { prepareGitLabMermaidReader } from '../integrations/gitlab/services/diagram_reader_patch.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const restore = process.argv[3] === '--restore';
@@ -35,6 +36,13 @@ const babelPath = 'babel.config.js';
 const babelHash = 'ff971fbc61f7c207b23f2834d135bc4741e651820ef289f87b6b61ac35350e54';
 const sandboxPath = 'app/assets/javascripts/lib/mermaid_sandbox.js';
 const sandboxHash = 'c174dee8be4203bea76c88778156ea5c00f976d758915c2627ec65a2f5872ab9';
+const diagramReaderPath = 'app/assets/javascripts/behaviors/markdown/render_sandboxed_mermaid.js';
+const diagramReaderHash = '3c349fe6816d139177ce6e9bc04eecbdb2a93fe72fbf345986ac483942f05786';
+const gfmPath = 'app/assets/javascripts/behaviors/markdown/render_gfm.js';
+const gfmHash = '9021fa0b9a83f7c1f41ab165ba1723fe63807cd384a9c8783c2a37f73d17670d';
+const readerImagesPath = 'app/assets/javascripts/behaviors/markdown/fountain_reader_images.js';
+const lazyLoaderPath = 'app/assets/javascripts/lazy_loader.js';
+const lazyLoaderHash = '6af1a0bf97f573fa8fd6513a9b0ce29a66068bac2df8eedc799a4d5cf8bd9cf2';
 if ((await lstat(resolve(source, hostPath))).isSymbolicLink())
   throw new Error('Refusing a symlinked ContentEditor.');
 const current = await readFile(resolve(source, hostPath), 'utf8');
@@ -56,30 +64,33 @@ if (previous) {
     'app/assets/javascripts/content_editor/services/fountain_runtime.js',
     'app/assets/javascripts/content_editor/services/fountain_runtime.css',
   ]);
-  if ([2, 3, 4, 5, 6, 7].includes(previous.formatVersion)) {
+  if ([2, 3, 4, 5, 6, 7, 8, 9, 10].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js');
   } else if (previous.formatVersion !== undefined) throw new Error('Unknown retained install format.');
-  if ([3, 4, 5, 6, 7].includes(previous.formatVersion)) {
+  if ([3, 4, 5, 6, 7, 8, 9, 10].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js');
   }
-  if ([4, 5, 6, 7].includes(previous.formatVersion)) {
+  if ([4, 5, 6, 7, 8, 9, 10].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.stories.js');
   }
-  if ([5, 6, 7].includes(previous.formatVersion)) {
+  if ([5, 6, 7, 8, 9, 10].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js');
   }
-  if ([6, 7].includes(previous.formatVersion)) {
+  if ([6, 7, 8, 9, 10].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.stories.js');
   }
-  if (previous.formatVersion === 7) {
+  if ([7, 8, 9, 10].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_diagram_preview.vue');
     allowed.add(sandboxPath);
   }
+  if ([8, 9, 10].includes(previous.formatVersion)) allowed.add(diagramReaderPath);
+  if (previous.formatVersion === 9) { allowed.add(gfmPath); allowed.add(readerImagesPath); }
+  if (previous.formatVersion === 10) { allowed.add(lazyLoaderPath); allowed.add(readerImagesPath); }
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
 }
@@ -107,12 +118,30 @@ if (restore) {
     preparedSandbox = await readFile(resolve(output, 'prepared-mermaid-sandbox.js'));
     if (hash(preparedSandbox) !== sandboxHash) throw new Error('Retained Mermaid sandbox has changed.');
   }
+  let preparedDiagramReader;
+  if (previous.files[diagramReaderPath]) {
+    preparedDiagramReader = await readFile(resolve(output, 'prepared-mermaid-reader.js'));
+    if (hash(preparedDiagramReader) !== diagramReaderHash) throw new Error('Retained Mermaid reader has changed.');
+  }
+  let preparedGFM;
+  if (previous.files[gfmPath]) {
+    preparedGFM = await readFile(resolve(output, 'prepared-render-gfm.js'));
+    if (hash(preparedGFM) !== gfmHash) throw new Error('Retained GFM reader has changed.');
+  }
+  let preparedLazyLoader;
+  if (previous.files[lazyLoaderPath]) {
+    preparedLazyLoader = await readFile(resolve(output, 'prepared-lazy-loader.js'));
+    if (hash(preparedLazyLoader) !== lazyLoaderHash) throw new Error('Retained image loader has changed.');
+  }
   await writeFile(resolve(source, hostPath), prepared);
   await writeFile(resolve(source, rendererPath), preparedRenderer);
   await writeFile(resolve(source, babelPath), preparedBabel);
   if (preparedSandbox) await writeFile(resolve(source, sandboxPath), preparedSandbox);
+  if (preparedDiagramReader) await writeFile(resolve(source, diagramReaderPath), preparedDiagramReader);
+  if (preparedGFM) await writeFile(resolve(source, gfmPath), preparedGFM);
+  if (preparedLazyLoader) await writeFile(resolve(source, lazyLoaderPath), preparedLazyLoader);
   for (const path of Object.keys(previous.files))
-    if (![hostPath, rendererPath, babelPath, sandboxPath].includes(path)) await unlink(resolve(source, path));
+    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath].includes(path)) await unlink(resolve(source, path));
   await writeFile(
     resolve(output, 'install.json'),
     JSON.stringify({ ...previous, restored: true }, null, 2) + '\n',
@@ -173,6 +202,35 @@ if (hash(currentSandbox) !== sandboxHash) {
   if (hash(originalSandbox) !== sandboxHash) throw new Error('Retained Mermaid sandbox does not match the pin.');
 }
 files.set(sandboxPath, prepareGitLabDiagramSandbox(originalSandbox));
+const currentDiagramReader = await readFile(resolve(source, diagramReaderPath), 'utf8');
+let originalDiagramReader = currentDiagramReader;
+if (hash(currentDiagramReader) !== diagramReaderHash) {
+  if (!previous || previous.files[diagramReaderPath] !== hash(currentDiagramReader)) throw new Error('Mermaid reader has unrecognized edits.');
+  originalDiagramReader = await readFile(resolve(output, 'prepared-mermaid-reader.js'), 'utf8');
+  if (hash(originalDiagramReader) !== diagramReaderHash) throw new Error('Retained Mermaid reader does not match the pin.');
+}
+files.set(diagramReaderPath, prepareGitLabMermaidReader(originalDiagramReader));
+const currentGFM = await readFile(resolve(source, gfmPath), 'utf8');
+if ((await realpath(resolve(source, gfmPath))) !== resolve(source, gfmPath)) throw new Error('Refusing a symlinked GFM reader.');
+let originalGFM = currentGFM;
+if (hash(currentGFM) !== gfmHash) {
+  if (!previous || previous.files[gfmPath] !== hash(currentGFM)) throw new Error('GFM reader has unrecognized edits.');
+  originalGFM = await readFile(resolve(output, 'prepared-render-gfm.js'), 'utf8');
+  if (hash(originalGFM) !== gfmHash) throw new Error('Retained GFM reader does not match the pin.');
+}
+const currentLazyLoader = await readFile(resolve(source, lazyLoaderPath), 'utf8');
+let originalLazyLoader = currentLazyLoader;
+if (hash(currentLazyLoader) !== lazyLoaderHash) {
+  if (!previous || previous.files[lazyLoaderPath] !== hash(currentLazyLoader)) throw new Error('Image loader has unrecognized edits.');
+  originalLazyLoader = await readFile(resolve(output, 'prepared-lazy-loader.js'), 'utf8');
+  if (hash(originalLazyLoader) !== lazyLoaderHash) throw new Error('Retained image loader does not match the pin.');
+}
+const imageImport = "import { appendWidthToAvatarUrl } from '~/vue_shared/components/user_avatar/utils';";
+const imageInitialization = "      img.setAttribute('src', imgUrl);";
+if ([imageImport, imageInitialization].some(value => originalLazyLoader.split(value).length !== 2)) throw new Error('Inspect the pinned lazy image initialization.');
+files.set(lazyLoaderPath, originalLazyLoader.replace(imageImport, imageImport + "\nimport { prepareFountainReaderImages } from '~/behaviors/markdown/fountain_reader_images';")
+  .replace(imageInitialization, imageInitialization + "\n      if (img.closest('.md')) prepareFountainReaderImages([img]);"));
+files.set(readerImagesPath, await readFile(resolve(root, 'integrations/gitlab/services/reader_images.js'), 'utf8'));
 if (originalBabel.split('exclude: /node_modules/,').length !== 2)
   throw new Error('Inspect the pinned third-party Babel boundary.');
 // The generated library is third-party code, even though installed under app/.
@@ -239,7 +297,7 @@ const requireUpstream = createRequire(resolve(source, 'package.json'));
 const prettier = requireUpstream('prettier');
 const formatOptions = await prettier.resolveConfig(resolve(source, hostPath));
 for (const [path, bytes] of files) {
-  if (!path.endsWith('.vue') && !path.endsWith('.stories.js') && path !== babelPath) continue;
+  if (!path.endsWith('.vue') && !path.endsWith('.stories.js') && ![babelPath, diagramReaderPath, lazyLoaderPath, readerImagesPath].includes(path)) continue;
   files.set(
     path,
     await prettier.format(bytes.toString(), {
@@ -258,7 +316,7 @@ for (const [path] of files) {
   const parent = await realpath(resolve(target, '..'));
   if (parent !== resolve(target, '..'))
     throw new Error('Refusing a symlinked installation parent.');
-  if ([hostPath, rendererPath, babelPath, sandboxPath].includes(path)) {
+  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath].includes(path)) {
     if ((await realpath(target)) !== target) throw new Error('Refusing a symlinked host input.');
     continue;
   }
@@ -275,12 +333,18 @@ await writeFile(resolve(output, 'prepared-content-editor.vue'), original);
 await writeFile(resolve(output, 'prepared-markdown-editor.vue'), originalRenderer);
 await writeFile(resolve(output, 'prepared-babel.config.js'), originalBabel);
 await writeFile(resolve(output, 'prepared-mermaid-sandbox.js'), originalSandbox);
+await writeFile(resolve(output, 'prepared-mermaid-reader.js'), originalDiagramReader);
+await writeFile(resolve(output, 'prepared-render-gfm.js'), originalGFM);
+await writeFile(resolve(output, 'prepared-lazy-loader.js'), originalLazyLoader);
+// Migrate the superseded GFM hook back to its pinned source; the source switch
+// happens later in LazyLoader and is the correct place to reserve image geometry.
+if (previous?.files[gfmPath]) await writeFile(resolve(source, gfmPath), originalGFM);
 for (const [path, bytes] of files) await writeFile(resolve(source, path), bytes);
 await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 7,
+      formatVersion: 10,
       source,
       revision: pin.commit,
       scope:

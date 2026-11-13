@@ -1135,8 +1135,8 @@ guarded source rollback/reinstall and eleven ordered test patches verify.
 No public library/API/size-ceiling changes or publication are made.
 
 This is Linux Chromium acceptance for the scoped Mermaid/PlantUML workflows.
-The paired-dialog follow-up is described below. Saved invalid diagram reader
-behavior, broader browsers/roles, frontmatter, suggestions, GLQL,
+The paired-dialog and saved-reader follow-ups are described below. Broader
+browsers/roles, frontmatter, suggestions, GLQL,
 remaining surfaces and complete product acceptance remain open.
 
 [Evidence and retained failures](../../artifacts/gitlab-native-diagram-integration-20261112.json),
@@ -1170,11 +1170,54 @@ The eleven-suite upstream set is **329 passed / 2 failed / 331 total**; the orig
 unfinished code/media requirements stay failed and unskipped. Nineteen-file guarded
 source rollback/reinstall and eleven ordered patches verify.
 
-This establishes Linux Chromium acceptance for the documented flow, not persistent
-draft storage, saved invalid-diagram reader behavior or full product/browser/role
-acceptance. No public API, size limit, npm package or website release is changed.
+This establishes Linux Chromium acceptance for the documented authoring flow.
+Persistent draft storage and full product/browser/role acceptance remain open;
+the saved-reader follow-up is below. No public API, size limit, npm package or
+website release is changed.
 The recorded real-service evidence and current acceptance limits are in
 [the authoring checkpoint](../../artifacts/gitlab-diagram-authoring-integration-20261113.json).
+
+### Saved diagram reader recovery and cold images
+
+The recorded invalid-source audit exposed an unhandled Mermaid rejection and a
+visually hidden source carrier. The sandbox now catches the rejection and reports
+a fixed failure flag; the reader accepts it only from its own opaque-origin frame,
+shows a localized warning/Retry and reveals the original inert code. Successful
+retry restores the diagram view. Existing legacy consumers retain Mermaid's own
+error graphic. PlantUML already returns a readable provider syntax-error image;
+its source carrier is preserved and is not replaced with a fabricated diagram.
+
+The same real run reproduced the earlier intermittent 1×1 lazy-image failure.
+GitLab swaps a decoded placeholder for the actual source after Markdown rendering,
+so an initialization hook at that later source switch reserves temporary space.
+Load/error removes only the owned marker and sizing classes; authored width/height
+and existing classes survive. The normal GFM entry is restored byte for byte to
+its pinned source. The discarded GFM-hook experiment and its failed positive probe
+are retained as evidence, rather than counted as an image repair.
+
+The final actual-service journey passes **23 checks** on issue 92: invalid source
+survives UI save/reopen/restart, reader retry and mobile feedback remain usable,
+and both sources reopen verbatim for native repair, UI saving and another reader
+reload. The image probe observes **32×32 pending → 400×60 decoded** and removal of
+temporary sizing. The scoped error region has zero axe violations and the run has
+zero browser errors. Reader/error/mobile/source-repair screenshots and representative
+recording frames are visually reviewed. Provider settings are restored and both
+task containers stop afterward.
+
+All **5,900 unit tests/359 files**, current types/API and existing size limits pass.
+The seventeen-suite GitLab set is **415 passed / 2 failed / 1 original skipped /
+418 total**. The original code/media requirements remain failed and unskipped;
+the existing expensive Mermaid-count case remains skipped as in the pinned source.
+No new skip or timeout increase waives a failure. Format 10 guards twenty-two
+files, and twelve ordered patches reconstruct the tested specs. Source rollback/
+reinstall succeeds; compiled deployment rollback remains separate work.
+
+This is Linux Chromium evidence for the documented grammar-error/image flows.
+Iframe bootstrap failures, broader browser/role/concurrency coverage and the full
+product remain unverified. These are private host-view repairs, with no public
+engine/API, size-limit, npm or website release changes.
+[Evidence and retained failures](../../artifacts/gitlab-diagram-reader-integration-20261113.json),
+[actual recorded journey](../../artifacts/gitlab-native-diagram-reader-20261113/report.json).
 
 ### Remaining full application acceptance
 

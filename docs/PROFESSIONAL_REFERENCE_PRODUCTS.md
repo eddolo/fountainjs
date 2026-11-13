@@ -25,7 +25,7 @@ The [GitLab integration work area](../integrations/gitlab/README.md) pins the
 upstream revision and documents completion requirements. Fountain now mounts in
 the actual GitLab issue and discussion composers, with real rendering, uploads,
 links, ordinary code, alerts, media properties/playback and native diagram source/
-preview workflows under verification. Normal account sign-in,
+preview/reader-recovery workflows under verification. Normal account sign-in,
 server persistence, private access checks and application restarts are exercised
 against the real local GitLab installation. This remains an incomplete integration;
 the full workflow/role/surface matrix below is the completion requirement.

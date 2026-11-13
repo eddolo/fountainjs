@@ -36,6 +36,9 @@ export function prepareGitLabDiagramSandbox(source) {
         return;
       }
       activeFountainRequestId = undefined;
-      drawDiagram(mermaid, source);`);
+      drawDiagram(mermaid, source).catch(() => {
+        // Preserve Mermaid's own error graphic for other legacy consumers.
+        window.parent.postMessage({ fountainDiagramError: true }, window.location.origin);
+      });`);
   return source;
 }

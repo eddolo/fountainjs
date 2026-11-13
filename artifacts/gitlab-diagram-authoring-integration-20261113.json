@@ -45,8 +45,8 @@
   "installation": {
     "format": 7,
     "files": 19,
-    "manifest": "artifacts/gitlab-native-browser-install/install.json",
-    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "manifest": "artifacts/gitlab-diagram-authoring-checkpoint-install-20261113.json",
+    "runtimeManifest": "artifacts/gitlab-diagram-authoring-checkpoint-build-20261113.json",
     "sourceRoundtrip": "artifacts/gitlab-native-diagram-authoring-install-roundtrip-20261113.json",
     "patchVerification": "artifacts/gitlab-native-diagram-authoring-patch-verification-20261113.json",
     "build": "artifacts/gitlab-diagram-authoring-rspack-20261113.log",

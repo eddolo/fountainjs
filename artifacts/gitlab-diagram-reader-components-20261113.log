@@ -1,0 +1,15 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-reader-components-20261113.json spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js spec/frontend/behaviors/markdown/render_sandboxed_mermaid_spec.js spec/frontend/behaviors/components/sandboxed_mermaid_spec.js
+PASS spec/frontend/behaviors/markdown/render_sandboxed_mermaid_spec.js
+PASS spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js
+PASS spec/frontend/behaviors/components/sandboxed_mermaid_spec.js
+
+Test Suites: 3 passed, 3 total
+Tests:       1 skipped, 48 passed, 49 total
+Snapshots:   0 total
+Time:        3.677 s
+Ran all test suites matching /spec\/frontend\/behaviors\/markdown\/fountain_diagram_reader_spec.js|spec\/frontend\/behaviors\/markdown\/render_sandboxed_mermaid_spec.js|spec\/frontend\/behaviors\/components\/sandboxed_mermaid_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-reader-components-20261113.json
+Done in 5.05s.

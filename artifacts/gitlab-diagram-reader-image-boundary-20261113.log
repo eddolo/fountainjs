@@ -1,0 +1,15 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-reader-image-boundary-20261113.json spec/frontend/behaviors/markdown/fountain_reader_images_spec.js spec/frontend/behaviors/markdown/render_gfm_spec.js spec/frontend/lazy_loader_spec.js
+PASS spec/frontend/lazy_loader_spec.js
+PASS spec/frontend/behaviors/markdown/render_gfm_spec.js
+PASS spec/frontend/behaviors/markdown/fountain_reader_images_spec.js
+
+Test Suites: 3 passed, 3 total
+Tests:       38 passed, 38 total
+Snapshots:   0 total
+Time:        3.005 s
+Ran all test suites matching /spec\/frontend\/behaviors\/markdown\/fountain_reader_images_spec.js|spec\/frontend\/behaviors\/markdown\/render_gfm_spec.js|spec\/frontend\/lazy_loader_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-reader-image-boundary-20261113.json
+Done in 4.31s.

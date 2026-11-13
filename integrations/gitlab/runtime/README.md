@@ -17,6 +17,17 @@ connect to an existing GitLab account or installation. Metrics are disabled and
 service concurrency is reduced for this small local test environment; these
 settings are not performance or deployment recommendations.
 
+GitLab deletes its temporary `initial_root_password` file after a day. The audit
+driver first reuses the root-only `/etc/gitlab/fountain-audit-password` file when
+available, or the temporary initial file. If neither exists, it initializes a
+new random password for the dedicated local root account through GitLab's normal
+password model and stores it in the configuration volume with mode `0600`.
+This happens only after the image, Compose project and revision guards pass, and
+after application readiness. Existing database records remain intact. Subsequent
+runs use normal browser sign-in with the retained credential. Credential values
+stay outside the checkout, reports, command arguments and browser storage-state
+files; captured process failures are replaced with fixed diagnostic categories.
+
 ```sh
 docker compose -f integrations/gitlab/runtime/compose.yaml config --quiet
 docker compose -f integrations/gitlab/runtime/compose.yaml pull
@@ -175,12 +186,14 @@ cases. Then apply `gitlab-19.5.3-native-link-tests.patch` and
 `gitlab-19.5.3-native-alert-tests.patch`. Follow with
 `gitlab-19.5.3-native-media-tests.patch`,
 `gitlab-19.5.3-native-reference-tests.patch` and
-`gitlab-19.5.3-native-diagram-tests.patch` in that order. The eleven patches retain
+`gitlab-19.5.3-native-diagram-tests.patch`, then
+`gitlab-19.5.3-native-diagram-reader-tests.patch` in that order. The twelve patches retain
 the original incomplete media/code-menu requirements while adding the native
-behavior tests. The current eleven-suite set is **329 passed / 2 failed / 331 cases**,
-including 64 work-item, 75 host-Markdown, 40 form, 24 code-menu, eight diagram-preview,
-three paired-authoring host,
-18 media, 13 reference, eight link and eleven alert cases. Full specialized-code
+behavior tests. The current seventeen-suite set is **415 passed / 2 failed /
+1 original skipped / 418 cases**, including the original Mermaid, GFM and
+lazy-loader suites, nine new reader-recovery cases and ten image-loading cases.
+The original expensive Mermaid-count test remains skipped; no new skip is added.
+Full specialized-code
 and media requirements remain failed and unskipped; frontmatter, suggestions and
 GLQL are not established by the diagram work.
 Forward/reverse checks reconstruct the native specs exactly
@@ -196,6 +209,12 @@ corepack yarn jest --runInBand \
   spec/frontend/content_editor/components/fountain_reference_menu_spec.js \
   spec/frontend/content_editor/components/fountain_diagram_preview_spec.js \
   spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js \
+  spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js \
+  spec/frontend/behaviors/markdown/fountain_reader_images_spec.js \
+  spec/frontend/behaviors/markdown/render_sandboxed_mermaid_spec.js \
+  spec/frontend/behaviors/components/sandboxed_mermaid_spec.js \
+  spec/frontend/behaviors/markdown/render_gfm_spec.js \
+  spec/frontend/lazy_loader_spec.js \
   spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js \
   spec/frontend/issuable/issuable_form_spec.js \
   spec/frontend/work_items/components/work_item_description_spec.js
@@ -205,13 +224,14 @@ The installer checks source revision, prepared-file digests, runtime input hashe
 and existing owned-file hashes. It rejects unrecognized edits and symlinks. It
 retains original source files for rollback and formats installed components with
 GitLab's own Prettier/Tailwind configuration. Its install manifest identifies
-every changed file. Format 7 guards nineteen files, including the native
-menus, preview component and correlated Mermaid sandbox. It retains the original
-sandbox source as well as the prepared host/renderer/Babel files. Earlier retained generations
+every changed file. Format 10 guards twenty-two files, including the native
+menus, preview component, correlated Mermaid sandbox, reader and image loader.
+It retains their pinned/prepared sources for guarded restoration. The superseded
+GFM image hook is restored to pinned source when upgrading format 9. Earlier retained generations
 remain recognizable for guarded upgrade/restore. The native runtime and renderer
 CSS are local build inputs.
 
-Verify the eleven ordered test patches without changing the upstream worktree or
+Verify the twelve ordered test patches without changing the upstream worktree or
 its main index:
 
 ```sh
@@ -219,6 +239,10 @@ node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source --diagrams
 # Store this follow-up's verification separately from the earlier diagram run:
 node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source --diagram-authoring
 node scripts/check-gitlab-native-install.mjs /absolute/gitlab-source --diagram-authoring
+# Current saved-reader/image checkpoint (prepare its twelfth patch first):
+node scripts/prepare-gitlab-diagram-reader-tests.mjs /absolute/gitlab-source
+node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source --diagram-reader
+node scripts/check-gitlab-native-install.mjs /absolute/gitlab-source --diagram-reader
 ```
 
 Native imports request `no_header_anchors` through the real host callback;
@@ -253,6 +277,8 @@ node scripts/run-gitlab-native-browser-audit.mjs --references --reference-contex
 node scripts/run-gitlab-native-browser-audit.mjs --diagrams
 # Paired source/preview draft, cancel/apply/undo and responsive modal journey:
 node scripts/run-gitlab-native-browser-audit.mjs --diagram-authoring
+# Invalid saved source, reader fallback/retry, cold images and native repair:
+node scripts/run-gitlab-native-browser-audit.mjs --diagram-reader
 # Read-only renderer fixture capture (not a product acceptance run):
 node scripts/run-gitlab-native-browser-audit.mjs --alert-fixtures
 # Diagram HTML fixtures use the isolated provider and temporarily enable PlantUML:

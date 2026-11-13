@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
@@ -9,6 +9,7 @@ import { auditNativeAlerts, assertSavedNativeAlerts } from './audit-gitlab-nativ
 import { auditNativeMedia, assertSavedNativeMedia } from './audit-gitlab-native-media.mjs';
 import { auditNativeReferences, assertSavedNativeReferences } from './audit-gitlab-native-references.mjs';
 import { auditNativeDiagrams, assertSavedNativeDiagrams } from './audit-gitlab-native-diagrams.mjs';
+import { prepareInvalidSavedDiagrams, assertInvalidSavedDiagrams, repairInvalidSavedDiagrams } from './audit-gitlab-diagram-reader.mjs';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
@@ -16,7 +17,9 @@ const nativeCapacity = process.argv.includes('--native-attachment-capacity');
 const nativeLinks = process.argv.includes('--native-links');
 const nativeCode = process.argv.includes('--native-code');
 const nativeDiagramAuthoring = process.argv.includes('--native-diagram-authoring');
-const nativeDiagrams = process.argv.includes('--native-diagrams') || nativeDiagramAuthoring;
+const nativeDiagramReader = process.argv.includes('--native-diagram-reader');
+const nativeDiagrams = process.argv.includes('--native-diagrams') || nativeDiagramAuthoring || nativeDiagramReader;
+const assertDiagramReader = nativeDiagramReader ? assertInvalidSavedDiagrams : assertSavedNativeDiagrams;
 const nativeAlerts = process.argv.includes('--native-alerts');
 const nativeReferenceContexts = process.argv.includes('--reference-contexts');
 const nativeReferences = process.argv.includes('--native-references') || nativeReferenceContexts;
@@ -29,7 +32,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeDiagramReader ? 'artifacts/gitlab-native-diagram-reader-20261113/' : nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -89,11 +92,40 @@ const revision = compose(
 ).trim();
 if (revision !== pin.packagedRevision)
   throw new Error('The running application revision differs from the pin.');
-const password = compose('exec', '-T', 'baseline', 'cat', '/etc/gitlab/initial_root_password')
-  .match(/^Password:\s*(.+)$/m)?.[1]
-  .trim();
-if (!password)
-  throw new Error('The local initial password is unavailable; no credentials were recorded.');
+let password;
+// This is reached only after the dedicated image/project/revision checks above.
+// GitLab deletes initial_root_password after a day. Keep the audit account usable
+// without recreating its database or putting a credential in the source checkout.
+function loadAuditPassword() {
+  let stage = 'read';
+  try {
+    const existing = compose('exec', '-T', 'baseline', 'sh', '-c',
+      'if test -f /etc/gitlab/fountain-audit-password; then test "$(stat -c %a /etc/gitlab/fountain-audit-password)" = 600 || exit 1; printf "FOUNTAIN_AUDIT_PASSWORD:"; cat /etc/gitlab/fountain-audit-password; elif test -f /etc/gitlab/initial_root_password; then cat /etc/gitlab/initial_root_password; fi');
+    const retained = existing.match(/^FOUNTAIN_AUDIT_PASSWORD:([^\r\n]+)$/m)?.[1]
+      || existing.match(/^Password:\s*(.+)$/m)?.[1];
+    if (retained) return { password: retained.trim(), source: existing.startsWith('FOUNTAIN_AUDIT_PASSWORD:') ? 'protected-task-config' : 'temporary-initial-file' };
+    const created = 'Fjs!9aA' + randomBytes(48).toString('base64url');
+    const input = (args, value) => execFileSync(process.platform === 'win32' ? 'wsl' : 'docker',
+      [...(process.platform === 'win32' ? ['-d', 'Ubuntu', '--', 'docker'] : []), ...args],
+      { encoding: 'utf8', input: value, timeout: 120000, stdio: ['pipe', 'pipe', 'pipe'] });
+    // The generated alphabet contains no Ruby quote/escape characters. Send it
+    // through stdin, never command arguments, and use GitLab's normal password model.
+    stage = 'account initialization';
+    const result = input(['exec', '-i', container, 'gitlab-rails', 'runner', '-'],
+      `user = User.find_by!(username: 'root')\nuser.password = '${created}'\nuser.password_confirmation = user.password\nuser.save!\nSTDOUT.write('FOUNTAIN_AUDIT_PASSWORD_SET')\n`);
+    if (!result.includes('FOUNTAIN_AUDIT_PASSWORD_SET')) throw new Error();
+    // gitlab-rails runs as git; Docker's root process owns this separate mode-600
+    // configuration file. Never let the Rails process write protected config.
+    stage = 'credential storage';
+    input(['exec', '-i', container, 'sh', '-c',
+      'umask 077; set -C; cat > /etc/gitlab/fountain-audit-password'], created);
+    return { password: created, source: 'provisioned-protected-task-config' };
+  } catch (error) {
+    // A child-process exception can carry captured credential output. Never rethrow it.
+    const category = String(error.stderr || '').match(/EACCES|Permission denied|ActiveRecord::RecordInvalid|SyntaxError|Unknown option|Errno::[A-Za-z]+/)?.[0] || 'operation failed';
+    throw new Error(`Unable to initialize the pinned isolated GitLab audit account (${stage}: ${category}); no credential output was recorded.`);
+  }
+}
 
 const report = {
   date: new Date().toISOString(),
@@ -104,7 +136,7 @@ const report = {
     : 'Original GitLab product baseline; Fountain is not installed in this application',
   pin,
   checks: [],
-  secrets: 'Password/session used in memory only; no traces or storage-state files',
+  secrets: 'Credential stays in protected task-container configuration and process memory; no credential values, traces or browser storage-state files are recorded',
   preparedHost,
   nativeBrowser,
   nativeInsertion,
@@ -130,6 +162,18 @@ try {
   context = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
     recordVideo: { dir: fileURLToPath(new URL('recordings/', output)) },
+  });
+  if (nativeDiagramReader) await context.addInitScript(() => {
+    window.fountainReaderImageEvents = [];
+    new MutationObserver(records => {
+      records.forEach(record => {
+        const image = record.target;
+        if (!(image instanceof HTMLImageElement) || !image.getAttribute('src')?.endsWith('/fountain-baseline-figure.png')) return;
+        const rect = image.getBoundingClientRect();
+        window.fountainReaderImageEvents.push({ pending: image.hasAttribute('data-fountain-reader-image-pending'),
+          width: rect.width, height: rect.height });
+      });
+    }).observe(document, { subtree: true, attributes: true, attributeFilter: ['data-fountain-reader-image-pending'] });
   });
   if (nativeInsertion)
     await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: baseURL });
@@ -188,6 +232,9 @@ try {
     }).toPass({ timeout: 180_000, intervals: [1000, 2000, 5000] });
   };
   await ready();
+  const auditCredential = loadAuditPassword();
+  password = auditCredential.password;
+  report.auditCredentialSource = auditCredential.source;
   await page.goto(`${baseURL}/users/sign_in`);
   await page.getByLabel('Username or primary email').fill('root');
   await page.getByLabel('Password', { exact: true }).fill(password);
@@ -291,6 +338,14 @@ try {
   await expect
     .poll(() => image.evaluate((element) => element.complete && element.naturalWidth > 0))
     .toBe(true);
+  if (nativeDiagramReader) {
+    await expect(image).not.toHaveAttribute('data-fountain-reader-image-pending', '');
+    report.readerImageInitialization = await image.evaluate(element => ({ events: window.fountainReaderImageEvents,
+      decodedWidth: element.naturalWidth, decodedHeight: element.naturalHeight,
+      temporaryClassesRetained: element.classList.contains('!gl-min-w-7') || element.classList.contains('!gl-min-h-7') }));
+    expect(report.readerImageInitialization.events.some(event => event.pending && event.width > 1 && event.height > 1)).toBe(true);
+    expect(report.readerImageInitialization.temporaryClassesRetained).toBe(false);
+  }
   await expect(page.locator('main .katex').first()).toBeVisible();
   await page.screenshot({
     path: fileURLToPath(new URL('original-rendered.png', output)),
@@ -375,6 +430,7 @@ try {
     if (nativeMedia) await auditNativeMedia({ page, context, editor, toolbar, output, report });
     if (nativeReferences) await auditNativeReferences({ page, context, editor, toolbar, output, report });
     if (nativeDiagrams) await auditNativeDiagrams({ page, context, editor, toolbar, output, report, pairedAuthoring: nativeDiagramAuthoring });
+    if (nativeDiagramReader) await prepareInvalidSavedDiagrams({ page, editor, toolbar, output, report });
     if (nativeAttachments) {
       if (process.argv.includes('--probe-upload-focus')) await editor.evaluate(element => {
         const root = element.closest('[data-fountain-integration="native"]');
@@ -596,8 +652,8 @@ try {
     report.checks.push('Actual UI Save retains reference display source and qualification; the real GitLab reader renders the issue, merge-request and colored-label references');
   }
   if (nativeDiagrams) {
-    await assertSavedNativeDiagrams({ page, description: saved.description, report, output, phase: 'saved' });
-    report.checks.push('Actual UI Save retains both edited diagram sources; the GitLab reader renders the published Mermaid node and decodes the actual PlantUML provider image');
+    await assertDiagramReader({ page, description: saved.description, report, output, phase: 'saved' });
+    report.checks.push(nativeDiagramReader ? 'Actual UI Save retains invalid diagram source and shows explicit reader failure output' : 'Actual UI Save retains both edited diagram sources; the GitLab reader renders the published Mermaid node and decodes the actual PlantUML provider image');
   }
   if (nativeInsertion) {
     expect(saved.description).toContain('Pasted **GitLab Markdown** with <span>@root</span>.');
@@ -715,7 +771,7 @@ try {
   if (nativeAlerts) await assertSavedNativeAlerts({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeMedia) await assertSavedNativeMedia({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeReferences) await assertSavedNativeReferences({ page, description: saved.description, report, output, phase: 'reopened' });
-  if (nativeDiagrams) await assertSavedNativeDiagrams({ page, description: saved.description, report, output, phase: 'reopened' });
+  if (nativeDiagrams) await assertDiagramReader({ page, description: saved.description, report, output, phase: 'reopened' });
   await page
     .getByRole('img', { name: 'Uploaded baseline figure', exact: true })
     .scrollIntoViewIfNeeded();
@@ -767,7 +823,7 @@ try {
     if (nativeAlerts) await assertSavedNativeAlerts({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeMedia) await assertSavedNativeMedia({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeReferences) await assertSavedNativeReferences({ page, description: reopened.description, report, output, phase: 'restart' });
-    if (nativeDiagrams) await assertSavedNativeDiagrams({ page, description: reopened.description, report, output, phase: 'restart' });
+    if (nativeDiagrams) await assertDiagramReader({ page, description: reopened.description, report, output, phase: 'restart' });
     const reopenedImage = page.getByRole('img', {
       name: 'Uploaded baseline figure',
       exact: true,
@@ -786,11 +842,21 @@ try {
       'Exact saved server source, authenticated session and uploaded image survive an actual application-container restart',
     );
   }
+  if (nativeDiagramReader) {
+    await repairInvalidSavedDiagrams({ page, report, output });
+    const repaired = await api('GET', `/projects/${project.id}/issues/${issue.iid}`);
+    const repairedReport = { nativeDiagrams: report.nativeInvalidDiagrams.valid };
+    await assertSavedNativeDiagrams({ page, description: repaired.description, report: repairedReport, output, phase: 'repaired' });
+    await page.reload();
+    await assertSavedNativeDiagrams({ page, description: repaired.description, report: repairedReport, output, phase: 'repaired-reopened' });
+    report.nativeInvalidDiagrams.repair = { source: repaired.description, phases: repairedReport.nativeDiagramReaderPhases };
+    report.checks.push('Both invalid saved sources reopen verbatim in native dialogs after restart; actual source repair, UI saving and reader reload restore working Mermaid and PlantUML diagrams');
+  }
   expect(browserErrors).toEqual([]);
   report.status = 'passed';
 } catch (error) {
   report.status = 'failed';
-  report.error = String(error).replaceAll(password, '[redacted]');
+  report.error = password ? String(error).replaceAll(password, '[redacted]') : String(error);
   if (nativeMedia) report.nativeMediaFailure = await context.pages()[0]?.evaluate(() => ({
     host: (() => {
       const owner = document.querySelector('[data-fountain-integration="native"]');

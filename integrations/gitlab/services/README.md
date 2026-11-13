@@ -215,7 +215,13 @@ stale-result rejection and fixed error messages for native previews. The parent
 accepts messages only from its own opaque-origin iframe and current request;
 the existing GitLab link policy remains in use. Source changes are debounced,
 unresponsive previews expose Retry, and closure releases timers/listeners.
-Existing reader messages retain their legacy contract.
+Existing successful reader messages retain their legacy contract. Legacy parse
+failures are caught and send a fixed failure flag without parser HTML. GitLab's
+reader accepts that flag only from its own opaque-origin frame, reveals the
+original inert code carrier, shows a localized error and offers Retry. Successful
+retry hides the source carrier again. Mermaid's own error graphic remains intact
+for other legacy consumers. The existing resize-removal lifecycle also releases
+the reader's message listener and error UI.
 
 PlantUML uses the real configured GitLab renderer and its returned image. The
 enabled HTML carrier's canonical base64 is decoded as strict UTF-8 before
@@ -228,9 +234,18 @@ The reproducible local audit uses the pinned optional service in
 `runtime/compose.diagrams.yaml`, following the [official PlantUML server setup](https://plantuml.com/starting).
 It enables the service only in the isolated task GitLab instance, restores the
 prior application settings, and stops both containers afterward. This is a
-private GitLab adapter, not a new public npm diagram-renderer API. Saved
-invalid-diagram reader behavior and broader engine/role coverage remain further
-product acceptance work.
+private GitLab adapter, not a new public npm diagram-renderer API. Broader
+engine/role coverage remains further product acceptance work.
+
+GitLab's lazy-image loader swaps a decoded 1×1 placeholder for its real URL after
+Markdown rendering. The reader-only image hook reserves temporary geometry at
+that source switch, after `loading="lazy"` and the real source are installed.
+It preserves explicit width/height, eager or already-complete images and existing
+classes; load/error removes only the owned marker and temporary sizing. Images
+outside `.md` content keep the original loader path. The failed later-GFM-hook
+experiment is retained in the audit evidence; `render_gfm.js` is restored to its
+pinned source. These are browser-view changes, outside the platform-neutral
+document service and public npm entry points.
 
 Deleting the final block in a required list item, quote or table cell retains an
 editable paragraph. Removing a root block lands at the immediate successor.

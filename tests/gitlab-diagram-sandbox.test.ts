@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { runInNewContext } from 'node:vm';
 import { prepareGitLabDiagramSandbox } from '../integrations/gitlab/services/diagram_sandbox_patch.mjs';
+import { prepareGitLabMermaidReader } from '../integrations/gitlab/services/diagram_reader_patch.mjs';
 
 const source = readFileSync(new URL('../integrations/gitlab/fixtures/mermaid-sandbox-upstream.js', import.meta.url), 'utf8');
 function setup(render = vi.fn(async () => ({ svg: '<svg>current</svg>' }))) {
@@ -61,4 +62,18 @@ it('ignores invalid native request IDs and foreign origins, while preserving leg
   send('legacy'); await settle();
   expect(render).toHaveBeenCalledWith('mermaid', 'legacy');
   expect(messages).toEqual([{ h: 100, w: 200 }]);
+});
+
+it('reports a fixed legacy-reader failure instead of leaking an unhandled parser rejection', async () => {
+  const { send, messages, app, removed } = setup(vi.fn(async () => { throw new Error('<img src=x onerror="alert(1)">'); }));
+  send('invalid saved diagram'); await settle();
+  expect(messages).toEqual([{ fountainDiagramError: true }]);
+  expect(app.textContent).toBe(''); expect(removed).toEqual([]);
+});
+
+it('guards the exact pinned reader boundary before installing source recovery', () => {
+  const reader = readFileSync(new URL('../integrations/gitlab/fixtures/mermaid-reader-upstream.js', import.meta.url), 'utf8');
+  expect(createHash('sha256').update(reader).digest('hex')).toBe('3c349fe6816d139177ce6e9bc04eecbdb2a93fe72fbf345986ac483942f05786');
+  expect(() => prepareGitLabMermaidReader(reader)).not.toThrow();
+  expect(() => prepareGitLabMermaidReader(reader.replace('hasRendered = true;', 'hasRendered = false;'))).toThrow('pinned');
 });

@@ -1,0 +1,15 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/behaviors/markdown/render_sandboxed_mermaid.js app/assets/javascripts/lib/mermaid_sandbox.js spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/behaviors/markdown/render_sandboxed_mermaid.js
+  160:71  error  'renderSandbox' was used before it was defined  no-use-before-define
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js
+  46:75  error  Prefer a stronger matcher like `toBe(true)`  jest/no-restricted-matchers
+
+✖ 2 problems (2 errors, 0 warnings)
+
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

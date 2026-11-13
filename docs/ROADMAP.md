@@ -2,6 +2,22 @@
 
 Updated 2026-11-13.
 
+The latest GitLab checkpoint verifies saved invalid-diagram recovery. Mermaid
+parse errors are caught, the reader exposes its original inert source with Retry,
+and native editing repairs both Mermaid and PlantUML after save/reopen/restart.
+The actual run also reproduced a lazy-image failure: the decoded 1×1 placeholder
+could remain collapsed when its real source was installed. The reader now reserves
+space at that source switch, removes only its temporary sizing after load/error,
+and preserves authored dimensions. The recorded journey passes **23 checks** with
+zero browser errors and scoped axe violations; measured image geometry changes
+from 32×32 pending to its natural 400×60 with the temporary classes removed.
+All **5,900 root tests/359 files**, current types/API and existing size checks pass.
+The seventeen-suite upstream set is **415 passed / 2 failed / 1 original skipped /
+418 total**. Twenty-two-file source rollback/reinstall and twelve ordered test
+patches verify. Broader browsers, roles, source fidelity, remaining GitLab surfaces
+and both other full products remain open. No publication or parity promotion.
+[Reader evidence and retained failures](../artifacts/gitlab-diagram-reader-integration-20261113.json).
+
 The latest GitLab follow-up pairs diagram source and live preview in a responsive
 authoring dialog. Draft previews leave the document unchanged; Apply targets the
 captured block in one undoable transaction, Cancel discards the local draft, and
@@ -12,7 +28,7 @@ pass. The eleven-suite upstream set is **329 passed / 2 failed / 331 total**.
 The recorded real GitLab journey passes **24 checks**, including edited diagrams
 after save/reopen/restart, a visually reviewed 360px layout and zero dialog axe
 violations. Nineteen-file source rollback/reinstall and eleven ordered test
-patches verify. Saved invalid-diagram reader behavior, other browser/role/surface
+patches verify. At that checkpoint, saved invalid-diagram reader behavior, other browser/role/surface
 coverage and both other full products remain open. Nothing is published.
 [Authoring evidence and limits](../artifacts/gitlab-diagram-authoring-integration-20261113.json).
 

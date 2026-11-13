@@ -1,0 +1,5 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/behaviors/markdown/fountain_reader_images.js app/assets/javascripts/behaviors/markdown/render_gfm.js spec/frontend/behaviors/markdown/fountain_reader_images_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+Done in 4.58s.

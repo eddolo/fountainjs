@@ -1,0 +1,61 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-reader-jest-20261113.json spec/frontend/content_editor/components/content_editor_spec.js spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js spec/frontend/work_items/components/work_item_description_spec.js spec/frontend/content_editor/components/fountain_reference_menu_spec.js spec/frontend/content_editor/components/fountain_media_menu_spec.js spec/frontend/content_editor/components/fountain_link_menu_spec.js spec/frontend/content_editor/components/fountain_code_menu_spec.js spec/frontend/content_editor/components/fountain_alert_menu_spec.js spec/frontend/issuable/issuable_form_spec.js spec/frontend/content_editor/components/fountain_diagram_preview_spec.js spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js spec/frontend/behaviors/markdown/render_sandboxed_mermaid_spec.js spec/frontend/behaviors/components/sandboxed_mermaid_spec.js
+FAIL spec/frontend/content_editor/components/content_editor_spec.js
+  ● ContentEditor › renders media bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      685 |     createWrapper();
+      686 |
+    > 687 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      688 |   });
+      689 |
+      690 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:687:55)
+
+  ● ContentEditor › renders codeBlock bubble menu
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      685 |     createWrapper();
+      686 |
+    > 687 |     expect(wrapper.findComponent(component).exists()).toBe(true);
+          |                                                       ^
+      688 |   });
+      689 |
+      690 |   it('renders an editor mode dropdown', () => {
+
+      at toBe (spec/frontend/content_editor/components/content_editor_spec.js:687:55)
+
+PASS spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+PASS spec/frontend/work_items/components/work_item_description_spec.js
+PASS spec/frontend/content_editor/components/fountain_reference_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_media_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_link_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_diagram_preview_spec.js
+PASS spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js
+PASS spec/frontend/content_editor/components/fountain_code_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_alert_menu_spec.js
+PASS spec/frontend/behaviors/components/sandboxed_mermaid_spec.js
+PASS spec/frontend/behaviors/markdown/render_sandboxed_mermaid_spec.js
+PASS spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js
+PASS spec/frontend/issuable/issuable_form_spec.js
+
+Test Suites: 1 failed, 13 passed, 14 total
+Tests:       2 failed, 1 skipped, 377 passed, 380 total
+Snapshots:   0 total
+Time:        37.526 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/content_editor_spec.js|spec\/frontend\/vue_shared\/components\/markdown\/markdown_editor_spec.js|spec\/frontend\/work_items\/components\/work_item_description_spec.js|spec\/frontend\/content_editor\/components\/fountain_reference_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_media_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_link_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_alert_menu_spec.js|spec\/frontend\/issuable\/issuable_form_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_preview_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_authoring_host_spec.js|spec\/frontend\/behaviors\/markdown\/fountain_diagram_reader_spec.js|spec\/frontend\/behaviors\/markdown\/render_sandboxed_mermaid_spec.js|spec\/frontend\/behaviors\/components\/sandboxed_mermaid_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-diagram-reader-jest-20261113.json
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

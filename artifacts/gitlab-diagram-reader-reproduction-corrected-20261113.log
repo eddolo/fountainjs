@@ -1,0 +1,48 @@
+ Container fountain-gitlab-integration-diagram-server-1  Starting
+ Container fountain-gitlab-integration-diagram-server-1  Started
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{
+  "status": "failed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "mermaid: the actual block-type selector creates a new block; native multiline typing and real preview work, and delete/undo/redo retain every source character",
+    "plantuml: the actual block-type selector creates a new block; native multiline typing and real preview work, and delete/undo/redo retain every source character",
+    "Real GitLab Markdown imports Mermaid code and the enabled PlantUML image/source carrier into native editable source blocks without flattening the diagram",
+    "The script-only real Mermaid sandbox renders a diagram; actual invalid native typing produces a recoverable preview error, and Undo restores source and a working preview without page errors",
+    "Native multiline editing updates the actual Mermaid preview, and Copy code writes the complete updated source to the real browser clipboard",
+    "Actual offline PlantUML preview failure retains the source; explicit online retry uses GitLab rendering and decodes the real isolated PlantUML server image",
+    "Actual PlantUML source editing updates a real image; conversion to ordinary code and one-step undo retain every source character",
+    "Diagram deletion/undo retains source; the restored real sandbox works at 360px without horizontal page overflow, and the preview region has no axe violations",
+    "Actual native source dialogs preserve deliberately invalid Mermaid/PlantUML source for saving without pretending that it is a rendered diagram",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value"
+  ],
+  "error": "Error: A saved invalid Mermaid must have a visible reader error\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false"
+}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+ Container fountain-gitlab-integration-diagram-server-1  Stopping
+ Container fountain-gitlab-integration-diagram-server-1  Stopped
+node:internal/errors:983
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /home/eddolo/.cache/fountainjs-gitlab-product/toolchain/node-v22.23.1-linux-x64/bin/node /mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/audit-gitlab-product-baseline.mjs --native-diagram-reader --verify-restart
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:916:11)
+    at execFileSync (node:child_process:952:15)
+    at file:///mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/run-gitlab-native-browser-audit.mjs:32:3 {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 1159,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v22.23.1

@@ -1,0 +1,179 @@
+{
+  "date": "2026-11-13",
+  "status": "partial-native-product-integration",
+  "parentRevision": "0a08cf6576c31a44713c059d6ab4f194e8fb119f",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Legacy Mermaid render rejections are caught; its reader validates the own opaque-origin frame before revealing original inert source, localized failure feedback and Retry",
+    "PlantUML retains its actual readable provider syntax-error image and canonical source carrier",
+    "Both invalid sources survive save/reopen/restart and reopen verbatim for native repair, UI saving and a working reader reload",
+    "Lazy reader images reserve temporary geometry at the real placeholder/source transition, preserve explicit sizes/classes and release owned state after load/error",
+    "Isolated test sign-in survives deletion of GitLab initial_root_password; protected task-container credentials and normal UI authentication preserve existing records"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Linux Chromium",
+    "checks": 23,
+    "issueIID": 92,
+    "report": "artifacts/gitlab-native-diagram-reader-20261113/report.json",
+    "invalidPhases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "repairPhases": [
+      "repaired",
+      "repaired-reopened"
+    ],
+    "errors": [],
+    "accessibilityViolations": [],
+    "settingsRestored": true,
+    "imageInitialization": {
+      "events": [
+        {
+          "pending": true,
+          "width": 32,
+          "height": 32
+        },
+        {
+          "pending": false,
+          "width": 400,
+          "height": 60
+        }
+      ],
+      "decodedWidth": 400,
+      "decodedHeight": 60,
+      "temporaryClassesRetained": false
+    }
+  },
+  "units": {
+    "tests": 5900,
+    "files": 359,
+    "newCases": 2,
+    "report": "artifacts/gitlab-diagram-reader-unit-final-20261113.log"
+  },
+  "upstream": {
+    "suites": 17,
+    "passed": 415,
+    "failed": 2,
+    "skipped": 1,
+    "total": 418,
+    "newCases": 19,
+    "failures": [
+      "ContentEditor renders codeBlock bubble menu",
+      "ContentEditor renders media bubble menu"
+    ],
+    "inheritedSkipped": [
+      "Mermaid diagrams renderer dangerous diagrams stops rendering diagrams when the rendered diagrams count exceeds 50"
+    ],
+    "report": "artifacts/gitlab-diagram-reader-loader-jest-20261113.json",
+    "skipEvidence": "The skipped expensive-count case and its comment are unchanged from pinned upstream; no new skip/timeout waiver is introduced"
+  },
+  "installation": {
+    "format": 10,
+    "files": 22,
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "sourceRoundtrip": "artifacts/gitlab-native-diagram-reader-install-roundtrip-20261113.json",
+    "patchVerification": "artifacts/gitlab-native-diagram-reader-patch-verification-20261113.json",
+    "build": "artifacts/gitlab-diagram-reader-loader-rspack-20261113.log",
+    "lint": [
+      "artifacts/gitlab-diagram-reader-eslint-final-20261113.log",
+      "artifacts/gitlab-diagram-reader-loader-eslint-20261113.log"
+    ]
+  },
+  "publicLibrary": {
+    "changed": false,
+    "declarations": 450,
+    "sizeLimitsChanged": false,
+    "nativeModelRuntimeChanged": false,
+    "freshChecks": [
+      "5900 root unit tests",
+      "Root TypeScript",
+      "Public API surface",
+      "Existing size budgets"
+    ],
+    "inherited": "Public package/headless/runtime/format/performance evidence is unchanged; this is not a new complete pnpm check or hosted release run"
+  },
+  "visualReview": [
+    "Original failed Mermaid syntax graphic/hidden source and actual PlantUML syntax-error image inspected",
+    "Fixed desktop/mobile warning, retained inert source, provider image and native source-repair dialogs inspected",
+    "Repaired/reloaded reader inspected with both actual diagrams and retained baseline table/math/figure",
+    "Representative journey/repair video contact sheets inspected; detailed screenshots establish transient states"
+  ],
+  "retainedFailures": [
+    {
+      "path": "artifacts/gitlab-diagram-reader-original-20261113.log",
+      "reason": "GitLab had expired its temporary initial password file before browser setup"
+    },
+    {
+      "path": "artifacts/gitlab-diagram-reader-credential-failure-20261113/report.json",
+      "reason": "Initial Rails-side credential persistence failed; separate protected container storage now succeeds and subsequent normal sign-in is verified"
+    },
+    {
+      "path": "artifacts/gitlab-native-diagram-reader-failed-20261113/report.json",
+      "reason": "Original saved invalid Mermaid leaks a parser rejection and keeps its source visually clipped; PlantUML already returns a readable error PNG",
+      "install": "artifacts/gitlab-diagram-authoring-checkpoint-install-20261113.json"
+    },
+    {
+      "path": "artifacts/gitlab-native-diagram-reader-image-failed-20261113/report.json",
+      "reason": "Actual valid reader image remains 1x1/currentSrc empty while its authenticated file returns HTTP 200",
+      "install": "artifacts/gitlab-diagram-reader-pre-image-install-20261113.json"
+    },
+    {
+      "path": "artifacts/gitlab-native-diagram-reader-image-probe-failed-20261113/report.json",
+      "reason": "Image happens to load but the later GFM hook misses the placeholder/source boundary; no positive repair evidence, so the hook is moved to LazyLoader",
+      "install": "artifacts/gitlab-diagram-reader-gfm-image-install-20261113.json"
+    },
+    {
+      "path": "artifacts/gitlab-diagram-reader-sandbox-red-20261113.log",
+      "reason": "Legacy rejection reproduces in the exact transformed sandbox before repair"
+    },
+    {
+      "path": "artifacts/gitlab-diagram-reader-image-components-20261113.json",
+      "reason": "Initial cleanup left an empty class attribute; corrected to retain absent authored attributes"
+    }
+  ],
+  "limitations": [
+    "Linux Chromium only for the real reader workflow; iframe bootstrap/network failures and broader browser/physical-device/role/concurrency coverage remain unverified",
+    "This proves the observed cold-image/source-switch scenario, not every image replacement or custom host-style case",
+    "Two original code/media requirements, exact untouched-section source spelling retention, full GitLab surfaces and both other complete products remain open",
+    "Source rollback is verified; compiled deployment rollback and full production/hosted release acceptance remain open",
+    "Private host-view repairs; no public engine/API/capability promotion, npm or website release"
+  ],
+  "recordings": [
+    {
+      "path": "artifacts/gitlab-native-diagram-reader-20261113/recordings/page@1bd65046feee96954dde638a3bb81ca9.webm",
+      "bytes": 6423077,
+      "sha256": "0bec10e58fccb558e5f41bdf1d3805eeef2d6d7a7974cf8834ebb2eba3759d11",
+      "durationSeconds": 206.88
+    }
+  ],
+  "sources": {
+    "docs/PROFESSIONAL_REFERENCE_PRODUCTS.md": "6c2a07259db3d1f2f174dbbe31f5e6656f4efdf3ebb02ed866fb91102330c8c7",
+    "docs/ROADMAP.md": "87a4ef78d8ab9ceb751e6e3ea0c49a8034c42a4c2267c9d07ee7653e154cd725",
+    "integrations/gitlab/README.md": "b1cb1d036c5f23890374b736241b1b5c1dfcec98b8ed30583fdf3152ff0409e7",
+    "integrations/gitlab/runtime/README.md": "c39a12132238974118fb57ffbbf06d09cd2cf3ce0a7e32c46fca681f7d415a91",
+    "integrations/gitlab/services/README.md": "162afe69fc7b1b25c00a19fb33f37f05f13b22fe0d131abee5868b92ba08296c",
+    "integrations/gitlab/services/diagram_sandbox_patch.mjs": "a9e6b8bbcb026af3026286fcdb6b673d663e682169b47c9b061f0a53b9c4d323",
+    "scripts/audit-gitlab-product-baseline.mjs": "8714dc96f540af03a5897c102b5ea5e9da49b38b1c4cad3470e63a2d626362c8",
+    "scripts/check-gitlab-native-install.mjs": "35c0b95227b76129abd8a3e5e97cfd640418250afebea0147cd2937dd9c2cf22",
+    "scripts/check-gitlab-native-patches.mjs": "0f10f469c294cd58cf53366b80309e2196a01fa6656c8087bf92fb4839a5ac4b",
+    "scripts/install-gitlab-native-browser.mjs": "9d4b6374539cdc850a1633cb46a3d582e2f955ad98ca0a32328b2052edf69e40",
+    "scripts/run-gitlab-native-browser-audit.mjs": "8e3d39a8d442b62fe994641a8f39d95e48d24869e3c6eef31bfa5d4b6eec551d",
+    "tests/gitlab-diagram-sandbox.test.ts": "a1b8cb0ffd06cf3967c195b5a0d5f4f44e508b2e138d406c85796d76e0f1e2f4",
+    "integrations/gitlab/services/diagram_reader_patch.mjs": "c3413a9d58f86dfa0f30bc66518aa4fd7aea4b3ddada4ad1367389e34c290203",
+    "integrations/gitlab/services/diagram_reader_patch.d.mts": "32234085d5b84beaa9ede43b517073d4628709127a2bcdd0ba62a65d668a61bd",
+    "integrations/gitlab/services/reader_images.js": "8c8575228f28d5350a20cac3ab9c7e28d1eb5139a9bae601a39f49ac192f6ca6",
+    "integrations/gitlab/specs/fountain_diagram_reader_spec.js": "e8de4fc3a3366b5fa63504ae2ded2c894cdfb5f232d4c70261931fbafdffad13",
+    "integrations/gitlab/specs/fountain_reader_images_spec.js": "3eabd220aac00e560f0f4d478d01684334e89f3adc739b4d64697555732244c4",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-diagram-reader-tests.patch": "8558d1bd6971085f8f4f4a95dcf157ea0e97a5d9e10645c3710b5eada7fa5500",
+    "scripts/audit-gitlab-diagram-reader.mjs": "e4ce9958a9cd25171df54842363cfc4cc79fa70711b99190f43ed6a904b05ae0",
+    "scripts/prepare-gitlab-diagram-reader-tests.mjs": "12d7e5da26c6f9afd1a618ef8625d403ac3ad9bf46d7fe8fed92c5b885c5264a",
+    "integrations/gitlab/fixtures/mermaid-reader-upstream.js": "3c349fe6816d139177ce6e9bc04eecbdb2a93fe72fbf345986ac483942f05786",
+    "integrations/gitlab/fixtures/mermaid-reader-upstream.LICENSE": "62dfe4bdd76e08992c09cf335b2374b3e6acd4f2b959b4971760727d9b785ab4",
+    "integrations/gitlab/fixtures/render-gfm-upstream.js": "9021fa0b9a83f7c1f41ab165ba1723fe63807cd384a9c8783c2a37f73d17670d",
+    "integrations/gitlab/fixtures/render-gfm-upstream.LICENSE": "62dfe4bdd76e08992c09cf335b2374b3e6acd4f2b959b4971760727d9b785ab4",
+    "integrations/gitlab/fixtures/lazy-loader-upstream.js": "6af1a0bf97f573fa8fd6513a9b0ce29a66068bac2df8eedc799a4d5cf8bd9cf2",
+    "integrations/gitlab/fixtures/lazy-loader-upstream.LICENSE": "62dfe4bdd76e08992c09cf335b2374b3e6acd4f2b959b4971760727d9b785ab4"
+  }
+}

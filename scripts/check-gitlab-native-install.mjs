@@ -11,14 +11,17 @@ if (execFileSync('docker', ['inspect', '--format', '{{.State.Running}}', 'founta
   throw new Error('Stop the isolated task application before exercising source rollback.');
 const manifest = new URL('artifacts/gitlab-native-browser-install/install.json', root);
 const before = JSON.parse(await readFile(manifest));
-const files = ({ 4: 13, 5: 15, 6: 17, 7: 19 })[before.formatVersion];
+const files = ({ 4: 13, 5: 15, 6: 17, 7: 19, 8: 20, 9: 22, 10: 22 })[before.formatVersion];
 if (before.source !== source || before.restored || !files || Object.keys(before.files).length !== files)
   throw new Error('Unexpected source install generation.');
 const install = restore => execFileSync(process.execPath,
   [fileURLToPath(new URL('scripts/install-gitlab-native-browser.mjs', root)), source, ...(restore ? ['--restore'] : [])], { stdio: 'inherit' });
 const prepared = ['app/assets/javascripts/content_editor/components/content_editor.vue',
   'app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue', 'babel.config.js',
-  ...(before.formatVersion >= 7 ? ['app/assets/javascripts/lib/mermaid_sandbox.js'] : [])];
+  ...(before.formatVersion >= 7 ? ['app/assets/javascripts/lib/mermaid_sandbox.js'] : []),
+  ...(before.formatVersion >= 8 ? ['app/assets/javascripts/behaviors/markdown/render_sandboxed_mermaid.js'] : []),
+  ...(before.formatVersion === 9 ? ['app/assets/javascripts/behaviors/markdown/render_gfm.js'] : []),
+  ...(before.formatVersion >= 10 ? ['app/assets/javascripts/lazy_loader.js'] : [])];
 let restored = false;
 try {
   install(true); restored = true;
@@ -33,8 +36,9 @@ for (const [path, digest] of Object.entries(before.files))
   if (after.files[path] !== digest || createHash('sha256').update(await readFile(`${source}/${path}`)).digest('hex') !== digest)
     throw new Error(`Reinstalled source differs: ${path}`);
 const authoring = process.argv.includes('--diagram-authoring');
-const profile = authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--reference-contexts') ? 'reference-context' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : before.formatVersion === 5 ? 'media' : 'alert';
-await writeFile(new URL(`artifacts/gitlab-native-${profile}-install-roundtrip-${authoring ? '20261113' : '20261112'}.json`, root), JSON.stringify({
+const reader = process.argv.includes('--diagram-reader');
+const profile = reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--reference-contexts') ? 'reference-context' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : before.formatVersion === 5 ? 'media' : 'alert';
+await writeFile(new URL(`artifacts/gitlab-native-${profile}-install-roundtrip-${authoring || reader ? '20261113' : '20261112'}.json`, root), JSON.stringify({
   status: 'passed', formatVersion: before.formatVersion, files, revision: after.revision,
   checks: [`Guarded ${files}-file source rollback succeeds`, `${files - prepared.length} verified additions are removed`,
     'Exact current source generation is reinstalled', `All ${files} source digests match`],
