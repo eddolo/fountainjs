@@ -17,9 +17,9 @@ import {
 import FountainEditorSurface from './fountain_editor_surface.vue';
 import FountainFormattingToolbar from './fountain_formatting_toolbar.vue';
 import FountainLinkMenu from './fountain_link_menu.vue';
-import FountainCodeMenu from './fountain_code_menu.vue';
+import CodeBlockBubbleMenu from './bubble_menus/code_block_bubble_menu.vue';
 import FountainAlertMenu from './fountain_alert_menu.vue';
-import FountainMediaMenu from './fountain_media_menu.vue';
+import MediaBubbleMenu from './bubble_menus/media_bubble_menu.vue';
 import FountainReferenceMenu from './fountain_reference_menu.vue';
 
 export default {
@@ -32,9 +32,9 @@ export default {
     FountainEditorSurface,
     FountainFormattingToolbar,
     FountainLinkMenu,
-    FountainCodeMenu,
+    CodeBlockBubbleMenu,
     FountainAlertMenu,
-    FountainMediaMenu,
+    MediaBubbleMenu,
     FountainReferenceMenu,
   },
   // The installer inserts the pinned host's exact public prop definitions here.
@@ -174,7 +174,11 @@ export default {
   },
   methods: {
     getEditorRoot() { return this.$refs.surface?.getRootElement(); },
-    onSurfaceReady() { this.$refs.linkMenu?.refreshRoot?.(); },
+    onSurfaceReady() {
+      this.$refs.linkMenu?.refreshRoot?.();
+      this.$refs.codeMenu?.refreshRoot?.();
+      this.$refs.mediaMenu?.refreshRoot?.();
+    },
     onSurfaceKeydown(event) {
       if (this.surfaceEditable && !event.defaultPrevented && !event.isComposing && !event.altKey
         && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
@@ -475,10 +479,10 @@ export default {
         >
           <template #context-actions>
             <fountain-link-menu ref="linkMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
-            <fountain-code-menu ref="codeMenu" :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
+            <code-block-bubble-menu ref="codeMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-reference-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" />
             <fountain-alert-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
-            <fountain-media-menu :content-editor="contentEditor" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />
+            <media-bubble-menu ref="mediaMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />
           </template>
           <template #header-buttons>
             <slot name="header-buttons"></slot>

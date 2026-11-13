@@ -38,9 +38,12 @@ const Template = args => ({
     });
     this.service.editor.dispatch(this.service.editor.createTransaction().setSelection(new NodeSelection(this.service.editor.state.doc, path)));
     this.ready = true;
+    await this.$nextTick(); this.$refs.surface.focus();
   },
   beforeDestroy() { this.service.dispose(); },
   methods: {
+    getEditorRoot() { return this.$refs.surface?.getRootElement() || null; },
+    refreshRoot() { this.$refs.menu?.refreshRoot(); },
     focusEditor() { this.$refs.surface.focus(); },
     changeMedia() {
       const { editor } = this.service;
@@ -58,8 +61,8 @@ const Template = args => ({
     <h1>Native media properties</h1>
     <p>Component fixture. Upload, playback and persistence acceptance use the actual GitLab service separately.</p>
     <p v-if="failure" role="alert">Media replacement failed.</p>
-    <fountain-media-menu v-if="service" :content-editor="service" :disabled="!ready || ${Boolean(args.readOnly)}" :allow-upload="${Boolean(args.replacement)}" @focus="focusEditor" @replace-file="replaceFile" />
-    <fountain-editor-surface v-if="service" ref="surface" :editor="service.editor" :options="{ ariaLabel: 'Media example document' }" />
+    <fountain-media-menu v-if="service" ref="menu" :content-editor="service" :disabled="!ready || ${Boolean(args.readOnly)}" :allow-upload="${Boolean(args.replacement)}" :get-editor-root="${args.contextual ? 'getEditorRoot' : 'null'}" @focus="focusEditor" @replace-file="replaceFile" />
+    <fountain-editor-surface v-if="service" ref="surface" :editor="service.editor" :options="{ ariaLabel: 'Media example document' }" @ready="refreshRoot" />
     <button v-if="ready && !${Boolean(args.readOnly)}" type="button" @click="changeMedia">Change selected media</button>
   </section>`,
 });
@@ -74,6 +77,10 @@ export const Properties = Template.bind({}); Properties.play = open;
 export const Audio = Template.bind({}); Audio.args = { kind: 'audio' };
 export const Video = Template.bind({}); Video.args = { kind: 'video' };
 export const ReadOnly = Template.bind({}); ReadOnly.args = { readOnly: true };
+export const ContextualImage = Template.bind({}); ContextualImage.args = { contextual: true };
+export const ContextualAudio = Template.bind({}); ContextualAudio.args = { contextual: true, kind: 'audio' };
+export const ContextualVideo = Template.bind({}); ContextualVideo.args = { contextual: true, kind: 'video' };
+export const ContextualReadOnly = Template.bind({}); ContextualReadOnly.args = { contextual: true, readOnly: true };
 export const InvalidSize = Template.bind({});
 InvalidSize.play = async context => {
   const dialog = await open(context);

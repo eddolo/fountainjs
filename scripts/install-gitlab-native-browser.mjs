@@ -43,6 +43,10 @@ const gfmHash = '9021fa0b9a83f7c1f41ab165ba1723fe63807cd384a9c8783c2a37f73d17670
 const readerImagesPath = 'app/assets/javascripts/behaviors/markdown/fountain_reader_images.js';
 const lazyLoaderPath = 'app/assets/javascripts/lazy_loader.js';
 const lazyLoaderHash = '6af1a0bf97f573fa8fd6513a9b0ce29a66068bac2df8eedc799a4d5cf8bd9cf2';
+const codeMenuPath = 'app/assets/javascripts/content_editor/components/bubble_menus/code_block_bubble_menu.vue';
+const codeMenuHash = '8837b74f5b10af4c73fb207952a1e9fe97e371bc5622b6ae4ecd39ec3f1cf7c6';
+const mediaMenuPath = 'app/assets/javascripts/content_editor/components/bubble_menus/media_bubble_menu.vue';
+const mediaMenuHash = '5efe01e313cb65cb25fdffa9a028246c9a06e4ba6224cd00a47734a4d59a7171';
 if ((await lstat(resolve(source, hostPath))).isSymbolicLink())
   throw new Error('Refusing a symlinked ContentEditor.');
 const current = await readFile(resolve(source, hostPath), 'utf8');
@@ -64,33 +68,37 @@ if (previous) {
     'app/assets/javascripts/content_editor/services/fountain_runtime.js',
     'app/assets/javascripts/content_editor/services/fountain_runtime.css',
   ]);
-  if ([2, 3, 4, 5, 6, 7, 8, 9, 10].includes(previous.formatVersion)) {
+  if ([2, 3, 4, 5, 6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js');
   } else if (previous.formatVersion !== undefined) throw new Error('Unknown retained install format.');
-  if ([3, 4, 5, 6, 7, 8, 9, 10].includes(previous.formatVersion)) {
+  if ([3, 4, 5, 6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js');
   }
-  if ([4, 5, 6, 7, 8, 9, 10].includes(previous.formatVersion)) {
+  if ([4, 5, 6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.stories.js');
   }
-  if ([5, 6, 7, 8, 9, 10].includes(previous.formatVersion)) {
+  if ([5, 6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js');
   }
-  if ([6, 7, 8, 9, 10].includes(previous.formatVersion)) {
+  if ([6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.stories.js');
   }
-  if ([7, 8, 9, 10].includes(previous.formatVersion)) {
+  if ([7, 8, 9, 10, 11].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_diagram_preview.vue');
     allowed.add(sandboxPath);
   }
-  if ([8, 9, 10].includes(previous.formatVersion)) allowed.add(diagramReaderPath);
+  if ([8, 9, 10, 11].includes(previous.formatVersion)) allowed.add(diagramReaderPath);
   if (previous.formatVersion === 9) { allowed.add(gfmPath); allowed.add(readerImagesPath); }
-  if (previous.formatVersion === 10) { allowed.add(lazyLoaderPath); allowed.add(readerImagesPath); }
+  if ([10, 11].includes(previous.formatVersion)) { allowed.add(lazyLoaderPath); allowed.add(readerImagesPath); }
+  if (previous.formatVersion === 11) {
+    allowed.add(codeMenuPath); allowed.add(mediaMenuPath);
+    allowed.add('app/assets/javascripts/content_editor/components/fountain_context_surface.vue');
+  }
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
 }
@@ -133,6 +141,13 @@ if (restore) {
     preparedLazyLoader = await readFile(resolve(output, 'prepared-lazy-loader.js'));
     if (hash(preparedLazyLoader) !== lazyLoaderHash) throw new Error('Retained image loader has changed.');
   }
+  const preparedMenus = new Map();
+  for (const [path, name, digest] of [[codeMenuPath, 'code-block', codeMenuHash], [mediaMenuPath, 'media', mediaMenuHash]]) {
+    if (!previous.files[path]) continue;
+    const value = await readFile(resolve(output, `prepared-${name}-bubble-menu.vue`));
+    if (hash(value) !== digest) throw new Error('Retained original bubble menu has changed.');
+    preparedMenus.set(path, value);
+  }
   await writeFile(resolve(source, hostPath), prepared);
   await writeFile(resolve(source, rendererPath), preparedRenderer);
   await writeFile(resolve(source, babelPath), preparedBabel);
@@ -140,8 +155,9 @@ if (restore) {
   if (preparedDiagramReader) await writeFile(resolve(source, diagramReaderPath), preparedDiagramReader);
   if (preparedGFM) await writeFile(resolve(source, gfmPath), preparedGFM);
   if (preparedLazyLoader) await writeFile(resolve(source, lazyLoaderPath), preparedLazyLoader);
+  for (const [path, value] of preparedMenus) await writeFile(resolve(source, path), value);
   for (const path of Object.keys(previous.files))
-    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath].includes(path)) await unlink(resolve(source, path));
+    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath, codeMenuPath, mediaMenuPath].includes(path)) await unlink(resolve(source, path));
   await writeFile(
     resolve(output, 'install.json'),
     JSON.stringify({ ...previous, restored: true }, null, 2) + '\n',
@@ -194,6 +210,17 @@ for (const [path, digest] of Object.entries(manifest.inputs)) {
     throw new Error(`Rebuild the native runtime after changing ${path}.`);
 }
 const files = new Map();
+const originalMenus = new Map();
+for (const [path, name, digest] of [[codeMenuPath, 'code-block', codeMenuHash], [mediaMenuPath, 'media', mediaMenuHash]]) {
+  if ((await realpath(resolve(source, path))) !== resolve(source, path)) throw new Error('Refusing a symlinked bubble menu.');
+  const currentMenu = await readFile(resolve(source, path));
+  const originalMenu = await readFile(resolve(root, `integrations/gitlab/fixtures/${name}-bubble-menu-upstream.vue`));
+  if (hash(originalMenu) !== digest) throw new Error('The original bubble-menu fixture differs from the source pin.');
+  if (hash(currentMenu) !== digest && (!previous || previous.files[path] !== hash(currentMenu)))
+    throw new Error('Bubble menu has unrecognized edits; refusing to overwrite it.');
+  originalMenus.set(path, { name, value: originalMenu });
+  files.set(path, await readFile(resolve(root, `integrations/gitlab/components/bubble_menus/${path.split('/').at(-1)}`), 'utf8'));
+}
 const currentSandbox = await readFile(resolve(source, sandboxPath), 'utf8');
 let originalSandbox = currentSandbox;
 if (hash(currentSandbox) !== sandboxHash) {
@@ -273,7 +300,7 @@ component = component
   .replace('  props: {},', `  props: ${propsSource},`)
   .replace("from '../runtime/browser'", "from '../services/fountain_runtime'");
 files.set(hostPath, component);
-for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue', 'fountain_link_menu.vue', 'fountain_link_menu.stories.js', 'fountain_code_menu.vue', 'fountain_code_menu.stories.js', 'fountain_diagram_preview.vue', 'fountain_alert_menu.vue', 'fountain_alert_menu.stories.js', 'fountain_media_menu.vue', 'fountain_media_menu.stories.js', 'fountain_reference_menu.vue', 'fountain_reference_menu.stories.js']) {
+for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue', 'fountain_context_surface.vue', 'fountain_link_menu.vue', 'fountain_link_menu.stories.js', 'fountain_code_menu.vue', 'fountain_code_menu.stories.js', 'fountain_diagram_preview.vue', 'fountain_alert_menu.vue', 'fountain_alert_menu.stories.js', 'fountain_media_menu.vue', 'fountain_media_menu.stories.js', 'fountain_reference_menu.vue', 'fountain_reference_menu.stories.js']) {
   let value = await readFile(resolve(root, `integrations/gitlab/components/${name}`), 'utf8');
   value = value
     .replace("from 'fountainjs-editor'", "from '../services/fountain_runtime'")
@@ -316,7 +343,7 @@ for (const [path] of files) {
   const parent = await realpath(resolve(target, '..'));
   if (parent !== resolve(target, '..'))
     throw new Error('Refusing a symlinked installation parent.');
-  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath].includes(path)) {
+  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath, codeMenuPath, mediaMenuPath].includes(path)) {
     if ((await realpath(target)) !== target) throw new Error('Refusing a symlinked host input.');
     continue;
   }
@@ -336,6 +363,7 @@ await writeFile(resolve(output, 'prepared-mermaid-sandbox.js'), originalSandbox)
 await writeFile(resolve(output, 'prepared-mermaid-reader.js'), originalDiagramReader);
 await writeFile(resolve(output, 'prepared-render-gfm.js'), originalGFM);
 await writeFile(resolve(output, 'prepared-lazy-loader.js'), originalLazyLoader);
+for (const { name, value } of originalMenus.values()) await writeFile(resolve(output, `prepared-${name}-bubble-menu.vue`), value);
 // Migrate the superseded GFM hook back to its pinned source; the source switch
 // happens later in LazyLoader and is the correct place to reserve image geometry.
 if (previous?.files[gfmPath]) await writeFile(resolve(source, gfmPath), originalGFM);
@@ -344,7 +372,7 @@ await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 10,
+      formatVersion: 11,
       source,
       revision: pin.commit,
       scope:

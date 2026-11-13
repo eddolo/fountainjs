@@ -1,0 +1,295 @@
+{
+  "date": "2026-11-13",
+  "status": "partial-native-product-integration",
+  "parentRevision": "62060842543459a66b626836a5f3c4ca2fc21875",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Original code/media entry components mount real native contextual controls, not hidden host-test substitutes",
+    "Captured block owns language/source controls, preview, clipboard and Apply after later caret moves; source-session handoff retains that owner",
+    "Equal-content document replacement invalidates stale code/media sessions in pure Node.js",
+    "Browser-owned portals support keyboard access/dismissal, focus/draft restoration, actual modal bounds, narrow docking, correct ARIA references and nested-dialog hiding",
+    "Editor Escape is isolated from the owning real GitLab edit form"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Linux Chromium",
+    "checks": 21,
+    "issueIID": 105,
+    "report": "artifacts/gitlab-native-context-menus-20261113/report.json",
+    "phases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "errors": [],
+    "bounds": [
+      {
+        "label": "Code block actions",
+        "menu": {
+          "x": 468,
+          "y": 799,
+          "width": 400,
+          "height": 106
+        },
+        "host": {
+          "x": 253,
+          "y": -47,
+          "width": 1151,
+          "height": 2345.140625,
+          "top": -47,
+          "right": 1404,
+          "bottom": 2298.140625,
+          "left": 253
+        }
+      },
+      {
+        "label": "Code block actions",
+        "menu": {
+          "x": 468,
+          "y": 364,
+          "width": 400,
+          "height": 106
+        },
+        "host": {
+          "x": 253,
+          "y": -482,
+          "width": 1151,
+          "height": 2345.140625,
+          "top": -482,
+          "right": 1404,
+          "bottom": 1863.140625,
+          "left": 253
+        }
+      },
+      {
+        "label": "Code block actions",
+        "menu": {
+          "x": 468,
+          "y": 364,
+          "width": 400,
+          "height": 106
+        },
+        "host": {
+          "x": 253,
+          "y": -482,
+          "width": 1151,
+          "height": 2345.140625,
+          "top": -482,
+          "right": 1404,
+          "bottom": 1863.140625,
+          "left": 253
+        }
+      },
+      {
+        "label": "Media actions",
+        "menu": {
+          "x": 300,
+          "y": 147,
+          "width": 400,
+          "height": 70
+        },
+        "host": {
+          "x": 253,
+          "y": -482,
+          "width": 1151,
+          "height": 2345.140625,
+          "top": -482,
+          "right": 1404,
+          "bottom": 1863.140625,
+          "left": 253
+        }
+      },
+      {
+        "label": "Media actions",
+        "menu": {
+          "x": 261,
+          "y": 718,
+          "width": 400,
+          "height": 70
+        },
+        "host": {
+          "x": 253,
+          "y": 89,
+          "width": 1151,
+          "height": 2321.140625,
+          "top": 89,
+          "right": 1404,
+          "bottom": 2410.140625,
+          "left": 253
+        }
+      }
+    ],
+    "accessibility": [
+      {
+        "name": "captured-code-context",
+        "violations": []
+      },
+      {
+        "name": "diagram-source-dialog",
+        "violations": []
+      },
+      {
+        "name": "image-context",
+        "violations": []
+      },
+      {
+        "name": "image-properties",
+        "violations": []
+      }
+    ]
+  },
+  "units": {
+    "tests": 5949,
+    "files": 361,
+    "newCases": 3,
+    "report": "artifacts/gitlab-context-unit-final-20261113.log"
+  },
+  "upstream": {
+    "suites": 19,
+    "passed": 439,
+    "failed": 0,
+    "skipped": 1,
+    "total": 440,
+    "newCases": 9,
+    "report": "artifacts/gitlab-context-final-jest-20261113.json",
+    "originalRequirements": [
+      "ContentEditor renders codeBlock bubble menu",
+      "ContentEditor renders media bubble menu"
+    ],
+    "inheritedSkipped": [
+      "Mermaid diagrams renderer dangerous diagrams stops rendering diagrams when the rendered diagrams count exceeds 50"
+    ],
+    "scope": "Selected host, work-item, native-menu, renderer and lifecycle suites; not the complete GitLab test suite"
+  },
+  "storybook": {
+    "states": 8,
+    "report": "artifacts/gitlab-native-context-storybook-20261113/report.json",
+    "scope": "Code editing/read-only, image/read-only/audio/video, narrow code/media, real clipboard and preview playback; fixed renderer fixtures, separate from real-service persistence"
+  },
+  "installation": {
+    "format": 11,
+    "files": 25,
+    "manifest": "artifacts/gitlab-context-checkpoint-install-20261113.json",
+    "runtimeManifest": "artifacts/gitlab-context-checkpoint-build-20261113.json",
+    "sourceRoundtrip": "artifacts/gitlab-native-context-menus-install-roundtrip-20261113.json",
+    "patchVerification": "artifacts/gitlab-native-context-menus-patch-verification-20261113.json"
+  },
+  "recordings": [
+    {
+      "path": "artifacts/gitlab-native-context-menus-20261113/recordings/page@7002995923f3fbdc4121e341c578afc1.webm",
+      "bytes": 5168597,
+      "sha256": "fc34155dc42edc3c350f2efe4ce2eb931d0e100fa2893ddc450f669887a533d6",
+      "durationSeconds": 212.08
+    }
+  ],
+  "sourceHashes": {
+    "docs/RELEASES.md": "ba15d8365b0d36a4c8e1c2383bf4638b75cdb66f7e6f5a79f5b74bf963bf108c",
+    "docs/ROADMAP.md": "febabcc13fbf50e508cc0ea885c393af70e8e06f32b240d451900971799506a4",
+    "docs/TIPTAP_PARITY.md": "f7748ca143a9ed477d5f42abd96627f40c15bfc084ab8ec1ffb368c112dcdac4",
+    "integrations/gitlab/README.md": "c472c4c5e47c069f298f29819e37e7495befc8eb3bef8b35608788f81613aa4f",
+    "integrations/gitlab/components/fountain_code_menu.stories.js": "9493220b194b94d244911f7da8371847eb49297e13e35f4e865b76b2cfc3e144",
+    "integrations/gitlab/components/fountain_code_menu.vue": "736633acbd2b656ba366018c6db5c0387e8cbb957ac1f0a96875a995b74cd653",
+    "integrations/gitlab/components/fountain_content_editor.vue": "c6c662267fe1a40c7ded4f7e403d119fe4e10cc1ee40ab9b0a3541ffb4fe7877",
+    "integrations/gitlab/components/fountain_media_menu.stories.js": "d3b1d68e17b541ddb01ad1605b4879cb8fa66c4251559182e1ab3ec64fdd9892",
+    "integrations/gitlab/components/fountain_media_menu.vue": "3ebfcde52264409fd930a749eaca4271b856d62ff4e1f7b860a117a476d7edd8",
+    "integrations/gitlab/runtime/README.md": "96998cac70eae57ee636cd9fcf08935f5f6aba8a8f458641d7fc7978f591b74d",
+    "integrations/gitlab/runtime/browser.ts": "181e440e0ea44f2d854feb1eedf7f965fe9ff98840599908838f1bed5abc1acb",
+    "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+    "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+    "scripts/audit-gitlab-native-code.mjs": "5e6530128e580db738aa63b2cd8a98dc2b2424927cada21834dfa1542d09f88f",
+    "scripts/audit-gitlab-native-diagrams.mjs": "30dfddbc14b445f115e13a8fd2955047358fab4a6c57aa4c34c97176b0beb8f3",
+    "scripts/audit-gitlab-native-frontmatter.mjs": "125c069b742ecd08c1b4129fe009c319730c51135828a4b67b45b821336870bd",
+    "scripts/audit-gitlab-native-media.mjs": "c7d74d644093f138f1ebc6ba672d48402200b5299fe29ec247d7f9cef2f3b6a7",
+    "scripts/audit-gitlab-product-baseline.mjs": "41d836d781c43735627f3a3d8d7e0cd7adf84ed7c4e704670465421b32aef69b",
+    "scripts/check-gitlab-native-install.mjs": "500ddd09c1ab1e820277e7c18040a66cbfec9eed5d72f9f26c58a2bac1f99738",
+    "scripts/check-gitlab-native-patches.mjs": "9d03f28c47ea9839b62ae2866c4d798c137300d776a4ec024e16d9ea6d87f66c",
+    "scripts/install-gitlab-native-browser.mjs": "b6e7541d6c19bff892d7472dbfb0f7fca3fea284d13d87efe32e021409540734",
+    "scripts/prepare-gitlab-link-storybook.mjs": "276f029edf37e4d1ea827981aedc3b751443431fb96db79d4752d710ce8cbcd0",
+    "scripts/run-gitlab-native-browser-audit.mjs": "91054120ec3cdce487962e85d0ed9c5dd421b76064aa042f89927ad94b30d00f",
+    "tests/gitlab-code-editing.test.ts": "0bd3500e79cd83b1cee41c0ed2edd374fea02e2f2f7b16ebd058ef15e95c1907",
+    "tests/gitlab-media-editing.test.ts": "8f5f3c30449ab4abbbf1cb3bd28b44e8a54baf7af265fa7753bb0a5b4444b1fb",
+    "integrations/gitlab/components/bubble_menus/code_block_bubble_menu.vue": "472193fbd7abe3d5ec0d53223ecc0bc491f655a9d5e952ce40518706c946dcda",
+    "integrations/gitlab/components/bubble_menus/media_bubble_menu.vue": "fbe08994ed3f529930eca2aa173dfe7c724a1910e65f95ae6fa9129a526b4222",
+    "integrations/gitlab/components/fountain_context_surface.vue": "04de64020ff6b3486c2837c3daa77daa03c7c01ceab8ab332af3a220cfb9355d",
+    "integrations/gitlab/fixtures/code-block-bubble-menu-upstream.LICENSE": "62dfe4bdd76e08992c09cf335b2374b3e6acd4f2b959b4971760727d9b785ab4",
+    "integrations/gitlab/fixtures/code-block-bubble-menu-upstream.vue": "8837b74f5b10af4c73fb207952a1e9fe97e371bc5622b6ae4ecd39ec3f1cf7c6",
+    "integrations/gitlab/fixtures/media-bubble-menu-upstream.LICENSE": "62dfe4bdd76e08992c09cf335b2374b3e6acd4f2b959b4971760727d9b785ab4",
+    "integrations/gitlab/fixtures/media-bubble-menu-upstream.vue": "5efe01e313cb65cb25fdffa9a028246c9a06e4ba6224cd00a47734a4d59a7171",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-context-menu-tests.patch": "b3dcd222b287dd4025101e88d80afa8d45c87ee2d3d9b4e6363966b26b731327",
+    "integrations/gitlab/specs/fountain_context_surface_spec.js": "6aea4305a96ee3150ccf07f050bb742bb7e1300b6d6c822d4ccfe7e0402f3678",
+    "scripts/audit-gitlab-context-storybook.mjs": "86136e4f69c0ca3f2148a31e7fa8b202958b04cf7f36df3bcf18bbfbbe649bc5",
+    "scripts/audit-gitlab-native-context-menus.mjs": "bf4568ddfd36a3af42f7bd01d3a478e058900d2fa7eb7ba63be259b20a21dcce",
+    "scripts/prepare-gitlab-context-menu-tests.mjs": "f6b307319bd84c19b938f30353602c89c951d95afcb39616a28cebd6cc3bb08d"
+  },
+  "fixtureAssets": {
+    "artifacts/gitlab-media-test-assets/fountain-figure.png": {
+      "sha256": "30241c937e8ff007831148c3dd8fc03ef23d71442efd3fbc5a3ee4abdc9a492f",
+      "bytes": 5790
+    },
+    "artifacts/gitlab-media-test-assets/fountain-figure-replacement.png": {
+      "sha256": "84a12c226a392cf9062bbab46188adab6b94458e1d0ac19c3c8e9034073f1c4a",
+      "bytes": 5780
+    },
+    "artifacts/gitlab-media-test-assets/fountain-recording.wav": {
+      "sha256": "fb1949fe7fd5883f410aa7eebda2c0a9c62014a691cea38b697c438e16c7e115",
+      "bytes": 88244
+    },
+    "artifacts/gitlab-media-test-assets/fountain-recording.webm": {
+      "sha256": "6edf6fe6ccc56606ebcb9bcbcab58d1ca0aceba1b450e2987e138660e60a0de2",
+      "bytes": 7151
+    }
+  },
+  "retainedRuns": [
+    {
+      "path": "artifacts/gitlab-context-browser-first-report-20261113.json",
+      "reason": "Audit expected js in a syntax-highlighting data attribute; actual display canonicalizes to javascript while model/source retains js"
+    },
+    {
+      "path": "artifacts/gitlab-context-browser-second-report-20261113.json",
+      "reason": "Real editor Escape reached the owning GitLab edit form and opened unsaved-change confirmation; repaired and rerun"
+    },
+    {
+      "path": "artifacts/gitlab-context-browser-pre-boundary-report-20261113.json",
+      "reason": "Narrower 21-check pass; visual review found media popup crossing the modal content edge, then stronger geometry assertions were added"
+    },
+    {
+      "path": "artifacts/gitlab-context-browser-pre-host-boundary-report-20261113.json",
+      "reason": "Visual recheck found the work-item page has no Bootstrap modal container; geometry must require its actual work-item content bounds, not silently fall back to the viewport"
+    },
+    {
+      "path": "artifacts/gitlab-context-storybook-first-report-20261113.json",
+      "reason": "Full-body accessibility caught a dangling ARIA popup reference after Tippy overwrote the render-time id"
+    },
+    {
+      "path": "artifacts/gitlab-context-storybook-pre-modal-report-20261113.json",
+      "reason": "Accessibility passed; visual review found the floating menu above its properties modal. Suspended controls now hide without discarding their draft"
+    }
+  ],
+  "visualReview": {
+    "images": [
+      "context-owned-language-draft.png",
+      "context-keyboard-reopened.png",
+      "context-mobile-source-draft.png",
+      "context-mobile-media-properties.png",
+      "context-media-restored.png",
+      "context-reopened-saved.png",
+      "context-reopened-restart.png",
+      "original-after-restart.png"
+    ],
+    "recording": "Representative recorded frames reviewed; not a claim that the entire recording was watched",
+    "storybook": "Desktop/read-only/audio/video and narrow properties snapshots inspected"
+  },
+  "boundaries": {
+    "publicEngineChanged": false,
+    "publicAPIChanged": false,
+    "acceptanceLimitsChanged": false,
+    "published": false,
+    "remaining": [
+      "Partial-edit full-document source fidelity",
+      "Quick actions, suggestions, GLQL, complete snippet/footnote/table workflows",
+      "All GitLab surfaces, roles, concurrent users and broader browsers",
+      "Compiled deployment rollback and full hosted CI",
+      "Other two complete products"
+    ]
+  }
+}

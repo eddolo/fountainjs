@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
 import { auditNativeLinks } from './audit-gitlab-native-links.mjs';
 import { auditNativeCode } from './audit-gitlab-native-code.mjs';
+import { auditNativeContextMenus, assertSavedNativeContextMenus } from './audit-gitlab-native-context-menus.mjs';
 import { auditNativeFrontmatter, assertSavedNativeFrontmatter } from './audit-gitlab-native-frontmatter.mjs';
 import { auditNativeAlerts, assertSavedNativeAlerts } from './audit-gitlab-native-alerts.mjs';
 import { auditNativeMedia, assertSavedNativeMedia } from './audit-gitlab-native-media.mjs';
@@ -17,7 +18,8 @@ const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const nativeCapacity = process.argv.includes('--native-attachment-capacity');
 const nativeLinks = process.argv.includes('--native-links');
-const nativeCode = process.argv.includes('--native-code');
+const nativeContextMenus = process.argv.includes('--native-context-menus');
+const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
 const nativeDiagramAuthoring = process.argv.includes('--native-diagram-authoring');
 const nativeDiagramReader = process.argv.includes('--native-diagram-reader');
@@ -35,7 +37,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeFrontmatter ? 'artifacts/gitlab-native-frontmatter-20261113/' : nativeDiagramReader ? 'artifacts/gitlab-native-diagram-reader-20261113/' : nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeContextMenus ? 'artifacts/gitlab-native-context-menus-20261113/' : nativeFrontmatter ? 'artifacts/gitlab-native-frontmatter-20261113/' : nativeDiagramReader ? 'artifacts/gitlab-native-diagram-reader-20261113/' : nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -145,6 +147,7 @@ const report = {
   nativeCapacity,
   nativeLinks,
   nativeCodeProfile: nativeCode,
+  nativeContextMenusProfile: nativeContextMenus,
   nativeFrontmatterProfile: nativeFrontmatter,
   nativeAlertsProfile: nativeAlerts,
   nativeMediaProfile: nativeMedia,
@@ -427,6 +430,7 @@ try {
     }
     if (nativeLinks) await auditNativeLinks({ page, context, editor, toolbar, output, report });
     if (nativeCode) await auditNativeCode({ page, editor, toolbar, output, report });
+    if (nativeContextMenus) await auditNativeContextMenus({ page, editor, toolbar, output, report });
     if (nativeFrontmatter) await auditNativeFrontmatter({ page, editor, toolbar, output, report });
     if (nativeAlerts) await auditNativeAlerts({ page, editor, toolbar, output, report });
     if (nativeMedia) await auditNativeMedia({ page, context, editor, toolbar, output, report });
@@ -645,6 +649,7 @@ try {
     await assertSavedNativeAlerts({ page, description: saved.description, report, output, phase: 'saved' });
     report.checks.push('Actual UI Save persists native alert kinds, custom titles, nested math/code and body text, and the GitLab reader renders them from saved server source');
   }
+  if (nativeContextMenus) await assertSavedNativeContextMenus({ page, description: saved.description, report, output, phase: 'saved' });
   if (nativeFrontmatter) {
     await assertSavedNativeFrontmatter({ page, description: saved.description, report, output, phase: 'saved' });
     report.checks.push('Actual UI Save retains frontmatter source and delimiters; the GitLab reader and reopened native source agree');
@@ -775,6 +780,7 @@ try {
   await page.reload();
   await expect(page.getByText(marker, { exact: true })).toBeVisible();
   if (nativeAlerts) await assertSavedNativeAlerts({ page, description: saved.description, report, output, phase: 'reopened' });
+  if (nativeContextMenus) await assertSavedNativeContextMenus({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeFrontmatter) await assertSavedNativeFrontmatter({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeMedia) await assertSavedNativeMedia({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeReferences) await assertSavedNativeReferences({ page, description: saved.description, report, output, phase: 'reopened' });
@@ -828,6 +834,7 @@ try {
     await page.goto(issue.web_url);
     await expect(page.getByText(marker, { exact: true })).toBeVisible();
     if (nativeAlerts) await assertSavedNativeAlerts({ page, description: reopened.description, report, output, phase: 'restart' });
+    if (nativeContextMenus) await assertSavedNativeContextMenus({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeFrontmatter) await assertSavedNativeFrontmatter({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeMedia) await assertSavedNativeMedia({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeReferences) await assertSavedNativeReferences({ page, description: reopened.description, report, output, phase: 'restart' });

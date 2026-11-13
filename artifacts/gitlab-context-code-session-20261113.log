@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-code-editing.test.ts (53 tests | 1 failed) 169ms
+   × refuses a source draft after its target is replaced 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-code-editing.test.ts > refuses a source draft after its target is replaced
+AssertionError: expected [ 1 ] to be undefined
+
+- Expected:
+undefined
+
++ Received:
+[
+  1,
+]
+
+ ❯ tests/gitlab-code-editing.test.ts:184:30
+    182|   if (change === 'replaced') await service.setSerializedContent(source…
+    183|   const before = editor.state.doc;
+    184|   expect(session.targetPath).toBeUndefined();
+       |                              ^
+    185|   expect(() => session.applySource('draft')).toThrow('GITLAB_CODE_TARG…
+    186|   expect(editor.state.doc).toBe(before); expect(session.closed).toBe(f…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 52 passed (53)
+   Start at  22:08:33
+   Duration  1.90s (transform 75%, import 15%, tests 10%)

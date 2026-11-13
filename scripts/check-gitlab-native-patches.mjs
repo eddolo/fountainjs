@@ -15,8 +15,10 @@ const run = (...args) => execFileSync('git', args, { cwd: source, env, encoding:
 const names = ['current-document', 'native-host-tests', 'native-component-tests', 'native-attachment-tests',
   'native-upload-capacity-tests', 'native-link-tests', 'native-code-tests', 'native-alert-tests', 'native-media-tests', 'native-reference-tests', 'native-diagram-tests'];
 const frontmatter = process.argv.includes('--frontmatter');
-if (process.argv.includes('--diagram-reader') || frontmatter) names.push('native-diagram-reader-tests');
-if (frontmatter) names.push('native-frontmatter-tests');
+const contextual = process.argv.includes('--context-menus');
+if (process.argv.includes('--diagram-reader') || frontmatter || contextual) names.push('native-diagram-reader-tests');
+if (frontmatter || contextual) names.push('native-frontmatter-tests');
+if (contextual) names.push('native-context-menu-tests');
 const patches = names.map(name => `integrations/gitlab/patches/gitlab-19.5.3-${name}.patch`);
 try {
   const revision = run('rev-parse', 'HEAD').trim();
@@ -36,8 +38,9 @@ try {
     'spec/frontend/content_editor/components/fountain_diagram_preview_spec.js',
     'spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js',
     'spec/frontend/content_editor/fixtures/fountain_diagram_live_html.json',
-    ...(process.argv.includes('--diagram-reader') || frontmatter ? ['spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js', 'spec/frontend/behaviors/markdown/fountain_reader_images_spec.js'] : []),
-    ...(frontmatter ? ['spec/frontend/content_editor/components/fountain_frontmatter_spec.js', 'spec/frontend/content_editor/fixtures/fountain_frontmatter_live_html.json'] : [])]) {
+    ...(process.argv.includes('--diagram-reader') || frontmatter || contextual ? ['spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js', 'spec/frontend/behaviors/markdown/fountain_reader_images_spec.js'] : []),
+    ...(frontmatter || contextual ? ['spec/frontend/content_editor/components/fountain_frontmatter_spec.js', 'spec/frontend/content_editor/fixtures/fountain_frontmatter_live_html.json'] : []),
+    ...(contextual ? ['spec/frontend/content_editor/components/fountain_context_surface_spec.js', 'spec/frontend/content_editor/fixtures/fountain_media_live_html.json'] : [])]) {
     if (run('show', `:${path}`) !== await readFile(join(source, path), 'utf8'))
       throw new Error(`Reconstructed test source differs: ${path}`);
   }
@@ -49,7 +52,7 @@ try {
     isolation: 'Upstream worktree and main index are unchanged; temporary index removed' };
   const authoring = process.argv.includes('--diagram-authoring');
   const reader = process.argv.includes('--diagram-reader');
-  const profile = frontmatter ? 'frontmatter' : reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
-  await writeFile(new URL(`artifacts/gitlab-native-${profile}-patch-verification-${authoring || reader || frontmatter ? '20261113' : '20261112'}.json`, root), JSON.stringify(report, null, 2) + '\n');
+  const profile = contextual ? 'context-menus' : frontmatter ? 'frontmatter' : reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
+  await writeFile(new URL(`artifacts/gitlab-native-${profile}-patch-verification-${authoring || reader || frontmatter || contextual ? '20261113' : '20261112'}.json`, root), JSON.stringify(report, null, 2) + '\n');
   console.log(`${patches.length} ordered native patches reconstruct the tested pinned source.`);
 } finally { await rm(temporary, { recursive: true, force: true }); }

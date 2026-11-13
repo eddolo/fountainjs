@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 
 export async function auditNativeFrontmatter({ page, editor, toolbar, output, report }) {
   const header = editor.locator('pre[data-fountain-gitlab-frontmatter]');
-  const controls = toolbar.getByRole('region', { name: 'Code block controls', exact: true });
+  const controls = page.getByRole('region', { name: 'Code block controls', exact: true });
   const format = controls.getByRole('combobox', { name: 'Frontmatter format', exact: true });
   const dialog = () => page.getByRole('dialog', { name: 'Frontmatter source', exact: true });
   const field = () => dialog().getByRole('textbox', { name: 'Frontmatter source', exact: true });
@@ -98,7 +98,7 @@ export async function assertSavedNativeFrontmatter({ page, description, report, 
   const wrapper = page.getByTestId('work-item-description-wrapper');
   const header = wrapper.locator('[contenteditable="true"] pre[data-fountain-gitlab-frontmatter]');
   await expect(header).toBeVisible(); await header.locator('code').click();
-  await wrapper.getByRole('button', { name: 'Edit frontmatter source', exact: true }).click();
+  await page.getByRole('button', { name: 'Edit frontmatter source', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Frontmatter source', exact: true });
   await expect(dialog.getByRole('textbox', { name: 'Frontmatter source', exact: true })).toHaveValue(state.text);
   await page.screenshot({ path: fileURLToPath(new URL(`frontmatter-native-reopened-${phase}.png`, output)), fullPage: true, animations: 'disabled' });

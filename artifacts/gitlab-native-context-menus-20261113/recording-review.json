@@ -1,0 +1,30 @@
+{
+  "video": "artifacts/gitlab-native-context-menus-20261113/recordings/page@7002995923f3fbdc4121e341c578afc1.webm",
+  "samples": [
+    {
+      "reference": "context-owned-language-draft.png",
+      "seconds": 79.93039184570313
+    },
+    {
+      "reference": "context-mobile-source-draft.png",
+      "seconds": 82.00496899414063
+    },
+    {
+      "reference": "context-mobile-media-properties.png",
+      "seconds": 83.35152099609375
+    },
+    {
+      "reference": "context-media-restored.png",
+      "seconds": 84.39237548828125
+    },
+    {
+      "reference": "context-reopened-saved.png",
+      "seconds": 86.82228881835937
+    },
+    {
+      "reference": "original-after-restart.png",
+      "seconds": 211.98000000000002
+    }
+  ],
+  "scope": "Representative video frames; not a full recording review"
+}

@@ -2,7 +2,28 @@
 
 Updated 2026-11-13.
 
-The latest GitLab checkpoint adds native document frontmatter. Source-aware
+The latest GitLab checkpoint restores the original code/media menu entry points
+with real native contextual controls. Captured block ownership now covers the
+displayed actions, source copy, preview and source-session handoff after a later
+caret move. Equal-content document replacement invalidates stale sessions.
+Keyboard access/dismissal, host-form Escape isolation, popup bounds,
+mobile docking, nested-modal hiding and final ARIA references are exercised
+through the native view. All **5,949 root tests/361 files**, current types/API,
+unchanged package-size checks and upstream lint pass. The selected nineteen-suite
+GitLab set is **439 passed / zero failed / one inherited skip / 440 total**;
+neither original menu assertion is weakened. Eight component states pass
+full-body accessibility checks, real clipboard and audio/video preview playback.
+The recorded real-service journey passes **21 checks**, including source-mode
+handoff, save/reopen and application restart. Visual review found and repaired
+menu/modal overlap as well as a popup crossing the owning content edge.
+Twenty-five-file source rollback/reinstall and fourteen ordered test patches
+verify. Full-document partial-edit source fidelity, remaining specialized GitLab
+workflows, all surfaces/roles/browsers, compiled deployment rollback, hosted CI
+and both other full products remain open. No parity row, public API, size limit
+or publication is changed.
+[Contextual-control evidence and retained failures](../artifacts/gitlab-context-integration-20261113.json).
+
+The preceding GitLab checkpoint adds native document frontmatter. Source-aware
 conversion distinguishes YAML/TOML/JSON headers from identically rendered code
 fences; header source, comments, prefixes and delimiters survive unrelated body
 edits. Native insertion, source/format controls, copy, delete, explicit code

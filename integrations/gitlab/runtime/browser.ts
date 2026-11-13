@@ -8,6 +8,8 @@ export { getGitLabMediaContext } from '../services/media_editing';
 export { getGitLabReferenceContext } from '../services/reference_editing';
 export {
   EditorView,
+  FountainMenuController,
+  getEditorMenuAnchorRect,
   Selection,
   NodeSelection,
   toggleMark,

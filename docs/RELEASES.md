@@ -1,5 +1,38 @@
 # Release and API stability policy
 
+## Native GitLab contextual controls — 2026-11-13
+
+This private integration checkpoint restores real native code/media menus at
+GitLab's original component entry points. A captured block now owns its shown
+actions, copied source, preview and source-editing handoff even after the caret
+moves elsewhere. Equal-content document replacement invalidates stale editing
+sessions. The shared browser surface supports keyboard entry/dismissal, focus
+and draft restoration, actual work-item/modal/viewport bounds and narrow docking.
+
+Real usage exposed Escape reaching the owning GitLab edit form. It now
+dismisses the owned menu without opening the host's unsaved-change confirmation.
+Full-body component accessibility found an ID overwritten by Tippy; the trigger
+now references the final namespaced popup. Visual review also found a floating
+menu above its properties modal and an image menu crossing the host boundary.
+Nested dialogs now hide the floating controls without dropping their drafts,
+and placement respects the containing work-item or modal content. Failed and
+narrower runs remain in the checkpoint evidence.
+
+All **5,949 unit tests/361 files**, current TypeScript, 450 public declaration
+checks, unchanged public size limits and upstream lint pass. The selected
+nineteen-suite GitLab set is **439 passed / zero failed / one inherited skip /
+440 total**, including nine native contextual cases and the unchanged original
+menu requirements. Eight component states pass full-body axe checks, browser
+clipboard and audio/video preview playback. The recorded real-service journey
+passes **21 checks** with save/reopen/restart, source handoff, mobile dialogs and
+zero browser/scoped accessibility errors. Twenty-five-file source rollback and
+fourteen ordered test patches verify.
+
+No public engine/API or acceptance limit changes; nothing is published.
+Complete GitLab product acceptance, broader browsers/roles/surfaces, partial-edit
+source fidelity, compiled deployment rollback, hosted CI and both other products
+remain open. [Evidence and scope](../artifacts/gitlab-context-integration-20261113.json).
+
 ## Homepage live-export selection work — 2026-11-11
 
 The source homepage caches its live export by document identity and format.

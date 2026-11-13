@@ -1,6 +1,30 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-## Current programme status — 2026-11-12
+## Current programme status — 2026-11-13
+
+Fountain's real GitLab integration now mounts native contextual code/media
+controls through the original component entry points. Captured ownership,
+equal-content replacement conflicts, source-session transfer, keyboard focus,
+Escape isolation from the owning GitLab edit form, narrow docking and popup
+accessibility are verified. The selected nineteen-suite upstream set is
+**439 passed / zero failed / one unchanged upstream skip / 440 total**. All
+**5,949 root tests/361 files**, current TypeScript/API, existing size checks and
+upstream lint pass. Eight isolated component states have no full-body axe
+violations and exercise actual clipboard and audio/video preview playback.
+The recorded real-service journey passes **21 checks** through UI save/reopen
+and application restart. Source rollback verifies twenty-five files; fourteen
+ordered patches reproduce the tested specs/fixtures.
+
+This closes the two outstanding original menu-entry requirements in that test
+set. It does not certify the complete GitLab suite or product. Partial-edit
+source fidelity, quick actions, suggestions, GLQL, complete snippet/footnote/table
+workflows, all product surfaces/roles/browsers, compiled deployment rollback and
+hosted CI remain open, as do the other two complete professional products.
+No parity row, superiority claim or publication is promoted.
+[Current evidence and retained failures](../artifacts/gitlab-context-integration-20261113.json).
+The following checkpoints are historical.
+
+## Earlier upload checkpoint — 2026-11-12
 
 Fountain mounts in real GitLab issue/discussion editors. Native picker/image
 clipboard uploads now use actual authenticated GitLab storage and rendering APIs,

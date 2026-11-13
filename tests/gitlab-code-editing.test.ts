@@ -163,13 +163,16 @@ it('does not create history for an unchanged source or mutate a cancelled source
 
 it('maps a source draft to its captured block after unrelated edits and caret movement', async () => {
   const { service, editor } = await setup(), session = service.beginCodeEdit();
+  expect(session.targetPath).toEqual([1]);
   const paragraph = editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Inserted')]);
   editor.dispatch(editor.createTransaction().replaceNode([0], [paragraph, editor.state.doc.child(0)]));
   editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([3, 0], 2)));
+  expect(session.targetPath).toEqual([2]);
   expect(session.applySource('Updated source')).toBe(true);
   expect(editor.state.doc.child(2).textContent).toBe('Updated source');
   expect(editor.state.doc.child(3).textContent).toBe('After');
   expect(editor.state.selection.path).toEqual([3, 0]);
+  expect(session.targetPath).toBeUndefined();
 });
 
 it.each(['edited', 'deleted', 'replaced'])('refuses a source draft after its target is %s', async change => {
@@ -178,6 +181,7 @@ it.each(['edited', 'deleted', 'replaced'])('refuses a source draft after its tar
   if (change === 'deleted') editor.dispatch(editor.createTransaction().replaceNode([1], []));
   if (change === 'replaced') await service.setSerializedContent(source);
   const before = editor.state.doc;
+  expect(session.targetPath).toBeUndefined();
   expect(() => session.applySource('draft')).toThrow('GITLAB_CODE_TARGET_CHANGED');
   expect(editor.state.doc).toBe(before); expect(session.closed).toBe(false);
 });

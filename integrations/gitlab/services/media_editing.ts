@@ -65,7 +65,7 @@ export class GitLabMediaEditingSession {
     catch (error) { try { this.options?.onListenerError?.(error); } catch { /* An observer cannot own a document commit. */ } }
   }
   private track(doc: Node, transaction: Transaction): void {
-    if (!transaction.docChanged || this.committing || this.conflict || !this.doc) return;
+    if (doc === this.doc || this.committing || this.conflict || !this.doc) return;
     try {
       if (transaction.originalDoc !== this.doc || transaction.getMeta('content$replace')) throw new Error();
       const selected = mapSelection(this.selected, this.doc, doc, transaction.mapping);

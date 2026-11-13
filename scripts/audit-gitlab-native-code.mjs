@@ -5,7 +5,7 @@ export async function auditNativeCode({ page, editor, toolbar, output, report })
   const text = 'const total = 42;\nconsole.log(total);';
   const source = '```javascript\n' + text + '\n```\n\n- ```js\n  Nested console\n  ```\n- Neighbor item';
   const code = editor.locator('pre').filter({ hasText: 'const total = 42;' });
-  const controls = toolbar.getByRole('region', { name: 'Code block controls' });
+  const controls = page.getByRole('region', { name: 'Code block controls' });
   const language = controls.getByRole('combobox', { name: 'Code language' });
   const screenshot = name => page.screenshot({ path: fileURLToPath(new URL(name, output)), fullPage: true, caret: 'initial' });
   await editor.getByText('Recovered paste', { exact: true }).click();

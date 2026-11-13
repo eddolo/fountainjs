@@ -119,9 +119,13 @@ export class GitLabCodeEditingSession {
 
   get conflict(): boolean { return this.conflicted; }
   get closed(): boolean { return !this.options; }
+  /** View placement follows the owned block, never a later unrelated caret. */
+  get targetPath(): readonly number[] | undefined {
+    return !this.closed && !this.conflicted ? this.selected.nodePath : undefined;
+  }
 
   private track(doc: Node, transaction: Transaction): void {
-    if (!transaction.docChanged || this.committing || this.conflicted || !this.doc) return;
+    if (doc === this.doc || this.committing || this.conflicted || !this.doc) return;
     try {
       if (transaction.originalDoc !== this.doc || transaction.getMeta('content$replace')) throw new Error();
       const mapped = mapSelection(this.selected, this.doc, doc, transaction.mapping);

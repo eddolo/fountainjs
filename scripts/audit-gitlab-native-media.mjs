@@ -4,7 +4,7 @@ import { writeFile } from 'node:fs/promises';
 
 const assets = new URL('../artifacts/gitlab-media-test-assets/', import.meta.url);
 export async function auditNativeMedia({ page, context, editor, toolbar, output, report }) {
-  const menu = toolbar.getByRole('group', { name: 'Media controls' });
+  const menu = page.getByRole('group', { name: 'Media controls' });
   const dialog = () => page.getByRole('dialog', { name: 'Media properties', exact: true });
   const screenshot = name => page.screenshot({ path: fileURLToPath(new URL(name, output)), fullPage: true, caret: 'initial' });
   const place = async () => {

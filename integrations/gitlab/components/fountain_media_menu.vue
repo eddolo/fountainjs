@@ -5,14 +5,16 @@ import { markRaw } from 'vue';
 import { s__ } from '~/locale';
 import { copyToClipboard } from '~/lib/utils/copy_to_clipboard';
 import { getGitLabMediaContext } from '../runtime/browser';
+import FountainContextSurface from './fountain_context_surface.vue';
 
 export default {
   name: 'FountainMediaMenu',
-  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlLink, GlModal },
+  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlLink, GlModal, FountainContextSurface },
   props: {
     contentEditor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
     allowUpload: { type: Boolean, required: false, default: false },
+    getEditorRoot: { type: Function, required: false, default: null },
   },
   emits: ['focus', 'error', 'replace-file'],
   data() {
@@ -55,6 +57,8 @@ export default {
     this.disposed = true; this.releaseState(); this.session?.close(); this.cancelReplacement(); this.stopPreview();
   },
   methods: {
+    // eslint-disable-next-line vue/no-unused-properties -- Called when the owning native view mounts/replaces.
+    refreshRoot() { this.$refs.contextSurface?.refreshRoot(); },
     refresh() { this.context = getGitLabMediaContext(this.contentEditor.editor) || null; this.copyState = null; },
     open() {
       if (this.disabled || !this.context) return;
@@ -91,11 +95,11 @@ export default {
       catch (error) { this.$emit('error', error); }
     },
     async copy(event) {
-      if (!this.context) return;
-      const address = this.context.canonical;
+      if (!this.displayContext) return;
+      const address = this.displayContext.canonical;
       try {
         await copyToClipboard(address, event.currentTarget);
-        if (!this.disposed && this.context?.canonical === address) this.copyState = 'copied';
+        if (!this.disposed && this.displayContext?.canonical === address) this.copyState = 'copied';
       } catch { if (!this.disposed) this.copyState = 'failed'; }
     },
     chooseReplacement() {
@@ -118,7 +122,8 @@ export default {
 };
 </script>
 <template>
-  <div v-if="displayContext" data-testid="native-media-menu" class="gl-inline-flex gl-flex-wrap gl-items-center gl-gap-2" role="group" :aria-label="s__('ContentEditor|Media controls')">
+  <fountain-context-surface v-if="displayContext" ref="contextSurface" :editor="contentEditor.editor" :active="Boolean(displayContext)" :anchor-path="displayContext.conflict ? null : displayContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Media actions')" :suspended="dialogOpen" @reveal="$emit('focus')">
+  <div data-testid="native-media-menu" class="gl-inline-flex gl-flex-wrap gl-items-center gl-gap-2" role="group" :aria-label="s__('ContentEditor|Media controls')">
     <gl-button :disabled="disabled" size="small" @click="open">{{ s__('ContentEditor|Edit media properties') }}</gl-button>
     <gl-link :href="displayContext.displayURL" target="_blank" rel="noopener noreferrer">{{ s__('ContentEditor|Open media') }}</gl-link>
     <gl-button size="small" @click="copy">{{ s__('ContentEditor|Copy media URL') }}</gl-button>
@@ -150,4 +155,5 @@ export default {
       </template>
     </gl-modal>
   </div>
+  </fountain-context-surface>
 </template>

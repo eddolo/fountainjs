@@ -1,0 +1,406 @@
+diff --git a/spec/frontend/content_editor/components/fountain_context_surface_spec.js b/spec/frontend/content_editor/components/fountain_context_surface_spec.js
+new file mode 100644
+index 00000000..3f935bb6
+--- /dev/null
++++ b/spec/frontend/content_editor/components/fountain_context_surface_spec.js
+@@ -0,0 +1,284 @@
++import { fireEvent, getByRole, queryByRole } from '@testing-library/dom';
++import { markRaw } from 'vue';
++import { mountExtended } from 'helpers/vue_test_utils_helper';
++import waitForPromises from 'helpers/wait_for_promises';
++import { copyToClipboard } from '~/lib/utils/copy_to_clipboard';
++import {
++  GitLabContentEditor,
++  Selection,
++  NodeSelection,
++  undo,
++} from '~/content_editor/services/fountain_runtime';
++import CodeBlockBubbleMenu from '~/content_editor/components/bubble_menus/code_block_bubble_menu.vue';
++import MediaBubbleMenu from '~/content_editor/components/bubble_menus/media_bubble_menu.vue';
++import FountainEditorSurface from '~/content_editor/components/fountain_editor_surface.vue';
++import mediaFixtures from '../fixtures/fountain_media_live_html.json';
++
++// Only the OS clipboard is replaced; both menus use the real native editor/view.
++jest.mock('~/lib/utils/copy_to_clipboard', () => ({
++  copyToClipboard: jest.fn().mockResolvedValue(),
++}));
++
++describe('native code/media contextual surfaces', () => {
++  let wrapper;
++  let service;
++  let restoreWidth;
++  const source = '```js\nconst first = 1;\n```\n\n```mermaid\ngraph LR\n  A-->B\n```';
++  const body =
++    '<pre data-language="js"><code>const first = 1;</code></pre><pre data-language="mermaid"><code>graph LR\n  A--&gt;B</code></pre>';
++  const settle = async () => {
++    await waitForPromises();
++    jest.runOnlyPendingTimers();
++    await waitForPromises();
++    jest.runOnlyPendingTimers();
++    await waitForPromises();
++  };
++  const popup = (label) => getByRole(document.body, 'dialog', { name: label });
++  const sourceDialog = () =>
++    getByRole(document.body, 'dialog', { name: 'Diagram source and preview' });
++  const language = () =>
++    getByRole(popup('Code block actions'), 'combobox', { name: 'Code language' });
++  async function createComponent({ kind = 'code', editable = true } = {}) {
++    const fixture = mediaFixtures.fixtures.find((item) => item.name === 'image');
++    service = new GitLabContentEditor({
++      editable,
++      describeLabels: () => '',
++      renderMarkdown: () => Promise.resolve({ body: kind === 'media' ? fixture.body : body }),
++    });
++    await service.setSerializedContent(kind === 'media' ? fixture.source : source);
++    const { editor } = service;
++    editor.dispatch(
++      editor
++        .createTransaction()
++        .setSelection(
++          kind === 'media'
++            ? new NodeSelection(editor.state.doc, [0, 0])
++            : Selection.cursor([0, 0], 3),
++        ),
++    );
++    wrapper = mountExtended(
++      {
++        components: { CodeBlockBubbleMenu, MediaBubbleMenu, FountainEditorSurface },
++        data() {
++          return { owner: markRaw(service) };
++        },
++        methods: {
++          getRoot() {
++            return this.$refs.surface?.getRootElement() || null;
++          },
++          ready() {
++            this.$refs.menu.refreshRoot();
++          },
++          reveal() {
++            this.$refs.surface.focus();
++          },
++        },
++        template: `<main><button type="button">Other field</button>
++        <code-block-bubble-menu v-if="${kind === 'code'}" ref="menu" :content-editor="owner" :get-editor-root="getRoot" :disabled="${!editable}" @focus="reveal" />
++        <media-bubble-menu v-else ref="menu" :content-editor="owner" :get-editor-root="getRoot" :disabled="${!editable}" @focus="reveal" />
++        <fountain-editor-surface ref="surface" :editor="owner.editor" :editable="${editable}" @ready="ready" />
++      </main>`,
++      },
++      { attachTo: document.body, stubs: { FountainDiagramPreview: true } },
++    );
++    await settle();
++    wrapper.findComponent(FountainEditorSurface).element.querySelector('[role="textbox"]').focus();
++    await settle();
++  }
++  beforeEach(() => {
++    const width = Object.getOwnPropertyDescriptor(window, 'innerWidth');
++    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1280 });
++    restoreWidth = () => Object.defineProperty(window, 'innerWidth', width);
++    jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(() => ({
++      x: 100,
++      y: 250,
++      left: 100,
++      top: 250,
++      right: 500,
++      bottom: 410,
++      width: 400,
++      height: 160,
++      toJSON: () => ({}),
++    }));
++  });
++  afterEach(async () => {
++    wrapper?.destroy();
++    service?.dispose();
++    await settle();
++    restoreWidth();
++  });
++
++  it('mounts the original code-menu entry point with real native language, copy, deletion and undo behavior', async () => {
++    await createComponent();
++    expect(wrapper.findComponent(CodeBlockBubbleMenu).exists()).toBe(true);
++    const trigger = getByRole(wrapper.element, 'button', { name: 'Code block actions' });
++    expect(document.getElementById(trigger.getAttribute('aria-controls'))).toBe(
++      popup('Code block actions'),
++    );
++    expect(language().value).toBe('js');
++    fireEvent.focus(language());
++    fireEvent.input(language(), { target: { value: 'python' } });
++    fireEvent.click(getByRole(popup('Code block actions'), 'button', { name: 'Apply language' }));
++    await settle();
++    expect(service.getSerializedContent()).toContain('```python\nconst first = 1;');
++    fireEvent.click(getByRole(popup('Code block actions'), 'button', { name: 'Copy code' }));
++    await settle();
++    expect(copyToClipboard).toHaveBeenCalledWith('const first = 1;', expect.any(HTMLElement));
++    fireEvent.click(
++      getByRole(popup('Code block actions'), 'button', { name: 'Delete code block' }),
++    );
++    await settle();
++    expect(service.getSerializedContent()).not.toContain('const first');
++    expect(undo(service.editor)).toBe(true);
++    expect(service.getSerializedContent()).toContain('const first');
++  });
++  it('retains one captured code owner while a language draft is open and the caret moves to another code block', async () => {
++    await createComponent();
++    fireEvent.focus(language());
++    fireEvent.input(language(), { target: { value: 'python' } });
++    service.editor.dispatch(
++      service.editor.createTransaction().setSelection(Selection.cursor([1, 0], 3)),
++    );
++    await settle();
++    expect(
++      queryByRole(popup('Code block actions'), 'button', { name: 'Show diagram preview' }),
++    ).toBeNull();
++    fireEvent.click(getByRole(popup('Code block actions'), 'button', { name: 'Copy code' }));
++    await settle();
++    expect(copyToClipboard).toHaveBeenCalledWith('const first = 1;', expect.any(HTMLElement));
++    fireEvent.click(getByRole(popup('Code block actions'), 'button', { name: 'Apply language' }));
++    await settle();
++    expect(service.editor.state.doc.child(0).attrs.language).toBe('python');
++    expect(service.editor.state.doc.child(1).attrs.language).toBe('mermaid');
++  });
++  it('mounts the original media-menu entry point and applies native properties with undo', async () => {
++    await createComponent({ kind: 'media' });
++    expect(wrapper.findComponent(MediaBubbleMenu).exists()).toBe(true);
++    fireEvent.click(getByRole(popup('Media actions'), 'button', { name: 'Edit media properties' }));
++    await settle();
++    expect(queryByRole(document.body, 'dialog', { name: 'Media actions' })).toBeNull();
++    const dialog = getByRole(document.body, 'dialog', { name: 'Media properties' });
++    fireEvent.input(getByRole(dialog, 'textbox', { name: 'Media description' }), {
++      target: { value: 'Reviewed figure' },
++    });
++    fireEvent.click(getByRole(dialog, 'button', { name: 'Apply media changes' }));
++    await settle();
++    expect(service.getSerializedContent()).toContain('![Reviewed figure]');
++    expect(undo(service.editor)).toBe(true);
++    expect(service.getSerializedContent()).toBe(
++      mediaFixtures.fixtures.find((item) => item.name === 'image').source,
++    );
++  });
++  it('transfers a captured clean language session into source editing without taking the later diagram owner', async () => {
++    await createComponent();
++    fireEvent.focus(language());
++    fireEvent.input(language(), { target: { value: 'mermaid' } });
++    fireEvent.click(getByRole(popup('Code block actions'), 'button', { name: 'Apply language' }));
++    await settle();
++    fireEvent.focus(language());
++    service.editor.dispatch(
++      service.editor.createTransaction().setSelection(Selection.cursor([1, 0], 3)),
++    );
++    await settle();
++    fireEvent.click(
++      getByRole(popup('Code block actions'), 'button', { name: 'Edit diagram source' }),
++    );
++    await settle();
++    const field = getByRole(sourceDialog(), 'textbox', { name: 'Diagram source' });
++    expect(field.value).toBe('const first = 1;');
++    fireEvent.input(field, { target: { value: 'graph LR\n  Captured-->Owner' } });
++    fireEvent.click(getByRole(sourceDialog(), 'button', { name: 'Apply diagram source' }));
++    await settle();
++    expect(service.editor.state.doc.child(0).textContent).toBe('graph LR\n  Captured-->Owner');
++    expect(service.editor.state.doc.child(1).textContent).toBe('graph LR\n  A-->B');
++    expect(undo(service.editor)).toBe(true);
++    expect(service.editor.state.doc.child(0).textContent).toBe('const first = 1;');
++  });
++  it('supports keyboard access, Escape dismissal, focus restoration and reopening without mutating content', async () => {
++    await createComponent();
++    const editor = wrapper
++      .findComponent(FountainEditorSurface)
++      .element.querySelector('[role="textbox"]');
++    fireEvent.keyDown(editor, { key: 'F10', altKey: true });
++    await settle();
++    expect(document.activeElement).toBe(language());
++    fireEvent.click(
++      getByRole(popup('Code block actions'), 'button', { name: 'Cancel language edit' }),
++    );
++    await settle();
++    const hostEscape = jest.fn();
++    wrapper.element.addEventListener('keydown', hostEscape);
++    fireEvent.keyDown(editor, { key: 'Escape' });
++    await settle();
++    expect(hostEscape).not.toHaveBeenCalled();
++    expect(queryByRole(document.body, 'dialog', { name: 'Code block actions' })).toBeNull();
++    const trigger = getByRole(wrapper.element, 'button', { name: 'Code block actions' });
++    expect(trigger.getAttribute('aria-expanded')).toBe('false');
++    fireEvent.click(trigger);
++    await settle();
++    expect(document.activeElement).toBe(language());
++    expect(service.getSerializedContent()).toBe(source);
++  });
++  it('hides the floating surface on external focus and keeps its draft available when reopened', async () => {
++    await createComponent();
++    fireEvent.focus(language());
++    fireEvent.input(language(), { target: { value: 'rust' } });
++    getByRole(wrapper.element, 'button', { name: 'Other field' }).focus();
++    await settle();
++    expect(queryByRole(document.body, 'dialog', { name: 'Code block actions' })).toBeNull();
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Code block actions' }));
++    await settle();
++    expect(language().value).toBe('rust');
++    expect(service.getSerializedContent()).toBe(source);
++  });
++  it('docks on a narrow viewport while retaining an open source draft and its document', async () => {
++    await createComponent();
++    service.editor.dispatch(
++      service.editor.createTransaction().setSelection(Selection.cursor([1, 0], 3)),
++    );
++    await settle();
++    fireEvent.click(
++      getByRole(popup('Code block actions'), 'button', { name: 'Edit diagram source' }),
++    );
++    await settle();
++    const field = getByRole(sourceDialog(), 'textbox', { name: 'Diagram source' });
++    fireEvent.input(field, { target: { value: 'graph LR\n  Retain-->Draft' } });
++    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 360 });
++    fireEvent(window, new Event('resize'));
++    await settle();
++    expect(wrapper.findByTestId('native-context-surface').attributes('data-menu-mode')).toBe(
++      'docked',
++    );
++    expect(getByRole(sourceDialog(), 'textbox', { name: 'Diagram source' }).value).toBe(
++      'graph LR\n  Retain-->Draft',
++    );
++    expect(service.getSerializedContent()).toBe(source);
++    fireEvent.click(getByRole(sourceDialog(), 'button', { name: 'Cancel source edit' }));
++    await settle();
++    expect(getByRole(wrapper.element, 'button', { name: 'Edit diagram source' })).toBeInstanceOf(
++      HTMLElement,
++    );
++  });
++  it('keeps read-only code inspection available and refuses mutation actions', async () => {
++    await createComponent({ editable: false });
++    const apply = getByRole(popup('Code block actions'), 'button', { name: 'Apply language' });
++    expect(apply.disabled || apply.getAttribute('aria-disabled') === 'true').toBe(true);
++    fireEvent.click(apply);
++    await settle();
++    expect(service.getSerializedContent()).toBe(source);
++  });
++  it('removes its floating surface and subscriptions when its owning view is destroyed', async () => {
++    await createComponent();
++    expect(popup('Code block actions')).toBeInstanceOf(HTMLElement);
++    wrapper.destroy();
++    wrapper = null;
++    await settle();
++    expect(queryByRole(document.body, 'dialog', { name: 'Code block actions' })).toBeNull();
++    service.editor.dispatch(
++      service.editor.createTransaction().setSelection(Selection.cursor([1, 0], 0)),
++    );
++    fireEvent(window, new Event('resize'));
++    await settle();
++    expect(queryByRole(document.body, 'dialog', { name: 'Code block actions' })).toBeNull();
++  });
++});
+diff --git a/spec/frontend/content_editor/fixtures/fountain_media_live_html.json b/spec/frontend/content_editor/fixtures/fountain_media_live_html.json
+new file mode 100644
+index 00000000..68355ce7
+--- /dev/null
++++ b/spec/frontend/content_editor/fixtures/fountain_media_live_html.json
+@@ -0,0 +1,110 @@
++{
++  "scope": "Authenticated renderer structure fixtures; asset URLs are illustrative, not uploaded/playback acceptance",
++  "upstream": {
++    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
++    "version": "19.5.3",
++    "packagedRevision": "0d4c9a9a2fa"
++  },
++  "fixtures": [
++    {
++      "name": "image",
++      "source": "![Original figure](/uploads/media-fixture/figure.png \"Figure title\")",
++      "body": "<p data-sourcepos=\"1:1-1:68\" dir=\"auto\"><a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/figure.png\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/figure.png\" data-link=\"true\"><img data-sourcepos=\"1:1-1:68\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Original figure\" title=\"Figure title\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
++    },
++    {
++      "name": "image-sized",
++      "source": "![Sized figure](/uploads/media-fixture/figure.png){width=\"320\" height=\"180\"}",
++      "body": "<p data-sourcepos=\"1:1-1:76\" dir=\"auto\"><a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/figure.png\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/figure.png\" data-link=\"true\"><img data-sourcepos=\"1:1-1:50\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Sized figure\" width=\"320\" height=\"180\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
++    },
++    {
++      "name": "image-percent",
++      "source": "![Responsive figure](/uploads/media-fixture/figure.png){width=\"50%\"}",
++      "body": "<p data-sourcepos=\"1:1-1:68\" dir=\"auto\"><a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/figure.png\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/figure.png\" data-link=\"true\"><img data-sourcepos=\"1:1-1:55\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Responsive figure\" width=\"50%\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
++    },
++    {
++      "name": "image-inline",
++      "source": "Before ![Inline figure](/uploads/media-fixture/figure.png) after.",
++      "body": "<p data-sourcepos=\"1:1-1:65\" dir=\"auto\">Before <a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/figure.png\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/figure.png\" data-link=\"true\"><img data-sourcepos=\"1:8-1:58\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Inline figure\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a> after.</p>"
++    },
++    {
++      "name": "image-link",
++      "source": "[![Linked figure](/uploads/media-fixture/figure.png)](/help/user/project)",
++      "body": "<p data-sourcepos=\"1:1-1:73\" dir=\"auto\"><a data-sourcepos=\"1:1-1:73\" href=\"/root/fountain-product-integration/-/blob/main/help/user/project\" data-canonical-src=\"/help/user/project\" class=\"gfm\"><img data-sourcepos=\"1:2-1:52\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Linked figure\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
++    },
++    {
++      "name": "image-link-sized",
++      "source": "[![Linked figure](/uploads/media-fixture/figure.png \"Linked figure title\"){width=\"240\"}](/help/user/project)",
++      "body": "<p data-sourcepos=\"1:1-1:108\" dir=\"auto\"><a data-sourcepos=\"1:1-1:108\" href=\"/root/fountain-product-integration/-/blob/main/help/user/project\" data-canonical-src=\"/help/user/project\" class=\"gfm\"><img data-sourcepos=\"1:2-1:74\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Linked figure\" title=\"Linked figure title\" width=\"240\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/figure.png\" data-canonical-src=\"/uploads/media-fixture/figure.png\"></a></p>"
++    },
++    {
++      "name": "audio",
++      "source": "![Audio description](/uploads/media-fixture/recording.wav)",
++      "body": "<p data-sourcepos=\"1:1-1:58\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Audio description\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
++    },
++    {
++      "name": "audio-titled",
++      "source": "![Audio description](/uploads/media-fixture/recording.wav \"Retained audio title\")",
++      "body": "<p data-sourcepos=\"1:1-1:81\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained audio title\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
++    },
++    {
++      "name": "audio-sized",
++      "source": "![Audio description](/uploads/media-fixture/recording.wav \"Retained audio title\"){width=\"240\" height=\"54\"}",
++      "body": "<p data-sourcepos=\"1:1-1:106\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained audio title\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
++    },
++    {
++      "name": "audio-link",
++      "source": "[Audio download](/uploads/media-fixture/recording.wav)",
++      "body": "<p data-sourcepos=\"1:1-1:54\" dir=\"auto\"><a data-sourcepos=\"1:1-1:54\" href=\"/-/project/1/uploads/media-fixture/recording.wav\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" data-link=\"true\" class=\"gfm\">Audio download</a></p>"
++    },
++    {
++      "name": "video",
++      "source": "![Video description](/uploads/media-fixture/recording.webm)",
++      "body": "<p data-sourcepos=\"1:1-1:59\" dir=\"auto\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Video description\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>"
++    },
++    {
++      "name": "video-titled",
++      "source": "![Video description](/uploads/media-fixture/recording.webm \"Retained video title\"){width=\"280\"}",
++      "body": "<p data-sourcepos=\"1:1-1:95\" dir=\"auto\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained video title\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" width=\"280\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>"
++    },
++    {
++      "name": "multiple-titled",
++      "source": "![Video description](/uploads/media-fixture/recording.webm \"Retained video title\"){width=\"280\"}\n\n![Audio description](/uploads/media-fixture/recording.wav \"Retained audio title\")",
++      "body": "<p data-sourcepos=\"1:1-1:95\" dir=\"auto\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained video title\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" width=\"280\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>&#x000A;<p data-sourcepos=\"3:1-3:81\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained audio title\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>"
++    },
++    {
++      "name": "video-sized",
++      "source": "![Sized video](/uploads/media-fixture/recording.webm){width=\"320\" height=\"180\"}",
++      "body": "<p data-sourcepos=\"1:1-1:79\" dir=\"auto\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Sized video\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" height=\"180\" width=\"320\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>"
++    },
++    {
++      "name": "video-inline",
++      "source": "Before ![Inline video](/uploads/media-fixture/recording.webm) after.",
++      "body": "<p data-sourcepos=\"1:1-1:68\" dir=\"auto\">Before <span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Inline video\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span> after.</p>"
++    },
++    {
++      "name": "nested",
++      "source": "> ![Quoted video](/uploads/media-fixture/recording.webm)\n\n- ![Listed audio](/uploads/media-fixture/recording.wav)",
++      "body": "<blockquote data-sourcepos=\"1:1-1:56\" dir=\"auto\">&#x000A;<p data-sourcepos=\"1:3-1:56\"><span class=\"media-container video-container\"><video src=\"/-/project/1/uploads/media-fixture/recording.webm\" controls=\"true\" data-setup=\"{}\" data-title=\"Quoted video\" preload=\"metadata\" class=\"gl-rounded-lg gfm\" data-canonical-src=\"/uploads/media-fixture/recording.webm\"></video></span></p>&#x000A;</blockquote>&#x000A;<ul data-sourcepos=\"3:1-3:55\" dir=\"auto\">&#x000A;<li data-sourcepos=\"3:1-3:55\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Listed audio\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></li>&#x000A;</ul>"
++    },
++    {
++      "name": "youtube",
++      "source": "![Training video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)",
++      "body": "<p data-sourcepos=\"1:1-1:62\" dir=\"auto\"><a class=\"no-attachment-icon\" href=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" target=\"_blank\" rel=\"nofollow noreferrer noopener\"><img data-sourcepos=\"1:1-1:62\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Training video\" decoding=\"async\" class=\"lazy\" data-src=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"></a></p>"
++    },
++    {
++      "name": "vimeo",
++      "source": "![Training video](https://vimeo.com/123456789)",
++      "body": "<p data-sourcepos=\"1:1-1:46\" dir=\"auto\"><a class=\"no-attachment-icon\" href=\"https://vimeo.com/123456789\" target=\"_blank\" rel=\"nofollow noreferrer noopener\"><img data-sourcepos=\"1:1-1:46\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Training video\" decoding=\"async\" class=\"lazy\" data-src=\"https://vimeo.com/123456789\"></a></p>"
++    },
++    {
++      "name": "drawio",
++      "source": "![Architecture](/uploads/media-fixture/architecture.drawio.svg)",
++      "body": "<p data-sourcepos=\"1:1-1:63\" dir=\"auto\"><a class=\"no-attachment-icon gfm\" href=\"/-/project/1/uploads/media-fixture/architecture.drawio.svg\" target=\"_blank\" rel=\"noopener noreferrer\" data-canonical-src=\"/uploads/media-fixture/architecture.drawio.svg\" data-link=\"true\"><img data-sourcepos=\"1:1-1:63\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"Architecture\" decoding=\"async\" class=\"lazy gfm\" data-src=\"/-/project/1/uploads/media-fixture/architecture.drawio.svg\" data-canonical-src=\"/uploads/media-fixture/architecture.drawio.svg\"></a></p>"
++    },
++    {
++      "name": "raw-video",
++      "source": "<video src=\"/uploads/media-fixture/recording.webm\" controls width=\"320\" height=\"180\"></video>",
++      "body": "<p data-sourcepos=\"1:1-1:93\" dir=\"auto\"></p>"
++    }
++  ]
++}

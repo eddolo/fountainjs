@@ -269,6 +269,8 @@ node scripts/run-gitlab-native-browser-audit.mjs --capacity
 node scripts/run-gitlab-native-browser-audit.mjs --links
 # Ordinary code, languages, clipboard, nested removal and visible caret recovery:
 node scripts/run-gitlab-native-browser-audit.mjs --code
+# Contextual code/media, captured owners, keyboard/modal isolation and mobile:
+node scripts/run-gitlab-native-browser-audit.mjs --context-menus
 # Alerts, direct titles/body, all kinds, nested math/code and real saved rendering:
 node scripts/run-gitlab-native-browser-audit.mjs --alerts
 # Media properties, actual file replacement, playback and recovery:
@@ -319,7 +321,7 @@ With the task application stopped, `node scripts/check-gitlab-native-install.mjs
 /absolute/gitlab-source` exercises the guarded source restore/reinstall and checks
 every digest. This is source rollback evidence; compiled deployment rollback still
 needs a separate exercise.
-Full native toolbar/menus, remaining media/suggestion/provider adapters,
+Remaining native toolbar/menu workflows, suggestion/provider adapters,
 remaining upstream feature cases, accessibility and
 cross-browser/product acceptance remain necessary. Passing a selected real
 journey does not close them.

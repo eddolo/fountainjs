@@ -1,0 +1,71 @@
+{
+  "scope": "Actual native component stories with fixed renderer fixtures and real local media; separate from real GitLab persistence acceptance",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "ee8e3068f0d84e882c67be8ade4744cb5ae6ba1ae5249b6c30d596e7a75e94fd",
+  "status": "passed",
+  "pages": [
+    {
+      "kind": "code",
+      "id": "contextual-editing",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "kind": "code",
+      "id": "contextual-read-only",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "kind": "code",
+      "id": "contextual-editing",
+      "width": 360,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-image",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-read-only",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-audio",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-video",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-image",
+      "width": 360,
+      "violations": [],
+      "errors": []
+    }
+  ],
+  "sources": {
+    "app/assets/javascripts/content_editor/components/fountain_context_surface.vue": "9d8fcfc6e0c7f7ea15fd667fe1a684cc0de74050e6b5724115ab89b5c08f8ed3",
+    "app/assets/javascripts/content_editor/components/fountain_code_menu.vue": "f63240f0bcdf481cdd8b45263db4f125c023653297bdadfb71bd855ca11d992e",
+    "app/assets/javascripts/content_editor/components/fountain_media_menu.vue": "a501c021bd4b798997535358e69e538031c47b877288a1cc1773a5aa0d1ea4f6",
+    "app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js": "10e8f6ddb5dc496be35671064024c0952df5e4b6442fe3694ba4aaf3f960acf0",
+    "app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js": "490b4f2f1aa95d590d2082315150d6c02f94301413102d11f445e4031a140193"
+  }
+}

@@ -7,13 +7,15 @@ import { copyToClipboard } from '~/lib/utils/copy_to_clipboard';
 import CODE_BLOCK_LANGUAGES from '../constants/code_block_languages';
 import { getGitLabCodeContext } from '../runtime/browser';
 import FountainDiagramPreview from './fountain_diagram_preview.vue';
+import FountainContextSurface from './fountain_context_surface.vue';
 
 export default {
   name: 'FountainCodeMenu',
-  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormTextarea, GlModal, FountainDiagramPreview },
+  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormTextarea, GlModal, FountainDiagramPreview, FountainContextSurface },
   props: {
     contentEditor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
+    getEditorRoot: { type: Function, required: false, default: null },
   },
   emits: ['focus', 'error'],
   data() {
@@ -24,13 +26,19 @@ export default {
   },
   computed: {
     visible() { return Boolean(this.context || this.session || this.dialogOpen); },
-    conflict() { return this.revision >= 0 && Boolean(this.session?.conflict); },
+    menuAnchorPath() {
+      if (this.revision < 0) return null;
+      const session = this.sourceSession || this.session;
+      return session ? session.targetPath || null : this.context?.path || this.dialogContext?.path || null;
+    },
+    conflict() { return this.revision >= 0 && Boolean(this.session?.conflict || this.session?.closed); },
+    menuContext() { return this.session?.initial || this.context; },
     languages() {
-      if (this.context?.frontmatter === 'header') return [{ syntax: 'yaml', label: 'YAML' }, { syntax: 'toml', label: 'TOML' }, { syntax: 'json', label: 'JSON' }];
+      if (this.menuContext?.frontmatter === 'header') return [{ syntax: 'yaml', label: 'YAML' }, { syntax: 'toml', label: 'TOML' }, { syntax: 'json', label: 'JSON' }];
       return [{ syntax: 'mermaid', label: s__('ContentEditor|Mermaid diagram') }, { syntax: 'plantuml', label: s__('ContentEditor|PlantUML diagram') }, ...CODE_BLOCK_LANGUAGES];
     },
-    isFrontmatter() { return Boolean(this.context?.frontmatter); },
-    isDiagram() { return !this.isFrontmatter && ['mermaid', 'plantuml'].includes(this.context?.language); },
+    isFrontmatter() { return Boolean(this.menuContext?.frontmatter); },
+    isDiagram() { return !this.isFrontmatter && ['mermaid', 'plantuml'].includes(this.menuContext?.language); },
     sourceIsFrontmatter() { return Boolean(this.dialogContext?.frontmatter); },
     sourceTitle() { return this.sourceIsFrontmatter ? s__('ContentEditor|Frontmatter source') : s__('ContentEditor|Diagram source and preview'); },
     sourceLabel() { return this.sourceIsFrontmatter ? s__('ContentEditor|Frontmatter source') : s__('ContentEditor|Diagram source'); },
@@ -79,6 +87,8 @@ export default {
     this.disposed = true; this.releaseState(); this.session?.close(); this.sourceSession?.close();
   },
   methods: {
+    // eslint-disable-next-line vue/no-unused-properties -- Called when the owning native view mounts/replaces.
+    refreshRoot() { this.$refs.contextSurface?.refreshRoot(); },
     onKeydown(event) {
       if (event.key !== 'Escape' || event.isComposing || this.dialogOpen) return;
       event.preventDefault(); event.stopPropagation(); this.cancel();
@@ -127,7 +137,7 @@ export default {
       } catch (error) { this.errorCode = error.message; }
     },
     async copy(event) {
-      const { context } = this;
+      const context = this.menuContext;
       if (!context) return;
       try {
         await copyToClipboard(context.text, event.currentTarget);
@@ -139,10 +149,12 @@ export default {
       if (this.session && this.language !== this.session.initial.language) {
         this.errorCode = 'GITLAB_CODE_LANGUAGE_DRAFT_PENDING'; return;
       }
-      this.session?.close(); this.session = null;
       try {
-        this.sourceSession = this.disabled ? null : markRaw(this.contentEditor.beginCodeEdit());
-        this.dialogContext = this.sourceSession?.initial || this.context;
+        const context = this.menuContext;
+        this.sourceSession = this.disabled ? null : this.session || markRaw(this.contentEditor.beginCodeEdit());
+        if (this.disabled) this.session?.close();
+        this.session = null;
+        this.dialogContext = this.sourceSession?.initial || context;
         this.sourceDraft = this.dialogContext.text; this.sourceError = null; this.sourceCopyState = null;
         this.sourceComposing = false; this.showPreview = false; this.errorCode = null; this.dialogOpen = true;
       } catch (error) { this.errorCode = error.message; }
@@ -176,19 +188,20 @@ export default {
 };
 </script>
 <template>
-  <section v-if="visible" data-testid="native-code-menu" class="gl-w-full gl-border-t gl-pt-3" :aria-label="s__('ContentEditor|Code block controls')" @keydown="onKeydown">
+  <fountain-context-surface v-if="visible" ref="contextSurface" :editor="contentEditor.editor" :active="visible" :anchor-path="menuAnchorPath" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Code block actions')" :suspended="dialogOpen" @reveal="$emit('focus')">
+  <section data-testid="native-code-menu" class="gl-w-full" :aria-label="s__('ContentEditor|Code block controls')" @keydown="onKeydown">
     <gl-alert v-if="formError" variant="danger" :dismissible="false" class="gl-mb-3">{{ formError }}</gl-alert>
-    <p v-if="isFrontmatter" class="gl-mb-3">{{ context.frontmatter === 'header' ? s__('ContentEditor|Document frontmatter stays at the beginning. Edit its literal source here or in the editor. Changing the format preserves the source; it does not translate YAML, TOML or JSON.') : s__('ContentEditor|This is a code fence labelled frontmatter, not a document header. Its fence parameter is preserved when you save.') }}</p>
+    <p v-if="isFrontmatter" class="gl-mb-3">{{ menuContext.frontmatter === 'header' ? s__('ContentEditor|Document frontmatter stays at the beginning. Edit its literal source here or in the editor. Changing the format preserves the source; it does not translate YAML, TOML or JSON.') : s__('ContentEditor|This is a code fence labelled frontmatter, not a document header. Its fence parameter is preserved when you save.') }}</p>
     <gl-form class="gl-flex gl-flex-wrap gl-items-end gl-gap-3" @submit.stop.prevent="apply">
-      <gl-form-group :label="context?.frontmatter === 'header' ? s__('ContentEditor|Frontmatter format') : s__('ContentEditor|Code language')" :label-for="inputId" class="gl-mb-0 gl-max-w-full">
+      <gl-form-group :label="menuContext?.frontmatter === 'header' ? s__('ContentEditor|Frontmatter format') : s__('ContentEditor|Code language')" :label-for="inputId" class="gl-mb-0 gl-max-w-full">
         <gl-form-input :id="inputId" v-model="language" :list="`${inputId}-options`" :disabled="disabled || conflict" :maxlength="80" autocomplete="off" @focus="begin" />
         <datalist :id="`${inputId}-options`">
           <option v-for="item in languages" :key="item.syntax" :value="item.syntax">{{ item.label }}</option>
         </datalist>
       </gl-form-group>
-      <gl-button type="submit" size="small" :disabled="disabled || conflict || !language.trim()">{{ context?.frontmatter === 'header' ? s__('ContentEditor|Apply frontmatter format') : s__('ContentEditor|Apply language') }}</gl-button>
+      <gl-button type="submit" size="small" :disabled="disabled || conflict || !language.trim()">{{ menuContext?.frontmatter === 'header' ? s__('ContentEditor|Apply frontmatter format') : s__('ContentEditor|Apply language') }}</gl-button>
       <gl-button v-if="session" size="small" @click="cancel">{{ s__('ContentEditor|Cancel language edit') }}</gl-button>
-      <gl-button size="small" :disabled="!context" @click="copy">{{ s__('ContentEditor|Copy code') }}</gl-button>
+      <gl-button size="small" :disabled="!menuContext" @click="copy">{{ s__('ContentEditor|Copy code') }}</gl-button>
       <gl-button size="small" variant="danger" category="secondary" :disabled="disabled || conflict" @click="remove">{{ s__('ContentEditor|Delete code block') }}</gl-button>
       <gl-button v-if="isFrontmatter" size="small" :disabled="disabled || conflict" @click="convertToCode">{{ s__('ContentEditor|Convert to regular code block') }}</gl-button>
     </gl-form>
@@ -201,7 +214,7 @@ export default {
       {{ disabled ? s__('ContentEditor|View diagram source') : s__('ContentEditor|Edit diagram source') }}
     </gl-button>
     <gl-button v-if="isFrontmatter" class="gl-mt-3" size="small" @click="openSource">{{ disabled ? s__('ContentEditor|View frontmatter source') : s__('ContentEditor|Edit frontmatter source') }}</gl-button>
-    <fountain-diagram-preview v-if="isDiagram && showPreview" :content-editor="contentEditor" :source="context.text" :language="context.language" />
+    <fountain-diagram-preview v-if="isDiagram && showPreview" :content-editor="contentEditor" :source="menuContext.text" :language="menuContext.language" />
     <gl-modal v-model="dialogOpen" :modal-id="modalId" size="lg" :title="sourceTitle" :action-primary="sourceAction" :action-cancel="sourceCancel" :return-focus="focusTarget" :no-close-on-esc="sourceComposing" :no-close-on-backdrop="hasUnappliedSource" @primary="applySource" @hide="hideSource" @hidden="hiddenSource">
       <template v-if="dialogOpen && dialogContext">
         <p v-if="sourceIsFrontmatter">{{ disabled ? s__('ContentEditor|Read-only frontmatter source. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') : s__('ContentEditor|Edit the source contents without the opening and closing delimiters. Apply makes one undoable change. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') }}</p>
@@ -222,6 +235,7 @@ export default {
       </template>
     </gl-modal>
   </section>
+  </fountain-context-surface>
 </template>
 <style scoped>
 .fountain-diagram-authoring { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }

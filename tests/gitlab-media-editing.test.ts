@@ -108,6 +108,15 @@ it('refuses a changed captured atom and retains the caller draft', async () => {
   expect(() => session.remove()).toThrow('GITLAB_MEDIA_TARGET_CHANGED');
   expect(editor.state.doc.child(0).child(0).attrs.alt).toBe('Another edit');
 });
+it.each(['image', 'audio', 'video'])('invalidates %s ownership immediately on an equal-content document replacement', async name => {
+  const { service, editor, row } = await setup(name), changed = vi.fn(), session = service.beginMediaEdit(changed);
+  await service.setSerializedContent(row.source);
+  const current = editor.state.doc;
+  expect(session.snapshot.conflict).toBe(true);
+  expect(changed).toHaveBeenCalledWith(expect.objectContaining({ conflict: true }));
+  await expect(session.apply(fields(session, { alt: 'Old document draft' }))).rejects.toThrow('GITLAB_MEDIA_TARGET_CHANGED');
+  expect(editor.state.doc).toBe(current); expect(service.getSerializedContent()).toBe(row.source);
+});
 it.each(['resolve', 'reject'])('cancels a pending media request and ignores a late %s', async outcome => {
   const { service, editor, render } = await setup(), before = editor.state.doc, session = service.beginMediaEdit();
   let resolve!: (value: { body: string }) => void, reject!: (error: Error) => void;

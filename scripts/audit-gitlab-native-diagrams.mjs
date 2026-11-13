@@ -9,7 +9,7 @@ export async function auditNativeDiagrams({ page, context, editor, toolbar, outp
   const source = '```mermaid\n' + mermaidSource + '\n```\n\n```plantuml\n' + plantumlSource + '\n```\n\nAfter diagrams.';
   const mermaid = editor.locator('pre[data-language="mermaid"]');
   const plantuml = editor.locator('pre[data-language="plantuml"]');
-  const controls = toolbar.getByRole('region', { name: 'Code block controls', exact: true });
+  const controls = page.getByRole('region', { name: 'Code block controls', exact: true });
   const preview = () => controls.getByRole('region', { name: 'Diagram preview', exact: true });
   const frame = () => preview().frameLocator('iframe[title="Mermaid diagram preview"]');
   const screenshot = name => page.screenshot({ path: fileURLToPath(new URL(name, output)), fullPage: true, caret: 'initial' });
@@ -144,7 +144,7 @@ export async function auditNativeDiagrams({ page, context, editor, toolbar, outp
 }
 
 async function auditPairedDiagramSource({ page, editor, toolbar, output, report }) {
-  const controls = toolbar.getByRole('region', { name: 'Code block controls', exact: true });
+  const controls = page.getByRole('region', { name: 'Code block controls', exact: true });
   const dialog = () => page.getByRole('dialog', { name: 'Diagram source and preview', exact: true });
   const source = () => dialog().getByRole('textbox', { name: 'Diagram source', exact: true });
   const preview = () => dialog().getByRole('region', { name: 'Diagram preview', exact: true });

@@ -1,0 +1,29 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/content_editor/components/fountain_context_surface.vue app/assets/javascripts/content_editor/components/fountain_code_menu.vue app/assets/javascripts/content_editor/components/fountain_media_menu.vue app/assets/javascripts/content_editor/components/content_editor.vue app/assets/javascripts/content_editor/components/bubble_menus/code_block_bubble_menu.vue app/assets/javascripts/content_editor/components/bubble_menus/media_bubble_menu.vue spec/frontend/content_editor/components/fountain_context_surface_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/content_editor/components/bubble_menus/code_block_bubble_menu.vue
+  5:16  error  Components must not implicitly rely on runtime-compiled templates  @gitlab/no-runtime-template-compiler
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/content_editor/components/bubble_menus/media_bubble_menu.vue
+  5:16  error  Components must not implicitly rely on runtime-compiled templates  @gitlab/no-runtime-template-compiler
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/content_editor/components/fountain_context_surface.vue
+   68:5   warning  Unused eslint-disable directive (no problems were reported from 'vue/no-unused-properties')
+   76:11  error    Split 'const' declarations into multiple statements                                          one-var
+   99:7   error    Split 'const' declarations into multiple statements                                          one-var
+  142:13  error    Use object destructuring                                                                     prefer-destructuring
+  152:7   error    Split 'const' declarations into multiple statements                                          one-var
+  153:9   error    Use object destructuring                                                                     prefer-destructuring
+  196:7   error    Split 'const' declarations into multiple statements                                          one-var
+  196:13  error    Use object destructuring                                                                     prefer-destructuring
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/spec/frontend/content_editor/components/fountain_context_surface_spec.js
+  49:11  error  Use object destructuring  prefer-destructuring
+
+✖ 11 problems (10 errors, 1 warning)
+  8 errors and 1 warning potentially fixable with the `--fix` option.
+
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

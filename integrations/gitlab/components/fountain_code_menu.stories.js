@@ -24,14 +24,16 @@ const Template = args => ({
   },
   beforeDestroy() { this.service.dispose(); },
   methods: {
+    getEditorRoot() { return this.$refs.surface?.getRootElement() || null; },
+    refreshRoot() { this.$refs.menu?.refreshRoot(); },
     focusEditor() { this.$refs.surface.focus(); },
     changeCode() { insertText(this.service.editor, 'changed'); },
   },
   template: `<section aria-label="Code component states" class="gl-p-5">
     <h1>Native code block controls</h1>
     <p>Component fixture. Product persistence is verified separately against the actual GitLab service.</p>
-    <fountain-code-menu v-if="service" :content-editor="service" :disabled="!ready || ${Boolean(args.readOnly)}" @focus="focusEditor" />
-    <fountain-editor-surface v-if="service" ref="surface" :editor="service.editor" :options="{ ariaLabel: 'Code example document' }" />
+    <fountain-code-menu v-if="service" ref="menu" :content-editor="service" :disabled="!ready || ${Boolean(args.readOnly)}" :get-editor-root="${args.contextual ? 'getEditorRoot' : 'null'}" @focus="focusEditor" />
+    <fountain-editor-surface v-if="service" ref="surface" :editor="service.editor" :options="{ ariaLabel: 'Code example document' }" @ready="refreshRoot" />
     <button v-if="ready && !${Boolean(args.readOnly)}" type="button" @click="changeCode">Change code content</button>
   </section>`,
 });
@@ -39,6 +41,8 @@ const field = async ({ canvasElement }) => waitFor(() => getByRole(canvasElement
 export default { component: FountainCodeMenu, title: 'content_editor/fountain_code_menu' };
 export const Editing = Template.bind({});
 export const ReadOnly = Template.bind({}); ReadOnly.args = { readOnly: true };
+export const ContextualEditing = Template.bind({}); ContextualEditing.args = { contextual: true };
+export const ContextualReadOnly = Template.bind({}); ContextualReadOnly.args = { contextual: true, readOnly: true };
 export const InvalidLanguage = Template.bind({});
 InvalidLanguage.play = async context => {
   const input = await field(context); fireEvent.focus(input);

@@ -1307,6 +1307,88 @@ No public engine/API, size allowance, npm or website publication changes.
 [Checkpoint evidence and limits](../../artifacts/gitlab-frontmatter-integration-20261113.json),
 [actual browser report](../../artifacts/gitlab-native-frontmatter-20261113/report.json).
 
+### Native contextual code and media surfaces
+
+The original GitLab code/media bubble-menu entry points now mount the real
+native Fountain controls. They retain the native session owner and use the
+existing `FountainMenuController` plus `getEditorMenuAnchorRect`; no Tiptap
+editor object or hidden substitute is supplied to satisfy the host assertions.
+The Vue adapters delegate to the compiled native component render function
+through GitLab's Vue compatibility helper.
+
+`components/fountain_context_surface.vue` owns browser-only placement and focus.
+It uses GitLab's existing headless Tippy dependency, anchors to the captured
+block, stays inside the viewport and containing work-item or modal content,
+and docks the controls below the toolbar at narrow widths. **Alt+F10** moves focus from the
+editor into its contextual controls. Escape cancels a code-field draft or
+dismisses the surface and restores editor focus. Editor-owned Escape is
+intercepted before the owning GitLab edit form can interpret it as closing the
+whole edit form. Focus outside the editor/menu hides the floating surface;
+its trigger restores the retained draft. Nested source/properties dialogs hide
+the floating controls while keeping their drafts and their own focus/cancel
+behavior. The trigger's ARIA reference uses the final namespaced popup ID,
+assigned after Tippy initializes its portal. Teardown removes the portal,
+observers, animation frame and document/window listeners.
+
+Language/source drafts continue to belong to their captured code block even if
+the caret later moves into another diagram. The displayed actions, source copy,
+preview and eventual Apply use that owner. A clean language-edit session can
+transfer directly into source editing without recapturing the later caret.
+Mapped paths follow unrelated edits; a replaced/conflicted target retains its
+draft and refuses overwrite. Code and media sessions now also recognize a
+new document identity when its JSON content happens to be equal, rather than
+relying only on the transaction's semantic `docChanged` flag. Those session
+rules run in pure Node.js; DOM geometry stays in the view component.
+
+Generation 11 owns twenty-five files, including two verified original entry
+points and the shared surface. The fourteenth ordered patch adds native
+contextual integration cases without weakening the original host assertions.
+Run the source rollback check only with the application stopped and all source
+test/build processes finished:
+
+```sh
+node scripts/prepare-gitlab-context-menu-tests.mjs /absolute/pinned/gitlab-source
+node scripts/check-gitlab-native-patches.mjs /absolute/pinned/gitlab-source --context-menus
+node scripts/check-gitlab-native-install.mjs /absolute/pinned/gitlab-source --context-menus
+node scripts/run-gitlab-native-browser-audit.mjs --context-menus
+```
+
+The real-service profile includes the ordinary/nested code workflow, captured
+owner changes, browser clipboard, keyboard dismissal/reopening, narrow source
+and media dialogs, image properties/delete/undo, source-mode handoff, actual
+save/reopen and application restart. It keeps renderer/engine behavior distinct:
+syntax highlighting can display canonical `javascript` while the authored
+language remains `js`. Component stories separately cover contextual code,
+read-only controls, image/audio/video and narrow docking using fixed renderer
+fixtures and actual local media files. They do not prove real-service upload or
+permission acceptance.
+
+The final selected upstream set is **439 passed / zero failed / one inherited
+skip / 440 total across nineteen suites**, including nine new contextual cases.
+All **5,949 root tests/361 files**, current TypeScript/API, existing size limits,
+upstream lint and the actual frontend production build pass. Eight isolated
+component states pass full-body axe checks, browser clipboard and audio/video
+preview playback. The recorded actual GitLab journey passes **21 checks** with
+save/reopen/restart and zero browser/scoped accessibility errors. These are
+Linux Chromium results, not cross-browser or whole-product certification.
+[Checkpoint evidence, retained failures and scope](../../artifacts/gitlab-context-integration-20261113.json),
+[actual browser report](../../artifacts/gitlab-native-context-menus-20261113/report.json),
+[component-state report](../../artifacts/gitlab-native-context-storybook-20261113/report.json).
+
+For the isolated component audit, prepare a filtered configuration with
+`node scripts/prepare-gitlab-link-storybook.mjs /absolute/pinned/gitlab-source --context-menus`.
+From that source's `storybook` directory, build it with
+`corepack yarn build -c .fountain-context-audit -o /absolute/pinned/context-storybook`,
+where the output directory is the sibling of `gitlab-source` named
+`context-storybook`. Then run `node scripts/audit-gitlab-context-storybook.mjs`
+from the Fountain checkout. This uses GitLab's existing Storybook configuration
+and accessibility dependency; no public-service or provider substitution is
+claimed as real GitLab acceptance.
+The exact local PNG/WAV/VP8 fixtures are retained in
+`artifacts/gitlab-media-test-assets`; the checkpoint records their hashes.
+`node scripts/create-gitlab-media-test-assets.mjs` can generate fresh sample
+assets in the pinned browser environment for further testing.
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

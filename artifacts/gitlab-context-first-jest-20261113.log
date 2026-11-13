@@ -1,0 +1,37 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-context-first-jest-20261113.json spec/frontend/content_editor/components/fountain_context_surface_spec.js spec/frontend/content_editor/components/content_editor_spec.js spec/frontend/content_editor/components/fountain_code_menu_spec.js spec/frontend/content_editor/components/fountain_media_menu_spec.js spec/frontend/content_editor/components/fountain_frontmatter_spec.js spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js
+PASS spec/frontend/content_editor/components/content_editor_spec.js
+FAIL spec/frontend/content_editor/components/fountain_context_surface_spec.js
+  ● native code/media contextual surfaces › retains one captured code owner while a language draft is open and the caret moves to another code block
+
+    expect(received).toBeNull()
+
+    Received: <button aria-expanded="false" class="gl-mt-3 btn gl-button btn-default btn-sm" type="button"><!----> <!---->  <span class="gl-button-text">
+          Show diagram preview
+         <!----></span></button>
+
+      139 |     expect(
+      140 |       queryByRole(popup('Code block actions'), 'button', { name: 'Show diagram preview' }),
+    > 141 |     ).toBeNull();
+          |       ^
+      142 |     fireEvent.click(getByRole(popup('Code block actions'), 'button', { name: 'Copy code' }));
+      143 |     await settle();
+      144 |     expect(copyToClipboard).toHaveBeenCalledWith('const first = 1;', expect.any(HTMLElement));
+
+      at Object.toBeNull (spec/frontend/content_editor/components/fountain_context_surface_spec.js:141:7)
+
+PASS spec/frontend/content_editor/components/fountain_code_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_media_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_frontmatter_spec.js
+PASS spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js
+
+Test Suites: 1 failed, 5 passed, 6 total
+Tests:       1 failed, 132 passed, 133 total
+Snapshots:   0 total
+Time:        29.375 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/fountain_context_surface_spec.js|spec\/frontend\/content_editor\/components\/content_editor_spec.js|spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_media_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_frontmatter_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_authoring_host_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-context-first-jest-20261113.json
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
