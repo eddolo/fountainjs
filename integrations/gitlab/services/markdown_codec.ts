@@ -5,7 +5,7 @@ import { parseFragment, serialize, type DefaultTreeAdapterMap } from 'parse5';
 import type { SerializedContentCodec } from './serialized_content';
 import type { GitLabRenderResponse } from './asset_resolver';
 import { gitlabMathNodes, normalizeGitLabMath, serializeGitLabMath } from './math';
-import { normalizeGitLabCodeRendering } from './code_rendering';
+import { normalizeGitLabCodeRendering, normalizeGitLabDiagrams } from './code_rendering';
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
 
@@ -124,14 +124,15 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
     }
   }
   const math = normalizeGitLabMath(elements);
-  const media = normalizeGitLabMedia(elements, source, schema);
+  const diagrams = normalizeGitLabDiagrams(elements);
+  const media = normalizeGitLabMedia(elements.filter(element => !diagrams.handled.has(element)), source, schema);
   const alerts = normalizeGitLabAlerts(elements, source);
-  const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element)));
+  const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element) && !diagrams.handled.has(element)));
   const issues: GitLabMarkdownIssue[] = [
-    ...math.issues, ...alerts.issues, ...media.issues, ...codeIssues.map(issue => ({ stage: 'import' as const, ...issue })),
+    ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues].map(issue => ({ stage: 'import' as const, ...issue })),
   ];
   for (const element of elements) {
-    if (math.handled.has(element) || alerts.handled.has(element) || media.handled.has(element)) continue;
+    if (math.handled.has(element) || alerts.handled.has(element) || media.handled.has(element) || diagrams.handled.has(element)) continue;
     const classes = (attr(element, 'class') ?? '').split(/\s+/u);
     if (attr(element, 'dir') === 'auto' && (attr(element, 'align')
       || /(?:^|;)\s*text-align\s*:/iu.test(attr(element, 'style') ?? ''))) {

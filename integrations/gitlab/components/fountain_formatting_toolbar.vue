@@ -13,6 +13,7 @@ import {
   canUndo,
   canRedo,
   getGitLabAlertContext,
+  getGitLabCodeContext,
 } from '../runtime/browser';
 
 export default {
@@ -20,6 +21,7 @@ export default {
   components: { GlButton, GlFormSelect },
   props: {
     editor: { type: Object, required: true },
+    contentEditor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
     hideAttachmentButton: { type: Boolean, required: false, default: false },
   },
@@ -31,6 +33,7 @@ export default {
     plainTitle() {
       return Boolean(this.state && getGitLabAlertContext(this.editor)?.inTitle);
     },
+    codeContext() { return this.state && getGitLabCodeContext(this.editor); },
     controls() {
       if (!this.state) return [];
       return [
@@ -58,7 +61,7 @@ export default {
           label,
           icon,
           active: isMarkActive(this.editor, mark),
-          disabled: this.plainTitle,
+          disabled: this.plainTitle || Boolean(this.codeContext),
           run: () => toggleMark(this.editor, mark),
         })),
         {
@@ -88,6 +91,8 @@ export default {
         { value: '2', text: s__('ContentEditor|Heading 2') },
         { value: '3', text: s__('ContentEditor|Heading 3') },
         { value: 'code', text: s__('ContentEditor|Code block') },
+        { value: 'mermaid', text: s__('ContentEditor|Mermaid diagram') },
+        { value: 'plantuml', text: s__('ContentEditor|PlantUML diagram') },
       ];
     },
     activeStyle() {
@@ -97,7 +102,7 @@ export default {
         if (!node.content[index]) break;
         node = node.child(index);
         if (node.type.name === 'heading') return String(node.attrs.level);
-        if (node.type.name === 'code_block') return 'code';
+        if (node.type.name === 'code_block') return ['mermaid', 'plantuml'].includes(node.attrs.language) ? node.attrs.language : 'code';
       }
       return 'paragraph';
     },
@@ -147,12 +152,19 @@ export default {
     },
     changeStyle(value) {
       if (this.plainTitle) return;
+      const code = getGitLabCodeContext(this.editor);
+      if (['code', 'mermaid', 'plantuml'].includes(value)) {
+        let language = value;
+        if (value === 'code') language = code && !['mermaid', 'plantuml'].includes(code.language) ? code.language : 'text';
+        this.execute({ run: () => this.contentEditor.setCodeBlock(language) });
+        return;
+      }
       let type = 'heading';
-      if (value === 'code') type = 'code_block';
+      let attrs = {};
       if (value === 'paragraph') type = 'paragraph';
+      if (/^\d$/u.test(value)) attrs = { level: Number(value) };
       this.execute({
-        run: () =>
-          setBlockType(this.editor, type, /^\d$/u.test(value) ? { level: Number(value) } : {}),
+        run: () => setBlockType(this.editor, type, attrs),
       });
     },
   },

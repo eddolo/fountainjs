@@ -13,7 +13,7 @@ const temporary = await mkdtemp(join(tmpdir(), 'fountain-gitlab-patch-check-'));
 const env = { ...process.env, GIT_INDEX_FILE: join(temporary, 'index') };
 const run = (...args) => execFileSync('git', args, { cwd: source, env, encoding: 'utf8' });
 const names = ['current-document', 'native-host-tests', 'native-component-tests', 'native-attachment-tests',
-  'native-upload-capacity-tests', 'native-link-tests', 'native-code-tests', 'native-alert-tests', 'native-media-tests', 'native-reference-tests'];
+  'native-upload-capacity-tests', 'native-link-tests', 'native-code-tests', 'native-alert-tests', 'native-media-tests', 'native-reference-tests', 'native-diagram-tests'];
 const patches = names.map(name => `integrations/gitlab/patches/gitlab-19.5.3-${name}.patch`);
 try {
   const revision = run('rev-parse', 'HEAD').trim();
@@ -29,17 +29,19 @@ try {
   for (const path of ['spec/frontend/content_editor/components/content_editor_spec.js',
     'spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js',
     ...['link', 'code', 'alert', 'media', 'reference'].map(kind => `spec/frontend/content_editor/components/fountain_${kind}_menu_spec.js`),
-    'spec/frontend/content_editor/fixtures/fountain_reference_live_html.json']) {
+    'spec/frontend/content_editor/fixtures/fountain_reference_live_html.json',
+    'spec/frontend/content_editor/components/fountain_diagram_preview_spec.js',
+    'spec/frontend/content_editor/fixtures/fountain_diagram_live_html.json']) {
     if (run('show', `:${path}`) !== await readFile(join(source, path), 'utf8'))
       throw new Error(`Reconstructed test source differs: ${path}`);
   }
   run('apply', '--reverse', '--check', fileURLToPath(new URL(patches.at(-1), root)));
   const report = { status: 'passed', revision, patches: hashes,
-    checks: ['Ten patches apply in order using a separate temporary index',
+    checks: ['Eleven patches apply in order using a separate temporary index',
       'Reconstructed host and native menu specs match the tested checkout byte for byte',
-      'Native reference test patch reverse-check passes'],
+      'Native diagram test patch reverse-check passes'],
     isolation: 'Upstream worktree and main index are unchanged; temporary index removed' };
-  const profile = process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
+  const profile = process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
   await writeFile(new URL(`artifacts/gitlab-native-${profile}-patch-verification-20261112.json`, root), JSON.stringify(report, null, 2) + '\n');
-  console.log('Ten ordered native patches reconstruct the tested pinned source.');
+  console.log('Eleven ordered native patches reconstruct the tested pinned source.');
 } finally { await rm(temporary, { recursive: true, force: true }); }

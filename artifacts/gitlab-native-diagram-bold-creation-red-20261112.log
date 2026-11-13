@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-code-editing.test.ts (34 tests | 1 failed | 33 skipped) 29ms
+   × creates serializable literal code after bold prose and retains deletion and undo 28ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-code-editing.test.ts > creates serializable literal code after bold prose and retains deletion and undo
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/gitlab-code-editing.test.ts:21:79
+     19|   expect(setBlockType(editor, 'code_block', { language: 'mermaid' })).…
+     20|   expect(insertText(editor, 'graph LR\n  Created-->Natively')).toBe(tr…
+     21|   expect(editor.state.doc.child(1).content.every(node => !node.marks.l…
+       |                                                                               ^
+     22|   expect(service.status).toBe('ready');
+     23|   expect(service.getSerializedContent()).toContain('```mermaid\ngraph …
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 33 skipped (34)
+   Start at  00:25:09
+   Duration  1.26s (transform 80%, import 17%, tests 3%)

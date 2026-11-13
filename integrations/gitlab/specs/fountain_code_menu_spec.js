@@ -9,6 +9,9 @@ import {
   redo,
 } from '~/content_editor/services/fountain_runtime';
 import FountainCodeMenu from '~/content_editor/components/fountain_code_menu.vue';
+import FountainDiagramPreview from '~/content_editor/components/fountain_diagram_preview.vue';
+import FountainFormattingToolbar from '~/content_editor/components/fountain_formatting_toolbar.vue';
+import diagramData from '../fixtures/fountain_diagram_live_html.json';
 
 describe('FountainCodeMenu', () => {
   let wrapper;
@@ -22,20 +25,22 @@ describe('FountainCodeMenu', () => {
     await waitForPromises();
     await waitForPromises();
   };
-  async function createComponent(editable = true) {
+  async function createComponent(editable = true, fixtureName = null) {
+    const fixture = diagramData.fixtures.find(item => item.name === fixtureName);
     service = new GitLabContentEditor({
       editable,
       describeLabels: () => '',
       renderMarkdown: () =>
         Promise.resolve({
-          body: '<pre data-canonical-lang="js"><code>const x = 1;\nconsole.log(x);</code></pre>',
+          body: fixture?.body || '<pre data-canonical-lang="js"><code>const x = 1;\nconsole.log(x);</code></pre>',
         }),
     });
-    await service.setSerializedContent(source);
+    await service.setSerializedContent(fixture?.source || source);
     const { editor } = service;
     editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 3)));
     wrapper = mountExtended(FountainCodeMenu, {
       propsData: { contentEditor: service, disabled: !editable },
+      stubs: { FountainDiagramPreview: true },
       attachTo: document.body,
     });
     await settle();
@@ -96,12 +101,47 @@ describe('FountainCodeMenu', () => {
   });
   it('explains specialized renderer refusal without changing code or draft', async () => {
     await createComponent();
-    draft('mermaid');
+    draft('math');
     fireEvent.click(button('Apply language'));
     await settle();
     expect(getByRole(wrapper.element, 'alert').textContent).toContain('specialized GitLab adapter');
-    expect(field().value).toBe('mermaid');
+    expect(field().value).toBe('math');
     expect(service.getSerializedContent()).toBe(source);
+  });
+  it.each(['mermaid', 'plantuml'])('opens and closes a %s preview without changing the source or undo history', async language => {
+    await createComponent(true, language);
+    const before = service.getSerializedContent();
+    expect(field().value).toBe(language);
+    fireEvent.click(button('Show diagram preview')); await settle();
+    expect(wrapper.findComponent(FountainDiagramPreview).props('source')).toBe(service.editor.state.doc.child(0).textContent);
+    expect(wrapper.findComponent(FountainDiagramPreview).props('language')).toBe(language);
+    expect(service.getSerializedContent()).toBe(before);
+    fireEvent.click(button('Hide diagram preview')); await settle();
+    expect(wrapper.findComponent(FountainDiagramPreview).exists()).toBe(false);
+    expect(service.getSerializedContent()).toBe(before);
+    expect(undo(service.editor)).toBe(false);
+  });
+  it.each(['mermaid', 'plantuml'])('allows a read-only %s preview while mutation controls remain disabled', async language => {
+    await createComponent(false, language);
+    const before = service.getSerializedContent();
+    expect(disabled('Apply language')).toBe(true); expect(disabled('Delete code block')).toBe(true);
+    expect(disabled('Show diagram preview')).toBe(false);
+    fireEvent.click(button('Show diagram preview')); await settle();
+    expect(wrapper.findComponent(FountainDiagramPreview).props('language')).toBe(language);
+    expect(service.getSerializedContent()).toBe(before);
+  });
+  it.each(['mermaid', 'plantuml'])('exposes %s in the block-type selector with preserved source and one-step undo', async language => {
+    await createComponent();
+    const toolbar = mountExtended(FountainFormattingToolbar, { propsData: { editor: service.editor, contentEditor: service }, attachTo: document.body });
+    try {
+      const text = service.editor.state.doc.child(0).textContent;
+      const styles = getByRole(toolbar.element, 'combobox', { name: 'Text style' });
+      fireEvent.change(styles, { target: { value: language } }); await settle();
+      expect(service.editor.state.doc.child(0).attrs.language).toBe(language);
+      expect(service.editor.state.doc.child(0).textContent).toBe(text);
+      expect(styles.value).toBe(language); expect(field().value).toBe(language);
+      expect(undo(service.editor)).toBe(true); expect(service.getSerializedContent()).toBe(source);
+    } finally { toolbar.destroy(); }
   });
   it('cancels through Escape without changing the document', async () => {
     await createComponent();

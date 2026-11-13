@@ -6,23 +6,25 @@ import { s__ } from '~/locale';
 import { copyToClipboard } from '~/lib/utils/copy_to_clipboard';
 import CODE_BLOCK_LANGUAGES from '../constants/code_block_languages';
 import { getGitLabCodeContext } from '../runtime/browser';
+import FountainDiagramPreview from './fountain_diagram_preview.vue';
 
 export default {
   name: 'FountainCodeMenu',
-  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput },
+  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, FountainDiagramPreview },
   props: {
     contentEditor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
   },
   emits: ['focus', 'error'],
   data() {
-    return { context: null, session: null, language: '', errorCode: null, copyState: null,
+    return { context: null, session: null, language: '', errorCode: null, copyState: null, showPreview: false,
       inputId: uniqueId('fountain-code-language-'), revision: 0 };
   },
   computed: {
     visible() { return Boolean(this.context || this.session); },
     conflict() { return this.revision >= 0 && Boolean(this.session?.conflict); },
-    languages() { return CODE_BLOCK_LANGUAGES; },
+    languages() { return [{ syntax: 'mermaid', label: s__('ContentEditor|Mermaid diagram') }, { syntax: 'plantuml', label: s__('ContentEditor|PlantUML diagram') }, ...CODE_BLOCK_LANGUAGES]; },
+    isDiagram() { return ['mermaid', 'plantuml'].includes(this.context?.language); },
     formError() {
       if (this.conflict)
         return s__('ContentEditor|This code block changed. Your language draft is retained. Cancel and select the block again.');
@@ -51,6 +53,7 @@ export default {
     refresh() {
       if (this.disposed) return;
       const context = getGitLabCodeContext(this.contentEditor.editor) || null;
+      if (context?.path.join('.') !== this.context?.path.join('.') || context?.language !== this.context?.language) this.showPreview = false;
       if (context?.text !== this.context?.text || context?.language !== this.context?.language) this.copyState = null;
       this.context = context;
       this.revision += 1;
@@ -110,5 +113,9 @@ export default {
     </gl-form>
     <p v-if="copyState === 'copied'" role="status" class="gl-mb-0 gl-mt-3">{{ s__('ContentEditor|Code copied.') }}</p>
     <p v-if="copyState === 'failed'" role="alert" class="gl-mb-0 gl-mt-3">{{ s__('ContentEditor|The code could not be copied. Select it in the editor and use your browser copy command.') }}</p>
+    <gl-button v-if="isDiagram" class="gl-mt-3" size="small" :aria-expanded="showPreview ? 'true' : 'false'" @click="showPreview = !showPreview">
+      {{ showPreview ? s__('ContentEditor|Hide diagram preview') : s__('ContentEditor|Show diagram preview') }}
+    </gl-button>
+    <fountain-diagram-preview v-if="isDiagram && showPreview" :content-editor="contentEditor" :source="context.text" :language="context.language" />
   </section>
 </template>

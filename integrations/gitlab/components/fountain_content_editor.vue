@@ -458,6 +458,7 @@ export default {
         <fountain-formatting-toolbar
           v-if="contentEditor"
           :editor="contentEditor.editor"
+          :content-editor="contentEditor"
           :disabled="!surfaceEditable"
           :hide-attachment-button="disableAttachments || !uploadsPath"
           @focus="focus"

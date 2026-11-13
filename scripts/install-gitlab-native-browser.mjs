@@ -5,6 +5,7 @@ import { resolve, relative, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { babelParse, parse as parseSFC } from 'vue/compiler-sfc';
+import { prepareGitLabDiagramSandbox } from '../integrations/gitlab/services/diagram_sandbox_patch.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const restore = process.argv[3] === '--restore';
@@ -32,6 +33,8 @@ const rendererPath = 'app/assets/javascripts/vue_shared/components/markdown/mark
 const rendererHash = '697704a24572acc75d9f4d5b6225f3ad9c32a3b32410fabc09a6743d8aa0fca9';
 const babelPath = 'babel.config.js';
 const babelHash = 'ff971fbc61f7c207b23f2834d135bc4741e651820ef289f87b6b61ac35350e54';
+const sandboxPath = 'app/assets/javascripts/lib/mermaid_sandbox.js';
+const sandboxHash = 'c174dee8be4203bea76c88778156ea5c00f976d758915c2627ec65a2f5872ab9';
 if ((await lstat(resolve(source, hostPath))).isSymbolicLink())
   throw new Error('Refusing a symlinked ContentEditor.');
 const current = await readFile(resolve(source, hostPath), 'utf8');
@@ -53,25 +56,29 @@ if (previous) {
     'app/assets/javascripts/content_editor/services/fountain_runtime.js',
     'app/assets/javascripts/content_editor/services/fountain_runtime.css',
   ]);
-  if ([2, 3, 4, 5, 6].includes(previous.formatVersion)) {
+  if ([2, 3, 4, 5, 6, 7].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js');
   } else if (previous.formatVersion !== undefined) throw new Error('Unknown retained install format.');
-  if ([3, 4, 5, 6].includes(previous.formatVersion)) {
+  if ([3, 4, 5, 6, 7].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js');
   }
-  if ([4, 5, 6].includes(previous.formatVersion)) {
+  if ([4, 5, 6, 7].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.stories.js');
   }
-  if ([5, 6].includes(previous.formatVersion)) {
+  if ([5, 6, 7].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js');
   }
-  if (previous.formatVersion === 6) {
+  if ([6, 7].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.stories.js');
+  }
+  if (previous.formatVersion === 7) {
+    allowed.add('app/assets/javascripts/content_editor/components/fountain_diagram_preview.vue');
+    allowed.add(sandboxPath);
   }
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
@@ -95,11 +102,17 @@ if (restore) {
   const preparedBabel = await readFile(resolve(output, 'prepared-babel.config.js'));
   if (hash(preparedBabel) !== babelHash)
     throw new Error('Retained Babel configuration has changed.');
+  let preparedSandbox;
+  if (previous.files[sandboxPath]) {
+    preparedSandbox = await readFile(resolve(output, 'prepared-mermaid-sandbox.js'));
+    if (hash(preparedSandbox) !== sandboxHash) throw new Error('Retained Mermaid sandbox has changed.');
+  }
   await writeFile(resolve(source, hostPath), prepared);
   await writeFile(resolve(source, rendererPath), preparedRenderer);
   await writeFile(resolve(source, babelPath), preparedBabel);
+  if (preparedSandbox) await writeFile(resolve(source, sandboxPath), preparedSandbox);
   for (const path of Object.keys(previous.files))
-    if (![hostPath, rendererPath, babelPath].includes(path)) await unlink(resolve(source, path));
+    if (![hostPath, rendererPath, babelPath, sandboxPath].includes(path)) await unlink(resolve(source, path));
   await writeFile(
     resolve(output, 'install.json'),
     JSON.stringify({ ...previous, restored: true }, null, 2) + '\n',
@@ -152,6 +165,14 @@ for (const [path, digest] of Object.entries(manifest.inputs)) {
     throw new Error(`Rebuild the native runtime after changing ${path}.`);
 }
 const files = new Map();
+const currentSandbox = await readFile(resolve(source, sandboxPath), 'utf8');
+let originalSandbox = currentSandbox;
+if (hash(currentSandbox) !== sandboxHash) {
+  if (!previous || previous.files[sandboxPath] !== hash(currentSandbox)) throw new Error('Mermaid sandbox has unrecognized edits.');
+  originalSandbox = await readFile(resolve(output, 'prepared-mermaid-sandbox.js'), 'utf8');
+  if (hash(originalSandbox) !== sandboxHash) throw new Error('Retained Mermaid sandbox does not match the pin.');
+}
+files.set(sandboxPath, prepareGitLabDiagramSandbox(originalSandbox));
 if (originalBabel.split('exclude: /node_modules/,').length !== 2)
   throw new Error('Inspect the pinned third-party Babel boundary.');
 // The generated library is third-party code, even though installed under app/.
@@ -194,7 +215,7 @@ component = component
   .replace('  props: {},', `  props: ${propsSource},`)
   .replace("from '../runtime/browser'", "from '../services/fountain_runtime'");
 files.set(hostPath, component);
-for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue', 'fountain_link_menu.vue', 'fountain_link_menu.stories.js', 'fountain_code_menu.vue', 'fountain_code_menu.stories.js', 'fountain_alert_menu.vue', 'fountain_alert_menu.stories.js', 'fountain_media_menu.vue', 'fountain_media_menu.stories.js', 'fountain_reference_menu.vue', 'fountain_reference_menu.stories.js']) {
+for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue', 'fountain_link_menu.vue', 'fountain_link_menu.stories.js', 'fountain_code_menu.vue', 'fountain_code_menu.stories.js', 'fountain_diagram_preview.vue', 'fountain_alert_menu.vue', 'fountain_alert_menu.stories.js', 'fountain_media_menu.vue', 'fountain_media_menu.stories.js', 'fountain_reference_menu.vue', 'fountain_reference_menu.stories.js']) {
   let value = await readFile(resolve(root, `integrations/gitlab/components/${name}`), 'utf8');
   value = value
     .replace("from 'fountainjs-editor'", "from '../services/fountain_runtime'")
@@ -237,7 +258,7 @@ for (const [path] of files) {
   const parent = await realpath(resolve(target, '..'));
   if (parent !== resolve(target, '..'))
     throw new Error('Refusing a symlinked installation parent.');
-  if ([hostPath, rendererPath, babelPath].includes(path)) {
+  if ([hostPath, rendererPath, babelPath, sandboxPath].includes(path)) {
     if ((await realpath(target)) !== target) throw new Error('Refusing a symlinked host input.');
     continue;
   }
@@ -253,12 +274,13 @@ for (const [path] of files) {
 await writeFile(resolve(output, 'prepared-content-editor.vue'), original);
 await writeFile(resolve(output, 'prepared-markdown-editor.vue'), originalRenderer);
 await writeFile(resolve(output, 'prepared-babel.config.js'), originalBabel);
+await writeFile(resolve(output, 'prepared-mermaid-sandbox.js'), originalSandbox);
 for (const [path, bytes] of files) await writeFile(resolve(source, path), bytes);
 await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 6,
+      formatVersion: 7,
       source,
       revision: pin.commit,
       scope:

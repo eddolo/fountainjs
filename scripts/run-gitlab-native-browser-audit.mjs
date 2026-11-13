@@ -20,7 +20,10 @@ const env = {
   ...process.env,
   FOUNTAIN_GITLAB_FRONTEND_ASSETS: resolve(install.source, 'public/assets/webpack'),
 };
+const diagrams = process.argv.includes('--diagrams') || process.argv.includes('--diagram-fixtures');
+if (diagrams) compose.push('-f', resolve(root, 'integrations/gitlab/runtime/compose.diagrams.yaml'));
 try {
+  if (diagrams) execFileSync('docker', [...compose, 'up', '-d', 'diagram-server'], { env, stdio: 'inherit', timeout: 120000 });
   execFileSync('docker', [...compose, 'up', '-d', 'baseline'], {
     env,
     stdio: 'inherit',
@@ -29,11 +32,13 @@ try {
   execFileSync(
     process.execPath,
     [
-      resolve(root, process.argv.includes('--alert-fixtures') || process.argv.includes('--media-fixtures') || process.argv.includes('--reference-fixtures') || process.argv.includes('--reference-context-fixtures') ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      resolve(root, ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures'].some(flag => process.argv.includes(flag)) ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      ...(process.argv.includes('--diagram-fixtures') ? ['--diagrams'] : []),
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--references') ? '--native-references'
+      process.argv.includes('--diagrams') ? '--native-diagrams'
+        : process.argv.includes('--references') ? '--native-references'
         : process.argv.includes('--media-files') ? '--native-media-files'
         : process.argv.includes('--media') ? '--native-media'
         : process.argv.includes('--alerts') ? '--native-alerts'
@@ -56,4 +61,5 @@ try {
     stdio: 'inherit',
     timeout: 120000,
   });
+  if (diagrams) execFileSync('docker', [...compose, 'stop', '--timeout', '30', 'diagram-server'], { env, stdio: 'inherit', timeout: 60000 });
 }

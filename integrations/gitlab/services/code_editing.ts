@@ -1,4 +1,4 @@
-import { NodeSelection, closeHistory, mapSelection, removeNode,
+import { NodeSelection, Step, closeHistory, mapSelection, removeNode, setBlockType,
   type Editor, type Node, type Transaction } from 'fountainjs-editor';
 
 export interface GitLabCodeContext {
@@ -16,6 +16,46 @@ interface CodeEditingOptions {
 const at = (doc: Node, path: readonly number[]): Node => path.reduce((node, index) => node.child(index), doc);
 const inside = (path: readonly number[], parent: readonly number[]): boolean =>
   path.length >= parent.length && parent.every((part, index) => path[index] === part);
+
+/** Removing mark metadata changes no source characters or model positions. */
+class PlainGitLabCodeStep extends Step {
+  private readonly targets: ReadonlySet<string>;
+  constructor(paths: readonly (readonly number[])[]) {
+    super(); this.targets = new Set(paths.map(path => path.join('.')));
+  }
+  apply(doc: Node): Node {
+    const rewrite = (node: Node, path: readonly number[]): Node => {
+      if (this.targets.has(path.join('.'))) {
+        if (node.type.name !== 'code_block' || node.content.some(child => !child.isText)) throw new Error('GITLAB_CODE_TARGET_CHANGED');
+        return node.content.some(child => child.marks.length) ? node.copy(node.content.map(child => child.withMarks([]))) : node;
+      }
+      const content = node.content.map((child, index) => rewrite(child, [...path, index]));
+      return content.every((child, index) => child === node.child(index)) ? node : node.copy(content);
+    };
+    return rewrite(doc, []);
+  }
+}
+
+/** Explicit conversion to GitLab fenced source clears prose marks atomically. */
+export function setGitLabCodeBlock(editor: Editor, input: string, validate: (doc: Node) => void): boolean {
+  if (!editor.editable) return false;
+  if (typeof input !== 'string' || !/^[A-Za-z0-9_+.#-]{1,80}$/u.test(input.trim())) throw new Error('GITLAB_CODE_INVALID_LANGUAGE');
+  const language = input.trim().toLowerCase();
+  if (['glql', 'suggestion', 'math'].includes(language)) throw new Error('GITLAB_CODE_SPECIALIZED_LANGUAGE');
+  const existing = new Set<Node>();
+  editor.state.doc.descendants(node => { if (node.type.name === 'code_block') existing.add(node); });
+  closeHistory(editor);
+  return editor.runCommandBatch(() => {
+    if (!setBlockType(editor, 'code_block', { language })) return false;
+    const paths: number[][] = [];
+    editor.state.doc.descendants((node, path) => { if (node.type.name === 'code_block' && !existing.has(node)) paths.push(path); });
+    if (!paths.length) return false;
+    const transaction = editor.createTransaction().step(new PlainGitLabCodeStep(paths)).setStoredMarks([]);
+    if (!editor.dispatch(transaction)) return false;
+    validate(editor.state.doc);
+    return true;
+  });
+}
 
 export function getGitLabCodeContext(editor: Editor): GitLabCodeContext | undefined {
   const { doc, selection } = editor.state;
@@ -80,7 +120,7 @@ export class GitLabCodeEditingSession {
       throw new Error('GITLAB_CODE_INVALID_LANGUAGE');
     const language = input.trim().toLowerCase();
     if (input.trim() === this.initial.language) { this.close(); return true; }
-    if (['mermaid', 'plantuml', 'glql', 'suggestion', 'math'].includes(language))
+    if (['glql', 'suggestion', 'math'].includes(language))
       throw new Error('GITLAB_CODE_SPECIALIZED_LANGUAGE');
     if (language === this.initial.language) { this.close(); return true; }
     closeHistory(editor); this.ready();

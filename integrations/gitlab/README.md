@@ -241,7 +241,8 @@ Current evidence and remaining conversion work:
 | Homogeneous nested task lists | Checkbox state comes from the item's own input, not a checked descendant. Mixed task/bullet lists, task-table cells and inapplicable tasks need dedicated adapters. |
 | Highlight/underline/subscript/superscript | Ordinary text exports the actual GitLab HTML dialect (`mark`, `u`, `sub`, `sup`). Custom highlight colors, certain combined code/atom formatting and authored layout require an explicit retained representation. |
 | Math | The source-backed adapter below covers tested dollar, legacy backtick, inline display and fenced forms, plus retained KaTeX annotations. It reuses native editable math nodes. Additional metadata, delimiter collisions and table-sensitive source still require explicit retention. |
-| Diagrams, frontmatter, review suggestions, footnotes, embeds, TOC and other specialized GitLab renderers | Known markers are reported before flattening. Their source-aware GitLab adapters remain required, even when Fountain already has a corresponding native feature. |
+| Mermaid / PlantUML diagrams | Native source editing and preview, direct block creation, language changes, copy/delete/undo and scoped real saved-reader acceptance are implemented. PlantUML requires a configured provider. Long-document paired preview UX, saved invalid diagrams and broader browser/role coverage remain open. |
+| Frontmatter, review suggestions, GLQL, footnotes, embeds, TOC and other specialized GitLab renderers | Known markers are reported before flattening. Their source-aware GitLab adapters remain required, even when Fountain already has a corresponding native feature. |
 | Quick actions | A preview response containing command metadata is refused until a dedicated document/source adapter is implemented. Source is retained; nothing is executed by the codec. |
 | Error/recovery and host workflow | Typed import/export issues are available. Complete host error presentation/source-mode recovery, provider/auth context, uploads, collaboration and the full application are still required. |
 
@@ -1102,6 +1103,46 @@ deployment and real connected workflows as release requirements.
 [Checkpoint evidence](../../artifacts/gitlab-native-reference-context-integration-20261112.json),
 [actual recorded journey](../../artifacts/gitlab-native-reference-contexts-20261112/report.json),
 [boundary contract](services/README.md#reference-text-boundaries).
+
+### Native Mermaid and PlantUML
+
+The block-type selector creates both diagram kinds directly. Authors type source
+in native code blocks and can copy it, change language, delete, undo and preview
+it. Mermaid uses GitLab's script-only sandbox with correlated rendering and
+recoverable native errors. PlantUML uses the actual configured provider, including
+strict UTF-8 recovery of GitLab's image/source carrier. Unknown metadata and
+unsupported fence parameters retain source through an explicit conversion error.
+
+Real creation after bold prose exposed a bug that the earlier import journey
+missed: inherited marks made the code unrepresentable and blocked deletion.
+`setCodeBlock()` now atomically converts to plain fenced source, clears stored
+typing marks, preserves the text characters and semantic selection positions,
+and restores rich text on undo. Code formatting UI/shortcuts cannot recreate the
+same problem. Fountain's general HTML preformatted-mark support remains intact.
+
+The final recorded actual-service run passes **21 checks** on issue 85: toolbar
+creation and native multiline typing of both kinds, real previews, invalid-source
+recovery, offline retry, copy, conversion, deletion/undo/redo, saved reader,
+reopen and actual application restart. Prior PlantUML settings are restored and
+both task containers stop afterward. The 360px preview has no horizontal page
+overflow; the scoped axe check has zero violations. Native/provider/restarted
+reader screenshots are visually inspected and the recording is retained.
+
+All **5,887 root tests/359 files**, current types/API and unchanged size checks
+pass. The ten-suite upstream set is **318 passed / 2 failed / 320 total**. The
+original media/code-menu requirements remain failed and unskipped. Nineteen-file
+guarded source rollback/reinstall and eleven ordered test patches verify.
+No public library/API/size-ceiling changes or publication are made.
+
+This is Linux Chromium acceptance for the scoped Mermaid/PlantUML workflows.
+Preview/source pairing in long documents still needs UX work. Saved invalid
+diagram reader behavior, broader browsers/roles, frontmatter, suggestions, GLQL,
+remaining surfaces and complete product acceptance remain open.
+
+[Evidence and retained failures](../../artifacts/gitlab-native-diagram-integration-20261112.json),
+[recorded real journey](../../artifacts/gitlab-native-diagrams-20261112/report.json),
+[source/preview contract](services/README.md#native-diagram-source-and-preview),
+[reproduction](runtime/README.md#native-browser-installation-in-progress).
 
 ### Remaining full application acceptance
 

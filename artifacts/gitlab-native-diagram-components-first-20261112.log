@@ -1,0 +1,91 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-diagram-components-first-20261112.json spec/frontend/content_editor/components/fountain_diagram_preview_spec.js spec/frontend/content_editor/components/fountain_code_menu_spec.js
+FAIL spec/frontend/content_editor/components/fountain_diagram_preview_spec.js
+  ● FountainDiagramPreview › uses a titled script-only sandbox and correlated source messages
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "false"
+    Received: undefined
+
+      60 |     send({ h: 100, fountainRequestId: requestId() });
+      61 |     await settle();
+    > 62 |     expect(wrapper.attributes('aria-busy')).toBe('false');
+         |                                             ^
+      63 |     expect(frame().getAttribute('height')).toBe('110');
+      64 |     expect(renderDiagram).not.toHaveBeenCalled();
+      65 |   });
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_diagram_preview_spec.js:62:45)
+
+  ● FountainDiagramPreview › reports invalid syntax, retains source and retries with a new request ID
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "false"
+    Received: undefined
+
+      102 |     await settle();
+      103 |     expect(queryByRole(wrapper.element, 'alert')).toBeNull();
+    > 104 |     expect(wrapper.attributes('aria-busy')).toBe('false');
+          |                                             ^
+      105 |   });
+      106 |   it('debounces source updates, invalidates old responses immediately and bounds unresponsive previews', async () => {
+      107 |     await create();
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_diagram_preview_spec.js:104:45)
+
+  ● FountainDiagramPreview › explains a missing PlantUML service and recovers when the real provider returns an image
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "false"
+    Received: undefined
+
+      147 |     fireEvent.load(image);
+      148 |     await settle();
+    > 149 |     expect(wrapper.attributes('aria-busy')).toBe('false');
+          |                                             ^
+      150 |     fireEvent.error(image);
+      151 |     await settle();
+      152 |     expect(getByRole(wrapper.element, 'alert')).toBeTruthy();
+
+      at Object.toBe (spec/frontend/content_editor/components/fountain_diagram_preview_spec.js:149:45)
+
+FAIL spec/frontend/content_editor/components/fountain_code_menu_spec.js
+  ● Test suite failed to run
+
+    Configuration error:
+
+    Could not locate module ~/content_editor/fixtures/fountain_diagram_live_html.json mapped as:
+    /home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts$1.
+
+    Please check your configuration for these entries:
+    {
+      "moduleNameMapper": {
+        "/^~(\/.*)$/": "/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts$1"
+      },
+      "resolver": /home/eddolo/.cache/fountainjs-gitlab-product/source/jest_resolver.js
+    }
+
+      11 | import FountainCodeMenu from '~/content_editor/components/fountain_code_menu.vue';
+      12 | import FountainDiagramPreview from '~/content_editor/components/fountain_diagram_preview.vue';
+    > 13 | import diagramData from '~/content_editor/fixtures/fountain_diagram_live_html.json';
+         | ^
+      14 |
+      15 | describe('FountainCodeMenu', () => {
+      16 |   let wrapper;
+
+      at createNoMappedModuleFoundError (node_modules/jest-resolve/build/resolver.js:759:17)
+      at Object.require (spec/frontend/content_editor/components/fountain_code_menu_spec.js:13:1)
+
+Test Suites: 2 failed, 2 total
+Tests:       3 failed, 5 passed, 8 total
+Snapshots:   0 total
+Time:        6.156 s
+Ran all test suites matching /spec\/frontend\/content_editor\/components\/fountain_diagram_preview_spec.js|spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-diagram-components-first-20261112.json
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

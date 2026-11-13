@@ -1,0 +1,13 @@
+services:
+  diagram-server:
+    image: plantuml/plantuml-server@sha256:3719f4a9b0b061f1aa42d14d130388f831954ca65685d521b6c5b72301e993e6
+    platform: linux/amd64
+    restart: "no"
+    cpus: 1
+    mem_limit: 512m
+    memswap_limit: 512m
+    ports:
+      - "127.0.0.1:5081:8080"
+    environment:
+      PLANTUML_SECURITY_PROFILE: SANDBOX
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx256m -Djava.awt.headless=true"

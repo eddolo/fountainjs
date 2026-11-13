@@ -1,0 +1,170 @@
+{
+  "startedDate": "2026-11-12",
+  "verifiedDate": "2026-11-13",
+  "status": "partial-native-product-integration",
+  "parentRevision": "1aa9a5db2f6d622e7db81eaae5d27ebf544196be",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "functionality": [
+    "Direct Mermaid/PlantUML block-type creation with native multiline typing, source copy, language changes, deletion and undo/redo",
+    "Real Mermaid script-only sandbox with correlated previews, strict existing renderer settings, stale-result suppression, recoverable errors and bounded retry",
+    "Enabled PlantUML image/source carrier decoded from canonical base64 using strict UTF-8; malformed/ambiguous metadata refuses conversion with retained source",
+    "Actual configured pinned PlantUML server, offline preview recovery, decoded image output and automatic restoration of isolated GitLab settings",
+    "Atomic plain GitLab code conversion clears prose/stored marks, preserves text characters and semantic selection positions, and restores rich text on undo",
+    "Native formatting controls/shortcuts cannot put prose formatting back into fenced source; IME, AltGraph and prose are left to existing handlers",
+    "Pure-Node source/conversion coverage plus actual upstream Vue component and recorded real-service acceptance"
+  ],
+  "browser": {
+    "status": "passed",
+    "engine": "Linux Chromium",
+    "checks": 21,
+    "issueIID": 85,
+    "report": "artifacts/gitlab-native-diagrams-20261112/report.json",
+    "runtimeSHA256": "224d6a6f202b5b16653eb49d5fb7890c559868738cccd2305f90df26fc9a472d",
+    "phases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "created": [
+      {
+        "language": "mermaid",
+        "source": "graph LR\n  Created-->Natively"
+      },
+      {
+        "language": "plantuml",
+        "source": "@startuml\nCreated -> Natively: Created through toolbar\n@enduml"
+      }
+    ],
+    "providerImage": "http://127.0.0.1:5081/png/U9npA2v9B2efpStXSip9J4vLqBLJSCfFib88IYtBJ2rNA4ejB4qjBk5ooazIqDMrKm0hib9mB2WeoYzBJK4N3oXDoiaipaXDuN98pKifpSq10E5D7s80",
+    "accessibilityViolations": [],
+    "errors": [],
+    "settingsRestored": true
+  },
+  "units": {
+    "tests": 5887,
+    "files": 359,
+    "newCases": 32,
+    "report": "artifacts/gitlab-native-diagram-full-unit-corrected-20261112.log"
+  },
+  "upstream": {
+    "suites": 10,
+    "passed": 318,
+    "failed": 2,
+    "total": 320,
+    "failures": [
+      "ContentEditor renders codeBlock bubble menu",
+      "ContentEditor renders media bubble menu"
+    ],
+    "report": "artifacts/gitlab-native-diagram-jest-corrected-20261112.json"
+  },
+  "installation": {
+    "format": 7,
+    "files": 19,
+    "manifest": "artifacts/gitlab-native-browser-install/install.json",
+    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "sourceRoundtrip": "artifacts/gitlab-native-diagram-install-roundtrip-20261112.json",
+    "patchVerification": "artifacts/gitlab-native-diagram-patch-verification-20261112.json",
+    "build": "artifacts/gitlab-native-diagram-rspack-corrected-20261112.log",
+    "lint": "artifacts/gitlab-native-diagram-eslint-corrected-20261112.log"
+  },
+  "privateRuntime": {
+    "bytes": 1519579,
+    "sha256": "224d6a6f202b5b16653eb49d5fb7890c559868738cccd2305f90df26fc9a472d",
+    "addedBytes": 5053,
+    "scope": "Private model/service bridge only; excludes compiled GitLab Vue/sandbox assets and optional PlantUML container"
+  },
+  "publicLibrary": {
+    "changed": false,
+    "declarations": 450,
+    "sizeLimitsChanged": false,
+    "freshChecks": [
+      "5887 root unit tests",
+      "Root TypeScript",
+      "Public API surface",
+      "Build budgets"
+    ],
+    "inherited": "Unchanged public package/runtime/headless/format/performance evidence from ff24d0e2; no claim of a new all-library check run"
+  },
+  "visualReview": [
+    "Actual source-typed Mermaid/PlantUML creation, malformed Mermaid source, live provider output and native editing screenshots inspected",
+    "Final restarted reader inspected with both updated diagrams, baseline math/table/image and source-backed content",
+    "360px preview screenshot inspected; no horizontal page overflow and no scoped preview axe violations",
+    "Preview is still far from code near the end of long documents; paired authoring layout remains a real UX follow-up"
+  ],
+  "retainedEvidence": [
+    {
+      "path": "artifacts/gitlab-native-diagrams-pre-creation-20261112/report.json",
+      "reason": "First functional import/edit/preview/save/reopen/restart journey passes 19 checks, before testing toolbar creation",
+      "install": "artifacts/gitlab-native-diagram-pre-creation-install-20261112.json",
+      "runtime": "artifacts/gitlab-native-diagram-pre-creation-build-20261112.json"
+    },
+    {
+      "path": "artifacts/gitlab-native-diagrams-creation-failed-20261112/report.json",
+      "reason": "Real creation after bold prose inherited marks and blocked serialization/deletion; fixed by explicit plain-code conversion",
+      "install": "artifacts/gitlab-native-diagram-creation-failure-install-20261112.json"
+    },
+    {
+      "path": "artifacts/gitlab-native-diagram-bold-creation-red-20261112.log",
+      "reason": "The same retained-mark defect reproduced in Node before repair"
+    },
+    {
+      "path": "artifacts/gitlab-native-diagram-components-first-20261112.json",
+      "reason": "Initial fixture path and false aria-busy rendering defects; corrected without weakening expectations"
+    },
+    {
+      "path": "artifacts/gitlab-native-diagram-jest-creation-20261112.json",
+      "reason": "Selector tests exposed wrong generic command routing for existing code; now uses the captured code session"
+    }
+  ],
+  "limitations": [
+    "Preview/source placement in long documents needs paired authoring UX",
+    "Saved invalid-diagram reader behavior and broader browser/role/physical-device coverage remain unproven",
+    "Frontmatter, suggestions, GLQL, remaining media and other full GitLab surfaces/workflows remain incomplete; two upstream requirements stay failed and unskipped",
+    "Exact untouched-section source spelling retention, concurrency/roles, production deployment/rollback and the other two products remain open",
+    "Private integration; no public npm diagram API, capability-ledger promotion or publication"
+  ],
+  "recordings": [
+    {
+      "path": "artifacts/gitlab-native-diagrams-20261112/recordings/page@db264bea2b6dcfb8b5a913d94c18dca7.webm",
+      "bytes": 4968992,
+      "sha256": "4f2d67de6e56ac2cc62af82328161bb87f271b07c85e61821cc25a5bbefa4259"
+    }
+  ],
+  "sources": {
+    "docs/PROFESSIONAL_REFERENCE_PRODUCTS.md": "283a6ba20fc924e3517905fc30f005d1aab80bb7a96ea421d5c3d94e8271358b",
+    "docs/ROADMAP.md": "c71f95413f08a1f075c2f528450e65fdbdc527cc142acb25d0ff4f7b422b878d",
+    "integrations/gitlab/README.md": "8517811e9a6b5aa4e042044aa5ddae2fb94aa1107c470d9fbf533e36392c62bd",
+    "integrations/gitlab/components/fountain_code_menu.vue": "26e18dce4e7a32bee215f3028dbede0bf0218641c2c8a64849ad9b15c7adc65f",
+    "integrations/gitlab/components/fountain_content_editor.vue": "28a2f7a5be9a66a7c1fe700eac387f454aea0365098450b66ee416c93ebf2115",
+    "integrations/gitlab/components/fountain_formatting_toolbar.vue": "2a948f25e3fc06abeb099808f0cb71ccbd76e8bdeb3652843ac82a50f50650ba",
+    "integrations/gitlab/runtime/README.md": "bf149e9d10811fb98057bb4b26ba0d02df128ba6dfa7bb287f95cd8666354904",
+    "integrations/gitlab/services/README.md": "1db5a7e30c6f9234019684b768e423ee9f06c5fc53abd0c5d64624c314cfcd1b",
+    "integrations/gitlab/services/code_editing.ts": "1e96f980a02239296dc1857200656e59899b8f0d79a7ef120e9da7289c0a20d2",
+    "integrations/gitlab/services/code_rendering.ts": "86e270443ee0fa132fb27bd29c3243693032420225d4ec10306a7de7468bb98d",
+    "integrations/gitlab/services/content_editor.ts": "6824bf169e36e254bbb68090e6b5a74f589abdb54706e3fcd3f4c5723a898baf",
+    "integrations/gitlab/services/markdown_codec.ts": "e42df653c294058b390fbba3959da2d351c925758b436f72be1a5c49f539bf64",
+    "integrations/gitlab/specs/fountain_code_menu_spec.js": "369eec108a05fe1f853b3bd461480355e97c1735b9fb5b6b459710aa5559e50d",
+    "scripts/audit-gitlab-product-baseline.mjs": "953ab177d4aef9b71a59f0757d3160fbf249ce8079258256abc6f178f03d5100",
+    "scripts/capture-gitlab-alert-rendering.mjs": "81e6f046049f51dedef2dfbcc211b80fe7e80c69e5328448a0f2a51a163e51d9",
+    "scripts/check-gitlab-native-install.mjs": "2f1086f956997f1e6c3ea95318e252497c17d5dd863405b900bef84b41059bdb",
+    "scripts/check-gitlab-native-patches.mjs": "e423e80b9e6a4689d9f6a084ca734a3b7b58dc8c2c5505cb1b074bae4168b46c",
+    "scripts/install-gitlab-native-browser.mjs": "35624f9b02b43b8f24233699bfcc7a9675fe85fbffc7d87c4aabefe8df5c36f6",
+    "scripts/run-gitlab-native-browser-audit.mjs": "6dabbd6eb2ff18a8ad7ffeb8244fbcd098174fb2ab44ec7569d3a5576bb7d046",
+    "tests/gitlab-code-editing.test.ts": "b3b14b0483bc67bfd0820e5972e3dcf04c016b615bdccd7b28d862c0683ded92",
+    "tests/gitlab-code-rendering.test.ts": "fe95d0ca18b67fb663517a3a91957f0f9579c22c1e9d0670026b605021e95465",
+    "integrations/gitlab/components/fountain_diagram_preview.vue": "20b5fb66143805d30aa610c01e83f2102a7d4b6ec6b542b45408105efb81588d",
+    "integrations/gitlab/fixtures/diagram-disabled-live-html.json": "5fe7290a9f2d078f44bdd955a2fb7df0d21eaf5ba1543dc60965936adc98dd04",
+    "integrations/gitlab/fixtures/diagram-live-html.json": "266b4c68a94fc7325b97324adc387e66541baeb17c70557176a525162d8dfb3c",
+    "integrations/gitlab/fixtures/mermaid-sandbox-upstream.LICENSE": "62dfe4bdd76e08992c09cf335b2374b3e6acd4f2b959b4971760727d9b785ab4",
+    "integrations/gitlab/fixtures/mermaid-sandbox-upstream.js": "c174dee8be4203bea76c88778156ea5c00f976d758915c2627ec65a2f5872ab9",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-diagram-tests.patch": "0c9183fa648c905eb17983f1efc9ea411a8a41aeacc25510be7b025db60214a7",
+    "integrations/gitlab/runtime/compose.diagrams.yaml": "345df09d23711d8606c053ec5a2a25b0230a46f79cf9b89cbd658cddeaeefb47",
+    "integrations/gitlab/services/diagram_sandbox_patch.d.mts": "f5485a863ddb4a4b9a9f9bf2e5d9a716ac71cbae86301f5997c489e48e13dce1",
+    "integrations/gitlab/services/diagram_sandbox_patch.mjs": "5d56c3d28a1f36f83a198293765c28a3d77b9393a1de9af36cdc42c7d2718e09",
+    "integrations/gitlab/specs/fountain_diagram_preview_spec.js": "4dcb17c9dcf68726c6501852e7d9c7feea32100e72d649f2b47f326f6fcc1340",
+    "scripts/audit-gitlab-native-diagrams.mjs": "9f92cc1f00664c266bc8215f6c8a638a9579bc7948513ad133df50a8c305a330",
+    "scripts/prepare-gitlab-diagram-tests.mjs": "6e4594eb79bff4f52e1bc02042511b8d897330d080c9d5b3395b2a37c412a1c9",
+    "tests/gitlab-diagram-sandbox.test.ts": "8ee39611b30e575e5676ab525b0f3edda9f5af77111518bad205e6c95e1f2647",
+    "tests/gitlab-diagrams.test.ts": "72e45c320867a3e71dd74f69f57cb8294aa6d12fe2c467191fc9d1a64cb5fd5d"
+  }
+}

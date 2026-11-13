@@ -1,8 +1,37 @@
+import { isSafeURL } from 'fountainjs-editor';
 import type { DefaultTreeAdapterMap } from 'parse5';
 type Element = DefaultTreeAdapterMap['element'];
 type RawNode = DefaultTreeAdapterMap['node'];
 const attr = (node: Element, name: string): string | undefined => node.attrs.find(item => item.name === name)?.value;
-const specialized = new Set(['mermaid', 'plantuml', 'math', 'suggestion', 'glql']);
+const specialized = new Set(['math', 'suggestion', 'glql']);
+
+/** GitLab's enabled PlantUML renderer carries original UTF-8 source beside its image. */
+export function normalizeGitLabDiagrams(elements: readonly Element[]) {
+  const handled = new Set<Element>(), issues: { code: string; message: string }[] = [];
+  for (const element of elements) {
+    if (attr(element, 'data-diagram') !== 'plantuml') continue;
+    try {
+      const encoded = attr(element, 'data-diagram-src')?.match(/^data:text\/plain;base64,([A-Za-z\d+/]*={0,2})$/u)?.[1];
+      const children = element.childNodes.filter(node => !(node.nodeName === '#text' && 'value' in node && !node.value.trim()));
+      const image = children.length === 1 && 'tagName' in children[0]! && children[0].tagName === 'img' ? children[0] : undefined;
+      if (encoded === undefined || encoded.length % 4 || element.tagName !== 'a' || !isSafeURL(attr(element, 'href'))
+        || !element.attrs.every(item => ['class', 'href', 'target', 'rel', 'data-diagram', 'data-diagram-src'].includes(item.name))
+        || !image || image.childNodes.length || !isSafeURL(attr(image, 'src'), { allowDataImage: true })
+        || attr(image, 'data-src') !== undefined && !isSafeURL(attr(image, 'data-src'))
+        || !image.attrs.every(item => ['src', 'data-src', 'decoding', 'class'].includes(item.name))) throw new Error();
+      const bytes = atob(encoded);
+      if (btoa(bytes) !== encoded) throw new Error();
+      const source = new TextDecoder('utf-8', { fatal: true }).decode(Uint8Array.from(bytes, character => character.charCodeAt(0)));
+      handled.add(element); handled.add(image);
+      element.tagName = 'pre'; element.nodeName = 'pre';
+      element.attrs = [{ name: 'data-language', value: 'plantuml' }];
+      element.childNodes = [{ nodeName: '#text', value: source, parentNode: element }];
+    } catch {
+      issues.push({ code: 'diagram-source', message: 'The PlantUML renderer must retain an unambiguous UTF-8 source carrier and safe image address before visual editing.' });
+    }
+  }
+  return { handled, issues };
+}
 
 /** Strip only GitLab's presentation carriers, retaining every code character. */
 export function normalizeGitLabCodeRendering(elements: readonly Element[]): readonly { code: string; message: string }[] {

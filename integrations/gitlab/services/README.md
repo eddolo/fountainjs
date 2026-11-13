@@ -172,9 +172,49 @@ known span metadata (`class`, `id`, `lang`, `data-lang`). It retains every sourc
 character and removes only a verified presentation wrapper and empty Copy/Insert
 snippet controls. Nonempty controls, unknown attributes/children and fence
 parameters cause a conversion refusal. Fixtures include both pinned upstream
-frontend literals and an actual authenticated renderer response. Diagrams,
-frontmatter, suggestions, GLQL and complete snippet workflows still need dedicated
-adapters; the ordinary-code menu does not implement them.
+frontend literals and an actual authenticated renderer response. Mermaid and
+PlantUML use the diagram boundary below. Frontmatter, suggestions, GLQL and
+complete snippet workflows still need dedicated adapters.
+
+### Native diagram source and preview
+
+`setCodeBlock(language)` creates a GitLab fenced-code block from selected prose,
+or routes an existing code block through its captured language-edit session.
+Creating fenced source intentionally removes prose marks and clears stored
+typing marks in one validated, undoable batch. The prose's text characters, semantic
+selection positions and unrelated blocks survive; Undo restores the original
+rich text. This host-specific conversion does not change Fountain's general
+HTML support for authored formatting inside preformatted blocks. Native code
+formatting buttons, browser formatting shortcuts and formatting `beforeinput`
+events are disabled for this GitLab source surface.
+
+The block-type selector exposes Mermaid and PlantUML directly. Source remains
+editable in the document, with language changes, full-source copy, deletion and
+undo. Preview toggles are view state and add no document/history entries.
+Read-only code can still be previewed and copied.
+
+Mermaid retains GitLab's script-only sandbox and strict renderer configuration.
+The pinned sandbox patch adds correlated request IDs, serialized rendering,
+stale-result rejection and fixed error messages for native previews. The parent
+accepts messages only from its own opaque-origin iframe and current request;
+the existing GitLab link policy remains in use. Source changes are debounced,
+unresponsive previews expose Retry, and closure releases timers/listeners.
+Existing reader messages retain their legacy contract.
+
+PlantUML uses the real configured GitLab renderer and its returned image. The
+enabled HTML carrier's canonical base64 is decoded as strict UTF-8 before
+becoming editable code. Unknown metadata, unsafe addresses, malformed carriers
+and unrepresented fence parameters refuse conversion with source retained.
+Missing/offline providers produce a recoverable preview error. No public
+PlantUML server is selected automatically.
+
+The reproducible local audit uses the pinned optional service in
+`runtime/compose.diagrams.yaml`, following the [official PlantUML server setup](https://plantuml.com/starting).
+It enables the service only in the isolated task GitLab instance, restores the
+prior application settings, and stops both containers afterward. This is a
+private GitLab adapter, not a new public npm diagram-renderer API. Preview/source
+placement in long documents, saved invalid-diagram reader behavior and broader
+engine/role coverage remain further product acceptance work.
 
 Deleting the final block in a required list item, quote or table cell retains an
 editable paragraph. Removing a root block lands at the immediate successor.

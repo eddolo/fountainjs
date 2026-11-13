@@ -68,8 +68,8 @@
   "installation": {
     "format": 6,
     "files": 17,
-    "manifest": "artifacts/gitlab-native-browser-install/install.json",
-    "runtimeManifest": "artifacts/gitlab-native-runtime/build.json",
+    "manifest": "artifacts/gitlab-native-reference-context-checkpoint-install-20261112.json",
+    "runtimeManifest": "artifacts/gitlab-native-reference-context-checkpoint-build-20261112.json",
     "roundtrip": "artifacts/gitlab-native-reference-context-install-roundtrip-20261112.json",
     "build": "artifacts/gitlab-native-reference-context-rspack-final-20261112.log"
   },

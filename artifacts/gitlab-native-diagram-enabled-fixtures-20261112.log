@@ -1,0 +1,11 @@
+ Container fountain-gitlab-integration-diagram-server-1  Creating
+ Container fountain-gitlab-integration-diagram-server-1  Created
+ Container fountain-gitlab-integration-diagram-server-1  Starting
+ Container fountain-gitlab-integration-diagram-server-1  Started
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"captured":10,"version":"19.5.3","kind":"diagrams"}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+ Container fountain-gitlab-integration-diagram-server-1  Stopping
+ Container fountain-gitlab-integration-diagram-server-1  Stopped

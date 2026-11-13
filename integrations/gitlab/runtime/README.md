@@ -157,7 +157,7 @@ After preparing the matching source and installing its locked dependencies:
 node scripts/build-gitlab-native-runtime.mjs
 node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source
 cd /absolute/gitlab-source
-corepack yarn rspack-prod
+NODE_ENV=production corepack yarn rspack
 ```
 
 For upstream host tests, apply
@@ -172,12 +172,16 @@ additional upload/focus cases. Then apply
 `gitlab-19.5.3-native-upload-capacity-tests.patch` for two whole-batch admission
 cases. Then apply `gitlab-19.5.3-native-link-tests.patch` and
 `gitlab-19.5.3-native-code-tests.patch` in that order, then
-`gitlab-19.5.3-native-alert-tests.patch`. They add native link, alert and
-ordinary-code component behavior tests. The current seven-suite set is 272 passed /
-3 failed / 275 cases, including 64 work-item description cases, eight link cases,
-ten code cases and eleven alert cases. Media, code-block and reference legacy-menu
-requirements remain failing; ordinary code controls do not implement diagrams/frontmatter.
-All 75 host and 40 form cases pass.
+`gitlab-19.5.3-native-alert-tests.patch`. Follow with
+`gitlab-19.5.3-native-media-tests.patch`,
+`gitlab-19.5.3-native-reference-tests.patch` and
+`gitlab-19.5.3-native-diagram-tests.patch` in that order. The eleven patches retain
+the original incomplete media/code-menu requirements while adding the native
+behavior tests. The current ten-suite set is **318 passed / 2 failed / 320 cases**,
+including 64 work-item, 75 host-Markdown, 40 form, 16 code-menu, eight diagram-preview,
+18 media, 13 reference, eight link and eleven alert cases. Full specialized-code
+and media requirements remain failed and unskipped; frontmatter, suggestions and
+GLQL are not established by the diagram work.
 Forward/reverse checks reconstruct the native specs exactly
 without changing the main index; no skips or timeout increases waive failures.
 
@@ -187,6 +191,9 @@ corepack yarn jest --runInBand \
   spec/frontend/content_editor/components/fountain_link_menu_spec.js \
   spec/frontend/content_editor/components/fountain_code_menu_spec.js \
   spec/frontend/content_editor/components/fountain_alert_menu_spec.js \
+  spec/frontend/content_editor/components/fountain_media_menu_spec.js \
+  spec/frontend/content_editor/components/fountain_reference_menu_spec.js \
+  spec/frontend/content_editor/components/fountain_diagram_preview_spec.js \
   spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js \
   spec/frontend/issuable/issuable_form_spec.js \
   spec/frontend/work_items/components/work_item_description_spec.js
@@ -196,16 +203,17 @@ The installer checks source revision, prepared-file digests, runtime input hashe
 and existing owned-file hashes. It rejects unrecognized edits and symlinks. It
 retains original source files for rollback and formats installed components with
 GitLab's own Prettier/Tailwind configuration. Its install manifest identifies
-every changed file. Format 4 owns exactly thirteen files, including all three native
-menu components and their isolated Storybook states; earlier retained generations
+every changed file. Format 7 guards nineteen files, including the native
+menus, preview component and correlated Mermaid sandbox. It retains the original
+sandbox source as well as the prepared host/renderer/Babel files. Earlier retained generations
 remain recognizable for guarded upgrade/restore. The native runtime and renderer
 CSS are local build inputs.
 
-Verify the eight ordered test patches without changing the upstream worktree or
+Verify the eleven ordered test patches without changing the upstream worktree or
 its main index:
 
 ```sh
-node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source
+node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source --diagrams
 ```
 
 Native imports request `no_header_anchors` through the real host callback;
@@ -232,8 +240,16 @@ node scripts/run-gitlab-native-browser-audit.mjs --links
 node scripts/run-gitlab-native-browser-audit.mjs --code
 # Alerts, direct titles/body, all kinds, nested math/code and real saved rendering:
 node scripts/run-gitlab-native-browser-audit.mjs --alerts
+# Media properties, actual file replacement, playback and recovery:
+node scripts/run-gitlab-native-browser-audit.mjs --media-files
+# Native reference display/copy/open and adjacent-source boundary preservation:
+node scripts/run-gitlab-native-browser-audit.mjs --references --reference-contexts
+# Create/type/edit Mermaid and PlantUML with real providers and save/reopen/restart:
+node scripts/run-gitlab-native-browser-audit.mjs --diagrams
 # Read-only renderer fixture capture (not a product acceptance run):
 node scripts/run-gitlab-native-browser-audit.mjs --alert-fixtures
+# Diagram HTML fixtures use the isolated provider and temporarily enable PlantUML:
+node scripts/run-gitlab-native-browser-audit.mjs --diagram-fixtures
 ```
 
 Use `PLAYWRIGHT_BROWSERS_PATH` when the installed Linux browser lives outside
@@ -245,6 +261,15 @@ limit to 10 MiB through GitLab's administrator API and restores the original
 value in `finally`. It records both values and restoration status, without
 recording other application settings. This bounds the over-limit test allocation.
 See the official [application settings API](https://docs.gitlab.com/api/settings/).
+
+The diagram profiles include `compose.diagrams.yaml`, which pins the optional
+PlantUML server image and binds it only to loopback port 5081 with bounded
+CPU/memory. The profile configures that URL through the real isolated GitLab
+administrator API, restores the prior PlantUML settings in `finally`, and stops
+both containers. A developer deployment must configure its own provider; no
+public service is selected automatically. Mermaid uses GitLab's existing
+script-only sandbox, with the guarded native request/error protocol patch.
+The ordinary reader retains its existing message contract.
 
 To restore the exact prepared host source:
 
@@ -259,8 +284,8 @@ With the task application stopped, `node scripts/check-gitlab-native-install.mjs
 /absolute/gitlab-source` exercises the guarded source restore/reinstall and checks
 every digest. This is source rollback evidence; compiled deployment rollback still
 needs a separate exercise.
-Full native toolbar/menus, remaining media/suggestion/provider adapters, direct
-source-mode recovery, remaining upstream feature cases, accessibility and
+Full native toolbar/menus, remaining media/suggestion/provider adapters,
+remaining upstream feature cases, accessibility and
 cross-browser/product acceptance remain necessary. Passing a selected real
 journey does not close them.
 

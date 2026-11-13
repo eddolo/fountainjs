@@ -19,7 +19,7 @@ import { createGitLabReferenceNavigationPlugin } from '../plugins/reference_navi
 import { GitLabMarkdownInsertion } from './markdown_insertion';
 import { GitLabAttachmentUploads, type GitLabUploadHandler, type GitLabUploadSnapshot } from './attachment_uploads';
 import { GitLabLinkEditingSession, type GitLabLinkSnapshot } from './link_editing';
-import { GitLabCodeEditingSession } from './code_editing';
+import { GitLabCodeEditingSession, getGitLabCodeContext, setGitLabCodeBlock } from './code_editing';
 import { GitLabAlertEditing } from './alert_editing';
 import type { GitLabPlayableKind } from './media';
 import { GitLabMediaEditingSession, type GitLabMediaSnapshot } from './media_editing';
@@ -121,8 +121,11 @@ export class GitLabContentEditor {
           audio: options.describeMedia('audio'), video: options.describeMedia('video'),
         } : undefined),
         plugins: [new Plugin({ props: {
-          handleKeyDown: (editor, event) => alertInput?.spec.props?.handleKeyDown?.(editor, event) ?? false,
-          handleBeforeInput: (editor, event) => alertInput?.spec.props?.handleBeforeInput?.(editor, event) ?? false,
+          handleKeyDown: (editor, event) => !event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey
+            && ['b', 'i', 'u'].includes(event.key.toLowerCase()) && Boolean(getGitLabCodeContext(editor))
+            || (alertInput?.spec.props?.handleKeyDown?.(editor, event) ?? false),
+          handleBeforeInput: (editor, event) => !event.isComposing && event.inputType?.startsWith('format')
+            && Boolean(getGitLabCodeContext(editor)) || (alertInput?.spec.props?.handleBeforeInput?.(editor, event) ?? false),
           handlePaste: (editor, event) => alertInput?.spec.props?.handlePaste?.(editor, event) ?? false,
         } }), ...kit.plugins, createGitLabReferenceNavigationPlugin()],
         editable: options.editable,
@@ -266,6 +269,13 @@ export class GitLabContentEditor {
     });
     this.codeSession = session;
     return session;
+  }
+  setCodeBlock(language = 'text'): boolean {
+    this.assertAlive();
+    if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
+      throw new GitLabEditorNotReady(this.status);
+    if (getGitLabCodeContext(this.editor)) return this.beginCodeEdit().applyLanguage(language);
+    return setGitLabCodeBlock(this.editor, language, doc => { this.codec.serialize({ doc }); });
   }
   beginReferenceEdit(changed?: (snapshot: GitLabReferenceSnapshot) => void): GitLabReferenceEditingSession {
     this.referenceSession?.close();

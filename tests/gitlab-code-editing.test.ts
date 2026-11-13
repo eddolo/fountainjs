@@ -1,12 +1,111 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { NodeSelection, Plugin, Selection, insertText, undo, redo, type FountainExtension } from 'fountainjs-editor';
+import { NodeSelection, Plugin, Selection, insertText, splitBlock, textPointToPosition, undo, redo, type FountainExtension } from 'fountainjs-editor';
 import { GitLabContentEditor } from '../integrations/gitlab/services/content_editor';
-import { GitLabCodeEditingSession, getGitLabCodeContext } from '../integrations/gitlab/services/code_editing';
+import { GitLabCodeEditingSession, getGitLabCodeContext, setGitLabCodeBlock } from '../integrations/gitlab/services/code_editing';
 
 const source = 'Before\n\n```js\nconst x = 1;\nconsole.log(x);\n```\n\nAfter';
 const html = '<p>Before</p><pre data-language="js"><code>const x = 1;\nconsole.log(x);</code></pre><p>After</p>';
 const services: GitLabContentEditor[] = [];
 afterEach(() => services.splice(0).forEach(service => service.dispose()));
+
+it('creates serializable literal code after bold prose and retains deletion and undo', async () => {
+  const source = '**Recovered paste**';
+  const service = new GitLabContentEditor({ describeLabels: () => '', renderMarkdown: async () => ({ body: '<p><strong>Recovered paste</strong></p>' }) });
+  services.push(service); await service.setSerializedContent(source);
+  const { editor } = service;
+  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 'Recovered paste'.length)));
+  expect(splitBlock(editor)).toBe(true);
+  expect(editor.state.storedMarks.map(mark => mark.type.name)).toContain('strong');
+  expect(service.setCodeBlock('mermaid')).toBe(true);
+  expect(insertText(editor, 'graph LR\n  Created-->Natively')).toBe(true);
+  expect(editor.state.doc.child(1).content.every(node => !node.marks.length)).toBe(true);
+  expect(service.status).toBe('ready');
+  expect(service.getSerializedContent()).toContain('```mermaid\ngraph LR\n  Created-->Natively\n```');
+  expect(service.beginCodeEdit().remove()).toBe(true);
+  expect(undo(editor)).toBe(true);
+  expect(service.getSerializedContent()).toContain('Created-->Natively');
+});
+
+it.each(['text', 'mermaid', 'plantuml'])('converts styled prose to literal %s source with stable selection and exact undo', async language => {
+  const source = '**A** and `B`';
+  const service = new GitLabContentEditor({ describeLabels: () => '', renderMarkdown: async () => ({ body: '<p><strong>A</strong> and <code>B</code></p>' }) });
+  services.push(service); await service.setSerializedContent(source);
+  const { editor } = service;
+  editor.dispatch(editor.createTransaction().setSelection(Selection.range([0, 0], 1, [0, 2], 1)));
+  const before = editor.state.doc, selection = editor.state.selection;
+  const positions = [textPointToPosition(before, selection.path, selection.from), textPointToPosition(before, selection.endPath, selection.to)];
+  expect(service.setCodeBlock(language)).toBe(true);
+  const selected = editor.state.selection;
+  expect(selected.kind).toBe('text');
+  expect([textPointToPosition(editor.state.doc, selected.path, selected.from),
+    textPointToPosition(editor.state.doc, selected.endPath, selected.to)]).toEqual(positions);
+  expect(editor.state.doc.child(0).textContent).toBe('A and B');
+  expect(editor.state.doc.child(0).content.every(node => !node.marks.length)).toBe(true);
+  expect(editor.state.storedMarks).toEqual([]);
+  expect(service.getSerializedContent()).toBe('```' + language + '\nA and B\n```');
+  expect(undo(editor)).toBe(true); expect(editor.state.doc.toJSON()).toEqual(before.toJSON());
+  expect(service.getSerializedContent()).toBe(source);
+  expect(redo(editor)).toBe(true); expect(service.getSerializedContent()).toContain('A and B');
+});
+
+it('preserves unrelated existing code blocks and neighboring paragraph identities during conversion', async () => {
+  const { service, editor } = await setup();
+  const before = editor.state.doc;
+  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([2, 0], 2)));
+  expect(service.setCodeBlock('plantuml')).toBe(true);
+  expect(editor.state.doc.child(0)).toBe(before.child(0)); expect(editor.state.doc.child(1)).toBe(before.child(1));
+  expect(editor.state.doc.child(2).attrs.language).toBe('plantuml');
+  expect(editor.state.doc.child(2).textContent).toBe('After');
+});
+
+it('refuses creating code while read-only without losing prose and permits retry', async () => {
+  const { service, editor } = await setup();
+  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([2, 0], 2)));
+  const before = editor.state.doc;
+  service.setEditable(false);
+  expect(() => service.setCodeBlock('mermaid')).toThrow('GITLAB_EDITOR_NOT_READY');
+  expect(editor.state.doc).toBe(before);
+  service.setEditable(true); expect(service.setCodeBlock('mermaid')).toBe(true);
+});
+
+it('rolls back code creation and formatting cleanup when a transaction filter refuses it', async () => {
+  let refuse = false;
+  const plugin = new Plugin({ filterTransaction: transaction => !refuse || !transaction.docChanged });
+  const { service, editor } = await setup([{ name: 'code-creation-refusal', plugins: [plugin] }]);
+  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([2, 0], 2)));
+  const before = editor.state.doc; refuse = true;
+  expect(service.setCodeBlock('mermaid')).toBe(false);
+  expect(editor.state.doc).toBe(before); expect(service.status).toBe('ready');
+  expect(undo(editor)).toBe(false);
+  refuse = false; expect(service.setCodeBlock('mermaid')).toBe(true);
+});
+
+it('publishes no partial code conversion when serialization refuses the completed batch', async () => {
+  const { editor } = await setup();
+  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([2, 0], 2)));
+  const before = editor.state.doc, observe = vi.fn(), release = editor.subscribe(observe);
+  expect(() => setGitLabCodeBlock(editor, 'mermaid', () => { throw new Error('CONVERSION_REFUSED'); })).toThrow('CONVERSION_REFUSED');
+  expect(editor.state.doc).toBe(before);
+  expect(observe.mock.calls.every(([, transaction]) => !transaction.docChanged)).toBe(true);
+  expect(undo(editor)).toBe(false); release();
+});
+
+it('keeps browser formatting shortcuts and beforeinput commands out of literal GitLab code without blocking prose or IME', async () => {
+  const { editor } = await setup(), plugin = editor.state.plugins[0]!;
+  const before = editor.state.doc;
+  for (const key of ['b', 'i', 'u']) {
+    expect(plugin.spec.props!.handleKeyDown!(editor, { key, ctrlKey: true, altKey: false } as KeyboardEvent)).toBe(true);
+    expect(plugin.spec.props!.handleKeyDown!(editor, { key, metaKey: true, altKey: false } as KeyboardEvent)).toBe(true);
+    expect(plugin.spec.props!.handleKeyDown!(editor, { key, ctrlKey: true, altKey: true } as KeyboardEvent)).toBe(false);
+    expect(plugin.spec.props!.handleKeyDown!(editor, { key, ctrlKey: true, isComposing: true } as KeyboardEvent)).toBe(false);
+  }
+  for (const inputType of ['formatBold', 'formatItalic', 'formatUnderline', 'formatStrikeThrough'])
+    expect(plugin.spec.props!.handleBeforeInput!(editor, { inputType } as InputEvent)).toBe(true);
+  expect(editor.state.doc).toBe(before);
+  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([2, 0], 2)));
+  expect(plugin.spec.props!.handleKeyDown!(editor, { key: 'b', ctrlKey: true } as KeyboardEvent)).toBe(false);
+  expect(plugin.spec.props!.handleBeforeInput!(editor, { inputType: 'formatBold' } as InputEvent)).toBe(false);
+});
 async function setup(extensions: readonly FountainExtension[] = []) {
   const render = vi.fn(async () => ({ body: html }));
   const service = new GitLabContentEditor({ renderMarkdown: render, describeLabels: () => '', extensions });
@@ -55,10 +154,18 @@ it.each(['', 'two words', 'a\nb', 'x`y', '<script>', 'x'.repeat(81)])('refuses m
   expect(session.applyLanguage('rust')).toBe(true);
 });
 
-it.each(['mermaid', 'plantuml', 'math', 'suggestion', 'glql'])('refuses the specialized %s renderer until its adapter is available', async language => {
+it.each(['math', 'suggestion', 'glql'])('refuses the specialized %s renderer until its adapter is available', async language => {
   const { service, editor } = await setup(), before = editor.state;
   expect(() => service.beginCodeEdit().applyLanguage(language)).toThrow('GITLAB_CODE_SPECIALIZED_LANGUAGE');
   expect(editor.state).toBe(before);
+});
+
+it.each(['mermaid', 'plantuml'])('changes ordinary source to %s without execution or rewriting its contents', async language => {
+  const { service, editor } = await setup(), original = editor.state.doc.child(1).textContent;
+  expect(service.beginCodeEdit().applyLanguage(language)).toBe(true);
+  expect(editor.state.doc.child(1).textContent).toBe(original);
+  expect(service.getSerializedContent()).toContain('```' + language + '\n' + original);
+  expect(undo(editor)).toBe(true); expect(service.getSerializedContent()).toBe(source);
 });
 
 it('removes the whole selected code block and restores its source through undo', async () => {

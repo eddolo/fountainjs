@@ -1,0 +1,81 @@
+jetty: Pulling from plantuml/plantuml-server
+01d7766a2e4a: Pulling fs layer
+868b909f8ce7: Pulling fs layer
+f12c2f6b47b7: Pulling fs layer
+e6b56ff66d06: Pulling fs layer
+c45a8f54c8db: Pulling fs layer
+83c4062ec54b: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+b5b3c350c613: Pulling fs layer
+e195da7cb5e1: Pulling fs layer
+9e5c5f513274: Pulling fs layer
+726aaacd44f1: Pulling fs layer
+f6b3a2f1b1b0: Pulling fs layer
+f3e5a37200ef: Pulling fs layer
+0e868597b410: Pulling fs layer
+224dc223d5ca: Pulling fs layer
+116742494967: Pulling fs layer
+82d994f16939: Pulling fs layer
+4f4fb700ef54: Waiting
+83c4062ec54b: Waiting
+e6b56ff66d06: Waiting
+b5b3c350c613: Waiting
+c45a8f54c8db: Waiting
+e195da7cb5e1: Waiting
+9e5c5f513274: Waiting
+0e868597b410: Waiting
+224dc223d5ca: Waiting
+116742494967: Waiting
+82d994f16939: Waiting
+726aaacd44f1: Waiting
+f3e5a37200ef: Waiting
+f6b3a2f1b1b0: Waiting
+868b909f8ce7: Verifying Checksum
+868b909f8ce7: Download complete
+01d7766a2e4a: Verifying Checksum
+01d7766a2e4a: Download complete
+e6b56ff66d06: Verifying Checksum
+e6b56ff66d06: Download complete
+c45a8f54c8db: Verifying Checksum
+c45a8f54c8db: Download complete
+4f4fb700ef54: Download complete
+b5b3c350c613: Download complete
+01d7766a2e4a: Pull complete
+83c4062ec54b: Verifying Checksum
+83c4062ec54b: Download complete
+e195da7cb5e1: Download complete
+9e5c5f513274: Download complete
+868b909f8ce7: Pull complete
+f6b3a2f1b1b0: Verifying Checksum
+f6b3a2f1b1b0: Download complete
+f3e5a37200ef: Verifying Checksum
+f3e5a37200ef: Download complete
+726aaacd44f1: Verifying Checksum
+726aaacd44f1: Download complete
+224dc223d5ca: Verifying Checksum
+224dc223d5ca: Download complete
+f12c2f6b47b7: Verifying Checksum
+f12c2f6b47b7: Download complete
+116742494967: Verifying Checksum
+116742494967: Download complete
+82d994f16939: Download complete
+0e868597b410: Verifying Checksum
+0e868597b410: Download complete
+f12c2f6b47b7: Pull complete
+e6b56ff66d06: Pull complete
+c45a8f54c8db: Pull complete
+83c4062ec54b: Pull complete
+4f4fb700ef54: Pull complete
+b5b3c350c613: Pull complete
+e195da7cb5e1: Pull complete
+9e5c5f513274: Pull complete
+726aaacd44f1: Pull complete
+f6b3a2f1b1b0: Pull complete
+f3e5a37200ef: Pull complete
+0e868597b410: Pull complete
+224dc223d5ca: Pull complete
+116742494967: Pull complete
+82d994f16939: Pull complete
+Digest: sha256:3719f4a9b0b061f1aa42d14d130388f831954ca65685d521b6c5b72301e993e6
+Status: Downloaded newer image for plantuml/plantuml-server:jetty
+docker.io/plantuml/plantuml-server:jetty

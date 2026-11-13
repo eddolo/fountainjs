@@ -1,0 +1,108 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-code-rendering.test.ts (16 tests | 2 failed) 54ms
+   × keeps mermaid out of the ordinary code adapter 12ms
+   × keeps plantuml out of the ordinary code adapter 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-code-rendering.test.ts > keeps mermaid out of the ordinary code adapter
+AssertionError: promise resolved "{ …(2) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "codec": GitLabMarkdownCodec {
++     "options": {
++       "renderMarkdown": [Function renderMarkdown],
++     },
++     "sources": WeakMap {},
++   },
++   "document": {
++     "content": [
++       {
++         "attrs": {
++           "language": "mermaid",
++           "lineNumbers": true,
++         },
++         "content": [
++           {
++             "text": "special",
++             "type": "text",
++           },
++         ],
++         "type": "code_block",
++       },
++     ],
++     "type": "doc",
++   },
+  }
+
+ ❯ tests/gitlab-code-rendering.test.ts:55:103
+     53| });
+     54| it.each(['mermaid', 'plantuml', 'math', 'suggestion', 'glql'])('keeps …
+     55|   await expect(convert(`<pre data-canonical-lang="${language}"><code>s…
+       |                                                                                                       ^
+     56| });
+     57| it('refuses fence parameters until their source representation is impl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/gitlab-code-rendering.test.ts > keeps plantuml out of the ordinary code adapter
+AssertionError: promise resolved "{ …(2) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "codec": GitLabMarkdownCodec {
++     "options": {
++       "renderMarkdown": [Function renderMarkdown],
++     },
++     "sources": WeakMap {},
++   },
++   "document": {
++     "content": [
++       {
++         "attrs": {
++           "language": "plantuml",
++           "lineNumbers": true,
++         },
++         "content": [
++           {
++             "text": "special",
++             "type": "text",
++           },
++         ],
++         "type": "code_block",
++       },
++     ],
++     "type": "doc",
++   },
+  }
+
+ ❯ tests/gitlab-code-rendering.test.ts:55:103
+     53| });
+     54| it.each(['mermaid', 'plantuml', 'math', 'suggestion', 'glql'])('keeps …
+     55|   await expect(convert(`<pre data-canonical-lang="${language}"><code>s…
+       |                                                                                                       ^
+     56| });
+     57| it('refuses fence parameters until their source representation is impl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 358 passed (359)
+      Tests  2 failed | 5876 passed (5878)
+   Start at  00:02:30
+   Duration  155.88s (environment 41%, tests 26%, import 26%, transform 7%, worker 1%)
+
+     Import  844 modules were evaluated 2345 times · 139.66s total, 26% of tracked time
+             ~8.44s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

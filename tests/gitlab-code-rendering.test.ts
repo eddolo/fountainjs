@@ -51,8 +51,16 @@ it.each([
 ])('refuses ambiguous code rendering without claiming conversion succeeded', async html => {
   await expect(convert(html, '```js\noriginal\n```')).rejects.toMatchObject({ issues: expect.arrayContaining([expect.objectContaining({ code: 'code-rendering' })]) });
 });
-it.each(['mermaid', 'plantuml', 'math', 'suggestion', 'glql'])('keeps %s out of the ordinary code adapter', async language => {
+it.each(['math', 'suggestion', 'glql'])('keeps %s out of the ordinary code adapter', async language => {
   await expect(convert(`<pre data-canonical-lang="${language}"><code>special</code></pre>`, 'source')).rejects.toBeInstanceOf(GitLabMarkdownConversionError);
+});
+it.each(['mermaid', 'plantuml'])('retains %s source as editable non-executing code after another edit', async language => {
+  const source = '```' + language + '\nspecial\n```';
+  const { codec, document } = await convert(`<pre data-canonical-lang="${language}"><code>special</code></pre>`, source);
+  expect(document.child(0).attrs.language).toBe(language);
+  expect(document.child(0).textContent).toBe('special');
+  const edited = document.copy([...document.content, schema.node('paragraph', {}, [schema.text('Added')])]);
+  expect(codec.serialize({ doc: edited })).toBe(source + '\n\nAdded');
 });
 it('refuses fence parameters until their source representation is implemented', async () => {
   await expect(convert('<pre data-canonical-lang="json" data-lang-params="title=Example"><code>{}</code></pre>', 'source')).rejects.toMatchObject({ issues: expect.arrayContaining([expect.objectContaining({ code: 'specialized-renderer' })]) });

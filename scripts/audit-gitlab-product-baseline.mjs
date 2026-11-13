@@ -8,12 +8,14 @@ import { auditNativeCode } from './audit-gitlab-native-code.mjs';
 import { auditNativeAlerts, assertSavedNativeAlerts } from './audit-gitlab-native-alerts.mjs';
 import { auditNativeMedia, assertSavedNativeMedia } from './audit-gitlab-native-media.mjs';
 import { auditNativeReferences, assertSavedNativeReferences } from './audit-gitlab-native-references.mjs';
+import { auditNativeDiagrams, assertSavedNativeDiagrams } from './audit-gitlab-native-diagrams.mjs';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const nativeCapacity = process.argv.includes('--native-attachment-capacity');
 const nativeLinks = process.argv.includes('--native-links');
 const nativeCode = process.argv.includes('--native-code');
+const nativeDiagrams = process.argv.includes('--native-diagrams');
 const nativeAlerts = process.argv.includes('--native-alerts');
 const nativeReferenceContexts = process.argv.includes('--reference-contexts');
 const nativeReferences = process.argv.includes('--native-references') || nativeReferenceContexts;
@@ -21,12 +23,12 @@ const nativeMediaFiles = process.argv.includes('--native-media-files');
 const nativeMedia = process.argv.includes('--native-media') || nativeMediaFiles;
 const debugLinks = nativeLinks && process.argv.includes('--debug-links');
 const nativeAttachments = process.argv.includes('--native-attachments') || nativeCapacity || nativeMedia;
-const nativeComponent = process.argv.includes('--native-component') || nativeAttachments || nativeLinks || nativeCode || nativeAlerts || nativeReferences;
+const nativeComponent = process.argv.includes('--native-component') || nativeAttachments || nativeLinks || nativeCode || nativeAlerts || nativeReferences || nativeDiagrams;
 const nativeInsertion = process.argv.includes('--native-insertion') || nativeComponent;
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -122,6 +124,7 @@ if (nativeBrowser)
 const browser = await chromium.launch(debugLinks ? { args: ['--remote-debugging-port=9331'] } : {});
 let context;
 let restoreUploadLimit;
+let restoreDiagramSettings;
 try {
   context = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
@@ -205,6 +208,19 @@ try {
   expect(version.version).toBe(pin.version);
   expect(version.revision).toBe(pin.packagedRevision);
   report.checks.push('Normal web sign-in and authenticated API version match the image/source pin');
+  if (nativeDiagrams) {
+    await expect(async () => expect((await page.request.get('http://127.0.0.1:5081/')).ok()).toBe(true)).toPass();
+    const settings = await api('GET', '/application/settings');
+    const prior = { plantuml_enabled: settings.plantuml_enabled, plantuml_url: settings.plantuml_url };
+    restoreDiagramSettings = async () => {
+      const restored = await api('PUT', '/application/settings', { data: prior });
+      expect(restored.plantuml_enabled).toBe(prior.plantuml_enabled); expect(restored.plantuml_url).toBe(prior.plantuml_url);
+      report.diagramSettings.restored = true;
+    };
+    const updated = await api('PUT', '/application/settings', { data: { plantuml_enabled: true, plantuml_url: 'http://127.0.0.1:5081/' } });
+    expect(updated.plantuml_enabled).toBe(true); expect(updated.plantuml_url).toBe('http://127.0.0.1:5081/');
+    report.diagramSettings = { auditURL: updated.plantuml_url, restored: false };
+  }
   if (nativeAttachments) {
     // This driver has already refused every image/project outside its own isolated runtime.
     // Bound the oversize fixture rather than allocating the default 100 MiB limit.
@@ -357,6 +373,7 @@ try {
     if (nativeAlerts) await auditNativeAlerts({ page, editor, toolbar, output, report });
     if (nativeMedia) await auditNativeMedia({ page, context, editor, toolbar, output, report });
     if (nativeReferences) await auditNativeReferences({ page, context, editor, toolbar, output, report });
+    if (nativeDiagrams) await auditNativeDiagrams({ page, context, editor, toolbar, output, report });
     if (nativeAttachments) {
       if (process.argv.includes('--probe-upload-focus')) await editor.evaluate(element => {
         const root = element.closest('[data-fountain-integration="native"]');
@@ -577,6 +594,10 @@ try {
     await assertSavedNativeReferences({ page, description: saved.description, report, output, phase: 'saved' });
     report.checks.push('Actual UI Save retains reference display source and qualification; the real GitLab reader renders the issue, merge-request and colored-label references');
   }
+  if (nativeDiagrams) {
+    await assertSavedNativeDiagrams({ page, description: saved.description, report, output, phase: 'saved' });
+    report.checks.push('Actual UI Save retains both edited diagram sources; the GitLab reader renders the published Mermaid node and decodes the actual PlantUML provider image');
+  }
   if (nativeInsertion) {
     expect(saved.description).toContain('Pasted **GitLab Markdown** with <span>@root</span>.');
     const pastedReference = page.getByTestId('work-item-description').locator('p')
@@ -693,6 +714,7 @@ try {
   if (nativeAlerts) await assertSavedNativeAlerts({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeMedia) await assertSavedNativeMedia({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeReferences) await assertSavedNativeReferences({ page, description: saved.description, report, output, phase: 'reopened' });
+  if (nativeDiagrams) await assertSavedNativeDiagrams({ page, description: saved.description, report, output, phase: 'reopened' });
   await page
     .getByRole('img', { name: 'Uploaded baseline figure', exact: true })
     .scrollIntoViewIfNeeded();
@@ -744,6 +766,7 @@ try {
     if (nativeAlerts) await assertSavedNativeAlerts({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeMedia) await assertSavedNativeMedia({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeReferences) await assertSavedNativeReferences({ page, description: reopened.description, report, output, phase: 'restart' });
+    if (nativeDiagrams) await assertSavedNativeDiagrams({ page, description: reopened.description, report, output, phase: 'restart' });
     const reopenedImage = page.getByRole('img', {
       name: 'Uploaded baseline figure',
       exact: true,
@@ -887,6 +910,10 @@ try {
   }
   process.exitCode = 1;
 } finally {
+  if (restoreDiagramSettings) {
+    try { await restoreDiagramSettings(); }
+    catch { report.status = 'failed'; report.diagramSettingsRestoreFailed = true; process.exitCode = 1; }
+  }
   if (restoreUploadLimit) {
     try { await restoreUploadLimit(); }
     catch { report.status = 'failed'; report.settingsRestoreFailed = true; process.exitCode = 1; }

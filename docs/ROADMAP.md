@@ -1,8 +1,22 @@
 # FountainJS roadmap
 
-Updated 2026-11-12.
+Updated 2026-11-13.
 
-The latest GitLab checkpoint prevents reference loss when native text is typed
+The latest GitLab checkpoint adds native Mermaid/PlantUML source creation and
+editing with real previews, error/retry recovery, copy, language conversion and
+delete/undo/redo. Actual toolbar creation after bold prose exposed inherited
+formatting that blocked serialization; the explicit plain-code conversion now
+retains text characters and semantic selection positions while clearing prose
+marks. The recorded real-service run passes **21 checks**, including edited
+reader output after save/reopen/restart. All **5,887 unit tests/359 files** pass;
+the upstream ten-suite set is **318 passed / 2 failed / 320 total**. Guarded
+nineteen-file source rollback/reinstall and eleven ordered patches verify.
+Preview/source pairing in long documents, saved invalid diagrams, remaining
+specialized content, full roles/workflows and both other products remain open.
+Public library/API/size limits are unchanged; nothing is published.
+[Diagram evidence and limits](../integrations/gitlab/README.md#native-mermaid-and-plantuml).
+
+The preceding GitLab checkpoint prevents reference loss when native text is typed
 immediately beside issue/MR/user/label atoms. Canonical source preserves their
 HTML text-node boundaries without adding visible separators; code/link marks
 that would erase reference semantics refuse export while the document remains

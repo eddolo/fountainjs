@@ -1,0 +1,357 @@
+diff --git a/spec/frontend/content_editor/components/fountain_code_menu_spec.js b/spec/frontend/content_editor/components/fountain_code_menu_spec.js
+index 4024e250..912c21f1
+--- a/spec/frontend/content_editor/components/fountain_code_menu_spec.js
++++ b/spec/frontend/content_editor/components/fountain_code_menu_spec.js
+@@ -11,2 +11,5 @@ import {
+ import FountainCodeMenu from '~/content_editor/components/fountain_code_menu.vue';
++import FountainDiagramPreview from '~/content_editor/components/fountain_diagram_preview.vue';
++import FountainFormattingToolbar from '~/content_editor/components/fountain_formatting_toolbar.vue';
++import diagramData from '../fixtures/fountain_diagram_live_html.json';
+ 
+@@ -24,3 +27,4 @@ describe('FountainCodeMenu', () => {
+   };
+-  async function createComponent(editable = true) {
++  async function createComponent(editable = true, fixtureName = null) {
++    const fixture = diagramData.fixtures.find((item) => item.name === fixtureName);
+     service = new GitLabContentEditor({
+@@ -30,6 +34,8 @@ describe('FountainCodeMenu', () => {
+         Promise.resolve({
+-          body: '<pre data-canonical-lang="js"><code>const x = 1;\nconsole.log(x);</code></pre>',
++          body:
++            fixture?.body ||
++            '<pre data-canonical-lang="js"><code>const x = 1;\nconsole.log(x);</code></pre>',
+         }),
+     });
+-    await service.setSerializedContent(source);
++    await service.setSerializedContent(fixture?.source || source);
+     const { editor } = service;
+@@ -38,2 +44,3 @@ describe('FountainCodeMenu', () => {
+       propsData: { contentEditor: service, disabled: !editable },
++      stubs: { FountainDiagramPreview: true },
+       attachTo: document.body,
+@@ -98,3 +105,3 @@ describe('FountainCodeMenu', () => {
+     await createComponent();
+-    draft('mermaid');
++    draft('math');
+     fireEvent.click(button('Apply language'));
+@@ -102,5 +109,63 @@ describe('FountainCodeMenu', () => {
+     expect(getByRole(wrapper.element, 'alert').textContent).toContain('specialized GitLab adapter');
+-    expect(field().value).toBe('mermaid');
++    expect(field().value).toBe('math');
+     expect(service.getSerializedContent()).toBe(source);
+   });
++  it.each(['mermaid', 'plantuml'])(
++    'opens and closes a %s preview without changing the source or undo history',
++    async (language) => {
++      await createComponent(true, language);
++      const before = service.getSerializedContent();
++      expect(field().value).toBe(language);
++      fireEvent.click(button('Show diagram preview'));
++      await settle();
++      expect(wrapper.findComponent(FountainDiagramPreview).props('source')).toBe(
++        service.editor.state.doc.child(0).textContent,
++      );
++      expect(wrapper.findComponent(FountainDiagramPreview).props('language')).toBe(language);
++      expect(service.getSerializedContent()).toBe(before);
++      fireEvent.click(button('Hide diagram preview'));
++      await settle();
++      expect(wrapper.findComponent(FountainDiagramPreview).exists()).toBe(false);
++      expect(service.getSerializedContent()).toBe(before);
++      expect(undo(service.editor)).toBe(false);
++    },
++  );
++  it.each(['mermaid', 'plantuml'])(
++    'allows a read-only %s preview while mutation controls remain disabled',
++    async (language) => {
++      await createComponent(false, language);
++      const before = service.getSerializedContent();
++      expect(disabled('Apply language')).toBe(true);
++      expect(disabled('Delete code block')).toBe(true);
++      expect(disabled('Show diagram preview')).toBe(false);
++      fireEvent.click(button('Show diagram preview'));
++      await settle();
++      expect(wrapper.findComponent(FountainDiagramPreview).props('language')).toBe(language);
++      expect(service.getSerializedContent()).toBe(before);
++    },
++  );
++  it.each(['mermaid', 'plantuml'])(
++    'exposes %s in the block-type selector with preserved source and one-step undo',
++    async (language) => {
++      await createComponent();
++      const toolbar = mountExtended(FountainFormattingToolbar, {
++        propsData: { editor: service.editor, contentEditor: service },
++        attachTo: document.body,
++      });
++      try {
++        const text = service.editor.state.doc.child(0).textContent;
++        const styles = getByRole(toolbar.element, 'combobox', { name: 'Text style' });
++        fireEvent.change(styles, { target: { value: language } });
++        await settle();
++        expect(service.editor.state.doc.child(0).attrs.language).toBe(language);
++        expect(service.editor.state.doc.child(0).textContent).toBe(text);
++        expect(styles.value).toBe(language);
++        expect(field().value).toBe(language);
++        expect(undo(service.editor)).toBe(true);
++        expect(service.getSerializedContent()).toBe(source);
++      } finally {
++        toolbar.destroy();
++      }
++    },
++  );
+   it('cancels through Escape without changing the document', async () => {
+diff --git a/spec/frontend/content_editor/components/fountain_diagram_preview_spec.js b/spec/frontend/content_editor/components/fountain_diagram_preview_spec.js
+new file mode 100644
+index 00000000..3d560f9b
+--- /dev/null
++++ b/spec/frontend/content_editor/components/fountain_diagram_preview_spec.js
+@@ -0,0 +1,180 @@
++import { nextTick } from 'vue';
++import { getByRole, queryByRole, fireEvent } from '@testing-library/dom';
++import { mountExtended } from 'helpers/vue_test_utils_helper';
++import { openLinkFromMessage } from '~/behaviors/markdown/render_sandboxed_mermaid';
++import FountainDiagramPreview from '~/content_editor/components/fountain_diagram_preview.vue';
++
++jest.mock('~/behaviors/markdown/render_sandboxed_mermaid', () => ({
++  getSandboxFrameSrc: () => '/-/sandbox/mermaid',
++  getIframeHeightFromMessage: (data) => (Number.isFinite(data?.h) ? data.h + 10 : null),
++  openLinkFromMessage: jest.fn(),
++  BUFFER_IFRAME_HEIGHT: 10,
++  SANDBOX_ATTRIBUTES: 'allow-scripts',
++}));
++describe('FountainDiagramPreview', () => {
++  let wrapper;
++  let renderDiagram;
++  const settle = () =>
++    Array.from({ length: 8 }).reduce(
++      (pending) => pending.then(() => nextTick()),
++      Promise.resolve(),
++    );
++  const frame = () => wrapper.find('iframe').element;
++  const send = (data) =>
++    window.dispatchEvent(
++      new MessageEvent('message', { origin: 'null', source: frame().contentWindow, data }),
++    );
++  const requestId = () => wrapper.vm.request;
++  const create = async (props = {}) => {
++    renderDiagram = jest.fn().mockResolvedValue('');
++    wrapper = mountExtended(FountainDiagramPreview, {
++      propsData: {
++        contentEditor: { renderDiagram: (...args) => renderDiagram(...args) },
++        language: 'mermaid',
++        source: 'graph LR; A-->B',
++        ...props,
++      },
++      attachTo: document.body,
++    });
++    await settle();
++  };
++  beforeEach(() => {
++    jest.useFakeTimers();
++  });
++  afterEach(() => {
++    wrapper?.destroy();
++    jest.useRealTimers();
++  });
++
++  it('uses a titled script-only sandbox and correlated source messages', async () => {
++    await create();
++    expect(frame().getAttribute('sandbox')).toBe('allow-scripts');
++    expect(frame().getAttribute('title')).toBe('Mermaid diagram preview');
++    const post = jest.spyOn(frame().contentWindow, 'postMessage');
++    fireEvent.load(frame());
++    await settle();
++    expect(post).toHaveBeenCalledWith(
++      { source: 'graph LR; A-->B', proxiedUrls: null, fountainRequestId: requestId() },
++      '*',
++    );
++    send({ h: 100, fountainRequestId: requestId() });
++    await settle();
++    expect(wrapper.attributes('aria-busy')).toBe('false');
++    expect(frame().getAttribute('height')).toBe('110');
++    expect(renderDiagram).not.toHaveBeenCalled();
++  });
++  it('ignores foreign origin/source, stale request IDs and invalid heights', async () => {
++    await create();
++    for (const event of [
++      {
++        origin: 'https://example.invalid',
++        source: frame().contentWindow,
++        data: { h: 100, fountainRequestId: requestId() },
++      },
++      { origin: 'null', source: window, data: { h: 100, fountainRequestId: requestId() } },
++      {
++        origin: 'null',
++        source: frame().contentWindow,
++        data: { h: 100, fountainRequestId: requestId() - 1 },
++      },
++    ])
++      window.dispatchEvent(new MessageEvent('message', event));
++    send({ h: Infinity, fountainRequestId: requestId() });
++    send({ h: 20000, fountainRequestId: requestId() });
++    await settle();
++    expect(wrapper.attributes('aria-busy')).toBe('true');
++    expect(frame().getAttribute('height')).toBe('10');
++  });
++  it('reports invalid syntax, retains source and retries with a new request ID', async () => {
++    await create();
++    const first = requestId();
++    send({ fountainRequestId: first, fountainDiagramError: true });
++    await settle();
++    expect(getByRole(wrapper.element, 'alert').textContent).toContain(
++      'editable source is retained',
++    );
++    expect(wrapper.props('source')).toBe('graph LR; A-->B');
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Retry diagram preview' }));
++    await settle();
++    expect(requestId()).toBeGreaterThan(first);
++    send({ fountainRequestId: first, fountainDiagramError: true });
++    send({ h: 80, fountainRequestId: requestId() });
++    await settle();
++    expect(queryByRole(wrapper.element, 'alert')).toBeNull();
++    expect(wrapper.attributes('aria-busy')).toBe('false');
++  });
++  it('debounces source updates, invalidates old responses immediately and bounds unresponsive previews', async () => {
++    await create();
++    const first = requestId();
++    await wrapper.setProps({ source: 'graph LR; B-->C' });
++    await settle();
++    send({ h: 80, fountainRequestId: first });
++    await settle();
++    expect(wrapper.attributes('aria-busy')).toBe('true');
++    jest.advanceTimersByTime(250);
++    await settle();
++    jest.advanceTimersByTime(15000);
++    await settle();
++    expect(getByRole(wrapper.element, 'alert').textContent).toContain('could not be rendered');
++    expect(wrapper.props('source')).toBe('graph LR; B-->C');
++    const expired = requestId() - 1;
++    send({ h: 80, fountainRequestId: expired });
++    await settle();
++    expect(getByRole(wrapper.element, 'alert').textContent).toContain('could not be rendered');
++  });
++  it('only forwards valid current-frame links after a preview is ready', async () => {
++    await create();
++    openLinkFromMessage.mockClear();
++    send({ href: 'https://example.com', fountainRequestId: requestId() });
++    expect(openLinkFromMessage).not.toHaveBeenCalled();
++    send({ h: 90, fountainRequestId: requestId() });
++    await settle();
++    send({ href: 'https://example.com', fountainRequestId: requestId() });
++    expect(openLinkFromMessage).toHaveBeenCalledWith({
++      href: 'https://example.com',
++      fountainRequestId: requestId(),
++    });
++  });
++  it('explains a missing PlantUML service and recovers when the real provider returns an image', async () => {
++    await create({ language: 'plantuml', source: '@startuml\nA->B\n@enduml' });
++    expect(renderDiagram).toHaveBeenCalledWith('@startuml\nA->B\n@enduml', 'plantuml');
++    expect(getByRole(wrapper.element, 'alert').textContent).toContain('configured diagram service');
++    renderDiagram.mockResolvedValue('/diagram.svg');
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Retry diagram preview' }));
++    await settle();
++    const image = getByRole(wrapper.element, 'img');
++    expect(image.getAttribute('src')).toBe('/diagram.svg');
++    fireEvent.load(image);
++    await settle();
++    expect(wrapper.attributes('aria-busy')).toBe('false');
++    fireEvent.error(image);
++    await settle();
++    expect(getByRole(wrapper.element, 'alert').textContent).toContain('could not be rendered');
++  });
++  it('ignores a late PlantUML response after the source changes', async () => {
++    let old;
++    const pending = new Promise((resolve) => {
++      old = resolve;
++    });
++    await create({ language: 'plantuml' });
++    renderDiagram.mockReturnValueOnce(pending).mockResolvedValueOnce('/new.svg');
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Retry diagram preview' }));
++    await settle();
++    await wrapper.setProps({ source: '@startuml\nnew\n@enduml' });
++    jest.advanceTimersByTime(250);
++    await settle();
++    old('/old.svg');
++    await settle();
++    expect(getByRole(wrapper.element, 'img').getAttribute('src')).toBe('/new.svg');
++  });
++  it('cleans up queued previews, deadlines and message observers on destruction', async () => {
++    await create();
++    const remove = jest.spyOn(window, 'removeEventListener');
++    const id = requestId();
++    wrapper.destroy();
++    expect(remove).toHaveBeenCalledWith('message', expect.any(Function));
++    jest.advanceTimersByTime(20000);
++    await settle();
++    expect(wrapper.vm.request).toBeGreaterThan(id);
++  });
++});
+diff --git a/spec/frontend/content_editor/fixtures/fountain_diagram_live_html.json b/spec/frontend/content_editor/fixtures/fountain_diagram_live_html.json
+new file mode 100644
+index 00000000..d0bd1b1f
+--- /dev/null
++++ b/spec/frontend/content_editor/fixtures/fountain_diagram_live_html.json
+@@ -0,0 +1,64 @@
++{
++  "scope": "Authenticated pinned GitLab renderer fixtures; not browser product acceptance",
++  "plantumlProvider": {
++    "url": "http://127.0.0.1:5081/",
++    "image": "plantuml/plantuml-server@sha256:3719f4a9b0b061f1aa42d14d130388f831954ca65685d521b6c5b72301e993e6"
++  },
++  "upstream": {
++    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
++    "version": "19.5.3",
++    "packagedRevision": "0d4c9a9a2fa"
++  },
++  "fixtures": [
++    {
++      "name": "mermaid",
++      "source": "```mermaid\ngraph LR\n  Draft-->Review\n```",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"mermaid\" class=\"code highlight js-syntax-highlight language-mermaid\" v-pre=\"true\"><code class=\"js-render-mermaid\"><span id=\"LC1\" class=\"line\" data-lang=\"mermaid\">graph LR</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"mermaid\">  Draft--&gt;Review</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
++    },
++    {
++      "name": "mermaid-unicode",
++      "source": "```mermaid\ngraph LR\n  A[\"研究 & review\"]-->B[\"Ready <now>\"]\n```",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"mermaid\" class=\"code highlight js-syntax-highlight language-mermaid\" v-pre=\"true\"><code class=\"js-render-mermaid\"><span id=\"LC1\" class=\"line\" data-lang=\"mermaid\">graph LR</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"mermaid\">  A[\"研究 &amp; review\"]--&gt;B[\"Ready &lt;now&gt;\"]</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
++    },
++    {
++      "name": "mermaid-empty",
++      "source": "```mermaid\n```",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-2:3\" data-canonical-lang=\"mermaid\" class=\"code highlight js-syntax-highlight language-mermaid\" v-pre=\"true\"><code class=\"js-render-mermaid\"></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
++    },
++    {
++      "name": "mermaid-invalid",
++      "source": "```mermaid\nnot a valid diagram\n```",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"mermaid\" class=\"code highlight js-syntax-highlight language-mermaid\" v-pre=\"true\"><code class=\"js-render-mermaid\"><span id=\"LC1\" class=\"line\" data-lang=\"mermaid\">not a valid diagram</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
++    },
++    {
++      "name": "mermaid-nested",
++      "source": "> ```mermaid\n> graph LR\n>   A-->B\n> ```",
++      "body": "<blockquote data-sourcepos=\"1:1-4:5\" dir=\"auto\">&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:3-4:5\" data-canonical-lang=\"mermaid\" class=\"code highlight js-syntax-highlight language-mermaid\" v-pre=\"true\"><code class=\"js-render-mermaid\"><span id=\"LC1\" class=\"line\" data-lang=\"mermaid\">graph LR</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"mermaid\">  A--&gt;B</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;</blockquote>"
++    },
++    {
++      "name": "mermaid-list",
++      "source": "- Diagram\n\n  ```mermaid\n  graph LR\n    A-->B\n  ```",
++      "body": "<ul data-sourcepos=\"1:1-6:5\" dir=\"auto\">&#x000A;<li data-sourcepos=\"1:1-6:5\">&#x000A;<p data-sourcepos=\"1:3-1:9\">Diagram</p>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"3:3-6:5\" data-canonical-lang=\"mermaid\" class=\"code highlight js-syntax-highlight language-mermaid\" v-pre=\"true\"><code class=\"js-render-mermaid\"><span id=\"LC1\" class=\"line\" data-lang=\"mermaid\">graph LR</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"mermaid\">  A--&gt;B</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;</li>&#x000A;</ul>"
++    },
++    {
++      "name": "mermaid-fence-params",
++      "source": "```mermaid unusual\ngraph LR\n A-->B\n```",
++      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"mermaid\" data-lang-params=\"unusual\" class=\"code highlight js-syntax-highlight language-mermaid\" v-pre=\"true\"><code class=\"js-render-mermaid\"><span id=\"LC1\" class=\"line\" data-lang=\"mermaid\">graph LR</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"mermaid\"> A--&gt;B</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>"
++    },
++    {
++      "name": "plantuml",
++      "source": "```plantuml\n@startuml\nAlice -> Bob: Review request\nBob --> Alice: Approved\n@enduml\n```",
++      "body": "<a class=\"no-attachment-icon\" href=\"http://127.0.0.1:5081/png/U9npA2v9B2efpStXSip9J4vLqBLJSCfFib88IYtBJ2rNA4ejB4qjBk5ooazIqDMrKm0hib9mB2WeoYzBJU5oICrBAStD0G12MnUL\" target=\"_blank\" rel=\"noopener noreferrer\" data-diagram=\"plantuml\" data-diagram-src=\"data:text/plain;base64,QHN0YXJ0dW1sCkFsaWNlIC0+IEJvYjogUmV2aWV3IHJlcXVlc3QKQm9iIC0tPiBBbGljZTogQXBwcm92ZWQKQGVuZHVtbA==\"><img src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" decoding=\"async\" class=\"lazy\" data-src=\"http://127.0.0.1:5081/png/U9npA2v9B2efpStXSip9J4vLqBLJSCfFib88IYtBJ2rNA4ejB4qjBk5ooazIqDMrKm0hib9mB2WeoYzBJU5oICrBAStD0G12MnUL\"></a>"
++    },
++    {
++      "name": "plantuml-unicode",
++      "source": "```plantuml\n@startuml\nAlice -> Bob: 研究 & review\n@enduml\n```",
++      "body": "<a class=\"no-attachment-icon\" href=\"http://127.0.0.1:5081/png/U9npA2v9B2efpStXSip9J4vLqBLJSCfFib9ulc3AyvNR5DGKYbBBCbFBkHnIyr9AStC0fL8HvG00\" target=\"_blank\" rel=\"noopener noreferrer\" data-diagram=\"plantuml\" data-diagram-src=\"data:text/plain;base64,QHN0YXJ0dW1sCkFsaWNlIC0+IEJvYjog56CU56m2ICYgcmV2aWV3CkBlbmR1bWw=\"><img src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" decoding=\"async\" class=\"lazy\" data-src=\"http://127.0.0.1:5081/png/U9npA2v9B2efpStXSip9J4vLqBLJSCfFib9ulc3AyvNR5DGKYbBBCbFBkHnIyr9AStC0fL8HvG00\"></a>"
++    },
++    {
++      "name": "mixed",
++      "source": "Before.\n\n```mermaid\ngraph LR\n  Draft-->Review\n```\n\nAfter.",
++      "body": "<p data-sourcepos=\"1:1-1:7\" dir=\"auto\">Before.</p>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"3:1-6:3\" data-canonical-lang=\"mermaid\" class=\"code highlight js-syntax-highlight language-mermaid\" v-pre=\"true\"><code class=\"js-render-mermaid\"><span id=\"LC1\" class=\"line\" data-lang=\"mermaid\">graph LR</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"mermaid\">  Draft--&gt;Review</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>&#x000A;<p data-sourcepos=\"8:1-8:6\" dir=\"auto\">After.</p>"
++    }
++  ]
++}
