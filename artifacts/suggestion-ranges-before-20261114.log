@@ -1,0 +1,258 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/suggestion-ranges.test.ts (14 tests | 10 failed) 24ms
+   × matches a reference across differently formatted text leaves without requiring a DOM 10ms
+   × checks the real prefix across formatting instead of treating every leaf as a new line 2ms
+   × does not open a slash command in a later formatted run after ordinary text 1ms
+   × allows line-start suggestions after a hard break, but not after an inline image 1ms
+   × supports a literal newline without confusing the paragraph start and current line 1ms
+   × supports actual long GitLab prefixes while bounding configuration size 1ms
+   × the mention controller inserts one real atom across formatting, with exact one-step undo and redo 2ms
+   × maps outside anchors precisely for an inline atom (cross-run=false) 2ms
+   × maps outside anchors precisely for an inline atom (cross-run=true) 1ms
+   × refuses cross-block or atom-spanning replacements without changing source or selection 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > matches a reference across differently formatted text leaves without requiring a DOM
+AssertionError: expected null to deeply equal { trigger: '@', query: 'alice', …(2) }
+
+- Expected:
+{
+  "query": "alice",
+  "range": {
+    "endPath": [
+      0,
+      2,
+    ],
+    "from": 0,
+    "path": [
+      0,
+      1,
+    ],
+    "to": 3,
+  },
+  "text": "@alice",
+  "trigger": "@",
+}
+
++ Received:
+null
+
+ ❯ tests/suggestion-ranges.test.ts:28:62
+     26|     schema.text('ice suffix', [schema.mark('em')])])], [0, 2], 3);
+     27|   expect(typeof globalThis.document).toBe('undefined');
+     28|   expect(findSuggestionMatch(editor.state, [{ char: '@' }])).toEqual({…
+       |                                                              ^
+     29|     range: { path: [0, 1], from: 0, to: 3, endPath: [0, 2] } });
+     30| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > checks the real prefix across formatting instead of treating every leaf as a new line
+AssertionError: expected { trigger: '@', query: 'root', …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "query": "root",
+  "range": {
+    "from": 0,
+    "path": [
+      0,
+      1,
+    ],
+    "to": 5,
+  },
+  "text": "@root",
+  "trigger": "@",
+}
+
+ ❯ tests/suggestion-ranges.test.ts:34:62
+     32|   const { editor, schema } = setup();
+     33|   seed(editor, [schema.node('paragraph', {}, [schema.text('email'), sc…
+     34|   expect(findSuggestionMatch(editor.state, [{ char: '@' }])).toBeNull(…
+       |                                                              ^
+     35|   expect(findSuggestionMatch(editor.state, [{ char: '@', allowedPrefix…
+     36| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > does not open a slash command in a later formatted run after ordinary text
+AssertionError: expected { trigger: '/', query: 'close', …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "query": "close",
+  "range": {
+    "from": 0,
+    "path": [
+      0,
+      1,
+    ],
+    "to": 6,
+  },
+  "text": "/close",
+  "trigger": "/",
+}
+
+ ❯ tests/suggestion-ranges.test.ts:40:81
+     38|   const { editor, schema } = setup();
+     39|   seed(editor, [schema.node('paragraph', {}, [schema.text('Prose '), s…
+     40|   expect(findSuggestionMatch(editor.state, [{ char: '/', startOfLine: …
+       |                                                                                 ^
+     41| });
+     42| it.each(['hard_break', 'inline_image'])('respects an inline %s boundar…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > allows line-start suggestions after a hard break, but not after an inline image
+AssertionError: expected 'close' to be null // Object.is equality
+
+- Expected:
+null
+
++ Received:
+"close"
+
+ ❯ tests/suggestion-ranges.test.ts:52:98
+     50|   for (const [node, expected] of [[schema.node('hard_break'), 'close']…
+     51|     seed(editor, [schema.node('paragraph', {}, [schema.text('Earlier')…
+     52|     expect(findSuggestionMatch(editor.state, [{ char: '/', startOfLine…
+       |                                                                                                  ^
+     53|   }
+     54| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > supports a literal newline without confusing the paragraph start and current line
+AssertionError: expected undefined to deeply equal { path: [ +0, +0 ], from: 6, to: 12 }
+
+- Expected:
+{
+  "from": 6,
+  "path": [
+    0,
+    0,
+  ],
+  "to": 12,
+}
+
++ Received:
+undefined
+
+ ❯ tests/suggestion-ranges.test.ts:58:88
+     56|   const { editor, schema } = setup();
+     57|   seed(editor, [schema.node('paragraph', {}, [schema.text('First\n/clo…
+     58|   expect(findSuggestionMatch(editor.state, [{ char: '/', startOfLine: …
+       |                                                                                        ^
+     59| });
+     60| it('supports actual long GitLab prefixes while bounding configuration …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > supports actual long GitLab prefixes while bounding configuration size
+TypeError: Suggestion triggers require one to eight non-whitespace characters.
+ ❯ validTrigger src/extensions/suggestion.ts:70:11
+     68| function validTrigger(trigger: SuggestionTrigger): void {
+     69|   if (!trigger.char || trigger.char.length > 8 || /\s/.test(trigger.ch…
+     70|     throw new TypeError('Suggestion triggers require one to eight non-…
+       |           ^
+     71|   }
+     72| }
+ ❯ candidateMatch src/extensions/suggestion.ts:80:3
+ ❯ src/extensions/suggestion.ts:112:23
+ ❯ findSuggestionMatch src/extensions/suggestion.ts:112:6
+ ❯ tests/suggestion-ranges.test.ts:63:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > the mention controller inserts one real atom across formatting, with exact one-step undo and redo
+AssertionError: expected [] to deeply equal [ 'alice' ]
+
+- Expected
++ Received
+
+- [
+-   "alice",
+- ]
++ []
+
+ ❯ tests/suggestion-ranges.test.ts:81:63
+     79|   seed(editor, [paragraph], [0, 2], 3);
+     80|   const controller = service.getController(editor); await Promise.reso…
+     81|   expect(controller.getSnapshot().items.map(item => item.id)).toEqual(…
+       |                                                               ^
+     82|   expect(controller.accept()).toBe(true);
+     83|   expect(editor.state.doc.child(0).content.map(node => node.type.name)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > maps outside anchors precisely for an inline atom (cross-run=false)
+AssertionError: expected 17 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 17
+
+ ❯ tests/suggestion-ranges.test.ts:106:48
+    104|   release();
+    105|   expect(applied).toBeDefined();
+    106|   expect(applied!.mapping.map(prefixPosition)).toBe(prefixPosition);
+       |                                                ^
+    107|   expect(applied!.mapping.map(suffixPosition)).toBe(suffixPosition - 6…
+    108|   const mapped = mapSelection(suffix, before, editor.state.doc, applie…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > maps outside anchors precisely for an inline atom (cross-run=true)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/suggestion-ranges.test.ts:103:55
+    101|   const node = createMentionNode(editor, { id: 'alice', label: 'Alice'…
+    102|   expect(insertInlineAtom(editor, node, { path: [0, 0], from: 7, to: c…
+    103|     ...(crossRun ? { endPath: [0, 1] } : {}) }, ' ')).toBe(true);
+       |                                                       ^
+    104|   release();
+    105|   expect(applied).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  tests/suggestion-ranges.test.ts > refuses cross-block or atom-spanning replacements without changing source or selection
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/suggestion-ranges.test.ts:117:93
+    115|     schema.node('paragraph', {}, [schema.text('Elsewhere')])], [0, 0],…
+    116|   const before = editor.state;
+    117|   expect(insertInlineAtom(editor, node, { path: [0, 0], from: 0, to: 3…
+       |                                                                                             ^
+    118|   expect(insertInlineAtom(editor, node, { path: [0, 0], from: 0, to: 2…
+    119|   expect(editor.state).toBe(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 4 passed (14)
+   Start at  19:17:01
+   Duration  1.91s (transform 80%, import 18%, tests 1%, worker 1%)

@@ -728,7 +728,11 @@ const limits = Object.freeze({
   // Pipe-table reporting, default/physical-left reimport and nested HTML flow
   // add 556 bytes, reaching 1,458,674. Add 512 bytes over the previous ceiling;
   // all other limits stay unchanged.
-  'all CommonJS runtime code': 1424.5 * kibibyte,
+  // Cross-formatting suggestion ranges and exact inline-atom position maps
+  // measure 1,460,286 bytes. Round capacity to the next quarter KiB (+1.75
+  // KiB); keep the preceding failed measurement and all per-entry, ESM,
+  // CSS, performance and retention limits unchanged.
+  'all CommonJS runtime code': 1426.25 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

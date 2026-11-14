@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Match mention, emoji and slash suggestions across contiguous formatted text
+  leaves. `InlineAtomRange.endPath` optionally identifies the final text leaf in
+  the same inline parent; existing single-leaf ranges and call signatures remain
+  valid. Inline-atom insertion now maps only the replaced query, keeping outside
+  anchors stable through edits and rebased undo/redo. Suggestions choose the
+  nearest eligible trigger and support bounded prefixes up to 64 characters,
+  including technical reference prefixes such as `[vulnerability:`.
+
 - Keep representable pipe-table column alignment free of false loss reports;
   report cells whose physical alignment differs from their column. Standalone
   physical-left and logical alignment reporting remains in place. Reopening an

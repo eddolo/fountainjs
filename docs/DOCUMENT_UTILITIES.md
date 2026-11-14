@@ -58,11 +58,24 @@ literal query until the user accepts an item.
 
 `SuggestionTrigger` supports:
 
-- `char`: one to eight non-whitespace characters;
+- `char`: one to 64 non-whitespace characters;
 - `allowedPrefixes`: characters allowed immediately before the trigger, or
   `null` for no prefix restriction;
-- `startOfLine`: require the trigger at offset zero;
+- `startOfLine`: require a real line start, including after a hard break;
 - `allowSpaces`: permit spaces inside the query.
+
+Matching follows contiguous text in the same inline parent, including across
+bold/italic boundaries, and chooses the nearest eligible trigger. It does not
+cross inline atoms or block boundaries. A match's `range.path` and `from` identify
+its first text leaf; optional `range.endPath` identifies its final text leaf, and
+`to` is an offset in that leaf. Single-leaf matches retain the existing shape.
+Native mention, emoji, slash-command and decoration consumers honor both ends.
+Custom range consumers should use `endPath ?? path` for the final text point.
+
+`insertInlineAtom` accepts the same optional final path and rejects cross-block
+or atom-spanning text ranges. It retains marks outside the query and emits an
+exact position map for the replaced text. Existing calls continue to insert into
+one text leaf. The document and selected text are unchanged if validation fails.
 
 The controller calls its synchronous or asynchronous provider with the active
 editor, immutable match, and an `AbortSignal`. A changed query aborts the old

@@ -1,0 +1,151 @@
+{
+  "date": "2026-11-14",
+  "status": "verified-shared-foundation-with-retained-visual-finding",
+  "parentRevision": "ed7f396b10a22d6e720225def12776325b8ad4d5",
+  "scope": "Formatted suggestion matching and precise inline-atom replacement; not native GitLab argument/reference autocomplete or full product acceptance",
+  "changes": [
+    "Contiguous differently formatted text leaves match as one query, without crossing inline atoms or block parents",
+    "Optional InlineAtomRange.endPath preserves existing same-leaf callers",
+    "Exact position maps retain outside anchors and support rebased undo/redo",
+    "Slash acceptance removes the entire formatted query",
+    "Nearest eligible trigger and real line boundaries; trigger configuration bounded at 64 non-whitespace characters"
+  ],
+  "unit": {
+    "passed": 6078,
+    "files": 365,
+    "focused": 63,
+    "focusedFiles": 3,
+    "newCases": 19,
+    "log": "artifacts/suggestion-ranges-unit-20261114.log"
+  },
+  "browser": {
+    "passed": 3,
+    "engines": [
+      "Windows Chromium",
+      "Windows Playwright Firefox",
+      "Windows WebKit"
+    ],
+    "interactions": "Native pointer/keyboard input and toolbar commands; no injected editor state or selection",
+    "checks": "Formatted mention and slash query acceptance, native focus, decoration spans, typing, undo and redo",
+    "recordings": [
+      {
+        "browser": "chromium",
+        "path": "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/video.webm",
+        "bytes": 496925,
+        "durationSeconds": 9.36,
+        "sha256": "927c609e96232b1b849e8d6f19cad73092cb73e8e8937e674513293e864ae9bf",
+        "screenshots": [
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/formatted-mention-query.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/formatted-mention-accepted.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/formatted-slash-accepted.png"
+        ],
+        "reviewedFrames": [
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/review-3s.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/review-06s.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/review-8s.png"
+        ]
+      },
+      {
+        "browser": "firefox",
+        "path": "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/video.webm",
+        "bytes": 672393,
+        "durationSeconds": 12.8,
+        "sha256": "d375d0d5e7f6d5245c23e6665183eb8d4d9b07f526fcea55936e271b388b7b27",
+        "screenshots": [
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/formatted-mention-query.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/formatted-mention-accepted.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/formatted-slash-accepted.png"
+        ],
+        "reviewedFrames": [
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/review-3s.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/review-06s.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/review-8s.png"
+        ]
+      },
+      {
+        "browser": "webkit",
+        "path": "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/video.webm",
+        "bytes": 1053348,
+        "durationSeconds": 17.72,
+        "sha256": "7fb1cab72583a4acbd6cd7219d8abae227d76e622e21d940be065e14667fa25d",
+        "screenshots": [
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/formatted-mention-query.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/formatted-mention-accepted.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/formatted-slash-accepted.png"
+        ],
+        "reviewedFrames": [
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/review-3s.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/review-06s.png",
+          "artifacts/suggestion-ranges-browser-final-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/review-8s.png"
+        ]
+      }
+    ],
+    "visualReview": "Reviewed full-page captures and nine sampled video frames. Full-page thumbnails are insufficient for detail; sampled viewport frames expose the caret visibility finding below. This is not frame-by-frame review or physical Safari certification.",
+    "retainedFinding": "The public demo can return to editing after scrolling to toolbar controls while the caret remains below the viewport. Current semantic assertions do not certify caret visibility. Add an explicit visibility regression and repair host-safe reveal behavior.",
+    "failedAttempts": [
+      "Initial test used visual End and split an existing paragraph, leaving a legitimate suffix; test now creates a fresh paragraph at document end",
+      "A generic Redo locator matched three distinct demo controls; test now names the intended toolbar action without weakening assertions"
+    ]
+  },
+  "validation": {
+    "build": "passed",
+    "types": "passed including Svelte and Angular",
+    "apiDeclarations": 450,
+    "apiChange": "Only inline-atom ESM/CJS declaration hashes; additive optional field, no new export",
+    "headlessModules": 143,
+    "package": "passed",
+    "performanceAndRetention": "passed with unchanged limits",
+    "size": {
+      "commonJSBytes": 1460286,
+      "previousCapBytes": 1458688,
+      "newCapBytes": 1460480,
+      "allowanceIncreaseBytes": 1792,
+      "policy": "Next quarter KiB; all individual entries, ESM, CSS, performance and retention ceilings unchanged"
+    }
+  },
+  "hostInspection": {
+    "fixture": "integrations/gitlab/fixtures/autocomplete-live.json",
+    "source": "Actual authenticated endpoints in the pinned isolated private GitLab project",
+    "observations": [
+      "Members and labels have no numeric id",
+      "Milestone id is null and iid is present",
+      "Global issue id 192 differs from local iid 128",
+      "Contacts returns HTTP 404",
+      "Snippets and wikis return genuinely empty lists"
+    ],
+    "nativeProviderUIImplemented": false,
+    "hostAcceptanceRerunForThisChange": false
+  },
+  "retainedEvidence": {
+    "originalRed": "artifacts/suggestion-ranges-before-20261114.log",
+    "apiBefore": "artifacts/suggestion-ranges-api-before-20261114.log",
+    "budgetBefore": "artifacts/suggestion-ranges-budget-before-20261114.log",
+    "logs": [
+      "artifacts/suggestion-ranges-before-20261114.log",
+      "artifacts/suggestion-ranges-after-20261114.log",
+      "artifacts/suggestion-ranges-build-20261114.log",
+      "artifacts/suggestion-ranges-api-before-20261114.log",
+      "artifacts/suggestion-ranges-api-update-20261114.log",
+      "artifacts/suggestion-ranges-api-after-20261114.log",
+      "artifacts/suggestion-ranges-budget-before-20261114.log",
+      "artifacts/suggestion-ranges-budget-20261114.log",
+      "artifacts/suggestion-ranges-unit-20261114.log",
+      "artifacts/suggestion-ranges-types-20261114.log",
+      "artifacts/suggestion-ranges-headless-20261114.log",
+      "artifacts/suggestion-ranges-package-20261114.log",
+      "artifacts/suggestion-ranges-performance-20261114.log",
+      "artifacts/suggestion-ranges-browser-20261114.log",
+      "artifacts/suggestion-ranges-browser-after-20261114.log",
+      "artifacts/suggestion-ranges-browser-final-20261114.log",
+      "artifacts/gitlab-autocomplete-fixtures-20261114.log"
+    ]
+  },
+  "remaining": [
+    "Fix and gate caret visibility after toolbar scrolling",
+    "Implement actual GitLab argument/reference provider, filtering and semantic insertion UI",
+    "Verify native host save/reopen, cancellation, permissions, contexts and browsers",
+    "Complete remaining GitLab workflows, compiled rollback, hosted CI and both other full products"
+  ],
+  "publication": "None; no npm version, website capability claim or parity row promoted",
+  "logFormatting": "ANSI escapes, CRLF and trailing whitespace normalized; original .raw captures retained locally"
+}

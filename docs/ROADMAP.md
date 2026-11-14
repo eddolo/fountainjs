@@ -2,6 +2,19 @@
 
 Updated 2026-11-14.
 
+The next autocomplete checkpoint repairs shared suggestion matching across
+adjacent differently formatted text leaves. Inline atom insertion now maps the
+exact replaced span, preserving outside anchors and rebased undo; slash commands
+remove the full formatted query. The optional `InlineAtomRange.endPath` stays
+within one inline parent. Three recorded native-input journeys pass in Chromium,
+Firefox and WebKit. Real GitLab autocomplete records are captured, including
+missing IDs, differing global/local issue IDs and a genuinely unavailable
+endpoint. They are evidence for the upcoming host adapter, not a completed
+reference/argument UI. Recording review also retains a separate usability finding:
+after toolbar scrolling, the public demo can resume editing with its caret below
+the visible viewport. The passing semantic journey does not close that finding.
+[Scoped foundation evidence](../artifacts/suggestion-ranges-integration-20261114.json).
+
 The GitLab integration now adds command-name suggestions from the authenticated
 host catalogue, toolbar insertion, server-generated effect previews, and an
 explicit undoable literal/active interpretation switch. Escape stays within the

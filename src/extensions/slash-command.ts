@@ -303,7 +303,7 @@ function executeSlashCommand(editor: Editor, item: SlashCommandItem, match: Sugg
   return editor.runCommandBatch(() => {
     try {
       const transaction = editor.state.createTransaction()
-        .replaceText(match.range.path, match.range.from, match.range.to, '')
+        .replaceTextRange(match.range.path, match.range.from, match.range.endPath ?? match.range.path, match.range.to, '')
         .setSelection(Selection.cursor(match.range.path, match.range.from));
       if (!editor.dispatch(transaction)) return false;
       return item.run({ editor, match });

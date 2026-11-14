@@ -1,0 +1,116 @@
+{
+  "scope": "Authenticated native autocomplete endpoints and actual records in the isolated private project; not a role/context/browser acceptance matrix",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "project": {
+    "id": 1,
+    "fullPath": "root/fountain-product-integration"
+  },
+  "issue": {
+    "id": 192,
+    "iid": 128,
+    "labels": [
+      "Fountain quick action & review"
+    ],
+    "assignees": []
+  },
+  "sources": {
+    "members": "/root/fountain-product-integration/-/autocomplete_sources/members?type=WorkItem&type_id=128",
+    "issues": "/root/fountain-product-integration/-/autocomplete_sources/issues?type=WorkItem&type_id=128",
+    "mergeRequests": "/root/fountain-product-integration/-/autocomplete_sources/merge_requests?type=WorkItem&type_id=128",
+    "labels": "/root/fountain-product-integration/-/autocomplete_sources/labels?type=WorkItem&type_id=128",
+    "milestones": "/root/fountain-product-integration/-/autocomplete_sources/milestones?type=WorkItem&type_id=128",
+    "commands": "/root/fountain-product-integration/-/autocomplete_sources/commands?type=WorkItem&type_id=128",
+    "snippets": "/root/fountain-product-integration/-/autocomplete_sources/snippets?type=WorkItem&type_id=128",
+    "contacts": "/root/fountain-product-integration/-/autocomplete_sources/contacts?type=WorkItem&type_id=128",
+    "wikis": "/root/fountain-product-integration/-/autocomplete_sources/wikis?type=WorkItem&type_id=128"
+  },
+  "results": {
+    "members": {
+      "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/members?type=WorkItem&type_id=128&search=root",
+      "status": 200,
+      "data": [
+        {
+          "type": "User",
+          "username": "root",
+          "name": "Administrator",
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "availability": null,
+          "composite_identity_enforced": false
+        }
+      ]
+    },
+    "issues": {
+      "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/issues?type=WorkItem&type_id=128&search=Fountain+reference",
+      "status": 200,
+      "data": [
+        {
+          "iid": 75,
+          "title": "Fountain reference controls fixture: & <review>",
+          "reference": "#75",
+          "icon_name": "work-item-issue"
+        }
+      ]
+    },
+    "mergeRequests": {
+      "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/merge_requests?type=WorkItem&type_id=128",
+      "status": 200,
+      "data": [
+        {
+          "iid": 1,
+          "title": "Fountain reference controls fixture: & <review>",
+          "id": null
+        }
+      ]
+    },
+    "labels": {
+      "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/labels?type=WorkItem&type_id=128",
+      "status": 200,
+      "data": [
+        {
+          "title": "Fountain quick action & review",
+          "color": "#6699cc",
+          "type": "ProjectLabel",
+          "textColor": "#FFFFFF",
+          "set": true
+        },
+        {
+          "title": "Fountain reference & review",
+          "color": "#6699cc",
+          "type": "ProjectLabel",
+          "textColor": "#FFFFFF"
+        }
+      ]
+    },
+    "milestones": {
+      "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/milestones?type=WorkItem&type_id=128",
+      "status": 200,
+      "data": [
+        {
+          "iid": 1,
+          "title": "Fountain native completion milestone",
+          "due_date": null,
+          "id": null
+        }
+      ]
+    },
+    "snippets": {
+      "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/snippets?type=WorkItem&type_id=128",
+      "status": 200,
+      "data": []
+    },
+    "contacts": {
+      "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/contacts?type=WorkItem&type_id=128",
+      "status": 404,
+      "data": null
+    },
+    "wikis": {
+      "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/wikis?type=WorkItem&type_id=128",
+      "status": 200,
+      "data": []
+    }
+  }
+}

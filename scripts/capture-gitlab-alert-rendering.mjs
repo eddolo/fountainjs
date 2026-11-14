@@ -12,9 +12,11 @@ const diagrams = process.argv.includes('--diagrams');
 const frontmatter = process.argv.includes('--frontmatter');
 const quickActions = process.argv.includes('--quick-actions');
 const quickActionCommands = process.argv.includes('--quick-action-commands');
+const autocomplete = process.argv.includes('--autocomplete');
+const catalogue = quickActionCommands || autocomplete;
 const referenceContexts = process.argv.includes('--reference-context');
 const references = process.argv.includes('--references') || referenceContexts;
-if ([media, diagrams, references, frontmatter, quickActions, quickActionCommands].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
+if ([media, diagrams, references, frontmatter, quickActions, quickActionCommands, autocomplete].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -57,11 +59,11 @@ try {
   }
   const project = await request('/api/v4/projects/root%2Ffountain-product-integration');
   expect(project.visibility).toBe('private');
-  const prior = quickActionCommands ? JSON.parse(await readFile(new URL('artifacts/gitlab-native-quick-actions-20261114/report.json', root))) : null;
-  const paths = await request('/api/graphql', { query: quickActionCommands
+  const prior = catalogue ? JSON.parse(await readFile(new URL(autocomplete ? 'artifacts/gitlab-native-quick-action-controls-20261114/report.json' : 'artifacts/gitlab-native-quick-actions-20261114/report.json', root))) : null;
+  const paths = await request('/api/graphql', { query: catalogue
     ? 'query($path:ID!,$iid:String){namespace(fullPath:$path){markdownPaths{markdownPreviewPath(iid:$iid) autocompleteSourcesPath(iid:$iid)}}}'
     : 'query($path:ID!){namespace(fullPath:$path){markdownPaths{markdownPreviewPath}}}',
-    variables: { path: project.path_with_namespace, ...(quickActionCommands ? { iid: String(prior.issue.iid) } : {}) } });
+    variables: { path: project.path_with_namespace, ...(catalogue ? { iid: String(prior.issue.iid) } : {}) } });
   if (paths.errors?.length) throw new Error('No actual renderer path');
   if (quickActionCommands) {
     const endpoint = new URL(paths.data.namespace.markdownPaths.autocompleteSourcesPath.commands, base);
@@ -75,7 +77,33 @@ try {
     }, null, 2) + '\n');
     console.log(JSON.stringify({ captured: commands.length, kind: 'quick-action-commands' }));
   }
-  if (!quickActionCommands) {
+  if (autocomplete) {
+    const title = 'Fountain native completion milestone';
+    const milestones = await request(`/api/v4/projects/${project.id}/milestones?search=Fountain%20native%20completion`);
+    if (!milestones.some(item => item.title === title)) await request(`/api/v4/projects/${project.id}/milestones`, { title });
+    const sources = paths.data.namespace.markdownPaths.autocompleteSourcesPath;
+    const results = {};
+    for (const [kind, source] of Object.entries(sources)) {
+      if (typeof source !== 'string' || !source || kind === 'commands') continue;
+      const endpoint = new URL(source, base);
+      if (endpoint.origin !== base || endpoint.username || endpoint.password || endpoint.hash) throw new Error('Nonlocal autocomplete source');
+      if (kind === 'members') endpoint.searchParams.set('search', 'root');
+      if (kind === 'issues') endpoint.searchParams.set('search', 'Fountain reference');
+      const response = await page.request.get(endpoint.href, { headers });
+      results[kind] = { endpoint: endpoint.pathname + endpoint.search, status: response.status(),
+        data: response.ok() ? await response.json() : null };
+    }
+    const issue = await request(`/api/v4/projects/${project.id}/issues/${prior.issue.iid}`);
+    await writeFile(new URL('integrations/gitlab/fixtures/autocomplete-live.json', root), JSON.stringify({
+      scope: 'Authenticated native autocomplete endpoints and actual records in the isolated private project; not a role/context/browser acceptance matrix',
+      upstream: { revision: pin.commit, version: version.version, packagedRevision: version.revision },
+      project: { id: project.id, fullPath: project.path_with_namespace },
+      issue: { id: issue.id, iid: issue.iid, labels: issue.labels, assignees: issue.assignees }, sources, results,
+    }, null, 2) + '\n');
+    console.log(JSON.stringify({ kind: 'autocomplete', captured: Object.fromEntries(Object.entries(results)
+      .map(([kind, result]) => [kind, { status: result.status, count: Array.isArray(result.data) ? result.data.length : null }])) }));
+  }
+  if (!catalogue) {
   const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
   if (preview.origin !== base) throw new Error('Nonlocal preview');
   preview.searchParams.set('no_header_anchors', 'true');

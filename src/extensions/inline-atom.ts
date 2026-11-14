@@ -1,18 +1,48 @@
 import {
   NodeSelection,
   Selection,
+  Step,
+  StepMap,
+  textPointToPosition,
   type Editor,
   type Node,
 } from '../core';
-import { getNodeAtPath } from '../core/transaction/path';
+import { getNodeAtPath, replaceNodeAtPath } from '../core/transaction/path';
 
 export interface InlineAtomRange {
   readonly path: readonly number[];
   readonly from: number;
   readonly to: number;
+  /** Optional final text leaf in the same inline parent. */
+  readonly endPath?: readonly number[];
 }
 
-/** Inserts an atomic inline node by splitting one text leaf around it. */
+class InsertInlineAtomStep extends Step {
+  constructor(private readonly range: InlineAtomRange, private readonly atom: Node, private readonly trailingText: string) { super(); }
+  apply(doc: Node): Node {
+    const { path, from, to } = this.range, endPath = this.range.endPath ?? path;
+    const parentPath = path.slice(0, -1), index = path.at(-1)!, endIndex = endPath.at(-1)!;
+    if (path.length !== endPath.length || !path.length || parentPath.some((value, position) => value !== endPath[position])
+      || index > endIndex) throw new RangeError('Inline atom ranges must stay within one inline parent.');
+    const parent = getNodeAtPath(doc, parentPath), first = parent.child(index), last = parent.child(endIndex);
+    if (!first.isText || !last.isText || !Number.isInteger(from) || !Number.isInteger(to)
+      || from < 0 || from > first.text!.length || to < 0 || to > last.text!.length
+      || index === endIndex && from > to || parent.content.slice(index, endIndex + 1).some(node => !node.isText))
+      throw new RangeError('Inline atom ranges must select contiguous text.');
+    const prefix = first.text!.slice(0, from), suffix = this.trailingText + last.text!.slice(to);
+    return replaceNodeAtPath(doc, parentPath, parent.copy([
+      ...parent.content.slice(0, index), ...(prefix ? [first.withText(prefix)] : []), this.atom,
+      last.withText(suffix), ...parent.content.slice(endIndex + 1),
+    ]));
+  }
+  override getMap(doc: Node): StepMap {
+    const start = textPointToPosition(doc, this.range.path, this.range.from);
+    const end = textPointToPosition(doc, this.range.endPath ?? this.range.path, this.range.to);
+    return new StepMap([start, end - start, this.atom.nodeSize + this.trailingText.length]);
+  }
+}
+
+/** Inserts an atomic inline node across contiguous text leaves, retaining outside marks and exact maps. */
 export function insertInlineAtom(
   editor: Editor,
   node: Node,
@@ -25,28 +55,18 @@ export function insertInlineAtom(
         path: editor.state.selection.path,
         from: editor.state.selection.from,
         to: editor.state.selection.to,
+        ...(editor.state.selection.isSingleText ? {} : { endPath: editor.state.selection.endPath }),
       }
     : null);
   if (!editor.editable || !node.type.isInline || !node.type.spec.atom || !selection?.path.length) return false;
 
-  let target: Node;
-  try { target = getNodeAtPath(editor.state.doc, selection.path); }
-  catch { return false; }
-  const value = target.text ?? '';
-  if (!target.isText || selection.from < 0 || selection.to < selection.from || selection.to > value.length) return false;
-
-  const before = value.slice(0, selection.from);
-  const after = `${trailingText}${value.slice(selection.to)}`;
+  if (typeof trailingText !== 'string') return false;
   const index = selection.path.at(-1) as number;
-  const atomIndex = index + (before ? 1 : 0);
+  const atomIndex = index + (selection.from ? 1 : 0);
   const atomPath = [...selection.path.slice(0, -1), atomIndex];
   const afterPath = [...selection.path.slice(0, -1), atomIndex + 1];
   try {
-    const transaction = editor.state.createTransaction().replaceNode(selection.path, [
-      ...(before ? [target.withText(before)] : []),
-      node,
-      target.withText(after),
-    ]);
+    const transaction = editor.state.createTransaction().step(new InsertInlineAtomStep(selection, node, trailingText));
     transaction.setSelection(selectInserted
       ? new NodeSelection(transaction.doc, atomPath)
       : Selection.cursor(afterPath, trailingText.length));

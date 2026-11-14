@@ -61,13 +61,9 @@ export type SuggestionListener<Item extends SuggestionItemBase> = (
 
 const DEFAULT_PREFIXES = Object.freeze([' ', '\t', '\n', '(', '[', '{']);
 
-function escapeExpression(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 function validTrigger(trigger: SuggestionTrigger): void {
-  if (!trigger.char || trigger.char.length > 8 || /\s/.test(trigger.char)) {
-    throw new TypeError('Suggestion triggers require one to eight non-whitespace characters.');
+  if (!trigger.char || trigger.char.length > 64 || /\s/.test(trigger.char)) {
+    throw new TypeError('Suggestion triggers require one to 64 non-whitespace characters.');
   }
 }
 
@@ -76,25 +72,22 @@ function candidateMatch(
   offset: number,
   path: readonly number[],
   config: SuggestionTrigger,
+  previous = '',
 ): SuggestionMatch | null {
   validTrigger(config);
   const source = value.slice(0, offset);
-  const queryPattern = config.allowSpaces ? '[^\\n]*?' : '[^\\s]*';
-  const expression = new RegExp(`${escapeExpression(config.char)}(${queryPattern})$`, 'u');
-  const match = expression.exec(source);
-  if (!match) return null;
-  const from = match.index;
-  const prefix = source.slice(Math.max(0, from - 1), from);
-  if (config.startOfLine && from !== 0) return null;
   const allowedPrefixes = config.allowedPrefixes === undefined ? DEFAULT_PREFIXES : config.allowedPrefixes;
-  if (from > 0 && allowedPrefixes && !allowedPrefixes.includes(prefix)) return null;
-  const query = match[1] ?? '';
-  return Object.freeze({
-    trigger: config.char,
-    query,
-    text: `${config.char}${query}`,
-    range: Object.freeze({ path: Object.freeze([...path]), from, to: offset }),
-  });
+  for (let from = source.lastIndexOf(config.char); from >= 0; from = from ? source.lastIndexOf(config.char, from - 1) : -1) {
+    const prefix = from ? source.slice(from - 1, from) : previous;
+    if (config.startOfLine && prefix !== '' && prefix !== '\n'
+      || prefix && allowedPrefixes && !allowedPrefixes.includes(prefix)) continue;
+    const query = source.slice(from + config.char.length);
+    if ((config.allowSpaces ? /\n/u : /\s/u).test(query)) return null;
+    return Object.freeze({ trigger: config.char, query, text: `${config.char}${query}`,
+      range: Object.freeze({ path: Object.freeze([...path]), from, to: offset }),
+    });
+  }
+  return null;
 }
 
 /** Finds the nearest configured trigger immediately before a collapsed text cursor. */
@@ -108,10 +101,23 @@ export function findSuggestionMatch(
   try { target = getNodeAtPath(state.doc, selection.path); }
   catch { return null; }
   if (!target.isText) return null;
+  const parentPath = selection.path.slice(0, -1), parent = getNodeAtPath(state.doc, parentPath);
+  const index = selection.path.at(-1)!;
+  let first = index;
+  while (first > 0 && parent.child(first - 1).isText) first--;
+  const before = parent.content.slice(first, index).map(node => node.text ?? '').join('');
+  const value = before + (target.text ?? '').slice(0, selection.from);
+  const previous = first ? parent.child(first - 1).type.name === 'hard_break' ? '\n' : '\uFFFC' : '';
   const matches = triggers
-    .map((trigger) => candidateMatch(target.text ?? '', selection.from, selection.path, trigger))
+    .map((trigger) => candidateMatch(value, value.length, selection.path, trigger, previous))
     .filter((match): match is SuggestionMatch => Boolean(match));
-  return matches.sort((left, right) => right.range.from - left.range.from || right.trigger.length - left.trigger.length)[0] ?? null;
+  const match = matches.sort((left, right) => right.range.from - left.range.from || right.trigger.length - left.trigger.length)[0];
+  if (!match) return null;
+  let offset = match.range.from, start = first;
+  while (start < index && offset >= parent.child(start).text!.length) { offset -= parent.child(start).text!.length; start++; }
+  return Object.freeze({ ...match, range: Object.freeze({ path: Object.freeze([...parentPath, start]), from: offset, to: selection.from,
+    ...(start === index ? {} : { endPath: Object.freeze([...selection.path]) }),
+  }) });
 }
 
 export function createSuggestionStateSpec(triggers: readonly SuggestionTrigger[]) {
@@ -132,10 +138,10 @@ export function suggestionDecorations(
   className = 'fountain-suggestion-query',
 ): readonly Decoration[] {
   const match = key.get(state)?.match;
-  if (!match || match.range.from === match.range.to) return [];
+  if (!match || !match.range.endPath && match.range.from === match.range.to) return [];
   try {
     const from = textPointToPosition(state.doc, match.range.path, match.range.from);
-    const to = textPointToPosition(state.doc, match.range.path, match.range.to);
+    const to = textPointToPosition(state.doc, match.range.endPath ?? match.range.path, match.range.to);
     return [Decoration.inline(from, to, {
       class: className,
       'data-fountain-suggestion-query': match.trigger,
@@ -145,7 +151,7 @@ export function suggestionDecorations(
 
 function matchIdentity(match: SuggestionMatch | null): string {
   return match
-    ? `${match.range.path.join('.')}:${match.range.from}:${match.range.to}:${match.trigger}:${match.query}`
+    ? `${match.range.path.join('.')}${match.range.endPath ? '>' + match.range.endPath.join('.') : ''}:${match.range.from}:${match.range.to}:${match.trigger}:${match.query}`
     : '';
 }
 

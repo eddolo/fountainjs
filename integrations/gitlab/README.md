@@ -9,6 +9,18 @@ accounts, projects, storage, uploads, authorization, issue/MR/wiki workflows and
 collaboration services. These services remain real GitLab services. Recreating
 their controls with local-only state does not meet the requirement.
 
+## Autocomplete provider inspection — November 14
+
+`fixtures/autocomplete-live.json` captures authenticated records from the pinned
+private GitLab project. Usernames and label titles arrive without numeric IDs;
+milestones use `iid` while `id` is null. Global issue ID and local IID differ.
+The contacts source returns 404, and several available sources are genuinely
+empty. Preserve these distinctions when wiring providers; do not manufacture
+successful results or infer IDs from array order. The shared SDK now supports
+formatted query spans and long prefixes, but this fixture capture does not
+implement the native reference/argument UI or certify its contexts and roles.
+[Foundation evidence](../../artifacts/suggestion-ranges-integration-20261114.json).
+
 ## Quick-action source/save checkpoint — November 14
 
 `services/quick_actions.ts` matches the pinned host's fence-aware command-line

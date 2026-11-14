@@ -32,7 +32,8 @@ try {
   execFileSync(
     process.execPath,
     [
-      resolve(root, ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands'].some(flag => process.argv.includes(flag)) ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      resolve(root, ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands', '--autocomplete-fixtures'].some(flag => process.argv.includes(flag)) ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      ...(process.argv.includes('--autocomplete-fixtures') ? ['--autocomplete'] : []),
       ...(process.argv.includes('--quick-action-commands') ? ['--quick-action-commands'] : []),
       ...(process.argv.includes('--quick-actions-fixtures') ? ['--quick-actions'] : []),
       ...(process.argv.includes('--frontmatter-fixtures') ? ['--frontmatter'] : []),

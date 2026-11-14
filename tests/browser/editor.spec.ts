@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { expect, test, type Locator } from '@playwright/test';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { wordBodyWithFields, wordBodyWithNestedField } from '../fixtures/docx-body-fields';
-import { suggestionScrollJourney, suggestionTabJourney } from './suggestion-navigation-journey';
+import { suggestionScrollJourney, suggestionTabJourney, formattedSuggestionJourney } from './suggestion-navigation-journey';
 import { runSiteFontJourney } from './site-font-journey';
 import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
 import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
@@ -5719,6 +5719,10 @@ test('keeps the active option visible while wrapping through public slash sugges
 
 test('lets Tab leave the editor when public emoji suggestions close', async ({ page }, info) => {
   await suggestionTabJourney(page, info);
+});
+
+test('accepts formatted mention and slash queries with native selection and undo', async ({ page }, info) => {
+  await formattedSuggestionJourney(page, info);
 });
 
 test('leaves IME candidate keys alone while the public slash menu is open', async ({ page }, info) => {

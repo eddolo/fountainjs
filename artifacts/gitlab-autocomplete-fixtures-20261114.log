@@ -1,0 +1,6 @@
+time="2026-11-14T19:09:33Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"kind":"autocomplete","captured":{"members":{"status":200,"count":1},"issues":{"status":200,"count":1},"mergeRequests":{"status":200,"count":1},"labels":{"status":200,"count":2},"milestones":{"status":200,"count":1},"snippets":{"status":200,"count":0},"contacts":{"status":404,"count":null},"wikis":{"status":200,"count":0}}}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped

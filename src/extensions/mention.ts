@@ -84,7 +84,7 @@ function normalizedMention(attrs: MentionAttributes): Required<Pick<MentionAttri
   const trigger = String(attrs.trigger ?? '@');
   const kind = String(attrs.kind ?? 'mention').trim();
   const href = String(attrs.href ?? '').trim();
-  if (!id || id.length > 256 || label.length > 256 || !trigger || trigger.length > 8 || /\s/.test(trigger)) return null;
+  if (!id || id.length > 256 || label.length > 256 || !trigger || trigger.length > 64 || /\s/.test(trigger)) return null;
   if (!kind || kind.length > 64 || (href && !isSafeURL(href))) return null;
   return { id, label, trigger, kind, href };
 }
@@ -109,7 +109,7 @@ function mentionNodeSpec(options: MentionExtensionOptions): NodeSpec {
     attrs: {
       id: { validate: requiredString },
       label: { default: '', validate: (value) => shortString(value) },
-      trigger: { default: '@', validate: (value) => requiredString(value) && String(value).length <= 8 && !/\s/.test(String(value)) },
+      trigger: { default: '@', validate: (value) => requiredString(value) && String(value).length <= 64 && !/\s/.test(String(value)) },
       kind: { default: 'mention', validate: (value) => requiredString(value) && String(value).length <= 64 },
       href: { default: '', validate: (value) => shortString(value, 2_048) && (!value || isSafeURL(value)) },
     },

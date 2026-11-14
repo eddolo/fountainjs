@@ -1,5 +1,23 @@
 # Release and API stability policy
 
+## Formatted suggestion ranges — 2026-11-14
+
+The optional `InlineAtomRange.endPath` supports contiguous text leaves in the same
+inline parent. Existing single-leaf calls remain valid. Mentions and emoji use
+exact inline-atom position maps; slash commands remove the complete formatted
+query. Suggestion prefixes may contain up to 64 non-whitespace characters, so
+the actual GitLab prefixes fit without a separate matcher. The API snapshot
+changes only the two inline-atom declaration hashes; no export is added.
+
+The measured aggregate CommonJS runtime is 1,460,286 bytes. Its ceiling moves
+from 1,458,688 to 1,460,480 bytes (+1.75 KiB), retaining the failed measurement.
+Every individual entry, ESM, CSS, performance and retention ceiling stays fixed.
+Actual host autocomplete fixtures are captured; the host reference/argument UI
+is not integrated or certified by this checkpoint. Recording review retains a
+public-demo caret visibility issue after toolbar scrolling. No publication or
+capability-row promotion follows from these scoped semantic tests.
+[Evidence and remaining work](../artifacts/suggestion-ranges-integration-20261114.json).
+
 ## GitLab quick-action controls — 2026-11-14
 
 The private integration adds command-name suggestions from the authenticated

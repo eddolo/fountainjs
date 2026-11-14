@@ -1,0 +1,209 @@
+$ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 375 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/html-server.js               0.09 kB │ gzip:  0.09 kB
+dist/B3HoYgiU.js                  0.10 kB │ gzip:  0.12 kB │ map:   0.43 kB
+dist/CZZMbg5E.js                  0.12 kB │ gzip:  0.13 kB │ map:   0.65 kB
+dist/yjs-retained.js              0.19 kB │ gzip:  0.14 kB
+dist/6OWPP9A_.js                  0.28 kB │ gzip:  0.23 kB │ map:   3.37 kB
+dist/MqzuiJN-.js                  0.30 kB │ gzip:  0.22 kB │ map:   1.32 kB
+dist/yjs.js                       0.43 kB │ gzip:  0.30 kB │ map:   2.23 kB
+dist/k80SygvX.js                  0.45 kB │ gzip:  0.31 kB │ map:   1.46 kB
+dist/CQ3KgNg-.js                  0.46 kB │ gzip:  0.33 kB │ map:   1.70 kB
+dist/BnFMdUMI.js                  0.51 kB │ gzip:  0.30 kB │ map:   2.53 kB
+dist/Cv9XzdCy.js                  0.52 kB │ gzip:  0.32 kB │ map:   8.20 kB
+dist/text-style.js                0.78 kB │ gzip:  0.35 kB
+dist/svelte.js                    0.80 kB │ gzip:  0.46 kB │ map:   3.41 kB
+dist/EuNFkSAi.js                  0.88 kB │ gzip:  0.47 kB │ map:   2.55 kB
+dist/D1AFWIEp.js                  0.91 kB │ gzip:  0.47 kB │ map:   3.88 kB
+dist/N_kHJUKF.js                  1.01 kB │ gzip:  0.52 kB │ map:   6.17 kB
+dist/react-widgets.js             1.22 kB │ gzip:  0.58 kB │ map:   5.30 kB
+dist/BG5jeMm4.js                  1.53 kB │ gzip:  0.78 kB │ map:   5.46 kB
+dist/CjF9iDJQ.js                  1.56 kB │ gzip:  0.81 kB │ map:   5.78 kB
+dist/DwOHBm61.js                  1.76 kB │ gzip:  0.90 kB │ map:   5.46 kB
+dist/sDYxc2yD.js                  2.11 kB │ gzip:  0.97 kB │ map:   6.10 kB
+dist/Bw8w8O4J.js                  2.26 kB │ gzip:  1.01 kB │ map:   7.46 kB
+dist/BLf5Nyeq.js                  2.27 kB │ gzip:  0.96 kB │ map:   8.49 kB
+dist/CcFuyTHX.js                  2.32 kB │ gzip:  1.12 kB │ map:   8.58 kB
+dist/5rtF7oGM.js                  2.37 kB │ gzip:  1.06 kB │ map:   7.54 kB
+dist/BH7rBvQl.js                  2.61 kB │ gzip:  1.12 kB │ map:  10.00 kB
+dist/7R2r_fH_.js                  2.62 kB │ gzip:  1.21 kB │ map:   9.57 kB
+dist/D8p1sV6E.js                  2.75 kB │ gzip:  1.16 kB │ map:  10.12 kB
+dist/vue.js                       3.15 kB │ gzip:  1.51 kB │ map:   9.51 kB
+dist/BTlIZnfF.js                  3.41 kB │ gzip:  1.45 kB │ map:  11.30 kB
+dist/CqUTft4L.js                  3.69 kB │ gzip:  1.37 kB │ map:  14.26 kB
+dist/DbI_OZvI.js                  3.72 kB │ gzip:  1.31 kB │ map:  13.28 kB
+dist/widgets-dom.js               3.97 kB │ gzip:  1.50 kB │ map:  13.20 kB
+dist/integrity-dom.js             4.27 kB │ gzip:  1.77 kB │ map:  13.46 kB
+dist/BCekc4lO.js                  4.44 kB │ gzip:  1.57 kB │ map:  16.06 kB
+dist/B_tIq55M.js                  4.66 kB │ gzip:  2.04 kB │ map:  15.64 kB
+dist/table-of-contents.js         4.69 kB │ gzip:  2.11 kB │ map:  16.67 kB
+dist/CzZ5Rd1v.js                  4.70 kB │ gzip:  1.94 kB │ map:  14.59 kB
+dist/DVlwl6P2.js                  4.81 kB │ gzip:  1.80 kB │ map:  15.72 kB
+dist/testing.js                   5.42 kB │ gzip:  2.07 kB │ map:  17.77 kB
+dist/react-tracked-changes.js     5.90 kB │ gzip:  2.05 kB │ map:  13.04 kB
+dist/D5lqMwEj.js                  5.96 kB │ gzip:  2.44 kB │ map:  21.94 kB
+dist/migrations.js                6.08 kB │ gzip:  2.01 kB │ map:  18.89 kB
+dist/BPsEQPjN.js                  6.20 kB │ gzip:  2.40 kB │ map:  24.36 kB
+dist/details.js                   6.24 kB │ gzip:  2.34 kB │ map:  20.20 kB
+dist/react-integrity.js           6.49 kB │ gzip:  2.20 kB │ map:  12.24 kB
+dist/Cr_BBPdA.js                  6.80 kB │ gzip:  2.34 kB │ map:  21.46 kB
+dist/html-inert.js                6.99 kB │ gzip:  2.87 kB │ map:  17.56 kB
+dist/react-comments.js            7.18 kB │ gzip:  2.59 kB │ map:  17.89 kB
+dist/widgets.js                   7.29 kB │ gzip:  2.91 kB │ map:  26.31 kB
+dist/oDFdtosg.js                  7.61 kB │ gzip:  2.67 kB │ map:  28.51 kB
+dist/CimHjj2Q.js                  7.64 kB │ gzip:  3.01 kB │ map:  25.75 kB
+dist/react-versions.js            7.75 kB │ gzip:  2.37 kB │ map:  16.76 kB
+dist/node-ids.js                  7.79 kB │ gzip:  3.08 kB │ map:  28.70 kB
+dist/DHCUXHMt.js                  8.14 kB │ gzip:  3.22 kB │ map:  31.79 kB
+dist/_cI4-REW.js                  8.20 kB │ gzip:  3.04 kB │ map:  27.43 kB
+dist/structured-attributes.js     8.48 kB │ gzip:  2.69 kB │ map:  29.80 kB
+dist/core.js                      8.98 kB │ gzip:  3.17 kB
+dist/Z_iz2Hd0.js                  9.00 kB │ gzip:  3.71 kB │ map:  33.01 kB
+dist/ai-generated-media.js        9.16 kB │ gzip:  2.96 kB │ map:  26.13 kB
+dist/ruby.js                      9.26 kB │ gzip:  3.17 kB │ map:  27.49 kB
+dist/DRLkH22y.js                  9.34 kB │ gzip:  3.32 kB │ map:  35.21 kB
+dist/integrity.js                 9.36 kB │ gzip:  3.29 kB │ map:  29.67 kB
+dist/pages.js                     9.90 kB │ gzip:  3.41 kB │ map:  28.91 kB
+dist/4M6rApD0.js                 10.33 kB │ gzip:  3.76 kB │ map:  38.15 kB
+dist/pages-preview.js            11.89 kB │ gzip:  4.29 kB │ map:  35.98 kB
+dist/html-source.js              11.96 kB │ gzip:  4.38 kB │ map:  33.22 kB
+dist/yjs-room.js                 12.44 kB │ gzip:  4.25 kB │ map:  36.23 kB
+dist/DSRLmP9s.js                 13.40 kB │ gzip:  4.54 kB │ map:  40.93 kB
+dist/ai-conversation.js          13.59 kB │ gzip:  4.03 kB │ map:  39.41 kB
+dist/ai-document-tools.js        14.07 kB │ gzip:  4.29 kB │ map:  43.37 kB
+dist/CQ-9mRBC.js                 14.48 kB │ gzip:  5.30 kB │ map:  45.27 kB
+dist/BoNlNrb_.js                 15.20 kB │ gzip:  5.88 kB │ map:  53.77 kB
+dist/BGPPleBY.js                 15.67 kB │ gzip:  6.14 kB │ map:  47.19 kB
+dist/BAYA9KQ9.js                 17.49 kB │ gzip:  5.57 kB │ map:  61.49 kB
+dist/BnigIiP3.js                 18.07 kB │ gzip:  6.83 kB │ map:  52.28 kB
+dist/document-utilities.js       19.56 kB │ gzip:  6.75 kB │ map:  64.21 kB
+dist/yjs-legacy.js               20.05 kB │ gzip:  6.07 kB │ map:  60.51 kB
+dist/tracked-changes.js          23.72 kB │ gzip:  7.32 kB │ map:  80.08 kB
+dist/versions.js                 24.65 kB │ gzip:  7.09 kB │ map:  75.93 kB
+dist/B1QL065r.js                 25.21 kB │ gzip:  8.21 kB │ map:  76.84 kB
+dist/comments.js                 25.28 kB │ gzip:  8.02 kB │ map:  85.74 kB
+dist/D1zFfbBd.js                 29.78 kB │ gzip:  8.91 kB │ map:  90.63 kB
+dist/markdown-html-D3sEScT1.js   40.97 kB │ gzip: 23.40 kB │ map:  73.64 kB
+dist/pages-dom.js                45.50 kB │ gzip: 12.28 kB │ map: 139.70 kB
+dist/B-TQpgrc.js                 70.79 kB │ gzip: 19.65 kB │ map: 243.01 kB
+dist/react.js                    75.57 kB │ gzip: 20.16 kB │ map: 179.73 kB
+dist/index.js                    75.66 kB │ gzip: 23.84 kB │ map: 181.22 kB
+dist/BQtybBMI.js                 91.47 kB │ gzip: 30.47 kB │ map: 339.07 kB
+dist/DLjRS2l3.js                 96.49 kB │ gzip: 27.99 kB │ map: 305.16 kB
+dist/B2V_49HM.js                133.79 kB │ gzip: 35.32 kB │ map: 387.76 kB
+dist/docx.js                    181.87 kB │ gzip: 59.94 kB │ map: 579.36 kB
+dist/BQ11DP6Y.js                209.73 kB │ gzip: 52.41 kB │ map: 719.94 kB
+dist/emoji-data.js              274.47 kB │ gzip: 30.19 kB │ map: 451.89 kB
+
+transforming...
+✓ 375 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/html-server.cjs               0.16 kB │ gzip:  0.15 kB
+dist/BrBcAANm.cjs                  0.16 kB │ gzip:  0.16 kB │ map:   0.43 kB
+dist/BG9jx0Wl.cjs                  0.20 kB │ gzip:  0.18 kB │ map:   0.67 kB
+dist/yjs-retained.cjs              0.27 kB │ gzip:  0.19 kB
+dist/DlQkwKdU.cjs                  0.47 kB │ gzip:  0.27 kB │ map:   3.39 kB
+dist/DkzkJuuS.cjs                  0.48 kB │ gzip:  0.25 kB │ map:   1.38 kB
+dist/yjs.cjs                       0.49 kB │ gzip:  0.36 kB │ map:   2.28 kB
+dist/CUi7RU93.cjs                  0.52 kB │ gzip:  0.36 kB │ map:   1.81 kB
+dist/owlJN_nc.cjs                  0.58 kB │ gzip:  0.35 kB │ map:   8.33 kB
+dist/CvEYLZNp.cjs                  0.59 kB │ gzip:  0.35 kB │ map:   1.59 kB
+dist/Chgba0Kb.cjs                  0.77 kB │ gzip:  0.41 kB
+dist/SWsNzUV-.cjs                  0.81 kB │ gzip:  0.33 kB │ map:   2.65 kB
+dist/text-style.cjs                0.85 kB │ gzip:  0.34 kB
+dist/svelte.cjs                    0.87 kB │ gzip:  0.50 kB │ map:   3.64 kB
+dist/DuyU6zi1.cjs                  0.88 kB │ gzip:  0.51 kB │ map:   2.71 kB
+dist/Bg2b7jBC.cjs                  0.99 kB │ gzip:  0.52 kB │ map:   4.01 kB
+dist/CNaCvDOw.cjs                  1.03 kB │ gzip:  0.54 kB │ map:   6.45 kB
+dist/react-widgets.cjs             1.33 kB │ gzip:  0.63 kB │ map:   5.62 kB
+dist/kIOwnErL.cjs                  1.71 kB │ gzip:  0.86 kB │ map:   6.14 kB
+dist/qHhRLJ_s.cjs                  1.79 kB │ gzip:  0.90 kB │ map:   5.72 kB
+dist/D5ZIveTN.cjs                  1.95 kB │ gzip:  0.83 kB │ map:   5.79 kB
+dist/MiF6EkPf.cjs                  2.10 kB │ gzip:  0.99 kB │ map:   7.84 kB
+dist/D_XPVMce.cjs                  2.36 kB │ gzip:  1.11 kB │ map:   8.07 kB
+dist/B2iSUXni.cjs                  2.52 kB │ gzip:  1.17 kB │ map:   9.07 kB
+dist/DWo7qF9i.cjs                  2.57 kB │ gzip:  1.04 kB │ map:   6.42 kB
+dist/CwtWauqp.cjs                  2.60 kB │ gzip:  1.24 kB │ map:  10.01 kB
+dist/BQA6ywOV.cjs                  2.61 kB │ gzip:  1.16 kB │ map:  10.43 kB
+dist/DdwMzxLs.cjs                  2.65 kB │ gzip:  1.05 kB │ map:   8.93 kB
+dist/DlLFB2ZW.cjs                  2.75 kB │ gzip:  1.20 kB │ map:  10.59 kB
+dist/vue.cjs                       3.23 kB │ gzip:  1.52 kB │ map:  10.51 kB
+dist/BL_j9AvF.cjs                  3.26 kB │ gzip:  1.44 kB │ map:  12.05 kB
+dist/widgets-dom.cjs               3.70 kB │ gzip:  1.59 kB │ map:  13.86 kB
+dist/CQ0Pjj17.cjs                  3.86 kB │ gzip:  1.38 kB │ map:  14.15 kB
+dist/integrity-dom.cjs             4.01 kB │ gzip:  1.83 kB │ map:  14.27 kB
+dist/CsYxvRmR.cjs                  4.59 kB │ gzip:  1.62 kB │ map:  17.10 kB
+dist/table-of-contents.cjs         4.61 kB │ gzip:  2.13 kB │ map:  17.66 kB
+dist/Dsxky-On.cjs                  4.82 kB │ gzip:  1.83 kB │ map:  16.60 kB
+dist/DSXv6j0A.cjs                  4.93 kB │ gzip:  1.48 kB │ map:  15.24 kB
+dist/testing.cjs                   5.12 kB │ gzip:  2.13 kB │ map:  19.03 kB
+dist/BJA4YAKU.cjs                  5.24 kB │ gzip:  2.02 kB │ map:  15.79 kB
+dist/migrations.cjs                5.42 kB │ gzip:  2.06 kB │ map:  19.77 kB
+dist/react-tracked-changes.cjs     5.43 kB │ gzip:  2.02 kB │ map:  14.63 kB
+dist/react-integrity.cjs           5.56 kB │ gzip:  2.23 kB │ map:  14.22 kB
+dist/details.cjs                   5.96 kB │ gzip:  2.46 kB │ map:  21.90 kB
+dist/ByeBXDOn.cjs                  6.17 kB │ gzip:  2.07 kB │ map:  16.71 kB
+dist/Duv-OOFp.cjs                  6.24 kB │ gzip:  2.44 kB │ map:  25.52 kB
+dist/BMdBpL0p.cjs                  6.29 kB │ gzip:  2.40 kB │ map:  22.86 kB
+dist/q86afhQ3.cjs                  6.36 kB │ gzip:  2.50 kB │ map:  23.47 kB
+dist/react-comments.cjs            6.48 kB │ gzip:  2.59 kB │ map:  20.26 kB
+dist/html-inert.cjs                6.60 kB │ gzip:  2.98 kB │ map:  18.90 kB
+dist/react-versions.cjs            6.81 kB │ gzip:  2.39 kB │ map:  19.39 kB
+dist/widgets.cjs                   6.98 kB │ gzip:  2.93 kB │ map:  28.17 kB
+dist/node-ids.cjs                  7.40 kB │ gzip:  3.16 kB │ map:  30.79 kB
+dist/BXQGRo9T.cjs                  7.72 kB │ gzip:  2.80 kB │ map:  30.09 kB
+dist/structured-attributes.cjs     7.76 kB │ gzip:  2.80 kB │ map:  31.60 kB
+dist/CLIC3-RA.cjs                  8.02 kB │ gzip:  3.14 kB │ map:  29.34 kB
+dist/ai-generated-media.cjs        8.12 kB │ gzip:  3.06 kB │ map:  27.63 kB
+dist/ruby.cjs                      8.15 kB │ gzip:  3.35 kB │ map:  29.80 kB
+dist/BMxtceyz.cjs                  8.18 kB │ gzip:  3.29 kB │ map:  33.63 kB
+dist/integrity.cjs                 8.31 kB │ gzip:  3.43 kB │ map:  30.93 kB
+dist/core.cjs                      8.71 kB │ gzip:  2.53 kB
+dist/chA4gpAQ.cjs                  9.04 kB │ gzip:  3.10 kB │ map:  27.37 kB
+dist/Dehhd3_1.cjs                  9.08 kB │ gzip:  3.79 kB │ map:  34.33 kB
+dist/BM6SrYuT.cjs                  9.16 kB │ gzip:  3.39 kB │ map:  37.59 kB
+dist/pages.cjs                     9.18 kB │ gzip:  3.48 kB │ map:  31.14 kB
+dist/C9B1ncTl.cjs                  9.43 kB │ gzip:  3.91 kB │ map:  41.36 kB
+dist/html-source.cjs              10.18 kB │ gzip:  4.47 kB │ map:  35.41 kB
+dist/pages-preview.cjs            10.53 kB │ gzip:  4.38 kB │ map:  38.73 kB
+dist/yjs-room.cjs                 11.43 kB │ gzip:  4.35 kB │ map:  38.30 kB
+dist/ai-conversation.cjs          11.81 kB │ gzip:  4.26 kB │ map:  42.18 kB
+dist/ai-document-tools.cjs        12.61 kB │ gzip:  4.34 kB │ map:  46.02 kB
+dist/wS8zK5sJ.cjs                 13.94 kB │ gzip:  4.67 kB │ map:  43.40 kB
+dist/CkFLb9h4.cjs                 14.18 kB │ gzip:  5.41 kB │ map:  48.68 kB
+dist/DUr6ny25.cjs                 15.54 kB │ gzip:  5.94 kB │ map:  57.56 kB
+dist/Cib0rdgF.cjs                 15.99 kB │ gzip:  6.31 kB │ map:  49.81 kB
+dist/yjs-legacy.cjs               16.37 kB │ gzip:  6.25 kB │ map:  64.63 kB
+dist/DhdHW4a5.cjs                 16.66 kB │ gzip:  5.63 kB │ map:  65.30 kB
+dist/2FJHw8gn.cjs                 17.49 kB │ gzip:  6.75 kB │ map:  56.21 kB
+dist/document-utilities.cjs       18.25 kB │ gzip:  6.85 kB │ map:  68.58 kB
+dist/versions.cjs                 20.78 kB │ gzip:  7.38 kB │ map:  81.63 kB
+dist/tracked-changes.cjs          20.84 kB │ gzip:  7.48 kB │ map:  86.24 kB
+dist/comments.cjs                 22.84 kB │ gzip:  8.36 kB │ map:  91.78 kB
+dist/A1d4Oay8.cjs                 23.09 kB │ gzip:  8.45 kB │ map:  82.99 kB
+dist/9HddpdyY.cjs                 28.72 kB │ gzip:  9.18 kB │ map:  97.86 kB
+dist/pages-dom.cjs                37.28 kB │ gzip: 12.82 kB │ map: 150.48 kB
+dist/markdown-html-BVYgcY-N.cjs   40.52 kB │ gzip: 23.62 kB │ map:  74.76 kB
+dist/fd4408or.cjs                 63.06 kB │ gzip: 20.16 kB │ map: 267.22 kB
+dist/react.cjs                    63.92 kB │ gzip: 20.23 kB │ map: 202.95 kB
+dist/index.cjs                    75.23 kB │ gzip: 22.60 kB │ map: 191.65 kB
+dist/BT3hMPeU.cjs                 80.78 kB │ gzip: 30.51 kB │ map: 361.02 kB
+dist/BXc1aW90.cjs                 83.94 kB │ gzip: 28.28 kB │ map: 326.25 kB
+dist/CzilxiDf.cjs                105.28 kB │ gzip: 35.41 kB │ map: 421.37 kB
+dist/docx.cjs                    163.17 kB │ gzip: 59.05 kB │ map: 614.20 kB
+dist/DpHJJ1xx.cjs                168.46 kB │ gzip: 53.63 kB │ map: 754.95 kB
+dist/emoji-data.cjs              274.54 kB │ gzip: 30.24 kB │ map: 451.98 kB
+
+✓ built in 7.45s
+[PLUGIN_TIMINGS] Your build spent 89% of 7.4s inside plugin hooks (6.6s).
+Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+  - fountain-library-output renderChunk (85%, 6.3s, 189 calls)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+$ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json

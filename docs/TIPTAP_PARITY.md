@@ -2,6 +2,14 @@
 
 ## Current programme status — 2026-11-14
 
+Shared suggestion matching now spans adjacent formatted text leaves. Mention
+insertion uses precise replacement maps; slash acceptance removes the whole
+formatted query. Three recorded browser journeys pass, with a separate offscreen
+caret finding retained from visual review. Authenticated GitLab autocomplete
+fixtures establish actual provider shapes; argument/reference UI integration
+remains open. No parity row is promoted.
+[Foundation evidence and limits](../artifacts/suggestion-ranges-integration-20261114.json).
+
 Quick-action command-name suggestions, insertion and server effect previews now
 use the real GitLab endpoint and renderer. An undoable switch keeps a command
 literal when requested. The seventeen-check recorded service profile includes
