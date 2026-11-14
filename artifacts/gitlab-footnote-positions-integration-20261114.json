@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-14",
+  "status": "source-position-foundation-native-footnote-adapter-incomplete",
+  "parentRevision": "a52248d99ecc30531072fa35a8a9cd48c5af9606",
+  "implementation": "integrations/gitlab/services/footnote_positions.ts",
+  "scope": "Private DOM-free mapping of exact renderer-input source spans; no native import/runtime wiring or authoring claim",
+  "sourceContract": "Inclusive one-based UTF-8 source columns become half-open JavaScript string offsets. Authored labels and newline characters remain unchanged; generated DOM IDs and hrefs are not identities.",
+  "validation": {
+    "cases": 47,
+    "actualRendererFixtures": 23,
+    "allGitLabCases": 839,
+    "suites": 33,
+    "typeScript": "pnpm exec tsc --noEmit: exit 0",
+    "modelCommand": "pnpm exec vitest run gitlab- --maxWorkers=2",
+    "modelLog": "artifacts/gitlab-footnote-positions-all-models-20261114.log"
+  },
+  "actualCases": [
+    "simple",
+    "repeated",
+    "ordered",
+    "hyphen",
+    "underscore",
+    "case",
+    "space",
+    "unicode",
+    "unicode-space",
+    "header-example",
+    "punctuation",
+    "multiblock",
+    "nested-reference",
+    "nested-definition",
+    "code",
+    "escaped",
+    "unreferenced",
+    "missing",
+    "duplicate",
+    "links-math",
+    "definition-reference",
+    "table",
+    "raw-html"
+  ],
+  "covered": [
+    "All emitted reference and direct definition positions in the captured authenticated host HTML map to their source labels",
+    "Repeated references without the footnote-ref CSS class remain discoverable through host reference attributes and exact source spans",
+    "Unicode and NBSP labels, percent sequences and case variants remain exact authored strings",
+    "Nested definitions, table references, multiblock bodies and duplicate definition spans map without deriving IDs from anchors",
+    "Positions inside UTF-8 characters, unsafe/out-of-bounds coordinates and lone surrogate input are refused",
+    "LF, CRLF and CR source offsets retain the exact original newline bytes/characters; these newline cases are synthetic index tests, not extra host captures",
+    "Source bytes are bounded and per-line byte boundary arrays are cached"
+  ],
+  "remaining": [
+    "Wire safe stable internal IDs and separate raw source labels into native schema nodes",
+    "Validate mapped source against converted host structure and remove only renderer-owned back-reference chrome",
+    "Discover and represent unused/omitted definition bodies through a verified host-render boundary",
+    "Export source and edited labels/body semantics, including duplicate/case-varied/repeated references",
+    "Insert/edit/navigation/rename/deletion UI, captured ownership, history and permissions",
+    "Real native service save/reopen/restart and reader/navigation/browser/context/role acceptance"
+  ],
+  "guards": "The existing source-loss refusal remains enabled. This helper does not replace Fountain-specific source snapshots or the host renderer, nor impose CommonMark AST equality.",
+  "files": {
+    "integrations/gitlab/fixtures/footnote-live-html.json": "349c3f9bbf3e2d130a0049fdd2ecceb05e9b00ffeb43812e0770db5e56f9acd7",
+    "integrations/gitlab/services/footnote_positions.ts": "9f15886c2b284e231c6674410fb8e6de84add2ddf16c0f7e36284cdb549ef60d",
+    "tests/gitlab-footnote-positions.test.ts": "104be8be5eb7311b9c94dadecf6fcde0cecf6c9e2a370703d2e0325c920883f1"
+  },
+  "unchanged": "Public engine, native runtime installation, package entry points/versions, size limits and parity rows"
+}

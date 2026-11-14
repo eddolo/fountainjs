@@ -1,5 +1,16 @@
 # Release and API stability policy
 
+## Private GitLab footnote position bridge — 2026-11-14
+
+Add a bounded, DOM-free UTF-8-to-JavaScript source-span index for the planned
+footnote adapter. All 23 captured host renderings map their emitted note labels;
+47 cases cover repeated/nested/duplicate labels, Unicode byte boundaries,
+newlines and invalid source/position refusal. All 839 GitLab model cases and
+TypeScript pass. The helper is not wired into native import or the installed
+runtime, so the existing source-loss guard stays. This is not native footnote
+feature completion or a public package/API/size change.
+[Evidence](../artifacts/gitlab-footnote-positions-integration-20261114.json).
+
 ## Private GitLab upload diagnostics — 2026-11-14
 
 Correlate the intermittent post-restart image failure with the authenticated

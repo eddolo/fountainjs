@@ -30,6 +30,15 @@ with the diagnostic mount removed and persistent volumes retained.
 
 ## Footnote source protection — November 14
 
+The next bridge foundation now maps GitLab's inclusive UTF-8 positions to exact
+JavaScript source spans. All 23 captured renderings supply matching label spans,
+including repeated, Unicode/NBSP, nested and duplicate labels. Forty-seven cases
+verify byte boundaries, newline retention and refusal of invalid/lossy input;
+all 839 GitLab model cases and TypeScript pass. The helper is not yet wired into
+native import: schema/identity mapping, body conversion, unused-note handling,
+export and authoring remain in the full adapter plan. The guard stays enabled.
+[Position evidence](../../artifacts/gitlab-footnote-positions-integration-20261114.json).
+
 The actual renderer omits unused footnote definitions. A recorded parent-codec
 counterexample shows why accepting that HTML is unsafe: unchanged source is
 retained, but an unrelated edit canonically exports without the hidden definition.

@@ -2,6 +2,13 @@
 
 ## Current programme status — 2026-11-14
 
+The private native-footnote bridge now maps the captured host positions to exact
+source labels across all 23 renderer fixtures, with 47 source-position cases and
+839 total GitLab model cases passing. TypeScript passes. This is an unwired
+source-boundary foundation, not completed footnote import or authoring; omitted
+definitions still require the existing protection. No capability row changes.
+[Position evidence](../artifacts/gitlab-footnote-positions-integration-20261114.json).
+
 The open reader-image failure now has request-correlated Rails evidence and a
 repeatable diagnostic harness. Twenty-five uncached loads across two application
 restarts match successful authentication and HTTP 200, with decoded screenshots

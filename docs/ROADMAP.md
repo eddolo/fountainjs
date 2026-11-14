@@ -2,6 +2,14 @@
 
 Updated 2026-11-14.
 
+The native footnote bridge now has an exact UTF-8-source-position foundation.
+Forty-seven cases, including all 23 actual host renderings, verify label spans,
+multibyte boundaries, nested/repeated/duplicate notes and exact newline offsets.
+All 839 GitLab model cases and TypeScript pass. This helper is not yet connected
+to native import; the loss-prevention guard, full source/body adapter and authoring
+acceptance requirements remain. No native footnote parity row is promoted.
+[Position evidence](../artifacts/gitlab-footnote-positions-integration-20261114.json).
+
 The image-restart investigation now correlates the earlier 403 with authenticated
 Rails logs. A temporary diagnostic overlay leaves Workhorse verification unchanged
 and records no tokens. The exact issue/image passes 25 uncached Chromium loads

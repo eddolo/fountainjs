@@ -5,6 +5,19 @@ and import remain unfinished. Fountain already has portable footnote nodes,
 numbering, insertion, reconnection, selection and removal in `src/pages/index.ts`.
 The next work is a source-aware host bridge, not another document engine.
 
+`services/footnote_positions.ts` now implements the first source-position
+boundary: inclusive one-based UTF-8 columns become exact half-open JavaScript
+offsets in the original renderer input. It refuses invalid boundaries, malformed
+or out-of-range positions, lossy Unicode and source beyond the byte limit.
+Per-line byte boundaries are cached; original LF/CRLF/CR characters stay intact.
+All 23 captured renderings map their emitted reference/definition positions,
+including repeated references without a CSS class, Unicode/NBSP labels, nested
+definitions and duplicate labels. Forty-seven cases pass; all 839 GitLab model
+cases and the TypeScript check pass. This helper is not yet wired into native
+import. It neither discovers omitted definitions nor enables authoring, chooses
+internal IDs or interprets definition bodies. The source-protection guard stays.
+[Source-position evidence](../../artifacts/gitlab-footnote-positions-integration-20261114.json).
+
 The authenticated cases in `fixtures/footnote-live-html.json` establish these
 constraints:
 
