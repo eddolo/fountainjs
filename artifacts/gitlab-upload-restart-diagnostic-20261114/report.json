@@ -1,0 +1,575 @@
+{
+  "date": "2026-11-14T23:00:35.801Z",
+  "scope": "Real GitLab reader-image requests across restart; diagnostic instrumentation preserves authentication",
+  "status": "passed",
+  "checks": [
+    "Pinned private task deployment, diagnostic activation and authenticated source verified",
+    "Twelve actual uncached browser image loads decode after restart 1, with source unchanged",
+    "Twelve actual uncached browser image loads decode after restart 2, with source unchanged"
+  ],
+  "samples": [
+    {
+      "round": 0,
+      "sample": 0,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 0,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 1,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 2,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 3,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 4,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 5,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 6,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 7,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 8,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 9,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 10,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 1,
+      "sample": 11,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 0,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 1,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 2,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 3,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 4,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 5,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 6,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 7,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 8,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 9,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 10,
+      "responses": 1,
+      "width": 400
+    },
+    {
+      "round": 2,
+      "sample": 11,
+      "responses": 1,
+      "width": 400
+    }
+  ],
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4RH3WFGYAJBJYYFCKMK6H"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4VPM2HYQRDGTJGEB3R7XD"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4VSVEND8G32R5WZDGCYT4"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4VWRV756K5ASY46QKKAW0"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4VXRGFW8YQR5E54PNAN7E"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4W0XHA3MXFYJ32Y1THCDB"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4W40Y9SYXT2WH25K5HZ3V"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4W79Y2R5BV700XFQSVMAK"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4WAYFWPB6ABA5W5Y55KJ1"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4WEB48H0G6RMMVCTRAADN"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4WHQJFEDA04ADQHX2EBV0"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4WMG2YK6N4V92HZWMVGWN"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4WQSG7S0TR25EHSD09GSM"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4YSFXY0F66TJ30DRSMRAT"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4YX065VSV0APSJTHSPAVX"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4YZN66MM32PR2WQE3WSF5"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4Z2QC4J2AT5ZYRF8Z7TYM"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4Z5VK58CPDWM0SDXDG54S"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4Z8VW5Z97BBV0DK8Y5RY3"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4ZC74HBHZ0X85BHBZ8Q4W"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4ZF3650EBKTPX7C7RZX1S"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4ZJG8P30DVZ44R2BVJ7HW"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4ZKCXE6R48CY9GQ9E2ZNN"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4ZPT6GRTV8TA1EVY42Q43"
+    },
+    {
+      "path": "/-/project/1/uploads/24033a1970f2baebff56911224685282/fountain-baseline-figure.png",
+      "status": 200,
+      "requestId": "01M7E4ZSVY9PZ68VM2J0AQ6VTM"
+    }
+  ],
+  "gatewaySamples": [
+    {
+      "time": "2026-11-14T23:02:01.746Z",
+      "event": "FountainUploadGatewayAuditReady"
+    },
+    {
+      "time": "2026-11-14T23:02:06.149Z",
+      "event": "FountainUploadGatewayAuditReady"
+    },
+    {
+      "time": "2026-11-14T23:02:08.260Z",
+      "event": "FountainUploadGatewayAuditReady"
+    },
+    {
+      "time": "2026-11-14T23:02:28.587Z",
+      "correlation_id": "01M7E4RH3WFGYAJBJYYFCKMK6H",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697348.58759,
+      "issued_at": 1794697348,
+      "age_seconds": 0.5875899791717529,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:03:55.737Z",
+      "event": "FountainUploadGatewayAuditReady"
+    },
+    {
+      "time": "2026-11-14T23:03:57.382Z",
+      "event": "FountainUploadGatewayAuditReady"
+    },
+    {
+      "time": "2026-11-14T23:04:12.704Z",
+      "correlation_id": "01M7E4VPM2HYQRDGTJGEB3R7XD",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697452.7031577,
+      "issued_at": 1794697452,
+      "age_seconds": 0.7031576633453369,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:15.851Z",
+      "correlation_id": "01M7E4VSVEND8G32R5WZDGCYT4",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697455.8510153,
+      "issued_at": 1794697455,
+      "age_seconds": 0.8510153293609619,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:18.963Z",
+      "correlation_id": "01M7E4VWRV756K5ASY46QKKAW0",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697458.9536576,
+      "issued_at": 1794697458,
+      "age_seconds": 0.9536576271057129,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:19.856Z",
+      "correlation_id": "01M7E4VXRGFW8YQR5E54PNAN7E",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697459.8540988,
+      "issued_at": 1794697459,
+      "age_seconds": 0.8540987968444824,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:23.066Z",
+      "correlation_id": "01M7E4W0XHA3MXFYJ32Y1THCDB",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697463.0659578,
+      "issued_at": 1794697462,
+      "age_seconds": 1.06595778465271,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:26.291Z",
+      "correlation_id": "01M7E4W40Y9SYXT2WH25K5HZ3V",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697466.290657,
+      "issued_at": 1794697465,
+      "age_seconds": 1.2906570434570312,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:29.683Z",
+      "correlation_id": "01M7E4W79Y2R5BV700XFQSVMAK",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697469.6825447,
+      "issued_at": 1794697469,
+      "age_seconds": 0.6825447082519531,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:33.430Z",
+      "correlation_id": "01M7E4WAYFWPB6ABA5W5Y55KJ1",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697473.4296546,
+      "issued_at": 1794697472,
+      "age_seconds": 1.429654598236084,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:36.918Z",
+      "correlation_id": "01M7E4WEB48H0G6RMMVCTRAADN",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697476.9127092,
+      "issued_at": 1794697476,
+      "age_seconds": 0.9127092361450195,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:40.287Z",
+      "correlation_id": "01M7E4WHQJFEDA04ADQHX2EBV0",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697480.287261,
+      "issued_at": 1794697479,
+      "age_seconds": 1.2872610092163086,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:43.092Z",
+      "correlation_id": "01M7E4WMG2YK6N4V92HZWMVGWN",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697483.0917253,
+      "issued_at": 1794697482,
+      "age_seconds": 1.0917253494262695,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:04:46.535Z",
+      "correlation_id": "01M7E4WQSG7S0TR25EHSD09GSM",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697486.534856,
+      "issued_at": 1794697486,
+      "age_seconds": 0.5348560810089111,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:05:39.469Z",
+      "event": "FountainUploadGatewayAuditReady"
+    },
+    {
+      "time": "2026-11-14T23:05:41.249Z",
+      "event": "FountainUploadGatewayAuditReady"
+    },
+    {
+      "time": "2026-11-14T23:05:53.828Z",
+      "correlation_id": "01M7E4YSFXY0F66TJ30DRSMRAT",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697553.827699,
+      "issued_at": 1794697553,
+      "age_seconds": 0.8276989459991455,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:05:57.349Z",
+      "correlation_id": "01M7E4YX065VSV0APSJTHSPAVX",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697557.3486397,
+      "issued_at": 1794697556,
+      "age_seconds": 1.348639726638794,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:00.148Z",
+      "correlation_id": "01M7E4YZN66MM32PR2WQE3WSF5",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697560.148042,
+      "issued_at": 1794697559,
+      "age_seconds": 1.1480419635772705,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:03.244Z",
+      "correlation_id": "01M7E4Z2QC4J2AT5ZYRF8Z7TYM",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697563.2442527,
+      "issued_at": 1794697562,
+      "age_seconds": 1.2442526817321777,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:06.500Z",
+      "correlation_id": "01M7E4Z5VK58CPDWM0SDXDG54S",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697566.4995406,
+      "issued_at": 1794697566,
+      "age_seconds": 0.4995405673980713,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:09.535Z",
+      "correlation_id": "01M7E4Z8VW5Z97BBV0DK8Y5RY3",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697569.535028,
+      "issued_at": 1794697569,
+      "age_seconds": 0.5350279808044434,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:12.961Z",
+      "correlation_id": "01M7E4ZC74HBHZ0X85BHBZ8Q4W",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697572.961023,
+      "issued_at": 1794697572,
+      "age_seconds": 0.9610230922698975,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:15.932Z",
+      "correlation_id": "01M7E4ZF3650EBKTPX7C7RZX1S",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697575.9303489,
+      "issued_at": 1794697575,
+      "age_seconds": 0.9303488731384277,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:19.322Z",
+      "correlation_id": "01M7E4ZJG8P30DVZ44R2BVJ7HW",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697579.3214645,
+      "issued_at": 1794697579,
+      "age_seconds": 0.32146453857421875,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:20.406Z",
+      "correlation_id": "01M7E4ZKCXE6R48CY9GQ9E2ZNN",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697580.4025786,
+      "issued_at": 1794697579,
+      "age_seconds": 1.402578592300415,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:23.804Z",
+      "correlation_id": "01M7E4ZPT6GRTV8TA1EVY42Q43",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697583.8044438,
+      "issued_at": 1794697583,
+      "age_seconds": 0.8044438362121582,
+      "issuer_matches": true
+    },
+    {
+      "time": "2026-11-14T23:06:26.978Z",
+      "correlation_id": "01M7E4ZSVY9PZ68VM2J0AQ6VTM",
+      "event": "FountainUploadGatewayAudit",
+      "outcome": "verified",
+      "observed_at": 1794697586.9754033,
+      "issued_at": 1794697586,
+      "age_seconds": 0.9754033088684082,
+      "issuer_matches": true
+    }
+  ],
+  "browserErrors": [],
+  "secrets": "No credentials, JWT text, CSRF/session headers or browser storage-state files are recorded",
+  "issue": {
+    "iid": 138,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/138"
+  }
+}

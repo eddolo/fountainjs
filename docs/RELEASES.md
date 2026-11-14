@@ -1,5 +1,18 @@
 # Release and API stability policy
 
+## Private GitLab upload diagnostics — 2026-11-14
+
+Correlate the intermittent post-restart image failure with the authenticated
+Rails 403 and add optional, removable verification diagnostics. Twenty-five
+uncached Chromium loads across two restarts pass, with each response matched
+to successful gateway verification and Rails HTTP 200. The original failure
+does not reproduce and remains open; no authentication rule or image retry
+changes. A cleanup-only defect in the audit helper was corrected and its
+restore-only path verified, leaving the ordinary deployment stopped without
+the diagnostic mount. Public engine, package versions, size limits and parity
+claims are unchanged.
+[Evidence and limits](../artifacts/gitlab-upload-restart-integration-20261114.json).
+
 ## GitLab omitted footnote source protection — 2026-11-14
 
 The private codec now detects footnote definitions in source rather than relying

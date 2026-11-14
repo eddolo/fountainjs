@@ -1,0 +1,103 @@
+{
+  "date": "2026-11-14",
+  "status": "diagnostic-checkpoint-original-finding-open",
+  "parentRevision": "21db3e95abe2a6d96e470a580881a65172232200",
+  "previousTurn": "Reconfirmed an existing UI refinement; resumed the previously pending image failure investigation rather than counting that restatement as implementation progress",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "originalFailure": {
+    "controller": "Banzai::UploadsController",
+    "action": "show",
+    "status": 403,
+    "time": "2026-11-14T22:13:09.160Z",
+    "correlation_id": "01M7E1Y8HEX5P3XMBH7YT98S6C",
+    "user_id": 1,
+    "queue_duration_s": -1.226215,
+    "db_count": 2,
+    "path_traversal_check_duration_s": 0.000055,
+    "pid": 609,
+    "duration_s": 0.01855
+  },
+  "proven": [
+    "The original image 403 is in Rails production logs, attributed to an authenticated user and Banzai::UploadsController#show",
+    "The original negative request queue duration is a timing clue; the log does not identify the rejected verification check",
+    "The exact issue and uploaded image survive two application restarts: 25 uncached Chromium image requests decode, with source unchanged",
+    "All 25 browser request IDs match both a successful gateway verification and an authenticated Rails HTTP 200",
+    "Temporary diagnostics execute the original verifier and re-raise JWT errors; no acceptance rule, expiry or issuer/signature requirement changes",
+    "The repaired restore-only path removes the diagnostic mount and leaves the ordinary deployment stopped with its three volumes and read-only frontend mount retained"
+  ],
+  "notProven": [
+    "The exact cause of the original 403; timestamp rejection is a hypothesis, not a recorded exception from that request",
+    "A repair for the intermittent image failure; the new run did not reproduce it",
+    "All browsers, permission roles, uploads, GitLab surfaces or full product acceptance",
+    "A new public engine feature, parity promotion or package release"
+  ],
+  "browser": {
+    "status": "passed",
+    "issue": {
+      "iid": 138,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/138"
+    },
+    "samples": 25,
+    "restarts": 2,
+    "responses": 25,
+    "matchedVerifiedRequests": 25,
+    "minimumObservedJwtAgeSeconds": 0.32146453857421875,
+    "maximumObservedJwtAgeSeconds": 1.429654598236084,
+    "errors": [],
+    "report": "artifacts/gitlab-upload-restart-diagnostic-20261114/report.json",
+    "serverRequests": "artifacts/gitlab-upload-restart-diagnostic-20261114/server-requests.jsonl",
+    "recording": {
+      "path": "artifacts/gitlab-upload-restart-diagnostic-20261114/recordings/page@84085a2aac4edd9b22b1543ed1ddd86d.webm",
+      "seconds": 352.52,
+      "sha256": "b822f8009a091ca63b43d066795cf28d6041d7f112343f860337a53796c86e39",
+      "review": "Five full-size decoded-image screenshots and five video samples (120, 230, 340, 350, 352 seconds); not frame-by-frame. Navigation samples include temporary lazy-image/math loading; final decoded captures show the figure. This does not certify math hydration timing."
+    },
+    "executedDriverSha256": "d66c1479af620f3f579de0630d140dba817f80288a2d88192c2264b23dbe69f8",
+    "strengthenedAssertions": "After recording, --verify-report validates all 25 response/correlation/issuer/decode results on the saved report; future live runs apply those assertions directly"
+  },
+  "cleanup": {
+    "initialWrapperExit": 1,
+    "reason": "Docker Compose create does not support --no-deps",
+    "repair": "Use supported create --force-recreate; run and verify the explicit --restore-only path",
+    "state": "created",
+    "running": false,
+    "diagnosticMountPresent": false,
+    "preservedVolumes": [
+      "fountain-gitlab-integration_baseline-config",
+      "fountain-gitlab-integration_baseline-logs",
+      "fountain-gitlab-integration_baseline-data"
+    ]
+  },
+  "source": {
+    "initializer": "integrations/gitlab/runtime/upload_gateway_diagnostics.rb",
+    "initializerSha256": "196945dd6a0033bea9031edb2e06d0e1e7db117164325d0bbc51d1a8f1fabd2d",
+    "controller": {
+      "path": "app/controllers/banzai/uploads_controller.rb",
+      "blob": "c010023b4c01978887fcfe27c0fd0b1474598074"
+    },
+    "exceptionMapping": {
+      "path": "app/controllers/concerns/workhorse_authenticatable.rb",
+      "blob": "ff066f89a6257683773a8d305a0d480cd36ddf6c"
+    },
+    "jwtChecks": {
+      "path": "lib/gitlab/jwt_authenticatable.rb",
+      "blob": "4d4d4f25293b4b5b125560b48f62b3dad2d43fea"
+    },
+    "issuerTimestamp": {
+      "path": "workhorse/internal/secret/roundtripper.go",
+      "blob": "4cdf6b0fac9279f3ff6c5263b37322d72160dc55"
+    }
+  },
+  "nextAction": "Keep the 403 finding open and reuse request-correlated diagnostics if it recurs. Continue the source-aware native footnote adapter; do not mask failures with image retries or weaker authentication."
+}

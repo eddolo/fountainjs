@@ -9,6 +9,25 @@ accounts, projects, storage, uploads, authorization, issue/MR/wiki workflows and
 collaboration services. These services remain real GitLab services. Recreating
 their controls with local-only state does not meet the requirement.
 
+## Uploaded-image restart investigation — November 14
+
+The earlier image failure is now correlated with an authenticated Rails HTTP
+403 in `Banzai::UploadsController#show`. Its negative queue duration is a timing
+clue, not proof of a particular JWT failure. A temporary, read-only diagnostic
+initializer calls the original Workhorse verifier and re-raises its errors;
+it records request IDs, verification outcomes and numeric timestamps, never
+tokens or session headers. It is not part of the ordinary deployment.
+
+The exact issue/image passed 25 uncached Chromium loads across two restarts.
+Every response matches both a successful verification and a Rails HTTP 200.
+Five decoded-image screenshots and sampled recording frames were inspected.
+The original failure did not recur and remains open; no retry or authentication
+relaxation is a repair. The cleanup helper's unsupported Compose flag was fixed
+and its restore-only path verified. The normal deployment is restored and stopped,
+with the diagnostic mount removed and persistent volumes retained.
+[Reproduction](runtime/README.md#uploaded-image-restart-diagnostics).
+[Evidence and limits](../../artifacts/gitlab-upload-restart-integration-20261114.json).
+
 ## Footnote source protection — November 14
 
 The actual renderer omits unused footnote definitions. A recorded parent-codec

@@ -1,0 +1,7 @@
+services:
+  baseline:
+    volumes:
+      - type: bind
+        source: ${FOUNTAIN_GITLAB_UPLOAD_DIAGNOSTICS:?Set the isolated diagnostic initializer path}
+        target: /opt/gitlab/embedded/service/gitlab-rails/config/initializers/fountain_upload_gateway_audit.rb
+        read_only: true

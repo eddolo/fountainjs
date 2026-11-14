@@ -2,6 +2,15 @@
 
 ## Current programme status — 2026-11-14
 
+The open reader-image failure now has request-correlated Rails evidence and a
+repeatable diagnostic harness. Twenty-five uncached loads across two application
+restarts match successful authentication and HTTP 200, with decoded screenshots
+reviewed. Temporary instrumentation was removed and the ordinary stopped
+deployment restored. The original authenticated 403 did not reproduce; its exact
+cause and repair remain unproven. This does not close a reliability row or enable
+a publication claim.
+[Diagnostic evidence](../artifacts/gitlab-upload-restart-integration-20261114.json).
+
 The private GitLab footnote audit exposes and blocks an omitted-source loss path.
 Twenty-three actual renderer cases and a parent-codec counterexample distinguish
 source retention from HTML rendering. Unused definitions could previously vanish

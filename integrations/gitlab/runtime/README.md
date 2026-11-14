@@ -89,6 +89,40 @@ table separator; that is baseline behavior, not a Fountain superiority claim.
 The reviewed [report](../../../artifacts/gitlab-product-baseline-20261112/report.json)
 and recording cover this one workflow. They do not certify every GitLab feature.
 
+## Uploaded-image restart diagnostics
+
+The optional `compose.upload-audit.yaml` mounts `upload_gateway_diagnostics.rb`
+read-only in this isolated deployment. It wraps only the audit PNG request,
+executes the original Workhorse authentication and re-raises verification errors.
+Logs contain only a request ID, error class, numeric timestamps and issuer-match
+boolean. No JWT text, credential or session header is recorded. Do not add this
+overlay to a normal deployment or use it to relax authentication.
+
+After the normal native frontend installation/build, run in Linux:
+
+```sh
+node scripts/run-gitlab-upload-restart-audit.mjs
+# Validate every request/correlation in the saved diagnostic report:
+node scripts/audit-gitlab-upload-restart.mjs --verify-report
+# Restore the ordinary stopped deployment if a diagnostic run is interrupted:
+node scripts/run-gitlab-upload-restart-audit.mjs --restore-only
+```
+
+The targeted reproduction uses the retained issue/image from the recorded
+November 14 failure, with browser caching disabled and no image request retry.
+It checks one initial load and twelve loads after each of two real restarts.
+The runner restores the ordinary stopped container with its existing volumes;
+its restore-only path is also independently verified. The first cleanup exposed
+an unsupported `compose create --no-deps` flag, replaced by the supported
+`--force-recreate` flag. The browser run passed but that initial wrapper exited
+unsuccessfully; the report does not conceal this distinction.
+
+All 25 requests subsequently correlated to successful verification and HTTP 200.
+The original authenticated Rails 403 remains unexplained. A negative original
+queue time suggests investigating clock/timestamp behavior if it recurs, but
+neither that clue nor these passing loads prove the original exception or a fix.
+[Evidence](../../../artifacts/gitlab-upload-restart-integration-20261114.json).
+
 ## Matching upstream source checks
 
 `upstream.json` matches the packaged revision to the official `v19.5.3` source

@@ -2,6 +2,16 @@
 
 Updated 2026-11-14.
 
+The image-restart investigation now correlates the earlier 403 with authenticated
+Rails logs. A temporary diagnostic overlay leaves Workhorse verification unchanged
+and records no tokens. The exact issue/image passes 25 uncached Chromium loads
+across two restarts, each matched to successful verification and a Rails HTTP 200.
+The ordinary deployment is restored and stopped with the diagnostic mount removed.
+The original failure remains open: its negative queue time is a timing clue,
+not a proven JWT cause, and the later passing run is not a repair. No package,
+parity row or public feature claim changes.
+[Diagnostic evidence and limits](../artifacts/gitlab-upload-restart-integration-20261114.json).
+
 The GitLab footnote audit now has 23 authenticated renderer cases. It found a
 real source-loss path: the previous codec accepted HTML that omitted unused
 definitions, retained exact source while unchanged, then dropped the definitions
