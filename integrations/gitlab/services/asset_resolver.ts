@@ -165,8 +165,9 @@ export class GitLabAssetResolver {
     return { href, text: text(anchors[0]!), expandedText: anchors[1] ? text(anchors[1]) : undefined,
       fullyExpandedText: anchors[2] ? text(anchors[2]) : undefined, backgroundColor: color };
   }
-  async explainQuickAction(source: string): Promise<string> {
+  async explainQuickAction(source: string, options?: { strict?: boolean }): Promise<string> {
     const response = await this.render(source);
+    if (options?.strict && typeof response.body !== 'string') throw new Error('GITLAB_QUICK_ACTION_PREVIEW_FAILED');
     const parsed = this.inspect(response.references?.commands);
     const paragraph = parsed.find(element => element.tagName === 'p');
     if (!paragraph) return '';

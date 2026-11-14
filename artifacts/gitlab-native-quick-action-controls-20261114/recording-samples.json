@@ -1,0 +1,50 @@
+[
+  {
+    "seconds": 74,
+    "screenshot": "original-rendered.png"
+  },
+  {
+    "seconds": 78,
+    "screenshot": "quick-action-controls-suggestions.png"
+  },
+  {
+    "seconds": 80,
+    "screenshot": "quick-action-controls-mobile.png"
+  },
+  {
+    "seconds": 82,
+    "screenshot": "quick-action-controls-desktop.png"
+  },
+  {
+    "seconds": 83,
+    "screenshot": "quick-actions-source.png"
+  },
+  {
+    "seconds": 84,
+    "screenshot": "quick-actions-rich.png"
+  },
+  {
+    "seconds": 88,
+    "screenshot": "quick-actions-reopened-saved.png"
+  },
+  {
+    "seconds": 90,
+    "screenshot": "empty-comment-placeholder.png"
+  },
+  {
+    "seconds": 97,
+    "screenshot": "failed-load-readonly.png"
+  },
+  {
+    "seconds": 97,
+    "screenshot": "failed-load-explicit-recovery.png"
+  },
+  {
+    "seconds": 109,
+    "screenshot": "quick-actions-reopened-reopened.png"
+  },
+  {
+    "seconds": 204,
+    "screenshot": "quick-actions-reopened-restart.png"
+  }
+]

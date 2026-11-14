@@ -1,0 +1,612 @@
+diff --git a/spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js b/spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js
+new file mode 100644
+index 00000000..ed809e8d
+--- /dev/null
++++ b/spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js
+@@ -0,0 +1,215 @@
++import { fireEvent, getByRole, queryByRole } from '@testing-library/dom';
++import { markRaw } from 'vue';
++import { mountExtended } from 'helpers/vue_test_utils_helper';
++import waitForPromises from 'helpers/wait_for_promises';
++import {
++  GitLabContentEditor,
++  Selection,
++  undo,
++  parseGitLabQuickActionCommands,
++} from '~/content_editor/services/fountain_runtime';
++import FountainEditorSurface from '~/content_editor/components/fountain_editor_surface.vue';
++import FountainQuickActionMenu from '~/content_editor/components/fountain_quick_action_menu.vue';
++import fixture from '../fixtures/fountain_quick_action_commands_live.json';
++
++describe('native quick action controls', () => {
++  let wrapper;
++  let service;
++  let provider;
++  let render;
++  let restoreWidth;
++  const commands = parseGitLabQuickActionCommands(fixture.commands);
++  const settle = async () => {
++    await waitForPromises();
++    jest.runOnlyPendingTimers();
++    await waitForPromises();
++    jest.runOnlyPendingTimers();
++    await waitForPromises();
++  };
++  const list = () => getByRole(document.body, 'listbox', { name: 'Available quick actions' });
++  const root = () => getByRole(wrapper.element, 'textbox', { name: 'Command document' });
++  const choose = (text) => {
++    const { editor } = service;
++    const { schema } = editor.state;
++    editor.dispatch(
++      editor
++        .createTransaction()
++        .replaceDocument(
++          schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text(text)])]),
++        )
++        .setSelection(Selection.cursor([0, 0], 0)),
++    );
++    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], text.length)));
++  };
++  const createComponent = async ({ text = '/la', fail = false } = {}) => {
++    provider = jest.fn(() =>
++      fail ? Promise.reject(new Error('Unavailable')) : Promise.resolve(commands),
++    );
++    render = jest
++      .fn()
++      .mockResolvedValue({
++        body: '<p>Start</p>',
++        references: { commands: '<p>Add the selected label.</p>' },
++      });
++    service = new GitLabContentEditor({
++      renderMarkdown: render,
++      describeLabels: () => '',
++      quickActionProvider: provider,
++    });
++    await service.setSerializedContent('Start');
++    wrapper = mountExtended(
++      {
++        components: { FountainEditorSurface, FountainQuickActionMenu },
++        data() {
++          return { owner: markRaw(service) };
++        },
++        methods: {
++          getRoot() {
++            return this.$refs.surface?.getRootElement() || null;
++          },
++          ready() {
++            this.$refs.menu.refreshRoot();
++          },
++          focus() {
++            this.$refs.surface.focus();
++          },
++        },
++        template: `<main><fountain-quick-action-menu ref="menu" :content-editor="owner" :get-editor-root="getRoot" @focus="focus" />
++        <fountain-editor-surface ref="surface" :editor="owner.editor" :options="{ ariaLabel: 'Command document' }" @ready="ready" /></main>`,
++      },
++      { attachTo: document.body },
++    );
++    choose(text);
++    await settle();
++    wrapper.findComponent(FountainEditorSurface).vm.focus();
++    await settle();
++  };
++  beforeEach(() => {
++    const descriptor = Object.getOwnPropertyDescriptor(window, 'innerWidth');
++    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 360 });
++    restoreWidth = () => Object.defineProperty(window, 'innerWidth', descriptor);
++  });
++  afterEach(async () => {
++    wrapper?.destroy();
++    service?.dispose();
++    await settle();
++    restoreWidth();
++  });
++
++  it('shows server names, parameter hints, descriptions and matching aliases', async () => {
++    await createComponent({ text: '/labels' });
++    expect(getByRole(list(), 'option', { name: /\/label.*Add labels/ }).textContent).toContain(
++      '~label1',
++    );
++    expect(provider).toHaveBeenCalledWith({ query: 'labels', signal: expect.any(AbortSignal) });
++    expect(list().querySelectorAll('[role="option"]')).toHaveLength(1);
++  });
++  it('inserts a clicked command, places the caret after its space and closes the suggestions', async () => {
++    await createComponent();
++    fireEvent.click(getByRole(list(), 'option', { name: /\/label.*Add labels/ }));
++    await settle();
++    expect(service.getSerializedContent()).toBe('/label ');
++    expect(service.editor.state.selection.from).toBe(7);
++    expect(queryByRole(document.body, 'listbox')).toBeNull();
++    expect(document.activeElement).toBe(root());
++    expect(undo(service.editor)).toBe(true);
++    expect(service.getSerializedContent()).toBe('/la');
++  });
++  it('supports Arrow and Enter from a focused list without submitting a form', async () => {
++    await createComponent({ text: '/' });
++    const popup = list();
++    popup.focus();
++    fireEvent.keyDown(popup, { key: 'ArrowDown' });
++    await settle();
++    const selected = document.getElementById(popup.getAttribute('aria-activedescendant'));
++    const label = selected.textContent.match(/\/[a-z_-]+/u)[0];
++    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
++    popup.dispatchEvent(event);
++    await settle();
++    expect(event.defaultPrevented).toBe(true);
++    expect(service.getSerializedContent()).toBe(`${label} `);
++  });
++  it('reaches docked suggestions with Alt+F10 at a narrow viewport', async () => {
++    await createComponent();
++    fireEvent.keyDown(root(), { key: 'F10', altKey: true });
++    await settle();
++    expect(document.activeElement).toBe(list());
++    fireEvent.keyDown(list(), { key: 'Enter' });
++    await settle();
++    expect(service.getSerializedContent()).toBe('/label ');
++    expect(document.activeElement).toBe(root());
++  });
++  it('keeps composition and modified keys out of suggestion navigation', async () => {
++    await createComponent({ text: '/' });
++    const popup = list();
++    const selected = popup.getAttribute('aria-activedescendant');
++    fireEvent.keyDown(popup, { key: 'ArrowDown', isComposing: true });
++    fireEvent.keyDown(popup, { key: 'ArrowDown', ctrlKey: true });
++    await settle();
++    expect(popup.getAttribute('aria-activedescendant')).toBe(selected);
++  });
++  it('Escape dismisses and clears owned ARIA without cancelling the surrounding form', async () => {
++    await createComponent();
++    const parent = jest.fn();
++    wrapper.element.addEventListener('keydown', parent);
++    const popup = list();
++    popup.focus();
++    fireEvent.keyDown(popup, { key: 'Escape' });
++    await settle();
++    expect(queryByRole(document.body, 'listbox')).toBeNull();
++    expect(parent).not.toHaveBeenCalled();
++    expect(root().hasAttribute('aria-controls')).toBe(false);
++    expect(service.getSerializedContent()).toBe('/la');
++  });
++  it('exposes a valid active-descendant relation while keeping the editor a textbox', async () => {
++    await createComponent();
++    expect(root().getAttribute('role')).toBe('textbox');
++    expect(document.getElementById(root().getAttribute('aria-controls'))).toBe(list());
++    expect(
++      document.getElementById(root().getAttribute('aria-activedescendant')).getAttribute('role'),
++    ).toBe('option');
++    expect(root().getAttribute('aria-autocomplete')).toBe('list');
++  });
++  it('explains the real server response without executing the command', async () => {
++    await createComponent({ text: '/label ~example' });
++    expect(wrapper.text()).toContain('On Save: Add the selected label.');
++    expect(service.getSerializedContent()).toBe('/label ~example');
++    expect(render).toHaveBeenCalledTimes(2);
++  });
++  it('switches to literal text and back as undoable document changes', async () => {
++    await createComponent({ text: '/label ~example' });
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Treat as literal text' }));
++    await settle();
++    expect(wrapper.text()).toContain('This line stays text.');
++    expect(service.getSerializedContent()).toContain('\\/label');
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Treat as quick action' }));
++    await settle();
++    expect(service.getSerializedContent()).toBe('/label ~example');
++    expect(undo(service.editor)).toBe(true);
++    expect(service.getSerializedContent()).toContain('\\/label');
++  });
++  it('shows transport failure with an explicit successful retry', async () => {
++    await createComponent({ fail: true });
++    expect(wrapper.text()).toContain('Available commands could not be loaded.');
++    provider.mockResolvedValue(commands);
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Retry commands' }));
++    await settle();
++    expect(getByRole(list(), 'option', { name: /\/label.*Add labels/ })).toBeVisible();
++  });
++  it('hides controls and restores ARIA when the editor becomes read-only', async () => {
++    await createComponent();
++    service.editor.setEditable(false);
++    await settle();
++    expect(queryByRole(document.body, 'listbox')).toBeNull();
++    expect(root().hasAttribute('aria-activedescendant')).toBe(false);
++    expect(service.getSerializedContent()).toBe('/la');
++  });
++  it('removes all menu-owned ARIA when unmounted without changing the editor source', async () => {
++    await createComponent();
++    const input = root();
++    wrapper.destroy();
++    wrapper = null;
++    expect(input.hasAttribute('aria-controls')).toBe(false);
++    expect(service.getSerializedContent()).toBe('/la');
++  });
++});
+diff --git a/spec/frontend/content_editor/components/fountain_quick_action_host_spec.js b/spec/frontend/content_editor/components/fountain_quick_action_host_spec.js
+new file mode 100644
+index 00000000..cb807c58
+--- /dev/null
++++ b/spec/frontend/content_editor/components/fountain_quick_action_host_spec.js
+@@ -0,0 +1,111 @@
++import AxiosMockAdapter from 'axios-mock-adapter';
++import { fireEvent, getByRole, queryByRole } from '@testing-library/dom';
++import { mountExtended } from 'helpers/vue_test_utils_helper';
++import waitForPromises from 'helpers/wait_for_promises';
++import axios from '~/lib/utils/axios_utils';
++import ContentEditor from '~/content_editor/components/content_editor.vue';
++import FountainEditorSurface from '~/content_editor/components/fountain_editor_surface.vue';
++import fixture from '../fixtures/fountain_quick_action_commands_live.json';
++
++describe('native quick action host transport', () => {
++  let wrapper;
++  let mock;
++  const endpoint = new URL('/commands', window.location.href).href;
++  const settle = async () => {
++    await waitForPromises();
++    jest.runOnlyPendingTimers();
++    await waitForPromises();
++    jest.runOnlyPendingTimers();
++    await waitForPromises();
++  };
++  const createComponent = async (props = {}) => {
++    wrapper = mountExtended(ContentEditor, {
++      propsData: {
++        markdown: 'Start',
++        markdownDocsPath: '/docs/markdown',
++        uploadsPath: '',
++        supportsQuickActions: true,
++        autocompleteDataSources: { commands: '/commands' },
++        renderMarkdown: jest.fn().mockResolvedValue({ body: '<p>Start</p>' }),
++        ...props,
++      },
++      attachTo: document.body,
++    });
++    await settle();
++  };
++  const open = async () => {
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Add a quick action' }));
++    await settle();
++  };
++  beforeEach(() => {
++    mock = new AxiosMockAdapter(axios);
++    mock.onGet(endpoint).reply(200, fixture.commands);
++  });
++  afterEach(async () => {
++    wrapper?.destroy();
++    await settle();
++    mock.restore();
++  });
++
++  it('loads only the host-provided endpoint and inserts a real returned command', async () => {
++    await createComponent();
++    await open();
++    expect(mock.history.get.map((request) => request.url)).toEqual([endpoint]);
++    expect(mock.history.get[0].signal).toBeInstanceOf(AbortSignal);
++    fireEvent.click(getByRole(wrapper.element, 'option', { name: /\/label.*Add labels/ }));
++    await settle();
++    expect(wrapper.emitted('change').at(-1)[0].markdown).toBe('Start\n\n/label ');
++  });
++  it('keeps the insert control absent when the host disables quick actions', async () => {
++    await createComponent({ supportsQuickActions: false });
++    expect(queryByRole(wrapper.element, 'button', { name: 'Add a quick action' })).toBeNull();
++    expect(mock.history.get).toHaveLength(0);
++  });
++  it.each([
++    'https://unrelated.example/commands',
++    // eslint-disable-next-line no-script-url -- Rejected URL fixture is never executed.
++    'javascript:alert(1)',
++    '/commands#fragment',
++    'https://user:password@unrelated.example/commands',
++    '',
++  ])('refuses an unsafe or unavailable endpoint %s #security', async (commands) => {
++    await createComponent({ autocompleteDataSources: { commands } });
++    await open();
++    expect(wrapper.text()).toContain('Available commands could not be loaded.');
++    expect(mock.history.get).toHaveLength(0);
++    expect(wrapper.emitted('change').at(-1)[0].markdown).toBe('Start\n\n/');
++  });
++  it('exposes unavailable transport as a retriable list error without discarding input', async () => {
++    mock.onGet(endpoint).reply(503);
++    await createComponent();
++    await open();
++    expect(wrapper.text()).toContain('Available commands could not be loaded.');
++    mock.onGet(endpoint).reply(200, fixture.commands);
++    fireEvent.click(getByRole(wrapper.element, 'button', { name: 'Retry commands' }));
++    await settle();
++    expect(getByRole(wrapper.element, 'option', { name: /\/label.*Add labels/ })).toBeVisible();
++  });
++  it('rejects malformed server data', async () => {
++    mock
++      .onGet(endpoint)
++      .reply(200, [{ name: '<unsafe>', aliases: [], params: [], description: '' }]);
++    await createComponent();
++    await open();
++    expect(wrapper.text()).toContain('Available commands could not be loaded.');
++    expect(
++      queryByRole(
++        getByRole(wrapper.element, 'listbox', { name: 'Available quick actions' }),
++        'option',
++      ),
++    ).toBeNull();
++  });
++  it('does not offer mutation in a read-only host', async () => {
++    await createComponent({ editable: false });
++    const button = getByRole(wrapper.element, 'button', { name: 'Add a quick action' });
++    expect(button.getAttribute('aria-disabled')).toBe('true');
++    fireEvent.click(button);
++    await settle();
++    expect(mock.history.get).toHaveLength(0);
++    expect(wrapper.findComponent(FountainEditorSurface).props('editor').getText()).toBe('Start');
++  });
++});
+diff --git a/spec/frontend/content_editor/fixtures/fountain_quick_action_commands_live.json b/spec/frontend/content_editor/fixtures/fountain_quick_action_commands_live.json
+new file mode 100644
+index 00000000..f3152299
+--- /dev/null
++++ b/spec/frontend/content_editor/fixtures/fountain_quick_action_commands_live.json
+@@ -0,0 +1,268 @@
++{
++  "scope": "Authenticated available command records for the task issue; not a browser acceptance claim",
++  "upstream": {
++    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
++    "version": "19.5.3",
++    "packagedRevision": "0d4c9a9a2fa"
++  },
++  "issueIID": 118,
++  "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/commands?type=WorkItem&type_id=118",
++  "commands": [
++    {
++      "name": "due",
++      "aliases": [],
++      "description": "Set due date",
++      "warning": "",
++      "icon": "",
++      "params": ["<in 2 days | this Friday | December 31st>"]
++    },
++    {
++      "name": "duplicate",
++      "aliases": [],
++      "description": "Mark this issue as a duplicate of another issue",
++      "warning": "",
++      "icon": "",
++      "params": ["<#item | group/project#item | item URL>"]
++    },
++    {
++      "name": "clone",
++      "aliases": [],
++      "description": "Clone this item",
++      "warning": "",
++      "icon": "",
++      "params": ["path/to/group_or_project [--with_notes] [type:<work item type>]"]
++    },
++    {
++      "name": "move",
++      "aliases": [],
++      "description": "Move this item to another group or project",
++      "warning": "",
++      "icon": "",
++      "params": ["path/to/group_or_project [type:<work item type>]"]
++    },
++    {
++      "name": "create_merge_request",
++      "aliases": [],
++      "description": "Create a merge request",
++      "warning": "",
++      "icon": "",
++      "params": ["<branch name>"]
++    },
++    {
++      "name": "zoom",
++      "aliases": [],
++      "description": "Add Zoom meeting",
++      "warning": "",
++      "icon": "",
++      "params": ["<Zoom URL>"]
++    },
++    {
++      "name": "add_email",
++      "aliases": [],
++      "description": "Add email participants that don't have a GitLab account.",
++      "warning": "",
++      "icon": "",
++      "params": ["email1@example.com email2@example.com (up to 6 emails)"]
++    },
++    {
++      "name": "promote_to_incident",
++      "aliases": [],
++      "description": "Promote issue to incident",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "close",
++      "aliases": [],
++      "description": "Close this item",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "title",
++      "aliases": [],
++      "description": "Change title",
++      "warning": "",
++      "icon": "",
++      "params": ["<New title>"]
++    },
++    {
++      "name": "label",
++      "aliases": ["labels"],
++      "description": "Add labels",
++      "warning": "",
++      "icon": "",
++      "params": ["~label1 ~\"label 2\""]
++    },
++    {
++      "name": "unlabel",
++      "aliases": ["remove_label"],
++      "description": "Remove all or specific labels",
++      "warning": "",
++      "icon": "",
++      "params": ["~label1 ~\"label 2\""]
++    },
++    {
++      "name": "relabel",
++      "aliases": [],
++      "description": "Replace all labels",
++      "warning": "",
++      "icon": "",
++      "params": ["~label1 ~\"label 2\""]
++    },
++    {
++      "name": "todo",
++      "aliases": [],
++      "description": "Add a to-do item",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "unsubscribe",
++      "aliases": [],
++      "description": "Unsubscribe",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "react",
++      "aliases": ["award"],
++      "description": "Toggle emoji reaction",
++      "warning": "",
++      "icon": "",
++      "params": [":emoji:"]
++    },
++    {
++      "name": "shrug",
++      "aliases": [],
++      "description": "Add ¯\\＿(ツ)＿/¯",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "tableflip",
++      "aliases": [],
++      "description": "Add (╯°□°)╯︵ ┻━┻",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "confidential",
++      "aliases": [],
++      "description": "Turn on confidentiality",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "internal_note",
++      "aliases": [],
++      "description": "Make this comment an internal note",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "assign",
++      "aliases": [],
++      "description": "Assign",
++      "warning": "",
++      "icon": "",
++      "params": ["@user"]
++    },
++    {
++      "name": "copy_metadata",
++      "aliases": [],
++      "description": "Copy labels and milestone from other work item or merge request in the same namespace",
++      "warning": "",
++      "icon": "",
++      "params": ["#item | !merge_request | URL"]
++    },
++    {
++      "name": "estimate",
++      "aliases": ["estimate_time"],
++      "description": "Set time estimate",
++      "warning": "",
++      "icon": "",
++      "params": ["<1w 3d 2h 14m>"]
++    },
++    {
++      "name": "spend",
++      "aliases": ["spent", "spend_time"],
++      "description": "Add or subtract spent time",
++      "warning": "",
++      "icon": "",
++      "params": ["time(1h30m | -1h30m) <date(YYYY-MM-DD)>"]
++    },
++    {
++      "name": "remove_estimate",
++      "aliases": ["remove_time_estimate"],
++      "description": "Remove time estimate",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "remove_time_spent",
++      "aliases": [],
++      "description": "Remove spent time",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "lock",
++      "aliases": [],
++      "description": "Lock the discussion",
++      "warning": "",
++      "icon": "",
++      "params": []
++    },
++    {
++      "name": "relate",
++      "aliases": [],
++      "description": "Link items related to this item",
++      "warning": "",
++      "icon": "",
++      "params": ["<#item | group/project#item | item URL>"]
++    },
++    {
++      "name": "unlink",
++      "aliases": [],
++      "description": "Remove linked item",
++      "warning": "",
++      "icon": "",
++      "params": ["<#item | group/project#item | item URL>"]
++    },
++    {
++      "name": "type",
++      "aliases": [],
++      "description": "Change item type",
++      "warning": "",
++      "icon": "",
++      "params": ["\"Type name\""]
++    },
++    {
++      "name": "promote_to",
++      "aliases": [],
++      "description": "Promote item",
++      "warning": "",
++      "icon": "",
++      "params": ["Incident"]
++    },
++    {
++      "name": "add_child",
++      "aliases": [],
++      "description": "Add child items",
++      "warning": "",
++      "icon": "",
++      "params": ["Child items' URL or reference ID"]
++    }
++  ]
++}

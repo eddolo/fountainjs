@@ -42,11 +42,13 @@ for (const path of [
   'integrations/gitlab/services/serialized_content.ts',
   'integrations/gitlab/services/markdown_codec.ts',
   'integrations/gitlab/services/quick_actions.ts',
+  'integrations/gitlab/services/quick_action_editing.ts',
   'integrations/gitlab/services/math.ts',
   'integrations/gitlab/services/asset_resolver.ts',
   'integrations/gitlab/services/reference_editing.ts',
   'integrations/gitlab/plugins/reference_navigation.ts',
   'dist/index.js',
+  'dist/document-utilities.js',
 ])
   inputs[path] = createHash('sha256')
     .update(await readFile(new URL(path, root)))

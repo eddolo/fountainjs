@@ -1,0 +1,15 @@
+{
+  "contactSheet": "artifacts/gitlab-native-quick-action-controls-20261114/recording-review.png",
+  "samples": "artifacts/gitlab-native-quick-action-controls-20261114/recording-samples.json",
+  "recording": "artifacts/gitlab-native-quick-action-controls-20261114/recordings/page@e954f2c8df6518657a91296290ae2c01.webm",
+  "scope": "Sampled visual review, not frame-by-frame video viewing",
+  "status": "reviewed",
+  "method": "Full-resolution retained interaction screenshots plus twelve sampled recording frames aligned approximately to screenshot write times",
+  "observations": [
+    "Command rows wrap and remain inside the real work-item clipping area.",
+    "Mobile controls follow the toolbar and expose keyboard focus.",
+    "Unavailable-command text and retry action remain fully visible in a short host.",
+    "Shared media properties keep previews and fields usable at 1280px and 360px.",
+    "Source view retains command arguments and escaped close text; the saved label is visible after restart."
+  ]
+}

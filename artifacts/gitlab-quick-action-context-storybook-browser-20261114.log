@@ -1,0 +1,53 @@
+{
+  "status": "passed",
+  "pages": [
+    {
+      "kind": "code",
+      "id": "contextual-editing",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "kind": "code",
+      "id": "contextual-read-only",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "kind": "code",
+      "id": "contextual-editing",
+      "width": 360,
+      "violations": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-image",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-read-only",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-audio",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-video",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "kind": "media",
+      "id": "contextual-image",
+      "width": 360,
+      "violations": []
+    }
+  ]
+}

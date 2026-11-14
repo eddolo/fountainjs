@@ -1,0 +1,323 @@
+{
+  "scope": "Authenticated available command records for the task issue; not a browser acceptance claim",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "issueIID": 118,
+  "endpoint": "/root/fountain-product-integration/-/autocomplete_sources/commands?type=WorkItem&type_id=118",
+  "commands": [
+    {
+      "name": "due",
+      "aliases": [],
+      "description": "Set due date",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "<in 2 days | this Friday | December 31st>"
+      ]
+    },
+    {
+      "name": "duplicate",
+      "aliases": [],
+      "description": "Mark this issue as a duplicate of another issue",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "<#item | group/project#item | item URL>"
+      ]
+    },
+    {
+      "name": "clone",
+      "aliases": [],
+      "description": "Clone this item",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "path/to/group_or_project [--with_notes] [type:<work item type>]"
+      ]
+    },
+    {
+      "name": "move",
+      "aliases": [],
+      "description": "Move this item to another group or project",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "path/to/group_or_project [type:<work item type>]"
+      ]
+    },
+    {
+      "name": "create_merge_request",
+      "aliases": [],
+      "description": "Create a merge request",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "<branch name>"
+      ]
+    },
+    {
+      "name": "zoom",
+      "aliases": [],
+      "description": "Add Zoom meeting",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "<Zoom URL>"
+      ]
+    },
+    {
+      "name": "add_email",
+      "aliases": [],
+      "description": "Add email participants that don't have a GitLab account.",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "email1@example.com email2@example.com (up to 6 emails)"
+      ]
+    },
+    {
+      "name": "promote_to_incident",
+      "aliases": [],
+      "description": "Promote issue to incident",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "close",
+      "aliases": [],
+      "description": "Close this item",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "title",
+      "aliases": [],
+      "description": "Change title",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "<New title>"
+      ]
+    },
+    {
+      "name": "label",
+      "aliases": [
+        "labels"
+      ],
+      "description": "Add labels",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "~label1 ~\"label 2\""
+      ]
+    },
+    {
+      "name": "unlabel",
+      "aliases": [
+        "remove_label"
+      ],
+      "description": "Remove all or specific labels",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "~label1 ~\"label 2\""
+      ]
+    },
+    {
+      "name": "relabel",
+      "aliases": [],
+      "description": "Replace all labels",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "~label1 ~\"label 2\""
+      ]
+    },
+    {
+      "name": "todo",
+      "aliases": [],
+      "description": "Add a to-do item",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "unsubscribe",
+      "aliases": [],
+      "description": "Unsubscribe",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "react",
+      "aliases": [
+        "award"
+      ],
+      "description": "Toggle emoji reaction",
+      "warning": "",
+      "icon": "",
+      "params": [
+        ":emoji:"
+      ]
+    },
+    {
+      "name": "shrug",
+      "aliases": [],
+      "description": "Add ¯\\＿(ツ)＿/¯",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "tableflip",
+      "aliases": [],
+      "description": "Add (╯°□°)╯︵ ┻━┻",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "confidential",
+      "aliases": [],
+      "description": "Turn on confidentiality",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "internal_note",
+      "aliases": [],
+      "description": "Make this comment an internal note",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "assign",
+      "aliases": [],
+      "description": "Assign",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "@user"
+      ]
+    },
+    {
+      "name": "copy_metadata",
+      "aliases": [],
+      "description": "Copy labels and milestone from other work item or merge request in the same namespace",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "#item | !merge_request | URL"
+      ]
+    },
+    {
+      "name": "estimate",
+      "aliases": [
+        "estimate_time"
+      ],
+      "description": "Set time estimate",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "<1w 3d 2h 14m>"
+      ]
+    },
+    {
+      "name": "spend",
+      "aliases": [
+        "spent",
+        "spend_time"
+      ],
+      "description": "Add or subtract spent time",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "time(1h30m | -1h30m) <date(YYYY-MM-DD)>"
+      ]
+    },
+    {
+      "name": "remove_estimate",
+      "aliases": [
+        "remove_time_estimate"
+      ],
+      "description": "Remove time estimate",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "remove_time_spent",
+      "aliases": [],
+      "description": "Remove spent time",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "lock",
+      "aliases": [],
+      "description": "Lock the discussion",
+      "warning": "",
+      "icon": "",
+      "params": []
+    },
+    {
+      "name": "relate",
+      "aliases": [],
+      "description": "Link items related to this item",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "<#item | group/project#item | item URL>"
+      ]
+    },
+    {
+      "name": "unlink",
+      "aliases": [],
+      "description": "Remove linked item",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "<#item | group/project#item | item URL>"
+      ]
+    },
+    {
+      "name": "type",
+      "aliases": [],
+      "description": "Change item type",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "\"Type name\""
+      ]
+    },
+    {
+      "name": "promote_to",
+      "aliases": [],
+      "description": "Promote item",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "Incident"
+      ]
+    },
+    {
+      "name": "add_child",
+      "aliases": [],
+      "description": "Add child items",
+      "warning": "",
+      "icon": "",
+      "params": [
+        "Child items' URL or reference ID"
+      ]
+    }
+  ]
+}

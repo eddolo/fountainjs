@@ -1,0 +1,121 @@
+{
+  "scope": "Isolated native quick-action presentation with declared renderer/provider fixtures; separate real GitLab persistence audit",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "4df95336f21cffa06eb01aa4fb13bb7347d97cd8ea581cdeb104dc2bad14f88b",
+  "status": "passed",
+  "pages": [
+    {
+      "state": "suggestions",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "menuBounds": {
+        "x": 449,
+        "y": 224,
+        "width": 382,
+        "height": 180
+      },
+      "hostBounds": {
+        "x": 16,
+        "y": 16,
+        "width": 1248,
+        "height": 416
+      }
+    },
+    {
+      "state": "literal",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "menuBounds": {
+        "x": 449,
+        "y": 80,
+        "width": 382,
+        "height": 83
+      },
+      "hostBounds": {
+        "x": 16,
+        "y": 16,
+        "width": 1248,
+        "height": 416
+      }
+    },
+    {
+      "state": "unavailable",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "menuBounds": {
+        "x": 449,
+        "y": 33,
+        "width": 382,
+        "height": 202
+      },
+      "hostBounds": {
+        "x": 16,
+        "y": 16,
+        "width": 1248,
+        "height": 416
+      }
+    },
+    {
+      "state": "suggestions",
+      "width": 360,
+      "violations": [],
+      "errors": [],
+      "menuBounds": {
+        "x": 32,
+        "y": 157,
+        "width": 296,
+        "height": 213
+      },
+      "hostBounds": {
+        "x": 16,
+        "y": 16,
+        "width": 328,
+        "height": 650
+      }
+    },
+    {
+      "state": "literal",
+      "width": 360,
+      "violations": [],
+      "errors": [],
+      "menuBounds": {
+        "x": 32,
+        "y": 157,
+        "width": 296,
+        "height": 116
+      },
+      "hostBounds": {
+        "x": 16,
+        "y": 16,
+        "width": 328,
+        "height": 553
+      }
+    },
+    {
+      "state": "unavailable",
+      "width": 360,
+      "violations": [],
+      "errors": [],
+      "menuBounds": {
+        "x": 32,
+        "y": 157,
+        "width": 296,
+        "height": 235
+      },
+      "hostBounds": {
+        "x": 16,
+        "y": 16,
+        "width": 328,
+        "height": 672
+      }
+    }
+  ],
+  "sources": {
+    "app/assets/javascripts/content_editor/components/fountain_context_surface.vue": "2470c2edc5fc384cff4b423457fc0ff47f39250260fd99454109f2aad60abcb9",
+    "app/assets/javascripts/content_editor/components/fountain_quick_action_menu.vue": "6b652a94d8c82ad7a71a383b688e9045920bca9f401c101bc272e64628b31e5b",
+    "app/assets/javascripts/content_editor/components/fountain_quick_action_menu.stories.js": "4c3c0b0c7a982874280d1ca85578d45bfb889584c4c607f6da97ff7af96355a3"
+  }
+}

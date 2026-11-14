@@ -23,7 +23,8 @@ const nativeContextUI = process.argv.includes('--native-context-ui');
 const nativeContextMenus = process.argv.includes('--native-context-menus') || nativeContextUI;
 const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
-const nativeQuickActions = process.argv.includes('--native-quick-actions');
+const nativeQuickActionControls = process.argv.includes('--native-quick-action-controls');
+const nativeQuickActions = process.argv.includes('--native-quick-actions') || nativeQuickActionControls;
 const nativeDiagramAuthoring = process.argv.includes('--native-diagram-authoring');
 const nativeDiagramReader = process.argv.includes('--native-diagram-reader');
 const nativeDiagrams = process.argv.includes('--native-diagrams') || nativeDiagramAuthoring || nativeDiagramReader;
@@ -40,7 +41,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeQuickActions ? 'artifacts/gitlab-native-quick-actions-20261114/' : nativeContextUI ? 'artifacts/gitlab-native-context-ui-20261113/' : nativeContextMenus ? 'artifacts/gitlab-native-context-menus-20261113/' : nativeFrontmatter ? 'artifacts/gitlab-native-frontmatter-20261113/' : nativeDiagramReader ? 'artifacts/gitlab-native-diagram-reader-20261113/' : nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeQuickActionControls ? 'artifacts/gitlab-native-quick-action-controls-20261114/' : nativeQuickActions ? 'artifacts/gitlab-native-quick-actions-20261114/' : nativeContextUI ? 'artifacts/gitlab-native-context-ui-20261113/' : nativeContextMenus ? 'artifacts/gitlab-native-context-menus-20261113/' : nativeFrontmatter ? 'artifacts/gitlab-native-frontmatter-20261113/' : nativeDiagramReader ? 'artifacts/gitlab-native-diagram-reader-20261113/' : nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -436,7 +437,7 @@ try {
     if (nativeLinks) await auditNativeLinks({ page, context, editor, toolbar, output, report });
     if (nativeCode) await auditNativeCode({ page, editor, toolbar, output, report });
     if (nativeContextMenus) await auditNativeContextMenus({ page, editor, toolbar, output, report });
-    if (nativeQuickActions) await auditNativeQuickActions({ page, editor, toolbar, output, report, api, project, issue });
+    if (nativeQuickActions) await auditNativeQuickActions({ page, editor, toolbar, output, report, api, project, issue, controls: nativeQuickActionControls });
     if (nativeFrontmatter) await auditNativeFrontmatter({ page, editor, toolbar, output, report });
     if (nativeAlerts) await auditNativeAlerts({ page, editor, toolbar, output, report });
     if (nativeMedia) await auditNativeMedia({ page, context, editor, toolbar, output, report });

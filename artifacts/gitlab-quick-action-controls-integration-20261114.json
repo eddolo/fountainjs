@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-14",
+  "status": "partial-native-product-integration",
+  "parentRevision": "ae300d237555d2aafe72c83cccad5f2f646653ac",
+  "scope": "Native GitLab command-name insertion/suggestions, server preview and interpretation controls; not full quick-action or product parity",
+  "logFormatting": "Captured terminal logs have ANSI escapes, CRLF and trailing whitespace normalized; original .raw captures remain local and ignored",
+  "unit": {
+    "passed": 6059,
+    "files": 364,
+    "log": "artifacts/gitlab-quick-action-controls-full-unit-20261114.log"
+  },
+  "upstream": {
+    "passed": 462,
+    "skipped": 1,
+    "suites": 21,
+    "report": "artifacts/gitlab-quick-action-controls-jest-20261114.json"
+  },
+  "browser": {
+    "checks": 17,
+    "report": "artifacts/gitlab-native-quick-action-controls-20261114/report.json",
+    "engine": "Linux Chromium",
+    "phases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "errors": [],
+    "accessibility": "No violations in the actual description/menu scans",
+    "recording": {
+      "path": "artifacts/gitlab-native-quick-action-controls-20261114/recordings/page@e954f2c8df6518657a91296290ae2c01.webm",
+      "bytes": 6345539,
+      "duration": 206.08,
+      "sha256": "82828930fe09ac7ab43a2a4728b4d209dffcc0e4db1659d3ce032b8c010ec4e6"
+    },
+    "visualReview": "artifacts/gitlab-native-quick-action-controls-20261114/recording-review.json"
+  },
+  "storybook": {
+    "states": 6,
+    "report": "artifacts/gitlab-quick-action-storybook-20261114/report.json",
+    "scope": "Suggestions, literal and unavailable states at 1280px and 360px; declared fixed provider/renderer fixtures, not real-service substitutes",
+    "violations": 0,
+    "errors": 0
+  },
+  "sharedContextRegression": {
+    "states": 8,
+    "report": "artifacts/gitlab-quick-action-context-regression-20261114/report.json",
+    "scope": "Real native code and image/audio/video component fixtures, read-only controls, 1280px and 360px views, keyboard, properties and playback; not a new full GitLab media-persistence matrix",
+    "violations": 0,
+    "errors": 0
+  },
+  "validation": {
+    "types": "passed",
+    "apiDeclarations": 450,
+    "headlessModules": 143,
+    "package": "passed",
+    "upstreamLint": "passed",
+    "productionBuild": "passed with two existing asset/entry warnings",
+    "patches": 16,
+    "installerFormat": 12,
+    "installerOwnedFiles": 27,
+    "sourceRollback": "passed",
+    "compiledDeploymentRollback": "not certified",
+    "sizeAllowancesChanged": false
+  },
+  "counterexamples": [
+    "artifacts/gitlab-quick-action-cancellation-before-20261114.log",
+    "artifacts/gitlab-quick-action-controls-first-run-20261114.json",
+    "artifacts/gitlab-quick-action-controls-mobile-before-20261114.png",
+    "artifacts/gitlab-quick-action-controls-list-failure-20261114.json",
+    "artifacts/gitlab-quick-action-controls-list-failure-20261114.png",
+    "artifacts/gitlab-quick-action-storybook-before-mobile-focus-20261114.json",
+    "artifacts/gitlab-quick-action-mobile-focus-before-20261114.log",
+    "artifacts/gitlab-quick-action-storybook-clipping-failure-20261114.json",
+    "artifacts/gitlab-quick-action-storybook-clipped-error-20261114.png"
+  ],
+  "remaining": [
+    "Argument and general reference autocomplete",
+    "All supported command/context/role/browser matrices",
+    "Remaining GitLab workflows, compiled deployment rollback and hosted CI",
+    "Other two full product integrations and global roadmap acceptance"
+  ]
+}

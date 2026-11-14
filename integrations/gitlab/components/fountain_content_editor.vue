@@ -13,6 +13,7 @@ import {
   createKaTeXRenderer,
   selectAll,
   assertGitLabNativeHostConfiguration,
+  parseGitLabQuickActionCommands,
 } from '../runtime/browser';
 import FountainEditorSurface from './fountain_editor_surface.vue';
 import FountainFormattingToolbar from './fountain_formatting_toolbar.vue';
@@ -21,6 +22,7 @@ import CodeBlockBubbleMenu from './bubble_menus/code_block_bubble_menu.vue';
 import FountainAlertMenu from './fountain_alert_menu.vue';
 import MediaBubbleMenu from './bubble_menus/media_bubble_menu.vue';
 import FountainReferenceMenu from './fountain_reference_menu.vue';
+import FountainQuickActionMenu from './fountain_quick_action_menu.vue';
 
 export default {
   name: 'FountainContentEditor',
@@ -36,6 +38,7 @@ export default {
     FountainAlertMenu,
     MediaBubbleMenu,
     FountainReferenceMenu,
+    FountainQuickActionMenu,
   },
   // The installer inserts the pinned host's exact public prop definitions here.
   props: {},
@@ -127,6 +130,7 @@ export default {
     this.loadRequest = 0;
     this.loadOptions = undefined;
     this.disposed = false;
+    this.quickActionCache = null;
     try {
       assertGitLabNativeHostConfiguration({
         collaborationProvider: this.collaborationProvider,
@@ -144,6 +148,7 @@ export default {
           renderMath: createKaTeXRenderer(katex),
           onListenerError: this.onSurfaceError,
           uploadAttachment: this.uploadFile,
+          quickActionProvider: this.supportsQuickActions ? this.fetchQuickActions : undefined,
         }),
       );
       this.releaseChange = this.contentEditor.subscribeChange(this.onDocumentChange);
@@ -178,13 +183,29 @@ export default {
       this.$refs.linkMenu?.refreshRoot?.();
       this.$refs.codeMenu?.refreshRoot?.();
       this.$refs.mediaMenu?.refreshRoot?.();
+      this.$refs.quickActionMenu?.refreshRoot?.();
     },
     onSurfaceKeydown(event) {
       if (this.surfaceEditable && !event.defaultPrevented && !event.isComposing && !event.altKey
         && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault(); event.stopPropagation(); this.$refs.linkMenu?.open?.();
       }
-      this.$emit('keydown', event);
+      if (!event.defaultPrevented) this.$emit('keydown', event);
+    },
+    async fetchQuickActions({ signal }) {
+      const endpoint = this.autocompleteDataSources.commands;
+      if (typeof endpoint !== 'string' || !endpoint) throw new Error('GITLAB_QUICK_ACTION_ENDPOINT_UNAVAILABLE');
+      const url = new URL(endpoint, window.location.href);
+      if (!['http:', 'https:'].includes(url.protocol) || url.origin !== window.location.origin
+        || url.username || url.password || url.hash) throw new Error('GITLAB_QUICK_ACTION_ENDPOINT_REFUSED');
+      if (this.quickActionCache?.url === url.href && Date.now() - this.quickActionCache.time < 10000)
+        return this.quickActionCache.items;
+      const { data } = await axios.get(url.href, { signal });
+      if (signal.aborted || this.disposed) throw new DOMException('GITLAB_QUICK_ACTION_CANCELLED', 'AbortError');
+      if (JSON.stringify(data).length > 1024 * 1024) throw new Error('GITLAB_QUICK_ACTION_RESPONSE_TOO_LARGE');
+      const items = parseGitLabQuickActionCommands(data);
+      this.quickActionCache = { url: url.href, items, time: Date.now() };
+      return items;
     },
     async uploadFile(file, { signal, reportProgress }) {
       if (!this.canUpload) throw new Error('GITLAB_UPLOAD_DISABLED');
@@ -401,7 +422,7 @@ export default {
     <gl-alert v-if="adapterGaps && !fatal" variant="warning" :dismissible="false">
       {{
         s__(
-          'ContentEditor|This integration is unfinished. Autocomplete, saved replies, quick actions and specialized menus are not connected yet. Use source editing for those workflows.',
+          'ContentEditor|This integration is unfinished. Reference and quick-action argument autocomplete, saved replies and some specialized menus are not connected yet. Use source editing for those workflows.',
         )
       }}
     </gl-alert>
@@ -483,6 +504,7 @@ export default {
             <fountain-reference-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" />
             <fountain-alert-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <media-bubble-menu ref="mediaMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />
+            <fountain-quick-action-menu ref="quickActionMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
           </template>
           <template #header-buttons>
             <slot name="header-buttons"></slot>

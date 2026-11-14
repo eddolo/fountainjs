@@ -349,4 +349,33 @@ save, reopen and restart. It checks that command execution waits for submission,
 literal close text stays escaped and the next edit has no inherited conflict.
 The separate `--quick-actions-fixtures` profile captures 32 renderer fixtures
 against the pinned original transform. These profiles do not certify all quick
-actions or expose the remaining insertion/preview/autocomplete interfaces.
+actions or certify the remaining argument/reference autocomplete interfaces.
+
+## Quick-action controls profile
+
+After preparing the first fifteen patches, build/install the current native
+runtime and prepare the additional controls specs:
+
+```sh
+node scripts/build-gitlab-native-runtime.mjs
+node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source
+node scripts/prepare-gitlab-quick-action-controls-tests.mjs /absolute/gitlab-source
+# In the GitLab checkout: corepack yarn rspack-prod
+node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source --quick-action-controls
+node scripts/check-gitlab-native-install.mjs /absolute/gitlab-source --quick-action-controls
+node scripts/run-gitlab-native-browser-audit.mjs --quick-action-controls
+```
+
+The controls use the host's command endpoint through its CSRF-configured Axios
+client. Provider data is validated, debounced and cancellable. No embedded command
+catalogue substitutes for unavailable transport. The optional data cache is local
+to one component and endpoint and expires after ten seconds. The native model
+layer remains DOM-free. UI-created commands execute only through normal host Save;
+literal interpretation remains an explicit undoable document change.
+
+The `--quick-action-commands` capture profile records the actual available command
+metadata separately from the renderer fixtures. It is not a role/context matrix.
+The controls profile preserves the earlier source/save checks and additionally
+tests command selection, Escape, Alt+F10, mobile interpretation switching, scroll
+visibility and actual host clipping. Format-12 source restore/reinstall covers
+27 owned files; compiled deployment rollback remains a separate requirement.

@@ -68,36 +68,40 @@ if (previous) {
     'app/assets/javascripts/content_editor/services/fountain_runtime.js',
     'app/assets/javascripts/content_editor/services/fountain_runtime.css',
   ]);
-  if ([2, 3, 4, 5, 6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
+  if ([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js');
   } else if (previous.formatVersion !== undefined) throw new Error('Unknown retained install format.');
-  if ([3, 4, 5, 6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
+  if ([3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js');
   }
-  if ([4, 5, 6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
+  if ([4, 5, 6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.stories.js');
   }
-  if ([5, 6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
+  if ([5, 6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js');
   }
-  if ([6, 7, 8, 9, 10, 11].includes(previous.formatVersion)) {
+  if ([6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.stories.js');
   }
-  if ([7, 8, 9, 10, 11].includes(previous.formatVersion)) {
+  if ([7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_diagram_preview.vue');
     allowed.add(sandboxPath);
   }
-  if ([8, 9, 10, 11].includes(previous.formatVersion)) allowed.add(diagramReaderPath);
+  if ([8, 9, 10, 11, 12].includes(previous.formatVersion)) allowed.add(diagramReaderPath);
   if (previous.formatVersion === 9) { allowed.add(gfmPath); allowed.add(readerImagesPath); }
-  if ([10, 11].includes(previous.formatVersion)) { allowed.add(lazyLoaderPath); allowed.add(readerImagesPath); }
-  if (previous.formatVersion === 11) {
+  if ([10, 11, 12].includes(previous.formatVersion)) { allowed.add(lazyLoaderPath); allowed.add(readerImagesPath); }
+  if ([11, 12].includes(previous.formatVersion)) {
     allowed.add(codeMenuPath); allowed.add(mediaMenuPath);
     allowed.add('app/assets/javascripts/content_editor/components/fountain_context_surface.vue');
+  }
+  if (previous.formatVersion === 12) {
+    allowed.add('app/assets/javascripts/content_editor/components/fountain_quick_action_menu.vue');
+    allowed.add('app/assets/javascripts/content_editor/components/fountain_quick_action_menu.stories.js');
   }
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
@@ -300,7 +304,7 @@ component = component
   .replace('  props: {},', `  props: ${propsSource},`)
   .replace("from '../runtime/browser'", "from '../services/fountain_runtime'");
 files.set(hostPath, component);
-for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue', 'fountain_context_surface.vue', 'fountain_link_menu.vue', 'fountain_link_menu.stories.js', 'fountain_code_menu.vue', 'fountain_code_menu.stories.js', 'fountain_diagram_preview.vue', 'fountain_alert_menu.vue', 'fountain_alert_menu.stories.js', 'fountain_media_menu.vue', 'fountain_media_menu.stories.js', 'fountain_reference_menu.vue', 'fountain_reference_menu.stories.js']) {
+for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.vue', 'fountain_context_surface.vue', 'fountain_link_menu.vue', 'fountain_link_menu.stories.js', 'fountain_code_menu.vue', 'fountain_code_menu.stories.js', 'fountain_diagram_preview.vue', 'fountain_alert_menu.vue', 'fountain_alert_menu.stories.js', 'fountain_media_menu.vue', 'fountain_media_menu.stories.js', 'fountain_reference_menu.vue', 'fountain_reference_menu.stories.js', 'fountain_quick_action_menu.vue', 'fountain_quick_action_menu.stories.js']) {
   let value = await readFile(resolve(root, `integrations/gitlab/components/${name}`), 'utf8');
   value = value
     .replace("from 'fountainjs-editor'", "from '../services/fountain_runtime'")
@@ -372,7 +376,7 @@ await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 11,
+      formatVersion: 12,
       source,
       revision: pin.commit,
       scope:

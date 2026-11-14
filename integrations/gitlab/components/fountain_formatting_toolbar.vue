@@ -89,6 +89,8 @@ export default {
         { key: 'frontmatter', label: s__('ContentEditor|Insert frontmatter'), icon: 'code',
           disabled: this.state.doc.content.some(node => node.attrs.gitlabFrontmatter?.kind === 'header'),
           run: () => this.contentEditor.insertFrontmatter() },
+        ...(this.contentEditor.quickActions?.enabled ? [{ key: 'quick-action', label: s__('ContentEditor|Add a quick action'),
+          icon: 'quick-actions', run: () => this.contentEditor.quickActions.insert() }] : []),
       ];
     },
     styles() {

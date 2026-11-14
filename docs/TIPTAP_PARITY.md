@@ -2,7 +2,22 @@
 
 ## Current programme status — 2026-11-14
 
-Quick-action source handling and normal submission are now verified in the
+Quick-action command-name suggestions, insertion and server effect previews now
+use the real GitLab endpoint and renderer. An undoable switch keeps a command
+literal when requested. The seventeen-check recorded service profile includes
+toolbar/keyboard use, a 360px dock, bounded popup/list scrolling, UI save, reopen
+and restart. The selected upstream set passes 462 tests in 21 suites with one
+original skip, and the full Node set passes 6,059 cases in 364 files. Docked
+Alt+F10 focus now follows the same shared surface contract as floating menus.
+A native suggestion cancellation repair also prevents stale
+transport failures from reopening dismissed or destroyed UI. The private source
+installer now owns 27 files; compiled deployment rollback remains separate.
+Argument/reference autocomplete, all command/context/role/browser matrices,
+remaining host surfaces and full product acceptance are still open. No capability
+row is promoted from this workflow.
+[Controls evidence and current scope](../artifacts/gitlab-quick-action-controls-integration-20261114.json).
+
+The preceding quick-action source handling and normal submission were verified in the
 real GitLab application. The label action changes server state only on Save;
 an escaped `/close` stays literal after editing, reopen and restart. Literal
 command arguments and following reference links survive conversion. Ambiguous
@@ -11,9 +26,8 @@ The same journey found a stale conflict flag in GitLab's next edit session and
 inaccessible reference-link styling; both are repaired. Sixteen real checks,
 136 final focused Node cases and 440 selected upstream cases pass (one original
 skip). The 6,023-case broad run preceded the last targeted refinements.
-Quick-action insertion/preview, autocomplete, remaining host surfaces and full
-product acceptance are still open; no capability row is promoted from this
-single workflow.
+Its insertion/preview gap is superseded by the follow-up above. Argument/reference
+autocomplete, remaining host surfaces and full product acceptance remain open.
 [Evidence and current scope](../artifacts/gitlab-quick-actions-integration-20261114.json).
 
 The November 13 UI follow-up removes the full-width contextual-trigger break in the

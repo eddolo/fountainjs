@@ -1,0 +1,38 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/content_editor/components/content_editor.vue app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue app/assets/javascripts/content_editor/components/fountain_context_surface.vue app/assets/javascripts/content_editor/components/fountain_quick_action_menu.vue app/assets/javascripts/content_editor/components/fountain_quick_action_menu.stories.js spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js spec/frontend/content_editor/components/fountain_quick_action_host_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+Done in 7.76s.
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand --json --outputFile=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-quick-action-controls-jest-20261114.json spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js spec/frontend/work_items/components/work_item_description_spec.js spec/frontend/content_editor/components/fountain_diagram_preview_spec.js spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js spec/frontend/content_editor/components/fountain_code_menu_spec.js spec/frontend/content_editor/components/fountain_reference_menu_spec.js spec/frontend/content_editor/components/fountain_media_menu_spec.js spec/frontend/content_editor/components/fountain_link_menu_spec.js spec/frontend/content_editor/components/fountain_frontmatter_spec.js spec/frontend/content_editor/components/fountain_alert_menu_spec.js spec/frontend/content_editor/components/fountain_context_surface_spec.js spec/frontend/content_editor/components/content_editor_spec.js spec/frontend/behaviors/markdown/render_sandboxed_mermaid_spec.js spec/frontend/behaviors/markdown/render_gfm_spec.js spec/frontend/behaviors/markdown/fountain_reader_images_spec.js spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js spec/frontend/behaviors/components/sandboxed_mermaid_spec.js spec/frontend/issuable/issuable_form_spec.js spec/frontend/lazy_loader_spec.js spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js spec/frontend/content_editor/components/fountain_quick_action_host_spec.js
+PASS spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+PASS spec/frontend/work_items/components/work_item_description_spec.js
+PASS spec/frontend/content_editor/components/fountain_diagram_preview_spec.js
+PASS spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js
+PASS spec/frontend/content_editor/components/fountain_reference_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_media_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_quick_action_host_spec.js
+PASS spec/frontend/content_editor/components/fountain_frontmatter_spec.js
+PASS spec/frontend/content_editor/components/fountain_link_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_code_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_alert_menu_spec.js
+PASS spec/frontend/content_editor/components/fountain_context_surface_spec.js
+PASS spec/frontend/content_editor/components/content_editor_spec.js
+PASS spec/frontend/behaviors/markdown/render_sandboxed_mermaid_spec.js
+PASS spec/frontend/behaviors/markdown/render_gfm_spec.js
+PASS spec/frontend/behaviors/markdown/fountain_reader_images_spec.js
+PASS spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js
+PASS spec/frontend/behaviors/components/sandboxed_mermaid_spec.js
+PASS spec/frontend/issuable/issuable_form_spec.js
+PASS spec/frontend/lazy_loader_spec.js
+
+Test Suites: 21 passed, 21 total
+Tests:       1 skipped, 462 passed, 463 total
+Snapshots:   0 total
+Time:        26.476 s
+Ran all test suites matching /spec\/frontend\/vue_shared\/components\/markdown\/markdown_editor_spec.js|spec\/frontend\/work_items\/components\/work_item_description_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_preview_spec.js|spec\/frontend\/content_editor\/components\/fountain_diagram_authoring_host_spec.js|spec\/frontend\/content_editor\/components\/fountain_code_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_reference_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_media_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_link_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_frontmatter_spec.js|spec\/frontend\/content_editor\/components\/fountain_alert_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_context_surface_spec.js|spec\/frontend\/content_editor\/components\/content_editor_spec.js|spec\/frontend\/behaviors\/markdown\/render_sandboxed_mermaid_spec.js|spec\/frontend\/behaviors\/markdown\/render_gfm_spec.js|spec\/frontend\/behaviors\/markdown\/fountain_reader_images_spec.js|spec\/frontend\/behaviors\/markdown\/fountain_diagram_reader_spec.js|spec\/frontend\/behaviors\/components\/sandboxed_mermaid_spec.js|spec\/frontend\/issuable\/issuable_form_spec.js|spec\/frontend\/lazy_loader_spec.js|spec\/frontend\/content_editor\/components\/fountain_quick_action_menu_spec.js|spec\/frontend\/content_editor\/components\/fountain_quick_action_host_spec.js/i.
+Test results written to: ../../../../../mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-quick-action-controls-jest-20261114.json
+Done in 27.78s.

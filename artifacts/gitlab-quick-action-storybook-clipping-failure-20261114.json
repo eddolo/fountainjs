@@ -1,0 +1,64 @@
+{
+  "scope": "Isolated native quick-action presentation with declared renderer/provider fixtures; separate real GitLab persistence audit",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "4df95336f21cffa06eb01aa4fb13bb7347d97cd8ea581cdeb104dc2bad14f88b",
+  "status": "failed",
+  "pages": [
+    {
+      "state": "suggestions",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "menuBounds": {
+        "x": 449,
+        "y": 224,
+        "width": 382,
+        "height": 180
+      },
+      "hostBounds": {
+        "x": 16,
+        "y": 16,
+        "width": 1248,
+        "height": 416
+      }
+    },
+    {
+      "state": "literal",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "menuBounds": {
+        "x": 449,
+        "y": 80,
+        "width": 382,
+        "height": 83
+      },
+      "hostBounds": {
+        "x": 16,
+        "y": 16,
+        "width": 1248,
+        "height": 416
+      }
+    },
+    {
+      "state": "unavailable",
+      "width": 1280,
+      "violations": [],
+      "errors": [],
+      "menuBounds": {
+        "x": 449,
+        "y": -39,
+        "width": 382,
+        "height": 202
+      },
+      "hostBounds": {
+        "x": 16,
+        "y": 16,
+        "width": 1248,
+        "height": 416
+      }
+    }
+  ],
+  "sources": {},
+  "error": "Error: Controls must remain inside the visible host, including error states\n\nexpect(received).toBeGreaterThanOrEqual(expected)\n\nExpected: >= 16\nReceived:    -39"
+}

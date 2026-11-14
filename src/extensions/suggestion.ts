@@ -221,6 +221,7 @@ export class SuggestionController<Item extends SuggestionItemBase> {
 
   dismiss(): boolean {
     if (!this.snapshot.open) return false;
+    this.requestId++;
     this.dismissedIdentity = this.currentIdentity;
     this.request?.abort();
     this.publish({ open: false, status: 'closed', match: null, items: Object.freeze([]), selectedIndex: -1 });
@@ -238,6 +239,7 @@ export class SuggestionController<Item extends SuggestionItemBase> {
 
   destroy(): void {
     if (this.destroyed) return;
+    this.requestId++;
     this.destroyed = true;
     this.request?.abort();
     this.unsubscribe();

@@ -11,9 +11,10 @@ const media = process.argv.includes('--media');
 const diagrams = process.argv.includes('--diagrams');
 const frontmatter = process.argv.includes('--frontmatter');
 const quickActions = process.argv.includes('--quick-actions');
+const quickActionCommands = process.argv.includes('--quick-action-commands');
 const referenceContexts = process.argv.includes('--reference-context');
 const references = process.argv.includes('--references') || referenceContexts;
-if ([media, diagrams, references, frontmatter, quickActions].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
+if ([media, diagrams, references, frontmatter, quickActions, quickActionCommands].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -56,8 +57,25 @@ try {
   }
   const project = await request('/api/v4/projects/root%2Ffountain-product-integration');
   expect(project.visibility).toBe('private');
-  const paths = await request('/api/graphql', { query: 'query($path:ID!){namespace(fullPath:$path){markdownPaths{markdownPreviewPath}}}', variables: { path: project.path_with_namespace } });
+  const prior = quickActionCommands ? JSON.parse(await readFile(new URL('artifacts/gitlab-native-quick-actions-20261114/report.json', root))) : null;
+  const paths = await request('/api/graphql', { query: quickActionCommands
+    ? 'query($path:ID!,$iid:String){namespace(fullPath:$path){markdownPaths{markdownPreviewPath(iid:$iid) autocompleteSourcesPath(iid:$iid)}}}'
+    : 'query($path:ID!){namespace(fullPath:$path){markdownPaths{markdownPreviewPath}}}',
+    variables: { path: project.path_with_namespace, ...(quickActionCommands ? { iid: String(prior.issue.iid) } : {}) } });
   if (paths.errors?.length) throw new Error('No actual renderer path');
+  if (quickActionCommands) {
+    const endpoint = new URL(paths.data.namespace.markdownPaths.autocompleteSourcesPath.commands, base);
+    if (endpoint.origin !== base || endpoint.username || endpoint.password || endpoint.hash) throw new Error('Nonlocal command source');
+    const commands = await request(endpoint.href);
+    if (!Array.isArray(commands)) throw new Error('Expected actual command records');
+    await writeFile(new URL('integrations/gitlab/fixtures/quick-action-commands-live.json', root), JSON.stringify({
+      scope: 'Authenticated available command records for the task issue; not a browser acceptance claim',
+      upstream: { revision: pin.commit, version: version.version, packagedRevision: version.revision },
+      issueIID: prior.issue.iid, endpoint: endpoint.pathname + endpoint.search, commands,
+    }, null, 2) + '\n');
+    console.log(JSON.stringify({ captured: commands.length, kind: 'quick-action-commands' }));
+  }
+  if (!quickActionCommands) {
   const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
   if (preview.origin !== base) throw new Error('Nonlocal preview');
   preview.searchParams.set('no_header_anchors', 'true');
@@ -237,5 +255,6 @@ try {
     upstream: { revision: pin.commit, version: version.version, packagedRevision: version.revision }, fixtures,
   }, null, 2) + '\n');
   console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: quickActions ? 'quick-actions' : frontmatter ? 'frontmatter' : diagrams ? 'diagrams' : referenceContexts ? 'reference-context' : references ? 'references' : media ? 'media' : 'alerts' }));
+  }
 } catch (error) { console.error(String(error).replaceAll(password, '[redacted]')); process.exitCode = 1; }
 finally { try { await restorePlantuml?.(); } finally { await context.close(); await browser.close(); } }

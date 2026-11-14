@@ -1,0 +1,128 @@
+{
+  "date": "2026-11-14T02:01:29.024Z",
+  "scope": "Native Fountain browser editor in the actual GitLab application; partial toolbar/providers, not full product acceptance",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste"
+  ],
+  "secrets": "Credential stays in protected task-container configuration and process memory; no credential values, traces or browser storage-state files are recorded",
+  "preparedHost": true,
+  "nativeBrowser": true,
+  "nativeInsertion": true,
+  "nativeComponent": true,
+  "nativeAttachments": false,
+  "nativeCapacity": false,
+  "nativeLinks": false,
+  "nativeCodeProfile": false,
+  "nativeContextMenusProfile": false,
+  "nativeContextUIProfile": false,
+  "nativeFrontmatterProfile": false,
+  "nativeQuickActionsProfile": true,
+  "nativeAlertsProfile": false,
+  "nativeMediaProfile": false,
+  "nativeMediaFilesProfile": false,
+  "nativeReferencesProfile": false,
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1587193,
+    "sha256": "4df95336f21cffa06eb01aa4fb13bb7347d97cd8ea581cdeb104dc2bad14f88b",
+    "parentRevision": "ae300d237555d2aafe72c83cccad5f2f646653ac",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "fdd8efdb6d8448c6d497e0217c19e0d17be1b2c0b3b95bc9552bcff9c4efd192",
+      "integrations/gitlab/services/content_editor.ts": "2e64b1be273fd546e9f08e3a5c815104c04d8762579b6bb0fd93b2c4d62f60ea",
+      "integrations/gitlab/services/markdown_insertion.ts": "b782f4d206cd062a63992e85b57b1264b8bf7365c437c72994b6aa1e8bd1726c",
+      "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+      "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+      "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+      "integrations/gitlab/services/code_rendering.ts": "0d94359598fe6ead2cff4d0e2bc2821e934916ba47eca214bf02cc433dfe05d6",
+      "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+      "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+      "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+      "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+      "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+      "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+      "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+      "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+      "integrations/gitlab/services/markdown_codec.ts": "be1e569e1300ffd68ea498be500c094ae42701fa2f52711129c69fd104bc67a4",
+      "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
+      "integrations/gitlab/services/quick_action_editing.ts": "6b27e52a26a0bdd4385058455c8d59bf7959ba8bb22d6c7183b3a972c0687547",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
+      "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+      "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+      "dist/index.js": "6ac62e3acacc8735fffc4851fe091734de6fe791c42ff3938a15ad84c128be69",
+      "dist/document-utilities.js": "2164e2b7922b6e33e707d7fdf3e00307792adc1d464765156d43ec649bbab8fa"
+    }
+  },
+  "browserErrors": [],
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/f36d4a3094bcf259de5821b7b74e0be2/fountain-baseline-figure.png",
+      "status": 200
+    }
+  ],
+  "auditCredentialSource": "protected-task-config",
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 123,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/123"
+  },
+  "originalServerDescription": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/f36d4a3094bcf259de5821b7b74e0be2/fountain-baseline-figure.png)\n\nEnd of the original description.",
+  "status": "failed",
+  "error": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+  "failedImages": [
+    {
+      "src": "http://127.0.0.1:5080/-/project/1/uploads/f36d4a3094bcf259de5821b7b74e0be2/fountain-baseline-figure.png",
+      "currentSrc": "http://127.0.0.1:5080/-/project/1/uploads/f36d4a3094bcf259de5821b7b74e0be2/fountain-baseline-figure.png",
+      "complete": true,
+      "width": 400,
+      "loading": "lazy",
+      "rect": {
+        "x": 300.390625,
+        "y": 267.109375,
+        "width": 400,
+        "height": 60,
+        "top": 267.109375,
+        "right": 700.390625,
+        "bottom": 327.109375,
+        "left": 300.390625
+      },
+      "visibility": "visible",
+      "display": "inline-block",
+      "contentVisibility": "visible"
+    }
+  ],
+  "failedImageRequests": [
+    {
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 3149
+    }
+  ],
+  "imagesAfterFailureScreenshot": [
+    {
+      "complete": true,
+      "width": 400,
+      "currentSrc": "http://127.0.0.1:5080/-/project/1/uploads/f36d4a3094bcf259de5821b7b74e0be2/fountain-baseline-figure.png"
+    }
+  ]
+}

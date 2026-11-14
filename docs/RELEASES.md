@@ -1,5 +1,29 @@
 # Release and API stability policy
 
+## GitLab quick-action controls — 2026-11-14
+
+The private integration adds command-name suggestions from the authenticated
+GitLab catalogue, toolbar insertion, server effect previews and an undoable
+literal/active switch. Keyboard selection, Escape ownership, screen-reader
+relations and mobile docking use Fountain's native suggestion/view boundaries.
+Visual review found and repaired fragmented mobile placement, clipped button
+text, an undefined spacing token, list-scroll geometry and missing docked Alt+F10
+focus. Error-state review also found vertical overflow in a short host; positioning
+now constrains both axes rather than allowing tethering outside the boundary.
+Six quick-action and eight shared code/media component views cover the change.
+The final service
+journey verifies UI-authored action submission, source switching, reopen and
+restart. Command-name insertion does not imply argument or reference autocomplete.
+
+The shared optional suggestion controller now invalidates pending request
+generations on dismiss/destroy so a late non-DOM transport failure cannot publish
+stale UI. Public API declarations and capacity limits are unchanged. The native
+installer moves to format 12 with 27 owned source files, and a sixteenth ordered
+test patch carries the new component/transport specs and actual command fixture.
+Full GitLab, role/browser matrices, compiled rollback and global parity remain
+open. This checkpoint does not publish a new npm version or website feature claim.
+[Scoped evidence](../artifacts/gitlab-quick-action-controls-integration-20261114.json).
+
 ## GitLab quick-action source and save — 2026-11-14
 
 The private integration isolates command lines using the pinned host's behavior,

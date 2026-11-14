@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "pages": [
+    {
+      "state": "suggestions",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "state": "literal",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "state": "unavailable",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "state": "suggestions",
+      "width": 360,
+      "violations": []
+    },
+    {
+      "state": "literal",
+      "width": 360,
+      "violations": []
+    },
+    {
+      "state": "unavailable",
+      "width": 360,
+      "violations": []
+    }
+  ]
+}

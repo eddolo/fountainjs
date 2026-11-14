@@ -1,0 +1,28 @@
+{
+  "scope": "Isolated native quick-action presentation with declared renderer/provider fixtures; separate real GitLab persistence audit",
+  "upstreamRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "nativeRuntimeSHA256": "4df95336f21cffa06eb01aa4fb13bb7347d97cd8ea581cdeb104dc2bad14f88b",
+  "status": "failed",
+  "pages": [
+    {
+      "state": "suggestions",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "state": "literal",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    },
+    {
+      "state": "unavailable",
+      "width": 1280,
+      "violations": [],
+      "errors": []
+    }
+  ],
+  "sources": {},
+  "error": "Error: expect(locator).toBeFocused() failed\n\nLocator:  getByRole('listbox', { name: 'Available quick actions', exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  5000ms\n\nCall log:\n  - Expect \"to.be.focused\" with timeout 5000ms\n  - waiting for getByRole('listbox', { name: 'Available quick actions', exact: true })\n    14 × locator resolved to <div tabindex=\"0\" role=\"listbox\" id=\"fountain-quick-actions-1\" aria-label=\"Available quick actions\" aria-activedescendant=\"fountain-quick-actions-1-0\" class=\"gl-relative gl-mb-3 gl-max-h-31 gl-overflow-y-auto\">…</div>\n       - unexpected value \"inactive\"\n"
+}

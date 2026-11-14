@@ -1,0 +1,88 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/suggestion-cancellation.test.ts (2 tests | 2 failed) 15ms
+   × does not publish a late transport failure after dismiss 12ms
+   × does not publish a late transport failure after destroy 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/suggestion-cancellation.test.ts > does not publish a late transport failure after dismiss
+AssertionError: expected { open: true, status: 'error', …(4) } to be { open: false, status: 'closed', …(3) } // Object.is equality
+
+- Expected
++ Received
+
+  {
++   "error": "Transport ended after cancellation",
+    "items": [],
+-   "match": null,
+-   "open": false,
++   "match": {
++     "query": "la",
++     "range": {
++       "from": 0,
++       "path": [
++         0,
++         0,
++       ],
++       "to": 3,
++     },
++     "text": "/la",
++     "trigger": "/",
++   },
++   "open": true,
+    "selectedIndex": -1,
+-   "status": "closed",
++   "status": "error",
+  }
+
+ ❯ tests/suggestion-cancellation.test.ts:25:36
+     23|   reject(new Error('Transport ended after cancellation'));
+     24|   await Promise.resolve(); await Promise.resolve(); await Promise.reso…
+     25|   expect(controller.getSnapshot()).toBe(snapshot);
+       |                                    ^
+     26|   expect(listener).toHaveBeenCalledTimes(calls);
+     27|   controller.destroy(); editor.destroy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/suggestion-cancellation.test.ts > does not publish a late transport failure after destroy
+AssertionError: expected { open: true, status: 'error', …(4) } to be { open: true, status: 'loading', …(3) } // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,6 +1,7 @@
+  {
++   "error": "Transport ended after cancellation",
+    "items": [],
+    "match": {
+      "query": "la",
+      "range": {
+        "from": 0,
+@@ -13,7 +14,7 @@
+      "text": "/la",
+      "trigger": "/",
+    },
+    "open": true,
+    "selectedIndex": -1,
+-   "status": "loading",
++   "status": "error",
+  }
+
+ ❯ tests/suggestion-cancellation.test.ts:25:36
+     23|   reject(new Error('Transport ended after cancellation'));
+     24|   await Promise.resolve(); await Promise.resolve(); await Promise.reso…
+     25|   expect(controller.getSnapshot()).toBe(snapshot);
+       |                                    ^
+     26|   expect(listener).toHaveBeenCalledTimes(calls);
+     27|   controller.destroy(); editor.destroy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  01:24:39
+   Duration  1.63s (transform 80%, import 18%, tests 1%)

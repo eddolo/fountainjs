@@ -15,8 +15,9 @@ export default {
     getEditorRoot: { type: Function, required: false, default: null },
     label: { type: String, required: true },
     suspended: { type: Boolean, required: false, default: false },
+    hideTrigger: { type: Boolean, required: false, default: false },
   },
-  emits: ['reveal'],
+  emits: ['reveal', 'dismiss', 'visibility-change'],
   data() {
     return { floating: false, expanded: false, menuId: uniqueId('fountain-context-') };
   },
@@ -28,6 +29,8 @@ export default {
     anchorIdentity() { this.controller.refresh(); this.schedule(); },
     suspended() { this.schedule(); },
     getEditorRoot() { this.refreshRoot(); },
+    floating() { this.reportVisibility(); },
+    expanded() { this.reportVisibility(); },
   },
   created() {
     this.disposed = false; this.root = null; this.popup = null; this.frame = null;
@@ -42,6 +45,7 @@ export default {
     this.disposed = true; this.release(); this.controller.destroy(); this.unbindRoot();
   },
   methods: {
+    reportVisibility() { this.$emit('visibility-change', { floating: this.floating, expanded: this.expanded }); },
     refreshRoot() {
       if (this.disposed) return;
       const root = this.getEditorRoot?.() || null;
@@ -123,7 +127,7 @@ export default {
         getReferenceClientRect: () => this.referenceRect() || this.root.getBoundingClientRect(),
         popperOptions: { strategy: 'fixed', modifiers: [
           { name: 'flip', options: { boundary, padding: 8 } },
-          { name: 'preventOverflow', options: { boundary, padding: 8 } },
+          { name: 'preventOverflow', options: { boundary, padding: 8, altAxis: true, tether: false } },
         ] },
         render: () => {
           const popper = document.createElement('div');
@@ -145,7 +149,9 @@ export default {
       const window = this.$refs.content.ownerDocument.defaultView;
       const reference = this.referenceRect();
       if (!root?.isConnected || !reference || (window.visualViewport?.width || window.innerWidth) < 640) {
-        this.dock(); return;
+        this.dock();
+        if (root?.isConnected && this.active && !this.suspended && this.pendingFocus && this.containsFocus()) this.focusFirst();
+        return;
       }
       if (!this.popup) this.createPopup();
       this.floating = true;
@@ -160,7 +166,7 @@ export default {
       } else this.popup.hide();
     },
     focusFirst() {
-      const field = this.$refs.content.querySelector('input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]):not([aria-disabled="true"]), a[href]');
+      const field = this.$refs.content.querySelector('[tabindex="0"], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]):not([aria-disabled="true"]), a[href]');
       if (field) { field.focus(); this.pendingFocus = false; }
     },
     focusMenu() {
@@ -177,7 +183,7 @@ export default {
         event.preventDefault(); event.stopPropagation(); this.focusMenu(); return;
       }
       if (event.key === 'Escape' && this.floating && this.containsFocus()) {
-        event.preventDefault(); event.stopPropagation(); this.pendingFocus = false; this.controller.dismiss(); this.$emit('reveal');
+        event.preventDefault(); event.stopPropagation(); this.pendingFocus = false; this.controller.dismiss(); this.$emit('dismiss'); this.$emit('reveal');
       }
     },
   },
@@ -185,7 +191,7 @@ export default {
 </script>
 <template>
   <div data-testid="native-context-surface" :data-menu-mode="floating ? 'floating' : 'docked'" :class="floating ? 'gl-inline-flex gl-shrink-0' : 'gl-w-full'">
-    <gl-button v-if="floating && active" ref="trigger" category="tertiary" size="small" :aria-expanded="expanded ? 'true' : 'false'" :aria-controls="expanded ? menuId : undefined" aria-keyshortcuts="Alt+F10" @click="focusMenu">{{ label }}</gl-button>
+    <gl-button v-if="floating && active && !hideTrigger" ref="trigger" category="tertiary" size="small" :aria-expanded="expanded ? 'true' : 'false'" :aria-controls="expanded ? menuId : undefined" aria-keyshortcuts="Alt+F10" @click="focusMenu">{{ label }}</gl-button>
     <div ref="home"><div ref="content" @keydown="onKeydown"><slot></slot></div></div>
   </div>
 </template>

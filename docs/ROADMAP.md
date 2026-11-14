@@ -2,7 +2,27 @@
 
 Updated 2026-11-14.
 
-The GitLab quick-action source/save foundation now has a recorded real-service
+The GitLab integration now adds command-name suggestions from the authenticated
+host catalogue, toolbar insertion, server-generated effect previews, and an
+explicit undoable literal/active interpretation switch. Escape stays within the
+editor; Alt+F10 and arrow/Enter navigation work with the native selection. The
+recorded real-service journey passes seventeen checks, including a UI-authored
+label action, source switching, save, reopen, and application restart. Actual
+desktop and 360px views are reviewed. Keyboard selection stays inside the
+scrollable list, and the popup stays inside the work-item clipping boundaries.
+The selected upstream set passes 462 tests across 21 suites, with the one original
+skip unchanged, and the full Node set passes 6,059 cases in 364 files. The shared
+context surface now honors Alt+F10 focus in docked mode as well as floating mode.
+It also constrains both popup axes, including the unavailable-command state in a
+short host. Six quick-action views and eight shared code/media views pass their
+component browser, accessibility and geometry checks.
+A shared suggestion-controller fix prevents late transport errors
+from reopening a dismissed menu or publishing after destruction. No capacity
+limits are raised. Argument/reference autocomplete, other command/context/role
+matrices and full GitLab/product acceptance remain open; no parity row is promoted.
+[Controls evidence and limits](../artifacts/gitlab-quick-action-controls-integration-20261114.json).
+
+The preceding GitLab quick-action source/save foundation has a recorded real-service
 journey. Commands retain their literal arguments, escaped slashes remain inert
 after unrelated edits, and reference definitions following commands resolve.
 Plain code without a language marker also imports as code. Source adapters use
@@ -16,8 +36,9 @@ The final focused Node set passes 136 cases and the nineteen upstream suites
 pass 440 cases with one unchanged skip. The earlier broad run passed 6,023 cases
 before the final targeted refinements; it is not a claim of a new final full run.
 All sixteen current browser checks pass. This is a private integration checkpoint,
-not full quick-action or GitLab parity. Insertion controls, explanations,
-autocomplete/providers and the other GitLab workflows remain required.
+not full quick-action or GitLab parity. The controls follow-up above supersedes
+its insertion/preview gap; argument/reference autocomplete and the other GitLab
+workflows remain required.
 [Quick-action evidence and limits](../artifacts/gitlab-quick-actions-integration-20261114.json).
 
 The November 13 presentation follow-up addresses the reviewed GitLab toolbar and

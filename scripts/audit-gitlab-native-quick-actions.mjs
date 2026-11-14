@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
 
-export async function auditNativeQuickActions({ page, editor, toolbar, output, report, api, project, issue }) {
+export async function auditNativeQuickActions({ page, editor, toolbar, output, report, api, project, issue, controls = false }) {
   page.on('response', async response => {
     if (response.request().method() !== 'POST' || !response.url().includes('/api/graphql')) return;
     let data;
@@ -21,18 +21,100 @@ export async function auditNativeQuickActions({ page, editor, toolbar, output, r
   const before = await api('GET', `/projects/${project.id}/issues/${issue.iid}`);
   expect(before.state).toBe('opened'); expect(before.labels).not.toContain(label);
   const originalText = await editor.innerText();
+  if (controls) {
+    const wrapper = page.getByTestId('work-item-description-wrapper');
+    const panel = page.getByTestId('native-quick-action-menu');
+    const list = page.getByRole('listbox', { name: 'Available quick actions', exact: true });
+    const commandResponses = [];
+    const observe = response => {
+      if (response.request().method() === 'GET' && response.url().includes('/autocomplete_sources/commands'))
+        commandResponses.push({ status: response.status(), url: new URL(response.url()).pathname });
+    };
+    page.on('response', observe);
+    await toolbar.getByRole('button', { name: 'Add a quick action', exact: true }).click();
+    await expect(list.getByRole('option', { name: /\/label.*Add labels/u })).toBeVisible();
+    await expect(editor).toHaveAttribute('aria-autocomplete', 'list');
+    await page.keyboard.press('ArrowUp');
+    await expect.poll(async () => {
+      const selected = await list.locator('[aria-selected="true"]').boundingBox(), bounds = await list.boundingBox();
+      report.quickActionControlGeometry = { selected, list: bounds, listStyle: await list.evaluate(element => ({
+        maxHeight: getComputedStyle(element).maxHeight, overflowY: getComputedStyle(element).overflowY,
+        scrollTop: element.scrollTop, clientHeight: element.clientHeight, scrollHeight: element.scrollHeight,
+      })) };
+      return Boolean(selected && bounds && selected.y >= bounds.y - 1 && selected.y + selected.height <= bounds.y + bounds.height + 1);
+    }, { message: 'Keyboard selection must remain fully inside the visible command list' }).toBe(true);
+    await page.keyboard.press('ArrowDown');
+    const popup = page.getByRole('dialog', { name: 'Quick actions', exact: true });
+    const host = await editor.evaluate(element => {
+      const container = element.closest('.work-item-detail'), bounds = [container.getBoundingClientRect().toJSON()];
+      for (let parent = element.parentElement; parent && parent !== element.ownerDocument.body; parent = parent.parentElement) {
+        const style = getComputedStyle(parent);
+        if (/(auto|scroll|hidden|clip)/u.test(`${style.overflowX} ${style.overflowY}`)) bounds.push(parent.getBoundingClientRect().toJSON());
+      }
+      return bounds;
+    });
+    await expect.poll(async () => {
+      const box = await popup.boundingBox();
+      report.quickActionControlGeometry.popup = box; report.quickActionControlGeometry.host = host;
+      return Boolean(box && box.y >= Math.max(0, ...host.map(rect => rect.top)) && box.y + box.height <= Math.min(page.viewportSize().height, ...host.map(rect => rect.bottom)) + 1);
+    }, { message: 'The quick-action popup must remain inside the actual host clipping boundaries' }).toBe(true);
+    await page.screenshot({ path: fileURLToPath(new URL('quick-action-controls-suggestions.png', output)), fullPage: true });
+    await editor.pressSequentially('label');
+    await expect(list.getByRole('option', { name: /\/label.*Add labels/u })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(panel).toHaveCount(0); await expect(editor).toBeVisible();
+    await expect(wrapper.getByRole('button', { name: 'Save changes', exact: true })).toBeVisible();
+    await page.keyboard.type('s');
+    await expect(list.getByRole('option', { name: /\/label.*Add labels/u })).toBeVisible();
+    expect(await list.getByRole('option').count()).toBe(1);
+    await page.keyboard.press('Alt+F10'); await expect(list).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(editor.getByText('/label', { exact: true })).toBeVisible();
+    await expect(list).toHaveCount(0);
+    await page.keyboard.type(`~"${label}"`);
+    await expect(panel).toContainText('Adds 1 label.');
+    const viewport = page.viewportSize(); await page.setViewportSize({ width: 360, height: 780 });
+    await expect(toolbar.getByTestId('native-context-surface').filter({ has: panel })).toHaveAttribute('data-menu-mode', 'docked');
+    await panel.scrollIntoViewIfNeeded();
+    const mobileBounds = await panel.boundingBox(); expect(mobileBounds.x).toBeGreaterThanOrEqual(0);
+    expect(mobileBounds.x + mobileBounds.width).toBeLessThanOrEqual(360);
+    await page.keyboard.press('Alt+F10');
+    await expect(panel.getByRole('button', { name: 'Treat as literal text', exact: true })).toBeFocused();
+    await page.screenshot({ path: fileURLToPath(new URL('quick-action-controls-mobile.png', output)), fullPage: true });
+    await panel.getByRole('button', { name: 'Treat as literal text', exact: true }).click();
+    await expect(panel).toContainText('This line stays text.');
+    await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
+    await expect(panel).toContainText('Adds 1 label.');
+    await page.setViewportSize(viewport);
+    await editor.getByText(`/label ~"${label}"`, { exact: true }).click();
+    await page.keyboard.press('End');
+    await expect(panel).toContainText('Adds 1 label.');
+    const install = JSON.parse(await readFile(new URL('../artifacts/gitlab-native-browser-install/install.json', import.meta.url)));
+    const require = createRequire(install.source + '/storybook/package.json');
+    await page.addScriptTag({ path: require.resolve('axe-core/axe.min.js') });
+    const accessibility = await panel.evaluate(element => window.axe.run(element));
+    expect(accessibility.violations).toEqual([]);
+    await page.screenshot({ path: fileURLToPath(new URL('quick-action-controls-desktop.png', output)), fullPage: true });
+    expect(commandResponses.some(response => response.status === 200)).toBe(true);
+    page.off('response', observe);
+    report.nativeQuickActionControls = { commandResponses, accessibilityViolations: accessibility.violations,
+      scope: 'Command-name suggestions and server preview; argument/reference autocomplete remains open' };
+    report.checks.push('Actual toolbar insertion loads authenticated command names, resolves an alias, supports Escape and Alt+F10/Enter, previews the server effect, and switches interpretation with undo on a 360px dock');
+  }
   await page.keyboard.press('End'); await page.keyboard.press('Enter');
-  const source = `/label ~"${label}"\n[retained]: https://example.com\n\nSee [help][retained]\n\n> [!note] Note\n>\n> Explicit title after a quick action.\n\n\`\`\`yaml frontmatter\ntitle: Paper after a quick action\n\`\`\`\n\n\\/close`;
+  const source = `${controls ? '' : `/label ~"${label}"\n`}[retained]: https://example.com\n\nSee [help][retained]\n\n> [!note] Note\n>\n> Explicit title after a quick action.\n\n\`\`\`yaml frontmatter\ntitle: Paper after a quick action\n\`\`\`\n\n\\/close`;
   await page.evaluate(text => navigator.clipboard.writeText(text), source);
   await toolbar.getByRole('button', { name: 'Paste Markdown', exact: true }).click();
   await expect(editor.getByText('/close', { exact: true })).toBeVisible();
-  await expect(editor.getByRole('link', { name: label, exact: true })).toBeVisible();
+  if (controls) await expect(editor.getByText(`/label ~"${label}"`, { exact: true })).toBeVisible();
+  else await expect(editor.getByRole('link', { name: label, exact: true })).toBeVisible();
   await expect(editor.getByRole('link', { name: 'help', exact: true })).toHaveAttribute('href', 'https://example.com');
   await expect(editor.locator('[data-fountain-node="gitlab_alert_title"]')).toHaveText('Note');
   await expect(editor.locator('pre[data-fountain-node="code_block"]')).toContainText('title: Paper after a quick action');
   await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(editor.getByText('/close', { exact: true })).toHaveCount(0);
-  expect((await editor.innerText()).trim()).toBe(originalText.trim());
+  if (controls) expect(await editor.innerText()).toContain(`/label ~"${label}"`);
+  else expect((await editor.innerText()).trim()).toBe(originalText.trim());
   await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
   await expect(editor.getByText('/close', { exact: true })).toBeVisible();
   await editor.getByText('/close', { exact: true }).click();
@@ -51,6 +133,7 @@ export async function auditNativeQuickActions({ page, editor, toolbar, output, r
   await page.screenshot({ path: fileURLToPath(new URL('quick-actions-source.png', output)), fullPage: true });
   await wrapper.getByRole('button', { name: 'Switch to rich text editing', exact: true }).click();
   await expect(editor.getByText('/close', { exact: true })).toBeVisible();
+  await expect(editor.getByRole('link', { name: label, exact: true })).toBeVisible();
   expect((await api('GET', `/projects/${project.id}/issues/${issue.iid}`)).labels).not.toContain(label);
   expect((await api('GET', `/projects/${project.id}/issues/${issue.iid}`)).state).toBe('opened');
   const install = JSON.parse(await readFile(new URL('../artifacts/gitlab-native-browser-install/install.json', import.meta.url)));

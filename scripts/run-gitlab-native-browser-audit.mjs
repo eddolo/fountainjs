@@ -32,14 +32,16 @@ try {
   execFileSync(
     process.execPath,
     [
-      resolve(root, ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures'].some(flag => process.argv.includes(flag)) ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      resolve(root, ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands'].some(flag => process.argv.includes(flag)) ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      ...(process.argv.includes('--quick-action-commands') ? ['--quick-action-commands'] : []),
       ...(process.argv.includes('--quick-actions-fixtures') ? ['--quick-actions'] : []),
       ...(process.argv.includes('--frontmatter-fixtures') ? ['--frontmatter'] : []),
       ...(process.argv.includes('--diagram-fixtures') ? ['--diagrams'] : []),
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--quick-actions') ? '--native-quick-actions'
+      process.argv.includes('--quick-action-controls') ? '--native-quick-action-controls'
+        : process.argv.includes('--quick-actions') ? '--native-quick-actions'
         : process.argv.includes('--context-ui') ? '--native-context-ui'
         : process.argv.includes('--context-menus') ? '--native-context-menus'
         : process.argv.includes('--frontmatter') ? '--native-frontmatter'

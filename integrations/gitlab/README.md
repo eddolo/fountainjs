@@ -1443,6 +1443,38 @@ alter the engine or document format. The existing root-unit baseline is reused;
 current GitLab component, browser and accessibility checks cover the changed UI.
 [Presentation evidence and scope](../../artifacts/gitlab-context-ui-integration-20261113.json).
 
+### Native quick-action controls
+
+The optional `quickActionProvider({ query, signal })` boundary supplies validated
+records from GitLab's actual available-command endpoint. The model layer owns
+matching, async cancellation, root-level insertion and literal/active transactions;
+Vue owns the view, focus, ARIA and authenticated transport. No Tiptap editor facade
+is constructed. The toolbar inserts a command after the owning root block, rather
+than inside a table or quote. Suggestions replace the command name while retaining
+existing arguments. Preview text comes from the current server renderer; it does
+not execute actions. Label/user argument completion remains unfinished.
+
+The menu uses ordinary design-system rows and a bounded scrolling list. Button
+text explicitly wraps despite GitLab's default ellipsis rule, and its height uses
+a supported spacing token. The mobile panel follows the toolbar controls. Escape
+dismisses the menu without cancelling the application edit form, Alt+F10 reaches
+the list, and owned textbox ARIA is restored on close/unmount. Stale provider items
+cannot be applied after their selection/document changes.
+
+The recorded real-service profile passes 17 checks with zero browser errors and
+zero violations in the scoped description/menu accessibility scans. It creates
+the label command through the UI, checks its effect preview, switches literal
+interpretation with undo, submits through Save, and verifies reopen/restart.
+The selected upstream set passes 462 cases in 21 suites with one original skip.
+The full Node set passes 6,059 cases in 364 files. The shared surface also fixes
+Alt+F10 focus in docked mode, with a regression that failed before the repair.
+Popup overflow is constrained on both axes, including failed-command loading in
+a short host. Six command-state views and eight code/media regression views use
+actual native components and strict accessibility/layout checks, with explicit
+fixed transport fixtures distinct from the real service journey.
+This remains private partial integration, not full quick-action/product parity.
+[Controls evidence](../../artifacts/gitlab-quick-action-controls-integration-20261114.json).
+
 ### Remaining full application acceptance
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

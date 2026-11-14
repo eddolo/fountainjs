@@ -11,7 +11,7 @@ const root = new URL('../', import.meta.url);
 const installed = JSON.parse(await readFile(new URL('artifacts/gitlab-native-browser-install/install.json', root)));
 const require = createRequire(resolve(installed.source, 'storybook/package.json'));
 const directory = resolve(installed.source, '../context-storybook');
-const output = new URL(process.argv.includes('--refined-ui') ? 'artifacts/gitlab-native-context-ui-storybook-20261113/' : 'artifacts/gitlab-native-context-storybook-20261113/', root);
+const output = new URL(process.argv.includes('--quick-action-controls') ? 'artifacts/gitlab-quick-action-context-regression-20261114/' : process.argv.includes('--refined-ui') ? 'artifacts/gitlab-native-context-ui-storybook-20261113/' : 'artifacts/gitlab-native-context-storybook-20261113/', root);
 await mkdir(output, { recursive: true });
 const types = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.wav': 'audio/wav', '.webm': 'video/webm' };
 const server = createServer(async (request, response) => {
@@ -48,7 +48,18 @@ try {
     const label = kind === 'code' ? 'Code block actions' : 'Media actions';
     await expect(controls).toBeVisible();
     if (width === 360) await expect(page.getByTestId('native-context-surface')).toHaveAttribute('data-menu-mode', 'docked');
-    else await expect(page.getByRole('dialog', { name: label, exact: true })).toBeVisible();
+    else {
+      const popup = page.getByRole('dialog', { name: label, exact: true });
+      await expect(popup).toBeVisible();
+      if (process.argv.includes('--quick-action-controls')) {
+        const bounds = await popup.boundingBox();
+        const host = await page.locator('[data-fountain-root] .fountain-editor').evaluate(element =>
+          (element.closest('.modal-content, .work-item-detail-panel, .work-item-detail')
+            || element.closest('[role="dialog"]') || element.closest('main') || element.ownerDocument.documentElement).getBoundingClientRect().toJSON());
+        expect(bounds.y).toBeGreaterThanOrEqual(Math.max(0, host.y));
+        expect(bounds.y + bounds.height).toBeLessThanOrEqual(Math.min(900, host.bottom) + 1);
+      }
+    }
     await controls.getByRole('button', { name: kind === 'code' ? 'Copy code' : 'Copy media URL', exact: true }).click();
     expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(kind === 'code' ? 'const answer = 42;\nconsole.log(answer);' : `/uploads/media-fixture/figure.${id === 'contextual-audio' ? 'wav' : id === 'contextual-video' ? 'webm' : 'png'}`);
     if (id === 'contextual-read-only') {

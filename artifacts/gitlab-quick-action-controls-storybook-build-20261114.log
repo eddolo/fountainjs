@@ -1,0 +1,404 @@
+@storybook/cli v7.6.24
+
+info => Cleaning outputDir: /home/eddolo/.cache/fountainjs-gitlab-product/quick-action-storybook
+info => Loading presets
+info Found existing addon "@storybook/addon-docs", skipping.
+info Found existing addon "@storybook/addon-viewport", skipping.
+info Found existing addon "@storybook/addon-docs", skipping.
+info Found existing addon "@storybook/addon-viewport", skipping.
+info => Building manager..
+info => Manager built (126 ms)
+info => Building preview..
+info => Copying static files: /home/eddolo/.cache/fountainjs-gitlab-product/source/storybook/node_modules/@storybook/manager/static at /home/eddolo/.cache/fountainjs-gitlab-product/quick-action-storybook/sb-common-assets
+info Using Babel compiler
+info Addon-docs: using MDX2
+info => Using implicit CSS loaders
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+info => Loading custom Webpack config (full-control mode).
+info => Copying static files: /home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/images at /home/eddolo/.cache/fountainjs-gitlab-product/quick-action-storybook/assets/images
+[BABEL] Note: The code generator has deoptimised the styling of /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/monaco-editor/esm/vs/language/typescript/lib/lib.js as it exceeds the max of 500KB.
+[BABEL] Note: The code generator has deoptimised the styling of /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/monaco-editor/esm/vs/language/css/_deps/vscode-css-languageservice/data/webCustomData.js as it exceeds the max of 500KB.
+[BABEL] Note: The code generator has deoptimised the styling of /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/monaco-editor/esm/vs/language/typescript/lib/typescriptServices.js as it exceeds the max of 500KB.
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import './application_base';
+  │         ^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/application.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+1 │ @import '../white_base';
+  │         ^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+
+More info: https://sass-lang.com/d/legacy-js-api
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+6 │ @import '@gitlab/at.js/dist/css/jquery.atwho';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/_application_base.scss 6:9  @import
+    ../app/assets/stylesheets/application.scss 1:9        root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+7 │ @import 'dropzone/dist/basic';
+  │         ^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/_application_base.scss 7:9  @import
+    ../app/assets/stylesheets/application.scss 1:9        root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+   ╷
+10 │ @import 'root';
+   │         ^^^^^^
+   ╵
+    ../app/assets/stylesheets/_application_base.scss 10:9  @import
+    ../app/assets/stylesheets/application.scss 1:9         root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+   ╷
+12 │ @import 'framework';
+   │         ^^^^^^^^^^^
+   ╵
+    ../app/assets/stylesheets/_application_base.scss 12:9  @import
+    ../app/assets/stylesheets/application.scss 1:9         root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+5 │ @import './common';
+  │         ^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/_white_base.scss 5:9   @import
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+4 │ @import '../framework/variables';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/common.scss 4:9        @import
+    ../app/assets/stylesheets/highlight/_white_base.scss 5:9   @import
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+5 │ @import './conflict_colors';
+  │         ^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/common.scss 5:9        @import
+    ../app/assets/stylesheets/highlight/_white_base.scss 5:9   @import
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+  ╷
+6 │ @import 'page_bundles/mixins_and_variables_and_functions';
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    ../app/assets/stylesheets/highlight/common.scss 6:9        @import
+    ../app/assets/stylesheets/highlight/_white_base.scss 5:9   @import
+    ../app/assets/stylesheets/highlight/themes/white.scss 1:9  root stylesheet
+
+DEPRECATION WARNING [user-authored]: color.red() is deprecated. Suggestion:
+
+color.channel($color, "red", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+   ╷
+80 │   $r: color.red($color);
+   │       ^^^^^^^^^^^^^^^^^
+   ╵
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_functions.scss 80:7      color-yiq()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/mixins/_forms.scss 65:12  form-validation-state()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_forms.scss 264:3         @import
+    ../node_modules/@gitlab/ui/src/scss/bootstrap_no_utils.scss 12:9               @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 3:9                @import
+    ../app/assets/stylesheets/framework.scss 5:9                                   @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                          @import
+    ../app/assets/stylesheets/application.scss 1:9                                 root stylesheet
+
+DEPRECATION WARNING [user-authored]: color.green() is deprecated. Suggestion:
+
+color.channel($color, "green", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+   ╷
+81 │   $g: color.green($color);
+   │       ^^^^^^^^^^^^^^^^^^^
+   ╵
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_functions.scss 81:7      color-yiq()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/mixins/_forms.scss 65:12  form-validation-state()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_forms.scss 264:3         @import
+    ../node_modules/@gitlab/ui/src/scss/bootstrap_no_utils.scss 12:9               @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 3:9                @import
+    ../app/assets/stylesheets/framework.scss 5:9                                   @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                          @import
+    ../app/assets/stylesheets/application.scss 1:9                                 root stylesheet
+
+DEPRECATION WARNING [user-authored]: color.blue() is deprecated. Suggestion:
+
+color.channel($color, "blue", $space: rgb)
+
+More info: https://sass-lang.com/d/color-functions
+
+   ╷
+82 │   $b: color.blue($color);
+   │       ^^^^^^^^^^^^^^^^^^
+   ╵
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_functions.scss 82:7      color-yiq()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/mixins/_forms.scss 65:12  form-validation-state()
+    ../node_modules/@gitlab/ui/src/vendor/bootstrap/scss/_forms.scss 264:3         @import
+    ../node_modules/@gitlab/ui/src/scss/bootstrap_no_utils.scss 12:9               @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 3:9                @import
+    ../app/assets/stylesheets/framework.scss 5:9                                   @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                          @import
+    ../app/assets/stylesheets/application.scss 1:9                                 root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+   ┌──> ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss
+75 │             z-index: 1;
+   │             ^^^^^^^^^^ declaration
+   ╵
+   ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+78 │ ┌       @media (forced-colors: active) {
+79 │ │         outline: 2px solid LinkText if-important($important);
+80 │ │       }
+   │ └─── nested rule
+   ╵
+    ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss 75:11  @import
+    ../node_modules/@gitlab/ui/src/scss/components.scss 46:9                                    @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 21:9                            @import
+    ../app/assets/stylesheets/framework.scss 5:9                                                @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                                       @import
+    ../app/assets/stylesheets/application.scss 1:9                                              root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+   ┌──> ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss
+91 │             z-index: 1;
+   │             ^^^^^^^^^^ declaration
+   ╵
+   ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+78 │ ┌       @media (forced-colors: active) {
+79 │ │         outline: 2px solid LinkText if-important($important);
+80 │ │       }
+   │ └─── nested rule
+   ╵
+    ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss 91:11  @import
+    ../node_modules/@gitlab/ui/src/scss/components.scss 46:9                                    @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 21:9                            @import
+    ../app/assets/stylesheets/framework.scss 5:9                                                @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                                       @import
+    ../app/assets/stylesheets/application.scss 1:9                                              root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+   ┌──> ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss
+99 │             z-index: 1;
+   │             ^^^^^^^^^^ declaration
+   ╵
+   ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+78 │ ┌       @media (forced-colors: active) {
+79 │ │         outline: 2px solid LinkText if-important($important);
+80 │ │       }
+   │ └─── nested rule
+   ╵
+    ../node_modules/@gitlab/ui/src/components/base/form/form_combobox/form_combobox.scss 99:11  @import
+    ../node_modules/@gitlab/ui/src/scss/components.scss 46:9                                    @import
+    ../node_modules/@gitlab/ui/src/scss/gitlab_ui_no_utils.scss 21:9                            @import
+    ../app/assets/stylesheets/framework.scss 5:9                                                @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                                       @import
+    ../app/assets/stylesheets/application.scss 1:9                                              root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+    ┌──> ../node_modules/@gitlab/duo-ui/src/components/chat/duo_chat.scss
+23  │       transition: background-color $gl-transition-duration-medium $gl-easing-out-cubic;
+    │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ declaration
+    ╵
+    ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+247 │ ┌   @media (prefers-reduced-motion) {
+248 │ │     transition-duration: 0.01ms !important;
+249 │ │     transition-delay: 0ms !important;
+250 │ │   }
+    │ └─── nested rule
+    ╵
+    ../node_modules/@gitlab/duo-ui/src/components/chat/duo_chat.scss 23:5  @import
+    ../node_modules/@gitlab/duo-ui/src/scss/components.scss 4:9            @import
+    ../app/assets/stylesheets/framework.scss 6:9                           @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                  @import
+    ../app/assets/stylesheets/application.scss 1:9                         root stylesheet
+
+DEPRECATION WARNING [user-authored]: $lightness: Passing a number without unit % (-10) is deprecated.
+
+To preserve current behavior: $lightness * 1%
+
+More info: https://sass-lang.com/d/function-units
+
+    ╷
+137 │     background-color: color.adjust($color, $lightness: -10);
+    │                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ╵
+    ../app/assets/stylesheets/highlight/common.scss 137:23      line-hover-bg()
+    ../app/assets/stylesheets/highlight/_white_base.scss 121:5  white-base()
+    ../app/assets/stylesheets/highlight/themes/white.scss 5:3   root stylesheet
+
+DEPRECATION WARNING [user-authored]: Sass's behavior for declarations that appear after nested
+rules will be changing to match the behavior specified by CSS in an upcoming
+version. To keep the existing behavior, move the declaration above the nested
+rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+More info: https://sass-lang.com/d/mixed-decls
+
+    ┌──> ../node_modules/@gitlab/duo-ui/src/components/chat/components/duo_chat_loader/duo_chat_loader.scss
+6   │       transition: width 200ms $gl-easing-out-cubic;
+    │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ declaration
+    ╵
+    ┌──> ../node_modules/@gitlab/ui/src/scss/mixins.scss
+247 │ ┌   @media (prefers-reduced-motion) {
+248 │ │     transition-duration: 0.01ms !important;
+249 │ │     transition-delay: 0ms !important;
+250 │ │   }
+    │ └─── nested rule
+    ╵
+    ../node_modules/@gitlab/duo-ui/src/components/chat/components/duo_chat_loader/duo_chat_loader.scss 6:5  @import
+    ../node_modules/@gitlab/duo-ui/src/scss/components.scss 5:9                                             @import
+    ../app/assets/stylesheets/framework.scss 6:9                                                            @import
+    ../app/assets/stylesheets/_application_base.scss 12:9                                                   @import
+    ../app/assets/stylesheets/application.scss 1:9                                                          root stylesheet
+
+WARNING: 47 repetitive deprecation warnings omitted.
+
+WARNING: 336 repetitive deprecation warnings omitted.
+
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (1:59292) from "autoprefixer" plugin: end value has mixed support, consider using flex-end instead
+WARN
+WARN Code:
+WARN   align-items:end
+WARN
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (1:60493) from "autoprefixer" plugin: start value has mixed support, consider using flex-start instead
+WARN
+WARN Code:
+WARN   align-items:start
+WARN
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (1:61358) from "autoprefixer" plugin: start value has mixed support, consider using flex-start instead
+WARN
+WARN Code:
+WARN   align-items:start
+WARN
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (1:72214) from "autoprefixer" plugin: end value has mixed support, consider using flex-end instead
+WARN
+WARN Code:
+WARN   align-items:end
+WARN
+WARN Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+WARN (4:557197) from "autoprefixer" plugin: end value has mixed support, consider using flex-end instead
+WARN
+WARN Code:
+WARN   justify-content:end
+WARN
+WARN asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+WARN This can impact web performance.
+WARN Assets:
+WARN   json.fd016677.worker.js (380 KiB)
+WARN   css.ae5b8118.worker.js (1020 KiB)
+WARN   html.9d29f0bb.worker.js (688 KiB)
+WARN   yaml.fe43b05f.worker.js (1.24 MiB)
+WARN   ts.ec6c455b.worker.js (6.42 MiB)
+WARN   static/media/bloom-grand-ambient.16fbfcee.png (315 KiB)
+WARN   static/media/icons.f4e9d352.svg (244 KiB)
+WARN   main.2e8b774b.iframe.bundle.js (3.46 MiB)
+WARN   fountain_quick_action_menu-stories.6b548a59.iframe.bundle.js (1.46 MiB)
+WARN   617.9fb55b7f.iframe.bundle.js (294 KiB)
+WARN   683.cb5efe6a.iframe.bundle.js (827 KiB)
+WARN   71.56641d2f.iframe.bundle.js (583 KiB)
+WARN   999.7d92e4d3.iframe.bundle.js (598 KiB)
+WARN   997.8d650047.iframe.bundle.js (859 KiB)
+WARN entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+WARN Entrypoints:
+WARN   main (4.05 MiB)
+WARN       runtime~main.3f98e6bc.iframe.bundle.js
+WARN       999.7d92e4d3.iframe.bundle.js
+WARN       main.2e8b774b.iframe.bundle.js
+WARN
+info => Preview built (1.08 min)
+info => Output directory: /home/eddolo/.cache/fountainjs-gitlab-product/quick-action-storybook

@@ -1,0 +1,21 @@
+{
+  "status": "failed",
+  "pages": [
+    {
+      "state": "suggestions",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "state": "literal",
+      "width": 1280,
+      "violations": []
+    },
+    {
+      "state": "unavailable",
+      "width": 1280,
+      "violations": []
+    }
+  ],
+  "error": "Error: Controls must remain inside the visible host, including error states\n\nexpect(received).toBeGreaterThanOrEqual(expected)\n\nExpected: >= 16\nReceived:    -39"
+}
