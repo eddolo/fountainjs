@@ -2,7 +2,23 @@
 
 Updated 2026-11-14.
 
-The next autocomplete checkpoint repairs shared suggestion matching across
+The offscreen-caret finding below now has a native-range visibility regression
+and a DOM-view repair. Focused local edits reveal the caret through inner scroll
+containers before adjusting the window, using the caret range rather than a
+whole long paragraph. Host scroll padding and the visual viewport are respected;
+remote-tagged updates, active composition, ranged selections and focus in other
+controls do not trigger automatic reveal. Eighteen recorded desktop-engine
+checks pass, including real public-demo typing/history and controlled nested
+vertical/horizontal embeddings. The embedding probes distinguish remote-tagged
+transactions from actual network collaboration acceptance. This closes the
+recorded local caret finding, not full mobile/IME or GitLab acceptance.
+All 6,078 unit cases, framework types, unchanged API declarations, headless
+boundary and package checks pass. Twelve further browser executions recheck
+the embedding guards on both axes plus 100,000-block virtualization and injected
+page-gap selection/composition; six repeat the embedding cases above.
+[Caret evidence and scope](../artifacts/caret-visibility-integration-20261114.json).
+
+The preceding autocomplete foundation repaired shared suggestion matching across
 adjacent differently formatted text leaves. Inline atom insertion now maps the
 exact replaced span, preserving outside anchors and rebased undo; slash commands
 remove the full formatted query. The optional `InlineAtomRange.endPath` stays
@@ -10,9 +26,10 @@ within one inline parent. Three recorded native-input journeys pass in Chromium,
 Firefox and WebKit. Real GitLab autocomplete records are captured, including
 missing IDs, differing global/local issue IDs and a genuinely unavailable
 endpoint. They are evidence for the upcoming host adapter, not a completed
-reference/argument UI. Recording review also retains a separate usability finding:
+reference/argument UI. Its recording review retained a separate usability finding:
 after toolbar scrolling, the public demo can resume editing with its caret below
-the visible viewport. The passing semantic journey does not close that finding.
+the visible viewport. The caret follow-up above closes that finding; the earlier
+passing semantic journey alone did not.
 [Scoped foundation evidence](../artifacts/suggestion-ranges-integration-20261114.json).
 
 The GitLab integration now adds command-name suggestions from the authenticated

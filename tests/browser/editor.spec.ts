@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { expect, test, type Locator } from '@playwright/test';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { wordBodyWithFields, wordBodyWithNestedField } from '../fixtures/docx-body-fields';
-import { suggestionScrollJourney, suggestionTabJourney, formattedSuggestionJourney } from './suggestion-navigation-journey';
+import { suggestionScrollJourney, suggestionTabJourney, formattedSuggestionJourney, nestedCaretJourney } from './suggestion-navigation-journey';
 import { runSiteFontJourney } from './site-font-journey';
 import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
 import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
@@ -5723,6 +5723,10 @@ test('lets Tab leave the editor when public emoji suggestions close', async ({ p
 
 test('accepts formatted mention and slash queries with native selection and undo', async ({ page }, info) => {
   await formattedSuggestionJourney(page, info);
+});
+
+for (const horizontal of [false, true]) test(`reveals the typing caret inside nested scrollers without stealing host focus: ${horizontal ? 'horizontal' : 'wrapped'}`, async ({ page }, info) => {
+  await nestedCaretJourney(page, info, horizontal);
 });
 
 test('leaves IME candidate keys alone while the public slash menu is open', async ({ page }, info) => {

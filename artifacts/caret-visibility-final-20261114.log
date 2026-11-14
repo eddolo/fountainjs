@@ -1,0 +1,285 @@
+
+[WebServer] (node:20652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+
+
+[WebServer] (node:332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] [PLUGIN_TIMINGS] Your build spent 90% of 8.8s inside plugin hooks (8.0s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (87%, 7.7s, 189 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer]
+
+[WebServer] (node:15848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+
+[WebServer] (node:14908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:20044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+
+[WebServer] (node:17972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:12408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:26272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:19472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+[WebServer]   - import "./tools/site-build-info" without a file extension (vite.config.ts:6:37). Add the file extension
+[WebServer] Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+Running 18 tests using 1 worker
+
+(node:5800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/18] [chromium] › tests\browser\editor.spec.ts:5716:1 › keeps the active option visible while wrapping through public slash suggestions
+[2/18] [chromium] › tests\browser\editor.spec.ts:5720:1 › lets Tab leave the editor when public emoji suggestions close
+[3/18] [chromium] › tests\browser\editor.spec.ts:5724:1 › accepts formatted mention and slash queries with native selection and undo
+[4/18] [chromium] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+  1) [chromium] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('textbox', { name: 'Nested caret editor', exact: true })
+        - locator resolved to <div tabindex="0" role="textbox" spellcheck="true" aria-multiline="true" contenteditable="true" class="fountain-editor" aria-label="Nested caret editor">…</div>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div tabindex="0" role="textbox" spellcheck="true" aria-multiline="true" contenteditable="true" class="fountain-editor" aria-label="Collaborative editor left">…</div> from <main>…</main> subtree intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div>Content before the embedded editor</div> intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div>Content after the embedded editor</div> intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <section id="caret-reveal-fixture">…</section> intercepts pointer events
+      28 × retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div>Content before the embedded editor</div> intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div>Content after the embedded editor</div> intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <section id="caret-reveal-fixture">…</section> intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <section id="caret-reveal-fixture">…</section> intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+       at suggestion-navigation-journey.ts:137
+
+      135 |   }, horizontal);
+      136 |   const editor = page.getByRole('textbox', { name: 'Nested caret editor', exact: true });
+    > 137 |   await editor.click(); await page.keyboard.press('Control+End'); await page.keyboard.type(' END');
+          |                ^
+      138 |   await expectVisibleCaret(editor);
+      139 |   await page.getByRole('button', { name: 'Review beginning', exact: true }).click();
+      140 |   const readScroll = () => page.evaluate(() => (window as unknown as { caretRevealAudit: { scroll: () => object } }).caretRevealAudit.scroll());
+        at nestedCaretJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\suggestion-navigation-journey.ts:137:16)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:5729:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:20328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[5/18] [chromium] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: horizontal
+[6/18] [chromium] › tests\browser\editor.spec.ts:5732:1 › leaves IME candidate keys alone while the public slash menu is open
+(node:23680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/18] [firefox] › tests\browser\editor.spec.ts:5716:1 › keeps the active option visible while wrapping through public slash suggestions
+[8/18] [firefox] › tests\browser\editor.spec.ts:5720:1 › lets Tab leave the editor when public emoji suggestions close
+[9/18] [firefox] › tests\browser\editor.spec.ts:5724:1 › accepts formatted mention and slash queries with native selection and undo
+[10/18] [firefox] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+  2) [firefox] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('textbox', { name: 'Nested caret editor', exact: true })
+        - locator resolved to <div tabindex="0" role="textbox" spellcheck="true" aria-multiline="true" contenteditable="true" class="fountain-editor" aria-label="Nested caret editor">…</div>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div>Content after the embedded editor</div> intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div>Content before the embedded editor</div> intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div data-fountain-drop-cursor-static="" aria-label="Inner document scroller" data-fountain-drop-cursor-enabled="">…</div> intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <section id="caret-reveal-fixture">…</section> intercepts pointer events
+      27 × retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div>Content before the embedded editor</div> intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div data-fountain-drop-cursor-static="" aria-label="Inner document scroller" data-fountain-drop-cursor-enabled="">…</div> intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <section id="caret-reveal-fixture">…</section> intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <section id="caret-reveal-fixture">…</section> intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div>Content before the embedded editor</div> intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+       at suggestion-navigation-journey.ts:137
+
+      135 |   }, horizontal);
+      136 |   const editor = page.getByRole('textbox', { name: 'Nested caret editor', exact: true });
+    > 137 |   await editor.click(); await page.keyboard.press('Control+End'); await page.keyboard.type(' END');
+          |                ^
+      138 |   await expectVisibleCaret(editor);
+      139 |   await page.getByRole('button', { name: 'Review beginning', exact: true }).click();
+      140 |   const readScroll = () => page.evaluate(() => (window as unknown as { caretRevealAudit: { scroll: () => object } }).caretRevealAudit.scroll());
+        at nestedCaretJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\suggestion-navigation-journey.ts:137:16)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:5729:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\caret-visibility-final-20261114\editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+
+(node:20044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/18] [firefox] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: horizontal
+[12/18] [firefox] › tests\browser\editor.spec.ts:5732:1 › leaves IME candidate keys alone while the public slash menu is open
+(node:20760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[13/18] [webkit] › tests\browser\editor.spec.ts:5716:1 › keeps the active option visible while wrapping through public slash suggestions
+[14/18] [webkit] › tests\browser\editor.spec.ts:5720:1 › lets Tab leave the editor when public emoji suggestions close
+[15/18] [webkit] › tests\browser\editor.spec.ts:5724:1 › accepts formatted mention and slash queries with native selection and undo

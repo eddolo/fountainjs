@@ -1840,3 +1840,7 @@ Object.assign(globalThis, { mountHTMLAnchorAudit: async () => {
   const { mountHTMLAnchorFixture } = await import('../../../tests/browser/fixtures/html-anchors');
   return mountHTMLAnchorFixture();
 } });
+Object.assign(globalThis, { mountCaretRevealAudit: async (horizontal: boolean) => {
+  const { mountCaretRevealFixture } = await import('../../../tests/browser/fixtures/caret-reveal');
+  return mountCaretRevealFixture(horizontal);
+} });

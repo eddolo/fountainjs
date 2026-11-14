@@ -1,5 +1,29 @@
 # Release and API stability policy
 
+## Visible caret after local DOM edits — 2026-11-14
+
+The offscreen-caret issue retained by the previous checkpoint now has a failing
+native-geometry regression and a DOM-view repair. A focused local document edit
+with a collapsed landing reveals the caret through nested scrollers and the
+visual viewport. It measures the caret itself, so a very long paragraph does not
+get centered away from its editing point. Host scroll padding is respected.
+Automatic reveal excludes remote-tagged updates, active composition, ranged
+selections and focus in external controls. The existing explicit reveal method
+retains its atomic-node behavior. The document engine and public signatures do
+not change.
+
+The measured CommonJS total is 1,461,248 bytes (+962). Its aggregate allowance
+increases by 768 bytes to that measured total; all individual entries, ESM, CSS,
+performance and retention ceilings stay unchanged. The preceding failed size
+measurement is retained. Eighteen targeted desktop-engine checks pass, including
+controlled host embeddings; these do not certify physical mobile keyboards,
+actual network collaboration or the complete GitLab product. No publication or
+parity promotion follows from this checkpoint.
+All 6,078 unit cases, framework types, unchanged API declarations, headless and
+package checks pass. Twelve additional browser executions recheck the embedding
+guards and existing 100,000-block/page-gap fixtures; six repeat embedding cases.
+[Evidence and remaining scope](../artifacts/caret-visibility-integration-20261114.json).
+
 ## Formatted suggestion ranges — 2026-11-14
 
 The optional `InlineAtomRange.endPath` supports contiguous text leaves in the same

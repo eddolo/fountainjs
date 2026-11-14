@@ -1,0 +1,80 @@
+
+[WebServer] (node:20364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:17508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] [PLUGIN_TIMINGS] Your build spent 91% of 8.9s inside plugin hooks (8.1s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 7.9s, 189 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer]
+
+[WebServer] (node:10660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+
+
+[WebServer] (node:14344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:20080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+
+[WebServer] (node:23316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:22716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:14488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+[WebServer]   - import "./tools/site-build-info" without a file extension (vite.config.ts:6:37). Add the file extension
+[WebServer] Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+Running 18 tests using 1 worker
+
+(node:13688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/18] [chromium] › tests\browser\editor.spec.ts:5716:1 › keeps the active option visible while wrapping through public slash suggestions
+[2/18] [chromium] › tests\browser\editor.spec.ts:5720:1 › lets Tab leave the editor when public emoji suggestions close
+[3/18] [chromium] › tests\browser\editor.spec.ts:5724:1 › accepts formatted mention and slash queries with native selection and undo
+[4/18] [chromium] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+[5/18] [chromium] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: horizontal
+[6/18] [chromium] › tests\browser\editor.spec.ts:5732:1 › leaves IME candidate keys alone while the public slash menu is open
+(node:24920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/18] [firefox] › tests\browser\editor.spec.ts:5716:1 › keeps the active option visible while wrapping through public slash suggestions
+[8/18] [firefox] › tests\browser\editor.spec.ts:5720:1 › lets Tab leave the editor when public emoji suggestions close
+[9/18] [firefox] › tests\browser\editor.spec.ts:5724:1 › accepts formatted mention and slash queries with native selection and undo
+[10/18] [firefox] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+[11/18] [firefox] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: horizontal
+[12/18] [firefox] › tests\browser\editor.spec.ts:5732:1 › leaves IME candidate keys alone while the public slash menu is open
+
+
+(node:7240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[13/18] [webkit] › tests\browser\editor.spec.ts:5716:1 › keeps the active option visible while wrapping through public slash suggestions
+[14/18] [webkit] › tests\browser\editor.spec.ts:5720:1 › lets Tab leave the editor when public emoji suggestions close
+[15/18] [webkit] › tests\browser\editor.spec.ts:5724:1 › accepts formatted mention and slash queries with native selection and undo
+[16/18] [webkit] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+[17/18] [webkit] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: horizontal
+[18/18] [webkit] › tests\browser\editor.spec.ts:5732:1 › leaves IME candidate keys alone while the public slash menu is open
+  18 passed (1.9m)

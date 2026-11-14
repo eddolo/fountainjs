@@ -2,10 +2,21 @@
 
 ## Current programme status — 2026-11-14
 
-Shared suggestion matching now spans adjacent formatted text leaves. Mention
+The caret visibility finding from suggestion recording review is repaired.
+The stronger public-demo journey checks native caret geometry after toolbar
+edits, acceptance and history. Eighteen desktop-engine checks pass, including
+nested scrollers, long lines and host-focus/background-update probes. The latter
+use controlled embedding fixtures, not a new real-service collaboration matrix.
+Full mobile/IME and GitLab acceptance remain separate. No parity row is promoted.
+The 6,078-case unit set, types/API, headless and package checks pass. A further
+twelve browser executions cover both-axis embedding guards and the existing
+100,000-block/page-gap fixtures, including six repeated embedding cases.
+[Caret repair evidence](../artifacts/caret-visibility-integration-20261114.json).
+
+The preceding foundation made suggestion matching span formatted text leaves. Mention
 insertion uses precise replacement maps; slash acceptance removes the whole
-formatted query. Three recorded browser journeys pass, with a separate offscreen
-caret finding retained from visual review. Authenticated GitLab autocomplete
+formatted query. Three recorded browser journeys passed, with the offscreen
+caret finding subsequently resolved above. Authenticated GitLab autocomplete
 fixtures establish actual provider shapes; argument/reference UI integration
 remains open. No parity row is promoted.
 [Foundation evidence and limits](../artifacts/suggestion-ranges-integration-20261114.json).

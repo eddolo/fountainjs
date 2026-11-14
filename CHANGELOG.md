@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Keep the native typing caret visible after local edits in the focused DOM
+  view, including after scrolling to toolbar controls. Reveal the caret range
+  through nested vertical/horizontal scrollers rather than centering a whole
+  long paragraph. Respect host scroll padding and the visual viewport; remote
+  updates, active composition and focus in external controls do not trigger
+  this automatic reveal.
+
 - Match mention, emoji and slash suggestions across contiguous formatted text
   leaves. `InlineAtomRange.endPath` optionally identifies the final text leaf in
   the same inline parent; existing single-leaf ranges and call signatures remain

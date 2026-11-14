@@ -732,7 +732,11 @@ const limits = Object.freeze({
   // measure 1,460,286 bytes. Round capacity to the next quarter KiB (+1.75
   // KiB); keep the preceding failed measurement and all per-entry, ESM,
   // CSS, performance and retention limits unchanged.
-  'all CommonJS runtime code': 1426.25 * kibibyte,
+  // Focused local-edit caret reveal respects inner scrollers, exact range
+  // geometry and host scroll padding. Measured total: 1,461,248 bytes (+962).
+  // Add 768 bytes of aggregate capacity; retain the failed measurement.
+  // Every per-entry, ESM, CSS, performance and retention limit stays fixed.
+  'all CommonJS runtime code': 1427 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

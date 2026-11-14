@@ -297,8 +297,8 @@ export class EditorView {
       }
     }
     this.selections.mapTransactionSelection(transaction);
-    const revealVirtualCaret = this.virtualized && transaction.docChanged
-      && state.doc.childCount < transaction.originalDoc.childCount
+    const revealLocalCaret = transaction.docChanged
+      && (transaction.selectionSet || this.virtualized && state.doc.childCount < transaction.originalDoc.childCount)
       && transaction.getMeta('fountain$collaborationRemote') !== true;
     const ownsDOMSelection = this.selections.consumeDOMSyncRequest()
       || this.selections.ownsDOMSelection()
@@ -356,8 +356,8 @@ export class EditorView {
           && focused !== this.dom.ownerDocument.documentElement && !this.dom.contains(focused);
         if (movedToControl) this.selections.requestModelSync(true);
         this.selections.sync(state.selection, ownsDOMSelection && !movedToControl);
-        if (revealVirtualCaret && ownsDOMSelection && state.selection.isCollapsed
-          && this.dom.ownerDocument.activeElement === this.dom) this.revealCaret();
+        if (revealLocalCaret && ownsDOMSelection && state.selection.isCollapsed && !this.input.composing
+          && this.editor.editable && this.dom.ownerDocument.activeElement === this.dom) this.revealCaret();
       }
     });
   };
@@ -374,11 +374,34 @@ export class EditorView {
     const element = native.focusNode.nodeType === 1 ? native.focusNode as HTMLElement : native.focusNode.parentElement;
     if (!element) return;
     const range = native.getRangeAt(0);
-    const caret = typeof range.getBoundingClientRect === 'function' ? range.getBoundingClientRect() : undefined;
-    const bounds = caret?.height ? caret : element.getBoundingClientRect();
-    if (bounds.top < 0 || bounds.bottom > ownerWindow.innerHeight) {
-      element.scrollIntoView?.({ block: 'center', inline: 'nearest' });
+    const measure = () => {
+      const caret = typeof range.getBoundingClientRect === 'function' ? range.getBoundingClientRect() : undefined;
+      return caret?.height ? caret : element.getBoundingClientRect();
+    };
+    const inset = (value: string, size: number) => (Number.parseFloat(value) || 0) * (value.endsWith('%') ? size / 100 : 1);
+    const distance = (start: number, end: number, low: number, high: number) => start < low ? start - low : end > high ? end - high : 0;
+    // Move the caret, rather than centering its entire (possibly very long)
+    // text block. Inner scrollers settle before measuring outer viewports.
+    for (let parent: HTMLElement | null = element; parent && parent !== this.dom.ownerDocument.documentElement; parent = parent.parentElement) {
+      const style = ownerWindow.getComputedStyle(parent);
+      const vertical = /^(auto|scroll|hidden|overlay)$/.test(style.overflowY) && parent.scrollHeight > parent.clientHeight;
+      const horizontal = /^(auto|scroll|hidden|overlay)$/.test(style.overflowX) && parent.scrollWidth > parent.clientWidth;
+      if (!vertical && !horizontal) continue;
+      const rect = parent.getBoundingClientRect(), caret = measure();
+      const top = rect.top + parent.clientTop, left = rect.left + parent.clientLeft;
+      const y = vertical
+        ? distance(caret.top, caret.bottom, top + inset(style.scrollPaddingTop, parent.clientHeight), top + parent.clientHeight - inset(style.scrollPaddingBottom, parent.clientHeight)) : 0;
+      const x = horizontal
+        ? distance(caret.left, caret.right, left + inset(style.scrollPaddingLeft, parent.clientWidth), left + parent.clientWidth - inset(style.scrollPaddingRight, parent.clientWidth)) : 0;
+      if (x || y) parent.scrollBy?.({ top: y, left: x, behavior: 'instant' });
     }
+    const viewport = ownerWindow.visualViewport, style = ownerWindow.getComputedStyle(this.dom.ownerDocument.documentElement);
+    const top = viewport?.offsetTop ?? 0, left = viewport?.offsetLeft ?? 0;
+    const height = viewport?.height ?? ownerWindow.innerHeight, width = viewport?.width ?? ownerWindow.innerWidth;
+    const caret = measure();
+    const y = distance(caret.top, caret.bottom, top + inset(style.scrollPaddingTop, height), top + height - inset(style.scrollPaddingBottom, height));
+    const x = distance(caret.left, caret.right, left + inset(style.scrollPaddingLeft, width), left + width - inset(style.scrollPaddingRight, width));
+    if (x || y) ownerWindow.scrollBy({ top: y, left: x, behavior: 'instant' });
   }
 
   private render(

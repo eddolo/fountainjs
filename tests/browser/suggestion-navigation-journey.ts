@@ -18,6 +18,23 @@ async function expectActiveOption(editor: Locator, option: Locator) {
   await expect(editor).toBeFocused();
 }
 
+async function expectVisibleCaret(editor: Locator) {
+  await expect.poll(() => editor.evaluate(root => {
+    const owner = root.ownerDocument, native = owner.getSelection();
+    if (!native?.isCollapsed || !native.rangeCount || !native.focusNode || !root.contains(native.focusNode)) return false;
+    const caret = native.getRangeAt(0).getBoundingClientRect();
+    let top = 0, bottom = owner.defaultView!.innerHeight;
+    let left = 0, right = owner.defaultView!.innerWidth;
+    for (let element: Element | null = root; element; element = element.parentElement) {
+      const style = owner.defaultView!.getComputedStyle(element), rect = element.getBoundingClientRect();
+      if (/auto|scroll|hidden|clip/.test(style.overflowY)) { top = Math.max(top, rect.top); bottom = Math.min(bottom, rect.bottom); }
+      if (/auto|scroll|hidden|clip/.test(style.overflowX)) { left = Math.max(left, rect.left); right = Math.min(right, rect.right); }
+    }
+    return owner.activeElement === root && caret.height > 0 && caret.top >= top - 1 && caret.bottom <= bottom + 1
+      && caret.left >= left - 1 && caret.right <= right + 1;
+  }), { message: 'The native typing caret must be visible in the viewport and its scrolling ancestors' }).toBe(true);
+}
+
 export async function suggestionScrollJourney(page: Page, info: TestInfo) {
   await page.setViewportSize({ width: 900, height: 650 });
   const editor = await openSuggestions(page, '/');
@@ -80,17 +97,20 @@ export async function formattedSuggestionJourney(page: Page, info: TestInfo) {
   await expect(editor).toBeFocused();
   expect((await editor.locator('[data-fountain-suggestion-query="@"]')
     .allTextContents()).join('')).toBe('@ada');
-  await page.screenshot({ path: info.outputPath('formatted-mention-query.png'), fullPage: true });
+  await page.screenshot({ path: info.outputPath('formatted-mention-query.png') });
+  await expectVisibleCaret(editor);
   await page.keyboard.press('Enter');
   const mention = editor.locator('[data-fountain-mention][data-id="ada"]');
   await expect(mention).toHaveText('@Ada Lovelace'); await expect(mentions).toHaveCount(0);
   await page.keyboard.type('continues after the reference');
   await expect(mention.locator('..')).toContainText('@Ada Lovelace continues after the reference');
+  await expectVisibleCaret(editor);
   await undo.click(); await undo.click();
   await expect(mention).toHaveCount(0); await expect(paragraph).toHaveText('@ada');
   await expect(paragraph.locator('strong')).toHaveText('@a');
   await redo.click(); await expect(mention).toHaveText('@Ada Lovelace');
-  await page.screenshot({ path: info.outputPath('formatted-mention-accepted.png'), fullPage: true });
+  await expectVisibleCaret(editor);
+  await page.screenshot({ path: info.outputPath('formatted-mention-accepted.png') });
 
   await page.keyboard.press('End'); await page.keyboard.press('Enter');
   await bold.click(); await page.keyboard.type('/head'); await bold.click(); await page.keyboard.type('ing');
@@ -101,5 +121,38 @@ export async function formattedSuggestionJourney(page: Page, info: TestInfo) {
   await undo.click(); await expect(editor.locator('[data-fountain-node="paragraph"]').filter({ hasText: '/heading' }).last()).toHaveText('/heading');
   await redo.click(); await page.keyboard.type('A heading created from a formatted query');
   await expect(editor.getByRole('heading', { level: 1, name: 'A heading created from a formatted query', exact: true })).toBeVisible();
-  await page.screenshot({ path: info.outputPath('formatted-slash-accepted.png'), fullPage: true });
+  await expectVisibleCaret(editor);
+  await page.screenshot({ path: info.outputPath('formatted-slash-accepted.png') });
+}
+
+export async function nestedCaretJourney(page: Page, info: TestInfo, horizontal: boolean) {
+  await page.goto('/browser-tests.html');
+  await page.evaluate(async horizontal => {
+    const host = window as typeof window & {
+      mountCaretRevealAudit: (horizontal: boolean) => Promise<unknown>; caretRevealAudit: unknown;
+    };
+    host.caretRevealAudit = await host.mountCaretRevealAudit(horizontal);
+  }, horizontal);
+  const editor = page.getByRole('textbox', { name: 'Nested caret editor', exact: true });
+  await page.getByRole('button', { name: 'Resume editing', exact: true }).click();
+  await page.keyboard.press('Control+End'); await page.keyboard.type(' END');
+  await expectVisibleCaret(editor);
+  await page.getByRole('button', { name: 'Review beginning', exact: true }).click();
+  const readScroll = () => page.evaluate(() => (window as unknown as { caretRevealAudit: { scroll: () => object } }).caretRevealAudit.scroll());
+  const settleFrames = () => page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+  const reviewed = await readScroll();
+  await page.evaluate(() => (window as unknown as { caretRevealAudit: { update: (remote: boolean) => void } }).caretRevealAudit.update(true));
+  await settleFrames();
+  expect(await readScroll()).toEqual(reviewed);
+  const field = page.getByRole('textbox', { name: 'External host field', exact: true });
+  await field.fill('Host owns focus');
+  const outside = await readScroll();
+  await page.evaluate(() => (window as unknown as { caretRevealAudit: { update: (remote: boolean) => void } }).caretRevealAudit.update(false));
+  await settleFrames();
+  await expect(field).toBeFocused(); expect(await readScroll()).toEqual(outside);
+  await page.getByRole('button', { name: 'Resume editing', exact: true }).click();
+  await page.keyboard.type(' visible again');
+  await expect(editor).toContainText('END visible again'); await expectVisibleCaret(editor);
+  await page.screenshot({ path: info.outputPath(horizontal ? 'nested-horizontal-caret.png' : 'nested-wrapped-caret.png') });
+  await page.evaluate(() => (window as unknown as { caretRevealAudit: { destroy: () => void } }).caretRevealAudit.destroy());
 }

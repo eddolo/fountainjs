@@ -1,0 +1,74 @@
+
+[WebServer] (node:13260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+
+[WebServer] (node:23472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] [PLUGIN_TIMINGS] Your build spent 89% of 8.9s inside plugin hooks (7.9s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (84%, 7.5s, 189 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer]
+
+[WebServer] (node:11120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+
+
+[WebServer] (node:2492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:15012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+
+[WebServer] (node:25712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:1436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+[WebServer]   - import "./tools/site-build-info" without a file extension (vite.config.ts:6:37). Add the file extension
+[WebServer] Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+Running 12 tests using 1 worker
+
+
+(node:17216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/12] [chromium] › tests\browser\editor.spec.ts:2149:1 › maps carets, ranges, and composition around injected paragraph page gaps
+[2/12] [chromium] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+[3/12] [chromium] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: horizontal
+[4/12] [chromium] › tests\browser\editor.spec.ts:8017:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy
+(node:2304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/12] [firefox] › tests\browser\editor.spec.ts:2149:1 › maps carets, ranges, and composition around injected paragraph page gaps
+[6/12] [firefox] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+[7/12] [firefox] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: horizontal
+[8/12] [firefox] › tests\browser\editor.spec.ts:8017:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy
+(node:25244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[9/12] [webkit] › tests\browser\editor.spec.ts:2149:1 › maps carets, ranges, and composition around injected paragraph page gaps
+[10/12] [webkit] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: wrapped
+[11/12] [webkit] › tests\browser\editor.spec.ts:5728:41 › reveals the typing caret inside nested scrollers without stealing host focus: horizontal
+[12/12] [webkit] › tests\browser\editor.spec.ts:8017:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy
+  12 passed (1.1m)

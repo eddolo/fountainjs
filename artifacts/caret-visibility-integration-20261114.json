@@ -1,0 +1,296 @@
+{
+  "date": "2026-11-14",
+  "status": "verified-local-caret-visibility-checkpoint",
+  "parentRevision": "3475b848e762e88ca23a29cb41479b1aa8efcf4f",
+  "sources": {
+    "src/view/view.ts": "93703d23d839f8cd5d567e6a17205556ed0b17228a548955bb5e7b584861b4aa",
+    "tests/browser/suggestion-navigation-journey.ts": "648a999269300b5fcf58f19b591ab782063961d060db43c5bddd62b847168511",
+    "tests/browser/fixtures/caret-reveal.ts": "869f056ed5e184c61d261bb45e7da49f76eca52d6faf405a2454bc37bd41fe08"
+  },
+  "scope": "Repair the recorded offscreen caret after local toolbar edits; desktop browser and controlled embedding evidence, not full GitLab or mobile acceptance",
+  "cause": "The view explicitly revealed only a narrow virtualized-deletion case. Model-handled edits restored the caret without revealing it after toolbar scrolling.",
+  "repair": [
+    "Reveal after a local document edit with an explicit collapsed landing in the focused editable view",
+    "Retain the existing virtualized-deletion reveal condition",
+    "Use exact native caret geometry, inner scrollers before outer viewports, CSS scroll padding and visual viewport bounds",
+    "Do not trigger automatic reveal for remote-tagged updates, active composition, ranged selections or external-control focus",
+    "Keep existing explicit atomic-node reveal behavior and public signatures"
+  ],
+  "validation": {
+    "unit": {
+      "passed": 6078,
+      "files": 365
+    },
+    "types": "passed including Svelte and Angular",
+    "apiDeclarations": 450,
+    "apiChanged": false,
+    "headlessModules": 143,
+    "package": "passed",
+    "size": {
+      "commonJSBytes": 1461248,
+      "previousMeasuredBytes": 1460286,
+      "codeIncreaseBytes": 962,
+      "previousAllowanceBytes": 1460480,
+      "allowanceBytes": 1461248,
+      "allowanceIncreaseBytes": 768,
+      "unchanged": [
+        "All individual package entries",
+        "ESM aggregate",
+        "CSS",
+        "Performance",
+        "Retention"
+      ]
+    }
+  },
+  "browser": {
+    "engines": [
+      "Windows Chromium",
+      "Windows Playwright Firefox",
+      "Windows WebKit"
+    ],
+    "primaryExecutions": 18,
+    "finalRegressionExecutions": 12,
+    "primary": "Public formatted mention/slash input, acceptance, history and native caret visibility; suggestion scrolling, Tab and IME candidate-key ownership; wrapped/horizontal controlled embeddings",
+    "finalRegression": "Recheck six embedding cases with both axes of all scroll owners and two settled animation frames; six existing 100,000-block virtualization and injected-page-gap selection/composition cases",
+    "counting": "The final profile repeats six embedding cases; do not describe all 30 executions as 30 different cases",
+    "controlledGuards": "Fixture-triggered remote-tagged transactions and local background edits while an external field owns focus; not real-service collaboration acceptance",
+    "recordings": [
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/video.webm",
+        "bytes": 644359,
+        "durationSeconds": 5.88,
+        "sha256": "222be85d4139e2cbea47263acbdebebe037c53e26d5103cff71e452360b63682"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/video.webm",
+        "bytes": 803970,
+        "durationSeconds": 8.72,
+        "sha256": "fd8d97687ac8050f14bc3b1cabf0b342eecc89864e6ee4a95c627caefc21ddc7"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/video.webm",
+        "bytes": 1093129,
+        "durationSeconds": 12,
+        "sha256": "9f49b52e50a6bec334e2225852c1f2b4131edc4c6c1c92fe1c16da874d59c134"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-keeps-the-active-op-39459-gh-public-slash-suggestions-chromium/video.webm",
+        "bytes": 267951,
+        "durationSeconds": 4.12,
+        "sha256": "5f080ebdd35bad17491f8644365a01dcdb26eac380ae15738b8bd824b9ccf04d"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-keeps-the-active-op-39459-gh-public-slash-suggestions-firefox/video.webm",
+        "bytes": 415674,
+        "durationSeconds": 7.8,
+        "sha256": "6190b2ea3ccd45f0db6e369aa2da04c303cbc801da2eb890e681fc4f9e5fdc3b"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-keeps-the-active-op-39459-gh-public-slash-suggestions-webkit/video.webm",
+        "bytes": 285795,
+        "durationSeconds": 5.16,
+        "sha256": "3ca9f2e86e21db722dc3f56a99d8e6b918f3323759ca2a3d9d8d073fae396bba"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-leaves-IME-candidat-8b7f8-e-public-slash-menu-is-open-chromium/video.webm",
+        "bytes": 225974,
+        "durationSeconds": 3.24,
+        "sha256": "0f5dbf3615c56383b94c37bedf5564915f69f102bd5720cb8e4be9b8b70806d7"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-leaves-IME-candidat-8b7f8-e-public-slash-menu-is-open-firefox/video.webm",
+        "bytes": 380603,
+        "durationSeconds": 6.56,
+        "sha256": "06ca13d550799189c32796011229dee0e3185241016f90c04489fe5d9ddb7685"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-leaves-IME-candidat-8b7f8-e-public-slash-menu-is-open-webkit/video.webm",
+        "bytes": 221907,
+        "durationSeconds": 3.8,
+        "sha256": "4531272325d59b2eedcc9850235a1b523dba7c14c02405a53a3a78bb134781f1"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-lets-Tab-leave-the--56faa-lic-emoji-suggestions-close-chromium/video.webm",
+        "bytes": 215507,
+        "durationSeconds": 3.16,
+        "sha256": "8580b760385307fc1675e2e4da47f5ff8e5ad3fd4c621abdac6c219c9113816e"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-lets-Tab-leave-the--56faa-lic-emoji-suggestions-close-firefox/video.webm",
+        "bytes": 270558,
+        "durationSeconds": 4.96,
+        "sha256": "6d808134036d98063e929239bd26839dd51b5fd65262f32b46761dcc55332c99"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-lets-Tab-leave-the--56faa-lic-emoji-suggestions-close-webkit/video.webm",
+        "bytes": 228911,
+        "durationSeconds": 4.36,
+        "sha256": "6e541ec94cca44f2f9655dff86b3a3520c4d7385f4ec38fa4aa32e88321f1f0a"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--5f4fe-aling-host-focus-horizontal-chromium/video.webm",
+        "bytes": 53801,
+        "durationSeconds": 2.32,
+        "sha256": "9c03868bf8cc8c933f31e676c5a9f7f50271c1e6d6f227fd1895b85826f34fce"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--5f4fe-aling-host-focus-horizontal-firefox/video.webm",
+        "bytes": 100710,
+        "durationSeconds": 4.72,
+        "sha256": "2af0fdd54c8cffe3c80a62014efa9ef57de8adeaa9c1f19a01489eb2ece92086"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--5f4fe-aling-host-focus-horizontal-webkit/video.webm",
+        "bytes": 96874,
+        "durationSeconds": 4.36,
+        "sha256": "e50001d99fd8383717a7f99d71943083ad32916f554dc5babccb53e22adfef5b"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-chromium/video.webm",
+        "bytes": 65457,
+        "durationSeconds": 2.4,
+        "sha256": "b9d483e35afe83be5aaff017eef9b204b717b2af430f0d904fb1f007ec981271"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-firefox/video.webm",
+        "bytes": 138555,
+        "durationSeconds": 5.24,
+        "sha256": "125fdaf91d5912db03aa16e4ee8ddf595a3be4b6103818f684bd17d68988111b"
+      },
+      {
+        "path": "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-webkit/video.webm",
+        "bytes": 104803,
+        "durationSeconds": 4.56,
+        "sha256": "bfbff7324e1ba5dc34ca84fdbcfbe6fc2a86a462c8df380f15c134ccff96114a"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-maps-carets-ranges--d6e0f-njected-paragraph-page-gaps-chromium/video.webm",
+        "bytes": 48427,
+        "durationSeconds": 2.32,
+        "sha256": "3b1e9fc0117a96d6b76aa14d6e84c88fba71e163ce778aa3e3c60e41ce76c373"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-maps-carets-ranges--d6e0f-njected-paragraph-page-gaps-firefox/video.webm",
+        "bytes": 78790,
+        "durationSeconds": 4.48,
+        "sha256": "0acaf3ff0aab5fe548957bbf637638b1885696e4940fa84220248428019f0036"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-maps-carets-ranges--d6e0f-njected-paragraph-page-gaps-webkit/video.webm",
+        "bytes": 60131,
+        "durationSeconds": 2.76,
+        "sha256": "e9b4e4c7df0baae0a46dcb6578237c4ec845abf2b86f0a1816c5753e5302aec8"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-reveals-the-typing--5f4fe-aling-host-focus-horizontal-chromium/video.webm",
+        "bytes": 62738,
+        "durationSeconds": 2.24,
+        "sha256": "dd8ba123e93ee937ac6da4b3017abe63f296f6055852a1ea6a1a5c0a35678d8f"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-reveals-the-typing--5f4fe-aling-host-focus-horizontal-firefox/video.webm",
+        "bytes": 107505,
+        "durationSeconds": 4.76,
+        "sha256": "5f7b37db4267c5d78fd4348cae6b809cded979feaf55cf717b19f62c9812852d"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-reveals-the-typing--5f4fe-aling-host-focus-horizontal-webkit/video.webm",
+        "bytes": 97918,
+        "durationSeconds": 4.16,
+        "sha256": "70576c9968fb72db62d7677ecda85affe40ef1fc317c84b9791382106268c5b7"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-chromium/video.webm",
+        "bytes": 85466,
+        "durationSeconds": 2.72,
+        "sha256": "840235fcd30afd9aee70f5e8bdf3830e6788655f482da0ffb46d7704e619b4de"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-firefox/video.webm",
+        "bytes": 147880,
+        "durationSeconds": 5.8,
+        "sha256": "28653b30d7512010d900dec7dff12669895f7dbf4dc994ef8d2c42ead8509352"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-webkit/video.webm",
+        "bytes": 95253,
+        "durationSeconds": 3.48,
+        "sha256": "77c583fde50e7ef1ce8963131a3b7f50780162e26024bb156157bbaf40190c5c"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-virtualizes-100-000-f195d-tant-selection-IME-and-copy-chromium/video.webm",
+        "bytes": 35165,
+        "durationSeconds": 2.04,
+        "sha256": "8c982280cc24fe69f83b57da818ec3bbba32abc19be8577cf99e0e936127151e"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-virtualizes-100-000-f195d-tant-selection-IME-and-copy-firefox/video.webm",
+        "bytes": 40068,
+        "durationSeconds": 3.44,
+        "sha256": "03e0d858eaea600ca8d50107f3e144210ac7e1552bfab5c2d6f814c399f2f5af"
+      },
+      {
+        "path": "artifacts/caret-visibility-regressions-20261114/editor-virtualizes-100-000-f195d-tant-selection-IME-and-copy-webkit/video.webm",
+        "bytes": 42014,
+        "durationSeconds": 4.28,
+        "sha256": "fb4d4a30130b75def5846128fec82d869498607b8ca1a938e14878b36ded4fff"
+      }
+    ]
+  },
+  "visualReview": {
+    "reviewedScreenshots": [
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/formatted-mention-query.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/formatted-slash-accepted.png",
+      "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-chromium/nested-wrapped-caret.png",
+      "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--5f4fe-aling-host-focus-horizontal-chromium/nested-horizontal-caret.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/formatted-mention-query.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/formatted-slash-accepted.png",
+      "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-firefox/nested-wrapped-caret.png",
+      "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--5f4fe-aling-host-focus-horizontal-firefox/nested-horizontal-caret.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/formatted-mention-query.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/formatted-slash-accepted.png",
+      "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--7ff00-stealing-host-focus-wrapped-webkit/nested-wrapped-caret.png",
+      "artifacts/caret-visibility-verified-20261114/editor-reveals-the-typing--5f4fe-aling-host-focus-horizontal-webkit/nested-horizontal-caret.png"
+    ],
+    "reviewedFrames": [
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/review-40pct.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/review-90pct.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/review-40pct.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-firefox/review-90pct.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/review-40pct.png",
+      "artifacts/caret-visibility-verified-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-webkit/review-90pct.png"
+    ],
+    "method": "Direct review of twelve viewport screenshots and six sampled recording frames (40% and 90% of the three main journeys), not frame-by-frame review",
+    "outcome": "The query and final heading are on screen; the end of the long wrapped paragraph and horizontal line remains inside nested scroll bounds. A toolbar-only moment before the next edit may still leave the old caret outside the viewport; automatic reveal is tied to the edit."
+  },
+  "counterexamples": {
+    "red": "artifacts/caret-visibility-before-20261114.log",
+    "redScreenshot": "artifacts/caret-visibility-before-20261114/editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium/test-failed-1.png",
+    "setupFailure": "artifacts/caret-visibility-final-20261114.log",
+    "setupExplanation": "The wrapped embedding setup clicked the center of a text block taller than its clipping viewport. After confirmed Chromium/Firefox pointer-interception failures, the owned run was stopped. The fixture now uses its real Resume editing control; no assertion was removed or timeout increased.",
+    "failedSize": "artifacts/caret-visibility-budget-before-20261114.log"
+  },
+  "supersedes": "The caret finding retained in artifacts/suggestion-ranges-integration-20261114.json",
+  "remaining": [
+    "Physical mobile keyboard/zoom/IME coverage",
+    "Actual GitLab argument/reference adapter and UI",
+    "Full native GitLab role/context/browser acceptance with the rebuilt runtime",
+    "Remaining GitLab workflows, compiled rollback, hosted CI and both other full products"
+  ],
+  "publication": "None; no npm version or website/parity capability claim promoted",
+  "logs": [
+    "artifacts/caret-visibility-before-20261114.log",
+    "artifacts/caret-visibility-browser-20261114.log",
+    "artifacts/caret-visibility-final-20261114.log",
+    "artifacts/caret-visibility-verified-20261114.log",
+    "artifacts/caret-visibility-regressions-20261114.log",
+    "artifacts/caret-visibility-unit-20261114.log",
+    "artifacts/caret-visibility-types-20261114.log",
+    "artifacts/caret-visibility-api-20261114.log",
+    "artifacts/caret-visibility-headless-20261114.log",
+    "artifacts/caret-visibility-package-20261114.log",
+    "artifacts/caret-visibility-budget-before-20261114.log",
+    "artifacts/caret-visibility-budget-20261114.log"
+  ],
+  "logFormatting": "ANSI escapes, CRLF, trailing whitespace and blank EOF lines normalized; original .raw logs retained locally"
+}

@@ -1,0 +1,102 @@
+[WebServer] (node:13528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+
+[WebServer] (node:12792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 90% of 7.8s inside plugin hooks (7.0s).
+
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 6.8s, 189 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer]
+
+[WebServer] (node:15276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+
+[WebServer] (node:15968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+
+[WebServer] (node:2176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+[WebServer]   - import "./tools/site-build-info" without a file extension (vite.config.ts:6:37). Add the file extension
+[WebServer] Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+Running 1 test using 1 worker
+
+
+(node:21060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] [chromium] › tests\browser\editor.spec.ts:5724:1 › accepts formatted mention and slash queries with native selection and undo
+  1) [chromium] › tests\browser\editor.spec.ts:5724:1 › accepts formatted mention and slash queries with native selection and undo
+
+    Error: The native typing caret must be visible in the viewport and its scrolling ancestors
+
+    The native typing caret must be visible in the viewport and its scrolling ancestors
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at suggestion-navigation-journey.ts:35
+
+      33 |     return owner.activeElement === root && caret.height > 0 && caret.top >= top - 1 && caret.bottom <= bottom + 1
+      34 |       && caret.left >= left - 1 && caret.right <= right + 1;
+    > 35 |   }), { message: 'The native typing caret must be visible in the viewport and its scrolling ancestors' }).toBe(true);
+         |                                                                                                           ^
+      36 | }
+      37 |
+      38 | export async function suggestionScrollJourney(page: Page, info: TestInfo) {
+        at expectVisibleCaret (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\suggestion-navigation-journey.ts:35:107)
+        at formattedSuggestionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\suggestion-navigation-journey.ts:101:9)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:5725:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\caret-visibility-before-20261114\editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\caret-visibility-before-20261114\editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\caret-visibility-before-20261114\editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\caret-visibility-before-20261114\editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\caret-visibility-before-20261114\editor-accepts-formatted-m-3936b-h-native-selection-and-undo-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [chromium] › tests\browser\editor.spec.ts:5724:1 › accepts formatted mention and slash queries with native selection and undo

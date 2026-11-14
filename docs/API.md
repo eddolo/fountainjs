@@ -1895,6 +1895,14 @@ return its own transaction or document for more specialized structures.
 
 `new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, `blockHandles`, the default-on `dropCursor`, `virtualization`, source-aware `paste`, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
 
+Local document edits with an explicit collapsed landing reveal the native caret
+in the focused editable view. The reveal adjusts inner scroll containers before
+the window, uses caret geometry for long text blocks, and respects CSS scroll
+padding and the visual viewport. It does not automatically reveal remote-tagged
+updates, active composition, ranged selections or a view while an external
+control owns focus. `view.scrollSelectionIntoView()` explicitly reveals the
+current caret or selected atomic node without changing the document.
+
 `virtualization: true` uses the window viewport and starts at 250 top-level
 blocks. `EditorViewVirtualizationOptions` configures `scrollContainer`,
 `minimumBlockCount`, `estimatedBlockHeight`, `overscanPx`, and
