@@ -10,6 +10,7 @@ import { getGitLabFrontmatter, gitlabFrontmatterCode, hydrateGitLabFrontmatter, 
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
 import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLabQuickAction, transformGitLabQuickActions } from './quick_actions';
+import { gitLabHasFootnoteDefinitions } from './footnote_source';
 
 export interface GitLabMarkdownIssue { stage: 'import' | 'export'; code: string; message: string; path?: readonly number[] }
 export class GitLabMarkdownConversionError extends Error {
@@ -135,6 +136,8 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   const frontmatter = normalizeGitLabFrontmatter(elements, source);
   const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element) && !diagrams.handled.has(element)));
   const issues: GitLabMarkdownIssue[] = [
+    ...(gitLabHasFootnoteDefinitions(source, maxBytes) ? [{ stage: 'import' as const, code: 'footnote-source',
+      message: 'Footnote definitions need a source-aware adapter, including definitions omitted by the host renderer. Original Markdown is retained.' }] : []),
     ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues, ...frontmatter.issues].map(issue => ({ stage: 'import' as const, ...issue })),
   ];
   for (const element of elements) {

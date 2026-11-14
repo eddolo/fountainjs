@@ -25,6 +25,7 @@ const nativeContextMenus = process.argv.includes('--native-context-menus') || na
 const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
 const nativeAutocomplete = process.argv.includes('--native-autocomplete');
+const nativeFootnoteSource = process.argv.includes('--native-footnote-source');
 const nativeQuickActionControls = process.argv.includes('--native-quick-action-controls') || nativeAutocomplete;
 const nativeQuickActions = process.argv.includes('--native-quick-actions') || nativeQuickActionControls;
 const nativeDiagramAuthoring = process.argv.includes('--native-diagram-authoring');
@@ -38,11 +39,12 @@ const nativeMediaFiles = process.argv.includes('--native-media-files');
 const nativeMedia = process.argv.includes('--native-media') || nativeMediaFiles;
 const debugLinks = nativeLinks && process.argv.includes('--debug-links');
 const nativeAttachments = process.argv.includes('--native-attachments') || nativeCapacity || nativeMedia;
-const nativeComponent = process.argv.includes('--native-component') || nativeAttachments || nativeLinks || nativeCode || nativeFrontmatter || nativeAlerts || nativeReferences || nativeDiagrams || nativeQuickActions;
+const nativeComponent = process.argv.includes('--native-component') || nativeAttachments || nativeLinks || nativeCode || nativeFrontmatter || nativeAlerts || nativeReferences || nativeDiagrams || nativeQuickActions || nativeFootnoteSource;
 const nativeInsertion = process.argv.includes('--native-insertion') || nativeComponent;
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
+  nativeFootnoteSource ? 'artifacts/gitlab-native-footnote-source-20261114/' :
   nativeAutocomplete ? 'artifacts/gitlab-native-autocomplete-20261114/' : nativeQuickActionControls ? 'artifacts/gitlab-native-quick-action-controls-20261114/' : nativeQuickActions ? 'artifacts/gitlab-native-quick-actions-20261114/' : nativeContextUI ? 'artifacts/gitlab-native-context-ui-20261113/' : nativeContextMenus ? 'artifacts/gitlab-native-context-menus-20261113/' : nativeFrontmatter ? 'artifacts/gitlab-native-frontmatter-20261113/' : nativeDiagramReader ? 'artifacts/gitlab-native-diagram-reader-20261113/' : nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
@@ -168,6 +170,7 @@ if (nativeBrowser)
   );
 const browser = await chromium.launch(debugLinks ? { args: ['--remote-debugging-port=9331'] } : {});
 let context;
+const pendingImageDiagnostics = [];
 let restoreUploadLimit;
 let restoreDiagramSettings;
 try {
@@ -196,10 +199,22 @@ try {
   const preparedScriptReads = [];
   const preparedScripts = [];
   const imageResponses = [];
+  report.imageFailureDiagnostics = [];
   page.on('response', (response) => {
     const url = new URL(response.url());
     if (url.origin === baseURL && url.pathname.endsWith('/fountain-baseline-figure.png')) {
       imageResponses.push({ path: url.pathname, status: response.status() });
+      if (response.status() >= 400) pendingImageDiagnostics.push((async () => {
+        const body = await response.text();
+        report.imageFailureDiagnostics.push({ path: url.pathname, status: response.status(),
+          contentType: await response.headerValue('content-type'), server: await response.headerValue('server'),
+          requestId: await response.headerValue('x-request-id'),
+          bodySHA256: createHash('sha256').update(body).digest('hex'),
+          // Persist only allowlisted diagnostic words, never raw error HTML,
+          // request headers or embedded session/CSRF fields.
+          keywords: [...new Set(body.match(/\b(?:forbidden|access denied|permission denied|workhorse|JWT|signature|expired|not found|unauthorized|csrf)\b/giu) ?? [])],
+        });
+      })().catch(() => { report.imageFailureDiagnostics.push({ path: url.pathname, status: response.status(), bodyUnavailable: true }); }));
     }
   });
   report.imageResponses = imageResponses;
@@ -410,13 +425,25 @@ try {
       await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
       await expect(editor.getByText('GitLab Markdown', { exact: true })).toBeVisible();
       const beforeFailure = await editor.innerText();
-      const rejected = 'Unsupported footnote [^source].\n\n[^source]: Keep this exact source.';
+      const rejected = nativeFootnoteSource ? 'Visible paste.\n\n[^source]: Keep this exact unused source.'
+        : 'Unsupported footnote [^source].\n\n[^source]: Keep this exact source.';
+      const rejectedPreview = nativeFootnoteSource ? page.waitForResponse(response => {
+        try { return response.request().method() === 'POST' && response.url().includes('no_header_anchors=') && response.request().postDataJSON()?.text === rejected; }
+        catch { return false; }
+      }) : null;
       await page.evaluate((source) => navigator.clipboard.writeText(source), rejected);
       await toolbar.getByRole('button', { name: 'Paste Markdown', exact: true }).click();
       await page.getByText('Retained paste source', { exact: true }).click();
       const retained = page.getByRole('textbox', { name: 'Failed paste source', exact: true });
       await expect(retained).toHaveValue(rejected);
       expect(await editor.innerText()).toBe(beforeFailure);
+      if (rejectedPreview) {
+        const rendered = await (await rejectedPreview).json();
+        expect(rendered.body).toContain('Visible paste.');
+        expect(rendered.body).not.toContain('Keep this exact unused source.');
+        expect(rendered.body).not.toContain('class="footnotes"');
+        report.nativeFootnoteSource = { pasteRenderingOmitsDefinition: true, failedPasteRetained: true };
+      }
       await retained.scrollIntoViewIfNeeded();
       await page.screenshot({
         path: fileURLToPath(new URL('retained-paste-source.png', output)),
@@ -433,7 +460,8 @@ try {
         'Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo',
       );
       report.checks.push(
-        'An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste',
+        nativeFootnoteSource ? 'Actual HTML omits the unused footnote definition; native paste refuses that incomplete projection, retains exact source and recovers through a supported paste'
+          : 'An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste',
       );
     }
     if (nativeLinks) await auditNativeLinks({ page, context, editor, toolbar, output, report });
@@ -747,7 +775,8 @@ try {
     );
   }
   if (nativeComponent) {
-    const rejectedSource = 'Unsupported footnote [^original].\n\n[^original]: Keep the saved original unchanged.';
+    const rejectedSource = nativeFootnoteSource ? 'Visible saved body.\n\n[^original]: Keep the saved unused footnote unchanged.'
+      : 'Unsupported footnote [^original].\n\n[^original]: Keep the saved original unchanged.';
     const rejectedIssue = await api('POST', `/projects/${project.id}/issues`, {
       data: { title: 'Native failed-load recovery audit', description: rejectedSource },
     });
@@ -758,7 +787,16 @@ try {
       catch { return false; }
     });
     await page.getByTestId('work-item-edit-form-button').click();
-    await (await rejectedRendering).finished();
+    const rejectedResponse = await rejectedRendering;
+    await rejectedResponse.finished();
+    if (nativeFootnoteSource) {
+      const rendered = await rejectedResponse.json();
+      expect(rendered.body).toContain('Visible saved body.');
+      expect(rendered.body).not.toContain('Keep the saved unused footnote unchanged.');
+      expect(rendered.body).not.toContain('class="footnotes"');
+      report.nativeFootnoteSource.savedRenderingOmitsDefinition = true;
+      report.nativeFootnoteSource.originalSource = rejectedSource;
+    }
     const native = page.getByTestId('work-item-description-wrapper').locator('[data-fountain-integration="native"]');
     const failedEditor = native.locator('[contenteditable]');
     await expect(native.getByTestId('content-editor-error')).toBeVisible();
@@ -844,6 +882,12 @@ try {
     await ready();
     const reopened = await api('GET', `/projects/${project.id}/issues/${issue.iid}`);
     expect(reopened.description).toBe(saved.description);
+    if (nativeFootnoteSource) {
+      const protectedOriginal = await api('GET', `/projects/${project.id}/issues/${report.recoveryIssue.iid}`);
+      expect(protectedOriginal.description).toBe(report.nativeFootnoteSource.originalSource);
+      report.nativeFootnoteSource.restartOriginalPreserved = true;
+      report.checks.push('The saved unused footnote definition remains byte-for-byte unchanged after actual application restart');
+    }
     await page.goto(issue.web_url);
     await expect(page.getByText(marker, { exact: true })).toBeVisible();
     if (nativeAlerts) await assertSavedNativeAlerts({ page, description: reopened.description, report, output, phase: 'restart' });
@@ -1015,6 +1059,7 @@ try {
     try { await restoreUploadLimit(); }
     catch { report.status = 'failed'; report.settingsRestoreFailed = true; process.exitCode = 1; }
   }
+  await Promise.allSettled(pendingImageDiagnostics);
   await context?.close();
   await browser.close();
   await writeFile(new URL('report.json', output), JSON.stringify(report, null, 2) + '\n');

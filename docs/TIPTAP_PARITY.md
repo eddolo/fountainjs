@@ -2,6 +2,16 @@
 
 ## Current programme status — 2026-11-14
 
+The private GitLab footnote audit exposes and blocks an omitted-source loss path.
+Twenty-three actual renderer cases and a parent-codec counterexample distinguish
+source retention from HTML rendering. Unused definitions could previously vanish
+after an unrelated edit; the new guard refuses that conversion with source kept.
+All 792 GitLab model cases, 536 upstream cases (one inherited skip) and the final
+13-check service profile pass. This does not enable native GitLab footnotes or
+certify the full label grammar. An intermittent post-restart upload-image 403 is
+retained as an open finding despite the later passing run. No parity row changes.
+[Scoped evidence](../artifacts/gitlab-footnote-source-integration-20261114.json).
+
 Native GitLab reference/argument completion now has a recorded 21-check
 real-service journey. Actual labels, issues, users, merge requests and milestones
 are accepted through host providers and rendering, then retained through UI

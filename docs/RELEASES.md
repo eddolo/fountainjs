@@ -1,5 +1,23 @@
 # Release and API stability policy
 
+## GitLab omitted footnote source protection — 2026-11-14
+
+The private codec now detects footnote definitions in source rather than relying
+only on rendered classes. The actual host omits unused definitions, and the
+parent codec can be shown dropping them on an unrelated edit. Refuse that
+projection with original source retained until a source-aware adapter is ready.
+The guard uses Fountain's existing parser with an inspection-only grammar and
+the validated GitLab frontmatter boundary. It adds no editor IDs or body
+conversion and does not complete the native footnote feature.
+
+The final recorded service profile passes 13 checks, including unchanged unused
+source after restart. An earlier upload-image 403 is an unresolved reliability
+finding; the subsequent passing image is not a repair. GitLab model/upstream,
+type/API/headless/size and source rollback checks pass. Public engine/package
+code and capacity limits stay unchanged; this checkpoint promotes no public
+feature claim or npm version.
+[Evidence and remaining scope](../artifacts/gitlab-footnote-source-integration-20261114.json).
+
 ## Native GitLab reference/argument completion — 2026-11-14
 
 This private integration checkpoint adds authenticated reference suggestions,

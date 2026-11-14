@@ -1,0 +1,9 @@
+{
+  "scope": "Actual codec copied from parent commit 259ba6fc, with the authenticated renderer fixture; an offline model counterexample, not a browser claim",
+  "source": "Visible body.\n\n[^unused]: Retain unused source.",
+  "actualRenderedHTML": "<p data-sourcepos=\"1:1-1:13\" dir=\"auto\">Visible body.</p>",
+  "unchanged": "Visible body.\n\n[^unused]: Retain unused source.",
+  "afterUnrelatedEdit": "Visible body.\n\nUnrelated edit.",
+  "acceptedBeforeGuard": true,
+  "omittedDefinitionLostAfterEdit": true
+}

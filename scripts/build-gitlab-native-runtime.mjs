@@ -41,6 +41,7 @@ for (const path of [
   'integrations/gitlab/services/host_configuration.ts',
   'integrations/gitlab/services/serialized_content.ts',
   'integrations/gitlab/services/markdown_codec.ts',
+  'integrations/gitlab/services/footnote_source.ts',
   'integrations/gitlab/services/quick_actions.ts',
   'integrations/gitlab/services/quick_action_editing.ts',
   'integrations/gitlab/services/autocomplete_data.ts',

@@ -9,6 +9,38 @@ accounts, projects, storage, uploads, authorization, issue/MR/wiki workflows and
 collaboration services. These services remain real GitLab services. Recreating
 their controls with local-only state does not meet the requirement.
 
+## Footnote source protection — November 14
+
+The actual renderer omits unused footnote definitions. A recorded parent-codec
+counterexample shows why accepting that HTML is unsafe: unchanged source is
+retained, but an unrelated edit canonically exports without the hidden definition.
+`services/footnote_source.ts` now inspects source with Fountain's existing parser
+and the validated GitLab frontmatter boundary, refusing that incomplete
+conversion while retaining original Markdown. Its inspection labels never become
+editor IDs or DOM anchors. Extra parsing is byte-bounded and ordinary documents
+stay on the fast path. This does not implement native GitLab footnote authoring.
+
+Twenty-three captured host cases cover repeated references, Unicode/NBSP labels,
+multi-block and nested notes, omitted/duplicate definitions, literal examples and
+frontmatter. All 792 GitLab model cases and 536 selected upstream cases pass,
+with one inherited skip. The final recorded 13-check service profile verifies
+omitted-definition paste refusal, saved-load refusal/Retry, explicit local
+recovery/cancel and exact original source after restart. An earlier reader-image
+403 after restart remains open; the later pass is not evidence of a repair.
+
+After the normal native runtime install and actual GitLab frontend build:
+
+```sh
+node scripts/run-gitlab-native-browser-audit.mjs --footnote-source --capture-footnotes
+# With the isolated application stopped:
+node scripts/check-gitlab-native-patches.mjs /absolute/pinned/gitlab-source --footnote-source
+node scripts/check-gitlab-native-install.mjs /absolute/pinned/gitlab-source --footnote-source
+```
+
+[Evidence and limits](../../artifacts/gitlab-footnote-source-integration-20261114.json).
+[Full adapter plan](FOOTNOTE_ADAPTER_PLAN.md) preserves the remaining source,
+authoring, reader navigation and full product acceptance requirements.
+
 ## Native reference and command-argument completion — November 14
 
 `services/autocomplete_data.ts` validates real provider records without a DOM.

@@ -1,0 +1,27 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-footnote-source.test.ts (2 tests | 2 failed) 21ms
+   × does not silently discard the unreferenced footnote source hidden by the real renderer 19ms
+   × does not silently discard the escaped footnote source hidden by the real renderer 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-footnote-source.test.ts > does not silently discard the unreferenced footnote source hidden by the real renderer
+ FAIL  tests/gitlab-footnote-source.test.ts > does not silently discard the escaped footnote source hidden by the real renderer
+AssertionError: expected Error: The omitted definition was accepte… to be an instance of GitLabMarkdownConversionError
+ ❯ tests/gitlab-footnote-source.test.ts:15:19
+     13|     throw new Error('The omitted definition was accepted without a sou…
+     14|   } catch (error) {
+     15|     expect(error).toBeInstanceOf(GitLabMarkdownConversionError);
+       |                   ^
+     16|     expect((error as GitLabMarkdownConversionError).originalMarkdown).…
+     17|     expect((error as GitLabMarkdownConversionError).issues.some(issue …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  21:58:44
+   Duration  1.15s (transform 80%, import 17%, tests 2%, worker 1%)

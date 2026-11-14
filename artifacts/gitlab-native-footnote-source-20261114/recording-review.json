@@ -1,0 +1,13 @@
+{
+  "status": "reviewed",
+  "scope": "Four full-resolution interaction screenshots and eight approximately aligned recording samples; not frame-by-frame video viewing",
+  "contactSheet": "artifacts/gitlab-native-footnote-source-20261114/recording-review.png",
+  "samples": "artifacts/gitlab-native-footnote-source-20261114/recording-samples.json",
+  "observations": [
+    "The failed paste retains its invisible definition in the source field while the existing visual document remains present.",
+    "Failed initial loading retains the complete original source and disables visual editing through Retry.",
+    "Explicit recovery exposes a separate local draft while keeping the retained source visible; the journey cancels this draft rather than saving over the original.",
+    "The ordinary edited issue, uploaded figure, math and table remain visible after restart in the final run.",
+    "The earlier failed run visibly shows a broken image after an HTTP 403. That failure is retained separately and is not considered repaired by the subsequent pass."
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "scope": "Eight sampled frames approximately aligned to screenshot file times, not frame-by-frame viewing",
+  "recording": "artifacts/gitlab-native-footnote-source-20261114/recordings/page@a0ed8a15948a027f4bf05478005db93b.webm",
+  "duration": 182.36,
+  "bytes": 3616592,
+  "sha256": "fc3d1744854afd9e2a3dd09200735412a8f965e4135f588d7e7857d01a63b927",
+  "samples": [
+    {
+      "index": 1,
+      "screenshot": "original-rendered.png",
+      "second": 61.62953833007812
+    },
+    {
+      "index": 2,
+      "screenshot": "retained-paste-source.png",
+      "second": 63.99338452148437
+    },
+    {
+      "index": 3,
+      "screenshot": "original-rich-edit.png",
+      "second": 65.35657202148437
+    },
+    {
+      "index": 4,
+      "screenshot": "empty-comment-placeholder.png",
+      "second": 66.65907470703125
+    },
+    {
+      "index": 5,
+      "screenshot": "failed-load-readonly.png",
+      "second": 72.1188798828125
+    },
+    {
+      "index": 6,
+      "screenshot": "failed-load-explicit-recovery.png",
+      "second": 72.6651904296875
+    },
+    {
+      "index": 7,
+      "screenshot": "original-reopened.png",
+      "second": 76.97201513671875
+    },
+    {
+      "index": 8,
+      "screenshot": "original-after-restart.png",
+      "second": 180.90600927734377
+    }
+  ]
+}

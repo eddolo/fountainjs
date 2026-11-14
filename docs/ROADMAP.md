@@ -2,6 +2,22 @@
 
 Updated 2026-11-14.
 
+The GitLab footnote audit now has 23 authenticated renderer cases. It found a
+real source-loss path: the previous codec accepted HTML that omitted unused
+definitions, retained exact source while unchanged, then dropped the definitions
+after an unrelated edit. A new source-inspection guard reuses Fountain's parser
+and validated frontmatter boundary to refuse that incomplete conversion with the
+original retained. It distinguishes code/comments, ordinary space-containing
+labels and frontmatter examples; Unicode and non-breaking-space labels are
+covered. This is source protection, not completed GitLab footnote editing.
+All 792 GitLab model cases and 536 selected upstream cases pass (one original
+skip). A recorded 13-check service journey verifies paste, failed load, Retry,
+explicit recovery/cancel and unchanged source after restart. An earlier run
+observed an uploaded image returning 403 after restart despite a later request
+returning 200; a subsequent pass does not close that intermittent finding.
+[Evidence and limits](../artifacts/gitlab-footnote-source-integration-20261114.json).
+[Full footnote adapter plan](../integrations/gitlab/FOOTNOTE_ADAPTER_PLAN.md).
+
 The private GitLab integration now connects reference suggestions and command
 arguments to actual host endpoints, reactive work-item state and the Markdown
 renderer. The recorded real-service profile passes 21 checks, including a label

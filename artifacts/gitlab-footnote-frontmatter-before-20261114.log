@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-footnote-source.test.ts (31 tests | 1 failed) 57ms
+   × does not confuse a literal source example with an omitted definition 6 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-footnote-source.test.ts > does not confuse a literal source example with an omitted definition 6
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/gitlab-footnote-source.test.ts:52:59
+     50|   '---\nexample: |\n  [^hidden]: Metadata example.\n---\n\nProse.',
+     51| ])('does not confuse a literal source example with an omitted definiti…
+     52|   expect(gitLabHasFootnoteDefinitions(source, 1_048_576)).toBe(false);
+       |                                                           ^
+     53| });
+     54| it('bounds the extra source inspection and leaves ordinary source on t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 30 passed (31)
+   Start at  22:06:14
+   Duration  1.21s (transform 77%, import 17%, tests 5%, worker 1%)

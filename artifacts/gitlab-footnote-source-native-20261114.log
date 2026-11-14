@@ -1,0 +1,42 @@
+time="2026-11-14T22:09:57Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"captured":23,"version":"19.5.3","kind":"footnotes"}
+{
+  "status": "failed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "Actual HTML omits the unused footnote definition; native paste refuses that incomplete projection, retains exact source and recovers through a supported paste",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Private issue is unavailable to an unauthenticated browser context"
+  ],
+  "error": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate"
+}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+node:internal/errors:983
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /home/eddolo/.cache/fountainjs-gitlab-product/toolchain/node-v22.23.1-linux-x64/bin/node /mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/audit-gitlab-product-baseline.mjs --native-footnote-source --verify-restart
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:916:11)
+    at execFileSync (node:child_process:952:15)
+    at file:///mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/run-gitlab-native-browser-audit.mjs:37:3 {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 3269,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v22.23.1

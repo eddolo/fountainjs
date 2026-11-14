@@ -13,10 +13,11 @@ const frontmatter = process.argv.includes('--frontmatter');
 const quickActions = process.argv.includes('--quick-actions');
 const quickActionCommands = process.argv.includes('--quick-action-commands');
 const autocomplete = process.argv.includes('--autocomplete');
+const footnotes = process.argv.includes('--footnotes');
 const catalogue = quickActionCommands || autocomplete;
 const referenceContexts = process.argv.includes('--reference-context');
 const references = process.argv.includes('--references') || referenceContexts;
-if ([media, diagrams, references, frontmatter, quickActions, quickActionCommands, autocomplete].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
+if ([media, diagrams, references, frontmatter, quickActions, quickActionCommands, autocomplete, footnotes].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -164,7 +165,31 @@ try {
   const issueToken = referenceRecords ? `#${referenceRecords.issueIID}` : '';
   const mrToken = referenceRecords ? `!${referenceRecords.mergeRequestIID}` : '';
   const labelToken = referenceRecords ? `~"${referenceRecords.label}"` : '';
-  const inputs = quickActions ? [
+  const inputs = footnotes ? [
+    ['simple', 'A note[^alpha].\n\n[^alpha]: Definition **bold**.'],
+    ['repeated', 'First[^alpha] and again[^alpha].\n\n[^alpha]: Shared definition.'],
+    ['ordered', 'Second[^b], first[^a].\n\n[^a]: Alpha.\n\n[^b]: Beta.'],
+    ['hyphen', 'A note[^a-b].\n\n[^a-b]: Hyphen label.'],
+    ['underscore', 'A note[^a_b].\n\n[^a_b]: Underscore label.'],
+    ['case', 'A note[^Alpha] and[^alpha].\n\n[^Alpha]: Capitalized label.'],
+    ['space', 'A note[^two words].\n\n[^two words]: Spaced label.'],
+    ['unicode', 'A note[^épreuve].\n\n[^épreuve]: Unicode label.'],
+    ['unicode-space', 'A note[^non\u00a0breaking].\n\n[^non\u00a0breaking]: Non-breaking-space label.'],
+    ['header-example', '---\nexample: |\n  [^hidden]: Metadata example.\n---\n\nProse.'],
+    ['punctuation', 'A note[^a.b:c%41].\n\n[^a.b:c%41]: Punctuation label.'],
+    ['multiblock', 'A note[^long].\n\n[^long]: First paragraph.\n\n    Second **paragraph**.\n\n    - One\n    - Two'],
+    ['nested-reference', '> Quote[^q].\n\n- Item[^l].\n\n[^q]: Quote note.\n\n[^l]: List note.'],
+    ['nested-definition', '> Body[^q].\n>\n> [^q]: A quoted definition.'],
+    ['code', 'Literal `[^alpha]`.\n\n```text\n[^alpha]: Code only.\n```'],
+    ['escaped', 'Literal \\[^alpha].\n\n[^alpha]: Unreferenced definition.'],
+    ['unreferenced', 'Visible body.\n\n[^unused]: Retain unused source.'],
+    ['missing', 'Unresolved[^missing].'],
+    ['duplicate', 'A note[^a].\n\n[^a]: First.\n\n[^a]: Second.'],
+    ['links-math', 'A note[^a].\n\n[^a]: [Link](https://example.com) and $`x^2`$.'],
+    ['definition-reference', 'A note[^a].\n\n[^a]: With another[^b].\n\n[^b]: Second note.'],
+    ['table', '| Heading |\n| --- |\n| Cell[^a] |\n\n[^a]: Table note.'],
+    ['raw-html', '<sup class="footnote-ref"><a id="fnref-fake-1" href="#fn-fake-1">1</a></sup>'],
+  ] : quickActions ? [
     ['close', '/close'], ['close-newline', '/close\n'],
     ['reopen', '/reopen'], ['confidential', '/confidential'],
     ['title', '/title Revised title'], ['due', '/due 2026-12-01'],
@@ -290,14 +315,14 @@ try {
     fixtures.push({ name, source, body: result.body, ...(quickActions ? { renderedSource, references: result.references,
       untransformed: await request(preview.href, { text: source }) } : {}) });
   }
-  await writeFile(new URL(`integrations/gitlab/fixtures/${quickActions ? 'quick-actions' : frontmatter ? 'frontmatter' : diagrams ? 'diagram' : referenceContexts ? 'reference-context' : references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
+  await writeFile(new URL(`integrations/gitlab/fixtures/${footnotes ? 'footnote' : quickActions ? 'quick-actions' : frontmatter ? 'frontmatter' : diagrams ? 'diagram' : referenceContexts ? 'reference-context' : references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
     scope: media ? 'Authenticated renderer structure fixtures; asset URLs are illustrative, not uploaded/playback acceptance' : 'Authenticated pinned GitLab renderer fixtures; not browser product acceptance',
     ...(quickActionOracle ? { quickActionOracle: { path: quickActionOracle.path, sha256: quickActionOracle.sha256 } } : {}),
     ...(references ? { referenceRecords } : {}),
     ...(diagrams ? { plantumlProvider: { url: 'http://127.0.0.1:5081/', image: 'plantuml/plantuml-server@sha256:3719f4a9b0b061f1aa42d14d130388f831954ca65685d521b6c5b72301e993e6' } } : {}),
     upstream: { revision: pin.commit, version: version.version, packagedRevision: version.revision }, fixtures,
   }, null, 2) + '\n');
-  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: quickActions ? 'quick-actions' : frontmatter ? 'frontmatter' : diagrams ? 'diagrams' : referenceContexts ? 'reference-context' : references ? 'references' : media ? 'media' : 'alerts' }));
+  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: footnotes ? 'footnotes' : quickActions ? 'quick-actions' : frontmatter ? 'frontmatter' : diagrams ? 'diagrams' : referenceContexts ? 'reference-context' : references ? 'references' : media ? 'media' : 'alerts' }));
   }
 } catch (error) { console.error(String(error).replaceAll(password, '[redacted]')); process.exitCode = 1; }
 finally { try { await restorePlantuml?.(); } finally { await context.close(); await browser.close(); } }

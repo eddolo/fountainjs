@@ -1,0 +1,87 @@
+{
+  "date": "2026-11-14",
+  "status": "source-preservation-guard; native-footnote-feature-incomplete",
+  "parentRevision": "259ba6fcaed171174808484dea51c785eefc9473",
+  "scope": "Protect known GitLab footnote definitions omitted by rendered HTML; this does not implement footnote authoring or certify all GLFM label syntax",
+  "fixtureCapture": {
+    "path": "integrations/gitlab/fixtures/footnote-live-html.json",
+    "cases": 23,
+    "provenance": "Authenticated pinned GitLab 19.5.3 renderer; actual outputs, not fabricated HTML",
+    "sourceFilter": "lib/banzai/filter/footnote_filter.rb",
+    "sourceFilterGitBlob": "f18d4e5c6e0a993b067e02d982b3f1876eb19caa",
+    "sourceFilterFacts": "The host adds a random suffix and processes at most 1000 references. Repeated references do not consistently retain the same class/fragment form.",
+    "findings": ["Unused definitions are omitted entirely", "Unicode and NBSP labels are accepted", "Reference/definition source positions use UTF-8 byte columns", "Frontmatter examples stay metadata rather than document footnotes"]
+  },
+  "counterexample": {
+    "witness": "artifacts/gitlab-footnote-source-before-witness-20261114.json",
+    "scope": "Actual parent codec copied from 259ba6fc and exercised offline with the authenticated renderer fixture; not a before-fix browser claim",
+    "observed": "The parent accepts the projection and preserves unchanged Markdown, but canonical export after an unrelated edit drops the unused definition.",
+    "redRegressions": ["artifacts/gitlab-footnote-hidden-source-before-20261114.log", "artifacts/gitlab-footnote-frontmatter-before-20261114.log"]
+  },
+  "implementation": {
+    "path": "integrations/gitlab/services/footnote_source.ts",
+    "contract": "Reuse the native block/container parser for bounded source inspection; never use the inspection grammar's labels as editor IDs, DOM anchors or converted definition content.",
+    "limits": "The probe currently bounds labels to 4096 characters and shares the configured input-byte limit. This guard is not a complete GLFM footnote parser.",
+    "frontmatter": "Exclude the validated GitLab frontmatter prefix before interpreting document definitions.",
+    "ordinaryDocuments": "No extra Markdown parse when there is no definition-like candidate."
+  },
+  "models": {
+    "scope": "All GitLab model test files; this checkpoint does not claim a new full-repository unit run",
+    "passed": 792,
+    "files": 32,
+    "newGuardCases": 34,
+    "log": "artifacts/gitlab-footnote-all-gitlab-models-20261114.log"
+  },
+  "upstream": {
+    "passed": 536,
+    "skipped": 1,
+    "suites": 23,
+    "report": "artifacts/gitlab-footnote-source-upstream-20261114.json"
+  },
+  "browser": {
+    "status": "passed on final strengthened run",
+    "checks": 13,
+    "engine": "Linux Chromium",
+    "report": "artifacts/gitlab-native-footnote-source-20261114/report.json",
+    "verified": "Actual omitted-definition paste refusal, failed saved-load refusal/Retry, retained source, local recovery/cancel, unchanged original source after restart, and ordinary edit/save/reopen.",
+    "errors": [],
+    "visualReview": "artifacts/gitlab-native-footnote-source-20261114/recording-review.json",
+    "recording": {
+      "path": "artifacts/gitlab-native-footnote-source-20261114/recordings/page@a0ed8a15948a027f4bf05478005db93b.webm",
+      "duration": 182.36,
+      "bytes": 3616592,
+      "sha256": "fc3d1744854afd9e2a3dd09200735412a8f965e4135f588d7e7857d01a63b927"
+    }
+  },
+  "openImageFinding": {
+    "status": "unresolved",
+    "report": "artifacts/gitlab-native-footnote-source-image-403-20261114/report.json",
+    "screenshot": "artifacts/gitlab-native-footnote-source-image-403-20261114/failure.png",
+    "observed": "The first service run failed after restart when the reader image received HTTP 403 and had naturalWidth 0. A follow-up authenticated request returned 200 with PNG bytes.",
+    "laterRun": "The final run passed with no failed image responses. This is not a root-cause fix or a reliability certification.",
+    "diagnostics": "The audit now records only allowlisted error words, status, response content type/server/request ID and a body hash. No raw error HTML or request/session headers are persisted; there is no automatic image retry."
+  },
+  "validation": {
+    "types": "passed",
+    "apiDeclarations": 450,
+    "headlessModules": 143,
+    "budget": "passed with unchanged limits",
+    "productionBuild": "passed with two existing asset/entry warnings",
+    "patchReport": "artifacts/gitlab-native-footnote-source-patch-verification-20261114.json",
+    "patches": 18,
+    "sourceRollbackReport": "artifacts/gitlab-native-footnote-source-install-roundtrip-20261114.json",
+    "sourceRollbackFiles": 28,
+    "compiledDeploymentRollback": "not certified",
+    "publicEnginePackageOrBudgetChanges": false
+  },
+  "plan": "integrations/gitlab/FOOTNOTE_ADAPTER_PLAN.md",
+  "remaining": [
+    "Complete source-aware footnote mapping, omitted-definition materialization, original-label retention and semantic export after edits",
+    "Native insert/edit/rename/delete/navigation UI, clear source-only handoff and explicit recovery semantics",
+    "Repeated/back-reference reader behavior and full GLFM label/container/browser/permission matrices",
+    "Diagnose and repair the observed post-restart uploaded-image 403",
+    "Remaining GitLab surfaces, compiled rollback, hosted CI, the other full products and the global roadmap"
+  ],
+  "publication": "No public feature claim, parity row, npm version or capacity increase is promoted by this checkpoint.",
+  "logFormatting": "Tracked terminal receipts normalize ANSI escapes, CRLF and trailing whitespace. Renderer fixtures, native JSON reports, patches and recording hashes are retained as distinct evidence."
+}

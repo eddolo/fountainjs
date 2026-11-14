@@ -1,0 +1,3 @@
+$ node scripts/check-api-surface.mjs
+Public API surface verified across 450 declaration files.
+Check exit: 0
