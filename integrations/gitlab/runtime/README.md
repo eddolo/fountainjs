@@ -330,3 +330,23 @@ journey does not close them.
 
 Configuration references: [GitLab Docker installation](https://docs.gitlab.com/install/docker/installation/)
 and [memory-constrained environments](https://docs.gitlab.com/omnibus/settings/memory_constrained_envs/).
+
+## Quick-action source/save profile
+
+After installing the native runtime and the preceding fourteen test patches,
+prepare the additional fresh-session host repair and regression, then rebuild
+the full GitLab frontend:
+
+```sh
+node scripts/prepare-gitlab-quick-action-tests.mjs /absolute/gitlab-source
+# In the GitLab checkout: corepack yarn rspack-prod
+node scripts/check-gitlab-native-patches.mjs /absolute/gitlab-source --quick-actions
+node scripts/run-gitlab-native-browser-audit.mjs --quick-actions
+```
+
+The profile uses the actual private project, clipboard, renderer, label action,
+save, reopen and restart. It checks that command execution waits for submission,
+literal close text stays escaped and the next edit has no inherited conflict.
+The separate `--quick-actions-fixtures` profile captures 32 renderer fixtures
+against the pinned original transform. These profiles do not certify all quick
+actions or expose the remaining insertion/preview/autocomplete interfaces.

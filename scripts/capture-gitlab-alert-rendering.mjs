@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
@@ -9,9 +10,10 @@ const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
 const media = process.argv.includes('--media');
 const diagrams = process.argv.includes('--diagrams');
 const frontmatter = process.argv.includes('--frontmatter');
+const quickActions = process.argv.includes('--quick-actions');
 const referenceContexts = process.argv.includes('--reference-context');
 const references = process.argv.includes('--references') || referenceContexts;
-if ([media, diagrams, references, frontmatter].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
+if ([media, diagrams, references, frontmatter, quickActions].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -59,6 +61,17 @@ try {
   const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
   if (preview.origin !== base) throw new Error('Nonlocal preview');
   preview.searchParams.set('no_header_anchors', 'true');
+  if (quickActions) preview.searchParams.set('render_quick_actions', 'true');
+  let quickActionOracle;
+  if (quickActions) {
+    // Run only the pure named transform from the pinned, trusted source. The
+    // default ProseMirror/DOM deserializer is never called or bundled here.
+    const installed = JSON.parse(await readFile(new URL('artifacts/gitlab-native-browser-install/install.json', root)));
+    const path = 'app/assets/javascripts/content_editor/services/gl_api_markdown_deserializer.js';
+    const original = execFileSync('git', ['-C', installed.source, 'show', `${pin.commit}:${path}`], { encoding: 'utf8' });
+    const module = await import(`data:text/javascript;base64,${Buffer.from(original.replace(/^import [^\n]*;\r?$/gmu, '')).toString('base64')}`);
+    quickActionOracle = { transform: module.transformQuickActions, path, sha256: createHash('sha256').update(original).digest('hex') };
+  }
   let referenceRecords;
   if (references) {
     const title = 'Fountain reference controls fixture: & <review>';
@@ -90,7 +103,29 @@ try {
   const issueToken = referenceRecords ? `#${referenceRecords.issueIID}` : '';
   const mrToken = referenceRecords ? `!${referenceRecords.mergeRequestIID}` : '';
   const labelToken = referenceRecords ? `~"${referenceRecords.label}"` : '';
-  const inputs = frontmatter ? [
+  const inputs = quickActions ? [
+    ['close', '/close'], ['close-newline', '/close\n'],
+    ['reopen', '/reopen'], ['confidential', '/confidential'],
+    ['title', '/title Revised title'], ['due', '/due 2026-12-01'],
+    ['assign', '/assign @root'], ['label', '/label ~"Fountain reference & review"'],
+    ['unknown', '/not_a_real_action value'], ['slash', '/'],
+    ['paragraph-lines', 'Before\n/close\nAfter'],
+    ['multiple', '/close\n/assign @root\n\nAfter.'],
+    ['reference-definition', 'Link to [help][ref]\n/close\n[ref]: https://example.com'],
+    ['code', '```sh\n/close\n/usr/bin/env bash\n```'],
+    ['tilde-code', '~~~sh\n/close\n~~~'],
+    ['long-fence', '````\n```\n/close\n````'],
+    ['quote', '> /close'], ['list', '- /close'], ['indented', '    /close'],
+    ['marked', '**/close**'], ['inline-code', '`/close`'],
+    ['crlf', 'Before\r\n/close\r\nAfter'],
+    ['unicode', '/title 研究 & review <now>'],
+    ['escaped', '\\/close'], ['entity', '&#47;close'], ['html', '<p>/close</p>'],
+    ['html-container', '<div>\n/close\n</div>'],
+    ['inline-leading', '*prefix* /close'], ['two-commands-paragraph', '/close\n/reopen'],
+    ['after-command-alert', '/close\n> [!note] Note\n>\n> Explicit title.'],
+    ['after-command-frontmatter', '/close\n```yaml frontmatter\ntitle: Paper\n```'],
+    ['after-command-audio', '/close\n![Audio description](/uploads/media-fixture/recording.wav "Retained audio title")'],
+  ] : frontmatter ? [
     ['yaml', '---\ntitle: Paper\n# Retain comment\ntags:\n  - research\n---\n\nBody **text**.'],
     ['toml', '+++\ntitle = "Paper"\n# Retain comment\ntags = ["research"]\n+++\n\nBody **text**.'],
     ['json', ';;;\n{ "title": "Paper", "tags": ["research"] }\n;;;\n\nBody **text**.'],
@@ -188,16 +223,19 @@ try {
   ];
   const fixtures = [];
   for (const [name, source] of inputs) {
-    const result = await request(preview.href, { text: source });
+    const renderedSource = quickActionOracle ? quickActionOracle.transform(source) : source;
+    const result = await request(preview.href, { text: renderedSource });
     if (typeof result.body !== 'string') throw new Error('Missing renderer body');
-    fixtures.push({ name, source, body: result.body });
+    fixtures.push({ name, source, body: result.body, ...(quickActions ? { renderedSource, references: result.references,
+      untransformed: await request(preview.href, { text: source }) } : {}) });
   }
-  await writeFile(new URL(`integrations/gitlab/fixtures/${frontmatter ? 'frontmatter' : diagrams ? 'diagram' : referenceContexts ? 'reference-context' : references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
+  await writeFile(new URL(`integrations/gitlab/fixtures/${quickActions ? 'quick-actions' : frontmatter ? 'frontmatter' : diagrams ? 'diagram' : referenceContexts ? 'reference-context' : references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
     scope: media ? 'Authenticated renderer structure fixtures; asset URLs are illustrative, not uploaded/playback acceptance' : 'Authenticated pinned GitLab renderer fixtures; not browser product acceptance',
+    ...(quickActionOracle ? { quickActionOracle: { path: quickActionOracle.path, sha256: quickActionOracle.sha256 } } : {}),
     ...(references ? { referenceRecords } : {}),
     ...(diagrams ? { plantumlProvider: { url: 'http://127.0.0.1:5081/', image: 'plantuml/plantuml-server@sha256:3719f4a9b0b061f1aa42d14d130388f831954ca65685d521b6c5b72301e993e6' } } : {}),
     upstream: { revision: pin.commit, version: version.version, packagedRevision: version.revision }, fixtures,
   }, null, 2) + '\n');
-  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: frontmatter ? 'frontmatter' : diagrams ? 'diagrams' : referenceContexts ? 'reference-context' : references ? 'references' : media ? 'media' : 'alerts' }));
+  console.log(JSON.stringify({ captured: fixtures.length, version: version.version, kind: quickActions ? 'quick-actions' : frontmatter ? 'frontmatter' : diagrams ? 'diagrams' : referenceContexts ? 'reference-context' : references ? 'references' : media ? 'media' : 'alerts' }));
 } catch (error) { console.error(String(error).replaceAll(password, '[redacted]')); process.exitCode = 1; }
 finally { try { await restorePlantuml?.(); } finally { await context.close(); await browser.close(); } }

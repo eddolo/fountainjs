@@ -9,6 +9,36 @@ accounts, projects, storage, uploads, authorization, issue/MR/wiki workflows and
 collaboration services. These services remain real GitLab services. Recreating
 their controls with local-only state does not meet the requirement.
 
+## Quick-action source/save checkpoint — November 14
+
+`services/quick_actions.ts` matches the pinned host's fence-aware command-line
+isolation; 32 authenticated render fixtures also retain the result of running
+the original host transform as an oracle. Fountain retains its own schema and
+source parser. Command arguments serialize as literal command source. Imported
+escaped/entity/HTML slashes retain a literal marker, including when inline
+formatting is removed or a nested paragraph moves to the root. Ambiguous source
+ownership or renderer-truncated arguments refuse conversion with source retained.
+This does not assert support for every command, formatting or host context.
+Source-position adapters use the actual isolated renderer input, preserving
+explicit alert titles and fenced metadata after command-induced line shifts.
+
+The recorded issue workflow pastes a label command with a following link
+definition and literal close text, edits, undoes/redoes, switches source/rich
+mode, saves through the UI, and checks actual server labels and open state.
+Saved source reopens exactly, remains literal on another edit, and survives a
+real application restart. It exposed a stale host conflict flag, fixed in
+`gitlab-19.5.3-native-quick-action-tests.patch`, applied after the existing
+fourteen patches. That reset starts a fresh edit session without disabling
+active-session conflict detection. The journey's accessibility check also led
+to underlining native reference links.
+
+Current evidence is 136 final focused Node cases, 440 passing upstream cases
+with one existing skip, lint/types/build, source checks, and 16 recorded browser
+checks. A 6,023-case broad Node run preceded the final targeted refinements.
+Quick-action insertion, explanations, autocomplete and broader product acceptance
+remain open. No public demo or package claim is promoted from this checkpoint.
+[Report](../../artifacts/gitlab-quick-actions-integration-20261114.json).
+
 ## Inspected upstream contract
 
 `upstream.json` pins a GitLab source commit, not an assumed current release.

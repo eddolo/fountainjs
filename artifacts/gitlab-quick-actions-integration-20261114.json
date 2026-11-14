@@ -1,0 +1,102 @@
+{
+  "date": "2026-11-14",
+  "status": "partial-native-product-integration",
+  "parentRevision": "5046ab51225685a554c9a43e296673906cdf010c",
+  "scope": "GitLab quick-action source/save foundation; not complete quick-action, GitLab or editor parity",
+  "browser": {
+    "report": "artifacts/gitlab-native-quick-actions-20261114/report.json",
+    "engine": "Linux Chromium",
+    "checks": 16,
+    "issueIID": 118,
+    "phases": [
+      "saved",
+      "reopened",
+      "restart"
+    ],
+    "errors": [],
+    "accessibility": "Zero violations in the actual editable description region",
+    "recordings": [
+      {
+        "path": "artifacts/gitlab-native-quick-actions-20261114/recordings/page@c1b10ba1becd01d0a7b11bc163be1f6a.webm",
+        "bytes": 5950786,
+        "sha256": "aeb0a68eb58c6a22f7af26cac86f3624e27e39e171d33143a4363d2f77375c36"
+      }
+    ],
+    "duration": 216.64
+  },
+  "upstream": {
+    "passed": 440,
+    "failed": 0,
+    "skipped": 1,
+    "total": 441,
+    "suites": 19,
+    "report": "artifacts/gitlab-quick-actions-jest-20261114.json"
+  },
+  "unit": {
+    "finalFocused": 136,
+    "files": 3,
+    "quickActionCases": 89,
+    "oracleFixtures": 32,
+    "finalLog": "artifacts/gitlab-quick-actions-unit-final-20261114.log",
+    "broadRun": {
+      "passed": 6023,
+      "files": 362,
+      "log": "artifacts/gitlab-quick-actions-full-unit-20261114.log",
+      "scope": "Pre-final broad run; final reference styling, ambiguity/renderer-coordinate refinements and fourteen extra cases were checked in the final focused/upstream/browser runs, not a repeated full run"
+    }
+  },
+  "validation": {
+    "types": "passed",
+    "lint": "passed after restoring the exact pinned doc/user/markdown.md sparse-checkout input",
+    "productionBuild": "passed with two existing asset/entry warnings",
+    "patchCount": 15,
+    "installerOwnedFiles": 25,
+    "installArchive": "artifacts/gitlab-quick-actions-checkpoint-install-20261114.json",
+    "runtimeArchive": "artifacts/gitlab-quick-actions-checkpoint-runtime-20261114.json",
+    "sourceRollbackScope": "Installer-owned source only; the prepared host repair and compiled deployment rollback remain separate"
+  },
+  "fixes": [
+    "Fence-aware command isolation without losing following reference definitions",
+    "Literal command argument serialization",
+    "Literal slash provenance through edits, formatting removal and nested paragraph moves",
+    "Explicit retained-source failure for ambiguous or truncated commands",
+    "Plain code without a declared language remains code",
+    "Underlined native reference links",
+    "Fresh GitLab edit sessions reset their prior conflict flag"
+  ],
+  "remaining": [
+    "Quick-action insertion controls and explanations",
+    "Autocomplete/provider integration",
+    "All supported command/context/role/browser matrices",
+    "Remaining GitLab product workflows, compiled deployment rollback and hosted CI",
+    "Other two full product integrations and remaining global roadmap work"
+  ],
+  "retainedCounterexamples": [
+    "artifacts/gitlab-quick-actions-pre-reference-a11y-20261114.json",
+    "artifacts/gitlab-quick-actions-first-reopen-conflict-20261114.json",
+    "artifacts/gitlab-quick-actions-reopen-diagnosis-20261114.json"
+  ],
+  "publication": "None; public engine, API, package metadata and budget limits unchanged",
+  "sourceHashes": {
+    "docs/RELEASES.md": "5d8098fe5bda971ce487a51fd790856ee34bc31744fbfecac763322c5343ca36",
+    "docs/ROADMAP.md": "d876ae3a6eedb8573cffdc6a5543e3730382eeb6146ae3825ed0baa4e934eae2",
+    "docs/TIPTAP_PARITY.md": "499fd5dbcf0b6bf87145a155134fd4c513cecff7ff93bea6358735d1bb841a84",
+    "integrations/gitlab/README.md": "23381a9dae151d0357e7a7aecb06dfeff48c085e003cc72fa8caab3d09a5af28",
+    "integrations/gitlab/fixtures/quick-actions-live-html.json": "0cd85fbe8904ce4dc13f02c76c87d154383783c095d8b54b001bc70832eb17e1",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-quick-action-tests.patch": "42055629185f45765073042ee0417941e11e607208fb673d50359ae5fa70ef3b",
+    "integrations/gitlab/runtime/README.md": "072710abafbb49a2184b30b4c156be46532090f9111de4f4177cfa04ca538eff",
+    "integrations/gitlab/services/code_rendering.ts": "0d94359598fe6ead2cff4d0e2bc2821e934916ba47eca214bf02cc433dfe05d6",
+    "integrations/gitlab/services/markdown_codec.ts": "be1e569e1300ffd68ea498be500c094ae42701fa2f52711129c69fd104bc67a4",
+    "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
+    "scripts/audit-gitlab-native-quick-actions.mjs": "aa5b69d3e9fc10021352b1ce86c6b22342200f27fecfe271b40857e4a52b1bfe",
+    "scripts/audit-gitlab-product-baseline.mjs": "a23070a0817175f82bb4f190ebbb30964896b839e2c76d73639fee2aa68f8738",
+    "scripts/build-gitlab-native-runtime.mjs": "cd0d5f67d1deeb269cb408dcb64eb902e907c7485de98d655786e7545d62fb73",
+    "scripts/capture-gitlab-alert-rendering.mjs": "5409bc9da261305bbe9620e85aa9e92c446ebe727b5da12ddfacde08a38d9cb3",
+    "scripts/check-gitlab-native-install.mjs": "8b9346ca982e9d5b234e790e21aa0ff7a83a2c563ba8259e869660b129b2dc66",
+    "scripts/check-gitlab-native-patches.mjs": "76dced5756f7954d4b31406e52751562ff111ef5fa31f852b421eb5e95f1490f",
+    "scripts/prepare-gitlab-quick-action-tests.mjs": "d507e0d63035ab58b6ca44ed3ad1ada6d6f57184809fc8da77939fa91b382959",
+    "scripts/run-gitlab-native-browser-audit.mjs": "5f4e48b051aba09a2b843632ee8507a57da5e095a2283445159bd58ce9003cfc",
+    "tests/gitlab-markdown-codec.test.ts": "da53183f38dc0919f4434d0564cce5e5baeae61c9ad1b5950894738e3fefbd16",
+    "tests/gitlab-quick-actions.test.ts": "a75b8261f47ac903ab53b20f43a8ee224b293acc51b784d7a37e7673dbcdf8bf"
+  }
+}

@@ -113,12 +113,6 @@ it.each([
   }
 });
 
-it('retains quick-action source as an explicit unfinished document-adapter requirement', async () => {
-  const codec = new GitLabMarkdownCodec({ renderMarkdown: async () => ({ body: '<p>Text</p>', references: { commands: '<p>Closes the issue.</p>' } }) });
-  await expect(codec.deserialize({ schema: new Schema(createGitLabSchemaSpec()), markdown: 'Text\n/close', signal: new AbortController().signal }))
-    .rejects.toMatchObject({ originalMarkdown: 'Text\n/close', issues: [expect.objectContaining({ code: 'quick-actions' })] });
-});
-
 it.each(['mark', 'u', 'sub', 'sup'])('writes the actual GitLab <%s> dialect after an edit instead of another Markdown dialect', async tag => {
   const source = `<${tag}>Value</${tag}>`;
   const { codec, document } = await convert(source, `<p>${source}</p>`);

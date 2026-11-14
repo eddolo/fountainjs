@@ -1,8 +1,22 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-## Current programme status — 2026-11-13
+## Current programme status — 2026-11-14
 
-The latest UI follow-up removes the full-width contextual-trigger break in the
+Quick-action source handling and normal submission are now verified in the
+real GitLab application. The label action changes server state only on Save;
+an escaped `/close` stays literal after editing, reopen and restart. Literal
+command arguments and following reference links survive conversion. Ambiguous
+or renderer-truncated command source is refused with the original retained.
+The same journey found a stale conflict flag in GitLab's next edit session and
+inaccessible reference-link styling; both are repaired. Sixteen real checks,
+136 final focused Node cases and 440 selected upstream cases pass (one original
+skip). The 6,023-case broad run preceded the last targeted refinements.
+Quick-action insertion/preview, autocomplete, remaining host surfaces and full
+product acceptance are still open; no capability row is promoted from this
+single workflow.
+[Evidence and current scope](../artifacts/gitlab-quick-actions-integration-20261114.json).
+
+The November 13 UI follow-up removes the full-width contextual-trigger break in the
 GitLab toolbar, groups attachment/paste controls and gives the media panel a
 clear primary/secondary/destructive hierarchy. It adds measured desktop layout
 checks to the real-service profile. This does not change a capability row or

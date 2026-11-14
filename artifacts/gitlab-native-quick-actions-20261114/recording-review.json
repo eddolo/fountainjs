@@ -1,0 +1,27 @@
+{
+  "recording": "artifacts/gitlab-native-quick-actions-20261114/recordings/page@c1b10ba1becd01d0a7b11bc163be1f6a.webm",
+  "duration": 216.64,
+  "seconds": [
+    78.25,
+    79.45,
+    83.4,
+    84.58,
+    90.96,
+    98.19,
+    99.78,
+    214.26,
+    215.89
+  ],
+  "milestones": [
+    "quick-actions-source.png",
+    "quick-actions-rich.png",
+    "quick-actions-reopened-saved.png",
+    "empty-comment-placeholder.png",
+    "failed-load-readonly.png",
+    "quick-actions-reopened-reopened.png",
+    "original-reopened.png",
+    "quick-actions-reopened-restart.png",
+    "original-after-restart.png"
+  ],
+  "scope": "Representative interaction frames plus separately reviewed stable screenshots; not an assertion that every video frame was inspected"
+}

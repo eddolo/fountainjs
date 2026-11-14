@@ -1,5 +1,23 @@
 # Release and API stability policy
 
+## GitLab quick-action source and save — 2026-11-14
+
+The private integration isolates command lines using the pinned host's behavior,
+retains command arguments without Markdown escaping, and keeps imported literal
+slashes inert. Unsupported source ownership retains the original source instead
+of silently changing commands. Plain code without a language marker now retains
+its source as code. Reference links have a persistent visual underline.
+
+Normal GitLab submission applies a real label action; escaped close text stays
+literal through another edit and application restart. The recorded journey also
+identified a host conflict flag surviving its completed edit session. The added
+fifteenth source patch resets that flag at a new session boundary and retains
+the existing concurrent-edit tests. Source restore/reinstall still covers the
+25 installer-owned files; the host patch and compiled deployment rollback are
+separate concerns. No public engine/API, size allowance, website feature claim
+or publication changes. Quick-action controls and full host parity remain open.
+[Scoped evidence](../artifacts/gitlab-quick-actions-integration-20261114.json).
+
 ## GitLab toolbar and media presentation — 2026-11-13
 
 Visual feedback identified a full-width floating-menu trigger that forced

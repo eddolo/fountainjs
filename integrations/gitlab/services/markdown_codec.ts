@@ -9,6 +9,7 @@ import { normalizeGitLabCodeRendering, normalizeGitLabDiagrams } from './code_re
 import { getGitLabFrontmatter, gitlabFrontmatterCode, hydrateGitLabFrontmatter, normalizeGitLabFrontmatter, serializeGitLabFrontmatter } from './frontmatter';
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
+import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLabQuickAction, transformGitLabQuickActions } from './quick_actions';
 
 export interface GitLabMarkdownIssue { stage: 'import' | 'export'; code: string; message: string; path?: readonly number[] }
 export class GitLabMarkdownConversionError extends Error {
@@ -59,6 +60,8 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
       alt: child.getAttribute('alt') ?? '', title: child.getAttribute('title') ?? '', width: size('width'), height: size('height') };
   };
   return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base), ...gitlabAlertNodes(), ...gitlabMediaNodes(mediaLabels),
+    paragraph: { ...base.nodes.paragraph!, attrs: { ...base.nodes.paragraph!.attrs,
+      gitlabLiteralSlash: { default: false, validate: value => typeof value === 'boolean' } } },
     code_block: gitlabFrontmatterCode(base.nodes.code_block!),
     inline_image: { ...image, attrs: { ...image.attrs, gitlabCanonicalSrc: canonical,
       gitlabIntrinsicSize: { default: false, validate: value => typeof value === 'boolean' },
@@ -77,7 +80,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
         return { original: unescapeOriginal(element.getAttribute('data-original')!), label: element.textContent, color,
           referenceType: element.getAttribute('data-reference-type')!, href, title: element.getAttribute('title') ?? '' };
       } }], toText: node => String(node.attrs.label),
-      toDOM: node => ['a', { href: node.attrs.href, title: node.attrs.title, rel: 'noopener noreferrer',
+      toDOM: node => ['a', { href: node.attrs.href, title: node.attrs.title, rel: 'noopener noreferrer', class: 'gl-link gl-underline',
         'data-fountain-gitlab-reference': node.attrs.referenceType, 'data-reference-type': node.attrs.referenceType,
         'data-original': node.attrs.original, style: node.attrs.color ? `background-color:${String(node.attrs.color)};color:${labelForeground(node.attrs.color)}` : undefined }, String(node.attrs.label)] },
     gitlab_placeholder: { group: 'inline', inline: true, atom: true,
@@ -181,19 +184,21 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     if (!schema.nodes.gitlab_reference || !schema.nodes.gitlab_placeholder) throw new Error('Use the explicit GitLab schema adapter.');
     try {
       const parser = new ServerHTMLImporter(this.options.html);
-      const response = markdown ? await this.options.renderMarkdown(markdown, { signal }) : { body: '<p></p>' };
+      const renderedSource = transformGitLabQuickActions(markdown);
+      const response = markdown ? await this.options.renderMarkdown(renderedSource, { signal }) : { body: '<p></p>' };
       if (signal.aborted) throw new Error('GitLab Markdown rendering was cancelled.');
       if (!response || typeof response.body !== 'string') throw new Error('The actual GitLab host renderer must return a body string.');
-      if (response.references?.commands) throw new GitLabMarkdownConversionError([{ stage: 'import', code: 'quick-actions', message: 'Quick-action source requires a dedicated document adapter before visual editing.' }]);
-      const result = parser.parseWithReport(normalizeGitLabRendering(response.body, parser.options, markdown, schema), schema);
+      const result = parser.parseWithReport(normalizeGitLabRendering(response.body, parser.options, renderedSource, schema), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
-      const document = hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown);
+      const document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
       schema.validate(document);
       const source = MarkdownSourceSnapshot.capture(markdown, document);
       document.descendants(node => { this.sources.set(node, source); });
       return { document };
     } catch (error) {
       if (error instanceof GitLabMarkdownConversionError) throw new GitLabMarkdownConversionError(error.issues, markdown);
+      if (error instanceof GitLabQuickActionSourceError) throw new GitLabMarkdownConversionError([{ stage: 'import', code: 'quick-action-source',
+        message: 'The rendered quick-action text cannot be matched unambiguously to its source. Retain source editing.' }], markdown);
       throw new GitLabMarkdownConversionError([{ stage: 'import', code: signal.aborted ? 'cancelled' : 'render-or-parse-failed',
         message: signal.aborted ? 'GitLab conversion was cancelled.' : 'The host renderer or bounded HTML conversion failed; original Markdown is retained.' }], markdown);
     }
@@ -211,6 +216,21 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const encoded = JSON.stringify(doc.toJSON());
     while (encoded.includes(prefix)) prefix += 'X';
     const project = (node: Node, path: number[]): Node => {
+      const command = path.length === 1 ? serializeGitLabQuickAction(node) : undefined;
+      if (command !== undefined) {
+        const token = `${prefix}${tokens.size}END`; tokens.set(token, command);
+        return project(node.type.create(node.attrs, [node.type.schema.text(token)]), path);
+      }
+      if (node.type.name === 'paragraph' && node.attrs.gitlabLiteralSlash) {
+        const first = node.content[0];
+        const leadingSlash = first?.isText ? first.text?.match(/^([\t ]*)\//u) : undefined;
+        if (first?.isText && leadingSlash && !first.marks.length) {
+          const token = `${prefix}${tokens.size}END`; tokens.set(token, '\\/');
+          return project(node.type.create({ ...node.attrs, gitlabLiteralSlash: false }, [
+            node.type.schema.text(leadingSlash[1] + token + first.text!.slice(leadingSlash[0].length)), ...node.content.slice(1),
+          ]), path);
+        }
+      }
       if (node.attrs.gitlabFrontmatter) {
         try {
           const raw = serializeGitLabFrontmatter(node, path);

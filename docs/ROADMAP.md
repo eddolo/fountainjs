@@ -1,8 +1,26 @@
 # FountainJS roadmap
 
-Updated 2026-11-13.
+Updated 2026-11-14.
 
-The latest presentation follow-up addresses the reviewed GitLab toolbar and
+The GitLab quick-action source/save foundation now has a recorded real-service
+journey. Commands retain their literal arguments, escaped slashes remain inert
+after unrelated edits, and reference definitions following commands resolve.
+Plain code without a language marker also imports as code. Source adapters use
+renderer-input coordinates for blocks following an isolated command, so explicit
+alert titles and fenced metadata keep their source ownership. A normal UI save
+applies a real label command while leaving an escaped `/close` as text, including
+after reopen and application restart. The journey exposed and fixed a stale
+GitLab conflict flag carried into a new edit session; existing concurrent-edit
+tests remain active. Native reference links now have a visible underline.
+The final focused Node set passes 136 cases and the nineteen upstream suites
+pass 440 cases with one unchanged skip. The earlier broad run passed 6,023 cases
+before the final targeted refinements; it is not a claim of a new final full run.
+All sixteen current browser checks pass. This is a private integration checkpoint,
+not full quick-action or GitLab parity. Insertion controls, explanations,
+autocomplete/providers and the other GitLab workflows remain required.
+[Quick-action evidence and limits](../artifacts/gitlab-quick-actions-integration-20261114.json).
+
+The November 13 presentation follow-up addresses the reviewed GitLab toolbar and
 media-panel mismatch. Floating triggers retain their natural width; attachment,
 Markdown paste and the contextual action share the desktop row. Markdown paste
 uses the existing icon with its descriptive title and accessible name. The media

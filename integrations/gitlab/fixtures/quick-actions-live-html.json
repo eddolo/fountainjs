@@ -1,0 +1,630 @@
+{
+  "scope": "Authenticated pinned GitLab renderer fixtures; not browser product acceptance",
+  "quickActionOracle": {
+    "path": "app/assets/javascripts/content_editor/services/gl_api_markdown_deserializer.js",
+    "sha256": "0525d0f44d82bcc5e0fe46fc7fe8744ae61239854b1c694901f17a7d6f04c6e8"
+  },
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "fixtures": [
+    {
+      "name": "close",
+      "source": "/close",
+      "body": "<p dir=\"auto\">/close</p>",
+      "renderedSource": "/close",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/close</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+        }
+      }
+    },
+    {
+      "name": "close-newline",
+      "source": "/close\n",
+      "body": "<p dir=\"auto\">/close&#x000A;</p>",
+      "renderedSource": "/close\n\n\n",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/close</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+        }
+      }
+    },
+    {
+      "name": "reopen",
+      "source": "/reopen",
+      "body": "<p dir=\"auto\">/reopen</p>",
+      "renderedSource": "/reopen",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/reopen</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "confidential",
+      "source": "/confidential",
+      "body": "<p dir=\"auto\">/confidential</p>",
+      "renderedSource": "/confidential",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:29\" dir=\"auto\">Makes this item confidential.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/confidential</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:29\" dir=\"auto\">Makes this item confidential.</p>"
+        }
+      }
+    },
+    {
+      "name": "title",
+      "source": "/title Revised title",
+      "body": "<p dir=\"auto\">/title Revised title</p>",
+      "renderedSource": "/title Revised title",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/title Revised title</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "due",
+      "source": "/due 2026-12-01",
+      "body": "<p dir=\"auto\">/due 2026-12-01</p>",
+      "renderedSource": "/due 2026-12-01",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:33\" dir=\"auto\">Sets the due date to Dec 1, 2026.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/due 2026-12-01</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:33\" dir=\"auto\">Sets the due date to Dec 1, 2026.</p>"
+        }
+      }
+    },
+    {
+      "name": "assign",
+      "source": "/assign @root",
+      "body": "<p dir=\"auto\">/assign <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a></p>",
+      "renderedSource": "/assign @root",
+      "references": {
+        "users": [
+          "root"
+        ],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:14\" dir=\"auto\">Assigns <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a>.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/assign <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a></p>",
+        "references": {
+          "users": [
+            "root"
+          ],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:14\" dir=\"auto\">Assigns <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a>.</p>"
+        }
+      }
+    },
+    {
+      "name": "label",
+      "source": "/label ~\"Fountain reference & review\"",
+      "body": "<p dir=\"auto\">/label <span class=\"gl-label\"><a href=\"/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review\" title=\"\" class=\"gfm gfm-label has-tooltip gl-link gl-label-link\" data-original=\"~&amp;quot;Fountain reference &amp;amp; review&amp;quot;\" data-link=\"false\" data-link-reference=\"false\" data-label=\"1\" data-project=\"1\" data-html=\"true\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"label\"><span class=\"gl-label-text gl-label-text-light\" data-container=\"body\" data-html=\"true\" style=\"background-color: #6699cc\">Fountain reference &amp; review</span></a></span></p>",
+      "renderedSource": "/label ~\"Fountain reference & review\"",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:14\" dir=\"auto\">Adds <span class=\"gl-label\"><a href=\"/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review\" title=\"\" class=\"gfm gfm-label has-tooltip gl-link gl-label-link\" data-original=\"~1\" data-link=\"false\" data-link-reference=\"false\" data-label=\"1\" data-project=\"1\" data-html=\"true\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"label\"><span class=\"gl-label-text gl-label-text-light\" data-container=\"body\" data-html=\"true\" style=\"background-color: #6699cc\">Fountain reference &amp; review</span></a></span> label.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/label <span class=\"gl-label\"><a href=\"/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review\" title=\"\" class=\"gfm gfm-label has-tooltip gl-link gl-label-link\" data-original=\"~&amp;quot;Fountain reference &amp;amp; review&amp;quot;\" data-link=\"false\" data-link-reference=\"false\" data-label=\"1\" data-project=\"1\" data-html=\"true\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"label\"><span class=\"gl-label-text gl-label-text-light\" data-container=\"body\" data-html=\"true\" style=\"background-color: #6699cc\">Fountain reference &amp; review</span></a></span></p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:14\" dir=\"auto\">Adds <span class=\"gl-label\"><a href=\"/root/fountain-product-integration/-/issues?label_name=Fountain+reference+%26+review\" title=\"\" class=\"gfm gfm-label has-tooltip gl-link gl-label-link\" data-original=\"~1\" data-link=\"false\" data-link-reference=\"false\" data-label=\"1\" data-project=\"1\" data-html=\"true\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"label\"><span class=\"gl-label-text gl-label-text-light\" data-container=\"body\" data-html=\"true\" style=\"background-color: #6699cc\">Fountain reference &amp; review</span></a></span> label.</p>"
+        }
+      }
+    },
+    {
+      "name": "unknown",
+      "source": "/not_a_real_action value",
+      "body": "<p data-sourcepos=\"1:1-1:24\" dir=\"auto\">/not_a_real_action value</p>",
+      "renderedSource": "/not_a_real_action value",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:24\" dir=\"auto\">/not_a_real_action value</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "slash",
+      "source": "/",
+      "body": "<p data-sourcepos=\"1:1-1:1\" dir=\"auto\">/</p>",
+      "renderedSource": "/",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:1\" dir=\"auto\">/</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "paragraph-lines",
+      "source": "Before\n/close\nAfter",
+      "body": "<p data-sourcepos=\"1:1-1:6\" dir=\"auto\">Before</p>&#x000A;<p dir=\"auto\">/close&#x000A;</p>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">After</p>",
+      "renderedSource": "Before\n/close\n\n\nAfter",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:6\" dir=\"auto\">Before</p>&#x000A;<p dir=\"auto\">/close</p>&#x000A;After",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+        }
+      }
+    },
+    {
+      "name": "multiple",
+      "source": "/close\n/assign @root\n\nAfter.",
+      "body": "<p dir=\"auto\">/close&#x000A;</p>&#x000A;<p dir=\"auto\">/assign <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a>&#x000A;</p>&#x000A;<p data-sourcepos=\"8:1-8:6\" dir=\"auto\">After.</p>",
+      "renderedSource": "/close\n\n\n/assign @root\n\n\n\nAfter.",
+      "references": {
+        "users": [
+          "root"
+        ],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:35\" dir=\"auto\">Closes this item.<br>Assigns <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a>.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/close</p>&#x000A;<p dir=\"auto\">/assign <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a>&#x000A;</p>&#x000A;After.",
+        "references": {
+          "users": [
+            "root"
+          ],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:35\" dir=\"auto\">Closes this item.<br>Assigns <a href=\"/root\" title=\"Administrator\" class=\"gfm gfm-project_member js-user-link\" data-user=\"1\" data-original=\"@root\" data-container=\"body\" data-placement=\"top\" data-reference-type=\"user\">@root</a>.</p>"
+        }
+      }
+    },
+    {
+      "name": "reference-definition",
+      "source": "Link to [help][ref]\n/close\n[ref]: https://example.com",
+      "body": "<p data-sourcepos=\"1:1-1:19\" dir=\"auto\">Link to <a data-sourcepos=\"1:9-1:19\" href=\"https://example.com\" rel=\"nofollow noreferrer noopener\" target=\"_blank\">help</a></p>&#x000A;<p dir=\"auto\">/close&#x000A;</p>",
+      "renderedSource": "Link to [help][ref]\n/close\n\n\n[ref]: https://example.com",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:19\" dir=\"auto\">Link to [help][ref]</p>&#x000A;<p dir=\"auto\">/close</p>&#x000A;[ref]: https://example.com",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+        }
+      }
+    },
+    {
+      "name": "code",
+      "source": "```sh\n/close\n/usr/bin/env bash\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"sh\" class=\"code highlight js-syntax-highlight language-shell\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"shell\">/close</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"shell\">/usr/bin/env bash</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+      "renderedSource": "```sh\n/close\n/usr/bin/env bash\n```",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"sh\" class=\"code highlight js-syntax-highlight language-shell\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"shell\">/close</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"shell\">/usr/bin/env bash</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "tilde-code",
+      "source": "~~~sh\n/close\n~~~",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"sh\" class=\"code highlight js-syntax-highlight language-shell\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"shell\">/close</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+      "renderedSource": "~~~sh\n/close\n~~~",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"sh\" class=\"code highlight js-syntax-highlight language-shell\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"shell\">/close</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "long-fence",
+      "source": "````\n```\n/close\n````",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:4\" class=\"code highlight js-syntax-highlight language-plaintext\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"plaintext\">```</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"plaintext\">/close</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+      "renderedSource": "````\n```\n/close\n````",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:4\" class=\"code highlight js-syntax-highlight language-plaintext\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"plaintext\">```</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"plaintext\">/close</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "quote",
+      "source": "> /close",
+      "body": "<blockquote data-sourcepos=\"1:1-1:8\" dir=\"auto\">&#x000A;<p data-sourcepos=\"1:3-1:8\">/close</p>&#x000A;</blockquote>",
+      "renderedSource": "> /close",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<blockquote data-sourcepos=\"1:1-1:8\" dir=\"auto\">&#x000A;<p data-sourcepos=\"1:3-1:8\">/close</p>&#x000A;</blockquote>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "list",
+      "source": "- /close",
+      "body": "<ul data-sourcepos=\"1:1-1:8\" dir=\"auto\">&#x000A;<li data-sourcepos=\"1:1-1:8\">/close</li>&#x000A;</ul>",
+      "renderedSource": "- /close",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<ul data-sourcepos=\"1:1-1:8\" dir=\"auto\">&#x000A;<li data-sourcepos=\"1:1-1:8\">/close</li>&#x000A;</ul>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "indented",
+      "source": "    /close",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:5-1:10\" class=\"code highlight js-syntax-highlight language-plaintext\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"plaintext\">/close</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+      "renderedSource": "    /close",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:5-1:10\" class=\"code highlight js-syntax-highlight language-plaintext\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"plaintext\">/close</span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "marked",
+      "source": "**/close**",
+      "body": "<p data-sourcepos=\"1:1-1:10\" dir=\"auto\"><strong data-sourcepos=\"1:1-1:10\">/close</strong></p>",
+      "renderedSource": "**/close**",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:10\" dir=\"auto\"><strong data-sourcepos=\"1:1-1:10\">/close</strong></p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "inline-code",
+      "source": "`/close`",
+      "body": "<p data-sourcepos=\"1:1-1:8\" dir=\"auto\"><code data-sourcepos=\"1:1-1:8\">/close</code></p>",
+      "renderedSource": "`/close`",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:8\" dir=\"auto\"><code data-sourcepos=\"1:1-1:8\">/close</code></p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "crlf",
+      "source": "Before\r\n/close\r\nAfter",
+      "body": "<p data-sourcepos=\"1:1-1:6\" dir=\"auto\">Before</p>&#x000A;<p dir=\"auto\">/close</p>&#x000A;After",
+      "renderedSource": "Before\r\n/close\r\nAfter",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:6\" dir=\"auto\">Before</p>&#x000A;<p dir=\"auto\">/close</p>&#x000A;After",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+        }
+      }
+    },
+    {
+      "name": "unicode",
+      "source": "/title 研究 & review <now>",
+      "body": "<p dir=\"auto\">/title 研究 &amp; review </p>",
+      "renderedSource": "/title 研究 & review <now>",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/title 研究 &amp; review </p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "escaped",
+      "source": "\\/close",
+      "body": "<p data-sourcepos=\"1:1-1:7\" dir=\"auto\">/close</p>",
+      "renderedSource": "\\/close",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:7\" dir=\"auto\">/close</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "entity",
+      "source": "&#47;close",
+      "body": "<p data-sourcepos=\"1:1-1:10\" dir=\"auto\">/close</p>",
+      "renderedSource": "&#47;close",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:10\" dir=\"auto\">/close</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "html",
+      "source": "<p>/close</p>",
+      "body": "<p dir=\"auto\">/close</p>",
+      "renderedSource": "<p>/close</p>",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/close</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "html-container",
+      "source": "<div>\n/close\n</div>",
+      "body": "<div>&#x000A;/close&#x000A;</div>",
+      "renderedSource": "<div>\n/close\n\n\n</div>",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<div>&#x000A;/close&#x000A;</div>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "inline-leading",
+      "source": "*prefix* /close",
+      "body": "<p data-sourcepos=\"1:1-1:15\" dir=\"auto\"><em data-sourcepos=\"1:1-1:8\">prefix</em> /close</p>",
+      "renderedSource": "*prefix* /close",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": ""
+      },
+      "untransformed": {
+        "body": "<p data-sourcepos=\"1:1-1:15\" dir=\"auto\"><em data-sourcepos=\"1:1-1:8\">prefix</em> /close</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": ""
+        }
+      }
+    },
+    {
+      "name": "two-commands-paragraph",
+      "source": "/close\n/reopen",
+      "body": "<p dir=\"auto\">/close&#x000A;</p>&#x000A;<p dir=\"auto\">/reopen</p>",
+      "renderedSource": "/close\n\n\n/reopen",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/close</p>&#x000A;<p dir=\"auto\">/reopen</p>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+        }
+      }
+    },
+    {
+      "name": "after-command-alert",
+      "source": "/close\n> [!note] Note\n>\n> Explicit title.",
+      "body": "<p dir=\"auto\">/close&#x000A;</p>&#x000A;<div class=\"markdown-alert markdown-alert-note\" data-sourcepos=\"4:1-6:17\">&#x000A;<p class=\"markdown-alert-title\">Note</p>&#x000A;<p data-sourcepos=\"6:3-6:17\">Explicit title.</p>&#x000A;</div>",
+      "renderedSource": "/close\n\n\n> [!note] Note\n>\n> Explicit title.",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/close</p>&#x000A;&gt; [!note] Note&#x000A;&gt;&#x000A;&gt; Explicit title.",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+        }
+      }
+    },
+    {
+      "name": "after-command-frontmatter",
+      "source": "/close\n```yaml frontmatter\ntitle: Paper\n```",
+      "body": "<p dir=\"auto\">/close&#x000A;</p>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"4:1-6:3\" data-canonical-lang=\"yaml\" data-lang-params=\"frontmatter\" class=\"code highlight js-syntax-highlight language-yaml\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"yaml\"><span class=\"na\">title</span><span class=\"pi\">:</span> <span class=\"s\">Paper</span></span></code></pre><copy-code></copy-code><insert-code-snippet></insert-code-snippet></div>",
+      "renderedSource": "/close\n\n\n```yaml frontmatter\ntitle: Paper\n```",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/close</p>&#x000A;```yaml frontmatter&#x000A;title: Paper&#x000A;```",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+        }
+      }
+    },
+    {
+      "name": "after-command-audio",
+      "source": "/close\n![Audio description](/uploads/media-fixture/recording.wav \"Retained audio title\")",
+      "body": "<p dir=\"auto\">/close&#x000A;</p>&#x000A;<p data-sourcepos=\"4:1-4:81\" dir=\"auto\"><span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained audio title\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span></p>",
+      "renderedSource": "/close\n\n\n![Audio description](/uploads/media-fixture/recording.wav \"Retained audio title\")",
+      "references": {
+        "users": [],
+        "suggestions": [],
+        "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+      },
+      "untransformed": {
+        "body": "<p dir=\"auto\">/close</p>&#x000A;<span class=\"media-container audio-container\"><audio src=\"/-/project/1/uploads/media-fixture/recording.wav\" controls=\"true\" data-setup=\"{}\" data-title=\"Retained audio title\" data-canonical-src=\"/uploads/media-fixture/recording.wav\" class=\"gfm\"></audio></span>",
+        "references": {
+          "users": [],
+          "suggestions": [],
+          "commands": "<p data-sourcepos=\"1:1-1:17\" dir=\"auto\">Closes this item.</p>"
+        }
+      }
+    }
+  ]
+}

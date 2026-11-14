@@ -71,14 +71,17 @@ export function normalizeGitLabDiagrams(elements: readonly Element[]) {
 export function normalizeGitLabCodeRendering(elements: readonly Element[]): readonly { code: string; message: string }[] {
   const issues: { code: string; message: string }[] = [];
   for (const pre of elements) {
-    if (pre.tagName !== 'pre' || attr(pre, 'data-canonical-lang') === undefined) continue;
-    const language = attr(pre, 'data-canonical-lang') || 'text';
+    if (pre.tagName !== 'pre') continue;
+    const unspecified = attr(pre, 'data-canonical-lang') === undefined
+      && (attr(pre, 'class') ?? '').split(/\s+/u).includes('language-plaintext');
+    if (attr(pre, 'data-canonical-lang') === undefined && !unspecified) continue;
+    const language = unspecified ? '' : attr(pre, 'data-canonical-lang') || 'text';
     if (specialized.has(language.toLowerCase()) || attr(pre, 'data-lang-params')) {
       issues.push({ code: 'specialized-renderer', message: 'This code language or fence parameters require a dedicated source-aware adapter.' });
       continue;
     }
     const source = readGitLabCodeRendering(pre);
-    if (source === undefined || !/^[A-Za-z0-9_+.#-]{1,80}$/u.test(language)) {
+    if (source === undefined || language !== '' && !/^[A-Za-z0-9_+.#-]{1,80}$/u.test(language)) {
       issues.push({ code: 'code-rendering', message: 'The code rendering has ambiguous structure or metadata; retain source editing.' });
       continue;
     }

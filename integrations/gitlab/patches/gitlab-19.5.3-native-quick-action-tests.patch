@@ -1,0 +1,27 @@
+diff --git a/app/assets/javascripts/work_items/components/work_item_description.vue b/app/assets/javascripts/work_items/components/work_item_description.vue
+index 02777eac..8a8767c2 100644
+--- a/app/assets/javascripts/work_items/components/work_item_description.vue
++++ b/app/assets/javascripts/work_items/components/work_item_description.vue
+@@ -496,2 +496,6 @@ export default {
+     async startEditing() {
++      // A completed quick action can normalize the saved description while the
++      // previous form is still mounted. A new session compares against its own
++      // current server baseline, rather than carrying that old conflict flag.
++      this.conflictedDescription = '';
+       this.isEditing = true;
+diff --git a/spec/frontend/work_items/components/work_item_description_spec.js b/spec/frontend/work_items/components/work_item_description_spec.js
+index d8f0ac35..9e688355 100644
+--- a/spec/frontend/work_items/components/work_item_description_spec.js
++++ b/spec/frontend/work_items/components/work_item_description_spec.js
+@@ -744,2 +744,11 @@ describe('WorkItemDescription', () => {
+ 
++      it('starts a new edit session without a conflict retained from the previous session', async () => {
++        await wrapper.setProps({ editMode: false });
++        await wrapper.setProps({ editMode: true });
++        await waitForPromises();
++
++        expect(findConflictedDescription().exists()).toBe(false);
++        expect(findMarkdownEditor().props('value')).toBe('description updated by someone else');
++      });
++
+       it('clears conflict warning on save', async () => {
