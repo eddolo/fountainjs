@@ -14,6 +14,7 @@ import { auditNativeDiagrams, assertSavedNativeDiagrams } from './audit-gitlab-n
 import { prepareInvalidSavedDiagrams, assertInvalidSavedDiagrams, repairInvalidSavedDiagrams } from './audit-gitlab-diagram-reader.mjs';
 import { readGitLabAuditCredential } from './gitlab-audit-credentials.mjs';
 import { auditNativeQuickActions, assertSavedNativeQuickActions } from './audit-gitlab-native-quick-actions.mjs';
+import { assertSavedAutocomplete } from './audit-gitlab-native-autocomplete.mjs';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
@@ -23,7 +24,8 @@ const nativeContextUI = process.argv.includes('--native-context-ui');
 const nativeContextMenus = process.argv.includes('--native-context-menus') || nativeContextUI;
 const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
-const nativeQuickActionControls = process.argv.includes('--native-quick-action-controls');
+const nativeAutocomplete = process.argv.includes('--native-autocomplete');
+const nativeQuickActionControls = process.argv.includes('--native-quick-action-controls') || nativeAutocomplete;
 const nativeQuickActions = process.argv.includes('--native-quick-actions') || nativeQuickActionControls;
 const nativeDiagramAuthoring = process.argv.includes('--native-diagram-authoring');
 const nativeDiagramReader = process.argv.includes('--native-diagram-reader');
@@ -41,7 +43,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
-  nativeQuickActionControls ? 'artifacts/gitlab-native-quick-action-controls-20261114/' : nativeQuickActions ? 'artifacts/gitlab-native-quick-actions-20261114/' : nativeContextUI ? 'artifacts/gitlab-native-context-ui-20261113/' : nativeContextMenus ? 'artifacts/gitlab-native-context-menus-20261113/' : nativeFrontmatter ? 'artifacts/gitlab-native-frontmatter-20261113/' : nativeDiagramReader ? 'artifacts/gitlab-native-diagram-reader-20261113/' : nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
+  nativeAutocomplete ? 'artifacts/gitlab-native-autocomplete-20261114/' : nativeQuickActionControls ? 'artifacts/gitlab-native-quick-action-controls-20261114/' : nativeQuickActions ? 'artifacts/gitlab-native-quick-actions-20261114/' : nativeContextUI ? 'artifacts/gitlab-native-context-ui-20261113/' : nativeContextMenus ? 'artifacts/gitlab-native-context-menus-20261113/' : nativeFrontmatter ? 'artifacts/gitlab-native-frontmatter-20261113/' : nativeDiagramReader ? 'artifacts/gitlab-native-diagram-reader-20261113/' : nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
     : nativeCapacity
     ? 'artifacts/gitlab-native-attachment-capacity-20261112/'
@@ -437,7 +439,7 @@ try {
     if (nativeLinks) await auditNativeLinks({ page, context, editor, toolbar, output, report });
     if (nativeCode) await auditNativeCode({ page, editor, toolbar, output, report });
     if (nativeContextMenus) await auditNativeContextMenus({ page, editor, toolbar, output, report });
-    if (nativeQuickActions) await auditNativeQuickActions({ page, editor, toolbar, output, report, api, project, issue, controls: nativeQuickActionControls });
+    if (nativeQuickActions) await auditNativeQuickActions({ page, editor, toolbar, output, report, api, project, issue, controls: nativeQuickActionControls, autocomplete: nativeAutocomplete });
     if (nativeFrontmatter) await auditNativeFrontmatter({ page, editor, toolbar, output, report });
     if (nativeAlerts) await auditNativeAlerts({ page, editor, toolbar, output, report });
     if (nativeMedia) await auditNativeMedia({ page, context, editor, toolbar, output, report });
@@ -658,6 +660,7 @@ try {
   }
   if (nativeContextMenus) await assertSavedNativeContextMenus({ page, description: saved.description, report, output, phase: 'saved' });
   if (nativeQuickActions) await assertSavedNativeQuickActions({ page, saved, report, output, phase: 'saved' });
+  if (nativeAutocomplete) await assertSavedAutocomplete({ page, saved, report, phase: 'saved' });
   if (nativeFrontmatter) {
     await assertSavedNativeFrontmatter({ page, description: saved.description, report, output, phase: 'saved' });
     report.checks.push('Actual UI Save retains frontmatter source and delimiters; the GitLab reader and reopened native source agree');
@@ -790,6 +793,7 @@ try {
   if (nativeAlerts) await assertSavedNativeAlerts({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeContextMenus) await assertSavedNativeContextMenus({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeQuickActions) await assertSavedNativeQuickActions({ page, saved: await api('GET', `/projects/${project.id}/issues/${issue.iid}`), report, output, phase: 'reopened' });
+  if (nativeAutocomplete) await assertSavedAutocomplete({ page, saved: await api('GET', `/projects/${project.id}/issues/${issue.iid}`), report, phase: 'reopened' });
   if (nativeFrontmatter) await assertSavedNativeFrontmatter({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeMedia) await assertSavedNativeMedia({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeReferences) await assertSavedNativeReferences({ page, description: saved.description, report, output, phase: 'reopened' });
@@ -845,6 +849,7 @@ try {
     if (nativeAlerts) await assertSavedNativeAlerts({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeContextMenus) await assertSavedNativeContextMenus({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeQuickActions) await assertSavedNativeQuickActions({ page, saved: reopened, report, output, phase: 'restart' });
+    if (nativeAutocomplete) await assertSavedAutocomplete({ page, saved: reopened, report, phase: 'restart' });
     if (nativeFrontmatter) await assertSavedNativeFrontmatter({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeMedia) await assertSavedNativeMedia({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeReferences) await assertSavedNativeReferences({ page, description: reopened.description, report, output, phase: 'restart' });

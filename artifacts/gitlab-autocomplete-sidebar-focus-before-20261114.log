@@ -1,0 +1,30 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js spec/frontend/super_sidebar/components/super_sidebar_spec.js --runInBand --silent
+FAIL spec/frontend/super_sidebar/components/super_sidebar_spec.js
+  ● SuperSidebar component › focusing first focusable element › keeps the active page control focused when the desktop sidebar expands
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: called with 0 arguments
+
+      545 |         await nextTick();
+      546 |         await nextTick();
+    > 547 |         expect(focusSpy).not.toHaveBeenCalled();
+          |                              ^
+      548 |         expect(document.activeElement).toBe(field);
+      549 |       } finally {
+      550 |         field.remove();
+
+      at Object.toHaveBeenCalled (spec/frontend/super_sidebar/components/super_sidebar_spec.js:547:30)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 53 passed, 54 total
+Snapshots:   0 total
+Time:        4.455 s
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

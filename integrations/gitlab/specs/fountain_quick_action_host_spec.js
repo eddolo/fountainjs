@@ -34,7 +34,7 @@ describe('native quick action host transport', () => {
     expect(mock.history.get.map(request => request.url)).toEqual([endpoint]);
     expect(mock.history.get[0].signal).toBeInstanceOf(AbortSignal);
     fireEvent.click(getByRole(wrapper.element, 'option', { name: /\/label.*Add labels/ })); await settle();
-    expect(wrapper.emitted('change').at(-1)[0].markdown).toBe('Start\n\n/label ');
+    expect(wrapper.emitted('change').at(-1)[0].markdown).toBe('Start\n\n/label ~');
   });
   it('keeps the insert control absent when the host disables quick actions', async () => {
     await createComponent({ supportsQuickActions: false });

@@ -2,6 +2,24 @@
 
 Updated 2026-11-14.
 
+The private GitLab integration now connects reference suggestions and command
+arguments to actual host endpoints, reactive work-item state and the Markdown
+renderer. The recorded real-service profile passes 21 checks, including a label
+argument, issue/user/merge-request/milestone insertion, a deliberate GET failure
+and retry, keyboard use at 360px, source switching, Save, reopen and application
+restart. Reference counts and source are checked against the document before
+Save. Scoped desktop/mobile reference scans have no accessibility violations.
+The journey exposed two focus defects: Retry removed its focused button, and
+GitLab's responsive desktop sidebar stole editor focus after a debounced resize.
+Both have regressions and repairs; the sidebar repair stays in the host patch.
+All 6,134 Node cases and 536 selected upstream cases pass, with the one inherited
+upstream skip unchanged. Eighteen patches and the 28-file source rollback verify.
+Wiki/Gollum and emoji completion, all provider/context/role/browser matrices,
+touch-first narrow-screen interaction, remaining GitLab surfaces, compiled
+deployment rollback and full product acceptance remain open. No parity row or
+public feature claim is promoted, and no package capacity limit changes.
+[Autocomplete evidence and limits](../artifacts/gitlab-autocomplete-integration-20261114.json).
+
 The offscreen-caret finding below now has a native-range visibility regression
 and a DOM-view repair. Focused local edits reveal the caret through inner scroll
 containers before adjusting the window, using the caret range rather than a

@@ -1,5 +1,24 @@
 # Release and API stability policy
 
+## Native GitLab reference/argument completion — 2026-11-14
+
+This private integration checkpoint adds authenticated reference suggestions,
+command-argument handoff and native inline insertion through GitLab's actual
+Markdown renderer. Source, selection, pending-request cancellation and undo use
+Fountain's existing engine boundaries. No Tiptap editor facade is introduced.
+Retry now returns focus before removing its button. A separate upstream host
+patch prevents automatic desktop sidebar expansion from stealing page focus;
+the existing mobile overlay focus behavior is retained.
+
+The recorded service journey passes 21 checks through Save/reopen/restart, with
+zero browser errors and no violations in the scoped reference-panel scans.
+The installer owns 28 source files, with eighteen ordered host/test patches.
+Source rollback is distinct from compiled deployment rollback. Broader provider,
+role/browser and touch interaction matrices, remaining product surfaces and full
+parity remain open. Public engine/package code and capacity limits are unchanged.
+No npm or public website feature promotion follows from this private checkpoint.
+[Evidence and remaining work](../artifacts/gitlab-autocomplete-integration-20261114.json).
+
 ## Visible caret after local DOM edits — 2026-11-14
 
 The offscreen-caret issue retained by the previous checkpoint now has a failing

@@ -2,13 +2,13 @@
   "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
   "entry": "integrations/gitlab/runtime/browser.ts",
   "target": "es2018",
-  "bytes": 1587193,
-  "sha256": "4df95336f21cffa06eb01aa4fb13bb7347d97cd8ea581cdeb104dc2bad14f88b",
-  "parentRevision": "ae300d237555d2aafe72c83cccad5f2f646653ac",
+  "bytes": 1608376,
+  "sha256": "cdad0a23bdbeee86da0bcb5c4cb3f849e7ce78f51e0290f87b1d2d029e43d47d",
+  "parentRevision": "f951b89a67f0755a99bcca49f004a5c7b1ee9886",
   "inputs": {
-    "integrations/gitlab/runtime/browser.ts": "fdd8efdb6d8448c6d497e0217c19e0d17be1b2c0b3b95bc9552bcff9c4efd192",
-    "integrations/gitlab/services/content_editor.ts": "2e64b1be273fd546e9f08e3a5c815104c04d8762579b6bb0fd93b2c4d62f60ea",
-    "integrations/gitlab/services/markdown_insertion.ts": "b782f4d206cd062a63992e85b57b1264b8bf7365c437c72994b6aa1e8bd1726c",
+    "integrations/gitlab/runtime/browser.ts": "c70fd2de401dc2c65d05abd38350105c048500a78c749a4f9de1e6a6722d74c8",
+    "integrations/gitlab/services/content_editor.ts": "209d0cfa819a6f0680986e8b77be299f1381a64f52f8685018e2b7e00dcbac61",
+    "integrations/gitlab/services/markdown_insertion.ts": "10a8078f9f9ebbd8bf7293ffc0d6ae34d36b51ed6d6598e3403a3289ee15187f",
     "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
     "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
     "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
@@ -23,12 +23,14 @@
     "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
     "integrations/gitlab/services/markdown_codec.ts": "be1e569e1300ffd68ea498be500c094ae42701fa2f52711129c69fd104bc67a4",
     "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
-    "integrations/gitlab/services/quick_action_editing.ts": "6b27e52a26a0bdd4385058455c8d59bf7959ba8bb22d6c7183b3a972c0687547",
+    "integrations/gitlab/services/quick_action_editing.ts": "42d37b3300907be0a8499ff7b0e64bb9410334fe13e82ce7515e412642b88ebe",
+    "integrations/gitlab/services/autocomplete_data.ts": "1741396673d51ce049777fa88bd00ff65184ce57e2d484ebde94c69f6cf98568",
+    "integrations/gitlab/services/autocomplete_editing.ts": "3244b67431ce508e9893b5166ab5f5ef798a4e63b770f7a8bfbe0fc6a7dec827",
     "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
     "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
     "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
     "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
-    "dist/index.js": "6ac62e3acacc8735fffc4851fe091734de6fe791c42ff3938a15ad84c128be69",
-    "dist/document-utilities.js": "2164e2b7922b6e33e707d7fdf3e00307792adc1d464765156d43ec649bbab8fa"
+    "dist/index.js": "52453d47cd8402b61f26f2bcf3d9af077ba24e231843012219b70928caeb5b2a",
+    "dist/document-utilities.js": "a76425ef95a8c04d36de1eba5dd994485dafe6f4cc60e1ac12c5c0aa68649bd4"
   }
 }

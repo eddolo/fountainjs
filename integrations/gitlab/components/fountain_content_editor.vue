@@ -15,6 +15,7 @@ import {
   assertGitLabNativeHostConfiguration,
   parseGitLabQuickActionCommands,
 } from '../runtime/browser';
+import { createGitLabAutocompleteProvider } from '../services/fountain_autocomplete';
 import FountainEditorSurface from './fountain_editor_surface.vue';
 import FountainFormattingToolbar from './fountain_formatting_toolbar.vue';
 import FountainLinkMenu from './fountain_link_menu.vue';
@@ -149,6 +150,11 @@ export default {
           onListenerError: this.onSurfaceError,
           uploadAttachment: this.uploadFile,
           quickActionProvider: this.supportsQuickActions ? this.fetchQuickActions : undefined,
+          autocompleteProvider: this.enableAutocomplete ? createGitLabAutocompleteProvider({
+            getSources: () => this.autocompleteDataSources,
+            getRoot: this.getEditorRoot,
+            getSidebar: () => this.sidebarMediator,
+          }) : undefined,
         }),
       );
       this.releaseChange = this.contentEditor.subscribeChange(this.onDocumentChange);
@@ -422,7 +428,7 @@ export default {
     <gl-alert v-if="adapterGaps && !fatal" variant="warning" :dismissible="false">
       {{
         s__(
-          'ContentEditor|This integration is unfinished. Reference and quick-action argument autocomplete, saved replies and some specialized menus are not connected yet. Use source editing for those workflows.',
+          'ContentEditor|This integration is unfinished. Some reference and command contexts, saved replies and specialized menus are still unavailable. Use source editing for those workflows.',
         )
       }}
     </gl-alert>

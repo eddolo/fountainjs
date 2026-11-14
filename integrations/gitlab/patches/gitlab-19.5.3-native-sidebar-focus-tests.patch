@@ -1,0 +1,45 @@
+diff --git a/app/assets/javascripts/super_sidebar/components/super_sidebar.vue b/app/assets/javascripts/super_sidebar/components/super_sidebar.vue
+index 22c8897fe9d9884d14fc2965d77bc4609494b8a6..61ece49b6ec73799e99c15598bfc1f5844592a60 100644
+--- a/app/assets/javascripts/super_sidebar/components/super_sidebar.vue
++++ b/app/assets/javascripts/super_sidebar/components/super_sidebar.vue
+@@ -135,9 +135,10 @@ export default {
+     'sidebarState.isCollapsed': {
+       handler(collapsed) {
+         this.setupFocusTrapListener();
+ 
+-        if (!collapsed) {
++        // Desktop expansion follows responsive layout; it must not steal editor focus.
++        if (!collapsed && this.isOverlapping()) {
+           this.$nextTick(() => {
+             this.firstFocusableElement().focus();
+           });
+         }
+diff --git a/spec/frontend/super_sidebar/components/super_sidebar_spec.js b/spec/frontend/super_sidebar/components/super_sidebar_spec.js
+index 9f4c459e9463faedd7184fba12f96f9e509e2537..382651fb906ed8557b28a0b82c0615d4493dbd5e 100644
+--- a/spec/frontend/super_sidebar/components/super_sidebar_spec.js
++++ b/spec/frontend/super_sidebar/components/super_sidebar_spec.js
+@@ -534,8 +534,24 @@ describe('SuperSidebar component', () => {
+ 
+       expect(focusSpy).toHaveBeenCalledTimes(1);
+     });
+ 
++    it('keeps the active page control focused when the desktop sidebar expands', async () => {
++      jest.spyOn(GlBreakpointInstance, 'windowWidth').mockReturnValue(xl);
++      const field = document.createElement('textarea');
++      document.body.append(field);
++      try {
++        field.focus();
++        wrapper.vm.sidebarState.isCollapsed = false;
++        await nextTick();
++        await nextTick();
++        expect(focusSpy).not.toHaveBeenCalled();
++        expect(document.activeElement).toBe(field);
++      } finally {
++        field.remove();
++      }
++    });
++
+     it("doesn't focus the first focusable element when sidebar is collapsed", async () => {
+       jest.spyOn(GlBreakpointInstance, 'windowWidth').mockReturnValue(lg);
+ 
+       wrapper.vm.sidebarState.isCollapsed = false;

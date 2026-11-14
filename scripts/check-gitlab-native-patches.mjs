@@ -15,7 +15,8 @@ const run = (...args) => execFileSync('git', args, { cwd: source, env, encoding:
 const names = ['current-document', 'native-host-tests', 'native-component-tests', 'native-attachment-tests',
   'native-upload-capacity-tests', 'native-link-tests', 'native-code-tests', 'native-alert-tests', 'native-media-tests', 'native-reference-tests', 'native-diagram-tests'];
 const frontmatter = process.argv.includes('--frontmatter');
-const quickActionControls = process.argv.includes('--quick-action-controls');
+const autocomplete = process.argv.includes('--autocomplete');
+const quickActionControls = process.argv.includes('--quick-action-controls') || autocomplete;
 const quickActions = process.argv.includes('--quick-actions') || quickActionControls;
 const refined = process.argv.includes('--context-ui') || quickActions;
 const contextual = process.argv.includes('--context-menus') || refined;
@@ -24,6 +25,7 @@ if (frontmatter || contextual) names.push('native-frontmatter-tests');
 if (contextual) names.push('native-context-menu-tests');
 if (quickActions) names.push('native-quick-action-tests');
 if (quickActionControls) names.push('native-quick-action-controls-tests');
+if (autocomplete) names.push('native-autocomplete-tests', 'native-sidebar-focus-tests');
 const patches = names.map(name => `integrations/gitlab/patches/gitlab-19.5.3-${name}.patch`);
 try {
   const revision = run('rev-parse', 'HEAD').trim();
@@ -36,7 +38,10 @@ try {
     run('apply', '--cached', '--whitespace=nowarn', absolute);
     hashes[path] = createHash('sha256').update(await readFile(absolute)).digest('hex');
   }
-  for (const path of [...(quickActionControls ? ['spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js',
+  for (const path of [...(autocomplete ? ['app/assets/javascripts/super_sidebar/components/super_sidebar.vue',
+    'spec/frontend/super_sidebar/components/super_sidebar_spec.js',
+    'spec/frontend/content_editor/components/fountain_autocomplete_spec.js',
+    'spec/frontend/content_editor/fixtures/fountain_autocomplete_live.json'] : []), ...(quickActionControls ? ['spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js',
     'spec/frontend/content_editor/components/fountain_quick_action_host_spec.js',
     'spec/frontend/content_editor/fixtures/fountain_quick_action_commands_live.json'] : []), ...(quickActions ? ['app/assets/javascripts/work_items/components/work_item_description.vue',
     'spec/frontend/work_items/components/work_item_description_spec.js'] : []), 'spec/frontend/content_editor/components/content_editor_spec.js',
@@ -60,7 +65,7 @@ try {
     isolation: 'Upstream worktree and main index are unchanged; temporary index removed' };
   const authoring = process.argv.includes('--diagram-authoring');
   const reader = process.argv.includes('--diagram-reader');
-  const profile = quickActionControls ? 'quick-action-controls' : quickActions ? 'quick-actions' : refined ? 'context-ui' : contextual ? 'context-menus' : frontmatter ? 'frontmatter' : reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
+  const profile = autocomplete ? 'autocomplete' : quickActionControls ? 'quick-action-controls' : quickActions ? 'quick-actions' : refined ? 'context-ui' : contextual ? 'context-menus' : frontmatter ? 'frontmatter' : reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
   await writeFile(new URL(`artifacts/gitlab-native-${profile}-patch-verification-${quickActions ? '20261114' : authoring || reader || frontmatter || contextual ? '20261113' : '20261112'}.json`, root), JSON.stringify(report, null, 2) + '\n');
   console.log(`${patches.length} ordered native patches reconstruct the tested pinned source.`);
 } finally { await rm(temporary, { recursive: true, force: true }); }

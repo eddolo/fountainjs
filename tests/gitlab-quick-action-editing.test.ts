@@ -4,6 +4,7 @@ import { GitLabContentEditor } from '../integrations/gitlab/services/content_edi
 import { createGitLabQuickActionPlugin, filterGitLabQuickActionCommands, getGitLabQuickActionContext,
   parseGitLabQuickActionCommands, type GitLabQuickActionProvider } from '../integrations/gitlab/services/quick_action_editing';
 import live from '../integrations/gitlab/fixtures/quick-action-commands-live.json';
+import autocompleteLive from '../integrations/gitlab/fixtures/autocomplete-live.json';
 
 const services: GitLabContentEditor[] = [];
 const commands = parseGitLabQuickActionCommands(live.commands);
@@ -77,6 +78,21 @@ it('accepts the actual label command without erasing existing arguments or reope
   expect(editor.state.selection).toEqual(Selection.cursor([0, 0], 7));
   expect(actions.suggestions?.getSnapshot().open).toBe(false);
   expect(undo(editor)).toBe(true); expect(service.getSerializedContent()).toBe('/lab ~"Keep arguments"');
+});
+it.each([['label', '~'], ['assign', '@']])('opens the native argument prefix for the returned %s command', async (name, prefix) => {
+  const { service, editor, actions } = await setup(); await query(service, '/' + name);
+  const item = actions.suggestions!.getSnapshot().items.find(value => value.name === name)!;
+  expect(item).toBeDefined(); expect(actions.accept(item)).toBe(true);
+  expect(service.getSerializedContent()).toBe('/' + name + ' ' + prefix);
+  expect(editor.state.selection.from).toBe(name.length + 2 + prefix.length);
+  expect(undo(editor)).toBe(true); expect(service.getSerializedContent()).toBe('/' + name);
+});
+it('opens the milestone prefix when the live catalogue enables it after a milestone exists', async () => {
+  const currentCommands = parseGitLabQuickActionCommands(autocompleteLive.commands);
+  const { service, actions } = await setup(async () => currentCommands); await query(service, '/milestone');
+  const item = actions.suggestions!.getSnapshot().items.find(value => value.name === 'milestone')!;
+  expect(item).toBeDefined(); expect(actions.accept(item)).toBe(true);
+  expect(service.getSerializedContent()).toBe('/milestone %');
 });
 it('cancels obsolete transport and refuses a stale visible item after the cursor changes', async () => {
   const signals: AbortSignal[] = [];

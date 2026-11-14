@@ -13,8 +13,8 @@ import type { SerializedContentCodec, SerializedContentResult } from './serializ
 export interface GitLabInsertionProjection {
   readonly selection: AnySelection;
   project(document: Node, markdown: string): Node;
-  /** Attribute-only replacements retain the user's current selection. */
-  apply?(document: Node): boolean;
+  /** Receives the captured target rebased through unrelated edits. */
+  apply?(document: Node, target: AnySelection): boolean;
 }
 
 export class GitLabInsertionConflict extends Error {
@@ -178,7 +178,7 @@ export class GitLabMarkdownInsertion {
       closeHistory(this.editor);
       const accepted = this.editor.runCommandBatch(() => {
         if (projection?.apply) {
-          if (!projection.apply(document)) return false;
+          if (!projection.apply(document, target)) return false;
         } else {
           if (
             !this.editor.dispatch(

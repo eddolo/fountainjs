@@ -93,12 +93,27 @@ try {
       results[kind] = { endpoint: endpoint.pathname + endpoint.search, status: response.status(),
         data: response.ok() ? await response.json() : null };
     }
+    const { parseGitLabAutocompleteItems, parseGitLabQuickActionCommands } = await import(new URL('artifacts/gitlab-native-runtime/fountain-runtime.mjs', root));
+    const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
+    if (preview.origin !== base) throw new Error('Nonlocal autocomplete preview');
+    preview.searchParams.set('no_header_anchors', 'true');
+    const projections = [];
+    for (const [kind, key] of [['user', 'members'], ['issue', 'issues'], ['merge_request', 'mergeRequests'], ['label', 'labels'], ['milestone', 'milestones']]) {
+      if (results[key]?.status !== 200) continue;
+      for (const item of parseGitLabAutocompleteItems(kind, results[key].data).slice(0, 3)) {
+        const rendered = await request(preview.href, { text: item.source });
+        projections.push({ kind, source: item.source, body: rendered.body });
+      }
+    }
+    const commandURL = new URL(sources.commands, base);
+    if (commandURL.origin !== base || commandURL.username || commandURL.password || commandURL.hash) throw new Error('Nonlocal commands');
+    const commands = parseGitLabQuickActionCommands(await request(commandURL.href));
     const issue = await request(`/api/v4/projects/${project.id}/issues/${prior.issue.iid}`);
     await writeFile(new URL('integrations/gitlab/fixtures/autocomplete-live.json', root), JSON.stringify({
       scope: 'Authenticated native autocomplete endpoints and actual records in the isolated private project; not a role/context/browser acceptance matrix',
       upstream: { revision: pin.commit, version: version.version, packagedRevision: version.revision },
       project: { id: project.id, fullPath: project.path_with_namespace },
-      issue: { id: issue.id, iid: issue.iid, labels: issue.labels, assignees: issue.assignees }, sources, results,
+      issue: { id: issue.id, iid: issue.iid, labels: issue.labels, assignees: issue.assignees }, sources, results, projections, commands,
     }, null, 2) + '\n');
     console.log(JSON.stringify({ kind: 'autocomplete', captured: Object.fromEntries(Object.entries(results)
       .map(([kind, result]) => [kind, { status: result.status, count: Array.isArray(result.data) ? result.data.length : null }])) }));

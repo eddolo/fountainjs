@@ -2,8 +2,9 @@ import { expect } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
+import { auditNativeAutocomplete } from './audit-gitlab-native-autocomplete.mjs';
 
-export async function auditNativeQuickActions({ page, editor, toolbar, output, report, api, project, issue, controls = false }) {
+export async function auditNativeQuickActions({ page, editor, toolbar, output, report, api, project, issue, controls = false, autocomplete = false }) {
   page.on('response', async response => {
     if (response.request().method() !== 'POST' || !response.url().includes('/api/graphql')) return;
     let data;
@@ -69,9 +70,12 @@ export async function auditNativeQuickActions({ page, editor, toolbar, output, r
     expect(await list.getByRole('option').count()).toBe(1);
     await page.keyboard.press('Alt+F10'); await expect(list).toBeFocused();
     await page.keyboard.press('Enter');
-    await expect(editor.getByText('/label', { exact: true })).toBeVisible();
+    await expect(editor.getByText('/label ~', { exact: true })).toBeVisible();
     await expect(list).toHaveCount(0);
-    await page.keyboard.type(`~"${label}"`);
+    const argumentsList = page.getByRole('listbox', { name: 'Available references', exact: true });
+    await expect(argumentsList.getByRole('option', { name: label, exact: true })).toBeVisible();
+    await argumentsList.getByRole('option', { name: label, exact: true }).click();
+    await expect(editor.getByRole('link', { name: label, exact: true })).toBeVisible();
     await expect(panel).toContainText('Adds 1 label.');
     const viewport = page.viewportSize(); await page.setViewportSize({ width: 360, height: 780 });
     await expect(toolbar.getByTestId('native-context-surface').filter({ has: panel })).toHaveAttribute('data-menu-mode', 'docked');
@@ -86,7 +90,7 @@ export async function auditNativeQuickActions({ page, editor, toolbar, output, r
     await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect(panel).toContainText('Adds 1 label.');
     await page.setViewportSize(viewport);
-    await editor.getByText(`/label ~"${label}"`, { exact: true }).click();
+    await editor.getByRole('link', { name: label, exact: true }).click();
     await page.keyboard.press('End');
     await expect(panel).toContainText('Adds 1 label.');
     const install = JSON.parse(await readFile(new URL('../artifacts/gitlab-native-browser-install/install.json', import.meta.url)));
@@ -98,22 +102,22 @@ export async function auditNativeQuickActions({ page, editor, toolbar, output, r
     expect(commandResponses.some(response => response.status === 200)).toBe(true);
     page.off('response', observe);
     report.nativeQuickActionControls = { commandResponses, accessibilityViolations: accessibility.violations,
-      scope: 'Command-name suggestions and server preview; argument/reference autocomplete remains open' };
+      scope: 'Command-name suggestions, label argument handoff and server preview; full command/context matrices remain open' };
     report.checks.push('Actual toolbar insertion loads authenticated command names, resolves an alias, supports Escape and Alt+F10/Enter, previews the server effect, and switches interpretation with undo on a 360px dock');
   }
+  if (autocomplete) await auditNativeAutocomplete({ page, editor, output, report });
   await page.keyboard.press('End'); await page.keyboard.press('Enter');
   const source = `${controls ? '' : `/label ~"${label}"\n`}[retained]: https://example.com\n\nSee [help][retained]\n\n> [!note] Note\n>\n> Explicit title after a quick action.\n\n\`\`\`yaml frontmatter\ntitle: Paper after a quick action\n\`\`\`\n\n\\/close`;
   await page.evaluate(text => navigator.clipboard.writeText(text), source);
   await toolbar.getByRole('button', { name: 'Paste Markdown', exact: true }).click();
   await expect(editor.getByText('/close', { exact: true })).toBeVisible();
-  if (controls) await expect(editor.getByText(`/label ~"${label}"`, { exact: true })).toBeVisible();
-  else await expect(editor.getByRole('link', { name: label, exact: true })).toBeVisible();
+  await expect(editor.getByRole('link', { name: label, exact: true })).toBeVisible();
   await expect(editor.getByRole('link', { name: 'help', exact: true })).toHaveAttribute('href', 'https://example.com');
   await expect(editor.locator('[data-fountain-node="gitlab_alert_title"]')).toHaveText('Note');
   await expect(editor.locator('pre[data-fountain-node="code_block"]')).toContainText('title: Paper after a quick action');
   await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(editor.getByText('/close', { exact: true })).toHaveCount(0);
-  if (controls) expect(await editor.innerText()).toContain(`/label ~"${label}"`);
+  if (controls) await expect(editor.getByRole('link', { name: label, exact: true })).toBeVisible();
   else expect((await editor.innerText()).trim()).toBe(originalText.trim());
   await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
   await expect(editor.getByText('/close', { exact: true })).toBeVisible();

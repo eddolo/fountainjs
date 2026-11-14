@@ -11,6 +11,8 @@ import {
 import { GitLabAssetResolver, type GitLabAssetResolverOptions } from './asset_resolver';
 import { GitLabMarkdownCodec, createGitLabSchemaSpec } from './markdown_codec';
 import { createGitLabQuickActionPlugin, GitLabQuickActionEditing, type GitLabQuickActionProvider } from './quick_action_editing';
+import { createGitLabAutocompletePlugin, GitLabAutocompleteEditing } from './autocomplete_editing';
+import type { GitLabAutocompleteProvider } from './autocomplete_data';
 import {
   SerializedContentController,
   type SerializedContentChange,
@@ -37,6 +39,7 @@ export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
   maxUploadEntries?: number;
   describeMedia?(kind: GitLabPlayableKind): string;
   quickActionProvider?: GitLabQuickActionProvider;
+  autocompleteProvider?: GitLabAutocompleteProvider;
 }
 export class GitLabEditorNotReady extends Error {
   constructor(readonly status: GitLabEditorStatus) {
@@ -60,6 +63,7 @@ export class GitLabContentEditor {
   private referenceSession?: GitLabReferenceEditingSession;
   readonly alerts: GitLabAlertEditing;
   readonly quickActions: GitLabQuickActionEditing;
+  readonly autocomplete: GitLabAutocompleteEditing;
   private readonly uploadListeners = new Set<(uploads: readonly GitLabUploadSnapshot[]) => void>();
   private readonly releaseChanges: () => void;
   private readonly listeners = new Set<(change: SerializedContentChange) => void>();
@@ -91,6 +95,7 @@ export class GitLabContentEditor {
       'maxUploadEntries',
       'describeMedia',
       'quickActionProvider',
+      'autocompleteProvider',
     ]);
     for (const key of Object.keys(options)) {
       if (!supported.has(key)) throw new TypeError(`UNSUPPORTED_GITLAB_NATIVE_OPTION:${key}`);
@@ -101,6 +106,8 @@ export class GitLabContentEditor {
       throw new TypeError('EXPECTED_GITLAB_MEDIA_LOCALIZER');
     if (options.quickActionProvider !== undefined && typeof options.quickActionProvider !== 'function')
       throw new TypeError('EXPECTED_GITLAB_QUICK_ACTION_PROVIDER');
+    if (options.autocompleteProvider !== undefined && typeof options.autocompleteProvider !== 'function')
+      throw new TypeError('EXPECTED_GITLAB_AUTOCOMPLETE_PROVIDER');
     if (options.maxUploadEntries !== undefined && (!Number.isInteger(options.maxUploadEntries)
       || options.maxUploadEntries < 1 || options.maxUploadEntries > 1000))
       throw new RangeError('INVALID_GITLAB_UPLOAD_CAPACITY');
@@ -124,6 +131,8 @@ export class GitLabContentEditor {
     let alertInput: Plugin | undefined;
     let quickActions: GitLabQuickActionEditing | undefined;
     const quickActionPlugin = createGitLabQuickActionPlugin(() => quickActions);
+    let autocomplete: GitLabAutocompleteEditing | undefined;
+    const autocompletePlugin = createGitLabAutocompletePlugin(() => autocomplete);
     try {
       this.editor = createEditor({
         schema: createGitLabSchemaSpec(kit.schema, options.describeMedia ? {
@@ -136,7 +145,7 @@ export class GitLabContentEditor {
           handleBeforeInput: (editor, event) => !event.isComposing && event.inputType?.startsWith('format')
             && (Boolean(getGitLabCodeContext(editor)) || selectionIncludesGitLabFrontmatter(editor)) || (alertInput?.spec.props?.handleBeforeInput?.(editor, event) ?? false),
           handlePaste: (editor, event) => alertInput?.spec.props?.handlePaste?.(editor, event) ?? false,
-        } }), quickActionPlugin, ...kit.plugins, createGitLabReferenceNavigationPlugin()],
+        } }), quickActionPlugin, autocompletePlugin, ...kit.plugins, createGitLabReferenceNavigationPlugin()],
         editable: options.editable,
       });
     } catch (error) {
@@ -196,6 +205,21 @@ export class GitLabContentEditor {
       validate: doc => { this.codec.serialize({ doc }); },
       explain: source => this.assetResolver.explainQuickAction(source, { strict: true }),
       onListenerError: this.reportListenerError,
+    });
+    this.autocomplete = autocomplete = new GitLabAutocompleteEditing({ editor: this.editor, key: autocompletePlugin.key,
+      provider: options.autocompleteProvider,
+      commandsEnabled: Boolean(options.quickActionProvider),
+      ensureReady: () => {
+        this.assertAlive();
+        if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
+          throw new GitLabEditorNotReady(this.status);
+      },
+      validate: doc => { this.codec.serialize({ doc }); },
+      insert: (source, projection) => this.insertions.insertFrom(() => source, undefined, source, projection),
+      onError: error => {
+        this.listenerFailure = error;
+        try { this.reportListenerError?.(error); } catch { /* Observers cannot own accepted insertion. */ }
+      },
     });
   }
 
@@ -475,6 +499,7 @@ export class GitLabContentEditor {
   dispose(): void {
     if (this.destroyed) return;
     this.destroyed = true;
+    this.autocomplete.destroy();
     this.quickActions.destroy();
     this.request++;
     this.linkSession?.close();

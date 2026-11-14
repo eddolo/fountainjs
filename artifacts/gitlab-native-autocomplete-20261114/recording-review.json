@@ -1,0 +1,15 @@
+{
+  "status": "reviewed",
+  "scope": "Nine full-resolution interaction screenshots plus twelve approximately aligned recording samples; not frame-by-frame video viewing",
+  "contactSheet": "artifacts/gitlab-native-autocomplete-20261114/recording-review.png",
+  "samples": "artifacts/gitlab-native-autocomplete-20261114/recording-samples.json",
+  "observations": [
+    "The failed-provider panel retains the typed issue query and presents a readable Retry action.",
+    "The 360px reference list is reachable through Alt+F10 in the docked toolbar and shows its focused option.",
+    "Inserted issue, user, merge-request and milestone references are visible in the editable document and actual GitLab reader.",
+    "The saved label appears in GitLab's real sidebar; source mode retains reference syntax and the escaped close command.",
+    "Unsupported saved footnote source is retained in the recovery UI while editing is disabled; explicit recovery remains visibly separate.",
+    "The document, uploaded figure, math, table, references and inert close text remain visible after restart.",
+    "Touch-first suggestion discovery beside an offscreen mobile caret is not certified by the keyboard dock journey."
+  ]
+}

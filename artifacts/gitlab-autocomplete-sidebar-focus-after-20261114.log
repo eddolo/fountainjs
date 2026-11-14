@@ -1,0 +1,11 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js spec/frontend/super_sidebar/components/super_sidebar_spec.js --runInBand --silent
+PASS spec/frontend/super_sidebar/components/super_sidebar_spec.js
+
+Test Suites: 1 passed, 1 total
+Tests:       54 passed, 54 total
+Snapshots:   0 total
+Time:        2.485 s
+Done in 3.65s.

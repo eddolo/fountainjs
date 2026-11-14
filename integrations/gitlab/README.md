@@ -9,6 +9,52 @@ accounts, projects, storage, uploads, authorization, issue/MR/wiki workflows and
 collaboration services. These services remain real GitLab services. Recreating
 their controls with local-only state does not meet the requirement.
 
+## Native reference and command-argument completion — November 14
+
+`services/autocomplete_data.ts` validates real provider records without a DOM.
+`services/autocomplete_editing.ts` owns formatted query matching, cancellation,
+captured/rebased insertion targets and undo. The host-only
+`services/autocomplete_host.js` imports GitLab's axios transport, sorter, fuzzy
+label search and reactive work-item state; it does not simulate an editor.
+URLs stay same-origin, successful response caching is bounded, and malformed or
+unresolved results are refused with the query/source retained. Vue presents the
+shared command/reference list and owns focus and ARIA restoration.
+
+Choosing `/label` hands the author to actual label suggestions. The recorded
+service journey additionally inserts an issue, user, merge request and milestone,
+checks a declared GET failure and real retry, then verifies source/reference
+counts through UI Save, reopen and a real application restart. Its 21 checks
+include desktop and 360px keyboard interaction; scoped panel accessibility scans
+have no violations. A Retry focus defect and GitLab's delayed desktop sidebar
+focus theft both have regressions and repairs. The sidebar change is a host
+patch, not a new DOM assumption in the engine.
+All 6,134 Node cases pass; the selected 23-suite upstream set passes 536 cases
+with one inherited skip. Types/API/headless/package/size and source rollback
+checks pass. This is source rollback, not compiled deployment rollback.
+
+Reproduce in the pinned Linux checkout after the preceding sixteen patches:
+
+```sh
+node scripts/prepare-gitlab-autocomplete-tests.mjs /absolute/pinned/gitlab-source
+node scripts/prepare-gitlab-sidebar-focus-tests.mjs /absolute/pinned/gitlab-source
+node scripts/build-gitlab-native-runtime.mjs
+node scripts/install-gitlab-native-browser.mjs /absolute/pinned/gitlab-source
+node scripts/check-gitlab-native-patches.mjs /absolute/pinned/gitlab-source --autocomplete
+# Build the actual GitLab frontend before running this service journey.
+node scripts/run-gitlab-native-browser-audit.mjs --autocomplete
+# Run only with the isolated application stopped:
+node scripts/check-gitlab-native-install.mjs /absolute/pinned/gitlab-source --autocomplete
+```
+
+The native installer is format 13 with 28 owned files; the eighteenth ordered
+patch repairs the host sidebar. Wiki/Gollum and emoji completion remain open.
+Status/type and context-sensitive removal providers have isolated host-contract
+tests, not a complete real-service role/context matrix. The 360px dock is verified
+with keyboard navigation, not physical mobile keyboards or touch-first discovery.
+All other reference/provider/browser matrices, compiled deployment rollback,
+remaining GitLab surfaces and full product acceptance remain separate work.
+[Evidence and limits](../../artifacts/gitlab-autocomplete-integration-20261114.json).
+
 ## Autocomplete provider inspection — November 14
 
 `fixtures/autocomplete-live.json` captures authenticated records from the pinned
@@ -18,7 +64,7 @@ The contacts source returns 404, and several available sources are genuinely
 empty. Preserve these distinctions when wiring providers; do not manufacture
 successful results or infer IDs from array order. The shared SDK now supports
 formatted query spans and long prefixes, but this fixture capture does not
-implement the native reference/argument UI or certify its contexts and roles.
+itself implement the native reference/argument UI or certify its contexts and roles.
 [Foundation evidence](../../artifacts/suggestion-ranges-integration-20261114.json).
 
 ## Quick-action source/save checkpoint — November 14
@@ -1464,7 +1510,8 @@ Vue owns the view, focus, ARIA and authenticated transport. No Tiptap editor fac
 is constructed. The toolbar inserts a command after the owning root block, rather
 than inside a table or quote. Suggestions replace the command name while retaining
 existing arguments. Preview text comes from the current server renderer; it does
-not execute actions. Label/user argument completion remains unfinished.
+not execute actions. That checkpoint did not include label/user argument
+completion; the follow-up near the top of this document adds that boundary.
 
 The menu uses ordinary design-system rows and a bounded scrolling list. Button
 text explicitly wraps despite GitLab's default ellipsis rule, and its height uses

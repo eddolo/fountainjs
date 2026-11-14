@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-14",
+  "status": "partial-native-product-integration",
+  "parentRevision": "f951b89a67f0755a99bcca49f004a5c7b1ee9886",
+  "scope": "Native GitLab reference and command-argument completion through real host providers/rendering; not full GitLab or global parity",
+  "unit": {
+    "passed": 6134,
+    "files": 367,
+    "log": "artifacts/gitlab-autocomplete-full-unit-20261114.log"
+  },
+  "upstream": {
+    "passed": 536,
+    "skipped": 1,
+    "suites": 23,
+    "report": "artifacts/gitlab-autocomplete-upstream-full-20261114.json",
+    "scope": "Previously selected 21 upstream suites, the native autocomplete suite and original sidebar suite; the inherited skip is unchanged"
+  },
+  "browser": {
+    "checks": 21,
+    "engine": "Linux Chromium",
+    "report": "artifacts/gitlab-native-autocomplete-20261114/report.json",
+    "phases": ["saved", "reopened", "restart"],
+    "errors": [],
+    "accessibility": "Zero violations in the actual desktop and 360px reference-panel scans, plus the command-panel scan",
+    "faultInjection": "One issues GET returns a declared HTTP 503; Retry then calls the real endpoint. No successful provider/render/save response is substituted.",
+    "recording": {
+      "path": "artifacts/gitlab-native-autocomplete-20261114/recordings/page@5d4f1c5b91b01088fe7586423c7de090.webm",
+      "duration": 179.92,
+      "bytes": 5986224,
+      "sha256": "0eaf770bccce7385ed0f9975f3a421fa67fec6c746d18095d473d5f0ab826bdd"
+    },
+    "visualReview": "artifacts/gitlab-native-autocomplete-20261114/recording-review.json"
+  },
+  "providerEvidence": {
+    "fixture": "integrations/gitlab/fixtures/autocomplete-live.json",
+    "actualRenderings": 6,
+    "normalizedAvailableCommands": 33,
+    "verifiedServiceKinds": ["label", "issue", "user", "merge_request", "milestone"],
+    "limits": "Other typed provider contracts and reactive removal/status/type contexts have isolated tests, not a full real-service role/context matrix. The contacts endpoint actually returns 404."
+  },
+  "repairs": [
+    "Retry returns keyboard focus before its button disappears during loading.",
+    "A separate GitLab host patch prevents responsive desktop sidebar expansion from stealing page focus after the debounced resize. Existing mobile overlay focus remains tested.",
+    "Accepted references use captured/rebased targets and actual rendered semantic nodes; unresolved results preserve the query and report retained source."
+  ],
+  "validation": {
+    "types": "tsc --noEmit passed",
+    "apiDeclarations": 450,
+    "headlessModules": 143,
+    "package": "passed",
+    "budget": "passed without changed allowances",
+    "productionBuild": "passed with two existing asset/entry warnings",
+    "upstreamLint": "passed",
+    "patches": 18,
+    "patchReport": "artifacts/gitlab-native-autocomplete-patch-verification-20261114.json",
+    "installerFormat": 13,
+    "installerOwnedFiles": 28,
+    "sourceRollback": "passed; all 28 reinstalled digests match",
+    "rollbackReport": "artifacts/gitlab-native-autocomplete-install-roundtrip-20261114.json",
+    "compiledDeploymentRollback": "not certified",
+    "publicEnginePackageOrBudgetChanges": false
+  },
+  "counterexamples": {
+    "retryFocus": "artifacts/gitlab-native-autocomplete-first-failure-20261114/report.json",
+    "lateNavigation": "artifacts/gitlab-native-autocomplete-focus-probe-20261114/report.json",
+    "upstreamSidebarRegressionBeforeRepair": "artifacts/gitlab-autocomplete-sidebar-focus-before-20261114.log",
+    "upstreamSidebarRegressionAfterRepair": "artifacts/gitlab-autocomplete-sidebar-focus-after-20261114.log",
+    "testCorrections": "Native journey assertions were corrected for pre-existing mentions, GitLab's rendered milestone prefix, and reference counts captured before Save. These assertion mistakes are not counted as product defects."
+  },
+  "remaining": [
+    "Native wiki/Gollum and emoji completion",
+    "Complete command/provider/context/role/browser coverage, including unavailable edition-specific sources",
+    "Touch-first narrow-screen suggestion discovery and physical mobile keyboard/IME acceptance",
+    "GitLab footnote ingestion and remaining specialized editor/application surfaces",
+    "Large-document performance in this actual host, remaining GitLab workflows, compiled deployment rollback and hosted CI",
+    "The other two full product integrations and the rest of the global roadmap, including the naming evaluation"
+  ],
+  "publication": "No npm version, public website feature claim or parity row is promoted by this checkpoint.",
+  "logFormatting": "Tracked terminal receipts normalize ANSI escapes, CRLF and trailing whitespace. Native JSON reports, actual render fixtures, source patches and recording hashes remain separate evidence."
+}

@@ -2,6 +2,18 @@
 
 ## Current programme status — 2026-11-14
 
+Native GitLab reference/argument completion now has a recorded 21-check
+real-service journey. Actual labels, issues, users, merge requests and milestones
+are accepted through host providers and rendering, then retained through UI
+Save, reopen and restart. A declared HTTP failure exercises query retention and
+Retry. Desktop and 360px keyboard/ARIA/accessibility checks pass. Retry focus and
+the host's delayed responsive-sidebar focus theft are repaired with regressions.
+This does not certify all kinds, commands, contexts, roles or browsers. Wiki/emoji
+completion, touch-first narrow-screen interaction and full product acceptance
+remain open, alongside compiled rollback, hosted CI and the other two products.
+Public engine APIs and size limits do not change. No capability row is promoted.
+[Scoped autocomplete evidence](../artifacts/gitlab-autocomplete-integration-20261114.json).
+
 The caret visibility finding from suggestion recording review is repaired.
 The stronger public-demo journey checks native caret geometry after toolbar
 edits, acceptance and history. Eighteen desktop-engine checks pass, including

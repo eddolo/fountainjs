@@ -43,6 +43,8 @@ for (const path of [
   'integrations/gitlab/services/markdown_codec.ts',
   'integrations/gitlab/services/quick_actions.ts',
   'integrations/gitlab/services/quick_action_editing.ts',
+  'integrations/gitlab/services/autocomplete_data.ts',
+  'integrations/gitlab/services/autocomplete_editing.ts',
   'integrations/gitlab/services/math.ts',
   'integrations/gitlab/services/asset_resolver.ts',
   'integrations/gitlab/services/reference_editing.ts',

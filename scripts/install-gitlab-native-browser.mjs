@@ -68,41 +68,42 @@ if (previous) {
     'app/assets/javascripts/content_editor/services/fountain_runtime.js',
     'app/assets/javascripts/content_editor/services/fountain_runtime.css',
   ]);
-  if ([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
+  if ([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js');
   } else if (previous.formatVersion !== undefined) throw new Error('Unknown retained install format.');
-  if ([3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
+  if ([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js');
   }
-  if ([4, 5, 6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
+  if ([4, 5, 6, 7, 8, 9, 10, 11, 12, 13].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.stories.js');
   }
-  if ([5, 6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
+  if ([5, 6, 7, 8, 9, 10, 11, 12, 13].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js');
   }
-  if ([6, 7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
+  if ([6, 7, 8, 9, 10, 11, 12, 13].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.stories.js');
   }
-  if ([7, 8, 9, 10, 11, 12].includes(previous.formatVersion)) {
+  if ([7, 8, 9, 10, 11, 12, 13].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_diagram_preview.vue');
     allowed.add(sandboxPath);
   }
-  if ([8, 9, 10, 11, 12].includes(previous.formatVersion)) allowed.add(diagramReaderPath);
+  if ([8, 9, 10, 11, 12, 13].includes(previous.formatVersion)) allowed.add(diagramReaderPath);
   if (previous.formatVersion === 9) { allowed.add(gfmPath); allowed.add(readerImagesPath); }
-  if ([10, 11, 12].includes(previous.formatVersion)) { allowed.add(lazyLoaderPath); allowed.add(readerImagesPath); }
-  if ([11, 12].includes(previous.formatVersion)) {
+  if ([10, 11, 12, 13].includes(previous.formatVersion)) { allowed.add(lazyLoaderPath); allowed.add(readerImagesPath); }
+  if ([11, 12, 13].includes(previous.formatVersion)) {
     allowed.add(codeMenuPath); allowed.add(mediaMenuPath);
     allowed.add('app/assets/javascripts/content_editor/components/fountain_context_surface.vue');
   }
-  if (previous.formatVersion === 12) {
+  if ([12, 13].includes(previous.formatVersion)) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_quick_action_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_quick_action_menu.stories.js');
   }
+  if (previous.formatVersion === 13) allowed.add('app/assets/javascripts/content_editor/services/fountain_autocomplete.js');
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
 }
@@ -312,6 +313,8 @@ for (const name of ['fountain_editor_surface.vue', 'fountain_formatting_toolbar.
   files.set(`app/assets/javascripts/content_editor/components/${name}`, value);
 }
 files.set('app/assets/javascripts/content_editor/services/fountain_runtime.js', bundle);
+files.set('app/assets/javascripts/content_editor/services/fountain_autocomplete.js',
+  await readFile(resolve(root, 'integrations/gitlab/services/autocomplete_host.js')));
 // The native renderer's structural CSS is a local build input, never a CDN.
 files.set(
   'app/assets/javascripts/content_editor/services/fountain_runtime.css',
@@ -328,7 +331,7 @@ const requireUpstream = createRequire(resolve(source, 'package.json'));
 const prettier = requireUpstream('prettier');
 const formatOptions = await prettier.resolveConfig(resolve(source, hostPath));
 for (const [path, bytes] of files) {
-  if (!path.endsWith('.vue') && !path.endsWith('.stories.js') && ![babelPath, diagramReaderPath, lazyLoaderPath, readerImagesPath].includes(path)) continue;
+  if (!path.endsWith('.vue') && !path.endsWith('.stories.js') && ![babelPath, diagramReaderPath, lazyLoaderPath, readerImagesPath, 'app/assets/javascripts/content_editor/services/fountain_autocomplete.js'].includes(path)) continue;
   files.set(
     path,
     await prettier.format(bytes.toString(), {
@@ -376,7 +379,7 @@ await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 12,
+      formatVersion: 13,
       source,
       revision: pin.commit,
       scope:

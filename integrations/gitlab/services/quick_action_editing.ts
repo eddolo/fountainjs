@@ -3,6 +3,7 @@ import { Plugin, PluginKey, ReplaceDocumentStep, Selection, Step, closeHistory, 
 import { SuggestionController, findSuggestionMatch, handleSuggestionKeyDown,
   type SuggestionMatch, type SuggestionPluginState } from 'fountainjs-editor/document-utilities';
 import { gitlabQuickActionText, serializeGitLabQuickAction } from './quick_actions';
+import { gitLabCommandArgumentTriggers } from './autocomplete_data';
 
 export interface GitLabQuickActionCommand {
   readonly id: string;
@@ -186,7 +187,7 @@ export class GitLabQuickActionEditing {
       if (editor.state.doc.child(context.path[0]!) !== context.node) throw new Error('GITLAB_QUICK_ACTION_TARGET_CHANGED');
       const prefix = context.node.child(0), end = prefix.text?.match(/^\/[a-z\d_-]*/iu)?.[0].length ?? 1;
       const remaining = (prefix.text ?? '').slice(end);
-      const text = '/' + item.name + ' ';
+      const text = '/' + item.name + ' ' + (remaining.trim() ? '' : gitLabCommandArgumentTriggers[item.name] ?? '');
       const transaction = editor.createTransaction().replaceText(match.range.path, 0, end + (remaining.startsWith(' ') ? 1 : 0), text);
       return editor.dispatch(transaction.setSelection(Selection.cursor(match.range.path, text.length)).setStoredMarks([]));
     });

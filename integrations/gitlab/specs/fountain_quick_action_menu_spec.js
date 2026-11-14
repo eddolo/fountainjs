@@ -58,11 +58,11 @@ describe('native quick action controls', () => {
     expect(provider).toHaveBeenCalledWith({ query: 'labels', signal: expect.any(AbortSignal) });
     expect(list().querySelectorAll('[role="option"]')).toHaveLength(1);
   });
-  it('inserts a clicked command, places the caret after its space and closes the suggestions', async () => {
+  it('inserts a clicked command, places the caret after its argument trigger and closes the name suggestions', async () => {
     await createComponent();
     fireEvent.click(getByRole(list(), 'option', { name: /\/label.*Add labels/ })); await settle();
-    expect(service.getSerializedContent()).toBe('/label ');
-    expect(service.editor.state.selection.from).toBe(7);
+    expect(service.getSerializedContent()).toBe('/label ~');
+    expect(service.editor.state.selection.from).toBe(8);
     expect(queryByRole(document.body, 'listbox')).toBeNull();
     expect(document.activeElement).toBe(root());
     expect(undo(service.editor)).toBe(true); expect(service.getSerializedContent()).toBe('/la');
@@ -82,7 +82,7 @@ describe('native quick action controls', () => {
     fireEvent.keyDown(root(), { key: 'F10', altKey: true }); await settle();
     expect(document.activeElement).toBe(list());
     fireEvent.keyDown(list(), { key: 'Enter' }); await settle();
-    expect(service.getSerializedContent()).toBe('/label ');
+    expect(service.getSerializedContent()).toBe('/label ~');
     expect(document.activeElement).toBe(root());
   });
   it('keeps composition and modified keys out of suggestion navigation', async () => {

@@ -7,6 +7,7 @@ export { getGitLabAlertContext } from '../services/alert_editing';
 export { getGitLabMediaContext } from '../services/media_editing';
 export { getGitLabReferenceContext } from '../services/reference_editing';
 export { getGitLabQuickActionContext, parseGitLabQuickActionCommands } from '../services/quick_action_editing';
+export { parseGitLabAutocompleteItems, gitLabAutocompleteSources } from '../services/autocomplete_data';
 export {
   EditorView,
   FountainMenuController,

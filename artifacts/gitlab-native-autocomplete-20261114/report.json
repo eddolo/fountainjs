@@ -1,0 +1,369 @@
+{
+  "date": "2026-11-14T21:32:36.247Z",
+  "scope": "Native Fountain browser editor in the actual GitLab application; partial toolbar/providers, not full product acceptance",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Actual toolbar insertion loads authenticated command names, resolves an alias, supports Escape and Alt+F10/Enter, previews the server effect, and switches interpretation with undo on a 360px dock",
+    "Actual reference provider failure retains the query; retry, native keyboard/pointer acceptance, a 360px dock and ARIA cleanup work with real issue/user/MR/milestone renderings",
+    "Actual clipboard import of a label command, following reference definition, explicit alert title, fenced metadata and literal slash is editable and atomically undoable; source/rich switching retains source without running the command",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Normal GitLab submit applies the label and consumes its command; the escaped close stays inert and remains escaped on a later native edit (saved)",
+    "Saved source and the actual GitLab reader retain all four inserted reference types (saved)",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Normal GitLab submit applies the label and consumes its command; the escaped close stays inert and remains escaped on a later native edit (reopened)",
+    "Saved source and the actual GitLab reader retain all four inserted reference types (reopened)",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "Normal GitLab submit applies the label and consumes its command; the escaped close stays inert and remains escaped on a later native edit (restart)",
+    "Saved source and the actual GitLab reader retain all four inserted reference types (restart)",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ],
+  "secrets": "Credential stays in protected task-container configuration and process memory; no credential values, traces or browser storage-state files are recorded",
+  "preparedHost": true,
+  "nativeBrowser": true,
+  "nativeInsertion": true,
+  "nativeComponent": true,
+  "nativeAttachments": false,
+  "nativeCapacity": false,
+  "nativeLinks": false,
+  "nativeCodeProfile": false,
+  "nativeContextMenusProfile": false,
+  "nativeContextUIProfile": false,
+  "nativeFrontmatterProfile": false,
+  "nativeQuickActionsProfile": true,
+  "nativeAlertsProfile": false,
+  "nativeMediaProfile": false,
+  "nativeMediaFilesProfile": false,
+  "nativeReferencesProfile": false,
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1608376,
+    "sha256": "cdad0a23bdbeee86da0bcb5c4cb3f849e7ce78f51e0290f87b1d2d029e43d47d",
+    "parentRevision": "f951b89a67f0755a99bcca49f004a5c7b1ee9886",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "c70fd2de401dc2c65d05abd38350105c048500a78c749a4f9de1e6a6722d74c8",
+      "integrations/gitlab/services/content_editor.ts": "209d0cfa819a6f0680986e8b77be299f1381a64f52f8685018e2b7e00dcbac61",
+      "integrations/gitlab/services/markdown_insertion.ts": "10a8078f9f9ebbd8bf7293ffc0d6ae34d36b51ed6d6598e3403a3289ee15187f",
+      "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+      "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+      "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+      "integrations/gitlab/services/code_rendering.ts": "0d94359598fe6ead2cff4d0e2bc2821e934916ba47eca214bf02cc433dfe05d6",
+      "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+      "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+      "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+      "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+      "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+      "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+      "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+      "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+      "integrations/gitlab/services/markdown_codec.ts": "be1e569e1300ffd68ea498be500c094ae42701fa2f52711129c69fd104bc67a4",
+      "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
+      "integrations/gitlab/services/quick_action_editing.ts": "42d37b3300907be0a8499ff7b0e64bb9410334fe13e82ce7515e412642b88ebe",
+      "integrations/gitlab/services/autocomplete_data.ts": "1741396673d51ce049777fa88bd00ff65184ce57e2d484ebde94c69f6cf98568",
+      "integrations/gitlab/services/autocomplete_editing.ts": "3244b67431ce508e9893b5166ab5f5ef798a4e63b770f7a8bfbe0fc6a7dec827",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
+      "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+      "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+      "dist/index.js": "52453d47cd8402b61f26f2bcf3d9af077ba24e231843012219b70928caeb5b2a",
+      "dist/document-utilities.js": "a76425ef95a8c04d36de1eba5dd994485dafe6f4cc60e1ac12c5c0aa68649bd4"
+    }
+  },
+  "browserErrors": [],
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png",
+      "status": 403
+    },
+    {
+      "path": "/-/project/1/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png",
+      "status": 200
+    }
+  ],
+  "auditCredentialSource": "protected-task-config",
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 136,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/136"
+  },
+  "originalServerDescription": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.",
+  "quickActionControlGeometry": {
+    "selected": {
+      "x": 477,
+      "y": 822,
+      "width": 382,
+      "height": 34
+    },
+    "list": {
+      "x": 477,
+      "y": 608,
+      "width": 382,
+      "height": 248
+    },
+    "listStyle": {
+      "maxHeight": "248px",
+      "overflowY": "auto",
+      "scrollTop": 886,
+      "clientHeight": 248,
+      "scrollHeight": 1134
+    },
+    "popup": {
+      "x": 468,
+      "y": 574,
+      "width": 400,
+      "height": 378
+    },
+    "host": [
+      {
+        "x": 253,
+        "y": 56,
+        "width": 1151,
+        "height": 1847.75,
+        "top": 56,
+        "right": 1404,
+        "bottom": 1903.75,
+        "left": 253
+      },
+      {
+        "x": 241,
+        "y": 85,
+        "width": 1190,
+        "height": 898,
+        "top": 85,
+        "right": 1431,
+        "bottom": 983,
+        "left": 241
+      },
+      {
+        "x": 241,
+        "y": 49,
+        "width": 1190,
+        "height": 942,
+        "top": 49,
+        "right": 1431,
+        "bottom": 991,
+        "left": 241
+      },
+      {
+        "x": 240,
+        "y": 48,
+        "width": 1192,
+        "height": 944,
+        "top": 48,
+        "right": 1432,
+        "bottom": 992,
+        "left": 240
+      }
+    ]
+  },
+  "nativeQuickActionControls": {
+    "commandResponses": [
+      {
+        "status": 200,
+        "url": "/root/fountain-product-integration/-/autocomplete_sources/commands"
+      }
+    ],
+    "accessibilityViolations": [],
+    "scope": "Command-name suggestions, label argument handoff and server preview; full command/context matrices remain open"
+  },
+  "nativeAutocomplete": {
+    "issue": "#75",
+    "mergeRequest": "!1",
+    "milestone": "Fountain native completion milestone",
+    "milestoneLabel": "%Fountain native completion milestone",
+    "user": "@root",
+    "requests": [
+      {
+        "path": "/root/fountain-product-integration/-/autocomplete_sources/issues",
+        "search": "75",
+        "status": 503
+      },
+      {
+        "path": "/root/fountain-product-integration/-/autocomplete_sources/issues",
+        "search": "75",
+        "status": 200
+      },
+      {
+        "path": "/root/fountain-product-integration/-/autocomplete_sources/members",
+        "search": "ro",
+        "status": 200
+      },
+      {
+        "path": "/root/fountain-product-integration/-/autocomplete_sources/merge_requests",
+        "search": null,
+        "status": 200
+      },
+      {
+        "path": "/root/fountain-product-integration/-/autocomplete_sources/milestones",
+        "search": null,
+        "status": 200
+      }
+    ],
+    "presentations": [
+      {
+        "width": 1440,
+        "bounds": {
+          "x": 477,
+          "y": 168,
+          "width": 382,
+          "height": 59
+        },
+        "violations": []
+      },
+      {
+        "width": 360,
+        "bounds": {
+          "x": 25.390625,
+          "y": 385,
+          "width": 294.21875,
+          "height": 57
+        },
+        "violations": []
+      }
+    ],
+    "deliberateFault": "One issues GET fulfilled as HTTP 503; retry then uses the real endpoint",
+    "scope": "Actual issue, user, merge-request and milestone insertion; keyboard, retry, mobile docking and ARIA cleanup. Not all reference contexts or roles.",
+    "focusAfterAcceptance": {
+      "tag": "DIV",
+      "role": "textbox",
+      "label": null,
+      "href": null,
+      "editor": true
+    },
+    "focusAfterResize": {
+      "tag": "DIV",
+      "role": "textbox",
+      "label": null,
+      "href": null,
+      "editor": true
+    },
+    "referenceCounts": {
+      "issue": 1,
+      "user": 3,
+      "merge_request": 1,
+      "milestone": 1
+    }
+  },
+  "nativeQuickActions": {
+    "label": "Fountain quick action & review",
+    "canonical": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\n/label ~\"Fountain quick action & review\" \n\nRelated issue #75 Owner @root Merge !1 Release %\"Fountain native completion milestone\"&#32;\n\nSee [help](https://example.com)\n\n> [!note] Note\n> \n> Explicit title after a quick action.\n\n```yaml frontmatter\ntitle: Paper after a quick action\n```\n\n\\/close\n\nEdited after importing quick actions and literal text.",
+    "accessibilityViolations": []
+  },
+  "preparedScripts": [
+    {
+      "path": "/assets/webpack/content_editor.23e46e58.chunk.js",
+      "sha256": "36db505e8bbb84fe7b29d717445ffbfa412073d3f342d41edc1bd127f29186d1"
+    },
+    {
+      "path": "/assets/webpack/content_editor.23e46e58.chunk.js",
+      "sha256": "36db505e8bbb84fe7b29d717445ffbfa412073d3f342d41edc1bd127f29186d1"
+    },
+    {
+      "path": "/assets/webpack/content_editor.23e46e58.chunk.js",
+      "sha256": "36db505e8bbb84fe7b29d717445ffbfa412073d3f342d41edc1bd127f29186d1"
+    },
+    {
+      "path": "/assets/webpack/content_editor.23e46e58.chunk.js",
+      "sha256": "36db505e8bbb84fe7b29d717445ffbfa412073d3f342d41edc1bd127f29186d1"
+    }
+  ],
+  "frontendMount": {
+    "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+    "readOnly": true
+  },
+  "nativeTaskControls": [
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    },
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    }
+  ],
+  "nativeQuickActionMutations": [
+    {
+      "errors": []
+    }
+  ],
+  "nativeQuickActionReopenReads": [
+    {
+      "phase": "saved",
+      "initialSource": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\nRelated issue #75 Owner @root Merge !1 Release %\"Fountain native completion milestone\"&#32;\n\nSee [help](https://example.com)\n\n> [!note] Note\n> \n> Explicit title after a quick action.\n\n```yaml frontmatter\ntitle: Paper after a quick action\n```\n\n\\/close\n\nEdited after importing quick actions and literal text.",
+      "serverSource": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\nRelated issue #75 Owner @root Merge !1 Release %\"Fountain native completion milestone\"&#32;\n\nSee [help](https://example.com)\n\n> [!note] Note\n> \n> Explicit title after a quick action.\n\n```yaml frontmatter\ntitle: Paper after a quick action\n```\n\n\\/close\n\nEdited after importing quick actions and literal text.",
+      "conflictSource": null
+    },
+    {
+      "phase": "reopened",
+      "initialSource": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\nRelated issue #75 Owner @root Merge !1 Release %\"Fountain native completion milestone\"&#32;\n\nSee [help](https://example.com)\n\n> [!note] Note\n> \n> Explicit title after a quick action.\n\n```yaml frontmatter\ntitle: Paper after a quick action\n```\n\n\\/close\n\nEdited after importing quick actions and literal text.",
+      "serverSource": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\nRelated issue #75 Owner @root Merge !1 Release %\"Fountain native completion milestone\"&#32;\n\nSee [help](https://example.com)\n\n> [!note] Note\n> \n> Explicit title after a quick action.\n\n```yaml frontmatter\ntitle: Paper after a quick action\n```\n\n\\/close\n\nEdited after importing quick actions and literal text.",
+      "conflictSource": null
+    },
+    {
+      "phase": "restart",
+      "initialSource": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\nRelated issue #75 Owner @root Merge !1 Release %\"Fountain native completion milestone\"&#32;\n\nSee [help](https://example.com)\n\n> [!note] Note\n> \n> Explicit title after a quick action.\n\n```yaml frontmatter\ntitle: Paper after a quick action\n```\n\n\\/close\n\nEdited after importing quick actions and literal text.",
+      "serverSource": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\nRelated issue #75 Owner @root Merge !1 Release %\"Fountain native completion milestone\"&#32;\n\nSee [help](https://example.com)\n\n> [!note] Note\n> \n> Explicit title after a quick action.\n\n```yaml frontmatter\ntitle: Paper after a quick action\n```\n\n\\/close\n\nEdited after importing quick actions and literal text.",
+      "conflictSource": null
+    }
+  ],
+  "nativeQuickActionPhases": [
+    "saved",
+    "reopened",
+    "restart"
+  ],
+  "source": {
+    "original": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.\n",
+    "saved": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/dec3ca87c6974a5ac58c08f6e7942950/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\nRelated issue #75 Owner @root Merge !1 Release %\"Fountain native completion milestone\"&#32;\n\nSee [help](https://example.com)\n\n> [!note] Note\n> \n> Explicit title after a quick action.\n\n```yaml frontmatter\ntitle: Paper after a quick action\n```\n\n\\/close\n\nEdited after importing quick actions and literal text."
+  },
+  "comment": {
+    "body": "Native Fountain discussion: created through the actual GitLab comment form.",
+    "persisted": true
+  },
+  "recoveryIssue": {
+    "iid": 137,
+    "originalSourceUnchanged": true,
+    "recoveryDraftCancelled": true
+  },
+  "status": "passed"
+}

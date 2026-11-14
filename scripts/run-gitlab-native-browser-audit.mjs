@@ -41,7 +41,8 @@ try {
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--quick-action-controls') ? '--native-quick-action-controls'
+      process.argv.includes('--autocomplete') ? '--native-autocomplete'
+        : process.argv.includes('--quick-action-controls') ? '--native-quick-action-controls'
         : process.argv.includes('--quick-actions') ? '--native-quick-actions'
         : process.argv.includes('--context-ui') ? '--native-context-ui'
         : process.argv.includes('--context-menus') ? '--native-context-menus'

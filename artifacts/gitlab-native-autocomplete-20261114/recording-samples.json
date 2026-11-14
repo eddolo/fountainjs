@@ -1,0 +1,69 @@
+{
+  "scope": "Twelve sampled frames approximately aligned to screenshot file times, not a frame-by-frame review",
+  "recording": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-autocomplete-20261114/recordings/page@5d4f1c5b91b01088fe7586423c7de090.webm",
+  "duration": 179.92,
+  "bytes": 5986224,
+  "sha256": "0eaf770bccce7385ed0f9975f3a421fa67fec6c746d18095d473d5f0ab826bdd",
+  "samples": [
+    {
+      "index": 1,
+      "screenshot": "original-rendered.png",
+      "second": 63.86416723632813
+    },
+    {
+      "index": 2,
+      "screenshot": "quick-action-controls-suggestions.png",
+      "second": 67.443650390625
+    },
+    {
+      "index": 3,
+      "screenshot": "quick-action-controls-mobile.png",
+      "second": 69.28738427734375
+    },
+    {
+      "index": 4,
+      "screenshot": "reference-provider-retry.png",
+      "second": 70.77824853515625
+    },
+    {
+      "index": 5,
+      "screenshot": "reference-suggestions-mobile.png",
+      "second": 72.99411791992188
+    },
+    {
+      "index": 6,
+      "screenshot": "references-inserted.png",
+      "second": 73.60704711914062
+    },
+    {
+      "index": 7,
+      "screenshot": "original-rich-edit.png",
+      "second": 77.78141015625
+    },
+    {
+      "index": 8,
+      "screenshot": "quick-actions-reopened-saved.png",
+      "second": 80.96674169921874
+    },
+    {
+      "index": 9,
+      "screenshot": "failed-load-readonly.png",
+      "second": 87.75982446289062
+    },
+    {
+      "index": 10,
+      "screenshot": "failed-load-explicit-recovery.png",
+      "second": 88.45520483398437
+    },
+    {
+      "index": 11,
+      "screenshot": "original-reopened.png",
+      "second": 95.97648388671875
+    },
+    {
+      "index": 12,
+      "screenshot": "original-after-restart.png",
+      "second": 179.63080004882815
+    }
+  ]
+}
