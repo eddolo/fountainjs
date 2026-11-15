@@ -7,6 +7,22 @@ and removal in `src/pages/index.ts`; it does not introduce another engine.
 
 ## Current implementation — November 15
 
+The actual-host round-trip corpus now covers 65 input/edit combinations and 208
+renderer responses. Fifty-three accepted cases retain the native graph through
+two edit/export/reopen cycles; twelve explicit refusals retain original source.
+Eight cases edit a note body directly. Opaque note IDs are joined through their
+source labels; all other structure, attributes, text and marks stay in the
+comparison. The replay tests do not use the diagnostic outcome flags as an oracle.
+
+This exposed automatic prose being offered below the terminal endnotes even
+though GitLab moves notes after the prose. `footnote_boundary.ts` reuses the
+normal trailing-block extension but suppresses that root repair when the final
+note body is already editable. It leaves authored paragraphs and the normal
+atomic-block repairs intact. The recorded 26-check journey verifies actual
+Enter/typing before notes through save/reopen/restart. Current focused tests pass
+1,133 cases; upstream checks pass 536 with one inherited skip. See
+[round-trip evidence](../../artifacts/gitlab-footnote-roundtrip-integration-20261115.json).
+
 `footnote_codec.ts` validates complete source/render ownership before enabling
 native notes. Represented definitions use one host render. Omitted bodies use a
 bounded second render, whose original reference targets must agree. Unsupported
@@ -55,8 +71,11 @@ Remaining acceptance work:
 - A complete duplicate-label/source-alias policy beyond verified rename cases.
 - Missing entity/escape bodies, raw HTML back-reference ambiguity and host
   BOM/CR preprocessing; retain source until each representation is verified.
-- All supported canonical exports re-rendered through the actual host, beyond
-  the current recorded issue cases and captured codec tests.
+- Broader canonical export/edit/context cases beyond the 53 accepted two-cycle
+  combinations. Arbitrary authored paragraphs after definitions are retained,
+  but their relative placement is not certified: GitLab projects endnotes last.
+  Atomic-only note endings retain the normal caret repair; their full layout
+  contract remains outside this matrix.
 - Footnote clipboard, native fragment and authored-empty-paragraph matrices,
   including the public Pages insertion commands outside this private adapter.
 - MR, wiki and discussion authoring; browser, touch/IME, read-only and role

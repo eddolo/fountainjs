@@ -9,6 +9,42 @@ accounts, projects, storage, uploads, authorization, issue/MR/wiki workflows and
 collaboration services. These services remain real GitLab services. Recreating
 their controls with local-only state does not meet the requirement.
 
+## Footnote round trips and the prose boundary — November 15
+
+The actual renderer corpus now covers 65 input/edit combinations with 208
+authenticated responses. Fifty-three accepted cases keep the full native graph
+through two edit/export/reopen cycles; twelve unsupported cases retain their
+original source. It includes eight direct note-body edits, shared/unused/empty
+notes, Unicode labels, literal markers, frontmatter, tables, links and math.
+Only opaque note IDs are joined through labels; content order and formatting are
+not normalized away to pass the comparison.
+
+The matrix found an automatic typing paragraph after terminal endnotes, allowing
+prose to appear below them before GitLab moved it above them on reopen.
+`footnote_boundary.ts` wraps the existing trailing-block extension only for this
+host: an already editable terminal note needs no extra root paragraph. It keeps
+repairs after atomic content and never deletes authored paragraphs. Source
+placement of arbitrary authored paragraphs after definitions remains outside
+this accepted matrix; GitLab's reader projects endnotes after the prose.
+Atomic-only note endings retain the normal caret repair; their full host layout
+contract remains outside this matrix.
+
+The recorded UI profile passes 26 checks through real Enter/typing, Save, reopen
+and restart; six scoped accessibility scans and browser-error checks pass.
+Models pass 1,133 cases in 41 suites, selected upstream checks pass 536 with one
+inherited skip, and types/frontend/source-rollback/patch checks pass.
+
+```sh
+# After the normal current runtime install and host frontend build:
+node scripts/run-gitlab-native-browser-audit.mjs --footnote-boundary --capture-footnote-roundtrip
+# Renderer corpus alone, with the explicitly declared server repair:
+node scripts/run-gitlab-native-browser-audit.mjs --footnote-roundtrip-fixtures
+```
+
+Broader source/edit/context, clipboard/native-fragment, public Pages placement,
+workflow/role/browser and deployment matrices remain open. No public release or
+parity claim changes. [Evidence](../../artifacts/gitlab-footnote-roundtrip-integration-20261115.json).
+
 ## Footnote labels and real reader navigation — November 15
 
 The native issue editor now renames source labels through a captured/rebased

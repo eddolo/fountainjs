@@ -21,11 +21,12 @@ const env = {
   FOUNTAIN_GITLAB_FRONTEND_ASSETS: resolve(install.source, 'public/assets/webpack'),
 };
 const fixtureFlags = ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands', '--autocomplete-fixtures', '--footnote-fixtures', '--footnote-probe-fixtures', '--footnote-editing-fixtures', '--footnote-renaming-fixtures'];
-const capturingFixtures = fixtureFlags.some(flag => process.argv.includes(flag));
+const footnoteRoundtrip = process.argv.includes('--footnote-roundtrip-fixtures');
+const capturingFixtures = footnoteRoundtrip || fixtureFlags.some(flag => process.argv.includes(flag));
 // The stock baseline uses compose.yaml alone. Native integration runs declare
 // this separate, pinned server repair explicitly in their deployment receipt.
 // Existing reference captures continue to use the original server by default.
-if (!capturingFixtures || process.argv.includes('--verify-footnote-server')) {
+if (!capturingFixtures || footnoteRoundtrip || process.argv.includes('--verify-footnote-server')) {
 execFileSync(process.execPath, [resolve(root, 'scripts/prepare-gitlab-footnote-server.mjs'), install.source], { stdio: 'inherit', timeout: 30000 });
 const footnoteServer = JSON.parse(await readFile(resolve(root, 'artifacts/gitlab-native-footnote-server/build.json')));
 const serverTarget = '/opt/gitlab/embedded/service/gitlab-rails/lib/banzai/filter/footnote_filter.rb';
@@ -54,10 +55,15 @@ try {
     execFileSync(process.execPath, [resolve(root, 'scripts/capture-gitlab-alert-rendering.mjs'), '--footnote-server'],
       { env, stdio: 'inherit', timeout: 300000 });
   }
+  if (process.argv.includes('--capture-footnote-roundtrip')) {
+    execFileSync(process.execPath, [resolve(root, 'scripts/capture-gitlab-alert-rendering.mjs'), '--footnote-roundtrip'],
+      { env, stdio: 'inherit', timeout: 300000 });
+  }
   execFileSync(
     process.execPath,
     [
       resolve(root, capturingFixtures ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      ...(footnoteRoundtrip ? ['--footnote-roundtrip'] : []),
       ...(process.argv.includes('--footnote-renaming-fixtures') ? ['--footnote-renaming'] : []),
       ...(process.argv.includes('--footnote-editing-fixtures') ? ['--footnote-editing'] : []),
       ...(process.argv.includes('--footnote-probe-fixtures') ? ['--footnote-probe'] : []),
@@ -70,7 +76,8 @@ try {
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--footnote-renaming') ? '--native-footnote-renaming'
+      process.argv.includes('--footnote-boundary') ? '--native-footnote-boundary'
+        : process.argv.includes('--footnote-renaming') ? '--native-footnote-renaming'
         : process.argv.includes('--footnote-editing') ? '--native-footnote-editing'
         : process.argv.includes('--footnote-decoded-source') ? '--native-footnote-decoded-source'
         : process.argv.includes('--footnote-source') ? '--native-footnote-source'

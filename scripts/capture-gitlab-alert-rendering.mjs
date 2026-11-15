@@ -6,6 +6,7 @@ import { chromium, expect } from '@playwright/test';
 import { readGitLabAuditCredential } from './gitlab-audit-credentials.mjs';
 import { captureGitLabFootnoteRenaming } from './capture-gitlab-footnote-renaming.mjs';
 import { captureGitLabFootnoteServer } from './capture-gitlab-footnote-server.mjs';
+import { captureGitLabFootnoteRoundtrip } from './capture-gitlab-footnote-roundtrip.mjs';
 
 if (process.platform !== 'linux') throw new Error('Run beside the isolated Linux GitLab deployment.');
 const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
@@ -18,7 +19,8 @@ const autocomplete = process.argv.includes('--autocomplete');
 const footnoteEditing = process.argv.includes('--footnote-editing');
 const footnoteRenaming = process.argv.includes('--footnote-renaming');
 const footnoteServer = process.argv.includes('--footnote-server');
-const footnoteProbe = process.argv.includes('--footnote-probe') || footnoteEditing || footnoteRenaming || footnoteServer;
+const footnoteRoundtrip = process.argv.includes('--footnote-roundtrip');
+const footnoteProbe = process.argv.includes('--footnote-probe') || footnoteEditing || footnoteRenaming || footnoteServer || footnoteRoundtrip;
 const footnotes = process.argv.includes('--footnotes') || footnoteProbe;
 const catalogue = quickActionCommands || autocomplete;
 const referenceContexts = process.argv.includes('--reference-context');
@@ -135,15 +137,16 @@ try {
     console.log(JSON.stringify({ kind: 'autocomplete', captured: Object.fromEntries(Object.entries(results)
       .map(([kind, result]) => [kind, { status: result.status, count: Array.isArray(result.data) ? result.data.length : null }])) }));
   }
-  if (footnoteRenaming || footnoteServer) {
+  if (footnoteRenaming || footnoteServer || footnoteRoundtrip) {
     const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
     if (preview.origin !== base) throw new Error('Nonlocal footnote preview');
     preview.searchParams.set('no_header_anchors', 'true');
     const renderMarkdown = source => request(preview.href, { text: source });
-    if (footnoteServer) await captureGitLabFootnoteServer({ root, pin, version, renderMarkdown, overlay: footnoteServerOverlay });
+    if (footnoteRoundtrip) await captureGitLabFootnoteRoundtrip({ root, pin, version, renderMarkdown, overlay: footnoteServerOverlay });
+    else if (footnoteServer) await captureGitLabFootnoteServer({ root, pin, version, renderMarkdown, overlay: footnoteServerOverlay });
     else await captureGitLabFootnoteRenaming({ root, pin, version, renderMarkdown });
   }
-  if (!catalogue && !footnoteRenaming && !footnoteServer) {
+  if (!catalogue && !footnoteRenaming && !footnoteServer && !footnoteRoundtrip) {
   const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
   if (preview.origin !== base) throw new Error('Nonlocal preview');
   preview.searchParams.set('no_header_anchors', 'true');

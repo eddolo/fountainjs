@@ -1,5 +1,30 @@
 # Release and API stability policy
 
+## Private GitLab footnote round trips and prose boundary — 2026-11-15
+
+Add a real-host two-cycle source/native-edit/canonical-export/reopen corpus.
+Fifty-three accepted input/edit combinations retain the same native graph after
+both cycles; twelve unsupported inputs refuse with original source retained.
+The 208 captured renderer responses support independent replay tests, rather
+than treating diagnostic outcome flags as acceptance. Comparisons join opaque
+note IDs through source labels and retain all other structure and attributes.
+
+The audit exposed an automatic root typing paragraph after terminal endnotes.
+Prose entered there moved above the endnotes in the GitLab reader. The private
+adapter now reuses the public trailing-block extension while omitting its repair
+only after an already editable terminal note body. It does not delete authored
+paragraphs or change the shared engine's behavior after media/atomic blocks.
+
+Validation passes 1,133 focused tests in 41 suites, 536 selected upstream tests
+(one inherited skip), TypeScript, frontend build, 18-patch reconstruction and the
+28-file source round trip. A recorded 26-check service journey covers real Enter
+and typing before endnotes through Save/reopen/restart; six scoped accessibility
+scans and browser-error checks pass. Screenshots and sampled recording frames
+are reviewed. Broader grammar/edit, clipboard/native-fragment/authored-placement,
+workflow/role/browser and deployment acceptance remain open. There is no public
+API, dependency, size-limit, package-version, npm or parity-row promotion.
+[Evidence and limits](../artifacts/gitlab-footnote-roundtrip-integration-20261115.json).
+
 ## Private GitLab footnote labels and reader navigation — 2026-11-15
 
 Add source-label editing with captured/rebased targets, actual host validation,

@@ -30,6 +30,7 @@ import { GitLabMediaEditingSession, type GitLabMediaSnapshot } from './media_edi
 import { GitLabReferenceEditingSession, type GitLabReferenceSnapshot } from './reference_editing';
 import { beginGitLabFootnoteInsertion } from './footnote_editing';
 import { GitLabFootnoteRenameSession, type GitLabFootnoteRenameSnapshot } from './footnote_renaming';
+import { gitLabFootnoteBoundary } from './footnote_boundary';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -129,7 +130,8 @@ export class GitLabContentEditor {
             })
         : undefined,
     });
-    const kit = composeExtensions([...StarterKit.extensions, math, ...(options.extensions ?? [])]);
+    const kit = composeExtensions([...StarterKit.extensions.map(extension => extension.name === 'trailing-editable-block'
+      ? gitLabFootnoteBoundary(extension) : extension), math, ...(options.extensions ?? [])]);
     this.assetResolver = new GitLabAssetResolver(options);
     let alertInput: Plugin | undefined;
     let quickActions: GitLabQuickActionEditing | undefined;

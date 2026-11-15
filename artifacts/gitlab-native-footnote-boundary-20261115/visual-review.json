@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-15T18:40:03.961Z",
+  "video": {
+    "path": "artifacts/gitlab-native-footnote-boundary-20261115/recordings/page@76b35fd791e9413e671e51d922aa3a3b.webm",
+    "bytes": 6379472,
+    "sha256": "8581961fc17ba2770f9ffe512641fd40f9fd14943a5d0c12cb380ea2572fbc58",
+    "durationSeconds": 155.44,
+    "width": 800,
+    "height": 554
+  },
+  "method": "Four full-size screenshots plus twelve sampled recording frames from approximately seconds 6–39 at three-second intervals; not frame-by-frame review of the whole recording",
+  "screenshots": {
+    "artifacts/gitlab-native-footnote-boundary-20261115/original-rich-edit.png": "f395c1336299262530b65762233287eecf460fc85c5e4bbf6483566b3a8b4fde",
+    "artifacts/gitlab-native-footnote-boundary-20261115/original-after-restart.png": "aadfc15665f524f759250c8f13d28127cadd10dfaecf4600f2dfb827c4b6f45c",
+    "artifacts/gitlab-native-footnote-boundary-20261115/rename-unused-mobile.png": "d0875f0067e369455f24ae650f437bf3973720e9bea8dfc9e9a2367c6daae1e7",
+    "artifacts/gitlab-native-footnote-boundary-20261115/recording-review.png": "709e434c97533a0f4b7852bfe95519e4ec83b1211a4eea8a838e633ae0f8bbd8"
+  },
+  "observations": [
+    "The native editor ends with the two editable note bodies; no extra root typing paragraph appears below them.",
+    "Actual Enter/typing creates continuation prose before the note section; the saved and restarted reader retains that order.",
+    "Context actions still distinguish common and destructive operations; the unused mobile label wraps above its body.",
+    "Sampled frames include loading and modal transitions; settled dialog accessibility checks are separate evidence."
+  ]
+}

@@ -1,0 +1,393 @@
+{
+  "scope": "Actual before-repair captures; physical note/prose order is compared, not normalized away",
+  "cases": [
+    {
+      "name": "insert",
+      "source": "[^fountain-note]\n\n[^fountain-note]: A service reliability note.",
+      "canonical": "[^fountain-note]\n\n[^fountain-note]: A service reliability note.\n\nFirst round-trip edit.&#32;",
+      "action": {
+        "kind": "insert-text",
+        "path": [
+          2,
+          0
+        ]
+      },
+      "expected": {
+        "type": "doc",
+        "attrs": {},
+        "marks": [],
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "start",
+              "dir": "auto",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "footnote_reference",
+                "attrs": {
+                  "gitlabFootnoteLabel": "fountain-note",
+                  "gitlabFootnoteOriginalLabel": "fountain-note",
+                  "gitlabFootnoteTargetLabel": "fountain-note",
+                  "id": "fountain-note"
+                },
+                "marks": [],
+                "content": []
+              }
+            ]
+          },
+          {
+            "type": "footnote_definition",
+            "attrs": {
+              "gitlabFootnoteLabel": "fountain-note",
+              "id": "fountain-note"
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "gitlabLiteralSlash": false
+                },
+                "marks": [],
+                "content": [
+                  {
+                    "type": "text",
+                    "attrs": {},
+                    "text": "A service reliability note.",
+                    "marks": [],
+                    "content": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "text",
+                "attrs": {},
+                "text": "First round-trip edit. ",
+                "marks": [],
+                "content": []
+              }
+            ]
+          }
+        ]
+      },
+      "reopened": {
+        "type": "doc",
+        "attrs": {},
+        "marks": [],
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "start",
+              "dir": "auto",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "footnote_reference",
+                "attrs": {
+                  "gitlabFootnoteLabel": "fountain-note",
+                  "gitlabFootnoteOriginalLabel": "fountain-note",
+                  "gitlabFootnoteTargetLabel": "fountain-note",
+                  "id": "fountain-note"
+                },
+                "marks": [],
+                "content": []
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "start",
+              "dir": "auto",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "text",
+                "attrs": {},
+                "text": "First round-trip edit. ",
+                "marks": [],
+                "content": []
+              }
+            ]
+          },
+          {
+            "type": "footnote_definition",
+            "attrs": {
+              "gitlabFootnoteLabel": "fountain-note",
+              "id": "fountain-note"
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "gitlabLiteralSlash": false
+                },
+                "marks": [],
+                "content": [
+                  {
+                    "type": "text",
+                    "attrs": {},
+                    "text": "A service reliability note.",
+                    "marks": [],
+                    "content": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "text",
+                "attrs": {},
+                "text": "",
+                "marks": [],
+                "content": []
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "insert-marked",
+      "source": "[^fountain-note]\n\n[^fountain-note]: Evidence **retained** after editing.",
+      "canonical": "[^fountain-note]\n\n[^fountain-note]: Evidence **retained** after editing.\n\nFirst round-trip edit.&#32;",
+      "action": {
+        "kind": "insert-text",
+        "path": [
+          2,
+          0
+        ]
+      },
+      "expected": {
+        "type": "doc",
+        "attrs": {},
+        "marks": [],
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "start",
+              "dir": "auto",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "footnote_reference",
+                "attrs": {
+                  "gitlabFootnoteLabel": "fountain-note",
+                  "gitlabFootnoteOriginalLabel": "fountain-note",
+                  "gitlabFootnoteTargetLabel": "fountain-note",
+                  "id": "fountain-note"
+                },
+                "marks": [],
+                "content": []
+              }
+            ]
+          },
+          {
+            "type": "footnote_definition",
+            "attrs": {
+              "gitlabFootnoteLabel": "fountain-note",
+              "id": "fountain-note"
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "gitlabLiteralSlash": false
+                },
+                "marks": [],
+                "content": [
+                  {
+                    "type": "text",
+                    "attrs": {},
+                    "text": "Evidence ",
+                    "marks": [],
+                    "content": []
+                  },
+                  {
+                    "type": "text",
+                    "attrs": {},
+                    "text": "retained",
+                    "marks": [
+                      {
+                        "type": "strong"
+                      }
+                    ],
+                    "content": []
+                  },
+                  {
+                    "type": "text",
+                    "attrs": {},
+                    "text": " after editing.",
+                    "marks": [],
+                    "content": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "text",
+                "attrs": {},
+                "text": "First round-trip edit. ",
+                "marks": [],
+                "content": []
+              }
+            ]
+          }
+        ]
+      },
+      "reopened": {
+        "type": "doc",
+        "attrs": {},
+        "marks": [],
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "start",
+              "dir": "auto",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "footnote_reference",
+                "attrs": {
+                  "gitlabFootnoteLabel": "fountain-note",
+                  "gitlabFootnoteOriginalLabel": "fountain-note",
+                  "gitlabFootnoteTargetLabel": "fountain-note",
+                  "id": "fountain-note"
+                },
+                "marks": [],
+                "content": []
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "start",
+              "dir": "auto",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "text",
+                "attrs": {},
+                "text": "First round-trip edit. ",
+                "marks": [],
+                "content": []
+              }
+            ]
+          },
+          {
+            "type": "footnote_definition",
+            "attrs": {
+              "gitlabFootnoteLabel": "fountain-note",
+              "id": "fountain-note"
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "gitlabLiteralSlash": false
+                },
+                "marks": [],
+                "content": [
+                  {
+                    "type": "text",
+                    "attrs": {},
+                    "text": "Evidence ",
+                    "marks": [],
+                    "content": []
+                  },
+                  {
+                    "type": "text",
+                    "attrs": {},
+                    "text": "retained",
+                    "marks": [
+                      {
+                        "type": "strong"
+                      }
+                    ],
+                    "content": []
+                  },
+                  {
+                    "type": "text",
+                    "attrs": {},
+                    "text": " after editing.",
+                    "marks": [],
+                    "content": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left",
+              "gitlabLiteralSlash": false
+            },
+            "marks": [],
+            "content": [
+              {
+                "type": "text",
+                "attrs": {},
+                "text": "",
+                "marks": [],
+                "content": []
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -125,6 +125,21 @@ export async function auditNativeFootnotes({ page, editor, toolbar, output, repo
   await toolbar.screenshot({ path: fileURLToPath(new URL('footnote-toolbar-ui.png', output)) });
   await media.screenshot({ path: fileURLToPath(new URL('footnote-media-controls.png', output)) });
   await main.click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('A continuation before the endnotes.');
+  const continuation = editor.locator('p').filter({ hasText: 'A continuation before the endnotes.' });
+  await expect(continuation).toHaveCount(1);
+  const layout = await definitions().last().evaluate(note => {
+    const blocks = [...note.parentElement.children].filter(node => node.hasAttribute('data-fountain-path'));
+    const prose = blocks.findIndex(node => node.textContent === 'A continuation before the endnotes.');
+    const firstNote = blocks.findIndex(node => node.hasAttribute('data-fountain-footnote-definition'));
+    return { endsWithNote: blocks.at(-1) === note, prose, firstNote };
+  });
+  expect(layout.endsWithNote).toBe(true); expect(layout.prose).toBeGreaterThanOrEqual(0);
+  expect(layout.prose).toBeLessThan(layout.firstNote);
+  report.footnoteProseBoundary = layout;
+  report.checks.push('Real Enter and typing continue the body before endnotes; no automatic root typing paragraph appears after the terminal editable note');
   report.nativeFootnotes = { definitions: 2, references: 3,
     bodies: ['A service reliability note. Verified in Chrome.', 'Second note body.'] };
   report.checks.push('Keyboard-accessible controls remove one reference without deleting its body, or delete a whole note and its references; Undo restores both operations; a 360px dialog retains its draft and cancels without inserting');

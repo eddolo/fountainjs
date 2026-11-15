@@ -2,6 +2,31 @@
 
 Updated 2026-11-15.
 
+The private GitLab footnote adapter now has an actual-host two-cycle round-trip
+matrix: 65 input/edit combinations, 208 authenticated renderings, 53 accepted
+cases with equal native graphs after both reopenings, and 12 explicit source-
+retaining refusals. The cases include direct note-body edits, empty/unused/shared
+notes, Unicode labels, literal markers, frontmatter, tables, links and math.
+The comparison normalizes only opaque note IDs, not body order or formatting.
+
+That audit exposed a real editor/reader mismatch: an automatic typing paragraph
+after terminal endnotes let prose appear below them in the editor and above them
+after reopening. The private adapter now omits that automatic repair when the
+last note body is already editable. Shared engine behavior, repairs after atomic
+content and authored paragraphs are retained. A recorded 26-check UI journey
+verifies Enter/typing before notes, source/rich switching, Save, reopen and
+restart. Six scoped accessibility scans and browser-error checks pass.
+
+Current validation passes 1,133 GitLab tests in 41 suites, 536 selected upstream
+tests (one inherited skip), TypeScript, the rebuilt frontend, 18 ordered patches
+and 28-file source rollback. Clipboard/native-fragment/authored-placement,
+broader format/edit/context/role/browser matrices, cache rollout, large-document
+costs and compiled deployment rollback remain open. No public API, size limit,
+package version or parity row changes.
+[Current evidence](../artifacts/gitlab-footnote-roundtrip-integration-20261115.json).
+
+Previous label and reader-navigation checkpoint:
+
 The private GitLab issue editor now supports footnote-label renaming through the
 actual host renderer. It retains native identities and note bodies, updates shared
 references atomically, supports undo/redo, and retains drafts on collision or

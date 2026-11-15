@@ -2,6 +2,27 @@
 
 ## Current programme status — 2026-11-15
 
+The private GitLab footnote round-trip corpus now has 53 accepted input/edit
+combinations that retain the full native graph through two actual-host export/
+reopen cycles, plus 12 explicit source-retaining refusals. The capture records
+208 authenticated renderer responses. Note-body, empty/shared/unused-note,
+Unicode, literal-marker, frontmatter, table, link and math cases are included;
+this does not certify the full grammar or every edit/context combination.
+
+The audit found automatic prose being offered after an endnote section even
+though GitLab renders notes last. The private adapter now suppresses only that
+automatic root repair when the terminal note body is editable. Authored content
+and the shared engine's normal repairs remain. The recorded UI profile passes
+26 checks through Enter/typing, Save, reopen and restart, with six scoped
+accessibility scans and no browser errors. Models pass 1,133 tests in 41 suites;
+536 selected upstream tests pass with one inherited skip. Types, frontend,
+18-patch reconstruction and 28-file source rollback pass. Broader source,
+clipboard, authored placement, workflow/role/browser and deployment matrices
+remain open. No capability row or public release claim is promoted.
+[Current evidence](../artifacts/gitlab-footnote-roundtrip-integration-20261115.json).
+
+Previous label and reader-navigation checkpoint:
+
 The private GitLab issue editor adds verified label renaming with stable native
 identities, shared-reference updates, atomic history, collision refusal and
 retained failure drafts. Actual host renderings before and after a rename must

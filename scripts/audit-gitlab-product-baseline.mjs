@@ -27,7 +27,8 @@ const nativeContextMenus = process.argv.includes('--native-context-menus') || na
 const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
 const nativeAutocomplete = process.argv.includes('--native-autocomplete');
-const nativeFootnoteRenaming = process.argv.includes('--native-footnote-renaming');
+const nativeFootnoteBoundary = process.argv.includes('--native-footnote-boundary');
+const nativeFootnoteRenaming = process.argv.includes('--native-footnote-renaming') || nativeFootnoteBoundary;
 const nativeFootnoteEditing = process.argv.includes('--native-footnote-editing') || nativeFootnoteRenaming;
 const nativeDecodedFootnoteSource = process.argv.includes('--native-footnote-decoded-source') || nativeFootnoteEditing;
 const nativeFootnoteSource = process.argv.includes('--native-footnote-source') || nativeDecodedFootnoteSource;
@@ -49,6 +50,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
+  nativeFootnoteBoundary ? 'artifacts/gitlab-native-footnote-boundary-20261115/' :
   nativeFootnoteRenaming ? 'artifacts/gitlab-native-footnote-renaming-20261115/' :
   nativeFootnoteEditing ? 'artifacts/gitlab-native-footnote-editing-20261115/' :
   nativeDecodedFootnoteSource ? 'artifacts/gitlab-native-footnote-decoded-source-20261114/' :

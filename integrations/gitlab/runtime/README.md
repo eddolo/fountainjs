@@ -395,6 +395,23 @@ With the task application stopped, `node scripts/check-gitlab-native-install.mjs
 /absolute/gitlab-source` exercises the guarded source restore/reinstall and checks
 every digest. This is source rollback evidence; compiled deployment rollback still
 needs a separate exercise.
+
+## Footnote round-trip and prose-boundary profile
+
+Build/install the current native runtime and rebuild the host frontend, then run:
+
+```sh
+node scripts/run-gitlab-native-browser-audit.mjs --footnote-boundary --capture-footnote-roundtrip
+```
+
+The capture uses the declared server repair and records exact actual-host
+responses for two native edit/export/reopen cycles. It keeps unsupported-input
+refusals explicit. The browser profile additionally types a new prose paragraph
+before the endnotes and saves/reopens/restarts the real application. These are
+separate kinds of evidence; the model-level capture is not a human UI recording.
+`--footnote-roundtrip-fixtures` runs only the renderer capture with its declared
+backend overlay. Original reference capture profiles continue to use the stock
+server unless explicitly requested otherwise.
 Remaining native toolbar/menu workflows, suggestion/provider adapters,
 remaining upstream feature cases, accessibility and
 cross-browser/product acceptance remain necessary. Passing a selected real
