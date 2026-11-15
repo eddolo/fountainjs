@@ -211,10 +211,10 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     }
   }
 
-  serializeWithReport({ doc }: { doc: Node }): { markdown: string; preservation: 'exact' | 'canonical'; issues: readonly GitLabMarkdownIssue[] } {
+  serializeWithReport({ doc, canonical = false }: { doc: Node; canonical?: boolean }): { markdown: string; preservation: 'exact' | 'canonical'; issues: readonly GitLabMarkdownIssue[] } {
     const sources = new Set<MarkdownSourceSnapshot>();
     doc.descendants(node => { const source = this.sources.get(node); if (source) sources.add(source); });
-    if (sources.size === 1) {
+    if (!canonical && sources.size === 1) {
       const source = sources.values().next().value!;
       if (source.matches(doc)) return { markdown: source.source, preservation: 'exact', issues: [] };
     }

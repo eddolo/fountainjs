@@ -11,8 +11,17 @@ export async function auditNativeFootnotes({ page, editor, toolbar, output, repo
   const require = createRequire(installed.source + '/storybook/package.json');
   await page.addScriptTag({ path: require.resolve('axe-core/axe.min.js') });
   const audit = async (locator, name) => {
+    await expect(locator).toBeVisible();
+    const surface = await locator.evaluate(async element => {
+      const root = element.closest('.modal') || element;
+      const initialOpacity = getComputedStyle(root).opacity;
+      const animations = root.getAnimations({ subtree: true });
+      await Promise.all(animations.map(animation => animation.finished.catch(() => {})));
+      return { initialOpacity, animations: animations.length, finalOpacity: getComputedStyle(root).opacity };
+    });
+    await expect(locator).toHaveCSS('opacity', '1');
     const result = await locator.evaluate(element => window.axe.run(element));
-    (report.footnoteAccessibility ??= []).push({ name, violations: result.violations });
+    (report.footnoteAccessibility ??= []).push({ name, surface, violations: result.violations });
     expect(result.violations).toEqual([]);
   };
   const selectionEvidence = async phase => {
@@ -123,7 +132,8 @@ export async function auditNativeFootnotes({ page, editor, toolbar, output, repo
 }
 
 export async function assertSavedNativeFootnotes({ page, description, report, phase }) {
-  expect(description).toContain('End of the original description.[^1][^2][^1]');
+  const [first = '1', second = '2'] = report.nativeFootnotes.labels ?? [];
+  expect(description).toContain(`End of the original description.[^${first}][^${second}][^${first}]`);
   expect(description).not.toContain('<p data-fountain-empty=');
   const reader = page.getByTestId('work-item-description');
   const notes = reader.locator('section[data-footnotes] > ol > li');
@@ -132,6 +142,24 @@ export async function assertSavedNativeFootnotes({ page, description, report, ph
     expect(description).toContain(text);
   }
   await expect(notes).toHaveCount(report.nativeFootnotes.definitions);
-  await expect(reader.locator('sup a[data-footnote-ref]')).toHaveCount(report.nativeFootnotes.references);
+  const references = reader.locator('sup a[data-footnote-ref]');
+  await expect(references).toHaveCount(report.nativeFootnotes.references);
+  const [firstBody, secondBody] = report.nativeFootnotes.bodies;
+  const firstID = await notes.filter({ hasText: firstBody }).getAttribute('id');
+  const secondID = await notes.filter({ hasText: secondBody }).getAttribute('id');
+  expect(firstID).toBeTruthy(); expect(secondID).toBeTruthy(); expect(firstID).not.toBe(secondID);
+  await expect(references.nth(0)).toHaveAttribute('href', `#${firstID}`);
+  await expect(references.nth(1)).toHaveAttribute('href', `#${secondID}`);
+  await expect(references.nth(2)).toHaveAttribute('href', `#${firstID}`);
+  await references.nth(2).click();
+  await expect(notes.filter({ hasText: firstBody })).toBeInViewport();
+  expect(new URL(page.url()).hash).toBe(`#${firstID}`);
+  const returnLink = notes.filter({ hasText: firstBody }).locator('a[data-footnote-backref][data-footnote-backref-idx="1-2"]');
+  const referenceID = await references.nth(2).getAttribute('id');
+  await expect(returnLink).toHaveAttribute('href', `#${referenceID}`);
+  await returnLink.click();
+  await expect(references.nth(2)).toBeInViewport();
+  expect(new URL(page.url()).hash).toBe(`#${referenceID}`);
+  report.checks.push(`Actual repeated footnote and backlink clicks reach their own unique reader targets (${phase})`);
   report.checks.push(`Native footnote bodies, two definitions and three references agree with the actual saved GitLab Markdown and reader (${phase})`);
 }

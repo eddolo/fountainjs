@@ -56,3 +56,4 @@
 /artifacts/gitlab-native-insertion-*.log -text -whitespace
 /artifacts/gitlab-native-component-*.log -text -whitespace
 /artifacts/gitlab-native-placeholder-*.log -text -whitespace
+/artifacts/gitlab-footnote-*.log -text -whitespace

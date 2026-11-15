@@ -1,5 +1,30 @@
 # Release and API stability policy
 
+## Private GitLab footnote labels and reader navigation — 2026-11-15
+
+Add source-label editing with captured/rebased targets, actual host validation,
+retained retry drafts and atomic reference/history updates. Refuse exact and
+renderer-resolved label collisions or changes to other document content. Keep
+unused long labels on their own wrapping line above the body.
+
+Actual repeated-reference clicks exposed a pinned upstream server defect. A
+separate read-only, hash-guarded filter overlay resolves definitions by href and
+repairs generated forward/backlink IDs. Original-server reference captures stay
+separate. A scoped refresh of the old test issue's cached HTML repairs its reader
+without changing Markdown, title or modification timestamp. Installation-wide
+cache invalidation/load planning and compiled deployment rollback remain open.
+
+Validation: 1,057 model tests in 39 suites; 536 selected upstream tests with one
+inherited skip; 24 Ruby contracts; 45 authenticated Rails renderings; and a
+recorded 25-check save/reopen/restart journey with six scoped accessibility scans
+and no browser errors. Types, frontend compilation, 18-patch reconstruction and
+28-file source restore/reinstall pass. Screenshots and sampled video frames are
+reviewed. This is local private-integration work, with no public API/dependency,
+package version, size allowance, npm release or parity-row change. Complete
+source/clipboard/workflow/role/browser matrices and large-document rename costs
+remain unverified; the separate intermittent image 403 remains open.
+[Evidence and limits](../artifacts/gitlab-footnote-renaming-integration-20261115.json).
+
 ## Private GitLab native footnote authoring and caret repair — 2026-11-15
 
 Enable verified footnote source/render cases in the private native codec, with

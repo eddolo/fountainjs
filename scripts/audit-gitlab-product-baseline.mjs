@@ -16,6 +16,7 @@ import { readGitLabAuditCredential } from './gitlab-audit-credentials.mjs';
 import { auditNativeQuickActions, assertSavedNativeQuickActions } from './audit-gitlab-native-quick-actions.mjs';
 import { assertSavedAutocomplete } from './audit-gitlab-native-autocomplete.mjs';
 import { auditNativeFootnotes, assertSavedNativeFootnotes } from './audit-gitlab-native-footnotes.mjs';
+import { auditNativeFootnoteRenaming } from './audit-gitlab-native-footnote-renaming.mjs';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
@@ -26,7 +27,8 @@ const nativeContextMenus = process.argv.includes('--native-context-menus') || na
 const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
 const nativeAutocomplete = process.argv.includes('--native-autocomplete');
-const nativeFootnoteEditing = process.argv.includes('--native-footnote-editing');
+const nativeFootnoteRenaming = process.argv.includes('--native-footnote-renaming');
+const nativeFootnoteEditing = process.argv.includes('--native-footnote-editing') || nativeFootnoteRenaming;
 const nativeDecodedFootnoteSource = process.argv.includes('--native-footnote-decoded-source') || nativeFootnoteEditing;
 const nativeFootnoteSource = process.argv.includes('--native-footnote-source') || nativeDecodedFootnoteSource;
 const nativeQuickActionControls = process.argv.includes('--native-quick-action-controls') || nativeAutocomplete;
@@ -47,6 +49,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
+  nativeFootnoteRenaming ? 'artifacts/gitlab-native-footnote-renaming-20261115/' :
   nativeFootnoteEditing ? 'artifacts/gitlab-native-footnote-editing-20261115/' :
   nativeDecodedFootnoteSource ? 'artifacts/gitlab-native-footnote-decoded-source-20261114/' :
   nativeFootnoteSource ? 'artifacts/gitlab-native-footnote-source-20261114/' :
@@ -86,20 +89,31 @@ const compose = (...args) => docker('compose', '-f', linuxComposeFile, ...args);
 const container = compose('ps', '--all', '--quiet', 'baseline').trim();
 if (!container) throw new Error('Start the isolated GitLab baseline first.');
 const inspection = JSON.parse(docker('inspect', container))[0];
-const frontendMount = inspection.Mounts.find(
-  (mount) =>
-    mount.Destination === '/opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack',
-);
-if (preparedHost ? !frontendMount || frontendMount.RW : Boolean(frontendMount)) {
-  throw new Error(
-    'The frontend deployment does not match the requested original/prepared-host audit.',
-  );
-}
 if (
   inspection.Config.Image !== pin.image ||
   inspection.Config.Labels['com.docker.compose.project'] !== 'fountain-gitlab-integration'
 ) {
   throw new Error('Refusing to modify an unrecognized GitLab deployment.');
+}
+const frontendMount = inspection.Mounts.find(
+  (mount) =>
+    mount.Destination === '/opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack',
+);
+const footnoteServerTarget = '/opt/gitlab/embedded/service/gitlab-rails/lib/banzai/filter/footnote_filter.rb';
+const footnoteServerMount = inspection.Mounts.find(mount => mount.Destination === footnoteServerTarget);
+let footnoteServerOverlay;
+if (footnoteServerMount) {
+  if (!preparedHost || footnoteServerMount.RW) throw new Error('A stock baseline cannot use the native footnote server overlay.');
+  const receipt = JSON.parse(await readFile(new URL('artifacts/gitlab-native-footnote-server/build.json', root)));
+  const actualHash = docker('exec', container, 'sha256sum', footnoteServerTarget).split(/\s/u)[0];
+  if (receipt.revision !== pin.commit || actualHash !== receipt.sha256) throw new Error('The live server repair does not match its receipt.');
+  footnoteServerOverlay = { source: footnoteServerMount.Source, readOnly: true,
+    sha256: receipt.sha256, originalSha256: receipt.originalSha256, scope: receipt.scope };
+}
+if (preparedHost ? !frontendMount || frontendMount.RW : Boolean(frontendMount)) {
+  throw new Error(
+    'The frontend deployment does not match the requested original/prepared-host audit.',
+  );
 }
 const revision = compose(
   'exec',
@@ -154,6 +168,7 @@ const report = {
   secrets: 'Credential stays in protected task-container configuration and process memory; no credential values, traces or browser storage-state files are recorded',
   preparedHost,
   nativeBrowser,
+  footnoteServerOverlay,
   nativeInsertion,
   nativeComponent,
   nativeAttachments,
@@ -472,6 +487,7 @@ try {
       );
     }
     if (nativeFootnoteEditing) await auditNativeFootnotes({ page, editor, toolbar, output, report });
+    if (nativeFootnoteRenaming) await auditNativeFootnoteRenaming({ page, editor, toolbar, output, report });
     if (nativeLinks) await auditNativeLinks({ page, context, editor, toolbar, output, report });
     if (nativeCode) await auditNativeCode({ page, editor, toolbar, output, report });
     if (nativeContextMenus) await auditNativeContextMenus({ page, editor, toolbar, output, report });

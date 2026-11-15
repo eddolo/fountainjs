@@ -2,6 +2,29 @@
 
 ## Current programme status — 2026-11-15
 
+The private GitLab issue editor adds verified label renaming with stable native
+identities, shared-reference updates, atomic history, collision refusal and
+retained failure drafts. Actual host renderings before and after a rename must
+agree on the rest of the document. Unused labels have their own wrapping line;
+long labels no longer overlap the body at desktop or 360px.
+
+The stronger reader test found an original GitLab repeated-reference defect.
+A separate pinned server overlay repairs forward/backlink destinations and is
+reported explicitly, rather than presented as a stock-backend result. Refreshing
+only the previously broken test issue's derived HTML repairs its cached reader
+without editing source or record metadata. Production cache rollout is still
+required. The recorded browser profile passes 25 checks through save/reopen/
+restart; six scoped accessibility scans and browser-error checks pass. Models
+pass 1,057 cases in 39 suites, selected upstream tests pass 536 with one inherited
+skip, and the backend has 24 Ruby contracts plus 45 real Rails renderings.
+Types, frontend build, source rollback and patch reconstruction pass. This is
+still partial GitLab integration: full canonical/clipboard/workflow/role/browser
+matrices, large-document validation costs and compiled rollback remain open.
+No capability row or public release claim is promoted.
+[Current evidence](../artifacts/gitlab-footnote-renaming-integration-20261115.json).
+
+Earlier authoring checkpoint:
+
 Verified native footnote import/export and basic issue authoring are now wired
 into the private GitLab integration. A recorded 19-check real-service journey
 covers insertion, direct body editing, shared reuse, reference/whole-note removal,

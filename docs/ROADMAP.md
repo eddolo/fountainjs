@@ -2,6 +2,33 @@
 
 Updated 2026-11-15.
 
+The private GitLab issue editor now supports footnote-label renaming through the
+actual host renderer. It retains native identities and note bodies, updates shared
+references atomically, supports undo/redo, and retains drafts on collision or
+transport failure. Validation refuses a rename that changes other content or
+reference ownership. Unused-note labels now wrap above their bodies rather than
+overlapping the numeric gutter, including at 360px.
+
+Real reader clicks exposed an upstream repeat-reference bug that link-count
+checks missed. A separately declared, exact-pin server filter repair now joins
+references by href and gives generated destinations collision-checked IDs. The
+original backend baseline remains separate. The old cached test issue required
+GitLab's documented derived-HTML invalidation; its source, title and timestamp
+were unchanged. This is not evidence for a completed site-wide cache migration.
+
+Current evidence: 1,057 GitLab model cases in 39 suites; 536 selected upstream
+cases with one inherited skip; 24 pinned-image Ruby contracts; 45 actual Rails
+renderings; and a recorded 25-check Chromium save/reopen/restart journey with six
+scoped accessibility checks and no browser errors. Types, actual frontend build,
+18-patch reconstruction and 28-file source rollback pass. Public APIs, package
+version, size limits and parity rows are unchanged. Duplicate/ambiguous source
+policies, complete canonical/clipboard/public-Pages and workflow/role/browser
+matrices, large-document rename costs, cache rollout and compiled deployment
+rollback remain open.
+[Current evidence](../artifacts/gitlab-footnote-renaming-integration-20261115.json).
+
+Earlier native authoring checkpoint:
+
 The private GitLab adapter now imports and canonically exports verified footnote
 cases using the existing native nodes. Its issue-editor controls insert notes,
 reuse a shared note, edit bodies, remove one reference or delete the whole note.

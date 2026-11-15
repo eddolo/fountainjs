@@ -26,6 +26,25 @@ existing transaction/history model. Definition insertion groups notes without
 turning the editor's final caret repair into an intervening empty paragraph.
 Authored empty paragraphs are not deleted to achieve that result.
 
+Label renaming is now installed. A session captures/rebases the target, compares
+actual canonical before/after host projections and permits only its label change.
+It preserves native identities, bodies and shared-reference ownership, with
+atomic undo/redo, retained failure drafts, cancellation and read-only/conflict
+guards. Exact, case-folded and captured entity collision cases refuse without
+mutation; this does not settle the full duplicate-definition/source-alias policy.
+Unused labels wrap on their own line at desktop and 360px.
+
+Actual reader clicks exposed an independent pinned GitLab server defect: repeat
+occurrence IDs were mistaken for definition labels. The explicit server overlay
+joins by original href and assigns unique generated IDs/backlinks. Twenty-four
+Ruby contracts and 45 actual Rails renderings pass. Old cached HTML still needs
+GitLab's documented invalidation; the affected task record was repaired without
+source or metadata changes. The recorded issue profile passes 25 checks through
+save/reopen/restart, with six scoped accessibility scans. Current models pass
+1,057 cases; upstream checks pass 536 with one inherited skip. See
+[current evidence](../../artifacts/gitlab-footnote-renaming-integration-20261115.json)
+and [server/cache requirements](runtime/README.md#native-footnote-server-repair).
+
 The real-user journey exposed a separate browser-view defect: End after a
 trailing inline atom could jump to a later paragraph. A view-only caret
 placeholder fixes the endpoint; it adds no model character or hard break.
@@ -33,7 +52,7 @@ The regression covers footnotes and inline math in Chromium, Firefox and WebKit.
 
 Remaining acceptance work:
 
-- Label-renaming UI and a complete duplicate-label/source-alias policy.
+- A complete duplicate-label/source-alias policy beyond verified rename cases.
 - Missing entity/escape bodies, raw HTML back-reference ambiguity and host
   BOM/CR preprocessing; retain source until each representation is verified.
 - All supported canonical exports re-rendered through the actual host, beyond
@@ -42,6 +61,9 @@ Remaining acceptance work:
   including the public Pages insertion commands outside this private adapter.
 - MR, wiki and discussion authoring; browser, touch/IME, read-only and role
   matrices; compiled deployment rollback. One issue journey is not that matrix.
+- Large-document rename latency/memory and production cache rollout/load: rename
+  uses two canonical host projections, plus bounded unused-body probes when
+  required. This cost is outside typing, but has not been accepted at scale.
 
 [Current evidence](../../artifacts/gitlab-footnote-authoring-integration-20261115.json).
 

@@ -1,0 +1,377 @@
+{
+  "status": "passed",
+  "scope": "Actual Rails rendering and exact local forward/backlink ownership; not the complete label grammar or every application surface",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "overlay": {
+    "sha256": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+    "originalSha256": "3c3e2469ca0ce9191954f725548fa0bf3599ca9ccc8980b3fbdca46e14e1dc74",
+    "readOnly": true,
+    "scope": "Read-only task server overlay; repeat-reference and generated-backlink repair, not an unmodified GitLab baseline"
+  },
+  "fixtures": [
+    {
+      "name": "simple",
+      "source": "A note[^alpha].\n\n[^alpha]: Definition **bold**.",
+      "body": "<p data-sourcepos=\"1:1-1:15\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:14\" class=\"footnote-ref\"><a href=\"#fn-alpha-4544\" id=\"fnref-alpha-4544\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:30\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:30\" id=\"fn-alpha-4544\">&#x000A;<p data-sourcepos=\"3:11-3:30\">Definition <strong data-sourcepos=\"3:22-3:29\">bold</strong>. <a href=\"#fnref-alpha-4544\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "simple-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^alpha]\n\nA note[^alpha].\n\n[^alpha]: Definition **bold**.",
+      "body": "<p data-sourcepos=\"3:1-3:36\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:36\" class=\"footnote-ref\"><a href=\"#fn-alpha-3598\" id=\"fnref-alpha-3598\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:15\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:14\" class=\"footnote-ref\"><a href=\"#fn-alpha-3598\" id=\"fnref-alpha-2-3598\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:30\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:30\" id=\"fn-alpha-3598\">&#x000A;<p data-sourcepos=\"7:11-7:30\">Definition <strong data-sourcepos=\"7:22-7:29\">bold</strong>. <a href=\"#fnref-alpha-3598\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-alpha-2-3598\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "repeated",
+      "source": "First[^alpha] and again[^alpha].\n\n[^alpha]: Shared definition.",
+      "body": "<p data-sourcepos=\"1:1-1:32\" dir=\"auto\">First<sup data-sourcepos=\"1:6-1:13\" class=\"footnote-ref\"><a href=\"#fn-alpha-2148\" id=\"fnref-alpha-2148\" data-footnote-ref=\"\">1</a></sup> and again<sup data-sourcepos=\"1:24-1:31\" class=\"footnote-ref\"><a href=\"#fn-alpha-2148\" id=\"fnref-alpha-2-2148\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:28\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:28\" id=\"fn-alpha-2148\">&#x000A;<p data-sourcepos=\"3:11-3:28\">Shared definition. <a href=\"#fnref-alpha-2148\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-alpha-2-2148\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "repeated-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^alpha]\n\nFirst[^alpha] and again[^alpha].\n\n[^alpha]: Shared definition.",
+      "body": "<p data-sourcepos=\"3:1-3:36\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:36\" class=\"footnote-ref\"><a href=\"#fn-alpha-1425\" id=\"fnref-alpha-1425\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:32\" dir=\"auto\">First<sup data-sourcepos=\"5:6-5:13\" class=\"footnote-ref\"><a href=\"#fn-alpha-1425\" id=\"fnref-alpha-2-1425\" data-footnote-ref=\"\">1</a></sup> and again<sup data-sourcepos=\"5:24-5:31\" class=\"footnote-ref\"><a href=\"#fn-alpha-1425\" id=\"fnref-alpha-3-1425\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:28\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:28\" id=\"fn-alpha-1425\">&#x000A;<p data-sourcepos=\"7:11-7:28\">Shared definition. <a href=\"#fnref-alpha-1425\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-alpha-2-1425\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a> <a href=\"#fnref-alpha-3-1425\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-3\" aria-label=\"Back to reference 1-3\" title=\"Back to reference 1-3\" class=\"footnote-backref\">↩<sup>3</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 3,
+      "backlinks": 3,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "ordered",
+      "source": "Second[^b], first[^a].\n\n[^a]: Alpha.\n\n[^b]: Beta.",
+      "body": "<p data-sourcepos=\"1:1-1:22\" dir=\"auto\">Second<sup data-sourcepos=\"1:7-1:10\" class=\"footnote-ref\"><a href=\"#fn-b-9525\" id=\"fnref-b-9525\" data-footnote-ref=\"\">1</a></sup>, first<sup data-sourcepos=\"1:18-1:21\" class=\"footnote-ref\"><a href=\"#fn-a-9525\" id=\"fnref-a-9525\" data-footnote-ref=\"\">2</a></sup>.</p>&#x000A;<section data-sourcepos=\"5:1-5:11\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"5:1-5:11\" id=\"fn-b-9525\">&#x000A;<p data-sourcepos=\"5:7-5:11\">Beta. <a href=\"#fnref-b-9525\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;<li data-sourcepos=\"3:1-3:12\" id=\"fn-a-9525\">&#x000A;<p data-sourcepos=\"3:7-3:12\">Alpha. <a href=\"#fnref-a-9525\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2\" aria-label=\"Back to reference 2\" title=\"Back to reference 2\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "ordered-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a] [^b]\n\nSecond[^b], first[^a].\n\n[^a]: Alpha.\n\n[^b]: Beta.",
+      "body": "<p data-sourcepos=\"3:1-3:37\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:32\" class=\"footnote-ref\"><a href=\"#fn-a-5745\" id=\"fnref-a-5745\" data-footnote-ref=\"\">1</a></sup> <sup data-sourcepos=\"3:34-3:37\" class=\"footnote-ref\"><a href=\"#fn-b-5745\" id=\"fnref-b-5745\" data-footnote-ref=\"\">2</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:22\" dir=\"auto\">Second<sup data-sourcepos=\"5:7-5:10\" class=\"footnote-ref\"><a href=\"#fn-b-5745\" id=\"fnref-b-2-5745\" data-footnote-ref=\"\">2</a></sup>, first<sup data-sourcepos=\"5:18-5:21\" class=\"footnote-ref\"><a href=\"#fn-a-5745\" id=\"fnref-a-2-5745\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:12\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:12\" id=\"fn-a-5745\">&#x000A;<p data-sourcepos=\"7:7-7:12\">Alpha. <a href=\"#fnref-a-5745\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a-2-5745\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;<li data-sourcepos=\"9:1-9:11\" id=\"fn-b-5745\">&#x000A;<p data-sourcepos=\"9:7-9:11\">Beta. <a href=\"#fnref-b-5745\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2\" aria-label=\"Back to reference 2\" title=\"Back to reference 2\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-b-2-5745\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2-2\" aria-label=\"Back to reference 2-2\" title=\"Back to reference 2-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 4,
+      "backlinks": 4,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "hyphen",
+      "source": "A note[^a-b].\n\n[^a-b]: Hyphen label.",
+      "body": "<p data-sourcepos=\"1:1-1:13\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:12\" class=\"footnote-ref\"><a href=\"#fn-a-b-1631\" id=\"fnref-a-b-1631\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:21\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:21\" id=\"fn-a-b-1631\">&#x000A;<p data-sourcepos=\"3:9-3:21\">Hyphen label. <a href=\"#fnref-a-b-1631\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "hyphen-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a-b]\n\nA note[^a-b].\n\n[^a-b]: Hyphen label.",
+      "body": "<p data-sourcepos=\"3:1-3:34\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:34\" class=\"footnote-ref\"><a href=\"#fn-a-b-7702\" id=\"fnref-a-b-7702\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:13\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:12\" class=\"footnote-ref\"><a href=\"#fn-a-b-7702\" id=\"fnref-a-b-2-7702\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:21\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:21\" id=\"fn-a-b-7702\">&#x000A;<p data-sourcepos=\"7:9-7:21\">Hyphen label. <a href=\"#fnref-a-b-7702\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a-b-2-7702\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "underscore",
+      "source": "A note[^a_b].\n\n[^a_b]: Underscore label.",
+      "body": "<p data-sourcepos=\"1:1-1:13\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:12\" class=\"footnote-ref\"><a href=\"#fn-a_b-4743\" id=\"fnref-a_b-4743\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:25\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:25\" id=\"fn-a_b-4743\">&#x000A;<p data-sourcepos=\"3:9-3:25\">Underscore label. <a href=\"#fnref-a_b-4743\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "underscore-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a_b]\n\nA note[^a_b].\n\n[^a_b]: Underscore label.",
+      "body": "<p data-sourcepos=\"3:1-3:34\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:34\" class=\"footnote-ref\"><a href=\"#fn-a_b-7515\" id=\"fnref-a_b-7515\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:13\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:12\" class=\"footnote-ref\"><a href=\"#fn-a_b-7515\" id=\"fnref-a_b-2-7515\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:25\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:25\" id=\"fn-a_b-7515\">&#x000A;<p data-sourcepos=\"7:9-7:25\">Underscore label. <a href=\"#fnref-a_b-7515\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a_b-2-7515\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "case",
+      "source": "A note[^Alpha] and[^alpha].\n\n[^Alpha]: Capitalized label.",
+      "body": "<p data-sourcepos=\"1:1-1:27\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:14\" class=\"footnote-ref\"><a href=\"#fn-Alpha-4250\" id=\"fnref-Alpha-4250\" data-footnote-ref=\"\">1</a></sup> and<sup data-sourcepos=\"1:19-1:26\" class=\"footnote-ref\"><a href=\"#fn-Alpha-4250\" id=\"fnref-Alpha-2-4250\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:28\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:28\" id=\"fn-Alpha-4250\">&#x000A;<p data-sourcepos=\"3:11-3:28\">Capitalized label. <a href=\"#fnref-Alpha-4250\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-Alpha-2-4250\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "case-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^Alpha]\n\nA note[^Alpha] and[^alpha].\n\n[^Alpha]: Capitalized label.",
+      "body": "<p data-sourcepos=\"3:1-3:36\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:36\" class=\"footnote-ref\"><a href=\"#fn-Alpha-4999\" id=\"fnref-Alpha-4999\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:27\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:14\" class=\"footnote-ref\"><a href=\"#fn-Alpha-4999\" id=\"fnref-Alpha-2-4999\" data-footnote-ref=\"\">1</a></sup> and<sup data-sourcepos=\"5:19-5:26\" class=\"footnote-ref\"><a href=\"#fn-Alpha-4999\" id=\"fnref-Alpha-3-4999\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:28\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:28\" id=\"fn-Alpha-4999\">&#x000A;<p data-sourcepos=\"7:11-7:28\">Capitalized label. <a href=\"#fnref-Alpha-4999\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-Alpha-2-4999\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a> <a href=\"#fnref-Alpha-3-4999\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-3\" aria-label=\"Back to reference 1-3\" title=\"Back to reference 1-3\" class=\"footnote-backref\">↩<sup>3</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 3,
+      "backlinks": 3,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unicode",
+      "source": "A note[^épreuve].\n\n[^épreuve]: Unicode label.",
+      "body": "<p data-sourcepos=\"1:1-1:18\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:17\" class=\"footnote-ref\"><a href=\"#fn-%C3%A9preuve-391\" id=\"fnref-%C3%A9preuve-391\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:27\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:27\" id=\"fn-%C3%A9preuve-391\">&#x000A;<p data-sourcepos=\"3:14-3:27\">Unicode label. <a href=\"#fnref-%C3%A9preuve-391\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unicode-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^épreuve]\n\nA note[^épreuve].\n\n[^épreuve]: Unicode label.",
+      "body": "<p data-sourcepos=\"3:1-3:39\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:39\" class=\"footnote-ref\"><a href=\"#fn-%C3%A9preuve-1060\" id=\"fnref-%C3%A9preuve-1060\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:18\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:17\" class=\"footnote-ref\"><a href=\"#fn-%C3%A9preuve-1060\" id=\"fnref-%C3%A9preuve-2-1060\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:27\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:27\" id=\"fn-%C3%A9preuve-1060\">&#x000A;<p data-sourcepos=\"7:14-7:27\">Unicode label. <a href=\"#fnref-%C3%A9preuve-1060\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-%C3%A9preuve-2-1060\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unicode-space",
+      "source": "A note[^non breaking].\n\n[^non breaking]: Non-breaking-space label.",
+      "body": "<p data-sourcepos=\"1:1-1:23\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:22\" class=\"footnote-ref\"><a href=\"#fn-non%20breaking-1241\" id=\"fnref-non%20breaking-1241\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:43\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:43\" id=\"fn-non%20breaking-1241\">&#x000A;<p data-sourcepos=\"3:19-3:43\">Non-breaking-space label. <a href=\"#fnref-non%20breaking-1241\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unicode-space-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^non breaking]\n\nA note[^non breaking].\n\n[^non breaking]: Non-breaking-space label.",
+      "body": "<p data-sourcepos=\"3:1-3:44\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:44\" class=\"footnote-ref\"><a href=\"#fn-non%20breaking-2322\" id=\"fnref-non%20breaking-2322\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:23\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:22\" class=\"footnote-ref\"><a href=\"#fn-non%20breaking-2322\" id=\"fnref-non%20breaking-2-2322\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:43\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:43\" id=\"fn-non%20breaking-2322\">&#x000A;<p data-sourcepos=\"7:19-7:43\">Non-breaking-space label. <a href=\"#fnref-non%20breaking-2322\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-non%20breaking-2-2322\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "punctuation",
+      "source": "A note[^a.b:c%41].\n\n[^a.b:c%41]: Punctuation label.",
+      "body": "<p data-sourcepos=\"1:1-1:18\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:17\" class=\"footnote-ref\"><a href=\"#fn-a.b:c%41-2380\" id=\"fnref-a.b:c%41-2380\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:31\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:31\" id=\"fn-a.b:c%41-2380\">&#x000A;<p data-sourcepos=\"3:14-3:31\">Punctuation label. <a href=\"#fnref-a.b:c%41-2380\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "punctuation-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a.b:c%41]\n\nA note[^a.b:c%41].\n\n[^a.b:c%41]: Punctuation label.",
+      "body": "<p data-sourcepos=\"3:1-3:39\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:39\" class=\"footnote-ref\"><a href=\"#fn-a.b:c%41-6701\" id=\"fnref-a.b:c%41-6701\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:18\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:17\" class=\"footnote-ref\"><a href=\"#fn-a.b:c%41-6701\" id=\"fnref-a.b:c%41-2-6701\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:31\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:31\" id=\"fn-a.b:c%41-6701\">&#x000A;<p data-sourcepos=\"7:14-7:31\">Punctuation label. <a href=\"#fnref-a.b:c%41-6701\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a.b:c%41-2-6701\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "multiblock",
+      "source": "A note[^long].\n\n[^long]: First paragraph.\n\n    Second **paragraph**.\n\n    - One\n    - Two",
+      "body": "<p data-sourcepos=\"1:1-1:14\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:13\" class=\"footnote-ref\"><a href=\"#fn-long-6689\" id=\"fnref-long-6689\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-8:9\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-8:9\" id=\"fn-long-6689\">&#x000A;<p data-sourcepos=\"3:10-3:25\">First paragraph.</p>&#x000A;<p data-sourcepos=\"5:5-5:25\">Second <strong data-sourcepos=\"5:12-5:24\">paragraph</strong>.</p>&#x000A;<ul data-sourcepos=\"7:5-8:9\">&#x000A;<li data-sourcepos=\"7:5-7:9\">One</li>&#x000A;<li data-sourcepos=\"8:5-8:9\">Two</li>&#x000A;</ul>&#x000A;<a href=\"#fnref-long-6689\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "multiblock-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^long]\n\nA note[^long].\n\n[^long]: First paragraph.\n\n    Second **paragraph**.\n\n    - One\n    - Two",
+      "body": "<p data-sourcepos=\"3:1-3:35\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:35\" class=\"footnote-ref\"><a href=\"#fn-long-5808\" id=\"fnref-long-5808\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:14\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:13\" class=\"footnote-ref\"><a href=\"#fn-long-5808\" id=\"fnref-long-2-5808\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-12:9\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-12:9\" id=\"fn-long-5808\">&#x000A;<p data-sourcepos=\"7:10-7:25\">First paragraph.</p>&#x000A;<p data-sourcepos=\"9:5-9:25\">Second <strong data-sourcepos=\"9:12-9:24\">paragraph</strong>.</p>&#x000A;<ul data-sourcepos=\"11:5-12:9\">&#x000A;<li data-sourcepos=\"11:5-11:9\">One</li>&#x000A;<li data-sourcepos=\"12:5-12:9\">Two</li>&#x000A;</ul>&#x000A;<a href=\"#fnref-long-5808\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-long-2-5808\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "nested-reference",
+      "source": "> Quote[^q].\n\n- Item[^l].\n\n[^q]: Quote note.\n\n[^l]: List note.",
+      "body": "<blockquote data-sourcepos=\"1:1-1:12\" dir=\"auto\">&#x000A;<p data-sourcepos=\"1:3-1:12\">Quote<sup data-sourcepos=\"1:8-1:11\" class=\"footnote-ref\"><a href=\"#fn-q-7960\" id=\"fnref-q-7960\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;</blockquote>&#x000A;<ul data-sourcepos=\"3:1-3:11\" dir=\"auto\">&#x000A;<li data-sourcepos=\"3:1-4:0\">Item<sup data-sourcepos=\"3:7-3:10\" class=\"footnote-ref\"><a href=\"#fn-l-7960\" id=\"fnref-l-7960\" data-footnote-ref=\"\">2</a></sup>.</li>&#x000A;</ul>&#x000A;<section data-sourcepos=\"5:1-5:17\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"5:1-5:17\" id=\"fn-q-7960\">&#x000A;<p data-sourcepos=\"5:7-5:17\">Quote note. <a href=\"#fnref-q-7960\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;<li data-sourcepos=\"7:1-7:16\" id=\"fn-l-7960\">&#x000A;<p data-sourcepos=\"7:7-7:16\">List note. <a href=\"#fnref-l-7960\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2\" aria-label=\"Back to reference 2\" title=\"Back to reference 2\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "nested-reference-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^q] [^l]\n\n> Quote[^q].\n\n- Item[^l].\n\n[^q]: Quote note.\n\n[^l]: List note.",
+      "body": "<p data-sourcepos=\"3:1-3:37\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:32\" class=\"footnote-ref\"><a href=\"#fn-q-3161\" id=\"fnref-q-3161\" data-footnote-ref=\"\">1</a></sup> <sup data-sourcepos=\"3:34-3:37\" class=\"footnote-ref\"><a href=\"#fn-l-3161\" id=\"fnref-l-3161\" data-footnote-ref=\"\">2</a></sup></p>&#x000A;<blockquote data-sourcepos=\"5:1-5:12\" dir=\"auto\">&#x000A;<p data-sourcepos=\"5:3-5:12\">Quote<sup data-sourcepos=\"5:8-5:11\" class=\"footnote-ref\"><a href=\"#fn-q-3161\" id=\"fnref-q-2-3161\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;</blockquote>&#x000A;<ul data-sourcepos=\"7:1-7:11\" dir=\"auto\">&#x000A;<li data-sourcepos=\"7:1-8:0\">Item<sup data-sourcepos=\"7:7-7:10\" class=\"footnote-ref\"><a href=\"#fn-l-3161\" id=\"fnref-l-2-3161\" data-footnote-ref=\"\">2</a></sup>.</li>&#x000A;</ul>&#x000A;<section data-sourcepos=\"9:1-9:17\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"9:1-9:17\" id=\"fn-q-3161\">&#x000A;<p data-sourcepos=\"9:7-9:17\">Quote note. <a href=\"#fnref-q-3161\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-q-2-3161\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;<li data-sourcepos=\"11:1-11:16\" id=\"fn-l-3161\">&#x000A;<p data-sourcepos=\"11:7-11:16\">List note. <a href=\"#fnref-l-3161\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2\" aria-label=\"Back to reference 2\" title=\"Back to reference 2\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-l-2-3161\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2-2\" aria-label=\"Back to reference 2-2\" title=\"Back to reference 2-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 4,
+      "backlinks": 4,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "nested-definition",
+      "source": "> Body[^q].\n>\n> [^q]: A quoted definition.",
+      "body": "<blockquote data-sourcepos=\"1:1-3:28\" dir=\"auto\">&#x000A;<p data-sourcepos=\"1:3-1:11\">Body<sup data-sourcepos=\"1:7-1:10\" class=\"footnote-ref\"><a href=\"#fn-q-3015\" id=\"fnref-q-3015\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;</blockquote>&#x000A;<section data-sourcepos=\"3:3-3:28\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:3-3:28\" id=\"fn-q-3015\">&#x000A;<p data-sourcepos=\"3:9-3:28\">A quoted definition. <a href=\"#fnref-q-3015\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "nested-definition-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^q]\n\n> Body[^q].\n>\n> [^q]: A quoted definition.",
+      "body": "<p data-sourcepos=\"3:1-3:32\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:32\" class=\"footnote-ref\"><a href=\"#fn-q-8279\" id=\"fnref-q-8279\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<blockquote data-sourcepos=\"5:1-7:28\" dir=\"auto\">&#x000A;<p data-sourcepos=\"5:3-5:11\">Body<sup data-sourcepos=\"5:7-5:10\" class=\"footnote-ref\"><a href=\"#fn-q-8279\" id=\"fnref-q-2-8279\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;</blockquote>&#x000A;<section data-sourcepos=\"7:3-7:28\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:3-7:28\" id=\"fn-q-8279\">&#x000A;<p data-sourcepos=\"7:9-7:28\">A quoted definition. <a href=\"#fnref-q-8279\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-q-2-8279\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unreferenced",
+      "source": "Visible body.\n\n[^unused]: Retain unused source.",
+      "body": "<p data-sourcepos=\"1:1-1:13\" dir=\"auto\">Visible body.</p>",
+      "references": 0,
+      "backlinks": 0,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unreferenced-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^unused]\n\nVisible body.\n\n[^unused]: Retain unused source.",
+      "body": "<p data-sourcepos=\"3:1-3:37\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:37\" class=\"footnote-ref\"><a href=\"#fn-unused-3786\" id=\"fnref-unused-3786\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:13\" dir=\"auto\">Visible body.</p>&#x000A;<section data-sourcepos=\"7:1-7:32\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:32\" id=\"fn-unused-3786\">&#x000A;<p data-sourcepos=\"7:12-7:32\">Retain unused source. <a href=\"#fnref-unused-3786\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "links-math",
+      "source": "A note[^a].\n\n[^a]: [Link](https://example.com) and $`x^2`$.",
+      "body": "<p data-sourcepos=\"1:1-1:11\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:10\" class=\"footnote-ref\"><a href=\"#fn-a-164\" id=\"fnref-a-164\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:46\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:46\" id=\"fn-a-164\">&#x000A;<p data-sourcepos=\"3:7-3:46\"><a data-sourcepos=\"3:7-3:33\" href=\"https://example.com\" rel=\"nofollow noreferrer noopener\" target=\"_blank\">Link</a> and <code data-math-style=\"inline\" data-sourcepos=\"3:39-3:45\" class=\"js-render-math\">x^2</code>. <a href=\"#fnref-a-164\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "links-math-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a]\n\nA note[^a].\n\n[^a]: [Link](https://example.com) and $`x^2`$.",
+      "body": "<p data-sourcepos=\"3:1-3:32\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:32\" class=\"footnote-ref\"><a href=\"#fn-a-5242\" id=\"fnref-a-5242\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:11\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:10\" class=\"footnote-ref\"><a href=\"#fn-a-5242\" id=\"fnref-a-2-5242\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:46\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:46\" id=\"fn-a-5242\">&#x000A;<p data-sourcepos=\"7:7-7:46\"><a data-sourcepos=\"7:7-7:33\" href=\"https://example.com\" rel=\"nofollow noreferrer noopener\" target=\"_blank\">Link</a> and <code data-math-style=\"inline\" data-sourcepos=\"7:39-7:45\" class=\"js-render-math\">x^2</code>. <a href=\"#fnref-a-5242\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a-2-5242\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "definition-reference",
+      "source": "A note[^a].\n\n[^a]: With another[^b].\n\n[^b]: Second note.",
+      "body": "<p data-sourcepos=\"1:1-1:11\" dir=\"auto\">A note<sup data-sourcepos=\"1:7-1:10\" class=\"footnote-ref\"><a href=\"#fn-a-9051\" id=\"fnref-a-9051\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:23\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:23\" id=\"fn-a-9051\">&#x000A;<p data-sourcepos=\"3:7-3:23\">With another<sup data-sourcepos=\"3:19-3:22\" class=\"footnote-ref\"><a href=\"#fn-b-9051\" id=\"fnref-b-9051\" data-footnote-ref=\"\">2</a></sup>. <a href=\"#fnref-a-9051\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;<li data-sourcepos=\"5:1-5:18\" id=\"fn-b-9051\">&#x000A;<p data-sourcepos=\"5:7-5:18\">Second note. <a href=\"#fnref-b-9051\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2\" aria-label=\"Back to reference 2\" title=\"Back to reference 2\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "definition-reference-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a] [^b]\n\nA note[^a].\n\n[^a]: With another[^b].\n\n[^b]: Second note.",
+      "body": "<p data-sourcepos=\"3:1-3:37\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:32\" class=\"footnote-ref\"><a href=\"#fn-a-5170\" id=\"fnref-a-5170\" data-footnote-ref=\"\">1</a></sup> <sup data-sourcepos=\"3:34-3:37\" class=\"footnote-ref\"><a href=\"#fn-b-5170\" id=\"fnref-b-5170\" data-footnote-ref=\"\">2</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:11\" dir=\"auto\">A note<sup data-sourcepos=\"5:7-5:10\" class=\"footnote-ref\"><a href=\"#fn-a-5170\" id=\"fnref-a-2-5170\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:23\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:23\" id=\"fn-a-5170\">&#x000A;<p data-sourcepos=\"7:7-7:23\">With another<sup data-sourcepos=\"7:19-7:22\" class=\"footnote-ref\"><a href=\"#fn-b-5170\" id=\"fnref-b-2-5170\" data-footnote-ref=\"\">2</a></sup>. <a href=\"#fnref-a-5170\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a-2-5170\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;<li data-sourcepos=\"9:1-9:18\" id=\"fn-b-5170\">&#x000A;<p data-sourcepos=\"9:7-9:18\">Second note. <a href=\"#fnref-b-5170\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2\" aria-label=\"Back to reference 2\" title=\"Back to reference 2\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-b-2-5170\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2-2\" aria-label=\"Back to reference 2-2\" title=\"Back to reference 2-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 4,
+      "backlinks": 4,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "table",
+      "source": "| Heading |\n| --- |\n| Cell[^a] |\n\n[^a]: Table note.",
+      "body": "<table data-sourcepos=\"1:1-3:12\" dir=\"auto\">&#x000A;<thead>&#x000A;<tr data-sourcepos=\"1:1-1:11\">&#x000A;<th data-sourcepos=\"1:2-1:10\">Heading</th>&#x000A;</tr>&#x000A;</thead>&#x000A;<tbody>&#x000A;<tr data-sourcepos=\"3:1-3:12\">&#x000A;<td data-sourcepos=\"3:2-3:11\">Cell<sup data-sourcepos=\"3:7-3:10\" class=\"footnote-ref\"><a href=\"#fn-a-4544\" id=\"fnref-a-4544\" data-footnote-ref=\"\">1</a></sup></td>&#x000A;</tr>&#x000A;</tbody>&#x000A;</table>&#x000A;<section data-sourcepos=\"5:1-5:17\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"5:1-5:17\" id=\"fn-a-4544\">&#x000A;<p data-sourcepos=\"5:7-5:17\">Table note. <a href=\"#fnref-a-4544\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "table-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a]\n\n| Heading |\n| --- |\n| Cell[^a] |\n\n[^a]: Table note.",
+      "body": "<p data-sourcepos=\"3:1-3:32\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:32\" class=\"footnote-ref\"><a href=\"#fn-a-9318\" id=\"fnref-a-9318\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<table data-sourcepos=\"5:1-7:12\" dir=\"auto\">&#x000A;<thead>&#x000A;<tr data-sourcepos=\"5:1-5:11\">&#x000A;<th data-sourcepos=\"5:2-5:10\">Heading</th>&#x000A;</tr>&#x000A;</thead>&#x000A;<tbody>&#x000A;<tr data-sourcepos=\"7:1-7:12\">&#x000A;<td data-sourcepos=\"7:2-7:11\">Cell<sup data-sourcepos=\"7:7-7:10\" class=\"footnote-ref\"><a href=\"#fn-a-9318\" id=\"fnref-a-2-9318\" data-footnote-ref=\"\">1</a></sup></td>&#x000A;</tr>&#x000A;</tbody>&#x000A;</table>&#x000A;<section data-sourcepos=\"9:1-9:17\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"9:1-9:17\" id=\"fn-a-9318\">&#x000A;<p data-sourcepos=\"9:7-9:17\">Table note. <a href=\"#fnref-a-9318\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a-2-9318\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unused-multiblock",
+      "source": "Body.\n\n[^unused]: First **paragraph**.\n\n    Second paragraph.\n\n    - One\n    - Two",
+      "body": "<p data-sourcepos=\"1:1-1:5\" dir=\"auto\">Body.</p>",
+      "references": 0,
+      "backlinks": 0,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unused-multiblock-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^unused]\n\nBody.\n\n[^unused]: First **paragraph**.\n\n    Second paragraph.\n\n    - One\n    - Two",
+      "body": "<p data-sourcepos=\"3:1-3:37\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:37\" class=\"footnote-ref\"><a href=\"#fn-unused-86\" id=\"fnref-unused-86\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>&#x000A;<section data-sourcepos=\"7:1-12:9\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-12:9\" id=\"fn-unused-86\">&#x000A;<p data-sourcepos=\"7:12-7:31\">First <strong data-sourcepos=\"7:18-7:30\">paragraph</strong>.</p>&#x000A;<p data-sourcepos=\"9:5-9:21\">Second paragraph.</p>&#x000A;<ul data-sourcepos=\"11:5-12:9\">&#x000A;<li data-sourcepos=\"11:5-11:9\">One</li>&#x000A;<li data-sourcepos=\"12:5-12:9\">Two</li>&#x000A;</ul>&#x000A;<a href=\"#fnref-unused-86\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "backslash-label",
+      "source": "Body[^a\\b].\n\n[^a\\b]: Backslash.",
+      "body": "<p data-sourcepos=\"1:1-1:11\" dir=\"auto\">Body<sup data-sourcepos=\"1:5-1:10\" class=\"footnote-ref\"><a href=\"#fn-a%5Cb-922\" id=\"fnref-a%5Cb-922\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:18\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:18\" id=\"fn-a%5Cb-922\">&#x000A;<p data-sourcepos=\"3:9-3:18\">Backslash. <a href=\"#fnref-a%5Cb-922\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "backslash-label-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a\\b]\n\nBody[^a\\b].\n\n[^a\\b]: Backslash.",
+      "body": "<p data-sourcepos=\"3:1-3:34\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:34\" class=\"footnote-ref\"><a href=\"#fn-a%5Cb-9026\" id=\"fnref-a%5Cb-9026\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:11\" dir=\"auto\">Body<sup data-sourcepos=\"5:5-5:10\" class=\"footnote-ref\"><a href=\"#fn-a%5Cb-9026\" id=\"fnref-a%5Cb-2-9026\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:18\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:18\" id=\"fn-a%5Cb-9026\">&#x000A;<p data-sourcepos=\"7:9-7:18\">Backslash. <a href=\"#fnref-a%5Cb-9026\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a%5Cb-2-9026\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unicode-case",
+      "source": "Body[^STRASSE] and[^Straße].\n\n[^Straße]: Case folding.",
+      "body": "<p data-sourcepos=\"1:1-1:29\" dir=\"auto\">Body<sup data-sourcepos=\"1:5-1:14\" class=\"footnote-ref\"><a href=\"#fn-Stra%C3%9Fe-6659\" id=\"fnref-Stra%C3%9Fe-6659\" data-footnote-ref=\"\">1</a></sup> and<sup data-sourcepos=\"1:19-1:28\" class=\"footnote-ref\"><a href=\"#fn-Stra%C3%9Fe-6659\" id=\"fnref-Stra%C3%9Fe-2-6659\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:25\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:25\" id=\"fn-Stra%C3%9Fe-6659\">&#x000A;<p data-sourcepos=\"3:13-3:25\">Case folding. <a href=\"#fnref-Stra%C3%9Fe-6659\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-Stra%C3%9Fe-2-6659\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unicode-case-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^Straße]\n\nBody[^STRASSE] and[^Straße].\n\n[^Straße]: Case folding.",
+      "body": "<p data-sourcepos=\"3:1-3:38\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:38\" class=\"footnote-ref\"><a href=\"#fn-Stra%C3%9Fe-9466\" id=\"fnref-Stra%C3%9Fe-9466\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:29\" dir=\"auto\">Body<sup data-sourcepos=\"5:5-5:14\" class=\"footnote-ref\"><a href=\"#fn-Stra%C3%9Fe-9466\" id=\"fnref-Stra%C3%9Fe-2-9466\" data-footnote-ref=\"\">1</a></sup> and<sup data-sourcepos=\"5:19-5:28\" class=\"footnote-ref\"><a href=\"#fn-Stra%C3%9Fe-9466\" id=\"fnref-Stra%C3%9Fe-3-9466\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:25\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:25\" id=\"fn-Stra%C3%9Fe-9466\">&#x000A;<p data-sourcepos=\"7:13-7:25\">Case folding. <a href=\"#fnref-Stra%C3%9Fe-9466\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-Stra%C3%9Fe-2-9466\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a> <a href=\"#fnref-Stra%C3%9Fe-3-9466\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-3\" aria-label=\"Back to reference 1-3\" title=\"Back to reference 1-3\" class=\"footnote-backref\">↩<sup>3</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 3,
+      "backlinks": 3,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "two-unused",
+      "source": "Body.\n\n[^b]: Beta.\n\n[^a]: Alpha.",
+      "body": "<p data-sourcepos=\"1:1-1:5\" dir=\"auto\">Body.</p>",
+      "references": 0,
+      "backlinks": 0,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "two-unused-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^b] [^a]\n\nBody.\n\n[^b]: Beta.\n\n[^a]: Alpha.",
+      "body": "<p data-sourcepos=\"3:1-3:37\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:32\" class=\"footnote-ref\"><a href=\"#fn-b-7272\" id=\"fnref-b-7272\" data-footnote-ref=\"\">1</a></sup> <sup data-sourcepos=\"3:34-3:37\" class=\"footnote-ref\"><a href=\"#fn-a-7272\" id=\"fnref-a-7272\" data-footnote-ref=\"\">2</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>&#x000A;<section data-sourcepos=\"7:1-7:11\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:11\" id=\"fn-b-7272\">&#x000A;<p data-sourcepos=\"7:7-7:11\">Beta. <a href=\"#fnref-b-7272\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;<li data-sourcepos=\"9:1-9:12\" id=\"fn-a-7272\">&#x000A;<p data-sourcepos=\"9:7-9:12\">Alpha. <a href=\"#fnref-a-7272\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2\" aria-label=\"Back to reference 2\" title=\"Back to reference 2\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unused-math-link",
+      "source": "Body.\n\n[^a]: [Link](https://example.com) and $`x^2`$.",
+      "body": "<p data-sourcepos=\"1:1-1:5\" dir=\"auto\">Body.</p>",
+      "references": 0,
+      "backlinks": 0,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "unused-math-link-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a]\n\nBody.\n\n[^a]: [Link](https://example.com) and $`x^2`$.",
+      "body": "<p data-sourcepos=\"3:1-3:32\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:32\" class=\"footnote-ref\"><a href=\"#fn-a-5341\" id=\"fnref-a-5341\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:5\" dir=\"auto\">Body.</p>&#x000A;<section data-sourcepos=\"7:1-7:46\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:46\" id=\"fn-a-5341\">&#x000A;<p data-sourcepos=\"7:7-7:46\"><a data-sourcepos=\"7:7-7:33\" href=\"https://example.com\" rel=\"nofollow noreferrer noopener\" target=\"_blank\">Link</a> and <code data-math-style=\"inline\" data-sourcepos=\"7:39-7:45\" class=\"js-render-math\">x^2</code>. <a href=\"#fnref-a-5341\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "authored-backlink",
+      "source": "Body[^a].\n\n[^a]: [Back](#fnref-a).",
+      "body": "<p data-sourcepos=\"1:1-1:9\" dir=\"auto\">Body<sup data-sourcepos=\"1:5-1:8\" class=\"footnote-ref\"><a href=\"#fn-a-7695\" id=\"fnref-a-7695\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:23\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:23\" id=\"fn-a-7695\">&#x000A;<p data-sourcepos=\"3:7-3:23\"><a data-sourcepos=\"3:7-3:22\" href=\"#fnref-a\">Back</a>. <a href=\"#fnref-a-7695\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 1,
+      "backlinks": 1,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "authored-backlink-probe",
+      "source": "\n\nFOUNTAINGITLABFOOTNOTEPROBE [^a]\n\nBody[^a].\n\n[^a]: [Back](#fnref-a).",
+      "body": "<p data-sourcepos=\"3:1-3:32\" dir=\"auto\">FOUNTAINGITLABFOOTNOTEPROBE <sup data-sourcepos=\"3:29-3:32\" class=\"footnote-ref\"><a href=\"#fn-a-4126\" id=\"fnref-a-4126\" data-footnote-ref=\"\">1</a></sup></p>&#x000A;<p data-sourcepos=\"5:1-5:9\" dir=\"auto\">Body<sup data-sourcepos=\"5:5-5:8\" class=\"footnote-ref\"><a href=\"#fn-a-4126\" id=\"fnref-a-2-4126\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"7:1-7:23\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"7:1-7:23\" id=\"fn-a-4126\">&#x000A;<p data-sourcepos=\"7:7-7:23\"><a data-sourcepos=\"7:7-7:22\" href=\"#fnref-a\">Back</a>. <a href=\"#fnref-a-4126\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a-2-4126\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 2,
+      "backlinks": 2,
+      "stockTextPreserved": true
+    },
+    {
+      "name": "occurrence-label-collision",
+      "source": "First[^a], other[^a-2], repeated[^a].\n\n[^a]: First body.\n\n[^a-2]: Other body.",
+      "body": "<p data-sourcepos=\"1:1-1:37\" dir=\"auto\">First<sup data-sourcepos=\"1:6-1:9\" class=\"footnote-ref\"><a href=\"#fn-a-637\" id=\"fnref-a-637\" data-footnote-ref=\"\">1</a></sup>, other<sup data-sourcepos=\"1:17-1:22\" class=\"footnote-ref\"><a href=\"#fn-a-2-637\" id=\"fnref-a-2-637\" data-footnote-ref=\"\">2</a></sup>, repeated<sup data-sourcepos=\"1:33-1:36\" class=\"footnote-ref\"><a href=\"#fn-a-637\" id=\"fnref-a-2-637-2\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:17\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:17\" id=\"fn-a-637\">&#x000A;<p data-sourcepos=\"3:7-3:17\">First body. <a href=\"#fnref-a-637\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a> <a href=\"#fnref-a-2-637-2\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1-2\" aria-label=\"Back to reference 1-2\" title=\"Back to reference 1-2\" class=\"footnote-backref\">↩<sup>2</sup></a></p>&#x000A;</li>&#x000A;<li data-sourcepos=\"5:1-5:19\" id=\"fn-a-2-637\">&#x000A;<p data-sourcepos=\"5:9-5:19\">Other body. <a href=\"#fnref-a-2-637\" data-footnote-backref=\"\" data-footnote-backref-idx=\"2\" aria-label=\"Back to reference 2\" title=\"Back to reference 2\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>",
+      "references": 3,
+      "backlinks": 3,
+      "stockTextPreserved": false
+    }
+  ]
+}

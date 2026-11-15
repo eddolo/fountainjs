@@ -133,4 +133,14 @@ export default {
   content: attr(data-fountain-default-title);
   pointer-events: none;
 }
+/* Unused notes have source labels, which need not fit a numeric marker gutter. */
+[data-fountain-root='gitlab'] .fountain-footnote-definition[data-gitlab-footnote-unreferenced='true'] {
+  padding-inline-start: 0;
+}
+[data-fountain-root='gitlab'] .fountain-footnote-definition[data-gitlab-footnote-unreferenced='true']::before {
+  position: static;
+  display: block;
+  overflow-wrap: anywhere;
+  content: attr(data-gitlab-footnote-label);
+}
 </style>

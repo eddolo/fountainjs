@@ -1,0 +1,113 @@
+{
+  "date": "2026-11-15T17:56:18.955Z",
+  "status": "passed",
+  "scope": "Private native GitLab footnote rename, local reader navigation and unused-label view repair; not full GitLab/parity completion",
+  "tests": {
+    "gitLabModels": {
+      "passed": 1057,
+      "suites": 39
+    },
+    "upstream": {
+      "passed": 536,
+      "suites": 23,
+      "inheritedSkip": 1
+    },
+    "pinnedRubyContracts": 24,
+    "actualRailsRenders": 45,
+    "stockTextComparisons": 44,
+    "recordedServiceChecks": 25,
+    "scopedAccessibilityChecks": 6,
+    "browserErrors": 0,
+    "types": "tsc --noEmit passed",
+    "frontend": "Rspack 2.2.8 compiled with 2 warnings in 79.62 s",
+    "sourceRollback": "28 files passed",
+    "patchReconstruction": "18 patches passed"
+  },
+  "evidence": {
+    "service": "artifacts/gitlab-native-footnote-renaming-20261115/report.json",
+    "visualReview": "artifacts/gitlab-native-footnote-renaming-20261115/visual-review.json",
+    "models": "artifacts/gitlab-footnote-renaming-models-final-20261115.log",
+    "upstream": "artifacts/gitlab-footnote-renaming-upstream-20261115.json",
+    "ruby": "artifacts/gitlab-footnote-filter-contract-20261115.log",
+    "server": "integrations/gitlab/fixtures/footnote-server-live-html.json",
+    "cachedWitness": "artifacts/gitlab-footnote-cache-20261115/report.json",
+    "oldReaderFailure": "artifacts/gitlab-native-footnote-renaming-reader-finding-20261115/report.json",
+    "overlapWitness": "artifacts/gitlab-unused-footnote-label-overlap-20261115.png",
+    "startupFailure": "artifacts/gitlab-footnote-server-startup-failure-20261115.json"
+  },
+  "repairs": [
+    "Captured/rebased rename target with actual before/after canonical host validation; stable native IDs, bodies and shared-reference ownership.",
+    "Atomic undo/redo; cancellation, read-only/changed-target refusal, retained retry drafts and alias/collision checks.",
+    "Separate hash-guarded server repair follows definition hrefs, rather than occurrence IDs; local generated IDs and backlinks remain unique.",
+    "Old cached task issue repaired through documented derived-HTML invalidation without changing source/title/timestamp.",
+    "Unused long source labels wrap on their own line instead of overlapping the numeric gutter."
+  ],
+  "limits": [
+    "Changed documents export canonically; untouched source remains exact. Full duplicate/alias policy and some entity/escape/raw-HTML/BOM/CR cases remain refused.",
+    "Full canonical-render, clipboard/native-fragment/public-Pages placement and MR/wiki/discussion/role/browser/touch/IME matrices remain open.",
+    "Rename validates two canonical host projections plus bounded omitted-body probes; large-document latency/memory is not accepted at scale.",
+    "Server evidence explicitly uses the declared read-only backend repair, not a stock GitLab backend; cross-render random-suffix policy remains upstream.",
+    "One scoped cache refresh is not production batching/load/rollout evidence; compiled deployment rollback remains unproven.",
+    "Intermittent uploaded-image 403 remains open; a passing restart does not repair it.",
+    "No public API/dependency/version/size-limit change, publication or parity-row promotion."
+  ],
+  "runtime": {
+    "bytes": 1677110,
+    "sha256": "91b507739f5b18e05ed4185914655c9a8f800d90c7361909f2c720125a594bc3"
+  },
+  "serverOverlay": {
+    "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source",
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "path": "lib/banzai/filter/footnote_filter.rb",
+    "originalSha256": "3c3e2469ca0ce9191954f725548fa0bf3599ca9ccc8980b3fbdca46e14e1dc74",
+    "sha256": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+    "license": "LICENSE",
+    "scope": "Read-only task server overlay; repeat-reference and generated-backlink repair, not an unmodified GitLab baseline"
+  },
+  "inputs": {
+    "integrations/gitlab/runtime/browser.ts": "081c31c05b3bd8db1be64d77f7bb913a31bc11666a253609318f7b808f8a350c",
+    "integrations/gitlab/services/content_editor.ts": "43277dfdf723739f948c4678714bcd53453eb11c615bb7e9637bfc241b1324d8",
+    "integrations/gitlab/services/markdown_insertion.ts": "8f67ac6cd8cbe5fc6c2dafb3d81b182fbca28f028562d92ef2a58a2d48df89f9",
+    "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+    "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+    "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+    "integrations/gitlab/services/code_rendering.ts": "0d94359598fe6ead2cff4d0e2bc2821e934916ba47eca214bf02cc433dfe05d6",
+    "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+    "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+    "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+    "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+    "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+    "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+    "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+    "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+    "integrations/gitlab/services/markdown_codec.ts": "062d129e3774c3e3fdd1b1cf819aa3254b1e23e5df2a98f0b42e3ea142bf45b8",
+    "integrations/gitlab/services/footnote_source.ts": "ae724e02065ac198f1f7f3364b82871b57c159ce60f494cdde41faea9fc29595",
+    "integrations/gitlab/services/footnote_codec.ts": "c800291c71af369b71d465b21b3043a3b0dcb44c6a90012dfb7d30f6b1fad6f7",
+    "integrations/gitlab/services/footnote_editing.ts": "89ae8dd5346cc3b3da6c64a568f88596dd3ac7ee2123c389a2f634dea2aa2d70",
+    "integrations/gitlab/services/footnote_renaming.ts": "874734624c86c9958da6a7d8483c150c5e4d569f59e6bd6b24b3483b0798d958",
+    "integrations/gitlab/services/footnote_labels.ts": "d49985193d45edfeebb19222ac3485f2ce74c8ec9c29cb54863aaf94d93467a4",
+    "integrations/gitlab/services/footnote_nodes.ts": "70ee9ae84bced37eef424e0a0baa095959b4811a830cd390e769d6c5a244ebc6",
+    "integrations/gitlab/services/footnote_positions.ts": "0020d65af8ab83d35d1955f8cf60ef34eb757b8b1d787b03d94ecb41f85f339a",
+    "integrations/gitlab/services/footnote_projection.ts": "867f843f35f30fa50c32addb6051760e7b193121744018757fff8d1efa1c6d19",
+    "integrations/gitlab/services/footnote_rendering.ts": "18f009bfb0246a01eeada0f716f21a393f0ddca636852bb32b17f7014f7334bb",
+    "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
+    "integrations/gitlab/services/quick_action_editing.ts": "42d37b3300907be0a8499ff7b0e64bb9410334fe13e82ce7515e412642b88ebe",
+    "integrations/gitlab/services/autocomplete_data.ts": "1741396673d51ce049777fa88bd00ff65184ce57e2d484ebde94c69f6cf98568",
+    "integrations/gitlab/services/autocomplete_editing.ts": "3244b67431ce508e9893b5166ab5f5ef798a4e63b770f7a8bfbe0fc6a7dec827",
+    "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+    "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
+    "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+    "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+    "dist/index.js": "6a699e874b16fe01ccbd5e98e049bf1c5fb7a7ecb82398be9e17c55ae226ceda",
+    "dist/document-utilities.js": "a76425ef95a8c04d36de1eba5dd994485dafe6f4cc60e1ac12c5c0aa68649bd4",
+    "dist/pages.js": "022730d02c9c45edd621a10d10e001afcde036bf2750184b3dd0f2495c76dad7",
+    "integrations/gitlab/components/fountain_formatting_toolbar.vue": "671314e99029b5cb88ad950ad2c9823ee41aebacb389dc16e4ab68633cf94d60",
+    "integrations/gitlab/components/fountain_editor_surface.vue": "cc4a2098089b7db7acaf8c518f7223f51866346e1c06c2ca280bf8a0d99408d7",
+    "integrations/gitlab/services/footnote_filter_patch.mjs": "cc61582721a0e36fe6aefc25de770435cf8efee34506f433bf3dfccc8654cc69"
+  },
+  "publication": {
+    "pushed": false,
+    "npmPublished": false,
+    "scope": "Local private integration checkpoint"
+  }
+}

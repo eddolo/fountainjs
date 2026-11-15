@@ -19,6 +19,44 @@ connect to an existing GitLab account or installation. Metrics are disabled and
 service concurrency is reduced for this small local test environment; these
 settings are not performance or deployment recommendations.
 
+### Native footnote server repair
+
+Native browser profiles now declare a separate read-only Ruby filter mount from
+`compose.footnotes.yaml`, in addition to the compiled frontend. The preparer
+requires the exact pinned source object and the runner checks that the original
+packaged file has the same SHA-256. The patched file and receipt are generated in
+`artifacts/gitlab-native-footnote-server/`; the image itself is unchanged. Audit
+reports include the mount, original hash and live patched hash. These runs are
+not an unmodified GitLab backend baseline. Reference-fixture capture profiles
+keep the original server by default; `--verify-footnote-server` explicitly
+captures the repaired server separately.
+
+The pinned filter inferred definition identity from a reference's occurrence ID.
+That leaves repeated references pointing at unsuffixed, absent destinations. The
+repair follows the original href to its definition, assigns collision-checked
+IDs and updates the matching generated backlinks. Its existing reference limit,
+timing concern and ordinary authored body links are retained. Standalone Ruby
+contracts and actual Rails renderings are separate from browser click evidence.
+
+GitLab caches rendered Markdown. A renderer change alone does not repair old
+cached issue descriptions. The pinned upstream guide is
+`doc/administration/invalidate_markdown_cache.md`: administrators can invalidate
+derived HTML for a project, or deliberately change the local Markdown version
+for an installation. Do not flush all caches or edit document source as a
+substitute. The task's old issue 152 retained its broken cached link after the
+repair; setting only its `description_html` to nil made the next read regenerate
+working forward/backlinks without changing Markdown, title or `updated_at`.
+`scripts/audit-gitlab-footnote-cache.mjs` records that specific stale-record
+witness; it is not a general-purpose migration command, and its stale-cache
+precondition no longer holds after the successful refresh. Production batching,
+load and rollback remain deployment acceptance work.
+
+The native source installer still owns 28 frontend files. Its restore operation
+does not remove the separate server Compose mount: recreate with the base
+Compose profile to remove overlays, and rebuild restored frontend source before
+serving it. Neither a source round trip nor the immutable original image proves
+the complete compiled deployment rollback.
+
 GitLab deletes its temporary `initial_root_password` file after a day. The audit
 driver first reuses the root-only `/etc/gitlab/fountain-audit-password` file when
 available, or the temporary initial file. If neither exists, it initializes a

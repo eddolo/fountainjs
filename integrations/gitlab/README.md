@@ -9,6 +9,42 @@ accounts, projects, storage, uploads, authorization, issue/MR/wiki workflows and
 collaboration services. These services remain real GitLab services. Recreating
 their controls with local-only state does not meet the requirement.
 
+## Footnote labels and real reader navigation — November 15
+
+The native issue editor now renames source labels through a captured/rebased
+session. Actual before/after host projections must preserve the rest of the
+document; native IDs and bodies remain stable, references update together, and
+undo/redo is atomic. Exact or renderer-resolved collisions are refused. Failed
+checks retain the draft for retry; cancelled or late requests cannot publish it.
+Unused long labels wrap above their body instead of overprinting its first line.
+
+Stronger reader checks found that the pinned original server left a repeated
+footnote pointing at a missing destination. Native browser runs now declare a
+separate read-only, exact-hash Ruby repair that joins definitions by original href
+and assigns collision-checked generated IDs. The original image and reference
+captures remain separate. See [deployment/cache requirements](runtime/README.md#native-footnote-server-repair).
+The prior cached issue was verified broken after deployment, then repaired by
+invalidating only its derived HTML; source, title and timestamp stayed unchanged.
+
+The recorded profile passes 25 real-service checks through Save, reopen and
+restart, including repeated-reference/backlink clicks in each phase, six scoped
+accessibility scans, keyboard use and 360px retained drafts. Models pass 1,057
+cases in 39 suites; upstream tests pass 536 with one inherited skip. Twenty-four
+pinned-image Ruby contracts and 45 actual Rails renders separately validate the
+filter. Types, rebuilt host frontend, 18 ordered patches and the 28-file source
+round trip pass. No public package/API/size limit or parity-row claim changes.
+
+```sh
+# After building/installing the current native runtime and host frontend:
+node scripts/run-gitlab-native-browser-audit.mjs --footnote-renaming --verify-footnote-server
+```
+
+Full source/canonical/clipboard matrices, MR/wiki/discussion/roles/browsers,
+large-document rename costs, production cache rollout and compiled rollback are
+still open. [Evidence](../../artifacts/gitlab-footnote-renaming-integration-20261115.json).
+
+Earlier authoring checkpoint:
+
 ## Native footnote import/export and issue authoring — November 15
 
 The verified adapter cases are now installed. Native controls insert a note,

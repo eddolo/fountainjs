@@ -1,0 +1,1 @@
+{"status":"passed","cases":24,"parent_broken_targets":["#fn-alpha","#fn-alpha"],"scope":"Standalone filter contracts using the pinned image gems; real Rails rendering and browser navigation require separate acceptance."}

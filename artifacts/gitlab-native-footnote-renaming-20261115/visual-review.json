@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-15T17:56:18.951Z",
+  "video": {
+    "path": "artifacts/gitlab-native-footnote-renaming-20261115/recordings/page@19d6602e760736fea9afebb8ffcbc628.webm",
+    "bytes": 5886393,
+    "sha256": "51cf562151fdd60938de463044e4059e00b699defb3e86b9a942631e69c470d7",
+    "durationSeconds": 208.76,
+    "width": 800,
+    "height": 554
+  },
+  "method": "Full-size screenshots plus 12 sampled recording frames from approximately seconds 72–116 at four-second intervals; not frame-by-frame review of the whole video",
+  "screenshots": {
+    "artifacts/gitlab-native-footnote-renaming-20261115/footnote-toolbar-ui.png": "91fb98662b186c54c2ad9ee92cb3fde3299b4725a9c6f74c4e7a30e3951a76fa",
+    "artifacts/gitlab-native-footnote-renaming-20261115/footnote-media-controls.png": "77091b4db7f594767fb233da1f3abc08f69cae6f65cfb1549c416df6733e6443",
+    "artifacts/gitlab-native-footnote-renaming-20261115/rename-collision.png": "3f4e586bcefd3a36241834ee93e3362bba32ca17fe9cd8a965cb9d8d7d299ca9",
+    "artifacts/gitlab-native-footnote-renaming-20261115/rename-offline-draft.png": "1cf24be597a77dc9ffce279f9693bd1b3d26ecdc13218f3fe6e229e1f759a66c",
+    "artifacts/gitlab-native-footnote-renaming-20261115/rename-mobile-draft.png": "e043c7afd2f2f39219613856ba41c83900aff562126b11f94a1a25825354c746",
+    "artifacts/gitlab-native-footnote-renaming-20261115/rename-unused-note.png": "e4bab95e0a1fb354ca24451a531695376986788522bb02cd7467b885cc0a93a4",
+    "artifacts/gitlab-native-footnote-renaming-20261115/rename-unused-mobile.png": "1e3069cfdcefab1ecffce261a5e4ecb6a512637036ed2887f7226e1363fc0063",
+    "artifacts/gitlab-native-footnote-renaming-20261115/original-after-restart.png": "aa1f9b3ab7a4805affbfa1e0128bdda8ff6a3a1f83f98450afc55f3a82740e3b",
+    "artifacts/gitlab-native-footnote-renaming-20261115/recording-review.png": "d5128e5dca926a6b4996e28b19013df2c5fc36ac80e32bef395607db96788c38"
+  },
+  "observations": [
+    "Current attachment, Markdown paste and media actions occupy one desktop toolbar row; Delete remains in a separated media footer.",
+    "Rename dialogs explain source labels versus displayed numbers and retain collision/offline drafts.",
+    "The 360px label draft remains inside its modal.",
+    "A long unused-note label appears above its body and wraps to three lines at 360px without overlap or horizontal overflow.",
+    "Saved and restarted reader displays two note bodies and three references; actual click assertions verify destinations and return links.",
+    "Samples include normal loading and modal animation transitions; scoped accessibility checks wait for the settled state."
+  ]
+}

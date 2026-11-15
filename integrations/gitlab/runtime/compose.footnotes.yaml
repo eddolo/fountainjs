@@ -1,0 +1,7 @@
+services:
+  baseline:
+    volumes:
+      - type: bind
+        source: ${FOUNTAIN_GITLAB_FOOTNOTE_FILTER:?Set the prepared absolute Linux footnote filter path}
+        target: /opt/gitlab/embedded/service/gitlab-rails/lib/banzai/filter/footnote_filter.rb
+        read_only: true

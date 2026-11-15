@@ -29,6 +29,7 @@ import type { GitLabPlayableKind } from './media';
 import { GitLabMediaEditingSession, type GitLabMediaSnapshot } from './media_editing';
 import { GitLabReferenceEditingSession, type GitLabReferenceSnapshot } from './reference_editing';
 import { beginGitLabFootnoteInsertion } from './footnote_editing';
+import { GitLabFootnoteRenameSession, type GitLabFootnoteRenameSnapshot } from './footnote_renaming';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -51,6 +52,7 @@ export class GitLabEditorNotReady extends Error {
 
 /** Native document service. GitLab owns network access; Fountain owns its model. */
 export class GitLabContentEditor {
+  private footnoteRenameSession?: GitLabFootnoteRenameSession;
   private mediaSession?: GitLabMediaEditingSession;
   readonly editor: Editor;
   readonly assetResolver: GitLabAssetResolver;
@@ -336,6 +338,19 @@ export class GitLabContentEditor {
       throw new GitLabEditorNotReady(this.status);
     return beginGitLabFootnoteInsertion(this.editor, this.insertions);
   }
+  beginFootnoteRename(changed?: (snapshot: GitLabFootnoteRenameSnapshot) => void): GitLabFootnoteRenameSession {
+    this.footnoteRenameSession?.close();
+    const session = new GitLabFootnoteRenameSession({ editor: this.editor, codec: this.codec, insertions: this.insertions,
+      ensureReady: () => {
+        this.assertAlive();
+        if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
+          throw new GitLabEditorNotReady(this.status);
+      },
+      changed, closed: () => { if (this.footnoteRenameSession === session) this.footnoteRenameSession = undefined; },
+      onListenerError: error => { this.listenerFailure = error; this.reportListenerError?.(error); },
+    });
+    this.footnoteRenameSession = session; return session;
+  }
   beginReferenceEdit(changed?: (snapshot: GitLabReferenceSnapshot) => void): GitLabReferenceEditingSession {
     this.referenceSession?.close();
     const session = new GitLabReferenceEditingSession({ editor: this.editor,
@@ -508,6 +523,8 @@ export class GitLabContentEditor {
     this.destroyed = true;
     this.autocomplete.destroy();
     this.quickActions.destroy();
+    this.footnoteRenameSession?.close();
+    this.footnoteRenameSession = undefined;
     this.request++;
     this.linkSession?.close();
     this.linkSession = undefined;

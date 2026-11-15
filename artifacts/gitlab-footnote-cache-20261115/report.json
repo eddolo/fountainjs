@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-15T17:43:15.310Z",
+  "status": "passed",
+  "scope": "One previously recorded task issue; documented derived-cache invalidation, not a site-wide rollout",
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 152,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/152"
+  },
+  "overlay": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+  "upstreamGuide": "doc/administration/invalidate_markdown_cache.md at 0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "before": {
+    "references": 3,
+    "backlinks": 3,
+    "brokenReferences": 1,
+    "brokenBacklinks": 0
+  },
+  "refresh": {
+    "sourceSha256": "3dee56c963d6cc85c772628a38b56c5d9888b4c749b5825a7fa68b5955760f38",
+    "oldCacheSha256": "5e5e31a63ab31e161b4d2fed605216e0a3ae2d5252d4a143e7fe81aaea11cbfb",
+    "cacheInvalidated": true,
+    "sourceAndMetadataUnchanged": true
+  },
+  "after": {
+    "references": 3,
+    "backlinks": 3,
+    "brokenReferences": 0,
+    "brokenBacklinks": 0
+  },
+  "clickedRepeatedReferenceAndBacklink": true,
+  "sourceAndMetadataUnchangedAfterRead": true
+}

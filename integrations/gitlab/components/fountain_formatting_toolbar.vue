@@ -1,5 +1,5 @@
 <script>
-import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormSelect, GlFormTextarea, GlModal } from '@gitlab/ui';
+import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormSelect, GlFormTextarea, GlModal } from '@gitlab/ui';
 import { markRaw } from 'vue';
 import { uniqueId } from 'lodash-es';
 import { s__, n__, sprintf } from '~/locale';
@@ -25,7 +25,7 @@ import {
 
 export default {
   name: 'FountainFormattingToolbar',
-  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormSelect, GlFormTextarea, GlModal, FountainContextSurface },
+  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormSelect, GlFormTextarea, GlModal, FountainContextSurface },
   props: {
     editor: { type: Object, required: true },
     contentEditor: { type: Object, required: true },
@@ -36,7 +36,8 @@ export default {
   emits: ['focus', 'error', 'paste-markdown', 'attach-files'],
   data() {
     return { state: null, footnoteOpen: false, footnoteText: '', footnoteExisting: '', footnoteApplying: false, footnoteFailed: false,
-      footnoteModalId: uniqueId('fountain-footnote-') };
+      footnoteModalId: uniqueId('fountain-footnote-'), renameOpen: false, renameLabel: '', renameState: null,
+      renameError: null, renameApplying: false, renameModalId: uniqueId('fountain-note-label-') };
   },
   computed: {
     footnoteContext() { return this.state && getGitLabFootnoteContext(this.editor); },
@@ -57,6 +58,22 @@ export default {
       disabled: this.disabled || !this.footnoteExisting && !this.footnoteText.trim() || this.footnoteApplying || this.footnoteFailed, loading: this.footnoteApplying } }; },
     footnoteCancel() { return { text: s__('ContentEditor|Cancel') }; },
     footnoteReturnFocus() { return { focus: () => this.$emit('focus') }; },
+    renamePrimary() { return { text: s__('ContentEditor|Rename footnote'), attributes: { variant: 'confirm',
+      disabled: this.disabled || !this.renameLabel || this.renameApplying || this.renameState?.conflict || this.renameState?.closed,
+      loading: this.renameApplying } }; },
+    renameMessage() {
+      if (this.renameState?.conflict || this.renameError === 'GITLAB_FOOTNOTE_TARGET_CHANGED')
+        return s__('ContentEditor|The selected note changed. Your draft is retained. Cancel and reopen to review the current note.');
+      if (this.renameError === 'GITLAB_FOOTNOTE_INVALID_LABEL')
+        return s__('ContentEditor|Use a nonempty Markdown label without spaces or square brackets.');
+      if (['GITLAB_FOOTNOTE_LABEL_COLLISION', 'GITLAB_FOOTNOTE_RENAME_RESOLUTION'].includes(this.renameError))
+        return s__('ContentEditor|That label would change the document or connect references to another note. Choose another label. Your document is unchanged.');
+      if (this.renameError === 'GITLAB_FOOTNOTE_DOCUMENT_CHANGED')
+        return s__('ContentEditor|The document changed while the label was being checked. Your draft is retained. Review it and try again.');
+      if (this.renameError === 'GITLAB_FOOTNOTE_RENAME_SOURCE')
+        return s__('ContentEditor|This document needs source editing before its labels can be safely changed. Your document is unchanged.');
+      return this.renameError ? s__('ContentEditor|The label could not be checked. Your draft and document are retained. Check the connection and try again.') : '';
+    },
     plainTitle() {
       return Boolean(this.state && getGitLabAlertContext(this.editor)?.inTitle);
     },
@@ -159,9 +176,30 @@ export default {
   beforeDestroy() {
     this.disposed = true;
     this.footnoteSession?.cancel();
+    this.renameSession?.close();
     this.releaseState();
   },
   methods: {
+    openRename() {
+      if (this.disabled) return;
+      try {
+        this.renameSession?.close();
+        this.renameSession = markRaw(this.contentEditor.beginFootnoteRename(snapshot => { if (!this.disposed) this.renameState = snapshot; }));
+        this.renameState = this.renameSession.snapshot; this.renameLabel = this.renameState.label;
+        this.renameError = null; this.renameApplying = false; this.renameOpen = true;
+      } catch (error) { this.$emit('error', error); }
+    },
+    async applyRename(event) {
+      event?.preventDefault();
+      if (this.disabled || this.renameApplying || !this.renameLabel || !this.renameSession || this.renameState?.conflict) return;
+      const session = this.renameSession; this.renameApplying = true; this.renameError = null;
+      try {
+        const result = await session.apply(this.renameLabel);
+        if (!this.disposed && this.renameOpen && this.renameSession === session && result.status === 'applied') this.renameOpen = false;
+      } catch (error) { if (!this.disposed && this.renameOpen && this.renameSession === session) this.renameError = error.message; }
+      finally { if (!this.disposed && this.renameSession === session) this.renameApplying = false; }
+    },
+    cancelRename(event) { if (!event?.defaultPrevented) this.renameSession?.close(); },
     openFootnote() {
       this.footnoteSession?.cancel();
       this.footnoteSession = markRaw(this.contentEditor.beginFootnoteInsertion());
@@ -303,11 +341,12 @@ export default {
     </template>
     <gl-button :disabled="disabled" category="tertiary" size="small" icon="markdown-mark" :aria-label="s__('ContentEditor|Paste Markdown')" :title="s__('ContentEditor|Paste Markdown')" @click="pasteMarkdown" />
     </div>
-    <fountain-context-surface v-if="footnoteContext" :editor="editor" :active="true" :anchor-path="footnoteContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Footnote actions')" @reveal="$emit('focus')">
+    <fountain-context-surface v-if="footnoteContext" :editor="editor" :active="true" :anchor-path="footnoteContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Footnote actions')" :suspended="renameOpen || footnoteOpen" @reveal="$emit('focus')">
       <div role="group" :aria-label="s__('ContentEditor|Footnote controls')">
         <h2 class="gl-heading-5 gl-mb-2 gl-break-words">{{ s__('ContentEditor|Footnote') }} {{ footnoteContext.label }}</h2>
         <p class="gl-text-subtle">{{ footnoteDescription }}</p>
         <gl-button :disabled="disabled" variant="confirm" category="primary" icon="pencil" @click="footnoteAction('edit')">{{ s__('ContentEditor|Edit note text') }}</gl-button>
+        <gl-button :disabled="disabled" category="tertiary" @click="openRename">{{ s__('ContentEditor|Rename label') }}</gl-button>
         <gl-button v-if="footnoteContext.referencePath" :disabled="disabled" category="tertiary" @click="footnoteAction('reference')">{{ s__('ContentEditor|Remove this reference') }}</gl-button>
         <div class="gl-mt-4 gl-border-t gl-pt-3"><gl-button :disabled="disabled" category="tertiary" variant="danger" icon="remove" @click="footnoteAction('note')">{{ s__('ContentEditor|Delete note and references') }}</gl-button></div>
       </div>
@@ -318,6 +357,15 @@ export default {
         <gl-form-group v-if="footnoteChoices.length > 1" :label="s__('ContentEditor|Footnote to insert')" :label-for="`${footnoteModalId}-existing`"><gl-form-select :id="`${footnoteModalId}-existing`" v-model="footnoteExisting" :options="footnoteChoices" :disabled="footnoteApplying" /></gl-form-group>
         <gl-form-group v-if="!footnoteExisting" :label="s__('ContentEditor|Footnote text (Markdown)')" :label-for="`${footnoteModalId}-text`">
           <gl-form-textarea :id="`${footnoteModalId}-text`" v-model="footnoteText" :rows="4" :disabled="footnoteApplying" required autofocus />
+        </gl-form-group>
+      </gl-form>
+    </gl-modal>
+    <gl-modal v-model="renameOpen" :modal-id="renameModalId" :title="s__('ContentEditor|Rename footnote label')" :action-primary="renamePrimary" :action-cancel="footnoteCancel" :return-focus="footnoteReturnFocus" @primary="applyRename" @hide="cancelRename">
+      <gl-alert v-if="renameMessage" variant="danger" :dismissible="false" class="gl-mb-3">{{ renameMessage }}</gl-alert>
+      <gl-form @submit.stop.prevent="applyRename">
+        <button type="submit" class="gl-hidden"></button>
+        <gl-form-group :label="s__('ContentEditor|Footnote label')" :label-for="`${renameModalId}-label`" :description="s__('ContentEditor|Used in Markdown references. Display numbers follow document order automatically.')">
+          <gl-form-input :id="`${renameModalId}-label`" v-model="renameLabel" :maxlength="4096" :disabled="renameApplying" required autofocus />
         </gl-form-group>
       </gl-form>
     </gl-modal>

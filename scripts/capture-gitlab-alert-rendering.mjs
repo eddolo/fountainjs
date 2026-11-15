@@ -4,6 +4,8 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
 import { readGitLabAuditCredential } from './gitlab-audit-credentials.mjs';
+import { captureGitLabFootnoteRenaming } from './capture-gitlab-footnote-renaming.mjs';
+import { captureGitLabFootnoteServer } from './capture-gitlab-footnote-server.mjs';
 
 if (process.platform !== 'linux') throw new Error('Run beside the isolated Linux GitLab deployment.');
 const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
@@ -14,7 +16,9 @@ const quickActions = process.argv.includes('--quick-actions');
 const quickActionCommands = process.argv.includes('--quick-action-commands');
 const autocomplete = process.argv.includes('--autocomplete');
 const footnoteEditing = process.argv.includes('--footnote-editing');
-const footnoteProbe = process.argv.includes('--footnote-probe') || footnoteEditing;
+const footnoteRenaming = process.argv.includes('--footnote-renaming');
+const footnoteServer = process.argv.includes('--footnote-server');
+const footnoteProbe = process.argv.includes('--footnote-probe') || footnoteEditing || footnoteRenaming || footnoteServer;
 const footnotes = process.argv.includes('--footnotes') || footnoteProbe;
 const catalogue = quickActionCommands || autocomplete;
 const referenceContexts = process.argv.includes('--reference-context');
@@ -24,8 +28,18 @@ const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstr
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
 const container = docker('compose', '-f', composeFile, 'ps', '--all', '--quiet', 'baseline').trim();
-const config = JSON.parse(docker('inspect', container))[0].Config;
+const deployment = JSON.parse(docker('inspect', container))[0];
+const config = deployment.Config;
 if (config.Image !== pin.image || config.Labels['com.docker.compose.project'] !== 'fountain-gitlab-integration') throw new Error('Wrong deployment');
+let footnoteServerOverlay;
+const footnoteTarget = '/opt/gitlab/embedded/service/gitlab-rails/lib/banzai/filter/footnote_filter.rb';
+const footnoteMount = deployment.Mounts.find(mount => mount.Destination === footnoteTarget);
+if (footnoteMount) {
+  const receipt = JSON.parse(await readFile(new URL('artifacts/gitlab-native-footnote-server/build.json', root)));
+  if (footnoteMount.RW || receipt.revision !== pin.commit || docker('exec', container, 'sha256sum', footnoteTarget).split(/\s/u)[0] !== receipt.sha256)
+    throw new Error('Unexpected footnote server overlay.');
+  footnoteServerOverlay = { sha256: receipt.sha256, originalSha256: receipt.originalSha256, readOnly: true, scope: receipt.scope };
+}
 const password = readGitLabAuditCredential(args => docker('exec', '-i', container, ...args))?.password;
 if (!password) throw new Error('Generated task password unavailable');
 const browser = await chromium.launch(), context = await browser.newContext();
@@ -121,7 +135,15 @@ try {
     console.log(JSON.stringify({ kind: 'autocomplete', captured: Object.fromEntries(Object.entries(results)
       .map(([kind, result]) => [kind, { status: result.status, count: Array.isArray(result.data) ? result.data.length : null }])) }));
   }
-  if (!catalogue) {
+  if (footnoteRenaming || footnoteServer) {
+    const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
+    if (preview.origin !== base) throw new Error('Nonlocal footnote preview');
+    preview.searchParams.set('no_header_anchors', 'true');
+    const renderMarkdown = source => request(preview.href, { text: source });
+    if (footnoteServer) await captureGitLabFootnoteServer({ root, pin, version, renderMarkdown, overlay: footnoteServerOverlay });
+    else await captureGitLabFootnoteRenaming({ root, pin, version, renderMarkdown });
+  }
+  if (!catalogue && !footnoteRenaming && !footnoteServer) {
   const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
   if (preview.origin !== base) throw new Error('Nonlocal preview');
   preview.searchParams.set('no_header_anchors', 'true');

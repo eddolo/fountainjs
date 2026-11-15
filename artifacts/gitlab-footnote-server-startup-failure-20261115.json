@@ -1,0 +1,9 @@
+{
+  "status": "environment-startup-failed",
+  "container": "fountain-gitlab-integration-baseline-1",
+  "exitCode": 1,
+  "oomKilled": false,
+  "failingCommand": "/opt/gitlab/embedded/bin/sv force-reload /opt/gitlab/service/sidekiq/log",
+  "observed": "runit log service reported down during gitlab-ctl reconfigure; the wrapper later timed out waiting for health and stopped the container",
+  "scope": "No Rails renderer or browser acceptance was reached; not attributed to the footnote repair and not counted as a passing run"
+}
