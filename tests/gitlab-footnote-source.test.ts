@@ -29,7 +29,7 @@ it.each(live.fixtures)('uses the real $name rendering without silently accepting
   const schema = new Schema(createGitLabSchemaSpec());
   const codec = new GitLabMarkdownCodec({ renderMarkdown: async () => ({ body: fixture.body }) });
   const result = codec.deserialize({ schema, markdown: fixture.source, signal: new AbortController().signal });
-  if (definitions) await expect(result).rejects.toMatchObject({ originalMarkdown: fixture.source,
+  if (definitions && ['unreferenced', 'escaped', 'duplicate'].includes(fixture.name)) await expect(result).rejects.toMatchObject({ originalMarkdown: fixture.source,
     issues: expect.arrayContaining([expect.objectContaining({ code: 'footnote-source' })]) });
   else if (fixture.name === 'raw-html') {
     // The existing HTML boundary refuses this rendering; it is not mistaken
@@ -39,6 +39,7 @@ it.each(live.fixtures)('uses the real $name rendering without silently accepting
   } else {
     const { document } = await result;
     expect(codec.serialize({ doc: document })).toBe(fixture.source);
+    if (definitions) expect(document.content.some(node => node.type.name === 'footnote_definition')).toBe(true);
   }
 });
 

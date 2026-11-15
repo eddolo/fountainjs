@@ -1,5 +1,35 @@
 # Release and API stability policy
 
+## Private GitLab native footnote authoring and caret repair — 2026-11-15
+
+Enable verified footnote source/render cases in the private native codec, with
+exact untouched source and canonical changed export. Preserve raw labels apart
+from opaque IDs, validate omitted-body probes against original reference targets,
+namespace newly inserted notes, and keep pasted definitions at the document root.
+The issue toolbar adds insertion/reuse and contextual edit/reference/delete
+controls with captured targets, cancellation, native history and keyboard access.
+
+Real visual/source review found two bugs beyond count-only assertions: End after
+a trailing inline atom could move the caret to a later paragraph, and appending
+a later definition could turn the automatic final caret paragraph into exported
+content. The public view now supplies a view-only endpoint after inline atoms;
+the private adapter groups definitions without deleting authored paragraphs.
+
+The final recorded Chromium journey passes 19 checks through Save/reopen/restart,
+with four scoped accessibility checks and current media toolbar screenshots.
+The caret regression passes Chromium, Firefox and WebKit; 1,005 final GitLab
+model cases and 536 selected upstream cases pass (one inherited skip). Types,
+package/API, existing size limits, frontend build, 18-patch reconstruction and
+28-file source rollback pass. The broad renderer checkpoint passed 6,380 units;
+the subsequent private placement repair and new control have the final 1,005-case
+GitLab run. No public API, dependency, size allowance or version change occurs.
+
+This remains local integration work, without a parity-row or npm promotion.
+Rename UI, unsupported/ambiguous label cases, complete canonical re-render,
+clipboard/public-Pages/workflow/browser/role matrices and deployment rollback
+remain open. Passing image loads do not resolve the earlier intermittent 403.
+[Evidence and limits](../artifacts/gitlab-footnote-authoring-integration-20261115.json).
+
 ## Private GitLab decoded footnote retention — 2026-11-15
 
 Protect hidden definitions whose decoded labels contain brackets or ASCII

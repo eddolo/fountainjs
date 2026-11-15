@@ -1,0 +1,322 @@
+{
+  "date": "2026-11-15T01:36:20.764Z",
+  "scope": "Native Fountain browser editor in the actual GitLab application; partial toolbar/providers, not full product acceptance",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "Actual HTML omits the unused footnote definition; native paste refuses that incomplete projection, retains exact source and recovers through a supported paste",
+    "Real footnote dialog cancels without mutation, inserts and directly edits two native notes, undoes/redoes typing independently, and reuses a note without duplicating its definition; all three references stay in the chosen paragraph",
+    "Keyboard-accessible controls remove one reference without deleting its body, or delete a whole note and its references; Undo restores both operations; a 360px dialog retains its draft and cancels without inserting",
+    "Current desktop toolbar keeps attachment, paste and media actions on one row; media deletion remains visibly separated; note dialogs and note/media controls pass scoped accessibility checks",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Native footnote bodies, two definitions and three references agree with the actual saved GitLab Markdown and reader (saved)",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Native footnote bodies, two definitions and three references agree with the actual saved GitLab Markdown and reader (reopened)",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "The saved unused footnote definition remains byte-for-byte unchanged after actual application restart",
+    "Native footnote bodies, two definitions and three references agree with the actual saved GitLab Markdown and reader (restart)",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ],
+  "secrets": "Credential stays in protected task-container configuration and process memory; no credential values, traces or browser storage-state files are recorded",
+  "preparedHost": true,
+  "nativeBrowser": true,
+  "nativeInsertion": true,
+  "nativeComponent": true,
+  "nativeAttachments": false,
+  "nativeCapacity": false,
+  "nativeLinks": false,
+  "nativeCodeProfile": false,
+  "nativeContextMenusProfile": false,
+  "nativeContextUIProfile": false,
+  "nativeFrontmatterProfile": false,
+  "nativeQuickActionsProfile": false,
+  "nativeAlertsProfile": false,
+  "nativeMediaProfile": false,
+  "nativeMediaFilesProfile": false,
+  "nativeReferencesProfile": false,
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1667093,
+    "sha256": "0f4b7b740642ee92bc00fdfe14e6a35821318066c1e0fdf2d1053d36089c4758",
+    "parentRevision": "48424509c9d0e80d75b5c3ce4ed10dfc89a4d6fa",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "081c31c05b3bd8db1be64d77f7bb913a31bc11666a253609318f7b808f8a350c",
+      "integrations/gitlab/services/content_editor.ts": "ec3af8250f8366de40097a8152ac4ec5c2f385ab01cebec1f3c787a64a1834f4",
+      "integrations/gitlab/services/markdown_insertion.ts": "8f67ac6cd8cbe5fc6c2dafb3d81b182fbca28f028562d92ef2a58a2d48df89f9",
+      "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+      "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+      "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+      "integrations/gitlab/services/code_rendering.ts": "0d94359598fe6ead2cff4d0e2bc2821e934916ba47eca214bf02cc433dfe05d6",
+      "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+      "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+      "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+      "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+      "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+      "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+      "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+      "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+      "integrations/gitlab/services/markdown_codec.ts": "8440b30afc20d684f9e19cc78fec14aee53f874779e34a578fa3cdfa89bdd72d",
+      "integrations/gitlab/services/footnote_source.ts": "ae724e02065ac198f1f7f3364b82871b57c159ce60f494cdde41faea9fc29595",
+      "integrations/gitlab/services/footnote_codec.ts": "c800291c71af369b71d465b21b3043a3b0dcb44c6a90012dfb7d30f6b1fad6f7",
+      "integrations/gitlab/services/footnote_editing.ts": "89ae8dd5346cc3b3da6c64a568f88596dd3ac7ee2123c389a2f634dea2aa2d70",
+      "integrations/gitlab/services/footnote_labels.ts": "d49985193d45edfeebb19222ac3485f2ce74c8ec9c29cb54863aaf94d93467a4",
+      "integrations/gitlab/services/footnote_nodes.ts": "70ee9ae84bced37eef424e0a0baa095959b4811a830cd390e769d6c5a244ebc6",
+      "integrations/gitlab/services/footnote_positions.ts": "0020d65af8ab83d35d1955f8cf60ef34eb757b8b1d787b03d94ecb41f85f339a",
+      "integrations/gitlab/services/footnote_projection.ts": "867f843f35f30fa50c32addb6051760e7b193121744018757fff8d1efa1c6d19",
+      "integrations/gitlab/services/footnote_rendering.ts": "18f009bfb0246a01eeada0f716f21a393f0ddca636852bb32b17f7014f7334bb",
+      "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
+      "integrations/gitlab/services/quick_action_editing.ts": "42d37b3300907be0a8499ff7b0e64bb9410334fe13e82ce7515e412642b88ebe",
+      "integrations/gitlab/services/autocomplete_data.ts": "1741396673d51ce049777fa88bd00ff65184ce57e2d484ebde94c69f6cf98568",
+      "integrations/gitlab/services/autocomplete_editing.ts": "3244b67431ce508e9893b5166ab5f5ef798a4e63b770f7a8bfbe0fc6a7dec827",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
+      "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+      "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+      "dist/index.js": "6a699e874b16fe01ccbd5e98e049bf1c5fb7a7ecb82398be9e17c55ae226ceda",
+      "dist/document-utilities.js": "a76425ef95a8c04d36de1eba5dd994485dafe6f4cc60e1ac12c5c0aa68649bd4",
+      "dist/pages.js": "022730d02c9c45edd621a10d10e001afcde036bf2750184b3dd0f2495c76dad7"
+    }
+  },
+  "browserErrors": [],
+  "imageFailureDiagnostics": [],
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/0606995ad476df800a63ce127a02963b/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/0606995ad476df800a63ce127a02963b/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/0606995ad476df800a63ce127a02963b/fountain-baseline-figure.png",
+      "status": 304
+    }
+  ],
+  "auditCredentialSource": "protected-task-config",
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 149,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/149"
+  },
+  "originalServerDescription": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/0606995ad476df800a63ce127a02963b/fountain-baseline-figure.png)\n\nEnd of the original description.",
+  "nativeFootnoteSource": {
+    "pasteRenderingOmitsDefinition": true,
+    "failedPasteRetained": true,
+    "decodedLabelProfile": true,
+    "rejectedPasteSource": "Visible paste.\n\n[^a\\[b]: Keep this exact unused source.",
+    "savedRenderingOmitsDefinition": true,
+    "originalSource": "Visible saved body.\n\n[^a&#32;b]: Keep the saved unused footnote unchanged.",
+    "restartOriginalPreserved": true
+  },
+  "footnoteSelections": [
+    {
+      "phase": "clicked",
+      "inside": true,
+      "offset": 32,
+      "paragraph": "End of the original description.",
+      "path": "6.0"
+    },
+    {
+      "phase": "end",
+      "inside": true,
+      "offset": 32,
+      "paragraph": "End of the original description.",
+      "path": "6.0"
+    },
+    {
+      "phase": "clicked",
+      "inside": true,
+      "offset": 32,
+      "paragraph": "End of the original description.",
+      "path": "6.0"
+    },
+    {
+      "phase": "end",
+      "inside": true,
+      "offset": 32,
+      "paragraph": "End of the original description.",
+      "path": "6.0"
+    },
+    {
+      "phase": "clicked",
+      "inside": true,
+      "offset": 1,
+      "paragraph": "End of the original description.1",
+      "path": "6.2"
+    },
+    {
+      "phase": "end",
+      "inside": true,
+      "offset": 1,
+      "paragraph": "End of the original description.1",
+      "path": "6.2"
+    },
+    {
+      "phase": "clicked",
+      "inside": true,
+      "offset": 1,
+      "paragraph": "End of the original description.12",
+      "path": "6.3"
+    },
+    {
+      "phase": "end",
+      "inside": true,
+      "offset": 1,
+      "paragraph": "End of the original description.12",
+      "path": "6.3"
+    },
+    {
+      "phase": "clicked",
+      "inside": true,
+      "offset": 1,
+      "paragraph": "End of the original description.121",
+      "path": "6.4"
+    },
+    {
+      "phase": "end",
+      "inside": true,
+      "offset": 1,
+      "paragraph": "End of the original description.121",
+      "path": "6.4"
+    }
+  ],
+  "footnoteAccessibility": [
+    {
+      "name": "insert-footnote-dialog",
+      "violations": []
+    },
+    {
+      "name": "definition-actions",
+      "violations": []
+    },
+    {
+      "name": "mobile-insert-footnote-dialog",
+      "violations": []
+    },
+    {
+      "name": "current-media-actions",
+      "violations": []
+    }
+  ],
+  "footnoteToolbarLayout": {
+    "bar": {
+      "x": 254,
+      "y": 297,
+      "width": 827,
+      "height": 49
+    },
+    "attach": {
+      "x": 766,
+      "y": 309,
+      "width": 24,
+      "height": 24
+    },
+    "paste": {
+      "x": 792,
+      "y": 309,
+      "width": 24,
+      "height": 24
+    },
+    "trigger": {
+      "x": 934,
+      "y": 309,
+      "width": 110,
+      "height": 24
+    },
+    "properties": {
+      "x": 309,
+      "y": 598,
+      "width": 115,
+      "height": 32
+    },
+    "remove": {
+      "x": 309,
+      "y": 691,
+      "width": 135,
+      "height": 32
+    }
+  },
+  "nativeFootnotes": {
+    "definitions": 2,
+    "references": 3,
+    "bodies": [
+      "A service reliability note. Verified in Chrome.",
+      "Second note body."
+    ]
+  },
+  "preparedScripts": [
+    {
+      "path": "/assets/webpack/content_editor.8df7ac64.chunk.js",
+      "sha256": "f45a072ebc809ff0707727b7491f1e850a87a13cf587c3de5b5c7cf2178f6b48"
+    },
+    {
+      "path": "/assets/webpack/content_editor.8df7ac64.chunk.js",
+      "sha256": "f45a072ebc809ff0707727b7491f1e850a87a13cf587c3de5b5c7cf2178f6b48"
+    },
+    {
+      "path": "/assets/webpack/content_editor.8df7ac64.chunk.js",
+      "sha256": "f45a072ebc809ff0707727b7491f1e850a87a13cf587c3de5b5c7cf2178f6b48"
+    },
+    {
+      "path": "/assets/webpack/content_editor.8df7ac64.chunk.js",
+      "sha256": "f45a072ebc809ff0707727b7491f1e850a87a13cf587c3de5b5c7cf2178f6b48"
+    }
+  ],
+  "frontendMount": {
+    "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+    "readOnly": true
+  },
+  "nativeTaskControls": [
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    },
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    }
+  ],
+  "source": {
+    "original": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/0606995ad476df800a63ce127a02963b/fountain-baseline-figure.png)\n\nEnd of the original description.\n",
+    "saved": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/0606995ad476df800a63ce127a02963b/fountain-baseline-figure.png)\n\nEnd of the original description.[^1][^2][^1]\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**\n\n[^1]: A service reliability note. Verified in Chrome.\n\n[^2]: Second note body."
+  },
+  "comment": {
+    "body": "Native Fountain discussion: created through the actual GitLab comment form.",
+    "persisted": true
+  },
+  "recoveryIssue": {
+    "iid": 150,
+    "originalSourceUnchanged": true,
+    "recoveryDraftCancelled": true
+  },
+  "status": "passed"
+}

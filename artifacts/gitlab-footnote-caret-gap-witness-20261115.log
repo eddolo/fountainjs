@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+x·······
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-footnote-editing.test.ts > inserts at the selected text end, retains existing text, namespaces the note, and undoes/redoes atomically
+AssertionError: expected 'A note[^1][^alpha].\n\n[^alpha]: Defi…' not to contain '<p data-fountain-empty='
+
+- Expected
++ Received
+
+- <p data-fountain-empty=
++ A note[^1][^alpha].
++
++ [^alpha]: Definition **bold**.
++
++ <p data-fountain-empty="text"></p>
++
++ [^1]: A service reliability note.
+
+ ❯ tests/gitlab-footnote-editing.test.ts:35:22
+     33|   const source = bridge.getSerializedContent();
+     34|   expect(source).toContain('[^1]'); expect(source).toContain('[^alpha]…
+     35|   expect(source).not.toContain('<p data-fountain-empty=');
+       |                      ^
+     36|   expect(getGitLabFootnoteContext(editor)?.label).toBe('1');
+     37|   expect(undo(editor)).toBe(true); expect(bridge.getSerializedContent(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  01:31:56
+   Duration  1.71s (transform 74%, import 15%, tests 10%, worker 1%)

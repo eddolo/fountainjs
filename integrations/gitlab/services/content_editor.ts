@@ -28,6 +28,7 @@ import { GitLabAlertEditing } from './alert_editing';
 import type { GitLabPlayableKind } from './media';
 import { GitLabMediaEditingSession, type GitLabMediaSnapshot } from './media_editing';
 import { GitLabReferenceEditingSession, type GitLabReferenceSnapshot } from './reference_editing';
+import { beginGitLabFootnoteInsertion } from './footnote_editing';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -328,6 +329,12 @@ export class GitLabContentEditor {
     if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
       throw new GitLabEditorNotReady(this.status);
     return insertGitLabFrontmatter(this.editor, language, doc => { this.codec.serialize({ doc }); });
+  }
+  beginFootnoteInsertion() {
+    this.assertAlive();
+    if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
+      throw new GitLabEditorNotReady(this.status);
+    return beginGitLabFootnoteInsertion(this.editor, this.insertions);
   }
   beginReferenceEdit(changed?: (snapshot: GitLabReferenceSnapshot) => void): GitLabReferenceEditingSession {
     this.referenceSession?.close();

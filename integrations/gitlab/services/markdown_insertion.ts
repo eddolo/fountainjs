@@ -7,14 +7,25 @@ import {
   type AnySelection,
   type Editor,
   type Node,
+  type Transaction,
 } from 'fountainjs-editor';
 import type { SerializedContentCodec, SerializedContentResult } from './serialized_content';
+import { namespaceGitLabFootnotes } from './footnote_labels';
+
+/** Keep definitions together without moving the editor's final caret repair. */
+export function appendGitLabFootnoteDefinitions(transaction: Transaction, definitions: readonly Node[]): void {
+  const last = transaction.doc.content.findLastIndex(node => node.type.name === 'footnote_definition');
+  const index = last < 0 ? transaction.doc.childCount : last + 1;
+  transaction.replace(index, index, definitions);
+}
 
 export interface GitLabInsertionProjection {
   readonly selection: AnySelection;
   project(document: Node, markdown: string): Node;
   /** Receives the captured target rebased through unrelated edits. */
   apply?(document: Node, target: AnySelection): boolean;
+  /** Native operations can supply their owned model without a dummy renderer request. */
+  nativeDocument?(): Node | undefined;
 }
 
 export class GitLabInsertionConflict extends Error {
@@ -160,8 +171,10 @@ export class GitLabMarkdownInsertion {
       markdown = typeof source === 'string' ? source : await Promise.race([source, aborted]);
       if (conflict && !this.destroyed) throw new GitLabInsertionConflict();
       if (request.signal.aborted || this.destroyed) return { status: 'superseded' };
-      if (typeof markdown !== 'string' || !markdown) throw new Error('GITLAB_INVALID_INSERTION_SOURCE');
-      const decoded = await Promise.race([
+      const nativeDocument = projection?.nativeDocument?.();
+      if (nativeDocument && nativeDocument.type !== this.editor.state.schema.topNodeType) throw new Error('GITLAB_INVALID_NATIVE_INSERTION_DOCUMENT');
+      if (typeof markdown !== 'string' || !markdown && !nativeDocument) throw new Error('GITLAB_INVALID_INSERTION_SOURCE');
+      const decoded = nativeDocument ? { document: nativeDocument } : await Promise.race([
         this.codec.deserialize({
           schema: this.editor.state.schema,
           markdown,
@@ -172,7 +185,7 @@ export class GitLabMarkdownInsertion {
       if (conflict && !this.destroyed) throw new GitLabInsertionConflict();
       if (!decoded || request.signal.aborted || this.destroyed) return { status: 'superseded' };
       this.ensureReady();
-      const document = projection?.project(decoded.document, markdown) ?? decoded.document;
+      const document = projection?.project(decoded.document, markdown) ?? namespaceGitLabFootnotes(decoded.document, this.editor.state.doc);
       release();
       this.pending.delete(request);
       closeHistory(this.editor);
@@ -190,7 +203,14 @@ export class GitLabMarkdownInsertion {
             )
           )
             return false;
-          if (!insertDocument(this.editor, document)) return false;
+          const definitions = document.content.filter(node => node.type.name === 'footnote_definition');
+          const content = definitions.length ? document.copy(document.content.filter(node => node.type.name !== 'footnote_definition')) : document;
+          if (content.childCount && !insertDocument(this.editor, content)) return false;
+          if (definitions.length) {
+            const transaction = this.editor.createTransaction();
+            appendGitLabFootnoteDefinitions(transaction, definitions);
+            if (!this.editor.dispatch(transaction)) return false;
+          }
         }
         this.codec.serialize({ doc: this.editor.state.doc });
         return true;

@@ -9,7 +9,39 @@ accounts, projects, storage, uploads, authorization, issue/MR/wiki workflows and
 collaboration services. These services remain real GitLab services. Recreating
 their controls with local-only state does not meet the requirement.
 
-## Decoded footnote retention and adapter model — November 14–15
+## Native footnote import/export and issue authoring — November 15
+
+The verified adapter cases are now installed. Native controls insert a note,
+reuse an existing note, edit its body, remove a single reference, or delete the
+shared note and references. Original labels stay separate from safe native IDs;
+newly inserted notes get independent numeric labels. Unchanged source stays
+exact, changed documents export canonically, and unsupported/ambiguous cases
+retain their original source.
+
+The recorded 19-check issue journey passes through source/rich switching, Save,
+reopen and an actual application restart. It also covers keyboard access,
+undo/redo, a retained 360px dialog draft and four scoped accessibility checks.
+Current screenshots verify that attachment, Markdown paste and media actions
+stay on one desktop toolbar row, with media deletion visibly separated.
+
+Review found and repaired End leaving a paragraph after an inline atom and an
+automatic final caret paragraph becoming exported content between definitions.
+All 1,005 final GitLab model cases and 536 selected upstream cases pass, with one
+inherited skip. The caret regression additionally passes Chromium, Firefox and
+WebKit. Types, package/API, unchanged size limits, frontend, source rollback and
+patch checks pass. This does not complete the host's other workflows, role/
+browser matrix, note renaming, all source cases or compiled deployment rollback.
+
+```sh
+node scripts/build-gitlab-native-runtime.mjs
+# In Linux, after the normal native runtime install and host frontend build:
+node scripts/run-gitlab-native-browser-audit.mjs --footnote-editing
+```
+
+[Evidence and limits](../../artifacts/gitlab-footnote-authoring-integration-20261115.json).
+[Remaining work](FOOTNOTE_ADAPTER_PLAN.md).
+
+## Earlier decoded footnote retention and adapter model — November 14–15
 
 The installed guard now protects hidden definitions whose decoded labels contain
 brackets or ASCII spaces. Actual parent-codec witnesses reproduce body loss on

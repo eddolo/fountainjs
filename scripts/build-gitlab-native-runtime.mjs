@@ -42,6 +42,13 @@ for (const path of [
   'integrations/gitlab/services/serialized_content.ts',
   'integrations/gitlab/services/markdown_codec.ts',
   'integrations/gitlab/services/footnote_source.ts',
+  'integrations/gitlab/services/footnote_codec.ts',
+  'integrations/gitlab/services/footnote_editing.ts',
+  'integrations/gitlab/services/footnote_labels.ts',
+  'integrations/gitlab/services/footnote_nodes.ts',
+  'integrations/gitlab/services/footnote_positions.ts',
+  'integrations/gitlab/services/footnote_projection.ts',
+  'integrations/gitlab/services/footnote_rendering.ts',
   'integrations/gitlab/services/quick_actions.ts',
   'integrations/gitlab/services/quick_action_editing.ts',
   'integrations/gitlab/services/autocomplete_data.ts',
@@ -52,6 +59,7 @@ for (const path of [
   'integrations/gitlab/plugins/reference_navigation.ts',
   'dist/index.js',
   'dist/document-utilities.js',
+  'dist/pages.js',
 ])
   inputs[path] = createHash('sha256')
     .update(await readFile(new URL(path, root)))

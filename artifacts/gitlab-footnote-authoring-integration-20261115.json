@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-15T01:44:31.785Z",
+  "status": "passed",
+  "scope": "Private native GitLab footnote import/export and issue authoring; public inline-atom caret repair; not full GitLab or global parity completion",
+  "tests": {
+    "finalGitLabModels": {
+      "passed": 1005,
+      "suites": 36
+    },
+    "broadUnitCheckpoint": {
+      "passed": 6380,
+      "suites": 372,
+      "note": "Before the final private definition-placement adjustment; final GitLab models cover that adjustment and added authored-empty control."
+    },
+    "upstream": {
+      "passed": 536,
+      "suites": 23,
+      "skipped": 1
+    },
+    "desktopCaretBrowsers": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "realServiceChecks": 19,
+    "scopedAccessibilityChecks": 4,
+    "types": "passed",
+    "api": "450 declarations passed",
+    "packageLoading": "passed",
+    "budgets": "passed without changing limits",
+    "sourceRollback": "28 files passed",
+    "patchReconstruction": "18 patches passed"
+  },
+  "evidence": {
+    "service": "artifacts/gitlab-native-footnote-editing-20261115/report.json",
+    "models": "artifacts/gitlab-footnote-editing-models-20261115.log",
+    "upstream": "artifacts/gitlab-footnote-editing-upstream-20261115.json",
+    "caretWitness": "artifacts/footnote-end-diagnosis-20261115.json",
+    "emptyParagraphWitness": "artifacts/gitlab-footnote-caret-gap-witness-20261115.log",
+    "visualReview": "artifacts/gitlab-native-footnote-editing-20261115/visual-review.json",
+    "caretRepair": "artifacts/inline-atom-end-integration-20261115.json"
+  },
+  "repairs": [
+    "Retain exact untouched Markdown; validate complete source/render ownership before native import",
+    "Expose verified omitted definitions through a bounded second host render without changing existing reference targets",
+    "Preserve raw labels separately from safe native IDs; namespace newly inserted notes",
+    "Insert/edit/reuse notes; remove one reference or delete the shared note with atomic history",
+    "Keep End/typing at a trailing inline atom using a view-only caret placeholder",
+    "Group definitions without moving a final automatic caret paragraph into exported content",
+    "Keep current media toolbar controls on one row and deletion separate"
+  ],
+  "limits": [
+    "Changed host documents export canonically, not with a blanket source-byte preservation promise",
+    "Duplicate/ambiguous labels, some entity/escape bodies, raw HTML backlink ambiguity and BOM/CR cases remain refused with source retained",
+    "Rename UI, complete canonical re-render matrix, clipboard/native-fragment/public-Pages placement, MR/wiki/discussion and full browser/touch/IME/role matrices remain",
+    "Compiled deployment rollback and full GitLab replacement remain incomplete",
+    "Intermittent uploaded-image 403 remains an open separate investigation; passing restart is not a repair",
+    "No publication, rename, public API addition or parity-row promotion"
+  ],
+  "runtime": {
+    "bytes": 1667093,
+    "sha256": "0f4b7b740642ee92bc00fdfe14e6a35821318066c1e0fdf2d1053d36089c4758"
+  },
+  "inputs": {
+    "integrations/gitlab/runtime/browser.ts": "081c31c05b3bd8db1be64d77f7bb913a31bc11666a253609318f7b808f8a350c",
+    "integrations/gitlab/services/content_editor.ts": "ec3af8250f8366de40097a8152ac4ec5c2f385ab01cebec1f3c787a64a1834f4",
+    "integrations/gitlab/services/markdown_insertion.ts": "8f67ac6cd8cbe5fc6c2dafb3d81b182fbca28f028562d92ef2a58a2d48df89f9",
+    "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+    "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+    "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+    "integrations/gitlab/services/code_rendering.ts": "0d94359598fe6ead2cff4d0e2bc2821e934916ba47eca214bf02cc433dfe05d6",
+    "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+    "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+    "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+    "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+    "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+    "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+    "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+    "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+    "integrations/gitlab/services/markdown_codec.ts": "8440b30afc20d684f9e19cc78fec14aee53f874779e34a578fa3cdfa89bdd72d",
+    "integrations/gitlab/services/footnote_source.ts": "ae724e02065ac198f1f7f3364b82871b57c159ce60f494cdde41faea9fc29595",
+    "integrations/gitlab/services/footnote_codec.ts": "c800291c71af369b71d465b21b3043a3b0dcb44c6a90012dfb7d30f6b1fad6f7",
+    "integrations/gitlab/services/footnote_editing.ts": "89ae8dd5346cc3b3da6c64a568f88596dd3ac7ee2123c389a2f634dea2aa2d70",
+    "integrations/gitlab/services/footnote_labels.ts": "d49985193d45edfeebb19222ac3485f2ce74c8ec9c29cb54863aaf94d93467a4",
+    "integrations/gitlab/services/footnote_nodes.ts": "70ee9ae84bced37eef424e0a0baa095959b4811a830cd390e769d6c5a244ebc6",
+    "integrations/gitlab/services/footnote_positions.ts": "0020d65af8ab83d35d1955f8cf60ef34eb757b8b1d787b03d94ecb41f85f339a",
+    "integrations/gitlab/services/footnote_projection.ts": "867f843f35f30fa50c32addb6051760e7b193121744018757fff8d1efa1c6d19",
+    "integrations/gitlab/services/footnote_rendering.ts": "18f009bfb0246a01eeada0f716f21a393f0ddca636852bb32b17f7014f7334bb",
+    "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
+    "integrations/gitlab/services/quick_action_editing.ts": "42d37b3300907be0a8499ff7b0e64bb9410334fe13e82ce7515e412642b88ebe",
+    "integrations/gitlab/services/autocomplete_data.ts": "1741396673d51ce049777fa88bd00ff65184ce57e2d484ebde94c69f6cf98568",
+    "integrations/gitlab/services/autocomplete_editing.ts": "3244b67431ce508e9893b5166ab5f5ef798a4e63b770f7a8bfbe0fc6a7dec827",
+    "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+    "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
+    "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+    "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+    "dist/index.js": "6a699e874b16fe01ccbd5e98e049bf1c5fb7a7ecb82398be9e17c55ae226ceda",
+    "dist/document-utilities.js": "a76425ef95a8c04d36de1eba5dd994485dafe6f4cc60e1ac12c5c0aa68649bd4",
+    "dist/pages.js": "022730d02c9c45edd621a10d10e001afcde036bf2750184b3dd0f2495c76dad7",
+    "src/view/dom-renderer.ts": "1d698f6b49de73cc535c439ce6c37455edc579ec548a789a303ae9cddf3df7b6",
+    "integrations/gitlab/components/fountain_formatting_toolbar.vue": "1ebe815806fa387c89208a5f592b5a230b53d78d3b70abff4f0179721cae6f06",
+    "integrations/gitlab/components/fountain_content_editor.vue": "fc294d84a813351f217d4215223feb023e6564b79f6bca26cdd5f50f027cb717"
+  },
+  "caretRepairCommit": "fa2ecca8",
+  "publication": {
+    "pushed": false,
+    "npmPublished": false,
+    "reason": "GitHub CLI is signed out; this is a local private-integration checkpoint, without a new parity claim."
+  }
+}

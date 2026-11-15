@@ -13,7 +13,8 @@ const frontmatter = process.argv.includes('--frontmatter');
 const quickActions = process.argv.includes('--quick-actions');
 const quickActionCommands = process.argv.includes('--quick-action-commands');
 const autocomplete = process.argv.includes('--autocomplete');
-const footnoteProbe = process.argv.includes('--footnote-probe');
+const footnoteEditing = process.argv.includes('--footnote-editing');
+const footnoteProbe = process.argv.includes('--footnote-probe') || footnoteEditing;
 const footnotes = process.argv.includes('--footnotes') || footnoteProbe;
 const catalogue = quickActionCommands || autocomplete;
 const referenceContexts = process.argv.includes('--reference-context');
@@ -308,7 +309,18 @@ try {
     ['formatted-title', '> [!note] **Important** & <tag>\n>\n> Body.'],
     ['unknown', '> [!unknown] Other\n>\n> Ordinary quote.'],
   ];
-  if (footnoteProbe) inputs.push(
+  if (footnoteEditing) inputs.splice(0, inputs.length,
+    ['insert', '[^fountain-note]\n\n[^fountain-note]: A service reliability note.'],
+    ['insert-marked', '[^fountain-note]\n\n[^fountain-note]: Evidence **retained** after editing.'],
+    ['empty', 'Body[^empty].\n\n[^empty]:'],
+    ['mixed', 'Body[^visible].\n\n[^visible]: Visible.\n\n[^unused]: Hidden.'],
+    ['orphan-reference', 'Body[^a].\n\n[^a]: Used.\n\n[^b]: Orphan referring[^a].'],
+    ['numeric-collision', 'Body[^1].\n\n[^1]: Existing.'],
+    ['compatibility-numeric', 'Body[^①].\n\n[^①]: Circled.'],
+    ['authored-backlink', 'Body[^a].\n\n[^a]: [Back](#fnref-a).'],
+    ['shared', 'First[^shared] and second[^shared].\n\n[^shared]: A shared definition.'],
+  );
+  else if (footnoteProbe) inputs.push(
     ['emoji-prefix', '🧑‍🔬 é Before[^数学].\n\n[^数学]: Research.'],
     ['tab-prefix', '\tcode\n\nBefore\t[^tab].\n\n[^tab]: Definition.'],
     ['header-unused', '---\ntitle: Paper\n---\n\nBody.\n\n[^unused]: Unused **body**.'],
@@ -346,7 +358,7 @@ try {
     fixtures.push({ name, source, body: result.body, ...(footnoteProbe ? { probe, probeBody: probeResult?.body } : {}), ...(quickActions ? { renderedSource, references: result.references,
       untransformed: await request(preview.href, { text: source }) } : {}) });
   }
-  await writeFile(new URL(`integrations/gitlab/fixtures/${footnoteProbe ? 'footnote-probe' : footnotes ? 'footnote' : quickActions ? 'quick-actions' : frontmatter ? 'frontmatter' : diagrams ? 'diagram' : referenceContexts ? 'reference-context' : references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
+  await writeFile(new URL(`integrations/gitlab/fixtures/${footnoteEditing ? 'footnote-editing' : footnoteProbe ? 'footnote-probe' : footnotes ? 'footnote' : quickActions ? 'quick-actions' : frontmatter ? 'frontmatter' : diagrams ? 'diagram' : referenceContexts ? 'reference-context' : references ? 'reference' : media ? 'media' : 'alert'}-live-html.json`, root), JSON.stringify({
     scope: media ? 'Authenticated renderer structure fixtures; asset URLs are illustrative, not uploaded/playback acceptance' : 'Authenticated pinned GitLab renderer fixtures; not browser product acceptance',
     ...(quickActionOracle ? { quickActionOracle: { path: quickActionOracle.path, sha256: quickActionOracle.sha256 } } : {}),
     ...(references ? { referenceRecords } : {}),

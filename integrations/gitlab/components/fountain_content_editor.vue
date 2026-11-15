@@ -498,6 +498,7 @@ export default {
           :editor="contentEditor.editor"
           :content-editor="contentEditor"
           :disabled="!surfaceEditable"
+          :get-editor-root="getEditorRoot"
           :hide-attachment-button="disableAttachments || !uploadsPath"
           @focus="focus"
           @error="onSurfaceError"

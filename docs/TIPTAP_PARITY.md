@@ -2,22 +2,33 @@
 
 ## Current programme status — 2026-11-15
 
-The installed source-loss guard now covers decoded bracket/ASCII-space labels,
-with two actual parent-codec counterexamples and a passing 13-check recorded
-service profile through restart. A 47-case host-render corpus supports an
-unwired native footnote adapter model. Its 110 cases plus the other GitLab models
-total 954 passes; 536 selected upstream cases and TypeScript also pass, with
-one inherited skip. Native note import/export/authoring remain unfinished.
-Duplicate-label navigation, source-authored back-reference attributes and host
-BOM/CR behavior have explicit refusal/acceptance requirements. No footnote
-capability row or full GitLab replacement claim is promoted.
-[Evidence](../artifacts/gitlab-footnote-projection-integration-20261115.json).
+Verified native footnote import/export and basic issue authoring are now wired
+into the private GitLab integration. A recorded 19-check real-service journey
+covers insertion, direct body editing, shared reuse, reference/whole-note removal,
+history, keyboard access, mobile draft layout, source/rich switching, Save,
+reopen and restart. Four scoped accessibility checks pass. Current toolbar
+screenshots and bounds keep media, attachment and paste controls on one desktop
+row, with destructive media actions separated below the common actions.
 
-The private native-footnote bridge now maps the captured host positions to exact
+The review caught two real defects: End at a trailing inline atom could redirect
+insertion to another paragraph, and later definitions could export an intervening
+automatic caret paragraph. Both have regression evidence; the caret endpoint is
+tested with footnotes and math in Chromium, Firefox and WebKit. Current GitLab
+models pass 1,005 cases; selected upstream tests pass 536 with one inherited skip.
+Types, package/API, existing size limits, frontend and source rollback checks pass.
+
+Untouched source is exact; edited host documents export canonically. Unverified
+entity/escape bodies, duplicates, ambiguous raw HTML and BOM/CR cases still retain
+source. Rename, full canonical/clipboard/public-Pages/workflow/role/browser
+matrices and deployment rollback remain open. No capability row or full GitLab
+replacement claim is promoted.
+[Evidence](../artifacts/gitlab-footnote-authoring-integration-20261115.json).
+
+The preceding private native-footnote checkpoint mapped the captured host positions to exact
 source labels across all 23 renderer fixtures, with 47 source-position cases and
-839 total GitLab model cases passing. TypeScript passes. This is an unwired
-source-boundary foundation, not completed footnote import or authoring; omitted
-definitions still require the existing protection. No capability row changes.
+839 total GitLab model cases passing. TypeScript passed. It was an unwired
+source-boundary foundation at that stage; the newer scoped implementation above
+replaces that status. Unrepresented definitions still require source protection.
 [Position evidence](../artifacts/gitlab-footnote-positions-integration-20261114.json).
 
 The open reader-image failure now has request-correlated Rails evidence and a
@@ -29,13 +40,13 @@ cause and repair remain unproven. This does not close a reliability row or enabl
 a publication claim.
 [Diagnostic evidence](../artifacts/gitlab-upload-restart-integration-20261114.json).
 
-The private GitLab footnote audit exposes and blocks an omitted-source loss path.
+The earlier private GitLab footnote audit exposed and blocked an omitted-source loss path.
 Twenty-three actual renderer cases and a parent-codec counterexample distinguish
 source retention from HTML rendering. Unused definitions could previously vanish
-after an unrelated edit; the new guard refuses that conversion with source kept.
+after an unrelated edit; that guard refused the conversion with source kept.
 All 792 GitLab model cases, 536 upstream cases (one inherited skip) and the final
-13-check service profile pass. This does not enable native GitLab footnotes or
-certify the full label grammar. An intermittent post-restart upload-image 403 is
+13-check service profile passed at that stage. That checkpoint did not enable
+native GitLab footnotes or certify the full label grammar. An intermittent post-restart upload-image 403 is
 retained as an open finding despite the later passing run. No parity row changes.
 [Scoped evidence](../artifacts/gitlab-footnote-source-integration-20261114.json).
 

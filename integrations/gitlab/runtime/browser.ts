@@ -6,6 +6,7 @@ export { selectionIncludesGitLabFrontmatter } from '../services/frontmatter';
 export { getGitLabAlertContext } from '../services/alert_editing';
 export { getGitLabMediaContext } from '../services/media_editing';
 export { getGitLabReferenceContext } from '../services/reference_editing';
+export { getGitLabFootnoteContext, deleteGitLabFootnote, deleteGitLabFootnoteReference, selectFootnoteDefinition } from '../services/footnote_editing';
 export { getGitLabQuickActionContext, parseGitLabQuickActionCommands } from '../services/quick_action_editing';
 export { parseGitLabAutocompleteItems, gitLabAutocompleteSources } from '../services/autocomplete_data';
 export {

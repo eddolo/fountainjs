@@ -10,7 +10,8 @@ import { getGitLabFrontmatter, gitlabFrontmatterCode, hydrateGitLabFrontmatter, 
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
 import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLabQuickAction, transformGitLabQuickActions } from './quick_actions';
-import { gitLabHasFootnoteDefinitions } from './footnote_source';
+import { convertGitLabFootnotes } from './footnote_codec';
+import { gitLabFootnoteNodes, validGitLabFootnoteLabel } from './footnote_nodes';
 
 export interface GitLabMarkdownIssue { stage: 'import' | 'export'; code: string; message: string; path?: readonly number[] }
 export class GitLabMarkdownConversionError extends Error {
@@ -60,7 +61,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
       gitlabIntrinsicSize: !child.getAttribute('width') && !child.getAttribute('height') && !child.style.width && !child.style.height,
       alt: child.getAttribute('alt') ?? '', title: child.getAttribute('title') ?? '', width: size('width'), height: size('height') };
   };
-  return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base), ...gitlabAlertNodes(), ...gitlabMediaNodes(mediaLabels),
+  return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base), ...gitlabAlertNodes(), ...gitlabMediaNodes(mediaLabels), ...gitLabFootnoteNodes(),
     paragraph: { ...base.nodes.paragraph!, attrs: { ...base.nodes.paragraph!.attrs,
       gitlabLiteralSlash: { default: false, validate: value => typeof value === 'boolean' } } },
     code_block: gitlabFrontmatterCode(base.nodes.code_block!),
@@ -136,8 +137,6 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   const frontmatter = normalizeGitLabFrontmatter(elements, source);
   const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element) && !diagrams.handled.has(element)));
   const issues: GitLabMarkdownIssue[] = [
-    ...(gitLabHasFootnoteDefinitions(source, maxBytes) ? [{ stage: 'import' as const, code: 'footnote-source',
-      message: 'Footnote definitions need a source-aware adapter, including definitions omitted by the host renderer. Original Markdown is retained.' }] : []),
     ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues, ...frontmatter.issues].map(issue => ({ stage: 'import' as const, ...issue })),
   ];
   for (const element of elements) {
@@ -191,7 +190,12 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       const response = markdown ? await this.options.renderMarkdown(renderedSource, { signal }) : { body: '<p></p>' };
       if (signal.aborted) throw new Error('GitLab Markdown rendering was cancelled.');
       if (!response || typeof response.body !== 'string') throw new Error('The actual GitLab host renderer must return a body string.');
-      const result = parser.parseWithReport(normalizeGitLabRendering(response.body, parser.options, renderedSource, schema), schema);
+      const footnotes = await convertGitLabFootnotes(renderedSource, response.body, { ...this.options, signal, html: parser.options });
+      if (footnotes.issues.length || footnotes.html === undefined) throw new GitLabMarkdownConversionError([
+        { stage: 'import', code: 'footnote-source', message: 'The complete footnote source/render relationship could not be retained. Original Markdown is retained.' },
+        ...footnotes.issues.map(code => ({ stage: 'import' as const, code, message: 'A footnote projection requires its explicit source-aware adapter.' })),
+      ]);
+      const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
       const document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
       schema.validate(document);
@@ -218,7 +222,34 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     let prefix = 'FOUNTAINGITLABSOURCETOKEN';
     const encoded = JSON.stringify(doc.toJSON());
     while (encoded.includes(prefix)) prefix += 'X';
+    const noteDefinitions = new Map<string, Node>();
+    const noteLabels = new Set<string>();
+    doc.descendants((node, path) => {
+      if (node.type.name !== 'footnote_definition') return;
+      const id = String(node.attrs.id), label = node.attrs.gitlabFootnoteLabel ?? id;
+      if (noteDefinitions.has(id) || typeof label !== 'string' || !validGitLabFootnoteLabel(label) || noteLabels.has(label))
+        issues.push({ stage: 'export', code: 'footnote-definition-identity', path, message: 'Footnote definitions require unique identities and labels.' });
+      noteDefinitions.set(id, node); noteLabels.add(String(label));
+    });
+    const noteToken = (label: string) => {
+      let index = tokens.size, token: string;
+      do { token = `FOUNTAINNOTELABEL${index++}`; } while (encoded.includes(token) || tokens.has(token));
+      tokens.set(token, label); return token;
+    };
     const project = (node: Node, path: number[]): Node => {
+      if (node.type.name === 'footnote_reference') {
+        const definition = noteDefinitions.get(String(node.attrs.id));
+        if (!definition || node.marks.some(mark => ['code', 'link'].includes(mark.type.name)))
+          issues.push({ stage: 'export', code: 'footnote-reference-target', path, message: 'A footnote reference requires its own definition and supported formatting.' });
+        const label = String(definition?.attrs.gitlabFootnoteLabel ?? definition?.attrs.id ?? node.attrs.id);
+        const original = node.attrs.gitlabFootnoteLabel === node.attrs.gitlabFootnoteOriginalLabel
+          && node.attrs.gitlabFootnoteTargetLabel === label && validGitLabFootnoteLabel(node.attrs.gitlabFootnoteLabel)
+          ? String(node.attrs.gitlabFootnoteLabel) : label;
+        const token = `${prefix}${tokens.size}END`; tokens.set(token, `[^${original}]`);
+        return doc.type.schema.text(token, node.marks);
+      }
+      if (node.type.name === 'footnote_definition') return node.type.create({ ...node.attrs,
+        id: noteToken(String(node.attrs.gitlabFootnoteLabel ?? node.attrs.id)) }, node.content.map((child, index) => project(child, [...path, index])));
       const command = path.length === 1 ? serializeGitLabQuickAction(node) : undefined;
       if (command !== undefined) {
         const token = `${prefix}${tokens.size}END`; tokens.set(token, command);

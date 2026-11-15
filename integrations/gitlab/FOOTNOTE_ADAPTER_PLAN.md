@@ -1,9 +1,52 @@
 # GitLab native footnote adapter
 
-Status: source-preservation guard implemented; native GitLab footnote authoring
-and import remain unfinished. Fountain already has portable footnote nodes,
-numbering, insertion, reconnection, selection and removal in `src/pages/index.ts`.
-The next work is a source-aware host bridge, not another document engine.
+Status: the verified source/render cases now use native import, canonical export
+and authoring controls in the private GitLab adapter. Full host acceptance is
+unfinished. The adapter reuses the portable footnote nodes, numbering, selection
+and removal in `src/pages/index.ts`; it does not introduce another engine.
+
+## Current implementation — November 15
+
+`footnote_codec.ts` validates complete source/render ownership before enabling
+native notes. Represented definitions use one host render. Omitted bodies use a
+bounded second render, whose original reference targets must agree. Unsupported
+or ambiguous cases still refuse conversion with the exact source retained.
+
+`markdown_codec.ts` keeps authored labels separate from native identities,
+preserves untouched source exactly, and canonically exports changed documents.
+Case-varied aliases retain their spelling while their definition binding stays
+unchanged. `footnote_labels.ts` gives newly inserted notes fresh numeric labels
+without rewriting existing labels. Pasted definitions stay at the document root.
+
+The formatting toolbar provides new-note insertion, existing-note reuse, direct
+body editing, definition navigation, removal of one reference, and deletion of
+the shared note with all its references. The insertion session retains its
+captured/rebased target; cancel and failure preserve the draft. Mutations use the
+existing transaction/history model. Definition insertion groups notes without
+turning the editor's final caret repair into an intervening empty paragraph.
+Authored empty paragraphs are not deleted to achieve that result.
+
+The real-user journey exposed a separate browser-view defect: End after a
+trailing inline atom could jump to a later paragraph. A view-only caret
+placeholder fixes the endpoint; it adds no model character or hard break.
+The regression covers footnotes and inline math in Chromium, Firefox and WebKit.
+
+Remaining acceptance work:
+
+- Label-renaming UI and a complete duplicate-label/source-alias policy.
+- Missing entity/escape bodies, raw HTML back-reference ambiguity and host
+  BOM/CR preprocessing; retain source until each representation is verified.
+- All supported canonical exports re-rendered through the actual host, beyond
+  the current recorded issue cases and captured codec tests.
+- Footnote clipboard, native fragment and authored-empty-paragraph matrices,
+  including the public Pages insertion commands outside this private adapter.
+- MR, wiki and discussion authoring; browser, touch/IME, read-only and role
+  matrices; compiled deployment rollback. One issue journey is not that matrix.
+
+[Current evidence](../../artifacts/gitlab-footnote-authoring-integration-20261115.json).
+
+The following section records the earlier guard/model checkpoint, before native
+import and controls were wired into the installed editor.
 
 ## Source/render checkpoint — November 14–15
 

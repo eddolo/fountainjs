@@ -1,4 +1,5 @@
 import { parseFragment, serialize, type DefaultTreeAdapterMap } from 'parse5';
+import { CoreSchemaSpec, MarkdownImporter, Schema } from 'fountainjs-editor';
 import { GitLabFootnotePositions, type GitLabFootnoteSpan } from './footnote_positions';
 import type { GitLabFootnoteProbe } from './footnote_rendering';
 
@@ -19,6 +20,7 @@ const attr = (element: Element, name: string) => element.attrs.find(item => item
 const ownText = (element: Element) => element.childNodes.every(node => 'value' in node)
   ? element.childNodes.map(node => 'value' in node ? node.value : '').join('') : undefined;
 const sourceLabel = /^\[\^([^\]\u0000-\u0020\u007f]{1,4096})\]/u;
+const linkProbeSchema = new Schema(CoreSchemaSpec);
 
 /** Inspect actual host structure; generated anchor suffixes never become IDs. */
 export function inspectGitLabFootnoteProjection(source: string, html: string, options: {
@@ -114,7 +116,7 @@ export function inspectGitLabFootnoteProjection(source: string, html: string, op
     carrier.parentNode = null;
     for (let i = references.length - 1; i >= 0; i--) if (descendants.has(references[i]!.element)) references.splice(i, 1);
   }
-  return { fragment, elements, sections, definitions, references, renderedReferences, issues };
+  return { fragment, elements, sections, definitions, references, renderedReferences, issues, sourceIndex: index };
 }
 
 /** Produce native footnote carriers without renderer-owned back-reference UI. */
@@ -134,6 +136,7 @@ export function normalizeGitLabFootnoteProjection(source: string, html: string, 
     return { ...graph, html: undefined };
   }
   const chrome = new Map<GitLabFootnoteDefinition, Element[]>();
+  const authoredLinks = new Map<Element, { name: string; value: string }[]>();
   // Check all ownership before removing anything. Source-authored raw HTML can
   // carry these reserved attributes too; a marker attribute alone is not proof.
   definitions.forEach((definition, ordinal) => {
@@ -152,12 +155,25 @@ export function normalizeGitLabFootnoteProjection(source: string, html: string, 
           || !/^#fnref-[^\s]+$/u.test(attr(node, 'href') ?? '') || node.attrs.some(item => !allowed.includes(item.name))
           || !content || !node.parentNode) issues.push('footnote-backref-source');
         else { seen.add(key); links.push(node); }
-      } else pending.push(...node.childNodes);
+      } else {
+        if (node.tagName === 'a' && (attr(node, 'class') ?? '').split(/\s+/u).includes('footnote-backref')) {
+          const span = graph.sourceIndex.read(attr(node, 'data-sourcepos') ?? '');
+          const parsed = span ? new MarkdownImporter().parse(source.slice(span.from, span.to), linkProbeSchema) : undefined;
+          const text = parsed?.childCount === 1 && parsed.child(0).childCount === 1 ? parsed.child(0).child(0) : undefined;
+          const mark = text?.isText && text.marks.length === 1 && text.marks[0]!.type.name === 'link' ? text.marks[0] : undefined;
+          if (!mark || ownText(node) !== text!.text || !String(mark.attrs.href).startsWith('#fnref-')) issues.push('footnote-authored-backref-source');
+          else authoredLinks.set(node, [{ name: 'href', value: String(mark.attrs.href) },
+            { name: 'data-canonical-src', value: String(mark.attrs.href) },
+            ...(mark.attrs.title ? [{ name: 'title', value: String(mark.attrs.title) }] : [])]);
+        }
+        pending.push(...node.childNodes);
+      }
     }
     if ([...expected].some(key => !seen.has(key))) issues.push('footnote-backref-source');
     chrome.set(definition, links);
   });
   if (issues.length) return { ...graph, html: undefined };
+  for (const [element, attrs] of authoredLinks) element.attrs = attrs;
   for (const definition of definitions) {
     const id = idFactory();
     if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/u.test(id) || occupied.has(id))
@@ -175,7 +191,9 @@ export function normalizeGitLabFootnoteProjection(source: string, html: string, 
   for (const reference of references) {
     const element = reference.element;
     element.attrs = [{ name: 'data-fountain-footnote-reference', value: ids.get(reference.definition)! },
-      { name: 'data-gitlab-footnote-label', value: reference.label }];
+      { name: 'data-gitlab-footnote-label', value: reference.label },
+      { name: 'data-gitlab-footnote-original-label', value: reference.label },
+      { name: 'data-gitlab-footnote-target-label', value: reference.definition.label }];
     element.childNodes = [];
   }
   for (const section of graph.sections) {
@@ -194,6 +212,10 @@ export function normalizeGitLabFootnoteProjection(source: string, html: string, 
       element.tagName = element.nodeName = 'section';
       element.attrs = [{ name: 'data-fountain-footnote-definition', value: ids.get(definition)! },
         { name: 'data-gitlab-footnote-label', value: definition.label }];
+      if (element.childNodes.every(child => 'value' in child && !child.value.trim())) {
+        element.childNodes = [{ nodeName: 'p', tagName: 'p', attrs: [], namespaceURI: element.namespaceURI,
+          childNodes: [], parentNode: element }];
+      }
       element.parentNode = parent;
       return element;
     });

@@ -2,25 +2,36 @@
 
 Updated 2026-11-15.
 
-The installed GitLab footnote guard now covers hidden definitions whose decoded
-labels contain brackets or ASCII spaces. Two real parent-codec witnesses lose
-these bodies after unrelated edits; the repaired 13-check service profile
-retains paste/load source and exact server Markdown through restart. The new
-source/render adapter model uses 47 authenticated cases and existing native
-footnote nodes. It is not yet installed: ambiguous back-reference markup,
-duplicate-label navigation, hidden entity bodies, BOM/CR behavior, source/export,
-paste collisions, authoring and full host matrices remain acceptance work.
-All 954 GitLab model cases, 536 upstream passes (one inherited skip), TypeScript,
-frontend build and source rollback/patch checks pass. No parity row or package
-release is promoted.
-[Evidence](../artifacts/gitlab-footnote-projection-integration-20261115.json).
+The private GitLab adapter now imports and canonically exports verified footnote
+cases using the existing native nodes. Its issue-editor controls insert notes,
+reuse a shared note, edit bodies, remove one reference or delete the whole note.
+Untouched source remains exact; ambiguous or unrepresented cases retain source
+instead of enabling a lossy edit. Newly inserted notes receive independent labels.
 
-The native footnote bridge now has an exact UTF-8-source-position foundation.
+The recorded 19-check Chromium journey verifies keyboard controls, undo/redo,
+360px draft retention, source/rich switching, Save, reopen and application restart.
+Four scoped accessibility checks pass. Visual/source review also found and fixed
+End escaping a paragraph after an inline atom, and an automatic caret paragraph
+being exported between definitions. The former has a three-engine footnote/math
+regression; the latter has a failing witness and an authored-empty control.
+All 1,005 current GitLab model cases, 536 selected upstream cases (one inherited
+skip), TypeScript, package/API, measured size, frontend and source rollback/patch
+checks pass. The earlier broad unit checkpoint passed 6,380 cases, before the
+final private definition-placement adjustment covered by the current model set.
+No size limit, API, package version or parity row is changed.
+
+Label renaming, duplicate/ambiguous source policies, the full canonical re-render
+and clipboard matrices, public Pages placement, MR/wiki/discussion/role/browser
+acceptance and compiled deployment rollback remain open. This is not a complete
+GitLab replacement or a global parity completion.
+[Evidence](../artifacts/gitlab-footnote-authoring-integration-20261115.json).
+
+The earlier native footnote checkpoint established an exact UTF-8-source-position foundation.
 Forty-seven cases, including all 23 actual host renderings, verify label spans,
 multibyte boundaries, nested/repeated/duplicate notes and exact newline offsets.
-All 839 GitLab model cases and TypeScript pass. This helper is not yet connected
-to native import; the loss-prevention guard, full source/body adapter and authoring
-acceptance requirements remain. No native footnote parity row is promoted.
+All 839 GitLab model cases and TypeScript passed at that checkpoint. The helper
+was then unwired; native import and controls are now covered by the newer scoped
+checkpoint above. No native footnote parity row is promoted.
 [Position evidence](../artifacts/gitlab-footnote-positions-integration-20261114.json).
 
 The image-restart investigation now correlates the earlier 403 with authenticated

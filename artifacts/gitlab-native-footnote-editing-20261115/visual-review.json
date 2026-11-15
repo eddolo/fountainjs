@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-15T01:44:31.669Z",
+  "video": {
+    "path": "artifacts/gitlab-native-footnote-editing-20261115/recordings/page@57e9946dcc0d52a605dec3021519fddc.webm",
+    "sha256": "32f0dff7873179d3a12a50809f72d19bda3ab23e61d359acc73e8233cfeb8516",
+    "bytes": 4978156,
+    "durationSeconds": 214.2,
+    "width": 800,
+    "height": 554
+  },
+  "review": {
+    "method": "Full-size screenshots plus ten sampled recording frames from seconds 72–92 at one frame every two seconds; not frame-by-frame review of the entire recording",
+    "screenshots": {
+      "artifacts/gitlab-native-footnote-editing-20261115/footnote-controls.png": "e275fa8cf5e43ea7042aa5648c01a7a9ef2ff9eb98cae96d370fdb8d3e211945",
+      "artifacts/gitlab-native-footnote-editing-20261115/footnote-mobile-draft.png": "a7a0b5f776dd8fcb5a8438be8accc34a19b3ee65d5f4e2103eb6ec1a1169c7d1",
+      "artifacts/gitlab-native-footnote-editing-20261115/footnote-toolbar-ui.png": "91fb98662b186c54c2ad9ee92cb3fde3299b4725a9c6f74c4e7a30e3951a76fa",
+      "artifacts/gitlab-native-footnote-editing-20261115/footnote-media-controls.png": "77091b4db7f594767fb233da1f3abc08f69cae6f65cfb1549c416df6733e6443",
+      "artifacts/gitlab-native-footnote-editing-20261115/original-after-restart.png": "4214daad9762bdbc3ff5716abc8283c89348e0bf55af3513767f21661ffe65ce",
+      "artifacts/gitlab-native-footnote-editing-20261115/recording-review.png": "93f7c1b5a835beb6dd14d865f3c6bb8cbe66d56dcc045037ad4b486dedda47ae"
+    },
+    "observations": [
+      "Three references remain inline in the chosen body paragraph; two note bodies appear below",
+      "Shared-note and destructive controls are distinct; focus outline remains visible",
+      "The 360px insert dialog retains its draft without horizontal overflow",
+      "Attachment, Markdown paste and media actions occupy one 49px desktop row",
+      "Media deletion has its own separated footer",
+      "The actual GitLab reader shows both note bodies and three links after restart; saved Markdown contains no intervening automatic empty paragraph"
+    ]
+  }
+}
