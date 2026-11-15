@@ -16,6 +16,19 @@ split safely. Unsupported live splits fail closed to continuous editing.
 
 ## Implemented platform-neutral foundation
 
+Footnote clipboard scope: ordinary text/node/document selections include owned
+definitions. Copying just a definition's text produces prose. Table-cell grid
+selection uses a separate clipboard path and is not covered by this contract;
+same-editor cut/move identity reuse also needs a separate acceptance matrix.
+Native HTML must actually reach the paste event for rich retention. Recorded
+Chromium/Firefox OS-clipboard runs exercise an independent plain-text target and
+same-editor rich paste. The installed Playwright WebKit ports currently fail
+the OS-format bridge; minimal non-Fountain reproductions are retained. This is
+an open validation gap, not verified physical Safari behavior. Run the explicit
+audit with `pnpm exec playwright test --config playwright.clipboard-audit.config.ts`;
+no browser is skipped and the WebKit failure is not converted to a synthetic
+paste.
+
 The isolated `fountainjs-editor/pages` entry currently provides:
 
 - `createPageGeometry()` for A4, Letter, and bounded custom geometry;
@@ -31,6 +44,13 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   insertion commands;
 - `inspectFootnotes()` / `assertFootnotes()` for missing, duplicate, nested,
   and unreferenced definition diagnostics;
+- a model-only footnote clipboard plugin, installed by `createPagesExtension`,
+  which includes complete owned definitions when references are copied and
+  remaps colliding note IDs on paste. Shared/nested references and body marks
+  remain connected; definitions are inserted at the document root in one
+  undoable operation. `createFootnoteClipboardPlugin` is also exported for
+  custom footnote schemas, with optional label, ID, host preparation and
+  validation callbacks. Clipboard text labels do not change model text;
 - immutable `computeFootnoteNumbering()` output, with display labels derived
   from first-reference order, shared by repeated references, and never stored
   in JSON; HTML and Markdown footnote interchange retain stable IDs, and

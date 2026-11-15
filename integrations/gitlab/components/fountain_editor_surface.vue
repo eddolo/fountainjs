@@ -59,6 +59,7 @@ export default {
         dom.addEventListener('keydown', this.onKeydown);
         dom.addEventListener('compositionstart', this.onCompositionStart);
         dom.addEventListener('compositionend', this.onCompositionEnd);
+        for (const type of ['copy', 'cut', 'paste']) dom.addEventListener(type, this.onClipboard);
         this.$emit('ready', this.fountainView);
       } catch (error) {
         this.releaseSurface();
@@ -75,6 +76,7 @@ export default {
       view.dom.removeEventListener('keydown', this.onKeydown);
       view.dom.removeEventListener('compositionstart', this.onCompositionStart);
       view.dom.removeEventListener('compositionend', this.onCompositionEnd);
+      for (const type of ['copy', 'cut', 'paste']) view.dom.removeEventListener(type, this.onClipboard);
       view.destroy();
     },
     // eslint-disable-next-line vue/no-unused-properties -- Called by the owning ContentEditor.
@@ -100,6 +102,13 @@ export default {
     },
     onCompositionStart() {
       this.composing = true;
+    },
+    onClipboard(event) {
+      // GitLab's document-level CopyAsGFM handler also matches this .md surface.
+      // Once the native view owns the payload, the reader must not overwrite it
+      // with rendered superscript numbers or reinterpret the paste afterward.
+      // Unhandled events still bubble normally, including nested host controls.
+      if (event.defaultPrevented) event.stopPropagation();
     },
     onCompositionEnd() {
       this.composing = false;

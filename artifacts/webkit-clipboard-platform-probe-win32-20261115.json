@@ -1,0 +1,122 @@
+{
+  "platform": "win32",
+  "desktop": false,
+  "version": "26.5",
+  "results": [
+    {
+      "mode": "browser",
+      "value": "Native plain text"
+    },
+    {
+      "mode": "plain",
+      "value": ""
+    },
+    {
+      "mode": "html",
+      "value": ""
+    },
+    {
+      "mode": "native",
+      "value": ""
+    }
+  ],
+  "events": [
+    {
+      "type": "copy",
+      "mode": "browser",
+      "trusted": true,
+      "types": [],
+      "plain": "",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "paste",
+      "mode": "browser",
+      "trusted": true,
+      "types": [
+        "text/plain",
+        "text/uri-list",
+        "text/html"
+      ],
+      "plain": "Native plain text",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "copy",
+      "mode": "plain",
+      "trusted": true,
+      "types": [
+        "text/plain"
+      ],
+      "plain": "Projected plain text",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "paste",
+      "mode": "plain",
+      "trusted": true,
+      "types": [
+        "text/plain",
+        "text/uri-list",
+        "text/html"
+      ],
+      "plain": "",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "copy",
+      "mode": "html",
+      "trusted": true,
+      "types": [
+        "text/plain",
+        "text/html"
+      ],
+      "plain": "Projected plain text",
+      "html": "<p><strong>Projected plain text</strong></p>",
+      "native": ""
+    },
+    {
+      "type": "paste",
+      "mode": "html",
+      "trusted": true,
+      "types": [
+        "text/plain",
+        "text/uri-list",
+        "text/html"
+      ],
+      "plain": "",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "copy",
+      "mode": "native",
+      "trusted": true,
+      "types": [
+        "text/plain",
+        "text/html",
+        "application/x-fountainjs+json"
+      ],
+      "plain": "Projected plain text",
+      "html": "<p><strong>Projected plain text</strong></p>",
+      "native": "{\"version\":1}"
+    },
+    {
+      "type": "paste",
+      "mode": "native",
+      "trusted": true,
+      "types": [
+        "text/plain",
+        "text/uri-list",
+        "text/html"
+      ],
+      "plain": "",
+      "html": "",
+      "native": ""
+    }
+  ]
+}

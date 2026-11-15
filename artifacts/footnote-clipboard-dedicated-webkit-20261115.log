@@ -1,0 +1,88 @@
+[WebServer] (node:3596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:2108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 90% of 6.6s inside plugin hooks (6.0s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (87%, 5.8s, 189 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer]
+[WebServer] (node:21780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:22012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:22828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+[WebServer]   - import "./tools/site-build-info" without a file extension (vite.config.ts:6:37). Add the file extension
+[WebServer] Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+Running 1 test using 1 worker
+
+(node:1884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [webkit] › tests\manual\footnote-clipboard-real.spec.ts:8:1 › keeps copied footnote graphs self-contained through native clipboard input (6.6s)
+
+
+  1) [webkit] › tests\manual\footnote-clipboard-real.spec.ts:8:1 › keeps copied footnote graphs self-contained through native clipboard input
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Independent plain-text destination', exact: true })
+    Timeout: 5000ms
+    Expected: "Copy this note[^clipboard-note] and again[^clipboard-note].
+    [^clipboard-note]: Shared body."
+    Received: ""
+
+    Call log:
+      - Expect "toHaveValue" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Independent plain-text destination', exact: true })
+        13 × locator resolved to <textarea aria-label="Independent plain-text destination"></textarea>
+           - unexpected value ""
+
+
+       at ..\browser\footnote-clipboard-journey.ts:44
+
+      42 |   const external = page.getByRole('textbox', { name: 'Independent plain-text destination', exact: true });
+      43 |   await external.click(); await page.keyboard.press('ControlOrMeta+v');
+    > 44 |   await expect(external).toHaveValue(copied['text/plain']);
+         |                          ^
+      45 |   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editor.getJSON())).toEqual(original);
+      46 |   await external.screenshot({ path: info.outputPath('external-plain-footnotes.png') });
+      47 |   const destination = editor.locator(':scope > p').filter({ hasText: 'Destination.' });
+        at footnoteClipboardJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\footnote-clipboard-journey.ts:44:26)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\footnote-clipboard-real.spec.ts:12:3
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\footnote-clipboard-dedicated-webkit-20261115\footnote-clipboard-real-ke-92e49-ough-native-clipboard-input-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\footnote-clipboard-dedicated-webkit-20261115\footnote-clipboard-real-ke-92e49-ough-native-clipboard-input-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\footnote-clipboard-dedicated-webkit-20261115\footnote-clipboard-real-ke-92e49-ough-native-clipboard-input-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\footnote-clipboard-dedicated-webkit-20261115\footnote-clipboard-real-ke-92e49-ough-native-clipboard-input-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\footnote-clipboard-dedicated-webkit-20261115\footnote-clipboard-real-ke-92e49-ough-native-clipboard-input-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › tests\manual\footnote-clipboard-real.spec.ts:8:1 › keeps copied footnote graphs self-contained through native clipboard input

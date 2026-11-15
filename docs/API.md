@@ -622,6 +622,28 @@ after collaborative changes are marked for one provider rebroadcast so peers
 converge without duplicate trailing blocks. See
 [TRAILING_EDITABLE_BLOCK.md](TRAILING_EDITABLE_BLOCK.md).
 
+### Structured clipboard hooks
+
+Optional `PluginProps` hooks operate on parsed model fragments:
+
+- `transformCopiedDocument(editor, document)` returns a schema-valid copy
+  projection, for example adding definitions owned by copied references. It
+  must leave the source document and selection unchanged.
+- `serializeCopiedNode(editor, node, serialize)` returns this node's clipboard
+  text, or `undefined` to delegate. Use `serialize(child)` for child nodes;
+  `Node.textContent` and other exporters remain unchanged.
+- `handlePasteDocument(editor, document, { source })` receives native Fountain
+  JSON or imported HTML. Return `undefined` to delegate, `true` after handling
+  insertion, or `false` to refuse. Model insertion runs in a command batch;
+  refusal or an exception rolls it back without retrying as lossy plain text.
+
+`createPagesExtension` installs `createFootnoteClipboardPlugin` automatically.
+The exported Pages helper also accepts optional ID/label, `prepareDocument` and
+`validateDocument` callbacks for custom footnote schemas and host constraints.
+It copies complete owned bodies, remaps collisions and keeps pasted definitions
+at the root. Table-cell grid selection has a separate clipboard path; see the
+[bounded footnote clipboard contract](PAGINATION.md).
+
 ### Clipboard history
 
 `ClipboardHistoryExtension` is opt-in and memory-only. Compose it after the

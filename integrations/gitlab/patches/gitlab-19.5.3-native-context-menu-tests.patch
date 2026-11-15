@@ -1,9 +1,9 @@
 diff --git a/spec/frontend/content_editor/components/fountain_context_surface_spec.js b/spec/frontend/content_editor/components/fountain_context_surface_spec.js
 new file mode 100644
-index 00000000..3f935bb6
+index 000000000..45d27d07b
 --- /dev/null
 +++ b/spec/frontend/content_editor/components/fountain_context_surface_spec.js
-@@ -0,0 +1,284 @@
+@@ -0,0 +1,345 @@
 +import { fireEvent, getByRole, queryByRole } from '@testing-library/dom';
 +import { markRaw } from 'vue';
 +import { mountExtended } from 'helpers/vue_test_utils_helper';
@@ -287,10 +287,71 @@ index 00000000..3f935bb6
 +    await settle();
 +    expect(queryByRole(document.body, 'dialog', { name: 'Code block actions' })).toBeNull();
 +  });
++  it.each(['copy', 'cut', 'paste'])(
++    'keeps handled native %s data out of the host reader clipboard transformer',
++    async (type) => {
++      await createComponent();
++      service.editor.dispatch(
++        service.editor
++          .createTransaction()
++          .setSelection(new NodeSelection(service.editor.state.doc, [0])),
++      );
++      const root = wrapper
++        .findComponent(FountainEditorSurface)
++        .element.querySelector('[role="textbox"]');
++      const data = new Map(
++        type === 'paste'
++          ? [
++              ['text/html', '<p>Native paste</p>'],
++              ['text/plain', 'Native paste'],
++            ]
++          : [],
++      );
++      const event = new Event(type, { bubbles: true, cancelable: true });
++      Object.defineProperty(event, 'clipboardData', {
++        value: {
++          files: [],
++          getData: (key) => data.get(key) || '',
++          setData: (key, value) => data.set(key, value),
++        },
++      });
++      const host = jest.fn(() => data.set('text/plain', 'Overwritten by the host reader'));
++      document.addEventListener(type, host);
++      try {
++        root.dispatchEvent(event);
++        expect(event.defaultPrevented).toBe(true);
++        expect(host).not.toHaveBeenCalled();
++        if (type === 'paste') expect(service.getSerializedContent()).toContain('Native paste');
++        else {
++          expect(data.get('text/plain')).toContain('const first = 1;');
++          expect(data.get('application/x-fountainjs+json')).toBeTruthy();
++        }
++      } finally {
++        document.removeEventListener(type, host);
++      }
++    },
++  );
++  it('leaves unhandled read-only paste available to the host without changing the document', async () => {
++    await createComponent({ editable: false });
++    const root = wrapper
++      .findComponent(FountainEditorSurface)
++      .element.querySelector('[role="textbox"]');
++    const event = new Event('paste', { bubbles: true, cancelable: true }),
++      host = jest.fn();
++    document.addEventListener('paste', host);
++    try {
++      root.dispatchEvent(event);
++      expect(event.defaultPrevented).toBe(false);
++      expect(host).toHaveBeenCalledTimes(1);
++      expect(service.getSerializedContent()).toBe(source);
++    } finally {
++      document.removeEventListener('paste', host);
++    }
++  });
 +});
 diff --git a/spec/frontend/content_editor/fixtures/fountain_media_live_html.json b/spec/frontend/content_editor/fixtures/fountain_media_live_html.json
 new file mode 100644
-index 00000000..68355ce7
+index 000000000..68355ce7c
 --- /dev/null
 +++ b/spec/frontend/content_editor/fixtures/fountain_media_live_html.json
 @@ -0,0 +1,110 @@

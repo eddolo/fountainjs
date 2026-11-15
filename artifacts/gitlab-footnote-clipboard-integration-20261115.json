@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-15T20:01:55.189Z",
+  "status": "bounded-delivery-with-open-platform-validation",
+  "parent": "6c93a9b75a785e752aad1e38e2875f6dee960242",
+  "scope": "Footnote model clipboard ownership and private GitLab host isolation; not full clipboard/product/parity acceptance",
+  "changes": [
+    "Copied references carry complete transitive/cyclic owned definitions without unrelated unused notes.",
+    "Paste remaps colliding note IDs and host labels, preserves shared references/marks and root placement, and supports atomic Undo/Redo.",
+    "Clipboard-only text serialization leaves Node.textContent unchanged; semantic paste refusal rolls back without a lossy second insertion.",
+    "Private GitLab view prevents its global reader transformer from overwriting handled copy/cut/paste; unhandled events still bubble."
+  ],
+  "tests": {
+    "root": {
+      "passed": 6526,
+      "suites": 380
+    },
+    "upstream": {
+      "passed": 540,
+      "suites": 23,
+      "inheritedSkip": 1
+    },
+    "publicOSClipboard": {
+      "passed": [
+        "Windows Chromium",
+        "Windows Firefox"
+      ],
+      "openFailure": "Windows WebKit; independently reproduced outside Fountain"
+    },
+    "native": {
+      "checks": 27,
+      "definitions": 4,
+      "references": 6,
+      "accessibilityScans": 6,
+      "browserErrors": 0,
+      "phases": [
+        "saved",
+        "reopened",
+        "restart"
+      ]
+    },
+    "api": "Public API surface verified across 452 declaration files.",
+    "types": "TypeScript, Svelte and Angular passed",
+    "package": "ESM/CommonJS and optional export smoke passed",
+    "server": "Node and Cloudflare workerd smoke passed",
+    "headless": "143-module boundary plus no-DOM TypeScript passed",
+    "runtime": "Unchanged latency, curve and retained-memory gates passed",
+    "frontend": "Rspack compiled with two existing warnings in 72.31 seconds",
+    "patches": 18,
+    "rollbackFiles": 28
+  },
+  "build": {
+    "esmKiB": 1605.5,
+    "commonjsKiB": 1430.1,
+    "commonjsCapacityKiB": {
+      "before": 1427,
+      "after": 1440
+    },
+    "otherLimits": "Unchanged",
+    "newDependencies": 0
+  },
+  "recording": {
+    "path": "artifacts/gitlab-native-footnote-clipboard-20261115/recordings/page@c0bcfeb42ff2c9eed327b7451d4ba6a7.webm",
+    "sha256": "d48e7c05b8c54d612a5705401c07c0db628b7a743e0df36b2eea74723f4a2567",
+    "seconds": 199.24
+  },
+  "evidence": {
+    "native": "artifacts/gitlab-native-footnote-clipboard-20261115/report.json",
+    "visual": "artifacts/gitlab-native-footnote-clipboard-20261115/visual-review.json",
+    "hostOverwriteWitness": "artifacts/gitlab-native-footnote-clipboard-host-copy-witness-20261115/report.json",
+    "minimalWindowsReproduction": "artifacts/webkit-clipboard-platform-probe-win32-20261115.json",
+    "minimalLinuxReproduction": "artifacts/webkit-clipboard-platform-probe-linux-20261115.json",
+    "reproductionScript": "artifacts/probe-webkit-clipboard-20261115.mjs",
+    "webkitFailure": "artifacts/footnote-clipboard-dedicated-webkit-20261115.log",
+    "units": "artifacts/footnote-clipboard-all-units-final-20261115.log",
+    "upstream": "artifacts/gitlab-footnote-clipboard-upstream-20261115.json",
+    "originalCapacityFailure": "artifacts/footnote-clipboard-budget-final-before-review-20261115.log"
+  },
+  "open": [
+    "Table-cell grid clipboard still has its own path and needs complete footnote ownership tests/repair.",
+    "Same-editor cut/move identity reuse requires its own matrix.",
+    "Installed WebKit ports lose custom copy formats; physical Safari is unverified.",
+    "Full grammar, authored placement, host reader conversion, product workflows/roles/browsers, cache rollout, large-document costs and compiled deployment rollback remain open."
+  ],
+  "publication": "No package version, npm publication, project rename or parity-row promotion"
+}

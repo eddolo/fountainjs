@@ -2,12 +2,15 @@
   "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
   "entry": "integrations/gitlab/runtime/browser.ts",
   "target": "es2018",
-  "bytes": 1679306,
-  "sha256": "81a3e38417bbd746764e26bde6b40a5b56623e36df42606a249c06899d4086c3",
-  "parentRevision": "9173d8d4c821ebb03c871c9705c93dd8e4255c0f",
+  "bytes": 1687114,
+  "sha256": "f252563a388b28fdb5a89243679a614907ed560fdf0b193ae150e6767750fa7f",
+  "parentRevision": "6c93a9b75a785e752aad1e38e2875f6dee960242",
   "inputs": {
     "integrations/gitlab/runtime/browser.ts": "081c31c05b3bd8db1be64d77f7bb913a31bc11666a253609318f7b808f8a350c",
-    "integrations/gitlab/services/content_editor.ts": "a1cb24619778f971de529620cd57410ed5e5125007b28497c6181eaf91b460ea",
+    "integrations/gitlab/services/content_editor.ts": "bf7511b3f4a8c87334ae50b31ce0bcc68298b0251bf1537017b6cd46f6bf0d3e",
+    "src/core/plugin.ts": "8fa5fddf399da8c39d8daccab849350f019440c41a034a9f56d907f23a8b0a2e",
+    "src/view/input.ts": "db7208e381c8c57d2423ecdbb39eceaad0d2daf38afe236305eb98517f3c23c4",
+    "src/pages/clipboard.ts": "dcd30d10c87199f72bb657c45ecb5ae0868ac8ec960e519c0b6d8bfc61a23c7a",
     "integrations/gitlab/services/markdown_insertion.ts": "8f67ac6cd8cbe5fc6c2dafb3d81b182fbca28f028562d92ef2a58a2d48df89f9",
     "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
     "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
@@ -40,8 +43,8 @@
     "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
     "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
     "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
-    "dist/index.js": "6a699e874b16fe01ccbd5e98e049bf1c5fb7a7ecb82398be9e17c55ae226ceda",
+    "dist/index.js": "aa66fceba5e8faf646d6155ca2be048a33b5fbc4259f5e857d2cf4fdde7e9fac",
     "dist/document-utilities.js": "a76425ef95a8c04d36de1eba5dd994485dafe6f4cc60e1ac12c5c0aa68649bd4",
-    "dist/pages.js": "022730d02c9c45edd621a10d10e001afcde036bf2750184b3dd0f2495c76dad7"
+    "dist/pages.js": "89c2b89f14f832d0759d8b19c7ceb99be9f6f33939ba704d7a275b197069aae4"
   }
 }

@@ -2,6 +2,20 @@
 
 ## Current programme status — 2026-11-15
 
+The latest bounded clipboard delivery preserves footnote dependency graphs,
+renames colliding identities/source labels and keeps paste atomic. Live GitLab
+testing also found and fixed a host reader handler overwriting Fountain's copy
+formats. Four definitions, six references, shared bodies and bold marks agree
+through Save/reopen/restart and all reader/backlink clicks. Root tests pass
+6,526 cases; 540 selected upstream cases pass with one inherited skip; the
+recorded service profile passes 27 checks. Chromium/Firefox OS copy/paste,
+framework types, package/Node/workerd, size and unchanged runtime gates pass.
+Installed WebKit OS-format failures remain recorded, alongside cell-grid and
+cut/move identity matrices and broader product acceptance. No parity row is
+promoted. [Evidence](../artifacts/gitlab-footnote-clipboard-integration-20261115.json).
+
+Previous source/typing checkpoint:
+
 The private GitLab footnote round-trip corpus now has 53 accepted input/edit
 combinations that retain the full native graph through two actual-host export/
 reopen cycles, plus 12 explicit source-retaining refusals. The capture records

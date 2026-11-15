@@ -1,0 +1,105 @@
+{
+  "platform": "linux",
+  "version": "26.5",
+  "results": [
+    {
+      "mode": "browser",
+      "value": "Native plain text"
+    },
+    {
+      "mode": "plain",
+      "value": "Projected plain text"
+    },
+    {
+      "mode": "html",
+      "value": "Projected plain text"
+    },
+    {
+      "mode": "native",
+      "value": "Projected plain text"
+    }
+  ],
+  "events": [
+    {
+      "type": "copy",
+      "mode": "browser",
+      "trusted": true,
+      "types": [],
+      "plain": "",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "paste",
+      "mode": "browser",
+      "trusted": true,
+      "types": [],
+      "plain": "Native plain text",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "copy",
+      "mode": "plain",
+      "trusted": true,
+      "types": [
+        "text/plain"
+      ],
+      "plain": "Projected plain text",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "paste",
+      "mode": "plain",
+      "trusted": true,
+      "types": [],
+      "plain": "Projected plain text",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "copy",
+      "mode": "html",
+      "trusted": true,
+      "types": [
+        "text/plain",
+        "text/html"
+      ],
+      "plain": "Projected plain text",
+      "html": "<p><strong>Projected plain text</strong></p>",
+      "native": ""
+    },
+    {
+      "type": "paste",
+      "mode": "html",
+      "trusted": true,
+      "types": [],
+      "plain": "Projected plain text",
+      "html": "",
+      "native": ""
+    },
+    {
+      "type": "copy",
+      "mode": "native",
+      "trusted": true,
+      "types": [
+        "text/plain",
+        "text/html",
+        "application/x-fountainjs+json"
+      ],
+      "plain": "Projected plain text",
+      "html": "<p><strong>Projected plain text</strong></p>",
+      "native": "{\"version\":1}"
+    },
+    {
+      "type": "paste",
+      "mode": "native",
+      "trusted": true,
+      "types": [],
+      "plain": "Projected plain text",
+      "html": "",
+      "native": ""
+    }
+  ]
+}

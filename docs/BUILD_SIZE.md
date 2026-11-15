@@ -18,6 +18,24 @@ remain optional. Investigate unexpected dependency/loading changes before
 increasing a budget. Justified growth for tested behavior is normal development;
 it does not justify weakening correctness, latency or retained-memory checks.
 
+## Footnote clipboard checkpoint, 2026-11-15
+
+The complete emitted inventory measures 1,605.5 KiB ESM / 1,430.1 KiB
+CommonJS, compared with 1,601.7 / 1,427.0 KiB in the preceding recorded build.
+Most of the added implementation belongs to the optional Pages entry
+(12.6 KiB ESM / 11.4 KiB CJS facade, previously 9.7 / 9.0 KiB); the remaining
+growth adds model clipboard hooks to the DOM input path. No dependency is added.
+This inventory is not one application's transfer size or a startup benchmark.
+
+All individual entries, CSS and the ESM aggregate fit their existing ceilings.
+The first unchanged CommonJS gate failed by 3.1 KiB. After reviewing the added
+dependency-closure and collision handling, its aggregate capacity is 1,440 KiB,
+providing roughly 10 KiB of headroom rather than a succession of tiny allowances.
+All other ceilings remain unchanged. The full 6,526-case unit suite, framework
+types, headless boundary, existing latency/growth and retained-memory gates pass.
+The original failed measurement remains in
+`artifacts/footnote-clipboard-budget-final-before-review-20261115.log`.
+
 ## Measured nested-Markdown checkpoint, 2026-11-04
 
 The diagnostic follows emitted ESM static imports and re-exports, compressing

@@ -9,6 +9,7 @@ import {
 } from '../core';
 import { getNodeAtPath, getTextLeaves } from '../core/transaction/path';
 import { defineExtension, type FountainExtension } from '../extensions/extension';
+import { createFootnoteClipboardPlugin } from './clipboard';
 import {
   assertPageTemplates,
   insertPageField,
@@ -25,6 +26,7 @@ export * from './layout';
 export * from './presentation';
 export * from './templates';
 export * from './settings';
+export * from './clipboard';
 
 const FOOTNOTE_ID = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 
@@ -439,6 +441,7 @@ export function createPagesExtension(options: PagesExtensionOptions = {}): Fount
   const idFactory = options.footnoteIdFactory ?? (() => defaultFootnoteId());
   return defineExtension({
     name: 'pages',
+    plugins: [createFootnoteClipboardPlugin({ idFactory })],
     nodes: {
       page_break: pageBreakNode,
       footnote_reference: footnoteReferenceNode,

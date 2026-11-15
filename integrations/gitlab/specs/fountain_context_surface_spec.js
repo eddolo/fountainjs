@@ -171,4 +171,33 @@ describe('native code/media contextual surfaces', () => {
     fireEvent(window, new Event('resize')); await settle();
     expect(queryByRole(document.body, 'dialog', { name: 'Code block actions' })).toBeNull();
   });
+  it.each(['copy', 'cut', 'paste'])('keeps handled native %s data out of the host reader clipboard transformer', async type => {
+    await createComponent();
+    service.editor.dispatch(service.editor.createTransaction().setSelection(new NodeSelection(service.editor.state.doc, [0])));
+    const root = wrapper.findComponent(FountainEditorSurface).element.querySelector('[role="textbox"]');
+    const data = new Map(type === 'paste' ? [['text/html', '<p>Native paste</p>'], ['text/plain', 'Native paste']] : []);
+    const event = new Event(type, { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: key => data.get(key) || '',
+      setData: (key, value) => data.set(key, value) } });
+    const host = jest.fn(() => data.set('text/plain', 'Overwritten by the host reader'));
+    document.addEventListener(type, host);
+    try {
+      root.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true); expect(host).not.toHaveBeenCalled();
+      if (type === 'paste') expect(service.getSerializedContent()).toContain('Native paste');
+      else {
+        expect(data.get('text/plain')).toContain('const first = 1;');
+        expect(data.get('application/x-fountainjs+json')).toBeTruthy();
+      }
+    } finally { document.removeEventListener(type, host); }
+  });
+  it('leaves unhandled read-only paste available to the host without changing the document', async () => {
+    await createComponent({ editable: false });
+    const root = wrapper.findComponent(FountainEditorSurface).element.querySelector('[role="textbox"]');
+    const event = new Event('paste', { bubbles: true, cancelable: true }), host = jest.fn();
+    document.addEventListener('paste', host);
+    try { root.dispatchEvent(event); expect(event.defaultPrevented).toBe(false); expect(host).toHaveBeenCalledTimes(1);
+      expect(service.getSerializedContent()).toBe(source);
+    } finally { document.removeEventListener('paste', host); }
+  });
 });

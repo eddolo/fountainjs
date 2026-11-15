@@ -37,7 +37,7 @@ import { comparePaths, getNodeAtPath } from '../core/transaction/path';
 import { textReplacementSelection } from '../core/text-replacement-selection';
 import { extractDocumentRange } from '../core/transaction/document-fragment';
 import { copySharedDirectionGroups, snapshotIncompleteSharedDirections, snapshotInheritedNodeDirection } from '../core/shared-direction';
-import { redo, setHistoryGroup, undo } from '../extensions/plugins/history';
+import { closeHistory, redo, setHistoryGroup, undo } from '../extensions/plugins/history';
 import {
   insertAssetFile,
   insertImageFile,
@@ -83,33 +83,36 @@ interface PendingNativeRichPaste {
   readonly timeout: ReturnType<typeof setTimeout>;
 }
 
-function clipboardText(node: Node): string {
+function clipboardText(node: Node, render?: (node: Node, serialize: (child: Node) => string) => string | undefined): string {
+  const serialize = (child: Node) => clipboardText(child, render);
+  const custom = render?.(node, serialize);
+  if (custom !== undefined) return custom;
   if (node.isText) return node.text ?? '';
-  const childText = () => node.content.map(clipboardText).join('');
+  const childText = () => node.content.map(serialize).join('');
   switch (node.type.name) {
-    case 'doc': return node.content.map(clipboardText).join('\n');
+    case 'doc': return node.content.map(serialize).join('\n');
     case 'hard_break': return '\n';
     case 'horizontal_rule': return '---';
-    case 'blockquote': return node.content.map(clipboardText).join('\n')
+    case 'blockquote': return node.content.map(serialize).join('\n')
       .split('\n').map((line) => `> ${line}`).join('\n');
     case 'bullet_list': return node.content.map((item) => (
-      `- ${clipboardText(item).split('\n').join('\n  ')}`
+      `- ${serialize(item).split('\n').join('\n  ')}`
     )).join('\n');
     case 'ordered_list': {
       const start = Number(node.attrs.start ?? 1);
       return node.content.map((item, index) => (
-        `${start + index}. ${clipboardText(item).split('\n').join('\n   ')}`
+        `${start + index}. ${serialize(item).split('\n').join('\n   ')}`
       )).join('\n');
     }
     case 'task_list': return node.content.map((item) => (
-      `${item.attrs.checked ? '[x]' : '[ ]'} ${clipboardText(item).split('\n').join('\n    ')}`
+      `${item.attrs.checked ? '[x]' : '[ ]'} ${serialize(item).split('\n').join('\n    ')}`
     )).join('\n');
     case 'list_item': case 'task_item':
     case 'definition_list': case 'definition_term': case 'definition_description': case 'html_container': case 'direction_scope':
-      return node.content.map(clipboardText).join('\n');
-    case 'table': return node.content.map(clipboardText).join('\n');
-    case 'table_row': return node.content.map(clipboardText).join('\t');
-    case 'table_header': case 'table_cell': return node.content.map(clipboardText).join('\n');
+      return node.content.map(serialize).join('\n');
+    case 'table': return node.content.map(serialize).join('\n');
+    case 'table_row': return node.content.map(serialize).join('\t');
+    case 'table_header': case 'table_cell': return node.content.map(serialize).join('\n');
     case 'paragraph': case 'heading': case 'code_block': case 'figcaption': return childText();
     default: return node.textContent;
   }
@@ -542,30 +545,26 @@ export class InputManager {
 
   private insertFountainClipboard(event: Event, fountain: string): true | ExternalPasteIssue | null {
     if (fountain && fountain.length <= MAX_FOUNTAIN_CLIPBOARD_CHARACTERS) {
+      let document: Node;
+      let snapshots: unknown;
       try {
         const payload = JSON.parse(fountain) as Partial<FountainClipboardPayload>;
         if (payload.version !== 1 || !payload.document) throw new TypeError('Unsupported Fountain clipboard payload.');
-        const document = copySharedDirectionGroups(this.editor.state.schema.nodeFromJSON(payload.document));
-        if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
-          event.preventDefault();
-          this.reportPaste(createExternalPasteReport(
-            'fountain',
-            'inserted-fountain-document',
-            fountain,
-            fountain,
-            directionSnapshotIssues(payload.directionSnapshots),
-          ));
-          return true;
-        }
-        this.rejectPaste(event, 'fountain', fountain);
+        document = copySharedDirectionGroups(this.editor.state.schema.nodeFromJSON(payload.document));
+        snapshots = payload.directionSnapshots;
+      } catch {
+        return Object.freeze({ code: 'fountain-document-fallback', count: 1,
+          message: 'Fountain clipboard content is incompatible with this schema; HTML or text was used.', lossy: true });
+      }
+      if (this.insertParsedClipboard(document, 'fountain')) {
+        event.preventDefault();
+        this.reportPaste(createExternalPasteReport(
+          'fountain', 'inserted-fountain-document', fountain, fountain, directionSnapshotIssues(snapshots),
+        ));
         return true;
-      } catch { /* The receiving schema can legitimately omit the copied extension. */ }
-      return Object.freeze({
-        code: 'fountain-document-fallback',
-        count: 1,
-        message: 'Fountain clipboard content is incompatible with this schema; HTML or text was used.',
-        lossy: true,
-      });
+      }
+      this.rejectPaste(event, 'fountain', fountain);
+      return true;
     } else if (fountain) {
       return Object.freeze({
         code: 'fountain-document-fallback',
@@ -575,6 +574,24 @@ export class InputManager {
       });
     }
     return null;
+  }
+
+  private insertParsedClipboard(document: Node, source: 'fountain' | 'html'): boolean {
+    try {
+      closeHistory(this.editor);
+      return this.editor.runCommandBatch(() => {
+        for (const plugin of this.editor.state.plugins) {
+          const handled = plugin.spec.props?.handlePasteDocument?.(this.editor, document, { source });
+          if (handled !== undefined) return handled;
+        }
+        return insertDocument(this.editor, document);
+      });
+    } catch (error) {
+      // The command batch has already restored its original state. A semantic
+      // refusal must never turn into a second, lossy HTML/plain-text insertion.
+      try { this.options.onError?.(error); } catch { /* Observers cannot authorize a fallback. */ }
+      return false;
+    }
   }
 
   private insertRichClipboard(event: Event | undefined, text: string | undefined, html: string,
@@ -590,6 +607,7 @@ export class InputManager {
     let richSource = fountain ? 'fountain' as const : html ? detectExternalPasteSource(html) : 'generic-html' as const;
     let normalizedHTML = html;
     if (html?.trim()) {
+      let document: Node | undefined;
       try {
         if (this.options.paste?.normalize !== false) {
           const normalized = normalizeExternalPasteHTML(html, this.options.paste);
@@ -597,8 +615,18 @@ export class InputManager {
           if (!fountain) richSource = normalized.source;
           richIssues = Object.freeze([...richIssues, ...normalized.issues]);
         }
-        const document = copySharedDirectionGroups(HTMLImporter.parse(normalizedHTML, this.editor.state.schema));
-        if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
+        document = copySharedDirectionGroups(HTMLImporter.parse(normalizedHTML, this.editor.state.schema));
+      } catch (error) {
+        this.options.onError?.(error);
+        richIssues = Object.freeze([...richIssues, Object.freeze({
+          code: 'rich-html-import-failed' as const,
+          count: 1,
+          message: 'Rich clipboard HTML could not be imported; Fountain used its plain-text representation.',
+          lossy: true,
+        })]);
+      }
+      if (document) {
+        if (this.insertParsedClipboard(document, 'html')) {
           event?.preventDefault();
           this.reportPaste(createExternalPasteReport(
             richSource,
@@ -611,14 +639,6 @@ export class InputManager {
         }
         this.rejectPaste(event, richSource, html, richIssues);
         return;
-      } catch (error) {
-        this.options.onError?.(error);
-        richIssues = Object.freeze([...richIssues, Object.freeze({
-          code: 'rich-html-import-failed',
-          count: 1,
-          message: 'Rich clipboard HTML could not be imported; Fountain used its plain-text representation.',
-          lossy: true,
-        })]);
       }
     }
     if (text === undefined) return;
@@ -685,8 +705,9 @@ export class InputManager {
 
   private writeFountainSelection(event: ClipboardEvent): boolean {
     if (!event.clipboardData) return false;
-    let selected = this.selectedFountainDocument();
-    if (!selected) return false;
+    const fragmentDocument = this.selectedFountainDocument();
+    if (!fragmentDocument) return false;
+    let selected: Node = fragmentDocument;
     let inheritedSnapshots = 0;
     if (this.editor.state.selection instanceof NodeSelection) {
       const snapshot = snapshotInheritedNodeDirection(selected, this.editor.state.doc, this.editor.state.selection.nodePath);
@@ -694,12 +715,26 @@ export class InputManager {
       selected = snapshot.document;
       inheritedSnapshots = snapshot.detached;
     }
+    for (const plugin of this.editor.state.plugins) {
+      const transformed: Node | undefined = plugin.spec.props?.transformCopiedDocument?.(this.editor, selected);
+      if (transformed) {
+        if (transformed.type !== this.editor.state.schema.topNodeType) throw new Error('Clipboard transforms must keep the editor schema.');
+        this.editor.state.schema.validate(transformed);
+        selected = transformed;
+      }
+    }
     const projection = snapshotIncompleteSharedDirections(selected, this.editor.state.doc);
     const document = projection.document, detached = projection.detached + inheritedSnapshots;
     const fragment = HTMLExporter.export(document, { document: false });
     const html = detached ? `<div data-fountain-clipboard-direction-snapshots="${detached}">${fragment}</div>` : fragment;
     const payload: FountainClipboardPayload = { version: 1, document: document.toJSON(), ...(detached ? { directionSnapshots: detached } : {}) };
-    let plainText = clipboardText(document);
+    let plainText = clipboardText(document, (node, serialize) => {
+      for (const plugin of this.editor.state.plugins) {
+        const text = plugin.spec.props?.serializeCopiedNode?.(this.editor, node, serialize);
+        if (text !== undefined) return text;
+      }
+      return undefined;
+    });
     const selection = this.editor.state.selection;
     if (!plainText && selection instanceof NodeSelection
       && !getNodeAtPath(this.editor.state.doc, selection.nodePath).type.spec.toText) {
@@ -727,12 +762,14 @@ export class InputManager {
         return;
       }
     }
-    if (!this.writeCellSelection(event) && !this.writeFountainSelection(event)) {
-      if (this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
-        event.preventDefault();
-        this.options.onError?.(new Error('This selection cannot be copied without losing document structure.'));
-      } else this.options.prepareClipboard?.();
-    }
+    try {
+      if (!this.writeCellSelection(event) && !this.writeFountainSelection(event)) {
+        if (this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
+          event.preventDefault();
+          this.options.onError?.(new Error('This selection cannot be copied without losing document structure.'));
+        } else this.options.prepareClipboard?.();
+      }
+    } catch (error) { event.preventDefault(); this.options.onError?.(error); }
   };
 
   private onCut = (event: ClipboardEvent): void => {
@@ -747,14 +784,16 @@ export class InputManager {
         return;
       }
     }
-    if (this.writeCellSelection(event) || this.writeFountainSelection(event)) {
-      if (!deleteSelection(this.editor) && this.editor.state.selection instanceof RangeSelection) {
-        this.options.onError?.(new Error('The selection was copied, but could not be removed safely.'));
-      }
-    } else if (this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
-      event.preventDefault();
-      this.options.onError?.(new Error('This selection cannot be cut without losing document structure.'));
-    } else this.options.prepareClipboard?.();
+    try {
+      if (this.writeCellSelection(event) || this.writeFountainSelection(event)) {
+        if (!deleteSelection(this.editor) && this.editor.state.selection instanceof RangeSelection) {
+          this.options.onError?.(new Error('The selection was copied, but could not be removed safely.'));
+        }
+      } else if (this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
+        event.preventDefault();
+        this.options.onError?.(new Error('This selection cannot be cut without losing document structure.'));
+      } else this.options.prepareClipboard?.();
+    } catch (error) { event.preventDefault(); this.options.onError?.(error); }
   };
 
   private onCompositionStart = (event: CompositionEvent): void => {

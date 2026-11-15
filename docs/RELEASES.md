@@ -1,5 +1,31 @@
 # Release and API stability policy
 
+## Footnote clipboard ownership and native host isolation — 2026-11-15
+
+Pages copy includes complete definitions for selected references. Paste remaps
+colliding IDs, keeps shared/nested links and body formatting, inserts definitions
+at the root and publishes one undoable operation. Clipboard-only text formatting
+does not alter `Node.textContent`. The optional `PluginProps` model clipboard
+hooks and exported `createFootnoteClipboardPlugin`/options are additive;
+the reviewed declaration inventory is 452 files.
+
+The live GitLab journey exposed a separate page-wide reader handler overwriting
+native clipboard data with visual superscript numbers. Its private view boundary
+now stops only already-handled clipboard events. Four upstream cases prove
+copy/cut/paste ownership and unhandled read-only paste delegation.
+
+Validation: 6,526 root cases, 540 selected upstream cases (one inherited skip),
+framework types, headless/package/Node/workerd, size and unchanged performance/
+retention gates. The recorded 27-check service journey preserves four notes and
+six references through Save/reopen/restart, exercises every forward/backlink,
+and passes six scoped accessibility scans without browser errors. Source
+rollback/reinstall covers 28 files and 18 ordered patches. Reviewed aggregate
+CJS capacity is 1,440 KiB (+13 KiB); all other limits stay unchanged. Native
+Chromium/Firefox clipboard journeys pass; installed WebKit format-bridge failures
+remain explicit. Cell-grid ownership, cut/move reuse, physical Safari and wider
+product acceptance remain open. No package version, publication or parity-row
+promotion is made. [Evidence](../artifacts/gitlab-footnote-clipboard-integration-20261115.json).
+
 ## Private GitLab footnote round trips and prose boundary — 2026-11-15
 
 Add a real-host two-cycle source/native-edit/canonical-export/reopen corpus.

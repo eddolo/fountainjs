@@ -27,6 +27,9 @@ const inputs = {};
 for (const path of [
   'integrations/gitlab/runtime/browser.ts',
   'integrations/gitlab/services/content_editor.ts',
+  'src/core/plugin.ts',
+  'src/view/input.ts',
+  'src/pages/clipboard.ts',
   'integrations/gitlab/services/markdown_insertion.ts',
   'integrations/gitlab/services/attachment_uploads.ts',
   'integrations/gitlab/services/link_editing.ts',

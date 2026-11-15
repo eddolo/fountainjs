@@ -2,6 +2,28 @@
 
 Updated 2026-11-15.
 
+The next clipboard checkpoint copies complete owned footnote bodies, remaps
+colliding IDs without breaking shared references, preserves marks, and pastes
+the graph in one undoable operation. Optional model clipboard hooks and the
+Pages helper leave document text unchanged. The actual GitLab journey exposed
+its page-wide reader clipboard transformer overwriting native copy data; the
+private view now isolates handled clipboard events while leaving unhandled
+ones available to the host. Four original/copied notes and six references
+survive Save/reopen/restart, including every real forward/backlink.
+
+Validation: 6,526 root tests / 380 suites, 540 selected upstream cases with one
+inherited skip, 27 recorded service checks, six scoped accessibility scans,
+framework types, headless/package/Node/workerd, unchanged latency/retention,
+18-patch reconstruction and 28-file source rollback. Chromium and Firefox
+OS-clipboard journeys pass. Installed WebKit ports still fail the format bridge;
+minimal non-Fountain controls are retained, without synthetic-paste substitution.
+Cell-grid clipboard ownership, cut/move identity reuse, physical Safari and
+broader product acceptance remain open. The optional public API is additive;
+reviewed CommonJS aggregate capacity is 1,440 KiB; other limits and parity rows
+are unchanged. [Clipboard evidence](../artifacts/gitlab-footnote-clipboard-integration-20261115.json).
+
+Previous source/typing checkpoint:
+
 The private GitLab footnote adapter now has an actual-host two-cycle round-trip
 matrix: 65 input/edit combinations, 208 authenticated renderings, 53 accepted
 cases with equal native graphs after both reopenings, and 12 explicit source-

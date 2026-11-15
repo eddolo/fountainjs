@@ -17,6 +17,7 @@ import { auditNativeQuickActions, assertSavedNativeQuickActions } from './audit-
 import { assertSavedAutocomplete } from './audit-gitlab-native-autocomplete.mjs';
 import { auditNativeFootnotes, assertSavedNativeFootnotes } from './audit-gitlab-native-footnotes.mjs';
 import { auditNativeFootnoteRenaming } from './audit-gitlab-native-footnote-renaming.mjs';
+import { auditNativeFootnoteClipboard, assertSavedNativeFootnoteClipboard } from './audit-gitlab-native-footnote-clipboard.mjs';
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
@@ -27,7 +28,9 @@ const nativeContextMenus = process.argv.includes('--native-context-menus') || na
 const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
 const nativeAutocomplete = process.argv.includes('--native-autocomplete');
-const nativeFootnoteBoundary = process.argv.includes('--native-footnote-boundary');
+const nativeFootnoteClipboard = process.argv.includes('--native-footnote-clipboard');
+const nativeFootnoteBoundary = process.argv.includes('--native-footnote-boundary') || nativeFootnoteClipboard;
+const assertSavedFootnotes = nativeFootnoteClipboard ? assertSavedNativeFootnoteClipboard : assertSavedNativeFootnotes;
 const nativeFootnoteRenaming = process.argv.includes('--native-footnote-renaming') || nativeFootnoteBoundary;
 const nativeFootnoteEditing = process.argv.includes('--native-footnote-editing') || nativeFootnoteRenaming;
 const nativeDecodedFootnoteSource = process.argv.includes('--native-footnote-decoded-source') || nativeFootnoteEditing;
@@ -50,6 +53,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
+  nativeFootnoteClipboard ? 'artifacts/gitlab-native-footnote-clipboard-20261115/' :
   nativeFootnoteBoundary ? 'artifacts/gitlab-native-footnote-boundary-20261115/' :
   nativeFootnoteRenaming ? 'artifacts/gitlab-native-footnote-renaming-20261115/' :
   nativeFootnoteEditing ? 'artifacts/gitlab-native-footnote-editing-20261115/' :
@@ -490,6 +494,7 @@ try {
     }
     if (nativeFootnoteEditing) await auditNativeFootnotes({ page, editor, toolbar, output, report });
     if (nativeFootnoteRenaming) await auditNativeFootnoteRenaming({ page, editor, toolbar, output, report });
+    if (nativeFootnoteClipboard) await auditNativeFootnoteClipboard({ page, editor, toolbar, output, report });
     if (nativeLinks) await auditNativeLinks({ page, context, editor, toolbar, output, report });
     if (nativeCode) await auditNativeCode({ page, editor, toolbar, output, report });
     if (nativeContextMenus) await auditNativeContextMenus({ page, editor, toolbar, output, report });
@@ -715,7 +720,7 @@ try {
   if (nativeContextMenus) await assertSavedNativeContextMenus({ page, description: saved.description, report, output, phase: 'saved' });
   if (nativeQuickActions) await assertSavedNativeQuickActions({ page, saved, report, output, phase: 'saved' });
   if (nativeAutocomplete) await assertSavedAutocomplete({ page, saved, report, phase: 'saved' });
-  if (nativeFootnoteEditing) await assertSavedNativeFootnotes({ page, description: saved.description, report, phase: 'saved' });
+  if (nativeFootnoteEditing) await assertSavedFootnotes({ page, description: saved.description, report, phase: 'saved' });
   if (nativeFrontmatter) {
     await assertSavedNativeFrontmatter({ page, description: saved.description, report, output, phase: 'saved' });
     report.checks.push('Actual UI Save retains frontmatter source and delimiters; the GitLab reader and reopened native source agree');
@@ -860,7 +865,7 @@ try {
   if (nativeContextMenus) await assertSavedNativeContextMenus({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeQuickActions) await assertSavedNativeQuickActions({ page, saved: await api('GET', `/projects/${project.id}/issues/${issue.iid}`), report, output, phase: 'reopened' });
   if (nativeAutocomplete) await assertSavedAutocomplete({ page, saved: await api('GET', `/projects/${project.id}/issues/${issue.iid}`), report, phase: 'reopened' });
-  if (nativeFootnoteEditing) await assertSavedNativeFootnotes({ page, description: saved.description, report, phase: 'reopened' });
+  if (nativeFootnoteEditing) await assertSavedFootnotes({ page, description: saved.description, report, phase: 'reopened' });
   if (nativeFrontmatter) await assertSavedNativeFrontmatter({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeMedia) await assertSavedNativeMedia({ page, description: saved.description, report, output, phase: 'reopened' });
   if (nativeReferences) await assertSavedNativeReferences({ page, description: saved.description, report, output, phase: 'reopened' });
@@ -923,7 +928,7 @@ try {
     if (nativeContextMenus) await assertSavedNativeContextMenus({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeQuickActions) await assertSavedNativeQuickActions({ page, saved: reopened, report, output, phase: 'restart' });
     if (nativeAutocomplete) await assertSavedAutocomplete({ page, saved: reopened, report, phase: 'restart' });
-    if (nativeFootnoteEditing) await assertSavedNativeFootnotes({ page, description: reopened.description, report, phase: 'restart' });
+    if (nativeFootnoteEditing) await assertSavedFootnotes({ page, description: reopened.description, report, phase: 'restart' });
     if (nativeFrontmatter) await assertSavedNativeFrontmatter({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeMedia) await assertSavedNativeMedia({ page, description: reopened.description, report, output, phase: 'restart' });
     if (nativeReferences) await assertSavedNativeReferences({ page, description: reopened.description, report, output, phase: 'restart' });

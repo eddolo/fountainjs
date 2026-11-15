@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Keep copied footnote references together with their complete owned bodies.
+  Pages paste remaps colliding note identities and retains shared references,
+  nested note links and marks in one undoable operation. Add optional model
+  clipboard hooks to `PluginProps` and `createFootnoteClipboardPlugin` in the
+  Pages entry for host-specific labels and validation. Clipboard text formatting
+  leaves `Node.textContent` unchanged. A refused model paste rolls back without
+  silently retrying as lossy plain text. Table-cell selections still use their
+  separate grid clipboard path.
+
+- Isolate handled native copy/cut/paste events in the private GitLab view so its
+  page-wide reader clipboard transformer cannot overwrite Fountain's formats.
+  Unhandled events still delegate to the host.
+
 - Keep the native typing caret visible after local edits in the focused DOM
   view, including after scrolling to toolbar controls. Reveal the caret range
   through nested vertical/horizontal scrollers rather than centering a whole

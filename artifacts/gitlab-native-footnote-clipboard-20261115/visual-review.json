@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-15T20:01:55.185Z",
+  "scope": "Reviewed screenshots and sampled video frames, not the entire movie",
+  "recording": {
+    "path": "artifacts/gitlab-native-footnote-clipboard-20261115/recordings/page@c0bcfeb42ff2c9eed327b7451d4ba6a7.webm",
+    "sha256": "d48e7c05b8c54d612a5705401c07c0db628b7a743e0df36b2eea74723f4a2567",
+    "seconds": 199.24
+  },
+  "images": [
+    {
+      "path": "artifacts/gitlab-native-footnote-clipboard-20261115/footnote-toolbar-ui.png",
+      "sha256": "91fb98662b186c54c2ad9ee92cb3fde3299b4725a9c6f74c4e7a30e3951a76fa"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-clipboard-20261115/footnote-copied-graph.png",
+      "sha256": "cae72004f022c7e10e072c15376a755120099a497cb2fe8a09c5d6d270cc78d6"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-clipboard-20261115/original-reopened.png",
+      "sha256": "63871bf4152651399efe0a8da53269cd8a29b74a518e1e102ce56649474f2128"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-clipboard-20261115/original-after-restart.png",
+      "sha256": "2f0bd76cb798057e3c7285d69eef55d5511cfbd9fe92ddce775af7100261e5c9"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-clipboard-20261115/recording-copied-bodies.png",
+      "sha256": "788ca86ec31ceea2bea156181bb81befce00544a87c7e07e50710797a7b21f5a"
+    },
+    {
+      "path": "artifacts/footnote-clipboard-dedicated-20261115/footnote-clipboard-real-ke-92e49-ough-native-clipboard-input-chromium/external-plain-footnotes.png",
+      "sha256": "49ddcb2520856fac56c3928111a29fd12867a737e4a3dd2fcae4fc00a17b5352"
+    },
+    {
+      "path": "artifacts/footnote-clipboard-dedicated-20261115/footnote-clipboard-real-ke-92e49-ough-native-clipboard-input-chromium/same-editor-pasted-notes.png",
+      "sha256": "44f2e521e8bcd26e3b45bf0978055b832c0566c5ff15385bad2f3e2ba78aab90"
+    },
+    {
+      "path": "artifacts/footnote-clipboard-dedicated-20261115/footnote-clipboard-real-ke-92e49-ough-native-clipboard-input-firefox/external-plain-footnotes.png",
+      "sha256": "abdd8e589d9430fd42f57645d338bdc7c69a3f692c8f6d297f6fc014c2a27a03"
+    },
+    {
+      "path": "artifacts/footnote-clipboard-dedicated-20261115/footnote-clipboard-real-ke-92e49-ough-native-clipboard-input-firefox/same-editor-pasted-notes.png",
+      "sha256": "22cda55ed04832a72d60862bd16b0e41c5939878d8a86e2e0508c991fff08ca5"
+    }
+  ],
+  "samples": {
+    "overview": "7.5 seconds then every 15 seconds, 13 populated frames",
+    "copyWindow": "76.25 through 83.75 seconds at 0.5-second intervals, 16 frames",
+    "fullFrame": 83.25
+  },
+  "findings": [
+    "Plain-text destinations contain readable reference labels and complete note bodies.",
+    "Rich paste shows separate original/copied numbering and preserved bold note bodies.",
+    "All four bodies remain visible in the saved and restarted reader.",
+    "Toolbar attachment, paste and contextual controls retain one desktop row."
+  ],
+  "limits": [
+    "Physical Safari and installed WebKit OS-format validation remain open."
+  ]
+}

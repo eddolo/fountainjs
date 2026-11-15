@@ -76,7 +76,8 @@ try {
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--footnote-boundary') ? '--native-footnote-boundary'
+      process.argv.includes('--footnote-clipboard') ? '--native-footnote-clipboard'
+        : process.argv.includes('--footnote-boundary') ? '--native-footnote-boundary'
         : process.argv.includes('--footnote-renaming') ? '--native-footnote-renaming'
         : process.argv.includes('--footnote-editing') ? '--native-footnote-editing'
         : process.argv.includes('--footnote-decoded-source') ? '--native-footnote-decoded-source'

@@ -31,6 +31,8 @@ import { GitLabReferenceEditingSession, type GitLabReferenceSnapshot } from './r
 import { beginGitLabFootnoteInsertion } from './footnote_editing';
 import { GitLabFootnoteRenameSession, type GitLabFootnoteRenameSnapshot } from './footnote_renaming';
 import { gitLabFootnoteBoundary } from './footnote_boundary';
+import { createFootnoteClipboardPlugin } from 'fountainjs-editor/pages';
+import { namespaceGitLabFootnotes } from './footnote_labels';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
@@ -150,7 +152,11 @@ export class GitLabContentEditor {
           handleBeforeInput: (editor, event) => !event.isComposing && event.inputType?.startsWith('format')
             && (Boolean(getGitLabCodeContext(editor)) || selectionIncludesGitLabFrontmatter(editor)) || (alertInput?.spec.props?.handleBeforeInput?.(editor, event) ?? false),
           handlePaste: (editor, event) => alertInput?.spec.props?.handlePaste?.(editor, event) ?? false,
-        } }), quickActionPlugin, autocompletePlugin, ...kit.plugins, createGitLabReferenceNavigationPlugin()],
+        } }), quickActionPlugin, autocompletePlugin, ...kit.plugins,
+        createFootnoteClipboardPlugin({ prepareDocument: namespaceGitLabFootnotes,
+          label: node => String(node.attrs.gitlabFootnoteLabel ?? node.attrs.id),
+          validateDocument: document => { this.codec.serialize({ doc: document }); } }),
+        createGitLabReferenceNavigationPlugin()],
         editable: options.editable,
       });
     } catch (error) {

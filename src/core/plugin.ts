@@ -2,6 +2,7 @@ import type { Editor } from './editor';
 import type { EditorState } from './state';
 import type { Transaction } from './transaction';
 import type { Decoration, DecorationSet } from './decoration';
+import type { Node } from './schema';
 import type { GlobalConstructorInstance } from './platform';
 
 let pluginId = 0;
@@ -38,6 +39,12 @@ export interface PluginProps {
   handleCopy?: (editor: Editor, event: GlobalConstructorInstance<'ClipboardEvent', any>) => boolean;
   handleCut?: (editor: Editor, event: GlobalConstructorInstance<'ClipboardEvent', any>) => boolean;
   handlePaste?: (editor: Editor, event: GlobalConstructorInstance<'ClipboardEvent', any>) => boolean;
+  /** Adds owned model dependencies to a copied fragment without changing the selection or document. */
+  transformCopiedDocument?: (editor: Editor, document: Node) => Node;
+  /** Overrides this node's clipboard text; use serialize on children, leaving model textContent unchanged. */
+  serializeCopiedNode?: (editor: Editor, node: Node, serialize: (child: Node) => string) => string | undefined;
+  /** Undefined delegates; true consumes the parsed paste; false refuses it atomically, without a text fallback. */
+  handlePasteDocument?: (editor: Editor, document: Node, context: { readonly source: 'fountain' | 'html' }) => boolean | undefined;
   handleDrop?: (editor: Editor, event: GlobalConstructorInstance<'DragEvent', any>) => boolean;
   /** Handle document chrome before the browser places a caret or changes focus. */
   handlePointerDown?: (editor: Editor, event: GlobalConstructorInstance<'PointerEvent', any>) => boolean;

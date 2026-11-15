@@ -7,6 +7,19 @@ and removal in `src/pages/index.ts`; it does not introduce another engine.
 
 ## Current implementation — November 15
 
+Clipboard references now carry complete owned definitions through the model
+hooks in `src/pages/clipboard.ts`. Collisions get new native IDs; the existing
+`namespaceGitLabFootnotes` assigns fresh source labels. Shared references and
+marks remain connected, root placement is retained, and paste rolls back as
+one operation on refusal. The live application exposed GitLab's global reader
+copy transformer overwriting those formats; `fountain_editor_surface.vue`
+isolates only already-handled clipboard events. Four original/copied definitions
+and six references retain body/mark/source semantics and real reader navigation
+through Save/reopen/restart in the 27-check profile. Root tests pass 6,526 cases;
+selected upstream tests pass 540 with one inherited skip. Cell-grid clipboard,
+cut/move identity reuse and physical Safari remain separate required matrices.
+[Clipboard evidence](../../artifacts/gitlab-footnote-clipboard-integration-20261115.json).
+
 The actual-host round-trip corpus now covers 65 input/edit combinations and 208
 renderer responses. Fifty-three accepted cases retain the native graph through
 two edit/export/reopen cycles; twelve explicit refusals retain original source.

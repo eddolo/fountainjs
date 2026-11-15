@@ -1,5 +1,23 @@
 # GitLab application integration
 
+Latest checkpoint: footnote clipboard ownership and host event isolation. Copy
+includes complete owned definitions; paste remaps collisions and preserves
+shared references, marks and root placement in one undoable operation. A real
+application failure exposed its global reader copy handler overwriting native
+data; the view now isolates handled clipboard events. Four definitions and six
+references survive Save/reopen/restart with all real links/backlinks verified.
+Validation passes 6,526 root cases, 540 upstream cases (one inherited skip), 27
+recorded service checks, six scoped accessibility scans, types, package/Node/
+workerd, size/runtime gates, 18 patches and 28-file rollback/reinstall.
+Chromium/Firefox OS clipboard journeys pass. Installed WebKit format-bridge
+failures, cell-grid ownership, cut/move identity reuse and broader product
+acceptance remain open. [Evidence](../../artifacts/gitlab-footnote-clipboard-integration-20261115.json).
+
+After the runtime build/install and frontend preparation below, the isolated
+Linux audit command is
+`node scripts/run-gitlab-native-browser-audit.mjs --footnote-clipboard`.
+It includes actual application restart and stops the task container afterward.
+
 This is the integration work area, not a finished replacement or a flagship
 application. The current website issue-description example is a smaller workflow
 lab and does not satisfy this project's acceptance criteria.
