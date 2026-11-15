@@ -5,6 +5,62 @@ and import remain unfinished. Fountain already has portable footnote nodes,
 numbering, insertion, reconnection, selection and removal in `src/pages/index.ts`.
 The next work is a source-aware host bridge, not another document engine.
 
+## Source/render checkpoint — November 14–15
+
+The installed guard now handles labels whose entity/escape decoding produces
+brackets or ASCII spaces. Two parent-codec witnesses show those hidden bodies
+vanishing after an unrelated edit. The inspection schema now accepts decoded
+metadata while qualifying it against raw, space-free candidate syntax through
+Fountain's own parser. Inspection values never become native IDs. The actual
+13-check browser profile verifies escaped-label paste refusal, entity-space
+failed-load recovery/cancel and exact server source after restart.
+
+Forty-seven authenticated normal and forty-two verification renderings
+now live in `fixtures/footnote-probe-live-html.json`. The bounded
+`footnote_rendering.ts` prelude exposes ordinary unused bodies through the real
+host, after validated frontmatter and outside trailing unclosed fences.
+`footnote_projection.ts` verifies/removes the carrier, checks source definition
+counts, resolves response-local link/ordinal relations and creates carriers for
+the existing native nodes. Raw authored labels remain separate from safe,
+collision-checked IDs. `footnote_nodes.ts` supplies matching headless/DOM rules.
+Invalid authored labels cannot fall through to generic native parsing and lose
+their metadata; a valid native ID/raw backslash label survives headless HTML
+fragment export/reopen. These three adapter modules are not yet wired into the
+installed editor.
+
+The new evidence adds important requirements, not permission to drop guards:
+
+- A raw-label probe still cannot expose some entity/escaped-label bodies.
+  Missing source definitions must refuse projection, including a syntactically
+  valid response whose diagnostic paragraph was removed successfully.
+- Duplicate definitions can share visible reference numbers while different
+  links target different bodies. Adding a probe reference can change which body
+  an existing link reaches. Response-local href joins take precedence over
+  ordinals, but duplicate-label normalization remains refused pending a complete
+  source/export/rename policy. Never infer a stable ID from the generated href.
+- Source-authored raw HTML can retain `data-footnote-backref`. Removing every
+  such anchor deletes authored content. Ownership checks require unique expected
+  indices and known generated structure; ambiguity refuses before removing links.
+- Prefixing a document with a leading BOM changes whether the BOM is treated as source
+  text. That projection is refused until a verified mapping preserves its role.
+- The actual preview collapses CR-only input in the captured case. Synthetic
+  CR offset-index tests do not prove host newline equivalence; the source-count
+  check refuses the resulting incomplete projection. Host parser positions must
+  be mapped through verified server preprocessing, rather than assumed to index
+  every request string verbatim.
+- Probe insertion changes host numbering. Definition order is restored from
+  original references after removing the probe; genuinely unused bodies follow.
+- Combined original/probe reference limits, original reference preservation,
+  body source links, cross-paste label collisions and canonical serialization
+  still need complete acceptance before native import/authoring is enabled.
+
+The 110 projection cases, existing source/position cases and other GitLab models
+total 954 passes. The selected upstream set has 536 passes and one inherited
+skip; types, frontend build, eighteen patch reconstruction and 28-file source
+rollback pass. The source guard is installed and browser-verified; native note
+import/export, controls and the full product/browser/role matrix remain open.
+[Evidence](../../artifacts/gitlab-footnote-projection-integration-20261115.json).
+
 `services/footnote_positions.ts` now implements the first source-position
 boundary: inclusive one-based UTF-8 columns become exact half-open JavaScript
 offsets in the original renderer input. It refuses invalid boundaries, malformed

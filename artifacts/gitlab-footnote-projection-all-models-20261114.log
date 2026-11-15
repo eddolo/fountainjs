@@ -1,0 +1,12 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+
+ Test Files  34 passed (34)
+      Tests  954 passed (954)
+   Start at  00:10:22
+   Duration  11.95s (import 32%, environment 30%, transform 19%, tests 17%, worker 1%)
+
+     Import  141 modules were evaluated 285 times · 5.76s total, 32% of tracked time
+             ~657ms faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

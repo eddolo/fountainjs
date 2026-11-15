@@ -1,0 +1,24 @@
+{
+  "scope": "Actual parent codec plus captured authenticated host HTML; temporary source copies removed after the test",
+  "parent": "c6d218609c5f3465917d73bbaf75403584b4d6ae",
+  "rows": [
+    {
+      "name": "escaped-opening-label",
+      "source": "Body[^a\\[b].\n\n[^a\\[b]: Escaped bracket.",
+      "actualHostHTML": "<p data-sourcepos=\"1:1-1:12\" dir=\"auto\">Body[^a[b].</p>",
+      "exactBeforeEdit": true,
+      "parentExportAfterUnrelatedEdit": "Body\\[^a\\[b\\].\n\nUnrelated edit.",
+      "sourceBodyLostBefore": true,
+      "currentRefusesWithExactOriginal": true
+    },
+    {
+      "name": "ascii-entity-label",
+      "source": "Body[^a&#32;b].\n\n[^a&#32;b]: Entity space.",
+      "actualHostHTML": "<p data-sourcepos=\"1:1-1:15\" dir=\"auto\">Body[^a b].</p>",
+      "exactBeforeEdit": true,
+      "parentExportAfterUnrelatedEdit": "Body\\[^a b\\].\n\nUnrelated edit.",
+      "sourceBodyLostBefore": true,
+      "currentRefusesWithExactOriginal": true
+    }
+  ]
+}

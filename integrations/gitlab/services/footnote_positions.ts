@@ -1,4 +1,4 @@
-/** Source offsets belong to the exact Markdown sent to GitLab's renderer. */
+/** Index the host parser's actual source; request preprocessing needs its own verified map. */
 export interface GitLabFootnoteSpan { readonly from: number; readonly to: number }
 interface SourceLine { from: number; to: number; boundaries?: Int32Array }
 const byteWidth = (point: number): number => point <= 0x7f ? 1 : point <= 0x7ff ? 2 : point <= 0xffff ? 3 : 4;
@@ -7,6 +7,7 @@ const byteWidth = (point: number): number => point <= 0x7f ? 1 : point <= 0x7ff 
  * Bridge inclusive, one-based UTF-8 source columns to half-open JS offsets.
  * This does not parse footnotes, derive identities or trust generated anchors.
  * A position inside a multibyte character is refused rather than rounded.
+ * It does not assume the host preserves CR/BOM request text before parsing.
  */
 export class GitLabFootnotePositions {
   private readonly lines: SourceLine[] = [];

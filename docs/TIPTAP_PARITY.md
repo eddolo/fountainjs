@@ -1,6 +1,17 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-## Current programme status — 2026-11-14
+## Current programme status — 2026-11-15
+
+The installed source-loss guard now covers decoded bracket/ASCII-space labels,
+with two actual parent-codec counterexamples and a passing 13-check recorded
+service profile through restart. A 47-case host-render corpus supports an
+unwired native footnote adapter model. Its 110 cases plus the other GitLab models
+total 954 passes; 536 selected upstream cases and TypeScript also pass, with
+one inherited skip. Native note import/export/authoring remain unfinished.
+Duplicate-label navigation, source-authored back-reference attributes and host
+BOM/CR behavior have explicit refusal/acceptance requirements. No footnote
+capability row or full GitLab replacement claim is promoted.
+[Evidence](../artifacts/gitlab-footnote-projection-integration-20261115.json).
 
 The private native-footnote bridge now maps the captured host positions to exact
 source labels across all 23 renderer fixtures, with 47 source-position cases and

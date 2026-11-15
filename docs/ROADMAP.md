@@ -1,6 +1,19 @@
 # FountainJS roadmap
 
-Updated 2026-11-14.
+Updated 2026-11-15.
+
+The installed GitLab footnote guard now covers hidden definitions whose decoded
+labels contain brackets or ASCII spaces. Two real parent-codec witnesses lose
+these bodies after unrelated edits; the repaired 13-check service profile
+retains paste/load source and exact server Markdown through restart. The new
+source/render adapter model uses 47 authenticated cases and existing native
+footnote nodes. It is not yet installed: ambiguous back-reference markup,
+duplicate-label navigation, hidden entity bodies, BOM/CR behavior, source/export,
+paste collisions, authoring and full host matrices remain acceptance work.
+All 954 GitLab model cases, 536 upstream passes (one inherited skip), TypeScript,
+frontend build and source rollback/patch checks pass. No parity row or package
+release is promoted.
+[Evidence](../artifacts/gitlab-footnote-projection-integration-20261115.json).
 
 The native footnote bridge now has an exact UTF-8-source-position foundation.
 Forty-seven cases, including all 23 actual host renderings, verify label spans,

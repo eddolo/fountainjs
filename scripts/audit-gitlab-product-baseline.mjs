@@ -25,7 +25,8 @@ const nativeContextMenus = process.argv.includes('--native-context-menus') || na
 const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
 const nativeAutocomplete = process.argv.includes('--native-autocomplete');
-const nativeFootnoteSource = process.argv.includes('--native-footnote-source');
+const nativeDecodedFootnoteSource = process.argv.includes('--native-footnote-decoded-source');
+const nativeFootnoteSource = process.argv.includes('--native-footnote-source') || nativeDecodedFootnoteSource;
 const nativeQuickActionControls = process.argv.includes('--native-quick-action-controls') || nativeAutocomplete;
 const nativeQuickActions = process.argv.includes('--native-quick-actions') || nativeQuickActionControls;
 const nativeDiagramAuthoring = process.argv.includes('--native-diagram-authoring');
@@ -44,6 +45,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
+  nativeDecodedFootnoteSource ? 'artifacts/gitlab-native-footnote-decoded-source-20261114/' :
   nativeFootnoteSource ? 'artifacts/gitlab-native-footnote-source-20261114/' :
   nativeAutocomplete ? 'artifacts/gitlab-native-autocomplete-20261114/' : nativeQuickActionControls ? 'artifacts/gitlab-native-quick-action-controls-20261114/' : nativeQuickActions ? 'artifacts/gitlab-native-quick-actions-20261114/' : nativeContextUI ? 'artifacts/gitlab-native-context-ui-20261113/' : nativeContextMenus ? 'artifacts/gitlab-native-context-menus-20261113/' : nativeFrontmatter ? 'artifacts/gitlab-native-frontmatter-20261113/' : nativeDiagramReader ? 'artifacts/gitlab-native-diagram-reader-20261113/' : nativeDiagramAuthoring ? 'artifacts/gitlab-native-diagram-authoring-20261113/' : nativeDiagrams ? 'artifacts/gitlab-native-diagrams-20261112/' : nativeReferenceContexts ? 'artifacts/gitlab-native-reference-contexts-20261112/' : nativeReferences ? 'artifacts/gitlab-native-references-20261112/' : nativeMediaFiles ? 'artifacts/gitlab-native-media-files-20261112/' : nativeMedia ? 'artifacts/gitlab-native-media-20261112/' : nativeAlerts ? 'artifacts/gitlab-native-alerts-20261112/' : nativeCode ? 'artifacts/gitlab-native-code-20261112/' : nativeLinks
     ? debugLinks ? 'artifacts/gitlab-native-link-debug-20261112/' : 'artifacts/gitlab-native-links-20261112/'
@@ -425,7 +427,8 @@ try {
       await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
       await expect(editor.getByText('GitLab Markdown', { exact: true })).toBeVisible();
       const beforeFailure = await editor.innerText();
-      const rejected = nativeFootnoteSource ? 'Visible paste.\n\n[^source]: Keep this exact unused source.'
+      const rejected = nativeDecodedFootnoteSource ? 'Visible paste.\n\n[^a\\[b]: Keep this exact unused source.'
+        : nativeFootnoteSource ? 'Visible paste.\n\n[^source]: Keep this exact unused source.'
         : 'Unsupported footnote [^source].\n\n[^source]: Keep this exact source.';
       const rejectedPreview = nativeFootnoteSource ? page.waitForResponse(response => {
         try { return response.request().method() === 'POST' && response.url().includes('no_header_anchors=') && response.request().postDataJSON()?.text === rejected; }
@@ -442,7 +445,8 @@ try {
         expect(rendered.body).toContain('Visible paste.');
         expect(rendered.body).not.toContain('Keep this exact unused source.');
         expect(rendered.body).not.toContain('class="footnotes"');
-        report.nativeFootnoteSource = { pasteRenderingOmitsDefinition: true, failedPasteRetained: true };
+        report.nativeFootnoteSource = { pasteRenderingOmitsDefinition: true, failedPasteRetained: true,
+          ...(nativeDecodedFootnoteSource ? { decodedLabelProfile: true, rejectedPasteSource: rejected } : {}) };
       }
       await retained.scrollIntoViewIfNeeded();
       await page.screenshot({
@@ -775,7 +779,8 @@ try {
     );
   }
   if (nativeComponent) {
-    const rejectedSource = nativeFootnoteSource ? 'Visible saved body.\n\n[^original]: Keep the saved unused footnote unchanged.'
+    const rejectedSource = nativeDecodedFootnoteSource ? 'Visible saved body.\n\n[^a&#32;b]: Keep the saved unused footnote unchanged.'
+      : nativeFootnoteSource ? 'Visible saved body.\n\n[^original]: Keep the saved unused footnote unchanged.'
       : 'Unsupported footnote [^original].\n\n[^original]: Keep the saved original unchanged.';
     const rejectedIssue = await api('POST', `/projects/${project.id}/issues`, {
       data: { title: 'Native failed-load recovery audit', description: rejectedSource },

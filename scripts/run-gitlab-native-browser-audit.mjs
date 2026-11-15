@@ -37,7 +37,8 @@ try {
   execFileSync(
     process.execPath,
     [
-      resolve(root, ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands', '--autocomplete-fixtures', '--footnote-fixtures'].some(flag => process.argv.includes(flag)) ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      resolve(root, ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands', '--autocomplete-fixtures', '--footnote-fixtures', '--footnote-probe-fixtures'].some(flag => process.argv.includes(flag)) ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
+      ...(process.argv.includes('--footnote-probe-fixtures') ? ['--footnote-probe'] : []),
       ...(process.argv.includes('--footnote-fixtures') ? ['--footnotes'] : []),
       ...(process.argv.includes('--autocomplete-fixtures') ? ['--autocomplete'] : []),
       ...(process.argv.includes('--quick-action-commands') ? ['--quick-action-commands'] : []),
@@ -47,7 +48,8 @@ try {
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--footnote-source') ? '--native-footnote-source'
+      process.argv.includes('--footnote-decoded-source') ? '--native-footnote-decoded-source'
+        : process.argv.includes('--footnote-source') ? '--native-footnote-source'
         : process.argv.includes('--autocomplete') ? '--native-autocomplete'
         : process.argv.includes('--quick-action-controls') ? '--native-quick-action-controls'
         : process.argv.includes('--quick-actions') ? '--native-quick-actions'

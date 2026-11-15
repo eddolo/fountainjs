@@ -9,6 +9,35 @@ accounts, projects, storage, uploads, authorization, issue/MR/wiki workflows and
 collaboration services. These services remain real GitLab services. Recreating
 their controls with local-only state does not meet the requirement.
 
+## Decoded footnote retention and adapter model — November 14–15
+
+The installed guard now protects hidden definitions whose decoded labels contain
+brackets or ASCII spaces. Actual parent-codec witnesses reproduce body loss on
+an unrelated edit. The current native service profile passes 13 recorded checks,
+including escaped-label paste refusal, entity-space failed-load recovery/cancel
+and unchanged server source after restart. This is a source-loss repair, not
+completed native footnote authoring.
+
+Forty-seven normal and forty-two verification renderings additionally exercise
+a bounded, read-only prelude for unused bodies. The unwired adapter model
+retains raw labels, uses the existing native footnote nodes and validates
+response-local reference ownership. It refuses missing definitions, ambiguous
+source-authored back-reference markup, duplicate-label navigation hazards, BOM
+role changes and the captured CR-only mismatch. Source/export, paste-label
+collisions, authoring and full host acceptance remain in the adapter plan.
+All 954 GitLab model cases, 536 selected upstream cases (one inherited skip),
+TypeScript, frontend build, source rollback and patch checks pass.
+
+```sh
+node scripts/build-gitlab-footnote-probe.mjs
+# In Linux, after the normal native runtime install and host frontend build:
+node scripts/run-gitlab-native-browser-audit.mjs --footnote-probe-fixtures
+node scripts/run-gitlab-native-browser-audit.mjs --footnote-decoded-source
+```
+
+[Evidence and limits](../../artifacts/gitlab-footnote-projection-integration-20261115.json).
+[Remaining adapter work](FOOTNOTE_ADAPTER_PLAN.md).
+
 ## Uploaded-image restart investigation — November 14
 
 The earlier image failure is now correlated with an authenticated Rails HTTP

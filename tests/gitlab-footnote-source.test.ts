@@ -2,6 +2,7 @@ import { expect, it } from 'vitest';
 import { Schema } from 'fountainjs-editor';
 import { GitLabMarkdownCodec, GitLabMarkdownConversionError, createGitLabSchemaSpec } from '../integrations/gitlab/services/markdown_codec';
 import live from '../integrations/gitlab/fixtures/footnote-live-html.json';
+import decoded from '../integrations/gitlab/fixtures/footnote-probe-live-html.json';
 import { gitLabHasFootnoteDefinitions } from '../integrations/gitlab/services/footnote_source';
 import { transformGitLabQuickActions } from '../integrations/gitlab/services/quick_actions';
 
@@ -59,4 +60,19 @@ it('bounds the extra source inspection and leaves ordinary source on the fast pa
 it('still detects an unused definition after host quick-action isolation', () => {
   const source = '/close\n\n[^unused]: Keep this source.';
   expect(gitLabHasFootnoteDefinitions(transformGitLabQuickActions(source), 1_048_576)).toBe(true);
+});
+
+it.each(['escaped-opening-label', 'entity-label', 'ascii-entity-label', 'decoded-bracket-entity'])('retains the actual omitted %s source even when decoding produces an invalid native ID', async name => {
+  const fixture = decoded.fixtures.find(item => item.name === name)!;
+  expect(fixture.body).not.toContain('class="footnotes"');
+  expect(gitLabHasFootnoteDefinitions(fixture.source, 1_048_576)).toBe(true);
+  const schema = new Schema(createGitLabSchemaSpec());
+  const codec = new GitLabMarkdownCodec({ renderMarkdown: async () => ({ body: fixture.body }) });
+  await expect(codec.deserialize({ schema, markdown: fixture.source, signal: new AbortController().signal })).rejects.toMatchObject({
+    originalMarkdown: fixture.source, issues: expect.arrayContaining([expect.objectContaining({ code: 'footnote-source' })]),
+  });
+});
+it('does not promote a spaced literal definition because a code example contains an eligible candidate', () => {
+  const fixture = decoded.fixtures.find(item => item.name === 'literal-code-and-spaced')!;
+  expect(gitLabHasFootnoteDefinitions(fixture.source, 1_048_576)).toBe(false);
 });

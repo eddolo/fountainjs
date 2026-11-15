@@ -1,5 +1,21 @@
 # Release and API stability policy
 
+## Private GitLab decoded footnote retention — 2026-11-15
+
+Protect hidden definitions whose decoded labels contain brackets or ASCII
+spaces. Two actual parent-codec witnesses reproduce body loss after unrelated
+edits; the installed repair passes the recorded 13-check native service journey
+through paste, failed load/recovery/cancel and restart. The source/render bridge
+now has 47 authenticated fixtures and native node adapters, still outside the
+installed editor pending complete source/export and authoring acceptance.
+
+All 954 GitLab model cases, 536 selected upstream cases (one inherited skip),
+TypeScript, actual frontend build and source rollback/patch checks pass. Public
+engine/package/API/size limits remain unchanged. No npm version or parity row is
+promoted. Earlier environment startup failures and the intermittent image 403
+remain separate findings; the passing run is not presented as their repair.
+[Evidence and remaining work](../artifacts/gitlab-footnote-projection-integration-20261115.json).
+
 ## Private GitLab footnote position bridge — 2026-11-14
 
 Add a bounded, DOM-free UTF-8-to-JavaScript source-span index for the planned

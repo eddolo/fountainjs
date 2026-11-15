@@ -1,0 +1,142 @@
+{
+  "date": "2026-11-15",
+  "started": "2026-11-14",
+  "status": "decoded-source-loss-repair-plus-unwired-footnote-adapter-model",
+  "parentRevision": "c6d218609c5f3465917d73bbaf75403584b4d6ae",
+  "previousGoalTurn": "Progress: c6d21860 added verified UTF-8 source-position mapping; a52248d9 added request-correlated image evidence. Neither completed native footnote authoring.",
+  "installedRepair": {
+    "file": "integrations/gitlab/services/footnote_source.ts",
+    "parentLossWitness": "artifacts/gitlab-footnote-decoding-loss-witness-20261114.json",
+    "problem": "The inspection schema rejected decoded brackets/ASCII spaces as if they were native IDs, so real renderer-hidden definitions could vanish on unrelated canonical edits",
+    "behavior": "Qualify raw space-free candidates with the same parser, accept decoded inspection metadata, refuse incomplete conversion with exact original retained. Inspector IDs never become editor IDs or DOM anchors.",
+    "bounds": "Source bytes, 4096-character raw labels and the 1000-candidate host reference limit; ordinary source remains on the no-candidate fast path"
+  },
+  "foundation": {
+    "installed": false,
+    "fixture": "integrations/gitlab/fixtures/footnote-probe-live-html.json",
+    "authenticatedNormalRenderings": 47,
+    "authenticatedProbeRenderings": 42,
+    "files": [
+      "integrations/gitlab/services/footnote_rendering.ts",
+      "integrations/gitlab/services/footnote_projection.ts",
+      "integrations/gitlab/services/footnote_nodes.ts"
+    ],
+    "proven": [
+      "Ordinary unused bodies are exposed by the actual host through a separate, bounded prelude after validated frontmatter, including before trailing unclosed code",
+      "The marker is checked against source positions and rendered text; the verified carrier is removed and remaining positions are rebased",
+      "Original source definition counts are required for probe acceptance; unresolved entity/escape bodies remain an explicit failure",
+      "Safe unique native IDs remain separate from raw Unicode/case/percent/backslash labels; actual host relations handle STRASSE/Straße",
+      "Native body carriers retain ordinary marks, paragraphs, lists and link/math carriers; the whole document still needs existing GLFM adapters",
+      "Generated back-reference ownership is checked before removal; source-authored lookalikes are refused intact",
+      "First-reference definition order is restored after removing the probe; unused definitions follow",
+      "Invalid authored labels cannot fall through to bare native parsing; valid note IDs and a raw backslash label survive headless HTML fragment export/reopen"
+    ],
+    "refused": [
+      "Unresolved source definitions",
+      "Source-authored/ambiguous back-reference metadata",
+      "Duplicate labels whose navigation changes under probing",
+      "BOM role changes",
+      "Captured CR-only input collapse",
+      "Malformed/out-of-bounds/unsafe or colliding identities"
+    ],
+    "tests": "110 projection cases plus the existing source, position and other GitLab model tests; no browser or end-to-end native authoring claim for these unwired modules"
+  },
+  "validation": {
+    "gitLabModels": {
+      "suites": 34,
+      "passed": 954,
+      "log": "artifacts/gitlab-footnote-projection-all-models-20261114.log"
+    },
+    "upstream": {
+      "suites": 23,
+      "passed": 536,
+      "skipped": 1,
+      "failed": 0,
+      "report": "artifacts/gitlab-footnote-projection-upstream-20261114.json"
+    },
+    "types": "pnpm exec tsc --noEmit: exit 0",
+    "frontend": {
+      "status": "passed",
+      "result": "Rspack 2.2.8 compiled with 2 warnings in 82.85 s"
+    },
+    "patches": "artifacts/gitlab-native-footnote-projection-patch-verification-20261114.json",
+    "sourceRollback": "artifacts/gitlab-native-footnote-projection-install-roundtrip-20261114.json"
+  },
+  "browser": {
+    "status": "passed",
+    "checks": 13,
+    "report": "artifacts/gitlab-native-footnote-decoded-source-20261114/report.json",
+    "issue": {
+      "iid": 142,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/142"
+    },
+    "recoveryIssue": {
+      "iid": 143,
+      "originalSourceUnchanged": true,
+      "recoveryDraftCancelled": true
+    },
+    "decodedSource": {
+      "pasteRenderingOmitsDefinition": true,
+      "failedPasteRetained": true,
+      "decodedLabelProfile": true,
+      "rejectedPasteSource": "Visible paste.\n\n[^a\\[b]: Keep this exact unused source.",
+      "savedRenderingOmitsDefinition": true,
+      "originalSource": "Visible saved body.\n\n[^a&#32;b]: Keep the saved unused footnote unchanged.",
+      "restartOriginalPreserved": true
+    },
+    "runtimeSha256": "8368cb181f7747e9975cf799ee0f925789e0c35436c7cee814f175efe138466e",
+    "runtimeBytes": 1610723,
+    "visualReview": "Four full-size screenshots (retained paste, failed load, explicit local recovery, decoded image after restart), sampled video frames and a 40-frame 2fps contact sheet of 75–95 seconds. Not frame-by-frame; early recording includes readiness/navigation waits.",
+    "video": {
+      "path": "artifacts/gitlab-native-footnote-decoded-source-20261114/recordings/page@d6abead326af2d4a7039ebb48838eba9.webm",
+      "localOnly": true,
+      "bytes": 3994399,
+      "seconds": 207.52,
+      "sha256": "bacf585b4b263ab9dabb1705a1e99089835f3c4cd526024d51d7402862212612"
+    },
+    "contactSheet": "artifacts/gitlab-native-footnote-decoded-source-20261114/video-75-95-contact.png",
+    "errors": []
+  },
+  "environment": {
+    "stopped": true,
+    "diagnosticMount": false,
+    "earlierAttempts": [
+      {
+        "result": "failed-startup",
+        "exit": 1,
+        "oom": false,
+        "finished": "2026-11-14T23:29:09.455396155Z",
+        "category": "runit postgresql/log force-reload failed during reconfigure; readiness capture then exited unsuccessfully"
+      },
+      {
+        "result": "standalone-40-case-capture-passed",
+        "laterContainerExit": 255,
+        "oom": false,
+        "finished": "2026-11-14T23:35:08.900392284Z",
+        "cause": "Not established; do not present a subsequent pass as an infrastructure repair"
+      },
+      {
+        "result": "wrapped-47-case-capture-passed",
+        "cleanStop": true
+      }
+    ],
+    "originalIntermittentImage403": "Still open; this passing reader-image restart does not repair or explain that earlier finding"
+  },
+  "remaining": [
+    "Wire complete native import/export and source ownership",
+    "Resolve nonreferencable entity/escape bodies, duplicate-label policy and BOM/CR semantics",
+    "Validate combined source/probe reference limits and preservation of original references",
+    "Handle cross-paste label collisions",
+    "Add insert/edit/rename/navigation/deletion and author/reader unused-note presentation",
+    "Verify actual issue/MR/discussion/wiki, permission and browser matrices plus compiled deployment rollback"
+  ],
+  "publicState": "No public engine/API/package/version/budget change and no parity row or publication claim",
+  "inputs": {
+    "integrations/gitlab/services/footnote_source.ts": "ae724e02065ac198f1f7f3364b82871b57c159ce60f494cdde41faea9fc29595",
+    "integrations/gitlab/fixtures/footnote-probe-live-html.json": "cd0e0329a531e3dbdaf262c21e059d207358de3839fc8e4f4119895a8bd98e70",
+    "tests/gitlab-footnote-projection.test.ts": "abea879e0144c4bcd830fe6a7ea689987d1a14eeebe957da201138e3366fdfc0",
+    "integrations/gitlab/services/footnote_rendering.ts": "18f009bfb0246a01eeada0f716f21a393f0ddca636852bb32b17f7014f7334bb",
+    "integrations/gitlab/services/footnote_projection.ts": "23759b7bb27d073a52d9890065ca7a8f7405998170a4fe0ba5e6c87bebaf068c",
+    "integrations/gitlab/services/footnote_nodes.ts": "e87dc825e6ca2d8d43227186ddd9cef55908b70a2572c3e5bd0dc83af95d7d76"
+  }
+}
