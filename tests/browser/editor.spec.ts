@@ -1,4 +1,5 @@
 import { readFile, writeFile } from 'node:fs/promises';
+import { inlineAtomEndJourney } from './inline-atom-end-journey';
 import { expect, test, type Locator } from '@playwright/test';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { wordBodyWithFields, wordBodyWithNestedField } from '../fixtures/docx-body-fields';
@@ -972,6 +973,10 @@ test('keeps comparison names separate from their copy in a mobile desktop-site v
     expect(row.contained).toBe(true);
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
+test('keeps End and typing in the paragraph after a trailing inline atom', async ({ page }, info) => {
+  await inlineAtomEndJourney(page, info);
 });
 
 test('renders, edits, and measures portable page intent in a real browser', async ({ page }) => {

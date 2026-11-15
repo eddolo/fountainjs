@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-15T01:44:31.678Z",
+  "scope": "Public browser renderer: End/typing beside a trailing inline atom",
+  "status": "passed",
+  "cause": "An empty text wrapper after an uneditable inline atom lacked a native line endpoint; Chromium End moved to a later root paragraph.",
+  "repair": "Reuse the view-only caret placeholder after a final inline atom; simplify the equivalent all-empty-runs check. No model character or hard break is added.",
+  "witness": "artifacts/footnote-end-diagnosis-20261115.json",
+  "regression": "tests/browser/inline-atom-end-journey.ts",
+  "browsers": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "cases": [
+    "footnote_reference",
+    "inline_math"
+  ],
+  "checks": [
+    "Native click, End and typing remain in the original paragraph",
+    "Following paragraph and note body stay intact",
+    "Undo/redo preserve the correct paragraph",
+    "No additional model hard break or visual line is introduced"
+  ],
+  "broadUnitCheckpoint": {
+    "passed": 6380,
+    "suites": 372
+  },
+  "validation": {
+    "api": "450 declaration files",
+    "package": "passed",
+    "types": "passed",
+    "size": "passed with existing limits"
+  },
+  "sourceSha256": "1d698f6b49de73cc535c439ce6c37455edc579ec548a789a303ae9cddf3df7b6",
+  "limits": "Three desktop engines and these atom fixtures; not a full mobile/IME or every custom NodeView matrix."
+}

@@ -176,11 +176,12 @@ function needsCaretPlaceholder(path: readonly number[], context: DOMRenderContex
   try { parent = getNodeAtPath(context.document, path.slice(0, -1)); }
   catch { return true; }
   const index = path.at(-1) as number;
-  const hasVisibleSibling = parent.content.some((child) => !child.isText || (child.text?.length ?? 0) > 0);
-  if (!hasVisibleSibling) {
-    return parent.content.findIndex((child) => child.isText && (child.text?.length ?? 0) === 0) === index;
-  }
-  return index === parent.childCount - 1 && parent.content[index - 1]?.type.name === 'hard_break';
+  if (parent.content.every((child) => child.isText && !child.text)) return index === 0;
+  const previous = parent.content[index - 1];
+  // A zero-length wrapper after an uneditable inline atom has no native line
+  // endpoint. Chromium's End can otherwise leave this paragraph altogether.
+  return index === parent.childCount - 1 && (previous?.type.name === 'hard_break'
+    || Boolean(previous?.type.isInline && previous.type.spec.atom));
 }
 
 function caretPlaceholder(): HTMLBRElement {

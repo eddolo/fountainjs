@@ -1,0 +1,125 @@
+[
+  {
+    "kind": "empty",
+    "before": {
+      "text": "A note1",
+      "path": "0.2",
+      "offset": 1,
+      "selection": {
+        "path": [
+          0,
+          2
+        ],
+        "endPath": [
+          0,
+          2
+        ],
+        "from": 0,
+        "to": 0,
+        "kind": "text"
+      },
+      "html": "<p dir=\"auto\" style=\"text-align:start\" data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">A note</span><sup data-fountain-footnote-reference=\"6a99df3b-d6bf-4e5f-a471-131ea5424814\" data-fountain-footnote-number=\"1\" class=\"fountain-footnote-reference\" role=\"doc-noteref\" aria-label=\"Footnote 1\" data-gitlab-footnote-label=\"alpha\" data-gitlab-footnote-original-label=\"alpha\" data-gitlab-footnote-target-label=\"alpha\" data-fountain-node=\"footnote_reference\" data-fountain-path=\"0.1\" contenteditable=\"false\"><a href=\"#fountain-footnote-6a99df3b-d6bf-4e5f-a471-131ea5424814\">1</a></sup><span data-fountain-text-path=\"0.2\"></span></p>"
+    },
+    "after": {
+      "text": "",
+      "path": "3.0",
+      "offset": 1,
+      "selection": {
+        "path": [
+          3,
+          0
+        ],
+        "endPath": [
+          3,
+          0
+        ],
+        "from": 0,
+        "to": 0,
+        "kind": "text"
+      },
+      "html": "<p dir=\"auto\" style=\"text-align:start\" data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">A note</span><sup data-fountain-footnote-reference=\"6a99df3b-d6bf-4e5f-a471-131ea5424814\" data-fountain-footnote-number=\"1\" class=\"fountain-footnote-reference\" role=\"doc-noteref\" aria-label=\"Footnote 1\" data-gitlab-footnote-label=\"alpha\" data-gitlab-footnote-original-label=\"alpha\" data-gitlab-footnote-target-label=\"alpha\" data-fountain-node=\"footnote_reference\" data-fountain-path=\"0.1\" contenteditable=\"false\"><a href=\"#fountain-footnote-6a99df3b-d6bf-4e5f-a471-131ea5424814\">1</a></sup><span data-fountain-text-path=\"0.2\"></span></p>"
+    }
+  },
+  {
+    "kind": "filler",
+    "before": {
+      "text": "A note1",
+      "path": "0.2",
+      "offset": 1,
+      "selection": {
+        "path": [
+          0,
+          2
+        ],
+        "endPath": [
+          0,
+          2
+        ],
+        "from": 0,
+        "to": 0,
+        "kind": "text"
+      },
+      "html": "<p dir=\"auto\" style=\"text-align:start\" data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">A note</span><sup data-fountain-footnote-reference=\"de810319-3492-494a-86f6-70f79441f645\" data-fountain-footnote-number=\"1\" class=\"fountain-footnote-reference\" role=\"doc-noteref\" aria-label=\"Footnote 1\" data-gitlab-footnote-label=\"alpha\" data-gitlab-footnote-original-label=\"alpha\" data-gitlab-footnote-target-label=\"alpha\" data-fountain-node=\"footnote_reference\" data-fountain-path=\"0.1\" contenteditable=\"false\"><a href=\"#fountain-footnote-de810319-3492-494a-86f6-70f79441f645\">1</a></sup><span data-fountain-text-path=\"0.2\"><br data-fountain-caret-placeholder=\"\"></span></p>"
+    },
+    "after": {
+      "text": "A note1",
+      "path": "0.2",
+      "offset": 1,
+      "selection": {
+        "path": [
+          0,
+          2
+        ],
+        "endPath": [
+          0,
+          2
+        ],
+        "from": 0,
+        "to": 0,
+        "kind": "text"
+      },
+      "html": "<p dir=\"auto\" style=\"text-align:start\" data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">A note</span><sup data-fountain-footnote-reference=\"de810319-3492-494a-86f6-70f79441f645\" data-fountain-footnote-number=\"1\" class=\"fountain-footnote-reference\" role=\"doc-noteref\" aria-label=\"Footnote 1\" data-gitlab-footnote-label=\"alpha\" data-gitlab-footnote-original-label=\"alpha\" data-gitlab-footnote-target-label=\"alpha\" data-fountain-node=\"footnote_reference\" data-fountain-path=\"0.1\" contenteditable=\"false\"><a href=\"#fountain-footnote-de810319-3492-494a-86f6-70f79441f645\">1</a></sup><span data-fountain-text-path=\"0.2\"><br data-fountain-caret-placeholder=\"\"></span></p>"
+    }
+  },
+  {
+    "kind": "visible",
+    "before": {
+      "text": "A note1 Tail",
+      "path": "0.2",
+      "offset": 5,
+      "selection": {
+        "path": [
+          0,
+          2
+        ],
+        "endPath": [
+          0,
+          2
+        ],
+        "from": 5,
+        "to": 5,
+        "kind": "text"
+      },
+      "html": "<p dir=\"auto\" style=\"text-align:start\" data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">A note</span><sup data-fountain-footnote-reference=\"7cc7a49e-4e52-4933-9cf6-dae77d6e5c09\" data-fountain-footnote-number=\"1\" class=\"fountain-footnote-reference\" role=\"doc-noteref\" aria-label=\"Footnote 1\" data-gitlab-footnote-label=\"alpha\" data-gitlab-footnote-original-label=\"alpha\" data-gitlab-footnote-target-label=\"alpha\" data-fountain-node=\"footnote_reference\" data-fountain-path=\"0.1\" contenteditable=\"false\"><a href=\"#fountain-footnote-7cc7a49e-4e52-4933-9cf6-dae77d6e5c09\">1</a></sup><span data-fountain-text-path=\"0.2\"> Tail</span></p>"
+    },
+    "after": {
+      "text": "A note1 Tail",
+      "path": "0.2",
+      "offset": 5,
+      "selection": {
+        "path": [
+          0,
+          2
+        ],
+        "endPath": [
+          0,
+          2
+        ],
+        "from": 5,
+        "to": 5,
+        "kind": "text"
+      },
+      "html": "<p dir=\"auto\" style=\"text-align:start\" data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">A note</span><sup data-fountain-footnote-reference=\"7cc7a49e-4e52-4933-9cf6-dae77d6e5c09\" data-fountain-footnote-number=\"1\" class=\"fountain-footnote-reference\" role=\"doc-noteref\" aria-label=\"Footnote 1\" data-gitlab-footnote-label=\"alpha\" data-gitlab-footnote-original-label=\"alpha\" data-gitlab-footnote-target-label=\"alpha\" data-fountain-node=\"footnote_reference\" data-fountain-path=\"0.1\" contenteditable=\"false\"><a href=\"#fountain-footnote-7cc7a49e-4e52-4933-9cf6-dae77d6e5c09\">1</a></sup><span data-fountain-text-path=\"0.2\"> Tail</span></p>"
+    }
+  }
+]
