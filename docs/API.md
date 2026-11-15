@@ -596,8 +596,25 @@ geometry.
 `pasteTableCells(editor, text)` distributes a tab/newline matrix from the
 selection's top-left cell, or repeats a smaller matrix across a larger selected
 rectangle. It rejects out-of-bounds targets and cells that would be split.
-`serializeTableSelection(doc, selection)` returns `{ text, html }`; the DOM input
-layer uses it for native copy/cut. Cells store optional per-logical-column
+It also accepts a table `Node`: rich placement works at a table caret or cell
+selection, retains cell types, marks, nested/custom content and source spans,
+and grows the table when necessary. A single source cell fills existing target
+merges. Larger grids tile an explicit selection and clip spans at its boundary;
+crossing target merges split while content anchored outside the paste survives.
+The transaction preserves mappings for untouched subtrees. Rich paste is bounded
+to 10,000 incoming/pasted logical cells and at most 10,000 newly grown positions.
+
+`insertDocument` distributes a sole incoming table when the target is a table
+caret or cell selection. Explicit `insertTable`/`insertNode` construction still
+allows nested tables. `extractTableSelection(doc, selection)` returns a model
+document slice with its table/row/cell attributes; ownership hooks add dependent
+definitions during actual copy. `serializeTableSelection(doc, selection)` remains
+a low-level `{ text, html }` projection. DOM cell copy/cut now uses the same
+model hooks as other selections, with span-aware TSV for plain targets. Rich
+HTML waits for deferred delivery before choosing a text fallback; missing HTML
+still reports its loss while distributing available TSV into selected cells.
+
+Cells store optional per-logical-column
 `colwidth` values from 40 through 2,000 pixels. The default cell NodeView exposes
 a labelled separator handle: Left/Right resizes by 5 px and Shift modifies by
 25 px; dragging previews locally and commits one undoable transaction on release.
@@ -641,7 +658,7 @@ Optional `PluginProps` hooks operate on parsed model fragments:
 The exported Pages helper also accepts optional ID/label, `prepareDocument` and
 `validateDocument` callbacks for custom footnote schemas and host constraints.
 It copies complete owned bodies, remaps collisions and keeps pasted definitions
-at the root. Table-cell grid selection has a separate clipboard path; see the
+at the root, including cell-grid selections; see the
 [bounded footnote clipboard contract](PAGINATION.md).
 
 ### Clipboard history
@@ -2348,6 +2365,12 @@ first occurrence of each reference. IDs remain stable in JSON while DOM and
 HTML labels renumber after document-order changes; repeated references retain
 the same label. The optional nodes also round-trip standard `[^id]` Markdown
 footnotes and import semantic HTML `doc-noteref` / `doc-footnote` roles.
+Individual definitions render as `aside[role="doc-footnote"]`. Older native
+`section` carriers remain accepted on import with their IDs intact. Style or
+locate definitions with `.fountain-footnote-definition` or
+`[data-fountain-footnote-definition]` rather than depending on the older tag.
+Reference links carry `doc-noteref` and the accessible label on the inner
+`a[href]`; the outer `sup` retains the native identity and display-number data.
 `insertPageBreak`, `insertFootnote`, `selectFootnoteDefinition`, and
 `removeFootnote` use ordinary validated transactions, so history and Yjs carry
 them without a page-specific collaboration protocol.

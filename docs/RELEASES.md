@@ -1,5 +1,27 @@
 # Release and API stability policy
 
+## Rich table clipboard and native control grouping — 2026-11-15
+
+`pasteTableCells` additionally accepts a table `Node`; `extractTableSelection`
+exports a model slice. Cell copy/paste uses owned-definition hooks, preserves
+rich cell data and spans, and distributes content instead of nesting the copied
+table. Anonymous batches retain atomic undo and exact-state refusal. Deferred
+HTML fallback retains TSV placement with explicit loss reporting.
+
+Individual footnotes now render as `aside[role="doc-footnote"]`; reference roles
+and accessible names belong to their links. Older native `section` HTML still
+imports with its IDs/source labels. Consumers should select definitions using
+their stable class/data attribute. The declaration inventory remains 452 files.
+
+The recorded GitLab profile passes 20 checks, six automated accessibility scans
+and actual Save/reopen/restart with three tables/notes. Toolbar/media layout is
+checked at 1440/1100/390px, with keyboard and mobile dialog use. Root tests pass
+6,553 cases with two workers; the earlier default-parallel SQLite timeout is
+retained. Selected upstream tests pass 540 cases with one inherited skip.
+No acceptance limits, package version, publication or parity row changes.
+Cut/move identity, WebKit OS transport, physical Safari and broader release
+acceptance remain open. [Evidence](../artifacts/gitlab-table-clipboard-integration-20261115.json).
+
 ## Footnote clipboard ownership and native host isolation — 2026-11-15
 
 Pages copy includes complete definitions for selected references. Paste remaps

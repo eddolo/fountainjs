@@ -11,6 +11,16 @@ import { readGitLabFrontmatter } from '../integrations/gitlab/services/frontmatt
 import { gitLabHasFootnoteDefinitions, gitLabFootnoteSourceDefinitions } from '../integrations/gitlab/services/footnote_source';
 
 const schema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...gitLabFootnoteNodes() } });
+it.each(['section', 'aside'])('retains the private source label on a %s native footnote carrier', tag => {
+  const imported = new ServerHTMLImporter().parse(`<${tag} data-fountain-footnote-definition="native-note" data-gitlab-footnote-label="evidence"><p>Retained body</p></${tag}>`, schema);
+  expect(imported.childCount).toBe(1);
+  expect(imported.child(0).type.name).toBe('footnote_definition');
+  expect(imported.child(0).attrs).toEqual({ id: 'native-note', gitlabFootnoteLabel: 'evidence' });
+  const exported = HTMLExporter.export(imported, { document: false });
+  expect(exported).toContain('<aside ');
+  expect(exported).toContain('data-gitlab-footnote-label="evidence"');
+  expect(new ServerHTMLImporter().parse(exported, schema).toJSON()).toEqual(imported.toJSON());
+});
 const fixture = (name: string) => live.fixtures.find(item => item.name === name)!;
 const normalize = (item: typeof live.fixtures[number], probe = false) => {
   let next = 0;

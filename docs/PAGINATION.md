@@ -16,13 +16,15 @@ split safely. Unsupported live splits fail closed to continuous editing.
 
 ## Implemented platform-neutral foundation
 
-Footnote clipboard scope: ordinary text/node/document selections include owned
-definitions. Copying just a definition's text produces prose. Table-cell grid
-selection uses a separate clipboard path and is not covered by this contract;
-same-editor cut/move identity reuse also needs a separate acceptance matrix.
+Footnote clipboard scope: text/node/document and cell-grid selections include
+owned definitions. Copying just a definition's text produces prose. Rich grid
+paste keeps definitions at the root, retains shared references and supports
+table growth/merged spans without nesting the copied grid in its first cell.
+Same-editor cut/move identity reuse still needs a separate acceptance matrix.
 Native HTML must actually reach the paste event for rich retention. Recorded
-Chromium/Firefox OS-clipboard runs exercise an independent plain-text target and
-same-editor rich paste. The installed Playwright WebKit ports currently fail
+Chromium/Firefox OS-clipboard runs exercise independent rich/plain-text targets,
+same-editor rich paste, merged grid placement and table-to-prose insertion.
+The installed Playwright WebKit ports currently fail
 the OS-format bridge; minimal non-Fountain reproductions are retained. This is
 an open validation gap, not verified physical Safari behavior. Run the explicit
 audit with `pnpm exec playwright test --config playwright.clipboard-audit.config.ts`;

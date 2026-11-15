@@ -12,6 +12,7 @@ import {
 } from './selection';
 import { Mark, Node, type Attributes } from './schema';
 import { TableMap } from './table-map';
+import { pasteTableCells } from './table-commands';
 import { createImageNode, getActiveImage, type ImageAttributes } from './image';
 import { outdentListItem } from './structure-commands';
 import { mapMarkRangeSelection } from './transaction/mark-range-step';
@@ -538,6 +539,16 @@ export function setContent(editor: Editor, content: Node): boolean {
 /** Inserts a parsed document fragment while preserving inline marks and block structure. */
 export function insertDocument(editor: Editor, document: Node): boolean {
   if (!editor.editable || document.type !== editor.state.schema.topNodeType || !document.childCount) return false;
+  if (document.childCount === 1 && document.child(0).type.name === 'table'
+    && (editor.state.selection instanceof CellSelection || editor.state.selection instanceof Selection && editor.state.selection.isCollapsed)) {
+    const selection = editor.state.selection;
+    let inCell = selection instanceof CellSelection;
+    for (let size = selection.path.length; size > 0 && !inCell; size--) {
+      const name = getNodeAtPath(editor.state.doc, selection.path.slice(0, size)).type.name;
+      inCell = name === 'table_cell' || name === 'table_header';
+    }
+    if (inCell) return pasteTableCells(editor, document.child(0));
+  }
   if (editor.state.selection.kind !== 'text') {
     return replaceSemanticSelectionWithDocument(editor, editor.state.selection, document);
   }

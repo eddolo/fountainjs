@@ -1,0 +1,113 @@
+{
+  "date": "2026-11-15T22:09:28.649Z",
+  "status": "bounded-delivery-with-open-platform-validation",
+  "parent": "2ba433cdb07743d4f4a94ae1554733d59bbace30",
+  "scope": "Rich cell-grid clipboard ownership/placement and private GitLab control polish; not full clipboard, product or parity acceptance",
+  "changes": [
+    "Cell selections use native document/HTML ownership hooks and span-aware TSV; rich paste preserves cell roles, attributes, marks, nested widget data and complete owned notes.",
+    "Paste grows bounds, tiles/clips source spans, splits crossing target spans and retains untouched subtree mappings; explicit nested-table insertion stays available.",
+    "Advertised rich HTML waits for delivery; missing HTML keeps TSV grid placement with an explicit loss report. Refusal preserves exact state without publishing intermediate updates.",
+    "Private toolbar wraps labelled control groups, keeps clipboard tools together and presents media actions as a readable list with divided deletion.",
+    "Whole-editor accessibility scans found invalid footnote container/reference role hosts. Definitions now use aside and reference roles/names belong to their links; older section input retains native IDs and source labels."
+  ],
+  "tests": {
+    "root": {
+      "passed": 6553,
+      "suites": 383,
+      "workers": 2,
+      "defaultParallelAttempt": {
+        "passed": 6552,
+        "timedOut": 1,
+        "expectationsAndTimeoutsChanged": false
+      }
+    },
+    "upstream": {
+      "passed": 540,
+      "suites": 23,
+      "inheritedSkip": 1
+    },
+    "api": "Public API surface verified across 452 declaration files.",
+    "publicOSClipboard": {
+      "passed": [
+        "Windows Chromium",
+        "Windows Firefox"
+      ],
+      "cases": 4,
+      "externalRichAndPlainDestinations": true
+    },
+    "footnoteDOM": {
+      "passed": [
+        "Windows Chromium",
+        "Windows Firefox",
+        "Windows WebKit"
+      ],
+      "cases": 3,
+      "distinctFromOSClipboardTransport": true
+    },
+    "native": {
+      "checks": 20,
+      "tables": 3,
+      "definitions": 3,
+      "references": 3,
+      "accessibilityScans": 6,
+      "browserErrors": 0,
+      "phases": [
+        "saved",
+        "reopened",
+        "restart"
+      ],
+      "controlWidths": [
+        1440,
+        1100,
+        390
+      ]
+    },
+    "types": "TypeScript, Svelte and Angular passed",
+    "package": "ESM/CommonJS/optional exports passed",
+    "server": "Node and Cloudflare workerd passed",
+    "headless": "144-module no-DOM boundary and TypeScript passed",
+    "runtime": "Existing latency, growth and retained-memory gates passed; separate grid-growth measurements are observational",
+    "patches": 18,
+    "rollbackFiles": 28
+  },
+  "build": {
+    "esmKiB": 1610.5,
+    "commonjsKiB": 1433.9,
+    "commonjsCapacityKiB": 1440,
+    "acceptanceLimits": "Unchanged in this checkpoint",
+    "newDependencies": 0
+  },
+  "recording": {
+    "path": "artifacts/gitlab-native-table-clipboard-20261115/recordings/page@a812921e0ead9b997bc5fbc5b04e2258.webm",
+    "sha256": "ee060af68f82852717bf042cfe6a091db782495688ea77bfc74924b0d21dff7f",
+    "seconds": 181.28
+  },
+  "evidence": {
+    "native": "artifacts/gitlab-native-table-clipboard-20261115/report.json",
+    "visual": "artifacts/gitlab-native-table-clipboard-20261115/visual-review.json",
+    "originalCellFailures": "artifacts/table-clipboard-parent-witness-20261115.log",
+    "originalDeferredFailures": "artifacts/table-clipboard-deferred-witness-20261115.log",
+    "accessibilityWitness": "artifacts/gitlab-native-table-clipboard-accessibility-witness-20261115/report.json",
+    "referenceRoleWitness": "artifacts/gitlab-native-table-clipboard-reference-witness-20261115/report.json",
+    "staleFixtureExpectation": "artifacts/gitlab-native-table-clipboard-fixture-witness-20261115/report.json",
+    "narrowLayoutWitness": "artifacts/gitlab-controls-narrow-layout-witness-20261115.png",
+    "defaultParallelTimeout": "artifacts/controls-default-parallel-timeout-witness-20261115.log",
+    "observedGridGrowth": "artifacts/table-clipboard-headless-cost-20261115.json",
+    "minimalWindowsClipboardReproduction": "artifacts/webkit-clipboard-platform-probe-win32-20261115.json",
+    "minimalLinuxClipboardReproduction": "artifacts/webkit-clipboard-platform-probe-linux-20261115.json"
+  },
+  "accessibilityReferences": [
+    "https://www.w3.org/TR/html-aria/#el-aside",
+    "https://www.w3.org/TR/dpub-aria-1.1/#doc-noteref"
+  ],
+  "harnessCorrection": "Only the table-editing profile replaces the baseline Pending-cell expectation with its intentional saved row values; the full reader cell graph is checked in every save/reopen/restart phase. Other profiles still require Pending.",
+  "open": [
+    "Same-editor cut/move identity reuse and broader clipboard/column-layout combinations remain open.",
+    "The default-parallel full-suite attempt hit one SQLite fixture deadline; bounded-concurrency success does not establish default-parallel reliability.",
+    "Installed WebKit OS-format transport failures remain independently reproduced; physical Safari is unverified.",
+    "Previously observed intermittent host-image 403 responses remain unresolved; this passing profile does not diagnose their cause.",
+    "GitLab GFM cannot represent arbitrary merged tables or standalone TD-only slices; source-retaining refusal is not format support.",
+    "Full GitLab workflows, roles, IME/touch/browser matrices, cache rollout and compiled deployment rollback remain open."
+  ],
+  "publication": "No package version, npm publication, project rename or parity-row promotion"
+}

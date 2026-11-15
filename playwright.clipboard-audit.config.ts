@@ -6,6 +6,6 @@ import base from './playwright.input-audit.config';
 export default defineConfig({
   ...base,
   testDir: './tests/manual',
-  testMatch: '**/footnote-clipboard-real.spec.ts',
-  projects: base.projects?.map(project => ({ ...project, testMatch: '**/footnote-clipboard-real.spec.ts' })),
+  testMatch: ['**/footnote-clipboard-real.spec.ts', '**/table-clipboard-real.spec.ts'],
+  projects: base.projects?.map(project => ({ ...project, testMatch: ['**/footnote-clipboard-real.spec.ts', '**/table-clipboard-real.spec.ts'] })),
 });

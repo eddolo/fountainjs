@@ -1,0 +1,31 @@
+Prepared the pinned repeated-footnote server repair. The base image remains unchanged.
+time="2026-11-15T22:00:10Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{
+  "status": "passed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "Actual HTML omits the unused footnote definition; native paste refuses that incomplete projection, retains exact source and recovers through a supported paste",
+    "Actual GitLab controls stay grouped without horizontal overflow at 1440/1100/390px; media actions have distinct rows and separated deletion; keyboard properties, mobile dialog cancellation and toolbar/popup accessibility pass without changing content",
+    "Trusted cell-range copy includes its owned note; rich paste grows the real GitLab table, preserves cell roles/marks and note ownership, and one Undo/Redo restores both graphs",
+    "A body-row-only table slice refuses standalone GitLab Markdown insertion without changing cell roles, source content or owned notes; editing stays available",
+    "Copying the full header/body table into prose succeeds after refusal, preserves three independent note identities and marks, supports atomic history, clears the error, and passes a whole-editor accessibility scan",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "All three real tables retain their cell roles, geometry, text and marks with three correctly linked notes in saved source and reader (saved)",
+    "Native rich typing and UI save retain untouched seeded content and the intentional rich-grid table edits in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "All three real tables retain their cell roles, geometry, text and marks with three correctly linked notes in saved source and reader (reopened)",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "The saved unused footnote definition remains byte-for-byte unchanged after actual application restart",
+    "All three real tables retain their cell roles, geometry, text and marks with three correctly linked notes in saved source and reader (restart)",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ]
+}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped

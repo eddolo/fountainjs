@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { AllSelection, NodeSelection, Selection, EditorView, undo, redo } from 'fountainjs-editor';
 import { inspectFootnotes } from 'fountainjs-editor/pages';
 import captures from '../integrations/gitlab/fixtures/footnote-probe-live-html.json';
@@ -14,7 +14,7 @@ function event(type: 'copy' | 'paste', input: Record<string, string> = {}) {
     setData: (name: string, value: string) => values.set(name, value) } });
   return { event, values };
 }
-async function setup() {
+async function setup(options: ConstructorParameters<typeof EditorView>[2] = {}) {
   const fixture = captures.fixtures.find(item => item.name === 'simple')!;
   const bridge = new GitLabContentEditor({ describeLabels: () => '', renderMarkdown: async source => {
     if (source !== fixture.source) throw new Error('No actual host fixture for this exact source.');
@@ -22,7 +22,7 @@ async function setup() {
   } });
   await bridge.setSerializedContent(fixture.source);
   const mount = document.createElement('div'); document.body.append(mount);
-  const view = new EditorView(mount, bridge.editor);
+  const view = new EditorView(mount, bridge.editor, options);
   return { bridge, view, cleanup: () => { view.destroy(); bridge.dispose(); mount.remove(); } };
 }
 
@@ -77,4 +77,22 @@ it('does not attach a copied reference to a different body with the same old ide
     expect(bodies).toContain('Different destination body.'); expect(bodies).toContain('Definition bold.');
     expect(destination.bridge.getSerializedContent()).toContain('Different destination body.');
   } finally { source.cleanup(); destination.cleanup(); }
+});
+
+it.each(['native', 'html'] as const)('refuses an unrepresentable %s cell slice atomically instead of changing its cell roles', async format => {
+  const onError = vi.fn(), { bridge, view, cleanup } = await setup({ onError });
+  try {
+    const editor = bridge.editor, { schema, doc } = editor.state;
+    const table = schema.node('table', {}, [schema.node('table_row', {}, [schema.node('table_cell', {}, [doc.child(0)])])]);
+    const copied = schema.node('doc', {}, [table, doc.child(1)]);
+    const values = { 'text/plain': 'Do not fall back to this text',
+      'text/html': (await import('fountainjs-editor')).HTMLExporter.export(copied, { document: false }),
+      ...(format === 'native' ? { [mime]: JSON.stringify({ version: 1, document: copied.toJSON() }) } : {}) };
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    const before = editor.getJSON(), markdown = bridge.getSerializedContent();
+    view.dom.dispatchEvent(event('paste', values).event);
+    expect(editor.getJSON()).toEqual(before); expect(bridge.getSerializedContent()).toBe(markdown);
+    expect(bridge.status).toBe('ready'); expect(onError).toHaveBeenCalledOnce();
+    expect(onError.mock.calls[0]![0].issues.some((issue: { message: string }) => issue.message.includes('first row column headers'))).toBe(true);
+  } finally { cleanup(); }
 });

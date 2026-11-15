@@ -46,12 +46,28 @@ describe('page-intent HTML interchange', () => {
     expect(html).toContain('data-fountain-footnote-reference="note-1"');
     expect(html).toContain('data-fountain-footnote-number="1"');
     expect(html).toContain('aria-label="Footnote 1"');
-    expect(html).toContain('href="#fountain-footnote-note-1">1</a>');
+    const reference = new DOMParser().parseFromString(html, 'text/html').querySelector('a[role="doc-noteref"]');
+    expect(reference?.getAttribute('href')).toBe('#fountain-footnote-note-1');
+    expect(reference?.getAttribute('aria-label')).toBe('Footnote 1');
+    expect(reference?.textContent).toBe('1');
+    expect(reference?.parentElement?.getAttribute('role')).toBeNull();
     expect(html).toContain('data-fountain-page-header="first"');
     expect(html).toContain('data-fountain-page-footer="default"');
     expect(html).toContain('data-fountain-page-field="page-number"');
     expect(html).toContain('role="doc-footnote"');
+    expect(new DOMParser().parseFromString(html, 'text/html').querySelector('[role="doc-footnote"]')?.tagName).toBe('ASIDE');
     expect(HTMLImporter.parse(html, schema).toJSON()).toEqual(source.toJSON());
+  });
+
+  it.each(['section', 'aside'])('retains native note identity when importing the %s HTML carrier', tag => {
+    const schema = new Schema(composeExtensions([CoreExtension, PagesExtension]).schema);
+    const imported = HTMLImporter.parse(`<${tag} data-fountain-footnote-definition="opaque-note" id="display-anchor"><p>Retained evidence</p></${tag}>`, schema);
+    expect(imported.childCount).toBe(1);
+    expect(imported.child(0).type.name).toBe('footnote_definition');
+    expect(imported.child(0).attrs.id).toBe('opaque-note');
+    expect(imported.child(0).textContent).toBe('Retained evidence');
+    const exported = HTMLExporter.export(imported, { document: false });
+    expect(new DOMParser().parseFromString(exported, 'text/html').querySelector('[role="doc-footnote"]')?.tagName).toBe('ASIDE');
   });
 
   it('renumbers unchanged reference nodes after document-order changes in the DOM view', () => {
@@ -113,7 +129,7 @@ describe('page-intent HTML interchange', () => {
     });
     const exported = HTMLExporter.export(imported, { document: false });
     expect(exported).toContain('data-fountain-footnote-number="1"');
-    expect(exported).toContain('href="#fountain-footnote-source-alpha">1</a>');
+    expect(new DOMParser().parseFromString(exported, 'text/html').querySelector('a[role="doc-noteref"]')?.getAttribute('href')).toBe('#fountain-footnote-source-alpha');
     expect(exported).not.toContain('>7</a>');
   });
 

@@ -209,7 +209,7 @@ export function normalizeGitLabFootnoteProjection(source: string, html: string, 
     const parent = section.parentNode, index = parent.childNodes.indexOf(section);
     const replacement = owned.map(definition => {
       const element = definition.element;
-      element.tagName = element.nodeName = 'section';
+      element.tagName = element.nodeName = 'aside';
       element.attrs = [{ name: 'data-fountain-footnote-definition', value: ids.get(definition)! },
         { name: 'data-gitlab-footnote-label', value: definition.label }];
       if (element.childNodes.every(child => 'value' in child && !child.value.trim())) {

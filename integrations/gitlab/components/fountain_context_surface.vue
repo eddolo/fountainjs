@@ -14,6 +14,7 @@ export default {
     anchorPath: { type: Array, required: false, default: null },
     getEditorRoot: { type: Function, required: false, default: null },
     label: { type: String, required: true },
+    triggerText: { type: String, required: false, default: null },
     suspended: { type: Boolean, required: false, default: false },
     hideTrigger: { type: Boolean, required: false, default: false },
   },
@@ -190,8 +191,8 @@ export default {
 };
 </script>
 <template>
-  <div data-testid="native-context-surface" :data-menu-mode="floating ? 'floating' : 'docked'" :class="floating ? 'gl-inline-flex gl-shrink-0' : 'gl-w-full'">
-    <gl-button v-if="floating && active && !hideTrigger" ref="trigger" category="tertiary" size="small" :aria-expanded="expanded ? 'true' : 'false'" :aria-controls="expanded ? menuId : undefined" aria-keyshortcuts="Alt+F10" @click="focusMenu">{{ label }}</gl-button>
-    <div ref="home"><div ref="content" @keydown="onKeydown"><slot></slot></div></div>
+  <div data-testid="native-context-surface" :data-menu-mode="floating ? 'floating' : 'docked'" :class="floating ? 'gl-inline-flex gl-shrink-0 gl-items-center' : 'gl-w-full'">
+    <gl-button v-if="floating && active && !hideTrigger" ref="trigger" category="tertiary" size="small" :aria-label="label" :title="label" :aria-expanded="expanded ? 'true' : 'false'" :aria-controls="expanded ? menuId : undefined" aria-keyshortcuts="Alt+F10" @click="focusMenu">{{ triggerText || label }}</gl-button>
+    <div ref="home" :class="{ 'gl-hidden': floating }"><div ref="content" @keydown="onKeydown"><slot></slot></div></div>
   </div>
 </template>

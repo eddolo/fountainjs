@@ -139,6 +139,14 @@ export default {
           icon: 'quick-actions', run: () => this.contentEditor.quickActions.insert() }] : []),
       ];
     },
+    controlGroups() {
+      return [
+        { label: s__('ContentEditor|History'), keys: ['undo', 'redo'] },
+        { label: s__('ContentEditor|Text formatting'), keys: ['bold', 'italic', 'strike', 'code'] },
+        { label: s__('ContentEditor|Lists and quotes'), keys: ['blockquote', 'bullet', 'ordered', 'task'] },
+        { label: s__('ContentEditor|Document tools'), keys: ['frontmatter', 'footnote', 'quick-action'] },
+      ].map(group => ({ ...group, controls: this.controls.filter(control => group.keys.includes(control.key)) }));
+    },
     styles() {
       return [
         { value: 'paragraph', text: s__('ContentEditor|Normal text') },
@@ -303,8 +311,9 @@ export default {
       class="gl-w-auto"
       @change="changeStyle"
     />
-    <gl-button
-      v-for="control in controls"
+    <div v-for="group in controlGroups" :key="group.label" class="gl-inline-flex gl-shrink-0 gl-items-center gl-gap-1 gl-border-l gl-pl-2" role="group" :aria-label="group.label">
+      <gl-button
+      v-for="control in group.controls"
       :key="control.key"
       :data-testid="control.key"
       :disabled="disabled || control.disabled"
@@ -316,8 +325,10 @@ export default {
       category="tertiary"
       size="small"
       @click="execute(control)"
-    />
-    <div class="gl-inline-flex gl-shrink-0 gl-items-center gl-gap-1 gl-border-l gl-pl-2" role="group" :aria-label="s__('ContentEditor|Clipboard and files')">
+      />
+    </div>
+    <slot name="context-actions"></slot>
+    <div class="fountain-clipboard-tools gl-inline-flex gl-flex-wrap gl-shrink-0 gl-items-center gl-gap-1 gl-border-l gl-pl-2 gl-max-w-full" role="group" :aria-label="s__('ContentEditor|Clipboard, files and media')">
     <template v-if="!hideAttachmentButton">
       <gl-button
         :disabled="disabled"
@@ -340,6 +351,7 @@ export default {
       />
     </template>
     <gl-button :disabled="disabled" category="tertiary" size="small" icon="markdown-mark" :aria-label="s__('ContentEditor|Paste Markdown')" :title="s__('ContentEditor|Paste Markdown')" @click="pasteMarkdown" />
+    <slot name="clipboard-actions"></slot>
     </div>
     <fountain-context-surface v-if="footnoteContext" :editor="editor" :active="true" :anchor-path="footnoteContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Footnote actions')" :suspended="renameOpen || footnoteOpen" @reveal="$emit('focus')">
       <div role="group" :aria-label="s__('ContentEditor|Footnote controls')">
@@ -369,7 +381,15 @@ export default {
         </gl-form-group>
       </gl-form>
     </gl-modal>
-    <slot name="context-actions"></slot>
     <slot name="header-buttons"></slot>
   </div>
 </template>
+
+<style scoped>
+/* Keep floating media with clipboard tools; let the docked mobile panel reflow. */
+.fountain-clipboard-tools:has([data-menu-mode='docked']) {
+  width: 100%;
+  border: 0;
+  padding: 0;
+}
+</style>

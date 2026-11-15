@@ -510,8 +510,10 @@ export default {
             <code-block-bubble-menu ref="codeMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-reference-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" />
             <fountain-alert-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
-            <media-bubble-menu ref="mediaMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />
             <fountain-quick-action-menu ref="quickActionMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
+          </template>
+          <template #clipboard-actions>
+            <media-bubble-menu ref="mediaMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />
           </template>
           <template #header-buttons>
             <slot name="header-buttons"></slot>

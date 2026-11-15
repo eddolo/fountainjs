@@ -2,7 +2,33 @@
 
 Updated 2026-11-15.
 
-The next clipboard checkpoint copies complete owned footnote bodies, remaps
+Latest checkpoint: cell selections now use the same owned-document clipboard
+pipeline. Rich grid paste preserves cell roles, marks, custom data and owned
+notes, handles merged spans and table growth, and keeps untouched position
+mapping. Deferred HTML fallback still distributes TSV with a loss report;
+refusal publishes no partial state. Explicit nested-table insertion remains
+available separately.
+
+The private GitLab toolbar now wraps related controls together, including
+Attach/Paste Markdown/Media. Media actions have distinct rows and divided
+deletion. Recorded checks cover 1440/1100/390px, keyboard properties, mobile
+cancellation and six automated accessibility scans. The whole-editor scan also
+repaired invalid footnote role hosts while retaining older HTML input.
+Three actual tables and three owned notes survive Save/reopen/restart in the
+20-check profile. This adds to the preceding footnote-only evidence below.
+
+Validation passes 6,553 tests in 383 files with two workers, 540 selected upstream
+cases (one inherited skip), framework types, package/Node/workerd, the 144-module
+headless boundary, 18 patches and 28-file source rollback. One default-parallel
+SQLite test timed out; that witness remains recorded. Chromium/Firefox native
+clipboard journeys pass; physical Safari, installed WebKit OS transport,
+cut/move identity reuse and broader product acceptance remain open. No size
+limit, version, publication or parity-row promotion changes.
+[Current evidence](../artifacts/gitlab-table-clipboard-integration-20261115.json).
+
+Previous footnote-only clipboard checkpoint:
+
+The model clipboard delivery copies complete owned footnote bodies, remaps
 colliding IDs without breaking shared references, preserves marks, and pastes
 the graph in one undoable operation. Optional model clipboard hooks and the
 Pages helper leave document text unchanged. The actual GitLab journey exposed

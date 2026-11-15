@@ -1,6 +1,27 @@
 # GitLab application integration
 
-Latest checkpoint: footnote clipboard ownership and host event isolation. Copy
+Latest checkpoint: rich cell-grid clipboard ownership and grouped native
+controls. A recorded actual-host profile passes 20 checks with three tables and
+three owned notes retained through Save/reopen/restart, six automated
+accessibility scans and no browser errors. The toolbar keeps Attach/Paste
+Markdown/Media together when wrapping; desktop/narrow/mobile layouts, keyboard
+properties and mobile cancellation are checked. Media actions use separate rows
+and divided deletion. Footnote role hosts are repaired without losing older
+HTML IDs/source labels.
+
+Validation passes 6,553 root cases with two workers, 540 selected upstream cases
+(one inherited skip), types, package/Node/workerd, a 144-module headless boundary,
+18 patches and 28-file rollback/reinstall. A default-parallel SQLite timeout is
+retained separately. Engine cell-grid paste supports merged spans; noncanonical
+GitLab GFM cases still refuse without changing the source. Cut/move identity,
+WebKit OS transport, physical Safari and full product acceptance remain open.
+[Current evidence](../../artifacts/gitlab-table-clipboard-integration-20261115.json).
+
+After the runtime build/install and frontend preparation below, run the isolated
+Linux audit with `node scripts/run-gitlab-native-browser-audit.mjs --table-clipboard`.
+It includes actual application restart and stops the task container afterward.
+
+Previous checkpoint: footnote clipboard ownership and host event isolation. Copy
 includes complete owned definitions; paste remaps collisions and preserves
 shared references, marks and root placement in one undoable operation. A real
 application failure exposed its global reader copy handler overwriting native
@@ -13,8 +34,7 @@ Chromium/Firefox OS clipboard journeys pass. Installed WebKit format-bridge
 failures, cell-grid ownership, cut/move identity reuse and broader product
 acceptance remain open. [Evidence](../../artifacts/gitlab-footnote-clipboard-integration-20261115.json).
 
-After the runtime build/install and frontend preparation below, the isolated
-Linux audit command is
+For the preceding footnote-only profile, the isolated Linux audit command is
 `node scripts/run-gitlab-native-browser-audit.mjs --footnote-clipboard`.
 It includes actual application restart and stops the task container afterward.
 

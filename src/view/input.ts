@@ -3,6 +3,7 @@ import {
   deleteForward,
   deleteSelection,
   extendCellSelection,
+  extractTableSelection,
   getActiveTableCell,
   insertPlainText,
   insertHardBreak,
@@ -19,12 +20,12 @@ import {
   splitBlock,
   toggleMark,
   pasteTableCells,
-  serializeTableSelection,
   type Editor,
   type AnySelection,
   AllSelection,
   NodeSelection,
   CellSelection,
+  TableMap,
   Node,
   Selection,
   RangeSelection,
@@ -37,7 +38,7 @@ import { comparePaths, getNodeAtPath } from '../core/transaction/path';
 import { textReplacementSelection } from '../core/text-replacement-selection';
 import { extractDocumentRange } from '../core/transaction/document-fragment';
 import { copySharedDirectionGroups, snapshotIncompleteSharedDirections, snapshotInheritedNodeDirection } from '../core/shared-direction';
-import { closeHistory, redo, setHistoryGroup, undo } from '../extensions/plugins/history';
+import { redo, setHistoryGroup, undo } from '../extensions/plugins/history';
 import {
   insertAssetFile,
   insertImageFile,
@@ -521,7 +522,8 @@ export class InputManager {
       }
     }
     const text = event.clipboardData?.getData('text/plain');
-    if (this.editor.state.selection instanceof CellSelection && text !== undefined && pasteTableCells(this.editor, text)) {
+    if (this.editor.state.selection instanceof CellSelection && !clipboardHTML.trim() && !fountain
+      && !event.clipboardData?.types?.includes('text/html') && text !== undefined && pasteTableCells(this.editor, text)) {
       event.preventDefault();
       this.reportPaste(createExternalPasteReport(
         clipboardHTML ? detectExternalPasteSource(clipboardHTML) : 'plain-text',
@@ -578,7 +580,6 @@ export class InputManager {
 
   private insertParsedClipboard(document: Node, source: 'fountain' | 'html'): boolean {
     try {
-      closeHistory(this.editor);
       return this.editor.runCommandBatch(() => {
         for (const plugin of this.editor.state.plugins) {
           const handled = plugin.spec.props?.handlePasteDocument?.(this.editor, document, { source });
@@ -643,13 +644,17 @@ export class InputManager {
     }
     if (text === undefined) return;
     event?.preventDefault();
-    if (!this.editor.runCommandBatch(() => insertPlainText(this.editor, text))) {
+    let insertedGrid = false;
+    if (!this.editor.runCommandBatch(() => {
+      if (this.editor.state.selection instanceof CellSelection && pasteTableCells(this.editor, text)) { insertedGrid = true; return true; }
+      return insertPlainText(this.editor, text);
+    })) {
       this.rejectPaste(event, html ? richSource : 'plain-text', html || text, richIssues);
       return;
     }
     this.reportPaste(createExternalPasteReport(
       html ? richSource : 'plain-text',
-      'inserted-plain-text',
+      insertedGrid ? 'inserted-table-grid' : 'inserted-plain-text',
       html || text,
       text,
       richIssues,
@@ -670,22 +675,11 @@ export class InputManager {
     }]));
   }
 
-  private writeCellSelection(event: ClipboardEvent): boolean {
-    const selection = this.editor.state.selection;
-    if (!(selection instanceof CellSelection) || !event.clipboardData) return false;
-    const serialized = serializeTableSelection(this.editor.state.doc, selection);
-    if (!serialized) return false;
-    event.clipboardData.setData('text/plain', serialized.text);
-    event.clipboardData.setData('text/html', serialized.html);
-    event.preventDefault();
-    clipboardTextObservers.get(this.editor)?.(serialized.text);
-    return true;
-  }
-
   private selectedFountainDocument(): Node | null {
     const { doc, schema, selection } = this.editor.state;
     let document: Node | null = null;
     if (selection instanceof AllSelection) document = doc;
+    else if (selection instanceof CellSelection) document = extractTableSelection(doc, selection);
     else if (selection instanceof RangeSelection && !selection.isCollapsed) {
       try { document = extractDocumentRange(doc, selection.structuralFrom, selection.structuralTo); }
       catch { return null; }
@@ -733,6 +727,13 @@ export class InputManager {
         const text = plugin.spec.props?.serializeCopiedNode?.(this.editor, node, serialize);
         if (text !== undefined) return text;
       }
+      if (this.editor.state.selection instanceof CellSelection && node === document.child(0) && node.type.name === 'table') {
+        const map = TableMap.create(node);
+        return Array.from({ length: map.height }, (_, row) => Array.from({ length: map.width }, (_, column) => {
+          const cell = map.cellAt(row, column);
+          return cell?.row === row && cell.column === column ? serialize(cell.node).replace(/[\t\r\n]+/g, ' ') : '';
+        }).join('\t')).join('\n');
+      }
       return undefined;
     });
     const selection = this.editor.state.selection;
@@ -763,8 +764,9 @@ export class InputManager {
       }
     }
     try {
-      if (!this.writeCellSelection(event) && !this.writeFountainSelection(event)) {
-        if (this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
+      if (!this.writeFountainSelection(event)) {
+        if (this.editor.state.selection instanceof CellSelection
+          || this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
           event.preventDefault();
           this.options.onError?.(new Error('This selection cannot be copied without losing document structure.'));
         } else this.options.prepareClipboard?.();
@@ -785,11 +787,12 @@ export class InputManager {
       }
     }
     try {
-      if (this.writeCellSelection(event) || this.writeFountainSelection(event)) {
+      if (this.writeFountainSelection(event)) {
         if (!deleteSelection(this.editor) && this.editor.state.selection instanceof RangeSelection) {
           this.options.onError?.(new Error('The selection was copied, but could not be removed safely.'));
         }
-      } else if (this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
+      } else if (this.editor.state.selection instanceof CellSelection
+        || this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
         event.preventDefault();
         this.options.onError?.(new Error('This selection cannot be cut without losing document structure.'));
       } else this.options.prepareClipboard?.();

@@ -8,10 +8,11 @@ export const validGitLabFootnoteLabel = (value: unknown): value is string => typ
 export function gitLabFootnoteNodes(): Record<string, NodeSpec> {
   return Object.fromEntries([
     ['footnote_reference', footnoteReferenceNode, 'sup', 'data-fountain-footnote-reference'],
-    ['footnote_definition', footnoteDefinitionNode, 'section', 'data-fountain-footnote-definition'],
+    ['footnote_definition', footnoteDefinitionNode, 'aside', 'data-fountain-footnote-definition'],
   ].map(([name, node, tag, attribute]) => {
     const base = node as NodeSpec, attr = attribute as string;
-    const rule = { tag: `${tag}[${attr}][data-gitlab-footnote-label]`, priority: 300, getAttrs: (element: Pick<HTMLParseElement, 'getAttribute'>) => {
+    const rule = { tag: (name === 'footnote_definition' ? ['aside', 'section'] : [tag])
+      .map(element => `${element}[${attr}][data-gitlab-footnote-label]`).join(', '), priority: 300, getAttrs: (element: Pick<HTMLParseElement, 'getAttribute'>) => {
       const label = element.getAttribute('data-gitlab-footnote-label');
       return validGitLabFootnoteLabel(label) ? { id: element.getAttribute(attr), gitlabFootnoteLabel: label,
         ...(name === 'footnote_reference' ? { gitlabFootnoteOriginalLabel: element.getAttribute('data-gitlab-footnote-original-label') ?? label,

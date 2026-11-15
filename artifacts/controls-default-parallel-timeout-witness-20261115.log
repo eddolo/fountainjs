@@ -1,0 +1,29 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/yjs-retained-provision.test.ts (51 tests | 1 failed) 11472ms
+   × returns the latest durable revision without evaluating the initializer again 5107ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/yjs-retained-provision.test.ts > returns the latest durable revision without evaluating the initializer again
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/yjs-retained-provision.test.ts:625:1
+    623| });
+    624|
+    625| it('returns the latest durable revision without evaluating the initial…
+       | ^
+    626|   const pair = await fixture();
+    627|   const loadCheckpoint = vi.fn(() => pair.checkpoint);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 382 passed (383)
+      Tests  1 failed | 6552 passed (6553)
+   Start at  21:46:05
+   Duration  116.60s (environment 41%, import 28%, tests 25%, transform 4%, worker 1%)
+
+    Isolate  383 workers spawned · ~1.02s startup each (spawn + environment, per file)
+             at least ~54.98s faster with isolate: false — reuses workers across files instead of one per file

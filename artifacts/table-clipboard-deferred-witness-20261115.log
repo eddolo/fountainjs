@@ -1,0 +1,42 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/table-native-paste.test.ts (3 tests | 2 failed) 257ms
+   × retains grid distribution when advertised HTML is unavailable at beforeinput 36ms
+   × retains grid distribution when advertised HTML is unavailable at timer 32ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/table-native-paste.test.ts > retains grid distribution when advertised HTML is unavailable at beforeinput
+ FAIL  tests/table-native-paste.test.ts > retains grid distribution when advertised HTML is unavailable at timer
+AssertionError: expected [ '1\t23\t4', '', '', '' ] to deeply equal [ '1', '2', '3', '4' ]
+
+- Expected
++ Received
+
+  [
+-   "1",
+-   "2",
+-   "3",
+-   "4",
++   "1	23	4",
++   "",
++   "",
++   "",
+  ]
+
+ ❯ tests/table-native-paste.test.ts:41:103
+
+     39|   const { editor, reports, event } = setup(), before = editor.getJSON(…
+     40|   if (fallback === 'beforeinput') event('beforeinput', '', 'Different …
+     41|   expect(editor.state.doc.child(0).content.flatMap(row => row.content.…
+       |                                                                                                       ^
+     42|   expect(reports).toHaveLength(1); expect(reports[0]?.outcome).toBe('i…
+     43|   expect(reports[0]?.issues).toContainEqual(expect.objectContaining({ …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+ Test Files  1 failed (1)
+
+      Tests  2 failed | 1 passed (3)
+   Start at  20:55:08
+   Duration  3.81s (environment 43%, transform 41%, import 9%, tests 7%)

@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-15T21:07:03.505Z",
+  "node": "v24.22.1",
+  "platform": "win32",
+  "scope": "Observed headless rich-grid paste plus table growth; excludes fixture creation and post-timing integrity assertions; not browser latency or a new acceptance threshold",
+  "unchangedGates": "The existing runtime, curve and retention checks are run separately",
+  "results": [
+    {
+      "cells": 100,
+      "samplesMilliseconds": [
+        6.103800000000007,
+        4.350999999999999,
+        3.260799999999989
+      ],
+      "medianMilliseconds": 4.350999999999999,
+      "maximumMilliseconds": 6.103800000000007
+    },
+    {
+      "cells": 1000,
+      "samplesMilliseconds": [
+        40.434,
+        37.68180000000001,
+        35.44960000000003
+      ],
+      "medianMilliseconds": 37.68180000000001,
+      "maximumMilliseconds": 40.434
+    },
+    {
+      "cells": 10000,
+      "samplesMilliseconds": [
+        280.04549999999995,
+        308.2395,
+        331.9987000000001
+      ],
+      "medianMilliseconds": 308.2395,
+      "maximumMilliseconds": 331.9987000000001
+    }
+  ]
+}

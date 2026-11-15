@@ -122,17 +122,17 @@ export default {
 };
 </script>
 <template>
-  <fountain-context-surface v-if="displayContext" ref="contextSurface" :editor="contentEditor.editor" :active="Boolean(displayContext)" :anchor-path="displayContext.conflict ? null : displayContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Media actions')" :suspended="dialogOpen" @reveal="$emit('focus')">
+  <fountain-context-surface v-if="displayContext" ref="contextSurface" :editor="contentEditor.editor" :active="Boolean(displayContext)" :anchor-path="displayContext.conflict ? null : displayContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Media actions')" :trigger-text="s__('ContentEditor|Media')" :suspended="dialogOpen" @reveal="$emit('focus')">
   <div data-testid="native-media-menu" class="gl-w-full" role="group" :aria-label="s__('ContentEditor|Media controls')">
     <h2 class="gl-heading-5 gl-mb-2">{{ s__('ContentEditor|Media') }}</h2>
     <p v-if="displayContext.alt" class="gl-mb-4 gl-truncate gl-text-subtle" :title="displayContext.alt">{{ displayContext.alt }}</p>
-    <div class="gl-flex gl-flex-wrap gl-items-center gl-gap-2">
+    <div class="gl-flex gl-flex-col gl-items-stretch gl-gap-2">
       <gl-button :disabled="disabled" category="primary" variant="confirm" icon="pencil" :aria-label="s__('ContentEditor|Edit media properties')" @click="open">{{ s__('ContentEditor|Properties') }}</gl-button>
-      <gl-button :href="displayContext.displayURL" target="_blank" rel="noopener noreferrer" category="tertiary" icon="external-link" :aria-label="s__('ContentEditor|Open media')">{{ s__('ContentEditor|Open') }}</gl-button>
-      <gl-button category="tertiary" icon="copy-to-clipboard" @click="copy">{{ s__('ContentEditor|Copy media URL') }}</gl-button>
+      <gl-button :href="displayContext.displayURL" target="_blank" rel="noopener noreferrer" category="tertiary" icon="external-link" class="gl-justify-start" button-text-classes="gl-w-full gl-text-left" :aria-label="s__('ContentEditor|Open media')">{{ s__('ContentEditor|Open') }}</gl-button>
+      <gl-button category="tertiary" icon="copy-to-clipboard" class="gl-justify-start" button-text-classes="gl-w-full gl-text-left" @click="copy">{{ s__('ContentEditor|Copy media URL') }}</gl-button>
+      <gl-button v-if="allowUpload" :disabled="disabled" category="tertiary" icon="upload" class="gl-justify-start" button-text-classes="gl-w-full gl-text-left" @click="chooseReplacement">{{ s__('ContentEditor|Replace media file') }}</gl-button>
     </div>
     <template v-if="allowUpload">
-      <gl-button :disabled="disabled" category="tertiary" icon="upload" class="gl-mt-3" @click="chooseReplacement">{{ s__('ContentEditor|Replace media file') }}</gl-button>
       <input ref="file" type="file" :accept="`${displayContext.kind}/*`" class="gl-hidden" :disabled="disabled" :aria-label="s__('ContentEditor|Replacement media file')" @change="replaceFile" @cancel="cancelReplacement" />
     </template>
     <p v-if="copyState === 'copied'" role="status" class="gl-mb-0 gl-mt-3 gl-text-subtle">{{ s__('ContentEditor|Media URL copied.') }}</p>

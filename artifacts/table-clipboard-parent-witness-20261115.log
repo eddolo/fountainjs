@@ -1,0 +1,103 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/table-clipboard-ownership.test.ts (5 tests | 5 failed) 367ms
+   × copies a complete cell-selection graph, including merged geometry: false 157ms
+   × copies a complete cell-selection graph, including merged geometry: true 27ms
+   × pastes rich native cells and their owned notes without nesting or flattening the table 68ms
+   × pastes rich html cells and their owned notes without nesting or flattening the table 50ms
+   × pastes a merged cell slice at a table caret, growing its destination and retaining note ownership 65ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/table-clipboard-ownership.test.ts > copies a complete cell-selection graph, including merged geometry: false
+AssertionError: expected '<table><tbody><tr><th colspan="1" row…' to contain 'Owned note body.'
+
+Expected: "Owned note body."
+Received: "<table><tbody><tr><th colspan="1" rowspan="1" style="background-color:#fff0aa" scope="col"><p><strong>Source</strong><sup data-fountain-footnote-reference="source-note" data-fountain-footnote-number="1" class="fountain-footnote-reference" role="doc-noteref" aria-label="Footnote 1"><a href="#fountain-footnote-source-note">1</a></sup></p></th><td colspan="1" rowspan="1"><p>B</p></td></tr><tr><td colspan="1" rowspan="1"><p>C</p></td><td colspan="1" rowspan="1"><p>D</p></td></tr></tbody></table>"
+
+ ❯ tests/table-clipboard-ownership.test.ts:37:42
+     35|     editor.dispatch(editor.createTransaction().setSelection(new CellSe…
+     36|     const before = editor.getJSON(), copied = clipboard('copy'); view.…
+     37|     expect(copied.data.get('text/html')).toContain('Owned note body.');
+       |                                          ^
+     38|     expect(copied.data.get('text/plain')).toContain('[^source-note]: O…
+     39|     expect(copied.data.has(mime)).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/table-clipboard-ownership.test.ts > copies a complete cell-selection graph, including merged geometry: true
+AssertionError: expected '<table><tbody><tr><th colspan="2" row…' to contain 'Owned note body.'
+
+Expected: "Owned note body."
+Received: "<table><tbody><tr><th colspan="2" rowspan="2" style="background-color:#fff0aa" scope="col"><p><strong>Source</strong><sup data-fountain-footnote-reference="source-note" data-fountain-footnote-number="1" class="fountain-footnote-reference" role="doc-noteref" aria-label="Footnote 1"><a href="#fountain-footnote-source-note">1</a></sup></p></th></tr><tr></tr></tbody></table>"
+
+ ❯ tests/table-clipboard-ownership.test.ts:37:42
+     35|     editor.dispatch(editor.createTransaction().setSelection(new CellSe…
+     36|     const before = editor.getJSON(), copied = clipboard('copy'); view.…
+     37|     expect(copied.data.get('text/html')).toContain('Owned note body.');
+       |                                          ^
+     38|     expect(copied.data.get('text/plain')).toContain('[^source-note]: O…
+     39|     expect(copied.data.has(mime)).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/table-clipboard-ownership.test.ts > pastes rich native cells and their owned notes without nesting or flattening the table
+AssertionError: expected 'table_cell' to be 'table_header' // Object.is equality
+
+Expected: "table_header"
+Received: "table_cell"
+
+ ❯ tests/table-clipboard-ownership.test.ts:62:29
+     60|     expect(notes.definitions).toHaveLength(2); expect(notes.valid).toB…
+     61|     const target = editor.state.doc.child(1), first = target.child(0).…
+     62|     expect(first.type.name).toBe('table_header'); expect(first.attrs.b…
+       |                             ^
+     63|     expect(first.child(0).child(0).marks.map(mark => mark.type.name)).…
+     64|     expect(TableMap.create(target).cells.map(cell => cell.node.textCon…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/table-clipboard-ownership.test.ts > pastes rich html cells and their owned notes without nesting or flattening the table
+AssertionError: expected [ { id: 'source-note', path: [ 3 ] } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/table-clipboard-ownership.test.ts:60:31
+     58|     view.dom.dispatchEvent(clipboard('paste', values).event);
+     59|     const notes = inspectFootnotes(editor.state.doc);
+     60|     expect(notes.definitions).toHaveLength(2); expect(notes.valid).toB…
+       |                               ^
+     61|     const target = editor.state.doc.child(1), first = target.child(0).…
+     62|     expect(first.type.name).toBe('table_header'); expect(first.attrs.b…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/table-clipboard-ownership.test.ts > pastes a merged cell slice at a table caret, growing its destination and retaining note ownership
+AssertionError: expected 2 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 2
+
+ ❯ tests/table-clipboard-ownership.test.ts:82:54
+     80|     const before = editor.getJSON(); view.dom.dispatchEvent(clipboard(…
+     81|     const map = TableMap.create(editor.state.doc.child(1));
+     82|     expect(map.valid).toBe(true); expect(map.height).toBe(3); expect(m…
+       |                                                      ^
+     83|     expect(map.cellAt(1, 1)?.rowspan).toBe(2); expect(map.cellAt(1, 1)…
+     84|     expect(inspectFootnotes(editor.state.doc).definitions).toHaveLengt…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  20:16:02
+   Duration  4.48s (environment 45%, transform 37%, tests 9%, import 8%)

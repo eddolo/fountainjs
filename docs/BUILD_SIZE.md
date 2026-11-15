@@ -18,6 +18,22 @@ remain optional. Investigate unexpected dependency/loading changes before
 increasing a budget. Justified growth for tested behavior is normal development;
 it does not justify weakening correctness, latency or retained-memory checks.
 
+## Rich cell clipboard checkpoint, 2026-11-15
+
+The emitted inventory is 1,610.5 KiB ESM / 1,433.9 KiB CommonJS, up from
+1,605.5 / 1,430.1 KiB. All existing entry, CSS and aggregate limits pass;
+CommonJS capacity remains 1,440 KiB. No dependencies or acceptance ceilings
+change. This inventory sums optional entries and is not a consumer's download
+size. The private GitLab toolbar CSS belongs to the host build.
+
+Existing latency, growth and retained-memory gates pass. A separate pure-Node
+grid-growth observation measures median 4.35 / 37.68 / 308.24 ms for
+100 / 1,000 / 10,000 cells, with three samples per size. It excludes fixture
+creation and post-timing checks; it is neither browser input latency nor a new
+acceptance threshold. Full tests pass 6,553 cases with two workers, while a
+default-parallel SQLite timeout remains a recorded runner observation.
+[Evidence](../artifacts/gitlab-table-clipboard-integration-20261115.json).
+
 ## Footnote clipboard checkpoint, 2026-11-15
 
 The complete emitted inventory measures 1,605.5 KiB ESM / 1,430.1 KiB

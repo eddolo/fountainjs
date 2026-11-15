@@ -38,7 +38,7 @@ export async function footnoteClipboardJourney(page: Page, info: TestInfo, brows
     expect(payload.document.content.filter((node: any) => node.type === 'footnote_definition')).toHaveLength(1);
   }
   expect(await page.evaluate(html => new DOMParser().parseFromString(html, 'text/html')
-    .querySelectorAll('section[data-fountain-footnote-definition]').length, copied['text/html'])).toBe(1);
+    .querySelectorAll('aside[data-fountain-footnote-definition]').length, copied['text/html'])).toBe(1);
   const external = page.getByRole('textbox', { name: 'Independent plain-text destination', exact: true });
   await external.click(); await page.keyboard.press('ControlOrMeta+v');
   await expect(external).toHaveValue(copied['text/plain']);

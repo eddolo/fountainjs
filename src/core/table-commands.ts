@@ -6,6 +6,7 @@ import { TableMap, type TableCellInfo, type TableRect } from './table-map';
 import type { EditorState } from './state';
 import { comparePaths, getNodeAtPath, replaceNodeAtPath } from './transaction/path';
 import { Step } from './transaction/step';
+import { pasteRichTableCells } from './table-clipboard';
 
 const CELL_NAMES = new Set(['table_cell', 'table_header']);
 const MIN_COLUMN_WIDTH = 40;
@@ -395,7 +396,8 @@ function parseTabularText(text: string): readonly (readonly string[])[] | null {
   return matrix.map((row) => Object.freeze(Array.from({ length: width }, (_, column) => row[column] ?? '')));
 }
 
-export function pasteTableCells(editor: Editor, text: string): boolean {
+export function pasteTableCells(editor: Editor, text: string | Node): boolean {
+  if (typeof text !== 'string') return pasteRichTableCells(editor, text);
   if (!editor.editable) return false;
   const context = selectionContext(editor);
   const matrix = parseTabularText(text);
@@ -430,13 +432,32 @@ export function pasteTableCells(editor: Editor, text: string): boolean {
   const head = context.map.cellAt(rect.rowTo, rect.columnTo);
   if (!anchor || !head) return false;
   transaction.setSelection(new CellSelection(transaction.doc, anchor.path, head.path));
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 export interface SerializedTableSelection {
   readonly text: string;
   readonly html: string;
+}
+
+/** Extracts a complete rectangular slice, retaining merged spans and row/cell attributes. */
+export function extractTableSelection(doc: Node, selection: CellSelection): Node | null {
+  const tablePath = selection.anchorCellPath.slice(0, -2);
+  try {
+    const table = getNodeAtPath(doc, tablePath);
+    if (table.type.name !== 'table') return null;
+    const map = TableMap.create(table, tablePath);
+    if (!map.valid) return null;
+    const cells = map.cellsInRect(selection);
+    if (cells.some(cell => cell.row < selection.rowFrom || cell.column < selection.columnFrom
+      || cell.row + cell.rowspan - 1 > selection.rowTo || cell.column + cell.colspan - 1 > selection.columnTo)) return null;
+    const grouped = new Map<number, Node[]>();
+    for (const cell of cells) { const row = grouped.get(cell.row) ?? []; row.push(cell.node); grouped.set(cell.row, row); }
+    const rows = table.content.slice(selection.rowFrom, selection.rowTo + 1).map((row, index) => row.copy(grouped.get(selection.rowFrom + index) ?? []));
+    const result = doc.copy([table.copy(rows)]);
+    doc.type.schema.validate(result);
+    return result;
+  } catch { return null; }
 }
 
 export function serializeTableSelection(doc: Node, selection: CellSelection): SerializedTableSelection | null {

@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-15T22:09:28.038Z",
+  "scope": "Reviewed named screenshots and sampled recording frames; not a full-movie review",
+  "recordingSha256": "ee060af68f82852717bf042cfe6a091db782495688ea77bfc74924b0d21dff7f",
+  "images": [
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/controls-toolbar-1440.png",
+      "sha256": "4ee657770df29d100c47dddce757e4ad29329868f3b1309d4435eb84ff9a39ef"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/controls-toolbar-1100.png",
+      "sha256": "3655dd0659a3c7a6faa91e47e39f14e537ddf4eb66d0bd588b0b560d95da6141"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/controls-toolbar-390.png",
+      "sha256": "4c29ce6ac054249a82a611dadc1ddf999cdabd8201cd2d68a2dc5f29f0154010"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/controls-media-1440.png",
+      "sha256": "5b7bd1aaccf4a29dc088a7612e9fcbe972180c3d88814da9c76f9ac98ef3ae30"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/table-document-copy.png",
+      "sha256": "bfcb5c7a6c974302cf58792b6b9c03ead429d8cb4b28f7058b144d9d0ffbfdd5"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/original-after-restart.png",
+      "sha256": "671926682c9aa0e0dc9c0347074584f13b97a126992d4cbf9c57f579e7f3e5e8"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/recording-72s.png",
+      "sha256": "94df3e7b06c2d2e09c0f73984bb71c77a564aa77f5d0077c03bcc39141ee14c4"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/recording-75s.png",
+      "sha256": "9025f0f8c0467ae6c0f024268c1e3710d0ce263a6e59de542061e95d8ab4372b"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/recording-90s.png",
+      "sha256": "72b1a7ece7c7b068781c112c2ce1a564f2201c7075638083e380533707e7e3dd"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/recording-170s.png",
+      "sha256": "e2d7fe89c0bdf70efb400a35d462f92d834b2b94b82ccddbe134cf9292088ca3"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/recording-177s.png",
+      "sha256": "5573b1cea06ec0f675d6e6f8a8585c193e276ee7ba8ae7ce50dffcce80dd9b41"
+    },
+    {
+      "path": "artifacts/gitlab-native-table-clipboard-20261115/recording-65-to-94s.png",
+      "sha256": "76275d309400c5d9f787392f8830f62d1306f5b18dca94be0ee8f2fcf4faad99"
+    },
+    {
+      "path": "artifacts/controls-final-clipboard-browser-20261115/table-clipboard-real-copie-8765d-real-table-document-targets-chromium/external-rich-table.png",
+      "sha256": "dd2209817e81a38f9eb82c8bf364c45aab04b93de9f8c78278a96c1e6b29bd88"
+    },
+    {
+      "path": "artifacts/controls-final-clipboard-browser-20261115/table-clipboard-real-copie-8765d-real-table-document-targets-chromium/merged-grid-expanded.png",
+      "sha256": "5529d709fea77756520ee6ddff039960bd847b3b63dfe8fb1c2e633cc15536ee"
+    },
+    {
+      "path": "artifacts/controls-final-clipboard-browser-20261115/table-clipboard-real-copie-8765d-real-table-document-targets-firefox/rich-grid-pasted.png",
+      "sha256": "224a45536636a1d98bee41661d06e05f36f5dbe4dd6fd41906c4324f8677b238"
+    },
+    {
+      "path": "artifacts/controls-final-clipboard-browser-20261115/table-clipboard-real-copie-8765d-real-table-document-targets-firefox/merged-slice-in-document.png",
+      "sha256": "d35b54471467a464773ce52c94a0484124a0963b31583280ca86a5caf88faf94"
+    }
+  ],
+  "observations": [
+    "At 1440px all controls share one toolbar row. At 1100px Attach, Paste Markdown and Media wrap together instead of leaving Media alone.",
+    "At 390px the media panel flows below the common tools without horizontal clipping; primary Properties, left-aligned common actions and divided red deletion are distinguishable.",
+    "Native grid copy/paste visibly retains headers, bold cells and referenced notes. Three tables, rendered math and the uploaded figure remain coherent in the saved reader after restart.",
+    "The 75-second recording frame shows all three saved Grid body notes and their backlinks; the contact sheet samples one frame per second from 65 through 94 seconds.",
+    "Chromium/Firefox screenshots show retained rich table text, color, merged geometry and copied bold note bodies in their independent and same-editor destinations."
+  ],
+  "limits": [
+    "Independent rich text uses its own browser-default presentation, not the Fountain stylesheet.",
+    "Physical Safari, installed WebKit OS format transport, cut/move identity and broader product/assistive-technology acceptance remain open."
+  ]
+}

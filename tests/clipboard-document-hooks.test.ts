@@ -51,11 +51,11 @@ it.each(['fountain', 'html'] as const)('atomically refuses a %s document without
   const { editor, view, cleanup } = mount([new Plugin({ props: { handlePasteDocument: handler } })],
     { onError, paste: { onReport: report => reports.push(report) } });
   try {
-    const before = editor.state.doc;
+    const before = editor.state, changed = vi.fn(); editor.subscribe(changed);
     const pasted = clipboard('paste', { 'text/plain': 'Lossy fallback', 'text/html': '<p>Rich source</p>',
       ...(source === 'fountain' ? { [mime]: JSON.stringify({ version: 1, document: { type: 'doc', content: [p('Native source')] } }) } : {}) });
     view.dom.dispatchEvent(pasted.event);
-    expect(editor.state.doc).toBe(before); expect(handler).toHaveBeenCalledOnce();
+    expect(editor.state).toBe(before); expect(changed).not.toHaveBeenCalled(); expect(handler).toHaveBeenCalledOnce();
     expect(handler.mock.calls[0]![2]).toEqual({ source });
     expect(reports).toEqual([expect.objectContaining({ outcome: 'rejected' })]);
     expect(onError).toHaveBeenCalledTimes(source === 'html' ? 1 : 0);

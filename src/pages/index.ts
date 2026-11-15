@@ -151,9 +151,11 @@ export const footnoteReferenceNode: NodeSpec = {
       'data-fountain-footnote-reference': node.attrs.id,
       'data-fountain-footnote-number': label,
       className: 'fountain-footnote-reference',
+    }, ['a', {
+      href: `#${footnoteAnchor(node.attrs.id)}`,
       role: 'doc-noteref',
       'aria-label': `Footnote ${label}`,
-    }, ['a', { href: `#${footnoteAnchor(node.attrs.id)}` }, label]];
+    }, label]];
   },
   toText: (node) => `[^${String(node.attrs.id)}]`,
 };
@@ -165,7 +167,7 @@ export const footnoteDefinitionNode: NodeSpec = {
   attrs: { id: { validate: validFootnoteId } },
   parseHTML: [
     {
-      tag: 'section[data-fountain-footnote-definition]',
+      tag: 'section[data-fountain-footnote-definition], aside[data-fountain-footnote-definition]',
       getAttrs: (element) => ({ id: element.dataset.fountainFootnoteDefinition ?? '' }),
     },
     {
@@ -178,7 +180,7 @@ export const footnoteDefinitionNode: NodeSpec = {
   ],
   parseDOM: [
     {
-      tag: 'section[data-fountain-footnote-definition]',
+      tag: 'section[data-fountain-footnote-definition], aside[data-fountain-footnote-definition]',
       getAttrs: (element) => ({ id: element.dataset.fountainFootnoteDefinition ?? '' }),
     },
     {
@@ -191,7 +193,7 @@ export const footnoteDefinitionNode: NodeSpec = {
   ],
   toDOM: (node, context) => {
     const label = displayFootnoteLabel(node, context);
-    return ['section', {
+    return ['aside', {
       'data-fountain-footnote-definition': node.attrs.id,
       'data-fountain-footnote-number': label,
       className: 'fountain-footnote-definition',

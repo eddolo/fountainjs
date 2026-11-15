@@ -2,14 +2,39 @@
 
 ## Unreleased
 
+- Group the private GitLab toolbar by history, text formatting, lists and
+  document tools so wrapping preserves related controls. Keep attachment,
+  Markdown paste and media together; shorten the visible media trigger while retaining
+  its accessible name and keyboard shortcut. Give media actions separate rows,
+  a prominent Properties action and a divided destructive action.
+
+- Render individual footnotes as `aside` elements, where `doc-footnote` is an
+  allowed role. Keep importing older `section` carriers with their native IDs
+  and private GitLab source labels intact. Put `doc-noteref` and its accessible
+  name on each reference link instead of the superscript wrapper.
+
+- Copy cell selections through the structured clipboard pipeline, including
+  owned footnote definitions and span-aware TSV. Rich grid paste preserves
+  marks, custom cell/widget data and merged geometry, grows table bounds and
+  maps untouched content through the existing restructuring transaction.
+  `pasteTableCells` additionally accepts a table `Node`;
+  `extractTableSelection` returns a model slice. Single-cell fill retains target
+  merges, source tiles clip at an explicit selection boundary, and crossing
+  target spans split while retaining content anchored outside the paste.
+  Plain TSV behavior and explicit nested-table insertion remain available.
+  Deferred rich-paste fallback still distributes TSV when HTML is unavailable,
+  with an explicit loss report. Refused model pastes preserve the exact editor
+  state and publish no intermediate update; TSV placement honors transaction
+  filters.
+
 - Keep copied footnote references together with their complete owned bodies.
   Pages paste remaps colliding note identities and retains shared references,
   nested note links and marks in one undoable operation. Add optional model
   clipboard hooks to `PluginProps` and `createFootnoteClipboardPlugin` in the
   Pages entry for host-specific labels and validation. Clipboard text formatting
   leaves `Node.textContent` unchanged. A refused model paste rolls back without
-  silently retrying as lossy plain text. Table-cell selections still use their
-  separate grid clipboard path.
+  silently retrying as lossy plain text. Cell selections use these same ownership
+  hooks.
 
 - Isolate handled native copy/cut/paste events in the private GitLab view so its
   page-wide reader clipboard transformer cannot overwrite Fountain's formats.

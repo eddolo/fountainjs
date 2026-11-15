@@ -7,6 +7,25 @@ and removal in `src/pages/index.ts`; it does not introduce another engine.
 
 ## Current implementation — November 15
 
+Cell-grid copy/paste now includes complete owned note bodies, remaps collisions
+and retains marks, cell roles and table placement. The 20-check real application
+profile preserves three tables, three definitions and their reader references
+through Save/reopen/restart. A TD-only slice is explicitly refused outside a
+table because GFM would change its first row into headers; this is not claimed
+as format support. Engine merged-grid support is verified separately in native
+Chromium/Firefox clipboard journeys.
+
+Toolbar/media layout is checked at three widths with keyboard access, mobile
+dialog cancellation and six automated accessibility scans. Those scans exposed
+invalid footnote role hosts: definitions now use `aside`, and reference roles
+belong to their links. Both older `section` and new `aside` carriers retain
+private source labels. Root tests pass 6,553 cases with two workers; a previous
+default-parallel SQLite timeout remains recorded. Cut/move identity reuse,
+physical Safari and broader host acceptance remain open.
+[Evidence](../../artifacts/gitlab-table-clipboard-integration-20261115.json).
+
+Previous footnote-only clipboard baseline:
+
 Clipboard references now carry complete owned definitions through the model
 hooks in `src/pages/clipboard.ts`. Collisions get new native IDs; the existing
 `namespaceGitLabFootnotes` assigns fresh source labels. Shared references and

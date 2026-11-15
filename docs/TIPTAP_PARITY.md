@@ -2,7 +2,19 @@
 
 ## Current programme status — 2026-11-15
 
-The latest bounded clipboard delivery preserves footnote dependency graphs,
+The latest bounded delivery covers rich cell-grid clipboard ownership and
+placement, including merged spans, growth, custom cell/widget data, atomic
+history and deferred-HTML/TSV fallback. A recorded 20-check actual GitLab profile
+retains three tables and three linked notes through Save/reopen/restart.
+Toolbar control groups, media actions, keyboard access and mobile cancellation
+are checked at three widths; six automated accessibility scans pass after
+repairing footnote role hosts. Root tests pass 6,553 cases with two workers;
+540 selected upstream cases pass with one inherited skip. A default-parallel
+SQLite timeout remains recorded. Cut/move identity reuse, physical Safari,
+WebKit OS clipboard transport and full host acceptance remain open; no parity
+row is promoted. [Evidence](../artifacts/gitlab-table-clipboard-integration-20261115.json).
+
+The preceding bounded clipboard delivery preserves footnote dependency graphs,
 renames colliding identities/source labels and keeps paste atomic. Live GitLab
 testing also found and fixed a host reader handler overwriting Fountain's copy
 formats. Four definitions, six references, shared bodies and bold marks agree
