@@ -1,8 +1,25 @@
 # Release and API stability policy
 
-## GitLab task source stability — 2026-11-16
+## Mixed lists and GitLab task source — 2026-11-16
 
-Latest task conversion checkpoint (2026-11-16): GitLab-generated checkbox spaces
+Latest mixed-list checkpoint (2026-11-16): ordinary bullets and checkboxes now
+share one list, including numbered tasks. Markdown, browser/server HTML and
+clipboard retain item kinds and state; indent/lift, split/join and selected-item
+conversion preserve neighbouring content and concurrent peer typing.
+
+All 6,623 unit cases / 388 files pass. Recorded Chromium and Firefox clipboard
+journeys pass; the actual GitLab MR/wiki profile passes 20 checks, including six
+rich/source cycles, Save/reopen and application restart. Screenshots and sampled
+recording frames were reviewed. The 18-patch reconstruction and 28-file source
+rollback pass. [Mixed-list evidence](../artifacts/mixed-lists-integration-20261116.json).
+
+Inapplicable `[~]` tasks still refuse editing with exact source retained; inline
+review/suggestions and broader product acceptance remain open. DOCX reports lost
+checkbox state explicitly; native task fidelity is still unfinished. CSS grows
+336 bytes with a measured 320-byte ceiling increase; JavaScript and performance
+limits remain unchanged. No package version, publication or parity-row promotion.
+
+Previous task conversion checkpoint (2026-11-16): GitLab-generated checkbox spaces
 and newlines before nested blocks no longer become authored text on export. The
 adapter consults source positions to retain intentional newline entities and
 preserves additional spaces, tabs, NBSP and escaped entity text. Seventeen actual

@@ -1,0 +1,8 @@
+{
+  "browser": "chromium",
+  "nestedBulletUnstruck": true,
+  "nativeSplitJoin": true,
+  "checkboxUndo": true,
+  "systemClipboardExternalPaste": true,
+  "sameEditorStructuredPaste": true
+}

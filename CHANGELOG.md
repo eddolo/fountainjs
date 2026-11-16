@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Preserve mixed ordinary/task lists and numbered checkboxes through Markdown,
+  HTML, clipboard and GitLab source conversion. Keep item kinds through list
+  editing, undo and concurrent peer typing; render nested bullets and numbered
+  checkboxes correctly. Report unsupported checkbox state in DOCX export.
+  Verify actual MR/wiki editing and persistence across application restart.
+
 - Prevent GitLab checkbox spacing and structural list newlines from accumulating
   in task text during rich/source conversion. Preserve authored whitespace and
   newline entities; verify task undo/redo and repeated MR/wiki edits through restart.

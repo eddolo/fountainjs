@@ -2,7 +2,7 @@
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
 import { CoreExtension, Mapping, Schema, Selection, composeExtensions, createEditor, getCollaborationState, indentListItem,
-  insertText, redoCollaboration, undoCollaboration, type NodeJSON } from '../src';
+  insertText, toggleList, redoCollaboration, undoCollaboration, type NodeJSON } from '../src';
 import { RestructureChildrenStep } from '../src/core/transaction/restructure-children-step';
 import { planRetainedNodeStarts, planRetainedText } from '../src/yjs/retained-mapping';
 import { RetainedDocumentStore } from '../src/yjs/retained-document';
@@ -61,5 +61,37 @@ it.each([false, true])('keeps one original list through independent offline inde
     expect(left.state.doc.child(0).child(2).textContent).toBe('EnglishX first');
     expect(redoCollaboration(left)).toBe(true); sync(); expect(left.state.doc.child(0).childCount).toBe(3);
     expect(left.state.doc.child(0).child(1).textContent).toBe('First parentEnglishX first');
+  } finally { reader.destroy(); left.destroy(); right.destroy(); a.destroy(); b.destroy(); }
+});
+
+it.each([false, true])('retains concurrent text while changing one mixed-list item kind and undoing (%s)', reverse => {
+  const content: NodeJSON = { type: 'doc', content: [{ type: 'task_list', content: [
+    { type: 'list_item', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Alpha' }] }] },
+    { type: 'task_item', attrs: { checked: true }, content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Done' }] }] },
+  ] }] };
+  const a = new Y.Doc(), b = new Y.Doc(); a.clientID = reverse ? 202 : 101; b.clientID = reverse ? 101 : 202;
+  const make = (document: Y.Doc, id: string) => {
+    const kit = composeExtensions([CoreExtension, createYjsCollaborationExtension({ document, captureTimeout: 0,
+      user: { id, name: id, color: '#a855f7' } })]);
+    return createEditor({ schema: kit.schema, plugins: kit.plugins, content });
+  };
+  const left = make(a, 'left'); Y.applyUpdate(b, Y.encodeStateAsUpdate(a)); const right = make(b, 'right');
+  const reader = new RetainedDocumentStore(a, 'fountain', left.state.schema, () => { throw new Error('Read only'); });
+  reader.read(); const listId = reader.identity([0]), paragraphId = reader.identity([0, 0, 0]);
+  const sync = () => {
+    const updates = [Y.encodeStateAsUpdate(a), Y.encodeStateAsUpdate(b)]; if (reverse) updates.reverse();
+    for (const document of [a, b]) for (const update of updates) Y.applyUpdate(document, update, 'peer');
+    for (const editor of [left, right]) expect(getCollaborationState(editor)?.status, getCollaborationState(editor)?.error?.message).toBe('connected');
+    expect(left.getJSON()).toEqual(right.getJSON());
+    expect(left.state.doc.child(0).child(0).textContent).toBe('AlXpha');
+    expect(left.state.doc.child(0).child(1).attrs.checked).toBe(true);
+    reader.read(); expect(reader.identity([0])).toBe(listId); expect(reader.identity([0, 0, 0])).toBe(paragraphId);
+  };
+  try {
+    left.dispatch(left.createTransaction().setSelection(Selection.cursor([0, 0, 0, 0], 2))); expect(toggleList(left, 'task')).toBe(true);
+    right.dispatch(right.createTransaction().setSelection(Selection.cursor([0, 0, 0, 0], 2))); expect(insertText(right, 'X')).toBe(true);
+    sync(); expect(left.state.doc.child(0).child(0).type.name).toBe('task_item');
+    expect(undoCollaboration(left)).toBe(true); sync(); expect(left.state.doc.child(0).child(0).type.name).toBe('list_item');
+    expect(redoCollaboration(left)).toBe(true); sync(); expect(left.state.doc.child(0).child(0).type.name).toBe('task_item');
   } finally { reader.destroy(); left.destroy(); right.destroy(); a.destroy(); b.destroy(); }
 });

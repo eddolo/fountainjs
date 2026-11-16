@@ -261,7 +261,10 @@ const limits = Object.freeze({
   // +612 bytes, measured 87.330 KiB. Keep only 174 bytes of raw CSS headroom.
   // Native empty-document/focus placeholder rendering measures 90,906 bytes.
   // Add 64 bytes over 90,880; other size/performance limits remain unchanged.
-  'dist/styles.css': 88.8125 * kibibyte,
+  // Mixed bullet/task and numbered-checkbox presentation adds 336 bytes,
+  // including independent nested-item decoration. Measured 91,242 bytes;
+  // a 320-byte ceiling increase retains 22 bytes of raw CSS headroom.
+  'dist/styles.css': 89.125 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another

@@ -100,7 +100,7 @@ it.each([
   ['specialized-renderer', '<pre data-canonical-lang="mermaid">graph TD</pre>'],
   ['specialized-renderer', '<pre data-lang-params="frontmatter">title: Paper</pre>'],
   ['specialized-renderer', '<sup class="footnote-ref"><a href="#fn1">1</a></sup>'],
-  ['mixed-task-list', '<ul class="task-list"><li>Bullet</li><li class="task-list-item"><input type="checkbox">Task</li></ul>'],
+  ['task-source', '<ul class="task-list"><li>Bullet</li><li class="task-list-item"><input type="checkbox"><input type="checkbox">Ambiguous state</li></ul>'],
   ['task-source', '<ul class="task-list"><li class="task-list-item">No state</li></ul>'],
   ['rejected-url', '<p><a href="javascript:alert(1)">Unsafe</a></p>'],
   ['unmapped-inline-element', '<p><custom-widget>Opaque widget</custom-widget></p>'],

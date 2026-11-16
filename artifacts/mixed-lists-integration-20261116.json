@@ -1,0 +1,413 @@
+{
+  "date": "2026-11-16T18:22:19.141Z",
+  "status": "verified-bounded-candidate",
+  "parentRevision": "0e50c4b666bab40369c1fd9b7d8d9b6e4ac53511",
+  "scope": "Mixed ordinary/task lists and numbered checkboxes in the public engine and pinned real GitLab MR/wiki workflows. No publication or overall parity promotion.",
+  "fixes": [
+    "A shared listItem schema group allows ordinary items and tasks to coexist without fragmenting one source list.",
+    "Markdown, DOM/server HTML and clipboard preserve item kinds, checked states, numbering and authored source spacing.",
+    "Indent/lift, split/join and selected item conversion retain siblings; structural transactions preserve concurrent peer text and author undo/redo.",
+    "Retained Yjs recovery recognizes empty displaced wrappers under the new list group.",
+    "Ordinary nested bullets do not inherit completed-task decoration; numbered tasks display both number and checkbox.",
+    "DOCX explicitly reports task-state-omitted for tasks inside ordinary/numbered lists. It is not a task-fidelity export claim."
+  ],
+  "sourceDigests": "Working-tree bytes from the Windows audit; Git may normalize text line endings.",
+  "source": [
+    {
+      "path": "integrations/gitlab/fixtures/task-live-html.json",
+      "sha256": "07d8bca73d2c9d2b8d8b75f818e2b790be33528330135c8938597a0f142a1777"
+    },
+    {
+      "path": "integrations/gitlab/services/markdown_codec.ts",
+      "sha256": "17109a664a511d69dc6dec480ee75e1572acfa88ef6ec1cfa2973c5924b94c1d"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "805d1b5c452a4a5315a10d147587e268a45ca948008f73c24517d2559470c73e"
+    },
+    {
+      "path": "scripts/audit-gitlab-native-workflows.mjs",
+      "sha256": "c70146e02744a110452ac3d8f0d47e1342971cb3c4bcfc2ae2049fc06e9d41ed"
+    },
+    {
+      "path": "scripts/audit-gitlab-product-baseline.mjs",
+      "sha256": "730494c4b7f86f174e5a40f7e7866b6f64a10aaefc36810b460ccfb99dc60508"
+    },
+    {
+      "path": "scripts/capture-gitlab-task-rendering.mjs",
+      "sha256": "ff276ccc1594c4744ca12fc27ac874ca624a40a4ed2942ff979025179a431a13"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "a2582fb8de076fd6413a8c8f4dde672b860ea01ea76e69235b24683ab147b108"
+    },
+    {
+      "path": "scripts/run-gitlab-native-browser-audit.mjs",
+      "sha256": "73726b9b7c8926ac96738074de90f351032457bb165e931d28db91a13d83b498"
+    },
+    {
+      "path": "src/core/exporters/html-exporter.ts",
+      "sha256": "978dc37ee907001e170e517e0ae2c84a60ea5ea93210cb921f74614803c0e7de"
+    },
+    {
+      "path": "src/core/exporters/markdown-exporter.ts",
+      "sha256": "051e88f2b7eb01d71fb7229b85356d51c61920bae1fe531b1a59351b8d9f9838"
+    },
+    {
+      "path": "src/core/importers/html-importer.ts",
+      "sha256": "194aef544d104437b0ca74cb1d6d71052f33ac1599e9f158cd3c4495feb4c6b5"
+    },
+    {
+      "path": "src/core/importers/markdown-importer.ts",
+      "sha256": "839cb961d1dddc1817abdaeb3ee9adf462a0e7223e4be7b6051adf64135dad16"
+    },
+    {
+      "path": "src/core/structure-commands.ts",
+      "sha256": "3a1d4e14c382d54ba8f9627f3b5e30b8f3d4cb07aa34ebde329669a061bd0de4"
+    },
+    {
+      "path": "src/docx/index.ts",
+      "sha256": "347341d098ad06513320055ec7660f39ddf863813d68ebc07258c448456f6fff"
+    },
+    {
+      "path": "src/extensions/nodes/bullet-list.ts",
+      "sha256": "11eb156aaee46fe38704fa2c57c95773e8667f6187bd90e4d8593da75f967aee"
+    },
+    {
+      "path": "src/extensions/nodes/list-item.ts",
+      "sha256": "f4104d0f37f23a68b28604fefbda1bfe1c9eba5e2db2161a508dc3155bd89d5c"
+    },
+    {
+      "path": "src/extensions/nodes/ordered-list.ts",
+      "sha256": "d0334d7f1f1b3a402340b344000fb62984b08fb25920ecd206337672ad359f70"
+    },
+    {
+      "path": "src/extensions/nodes/task-item.ts",
+      "sha256": "6f4ba4be89fcf074f1b18169e7e4ce690b4045129b9ce5a6652a357ed6a8b553"
+    },
+    {
+      "path": "src/extensions/nodes/task-list.ts",
+      "sha256": "85ca970d0190a1c01058bcd30d26ede16eb042daba154024e380b61bf586ff02"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "7d0e52d2ad381379c01abfa4ca80d3730663a0005b90eaec0fd66a87f096ec0f"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "ac3d8f810a600d2b849647488226d7292bdde402de9e3402ee582a97fb5986dd"
+    },
+    {
+      "path": "src/view/input.ts",
+      "sha256": "45e7dfdc7fdd9cf2445960936d09107a163cee5c31e1d0aa74a3b7692b62286e"
+    },
+    {
+      "path": "src/yjs/retained-document.ts",
+      "sha256": "c7dc6c4eeb24889c0e55741ed951b2153a36e8743423991a024e90ce4b7af0b1"
+    },
+    {
+      "path": "tests/gitlab-markdown-codec.test.ts",
+      "sha256": "67dbad57f048145ad7c21ef186574b812277ad1cd02f098379b05f531a1146a7"
+    },
+    {
+      "path": "tests/markdown-flow-tasks.test.ts",
+      "sha256": "42d2f0208695872d102151667ae946999398dcc092acc907b2f4606bbc9efaa7"
+    },
+    {
+      "path": "tests/yjs-retained-restructure.test.ts",
+      "sha256": "c9c528d6304073947f5d238c34879bd14d8e1bfb33605a29192a513c30f81a1e"
+    },
+    {
+      "path": "tests/browser/mixed-lists.spec.ts",
+      "sha256": "e2d79dd37e6eba3b98de1ff2aff7bd685e267729b54941c7d5f6d641a9538064"
+    },
+    {
+      "path": "tests/docx-mixed-tasks.test.ts",
+      "sha256": "355024f8c3cc7e23aff552fe96f1b3630a81e1334af852f7d5806dc9b7c58a15"
+    },
+    {
+      "path": "tests/gitlab-mixed-lists.test.ts",
+      "sha256": "ed45185d0938b53e916dbfb2697c330778cfffdcd50f186c0d339bee294748c8"
+    },
+    {
+      "path": "tests/mixed-task-lists.test.ts",
+      "sha256": "c65543bbf173f62d3f34476ea7ac142693721bfa0ce947cf818d8d21c403fcc8"
+    }
+  ],
+  "verification": {
+    "fullRoot": {
+      "files": 388,
+      "cases": 6623,
+      "workers": 2,
+      "path": "artifacts/mixed-lists-unit-accepted-20261116.log",
+      "sha256": "15505521eeb73dbbffaa9304863bf9011b41a7cde0c97446751cf0223347cc68",
+      "retainedLocally": true
+    },
+    "actualGitLab": {
+      "report": "artifacts/gitlab-native-mixed-lists-20261116/report.json",
+      "checks": 20,
+      "richSourceCycles": 6,
+      "phases": [
+        "reopened",
+        "restart"
+      ],
+      "browserErrors": 0,
+      "path": "artifacts/mixed-lists-browser-accepted-20261116.log",
+      "sha256": "3cbacaac02524e0a2a12c9d65d5991b15aa1d136715e4289e69c49325ebe7a6d",
+      "retainedLocally": true
+    },
+    "desktop": {
+      "projects": [
+        "chromium",
+        "firefox"
+      ],
+      "cases": 2,
+      "workers": 1,
+      "path": "artifacts/mixed-lists-desktop-20261116.log",
+      "sha256": "b574b6f0ea7399aadcfeecae62121f3509cc5e9b021ee755163603a264e460c2",
+      "retainedLocally": true,
+      "artifacts": [
+        {
+          "project": "chromium",
+          "reviewed": [
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/chromium/editor.png",
+              "sha256": "172fcf464d027844c6b408e3f44105ad2fc0847ed9a10049e0128d17977cbe8e"
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/chromium/observations.json",
+              "sha256": "6fe3c6f47a8e938bd76983034e91005d1360b4105806e0519d673dbba779632f"
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/chromium/before.json",
+              "sha256": "85d3bf11673dac24e4ae49618f6b74380dea790cdf6c9f884c9d1f7e7c5cb5a0"
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/chromium/after.json",
+              "sha256": "1d06b55c28a2e633e5762e783983613a264dfe783f3585b07e8a86cd73df90a3"
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/chromium/external-paste.txt",
+              "sha256": "10b8166fdabd77ec54df3db70ec5be36917a252bf6ae3938d20a6c3430583638"
+            }
+          ],
+          "localRecording": [
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/chromium/video.webm",
+              "sha256": "a3284318a91108bc0e638a8829d76ba26f1a86cc6257c2dc35f9650949f0ac24",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/chromium/video-1.webm",
+              "sha256": "7e4454663752b4fd76a0319b8df8535ab8a41ff95f01a6ebaacf95d2b4ed8e77",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/chromium/frames.png",
+              "sha256": "d4acb7611e5a1a9f870cf8a80fc96c08d807ad04e4d906544fb47c580e8d1ac0",
+              "retainedLocally": true
+            }
+          ]
+        },
+        {
+          "project": "firefox",
+          "reviewed": [
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/firefox/editor.png",
+              "sha256": "aff562d284a58d69d32863dc2242ec5663c272dccaa868942da83777fe4083cf"
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/firefox/observations.json",
+              "sha256": "395bf7029513c87997fa4dce2a35f53a5805e7edb56b47b2480c57c7b25e69ed"
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/firefox/before.json",
+              "sha256": "85d3bf11673dac24e4ae49618f6b74380dea790cdf6c9f884c9d1f7e7c5cb5a0"
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/firefox/after.json",
+              "sha256": "85d3bf11673dac24e4ae49618f6b74380dea790cdf6c9f884c9d1f7e7c5cb5a0"
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/firefox/external-paste.txt",
+              "sha256": "10b8166fdabd77ec54df3db70ec5be36917a252bf6ae3938d20a6c3430583638"
+            }
+          ],
+          "localRecording": [
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/firefox/video.webm",
+              "sha256": "51aa34d35e2972359bb4f718813c721b62c76f43c14e1db08b1e673821c9bfcb",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/firefox/video-1.webm",
+              "sha256": "661ab6907205b652a85da7380ff3e7c2e1e8bafba6cec2ecc9234341bc05e4b0",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/mixed-lists-desktop-20261116/firefox/frames.png",
+              "sha256": "feecf4382722e8240d0814832ab93dda1b84dc276dc5f33d4214985d9acae7fd",
+              "retainedLocally": true
+            }
+          ]
+        }
+      ]
+    },
+    "upstream": "artifacts/mixed-lists-upstream-summary-20261116.json",
+    "actualRendererFixtures": {
+      "total": 29,
+      "accepted": 21,
+      "sourcePreservingInapplicableRefusals": 8
+    },
+    "checks": [
+      {
+        "path": "artifacts/mixed-lists-typecheck-accepted-20261116.log",
+        "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/mixed-lists-build-accepted-20261116.log",
+        "sha256": "42826ba4d347bbc01c732f1d5de38c73f51ab6e570a9ac12f50f7459e807744d",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/mixed-lists-test-api-accepted-20261116.log",
+        "sha256": "6db6e86793e352fe883ae7e8a5377c9497286965dfec560b3205d3c6ea71bdbb",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/mixed-lists-test-package-accepted-20261116.log",
+        "sha256": "1b06944f83fd821dbec808557dc70e49de905280394a8f570edf2fa27b3d439a",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/mixed-lists-test-budget-accepted-20261116.log",
+        "sha256": "f880d6d383c29f87ba03830674bd08d361730240d26b0d47b5068fe4281f8f43",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/mixed-lists-test-server-runtimes-accepted-20261116.log",
+        "sha256": "ae2a68e67c0733f11926e6dd48af1a3429c7e13dde0da9e97ac6277d43af3d96",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/mixed-lists-test-headless-accepted-20261116.log",
+        "sha256": "b16f4c875130cea65b4e53ee00cae37fdcba9a90680dd15c148537485f29587d",
+        "retainedLocally": true
+      }
+    ],
+    "priorPerformanceAndMarkdownChecks": [
+      {
+        "path": "artifacts/mixed-lists-test-performance-20261116.log",
+        "sha256": "f8d17cf491775e864dd7a8ec6e945e5e2cc4d913d2202796fe40b4c2fef327d0",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/mixed-lists-test-markdown-conformance-20261116.log",
+        "sha256": "2149d074497fb692b8eabea7e18f95bfdd677e321cd34790019fee1f03ac414b",
+        "retainedLocally": true
+      }
+    ],
+    "sourceVerification": [
+      "artifacts/gitlab-native-mixed-lists-patch-verification-20261116.json",
+      "artifacts/gitlab-native-mixed-lists-install-roundtrip-20261116.json"
+    ],
+    "patches": 18,
+    "installedFiles": 28,
+    "frontend": {
+      "seconds": 75.56,
+      "existingAdvisories": 2,
+      "path": "artifacts/mixed-lists-rspack-20261116.log",
+      "sha256": "e07fe58499405d76953e86bb983af087d8ac56627abca6b4bdcc9b417bf7efd6",
+      "retainedLocally": true
+    },
+    "nativeRuntime": {
+      "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+      "entry": "integrations/gitlab/runtime/browser.ts",
+      "target": "es2018",
+      "bytes": 1700115,
+      "sha256": "4cd27842e261b1627fe53d2cc67def92f9a17ff4d7784cf7d19e1349f4826361",
+      "parentRevision": "0e50c4b666bab40369c1fd9b7d8d9b6e4ac53511",
+      "inputs": {
+        "integrations/gitlab/runtime/browser.ts": "081c31c05b3bd8db1be64d77f7bb913a31bc11666a253609318f7b808f8a350c",
+        "integrations/gitlab/services/content_editor.ts": "bf7511b3f4a8c87334ae50b31ce0bcc68298b0251bf1537017b6cd46f6bf0d3e",
+        "src/core/plugin.ts": "f2e86912869e6cd109e8a45b51b446d351e483cb52f1ea869e8f74b2ad5dd362",
+        "src/core/clipboard-write.ts": "cc87852b647747d9a358bde7dd7016c9b9b1d0daa17d9e10bb63d95b81fef775",
+        "src/core/commands.ts": "7c8a10963bf853fedc853013c55d985714f1c26a239b3e6b54f439165286221d",
+        "src/core/table-commands.ts": "b0c1080dedb678ac9977a3ec1eddfc3279bebb365a886c515eddfa80916fa89c",
+        "src/core/table-clipboard.ts": "e4770be3644f77982e45fe7102bfbc3fa90350aa927fd561478119925bb4562a",
+        "src/view/input.ts": "45e7dfdc7fdd9cf2445960936d09107a163cee5c31e1d0aa74a3b7692b62286e",
+        "src/pages/clipboard.ts": "c6587164da256aace4c39b1c50a3f1003707b5a8c331fa0546b2062d53a757c5",
+        "src/pages/index.ts": "a8fab75e0e4894e3990c5fbf668f8c5d1f3e02b993d45450a044b7f58b857a68",
+        "integrations/gitlab/services/markdown_insertion.ts": "8f67ac6cd8cbe5fc6c2dafb3d81b182fbca28f028562d92ef2a58a2d48df89f9",
+        "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+        "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+        "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+        "integrations/gitlab/services/code_rendering.ts": "0d94359598fe6ead2cff4d0e2bc2821e934916ba47eca214bf02cc433dfe05d6",
+        "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+        "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+        "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+        "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+        "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+        "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+        "integrations/gitlab/services/host_configuration.ts": "5b8e2c650f3dbd65efd894c602f3cc7b39f3b74e681dadbe5dfc3a646248a05b",
+        "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+        "integrations/gitlab/services/markdown_codec.ts": "17109a664a511d69dc6dec480ee75e1572acfa88ef6ec1cfa2973c5924b94c1d",
+        "integrations/gitlab/services/footnote_source.ts": "ae724e02065ac198f1f7f3364b82871b57c159ce60f494cdde41faea9fc29595",
+        "integrations/gitlab/services/footnote_codec.ts": "c800291c71af369b71d465b21b3043a3b0dcb44c6a90012dfb7d30f6b1fad6f7",
+        "integrations/gitlab/services/footnote_boundary.ts": "b2cb1ac6bb20590abff35c0331261a02006e2175cbb5068925c93a24da5c61f7",
+        "integrations/gitlab/services/footnote_editing.ts": "89ae8dd5346cc3b3da6c64a568f88596dd3ac7ee2123c389a2f634dea2aa2d70",
+        "integrations/gitlab/services/footnote_renaming.ts": "874734624c86c9958da6a7d8483c150c5e4d569f59e6bd6b24b3483b0798d958",
+        "integrations/gitlab/services/footnote_labels.ts": "622e70a0dccc7bafde0b346d39474ed9c34b96dc85025228f2e4e447037cdf63",
+        "integrations/gitlab/services/footnote_nodes.ts": "48321ca48f1eed9ee7379f952c46427070d85da73d02cc00e441a9b8f962980f",
+        "integrations/gitlab/services/footnote_positions.ts": "0020d65af8ab83d35d1955f8cf60ef34eb757b8b1d787b03d94ecb41f85f339a",
+        "integrations/gitlab/services/footnote_projection.ts": "c6c316be82b970aad6b9c8711b2f619286251683ca77d85e1b08a972dd40302a",
+        "integrations/gitlab/services/footnote_rendering.ts": "18f009bfb0246a01eeada0f716f21a393f0ddca636852bb32b17f7014f7334bb",
+        "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
+        "integrations/gitlab/services/quick_action_editing.ts": "42d37b3300907be0a8499ff7b0e64bb9410334fe13e82ce7515e412642b88ebe",
+        "integrations/gitlab/services/autocomplete_data.ts": "1741396673d51ce049777fa88bd00ff65184ce57e2d484ebde94c69f6cf98568",
+        "integrations/gitlab/services/autocomplete_editing.ts": "3244b67431ce508e9893b5166ab5f5ef798a4e63b770f7a8bfbe0fc6a7dec827",
+        "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+        "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
+        "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+        "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+        "dist/index.js": "a81afe6468ae3a16eb393170770865d00a617c5867ad99aa9d892033f9ccce9f",
+        "dist/document-utilities.js": "dfe6e4dfd3672cbf41a4d630ffed342378a562263a87b8e20c45b9bb3a795466",
+        "dist/pages.js": "011d421ce449b70e497b0b0258229102a41e7a7961090c2848af7c043a395220"
+      }
+    },
+    "footnoteServerOverlay": {
+      "source": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-footnote-server/footnote_filter.rb",
+      "readOnly": true,
+      "sha256": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+      "originalSha256": "3c3e2469ca0ce9191954f725548fa0bf3599ca9ccc8980b3fbdca46e14e1dc74",
+      "scope": "Read-only task server overlay; repeat-reference and generated-backlink repair, not an unmodified GitLab baseline"
+    },
+    "visualReview": "artifacts/gitlab-native-mixed-lists-20261116/visual-review.json"
+  },
+  "implementationFindings": [
+    "Concurrent conversion initially relocated peer typing; RestructureChildrenStep preserves text identity and both update orders now pass.",
+    "Initial schema change exposed four existing retained-wrapper tests; the recovery guard now recognizes the shared list group.",
+    "Audit-only failures: default Playwright caret hiding detached owned child NodeViews; screenshots now preserve the actual caret. Reader li locator now includes self. Failed attempts remain local; the final profile passed."
+  ],
+  "capacity": {
+    "cssBeforeBytes": 90906,
+    "cssAfterBytes": 91242,
+    "addedBytes": 336,
+    "capBeforeBytes": 90944,
+    "capAfterBytes": 91264,
+    "javascriptAndPerformanceLimits": "unchanged"
+  },
+  "operationalState": {
+    "container": "exited",
+    "sourceReinstalled": true,
+    "publication": "none",
+    "packageVersion": "0.5.0-beta.1"
+  },
+  "remaining": [
+    "GitLab inapplicable [~] tasks remain explicitly refused with exact original source preserved.",
+    "Native DOCX task/check-state retention; current export reports unsupported semantics.",
+    "Inline review/suggestions, role/reconnect/concurrency/mobile/IME and full GitLab product acceptance.",
+    "Compiled deployment rollback, physical Safari clipboard and remaining programme roadmap."
+  ]
+}

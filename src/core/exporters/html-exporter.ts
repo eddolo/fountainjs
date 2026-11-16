@@ -308,7 +308,10 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
     case 'blockquote': return `<blockquote${renderDOMAttributes(quoteDOMAttributes(node.attrs))}>${children()}</blockquote>`;
     case 'bullet_list': return `<ul${listAttributes(node)}>${children()}</ul>`;
     case 'ordered_list': return `<ol${node.attrs.start !== 1 ? ` start="${node.attrs.start}"` : ''}${listAttributes(node)}>${children()}</ol>`;
-    case 'list_item': return `<li${listAttributes(node, true)}>${children()}</li>`;
+    case 'list_item': {
+      const parent = path.slice(0, -1).reduce((ancestor, index) => ancestor.child(index), document);
+      return `<li${parent.type.name === 'task_list' ? ' data-type="list-item"' : ''}${listAttributes(node, true)}>${children()}</li>`;
+    }
     case 'task_list': return `<ul data-type="task-list"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
     case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''} aria-label="${escapeHTML(taskCheckboxLabel(node))}">${children()}</li>`;
     case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"${node.attrs.lineNumbers === false ? ' data-line-numbers="false"' : ''}${codeTheme(node) === 'light' ? ' data-fountain-code-theme="light"' : ''}${renderDOMAttributes({ ...paragraphLayoutDOMAttributes(node.attrs.layout), ...textDirectionDOMAttributes(node.attrs) })}><code class="language-${escapeHTML(node.attrs.language)}">${children()}</code></pre>`;

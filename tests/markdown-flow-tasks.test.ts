@@ -94,3 +94,24 @@ describe('task-aware Markdown HTML source recovery', () => {
     expect(MarkdownExporter.exportWithSource(result.document, result.source).markdown).toBe(source);
   });
 });
+
+it.each([
+  '- Plain\n- [x] Done\n- [ ] Pending',
+  '3. [ ] Pending\n4. Plain\n5. [x] Done',
+])('retains mixed lists through HTML flow and refuses raw-text flattening: %s', body => {
+  const schema = new Schema(CoreSchemaSpec);
+  const source = '<blockquote>\n\n' + body + '\n\n</blockquote>';
+  const fallback = vi.fn();
+  const result = MarkdownImporter.parseWithSource(source, schema, {
+    parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback,
+  });
+  expect(fallback).not.toHaveBeenCalled();
+  expect(result.document.child(0).child(0).toJSON()).toEqual(MarkdownImporter.parse(body, schema).child(0).toJSON());
+  expect(MarkdownExporter.exportWithSource(result.document, result.source).markdown).toBe(source);
+  for (const tag of ['pre', 'select', 'textarea', 'script']) {
+    const raw = `<div><${tag}>\n\n${body}\n\n</${tag}></div>`;
+    const refused = vi.fn();
+    MarkdownImporter.parseWithSource(raw, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: refused });
+    expect(refused).toHaveBeenCalled();
+  }
+});

@@ -1,0 +1,174 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "task_list",
+      "content": [
+        {
+          "type": "task_item",
+          "attrs": {
+            "checked": true
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Parent"
+                }
+              ]
+            },
+            {
+              "type": "task_list",
+              "content": [
+                {
+                  "type": "list_item",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "align": "left"
+                      },
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Pl"
+                        },
+                        {
+                          "type": "text",
+                          "text": "ain context"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "task_item",
+                  "attrs": {
+                    "checked": false
+                  },
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "attrs": {
+                        "align": "left"
+                      },
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Nested pending"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "list_item",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Plain sibling"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ordered_list",
+      "attrs": {
+        "start": 3
+      },
+      "content": [
+        {
+          "type": "task_item",
+          "attrs": {
+            "checked": false
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Numbered pending"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "list_item",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Plain numbered"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "task_item",
+          "attrs": {
+            "checked": true
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Nu"
+                },
+                {
+                  "type": "text",
+                  "text": "mbered done"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": ""
+        }
+      ]
+    }
+  ]
+}

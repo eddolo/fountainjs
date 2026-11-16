@@ -401,7 +401,8 @@ export class RetainedDocumentStore {
       // Only suppress a required wrapper emptied by displaced children or by
       // suppressing its emptied child wrappers. Keep its native history intact.
       if (node.id !== 'root' && !(children ?? node.content).length && (node.displacedChild || node.content.length)
-        && spec && spec.content === expression && !spec.validate) {
+        && spec && (spec.content === expression || spec.content === 'listItem+'
+          && ['bullet_list', 'ordered_list', 'task_list'].includes(node.type)) && !spec.validate) {
         computeAttrs(spec.attrs, node.attrs ?? {});
         node.marks?.forEach(mark => this.schema.markFromJSON(mark));
         return undefined;

@@ -2548,6 +2548,10 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       context.numberingDefinitions.push(`<w:abstractNum w:abstractNumId="${numId}"><w:lvl w:ilvl="${level}"><w:start w:val="${start}"/><w:numFmt w:val="${format}"/><w:lvlText w:val="${xmlEscape(marker)}"/><w:suff w:val="tab"/><w:lvlJc w:val="${geometry?.markerAlign ?? 'left'}"/><w:pPr><w:tabs><w:tab w:val="num" w:pos="${left + Math.round((geometry?.firstLineIndent ?? 0) * 20)}"/></w:tabs><w:ind w:left="${left}" w:right="${right}"${indent}/></w:pPr>${font && (font.family || font.size) ? `<w:rPr>${font.family}${font.size}</w:rPr>` : ''}</w:lvl></w:abstractNum>`);
       context.numbering.push(`<w:num w:numId="${numId}"><w:abstractNumId w:val="${numId}"/><w:lvlOverride w:ilvl="${level}"><w:startOverride w:val="${start}"/></w:lvlOverride></w:num>`);
       return node.content.map((item, index) => {
+        if (item.type.name === 'task_item') context.issues.push({
+          code: 'task-state-omitted', severity: 'warning', path: [...path, index],
+          message: 'Word output retains this list item and its content but omits its checkbox and checked state. Keep Fountain JSON or HTML for task semantics.',
+        });
         const own = isListLayout(item.attrs.layout) ? item.attrs.layout : undefined;
         if (own && ['markerStyle', 'markerPrefix', 'markerSuffix', 'markerAlign', 'fontFamily', 'fontSize'].some(key => own[key as keyof ListLayout] !== geometry?.[key as keyof ListLayout])) {
           context.issues.push({ code: 'list-item-marker-not-exported', severity: 'warning', message: 'Per-item marker formatting differs from the shared numbering definition; native export retains the list marker and per-item geometry.', path: [...path, index] });

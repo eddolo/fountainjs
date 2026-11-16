@@ -44,6 +44,7 @@ const desktopTests = [
   '**/homepage-export.spec.ts',
   '**/homepage-paste.spec.ts',
   '**/editability.spec.ts',
+  '**/mixed-lists.spec.ts',
 ];
 
 export default defineConfig({

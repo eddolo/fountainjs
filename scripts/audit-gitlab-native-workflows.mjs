@@ -17,7 +17,9 @@ async function richEditor(page, name) {
   return { host, native, editor, toolbar: native.getByTestId('formatting-toolbar') };
 }
 
-async function appendRich({ page, output, report, name, marker, taskRoundtrip }) {
+const mixedTaskSource = '- Before release\n- [ ] Verify deployment\n  - Plain nested context\n  - [x] Nested done\n- [ ] Review migration\n- After release\n\n3. [ ] Numbered pending\n4. Plain numbered context\n5. [x] Numbered done';
+
+async function appendRich({ page, output, report, name, marker, taskRoundtrip, mixedLists }) {
   const { host, native, editor, toolbar } = await richEditor(page, name);
   await expect(editor).toContainText('End of workflow notes.');
   await expect(editor.locator('table')).toHaveCount(1);
@@ -26,12 +28,46 @@ async function appendRich({ page, output, report, name, marker, taskRoundtrip })
     const checkbox = editor.locator('input[type="checkbox"]').first();
     await checkbox.check();
     await expect(checkbox).toBeChecked();
+    if (mixedLists) await expect(editor.getByText('Plain nested context', { exact: true })).toHaveCSS('text-decoration-line', 'none');
     await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect(checkbox).not.toBeChecked();
     await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
     await expect(checkbox).toBeChecked();
+    if (mixedLists) await expect(editor.getByText('Plain nested context', { exact: true })).toHaveCSS('text-decoration-line', 'none');
     await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect(checkbox).not.toBeChecked();
+  }
+  if (mixedLists) {
+    const ordinary = editor.locator('[data-fountain-node="list_item"]').filter({ has: page.getByText('After release', { exact: true }) });
+    await ordinary.getByText('After release', { exact: true }).click();
+    await page.keyboard.press('End'); await page.keyboard.press('Tab');
+    await expect(ordinary.locator('xpath=..')).toHaveAttribute('data-fountain-node', 'task_list');
+    await expect(ordinary.locator('xpath=../..')).toHaveAttribute('class', /fountain-task-item__content/);
+    await page.keyboard.press('Shift+Tab');
+    await expect(ordinary.locator('xpath=../..')).toHaveAttribute('contenteditable', 'true');
+    // Enter/Backspace in a bullet and a completed numbered task must retain kind and state.
+    for (const [text, kind, checked] of [['Plain nested context', 'list_item', null], ['Numbered done', 'task_item', true]]) {
+      const before = await editor.locator(`[data-fountain-node="${kind}"]`).count();
+      await editor.getByText(text, { exact: true }).click();
+      await page.keyboard.press('Home'); await page.keyboard.press('ArrowRight'); await page.keyboard.press('ArrowRight');
+      await page.keyboard.press('Enter');
+      await expect(editor.locator(`[data-fountain-node="${kind}"]`)).toHaveCount(before + 1);
+      await page.keyboard.press('Backspace');
+      await expect(editor.locator(`[data-fountain-node="${kind}"]`)).toHaveCount(before);
+      const item = editor.getByText(text, { exact: true }).locator('xpath=ancestor-or-self::li[1]');
+      if (checked !== null) await expect(item.locator('input[type="checkbox"]')).toBeChecked();
+    }
+    await expect(ordinary).toHaveCSS('list-style-type', 'disc');
+    const numbered = editor.getByText('Numbered done', { exact: true }).locator('xpath=ancestor-or-self::li[1]');
+    await expect(numbered).toHaveCSS('display', 'list-item');
+    const ordered = numbered.locator('xpath=..');
+    await expect(ordered).toHaveAttribute('start', '3');
+    // Playwright's default caret hiding sets inline styles on every input and
+    // contenteditable atom. The editor restores its owned NodeViews, detaching
+    // child handles. Capture the real caret without those cosmetic mutations.
+    await ordered.screenshot({ caret: 'initial', path: fileURLToPath(new URL(`${name}-numbered-tasks.png`, output)) });
+    await ordinary.locator('xpath=..').screenshot({ caret: 'initial', path: fileURLToPath(new URL(`${name}-mixed-tasks.png`, output)) });
+    (report.workflows.mixedListEditing ??= []).push({ name, bulletIndentLift: true, splitJoin: ['bullet', 'completed-numbered-task'] });
   }
   const math = editor.locator('.katex-mathml');
   await expect(math).toHaveCount(1);
@@ -62,6 +98,7 @@ async function appendRich({ page, output, report, name, marker, taskRoundtrip })
     if (taskRoundtrip) {
       const tasks = markdown.split(/\r?\n/u).filter(line => /^- \[[ x]\]/u.test(line));
       expect(tasks).toEqual(['- [ ] Verify deployment', '- [ ] Review migration']);
+      if (mixedLists) expect(markdown).toContain(mixedTaskSource);
       (report.workflows.taskRoundtrips ??= []).push({ name, cycle, tasks });
     }
     await host.getByRole('button', { name: 'Switch to rich text editing', exact: true }).click();
@@ -75,13 +112,13 @@ async function appendRich({ page, output, report, name, marker, taskRoundtrip })
   // Caller submits immediately, without a source handoff or observer-delay wait.
 }
 
-export async function auditNativeWorkflows({ page, api, project, upload, report, output, taskRoundtrip = false }) {
+export async function auditNativeWorkflows({ page, api, project, upload, report, output, taskRoundtrip = false, mixedLists = false }) {
   const suffix = Date.now().toString(36);
   const projectAPI = `/projects/${project.id}`;
   expect(typeof upload.full_path).toBe('string');
   const imageURL = new URL(upload.full_path, project.web_url).href;
   expect((await page.request.get(imageURL)).ok()).toBe(true);
-  const source = '# Release review\n\n**Review carefully** before merging.\n\n- [ ] Verify deployment\n- [ ] Review migration\n\n| Check | Result |\n| --- | --- |\n| Persistence | Pending |\n\nInline math $`a^2 + b^2 = c^2`$.\n\n' +
+  const source = '# Release review\n\n**Review carefully** before merging.\n\n' + (mixedLists ? mixedTaskSource : '- [ ] Verify deployment\n- [ ] Review migration') + '\n\n| Check | Result |\n| --- | --- |\n| Persistence | Pending |\n\nInline math $`a^2 + b^2 = c^2`$.\n\n' +
     `![Workflow figure](${imageURL})\n\nEnd of workflow notes.\n`;
   const branch = `fountain-workflow-${suffix}`;
   const commit = await api('POST', `${projectAPI}/repository/commits`, { data: {
@@ -95,7 +132,7 @@ export async function auditNativeWorkflows({ page, api, project, upload, report,
   report.workflows = { commit: commit.id, mergeRequest: { iid: mr.iid, url: mr.web_url, original: source }, phases: [] };
   await page.goto(`${mr.web_url}/edit`);
   const mrMarker = 'Fountain merge request: rich changes survive submission.';
-  await appendRich({ page, output, report, name: 'merge-request', marker: mrMarker, taskRoundtrip });
+  await appendRich({ page, output, report, name: 'merge-request', marker: mrMarker, taskRoundtrip, mixedLists });
   await page.getByRole('button', { name: 'Save changes', exact: true }).click();
   await expect(page).toHaveURL(mr.web_url);
   const savedMR = await api('GET', `${projectAPI}/merge_requests/${mr.iid}`);
@@ -117,7 +154,7 @@ export async function auditNativeWorkflows({ page, api, project, upload, report,
   report.workflows.wiki = { slug: wiki.slug, url: wikiURL, original: source };
   await page.goto(`${wikiURL}/edit`);
   const wikiMarker = 'Fountain wiki: rich changes survive submission.';
-  await appendRich({ page, output, report, name: 'wiki', marker: wikiMarker, taskRoundtrip });
+  await appendRich({ page, output, report, name: 'wiki', marker: wikiMarker, taskRoundtrip, mixedLists });
   await page.getByTestId('wiki-submit-button').click();
   const confirm = page.getByTestId('wiki-confirm-message');
   await expect(async () => expect(page.url() === wikiURL || await confirm.isVisible()).toBe(true)).toPass();
@@ -151,6 +188,13 @@ export async function assertSavedNativeWorkflows({ page, api, project, report, o
     const body = page.locator(name === 'wiki' ? '.js-wiki-page-content.md' : '.description .md').first();
     await expect(body).toBeVisible();
     await expect(body.locator('table')).toHaveCount(1);
+    if (report.workflows.mixedListEditing?.length) {
+      await expect(body.locator('input.task-list-item-checkbox')).toHaveCount(5);
+      await expect(body.getByText('After release', { exact: true }).locator('xpath=ancestor-or-self::li[1]')).not.toHaveClass(/task-list-item/);
+      const numbered = body.getByText('Numbered done', { exact: true }).locator('xpath=ancestor-or-self::li[1]');
+      await expect(numbered.locator('input[type="checkbox"]')).toBeChecked();
+      await expect(numbered.locator('xpath=..')).toHaveAttribute('start', '3');
+    }
     await expect(body.locator('.katex')).toBeVisible();
     const image = body.getByRole('img', { name: 'Workflow figure', exact: true });
     await image.scrollIntoViewIfNeeded();

@@ -554,7 +554,7 @@ function nestedItemCapture(source: string, node: Node, indent: number, schema: S
     const values = physical.map((line, index) => index === 0 ? marker.value : !line.value.trim() ? ''
       : indentationColumns(line.value) >= indent ? stripIndentation(line.value, indent) : line.value);
     const firstPrefix = physical[0].value.slice(0, physical[0].value.length - values[0].length);
-    const checkbox = marker.kind === 'task' ? firstPrefix.lastIndexOf('[') + 1 : undefined;
+    const checkbox = marker.task ? firstPrefix.lastIndexOf('[') + 1 : undefined;
     if (checkbox !== undefined && (checkbox <= 0 || !/[ xX]/u.test(firstPrefix[checkbox] ?? '') || firstPrefix[checkbox + 1] !== ']')) return null;
     return nestedLineView(source, node, values, values.map(() => ' '.repeat(indent)), schema, options, budget, depth, checkbox, scope);
   } };
@@ -580,7 +580,7 @@ function captureNestedContainer(source: string, node: Node, schema: Schema, opti
   let index = 0;
   while (index < context.lines.length && context.lines[index].trim()) {
     const marker = listMarker(context.lines[index]);
-    if (!marker || marker.kind !== first.kind || marker.m !== first.m || children.length >= node.childCount) return null;
+    if (!marker || marker.m !== first.m || children.length >= node.childCount) return null;
     const start = index;
     const item = collectListItem(context.lines, index, schema, scope?.definitions ?? context.definitions, options);
     index = item.nextIndex;
@@ -1945,6 +1945,7 @@ interface ListMarker {
   readonly m: '-' | '*' | '+' | '.' | ')';
   readonly value: string;
   readonly checked: boolean;
+  readonly task: boolean;
   readonly start: number;
 }
 
@@ -1959,14 +1960,15 @@ function listMarker(line: string): ListMarker | null {
   const raw = (match[6] && padding > 4 ? ' '.repeat(padding - 1) : '') + (match[6] ?? '');
   // Task syntax is an inline prefix; it does not increase the container's
   // indentation requirement for subsequent paragraphs or nested lists.
-  const task = match[2] ? /^\[([ xX])\](?:[ \t]+(.*)|$)/.exec(raw) : null;
+  const task = /^\[([ xX])\](?:[ \t]+(.*)|$)/.exec(raw);
   return {
     indent,
     contentIndent,
-    kind: task ? 'task' : match[2] ? 'bullet' : 'ordered',
+    kind: match[2] ? task ? 'task' : 'bullet' : 'ordered',
     m: (match[2] || match[4]) as ListMarker['m'],
     value: task ? task[2] ?? '' : raw,
     checked: task?.[1].toLowerCase() === 'x',
+    task: Boolean(task),
     start: +(match[3] || 1),
   };
 }
@@ -2093,8 +2095,7 @@ function parseList(
   options: MarkdownImportOptions,
 ): { node: Node; nextIndex: number; sourceEnd: number; source?: PendingHTMLBlockSource } {
   const first = listMarker(lines[startIndex]) as ListMarker;
-  const listName = first.kind === 'bullet' ? 'bullet_list' : first.kind === 'ordered' ? 'ordered_list' : 'task_list';
-  const itemName = first.kind === 'task' ? 'task_item' : 'list_item';
+  let listName = first.kind === 'ordered' ? 'ordered_list' : 'bullet_list';
   const items: Node[] = [];
   const pending: { marker: ListMarker; layout: ListItemLayout; start: number; end: number; sources: PendingHTMLBlockSource[] }[] = [];
   const itemSources: PendingHTMLBlockSource[] = [];
@@ -2103,7 +2104,9 @@ function parseList(
   while (index < lines.length) {
     if (thematicBreak(lines[index])) break;
     const marker = listMarker(lines[index]);
-    if (!marker || marker.indent >= 4 || marker.kind !== first.kind || marker.m !== first.m) break;
+    if (!marker || marker.indent >= 4 || marker.m !== first.m) break;
+    const itemName = marker.task ? 'task_item' : 'list_item';
+    if (marker.task && first.kind !== 'ordered') listName = 'task_list';
     const itemStart = index;
     const item = collectListItem(lines, index, schema, references, options);
     index = item.nextIndex;
@@ -2130,6 +2133,7 @@ function parseList(
     || item.layout.spans.some((span, blockIndex, spans) => blockIndex > 0 && span.start > spans[blockIndex - 1].end + 1)
   ));
   for (const { marker, layout, sources } of pending) {
+    const itemName = marker.task ? 'task_item' : 'list_item';
     const content = layout.finish!(tight);
     const empty = !content.length;
     if (empty) {
@@ -2145,7 +2149,7 @@ function parseList(
   const node = schema.node(listName, listName === 'ordered_list' ? { start: first.start } : {}, items);
   return {
     node,
-    source: !options.parseHTMLFlow ? undefined : first.kind === 'task'
+    source: !options.parseHTMLFlow ? undefined : listName === 'task_list'
       ? { kind: 'taskList', blocks: [node], children: itemSources }
       : { kind: 'container', tag: first.kind === 'ordered' ? 'ol' : 'ul', start: first.start, blocks: [node], children: itemSources },
     nextIndex: index,

@@ -1,0 +1,47 @@
+{
+  "scope": "Final screenshots and sampled recording frames were visually inspected; not continuous full-video review.",
+  "observations": [
+    "Ordinary bullets remain visible among checkboxes; nested ordinary content is not struck through by completed tasks.",
+    "Numbered checkboxes retain their 3/4/5 sequence alongside an ordinary numbered item.",
+    "Final post-restart MR/wiki readers retain lists, checked states, table, math and decoded figure.",
+    "Recording samples include initial loading frames and a transient environment-fetch banner while the deliberately restarted server was unavailable; final reader screenshots are checked after recovery.",
+    "Chromium and Firefox public-editor screenshots and sampled frames cover native split/join, checkbox undo, external text paste and same-editor structured paste."
+  ],
+  "images": [
+    {
+      "path": "artifacts/gitlab-native-mixed-lists-20261116/merge-request-mixed-tasks.png",
+      "sha256": "d1a1ae9e628e47a4ea3188de3c6d63c3c9165226bcbb39c79610f10ff7df5956"
+    },
+    {
+      "path": "artifacts/gitlab-native-mixed-lists-20261116/merge-request-numbered-tasks.png",
+      "sha256": "6cf8fadb99fbc9db50d163bfca27651ea9df23dbdabd31f53bf45198e42747a3"
+    },
+    {
+      "path": "artifacts/gitlab-native-mixed-lists-20261116/wiki-mixed-tasks.png",
+      "sha256": "2c408441e712abdb42c07c151cc85e23f52e3a3e79299d7edf408f2585c59ce1"
+    },
+    {
+      "path": "artifacts/gitlab-native-mixed-lists-20261116/wiki-numbered-tasks.png",
+      "sha256": "3842e5191458500e4cd3817e031b53b87109c46fdb9632eaf4ca87a04523df61"
+    },
+    {
+      "path": "artifacts/gitlab-native-mixed-lists-20261116/wiki-restart.png",
+      "sha256": "694b9032f25e393a7ce3658db509899c9968de20b4e587c3902ba44e74dc88cb"
+    },
+    {
+      "path": "artifacts/gitlab-native-mixed-lists-20261116/merge-request-restart.png",
+      "sha256": "dc91f1ceb53d858f04d6168b5316fbc41d4e0360bedadf3b8fc345bc9bfb7d13"
+    },
+    {
+      "path": "artifacts/gitlab-native-mixed-lists-20261116/recording-samples.png",
+      "sha256": "650c05b7a3cd575e928cc25de3b975554eaf57ff49cf0010f3e8ac57cde2d1b8"
+    }
+  ],
+  "recording": {
+    "path": "artifacts/gitlab-native-mixed-lists-20261116/recordings/page@615acea2673e7329280034254226a877.webm",
+    "sha256": "806c97fbd3077eac7d93b605d3771981761a2615eda6e46f28258fdc66f63a87",
+    "retainedLocally": true
+  },
+  "sampleIntervalSeconds": 30,
+  "recordingSeconds": 258.68
+}

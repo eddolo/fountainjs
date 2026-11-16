@@ -1,0 +1,7 @@
+[x] Parent
+    - Plain context
+    [ ] Nested pending
+- Plain sibling
+3. [ ] Numbered pending
+4. Plain numbered
+5. [x] Numbered done

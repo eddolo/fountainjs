@@ -330,9 +330,12 @@
 .fountain-media__error button { margin-inline-start: 6px; padding: 4px 8px; color: inherit; background: #fff; border: 1px solid currentcolor; border-radius: 6px; cursor: pointer; }
 .fountain-media[data-fountain-media-selected="true"] { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 72%, transparent); outline-offset: 3px; }
 .fountain-editor [data-type="task-list"] { padding: 0; list-style: none; }
+.fountain-editor [data-type="task-list"] > [data-type="list-item"] { list-style: disc; margin-inline-start: 1.5em; }
+.fountain-editor ol > [data-type="task-item"] { display: list-item; position: relative; padding-inline-start: 2em; }
+.fountain-editor ol > [data-type="task-item"] > [data-fountain-task-toggle] { position: absolute; inset-inline-start: 0; }
 .fountain-editor [data-type="task-item"] { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
 .fountain-editor [data-fountain-task-toggle] { width: 24px; height: 24px; flex-shrink: 0; margin-top: .12em; accent-color: var(--fountain-accent); }
-.fountain-editor [data-type="task-item"] { --fountain-task-decoration: none; --fountain-task-color: initial; }
+.fountain-editor li { --fountain-task-decoration: none; --fountain-task-color: initial; }
 .fountain-editor [data-type="task-item"][data-checked="true"] { --fountain-task-decoration: line-through; --fountain-task-color: var(--fountain-muted); }
 /* Decorate text blocks, not the wrapper: wrapper decorations propagate through
    nested tasks and cannot be cancelled by an unfinished child's text-decoration. */

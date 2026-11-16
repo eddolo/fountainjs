@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "passed": 540,
+  "skipped": 1,
+  "suites": 23,
+  "selectedSuites": [
+    "spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js",
+    "spec/frontend/work_items/components/work_item_description_spec.js",
+    "spec/frontend/super_sidebar/components/super_sidebar_spec.js",
+    "spec/frontend/content_editor/components/fountain_quick_action_host_spec.js",
+    "spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js",
+    "spec/frontend/content_editor/components/fountain_diagram_preview_spec.js",
+    "spec/frontend/content_editor/components/fountain_reference_menu_spec.js",
+    "spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js",
+    "spec/frontend/content_editor/components/fountain_context_surface_spec.js",
+    "spec/frontend/content_editor/components/fountain_media_menu_spec.js",
+    "spec/frontend/content_editor/components/fountain_link_menu_spec.js",
+    "spec/frontend/content_editor/components/fountain_frontmatter_spec.js",
+    "spec/frontend/content_editor/components/fountain_alert_menu_spec.js",
+    "spec/frontend/content_editor/components/fountain_autocomplete_spec.js",
+    "spec/frontend/content_editor/components/fountain_code_menu_spec.js",
+    "spec/frontend/content_editor/components/content_editor_spec.js",
+    "spec/frontend/behaviors/components/sandboxed_mermaid_spec.js",
+    "spec/frontend/behaviors/markdown/render_sandboxed_mermaid_spec.js",
+    "spec/frontend/behaviors/markdown/render_gfm_spec.js",
+    "spec/frontend/behaviors/markdown/fountain_reader_images_spec.js",
+    "spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js",
+    "spec/frontend/issuable/issuable_form_spec.js",
+    "spec/frontend/lazy_loader_spec.js"
+  ],
+  "rawResult": {
+    "path": "artifacts/gitlab-mixed-lists-upstream-20261116.json",
+    "sha256": "ecd06027152b564ce72983c5e252f53386523d625cbfff4b50cd391dd390d2bb",
+    "retainedLocally": true
+  }
+}

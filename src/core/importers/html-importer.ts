@@ -321,15 +321,16 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
   if (tag === 'hr') return [schema.node('horizontal_rule')];
   if (tag === 'ul' || tag === 'ol') {
     const isTask = element.getAttribute('data-type') === 'task-list';
-    const itemType = isTask ? 'task_item' : 'list_item';
     const items = Array.from(element.children).filter((child) => child.tagName.toLowerCase() === 'li').map((item) => {
+      const task = item.getAttribute('data-type') === 'task-item' || isTask && item.getAttribute('data-type') !== 'list-item';
+      const itemType = task ? 'task_item' : 'list_item';
       return schema.node(
         itemType,
-        { ...readContainerDirection(item, schema), ...(!isTask && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(isTask ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}) },
+        { ...readContainerDirection(item, schema), ...(!task && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(task ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}) },
         listItemContent(item, schema),
       );
     });
-    const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
+    const listType = tag === 'ol' ? 'ordered_list' : isTask ? 'task_list' : 'bullet_list';
     const start = htmlOrderedListStart(element.getAttribute('start'));
     return [schema.node(listType, { ...readContainerDirection(element, schema), ...(!isTask && schema.nodes[listType]?.spec.attrs?.layout ? readListLayout(element) : {}), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items)];
   }

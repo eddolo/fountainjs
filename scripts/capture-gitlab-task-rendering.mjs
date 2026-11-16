@@ -20,6 +20,18 @@ export async function captureGitLabTaskRendering({ root, pin, version, renderMar
     ["nested-escaped-newline", "- [ ] Parent\\&#10;\n  - [x] Child"],
     ["nested-hex-newline", "- [ ] Parent&#x0A;\n  - [x] Child"],
     ["nested-named-newline", "- [ ] Parent&NewLine;\n  - [x] Child"],
+    ['mixed', '- Plain item\n- [ ] Pending\n- [x] Done\n- Another bullet'],
+    ['mixed-nested', '- Plain parent\n  - [ ] Task child\n  - Plain child\n- [x] Task parent\n  - Plain child\n  - [ ] Nested task'],
+    ['mixed-loose', '- Plain paragraph\n\n  Follow-up.\n\n- [ ] Task paragraph\n\n  Task follow-up.'],
+    ['ordered-tasks', '3. [ ] First\n4. Plain second\n5. [x] Last'],
+    ['inapplicable', '- [~] Not needed\n- [ ] Pending\n- [x] Done'],
+    ['inapplicable-marked', '- [~] **Bold** and ~~authored strike~~ and `code`'],
+    ['inapplicable-nested', '- [~] Parent\n  - [ ] Child\n  - Plain child'],
+    ['inapplicable-loose', '- [~] First\n\n  Follow-up paragraph.\n\n- [ ] Next'],
+    ['inapplicable-empty', '- [~]'],
+    ['inapplicable-spaces', '- [~]   Keep two spaces'],
+    ['inapplicable-nbsp', '- [~] &#160;Keep NBSP'],
+    ['inapplicable-newline', '- [~] Parent&#10;\n  - [ ] Child'],
   ];
   const fixtures = [];
   for (const [name, source] of cases) {

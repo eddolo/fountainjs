@@ -1048,16 +1048,19 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
   if (tag === 'hr') return [schema.node('horizontal_rule')];
   if (tag === 'ul' || tag === 'ol') {
     const isTask = element.getAttribute('data-type') === 'task-list';
-    const itemType = isTask ? 'task_item' : 'list_item';
-    const items = element.children.filter((child) => child.tagName === 'li').map((item) => schema.node(
-      itemType,
-      { ...readContainerDirection(item, schema), ...(!isTask && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(isTask ? {
-        checked: item.getAttribute('data-checked') === 'true'
-          || item.querySelector('input')?.hasAttribute('checked') === true,
-      } : {}) },
-      listItemContent(item, schema, context),
-    ));
-    const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
+    const items = element.children.filter((child) => child.tagName === 'li').map((item) => {
+      const task = item.getAttribute('data-type') === 'task-item' || isTask && item.getAttribute('data-type') !== 'list-item';
+      const itemType = task ? 'task_item' : 'list_item';
+      return schema.node(
+        itemType,
+        { ...readContainerDirection(item, schema), ...(!task && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(task ? {
+          checked: item.getAttribute('data-checked') === 'true'
+            || item.querySelector('input')?.hasAttribute('checked') === true,
+        } : {}) },
+        listItemContent(item, schema, context),
+      );
+    });
+    const listType = tag === 'ol' ? 'ordered_list' : isTask ? 'task_list' : 'bullet_list';
     const start = htmlOrderedListStart(element.getAttribute('start'));
     if (tag === 'ol' && (start < 0 || element.hasAttribute('reversed')
       || (element.hasAttribute('type') && element.getAttribute('type') !== '1')
@@ -1410,7 +1413,7 @@ export class ServerHTMLImporter {
     const raw = (html: string) => { stream.push({ kind: 'html', html, marks: [] }); if (html) newline = html.endsWith('\n'); };
     const cr = () => { if (!newline) raw('\n'); };
     const used = new Set<FountainNode>();
-    const taskLists: FountainNode[] = [];
+    const taskNodes: FountainNode[] = [];
     let count = 0;
     const emit = (paragraph: MarkdownHTMLFlowBlockSource, depth = 0, insideTask = false): void => {
       if (++count > this.options.maxNodes) throw new HTMLImportLimitError('maxNodes', 'Structural flow exceeds its node limit.');
@@ -1476,7 +1479,7 @@ export class ServerHTMLImporter {
           || !node.eq(schema.node(list ? 'task_list' : 'task_item', attrs, node.content))) throw new Error('Structural flow refuses custom or modified task attributes.');
         const children = paragraph.children.flatMap(child => child.blocks);
         if (children.length !== node.content.length || children.some((child, index) => child !== node.content[index])) throw new Error('Structural flow refuses modified task projections.');
-        if (list) taskLists.push(node);
+        taskNodes.push(node);
         cr();
         raw(list ? '<ul data-type="task-list">' : `<li data-type="task-item" data-checked="${paragraph.checked}">`);
         for (const child of paragraph.children) emit(child, depth + 1, true);
@@ -1493,7 +1496,7 @@ export class ServerHTMLImporter {
         const children = paragraph.children.flatMap(child => child.blocks);
         if (children.length !== node.content.length || children.some((child, index) => child !== node.content[index])) throw new Error('Structural flow refuses modified container projections.');
         if (paragraph.tag !== 'li') cr();
-        raw(`<${paragraph.tag}${paragraph.tag === 'ol' && paragraph.start !== 1 ? ` start="${paragraph.start}"` : ''}>`);
+        raw(`<${paragraph.tag}${paragraph.tag === 'li' && insideTask ? ' data-type="list-item"' : ''}${paragraph.tag === 'ol' && paragraph.start !== 1 ? ` start="${paragraph.start}"` : ''}>`);
         if (paragraph.tag !== 'li') cr();
         for (const child of paragraph.children) emit(child, depth + 1, insideTask);
         if (paragraph.tag !== 'li') cr();
@@ -1573,14 +1576,14 @@ export class ServerHTMLImporter {
     // Task syntax is an extension, not ordinary CommonMark list text. Reject
     // HTML repair/raw-text scopes that erase, duplicate or alter any task tree.
     // A refusal rolls back the entire speculative flow at the importer boundary.
-    if (taskLists.length) {
+    if (taskNodes.length) {
       const projected: FountainNode[] = [];
       const visit = (node: FountainNode): void => {
-        if (node.type.name === 'task_list') projected.push(node);
+        if (['task_list', 'task_item'].includes(node.type.name)) projected.push(node);
         node.content.forEach(visit);
       };
       result.nodes.forEach(visit);
-      if (projected.length !== taskLists.length || projected.some((node, index) => !node.eq(taskLists[index]))) {
+      if (projected.length !== taskNodes.length || projected.some((node, index) => !node.eq(taskNodes[index]))) {
         throw new Error('Structural flow cannot change or flatten a task list; original source retained.');
       }
     }

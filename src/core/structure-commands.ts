@@ -459,7 +459,8 @@ export function indentListItem(editor: Editor, nestedKind?: ListKind): boolean {
   const sourceList = getNodeAtPath(prepared.document, range.listPath);
   const moved = sourceList.content.slice(range.from, range.to + 1)
     .map((item, index) => {
-      const original = convertListItem(editor, item, target.item);
+      const original = !nestedKind && matchesContentExpression([item], nestedType.spec.content ?? '')
+        ? item : convertListItem(editor, item, target.item);
       const geometry = original?.type.spec.attrs?.layout
         && layoutForListKind(original.attrs.layout, nestedKind ?? sourceKind, target.list === sourceList.type.name);
       const converted = original && geometry ? original.type.create({ ...original.attrs, layout: geometry }, original.content) : original;
@@ -588,7 +589,8 @@ export function outdentListItem(editor: Editor): boolean {
   const sourceParent = getNodeAtPath(prepared.document, parentItemPath);
   const lifted = sourceList.content.slice(range.from, range.to + 1)
     .map((item, index) => {
-      const converted = convertListItem(editor, item, targetItemName);
+      const converted = matchesContentExpression([item], outerList.type.spec.content ?? '')
+        ? item : convertListItem(editor, item, targetItemName);
       const fixed = converted && retainListDirection(converted,
         listDirectionAt(editor.state.doc, [...range.listPath, range.from + index]), destination);
       return fixed && retainSharedDirection(fixed, prepared.memberships.get([...range.listPath, range.from + index].join('.')));
@@ -648,6 +650,21 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
   if (!targetListType || !editor.state.schema.nodes[target.item]) return false;
   const range = selectedListRange(editor);
   if (range) {
+    // A mixed unordered list is one container. Converting selected items must
+    // not split it into separate lists or change untouched siblings' kinds.
+    const mixed = range.list.type.name !== 'ordered_list'
+      && range.list.content.some(item => item.type.name === 'task_item')
+      && range.list.content.some(item => item.type.name === 'list_item');
+    if (mixed && kind !== 'ordered') {
+      const selected = range.list.content.slice(range.from, range.to + 1);
+      if (selected.every(item => item.type.name === target.item)) return outdentListItem(editor);
+      const converted = selected.map(item => convertListItem(editor, item, target.item));
+      if (converted.some(item => !item)) return false;
+      const transaction = editor.state.createTransaction();
+      transaction.step(new RestructureChildrenStep(range.listPath, range.from, selected, converted as Node[]));
+      selectListRange(editor, transaction, editor.state.selection.path, editor.state.selection.endPath);
+      return dispatchListTransform(editor, transaction);
+    }
     if (range.list.type.name === target.list) return outdentListItem(editor);
     const selected = range.list.content.slice(range.from, range.to + 1)
       .map((item) => {

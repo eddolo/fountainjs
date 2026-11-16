@@ -168,32 +168,32 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
       || classes.includes('task-table-item')) {
       issues.push({ stage: 'import', code: 'specialized-renderer', message: 'This specialized GitLab rendering requires a source-aware document adapter before visual editing.' });
     }
-    if (element.tagName !== 'ul' || !classes.includes('task-list')) continue;
+    if (!['ul', 'ol'].includes(element.tagName) || !classes.includes('task-list')) continue;
     const items = element.childNodes.filter((node): node is RawElement => 'tagName' in node && node.tagName === 'li');
-    if (items.some(item => !(attr(item, 'class') ?? '').split(/\s+/u).includes('task-list-item'))) {
-      issues.push({ stage: 'import', code: 'mixed-task-list', message: 'A mixed task/bullet list requires a lossless mixed-list adapter.' }); continue;
-    }
-    setAttr(element, 'data-type', 'task-list');
+    if (element.tagName === 'ul') setAttr(element, 'data-type', 'task-list');
     for (const item of items) {
+      const task = (attr(item, 'class') ?? '').split(/\s+/u).includes('task-list-item');
+      setAttr(item, 'data-type', task ? 'task-item' : 'list-item');
       const owned = checkboxes.get(item), input = owned?.[0];
+      const generated = input && attr(input, 'data-checkbox-sourcepos')
+        && (attr(input, 'class') ?? '').split(/\s+/u).includes('task-list-item-checkbox');
+      // Only remove renderer-owned separators; arbitrary HTML retains its text.
+      // GitLab inserts the same block-boundary LF for ordinary list items.
+      if (task ? generated : attr(item, 'data-sourcepos')) for (let index = 1; index < item.childNodes.length; index++) {
+        const block = item.childNodes[index]!, previous = item.childNodes[index - 1]!;
+        if ('tagName' in block && ['ul', 'ol', 'blockquote', 'pre', 'table', 'p', 'div', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(block.tagName)
+          && 'value' in previous && previous.value.endsWith('\n')
+          && !hasAuthoredTerminalNewline(block)) previous.value = previous.value.slice(0, -1);
+      }
+      if (!task) continue;
       if (!input || owned!.length !== 1) { issues.push({ stage: 'import', code: 'task-source', message: 'A GitLab task item requires one unambiguous own checkbox state.' }); continue; }
       setAttr(item, 'data-checked', input.attrs.some(value => value.name === 'checked') ? 'true' : 'false');
-      if (attr(input, 'data-checkbox-sourcepos')
-        && (attr(input, 'class') ?? '').split(/\s+/u).includes('task-list-item-checkbox')) {
+      if (generated) {
         // GitLab inserts one display separator after its checkbox. Preserve all
         // authored whitespace beyond it, including additional spaces, tabs and NBSP.
         const siblings = input.parentNode!.childNodes;
         const next = siblings[siblings.indexOf(input) + 1];
         if (next && 'value' in next && next.value.startsWith(' ')) next.value = next.value.slice(1);
-        // The renderer also separates an inline task body from following blocks
-        // with one newline. Remove that boundary, not an authored entity before it.
-        const blockTags = ['ul', 'ol', 'blockquote', 'pre', 'table', 'p', 'div', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-        for (let index = 1; index < item.childNodes.length; index++) {
-          const block = item.childNodes[index]!, previous = item.childNodes[index - 1]!;
-          if ('tagName' in block && blockTags.includes(block.tagName)
-            && 'value' in previous && previous.value.endsWith('\n')
-            && !hasAuthoredTerminalNewline(block)) previous.value = previous.value.slice(0, -1);
-        }
       }
       input.parentNode!.childNodes = input.parentNode!.childNodes.filter(child => child !== input);
     }
