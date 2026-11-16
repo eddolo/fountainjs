@@ -6,7 +6,7 @@ import captures from '../integrations/gitlab/fixtures/footnote-probe-live-html.j
 import { GitLabContentEditor } from '../integrations/gitlab/services/content_editor';
 
 const mime = 'application/x-fountainjs+json';
-function event(type: 'copy' | 'paste', input: Record<string, string> = {}) {
+function event(type: 'copy' | 'cut' | 'paste', input: Record<string, string> = {}) {
   const values = new Map(Object.entries(input));
   const event = new Event(type, { bubbles: true, cancelable: true });
   Object.defineProperty(event, 'clipboardData', { value: { files: [],
@@ -94,5 +94,26 @@ it.each(['native', 'html'] as const)('refuses an unrepresentable %s cell slice a
     expect(editor.getJSON()).toEqual(before); expect(bridge.getSerializedContent()).toBe(markdown);
     expect(bridge.status).toBe('ready'); expect(onError).toHaveBeenCalledOnce();
     expect(onError.mock.calls[0]![0].issues.some((issue: { message: string }) => issue.message.includes('first row column headers'))).toBe(true);
+  } finally { cleanup(); }
+});
+
+it.each(['native', 'html'] as const)('moves a %s GitLab reference without changing its source label or definition', async format => {
+  const { bridge, view, cleanup } = await setup();
+  try {
+    const editor = bridge.editor;
+    editor.dispatch(editor.createTransaction().replace(1, 1, [editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Destination.')])]));
+    const original = bridge.getSerializedContent();
+    editor.dispatch(editor.createTransaction().setSelection(new NodeSelection(editor.state.doc, [0])));
+    const cut = event('cut'); view.dom.dispatchEvent(cut.event);
+    const afterCut = bridge.getSerializedContent();
+    if (format === 'html') cut.values.delete(mime);
+    const index = editor.state.doc.content.findIndex(node => node.type.name === 'paragraph');
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([index, 0], 0)));
+    view.dom.dispatchEvent(event('paste', Object.fromEntries(cut.values)).event);
+    expect(inspectFootnotes(editor.state.doc).definitions).toHaveLength(1);
+    expect(inspectFootnotes(editor.state.doc).valid).toBe(true);
+    const moved = bridge.getSerializedContent(); expect(moved).toContain('[^alpha]'); expect(moved).toContain('[^alpha]:');
+    expect(undo(editor)).toBe(true); expect(bridge.getSerializedContent()).toBe(afterCut);
+    expect(undo(editor)).toBe(true); expect(bridge.getSerializedContent()).toBe(original);
   } finally { cleanup(); }
 });

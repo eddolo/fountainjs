@@ -1,0 +1,67 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/footnote-cut-move.test.ts (9 tests | 4 failed) 246ms
+   × moves a shared cyclic footnote graph through fountain once, with independent cut/paste undo 108ms
+   × moves a shared cyclic footnote graph through html once, with independent cut/paste undo 40ms
+   × preserves the copied graph separately if a dependency was changed after cutting 9ms
+   × keeps a refused cut as a copy and reports the refusal 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/footnote-cut-move.test.ts > moves a shared cyclic footnote graph through fountain once, with independent cut/paste undo
+ FAIL  tests/footnote-cut-move.test.ts > moves a shared cyclic footnote graph through html once, with independent cut/paste undo
+AssertionError: expected [ 'a', 'b', 'copy', 'copy-2' ] to deeply equal [ 'a', 'b' ]
+
+- Expected
++ Received
+
+  [
+    "a",
+    "b",
++   "copy",
++   "copy-2",
+  ]
+
+ ❯ tests/footnote-cut-move.test.ts:44:86
+     42|     s.paste(values, format);
+     43|     const report = inspectFootnotes(s.editor.state.doc), moved = s.edi…
+     44|     expect(report.valid).toBe(true); expect(report.definitions.map(not…
+       |                                                                                      ^
+     45|     expect(report.references.filter(ref => ref.id === 'a')).toHaveLeng…
+     46|     expect(undo(s.editor)).toBe(true); expect(s.editor.getJSON()).toEq…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/footnote-cut-move.test.ts > preserves the copied graph separately if a dependency was changed after cutting
+RangeError: No node exists at 4.
+ ❯ ReplaceNodeStep.apply src/core/transaction/replace-node-step.ts:19:56
+     17|     const index = this.path.at(-1) as number;
+     18|     const parent = getNodeAtPath(doc, parentPath);
+     19|     if (index < 0 || index >= parent.childCount) throw new RangeError(…
+       |                                                        ^
+     20|     return replaceNodeAtPath(doc, parentPath, parent.copy([
+     21|       ...parent.content.slice(0, index),
+ ❯ Transaction.step src/core/transaction/transform.ts:31:23
+ ❯ Transaction.replaceNode src/core/transaction/transform.ts:63:17
+ ❯ tests/footnote-cut-move.test.ts:66:52
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/footnote-cut-move.test.ts > keeps a refused cut as a copy and reports the refusal
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ tests/footnote-cut-move.test.ts:81:23
+     79|   const s = setup([new Plugin({ filterTransaction: tr => !tr.docChange…
+     80|     const original = s.editor.getJSON(), values = s.copy(); expect(s.e…
+     81|     expect(s.onError).toHaveBeenCalledOnce(); expect(values.get('text/…
+       |                       ^
+     82|   } finally { s.cleanup(); }
+     83| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+   Start at  15:08:52
+   Duration  5.52s (environment 55%, transform 33%, import 7%, tests 5%)

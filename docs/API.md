@@ -649,16 +649,24 @@ Optional `PluginProps` hooks operate on parsed model fragments:
 - `serializeCopiedNode(editor, node, serialize)` returns this node's clipboard
   text, or `undefined` to delegate. Use `serialize(child)` for child nodes;
   `Node.textContent` and other exporters remain unchanged.
-- `handlePasteDocument(editor, document, { source })` receives native Fountain
+- `handlePasteDocument(editor, document, { source, move? })` receives native Fountain
   JSON or imported HTML. Return `undefined` to delegate, `true` after handling
   insertion, or `false` to refuse. Model insertion runs in a command batch;
   refusal or an exception rolls it back without retrying as lossy plain text.
+  The DOM view sets `move: true` only for an unconsumed, successful cut from
+  this live editor whose delivered native data or parsed HTML matches the
+  recorded transfer. The marker alone does not authorize identity reuse.
 
 `createPagesExtension` installs `createFootnoteClipboardPlugin` automatically.
 The exported Pages helper also accepts optional ID/label, `prepareDocument` and
 `validateDocument` callbacks for custom footnote schemas and host constraints.
 It copies complete owned bodies, remaps collisions and keeps pasted definitions
-at the root, including cell-grid selections; see the
+at the root, including cell-grid selections. A verified cut reuses unchanged
+owned definitions; altered dependency graphs are copied separately. The
+optional third `prepareDocument` argument contains `reusedDefinitionIds`:
+those definitions already belong to the destination and are omitted from the
+incoming fragment; preserve their reference labels. Definitions removed by the
+paste destination selection are restored. See the
 [bounded footnote clipboard contract](PAGINATION.md).
 
 ### Clipboard history

@@ -1,0 +1,39 @@
+Prepared the pinned repeated-footnote server repair. The base image remains unchanged.
+time="2026-11-16T15:23:41Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{
+  "status": "passed",
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "Actual HTML omits the unused footnote definition; native paste refuses that incomplete projection, retains exact source and recovers through a supported paste",
+    "Real footnote dialog cancels without mutation, inserts and directly edits two native notes, undoes/redoes typing independently, and reuses a note without duplicating its definition; all three references stay in the chosen paragraph",
+    "Real Enter and typing continue the body before endnotes; no automatic root typing paragraph appears after the terminal editable note",
+    "Keyboard-accessible controls remove one reference without deleting its body, or delete a whole note and its references; Undo restores both operations; a 360px dialog retains its draft and cancels without inserting",
+    "Current desktop toolbar keeps attachment, paste and media actions on one row; media deletion remains visibly separated; note dialogs and note/media controls pass scoped accessibility checks",
+    "Actual label editor retains exact-collision and HTTP-failure drafts, retries successfully, preserves native IDs, updates shared references atomically with Undo/Redo, and refuses a real GitLab case-folded collision",
+    "An unused note’s long source label occupies its own wrapping line above its body at desktop and 360px, without horizontal overflow",
+    "An unused definition renames through real bounded host rendering without losing its body; Undo restores its label/reference, and a 360px draft cancels without publishing a label change",
+    "Trusted cut moves all three references while retaining the four original/copied definitions, source labels and bold marks; separate cut/paste Undo and Redo restore each graph",
+    "Trusted copy includes both owned footnote bodies; native paste creates two fresh identities and collision-free source labels, retains shared references and bold text, and one Undo/Redo restores the whole graph",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Four copied/original definitions retain their source labels, bodies and marks in the saved Markdown and actual reader (saved)",
+    "All six real reader references and their individual backlinks navigate to the correct copied/original note (saved)",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Four copied/original definitions retain their source labels, bodies and marks in the saved Markdown and actual reader (reopened)",
+    "All six real reader references and their individual backlinks navigate to the correct copied/original note (reopened)",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "The saved unused footnote definition remains byte-for-byte unchanged after actual application restart",
+    "Four copied/original definitions retain their source labels, bodies and marks in the saved Markdown and actual reader (restart)",
+    "All six real reader references and their individual backlinks navigate to the correct copied/original note (restart)",
+    "Exact saved server source, authenticated session and uploaded image survive an actual application-container restart"
+  ]
+}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped

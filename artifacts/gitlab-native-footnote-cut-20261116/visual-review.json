@@ -1,0 +1,63 @@
+{
+  "scope": "Named editor/reader screenshots and sampled frames inspected; not an uninterrupted review of either recording.",
+  "observations": [
+    "After the whole-line cut, moved and remaining text share note 1; the second paste adds independent note 2.",
+    "Initial Firefox click selected only the atom; tightened coordinates and explicit moved-prose assertions now cover the same whole line in both browsers.",
+    "Real GitLab author and saved/reopened/restarted reader retain four note bodies, bold marks and six references.",
+    "Contextual Footnote actions still appears on its own row during label editing; retained as UI follow-up."
+  ],
+  "screenshots": [
+    {
+      "path": "artifacts/footnote-cut-browser-final-20261116/footnote-clipboard-real-mo-2e834-then-copies-on-repeat-paste-chromium/cut-reference-shared-body.png",
+      "sha256": "d5c361092237e5f27e1ae1bd1a63542eea76d00f625aa74ca8c5ccfdf44422ef"
+    },
+    {
+      "path": "artifacts/footnote-cut-browser-final-20261116/footnote-clipboard-real-mo-2e834-then-copies-on-repeat-paste-chromium/repeat-paste-independent-note.png",
+      "sha256": "d3564e7253e25028bdeeac8c19695f9f846936c9daf93393a80a3378e61a96c0"
+    },
+    {
+      "path": "artifacts/footnote-cut-browser-final-20261116/footnote-clipboard-real-mo-2e834-then-copies-on-repeat-paste-firefox/cut-reference-shared-body.png",
+      "sha256": "2af94ba04c9bce8bcb35e3be80bbb9ccb2ecf05e577b7e047df8160a601fa751"
+    },
+    {
+      "path": "artifacts/footnote-cut-browser-final-20261116/footnote-clipboard-real-mo-2e834-then-copies-on-repeat-paste-firefox/repeat-paste-independent-note.png",
+      "sha256": "cec71d3c476ce2fd6d9037512ffa5c78dae783223566f1c13645c0a95752decc"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-cut-20261116/footnote-cut-moved-graph.png",
+      "sha256": "48c8c695d6d3b7245a8305ac0cac6265695a19d8348fa9b9fc01a1cdaa119901"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-cut-20261116/original-reopened.png",
+      "sha256": "673001d71230cb4416f94c1b9aa9b030c43f0773da162c4e33a38d13058fc63d"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-cut-20261116/original-after-restart.png",
+      "sha256": "e460eb2c79cb74684749084a3924b48032bcc0d35ab1fe1f76cf6b0b5b1c7c2d"
+    }
+  ],
+  "frameSheets": [
+    {
+      "path": "artifacts/footnote-cut-firefox-frames-20261116.png",
+      "sha256": "385fab2885108e1984d119a1813a35c7f65eb17e7d72bd1ef734074484d483d4"
+    },
+    {
+      "path": "artifacts/footnote-cut-gitlab-move-frames-20261116.png",
+      "sha256": "21d5dcb06e059cd03f09e1cfa3fc86bd7ca21c5726c0cd52205d788705d315f2"
+    }
+  ],
+  "nativeRecording": {
+    "path": "artifacts/gitlab-native-footnote-cut-20261116/recordings/page@9a74ebec67dff6764874e8dbec4d6b86.webm",
+    "sha256": "2befbdf0638ad7d4df102d39a9928cf4ee372f0c87c4b4b15622f33df6c727c6",
+    "durationSeconds": 207.52,
+    "sampledSeconds": [
+      84,
+      87,
+      90,
+      93,
+      96,
+      99
+    ],
+    "retainedLocally": true
+  }
+}

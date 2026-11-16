@@ -4,7 +4,7 @@ import type { Node } from 'fountainjs-editor';
 const occupiedKey = (value: unknown) => String(value).normalize('NFKC').toUpperCase()
   .replace(/[\p{White_Space}\p{Default_Ignorable_Code_Point}]/gu, '');
 
-export function namespaceGitLabFootnotes(document: Node, current: Node): Node {
+export function namespaceGitLabFootnotes(document: Node, current: Node, context?: { readonly reusedDefinitionIds: ReadonlySet<string> }): Node {
   const labels = new Set<string>(), ids = new Set<string>(), assigned = new Map<string, string>();
   current.descendants(node => {
     if (node.type.name.startsWith('footnote_')) ids.add(String(node.attrs.id));
@@ -21,7 +21,7 @@ export function namespaceGitLabFootnotes(document: Node, current: Node): Node {
   if (!assigned.size) return document;
   const project = (node: Node): Node => {
     const label = node.type.name.startsWith('footnote_') ? assigned.get(String(node.attrs.id)) : undefined;
-    if (node.type.name === 'footnote_reference' && label === undefined) throw new Error('GITLAB_FOOTNOTE_INSERTION_TARGET');
+    if (node.type.name === 'footnote_reference' && label === undefined && !context?.reusedDefinitionIds.has(String(node.attrs.id))) throw new Error('GITLAB_FOOTNOTE_INSERTION_TARGET');
     const children = node.content.map(project);
     const attrs = label === undefined ? node.attrs : { ...node.attrs, gitlabFootnoteLabel: label,
       ...(node.type.name === 'footnote_reference' ? { gitlabFootnoteOriginalLabel: label, gitlabFootnoteTargetLabel: label } : {}) };

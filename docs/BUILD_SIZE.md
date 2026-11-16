@@ -18,6 +18,15 @@ remain optional. Investigate unexpected dependency/loading changes before
 increasing a budget. Justified growth for tested behavior is normal development;
 it does not justify weakening correctness, latency or retained-memory checks.
 
+## Cut/move ownership checkpoint, 2026-11-16
+
+The emitted inventory is 1,612.1 KiB ESM / 1,435.4 KiB CommonJS (previously
+1,610.5 / 1,433.9 KiB). All existing limits pass without changes. The optional
+Pages facade is 13.3 / 12.0 KiB; no dependencies were added. Existing runtime
+and retained-memory gates pass. This inventory sums optional entries and does
+not measure a consumer download or GUI latency.
+[Evidence](../artifacts/footnote-cut-integration-20261116.json).
+
 ## Rich cell clipboard checkpoint, 2026-11-15
 
 The emitted inventory is 1,610.5 KiB ESM / 1,433.9 KiB CommonJS, up from

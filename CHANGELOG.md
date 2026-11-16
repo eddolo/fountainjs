@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Preserve shared footnote identity when moving a successful cut within one
+  editor. The first matching paste reuses unchanged owned bodies; changed
+  dependencies, ordinary copies and later pastes remain independent. Restore
+  definitions removed by the destination selection. Cut/paste undo separately,
+  refused pastes retain the transfer, and undo/replacement/view teardown clear
+  it. GitLab keeps the original labels for reused notes. Refused cuts report
+  that content was copied but not removed, and a copy observer cannot redirect
+  deletion to another selection.
+
 - Group the private GitLab toolbar by history, text formatting, lists and
   document tools so wrapping preserves related controls. Keep attachment,
   Markdown paste and media together; shorten the visible media trigger while retaining

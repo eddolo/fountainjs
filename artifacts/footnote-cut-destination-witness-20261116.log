@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/footnote-cut-move.test.ts (17 tests | 1 failed) 386ms
+   × restores owned definitions removed by the paste destination selection 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/footnote-cut-move.test.ts > restores owned definitions removed by the paste destination selection
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/footnote-cut-move.test.ts:133:26
+    131|     s.view.dom.dispatchEvent(transfer('paste', values).event);
+    132|     const report = inspectFootnotes(s.editor.state.doc);
+    133|     expect(report.valid).toBe(true); expect(report.definitions.map(n =…
+       |                          ^
+    134|     expect(s.editor.getText()).toContain('Move'); expect(s.editor.getT…
+    135|   } finally { s.cleanup(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)
+   Start at  15:14:40
+   Duration  3.64s (transform 41%, environment 39%, tests 11%, import 9%)

@@ -44,7 +44,7 @@ export interface PluginProps {
   /** Overrides this node's clipboard text; use serialize on children, leaving model textContent unchanged. */
   serializeCopiedNode?: (editor: Editor, node: Node, serialize: (child: Node) => string) => string | undefined;
   /** Undefined delegates; true consumes the parsed paste; false refuses it atomically, without a text fallback. */
-  handlePasteDocument?: (editor: Editor, document: Node, context: { readonly source: 'fountain' | 'html' }) => boolean | undefined;
+  handlePasteDocument?: (editor: Editor, document: Node, context: { readonly source: 'fountain' | 'html'; /** Verified, one-use cut from this live editor. */ readonly move?: boolean }) => boolean | undefined;
   handleDrop?: (editor: Editor, event: GlobalConstructorInstance<'DragEvent', any>) => boolean;
   /** Handle document chrome before the browser places a caret or changes focus. */
   handlePointerDown?: (editor: Editor, event: GlobalConstructorInstance<'PointerEvent', any>) => boolean;

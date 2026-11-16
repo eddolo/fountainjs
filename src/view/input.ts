@@ -31,7 +31,7 @@ import {
   RangeSelection,
 } from '../core';
 import { isCompositionKey } from '../core/composition-key';
-import { clipboardTextObservers } from '../core/clipboard-write';
+import { clipboardTextObservers, forgetClipboardCut, getClipboardCut, rememberClipboardCut, type ClipboardCutTransfer } from '../core/clipboard-write';
 import { HTMLExporter } from '../core/exporters/html-exporter';
 import { HTMLImporter } from '../core/importers/html-importer';
 import { comparePaths, getNodeAtPath } from '../core/transaction/path';
@@ -69,6 +69,7 @@ interface FountainClipboardPayload {
   readonly version: 1;
   readonly document: import('../core').NodeJSON;
   readonly directionSnapshots?: number;
+  readonly cutToken?: string;
 }
 
 function directionSnapshotIssues(count: unknown): readonly ExternalPasteIssue[] {
@@ -176,6 +177,7 @@ export class InputManager {
 
   cancelComposition(): void {
     this.clearPendingNativePaste();
+    forgetClipboardCut(this.editor);
     this.composingValue = false;
     this.shiftEnterPending = false;
     this.compositionSelection = undefined;
@@ -558,7 +560,8 @@ export class InputManager {
         return Object.freeze({ code: 'fountain-document-fallback', count: 1,
           message: 'Fountain clipboard content is incompatible with this schema; HTML or text was used.', lossy: true });
       }
-      if (this.insertParsedClipboard(document, 'fountain')) {
+      const cut = getClipboardCut(this.editor);
+      if (this.insertParsedClipboard(document, 'fountain', cut?.native === fountain ? cut : undefined)) {
         event.preventDefault();
         this.reportPaste(createExternalPasteReport(
           'fountain', 'inserted-fountain-document', fountain, fountain, directionSnapshotIssues(snapshots),
@@ -578,15 +581,18 @@ export class InputManager {
     return null;
   }
 
-  private insertParsedClipboard(document: Node, source: 'fountain' | 'html'): boolean {
+  private insertParsedClipboard(document: Node, source: 'fountain' | 'html', cut?: ClipboardCutTransfer): boolean {
+    if (cut) document = cut.document;
     try {
-      return this.editor.runCommandBatch(() => {
+      const accepted = this.editor.runCommandBatch(() => {
         for (const plugin of this.editor.state.plugins) {
-          const handled = plugin.spec.props?.handlePasteDocument?.(this.editor, document, { source });
+          const handled = plugin.spec.props?.handlePasteDocument?.(this.editor, document, { source, ...(cut ? { move: true } : {}) });
           if (handled !== undefined) return handled;
         }
         return insertDocument(this.editor, document);
       });
+      if (accepted && cut) forgetClipboardCut(this.editor);
+      return accepted;
     } catch (error) {
       // The command batch has already restored its original state. A semantic
       // refusal must never turn into a second, lossy HTML/plain-text insertion.
@@ -627,7 +633,20 @@ export class InputManager {
         })]);
       }
       if (document) {
-        if (this.insertParsedClipboard(document, 'html')) {
+        let cut = getClipboardCut(this.editor);
+        // Browsers may wrap/reformat HTML. Require both our transfer marker and
+        // equal parsed content, not a caller-supplied marker alone. The original
+        // model then preserves attributes the HTML projection cannot represent.
+        if (cut) {
+          try {
+            const offered = this.options.paste?.normalize === false ? cut.html
+              : normalizeExternalPasteHTML(cut.html, this.options.paste).html;
+            const delivered = HTMLImporter.parse(normalizedHTML, this.editor.state.schema);
+            if (!html.includes(`data-fountain-cut="${cut.token}"`)
+              || !delivered.eq(HTMLImporter.parse(offered, this.editor.state.schema))) cut = undefined;
+          } catch { cut = undefined; }
+        }
+        if (this.insertParsedClipboard(document, 'html', cut)) {
           event?.preventDefault();
           this.reportPaste(createExternalPasteReport(
             richSource,
@@ -697,7 +716,7 @@ export class InputManager {
     return document;
   }
 
-  private writeFountainSelection(event: ClipboardEvent): boolean {
+  private writeFountainSelection(event: ClipboardEvent, cutToken?: string): ClipboardCutTransfer | true | false {
     if (!event.clipboardData) return false;
     const fragmentDocument = this.selectedFountainDocument();
     if (!fragmentDocument) return false;
@@ -720,8 +739,10 @@ export class InputManager {
     const projection = snapshotIncompleteSharedDirections(selected, this.editor.state.doc);
     const document = projection.document, detached = projection.detached + inheritedSnapshots;
     const fragment = HTMLExporter.export(document, { document: false });
-    const html = detached ? `<div data-fountain-clipboard-direction-snapshots="${detached}">${fragment}</div>` : fragment;
-    const payload: FountainClipboardPayload = { version: 1, document: document.toJSON(), ...(detached ? { directionSnapshots: detached } : {}) };
+    const html = cutToken || detached ? `<div${cutToken ? ` data-fountain-cut="${cutToken}"` : ''}${detached ? ` data-fountain-clipboard-direction-snapshots="${detached}"` : ''}>${fragment}</div>` : fragment;
+    const payload: FountainClipboardPayload = { version: 1, document: document.toJSON(),
+      ...(cutToken ? { cutToken } : {}), ...(detached ? { directionSnapshots: detached } : {}) };
+    const native = JSON.stringify(payload);
     let plainText = clipboardText(document, (node, serialize) => {
       for (const plugin of this.editor.state.plugins) {
         const text = plugin.spec.props?.serializeCopiedNode?.(this.editor, node, serialize);
@@ -746,17 +767,18 @@ export class InputManager {
     }
     event.clipboardData.setData('text/plain', plainText);
     event.clipboardData.setData('text/html', html);
-    try { event.clipboardData.setData(FOUNTAIN_CLIPBOARD_MIME, JSON.stringify(payload)); }
+    try { event.clipboardData.setData(FOUNTAIN_CLIPBOARD_MIME, native); }
     catch { /* Standards-based rich HTML remains available to every paste target. */ }
     event.preventDefault();
     clipboardTextObservers.get(this.editor)?.(plainText);
-    return true;
+    return cutToken ? { token: cutToken, document, native, html } : true;
   }
 
   private onCopy = (event: ClipboardEvent): void => {
     const semanticSelection = this.editor.state.selection instanceof NodeSelection
       || this.editor.state.selection instanceof AllSelection;
     if (this.options.shouldStopEvent?.(event) && !semanticSelection) return;
+    forgetClipboardCut(this.editor);
     for (const plugin of this.editor.state.plugins) {
       if (plugin.spec.props?.handleCopy?.(this.editor, event)) {
         event.preventDefault();
@@ -780,6 +802,7 @@ export class InputManager {
     const semanticSelection = this.editor.state.selection instanceof NodeSelection
       || this.editor.state.selection instanceof AllSelection;
     if ((this.options.shouldStopEvent?.(event) && !semanticSelection) || !this.editor.editable) return;
+    forgetClipboardCut(this.editor);
     for (const plugin of this.editor.state.plugins) {
       if (plugin.spec.props?.handleCut?.(this.editor, event)) {
         event.preventDefault();
@@ -787,10 +810,13 @@ export class InputManager {
       }
     }
     try {
-      if (this.writeFountainSelection(event)) {
-        if (!deleteSelection(this.editor) && this.editor.state.selection instanceof RangeSelection) {
-          this.options.onError?.(new Error('The selection was copied, but could not be removed safely.'));
-        }
+      const before = this.editor.state;
+      const copied = this.writeFountainSelection(event, globalThis.crypto?.randomUUID?.());
+      if (copied) {
+        const unchanged = this.editor.state.doc === before.doc && this.editor.state.selection === before.selection;
+        if (unchanged && deleteSelection(this.editor) && this.editor.state.doc !== before.doc) {
+          if (copied !== true) rememberClipboardCut(this.editor, copied);
+        } else this.options.onError?.(new Error('The selection was copied, but could not be removed safely.'));
       } else if (this.editor.state.selection instanceof CellSelection
         || this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
         event.preventDefault();

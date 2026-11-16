@@ -31,7 +31,8 @@ const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
 const nativeAutocomplete = process.argv.includes('--native-autocomplete');
 const nativeTableClipboard = process.argv.includes('--native-table-clipboard');
-const nativeFootnoteClipboard = process.argv.includes('--native-footnote-clipboard');
+const nativeFootnoteCut = process.argv.includes('--native-footnote-cut');
+const nativeFootnoteClipboard = process.argv.includes('--native-footnote-clipboard') || nativeFootnoteCut;
 const nativeFootnoteBoundary = process.argv.includes('--native-footnote-boundary') || nativeFootnoteClipboard;
 const assertSavedFootnotes = nativeFootnoteClipboard ? assertSavedNativeFootnoteClipboard : assertSavedNativeFootnotes;
 const nativeFootnoteRenaming = process.argv.includes('--native-footnote-renaming') || nativeFootnoteBoundary;
@@ -57,6 +58,7 @@ const nativeBrowser = process.argv.includes('--native-browser') || nativeInserti
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
   nativeTableClipboard ? 'artifacts/gitlab-native-table-clipboard-20261115/' :
+  nativeFootnoteCut ? 'artifacts/gitlab-native-footnote-cut-20261116/' :
   nativeFootnoteClipboard ? 'artifacts/gitlab-native-footnote-clipboard-20261115/' :
   nativeFootnoteBoundary ? 'artifacts/gitlab-native-footnote-boundary-20261115/' :
   nativeFootnoteRenaming ? 'artifacts/gitlab-native-footnote-renaming-20261115/' :
@@ -498,7 +500,7 @@ try {
     }
     if (nativeFootnoteEditing) await auditNativeFootnotes({ page, editor, toolbar, output, report });
     if (nativeFootnoteRenaming) await auditNativeFootnoteRenaming({ page, editor, toolbar, output, report });
-    if (nativeFootnoteClipboard) await auditNativeFootnoteClipboard({ page, editor, toolbar, output, report });
+    if (nativeFootnoteClipboard) await auditNativeFootnoteClipboard({ page, editor, toolbar, output, report, move: nativeFootnoteCut });
     if (nativeTableClipboard) {
       await auditNativeControlsLayout({ page, editor, toolbar, output, report });
       await auditNativeTableClipboard({ page, editor, toolbar, output, report });

@@ -5,7 +5,7 @@ export interface FootnoteClipboardOptions {
   readonly idFactory?: (editor: Editor) => string;
   readonly label?: (node: Node) => string;
   /** Host-specific source metadata, such as labels, is prepared before insertion. */
-  readonly prepareDocument?: (document: Node, current: Node) => Node;
+  readonly prepareDocument?: (document: Node, current: Node, context?: { readonly reusedDefinitionIds: ReadonlySet<string> }) => Node;
   /** Throws to refuse the entire paste before its model is published. */
   readonly validateDocument?: (document: Node) => void;
 }
@@ -56,14 +56,31 @@ function completeCopy(editor: Editor, supplied: Node): Node {
   for (const [id, definition] of needed) if (!selected.has(id)) content.push(definition);
   return document.copy(content);
 }
-function freshen(document: Node, current: Node, editor: Editor, factory: NonNullable<FootnoteClipboardOptions['idFactory']>): Node {
+function freshen(document: Node, current: Node, editor: Editor, factory: NonNullable<FootnoteClipboardOptions['idFactory']>, move: boolean): { document: Node; reused: ReadonlySet<string> } {
   const incoming = definitions(document), used = new Set<string>(), assigned = new Map<string, string>();
   current.descendants(node => { if (isDefinition(node) || isReference(node)) used.add(String(node.attrs.id)); });
+  const existing = definitions(current), reused = new Set<string>();
+  if (move) {
+    for (const [id, note] of incoming) if (existing.get(id)?.eq(note)) reused.add(id);
+    // Remove parents of changed dependencies in linear time, including cycles.
+    const parents = new Map<string, Set<string>>(), conflicts: string[] = [];
+    for (const [id, note] of incoming) {
+      if (existing.has(id) && !reused.has(id)) conflicts.push(id);
+      for (const target of references(note)) {
+        let owners = parents.get(target);
+        if (!owners) parents.set(target, owners = new Set());
+        owners.add(id);
+      }
+    }
+    for (let index = 0; index < conflicts.length; index++) {
+      for (const parent of parents.get(conflicts[index]!) ?? []) if (reused.delete(parent)) conflicts.push(parent);
+    }
+  }
   const incomingIds = new Set(incoming.keys()), counters = new Map<string, number>();
   for (const reference of references(document)) if (!incoming.has(reference)) throw new Error('FOUNTAIN_CLIPBOARD_MISSING_FOOTNOTE');
   for (const id of incoming.keys()) {
     let target = id;
-    if (used.has(target)) {
+    if (used.has(target) && !reused.has(id) && !(move && !existing.has(id))) {
       const base = factory(editor);
       if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/u.test(base)) throw new Error('FOUNTAIN_CLIPBOARD_FOOTNOTE_ID');
       target = base;
@@ -81,7 +98,7 @@ function freshen(document: Node, current: Node, editor: Editor, factory: NonNull
     const content = node.content.map(project);
     return node.type.create(id === undefined ? node.attrs : { ...node.attrs, id }, content, node.text, node.marks);
   };
-  return project(document);
+  return { document: document.copy(document.content.filter(node => !isDefinition(node) || !reused.has(String(node.attrs.id))).map(project)), reused };
 }
 
 /** Keeps clipboard references self-contained and inserts their definitions at the document root. */
@@ -99,19 +116,27 @@ export function createFootnoteClipboardPlugin(options: FootnoteClipboardOptions 
       if (isDefinition(node)) return `[^${label}]: ${node.content.map(serialize).join('\n\n').split('\n').join('\n    ')}`;
       return undefined;
     },
-    handlePasteDocument(editor, supplied) {
+    handlePasteDocument(editor, supplied, context) {
       if (!containsNotes(supplied)) return undefined;
       if (!editor.editable) return false;
       return editor.runCommandBatch(() => {
-        let document = freshen(supplied, editor.state.doc, editor, factory);
-        document = options.prepareDocument?.(document, editor.state.doc) ?? document;
+        const prepared = freshen(supplied, editor.state.doc, editor, factory, context.move === true);
+        let document = prepared.document;
+        document = options.prepareDocument?.(document, editor.state.doc, { reusedDefinitionIds: prepared.reused }) ?? document;
         if (document.type !== editor.state.schema.topNodeType) throw new Error('FOUNTAIN_CLIPBOARD_FOOTNOTE_SCHEMA');
         editor.state.schema.validate(document);
         const owned = definitions(document);
-        for (const id of references(document)) if (!owned.has(id)) throw new Error('FOUNTAIN_CLIPBOARD_MISSING_FOOTNOTE');
+        for (const id of references(document)) if (!owned.has(id) && !prepared.reused.has(id)) throw new Error('FOUNTAIN_CLIPBOARD_MISSING_FOOTNOTE');
         const notes = document.content.filter(isDefinition);
         const body = document.copy(document.content.filter(node => !isDefinition(node)));
         if (body.childCount && !insertDocument(editor, body)) return false;
+        // The target selection may itself include reusable definitions (for
+        // example Select all). Restore those bodies instead of leaving dangling
+        // references after the body insertion replaces that selection.
+        if (prepared.reused.size) {
+          const remaining = definitions(editor.state.doc), original = definitions(supplied);
+          for (const id of prepared.reused) if (!remaining.has(id)) notes.push(original.get(id)!);
+        }
         if (notes.length) {
           const transaction = editor.createTransaction(), last = transaction.doc.content.findLastIndex(isDefinition);
           const index = last >= 0 ? last + 1 : transaction.doc.childCount - (isAutomaticTrailingParagraph(transaction.doc.content.at(-1)) ? 1 : 0);

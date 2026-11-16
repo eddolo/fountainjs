@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { footnoteClipboardJourney } from '../browser/footnote-clipboard-journey';
+import { footnoteClipboardJourney, footnoteCutMoveJourney } from '../browser/footnote-clipboard-journey';
 
 // This exercises the OS clipboard, including another application's plain-text
 // field. Run through playwright.clipboard-audit.config.ts. WebKit's installed
@@ -10,4 +10,10 @@ test('keeps copied footnote graphs self-contained through native clipboard input
   await page.waitForFunction(() => Boolean((globalThis as any).fountainBrowserTest?.editor));
   await expect(page.getByRole('textbox', { name: 'Page intent contract editor', exact: true })).toBeVisible();
   await footnoteClipboardJourney(page, info, browserName);
+});
+
+test('moves a cut reference without duplicating its shared body, then copies on repeat paste', async ({ page, browserName }, info) => {
+  await page.goto('/browser-tests.html');
+  await page.waitForFunction(() => Boolean((globalThis as any).fountainBrowserTest?.pages?.editor));
+  await footnoteCutMoveJourney(page, info, browserName);
 });

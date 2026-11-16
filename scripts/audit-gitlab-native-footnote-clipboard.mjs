@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 // Model APIs are deliberately absent: create, select, copy, paste and history
 // all pass through the actual GitLab application and trusted browser input.
-export async function auditNativeFootnoteClipboard({ page, editor, toolbar, output, report }) {
+export async function auditNativeFootnoteClipboard({ page, editor, toolbar, output, report, move = false }) {
   await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   const definitions = editor.locator('[data-fountain-footnote-definition]');
   const references = editor.locator('sup[data-fountain-footnote-reference]');
@@ -52,7 +52,29 @@ export async function auditNativeFootnoteClipboard({ page, editor, toolbar, outp
   await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
   await expect(definitions).toHaveCount(4); expect(await graph()).toEqual(pasted);
   await page.screenshot({ path: fileURLToPath(new URL('footnote-copied-graph.png', output)), fullPage: true });
-  report.nativeFootnoteClipboard = { ...pasted, plain };
+  let final = pasted;
+  if (move) {
+    const paragraphs = editor.locator('p').filter({ hasText: 'End of the original description.' });
+    await expect(paragraphs).toHaveCount(2);
+    await paragraphs.first().click({ position: { x: 20, y: 10 } });
+    await page.keyboard.press('Home'); await page.keyboard.press('Shift+End'); await page.keyboard.press('Control+x');
+    await expect(paragraphs).toHaveCount(1); await expect(references).toHaveCount(3); await expect(definitions).toHaveCount(4);
+    const cut = await graph();
+    expect(cut.definitions).toEqual(pasted.definitions);
+    await continuation.click({ position: { x: 20, y: 10 } }); await page.keyboard.press('End'); await page.keyboard.press('Control+v');
+    await expect(paragraphs).toHaveCount(2); await expect(references).toHaveCount(6); await expect(definitions).toHaveCount(4);
+    const moved = await graph(); expect(moved.definitions).toEqual(pasted.definitions);
+    for (const reference of moved.references) expect(moved.definitions.filter(note => note.id === reference.id && note.label === reference.label)).toHaveLength(1);
+    await toolbar.getByRole('button', { name: 'Undo', exact: true }).click(); expect(await graph()).toEqual(cut);
+    await toolbar.getByRole('button', { name: 'Undo', exact: true }).click(); expect(await graph()).toEqual(pasted);
+    await toolbar.getByRole('button', { name: 'Redo', exact: true }).click(); expect(await graph()).toEqual(cut);
+    await toolbar.getByRole('button', { name: 'Redo', exact: true }).click(); expect(await graph()).toEqual(moved);
+    final = moved;
+    report.nativeFootnoteCut = { before: pasted, cut, moved };
+    await page.screenshot({ path: fileURLToPath(new URL('footnote-cut-moved-graph.png', output)), fullPage: true });
+    report.checks.push('Trusted cut moves all three references while retaining the four original/copied definitions, source labels and bold marks; separate cut/paste Undo and Redo restore each graph');
+  }
+  report.nativeFootnoteClipboard = { ...final, plain };
   report.checks.push('Trusted copy includes both owned footnote bodies; native paste creates two fresh identities and collision-free source labels, retains shared references and bold text, and one Undo/Redo restores the whole graph');
 }
 

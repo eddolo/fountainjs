@@ -72,3 +72,46 @@ export async function footnoteClipboardJourney(page: Page, info: TestInfo, brows
   await info.attach('footnote-clipboard-evidence', { body: JSON.stringify({ browserName, graph,
     clipboard: await page.evaluate(() => (globalThis as any).footnoteClipboardProbe) }), contentType: 'application/json' });
 }
+
+/** Real cut, paste and undo/redo input; no injected clipboard events. */
+export async function footnoteCutMoveJourney(page: Page, info: TestInfo, browserName: string) {
+  if (browserName === 'chromium') await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  const surface = page.getByRole('textbox', { name: 'Page intent contract editor', exact: true });
+  await page.evaluate(() => {
+    const { editor } = (globalThis as any).fountainBrowserTest.pages, { schema } = editor.state;
+    const ref = () => schema.node('footnote_reference', { id: 'move-note' });
+    const p = (text: string, reference = false) => schema.node('paragraph', {}, [schema.text(text), ...(reference ? [ref()] : [])]);
+    editor.dispatch(editor.createTransaction().replaceDocument(schema.node('doc', {}, [
+      p('Move this reference', true), p('Keep this reference', true), p('Destination.'),
+      schema.node('footnote_definition', { id: 'move-note' }, [p('One shared note body.')]),
+    ])));
+    (globalThis as any).footnoteMoveProbe = [];
+    for (const type of ['cut', 'paste']) document.addEventListener(type, event => {
+      const data = (event as ClipboardEvent).clipboardData;
+      (globalThis as any).footnoteMoveProbe.push({ type, formats: data ? Object.fromEntries([...data.types].map(key => [key, data.getData(key)])) : {} });
+    });
+  });
+  const json = () => page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editor.getJSON());
+  const original = await json();
+  await surface.locator(':scope > p').first().click({ position: { x: 20, y: 10 } });
+  await page.keyboard.press('Home'); await page.keyboard.press('Shift+End'); await page.keyboard.press('ControlOrMeta+x');
+  await expect(surface.locator('sup[data-fountain-footnote-reference]')).toHaveCount(1);
+  await expect(surface.locator(':scope > p').first()).toHaveText('');
+  const cut = await json();
+  await surface.locator(':scope > p').filter({ hasText: 'Destination.' }).click();
+  await page.keyboard.press('End'); await page.keyboard.press('ControlOrMeta+v');
+  await expect(surface.locator('sup[data-fountain-footnote-reference]')).toHaveCount(2);
+  await expect(surface.locator('[data-fountain-footnote-definition]')).toHaveCount(1);
+  await expect(surface.locator(':scope > p').filter({ hasText: 'Destination.' })).toHaveText('Destination.Move this reference1');
+  const moved = await json();
+  await surface.screenshot({ path: info.outputPath('cut-reference-shared-body.png') });
+  await page.keyboard.press('ControlOrMeta+z'); expect(await json()).toEqual(cut);
+  await page.keyboard.press('ControlOrMeta+z'); expect(await json()).toEqual(original);
+  await page.keyboard.press('ControlOrMeta+Shift+z'); await page.keyboard.press('ControlOrMeta+Shift+z'); expect(await json()).toEqual(moved);
+  await page.keyboard.press('ControlOrMeta+v');
+  await expect(surface.locator('[data-fountain-footnote-definition]')).toHaveCount(2);
+  await expect(surface.locator('sup[data-fountain-footnote-reference]')).toHaveCount(3);
+  await surface.screenshot({ path: info.outputPath('repeat-paste-independent-note.png') });
+  await info.attach('cut-move-evidence', { body: JSON.stringify({ browserName, original, cut, moved, repeated: await json(),
+    clipboard: await page.evaluate(() => (globalThis as any).footnoteMoveProbe) }), contentType: 'application/json' });
+}

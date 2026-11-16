@@ -20,7 +20,8 @@ Footnote clipboard scope: text/node/document and cell-grid selections include
 owned definitions. Copying just a definition's text produces prose. Rich grid
 paste keeps definitions at the root, retains shared references and supports
 table growth/merged spans without nesting the copied grid in its first cell.
-Same-editor cut/move identity reuse still needs a separate acceptance matrix.
+Same-editor cut/move identity reuse is covered by the contract below and recorded
+Chromium/Firefox keyboard journeys; wider host and device matrices remain.
 Native HTML must actually reach the paste event for rich retention. Recorded
 Chromium/Firefox OS-clipboard runs exercise independent rich/plain-text targets,
 same-editor rich paste, merged grid placement and table-to-prose insertion.
@@ -386,6 +387,27 @@ Automatic page membership is deliberately absent. Header/footer editing keeps
 one canonical editable model representation. Repeated preview and editable-page
 shell furniture is view-only and excluded from selection, clipboard,
 accessibility, and JSON.
+
+## Cut and move ownership
+
+A successful native cut records one transient transfer in the live editor.
+The first matching paste reuses unchanged footnote definitions, preserving
+shared references, labels and cyclic dependencies. A changed body or dependency
+creates a separate graph rather than overwriting the current note. If the
+paste selection removes an owned definition, its body is restored at the root.
+
+Ordinary copies, another editor, modified transfer contents, repeated paste,
+and paste after undo/redo or document replacement use copy semantics. A refused
+paste leaves the transfer available for retry. Another editor copy/cut, view
+destruction, undo/redo or whole-document replacement discards it. The transfer
+never enters document JSON or persisted history. Cut and paste have separate
+undo steps. Plain-text-only transports cannot carry this identity intent.
+
+The DOM adapter verifies native bytes or a marker plus equal parsed HTML before
+passing the original model to the clipboard plugins. The metadata is transfer
+provenance, not a security or permissions boundary. Host plugins still validate
+the resulting document. Installed WebKit clipboard transport and physical
+Safari remain unverified; Chromium/Firefox have real keyboard journeys.
 
 ## Fragmentation policy
 

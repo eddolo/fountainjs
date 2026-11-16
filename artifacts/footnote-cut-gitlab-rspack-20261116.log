@@ -1,0 +1,9 @@
+Condensed successful GitLab frontend build receipt (exit 0).
+Full log retained locally: artifacts/footnote-cut-gitlab-rspack-20261116.raw.log
+Full log SHA-256: cc350ae9d108b2f42b19d8ab58d52f01e85a50eafc937b0bce8dc840f2122b87
+Command: corepack yarn rspack-prod; NODE_OPTIONS=--max-old-space-size=6144; RAYON_NUM_THREADS=2
+WARNING in ⚠ asset size limit: The following asset(s) exceed the recommended size limit (300.000 KiB). This can impact web performance.
+WARNING in ⚠ entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (500.000 KiB). This can impact web performance.
+Rspack 2.2.8 compiled with 2 warnings in 80.06 s
+Done in 82.47s.
+Asset/entrypoint size advisories are reported; no upstream acceptance limit was changed.

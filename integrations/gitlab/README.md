@@ -1,6 +1,31 @@
 # GitLab application integration
 
-Latest checkpoint: rich cell-grid clipboard ownership and grouped native
+Latest checkpoint (2026-11-16): successful same-editor cuts now reuse unchanged
+owned footnotes on the first paste. Ordinary/repeated copies stay independent;
+changed dependency graphs retain both versions. Destination selections cannot
+silently remove owned definitions, and cut/paste undo separately. GitLab keeps
+the original labels for reused notes.
+
+Validation: 6,572 root cases / 384 files with two workers; recorded Chromium and
+Firefox whole-line cut/paste/undo/redo; 28 actual GitLab checks through
+Save/reopen/restart with four definitions, six references and their backlinks;
+six scoped accessibility scans and no browser errors. Framework types,
+package/Node/workerd, the 144-module headless boundary, unchanged size/runtime
+limits, 18-patch reconstruction and 28-file source rollback pass. The API adds
+optional move/preparation context and remains at 452 declaration files.
+No version, publication or parity-row promotion changes.
+
+Open: physical Safari and installed WebKit clipboard transport, broader
+selection/role/collaboration matrices, complete GitLab product acceptance,
+and the contextual Footnote actions button still occupying a separate row
+in the recorded label-editing flow. The latter is a remaining UI cleanup.
+[Cut/move evidence](../../artifacts/footnote-cut-integration-20261116.json).
+
+After runtime build/install and frontend preparation, run
+`node scripts/run-gitlab-native-browser-audit.mjs --footnote-cut` inside the
+isolated Linux setup. It includes a real restart and stops the task container.
+
+Previous checkpoint: rich cell-grid clipboard ownership and grouped native
 controls. A recorded actual-host profile passes 20 checks with three tables and
 three owned notes retained through Save/reopen/restart, six automated
 accessibility scans and no browser errors. The toolbar keeps Attach/Paste

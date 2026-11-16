@@ -1,0 +1,177 @@
+{
+  "date": "2026-11-16T15:36:01.210Z",
+  "status": "verified-bounded-candidate",
+  "parentRevision": "901268ffa674e655ca52cd3f7ca54f66b0c14bbb",
+  "scope": "Same-live-editor footnote cut/move identity, distinct copy semantics, owned dependency retention and actual GitLab persistence. Not full product parity or a release.",
+  "sourceFiles": [
+    {
+      "path": "src/core/clipboard-write.ts",
+      "sha256": "cc87852b647747d9a358bde7dd7016c9b9b1d0daa17d9e10bb63d95b81fef775"
+    },
+    {
+      "path": "src/core/plugin.ts",
+      "sha256": "f2e86912869e6cd109e8a45b51b446d351e483cb52f1ea869e8f74b2ad5dd362"
+    },
+    {
+      "path": "src/pages/clipboard.ts",
+      "sha256": "c6587164da256aace4c39b1c50a3f1003707b5a8c331fa0546b2062d53a757c5"
+    },
+    {
+      "path": "src/view/input.ts",
+      "sha256": "40bffbfc2a1b3dde4196b6f0ec38bdf678867f408409a133e8aae2913a6eb982"
+    },
+    {
+      "path": "integrations/gitlab/services/footnote_labels.ts",
+      "sha256": "622e70a0dccc7bafde0b346d39474ed9c34b96dc85025228f2e4e447037cdf63"
+    },
+    {
+      "path": "tests/footnote-cut-move.test.ts",
+      "sha256": "c1920128f90d9f915c60026ebffb120c482d9c2d11a7ca28dffa81d838662fcf"
+    },
+    {
+      "path": "tests/gitlab-footnote-clipboard.test.ts",
+      "sha256": "67cf6172d3472e71552edc23d8659ab7f04f220b832ed5f06fb1cbcd279ec677"
+    },
+    {
+      "path": "tests/browser/footnote-clipboard-journey.ts",
+      "sha256": "cb1ea502486e3610da52ff79bc108729b79475ff343ecc9b17a5d3f2357d2f00"
+    },
+    {
+      "path": "scripts/audit-gitlab-native-footnote-clipboard.mjs",
+      "sha256": "626c7f6847f7cb7f9bd6bf4d09cc9e556eea2423cdcadfae9c39e04e7977c1a7"
+    }
+  ],
+  "implementation": [
+    "One-use editor-owned transfer matched against native bytes or marked equivalent HTML; marker alone is insufficient.",
+    "Reuse unchanged definitions; propagate changed dependency conflicts through shared/cyclic graphs without overwriting current bodies.",
+    "Restore owned definitions removed by the paste selection; separate cut/paste undo and atomic refusal.",
+    "Invalidate on new editor copy/cut, undo/redo, whole-document replacement and view teardown; rejected paste can retry.",
+    "Keep GitLab labels for reused notes; ordinary/repeated/foreign-editor pastes remain copies.",
+    "Refused cut reports copied-but-not-removed; a clipboard observer cannot redirect deletion."
+  ],
+  "regressionWitnesses": [
+    {
+      "path": "artifacts/footnote-cut-parent-witness-20261116.log",
+      "scope": "Two valid native/HTML duplication failures; two other initial fixture errors were corrected before final tests."
+    },
+    {
+      "path": "artifacts/footnote-cut-destination-witness-20261116.log",
+      "scope": "New destination-selection regression failed until owned bodies were restored."
+    }
+  ],
+  "verification": {
+    "unitTests": 6572,
+    "unitFiles": 384,
+    "workers": 2,
+    "actualGitLabChecks": 28,
+    "accessibilityScans": 6,
+    "browserErrors": 0,
+    "nativeReport": "artifacts/gitlab-native-footnote-cut-20261116/report.json",
+    "runtimeSha256": "458863f9341cf1f0012b0ce19083d73a04641a6a6b49a570fc64c9d73cdb0e66",
+    "footnoteServerOverlay": {
+      "source": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-footnote-server/footnote_filter.rb",
+      "readOnly": true,
+      "sha256": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+      "originalSha256": "3c3e2469ca0ce9191954f725548fa0bf3599ca9ccc8980b3fbdca46e14e1dc74",
+      "scope": "Read-only task server overlay; repeat-reference and generated-backlink repair, not an unmodified GitLab baseline"
+    },
+    "rootClipboardRun": {
+      "path": "artifacts/footnote-cut-browser-20261116.log",
+      "passed": 6,
+      "scope": "Copy, rich table, and initial cut journeys on Chromium/Firefox."
+    },
+    "strengthenedCutRun": {
+      "path": "artifacts/footnote-cut-browser-final-20261116.log",
+      "passed": 2,
+      "scope": "Whole-line prose/reference cut, shared identity, independent second paste and keyboard history."
+    },
+    "gates": [
+      {
+        "name": "unit",
+        "path": "artifacts/footnote-cut-unit-20261116.log",
+        "sha256": "cf2fb3e8fbf03946e22b6756dc6c0facdf3164c300562b9d23cf77651e6a0912"
+      },
+      {
+        "name": "typecheck",
+        "path": "artifacts/footnote-cut-typecheck-20261116.log",
+        "sha256": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976"
+      },
+      {
+        "name": "build",
+        "path": "artifacts/footnote-cut-build-20261116.log",
+        "sha256": "abed85ab1e5f971b0fe703e9635160bb592ec81ca96b70b711d8ac29bd68d5c4"
+      },
+      {
+        "name": "api",
+        "path": "artifacts/footnote-cut-api-20261116.log",
+        "sha256": "fe707f664110e6adf01f7bc5bde64729f1637e0eb275969bc7619fb4cb206624"
+      },
+      {
+        "name": "budgets",
+        "path": "artifacts/footnote-cut-budgets-20261116.log",
+        "sha256": "4428a1672bc2bfa58be6b9317d12b13f50491c520cbbef077f6354fabbb9f155"
+      },
+      {
+        "name": "headless",
+        "path": "artifacts/footnote-cut-headless-20261116.log",
+        "sha256": "1dbf0cfa212fecac66fb2bdb5d429f2c3db657816d4a341c4338b0a3f8f09952"
+      },
+      {
+        "name": "package",
+        "path": "artifacts/footnote-cut-package-20261116.log",
+        "sha256": "f8f0fc76e206e685a7ce3fa2c65bad2a2cda6774c49a0cc78462be002112e968"
+      },
+      {
+        "name": "server-runtimes",
+        "path": "artifacts/footnote-cut-server-runtimes-20261116.log",
+        "sha256": "583703f342e047c5e8535bc89fb5152352156dde5c57195dae1176161e397136"
+      },
+      {
+        "name": "performance",
+        "path": "artifacts/footnote-cut-performance-20261116.log",
+        "sha256": "7946c59a6b95825ed4efa16de2b685f22201da5119bea10f58e2d2789e8d516a"
+      },
+      {
+        "name": "source-roundtrip",
+        "path": "artifacts/footnote-cut-source-roundtrip-20261116.log",
+        "sha256": "6c58147dfe073a780197879704cd0d53d029eda2e03f63f0cbdae39d9a74bd9b"
+      }
+    ],
+    "sourceVerification": [
+      "artifacts/gitlab-native-footnote-cut-patch-verification-20261116.json",
+      "artifacts/gitlab-native-footnote-cut-install-roundtrip-20261116.json"
+    ],
+    "patchCount": 18,
+    "installedFiles": 28,
+    "publicDeclarations": 452,
+    "currentSelectedUpstreamRerun": false,
+    "previousSelectedUpstream": {
+      "passed": 540,
+      "inheritedSkip": 1,
+      "evidence": "artifacts/gitlab-table-clipboard-upstream-20261115.json"
+    }
+  },
+  "size": {
+    "aggregateESMKiB": 1612.1,
+    "aggregateCJSKiB": 1435.4,
+    "esmLimitKiB": 1691.25,
+    "cjsLimitKiB": 1440,
+    "changedLimits": false,
+    "addedDependencies": false
+  },
+  "visualReview": "artifacts/gitlab-native-footnote-cut-20261116/visual-review.json",
+  "operationalState": {
+    "auditContainer": "exited",
+    "publication": "none",
+    "packageVersion": "0.5.0-beta.1",
+    "parityRowsPromoted": false
+  },
+  "remaining": [
+    "Installed WebKit OS-format transport and physical Safari",
+    "Broader cut selection, collaboration and role matrices",
+    "Footnote actions contextual control placement",
+    "Intermittent host-image 403 from earlier profiles remains unresolved",
+    "Full GitLab MR/wiki/provider/permissions/touch/IME acceptance and compiled deployment rollback",
+    "Remaining programme roadmap and naming evaluation"
+  ]
+}

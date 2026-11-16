@@ -1,0 +1,3 @@
+18 ordered native patches reconstruct the tested pinned source.
+Restored the exact prepared GitLab component and removed only verified installer-owned files. Rebuild its frontend before deployment.
+Installed native browser integration into matching GitLab source (28 files). Build and real-service browser verification are required.

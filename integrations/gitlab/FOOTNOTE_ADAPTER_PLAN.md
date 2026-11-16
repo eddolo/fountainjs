@@ -5,7 +5,30 @@ and authoring controls in the private GitLab adapter. Full host acceptance is
 unfinished. The adapter reuses the portable footnote nodes, numbering, selection
 and removal in `src/pages/index.ts`; it does not introduce another engine.
 
-## Current implementation — November 15
+## Current implementation — November 16
+
+Latest checkpoint (2026-11-16): successful same-editor cuts now reuse unchanged
+owned footnotes on the first paste. Ordinary/repeated copies stay independent;
+changed dependency graphs retain both versions. Destination selections cannot
+silently remove owned definitions, and cut/paste undo separately. GitLab keeps
+the original labels for reused notes.
+
+Validation: 6,572 root cases / 384 files with two workers; recorded Chromium and
+Firefox whole-line cut/paste/undo/redo; 28 actual GitLab checks through
+Save/reopen/restart with four definitions, six references and their backlinks;
+six scoped accessibility scans and no browser errors. Framework types,
+package/Node/workerd, the 144-module headless boundary, unchanged size/runtime
+limits, 18-patch reconstruction and 28-file source rollback pass. The API adds
+optional move/preparation context and remains at 452 declaration files.
+No version, publication or parity-row promotion changes.
+
+Open: physical Safari and installed WebKit clipboard transport, broader
+selection/role/collaboration matrices, complete GitLab product acceptance,
+and the contextual Footnote actions button still occupying a separate row
+in the recorded label-editing flow. The latter is a remaining UI cleanup.
+[Cut/move evidence](../../artifacts/footnote-cut-integration-20261116.json).
+
+## Previous cell-clipboard checkpoint — November 15
 
 Cell-grid copy/paste now includes complete owned note bodies, remaps collisions
 and retains marks, cell roles and table placement. The 20-check real application
