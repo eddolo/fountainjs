@@ -18,7 +18,7 @@ let session: GitLabSuggestionEditingSession | undefined;
 const command = (id: string, run: () => void | Promise<void>) => document.querySelector('#' + id)!.addEventListener('click', async () => {
   try { await run(); } catch (error) { status.textContent = error instanceof Error ? error.message : String(error); }
 });
-command('insert', () => { bridge.suggestions.insert(); status.textContent = 'Suggestion inserted'; });
+command('insert', async () => { await bridge.suggestions.insertVerified(); status.textContent = 'Suggestion inserted'; });
 command('edit', () => {
   session = bridge.suggestions.begin(); input('replacement').value = session.initial.text;
   panel.hidden = false; status.textContent = 'Editing captured suggestion';

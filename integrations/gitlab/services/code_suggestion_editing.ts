@@ -1,4 +1,8 @@
-import { NodeSelection, Selection, closeHistory, insertBlock, mapSelection, type Editor, type Node, type Transaction } from 'fountainjs-editor';
+import { NodeSelection, Selection, closeHistory, insertBlock, mapSelection, type AnySelection, type Editor, type Node, type Transaction } from 'fountainjs-editor';
+
+import type { GitLabInsertionProjection } from './markdown_insertion';
+import type { SerializedContentResult } from './serialized_content';
+import { serializeGitLabSuggestionNode } from './code_suggestion_node';
 
 export interface GitLabSuggestionPreview {
   readonly preview_suggestions: true;
@@ -66,6 +70,7 @@ export interface GitLabSuggestionEditingOptions {
   getContext(): unknown;
   validate(document: Node): void;
   loadSource?(path: string, options: { signal: AbortSignal }): Promise<string>;
+  insertVerified?(resolve: (signal: AbortSignal) => Promise<string>, signal: AbortSignal, projection: GitLabInsertionProjection): Promise<SerializedContentResult>;
 }
 function context(options: GitLabSuggestionEditingOptions): GitLabSuggestionContext {
   options.ensureReady();
@@ -73,39 +78,97 @@ function context(options: GitLabSuggestionEditingOptions): GitLabSuggestionConte
   if (!options.editor.editable) return fail('READ_ONLY');
   return readGitLabSuggestionContext(options.getContext()) ?? fail('UNAVAILABLE');
 }
+/** The pinned Rapid Diffs transport is lossy: literal backslash-n and U+E000
+ * share the same displayed value. Compare its encoding, but only use raw file
+ * lines as replacement source. Never reverse/clean the displayed sentinel. */
+function verifiedLines(source: string, captured: GitLabSuggestionContext): readonly string[] {
+  if (typeof source !== 'string' || source.length > 1_048_576) return fail('SOURCE_INVALID');
+  const lines = source.split('\n').map(line => line.endsWith('\r') ? line.slice(0, -1) : line);
+  if (source.endsWith('\n')) lines.pop();
+  const range = captured.lineRange;
+  if (range.end > lines.length || captured.lines.some((line, index) => {
+    const raw = lines[range.start - 1 + index]!;
+    return (captured.previewParams ? raw.replace(/\\n/gu, '\uE000') : raw) !== line;
+  })) return fail('SOURCE_CHANGED');
+  return Object.freeze(lines);
+}
 /** Insertions are proposals in the comment model, never repository writes. */
 export class GitLabSuggestionEditing {
   private disposed = false;
   private session?: GitLabSuggestionEditingSession;
+  private pending?: AbortController;
   constructor(private readonly options: GitLabSuggestionEditingOptions) {}
   get available(): boolean { if (this.disposed) return false; try { context(this.options); return true; } catch { return false; } }
   insert(): boolean {
     if (this.disposed) return fail('DISPOSED');
-    const captured = context(this.options), fingerprint = key(captured), { editor } = this.options;
+    const captured = context(this.options), { editor } = this.options;
     if (target(editor, false)) return fail('ALREADY_INSIDE');
+    // Ambiguous host text must use the raw-file path even for private callers.
+    if (captured.lines.some(line => line.includes('\uE000'))) return fail('SOURCE_REQUIRED');
+    if (this.pending) return fail('INSERTION_PENDING');
     closeHistory(editor);
-    const accepted = editor.runCommandBatch(() => {
+    if (!editor.runCommandBatch(() => this.applyInsertion(captured, captured.lines))) return fail('UPDATE_REFUSED');
+    return true;
+  }
+  /** Capture the comment target now; raw-file completion may not follow a later caret. */
+  async insertVerified(signal?: AbortSignal): Promise<SerializedContentResult> {
+    if (this.disposed) return fail('DISPOSED');
+    const captured = context(this.options), fingerprint = key(captured), { editor, loadSource, insertVerified } = this.options;
+    if (target(editor, false)) return fail('ALREADY_INSIDE');
+    if (this.pending) return fail('INSERTION_PENDING');
+    if (!captured.blobRawPath || !loadSource || !insertVerified) return fail('SOURCE_REQUIRED');
+    if (signal?.aborted) return { status: 'superseded' };
+    const pending = this.pending = new AbortController(), cancel = () => pending.abort();
+    signal?.addEventListener('abort', cancel, { once: true });
+    let proposal: Node | undefined, selected: readonly string[] = [];
+    const ready = () => {
+      if (this.disposed) return fail('DISPOSED');
       if (key(context(this.options)) !== fingerprint) return fail('CONTEXT_CHANGED');
-      const before = editor.state.doc;
-      const text = captured.lines.join('\n') + '\n', attrs = { params: `-${captured.lines.length - 1}+0`, fence: '```' };
-      const selection = editor.state.selection, schema = editor.state.schema;
-      const empty = before.childCount === 1 && before.child(0).type.name === 'paragraph'
-        && before.child(0).eq(schema.node('paragraph', {}, [schema.text('')]))
-        && selection.kind === 'text' && selection.isCollapsed && selection.path[0] === 0;
-      if (empty) {
-        const proposal = schema.node('gitlab_code_suggestion', attrs, [schema.text(text)]);
-        if (!editor.dispatch(editor.createTransaction().replaceNode([0], [proposal])
-          .setSelection(Selection.cursor([0, 0], text.length)).setStoredMarks([]))) return false;
-      } else {
-        if (!insertBlock(editor, 'gitlab_code_suggestion', attrs, text)) return false;
-        editor.dispatch(editor.createTransaction().setStoredMarks([]));
-      }
-      if (editor.state.doc === before) return false;
-      this.options.validate(editor.state.doc);
-      if (key(context(this.options)) !== fingerprint) return fail('CONTEXT_CHANGED');
-      return true;
-    });
-    if (!accepted) return fail('UPDATE_REFUSED');
+    };
+    try {
+      return await insertVerified(async request => {
+        ready();
+        const source = await loadSource(captured.blobRawPath!, { signal: request });
+        // Cancellation belongs to the mapped insertion owner, including an
+        // uncooperative loader. It discards late resolution before projection.
+        ready();
+        selected = verifiedLines(source, captured).slice(captured.lineRange.start - 1, captured.lineRange.end);
+        proposal = editor.state.schema.node('gitlab_code_suggestion',
+          { params: `-${selected.length - 1}+0`, fence: '```' }, [editor.state.schema.text(selected.join('\n') + '\n')]);
+        return serializeGitLabSuggestionNode(proposal);
+      }, pending.signal, {
+        selection: editor.state.selection,
+        nativeDocument: () => proposal ? editor.state.schema.node('doc', {}, [proposal]) : undefined,
+        project: document => { ready(); return document; },
+        apply: (_document, selection) => { ready(); return this.applyInsertion(captured, selected, selection); },
+      });
+    } finally {
+      signal?.removeEventListener('abort', cancel);
+      if (this.pending === pending) this.pending = undefined;
+    }
+  }
+  private applyInsertion(captured: GitLabSuggestionContext, lines: readonly string[], mapped?: AnySelection): boolean {
+    const fingerprint = key(captured), { editor } = this.options;
+    if (key(context(this.options)) !== fingerprint) return fail('CONTEXT_CHANGED');
+    if (mapped && !editor.dispatch(editor.createTransaction().setSelection(mapped).setStoredMarks([]))) return false;
+    if (target(editor, false)) return fail('ALREADY_INSIDE');
+    const before = editor.state.doc;
+    const text = lines.join('\n') + '\n', attrs = { params: `-${lines.length - 1}+0`, fence: '```' };
+    const selection = editor.state.selection, schema = editor.state.schema;
+    const empty = before.childCount === 1 && before.child(0).type.name === 'paragraph'
+      && before.child(0).eq(schema.node('paragraph', {}, [schema.text('')]))
+      && selection.kind === 'text' && selection.isCollapsed && selection.path[0] === 0;
+    if (empty) {
+      const proposal = schema.node('gitlab_code_suggestion', attrs, [schema.text(text)]);
+      if (!editor.dispatch(editor.createTransaction().replaceNode([0], [proposal])
+        .setSelection(Selection.cursor([0, 0], text.length)).setStoredMarks([]))) return false;
+    } else {
+      if (!insertBlock(editor, 'gitlab_code_suggestion', attrs, text)) return false;
+      if (!editor.dispatch(editor.createTransaction().setStoredMarks([]))) return false;
+    }
+    if (editor.state.doc === before) return false;
+    this.options.validate(editor.state.doc);
+    if (key(context(this.options)) !== fingerprint) return fail('CONTEXT_CHANGED');
     return true;
   }
   begin(): GitLabSuggestionEditingSession {
@@ -113,7 +176,7 @@ export class GitLabSuggestionEditing {
     this.session?.close();
     return this.session = new GitLabSuggestionEditingSession(this.options);
   }
-  dispose(): void { this.disposed = true; this.session?.close(); this.session = undefined; }
+  dispose(): void { this.disposed = true; this.pending?.abort(); this.session?.close(); this.session = undefined; }
 }
 
 /** Capture an owned proposal and host context. Later caret movement cannot
@@ -176,10 +239,7 @@ export class GitLabSuggestionEditingSession {
     return source;
   }
   async prepareRange(): Promise<readonly string[]> {
-    const source = await this.fetchSource(), lines = source.split('\n').map(line => line.endsWith('\r') ? line.slice(0, -1) : line);
-    if (source.endsWith('\n')) lines.pop();
-    const range = this.captured.lineRange;
-    if (range.end > lines.length || this.captured.lines.some((line, index) => lines[range.start - 1 + index] !== line)) return fail('SOURCE_CHANGED');
+    const source = await this.fetchSource(), lines = verifiedLines(source, this.captured);
     this.source = source; this.lines = Object.freeze(lines); return this.lines;
   }
   private async rangeParams(start: number, end: number): Promise<string> {

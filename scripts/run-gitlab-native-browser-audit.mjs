@@ -20,7 +20,7 @@ const env = {
   ...process.env,
   FOUNTAIN_GITLAB_FRONTEND_ASSETS: resolve(install.source, 'public/assets/webpack'),
 };
-const fixtureFlags = ['--suggestion-verify', '--suggestion-authoring', '--suggestion-preview-fixtures', '--suggestion-context-fixtures', '--suggestion-fixtures', '--task-fixtures', '--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands', '--autocomplete-fixtures', '--footnote-fixtures', '--footnote-probe-fixtures', '--footnote-editing-fixtures', '--footnote-renaming-fixtures'];
+const fixtureFlags = ['--suggestion-transport-authoring', '--suggestion-transport-verify', '--suggestion-transport-fixtures', '--suggestion-verify', '--suggestion-authoring', '--suggestion-preview-fixtures', '--suggestion-context-fixtures', '--suggestion-fixtures', '--task-fixtures', '--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands', '--autocomplete-fixtures', '--footnote-fixtures', '--footnote-probe-fixtures', '--footnote-editing-fixtures', '--footnote-renaming-fixtures'];
 const footnoteRoundtrip = process.argv.includes('--footnote-roundtrip-fixtures');
 const capturingFixtures = footnoteRoundtrip || fixtureFlags.some(flag => process.argv.includes(flag));
 // The stock baseline uses compose.yaml alone. Native integration runs declare
@@ -64,6 +64,9 @@ try {
     [
       resolve(root, capturingFixtures ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
       ...(footnoteRoundtrip ? ['--footnote-roundtrip'] : []),
+      ...(process.argv.includes('--suggestion-transport-authoring') ? ['--suggestion-transport-authoring'] : []),
+      ...(process.argv.includes('--suggestion-transport-verify') ? ['--suggestion-transport-verify'] : []),
+      ...(process.argv.includes('--suggestion-transport-fixtures') ? ['--suggestion-transport'] : []),
       ...(process.argv.includes('--suggestion-verify') ? ['--suggestion-verify'] : []),
       ...(process.argv.includes('--suggestion-authoring') ? ['--suggestion-authoring'] : []),
       ...(process.argv.includes('--suggestion-preview-fixtures') ? ['--suggestion-preview'] : []),

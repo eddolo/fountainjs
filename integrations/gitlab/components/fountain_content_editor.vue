@@ -213,8 +213,12 @@ export default {
       if (typeof data !== 'string' || data.length > 1048576) throw new Error('GITLAB_SUGGESTION_SOURCE_INVALID');
       return data;
     },
-    insertSuggestion() {
-      try { this.ensureNoSourceDraft(); this.contentEditor.suggestions.insert(); this.focus(); }
+    async insertSuggestion() {
+      try {
+        this.ensureNoSourceDraft();
+        const result = await this.contentEditor.suggestions.insertVerified();
+        if (result.status === 'applied' && !this.disposed) this.focus();
+      }
       catch (error) { this.onSurfaceError(error); }
     },
     async fetchQuickActions({ signal }) {
@@ -535,7 +539,7 @@ export default {
             <media-bubble-menu ref="mediaMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />
           </template>
           <template #header-buttons>
-            <gl-button v-if="codeSuggestionsConfig && codeSuggestionsConfig.canSuggest" size="small" icon="comment" :disabled="!surfaceEditable" @click="insertSuggestion">{{ s__('ContentEditor|Insert suggestion') }}</gl-button>
+            <gl-button v-if="codeSuggestionsConfig && codeSuggestionsConfig.canSuggest" size="small" icon="comment" :disabled="!surfaceEditable || inserting" @click="insertSuggestion">{{ s__('ContentEditor|Insert suggestion') }}</gl-button>
             <slot name="header-buttons"></slot>
             <editor-mode-switcher
               v-if="immersive && !hideModeSwitcher"

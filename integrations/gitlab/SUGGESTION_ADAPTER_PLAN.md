@@ -1,7 +1,7 @@
 # Native GitLab inline suggestion acceptance
 
-Status: explicit native candidate now verifies live insertion/editing/posting, single
-suggestion application and cold restart. Default guard callers still reject
+Status: explicit native candidate now verifies raw-source insertion, selected
+multiline authoring/editing/posting, single application and cold restart. Default guard callers still reject
 active configuration. Full review/product acceptance remains open.
 Pinned target: GitLab CE 19.5.3, source
 `0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf`.
@@ -64,22 +64,44 @@ to U+E000. The adapter must distinguish this host transport convention from real
 source characters. Preserve original source and verify against raw repository
 content; do not globally remove zero-width or private-use characters.
 
-## Immediate source-integrity follow-up
+## Verified raw-source transport follow-up
 
-Before promoting this candidate, resolve the known Rapid Diffs transport collision:
-`line_utils.js` replaces literal backslash-n with U+E000. A synchronous prefill
-from `context.lines` cannot distinguish that marker from a genuine U+E000 source
-character. Capture both real cases, use the immutable raw-file source to recover
-exact selected lines, and make insertion cancellation/selection ownership safe
-while fetching. Do not globally replace or strip U+E000, and do not present the
-current positive Unicode case as proof that this transport edge is supported.
-This is the next implementation task before broader review-batch expansion.
+Source-integrity follow-up (2026-11-16): native suggestion insertion now fetches
+and validates raw repository lines before prefilling. Six real Rapid Diffs
+contexts include literal backslash-n, genuine U+E000, their mixture, invisible
+characters/trailing spaces, a blank line and an actual two-line drag selection.
+The displayed transport collision is verified; Fountain preserves raw characters
+rather than reversing or stripping the marker. The existing asynchronous queue
+owns the captured comment target, maps unrelated edits, refuses overlap, cancels
+on replacement/disposal, and blocks duplicate insertion and old-source handoff.
+
+The actual selected-multiline UI journey inserts both distinct source values,
+edits source/range, undoes/redoes, posts exact Markdown and applies a real GitLab
+commit. Repository APIs verify the intended file and untouched remaining lines;
+cold restart retains the note, source commit and visible Applied state. Physical
+review covers the source/range modal, native draft and posted/restarted readers.
+1351 integration tests / 52 files, strict TypeScript, 552 selected upstream tests /
+23 suites (one inherited skip), frontend build, 19 ordered source patches and
+28-file guarded source rollback/reinstall pass. No public API, capacity limit,
+package version, publication or overall parity row changes. Actual context-line/
+legacy variants, posted/applied-note editing, deletion/blank UI, review batches,
+roles/concurrency and broader native browser/mobile/hosted acceptance remain open.
+The previously retained resolved-gutter issue remains open.
+
+[Source-integrity receipt](../../artifacts/suggestion-transport-integration-20261116.json).
+The native UI calls `suggestions.insertVerified()` using the same-origin,
+authenticated, abortable `loadSuggestionSource` boundary. `prepareRange()` verifies
+the same encoded host context against raw source and keeps the exact file snapshot
+for its final recheck. LF line boundaries are required by suggestion Markdown;
+CRLF is split for line comparison without normalizing the stored snapshot.
+The private synchronous `insert()` helper refuses ambiguous U+E000 prefills; it is
+not the native product insertion path.
 
 ## Required next acceptance
 
-1. Single-line Unicode/blank/trailing-space contexts are captured. Extend actual
-   default Rapid Diffs capture to multiline, literal backslash-n and context lines.
-   Compare selected lines against the actual same-origin raw-file response.
+1. Six actual Rapid Diffs contexts now cover selected multiline, literal
+   backslash-n/private-use collisions, blank lines and trailing spaces against raw
+   source. Actual unchanged/context-line and broader legacy transports remain.
 2. Known legacy/Rapid Diffs fields now validate and revision changes invalidate
    sessions. Verify the remaining real host context variants and revision semantics.
    Ten actual contextual preview responses retain their original replacement
@@ -94,7 +116,7 @@ This is the next implementation task before broader review-batch expansion.
    browser, focus and accessibility coverage open beyond the tested profile.
 5. A newly authored single-anchor proposal expands to three file lines, posts
    exact Markdown and survives reload/restart. Still cover editing already-posted
-   and applied/outdated proposals, selected multiline anchors, empty deletions
+   and applied/outdated proposals, additional multiline/context variants, empty deletions
    and meaningful blank replacements through the real UI and APIs.
 6. Single application now verifies the exact file, new commit and branch head,
    plus cold-restart retention. Still cover review batches, revoked roles, changed

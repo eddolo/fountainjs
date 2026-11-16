@@ -1,3 +1,7 @@
+import AxiosMockAdapter from 'axios-mock-adapter';
+import axios from '~/lib/utils/axios_utils';
+import ContentEditor from '~/content_editor/components/content_editor.vue';
+import FountainEditorSurface from '~/content_editor/components/fountain_editor_surface.vue';
 import { fireEvent, getByRole, queryByRole } from '@testing-library/dom';
 import { mountExtended } from 'helpers/vue_test_utils_helper';
 import waitForPromises from 'helpers/wait_for_promises';
@@ -97,7 +101,7 @@ describe('FountainCodeMenu', () => {
     fireEvent.input(field(), { target: { value: 'python' } });
     fireEvent.click(button('Apply language'));
     await settle();
-    expect(queryByRole(wrapper.element, 'alert')).toBeNull();
+    expect(wrapper.findByTestId('content-editor-error').exists()).toBe(false);
     expect(service.getSerializedContent()).toContain('```python');
   });
   it('contains submission so applying a language cannot submit the owning GitLab form', async () => {
@@ -346,4 +350,69 @@ describe('FountainCodeMenu', () => {
     expect(queryByRole(suggestionDialog(), 'button', { name: 'Apply suggestion' })).toBeNull();
   });
 
+});
+
+
+describe('native suggestion raw-file transport', () => {
+  let wrapper;
+  let mock;
+  const endpoint = new URL(suggestionHost.blobRawPath, window.location.href).href;
+  const settle = async () => { await waitForPromises(); await waitForPromises(); };
+  const button = () => getByRole(wrapper.element, 'button', { name: 'Insert suggestion' });
+  const editor = () => wrapper.findComponent(FountainEditorSurface).props('editor');
+  async function createComponent(lines = ['const value = "\uE000";']) {
+    wrapper = mountExtended(ContentEditor, { propsData: {
+      markdown: '', markdownDocsPath: '/docs/markdown', uploadsPath: '',
+      codeSuggestionsConfig: { ...suggestionHost, lines },
+      renderMarkdown: jest.fn().mockResolvedValue({ body: '<p></p>' }),
+    }, attachTo: document.body });
+    await settle();
+  }
+  beforeEach(() => { mock = new AxiosMockAdapter(axios); });
+  afterEach(async () => { wrapper?.destroy(); await settle(); mock.restore(); });
+  it.each([
+    ['literal backslash-n', 'const value = "\\n";\n', ['const value = "\uE000";']],
+    ['genuine private-use character', 'const value = "\uE000";\n', ['const value = "\uE000";']],
+    ['JSON-looking raw source', '{"key":"\\n"}\n', ['{"key":"\uE000"}']],
+  ])('inserts exact %s from the authenticated raw response', async (_name, raw, lines) => {
+    mock.onGet(endpoint).reply(200, raw); await createComponent(lines);
+    fireEvent.click(button()); await settle();
+    expect(mock.history.get.map(request => request.url)).toEqual([endpoint]);
+    expect(mock.history.get[0].signal).toBeInstanceOf(AbortSignal);
+    expect(editor().state.doc.childCount).toBe(1);
+    expect(editor().state.doc.child(0).textContent).toBe(raw);
+    expect(wrapper.emitted('change').at(-1)[0].markdown).toBe('```suggestion:-0+0\n' + raw + '```');
+    expect(wrapper.findByTestId('content-editor-error').exists()).toBe(false);
+  });
+  it('prevents duplicate insertion and old-source handoff until the owned raw request finishes', async () => {
+    let finish;
+    mock.onGet(endpoint).reply(() => new Promise(resolve => { finish = resolve; }));
+    await createComponent(); fireEvent.click(button()); await settle();
+    expect(button().getAttribute('aria-disabled')).toBe('true');
+    expect(() => wrapper.vm.getSerializedContentForHandoff()).toThrow();
+    expect(editor().getText()).toBe('');
+    finish([200, 'const value = "\\n";\n']); await settle();
+    expect(editor().state.doc.child(0).textContent).toBe('const value = "\\n";\n');
+    expect(button().getAttribute('aria-disabled')).not.toBe('true');
+  });
+  it('refuses a changed file context while keeping the current draft', async () => {
+    let finish;
+    mock.onGet(endpoint).reply(() => new Promise(resolve => { finish = resolve; }));
+    await createComponent(); fireEvent.click(button()); await settle();
+    await wrapper.setProps({ codeSuggestionsConfig: { ...suggestionHost, previewParams: {
+      ...suggestionHost.previewParams, head_sha: 'b'.repeat(40),
+    } } });
+    finish([200, 'const value = "\\n";\n']); await settle();
+    expect(editor().state.doc.child(0).type.name).toBe('paragraph');
+    expect(wrapper.attributes('data-fountain-error')).toBe('GITLAB_SUGGESTION_CONTEXT_CHANGED');
+    expect(undo(editor())).toBe(false);
+  });
+  it('aborts the raw-file request when the native host is unmounted', async () => {
+    let finish;
+    mock.onGet(endpoint).reply(() => new Promise(resolve => { finish = resolve; }));
+    await createComponent(); fireEvent.click(button()); await settle();
+    const signal = mock.history.get[0].signal; wrapper.destroy(); await settle();
+    expect(signal.aborted).toBe(true);
+    finish([200, 'const value = "\\n";\n']); await settle();
+  });
 });

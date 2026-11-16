@@ -239,8 +239,10 @@ export class GitLabContentEditor {
     this.suggestions = new GitLabSuggestionEditing({ editor: this.editor,
       ensureReady: () => {
         this.assertAlive();
-        if (this.status !== 'ready' || !this.editable) throw new GitLabEditorNotReady(this.status);
+        if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
+          throw new GitLabEditorNotReady(this.status);
       },
+      insertVerified: (resolve, signal, projection) => this.insertions.insertFrom(resolve, signal, undefined, projection),
       getContext: options.getSuggestionContext ?? (() => undefined),
       loadSource: options.loadSuggestionSource,
       validate: doc => { this.codec.serialize({ doc }); },

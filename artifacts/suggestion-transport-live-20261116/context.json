@@ -1,0 +1,196 @@
+{
+  "scope": "Actual Rapid Diffs NoteForm context after user clicks in a real pinned MR diff; no insertion/posting/application/batching acceptance.",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "mergeRequest": {
+    "iid": 26,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/26"
+  },
+  "setupSHA": {
+    "source": "merge-request-api.sha",
+    "value": "4d6df439d9faec201eb2bb1799dac9d31f9b17ec"
+  },
+  "previewHeadSHAs": [
+    "a840953361bacd40d85aab8d3c1ea934b2fd7457"
+  ],
+  "filePath": "suggestion-transport-mwjsb096.js",
+  "revisions": {
+    "reportedSHA": "4d6df439d9faec201eb2bb1799dac9d31f9b17ec",
+    "diffRefs": {
+      "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "head_sha": "4d6df439d9faec201eb2bb1799dac9d31f9b17ec",
+      "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915"
+    },
+    "sourceBranch": "fountain-suggestion-transport-mwjsb096",
+    "branchHead": "4d6df439d9faec201eb2bb1799dac9d31f9b17ec",
+    "versions": [
+      {
+        "id": 56,
+        "head": "4d6df439d9faec201eb2bb1799dac9d31f9b17ec",
+        "base": "15aeca7199b19518372fcb918a96eae93fd7e915",
+        "start": "15aeca7199b19518372fcb918a96eae93fd7e915",
+        "state": "collected"
+      }
+    ]
+  },
+  "fixtures": [
+    {
+      "name": "escaped",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const value = \"\";"
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/a840953361bacd40d85aab8d3c1ea934b2fd7457/suggestion-transport-mwjsb096.js",
+        "lineRange": {
+          "start": 1,
+          "end": 1
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 1,
+          "file_path": "suggestion-transport-mwjsb096.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "a840953361bacd40d85aab8d3c1ea934b2fd7457"
+        }
+      },
+      "rawSource": "const value = \"\\n\";\nconst value = \"\";\nconst mixed = \"\\n\";\nconst key = \"A​B\";  \n\nreturn 1;\n"
+    },
+    {
+      "name": "private-use",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const value = \"\";"
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/a840953361bacd40d85aab8d3c1ea934b2fd7457/suggestion-transport-mwjsb096.js",
+        "lineRange": {
+          "start": 2,
+          "end": 2
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 2,
+          "file_path": "suggestion-transport-mwjsb096.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "a840953361bacd40d85aab8d3c1ea934b2fd7457"
+        }
+      },
+      "rawSource": "const value = \"\\n\";\nconst value = \"\";\nconst mixed = \"\\n\";\nconst key = \"A​B\";  \n\nreturn 1;\n"
+    },
+    {
+      "name": "mixed",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const mixed = \"\";"
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/a840953361bacd40d85aab8d3c1ea934b2fd7457/suggestion-transport-mwjsb096.js",
+        "lineRange": {
+          "start": 3,
+          "end": 3
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 3,
+          "file_path": "suggestion-transport-mwjsb096.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "a840953361bacd40d85aab8d3c1ea934b2fd7457"
+        }
+      },
+      "rawSource": "const value = \"\\n\";\nconst value = \"\";\nconst mixed = \"\\n\";\nconst key = \"A​B\";  \n\nreturn 1;\n"
+    },
+    {
+      "name": "unicode",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const key = \"A​B\";  "
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/a840953361bacd40d85aab8d3c1ea934b2fd7457/suggestion-transport-mwjsb096.js",
+        "lineRange": {
+          "start": 4,
+          "end": 4
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 4,
+          "file_path": "suggestion-transport-mwjsb096.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "a840953361bacd40d85aab8d3c1ea934b2fd7457"
+        }
+      },
+      "rawSource": "const value = \"\\n\";\nconst value = \"\";\nconst mixed = \"\\n\";\nconst key = \"A​B\";  \n\nreturn 1;\n"
+    },
+    {
+      "name": "empty",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          ""
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/a840953361bacd40d85aab8d3c1ea934b2fd7457/suggestion-transport-mwjsb096.js",
+        "lineRange": {
+          "start": 5,
+          "end": 5
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 5,
+          "file_path": "suggestion-transport-mwjsb096.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "a840953361bacd40d85aab8d3c1ea934b2fd7457"
+        }
+      },
+      "rawSource": "const value = \"\\n\";\nconst value = \"\";\nconst mixed = \"\\n\";\nconst key = \"A​B\";  \n\nreturn 1;\n"
+    },
+    {
+      "name": "multiline",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const value = \"\";",
+          "const value = \"\";"
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/a840953361bacd40d85aab8d3c1ea934b2fd7457/suggestion-transport-mwjsb096.js",
+        "lineRange": {
+          "start": 1,
+          "end": 2
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 2,
+          "file_path": "suggestion-transport-mwjsb096.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "a840953361bacd40d85aab8d3c1ea934b2fd7457"
+        }
+      },
+      "rawSource": "const value = \"\\n\";\nconst value = \"\";\nconst mixed = \"\\n\";\nconst key = \"A​B\";  \n\nreturn 1;\n"
+    }
+  ]
+}

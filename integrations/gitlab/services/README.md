@@ -425,7 +425,18 @@ parity. This service is private integration code, not a newly published npm API.
 
 ## Captured code suggestions — private integration foundation
 
-The service exposes `content.suggestions.available`, `insert()` and `begin()`.
+The service exposes `content.suggestions.available`, `insertVerified()` and
+`begin()`. The native UI awaits `insertVerified()`: it uses host-owned raw-file
+loading and the existing mapped asynchronous insertion queue. Its target belongs
+to the original invocation, not a later caret. Overlap, replaced documents,
+revoked editability/context and disposal cannot publish a late proposal. Pending
+insertion blocks serialization/handoff and disables duplicate insertion.
+
+Rapid Diffs maps literal backslash-n to U+E000, colliding with a genuine private-use
+source character. Verification compares that known transport encoding but prefills
+only the raw file's original characters. It never reverses/removes the marker.
+The private synchronous `insert()` helper refuses ambiguous prefills and is not
+used by the native UI. [Verified selected-multiline/source evidence](../../../artifacts/suggestion-transport-integration-20261116.json).
 An optional host-owned `getSuggestionContext()` callback supplies the current
 `canSuggest`, original `lines`, inclusive `lineRange`, `lineType` and
 `blobRawPath`, plus optional Rapid Diffs `previewParams`. Only known fields and

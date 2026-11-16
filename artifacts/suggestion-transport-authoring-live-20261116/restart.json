@@ -1,0 +1,17 @@
+{
+  "scope": "Cold-container-restart persistence for the saved native proposal and applied source-branch commit; not review batching or full role/concurrency acceptance.",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3"
+  },
+  "mergeRequest": {
+    "iid": 27,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/27"
+  },
+  "noteId": 290,
+  "body": "```suggestion:-1+1\nconst value = \"\\n\";\nconst value = \"\";\n// verified transport\n```\n\nReview combined suggestion mwjsscih",
+  "commit": "47e27ce75df95aa4a90044cc883943fb4bb3b9fc",
+  "content": "const value = \"\\n\";\nconst value = \"\";\n// verified transport\nconst key = \"A​B\";  \n\nreturn 1;\n",
+  "branchHead": "47e27ce75df95aa4a90044cc883943fb4bb3b9fc",
+  "readerAppliedVisible": true
+}

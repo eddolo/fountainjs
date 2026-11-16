@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "formatVersion": 13,
+  "files": 28,
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "checks": [
+    "Guarded 28-file source rollback succeeds",
+    "20 verified additions are removed",
+    "Exact current source generation is reinstalled",
+    "All 28 source digests match"
+  ],
+  "scope": "Source rollback with application stopped; compiled deployment rollback remains separate acceptance work"
+}

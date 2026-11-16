@@ -40,14 +40,15 @@ for (const [path, digest] of Object.entries(before.files))
 const authoring = process.argv.includes('--diagram-authoring');
 const reader = process.argv.includes('--diagram-reader');
 const frontmatter = process.argv.includes('--frontmatter');
-const suggestions = process.argv.includes('--suggestions');
+const suggestionTransport = process.argv.includes('--suggestion-transport');
+const suggestions = suggestionTransport || process.argv.includes('--suggestions');
 const footnoteSource = suggestions || process.argv.includes('--footnote-source');
 const autocomplete = process.argv.includes('--autocomplete') || footnoteSource;
 const quickActionControls = process.argv.includes('--quick-action-controls') || autocomplete;
 const quickActions = process.argv.includes('--quick-actions') || quickActionControls;
 const refined = process.argv.includes('--context-ui') || quickActions;
 const contextual = process.argv.includes('--context-menus') || refined;
-const profile = suggestions ? 'suggestion' : footnoteSource ? 'footnote-source' : autocomplete ? 'autocomplete' : quickActionControls ? 'quick-action-controls' : quickActions ? 'quick-actions' : refined ? 'context-ui' : contextual ? 'context-menus' : frontmatter ? 'frontmatter' : reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--reference-contexts') ? 'reference-context' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : before.formatVersion === 5 ? 'media' : 'alert';
+const profile = suggestionTransport ? 'suggestion-transport' : suggestions ? 'suggestion' : footnoteSource ? 'footnote-source' : autocomplete ? 'autocomplete' : quickActionControls ? 'quick-action-controls' : quickActions ? 'quick-actions' : refined ? 'context-ui' : contextual ? 'context-menus' : frontmatter ? 'frontmatter' : reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--reference-contexts') ? 'reference-context' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : before.formatVersion === 5 ? 'media' : 'alert';
 await writeFile(new URL(`artifacts/gitlab-native-${profile}-install-roundtrip-${suggestions ? '20261116' : quickActions ? '20261114' : authoring || reader || frontmatter || contextual ? '20261113' : '20261112'}.json`, root), JSON.stringify({
   status: 'passed', formatVersion: before.formatVersion, files, revision: after.revision,
   checks: [`Guarded ${files}-file source rollback succeeds`, `${files - prepared.length} verified additions are removed`,

@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "patches": {
+    "integrations/gitlab/patches/gitlab-19.5.3-current-document.patch": "6c2c7b2dee50fa655f39ae0663c01f7fa9a14f14ddc1763f30237dfefec74d4a",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-host-tests.patch": "f91fee895107e0f6bb1fd6fb1728e7142b25dc6fe399715aadf5cc2f34565ffd",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-component-tests.patch": "7d8fd194e54d0de564f3bc98a13dea80b9034e965f07147bd326b808ee5de03b",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-attachment-tests.patch": "55726b99a1931d4f027768e1f67c00dcf1679504a9a6fd804ae8bfe1db18f3f0",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-upload-capacity-tests.patch": "31f267e9c666dd2e190b83c1611262a86e3fcec16abf5303d77dbdc458f46f7f",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-link-tests.patch": "1e250995763080bd9eff4e95b41d7d6648a6ca4d712e463fa6a5d5d069a297d1",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-code-tests.patch": "6df83ef747a385d5fdd675ae12ddbf51731550582a8b33e4ead50808351d6a6a",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-alert-tests.patch": "1a3121c62fb7b8ab3a3a32581a60dce7427d61bffa5ffaa31f2a4c70a0e21780",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-media-tests.patch": "700b52b7b7547f9905cef2086c20d4e835743dd9d8549fd1ae636b9e471b1e25",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-reference-tests.patch": "09d49fe57ea5e480126d7a268df8429e33d4aaf2d2c15c632cc6213f8eb014ae",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-diagram-tests.patch": "27dade649793376899b62532475c48064e2889a02c031f523a46d00717be156a",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-diagram-reader-tests.patch": "8558d1bd6971085f8f4f4a95dcf157ea0e97a5d9e10645c3710b5eada7fa5500",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-frontmatter-tests.patch": "f9c9337b82e95c1334eb88c4b29c273ea9a920e7257fb5672cf0fdccaac7f72c",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-context-menu-tests.patch": "7b4bb2a079085a5e17f9787e7eb59b5d12cfa7bd1f94601a7972d29a3bd7af85",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-quick-action-tests.patch": "42055629185f45765073042ee0417941e11e607208fb673d50359ae5fa70ef3b",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-quick-action-controls-tests.patch": "8e99065202dddeb1ed34f9e24f2ed9f2ff12acbcd5db8b5ebfb1323a7bf219d7",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-autocomplete-tests.patch": "87e75bf062d8427e0aa9d1a329863dc59b554257a4db159be91f4b7267fa078c",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-sidebar-focus-tests.patch": "97ba98003861d23260da7df5c2aec404ee390d8b4adf029532d4bf6811cfcadb",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-suggestion-tests.patch": "988ddd296d19f6518891d134e921bba46351a51a7c574d6976408f014f055538"
+  },
+  "checks": [
+    "19 patches apply in order using a separate temporary index",
+    "Reconstructed host and native menu specs match the tested checkout byte for byte",
+    "Last native test patch reverse-check passes"
+  ],
+  "isolation": "Upstream worktree and main index are unchanged; temporary index removed"
+}

@@ -2,7 +2,31 @@
 
 ## Current programme status — 2026-11-16
 
-Current native GitLab suggestion checkpoint (2026-11-16): the explicit native
+Source-integrity follow-up (2026-11-16): native suggestion insertion now fetches
+and validates raw repository lines before prefilling. Six real Rapid Diffs
+contexts include literal backslash-n, genuine U+E000, their mixture, invisible
+characters/trailing spaces, a blank line and an actual two-line drag selection.
+The displayed transport collision is verified; Fountain preserves raw characters
+rather than reversing or stripping the marker. The existing asynchronous queue
+owns the captured comment target, maps unrelated edits, refuses overlap, cancels
+on replacement/disposal, and blocks duplicate insertion and old-source handoff.
+
+The actual selected-multiline UI journey inserts both distinct source values,
+edits source/range, undoes/redoes, posts exact Markdown and applies a real GitLab
+commit. Repository APIs verify the intended file and untouched remaining lines;
+cold restart retains the note, source commit and visible Applied state. Physical
+review covers the source/range modal, native draft and posted/restarted readers.
+1351 integration tests / 52 files, strict TypeScript, 552 selected upstream tests /
+23 suites (one inherited skip), frontend build, 19 ordered source patches and
+28-file guarded source rollback/reinstall pass. No public API, capacity limit,
+package version, publication or overall parity row changes. Actual context-line/
+legacy variants, posted/applied-note editing, deletion/blank UI, review batches,
+roles/concurrency and broader native browser/mobile/hosted acceptance remain open.
+The previously retained resolved-gutter issue remains open.
+
+[Source-integrity evidence](../artifacts/suggestion-transport-integration-20261116.json).
+
+Earlier native GitLab suggestion checkpoint (2026-11-16): the explicit native
 candidate now inserts proposals from real diff context and exposes source/range
 controls in its existing code menu. Applying source and range is one undoable
 transaction. The real UI posts exact Markdown, GitLab applies it through its
@@ -25,8 +49,8 @@ GitLab or overall parity. Posted/applied-note editing, multiline/transport edge
 cases, review batches, roles/concurrency and broader native browser/mobile
 acceptance remain open. The resolved Rapid Diffs gutter did not reopen in the
 probe; MR overview Applied display works and that gutter issue remains recorded.
-The immediate source-integrity follow-up is raw-file disambiguation of literal
-backslash-n and real U+E000 during prefill, before broader review expansion.
+That immediate raw-source transport finding is resolved by the follow-up above;
+the earlier evidence remains a historical single-anchor checkpoint.
 Default guard callers still refuse active configuration; the known native
 component explicitly opts into its adapter. Public API/size/performance limits,
 package version and publication are unchanged. Hosted CI/full-root release checks

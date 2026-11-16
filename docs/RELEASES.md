@@ -26,6 +26,23 @@ do not mark an unfinished beta stable merely to change the badge.
 
 This reconciliation changes no release, tag, npm package or website deployment.
 
+## Native GitLab raw-source suggestion repair — 2026-11-16
+
+The unpublished candidate resolves a verified Rapid Diffs prefill collision
+between literal backslash-n and genuine U+E000. Native insertion fetches original
+repository lines through the host adapter and keeps the captured comment target
+through asynchronous loading. Pending requests block stale-source handoff;
+replacement/disposal cancels them, overlap and changed context refuse safely.
+
+A real two-line drag selection retains both source values through native
+source/range editing, undo/redo, GitLab posting/application and cold restart.
+1351 scoped integration tests, strict types, 552 selected native upstream tests
+(one existing skip), frontend build, ordered patches and guarded source rollback
+pass. [Evidence](../artifacts/suggestion-transport-integration-20261116.json).
+Broader review/role/concurrency and native browser/mobile acceptance, hosted CI
+and full-root release checks remain open. No public API/size/performance limit,
+package version, publication or overall parity claim changes.
+
 
 ## Mixed lists and GitLab task source — 2026-11-16
 

@@ -1,0 +1,100 @@
+{
+  "scope": "Scoped native selected-multiline suggestion raw-source integrity, exact posting/application and cold restart; not full GitLab or overall parity.",
+  "parentRevision": "c0b1fd2c444bfcd73c9c057ff33eb54d6d6d168e",
+  "finding": "Pinned Rapid Diffs encodes literal backslash-n as U+E000, colliding with genuine source U+E000. Six actual contexts include a real two-line drag selection.",
+  "repair": "Native insertion fetches and validates raw repository lines, preserves their original characters, and uses the existing mapped async insertion queue. Displayed sentinels are never reversed or stripped.",
+  "verification": {
+    "integrationUnit": {
+      "passed": 1351,
+      "files": 52,
+      "workers": 2,
+      "addedSourceInsertionCases": 28
+    },
+    "types": "strict TypeScript passed",
+    "upstream": {
+      "passed": 552,
+      "suites": 23,
+      "inheritedSkip": 1
+    },
+    "frontend": "passed with two existing warnings; two Rspack threads",
+    "actualContexts": 6,
+    "sourcePatches": 19,
+    "guardedRollbackFiles": 28,
+    "pureNode": "No DOM/shim; cancellation, stale source/context/permissions, mapped unrelated edits, overlap refusal, one-step undo, CRLF, raw Unicode and JSON-like text covered.",
+    "host": "Real Vue/Axios raw text handling, duplicate button disable, handoff blocking, changed context and unmount abort verified.",
+    "liveChecks": [
+      "Real selected multiline diff context inserts exact raw backslash-n and genuine U+E000 as distinct original source values.",
+      "Replacement plus expanded range apply and undo/redo atomically in the actual native menu.",
+      "Ctrl+Enter leaves source without triggering GitLab quick submit; subsequent prose remains in the draft.",
+      "Normal GitLab submission persists exact native suggestion source, offsets and prose via the authenticated discussions API.",
+      "GitLab Apply suggestion creates a real source-branch commit containing exactly the intended replacement and untouched remaining file lines."
+    ],
+    "restart": {
+      "passed": true,
+      "commit": "47e27ce75df95aa4a90044cc883943fb4bb3b9fc",
+      "readerAppliedVisible": true
+    },
+    "visualReview": "Inspected actual source/range modal, native draft, posted reader, Applied overview and cold-restart screenshots."
+  },
+  "actual": {
+    "mergeRequest": {
+      "iid": 27,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/27"
+    },
+    "noteId": 290,
+    "body": "```suggestion:-1+1\nconst value = \"\\n\";\nconst value = \"\";\n// verified transport\n```\n\nReview combined suggestion mwjsscih",
+    "commit": "47e27ce75df95aa4a90044cc883943fb4bb3b9fc",
+    "content": "const value = \"\\n\";\nconst value = \"\";\n// verified transport\nconst key = \"A​B\";  \n\nreturn 1;\n"
+  },
+  "remaining": [
+    "Actual unchanged/context-line and broader legacy source transport variants",
+    "Editing already-posted/applied/outdated proposals; actual empty deletion/blank replacements",
+    "Review batches, actual role revocation, branch/file changes and concurrent/conflicting proposals",
+    "Retained resolved Rapid Diffs gutter reopening issue; MR overview Applied works",
+    "Broader native browser/mobile and hosted/full-root release checks"
+  ],
+  "constraints": [
+    "Native component explicitly opts into known adapter; default host guard remains closed",
+    "Actual live native UI uses Chromium and stock pinned GitLab server; no credentialed trace/video/auth storage retained",
+    "No public package/API/capacity limit/version/publication change or overall parity-row promotion",
+    "Application stopped after acceptance; source rollback verified only while stopped"
+  ],
+  "hashes": {
+    "integrations/gitlab/services/code_suggestion_editing.ts": "c04fa5ef2ddbcca8dba59a5d1f4af45d2f2cddc7dbd2cb063130db3049842189",
+    "integrations/gitlab/services/content_editor.ts": "f0072efec90161ac0262233693f76b3011935f50946127dc282ee377e54d95e7",
+    "integrations/gitlab/components/fountain_content_editor.vue": "20cffde374df4ac732973cc6a363f67ed5c967b451ef84c3ac80fdc376336f41",
+    "integrations/gitlab/specs/fountain_code_menu_spec.js": "73673c6ba6e20d95bba753baeaa2b1dbcf36bf6d26349992b6a4a715ecebba89",
+    "integrations/gitlab/fixtures/suggestion-transport-live.json": "785df5acde3525ef668fffcb0550ddb90c4132375fb0155c4edbbfabd5a6d915",
+    "tests/gitlab-suggestion-insertion.test.ts": "abd3e8194b739f8d04f05621d9d34f68e78fcf14d3fa7e0b48406ae14099d469",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-suggestion-tests.patch": "988ddd296d19f6518891d134e921bba46351a51a7c574d6976408f014f055538",
+    "tests/browser/gitlab-suggestion-editing-fixture.ts": "dffe55f690bcaabdbd5fe1f553ceb765132c52d1113003bd0304ca3bc0bad88b",
+    "scripts/capture-gitlab-suggestion-context.mjs": "40f7f9bee35886702be314a5e07ad79c3241008bb8cc082c026e8d5f17083ee1",
+    "scripts/audit-gitlab-suggestion-authoring.mjs": "0f27c0180708223a31d1b3f5ca7be66469d5b32a7656e071fdf0f9c0ecb38b26",
+    "scripts/capture-gitlab-alert-rendering.mjs": "633cd141a49a500b4800fd247874092ee03758bdde2e5a6ea827187a8c0719a7",
+    "scripts/run-gitlab-native-browser-audit.mjs": "2560405df9e508a52e3809ad7ffa9a9c91189d8e1ade0d3bbdc3327be67f5775",
+    "scripts/check-gitlab-native-patches.mjs": "48f8deaba04fd3268c53b1ff7bd7a312a6d744d0ed1251ff5e6675666d572eb3",
+    "scripts/check-gitlab-native-install.mjs": "218ba1e1a890f41fc69cccc62fd5fc3215a7b265eda50c63d6bc13161bee3be7",
+    "artifacts/gitlab-native-runtime/build.json": "0a7d52b647119e3628bdc48447340578fbd62ab255e36346ff030dbc3def6096",
+    "artifacts/gitlab-native-browser-install/install.json": "a3523cf2c12d978930922a097bf379e10e58420135af1fda9f202f095889063a",
+    "artifacts/gitlab-native-suggestion-transport-patch-verification-20261116.json": "113eb3c24383243d05bb4e18be8ec6938f397478bb0e73263bd3357602656669",
+    "artifacts/gitlab-native-suggestion-transport-install-roundtrip-20261116.json": "a202106af1d0fb73143d8cd856a38b2fdab3369f585e864c8e268958e540a8ff",
+    "artifacts/suggestion-transport-all-unit-20261116.log": "64308d365ab7e7e6294847559f1ea3eb3396a590991a53075337a959e816282b",
+    "artifacts/suggestion-transport-types-20261116.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/suggestion-transport-upstream-20261116.log": "fb5d5b1f5707e6bfb1f63625ae2483666dc748311691743e9b765f68c7924fb5",
+    "artifacts/suggestion-transport-frontend-20261116.log": "155771e175cd81fe504e8b36e71d4e48213c50ecad0cc236b9cd753cadc9544d",
+    "artifacts/suggestion-transport-runtime-20261116.log": "5ddbda52e0cb1c282b62c78b93df350d54525b4ddc15ef7fc7b11a7ddbd89e7c",
+    "artifacts/suggestion-transport-capture-20261116.log": "0fe7246c1690dc78922ea49eba114f7ba91aa6ada4caace57898cd45aa480e00",
+    "artifacts/suggestion-transport-authoring-20261116.log": "a8efe340ddc663a61a7c9b8c71e184597b4687dc03bbaff7bd8c4bf8c73a2c78",
+    "artifacts/suggestion-transport-restart-20261116.log": "b73a74e655939202b7c7b8ace9939b953cd8ae3f521bad3f420d54a5fa4b6f25",
+    "artifacts/run-suggestion-transport-upstream-20261116.mjs": "aef76646e0adb8a00c0ee9877f7e0790da443b4bf028f98104f5729c3c907e90",
+    "artifacts/suggestion-transport-live-20261116/context.json": "049aefb04aa9c989a14aa42e7a9611ebcbc369380c98b2f9789b5a93de4f9612",
+    "artifacts/suggestion-transport-live-20261116/multiline.png": "25f9142ad3c04ce2c7343bb0de2fdaf49136adb704e84d8593e9be779b042ed2",
+    "artifacts/suggestion-transport-authoring-live-20261116/report.json": "b77a3c46e937422e314ff8502ac690af36888a568937d87afb80401a926b4b00",
+    "artifacts/suggestion-transport-authoring-live-20261116/restart.json": "24c153fcccb7cd93679a79cfb4903a10a93e5c9e0990000b1dbc00755b82ca6d",
+    "artifacts/suggestion-transport-authoring-live-20261116/source-and-range.png": "c93aadb6af9a2cc2f28d70729c669da529fde488436003597c49b40d11bd68f2",
+    "artifacts/suggestion-transport-authoring-live-20261116/native-draft.png": "d8ecfc9bbe6b07479ce07f8270c9c706d6c17f84e9a08bce1b582758d67454ce",
+    "artifacts/suggestion-transport-authoring-live-20261116/posted-reader.png": "34886caeceab5601e83c43d07fcdc7a0248a4f99c6aae9d3ff874489b0032374",
+    "artifacts/suggestion-transport-authoring-live-20261116/applied.png": "079a36bc8dd54a156ea8cc1c23ed89c9b772fe96f02d083f4d39a8cb0bd5e1f0",
+    "artifacts/suggestion-transport-authoring-live-20261116/after-restart.png": "09f43ffe335ffc418aed9cc33467489538c08d8b7ffe1d7b8814877893f77548"
+  }
+}
