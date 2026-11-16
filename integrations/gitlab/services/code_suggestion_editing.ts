@@ -1,4 +1,4 @@
-import { NodeSelection, closeHistory, insertBlock, mapSelection, type Editor, type Node, type Transaction } from 'fountainjs-editor';
+import { NodeSelection, Selection, closeHistory, insertBlock, mapSelection, type Editor, type Node, type Transaction } from 'fountainjs-editor';
 
 export interface GitLabSuggestionPreview {
   readonly preview_suggestions: true;
@@ -87,8 +87,20 @@ export class GitLabSuggestionEditing {
     const accepted = editor.runCommandBatch(() => {
       if (key(context(this.options)) !== fingerprint) return fail('CONTEXT_CHANGED');
       const before = editor.state.doc;
-      if (!insertBlock(editor, 'gitlab_code_suggestion', { params: `-${captured.lines.length - 1}+0`, fence: '```' }, captured.lines.join('\n') + '\n')
-        || editor.state.doc === before) return false;
+      const text = captured.lines.join('\n') + '\n', attrs = { params: `-${captured.lines.length - 1}+0`, fence: '```' };
+      const selection = editor.state.selection, schema = editor.state.schema;
+      const empty = before.childCount === 1 && before.child(0).type.name === 'paragraph'
+        && before.child(0).eq(schema.node('paragraph', {}, [schema.text('')]))
+        && selection.kind === 'text' && selection.isCollapsed && selection.path[0] === 0;
+      if (empty) {
+        const proposal = schema.node('gitlab_code_suggestion', attrs, [schema.text(text)]);
+        if (!editor.dispatch(editor.createTransaction().replaceNode([0], [proposal])
+          .setSelection(Selection.cursor([0, 0], text.length)).setStoredMarks([]))) return false;
+      } else {
+        if (!insertBlock(editor, 'gitlab_code_suggestion', attrs, text)) return false;
+        editor.dispatch(editor.createTransaction().setStoredMarks([]));
+      }
+      if (editor.state.doc === before) return false;
       this.options.validate(editor.state.doc);
       if (key(context(this.options)) !== fingerprint) return fail('CONTEXT_CHANGED');
       return true;
@@ -107,7 +119,7 @@ export class GitLabSuggestionEditing {
 /** Capture an owned proposal and host context. Later caret movement cannot
  * redirect it; changed source/target/context requires reopening the session. */
 export class GitLabSuggestionEditingSession {
-  readonly initial: Readonly<{ text: string; params: string }>;
+  readonly initial: Readonly<{ text: string; params: string; range: Readonly<{ start: number; end: number }> }>;
   private options?: GitLabSuggestionEditingOptions;
   private readonly captured: GitLabSuggestionContext;
   private readonly fingerprint: string;
@@ -126,7 +138,10 @@ export class GitLabSuggestionEditingSession {
     const path = target(options.editor); if (!path) fail('SELECTION_REQUIRED');
     this.options = options; this.doc = options.editor.state.doc; this.node = at(this.doc, path);
     this.selection = new NodeSelection(this.doc, path);
-    this.initial = Object.freeze({ text: this.node.textContent, params: String(this.node.attrs.params) });
+    const params = String(this.node.attrs.params), offsets = params.match(/^([+-]\d+)([+-]\d+)$/u);
+    const anchor = this.captured.lineRange.end;
+    this.initial = Object.freeze({ text: this.node.textContent, params,
+      range: Object.freeze({ start: anchor + Number(offsets?.[1] ?? 0), end: anchor + Number(offsets?.[2] ?? 0) }) });
     this.release = options.editor.subscribe((state, transaction) => this.track(state.doc, transaction));
   }
   get closed(): boolean { return !this.options; }
@@ -167,7 +182,7 @@ export class GitLabSuggestionEditingSession {
     if (range.end > lines.length || this.captured.lines.some((line, index) => lines[range.start - 1 + index] !== line)) return fail('SOURCE_CHANGED');
     this.source = source; this.lines = Object.freeze(lines); return this.lines;
   }
-  async applyRange(start: number, end: number): Promise<boolean> {
+  private async rangeParams(start: number, end: number): Promise<string> {
     this.ready(); const anchor = this.captured.lineRange.end;
     if (!positive(start) || !positive(end) || start > anchor || end < anchor) return fail('RANGE_INVALID');
     const within = start >= this.captured.lineRange.start && end <= anchor;
@@ -177,7 +192,18 @@ export class GitLabSuggestionEditingSession {
       if (await this.fetchSource() !== this.source) return fail('SOURCE_CHANGED');
     }
     this.ready();
-    return this.commit(node => node.type.create({ ...node.attrs, params: `-${anchor - start}+${end - anchor}` }, node.content));
+    return `-${anchor - start}+${end - anchor}`;
+  }
+  async applyRange(start: number, end: number): Promise<boolean> {
+    const params = await this.rangeParams(start, end);
+    return this.commit(node => node.type.create({ ...node.attrs, params }, node.content));
+  }
+  /** A dialog applies its replacement and range together as one undoable edit. */
+  async applyChange(text: string, start: number, end: number): Promise<boolean> {
+    this.ready();
+    if (typeof text !== 'string' || text.length > 1_048_576 || /\r/u.test(text)) return fail('SOURCE_INVALID');
+    const params = await this.rangeParams(start, end);
+    return this.commit(node => node.type.create({ ...node.attrs, params }, [node.type.schema.text(text)]));
   }
   applySource(text: string): boolean {
     this.ready();

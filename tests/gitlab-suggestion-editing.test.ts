@@ -210,10 +210,10 @@ it.each(['single', 'quoted', 'nested-list'])('leaves %s suggestion at its own pa
     const before = editor.state.doc, node = path.reduce((owner, index) => owner.child(index), before);
     editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([...path, 0], 0)));
     const handler = editor.state.plugins[0]!.spec.props!.handleKeyDown!;
-    const event = { key: 'Enter', ctrlKey: true, altKey: false, shiftKey: false, isComposing: false } as KeyboardEvent;
+    const event = { key: 'Enter', ctrlKey: true, altKey: false, shiftKey: false, isComposing: false, stopPropagation: vi.fn() } as unknown as KeyboardEvent;
     expect(handler(editor, { ...event, isComposing: true } as KeyboardEvent)).toBe(false);
     expect(handler(editor, { ...event, ctrlKey: false } as KeyboardEvent)).toBe(false);
-    expect(handler(editor, event)).toBe(true);
+    expect(handler(editor, event)).toBe(true); expect(event.stopPropagation).toHaveBeenCalledTimes(1);
     expect(editor.state.selection.path.slice(0, -2)).toEqual(path.slice(0, -1));
     expect(path.reduce((owner, index) => owner.child(index), editor.state.doc)).toBe(node);
     const exited = editor.state.doc;
@@ -259,4 +259,29 @@ it.each(contexts.fixtures)('inserts and prepares real $name line context without
   expect(proposal.textContent).toBe(expected); expect(proposal.attrs.params).toBe('-0+0');
   const session = editing.begin(); await session.prepareRange(); expect(await session.applyRange(1, 5)).toBe(true);
   expect(editor.state.doc.child(1).textContent).toBe(expected);
+});
+
+it('applies a replacement and absolute file range atomically with one undo and redo', async () => {
+  const { editor, editing } = setup(), before = editor.state.doc, session = editing.begin();
+  expect(session.initial.range).toEqual({ start: 2, end: 3 }); expect(Object.isFrozen(session.initial.range)).toBe(true);
+  await session.prepareRange(); expect(await session.applyChange('combined();\n', 1, 4)).toBe(true);
+  expect(editor.state.doc.child(1).attrs.params).toBe('-2+1'); expect(editor.state.doc.child(1).textContent).toBe('combined();\n');
+  expect(undo(editor)).toBe(true); expect(editor.state.doc.toJSON()).toEqual(before.toJSON()); expect(undo(editor)).toBe(false);
+  expect(redo(editor)).toBe(true); expect(editor.state.doc.child(1).textContent).toBe('combined();\n');
+});
+it('publishes neither range nor source when combined editing fails validation', async () => {
+  const { editor, editing, options } = setup(), session = editing.begin(), before = editor.state.doc;
+  await session.prepareRange(); options.validate = () => { throw new Error('COMBINED_REFUSED'); };
+  await expect(session.applyChange('combined();\n', 1, 4)).rejects.toThrow('COMBINED_REFUSED');
+  expect(editor.state.doc).toBe(before); expect(undo(editor)).toBe(false); expect(session.closed).toBe(false);
+});
+
+it('replaces the sole default empty paragraph and clears prose marks when inserting a literal suggestion', () => {
+  const { editing, editor } = setup(), schema = editor.state.schema;
+  const empty = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('')])]);
+  editor.dispatch(editor.createTransaction().replaceDocument(empty).setMeta('history$reset', true)
+    .setSelection(Selection.cursor([0, 0], 0)).setStoredMarks([schema.mark('strong')]));
+  expect(editing.insert()).toBe(true); expect(editor.state.doc.childCount).toBe(1);
+  expect(editor.state.doc.child(0).type.name).toBe('gitlab_code_suggestion'); expect(editor.state.storedMarks).toEqual([]);
+  expect(insertText(editor, 'typed();')).toBe(true); expect(editor.state.doc.child(0).content.every(node => !node.marks.length)).toBe(true);
 });

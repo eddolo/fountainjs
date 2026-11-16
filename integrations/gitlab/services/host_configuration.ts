@@ -1,3 +1,4 @@
+import { readGitLabSuggestionContext } from './code_suggestion_editing';
 export interface GitLabHostConfiguration {
   collaborationProvider?: unknown;
   serializerConfig?: Record<string, unknown> | null;
@@ -10,8 +11,9 @@ const emptyRecord = (value: unknown): boolean =>
   !Array.isArray(value) &&
   Object.keys(value).length === 0;
 
-/** Accept the real host's inactive defaults, never an active legacy adapter. */
-export function assertGitLabNativeHostConfiguration(options: GitLabHostConfiguration): void {
+/** Default callers accept inactive settings only. The native candidate opts into
+ * its explicit source/range adapter; unknown active contracts still refuse. */
+export function assertGitLabNativeHostConfiguration(options: GitLabHostConfiguration, native: { codeSuggestions?: boolean } = {}): void {
   if (options.collaborationProvider != null)
     throw new Error('GITLAB_NATIVE_COLLABORATION_ADAPTER_REQUIRED');
   const serializer = options.serializerConfig ?? {};
@@ -22,6 +24,10 @@ export function assertGitLabNativeHostConfiguration(options: GitLabHostConfigura
   )
     throw new Error('GITLAB_NATIVE_SERIALIZER_ADAPTER_REQUIRED');
   const suggestions = options.codeSuggestionsConfig ?? {};
+  if (native.codeSuggestions) {
+    try { if (readGitLabSuggestionContext(suggestions)) return; }
+    catch { throw new Error('GITLAB_NATIVE_SUGGESTIONS_ADAPTER_REQUIRED'); }
+  }
   for (const [key, value] of Object.entries(suggestions)) {
     if ((key === 'canSuggest' || key === 'showPopover') && value === false) continue;
     if (key === 'lineType' && value === '') continue;

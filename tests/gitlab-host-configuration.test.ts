@@ -57,3 +57,8 @@ it('refuses active serializer hooks and legacy collaboration instead of ignoring
 it.each(suggestionContexts.fixtures)('keeps real Rapid Diffs $name configuration guarded pending end-to-end acceptance', fixture => {
   expect(() => validate({ codeSuggestionsConfig: fixture.context })).toThrow('GITLAB_NATIVE_SUGGESTIONS_ADAPTER_REQUIRED');
 });
+
+it.each(suggestionContexts.fixtures)('accepts actual Rapid Diffs $name only for the explicit native suggestion candidate', fixture => {
+  expect(() => validate({ codeSuggestionsConfig: fixture.context }, { codeSuggestions: true })).not.toThrow();
+  expect(() => validate({ codeSuggestionsConfig: { ...fixture.context, previewParams: { ...fixture.context.previewParams, head_sha: 'invalid' } } }, { codeSuggestions: true })).toThrow('GITLAB_NATIVE_SUGGESTIONS_ADAPTER_REQUIRED');
+});

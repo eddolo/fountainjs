@@ -134,7 +134,8 @@ export default {
   background: #151823;
   color: #e7e9ee;
 }
-[data-fountain-root='gitlab'] .fountain-editor pre.fjs-code-block > code {
+[data-fountain-root='gitlab'] .fountain-editor pre.fjs-code-block > code,
+[data-fountain-root='gitlab'] .fountain-editor pre[data-fountain-gitlab-suggestion] > code {
   background: transparent;
   color: inherit;
 }

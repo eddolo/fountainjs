@@ -70,7 +70,7 @@ export default {
     },
     failureMessage() {
       if (this.failureCode === 'GITLAB_CODE_SOURCE_DRAFT_PENDING')
-        return s__('ContentEditor|Apply or cancel your diagram source draft before saving or switching editing mode.');
+        return s__('ContentEditor|Apply or cancel your source draft before saving or switching editing mode.');
       if (this.failureCode === 'GITLAB_ALERT_TITLE_SINGLE_LINE')
         return s__('ContentEditor|Alert titles must stay on one line. Paste multiple paragraphs into the alert body instead.');
       if (this.failureCode === 'GITLAB_UPLOAD_QUEUE_FULL')
@@ -139,7 +139,7 @@ export default {
         collaborationProvider: this.collaborationProvider,
         serializerConfig: this.serializerConfig,
         codeSuggestionsConfig: this.codeSuggestionsConfig,
-      });
+      }, { codeSuggestions: true });
       this.contentEditor = markRaw(
         new GitLabContentEditor({
           renderMarkdown: (markdown, options) =>
@@ -151,6 +151,8 @@ export default {
           renderMath: createKaTeXRenderer(katex),
           onListenerError: this.onSurfaceError,
           uploadAttachment: this.uploadFile,
+          getSuggestionContext: () => this.codeSuggestionsConfig,
+          loadSuggestionSource: this.fetchSuggestionSource,
           quickActionProvider: this.supportsQuickActions ? this.fetchQuickActions : undefined,
           autocompleteProvider: this.enableAutocomplete ? createGitLabAutocompleteProvider({
             getSources: () => this.autocompleteDataSources,
@@ -199,6 +201,21 @@ export default {
         event.preventDefault(); event.stopPropagation(); this.$refs.linkMenu?.open?.();
       }
       if (!event.defaultPrevented) this.$emit('keydown', event);
+    },
+    async fetchSuggestionSource(path, { signal }) {
+      if (path !== this.codeSuggestionsConfig?.blobRawPath) throw new Error('GITLAB_SUGGESTION_CONTEXT_CHANGED');
+      const url = new URL(path, window.location.href);
+      if (!['http:', 'https:'].includes(url.protocol) || url.origin !== window.location.origin
+        || url.username || url.password || url.hash || !url.pathname.includes('/-/raw/'))
+        throw new Error('GITLAB_SUGGESTION_SOURCE_ENDPOINT_REFUSED');
+      const { data } = await axios.get(url.href, { signal, responseType: 'text', transformResponse: [value => value] });
+      if (signal.aborted || this.disposed) throw new DOMException('GITLAB_SUGGESTION_CANCELLED', 'AbortError');
+      if (typeof data !== 'string' || data.length > 1048576) throw new Error('GITLAB_SUGGESTION_SOURCE_INVALID');
+      return data;
+    },
+    insertSuggestion() {
+      try { this.ensureNoSourceDraft(); this.contentEditor.suggestions.insert(); this.focus(); }
+      catch (error) { this.onSurfaceError(error); }
     },
     async fetchQuickActions({ signal }) {
       const endpoint = this.autocompleteDataSources.commands;
@@ -509,7 +526,7 @@ export default {
         >
           <template #context-actions>
             <fountain-link-menu ref="linkMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
-            <code-block-bubble-menu ref="codeMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
+            <code-block-bubble-menu ref="codeMenu" :content-editor="contentEditor" :configuration="codeSuggestionsConfig" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-reference-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" />
             <fountain-alert-menu :content-editor="contentEditor" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
             <fountain-quick-action-menu ref="quickActionMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" @focus="focus" @error="onSurfaceError" />
@@ -518,6 +535,7 @@ export default {
             <media-bubble-menu ref="mediaMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />
           </template>
           <template #header-buttons>
+            <gl-button v-if="codeSuggestionsConfig && codeSuggestionsConfig.canSuggest" size="small" icon="comment" :disabled="!surfaceEditable" @click="insertSuggestion">{{ s__('ContentEditor|Insert suggestion') }}</gl-button>
             <slot name="header-buttons"></slot>
             <editor-mode-switcher
               v-if="immersive && !hideModeSwitcher"

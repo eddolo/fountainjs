@@ -436,9 +436,14 @@ head freshness or grant repository write permission.
 `showPopover` is UI metadata; it does not change source ownership. The callback
 is reread before mutations and after asynchronous operations. No callback means
 suggestions are unavailable. It does not enable the active native host adapter:
-that adapter remains guarded pending real inline review acceptance.
+default callers remain guarded. The native candidate explicitly opts into the
+known adapter and has scoped real authoring/single-application/restart acceptance;
+review batching and broader role/concurrency coverage remain open.
 
 A session owns one proposal, rather than whichever block the caret later enters.
+Its immutable `initial.range` contains absolute file lines derived from the
+original offsets and host anchor. `applyChange(text, start, end)` applies the
+replacement plus range atomically; validation/refusal cannot publish half an edit.
 `initial` contains its source and offset header. `applySource(text)` preserves
 literal LF source; an empty value is a deletion proposal. `prepareRange()` calls
 optional `loadSuggestionSource(path, { signal })`, verifies the selected original
@@ -457,7 +462,14 @@ content-service disposal closes the session and aborts its pending request.
 
 Ctrl/Cmd+Enter leaves literal code at its current parent boundary, creating or
 reusing an editable paragraph without changing code source. Ordinary Enter and
-Tab keep their source-editing behavior. This private shortcut needs verification
-in the live host alongside its submission shortcuts before production acceptance.
+Tab keep their source-editing behavior. The real host journey verifies that this shortcut does not trigger quick submit;
+its handled event stops propagation before reaching the form submission handler.
 
 [Service and recorded local-browser evidence](../../../artifacts/suggestion-editing-integration-20261116.json).
+
+The current native journey posts exact Markdown from the real source/range menu,
+uses GitLab's normal Apply control and verifies the source-branch commit/file.
+The MR overview shows Applied before and after cold restart. The resolved Rapid
+Diffs gutter reopening probe remains a separate recorded UI issue. This does not
+establish review batching, all roles/concurrency paths or broad native browser
+coverage. [Native evidence](../../../artifacts/suggestion-native-integration-20261116.json).

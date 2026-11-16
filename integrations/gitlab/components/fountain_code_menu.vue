@@ -16,13 +16,14 @@ export default {
     contentEditor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
     getEditorRoot: { type: Function, required: false, default: null },
+    configuration: { type: Object, required: false, default: null },
   },
   emits: ['focus', 'error'],
   data() {
     return { context: null, session: null, language: '', errorCode: null, copyState: null, showPreview: false,
       inputId: uniqueId('fountain-code-language-'), revision: 0,
       dialogOpen: false, dialogContext: null, sourceSession: null, sourceDraft: '', sourceError: null,
-      sourceCopyState: null, sourceComposing: false, modalId: uniqueId('fountain-diagram-source-') };
+      sourceCopyState: null, sourceComposing: false, sourceApplying: false, sourceRangeEnabled: false, rangeStart: 1, rangeEnd: 1, rangeLoading: false, fileLines: null, modalId: uniqueId('fountain-diagram-source-') };
   },
   computed: {
     visible() { return Boolean(this.context || this.session || this.dialogOpen); },
@@ -39,23 +40,36 @@ export default {
     },
     isFrontmatter() { return Boolean(this.menuContext?.frontmatter); },
     isDiagram() { return !this.isFrontmatter && ['mermaid', 'plantuml'].includes(this.menuContext?.language); },
+    isSuggestion() { return Boolean(this.menuContext?.suggestion); },
+    sourceIsSuggestion() { return Boolean(this.dialogContext?.suggestion); },
+    rangePreview() {
+      if (!this.fileLines) return '';
+      const start = Math.max(0, Math.min(this.fileLines.length - 1, Number(this.rangeStart) - 4 || 0));
+      return this.fileLines.slice(start, start + 100).map((line, index) => `${start + index + 1}: ${line}`).join('\n');
+    },
     sourceIsFrontmatter() { return Boolean(this.dialogContext?.frontmatter); },
-    sourceTitle() { return this.sourceIsFrontmatter ? s__('ContentEditor|Frontmatter source') : s__('ContentEditor|Diagram source and preview'); },
-    sourceLabel() { return this.sourceIsFrontmatter ? s__('ContentEditor|Frontmatter source') : s__('ContentEditor|Diagram source'); },
+    sourceTitle() { if (this.sourceIsSuggestion) return s__('ContentEditor|Suggested replacement'); return this.sourceIsFrontmatter ? s__('ContentEditor|Frontmatter source') : s__('ContentEditor|Diagram source and preview'); },
+    sourceLabel() { if (this.sourceIsSuggestion) return s__('ContentEditor|Replacement source'); return this.sourceIsFrontmatter ? s__('ContentEditor|Frontmatter source') : s__('ContentEditor|Diagram source'); },
     // The host reads this before saving or switching editing mode.
-    hasUnappliedSource() { return this.dialogOpen && this.sourceDraft !== this.dialogContext?.text; },
+    hasUnappliedSource() { return this.dialogOpen && (this.sourceApplying || this.sourceDraft !== this.dialogContext?.text
+      || this.sourceRangeEnabled && (Number(this.rangeStart) !== this.sourceSession?.initial.range.start || Number(this.rangeEnd) !== this.sourceSession?.initial.range.end)); },
     sourceConflict() { return this.revision >= 0 && Boolean(this.sourceSession?.conflict || this.sourceSession?.closed); },
     sourceAction() {
       if (this.disabled) return null;
-      return { text: this.sourceIsFrontmatter ? s__('ContentEditor|Apply frontmatter source') : s__('ContentEditor|Apply diagram source'), attributes: { variant: 'confirm',
-        disabled: !this.sourceSession || this.sourceConflict || this.sourceComposing } };
+      return { text: this.sourceIsSuggestion ? s__('ContentEditor|Apply suggestion') : this.sourceIsFrontmatter ? s__('ContentEditor|Apply frontmatter source') : s__('ContentEditor|Apply diagram source'), attributes: { variant: 'confirm',
+        disabled: !this.sourceSession || this.sourceConflict || this.sourceComposing || this.sourceApplying || this.rangeLoading, loading: this.sourceApplying } };
     },
     sourceCancel() {
       if (!this.disabled) return { text: s__('ContentEditor|Cancel source edit') };
-      return { text: this.sourceIsFrontmatter ? s__('ContentEditor|Close frontmatter source') : s__('ContentEditor|Close diagram source') };
+      return { text: this.sourceIsSuggestion ? s__('ContentEditor|Close suggestion source') : this.sourceIsFrontmatter ? s__('ContentEditor|Close frontmatter source') : s__('ContentEditor|Close diagram source') };
     },
     focusTarget() { return { focus: () => { if (!this.disposed) this.$emit('focus'); } }; },
     sourceMessage() {
+      if (this.sourceIsSuggestion) {
+        if (this.sourceConflict) return s__('ContentEditor|This suggestion or its file context changed. Your draft is retained. Copy it before closing and reopen the current suggestion.');
+        if (this.sourceError) return s__('ContentEditor|The suggestion could not be applied. Your draft and document are retained. Load the original file before expanding the range, check the file lines, and try again.');
+        return '';
+      }
       if (this.sourceConflict)
         return this.sourceIsFrontmatter ? s__('ContentEditor|This frontmatter block changed or was replaced. Your source draft is retained. Copy it before closing and reopen the current block.') : s__('ContentEditor|This diagram changed or was replaced. Your source draft is retained. Copy it before closing and reopen the current block.');
       if (this.sourceError)
@@ -78,6 +92,7 @@ export default {
       return '';
     },
   },
+  watch: { configuration: { deep: true, handler() { this.revision += 1; } } },
   created() {
     this.disposed = false;
     this.releaseState = this.contentEditor.editor.subscribe(() => this.refresh());
@@ -145,27 +160,44 @@ export default {
       } catch { if (!this.disposed) this.copyState = 'failed'; }
     },
     openSource() {
-      if ((!this.isDiagram && !this.isFrontmatter) || this.dialogOpen) return;
+      if ((!this.isDiagram && !this.isFrontmatter && !this.isSuggestion) || this.dialogOpen) return;
       if (this.session && this.language !== this.session.initial.language) {
         this.errorCode = 'GITLAB_CODE_LANGUAGE_DRAFT_PENDING'; return;
       }
       try {
         const context = this.menuContext;
-        this.sourceSession = this.disabled ? null : this.session || markRaw(this.contentEditor.beginCodeEdit());
+        this.sourceRangeEnabled = this.isSuggestion && !this.disabled && this.contentEditor.suggestions.available;
+        this.sourceSession = this.disabled ? null : this.sourceRangeEnabled ? markRaw(this.contentEditor.suggestions.begin()) : this.session || markRaw(this.contentEditor.beginCodeEdit());
         if (this.disabled) this.session?.close();
         this.session = null;
-        this.dialogContext = this.sourceSession?.initial || context;
+        this.dialogContext = { ...context, ...(this.sourceSession?.initial || {}) };
+        this.rangeStart = this.sourceSession?.initial.range?.start ?? 1; this.rangeEnd = this.sourceSession?.initial.range?.end ?? 1;
+        this.fileLines = null; this.rangeLoading = false; this.sourceApplying = false;
         this.sourceDraft = this.dialogContext.text; this.sourceError = null; this.sourceCopyState = null;
         this.sourceComposing = false; this.showPreview = false; this.errorCode = null; this.dialogOpen = true;
       } catch (error) { this.errorCode = error.message; }
     },
-    applySource(event) {
-      event?.preventDefault();
-      if (this.disabled || this.sourceConflict || this.sourceComposing || !this.sourceSession) return;
+    async loadOriginalFile() {
+      const session = this.sourceSession;
+      if (!session || !this.sourceRangeEnabled || this.rangeLoading || this.sourceApplying) return;
+      this.rangeLoading = true; this.sourceError = null;
       try {
-        this.sourceSession.applySource(this.sourceDraft);
+        const lines = await session.prepareRange();
+        if (!this.disposed && this.dialogOpen && this.sourceSession === session) this.fileLines = lines;
+      } catch (error) { if (!this.disposed && this.dialogOpen && this.sourceSession === session) this.sourceError = error.message; }
+      finally { if (!this.disposed && this.sourceSession === session) this.rangeLoading = false; }
+    },
+    async applySource(event) {
+      event?.preventDefault();
+      if (this.disabled || this.sourceConflict || this.sourceComposing || this.sourceApplying || this.rangeLoading || !this.sourceSession) return;
+      const session = this.sourceSession; this.sourceApplying = true;
+      try {
+        if (this.sourceRangeEnabled) await session.applyChange(this.sourceDraft, Number(this.rangeStart), Number(this.rangeEnd));
+        else session.applySource(this.sourceDraft);
+        if (this.disposed || !this.dialogOpen || this.sourceSession !== session) return;
         this.dialogOpen = false; this.sourceSession = null; this.sourceError = null; this.refresh();
-      } catch (error) { this.sourceError = error.message; }
+      } catch (error) { if (!this.disposed && this.dialogOpen && this.sourceSession === session) this.sourceError = error.message; }
+      finally { if (!this.disposed) this.sourceApplying = false; }
     },
     hideSource(event) {
       if (event?.defaultPrevented) return;
@@ -188,11 +220,16 @@ export default {
 };
 </script>
 <template>
-  <fountain-context-surface v-if="visible" ref="contextSurface" :editor="contentEditor.editor" :active="visible" :anchor-path="menuAnchorPath" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Code block actions')" :suspended="dialogOpen" @reveal="$emit('focus')">
-  <section data-testid="native-code-menu" class="gl-w-full" :aria-label="s__('ContentEditor|Code block controls')" @keydown="onKeydown">
+  <fountain-context-surface v-if="visible" ref="contextSurface" :editor="contentEditor.editor" :active="visible" :anchor-path="menuAnchorPath" :get-editor-root="getEditorRoot" :label="isSuggestion ? s__('ContentEditor|Suggestion actions') : s__('ContentEditor|Code block actions')" :suspended="dialogOpen" @reveal="$emit('focus')">
+  <section data-testid="native-code-menu" class="gl-w-full" :aria-label="isSuggestion ? s__('ContentEditor|Suggestion controls') : s__('ContentEditor|Code block controls')" @keydown="onKeydown">
     <gl-alert v-if="formError" variant="danger" :dismissible="false" class="gl-mb-3">{{ formError }}</gl-alert>
     <p v-if="isFrontmatter" class="gl-mb-3">{{ menuContext.frontmatter === 'header' ? s__('ContentEditor|Document frontmatter stays at the beginning. Edit its literal source here or in the editor. Changing the format preserves the source; it does not translate YAML, TOML or JSON.') : s__('ContentEditor|This is a code fence labelled frontmatter, not a document header. Its fence parameter is preserved when you save.') }}</p>
-    <gl-form class="gl-flex gl-flex-wrap gl-items-end gl-gap-3" @submit.stop.prevent="apply">
+    <div v-if="isSuggestion" class="gl-flex gl-flex-wrap gl-gap-3">
+      <gl-button size="small" @click="openSource">{{ disabled ? s__('ContentEditor|View suggestion source') : s__('ContentEditor|Edit suggestion') }}</gl-button>
+      <gl-button size="small" @click="copy">{{ s__('ContentEditor|Copy replacement') }}</gl-button>
+      <gl-button size="small" variant="danger" category="secondary" :disabled="disabled" @click="remove">{{ s__('ContentEditor|Delete suggestion') }}</gl-button>
+    </div>
+    <gl-form v-if="!isSuggestion" class="gl-flex gl-flex-wrap gl-items-end gl-gap-3" @submit.stop.prevent="apply">
       <gl-form-group :label="menuContext?.frontmatter === 'header' ? s__('ContentEditor|Frontmatter format') : s__('ContentEditor|Code language')" :label-for="inputId" class="gl-mb-0 gl-max-w-full">
         <gl-form-input :id="inputId" v-model="language" :list="`${inputId}-options`" :disabled="disabled || conflict" :maxlength="80" autocomplete="off" @focus="begin" />
         <datalist :id="`${inputId}-options`">
@@ -217,14 +254,24 @@ export default {
     <fountain-diagram-preview v-if="isDiagram && showPreview" :content-editor="contentEditor" :source="menuContext.text" :language="menuContext.language" />
     <gl-modal v-model="dialogOpen" :modal-id="modalId" size="lg" :title="sourceTitle" :action-primary="sourceAction" :action-cancel="sourceCancel" :return-focus="focusTarget" :no-close-on-esc="sourceComposing" :no-close-on-backdrop="hasUnappliedSource" @primary="applySource" @hide="hideSource" @hidden="hiddenSource">
       <template v-if="dialogOpen && dialogContext">
-        <p v-if="sourceIsFrontmatter">{{ disabled ? s__('ContentEditor|Read-only frontmatter source. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') : s__('ContentEditor|Edit the source contents without the opening and closing delimiters. Apply makes one undoable change. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') }}</p>
+        <template v-if="sourceIsSuggestion">
+          <p>{{ s__('ContentEditor|Edit the proposed replacement here or directly in the document. Applying changes the comment; GitLab applies it to the repository separately.') }}</p>
+          <div v-if="sourceRangeEnabled" class="gl-flex gl-flex-wrap gl-items-end gl-gap-3 gl-mb-4">
+            <gl-form-group :label="s__('ContentEditor|First file line')" :label-for="`${modalId}-start`" class="gl-mb-0"><gl-form-input :id="`${modalId}-start`" v-model="rangeStart" type="number" min="1" :disabled="disabled || sourceConflict || sourceApplying || rangeLoading" /></gl-form-group>
+            <gl-form-group :label="s__('ContentEditor|Last file line')" :label-for="`${modalId}-end`" class="gl-mb-0"><gl-form-input :id="`${modalId}-end`" v-model="rangeEnd" type="number" min="1" :disabled="disabled || sourceConflict || sourceApplying || rangeLoading" /></gl-form-group>
+            <gl-button size="small" :disabled="sourceConflict || sourceApplying || rangeLoading" :loading="rangeLoading" @click="loadOriginalFile">{{ s__('ContentEditor|Load original file') }}</gl-button>
+          </div>
+          <p v-else>{{ s__('ContentEditor|File range controls are available when this editor has a current diff-line context.') }}</p>
+          <pre v-if="fileLines" role="region" class="gl-max-h-48 gl-overflow-auto" :aria-label="s__('ContentEditor|Original file lines')">{{ rangePreview }}</pre>
+        </template>
+        <p v-else-if="sourceIsFrontmatter">{{ disabled ? s__('ContentEditor|Read-only frontmatter source. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') : s__('ContentEditor|Edit the source contents without the opening and closing delimiters. Apply makes one undoable change. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') }}</p>
         <p v-else>{{ disabled ? s__('ContentEditor|Read-only source. Previewing does not change the document.') : s__('ContentEditor|Preview your draft here. Apply updates the selected diagram in one undoable change; Cancel leaves the document unchanged.') }}</p>
         <gl-alert v-if="sourceMessage" variant="danger" :dismissible="false">{{ sourceMessage }}</gl-alert>
-        <div :class="{ 'fountain-diagram-authoring': !sourceIsFrontmatter }">
+        <div :class="{ 'fountain-diagram-authoring': !sourceIsFrontmatter && !sourceIsSuggestion }">
           <gl-form-group :label="sourceLabel" :label-for="`${modalId}-source`">
             <gl-form-textarea :id="`${modalId}-source`" v-model="sourceDraft" :readonly="disabled" :rows="14" wrap="off" spellcheck="false" class="fountain-diagram-source" @input="sourceCopyState = null" @compositionstart="sourceComposing = true" @compositionend="sourceComposing = false" @keydown="onSourceKeydown" />
           </gl-form-group>
-          <div v-if="!sourceIsFrontmatter" class="fountain-diagram-draft-preview">
+          <div v-if="!sourceIsFrontmatter && !sourceIsSuggestion" class="fountain-diagram-draft-preview">
             <h3 class="gl-heading-4">{{ s__('ContentEditor|Draft preview') }}</h3>
             <fountain-diagram-preview :content-editor="contentEditor" :source="sourceDraft" :language="dialogContext.language" />
           </div>

@@ -13,6 +13,11 @@ import FountainDiagramPreview from '~/content_editor/components/fountain_diagram
 import FountainFormattingToolbar from '~/content_editor/components/fountain_formatting_toolbar.vue';
 import diagramData from '../fixtures/fountain_diagram_live_html.json';
 
+
+const suggestionFixture = {"source": "```suggestion:-0+0\nreturn 42;\n```", "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">return 42;</span></code></pre></div>"};
+const suggestionHost = {"canSuggest": true, "lines": ["const key = \"A​B\";"], "lineType": "", "showPopover": false, "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js", "lineRange": {"start": 1, "end": 1}, "previewParams": {"preview_suggestions": true, "line": 1, "file_path": "suggestion-context-mwjpfe74.js", "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915", "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915", "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"}};
+const suggestionFile = "const key = \"A​B\";\n\n  keep();  \nreturn 1;\n// end\n";
+
 describe('FountainCodeMenu', () => {
   let wrapper;
   let service;
@@ -276,4 +281,69 @@ describe('FountainCodeMenu', () => {
     expect(session.closed).toBe(true);
     wrapper = null;
   });
+  async function createSuggestion({ editable = true, active = true, loader = async () => suggestionFile } = {}) {
+    const configuration = JSON.parse(JSON.stringify(suggestionHost));
+    if (!active) configuration.canSuggest = false;
+    service = new GitLabContentEditor({ editable, describeLabels: () => '', renderMarkdown: async () => ({ body: suggestionFixture.body }),
+      getSuggestionContext: () => configuration, loadSuggestionSource: loader });
+    await service.setSerializedContent(suggestionFixture.source);
+    service.editor.dispatch(service.editor.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    wrapper = mountExtended(FountainCodeMenu, { propsData: { contentEditor: service, disabled: !editable, configuration }, attachTo: document.body });
+    await settle(); return configuration;
+  }
+  const suggestionDialog = () => getByRole(document.body, 'dialog', { name: 'Suggested replacement' });
+  const replacementField = () => getByRole(suggestionDialog(), 'textbox', { name: 'Replacement source' });
+  async function editSuggestion(readOnly = false) {
+    fireEvent.click(button(readOnly ? 'View suggestion source' : 'Edit suggestion')); await settle();
+  }
+  it('exposes suggestion actions instead of a code-language editor', async () => {
+    await createSuggestion();
+    expect(queryByRole(wrapper.element, 'combobox', { name: 'Code language' })).toBeNull();
+    expect(disabled('Edit suggestion')).toBe(false); expect(disabled('Delete suggestion')).toBe(false);
+    expect(button('Copy replacement')).toBeVisible();
+  });
+  it('applies replacement and expanded file range together with one undo', async () => {
+    await createSuggestion(); await editSuggestion();
+    fireEvent.input(replacementField(), { target: { value: 'return 99;\n' } });
+    expect(wrapper.vm.hasUnappliedSource).toBe(true);
+    fireEvent.click(getByRole(suggestionDialog(), 'button', { name: 'Load original file' })); await settle();
+    expect(getByRole(suggestionDialog(), 'region', { name: 'Original file lines' }).textContent).toContain('3:   keep();  ');
+    fireEvent.input(getByRole(suggestionDialog(), 'spinbutton', { name: 'Last file line' }), { target: { value: '3' } });
+    fireEvent.click(getByRole(suggestionDialog(), 'button', { name: 'Apply suggestion' })); await settle();
+    expect(service.getSerializedContent()).toBe('```suggestion:-0+2\nreturn 99;\n```');
+    expect(undo(service.editor)).toBe(true); expect(service.getSerializedContent()).toBe(suggestionFixture.source);
+    expect(undo(service.editor)).toBe(false);
+  });
+  it('retains a replacement and range draft after a refused expansion without a file load', async () => {
+    await createSuggestion(); await editSuggestion();
+    fireEvent.input(replacementField(), { target: { value: 'retained();\n' } });
+    fireEvent.input(getByRole(suggestionDialog(), 'spinbutton', { name: 'Last file line' }), { target: { value: '3' } });
+    fireEvent.click(getByRole(suggestionDialog(), 'button', { name: 'Apply suggestion' })); await settle();
+    expect(service.getSerializedContent()).toBe(suggestionFixture.source); expect(replacementField().value).toBe('retained();\n');
+    expect(getByRole(suggestionDialog(), 'alert').textContent).toContain('Load the original file');
+  });
+  it('retains the draft and disables Apply when host suggestion permission changes', async () => {
+    const configuration = await createSuggestion(); await editSuggestion();
+    fireEvent.input(replacementField(), { target: { value: 'pending();\n' } }); configuration.canSuggest = false;
+    await wrapper.setProps({ configuration: { ...configuration } }); await settle();
+    expect(wrapper.vm.sourceSession.conflict).toBe(true);
+    expect(wrapper.vm.sourceConflict).toBe(true);
+    const primary = getByRole(suggestionDialog(), 'button', { name: 'Apply suggestion' });
+    expect(primary.disabled || primary.getAttribute('aria-disabled') === 'true').toBe(true);
+    expect(getByRole(suggestionDialog(), 'alert').textContent).toContain('file context changed');
+    expect(replacementField().value).toBe('pending();\n'); expect(service.getSerializedContent()).toBe(suggestionFixture.source);
+  });
+  it('edits replacement text without inventing a file range outside an active diff context', async () => {
+    await createSuggestion({ active: false }); await editSuggestion();
+    expect(queryByRole(suggestionDialog(), 'spinbutton', { name: 'First file line' })).toBeNull();
+    fireEvent.input(replacementField(), { target: { value: 'sourceOnly();\n' } });
+    fireEvent.click(getByRole(suggestionDialog(), 'button', { name: 'Apply suggestion' })); await settle();
+    expect(service.getSerializedContent()).toBe('```suggestion:-0+0\nsourceOnly();\n```');
+  });
+  it('keeps read-only suggestion source inspectable while disabling mutation', async () => {
+    await createSuggestion({ editable: false }); expect(disabled('Delete suggestion')).toBe(true);
+    await editSuggestion(true); expect(replacementField().readOnly).toBe(true);
+    expect(queryByRole(suggestionDialog(), 'button', { name: 'Apply suggestion' })).toBeNull();
+  });
+
 });

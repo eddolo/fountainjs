@@ -158,11 +158,16 @@ export class GitLabContentEditor {
           audio: options.describeMedia('audio'), video: options.describeMedia('video'),
         } : undefined),
         plugins: [new Plugin({ props: {
-          handleKeyDown: (editor, event) => !event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey
-            && event.key === 'Enter' && this.status === 'ready' && exitGitLabCode(editor, doc => { this.codec.serialize({ doc }); })
-            || !event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey
-            && ['b', 'i', 'u'].includes(event.key.toLowerCase()) && (Boolean(getGitLabCodeContext(editor)) || selectionIncludesGitLabFrontmatter(editor))
-            || (alertInput?.spec.props?.handleKeyDown?.(editor, event) ?? false),
+          handleKeyDown: (editor, event) => {
+            if (!event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey
+              && event.key === 'Enter' && this.status === 'ready' && exitGitLabCode(editor, doc => { this.codec.serialize({ doc }); })) {
+              event.stopPropagation?.();
+              return true;
+            }
+            return !event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey
+              && ['b', 'i', 'u'].includes(event.key.toLowerCase()) && (Boolean(getGitLabCodeContext(editor)) || selectionIncludesGitLabFrontmatter(editor))
+              || (alertInput?.spec.props?.handleKeyDown?.(editor, event) ?? false);
+          },
           handleBeforeInput: (editor, event) => !event.isComposing && event.inputType?.startsWith('format')
             && (Boolean(getGitLabCodeContext(editor)) || selectionIncludesGitLabFrontmatter(editor)) || (alertInput?.spec.props?.handleBeforeInput?.(editor, event) ?? false),
           handlePaste: (editor, event) => alertInput?.spec.props?.handlePaste?.(editor, event) ?? false,

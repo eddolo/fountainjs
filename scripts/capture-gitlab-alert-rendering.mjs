@@ -4,6 +4,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
 import { readGitLabAuditCredential } from './gitlab-audit-credentials.mjs';
+import { auditGitLabSuggestionAuthoring, verifyGitLabSuggestionAfterRestart } from './audit-gitlab-suggestion-authoring.mjs';
 import { captureGitLabSuggestionContext } from './capture-gitlab-suggestion-context.mjs';
 import { captureGitLabSuggestionRendering } from './capture-gitlab-suggestion-rendering.mjs';
 import { captureGitLabTaskRendering } from './capture-gitlab-task-rendering.mjs';
@@ -14,7 +15,10 @@ import { captureGitLabFootnoteRoundtrip } from './capture-gitlab-footnote-roundt
 if (process.platform !== 'linux') throw new Error('Run beside the isolated Linux GitLab deployment.');
 const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
 const suggestions = process.argv.includes('--suggestions');
-const suggestionContexts = process.argv.includes('--suggestion-context');
+const suggestionVerification = process.argv.includes('--suggestion-verify');
+const suggestionAuthoring = process.argv.includes('--suggestion-authoring');
+const suggestionPreviews = process.argv.includes('--suggestion-preview');
+const suggestionContexts = suggestionVerification || suggestionAuthoring || suggestionPreviews || process.argv.includes('--suggestion-context');
 const tasks = process.argv.includes('--tasks');
 const media = process.argv.includes('--media');
 const diagrams = process.argv.includes('--diagrams');
@@ -84,7 +88,9 @@ try {
   }
   const project = await request('/api/v4/projects/root%2Ffountain-product-integration');
   expect(project.visibility).toBe('private');
-  if (suggestionContexts) await captureGitLabSuggestionContext({ root, page, request, project, pin, version });
+  if (suggestionVerification) await verifyGitLabSuggestionAfterRestart({ root, page, request, project, pin, version });
+  else if (suggestionAuthoring) await auditGitLabSuggestionAuthoring({ root, page, request, project, pin, version });
+  else if (suggestionContexts) await captureGitLabSuggestionContext({ root, page, request, project, pin, version, preview: suggestionPreviews });
   const prior = catalogue ? JSON.parse(await readFile(new URL(autocomplete ? 'artifacts/gitlab-native-quick-action-controls-20261114/report.json' : 'artifacts/gitlab-native-quick-actions-20261114/report.json', root))) : null;
   const paths = await request('/api/graphql', { query: catalogue
     ? 'query($path:ID!,$iid:String){namespace(fullPath:$path){markdownPaths{markdownPreviewPath(iid:$iid) autocompleteSourcesPath(iid:$iid)}}}'

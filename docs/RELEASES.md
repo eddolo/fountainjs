@@ -29,7 +29,37 @@ This reconciliation changes no release, tag, npm package or website deployment.
 
 ## Mixed lists and GitLab task source — 2026-11-16
 
-Latest live GitLab suggestion context check (2026-11-16): the default Rapid
+Current native GitLab suggestion checkpoint (2026-11-16): the explicit native
+candidate now inserts proposals from real diff context and exposes source/range
+controls in its existing code menu. Applying source and range is one undoable
+transaction. The real UI posts exact Markdown, GitLab applies it through its
+normal action, and repository APIs verify the resulting file, new commit and
+source-branch head. A cold container restart retains the note, file/commit and
+visible Applied state in the MR overview reader.
+
+Physical review caught and fixed unreadable replacement text under GitLab's
+inline-code CSS and an unwanted empty paragraph on insertion. Ctrl+Enter exits
+code without submitting the host form. Ten real contextual previews already fit
+the source-aware codec. Read-only Git objects explain the different preview head
+as a merge-result commit; the host's actual revision metadata is retained.
+
+1323 GitLab integration cases / 51 files, TypeScript and 546 selected upstream
+cases / 23 suites pass (one inherited skip). Nineteen test patches reconstruct
+the tested source; guarded 28-file source rollback/reinstall passes. [Native suggestion evidence](../artifacts/suggestion-native-integration-20261116.json).
+
+This verifies a single live authoring/application/restart workflow, not full
+GitLab or overall parity. Posted/applied-note editing, multiline/transport edge
+cases, review batches, roles/concurrency and broader native browser/mobile
+acceptance remain open. The resolved Rapid Diffs gutter did not reopen in the
+probe; MR overview Applied display works and that gutter issue remains recorded.
+The immediate source-integrity follow-up is raw-file disambiguation of literal
+backslash-n and real U+E000 during prefill, before broader review expansion.
+Default guard callers still refuse active configuration; the known native
+component explicitly opts into its adapter. Public API/size/performance limits,
+package version and publication are unchanged. Hosted CI/full-root release checks
+were not claimed for this checkpoint.
+
+Previous live GitLab suggestion context check (2026-11-16): the default Rapid
 Diffs UI supplies extra file/commit preview metadata. Three actual form contexts
 (Unicode zero-width character, empty line, trailing spaces) match the raw
 repository response. The service now validates/freezes that known metadata and

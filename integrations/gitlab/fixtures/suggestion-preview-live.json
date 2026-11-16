@@ -1,0 +1,280 @@
+{
+  "scope": "Actual authenticated Rapid Diffs contextual Markdown preview responses; not browser-expanded widget or posting/application acceptance.",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "fixtures": [
+    {
+      "name": "single",
+      "source": "```suggestion:-0+0\nreturn 42;\n```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const key = \"A​B\";"
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 1,
+          "end": 1
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 1,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=1&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">return 42;</span></code></pre></div>"
+    },
+    {
+      "name": "literal-unicode",
+      "source": "```suggestion:-0+0\nconst key = \"A​B\";\n```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const key = \"A​B\";"
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 1,
+          "end": 1
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 1,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=1&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">const key = \"A​B\";</span></code></pre></div>"
+    },
+    {
+      "name": "quoted",
+      "source": "> ```suggestion:-0+0\n> return 42;\n> ```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const key = \"A​B\";"
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 1,
+          "end": 1
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 1,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=1&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<blockquote data-sourcepos=\"1:1-3:5\" dir=\"auto\">&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:3-3:5\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">return 42;</span></code></pre></div>&#x000A;</blockquote>"
+    },
+    {
+      "name": "nested-list",
+      "source": "- Review\n\n  ```suggestion:-0+0\n  return 42;\n  ```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const key = \"A​B\";"
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 1,
+          "end": 1
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 1,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=1&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<ul data-sourcepos=\"1:1-5:5\" dir=\"auto\">&#x000A;<li data-sourcepos=\"1:1-5:5\">&#x000A;<p data-sourcepos=\"1:3-1:8\">Review</p>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"3:3-5:5\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">return 42;</span></code></pre></div>&#x000A;</li>&#x000A;</ul>"
+    },
+    {
+      "name": "empty",
+      "source": "```suggestion:-0+0\n```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          ""
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 2,
+          "end": 2
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 2,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=2&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-2:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"></code></pre></div>"
+    },
+    {
+      "name": "one-blank-line",
+      "source": "```suggestion:-0+0\n\n```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          ""
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 2,
+          "end": 2
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 2,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=2&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\"></span></code></pre></div>"
+    },
+    {
+      "name": "two-blank-lines",
+      "source": "```suggestion:-0+0\n\n\n```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          ""
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 2,
+          "end": 2
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 2,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=2&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\"></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"suggestion\"></span></code></pre></div>"
+    },
+    {
+      "name": "range",
+      "source": "```suggestion:-1+1\nnew();\n```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "  keep();  "
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 3,
+          "end": 3
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 3,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=3&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-1+1\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">new();</span></code></pre></div>"
+    },
+    {
+      "name": "trailing-spaces",
+      "source": "```suggestion:-0+0\n  keep();  \n```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "  keep();  "
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 3,
+          "end": 3
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 3,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=3&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">  keep();  </span></code></pre></div>"
+    },
+    {
+      "name": "two",
+      "source": "```suggestion:-0+0\nfirst();\n```\n\n```suggestion:-0+0\nsecond();\n```",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "  keep();  "
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 3,
+          "end": 3
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 3,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "endpoint": "/root/fountain-product-integration/-/preview_markdown?target_id=20&target_type=MergeRequest&preview_suggestions=true&line=3&file_path=suggestion-context-mwjpfe74.js&base_sha=15aeca7199b19518372fcb918a96eae93fd7e915&start_sha=15aeca7199b19518372fcb918a96eae93fd7e915&head_sha=d36f602d8bb8e5c0187793e7a30436cef52aae97",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">first();</span></code></pre></div>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"5:1-7:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code class=\"js-render-suggestion\"><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">second();</span></code></pre></div>"
+    }
+  ]
+}

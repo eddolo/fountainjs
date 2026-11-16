@@ -1,0 +1,71 @@
+{
+  "scope": "Actual native Fountain suggestion authoring, normal GitLab submission and real single-suggestion repository application; excludes resolved Rapid Diffs gutter reopening, review batching and role/concurrency acceptance.",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3"
+  },
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "mergeRequest": {
+    "iid": 24,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/24"
+  },
+  "branch": "fountain-suggestion-author-mwjrbzrj",
+  "filePath": "suggestion-author-mwjrbzrj.js",
+  "seedCommit": "8e26fab6991186154ff37f3e44d24c3caf6bb937",
+  "original": "const key = \"A​B\";\n\n  keep();  \nreturn 1;\n// end\n",
+  "proposal": "const key = \"updated\";\n",
+  "marker": "Review combined suggestion mwjrbzrj",
+  "observations": [
+    "Real diff context inserts original Unicode source and offsets into a native suggestion.",
+    "Replacement plus expanded range apply and undo/redo atomically in the actual native menu.",
+    "Ctrl+Enter leaves source without triggering GitLab quick submit; subsequent prose remains in the draft.",
+    "Normal GitLab submission persists exact native suggestion source, offsets and prose via the authenticated discussions API.",
+    "GitLab Apply suggestion creates a real source-branch commit containing exactly the intended replacement and untouched remaining file lines."
+  ],
+  "errors": [],
+  "palette": {
+    "background": "rgba(0, 0, 0, 0)",
+    "color": "rgb(231, 233, 238)",
+    "parentColor": "rgb(231, 233, 238)"
+  },
+  "saved": {
+    "discussionId": "41e75d1879a9a432a04da17bd68d3ca80146c3a2",
+    "noteId": 286,
+    "body": "```suggestion:-0+2\nconst key = \"updated\";\n```\n\nReview combined suggestion mwjrbzrj",
+    "position": {
+      "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "head_sha": "8e26fab6991186154ff37f3e44d24c3caf6bb937",
+      "old_path": "suggestion-author-mwjrbzrj.js",
+      "new_path": "suggestion-author-mwjrbzrj.js",
+      "position_type": "text",
+      "old_line": null,
+      "new_line": 1,
+      "line_range": {
+        "start": {
+          "old_line": null,
+          "new_line": 1,
+          "type": "new"
+        },
+        "end": {
+          "old_line": null,
+          "new_line": 1,
+          "type": "new"
+        }
+      }
+    }
+  },
+  "applied": {
+    "commit": "788b11faa62523212dcb43c7e6a26be75bf8fb9b",
+    "parents": [
+      "8e26fab6991186154ff37f3e44d24c3caf6bb937"
+    ],
+    "message": "Apply Fountain native suggestion mwjrbzrj",
+    "content": "const key = \"updated\";\nreturn 1;\n// end\n",
+    "branchHead": "788b11faa62523212dcb43c7e6a26be75bf8fb9b"
+  },
+  "readerRoute": "MR overview note anchor after application; resolved Rapid Diffs gutter reopening remains a separate retained UI issue."
+}

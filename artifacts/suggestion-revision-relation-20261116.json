@@ -1,0 +1,40 @@
+{
+  "scope": "Read-only actual Git objects explain this captured MR preview head; not a general branch freshness or suggestion application proof.",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "mergeRequest": {
+    "iid": 20,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/20"
+  },
+  "filePath": "suggestion-context-mwjpfe74.js",
+  "source": {
+    "sha": "a29a27a6d30f6b143ac18c8a5db001f6ead3728b",
+    "parents": [
+      "15aeca7199b19518372fcb918a96eae93fd7e915"
+    ],
+    "subject": "Add suggestion context audit fixture"
+  },
+  "preview": {
+    "sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97",
+    "parents": [
+      "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "a29a27a6d30f6b143ac18c8a5db001f6ead3728b"
+    ],
+    "subject": "Merge branch 'fountain-suggestion-context-mwjpfe74' into 'main'"
+  },
+  "fileContentEqual": true,
+  "interpretation": "The preview uses a merge-result commit containing the source branch commit and target base. Preserve the host preview refs; do not replace them with the MR API head merely because the hashes differ.",
+  "isolation": {
+    "containerStopped": true,
+    "network": "none",
+    "volumeReadOnly": true,
+    "repositoryWrites": false
+  }
+}
