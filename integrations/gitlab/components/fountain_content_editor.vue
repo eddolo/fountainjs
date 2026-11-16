@@ -2,6 +2,8 @@
 import { GlAlert, GlButton, GlLoadingIcon } from '@gitlab/ui';
 import { markRaw } from 'vue';
 import katex from 'katex';
+// Direct editor entry must not depend on the reader having loaded math styles.
+import 'katex/dist/katex.min.css';
 import axios from '~/lib/utils/axios_utils';
 import { s__, n__, sprintf } from '~/locale';
 import EditorModeSwitcher from '~/vue_shared/components/markdown/editor_mode_switcher.vue';

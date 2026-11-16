@@ -68,7 +68,7 @@
     "app/assets/javascripts/behaviors/markdown/fountain_reader_images.js": "9b36b527c5e271ab97ec41b066446b2441afdb78ca79bc89a2fe34a06ba7b125",
     "babel.config.js": "7cc8ec862fb6e42c7e26b3fb29410094b4f49f602f2ed02e6ec6132ac32a20a4",
     "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "f4d35a1425d46cc0e4de1caae146f3a035c9c853da8ba08d241c8e12c3cffe10",
-    "app/assets/javascripts/content_editor/components/content_editor.vue": "2ca09de1d530297b650ede31cffa491291607420d49cce6954f46b65089ad543",
+    "app/assets/javascripts/content_editor/components/content_editor.vue": "33bc8778aaabcb32595f40903b7b7dc71686d3c1d49db420516c408162a90265",
     "app/assets/javascripts/content_editor/components/fountain_editor_surface.vue": "96fa82a37ea6e51a0d1b48fb4a79613bf7ec9183e645492888660f6690203b2f",
     "app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue": "394b611d206cd6f7a773f1e0d802f8e3108bd28e24bfaa5055a107a5c4b7c902",
     "app/assets/javascripts/content_editor/components/fountain_context_surface.vue": "0ed961554fcd01f882248b9d7e9d9252d29df992a7f884ae661cc19e29a441b8",

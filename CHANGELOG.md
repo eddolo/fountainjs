@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Load KaTeX styles on direct entry to the private GitLab editor, avoiding
+  duplicate visual equations. Add real merge-request/wiki save and restart checks.
+
 - Keep the private GitLab Note control with related document tools. Stack note
   actions, separate removal, and preserve keyboard focus and mobile docking.
 

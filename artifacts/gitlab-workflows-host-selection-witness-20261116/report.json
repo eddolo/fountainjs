@@ -1,0 +1,248 @@
+{
+  "date": "2026-11-16T16:08:17.127Z",
+  "scope": "Native Fountain browser editor in the actual GitLab application; partial toolbar/providers, not full product acceptance",
+  "pin": {
+    "edition": "Community Edition",
+    "version": "19.5.3",
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "platform": "linux/amd64",
+    "repository": "https://gitlab.com/gitlab-org/gitlab-foss.git",
+    "tag": "v19.5.3",
+    "tagObject": "814785dcf8a6d9dcf68073de82c5a032e810b226",
+    "commit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "packagedRevision": "0d4c9a9a2fa",
+    "fountainReplacementInstalled": false
+  },
+  "checks": [
+    "Normal web sign-in and authenticated API version match the image/source pin",
+    "Real private project, PNG upload and issue created through authenticated GitLab HTTP APIs",
+    "Real browser clipboard Markdown renders through the actual GitLab service, inserts with reference/marks, and supports one-step undo/redo",
+    "An actual unsupported GitLab-rendered footnote leaves the document untouched, exposes exact retained source and recovers through a later supported paste",
+    "Native Fountain toolbar formats actual browser selection; undo and redo update both document and view",
+    "Rebuilt real host hands current rich content to source mode and reopens it without a stale cached value",
+    "Native rich typing and UI save persisted the added paragraph and retained the seeded content in the server record",
+    "An actual empty comment paints its placeholder, hides it on focus/typing and restores empty state after real comment persistence",
+    "An initially empty native Fountain composer creates a real GitLab discussion comment and clears after successful persistence",
+    "Actual unsupported saved Markdown refuses editing through Retry; explicit recovery enables a local draft, cancelled without changing the server original",
+    "Private issue is unavailable to an unauthenticated browser context",
+    "Actual merge-request form edits in Fountain, switches rich/source modes, saves from rich mode and reopens the persisted description"
+  ],
+  "secrets": "Credential stays in protected task-container configuration and process memory; no credential values, traces or browser storage-state files are recorded",
+  "preparedHost": true,
+  "nativeBrowser": true,
+  "footnoteServerOverlay": {
+    "source": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-footnote-server/footnote_filter.rb",
+    "readOnly": true,
+    "sha256": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+    "originalSha256": "3c3e2469ca0ce9191954f725548fa0bf3599ca9ccc8980b3fbdca46e14e1dc74",
+    "scope": "Read-only task server overlay; repeat-reference and generated-backlink repair, not an unmodified GitLab baseline"
+  },
+  "nativeInsertion": true,
+  "nativeComponent": true,
+  "nativeAttachments": false,
+  "nativeCapacity": false,
+  "nativeLinks": false,
+  "nativeCodeProfile": false,
+  "nativeContextMenusProfile": false,
+  "nativeContextUIProfile": false,
+  "nativeFrontmatterProfile": false,
+  "nativeQuickActionsProfile": false,
+  "nativeAlertsProfile": false,
+  "nativeMediaProfile": false,
+  "nativeMediaFilesProfile": false,
+  "nativeReferencesProfile": false,
+  "nativeRuntime": {
+    "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+    "entry": "integrations/gitlab/runtime/browser.ts",
+    "target": "es2018",
+    "bytes": 1696886,
+    "sha256": "458863f9341cf1f0012b0ce19083d73a04641a6a6b49a570fc64c9d73cdb0e66",
+    "parentRevision": "901268ffa674e655ca52cd3f7ca54f66b0c14bbb",
+    "inputs": {
+      "integrations/gitlab/runtime/browser.ts": "081c31c05b3bd8db1be64d77f7bb913a31bc11666a253609318f7b808f8a350c",
+      "integrations/gitlab/services/content_editor.ts": "bf7511b3f4a8c87334ae50b31ce0bcc68298b0251bf1537017b6cd46f6bf0d3e",
+      "src/core/plugin.ts": "f2e86912869e6cd109e8a45b51b446d351e483cb52f1ea869e8f74b2ad5dd362",
+      "src/core/clipboard-write.ts": "cc87852b647747d9a358bde7dd7016c9b9b1d0daa17d9e10bb63d95b81fef775",
+      "src/core/commands.ts": "7c8a10963bf853fedc853013c55d985714f1c26a239b3e6b54f439165286221d",
+      "src/core/table-commands.ts": "b0c1080dedb678ac9977a3ec1eddfc3279bebb365a886c515eddfa80916fa89c",
+      "src/core/table-clipboard.ts": "e4770be3644f77982e45fe7102bfbc3fa90350aa927fd561478119925bb4562a",
+      "src/view/input.ts": "40bffbfc2a1b3dde4196b6f0ec38bdf678867f408409a133e8aae2913a6eb982",
+      "src/pages/clipboard.ts": "c6587164da256aace4c39b1c50a3f1003707b5a8c331fa0546b2062d53a757c5",
+      "src/pages/index.ts": "a8fab75e0e4894e3990c5fbf668f8c5d1f3e02b993d45450a044b7f58b857a68",
+      "integrations/gitlab/services/markdown_insertion.ts": "8f67ac6cd8cbe5fc6c2dafb3d81b182fbca28f028562d92ef2a58a2d48df89f9",
+      "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+      "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+      "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+      "integrations/gitlab/services/code_rendering.ts": "0d94359598fe6ead2cff4d0e2bc2821e934916ba47eca214bf02cc433dfe05d6",
+      "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+      "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+      "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+      "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+      "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+      "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+      "integrations/gitlab/services/host_configuration.ts": "14af6e3400252b762d221189b6d6d96456c443fe21dfbdf6620ea83615dca1f3",
+      "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+      "integrations/gitlab/services/markdown_codec.ts": "062d129e3774c3e3fdd1b1cf819aa3254b1e23e5df2a98f0b42e3ea142bf45b8",
+      "integrations/gitlab/services/footnote_source.ts": "ae724e02065ac198f1f7f3364b82871b57c159ce60f494cdde41faea9fc29595",
+      "integrations/gitlab/services/footnote_codec.ts": "c800291c71af369b71d465b21b3043a3b0dcb44c6a90012dfb7d30f6b1fad6f7",
+      "integrations/gitlab/services/footnote_boundary.ts": "b2cb1ac6bb20590abff35c0331261a02006e2175cbb5068925c93a24da5c61f7",
+      "integrations/gitlab/services/footnote_editing.ts": "89ae8dd5346cc3b3da6c64a568f88596dd3ac7ee2123c389a2f634dea2aa2d70",
+      "integrations/gitlab/services/footnote_renaming.ts": "874734624c86c9958da6a7d8483c150c5e4d569f59e6bd6b24b3483b0798d958",
+      "integrations/gitlab/services/footnote_labels.ts": "622e70a0dccc7bafde0b346d39474ed9c34b96dc85025228f2e4e447037cdf63",
+      "integrations/gitlab/services/footnote_nodes.ts": "48321ca48f1eed9ee7379f952c46427070d85da73d02cc00e441a9b8f962980f",
+      "integrations/gitlab/services/footnote_positions.ts": "0020d65af8ab83d35d1955f8cf60ef34eb757b8b1d787b03d94ecb41f85f339a",
+      "integrations/gitlab/services/footnote_projection.ts": "c6c316be82b970aad6b9c8711b2f619286251683ca77d85e1b08a972dd40302a",
+      "integrations/gitlab/services/footnote_rendering.ts": "18f009bfb0246a01eeada0f716f21a393f0ddca636852bb32b17f7014f7334bb",
+      "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
+      "integrations/gitlab/services/quick_action_editing.ts": "42d37b3300907be0a8499ff7b0e64bb9410334fe13e82ce7515e412642b88ebe",
+      "integrations/gitlab/services/autocomplete_data.ts": "1741396673d51ce049777fa88bd00ff65184ce57e2d484ebde94c69f6cf98568",
+      "integrations/gitlab/services/autocomplete_editing.ts": "3244b67431ce508e9893b5166ab5f5ef798a4e63b770f7a8bfbe0fc6a7dec827",
+      "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+      "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
+      "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+      "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+      "dist/index.js": "38c6a35e96a32d5066c6a45526970d1d4320db45f51c569e5de04d136c7ec3fa",
+      "dist/document-utilities.js": "db93d9e686ca02dc50dddb7939e5c1c09817d8d18d5b658ed30e0494ff2fbad8",
+      "dist/pages.js": "aa6b04a97423b57d19451614be6a6cade166eb6628acd1d343929f7b0abd635f"
+    }
+  },
+  "browserErrors": [],
+  "imageFailureDiagnostics": [],
+  "imageResponses": [
+    {
+      "path": "/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png",
+      "status": 200
+    },
+    {
+      "path": "/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png",
+      "status": 304
+    },
+    {
+      "path": "/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png",
+      "status": 304
+    },
+    {
+      "path": "/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png",
+      "status": 304
+    },
+    {
+      "path": "/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png",
+      "status": 304
+    }
+  ],
+  "auditCredentialSource": "protected-task-config",
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "issue": {
+    "iid": 178,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/178"
+  },
+  "originalServerDescription": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png)\n\nEnd of the original description.",
+  "preparedScripts": [
+    {
+      "path": "/assets/webpack/content_editor.9dd1f4a6.chunk.js",
+      "sha256": "bfc1a2793eb6a7c661a2c213762f952d6dd45b59387f9b753d2ce2548b45605d"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9dd1f4a6.chunk.js",
+      "sha256": "bfc1a2793eb6a7c661a2c213762f952d6dd45b59387f9b753d2ce2548b45605d"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9dd1f4a6.chunk.js",
+      "sha256": "bfc1a2793eb6a7c661a2c213762f952d6dd45b59387f9b753d2ce2548b45605d"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9dd1f4a6.chunk.js",
+      "sha256": "bfc1a2793eb6a7c661a2c213762f952d6dd45b59387f9b753d2ce2548b45605d"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9dd1f4a6.chunk.js",
+      "sha256": "bfc1a2793eb6a7c661a2c213762f952d6dd45b59387f9b753d2ce2548b45605d"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9dd1f4a6.chunk.js",
+      "sha256": "bfc1a2793eb6a7c661a2c213762f952d6dd45b59387f9b753d2ce2548b45605d"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9dd1f4a6.chunk.js",
+      "sha256": "bfc1a2793eb6a7c661a2c213762f952d6dd45b59387f9b753d2ce2548b45605d"
+    },
+    {
+      "path": "/assets/webpack/content_editor.9dd1f4a6.chunk.js",
+      "sha256": "bfc1a2793eb6a7c661a2c213762f952d6dd45b59387f9b753d2ce2548b45605d"
+    }
+  ],
+  "frontendMount": {
+    "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+    "readOnly": true
+  },
+  "nativeTaskControls": [
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    },
+    {
+      "appearance": "auto",
+      "opacity": "1",
+      "display": "block",
+      "width": "24px",
+      "height": "24px"
+    }
+  ],
+  "source": {
+    "original": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] Reproduce the incident\n- [ ] Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png)\n\nEnd of the original description.\n",
+    "saved": "# Source retention investigation\n\nKeep **formatted content** and @root references when editing.\n\n- [ ] &#32;Reproduce the incident\n- [ ] &#32;Review the update\n\n| Stage | Status |\n| --- | --- |\n| Save | Pending |\n\nInline math $`a^2 + b^2 = c^2`$ remains source-backed.\n\n![Uploaded baseline figure](/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png)\n\nEnd of the original description.\n\n**Edited through native Fountain in GitLab; persisted after restart.**\n\nPasted **GitLab Markdown** with <span>@root</span>.\n\n**Recovered paste**"
+  },
+  "comment": {
+    "body": "Native Fountain discussion: created through the actual GitLab comment form.",
+    "persisted": true
+  },
+  "recoveryIssue": {
+    "iid": 179,
+    "originalSourceUnchanged": true,
+    "recoveryDraftCancelled": true
+  },
+  "workflows": {
+    "commit": "1b053f870b54682317fc2bb1dca5aa928370e866",
+    "mergeRequest": {
+      "iid": 4,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/4",
+      "original": "# Release review\n\n**Review carefully** before merging.\n\n- [ ] Verify deployment\n- [ ] Review migration\n\n| Check | Result |\n| --- | --- |\n| Persistence | Pending |\n\nInline math $`a^2 + b^2 = c^2`$.\n\n![Workflow figure](http://127.0.0.1:5080/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png)\n\nEnd of workflow notes.\n",
+      "saved": "# Release review\n\n**Review carefully** before merging.\n\n- [ ] &#32;&#32;Verify deployment\n- [ ] &#32;&#32;Review migration\n\n| Check | Result |\n| --- | --- |\n| Persistence | Pending |\n\nInline math $`a^2 + b^2 = c^2`$.\n\n![Workflow figure](http://127.0.0.1:5080/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png)\n\nEnd of workflow notes.\n\n**Fountain merge request: rich changes survive submission.**\n\n**merge-request: final rich edit.**",
+      "marker": "Fountain merge request: rich changes survive submission."
+    },
+    "phases": [],
+    "mathProjection": [
+      {
+        "name": "merge-request",
+        "width": 1,
+        "height": 1,
+        "clip": "auto",
+        "position": "absolute"
+      }
+    ],
+    "wiki": {
+      "slug": "Fountain-release-mwjgllay",
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/wikis/Fountain-release-mwjgllay",
+      "original": "# Release review\n\n**Review carefully** before merging.\n\n- [ ] Verify deployment\n- [ ] Review migration\n\n| Check | Result |\n| --- | --- |\n| Persistence | Pending |\n\nInline math $`a^2 + b^2 = c^2`$.\n\n![Workflow figure](http://127.0.0.1:5080/-/project/1/uploads/ec474a010237afcf58ce5b9b6dd9d6f0/fountain-baseline-figure.png)\n\nEnd of workflow notes.\n"
+    }
+  },
+  "status": "failed",
+  "error": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('[data-fountain-integration=\"native\"]:visible')\nExpected: 1\nReceived: 2\nTimeout:  5000ms\n\nCall log:\n  - Expect \"to.have.count\" with timeout 5000ms\n  - waiting for locator('[data-fountain-integration=\"native\"]:visible')\n    14 × locator resolved to 2 elements\n       - unexpected value \"2\"\n",
+  "failedImages": [],
+  "failedImageRequests": [],
+  "imagesAfterFailureScreenshot": []
+}

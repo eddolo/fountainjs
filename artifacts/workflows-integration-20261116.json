@@ -1,0 +1,84 @@
+{
+  "date": "2026-11-16T16:17:11.309Z",
+  "status": "verified-bounded-candidate",
+  "parentRevision": "3ae0f79a6ce587fba102ee96f761acefa6072c3a",
+  "scope": "Real existing merge-request description and wiki-page editing, mode handoff, immediate rich submission and reader persistence. Records are seeded through authenticated GitLab APIs. Not full MR review/wiki/product acceptance.",
+  "source": [
+    {
+      "path": "integrations/gitlab/components/fountain_content_editor.vue",
+      "sha256": "e303ad7531c1c734b379db8b1de043580211bc814c11cc9d9b8063c29478861c"
+    },
+    {
+      "path": "scripts/audit-gitlab-native-workflows.mjs",
+      "sha256": "da52d60e42c3a568a783622fb0baa06ef7c0036d3b3e2ab05b3e00273c0fb9c5"
+    },
+    {
+      "path": "scripts/audit-gitlab-product-baseline.mjs",
+      "sha256": "06d0e26d032f955e19599de40e250d5d39570d5b6572a4c18dd9ddb978506643"
+    },
+    {
+      "path": "scripts/run-gitlab-native-browser-audit.mjs",
+      "sha256": "d7f33c51379a2d2336924c26c6b8177dd8b55a273b3bac92007e7294b9c1c1cd"
+    }
+  ],
+  "fix": "Load the already installed KaTeX stylesheet with the editor itself, including direct editor-entry routes.",
+  "verification": {
+    "actualChecks": 16,
+    "report": "artifacts/gitlab-native-workflows-20261116/report.json",
+    "browserErrors": 0,
+    "selectedUpstream": "artifacts/workflows-upstream-summary-20261116.json",
+    "sourceVerification": [
+      "artifacts/gitlab-native-workflows-patch-verification-20261116.json",
+      "artifacts/gitlab-native-workflows-install-roundtrip-20261116.json"
+    ],
+    "patches": 18,
+    "installedFiles": 28,
+    "frontendBuild": {
+      "status": "passed",
+      "seconds": 71.61,
+      "existingSizeAdvisories": 2,
+      "rawLog": "artifacts/workflows-rspack-20261116.log",
+      "sha256": "edf25a1481bd260225b707f1d6f979423a460083caee253e6851e294d3278d0f",
+      "retainedLocally": true
+    },
+    "nativeEngineRuntimeSha256": "458863f9341cf1f0012b0ce19083d73a04641a6a6b49a570fc64c9d73cdb0e66",
+    "footnoteServerOverlay": {
+      "source": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-footnote-server/footnote_filter.rb",
+      "readOnly": true,
+      "sha256": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+      "originalSha256": "3c3e2469ca0ce9191954f725548fa0bf3599ca9ccc8980b3fbdca46e14e1dc74",
+      "scope": "Read-only task server overlay; repeat-reference and generated-backlink repair, not an unmodified GitLab baseline"
+    },
+    "engineAndPublicAPIChanged": false,
+    "rootSuiteRerun": false,
+    "previousEngineEvidence": "artifacts/footnote-cut-integration-20261116.json"
+  },
+  "witnesses": [
+    {
+      "path": "artifacts/gitlab-workflows-first-witness-20261116/report.json",
+      "finding": "Audit used button instead of the actual Cancel link. Its author screenshot separately exposes the genuine missing math stylesheet."
+    },
+    {
+      "path": "artifacts/gitlab-workflows-image-fixture-witness-20261116/report.json",
+      "finding": "Audit constructed a 404 image URL; corrected to the server-returned upload full_path. Not a product image fix."
+    },
+    {
+      "path": "artifacts/gitlab-workflows-host-selection-witness-20261116/report.json",
+      "finding": "Wiki mounts a document editor and a comment editor; the audit now scopes its controls to the document form."
+    }
+  ],
+  "visualReview": "artifacts/gitlab-native-workflows-20261116/visual-review.json",
+  "operationalState": {
+    "auditContainer": "exited",
+    "sourceReinstalled": true,
+    "publication": "none",
+    "packageAndAcceptanceLimitsChanged": false
+  },
+  "remaining": [
+    "MR discussion and inline code-review/suggestion workflows",
+    "UI creation, wiki links/history/templates and navigation",
+    "Role/permission, concurrent editing, reconnect and mobile/IME matrices",
+    "Earlier image-403 diagnosis, physical Safari/OS clipboard, compiled deployment rollback",
+    "Remaining programme roadmap and naming evaluation"
+  ]
+}

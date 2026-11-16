@@ -1,0 +1,47 @@
+{
+  "scope": "Named screenshots and sampled frames inspected, not uninterrupted full-video review or pixel equality with stock GitLab.",
+  "observations": [
+    "Direct merge-request entry now renders one equation; previously both accessible MathML and HTML were visible.",
+    "Wiki document editing and its separate comment composer coexist; audit interactions target the document form.",
+    "Real author and reader pages retain headings, tasks, tables, math, decoded image and the new bold paragraphs.",
+    "Host reader typography differs from authoring typography; this checkpoint does not claim identical page layout.",
+    "Sampled reader-loading frames show transient raw/unstyled math before GitLab finishes loading; final readers are checked after rendering. Reader loading polish remains open."
+  ],
+  "screenshots": [
+    {
+      "path": "artifacts/gitlab-native-workflows-20261116/merge-request-author.png",
+      "sha256": "8961c07e00f158b6b63c2617f81ca8a51c42ef7b9ea70f704b9c8de3fcd4d993"
+    },
+    {
+      "path": "artifacts/gitlab-native-workflows-20261116/merge-request-reopened.png",
+      "sha256": "13f1a878dc9eeb4179e75435762e78a601cbcd61a445bfde3dcd4f34a62507fb"
+    },
+    {
+      "path": "artifacts/gitlab-native-workflows-20261116/merge-request-restart.png",
+      "sha256": "ee61405bbb112181df58681cee26ed372acfe72b4e973c7756ea219e17ef1f56"
+    },
+    {
+      "path": "artifacts/gitlab-native-workflows-20261116/wiki-author.png",
+      "sha256": "f07d2bbbde583320c6121a9464b6300c7f9117327040811c2dbc53d51ff50251"
+    },
+    {
+      "path": "artifacts/gitlab-native-workflows-20261116/wiki-reopened.png",
+      "sha256": "ab902d307b7fbdfe3f78c9fdf2000f010e3078f83cba1bdd4a21d458a49704f1"
+    },
+    {
+      "path": "artifacts/gitlab-native-workflows-20261116/wiki-restart.png",
+      "sha256": "b342f3415857e71d600fd19475a9b74baa008f75fec9cc25f54cd8ef6d6ed70c"
+    }
+  ],
+  "recording": {
+    "path": "artifacts/gitlab-native-workflows-20261116/recordings/page@eec286dbfe99686e443f32ed00b0cf49.webm",
+    "sha256": "c36cfe30b5629a622b308aa5389e070b887867d41c6c5dbe37d5e7a61cec49d6",
+    "durationSeconds": 209.08,
+    "retainedLocally": true
+  },
+  "frameSheet": {
+    "path": "artifacts/workflows-frames-20261116.png",
+    "sha256": "89487dcc142bb9aca625c48e1e2c60b358d57014d3ed9cddfcc99a3f5ce856ef",
+    "sampling": "From 70 seconds, one frame per 10 seconds for 90 seconds."
+  }
+}

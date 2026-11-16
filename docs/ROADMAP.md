@@ -2,7 +2,23 @@
 
 Updated 2026-11-16.
 
-Latest UI checkpoint (2026-11-16): the contextual Note button now stays with
+Latest workflow checkpoint (2026-11-16): existing merge-request descriptions
+and wiki pages now have recorded real-service coverage for rich/source switching,
+immediate rich-mode saving, reopening and an actual application restart. The
+wiki journey includes its commit-message dialog. Saved Markdown remains exact
+across restart; reader checks retain tables, math, decoded images and bold edits.
+Direct editor entry exposed missing KaTeX styles; the editor now loads its own
+stylesheet instead of depending on a prior reader visit. The profile passes
+16 checks and 540 selected upstream tests (one inherited skip); frontend build,
+18-patch reconstruction and 28-file source rollback pass. Engine/API/limits are
+unchanged. [Workflow evidence](../artifacts/workflows-integration-20261116.json).
+
+Records are seeded through real authenticated APIs; this does not prove UI
+creation, MR inline review/suggestions, wiki history/templates, multiple roles,
+concurrency or full product acceptance. Those remain open. No publication or
+parity-row promotion is implied.
+
+Previous UI checkpoint (2026-11-16): the contextual Note button now stays with
 Document tools. Note actions use full-width rows, with removal below a divider;
 mobile controls dock without horizontal overflow. The actual GitLab audit passes
 29 checks through Save/reopen/restart, keyboard cancellation/focus at 1440/1100/
