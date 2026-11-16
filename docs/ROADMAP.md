@@ -2,6 +2,15 @@
 
 Updated 2026-11-16.
 
+Current work (2026-11-16): not-applicable `[~]` task rendering now has a
+source-verified normalization adapter. Eight actual renderer samples retain authored
+strike, whitespace, nested items and newline entities; eight malformed metadata
+cases are refused. All 1196 GitLab cases / 45 files and type checks pass.
+This is preparation: third-state editing remains guarded until schema, controls,
+serialization, clipboard/history and actual save/restart checks are complete.
+The installed app remains at the mixed-list checkpoint below.
+[Task-state preparation evidence](../artifacts/task-state-preparation-20261116.json).
+
 Latest mixed-list checkpoint (2026-11-16): ordinary bullets and checkboxes now
 share one list, including numbered tasks. Markdown, browser/server HTML and
 clipboard retain item kinds and state; indent/lift, split/join and selected-item

@@ -10,6 +10,7 @@ import { getGitLabFrontmatter, gitlabFrontmatterCode, hydrateGitLabFrontmatter, 
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
 import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLabQuickAction, transformGitLabQuickActions } from './quick_actions';
+import { normalizeGitLabTasks } from './task_rendering';
 import { convertGitLabFootnotes } from './footnote_codec';
 import { gitLabFootnoteNodes, validGitLabFootnoteLabel } from './footnote_nodes';
 
@@ -120,28 +121,7 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
     if ('tagName' in node) elements.push(node);
     if ('childNodes' in node) for (let index = node.childNodes.length - 1; index >= 0; index--) stack.push([node.childNodes[index]!, depth + 1]);
   }
-  const sourceLines = source.split(/\r\n|\r|\n/u);
-  const hasAuthoredTerminalNewline = (block: RawElement): boolean => {
-    const lineNumber = Number(attr(block, 'data-sourcepos')?.match(/^(\d+):/u)?.[1]);
-    const line = sourceLines[lineNumber - 2] ?? '';
-    // GitLab does not append a second separator when an authored entity already
-    // ends the inline body with LF. Escaped ampersands remain literal source.
-    const entity = /&(?:#0*10|#[xX]0*[aA]|NewLine);$/u.exec(line);
-    if (!entity) return false;
-    let backslashes = 0;
-    for (let index = entity.index - 1; index >= 0 && line[index] === '\\'; index--) backslashes++;
-    return backslashes % 2 === 0;
-  };
-  const checkboxes = new Map<RawElement, RawElement[]>();
-  for (const input of elements) {
-    if (input.tagName !== 'input' || attr(input, 'type') !== 'checkbox') continue;
-    let parent = input.parentNode;
-    while (parent && 'tagName' in parent && parent.tagName !== 'li') parent = parent.parentNode;
-    if (parent && 'tagName' in parent && parent.tagName === 'li') {
-      const owned = checkboxes.get(parent) ?? [];
-      owned.push(input); checkboxes.set(parent, owned);
-    }
-  }
+  const tasks = normalizeGitLabTasks(elements, source);
   const math = normalizeGitLabMath(elements);
   const diagrams = normalizeGitLabDiagrams(elements);
   const media = normalizeGitLabMedia(elements.filter(element => !diagrams.handled.has(element)), source, schema);
@@ -149,7 +129,7 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   const frontmatter = normalizeGitLabFrontmatter(elements, source);
   const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element) && !diagrams.handled.has(element)));
   const issues: GitLabMarkdownIssue[] = [
-    ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues, ...frontmatter.issues].map(issue => ({ stage: 'import' as const, ...issue })),
+    ...tasks.issues, ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues, ...frontmatter.issues].map(issue => ({ stage: 'import' as const, ...issue })),
   ];
   for (const element of elements) {
     if (math.handled.has(element) || alerts.handled.has(element) || media.handled.has(element) || diagrams.handled.has(element) || frontmatter.handled.has(element)) continue;
@@ -167,35 +147,6 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
       || (attr(element, 'data-canonical-src') ?? '').endsWith('drawio.svg')
       || classes.includes('task-table-item')) {
       issues.push({ stage: 'import', code: 'specialized-renderer', message: 'This specialized GitLab rendering requires a source-aware document adapter before visual editing.' });
-    }
-    if (!['ul', 'ol'].includes(element.tagName) || !classes.includes('task-list')) continue;
-    const items = element.childNodes.filter((node): node is RawElement => 'tagName' in node && node.tagName === 'li');
-    if (element.tagName === 'ul') setAttr(element, 'data-type', 'task-list');
-    for (const item of items) {
-      const task = (attr(item, 'class') ?? '').split(/\s+/u).includes('task-list-item');
-      setAttr(item, 'data-type', task ? 'task-item' : 'list-item');
-      const owned = checkboxes.get(item), input = owned?.[0];
-      const generated = input && attr(input, 'data-checkbox-sourcepos')
-        && (attr(input, 'class') ?? '').split(/\s+/u).includes('task-list-item-checkbox');
-      // Only remove renderer-owned separators; arbitrary HTML retains its text.
-      // GitLab inserts the same block-boundary LF for ordinary list items.
-      if (task ? generated : attr(item, 'data-sourcepos')) for (let index = 1; index < item.childNodes.length; index++) {
-        const block = item.childNodes[index]!, previous = item.childNodes[index - 1]!;
-        if ('tagName' in block && ['ul', 'ol', 'blockquote', 'pre', 'table', 'p', 'div', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(block.tagName)
-          && 'value' in previous && previous.value.endsWith('\n')
-          && !hasAuthoredTerminalNewline(block)) previous.value = previous.value.slice(0, -1);
-      }
-      if (!task) continue;
-      if (!input || owned!.length !== 1) { issues.push({ stage: 'import', code: 'task-source', message: 'A GitLab task item requires one unambiguous own checkbox state.' }); continue; }
-      setAttr(item, 'data-checked', input.attrs.some(value => value.name === 'checked') ? 'true' : 'false');
-      if (generated) {
-        // GitLab inserts one display separator after its checkbox. Preserve all
-        // authored whitespace beyond it, including additional spaces, tabs and NBSP.
-        const siblings = input.parentNode!.childNodes;
-        const next = siblings[siblings.indexOf(input) + 1];
-        if (next && 'value' in next && next.value.startsWith(' ')) next.value = next.value.slice(1);
-      }
-      input.parentNode!.childNodes = input.parentNode!.childNodes.filter(child => child !== input);
     }
   }
   if (issues.length) throw new GitLabMarkdownConversionError(issues);

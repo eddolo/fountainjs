@@ -1,0 +1,58 @@
+{
+  "status": "verified-preparation-not-feature-acceptance",
+  "parentRevision": "7a853c4a",
+  "scope": "Extract GitLab task normalization and prepare source-verified not-applicable rendering without enabling third-state editing.",
+  "verification": {
+    "gitlabFiles": 45,
+    "gitlabTests": 1196,
+    "actualNotApplicableRendererSamples": 8,
+    "malformedMetadataCases": 8,
+    "typecheck": "passed",
+    "actualAppRerun": false,
+    "runtimeRebuiltOrInstalled": false
+  },
+  "observations": [
+    "Generated strike wrappers and an additional separator must be removed independently from authored strike marks and source whitespace.",
+    "Source-position checkbox metadata must match [~], with exactly one direct owned checkbox and consistent unchecked/inapplicable flags.",
+    "Modified or unowned inapplicable display wrappers are refused.",
+    "The existing codec still refuses [~] content with exact original source retained."
+  ],
+  "files": [
+    {
+      "path": "integrations/gitlab/services/task_rendering.ts",
+      "sha256": "bac5ba63880fd8643787949a1df6ee4842fbea8e3310ee3f96f462be58ac95c8",
+      "retainedLocally": false
+    },
+    {
+      "path": "integrations/gitlab/services/markdown_codec.ts",
+      "sha256": "f6dcd6d4668482678e383e384ee0f78c538228d4a5f65fbd9d371f4d89736480",
+      "retainedLocally": false
+    },
+    {
+      "path": "tests/gitlab-task-rendering.test.ts",
+      "sha256": "2706703bddafaf37baf082706c19699f5002553a90283f784ed2dd47d65498f5",
+      "retainedLocally": false
+    },
+    {
+      "path": "scripts/build-gitlab-native-runtime.mjs",
+      "sha256": "a58e5d968e9da728b31b73f1454f9d874b9a6c8d85be234f0839f6558592417e",
+      "retainedLocally": false
+    },
+    {
+      "path": "artifacts/task-state-preparation-gitlab-final-20261116.log",
+      "sha256": "3bd6f0a89697a3d9b897cf2ea5a0b0e643235ff8cdefe1951d44b922729a254b",
+      "retainedLocally": true
+    },
+    {
+      "path": "artifacts/task-state-preparation-typecheck-20261116.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+      "retainedLocally": true
+    }
+  ],
+  "remaining": [
+    "Third-state schema and DOM projection; pending/complete/not-applicable author controls and keyboard behavior.",
+    "Markdown serialization/source preservation, clipboard, split/join and undo/collaboration contracts for third state.",
+    "Runtime/frontend rebuild and actual UI Save/reopen/restart validation."
+  ],
+  "publication": "none"
+}
