@@ -20,6 +20,13 @@ export interface MarkdownExportLoss {
 }
 
 export interface MarkdownExportOptions {
+  /** Trusted host serializers for block extensions. Returned Markdown is used
+   * verbatim; native Markdown containers own indentation. Undefined delegates
+   * to the standard writer and its loss reports. A handler owns all child and
+   * attribute conversion and should throw if it cannot represent the node.
+   * This is canonical syntax generation, not source-preservation proof.
+   */
+  blockSerializers?: Readonly<Record<string, (node: Node) => string | undefined>>;
   /** Emit ordinary inline destinations or deterministic reference definitions. */
   linkStyle?: MarkdownLinkStyle;
   /** Preserve blank paragraphs as inert HTML markers (default), or omit with loss reports. */
@@ -578,6 +585,14 @@ function render(
   tableAlignmentRepresented = false,
   alternateListMarker = false,
 ): string {
+  const serializers = context.options.blockSerializers;
+  if (node.isBlock && serializers && Object.hasOwn(serializers, node.type.name)) {
+    const value = serializers[node.type.name](node);
+    if (value !== undefined) {
+      if (typeof value !== 'string') throw new TypeError('A Markdown block serializer must return a string or undefined.');
+      return value;
+    }
+  }
   if (node.type.spec.markdown === 'html') return schemaHTML(node, context, path);
   reportNodeAttributes(node, context, path, tableAlignmentRepresented);
   const children = () => node.content

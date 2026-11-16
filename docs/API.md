@@ -2162,6 +2162,13 @@ React passes this option through its view options and
 
 The root package exports `HTMLImporter`, `MarkdownImporter`, `HTMLExporter`, `MarkdownExporter`, `JSONExporter`, and `TextExporter`. Importers receive a `Schema`; exporters accept an `EditorState` or `Node`.
 
+`JSONExporter.export(state, 2, { omitTrailingCaret: true })` omits only the editor's
+known, still-empty root caret repair before persistence. Default export remains
+the complete model JSON. Authored, copied and already JSON-reopened blank
+paragraphs are never inferred to be repair nodes. Save with this option before
+that provenance is lost; reopening can create a fresh view caret when needed.
+
+
 The isolated `fountainjs-editor/html/server` entry exports
 `ServerHTMLImporter`, `HTMLImportLimitError`, and their option/report types.
 `ServerHTMLImporter.parse(html, schema, options?)` returns a validated document

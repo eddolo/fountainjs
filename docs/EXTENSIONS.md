@@ -116,6 +116,28 @@ Document JSON is the lossless persistence boundary. Custom nodes and marks only
 work when every writer/reader composes a compatible schema. HTML, Markdown, and
 text may be lossy unless the extension contributes explicit rules or formats.
 
+## Canonical Markdown for custom blocks
+
+Pass host-owned `blockSerializers` to `MarkdownExporter.exportWithReport` when
+an extension has native Markdown syntax:
+
+```ts
+const result = new MarkdownExporter().exportWithReport(editor.state.doc, {
+  blockSerializers: {
+    research_note: node => serializeResearchNote(node),
+  },
+})
+```
+
+The callback owns the complete block, its children and attributes. Return
+`undefined` to delegate to normal export and loss reporting, or throw when the
+state cannot be represented. Returned syntax is used verbatim; the native list
+and quote writers apply their indentation. Only own serializer properties run.
+HTML projections such as HTML tables use the HTML renderer instead. Contribute
+matching import rules and test every claimed container and interchange path.
+This hook does not prove exact source retention, safe third-party output or
+support for a missing renderer.
+
 ## Automated conformance
 
 The isolated `fountainjs-editor/testing` entry contains no test-runner or React

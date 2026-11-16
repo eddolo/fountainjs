@@ -10,6 +10,7 @@ import { getGitLabFrontmatter, gitlabFrontmatterCode, hydrateGitLabFrontmatter, 
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
 import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLabQuickAction, transformGitLabQuickActions } from './quick_actions';
+import { gitLabCodeSuggestion, normalizeGitLabSuggestionNodes, serializeGitLabSuggestionNode } from './code_suggestion_node';
 import { gitLabTaskItem } from './task_state';
 import { normalizeGitLabTasks } from './task_rendering';
 import { convertGitLabFootnotes } from './footnote_codec';
@@ -64,6 +65,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
       alt: child.getAttribute('alt') ?? '', title: child.getAttribute('title') ?? '', width: size('width'), height: size('height') };
   };
   return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base), ...gitlabAlertNodes(), ...gitlabMediaNodes(mediaLabels), ...gitLabFootnoteNodes(),
+    gitlab_code_suggestion: gitLabCodeSuggestion(),
     task_item: gitLabTaskItem(base),
     paragraph: { ...base.nodes.paragraph!, attrs: { ...base.nodes.paragraph!.attrs,
       gitlabLiteralSlash: { default: false, validate: value => typeof value === 'boolean' } } },
@@ -129,9 +131,10 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   const media = normalizeGitLabMedia(elements.filter(element => !diagrams.handled.has(element)), source, schema);
   const alerts = normalizeGitLabAlerts(elements, source);
   const frontmatter = normalizeGitLabFrontmatter(elements, source);
-  const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element) && !diagrams.handled.has(element)));
+  const suggestions = normalizeGitLabSuggestionNodes(elements, source);
+  const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element) && !diagrams.handled.has(element) && !suggestions.handled.has(element)));
   const issues: GitLabMarkdownIssue[] = [
-    ...tasks.issues, ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues, ...frontmatter.issues].map(issue => ({ stage: 'import' as const, ...issue })),
+    ...tasks.issues, ...suggestions.issues.map(issue => ({ stage: 'import' as const, ...issue })), ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues, ...frontmatter.issues].map(issue => ({ stage: 'import' as const, ...issue })),
   ];
   for (const element of elements) {
     if (math.handled.has(element) || alerts.handled.has(element) || media.handled.has(element) || diagrams.handled.has(element) || frontmatter.handled.has(element)) continue;
@@ -366,7 +369,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         && Object.entries(attrs).every(([key, value]) => value === node.attrs[key])) return node;
       return node.type.create(attrs, content, text, retainedMarks);
     };
-    const exported = new MarkdownExporter().exportWithReport(project(doc, []), { omitTrailingCaret: true });
+    const exported = new MarkdownExporter().exportWithReport(project(doc, []), { omitTrailingCaret: true, blockSerializers: { gitlab_code_suggestion: serializeGitLabSuggestionNode } });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
     let markdown = exported.markdown;
     for (const [token, original] of tokens) markdown = markdown.replaceAll(token, () => original);

@@ -1,19 +1,26 @@
 # GitLab application integration
 
-Current work (2026-11-16): source-verified suggestion parsing is prepared
-against 17 actual project-preview captures. It preserves empty versus blank-only
-replacements, offsets, literal Unicode and whitespace; unsupported metadata is
-refused. All 1,227 GitLab tests / 48 files and types pass. This module is not yet
-wired into native editing: suggestion nodes, range controls, document/clipboard
-serialization, real inline review/apply and batching remain open. The active
-host-suggestion guard and previously verified runtime remain in place.
-[Suggestion source evidence](../../artifacts/suggestion-source-preparation-20261116.json).
+Current suggestion-node checkpoint (2026-11-16): source and range metadata now
+live in editable typed nodes. JSON/HTML clipboard and canonical Markdown retain
+empty/blank-only replacements and nested quote/list structure. A host-owned block
+serializer hook reuses the native container writer. Physical tests exposed and
+fixed custom-code HTML flattening, leading-LF loss, stale code-region focus and
+an automatic caret becoming an authored blank after raw JSON persistence. JSON
+export now has an explicit option to omit only that proven view repair.
 
-Run `node scripts/run-gitlab-native-browser-audit.mjs --suggestion-fixtures`
-to refresh the actual pinned preview corpus. It stops the isolated app afterward.
-This is renderer capture, not a review/apply acceptance run.
+All 6695 unit cases / 395 files pass. Six recorded Chromium/Firefox
+journeys use native typing, Enter/Tab, external-text and same-editor clipboard,
+and local JSON save/reopen. Types, API/package, Node/Worker/headless, existing
+size/performance limits and the Markdown conformance gate pass. Screenshots and
+sampled frames were inspected. [Suggestion-node evidence](../../artifacts/suggestion-node-integration-20261116.json).
 
-Latest GitLab task-state checkpoint (2026-11-16): pending, completed and
+Active inline suggestion context remains guarded. Insertion/range controls,
+actual MR posting/applying and batching, and this candidate's native runtime/
+frontend/upstream/restart acceptance remain open. The last installed GitLab
+runtime is still the separately verified task-state checkpoint. No publication,
+version increase or overall parity-row promotion.
+
+Previous GitLab task-state checkpoint (2026-11-16): pending, completed and
 not-applicable tasks now remain distinct through author controls, Markdown,
 HTML and clipboard. Native buttons support Enter/Space; checking an N/A task
 completes it, and splitting creates a pending task. Concurrent peer typing and

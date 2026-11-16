@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add an explicit JSON export option to omit only a proven automatic trailing
+  caret repair before persistence. Preserve authored blanks and root metadata.
+
+- Add optional canonical Markdown block serializers for host-defined syntax,
+  retaining native list/quote indentation and explicit fallback loss reports.
+  Preserve GitLab suggestion source and range metadata in typed nodes through
+  editing and JSON/HTML clipboard; active inline review/apply remains guarded.
+  Route specialized code-region focus and nested Tab input to their code source.
+
 - Support GitLab not-applicable tasks with N/A controls, keyboard activation,
   undo and explicit third-state validation. Preserve state through Markdown,
   HTML and clipboard; verify concurrent peer typing and real MR/wiki saving

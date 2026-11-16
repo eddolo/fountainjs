@@ -45,6 +45,7 @@ const desktopTests = [
   '**/homepage-paste.spec.ts',
   '**/editability.spec.ts',
   '**/mixed-lists.spec.ts',
+  '**/gitlab-suggestion-node.spec.ts',
 ];
 
 export default defineConfig({

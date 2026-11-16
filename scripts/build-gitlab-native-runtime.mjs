@@ -40,6 +40,8 @@ for (const path of [
   'integrations/gitlab/services/link_editing.ts',
   'integrations/gitlab/services/code_editing.ts',
   'integrations/gitlab/services/code_rendering.ts',
+  'integrations/gitlab/services/code_suggestion_source.ts',
+  'integrations/gitlab/services/code_suggestion_node.ts',
   'integrations/gitlab/services/frontmatter.ts',
   'integrations/gitlab/services/alerts.ts',
   'integrations/gitlab/services/alert_editing.ts',

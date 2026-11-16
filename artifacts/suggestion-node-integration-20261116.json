@@ -1,0 +1,404 @@
+{
+  "status": "verified-node-foundation-not-inline-review-acceptance",
+  "date": "2026-11-16T19:39:00.305Z",
+  "parentRevision": "6d1b11cbc65b7612dfc0812df6fe3c89a6ded2d6",
+  "scope": "Editable GitLab suggestion nodes from actual pinned preview captures, canonical Markdown block serializer hook, JSON persistence projection and specialized code input. Active host suggestion insertion/application remains guarded.",
+  "fixes": [
+    "Suggestions have explicit params/fence metadata and plain code content; source newlines distinguish empty from blank-only replacements.",
+    "The native Markdown writer indents host-produced block syntax inside quotes/lists. Undefined serializers retain standard loss reporting; conversion refusals propagate.",
+    "Explicit code content roots prevent custom HTML import from flattening suggestion nodes or stripping leading LF.",
+    "Specialized code-region focus and nested Tab input target the code rather than a stale prose selection.",
+    "Opt-in JSON export omits only a proven still-empty automatic caret before saving. Default JSON and authored/copied/reopened blank paragraphs remain intact."
+  ],
+  "verification": {
+    "unit": {
+      "files": 395,
+      "tests": 6695,
+      "workers": 2,
+      "path": "artifacts/suggestion-node-unit-20261116.log",
+      "sha256": "8e15cfb7db430c537e36bc456f59cd99389a3d01ff883ee2c180d35b950ba29d",
+      "retainedLocally": true
+    },
+    "browser": {
+      "cases": 6,
+      "workers": 1,
+      "scope": "Real Fountain browser editing with actual GitLab preview fixtures; local JSON save/reopen, not GitLab service persistence.",
+      "projects": [
+        {
+          "browser": "chromium",
+          "container": "range",
+          "observations": {
+            "focusEntersSuggestion": true,
+            "prosePreserved": true,
+            "keyboardEnterTab": true,
+            "nativeClipboard": true,
+            "savedJSONReopened": true,
+            "errors": []
+          },
+          "artifacts": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/range/editor.png",
+              "sha256": "99f28fa3bb8b89393345427ce06c2952407f4b6acf4b275d88223ea4ea7e3a06"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/range/source.json",
+              "sha256": "a7c9d838087b0417c3f7d8281be2560b047df3717b50ca612f5ca940a2c11975"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/range/external.txt",
+              "sha256": "c0abebd40e4f16c16d1680cae6aa09854ef3e449db4f97eefcf37705138393ef"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/range/observations.json",
+              "sha256": "840de921374bec499ae14d4378e1efb0ba296471695562b1988fecc0b674df10"
+            }
+          ],
+          "rawMarkdown": {
+            "path": "artifacts/suggestion-node-desktop-20261116/chromium/range/source.md",
+            "sha256": "02bb4282203c1cadfd37ec357d7c6e440844d8b9af39bf8c00c74dcb018e9942",
+            "retainedLocally": true
+          },
+          "localRecordings": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/range/video.webm",
+              "sha256": "6d6398178c761d62ddd91e31a1298fb4ff674c6a7773cadc41c1a7f1a90f9956",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/range/video-1.webm",
+              "sha256": "5d1d8d67e5d24e41cd6e1b93a981941cf3f99da267dc78b0bfa510f4ab85eaeb",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/range/frames.png",
+              "sha256": "a701c069366d723b113b4ab681b1a2c66a3c1d5e2e06f7aeeed2981c133b82bb",
+              "retainedLocally": true
+            }
+          ]
+        },
+        {
+          "browser": "chromium",
+          "container": "quoted",
+          "observations": {
+            "focusEntersSuggestion": true,
+            "prosePreserved": true,
+            "keyboardEnterTab": true,
+            "nativeClipboard": true,
+            "savedJSONReopened": true,
+            "errors": []
+          },
+          "artifacts": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/quoted/editor.png",
+              "sha256": "ee2a74d43abcb85f48cad126412ead86fd8af73d7a386b5eccc45cdebe0c9521"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/quoted/source.json",
+              "sha256": "a4c03e523619c05861e6f5b40a73b1345ca55325c2b05ceba9eae05805b51c6f"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/quoted/external.txt",
+              "sha256": "a868d5e19cc3278730db10777a2a9d1e6259e63efd518033a16876d0dd5406bf"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/quoted/observations.json",
+              "sha256": "840de921374bec499ae14d4378e1efb0ba296471695562b1988fecc0b674df10"
+            }
+          ],
+          "rawMarkdown": {
+            "path": "artifacts/suggestion-node-desktop-20261116/chromium/quoted/source.md",
+            "sha256": "3e231ea9b236885672aefca1a1d350cfcf7dadfda76a227d8b1dca65c7222b41",
+            "retainedLocally": true
+          },
+          "localRecordings": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/quoted/video.webm",
+              "sha256": "8ed5440330aa6acfc5dc653f4ffddb65048cd721e06eee31b8fdec4aac579ca7",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/quoted/video-1.webm",
+              "sha256": "0b0d72ef1023be10d3f2c049d47ca4aa7acc5773fd3974dad08a88f2ec5d541b",
+              "retainedLocally": true
+            }
+          ]
+        },
+        {
+          "browser": "chromium",
+          "container": "nested-list",
+          "observations": {
+            "focusEntersSuggestion": true,
+            "prosePreserved": true,
+            "keyboardEnterTab": true,
+            "nativeClipboard": true,
+            "savedJSONReopened": true,
+            "errors": []
+          },
+          "artifacts": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/nested-list/editor.png",
+              "sha256": "cebb18f47b18e7209450782d2c06892220b65b6714ca273a864f7eb46cc1b81c"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/nested-list/source.json",
+              "sha256": "d53ef4dfa61e903879a944ce4462281e0ebaeedb4054d62ed99981155ca59b1f"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/nested-list/external.txt",
+              "sha256": "2189fc2ee0e02dab7c86b24896739b0bc8c8a2f7ad3938dced6da1039f576f9c"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/nested-list/observations.json",
+              "sha256": "840de921374bec499ae14d4378e1efb0ba296471695562b1988fecc0b674df10"
+            }
+          ],
+          "rawMarkdown": {
+            "path": "artifacts/suggestion-node-desktop-20261116/chromium/nested-list/source.md",
+            "sha256": "e54c869da92a9c0a546914bc6e9f51506ceaba97e7934211e64e34ca606a6fbc",
+            "retainedLocally": true
+          },
+          "localRecordings": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/nested-list/video.webm",
+              "sha256": "64d72b2b5bf1ec9cc108f9b631550a905311c97bcc1c642db2c192de6c562209",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/chromium/nested-list/video-1.webm",
+              "sha256": "d3c574b647680114a14d8e92058cb164d56de0bdbc2284bbefc3f68edec223d1",
+              "retainedLocally": true
+            }
+          ]
+        },
+        {
+          "browser": "firefox",
+          "container": "range",
+          "observations": {
+            "focusEntersSuggestion": true,
+            "prosePreserved": true,
+            "keyboardEnterTab": true,
+            "nativeClipboard": true,
+            "savedJSONReopened": true,
+            "errors": []
+          },
+          "artifacts": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/range/editor.png",
+              "sha256": "9917ae91e2a6678aa5f5cf21d4b4625fc9f5a40dcecf9c6de90527561019d25c"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/range/source.json",
+              "sha256": "a7c9d838087b0417c3f7d8281be2560b047df3717b50ca612f5ca940a2c11975"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/range/external.txt",
+              "sha256": "c0abebd40e4f16c16d1680cae6aa09854ef3e449db4f97eefcf37705138393ef"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/range/observations.json",
+              "sha256": "840de921374bec499ae14d4378e1efb0ba296471695562b1988fecc0b674df10"
+            }
+          ],
+          "rawMarkdown": {
+            "path": "artifacts/suggestion-node-desktop-20261116/firefox/range/source.md",
+            "sha256": "02bb4282203c1cadfd37ec357d7c6e440844d8b9af39bf8c00c74dcb018e9942",
+            "retainedLocally": true
+          },
+          "localRecordings": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/range/video.webm",
+              "sha256": "023f96f855169589abd55871ee7b688e081a127962689f47bf30e199bbbb8c1f",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/range/video-1.webm",
+              "sha256": "f9f96af8868c2e9617a3733fb0936ec1672aad8aa1a5e245e393a3ac59e9e272",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/range/frames.png",
+              "sha256": "2211b1c9bf6915563f7e248a1abf4a6c815d334df7a3ea949e5c4955205a064f",
+              "retainedLocally": true
+            }
+          ]
+        },
+        {
+          "browser": "firefox",
+          "container": "quoted",
+          "observations": {
+            "focusEntersSuggestion": true,
+            "prosePreserved": true,
+            "keyboardEnterTab": true,
+            "nativeClipboard": true,
+            "savedJSONReopened": true,
+            "errors": []
+          },
+          "artifacts": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/quoted/editor.png",
+              "sha256": "d4caab80b6d9becb890adde726648c476a308fc96a04bedae4a9a99f25660c78"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/quoted/source.json",
+              "sha256": "a4c03e523619c05861e6f5b40a73b1345ca55325c2b05ceba9eae05805b51c6f"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/quoted/external.txt",
+              "sha256": "a868d5e19cc3278730db10777a2a9d1e6259e63efd518033a16876d0dd5406bf"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/quoted/observations.json",
+              "sha256": "840de921374bec499ae14d4378e1efb0ba296471695562b1988fecc0b674df10"
+            }
+          ],
+          "rawMarkdown": {
+            "path": "artifacts/suggestion-node-desktop-20261116/firefox/quoted/source.md",
+            "sha256": "3e231ea9b236885672aefca1a1d350cfcf7dadfda76a227d8b1dca65c7222b41",
+            "retainedLocally": true
+          },
+          "localRecordings": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/quoted/video.webm",
+              "sha256": "655b449a44e6a162c01c64c9699cc5ccbb37b61aba729b7930a85cca60f60136",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/quoted/video-1.webm",
+              "sha256": "d1257959954c48fa397e88312d5c7c5cdfd5f94d4c53e3d1d126905f032e564b",
+              "retainedLocally": true
+            }
+          ]
+        },
+        {
+          "browser": "firefox",
+          "container": "nested-list",
+          "observations": {
+            "focusEntersSuggestion": true,
+            "prosePreserved": true,
+            "keyboardEnterTab": true,
+            "nativeClipboard": true,
+            "savedJSONReopened": true,
+            "errors": []
+          },
+          "artifacts": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/nested-list/editor.png",
+              "sha256": "b15a888cba1cf1dc540837ac76ea5abf8c3f82ba07b59ea08089d048460e58d7"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/nested-list/source.json",
+              "sha256": "d53ef4dfa61e903879a944ce4462281e0ebaeedb4054d62ed99981155ca59b1f"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/nested-list/external.txt",
+              "sha256": "2189fc2ee0e02dab7c86b24896739b0bc8c8a2f7ad3938dced6da1039f576f9c"
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/nested-list/observations.json",
+              "sha256": "840de921374bec499ae14d4378e1efb0ba296471695562b1988fecc0b674df10"
+            }
+          ],
+          "rawMarkdown": {
+            "path": "artifacts/suggestion-node-desktop-20261116/firefox/nested-list/source.md",
+            "sha256": "e54c869da92a9c0a546914bc6e9f51506ceaba97e7934211e64e34ca606a6fbc",
+            "retainedLocally": true
+          },
+          "localRecordings": [
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/nested-list/video.webm",
+              "sha256": "afe205d81657e2858d910a8a292760a73102526b7ec0633441a21725f3629f31",
+              "retainedLocally": true
+            },
+            {
+              "path": "artifacts/suggestion-node-desktop-20261116/firefox/nested-list/video-1.webm",
+              "sha256": "5af829dc333766bb4b10dcd532a3c743090b7233b98884a6df3437df6f63feb4",
+              "retainedLocally": true
+            }
+          ]
+        }
+      ],
+      "path": "artifacts/suggestion-node-desktop-accepted-20261116.log",
+      "sha256": "f8a63da6b410cdd04fb734d37a6f94295d9e5b1f0ff1142aa28a39c210926a7b",
+      "retainedLocally": true
+    },
+    "gates": [
+      {
+        "path": "artifacts/suggestion-node-types-final-20261116.log",
+        "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/suggestion-node-test-api-20261116.log",
+        "sha256": "6db6e86793e352fe883ae7e8a5377c9497286965dfec560b3205d3c6ea71bdbb",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/suggestion-node-test-package-20261116.log",
+        "sha256": "1b06944f83fd821dbec808557dc70e49de905280394a8f570edf2fa27b3d439a",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/suggestion-node-test-budget-20261116.log",
+        "sha256": "dfb4b578f0fa2844764b378820422cea38f035d2da5acf9a9e3dfb606c739562",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/suggestion-node-test-server-runtimes-20261116.log",
+        "sha256": "ae2a68e67c0733f11926e6dd48af1a3429c7e13dde0da9e97ac6277d43af3d96",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/suggestion-node-test-headless-20261116.log",
+        "sha256": "b16f4c875130cea65b4e53ee00cae37fdcba9a90680dd15c148537485f29587d",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/suggestion-node-test-markdown-conformance-20261116.log",
+        "sha256": "2149d074497fb692b8eabea7e18f95bfdd677e321cd34790019fee1f03ac414b",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/suggestion-node-test-performance-20261116.log",
+        "sha256": "fcc21d2d3c84a79f2e4c3b3a47d80601b0d1c63ec87ec420ae88980dd41411c9",
+        "retainedLocally": true
+      }
+    ],
+    "api": {
+      "declarations": 452,
+      "additions": [
+        "MarkdownExportOptions.blockSerializers",
+        "JSONExportOptions.omitTrailingCaret; optional third JSON export argument"
+      ],
+      "changedDeclarationPairs": [
+        "MarkdownExporter",
+        "JSONExporter"
+      ]
+    },
+    "previousRealGitLabRuntime": "artifacts/task-states-integration-20261116.json",
+    "nativeRuntimeRebuiltOrInstalled": false
+  },
+  "sourceDigestFormat": "Working-tree bytes; Git may normalize text line endings.",
+  "source": [],
+  "witnesses": [
+    {
+      "path": "artifacts/suggestion-node-focused-20261116.log",
+      "sha256": "32a54efc076ff15e71971d70773edb8c9f19c9b709d32fbf1cfd8c6c80b81153",
+      "retainedLocally": true
+    },
+    {
+      "path": "artifacts/suggestion-node-desktop-final-20261116.log",
+      "sha256": "b29b720d6450f7f8df980248f9ac0441b811a605504127916f0bbcafd39d0094",
+      "retainedLocally": true
+    }
+  ],
+  "visualReview": "Final Chromium/Firefox range screenshots, Firefox nested-list screenshot and sampled range recording frames inspected. All six final screenshots retained. Initial loading frames are present; this is not continuous full-video review.",
+  "remaining": [
+    "Active host suggestion context, insertion and range controls, stale-target/permission checks.",
+    "Actual MR inline posting, editing, repository application and review batching; build/install/frontend/upstream/restart acceptance for this candidate.",
+    "Broader mobile/IME/selection, published MR diff-widget adapters, and full GitLab product acceptance.",
+    "Generic third-state ingestion, native DOCX checkbox retention and remaining programme roadmap."
+  ],
+  "publication": "none",
+  "limits": "unchanged",
+  "packageVersion": "0.5.0-beta.1"
+}

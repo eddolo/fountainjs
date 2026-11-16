@@ -265,7 +265,7 @@ export class InputManager {
   private focusedCodeRegion(event: Event): HTMLElement | undefined {
     const target = event.target;
     return target instanceof HTMLElement && target.tagName === 'PRE'
-      && target.dataset.fountainNode === 'code_block' && target === this.dom.ownerDocument.activeElement
+      && Boolean(this.editor.state.schema.nodes[target.dataset.fountainNode ?? '']?.spec.code) && target === this.dom.ownerDocument.activeElement
       && !target.contains(this.dom.ownerDocument.getSelection()?.anchorNode ?? null) ? target : undefined;
   }
 
@@ -368,18 +368,22 @@ export class InputManager {
         () => backward ? deleteBackward(this.editor) : deleteForward(this.editor),
       );
       if (handled) event.preventDefault();
+    } else if (event.key === 'Tab' && (() => {
+      const { doc, selection } = this.editor.state;
+      for (let length = selection.path.length; length > 0; length--) {
+        const node = getNodeAtPath(doc, selection.path.slice(0, length));
+        if (node.isBlock && node.type.spec.code) return true;
+      }
+      return false;
+    })()) {
+      event.preventDefault(); insertText(this.editor, '  ');
     } else if (event.key === 'Tab' && (isInsideNode(this.editor, 'table_cell') || isInsideNode(this.editor, 'table_header'))) {
       event.preventDefault();
       moveTableCell(this.editor, event.shiftKey ? 'previous' : 'next');
     } else if (event.key === 'Tab' && (isInsideNode(this.editor, 'list_item') || isInsideNode(this.editor, 'task_item'))) {
       const handled = event.shiftKey ? outdentListItem(this.editor) : indentListItem(this.editor);
       if (handled) event.preventDefault();
-    } else if (event.key === 'Tab' && getNodeAtPath(this.editor.state.doc, this.editor.state.selection.path).type.name === 'text') {
-      const block = this.editor.state.doc.content[this.editor.state.selection.path[0]];
-      if (block?.type.name === 'code_block') {
-        event.preventDefault();
-        insertText(this.editor, '  ');
-      }
+
     }
   };
 

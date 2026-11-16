@@ -7,6 +7,7 @@ export interface GitLabCodeContext {
   readonly text: string;
   readonly language: string;
   readonly frontmatter?: 'header' | 'fence';
+  readonly suggestion?: boolean;
 }
 interface CodeEditingOptions {
   editor: Editor;
@@ -66,10 +67,11 @@ export function getGitLabCodeContext(editor: Editor): GitLabCodeContext | undefi
   try {
     for (let length = origin.length; length > 0; length--) {
       const path = origin.slice(0, length), node = at(doc, path);
-      if (node.type.name !== 'code_block') continue;
+      if (!['code_block', 'gitlab_code_suggestion'].includes(node.type.name)) continue;
       if (!inside(selection.endPath, path) || node.content.some(child => !child.isText)) return undefined;
       return Object.freeze({ path: Object.freeze(path), text: node.textContent,
-        language: String(node.attrs.language), ...(getGitLabFrontmatter(node) ? { frontmatter: getGitLabFrontmatter(node)!.kind } : {}) });
+        language: node.type.name === 'gitlab_code_suggestion' ? 'suggestion' : String(node.attrs.language),
+        ...(node.type.name === 'gitlab_code_suggestion' ? { suggestion: true } : {}), ...(getGitLabFrontmatter(node) ? { frontmatter: getGitLabFrontmatter(node)!.kind } : {}) });
     }
   } catch { return undefined; }
   return undefined;
@@ -143,6 +145,7 @@ export class GitLabCodeEditingSession {
 
   applyLanguage(input: string): boolean {
     const { editor } = this.ready();
+    if (this.initial.suggestion) throw new Error('GITLAB_CODE_SUGGESTION_REQUIRES_RANGE_ADAPTER');
     if (typeof input !== 'string' || !/^[A-Za-z0-9_+.#-]{1,80}$/u.test(input.trim()))
       throw new Error('GITLAB_CODE_INVALID_LANGUAGE');
     const language = input.trim().toLowerCase();

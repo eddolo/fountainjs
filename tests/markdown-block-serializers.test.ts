@@ -1,0 +1,23 @@
+import { expect, it } from 'vitest';
+import { CoreSchemaSpec, Schema, MarkdownExporter } from '../src';
+const schema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
+  custom: { group: 'block', content: 'text*' },
+} });
+const custom = schema.node('custom', {}, [schema.text('source')]);
+const render = new MarkdownExporter();
+const serializers = { custom: () => '```custom\nsource\n```' };
+it('lets existing list/quote writers indent custom syntax and preserves fallback loss reporting', () => {
+  const node = schema.node('doc', {}, [schema.node('blockquote', {}, [schema.node('bullet_list', {}, [schema.node('list_item', {}, [custom])])])]);
+  const output = render.exportWithReport(node, { blockSerializers: serializers });
+  expect(output.losses).toEqual([]);
+  expect(output.markdown).toBe('> - ```custom\n>   source\n>   ```');
+  expect(render.exportWithReport(node, { blockSerializers: { custom: () => undefined } }).losses).toContainEqual(expect.objectContaining({ kind: 'node', type: 'custom' }));
+});
+it('does not execute an inherited serializer', () => {
+  const output = render.exportWithReport(custom, { blockSerializers: Object.create(serializers) });
+  expect(output.markdown).toBe('source');
+  expect(output.losses).toHaveLength(1);
+});
+it('propagates refused conversions rather than returning partially generated content', () => {
+  expect(() => render.exportWithReport(custom, { blockSerializers: { custom: () => { throw new Error('unsupported'); } } })).toThrow('unsupported');
+});
