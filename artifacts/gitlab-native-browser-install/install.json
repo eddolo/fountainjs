@@ -70,7 +70,7 @@
     "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "f4d35a1425d46cc0e4de1caae146f3a035c9c853da8ba08d241c8e12c3cffe10",
     "app/assets/javascripts/content_editor/components/content_editor.vue": "2ca09de1d530297b650ede31cffa491291607420d49cce6954f46b65089ad543",
     "app/assets/javascripts/content_editor/components/fountain_editor_surface.vue": "96fa82a37ea6e51a0d1b48fb4a79613bf7ec9183e645492888660f6690203b2f",
-    "app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue": "6f1efb38815de3ee31aecf7deede2baa1889d6e3dbf3b04502cc21dd884c93d0",
+    "app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue": "394b611d206cd6f7a773f1e0d802f8e3108bd28e24bfaa5055a107a5c4b7c902",
     "app/assets/javascripts/content_editor/components/fountain_context_surface.vue": "0ed961554fcd01f882248b9d7e9d9252d29df992a7f884ae661cc19e29a441b8",
     "app/assets/javascripts/content_editor/components/fountain_link_menu.vue": "9bdf449c4181c9d8ae9c4aecd5bc8a2c6849235a6fdc17d7885b0b3180a712c9",
     "app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js": "da2df3c21cc67b6062c9e8877f04c43567058d8d20655c1ee559593202180889",

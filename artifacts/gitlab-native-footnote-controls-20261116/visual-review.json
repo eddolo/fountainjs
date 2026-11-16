@@ -1,0 +1,43 @@
+{
+  "scope": "Named screenshots and sampled video frames visually inspected; not an uninterrupted review of the full recording.",
+  "observations": [
+    "1440px viewport: a single 49px toolbar row with Note beside document tools.",
+    "1100px viewport: wrapping keeps Note with document tools; attachment and Markdown controls remain together.",
+    "360px viewport: full-width note panel without horizontal overflow; edit and removal rows remain distinct.",
+    "Note and Media panels prioritize editing, align secondary actions and divide destructive actions.",
+    "Sampled frames retain real GitLab author/dialog/reader structure; first two samples show the pre-navigation blank surface."
+  ],
+  "screenshots": [
+    {
+      "path": "artifacts/gitlab-native-footnote-controls-20261116/note-toolbar-1440.png",
+      "sha256": "33d01445cc9ddd260528df387f610dd88d9d815fb4d2eb3666f566261cd04054"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-controls-20261116/note-toolbar-1100.png",
+      "sha256": "5122ba0285309658ac66a7930e5ddd5fbb95b0b0ebb2aca52951ad155dfa1891"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-controls-20261116/note-toolbar-360.png",
+      "sha256": "4607a5b5bfee9a2606c32c5df37363a2005df86e23750e5a3e119413756c1f38"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-controls-20261116/note-actions-1440.png",
+      "sha256": "1573ecb24f43b81b3d5c42f8b0909159545c3e615bcb82303149f17cece2462d"
+    },
+    {
+      "path": "artifacts/gitlab-native-footnote-controls-20261116/footnote-media-controls.png",
+      "sha256": "9ee4d8c2ab1ff641c4cdabc3dbd886fdf565aaf0ef2e12ca571900efcd070172"
+    }
+  ],
+  "frameSheet": {
+    "path": "artifacts/note-controls-frames-20261116.png",
+    "sha256": "f5352beec521563367e0291dd7d63e121f4919a087b4de775de64742b95b85dc",
+    "sampling": "From 40 seconds, one frame per 10 seconds for 90 seconds."
+  },
+  "recording": {
+    "path": "artifacts/gitlab-native-footnote-controls-20261116/recordings/page@174c3e8f2d99f8c4d29f069892336c2b.webm",
+    "sha256": "e7426d3a13a2a2e48c86770b9a68e769be055ffdf3febd7e50da3de187925a21",
+    "durationSeconds": 180.2,
+    "retainedLocally": true
+  }
+}

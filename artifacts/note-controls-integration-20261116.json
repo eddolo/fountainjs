@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-16T15:54:19.324Z",
+  "status": "verified-bounded-candidate",
+  "parentRevision": "5f1ade93a91bd001e94d0793db34daf9dbb361b7",
+  "scope": "Private GitLab contextual Note controls and shared toolbar layout; not a release or full GitLab acceptance.",
+  "source": [
+    {
+      "path": "integrations/gitlab/components/fountain_formatting_toolbar.vue",
+      "sha256": "526b046c45398b657d05bf91a0547ad748ba45b97feac456f27224da0becdab1"
+    },
+    {
+      "path": "scripts/audit-gitlab-native-footnote-controls.mjs",
+      "sha256": "3d03403298c1010e2550aaab40feb7c178bdda030061bcddd755388b6f290c2a"
+    },
+    {
+      "path": "scripts/audit-gitlab-product-baseline.mjs",
+      "sha256": "63ef5450dd8a0775ad371998d58b3e504244e153634bb3294842289e24f255ef"
+    },
+    {
+      "path": "scripts/run-gitlab-native-browser-audit.mjs",
+      "sha256": "dc55e1e6919976987063db1a5957e2c000365cff6bc655545ea42a4abc3f4a37"
+    }
+  ],
+  "verification": {
+    "nativeReport": "artifacts/gitlab-native-footnote-controls-20261116/report.json",
+    "actualChecks": 29,
+    "scopedAccessibilityScans": 9,
+    "browserErrors": 0,
+    "selectedUpstream": "artifacts/note-controls-upstream-summary-20261116.json",
+    "sourceVerification": [
+      "artifacts/gitlab-native-note-controls-patch-verification-20261116.json",
+      "artifacts/gitlab-native-note-controls-install-roundtrip-20261116.json"
+    ],
+    "patchCount": 18,
+    "installedFiles": 28,
+    "frontendBuild": {
+      "status": "passed",
+      "seconds": 71.68,
+      "existingSizeAdvisories": 2,
+      "rawLog": "artifacts/note-controls-rspack-20261116.log",
+      "sha256": "819a4e220f2f185ae112da67f9561892eba63778202e65442da4ba5bb4c60c76",
+      "rawRetainedLocally": true
+    },
+    "runtimeSha256": "458863f9341cf1f0012b0ce19083d73a04641a6a6b49a570fc64c9d73cdb0e66",
+    "footnoteServerOverlay": {
+      "source": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-footnote-server/footnote_filter.rb",
+      "readOnly": true,
+      "sha256": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+      "originalSha256": "3c3e2469ca0ce9191954f725548fa0bf3599ca9ccc8980b3fbdca46e14e1dc74",
+      "scope": "Read-only task server overlay; repeat-reference and generated-backlink repair, not an unmodified GitLab baseline"
+    },
+    "previousEngineEvidence": {
+      "revision": "5f1ade93",
+      "path": "artifacts/footnote-cut-integration-20261116.json",
+      "currentRootSuiteRerun": false,
+      "engineChanged": false
+    }
+  },
+  "auditCorrection": {
+    "firstRun": "An immediate post-Cancel focus assertion failed during modal closing. The audit now waits for the dialog to hide and polls the same focus expectation. No product focus workaround or expectation reduction.",
+    "witness": "artifacts/gitlab-note-controls-transition-witness-20261116/report.json",
+    "witnessSha256": "d5d7fe4237c88ff4fd6e26acf136d710738b2b132977a9ee6aaed0be3a0728b8"
+  },
+  "visualReview": "artifacts/gitlab-native-footnote-controls-20261116/visual-review.json",
+  "operationalState": {
+    "auditContainer": "exited",
+    "sourceReinstalled": true,
+    "publication": "none",
+    "publicAPIChanged": false,
+    "packageVersionChanged": false,
+    "acceptanceLimitsChanged": false
+  },
+  "remaining": [
+    "Full actual GitLab MR/wiki/provider/permissions/reconnect/mobile/IME workflow acceptance",
+    "Physical Safari and installed WebKit OS clipboard transport",
+    "Broader cut-selection/collaboration/role matrices",
+    "Earlier intermittent host-image 403 remains open",
+    "Compiled deployment rollback and programme roadmap"
+  ]
+}

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Keep the private GitLab Note control with related document tools. Stack note
+  actions, separate removal, and preserve keyboard focus and mobile docking.
+
 - Preserve shared footnote identity when moving a successful cut within one
   editor. The first matching paste reuses unchanged owned bodies; changed
   dependencies, ordinary copies and later pastes remain independent. Restore

@@ -311,7 +311,7 @@ export default {
       class="gl-w-auto"
       @change="changeStyle"
     />
-    <div v-for="group in controlGroups" :key="group.label" class="gl-inline-flex gl-shrink-0 gl-items-center gl-gap-1 gl-border-l gl-pl-2" role="group" :aria-label="group.label">
+    <div v-for="group in controlGroups" :key="group.label" class="fountain-tool-group gl-inline-flex gl-flex-wrap gl-shrink-0 gl-items-center gl-gap-1 gl-border-l gl-pl-2 gl-max-w-full" role="group" :aria-label="group.label">
       <gl-button
       v-for="control in group.controls"
       :key="control.key"
@@ -326,6 +326,20 @@ export default {
       size="small"
       @click="execute(control)"
       />
+      <fountain-context-surface v-if="group.keys.includes('footnote') && footnoteContext" :editor="editor" :active="true" :anchor-path="footnoteContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Footnote actions')" :trigger-text="s__('ContentEditor|Note')" :suspended="renameOpen || footnoteOpen" @reveal="$emit('focus')">
+        <div class="gl-w-full" role="group" :aria-label="s__('ContentEditor|Footnote controls')">
+          <h2 class="gl-heading-5 gl-mb-2 gl-break-words">{{ s__('ContentEditor|Footnote') }} {{ footnoteContext.label }}</h2>
+          <p class="gl-text-subtle">{{ footnoteDescription }}</p>
+          <div class="gl-flex gl-flex-col gl-items-stretch gl-gap-2">
+            <gl-button :disabled="disabled" variant="confirm" category="primary" icon="pencil" @click="footnoteAction('edit')">{{ s__('ContentEditor|Edit note text') }}</gl-button>
+            <gl-button :disabled="disabled" category="tertiary" class="gl-justify-start" button-text-classes="gl-w-full gl-text-left" @click="openRename">{{ s__('ContentEditor|Rename label') }}</gl-button>
+          </div>
+          <div class="gl-mt-4 gl-border-t gl-pt-3 gl-flex gl-flex-col gl-items-stretch gl-gap-2">
+            <gl-button v-if="footnoteContext.referencePath" :disabled="disabled" category="tertiary" variant="danger" class="gl-justify-start" button-text-classes="gl-w-full gl-text-left" @click="footnoteAction('reference')">{{ s__('ContentEditor|Remove this reference') }}</gl-button>
+            <gl-button :disabled="disabled" category="tertiary" variant="danger" icon="remove" class="gl-justify-start" button-text-classes="gl-w-full gl-text-left" @click="footnoteAction('note')">{{ s__('ContentEditor|Delete note and references') }}</gl-button>
+          </div>
+        </div>
+      </fountain-context-surface>
     </div>
     <slot name="context-actions"></slot>
     <div class="fountain-clipboard-tools gl-inline-flex gl-flex-wrap gl-shrink-0 gl-items-center gl-gap-1 gl-border-l gl-pl-2 gl-max-w-full" role="group" :aria-label="s__('ContentEditor|Clipboard, files and media')">
@@ -353,16 +367,6 @@ export default {
     <gl-button :disabled="disabled" category="tertiary" size="small" icon="markdown-mark" :aria-label="s__('ContentEditor|Paste Markdown')" :title="s__('ContentEditor|Paste Markdown')" @click="pasteMarkdown" />
     <slot name="clipboard-actions"></slot>
     </div>
-    <fountain-context-surface v-if="footnoteContext" :editor="editor" :active="true" :anchor-path="footnoteContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Footnote actions')" :suspended="renameOpen || footnoteOpen" @reveal="$emit('focus')">
-      <div role="group" :aria-label="s__('ContentEditor|Footnote controls')">
-        <h2 class="gl-heading-5 gl-mb-2 gl-break-words">{{ s__('ContentEditor|Footnote') }} {{ footnoteContext.label }}</h2>
-        <p class="gl-text-subtle">{{ footnoteDescription }}</p>
-        <gl-button :disabled="disabled" variant="confirm" category="primary" icon="pencil" @click="footnoteAction('edit')">{{ s__('ContentEditor|Edit note text') }}</gl-button>
-        <gl-button :disabled="disabled" category="tertiary" @click="openRename">{{ s__('ContentEditor|Rename label') }}</gl-button>
-        <gl-button v-if="footnoteContext.referencePath" :disabled="disabled" category="tertiary" @click="footnoteAction('reference')">{{ s__('ContentEditor|Remove this reference') }}</gl-button>
-        <div class="gl-mt-4 gl-border-t gl-pt-3"><gl-button :disabled="disabled" category="tertiary" variant="danger" icon="remove" @click="footnoteAction('note')">{{ s__('ContentEditor|Delete note and references') }}</gl-button></div>
-      </div>
-    </fountain-context-surface>
     <gl-modal v-model="footnoteOpen" :modal-id="footnoteModalId" :title="s__('ContentEditor|Insert footnote')" :action-primary="footnotePrimary" :action-cancel="footnoteCancel" :return-focus="footnoteReturnFocus" @primary="applyFootnote" @hide="cancelFootnote">
       <gl-alert v-if="footnoteFailed" variant="danger" :dismissible="false">{{ s__('ContentEditor|The footnote could not be inserted. Your draft is retained. Cancel and reopen to retry at the selected position.') }}</gl-alert>
       <gl-form @submit.stop.prevent="applyFootnote">
@@ -386,8 +390,9 @@ export default {
 </template>
 
 <style scoped>
-/* Keep floating media with clipboard tools; let the docked mobile panel reflow. */
-.fountain-clipboard-tools:has([data-menu-mode='docked']) {
+/* Keep contextual triggers with their tools; let mobile panels use a full row. */
+.fountain-clipboard-tools:has([data-menu-mode='docked']),
+.fountain-tool-group:has([data-menu-mode='docked']) {
   width: 100%;
   border: 0;
   padding: 0;

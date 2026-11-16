@@ -2,7 +2,17 @@
 
 Updated 2026-11-16.
 
-Latest checkpoint (2026-11-16): successful same-editor cuts now reuse unchanged
+Latest UI checkpoint (2026-11-16): the contextual Note button now stays with
+Document tools. Note actions use full-width rows, with removal below a divider;
+mobile controls dock without horizontal overflow. The actual GitLab audit passes
+29 checks through Save/reopen/restart, keyboard cancellation/focus at 1440/1100/
+360px, and nine scoped accessibility scans. Reviewed screenshots and sampled
+recording frames confirm the layout. Selected upstream tests pass 540 cases
+(one inherited skip), the frontend builds, and 18-patch/28-file source rollback
+passes. The engine/API/package are unchanged; this is not full product acceptance
+or publication. [Control-layout evidence](../artifacts/note-controls-integration-20261116.json).
+
+Previous engine checkpoint (2026-11-16): successful same-editor cuts now reuse unchanged
 owned footnotes on the first paste. Ordinary/repeated copies stay independent;
 changed dependency graphs retain both versions. Destination selections cannot
 silently remove owned definitions, and cut/paste undo separately. GitLab keeps
@@ -18,9 +28,8 @@ optional move/preparation context and remains at 452 declaration files.
 No version, publication or parity-row promotion changes.
 
 Open: physical Safari and installed WebKit clipboard transport, broader
-selection/role/collaboration matrices, complete GitLab product acceptance,
-and the contextual Footnote actions button still occupying a separate row
-in the recorded label-editing flow. The latter is a remaining UI cleanup.
+selection/role/collaboration matrices and complete GitLab product acceptance.
+The separate Footnote actions row is resolved by the control-layout checkpoint above.
 [Cut/move evidence](../artifacts/footnote-cut-integration-20261116.json).
 
 Previous cell-clipboard checkpoint: cell selections now use the same owned-document clipboard

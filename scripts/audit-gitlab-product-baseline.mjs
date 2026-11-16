@@ -17,6 +17,7 @@ import { auditNativeQuickActions, assertSavedNativeQuickActions } from './audit-
 import { assertSavedAutocomplete } from './audit-gitlab-native-autocomplete.mjs';
 import { auditNativeFootnotes, assertSavedNativeFootnotes } from './audit-gitlab-native-footnotes.mjs';
 import { auditNativeFootnoteRenaming } from './audit-gitlab-native-footnote-renaming.mjs';
+import { auditNativeFootnoteControls } from './audit-gitlab-native-footnote-controls.mjs';
 import { auditNativeFootnoteClipboard, assertSavedNativeFootnoteClipboard } from './audit-gitlab-native-footnote-clipboard.mjs';
 import { auditNativeTableClipboard, assertSavedNativeTableClipboard } from './audit-gitlab-native-table-clipboard.mjs';
 import { auditNativeControlsLayout } from './audit-gitlab-native-controls-layout.mjs';
@@ -31,7 +32,8 @@ const nativeCode = process.argv.includes('--native-code') || nativeContextMenus;
 const nativeFrontmatter = process.argv.includes('--native-frontmatter');
 const nativeAutocomplete = process.argv.includes('--native-autocomplete');
 const nativeTableClipboard = process.argv.includes('--native-table-clipboard');
-const nativeFootnoteCut = process.argv.includes('--native-footnote-cut');
+const nativeFootnoteControls = process.argv.includes('--native-footnote-controls');
+const nativeFootnoteCut = process.argv.includes('--native-footnote-cut') || nativeFootnoteControls;
 const nativeFootnoteClipboard = process.argv.includes('--native-footnote-clipboard') || nativeFootnoteCut;
 const nativeFootnoteBoundary = process.argv.includes('--native-footnote-boundary') || nativeFootnoteClipboard;
 const assertSavedFootnotes = nativeFootnoteClipboard ? assertSavedNativeFootnoteClipboard : assertSavedNativeFootnotes;
@@ -58,6 +60,7 @@ const nativeBrowser = process.argv.includes('--native-browser') || nativeInserti
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
   nativeTableClipboard ? 'artifacts/gitlab-native-table-clipboard-20261115/' :
+  nativeFootnoteControls ? 'artifacts/gitlab-native-footnote-controls-20261116/' :
   nativeFootnoteCut ? 'artifacts/gitlab-native-footnote-cut-20261116/' :
   nativeFootnoteClipboard ? 'artifacts/gitlab-native-footnote-clipboard-20261115/' :
   nativeFootnoteBoundary ? 'artifacts/gitlab-native-footnote-boundary-20261115/' :
@@ -499,6 +502,7 @@ try {
       );
     }
     if (nativeFootnoteEditing) await auditNativeFootnotes({ page, editor, toolbar, output, report });
+    if (nativeFootnoteControls) await auditNativeFootnoteControls({ page, editor, toolbar, output, report });
     if (nativeFootnoteRenaming) await auditNativeFootnoteRenaming({ page, editor, toolbar, output, report });
     if (nativeFootnoteClipboard) await auditNativeFootnoteClipboard({ page, editor, toolbar, output, report, move: nativeFootnoteCut });
     if (nativeTableClipboard) {
