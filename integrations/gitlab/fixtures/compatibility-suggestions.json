@@ -1,0 +1,55 @@
+{
+  "formatVersion": 2,
+  "workflow": "suggestion-preservation-and-applied-prose",
+  "title": "Paired suggestion compatibility",
+  "marker": "Compatibility review",
+  "appendLine": "// reviewed by the compatibility workflow\n",
+  "proseSuffix": " — confirmed",
+  "cases": [
+    {
+      "id": "ordinary-immediate",
+      "filePath": "paired-suggestion.js",
+      "source": "const key = \"old\";\nkeep();\nlast();\n",
+      "range": {
+        "start": 1,
+        "end": 1
+      },
+      "handoffDelayMs": 0,
+      "scope": "handoff"
+    },
+    {
+      "id": "ordinary-settled",
+      "filePath": "paired-suggestion.js",
+      "source": "const key = \"old\";\nkeep();\nlast();\n",
+      "range": {
+        "start": 1,
+        "end": 1
+      },
+      "handoffDelayMs": 1500,
+      "scope": "full-review"
+    },
+    {
+      "id": "transport-collision-immediate",
+      "filePath": "paired-suggestion.js",
+      "source": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+      "range": {
+        "start": 1,
+        "end": 3
+      },
+      "handoffDelayMs": 0,
+      "scope": "handoff"
+    },
+    {
+      "id": "transport-collision-settled",
+      "filePath": "paired-suggestion.js",
+      "source": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+      "range": {
+        "start": 1,
+        "end": 3
+      },
+      "handoffDelayMs": 1500,
+      "scope": "full-review"
+    }
+  ],
+  "sourceObservationDelayMs": 1500
+}

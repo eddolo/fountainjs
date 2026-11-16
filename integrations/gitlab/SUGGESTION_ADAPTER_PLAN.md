@@ -124,7 +124,8 @@ change after restart and is recorded separately from persisted fields. The origi
 intended-blank-line application failure is retained; the new UI makes its deletion
 effect explicit and does not claim meaningful blank-line application support.
 No public API/capacity limit/version/publication or overall parity row changes.
-Paired original-editor UI classifications are still pending.
+At that earlier checkpoint, paired UI classifications were still pending; the
+subsequent matched results supersede that status for their scoped workflows.
 
 Pinned server evidence:
 
@@ -144,8 +145,11 @@ host adapter/repair needs explicit identity/history rules and real controls for
 changed, duplicated, reordered and outdated proposals. This remains open.
 
 [Current scoped receipt](../../artifacts/suggestion-effects-integration-20261116.json).
-[Paired original-editor comparison plan](COMPATIBILITY_SUITE_PLAN.md): no parity,
-improvement, regression or shared-limitation classification before both UI runs.
+[First matched results](COMPATIBILITY_RESULTS.md) now classify actual original/
+Fountain handoff, source, application and applied-prose outcomes. The server
+Applied-history requirement is a verified shared limitation in the tested UI
+pair. The broader [comparison plan](COMPATIBILITY_SUITE_PLAN.md) remains open;
+no classification is inferred for workflows not yet run on both editors.
 
 ## Required next acceptance
 

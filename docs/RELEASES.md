@@ -26,6 +26,23 @@ do not mark an unfinished beta stable merely to change the badge.
 
 This reconciliation changes no release, tag, npm package or website deployment.
 
+## Matched GitLab regression harness — 2026-11-16
+
+The unpublished candidate now has real original-editor/Fountain matched evidence
+on GitLab CE 19.5.3. Four fixed timing/source scenarios produce 20 parity, 12
+improvement, zero regression and four shared-limitation invariant outcomes.
+Rapid source handoff and literal backslash-n/U+E000 preservation improve in this
+corpus; normal settled editing/application has parity. Applied-history loss is
+shared and remains an unmet feature requirement. Outcome counts are correlated
+assertions, not independent feature wins or broad editor superiority.
+
+Collectors preserve original output, exact source/commits and immutable visual
+receipts. Comparison refuses mismatched/missing evidence and separates its
+regression gate from absolute feature acceptance. 1377 scoped integration tests
+and strict types pass. No editor-runtime, public API/capacity limit, version,
+publication or website marketing change is introduced by the harness.
+[Results and reproducible commands](../integrations/gitlab/COMPATIBILITY_RESULTS.md).
+
 ## Native GitLab deletion-effect safeguard — 2026-11-16
 
 The unpublished integration candidate now labels deletion proposals and requires

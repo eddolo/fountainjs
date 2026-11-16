@@ -2,11 +2,17 @@
 
 Updated 2026-11-16.
 
-Paired compatibility suite requested (2026-11-16): compare equivalent workflows
-in the original GitLab editor and Fountain on the same pinned backend and fixture
-content. Classify per invariant as parity, improvement, regression or shared
-limitation only after both real UI runs exist. Existing native/API-only evidence
-is not promoted to a completed pair. [Execution and evidence plan](../integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md).
+First paired GitLab compatibility run completed (2026-11-16): matching stock
+backend/browser/fixtures/instruments verify 20 parity, 12 improvement, zero
+regression and four shared-limitation outcomes across 36 checks in four scenarios.
+The improvements concern rapid source handoff and lossy diff-source prefill;
+multiple checks exercise the same underlying issues. Both actual editors lose
+Applied history on prose-only note editing, so absolute feature acceptance remains
+false. 1377 scoped integration tests / 54 files and strict types pass. The previous
+555 upstream tests remain the unchanged runtime baseline. No global parity,
+latest-Tiptap, browser/mobile or release promotion is claimed.
+[Matched results and reproduction](../integrations/gitlab/COMPATIBILITY_RESULTS.md).
+[Wider suite plan](../integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md).
 
 Publication follow-up (2026-11-16): GitHub's stable Latest badge points to 0.3.0;
 the newer 0.4.0-beta.2 GitHub prerelease and npm package already exist. The local
@@ -39,7 +45,8 @@ change after restart and is recorded separately from persisted fields. The origi
 intended-blank-line application failure is retained; the new UI makes its deletion
 effect explicit and does not claim meaningful blank-line application support.
 No public API/capacity limit/version/publication or overall parity row changes.
-Paired original-editor UI classifications are still pending.
+At that earlier checkpoint, paired UI classifications were still pending; the
+subsequent matched results supersede that status for their scoped workflows.
 
 [Deletion-effect evidence](../artifacts/suggestion-effects-integration-20261116.json).
 

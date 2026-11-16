@@ -1,0 +1,186 @@
+{
+  "formatVersion": 1,
+  "runId": "suggestions-20261116",
+  "attempt": 1,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "fixtureHash": "6e46c69e80553f3ca058fac142bcfae25e90408e6b5beb8db4f2aaf013a92df3",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "suggestion-preservation-and-applied-prose",
+    "title": "Paired suggestion compatibility",
+    "marker": "Compatibility review",
+    "appendLine": "// reviewed by the compatibility workflow\n",
+    "proseSuffix": " — confirmed",
+    "cases": [
+      {
+        "id": "ordinary",
+        "filePath": "paired-suggestion.js",
+        "source": "const key = \"old\";\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        }
+      },
+      {
+        "id": "transport-collision",
+        "filePath": "paired-suggestion.js",
+        "source": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        }
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "ordinary",
+      "status": "incomplete",
+      "stage": "inspect-source",
+      "input": {
+        "id": "ordinary",
+        "filePath": "paired-suggestion.js",
+        "source": "const key = \"old\";\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        }
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines."
+      ],
+      "setup": {
+        "branch": "fountain-compat-suggestions-20261116-original-ordinary",
+        "seedCommit": "fb669634989fc507ae3ae8eadb8dfe848c2da355",
+        "source": "Y29uc3Qga2V5ID0gIm9sZCI7CmtlZXAoKTsKbGFzdCgpOwo=",
+        "mergeRequest": {
+          "iid": 43,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/43"
+        }
+      },
+      "editorProof": {
+        "className": "tiptap ProseMirror rte-text-box",
+        "native": false
+      },
+      "prefillDOM": "const key = \"old\";",
+      "sourceModeBeforeEdit": "",
+      "error": "Error: Unexpected suggestion source carrier"
+    },
+    {
+      "id": "transport-collision",
+      "status": "incomplete",
+      "stage": "inspect-source",
+      "input": {
+        "id": "transport-collision",
+        "filePath": "paired-suggestion.js",
+        "source": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        }
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines."
+      ],
+      "setup": {
+        "branch": "fountain-compat-suggestions-20261116-original-transport-collision",
+        "seedCommit": "434bcb1e527357c69a881ede2a07d6f0d753f929",
+        "source": "Y29uc3QgdmFsdWUgPSAiXG4iOwpjb25zdCB2YWx1ZSA9ICLugIAiOwpjb25zdCBrZXkgPSAiQeKAi0IiOyAgCmtlZXAoKTsK",
+        "mergeRequest": {
+          "iid": 44,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/44"
+        }
+      },
+      "editorProof": {
+        "className": "tiptap ProseMirror rte-text-box",
+        "native": false
+      },
+      "prefillDOM": "const value = \"\";\nconst value = \"\";\nconst key = \"A​B\";  ",
+      "sourceModeBeforeEdit": "",
+      "error": "Error: Unexpected suggestion source carrier"
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "3561d13df0ee2060e6493d23882c9d74da1551275709471f33fc6613d4403130",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "976312b186a70be8c10ad9a3c08b09a8b8dbfa065232cf07b1697c6b747b0f0d"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "008e6f1d990965db5abffb6739a39f06c463de8e681c761315e84f836db4b802  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.json",
+    "36ebdd7dddd055eb892ff6ef5538947e463db218d3051c33cd04d304101030b9  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": false
+}

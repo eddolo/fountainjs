@@ -1,8 +1,10 @@
 # GitLab paired compatibility and regression suite
 
-Status: requested 2026-11-16. Planned next comparison layer; paired original-editor
-UI results are not yet available. Existing native journeys and API controls are
-single-sided evidence, not completed comparisons.
+Status: first matched original-editor/Fountain source-handoff and application/
+prose-edit runs completed 2026-11-16. Four scenarios yield 20 parity, 12 improvement,
+zero regression and four shared-limitation outcomes across 36 invariants. Absolute
+feature acceptance remains false. [Results and reproduction](COMPATIBILITY_RESULTS.md).
+Earlier native journeys/API controls remain separate single-sided evidence.
 
 ## Comparison contract
 
@@ -120,7 +122,15 @@ and incomplete required pairs visible. Preserve existing engine/security/source/
 performance gates independently. Define any known-limitation policy explicitly,
 without converting an unmet feature requirement into a pass.
 
-Next implementation: verify a stock-editor deployment from the packaged image,
-extract shared suggestion workflow intent from the current native audit, add an
-original-editor driver, run the first matched pairs, then produce the first
-classified report. No broad superiority claim or release promotion precedes it.
+Implemented: guarded stock/native deployment selection, shared fixture corpus,
+real editor-specific drivers, immutable original/candidate receipts, strict
+per-invariant comparison and separate regression/feature gates. The original
+handoff discovery is retained; predefined immediate and settled profiles run
+identically on both sides. The comparator refuses environment/input/instrument
+mismatches, missing editor proof and unobserved outcomes.
+
+Next: extend matched workflows to posted source/range editing, deletion/whitespace
+warning/confirmation, clipboard/tables/tasks/media and then roles/concurrency,
+additional browsers/mobile and matched restart. Keep the shared Applied-history
+failure open. Add repeated profiles before making frequency/performance claims.
+No broad superiority claim or release promotion follows from this initial corpus.

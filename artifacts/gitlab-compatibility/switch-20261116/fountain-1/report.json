@@ -1,0 +1,885 @@
+{
+  "formatVersion": 1,
+  "runId": "switch-20261116",
+  "attempt": 1,
+  "side": "fountain",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "fixtureHash": "b0b84f19af37f1c5bd56e709df94aa15941604855439cbb5a81fcb8dbe382174",
+  "fixture": {
+    "formatVersion": 2,
+    "workflow": "suggestion-preservation-and-applied-prose",
+    "title": "Paired suggestion compatibility",
+    "marker": "Compatibility review",
+    "appendLine": "// reviewed by the compatibility workflow\n",
+    "proseSuffix": " — confirmed",
+    "cases": [
+      {
+        "id": "ordinary-immediate",
+        "filePath": "paired-suggestion.js",
+        "source": "const key = \"old\";\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "handoffDelayMs": 0,
+        "scope": "handoff"
+      },
+      {
+        "id": "ordinary-settled",
+        "filePath": "paired-suggestion.js",
+        "source": "const key = \"old\";\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "handoffDelayMs": 1500,
+        "scope": "full-review"
+      },
+      {
+        "id": "transport-collision-immediate",
+        "filePath": "paired-suggestion.js",
+        "source": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        },
+        "handoffDelayMs": 0,
+        "scope": "handoff"
+      },
+      {
+        "id": "transport-collision-settled",
+        "filePath": "paired-suggestion.js",
+        "source": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        },
+        "handoffDelayMs": 1500,
+        "scope": "full-review"
+      }
+    ],
+    "sourceObservationDelayMs": 1500
+  },
+  "observations": [
+    {
+      "id": "ordinary-immediate",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "ordinary-immediate",
+        "filePath": "paired-suggestion.js",
+        "source": "const key = \"old\";\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "handoffDelayMs": 0,
+        "scope": "handoff"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines."
+      ],
+      "setup": {
+        "branch": "fountain-compat-switch-20261116-a1-fountain-ordinary-immediate",
+        "seedCommit": "afbd5fa87cafb93865cc29a465852ab6a025b75c",
+        "source": "Y29uc3Qga2V5ID0gIm9sZCI7CmtlZXAoKTsKbGFzdCgpOwo=",
+        "mergeRequest": {
+          "iid": 49,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/49"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "const key = \"old\";\n",
+      "handoffTiming": {
+        "declaredDelayMs": 0,
+        "observedVisibleToSwitchMs": 0.07986300002085045
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\nconst key = \"old\";\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\nconst key = \"old\";\n```"
+    },
+    {
+      "id": "ordinary-settled",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "ordinary-settled",
+        "filePath": "paired-suggestion.js",
+        "source": "const key = \"old\";\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "handoffDelayMs": 1500,
+        "scope": "full-review"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Switch to source; append review line without rewriting the captured replacement; add prose marker.",
+        "Normal GitLab Apply suggestion creates a real source commit.",
+        "Reopen the applied note in rich mode; switch to source and change only prose; save."
+      ],
+      "setup": {
+        "branch": "fountain-compat-switch-20261116-a1-fountain-ordinary-settled",
+        "seedCommit": "d032968920dff9ff69a31779412e76206bc5b8f5",
+        "source": "Y29uc3Qga2V5ID0gIm9sZCI7CmtlZXAoKTsKbGFzdCgpOwo=",
+        "mergeRequest": {
+          "iid": 50,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/50"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "const key = \"old\";\n",
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1500.426427999977
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\nconst key = \"old\";\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\nconst key = \"old\";\n```",
+      "saved": {
+        "id": 415,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\nconst key = \"old\";\n// reviewed by the compatibility workflow\n```\n\nCompatibility review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:08:01.440Z",
+        "updated_at": "2026-11-16T23:08:01.440Z",
+        "system": false,
+        "noteable_id": 110,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d032968920dff9ff69a31779412e76206bc5b8f5",
+          "old_path": "paired-suggestion.js",
+          "new_path": "paired-suggestion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 75,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": true,
+            "applied": false,
+            "from_content": "const key = \"old\";\n",
+            "to_content": "const key = \"old\";\n// reviewed by the compatibility workflow\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 50,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-suggestion.js",
+        "file_path": "paired-suggestion.js",
+        "size": 35,
+        "encoding": "base64",
+        "content_sha256": "3a770f7a167e0c3841552deece5f81705a78b3d2b58f4cc15b9152855b4ecec7",
+        "ref": "fountain-compat-switch-20261116-a1-fountain-ordinary-settled",
+        "blob_id": "9b5e85e5aea46eafbbc56e1b9193215c079bb38d",
+        "commit_id": "d032968920dff9ff69a31779412e76206bc5b8f5",
+        "last_commit_id": "d032968920dff9ff69a31779412e76206bc5b8f5",
+        "execute_filemode": false,
+        "content": "Y29uc3Qga2V5ID0gIm9sZCI7CmtlZXAoKTsKbGFzdCgpOwo="
+      },
+      "beforeApplyHead": "d032968920dff9ff69a31779412e76206bc5b8f5",
+      "appliedFile": {
+        "file_name": "paired-suggestion.js",
+        "file_path": "paired-suggestion.js",
+        "size": 77,
+        "encoding": "base64",
+        "content_sha256": "1363bc69d1299be8f2f204fdb8f808222f9e20b94810ec1f9a1200442bc3af5a",
+        "ref": "fountain-compat-switch-20261116-a1-fountain-ordinary-settled",
+        "blob_id": "0ce53feb790e6534c3fa31195e410fb3e4534492",
+        "commit_id": "ff9ae7b6dd88186f8b2ac9cf2e0deb023b43feb5",
+        "last_commit_id": "ff9ae7b6dd88186f8b2ac9cf2e0deb023b43feb5",
+        "execute_filemode": false,
+        "content": "Y29uc3Qga2V5ID0gIm9sZCI7Ci8vIHJldmlld2VkIGJ5IHRoZSBjb21wYXRpYmlsaXR5IHdvcmtmbG93CmtlZXAoKTsKbGFzdCgpOwo="
+      },
+      "appliedCommit": {
+        "id": "ff9ae7b6dd88186f8b2ac9cf2e0deb023b43feb5",
+        "short_id": "ff9ae7b6",
+        "created_at": "2026-11-16T23:08:04.000+00:00",
+        "parent_ids": [
+          "d032968920dff9ff69a31779412e76206bc5b8f5"
+        ],
+        "title": "Apply paired editor suggestion",
+        "message": "Apply paired editor suggestion",
+        "author_name": "Administrator",
+        "author_email": "gitlab_admin_5c5720@example.com",
+        "authored_date": "2026-11-16T23:08:04.000+00:00",
+        "committer_name": "Administrator",
+        "committer_email": "gitlab_admin_5c5720@example.com",
+        "committed_date": "2026-11-16T23:08:04.000+00:00",
+        "trailers": {},
+        "extended_trailers": {},
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/commit/ff9ae7b6dd88186f8b2ac9cf2e0deb023b43feb5",
+        "stats": {
+          "additions": 1,
+          "deletions": 0,
+          "total": 1
+        },
+        "status": null,
+        "project_id": 1,
+        "last_pipeline": null
+      },
+      "appliedNote": {
+        "id": 415,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\nconst key = \"old\";\n// reviewed by the compatibility workflow\n```\n\nCompatibility review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:08:01.440Z",
+        "updated_at": "2026-11-16T23:08:05.049Z",
+        "system": false,
+        "noteable_id": 110,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d032968920dff9ff69a31779412e76206bc5b8f5",
+          "old_path": "paired-suggestion.js",
+          "new_path": "paired-suggestion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-16T23:08:05.049Z",
+        "suggestions": [
+          {
+            "id": 75,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": false,
+            "applied": true,
+            "from_content": "const key = \"old\";\n",
+            "to_content": "const key = \"old\";\n// reviewed by the compatibility workflow\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 50,
+        "commands_changes": {}
+      },
+      "reopenedDOM": "const key = \"old\";\n// reviewed by the compatibility workflow\n",
+      "sourceBeforeProseEdit": "```suggestion:-0+0\nconst key = \"old\";\n// reviewed by the compatibility workflow\n```\n\nCompatibility review",
+      "afterProseNote": {
+        "id": 415,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\nconst key = \"old\";\n// reviewed by the compatibility workflow\n```\n\nCompatibility review — confirmed",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:08:01.440Z",
+        "updated_at": "2026-11-16T23:08:11.811Z",
+        "system": false,
+        "noteable_id": 110,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "ff9ae7b6dd88186f8b2ac9cf2e0deb023b43feb5",
+          "old_path": "paired-suggestion.js",
+          "new_path": "paired-suggestion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-16T23:08:05.049Z",
+        "suggestions": [
+          {
+            "id": 76,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": true,
+            "applied": false,
+            "from_content": "const key = \"old\";\n",
+            "to_content": "const key = \"old\";\n// reviewed by the compatibility workflow\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 50,
+        "commands_changes": {}
+      },
+      "afterProseFile": {
+        "file_name": "paired-suggestion.js",
+        "file_path": "paired-suggestion.js",
+        "size": 77,
+        "encoding": "base64",
+        "content_sha256": "1363bc69d1299be8f2f204fdb8f808222f9e20b94810ec1f9a1200442bc3af5a",
+        "ref": "fountain-compat-switch-20261116-a1-fountain-ordinary-settled",
+        "blob_id": "0ce53feb790e6534c3fa31195e410fb3e4534492",
+        "commit_id": "ff9ae7b6dd88186f8b2ac9cf2e0deb023b43feb5",
+        "last_commit_id": "ff9ae7b6dd88186f8b2ac9cf2e0deb023b43feb5",
+        "execute_filemode": false,
+        "content": "Y29uc3Qga2V5ID0gIm9sZCI7Ci8vIHJldmlld2VkIGJ5IHRoZSBjb21wYXRpYmlsaXR5IHdvcmtmbG93CmtlZXAoKTsKbGFzdCgpOwo="
+      },
+      "afterProseHead": "ff9ae7b6dd88186f8b2ac9cf2e0deb023b43feb5",
+      "afterProseAppliedBadge": false
+    },
+    {
+      "id": "transport-collision-immediate",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "transport-collision-immediate",
+        "filePath": "paired-suggestion.js",
+        "source": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        },
+        "handoffDelayMs": 0,
+        "scope": "handoff"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines."
+      ],
+      "setup": {
+        "branch": "fountain-compat-switch-20261116-a1-fountain-transport-collision-immediate",
+        "seedCommit": "fe5a803b232bd88ae978de0034807e811ca38c11",
+        "source": "Y29uc3QgdmFsdWUgPSAiXG4iOwpjb25zdCB2YWx1ZSA9ICLugIAiOwpjb25zdCBrZXkgPSAiQeKAi0IiOyAgCmtlZXAoKTsK",
+        "mergeRequest": {
+          "iid": 51,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/51"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "handoffTiming": {
+        "declaredDelayMs": 0,
+        "observedVisibleToSwitchMs": 0.07454599998891354
+      },
+      "sourceAtFirstVisible": "```suggestion:-2+0\nconst value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-2+0\nconst value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n```"
+    },
+    {
+      "id": "transport-collision-settled",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "transport-collision-settled",
+        "filePath": "paired-suggestion.js",
+        "source": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        },
+        "handoffDelayMs": 1500,
+        "scope": "full-review"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Switch to source; append review line without rewriting the captured replacement; add prose marker.",
+        "Normal GitLab Apply suggestion creates a real source commit.",
+        "Reopen the applied note in rich mode; switch to source and change only prose; save."
+      ],
+      "setup": {
+        "branch": "fountain-compat-switch-20261116-a1-fountain-transport-collision-settled",
+        "seedCommit": "ae1f0797fbac0cd4b2791dd68638da497280b795",
+        "source": "Y29uc3QgdmFsdWUgPSAiXG4iOwpjb25zdCB2YWx1ZSA9ICLugIAiOwpjb25zdCBrZXkgPSAiQeKAi0IiOyAgCmtlZXAoKTsK",
+        "mergeRequest": {
+          "iid": 52,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/52"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1501.8504559999856
+      },
+      "sourceAtFirstVisible": "```suggestion:-2+0\nconst value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-2+0\nconst value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n```",
+      "saved": {
+        "id": 419,
+        "type": "DiffNote",
+        "body": "```suggestion:-2+0\nconst value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n```\n\nCompatibility review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:08:31.860Z",
+        "updated_at": "2026-11-16T23:08:31.860Z",
+        "system": false,
+        "noteable_id": 112,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "ae1f0797fbac0cd4b2791dd68638da497280b795",
+          "old_path": "paired-suggestion.js",
+          "new_path": "paired-suggestion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 3,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 3,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 77,
+            "from_line": 1,
+            "to_line": 3,
+            "appliable": true,
+            "applied": false,
+            "from_content": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+            "to_content": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 52,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-suggestion.js",
+        "file_path": "paired-suggestion.js",
+        "size": 72,
+        "encoding": "base64",
+        "content_sha256": "a542462493d564c032889aac3e85ad9b95497db32388c07b0ffccab5b837482d",
+        "ref": "fountain-compat-switch-20261116-a1-fountain-transport-collision-settled",
+        "blob_id": "c0c8ee57d14ef28e5f7196bee8486df88ef3fa6b",
+        "commit_id": "ae1f0797fbac0cd4b2791dd68638da497280b795",
+        "last_commit_id": "ae1f0797fbac0cd4b2791dd68638da497280b795",
+        "execute_filemode": false,
+        "content": "Y29uc3QgdmFsdWUgPSAiXG4iOwpjb25zdCB2YWx1ZSA9ICLugIAiOwpjb25zdCBrZXkgPSAiQeKAi0IiOyAgCmtlZXAoKTsK"
+      },
+      "beforeApplyHead": "ae1f0797fbac0cd4b2791dd68638da497280b795",
+      "appliedFile": {
+        "file_name": "paired-suggestion.js",
+        "file_path": "paired-suggestion.js",
+        "size": 114,
+        "encoding": "base64",
+        "content_sha256": "657891a504a6cf5efc3b5572c918099b0b9c606fe24dfa071b6bc6b1be5b60b1",
+        "ref": "fountain-compat-switch-20261116-a1-fountain-transport-collision-settled",
+        "blob_id": "638f7da01e95e783840fbabe3a3b33889a27ef41",
+        "commit_id": "0bcef8d37f136fdbb20ee29f21c6f35987e4f22e",
+        "last_commit_id": "0bcef8d37f136fdbb20ee29f21c6f35987e4f22e",
+        "execute_filemode": false,
+        "content": "Y29uc3QgdmFsdWUgPSAiXG4iOwpjb25zdCB2YWx1ZSA9ICLugIAiOwpjb25zdCBrZXkgPSAiQeKAi0IiOyAgCi8vIHJldmlld2VkIGJ5IHRoZSBjb21wYXRpYmlsaXR5IHdvcmtmbG93CmtlZXAoKTsK"
+      },
+      "appliedCommit": {
+        "id": "0bcef8d37f136fdbb20ee29f21c6f35987e4f22e",
+        "short_id": "0bcef8d3",
+        "created_at": "2026-11-16T23:08:35.000+00:00",
+        "parent_ids": [
+          "ae1f0797fbac0cd4b2791dd68638da497280b795"
+        ],
+        "title": "Apply paired editor suggestion",
+        "message": "Apply paired editor suggestion",
+        "author_name": "Administrator",
+        "author_email": "gitlab_admin_5c5720@example.com",
+        "authored_date": "2026-11-16T23:08:35.000+00:00",
+        "committer_name": "Administrator",
+        "committer_email": "gitlab_admin_5c5720@example.com",
+        "committed_date": "2026-11-16T23:08:35.000+00:00",
+        "trailers": {},
+        "extended_trailers": {},
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/commit/0bcef8d37f136fdbb20ee29f21c6f35987e4f22e",
+        "stats": {
+          "additions": 1,
+          "deletions": 0,
+          "total": 1
+        },
+        "status": null,
+        "project_id": 1,
+        "last_pipeline": null
+      },
+      "appliedNote": {
+        "id": 419,
+        "type": "DiffNote",
+        "body": "```suggestion:-2+0\nconst value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n```\n\nCompatibility review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:08:31.860Z",
+        "updated_at": "2026-11-16T23:08:35.719Z",
+        "system": false,
+        "noteable_id": 112,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "ae1f0797fbac0cd4b2791dd68638da497280b795",
+          "old_path": "paired-suggestion.js",
+          "new_path": "paired-suggestion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 3,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 3,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-16T23:08:35.719Z",
+        "suggestions": [
+          {
+            "id": 77,
+            "from_line": 1,
+            "to_line": 3,
+            "appliable": false,
+            "applied": true,
+            "from_content": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+            "to_content": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 52,
+        "commands_changes": {}
+      },
+      "reopenedDOM": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n",
+      "sourceBeforeProseEdit": "```suggestion:-2+0\nconst value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n```\n\nCompatibility review",
+      "afterProseNote": {
+        "id": 419,
+        "type": "DiffNote",
+        "body": "```suggestion:-2+0\nconst value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n```\n\nCompatibility review — confirmed",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:08:31.860Z",
+        "updated_at": "2026-11-16T23:08:41.003Z",
+        "system": false,
+        "noteable_id": 112,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "0bcef8d37f136fdbb20ee29f21c6f35987e4f22e",
+          "old_path": "paired-suggestion.js",
+          "new_path": "paired-suggestion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 3,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 3,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-16T23:08:35.719Z",
+        "suggestions": [
+          {
+            "id": 78,
+            "from_line": 1,
+            "to_line": 3,
+            "appliable": true,
+            "applied": false,
+            "from_content": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+            "to_content": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 52,
+        "commands_changes": {}
+      },
+      "afterProseFile": {
+        "file_name": "paired-suggestion.js",
+        "file_path": "paired-suggestion.js",
+        "size": 114,
+        "encoding": "base64",
+        "content_sha256": "657891a504a6cf5efc3b5572c918099b0b9c606fe24dfa071b6bc6b1be5b60b1",
+        "ref": "fountain-compat-switch-20261116-a1-fountain-transport-collision-settled",
+        "blob_id": "638f7da01e95e783840fbabe3a3b33889a27ef41",
+        "commit_id": "0bcef8d37f136fdbb20ee29f21c6f35987e4f22e",
+        "last_commit_id": "0bcef8d37f136fdbb20ee29f21c6f35987e4f22e",
+        "execute_filemode": false,
+        "content": "Y29uc3QgdmFsdWUgPSAiXG4iOwpjb25zdCB2YWx1ZSA9ICLugIAiOwpjb25zdCBrZXkgPSAiQeKAi0IiOyAgCi8vIHJldmlld2VkIGJ5IHRoZSBjb21wYXRpYmlsaXR5IHdvcmtmbG93CmtlZXAoKTsK"
+      },
+      "afterProseHead": "0bcef8d37f136fdbb20ee29f21c6f35987e4f22e",
+      "afterProseAppliedBadge": false
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "532be60e5c56105127f19b9fa0ae2df199465e3ed66918e9a8ecce7f2c9a8196",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "65171a11356427d2795bfde4f3221b7382d9721a0c2470651b3d09e335a12d44"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [
+      {
+        "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+        "readOnly": true
+      }
+    ],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "ENABLE_RSPACK=true",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "14a1f4547a75e8ca9f2cca7aecb339c024cb934accdea2475ed2e4da60f3751c  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": true
+}

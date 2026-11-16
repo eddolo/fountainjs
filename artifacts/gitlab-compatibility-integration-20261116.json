@@ -1,0 +1,114 @@
+{
+  "scope": "First matched real GitLab source-handoff and repository/prose workflows; four scenarios and 36 per-invariant classifications, not broad product superiority.",
+  "parentRevision": "95c5cea173411733afabfd6eee71a68aedc326d7",
+  "comparison": {
+    "path": "artifacts/gitlab-compatibility/switch-20261116/comparison-2/report.json",
+    "parity": 20,
+    "improvement": 12,
+    "regression": 0,
+    "shared-limitation": 4,
+    "incomplete": 0,
+    "total": 36,
+    "complete": true,
+    "environmentMatched": true,
+    "regressionGatePassed": true,
+    "absoluteFeatureAcceptance": false
+  },
+  "findings": [
+    "Observed rapid original-editor rich-to-source handoff loses inserted source; tested Fountain candidate retains it.",
+    "Original lossy diff prefill changes literal backslash-n into U+E000 through actual save/application; candidate preserves both source values.",
+    "Ordinary settled source/save/application/prose behaviors match under the declared invariants.",
+    "Both actual editor workflows clear Applied flag and recreate suggestion identity on prose-only note updates; unmet requirements remain open."
+  ],
+  "verification": {
+    "integrationUnit": {
+      "passed": 1377,
+      "files": 54,
+      "comparisonPolicyCases": 13,
+      "workers": 2
+    },
+    "types": "strict TypeScript passed",
+    "visualReview": "Inspected matched source fields, settled proposals and after-prose readers. Exact saved payloads and repository files supply code-point evidence.",
+    "deployment": "Same image/backend mounts/server sources/configuration, actor/permissions, project/default head, browser and fixtures; different declared frontend asset selector/mount.",
+    "provenance": {
+      "scope": "Pinned upstream source and actual shared packaged server provenance. Package versions are upstream lock entries; active editor identity is separately observed in UI.",
+      "sourceRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+      "packagedRevision": "0d4c9a9a2fa",
+      "packages": {
+        "@tiptap/core": {
+          "descriptor": "^2.27.3",
+          "lockedVersion": "2.27.3"
+        },
+        "@tiptap/pm": {
+          "descriptor": "^2.27.3",
+          "lockedVersion": "2.27.3"
+        },
+        "@tiptap/vue-2": {
+          "descriptor": "^2.27.3",
+          "lockedVersion": "2.27.3"
+        }
+      },
+      "hashes": {
+        "yarn.lock": "fc13092874bb930af55b882372b530f6936aea9519d449c21c174232156be538",
+        "app/assets/javascripts/content_editor/extensions/code_suggestion.js": "118b972333a36faaa92ebd11c29708f872f55a61d5aac5ce2241a2dcc23f29fb",
+        "app/assets/javascripts/content_editor/components/editor_state_observer.vue": "c5679e7841ef19eccc83524527d7fbe55f3e9d8f2fa372cdf487dbaf7cf0bd17",
+        "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
+        "app/services/notes/update_service.rb": "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2",
+        "app/services/suggestions/create_service.rb": "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a",
+        "lib/gitlab/diff/suggestion.rb": "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546"
+      },
+      "packagedServerSourcesMatch": true,
+      "nativeRuntimeSha256": "90d81cd3b310db40a95608ddf807ba3c067936ac1f7608bfa9014b3d1c18bf31",
+      "candidateParent": "95c5cea173411733afabfd6eee71a68aedc326d7"
+    },
+    "applicationStopped": true
+  },
+  "limits": [
+    "One matched Linux Chromium run per profile; no frequency/performance/latest-framework/mobile claim.",
+    "Immediate handoff ends after source observation; settled profile continues through saving, real application and applied-note prose editing.",
+    "Recorded handoff timing identifies switch-action entry, not completed pointer latency.",
+    "Counts are correlated assertions across two underlying improvements, not twelve independent features.",
+    "Earlier failed discovery is retained separately and is excluded from paired classifications.",
+    "No matched cold restart, roles/concurrency, posted-range changes, clipboard/table/media or whitespace-warning comparison yet.",
+    "No editor-runtime/public API/capacity limit/version/publication or overall parity-row change."
+  ],
+  "hashes": {
+    "scripts/run-gitlab-compatibility.mjs": "532be60e5c56105127f19b9fa0ae2df199465e3ed66918e9a8ecce7f2c9a8196",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "65171a11356427d2795bfde4f3221b7382d9721a0c2470651b3d09e335a12d44",
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "2ddfb7ab07c0accf08d0c55870a53747ea4ea9158993f8046cdfca4238be883d",
+    "integrations/gitlab/fixtures/compatibility-suggestions.json": "b0b84f19af37f1c5bd56e709df94aa15941604855439cbb5a81fcb8dbe382174",
+    "tests/gitlab-compatibility.test.ts": "735a6472746cddfbf3b0e13eac68780e6c08ad34974a75d0fd0f806f4f7bdaeb",
+    "integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md": "eacf79fd6f3c2eeaf2db264a4ff0b8fe701a73dd13096ae633bcb19b3638f4f4",
+    "integrations/gitlab/COMPATIBILITY_RESULTS.md": "4d2d45e16278606a3668aa660e81d910d4fbc3d164beb16cbd4b1275dcace3e1",
+    "artifacts/record-gitlab-compatibility-source-20261116.mjs": "cb0490625ee3f370002dd536402e66ca6bdac9d7966a661c4185c3c0e24aa5a6",
+    "artifacts/compatibility-original-20261116.log": "e6fc4b6d026b68e772c93df2b9fc68967e39c4e54ac6e5cbab3916d6bc439658",
+    "artifacts/compatibility-original-switch-20261116.log": "600e33e51e19b93639b9116e9004b696dbdc97c23a8d520dcc33410900844397",
+    "artifacts/compatibility-fountain-switch-20261116.log": "e28fead3da4f94566a8cac60e23a535b70be8be683956bf4582bcfbc124b33cc",
+    "artifacts/compatibility-all-unit-20261116.log": "48c224f54ac128e2dfdc0670340bde581fb4c41172fd3e2c6743b04c746e6bda",
+    "artifacts/compatibility-types-20261116.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gitlab-compatibility/suggestions-20261116/original-1/report.json": "a534ee953c3998babad53fba637eef50280ab7207f01a8ba0acb045921153296",
+    "artifacts/gitlab-compatibility/switch-20261116/original-1/report.json": "14138d573e6ef1feba62774de1cad5d812b38d7276f38b8d6965e158bd7b1cc1",
+    "artifacts/gitlab-compatibility/switch-20261116/fountain-1/report.json": "12509d11b7f69017b55166334a1b4fecdcc287153733b9c6dbf1583d07ff6d20",
+    "artifacts/gitlab-compatibility/switch-20261116/comparison-2/report.json": "57ddeba62fbb2470642191b339abfc8bb978c55571d93c63ba31a40d8008267f",
+    "artifacts/gitlab-compatibility/switch-20261116/comparison-2/report.md": "3057aab69033f92ccfe1d3a626fe2c12bcc4f852cb02e1b87729ac5dbbd602b4",
+    "artifacts/gitlab-compatibility/switch-20261116/source-provenance.json": "002469d2f8c2f4384785469aae8f3f9bdc810dbba46528a8ba22363e257a70e8",
+    "artifacts/gitlab-compatibility/switch-20261116/original-1/ordinary-immediate-source-handoff.png": "fa98441ea98c38f4770089929863dbcc2d022ed25395d01e19ee9bc8aa68e218",
+    "artifacts/gitlab-compatibility/switch-20261116/original-1/ordinary-settled-after-prose.png": "c4d601f80dcb3dc637961d5f81fe3d8b9aba31b13dde6c10252a4e29d600cf64",
+    "artifacts/gitlab-compatibility/switch-20261116/original-1/ordinary-settled-posted.png": "979a741cc9ba67778bdd3898f1553903bb45620ba82c8c600f4ace107b31465e",
+    "artifacts/gitlab-compatibility/switch-20261116/original-1/ordinary-settled-source-draft.png": "b14b8dcbe65d71607c45bb2eb2de96d554485a153a1052822ecda6d6acfcc54b",
+    "artifacts/gitlab-compatibility/switch-20261116/original-1/transport-collision-immediate-source-handoff.png": "cbecd7fa4e2f6a4dc03deba984eb798d7c837099404fd00299d080b73c54fb61",
+    "artifacts/gitlab-compatibility/switch-20261116/original-1/transport-collision-settled-after-prose.png": "6b476b30ccf3a5637f661531d91c0bb39d099ff7e9d48403ea7469f4d50fce5b",
+    "artifacts/gitlab-compatibility/switch-20261116/original-1/transport-collision-settled-posted.png": "50c906f10108a005baebb3550b2d4431ace61a910094d2a4fa01e3307b1d1a64",
+    "artifacts/gitlab-compatibility/switch-20261116/original-1/transport-collision-settled-source-draft.png": "2aea7b9fc2fa2ab24fa442e5dd2341c9c65f59b00a0098cb11fadfa316194df8",
+    "artifacts/gitlab-compatibility/switch-20261116/fountain-1/ordinary-immediate-source-handoff.png": "ce00351feb777801f919c61fa314194939b158e05b238378c9ac5937ae7022ba",
+    "artifacts/gitlab-compatibility/switch-20261116/fountain-1/ordinary-settled-after-prose.png": "ec1545d7b13eaa9d11b8c4267a303ddbc22151686606d0d63ea71a737f0c21e7",
+    "artifacts/gitlab-compatibility/switch-20261116/fountain-1/ordinary-settled-posted.png": "b181c647b2aeab8fc08977d86a37ec4ffe881e37d3bf25d0dd31337714d9798f",
+    "artifacts/gitlab-compatibility/switch-20261116/fountain-1/ordinary-settled-source-draft.png": "5d61ba01bd5366a6401d1079d5e509eb2cc589ccaf28bfb1128784d6f88c56a5",
+    "artifacts/gitlab-compatibility/switch-20261116/fountain-1/transport-collision-immediate-source-handoff.png": "15078506b78431c6af29f66f8a2f63217a95ce77b5aa90fa4cb5ca189349a82d",
+    "artifacts/gitlab-compatibility/switch-20261116/fountain-1/transport-collision-settled-after-prose.png": "6cc0603a5f16366b3792ea68d132a440b14f8361fadfa839a5bb4040304f1aa8",
+    "artifacts/gitlab-compatibility/switch-20261116/fountain-1/transport-collision-settled-posted.png": "3ec597d060740939affce62011dfa8b759dbfe200f5364c9b3e921cc90095535",
+    "artifacts/gitlab-compatibility/switch-20261116/fountain-1/transport-collision-settled-source-draft.png": "e1bf33ff7f9a406b860c87269bad2cec374ec4b58a35117823323ecaf31b6d05"
+  }
+}
