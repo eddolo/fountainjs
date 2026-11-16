@@ -28,6 +28,14 @@ This reconciliation changes no release, tag, npm package or website deployment.
 
 ## Matched GitLab regression harness — 2026-11-16
 
+The subsequent [deletion corpus](../integrations/gitlab/COMPATIBILITY_DELETION_RESULTS.md)
+adds two matched UI scenarios: 26 parity/four improvement checks, zero regression.
+It verifies explicit deletion wording, affirmative whitespace consent and exact
+source reopening. Fresh integration verification is 1381 tests / 54 files plus
+strict types. Blank-line application and shared Applied-history retention remain
+unmet; there is no editor runtime, release or acceptance-limit change.
+
+
 The unpublished candidate now has real original-editor/Fountain matched evidence
 on GitLab CE 19.5.3. Four fixed timing/source scenarios produce 20 parity, 12
 improvement, zero regression and four shared-limitation invariant outcomes.

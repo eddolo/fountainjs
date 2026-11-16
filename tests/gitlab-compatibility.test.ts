@@ -60,3 +60,41 @@ it('does not claim complete or feature acceptance when browser errors remain une
  const result=compareGitLabCompatibility(original,fountain);
  expect(result.comparisonComplete).toBe(false);expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
 });
+
+function deletionReports(replacement:string){
+ const pair=reports();
+ for(const report of pair){
+  const input:any=report.fixture.cases[0];input.scope='deletion';input.replacement=replacement;
+  const item:any=report.observations[0];item.input=structuredClone(input);
+  item.sourceAtFirstVisible='```suggestion:-0+0\n'+replacement+'```';item.sourceModeBeforeEdit=item.sourceAtFirstVisible;
+  item.saved={body:item.sourceAtFirstVisible};item.reopenedSource=item.sourceAtFirstVisible;
+  item.deletion={richSource:replacement,explicitDeletionExplanation:true,confirmationPresent:replacement.length>0,blockedBeforeConsent:replacement.length>0,confirmed:replacement.length>0};
+  item.setup={seedCommit:'seed'};item.beforeApplyFile={content:Buffer.from(input.source).toString('base64')};item.beforeApplyHead='seed';
+  item.appliedFile={content:''};item.appliedCommit={id:'applied',parent_ids:['seed']};item.appliedNote={suggestions:[{applied:true}]};
+ }
+ return pair;
+}
+it.each(['','\n'])('checks real deletion semantics separately from exact proposal source %j',(replacement)=>{
+ const [original,fountain]=deletionReports(replacement);
+ const result=compareGitLabCompatibility(original,fountain);
+ expect(result.summary).toEqual({parity:15,improvement:0,regression:0,'shared-limitation':0,incomplete:0,total:15});
+ expect(result.featureAcceptance.passed).toBe(true);
+});
+it('does not credit a whitespace warning when acceptance was not blocked before consent',()=>{
+ const [original,fountain]=deletionReports('\n');
+ const a:any=original.observations[0],b:any=fountain.observations[0];
+ a.deletion.explicitDeletionExplanation=false;a.deletion.confirmationPresent=false;a.deletion.blockedBeforeConsent=false;a.deletion.confirmed=false;
+ b.deletion.blockedBeforeConsent=false;
+ const result=compareGitLabCompatibility(original,fountain);
+ expect(result.rows.find((row:any)=>row.invariant==='deletionExplanation').classification).toBe('improvement');
+ expect(result.rows.find((row:any)=>row.invariant==='consent').classification).toBe(null);
+ expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
+});
+it('does not hide changed whitespace source behind an equivalent deletion result',()=>{
+ const [original,fountain]=deletionReports('\n');
+ (fountain.observations[0] as any).saved.body='```suggestion:-0+0\n```';
+ const result=compareGitLabCompatibility(original,fountain);
+ expect(result.rows.find((row:any)=>row.invariant==='savedSource').classification).toBe('regression');
+ expect(result.rows.find((row:any)=>row.invariant==='appliedSource').classification).toBe('parity');
+ expect(result.regressionGate.passed).toBe(false);
+});

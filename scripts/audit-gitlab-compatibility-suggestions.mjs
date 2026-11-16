@@ -21,6 +21,50 @@ function driver(side, page) {
     },
   };
 }
+async function editDeletion({side,page,form,surface,input,output}) {
+  const result={replacement:input.replacement,confirmationPresent:false,blockedBeforeConsent:false};
+  if(side==='original') {
+    // Browser fill selects the enclosing contenteditable, including NodeView
+    // decorations. Select the actual source line with real keys instead.
+    await surface.code.click();await page.keyboard.press('Home');await page.keyboard.press('Shift+End');
+    result.selectedSource=await page.evaluate(()=>window.getSelection()?.toString());
+    expect(result.selectedSource).toBe(input.source.split('\n')[input.range.start-1]);
+    await page.keyboard.press('Backspace');
+    for(const character of input.replacement){
+      if(character==='\n')await page.keyboard.press('Enter');else await page.keyboard.insertText(character);
+    }
+    await new Promise(resolve=>setTimeout(resolve,input.handoffDelayMs));
+    const block=surface.editor.locator('pre.content-editor-code-block');
+    result.confirmationPresent=await block.getByRole('checkbox').count()>0;
+    result.blockedBeforeConsent=await form.getByRole('button',{name:/^(Add comment now|Comment)$/u}).isDisabled();
+    result.confirmed=false;
+    result.visibleExplanation=await block.innerText();
+    result.explicitDeletionExplanation=/\bdelet(?:e|es|ion|ing)\b/iu.test(result.visibleExplanation);
+    result.richSource=await surface.code.textContent();
+    await form.screenshot({path:join(output,input.id+'-deletion-draft.png'),animations:'disabled',caret:'initial'});
+  } else {
+    await surface.code.click();await page.getByRole('button',{name:'Edit suggestion',exact:true}).click();
+    const dialog=page.getByRole('dialog',{name:'Suggested replacement',exact:true});await expect(dialog).toBeVisible();
+    await dialog.getByRole('textbox',{name:'Replacement source',exact:true}).fill(input.replacement);
+    const action=dialog.getByRole('button',{name:/^Apply (suggestion|deletion)$/u});
+    const consent=dialog.getByRole('checkbox',{name:'I intend to delete these file lines',exact:true});
+    result.visibleExplanation=await dialog.getByRole('alert').innerText();
+    result.explicitDeletionExplanation=/\bdelet(?:e|es|ion|ing)\b/iu.test(result.visibleExplanation);
+    result.actionLabel=await action.innerText();
+    result.confirmationPresent=await consent.count()===1;result.blockedBeforeConsent=await action.isDisabled();
+    await dialog.screenshot({path:join(output,input.id+'-deletion-warning.png'),animations:'disabled',caret:'initial'});
+    if(result.confirmationPresent){
+      await dialog.getByText('I intend to delete these file lines',{exact:true}).click();
+      await expect(consent).toBeChecked();result.confirmed=await consent.isChecked();
+      await expect(action).toBeEnabled();
+    }
+    await action.click();await expect(dialog).toBeHidden();
+    result.richSource=await surface.code.textContent();
+    result.effect=await surface.editor.locator('pre[data-fountain-gitlab-suggestion]').getAttribute('data-fountain-suggestion-effect');
+    await form.screenshot({path:join(output,input.id+'-deletion-draft.png'),animations:'disabled',caret:'initial'});
+  }
+  return result;
+}
 async function openLineForm(page, mr, range) {
   await page.goto(mr.web_url+'/diffs');
   const rowAt=line=>page.locator('tr[data-hunk-lines]').filter({has:page.locator(`[data-position="new"] [data-line-number="${line}"]`)}).first();
@@ -62,6 +106,11 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       await stage('insert');await ui.insert(form);await expect(surface.code).toHaveCount(1);
       await expect(surface.code).toBeVisible();result.prefillDOM=await surface.code.textContent();
       result.actions.push('Rich editor: Insert suggestion from actual selected diff lines.');
+      if(input.scope==='deletion'){
+        await stage('edit-deletion');await new Promise(resolve=>setTimeout(resolve,fixture.editingDelayMs));
+        result.deletion=await editDeletion({side,page,form,surface,input,output});
+        result.actions.push('Edit the replacement through the actual rich editor controls; observe deletion explanation and confirmation before accepting.');
+      }
       const visibleAt=performance.now();
       if(input.handoffDelayMs)await new Promise(resolve=>setTimeout(resolve,input.handoffDelayMs));
       result.stage='inspect-source';onProgress({side,case:input.id,stage:result.stage});
@@ -78,8 +127,8 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       // append a deterministic line before its closing fence; never repair it.
       const closing=result.sourceModeBeforeEdit.lastIndexOf('\n```');
       if(closing<0||result.sourceModeBeforeEdit.slice(closing+4).trim()!=='')throw new Error('Unexpected suggestion source carrier');
-      const body=result.sourceModeBeforeEdit.slice(0,closing+1)+fixture.appendLine+result.sourceModeBeforeEdit.slice(closing+1)+'\n\n'+fixture.marker;
-      await source.fill(body);result.actions.push('Switch to source; append review line without rewriting the captured replacement; add prose marker.');
+      const body=(input.scope==='deletion'?result.sourceModeBeforeEdit:result.sourceModeBeforeEdit.slice(0,closing+1)+fixture.appendLine+result.sourceModeBeforeEdit.slice(closing+1))+'\n\n'+fixture.marker;
+      await source.fill(body);result.actions.push(input.scope==='deletion'?'Switch to source; retain the exact captured deletion proposal and add only a prose marker.':'Switch to source; append review line without rewriting the captured replacement; add prose marker.');
       await form.screenshot({path:join(output,input.id+'-source-draft.png'),animations:'disabled',caret:'initial'});
       await stage('post');await form.getByRole('button',{name:/^(Add comment now|Comment)$/u}).click();
       let discussion;
@@ -90,6 +139,17 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       result.beforeApplyHead=(await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(branch)}`)).commit.id;
       await page.reload();const savedNote=page.locator('#note_'+note.id);await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
       await page.screenshot({path:join(output,input.id+'-posted.png'),fullPage:true,animations:'disabled',caret:'initial'});
+      if(input.scope==='deletion'){
+        await savedNote.getByRole('button',{name:'Edit comment',exact:true}).click();
+        const reopenForm=savedNote.locator('form.common-note-form');surface=await ui.rich(reopenForm);
+        await expect(surface.code).toHaveCount(1);result.reopenedDOM=await surface.code.textContent();
+        await new Promise(resolve=>setTimeout(resolve,input.handoffDelayMs));
+        const reopenedSource=await ui.source(reopenForm);await new Promise(resolve=>setTimeout(resolve,fixture.sourceObservationDelayMs));
+        result.reopenedSource=await reopenedSource.inputValue();
+        await reopenForm.screenshot({path:join(output,input.id+'-reopened-source.png'),animations:'disabled',caret:'initial'});
+        await reopenForm.getByRole('button',{name:'Cancel',exact:true}).click();await expect(reopenForm).toBeHidden();
+        result.actions.push('Reload the saved proposal; reopen rich editing and inspect exact source; cancel without rewriting it.');
+      }
       await stage('apply');await savedNote.getByTestId('apply-suggestion-dropdown').getByRole('button',{name:'Apply suggestion',exact:true}).click();
       await page.getByTestId('commit-message-field').fill('Apply paired editor suggestion');
       await page.getByTestId('commit-with-custom-message-button').click();
@@ -97,6 +157,11 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       result.appliedCommit=await request(`/api/v4/projects/${project.id}/repository/commits/${result.appliedFile.last_commit_id}`);
       result.appliedNote=await request(`${base}/notes/${note.id}`);expect(result.appliedNote.suggestions[0].applied).toBe(true);
       result.actions.push('Normal GitLab Apply suggestion creates a real source commit.');
+      if(input.scope==='deletion'){
+        await page.goto(mr.web_url+'#note_'+note.id);await expect(page.getByTestId('applied-badge')).toBeVisible({timeout:30000});
+        await page.screenshot({path:join(output,input.id+'-applied.png'),fullPage:true,animations:'disabled',caret:'initial'});
+        result.status='observed';await stage('complete');continue;
+      }
       await stage('edit-applied-prose');await page.goto(mr.web_url+'#note_'+note.id);
       await expect(page.getByTestId('applied-badge')).toBeVisible({timeout:30000});
       const appliedNote=page.locator('#note_'+note.id);await appliedNote.getByRole('button',{name:/^Edit comment(?:,|$)/u}).click();

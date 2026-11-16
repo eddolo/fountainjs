@@ -66,6 +66,14 @@ recorded pair. Absolute feature acceptance remains false because the shared
 application-history requirements fail. Broader editor capability/readiness is
 tracked separately from these outcomes.
 
+## Subsequent matched corpus
+
+The [deletion pair](COMPATIBILITY_DELETION_RESULTS.md) adds two real workflows
+and 30 checks: 26 parity, four improvement, zero regression. It verifies explicit
+effect explanation, whitespace consent and exact source reopening. It does not
+close the shared history failure in this first corpus or add blank-line
+replacement support to the stock backend.
+
 ## Reproduce
 
 Use the matching Linux Docker environment and the prepared native source/assets

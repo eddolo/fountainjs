@@ -1,0 +1,296 @@
+{
+  "formatVersion": 1,
+  "runId": "deletion-20261116",
+  "attempt": 1,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "deletions",
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-deletions.json",
+  "fixtureHash": "0fc3d7177a1e44bfc1baf8d99cc161b3fd9f946ac2125fa5fd6aec9d39474999",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "suggestion-deletion-effects",
+    "title": "Paired deletion compatibility",
+    "marker": "Compatibility deletion review",
+    "sourceObservationDelayMs": 1500,
+    "cases": [
+      {
+        "id": "empty-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      {
+        "id": "whitespace-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "\n",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "empty-deletion",
+      "status": "incomplete",
+      "stage": "apply",
+      "input": {
+        "id": "empty-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Edit the replacement through the actual rich editor controls; observe deletion explanation and confirmation before accepting.",
+        "Switch to source; retain the exact captured deletion proposal and add only a prose marker.",
+        "Reload the saved proposal; reopen rich editing and inspect exact source; cancel without rewriting it."
+      ],
+      "setup": {
+        "branch": "fountain-compat-deletion-20261116-a1-original-empty-deletion",
+        "seedCommit": "2250de372c697e05d94dc6888649ae1d63f79e91",
+        "source": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo=",
+        "mergeRequest": {
+          "iid": 53,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/53"
+        }
+      },
+      "editorProof": {
+        "className": "tiptap ProseMirror rte-text-box",
+        "native": false
+      },
+      "prefillDOM": "old();",
+      "deletion": {
+        "replacement": "",
+        "confirmationPresent": false,
+        "blockedBeforeConsent": false,
+        "visibleExplanation": "Suggested change\nFrom line\n1\nto\n1\nold();​\nold();​\nold();",
+        "explicitDeletionExplanation": false,
+        "richSource": "old();"
+      },
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1502.1357699999935
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\nold();\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\nold();\n```",
+      "saved": {
+        "id": 447,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\nold();\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:36:40.435Z",
+        "updated_at": "2026-11-16T23:36:40.435Z",
+        "system": false,
+        "noteable_id": 142,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "2250de372c697e05d94dc6888649ae1d63f79e91",
+          "old_path": "paired-deletion.js",
+          "new_path": "paired-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 108,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": false,
+            "applied": false,
+            "from_content": "old();\n",
+            "to_content": "old();\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 53,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-deletion.js",
+        "file_path": "paired-deletion.js",
+        "size": 23,
+        "encoding": "base64",
+        "content_sha256": "a2a6db4c1c8cdf3e7e2082afb68e22a3d6609207deb9bbd80c23c228a50949f0",
+        "ref": "fountain-compat-deletion-20261116-a1-original-empty-deletion",
+        "blob_id": "e57a323a219bdeba9b4b6780e2f82fb41d9ac21e",
+        "commit_id": "2250de372c697e05d94dc6888649ae1d63f79e91",
+        "last_commit_id": "2250de372c697e05d94dc6888649ae1d63f79e91",
+        "execute_filemode": false,
+        "content": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo="
+      },
+      "beforeApplyHead": "2250de372c697e05d94dc6888649ae1d63f79e91",
+      "reopenedDOM": "old();",
+      "reopenedSource": "```suggestion:-0+0\nold();\n```\n\nCompatibility deletion review",
+      "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#note_447').getByTestId('apply-suggestion-dropdown').getByRole('button', { name: 'Apply suggestion', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" aria-disabled=\"true\" aria-expanded=\"false\" id=\"dropdown-toggle-btn-177\" aria-controls=\"base-dropdown-179\" data-testid=\"base-dropdown-toggle\" class=\"btn gl-button btn-default btn-sm disabled gl-new-dropdown-toggle\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+    },
+    {
+      "id": "whitespace-deletion",
+      "status": "incomplete",
+      "stage": "edit-deletion",
+      "input": {
+        "id": "whitespace-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "\n",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines."
+      ],
+      "setup": {
+        "branch": "fountain-compat-deletion-20261116-a1-original-whitespace-deletion",
+        "seedCommit": "19725ef5501b5a24d36a044198a195ef0d6790a0",
+        "source": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo=",
+        "mergeRequest": {
+          "iid": 54,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/54"
+        }
+      },
+      "editorProof": {
+        "className": "tiptap ProseMirror rte-text-box",
+        "native": false
+      },
+      "prefillDOM": "old();",
+      "error": "Error: locator.textContent: Error: strict mode violation: locator('form.common-note-form').first().locator('.ProseMirror[contenteditable=\"true\"]').locator('pre.content-editor-code-block [data-testid=\"suggestion-field\"]') resolved to 2 elements:\n    1) <code spellcheck=\"false\" data-node-view-content=\"\" data-testid=\"suggestion-field\" class=\"gl-relative gl-z-1 !gl-break-words line_content new code code-syntax-highlight-theme\">…</code> aka getByTestId('suggestion-field').first()\n    2) <code spellcheck=\"false\" data-node-view-content=\"\" data-testid=\"suggestion-field\" class=\"gl-relative gl-z-1 !gl-break-words line_content new code code-syntax-highlight-theme\">…</code> aka getByTestId('suggestion-field').nth(1)\n\nCall log:\n\u001b[2m  - waiting for locator('form.common-note-form').first().locator('.ProseMirror[contenteditable=\"true\"]').locator('pre.content-editor-code-block [data-testid=\"suggestion-field\"]')\u001b[22m\n"
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "b802886d985fc9b15b28d55edd17303a8732662c7e50d8b8c11aa5e80747aa2b",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "901226e9ca5cc8a15afaa35b2a41fbfc093b1e2c2880b824efba40a194459db0"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "008e6f1d990965db5abffb6739a39f06c463de8e681c761315e84f836db4b802  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.json",
+    "36ebdd7dddd055eb892ff6ef5538947e463db218d3051c33cd04d304101030b9  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": false
+}

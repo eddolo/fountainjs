@@ -1,0 +1,125 @@
+{
+  "scope": "Matched empty and one-newline deletion proposals in actual stock GitLab and Fountain UI; separate from original source-handoff/history corpus.",
+  "parentRevision": "a4f8a0223c7d595e2362995fd2782f955acad653",
+  "comparison": {
+    "path": "artifacts/gitlab-compatibility/deletion-keyboard-20261116/comparison-1/report.json",
+    "parity": 26,
+    "improvement": 4,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 30,
+    "environmentMatched": true,
+    "complete": true,
+    "regressionGatePassed": true,
+    "candidateDeletionFixtureAcceptance": true
+  },
+  "overallProductAcceptance": false,
+  "findings": [
+    "Explicit textual deletion explanations are observed on Fountain in both cases; original shows its diff without that explicit wording.",
+    "Native whitespace Apply deletion is blocked until affirmative visible consent; original accepts the direct rich source edit without that additional control.",
+    "Both save the one-newline source exactly; original rich reopen/source inspection drops it, native preserves it. Inspection is canceled without overwriting the saved note.",
+    "Both apply deletion to only the selected line, producing exact keep/last content in one child commit of the fixture seed."
+  ],
+  "verification": {
+    "integrationTests": 1381,
+    "files": 54,
+    "comparisonPolicyTests": 17,
+    "strictTypes": true,
+    "applicationStopped": true,
+    "unchangedEditorRuntimeHash": true,
+    "visualReview": "Inspected original and native rich deletion drafts, native warning/disabled action and reopened source fields; API/source commit bytes prove saved/application effects.",
+    "sourceProvenance": {
+      "scope": "Pinned upstream source and actual shared packaged server provenance. Package versions are upstream lock entries; active editor identity is separately observed in UI.",
+      "sourceRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+      "packagedRevision": "0d4c9a9a2fa",
+      "packages": {
+        "@tiptap/core": {
+          "descriptor": "^2.27.3",
+          "lockedVersion": "2.27.3"
+        },
+        "@tiptap/pm": {
+          "descriptor": "^2.27.3",
+          "lockedVersion": "2.27.3"
+        },
+        "@tiptap/vue-2": {
+          "descriptor": "^2.27.3",
+          "lockedVersion": "2.27.3"
+        }
+      },
+      "hashes": {
+        "yarn.lock": "fc13092874bb930af55b882372b530f6936aea9519d449c21c174232156be538",
+        "app/assets/javascripts/content_editor/components/wrappers/code_block.vue": "b88b3264286ee2abab07fab4ae295b3b113e5c88d72ddee048af18c78118e4e6",
+        "app/assets/javascripts/content_editor/extensions/code_suggestion.js": "118b972333a36faaa92ebd11c29708f872f55a61d5aac5ce2241a2dcc23f29fb",
+        "app/assets/javascripts/content_editor/components/editor_state_observer.vue": "c5679e7841ef19eccc83524527d7fbe55f3e9d8f2fa372cdf487dbaf7cf0bd17",
+        "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
+        "app/services/notes/update_service.rb": "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2",
+        "app/services/suggestions/create_service.rb": "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a",
+        "lib/gitlab/diff/suggestion.rb": "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546"
+      },
+      "packagedServerSourcesMatch": true,
+      "nativeRuntimeSha256": "90d81cd3b310db40a95608ddf807ba3c067936ac1f7608bfa9014b3d1c18bf31",
+      "candidateParent": "a4f8a0223c7d595e2362995fd2782f955acad653"
+    }
+  },
+  "retainedFailures": [
+    "Earlier generic-fill driver attempt failed and is excluded from classifications; corrected keyboard driver verifies actual selected source.",
+    "Meaningful blank-line application remains unsupported on this unchanged stock backend; whitespace is deletion.",
+    "Applied-history retention after prose-only editing remains failed in the earlier matched corpus; its extended-comparator replay is unchanged."
+  ],
+  "limits": [
+    "One Linux Chromium run per case; single-line target and one newline only.",
+    "No matched multirange/Unicode-whitespace/roles/concurrency/other-browser/mobile/restart claim.",
+    "No editor runtime/API/capacity/version/publication/website claim change."
+  ],
+  "hashes": {
+    "scripts/run-gitlab-compatibility.mjs": "b802886d985fc9b15b28d55edd17303a8732662c7e50d8b8c11aa5e80747aa2b",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "2be5b11b3844d3c75d26f28bc782f16127bd7295eb4fd5eac1f058f393b3ec66",
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "90a6d0f718c03b8f41d4d5be785adb353544e35699ba9f7b2923c1dd8283d112",
+    "integrations/gitlab/fixtures/compatibility-deletions.json": "82a334624740159b915769024a626bc1220d245f1b8f9da688afb1988c766bfa",
+    "tests/gitlab-compatibility.test.ts": "231748254feb87fff536a7ffb72ca225849485c394539ffb2f451d4a51adbb93",
+    "integrations/gitlab/COMPATIBILITY_DELETION_RESULTS.md": "8c0a66c27f08ef54d74a86a8232f63d23cac128472377b08a588174baa0fbd25",
+    "integrations/gitlab/COMPATIBILITY_RESULTS.md": "eeea507c0ce9ff7275707b676696bbb5e90807a3f1ea94624b4187efbb59fa98",
+    "integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md": "e4ab9bf9c22519905de7c0a90ab78ddedb577f39bee1e97f8a20cbefb07a9591",
+    "artifacts/record-gitlab-deletion-source-20261116.mjs": "d66b4e670257893e4b3e8e095c4b16378743ecf064b1538978cdd198e5fe8f28",
+    "artifacts/compatibility-deletion-original-20261116.log": "1847b02d6da10fd75493eafabb519749a8dc9f5fcc01b912d091d2e54d193b81",
+    "artifacts/compatibility-deletion-keyboard-original-20261116.log": "98c1fc42898298cd295c8af367700830e17ba9e479ea60d8031a2d5eff60667e",
+    "artifacts/compatibility-deletion-keyboard-fountain-20261116.log": "e4cb1c6a2cdd308a12fc451c0fcd369a549b2abd6ea8dcba6b4ca5840ebbef0b",
+    "artifacts/compatibility-deletion-all-unit-20261116.log": "dbc665cc95d8362b5e1e11b1aa616fcf5f69325c3c21fd09246fe1a3b53517d2",
+    "artifacts/compatibility-deletion-types-20261116.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gitlab-compatibility/deletion-20261116/original-1/report.json": "7b561dceaba6dde41b1c85760477dac6958c7588856801fdec3bea48a1d2ae50",
+    "artifacts/gitlab-compatibility/deletion-20261116/original-1/empty-deletion-deletion-draft.png": "3bfbe273f5d1a6c4d8e0aea125db751aa4692dd777e0704ccae41eae0ded6e3c",
+    "artifacts/gitlab-compatibility/deletion-20261116/original-1/whitespace-deletion-failure.png": "ee1680612e38e9c587c87871796df19d1a2cf455681119da467244a5d41a2f75",
+    "artifacts/gitlab-compatibility/switch-20261116/comparison-3/report.json": "2d37e7821256c94d16b8e64aba4cf04203d4e88ecf900bb1547fa90be80f7b05",
+    "artifacts/gitlab-compatibility/switch-20261116/comparison-3/report.md": "3057aab69033f92ccfe1d3a626fe2c12bcc4f852cb02e1b87729ac5dbbd602b4",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/report.json": "2ade0a8a14c9cb8986eedb5589207dcfa1cc22a384d8abcffec89faaf74b319d",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/report.json": "2ef797bfe9b46fbb14120f961628013eb323fbcc08853eec53c153838753f5a9",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/comparison-1/report.json": "d89ffbc109c7298e70ef506d83418138771608585ec211eff88019a8edf8a424",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/comparison-1/report.md": "9f34940b38007e53bd00f45b9e8ea5900e2eecb5fc331802c0213ea3ef57945f",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/source-provenance.json": "5f06ff203a806d04ed0a9fa8d9c3bc264929bae52a26e2dd34bc9e3f41827987",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/empty-deletion-applied.png": "90402062766160f5e73c4907a81558a94063ac8bbc30317e6abfb824a9afc0ce",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/empty-deletion-deletion-draft.png": "7492c50080fe7d456adf77310e4622e9d69e59d0264738e24797287ce572e77a",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/empty-deletion-posted.png": "f8f74c804e7bba7f90fa98ab8b786689da57ac7e802d6ebc33dad934696b0ab3",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/empty-deletion-reopened-source.png": "6a7da3faba5f81dda31d5ec9f4cec3d377ccd75b15f86152a05138b52bcb5ba3",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/empty-deletion-source-draft.png": "b26c76c077560f14e0b8454c6b252bd771ae10701bd58b0109183b36a9eaf73d",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/whitespace-deletion-applied.png": "6eb5b32d1a41920680538907ee753542a7e6721ab99be0f5e52f13fb83e9c31c",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/whitespace-deletion-deletion-draft.png": "9e12230746735a2da162fdb87bf7542e47cbff11ba53060a805dac69b5b653b6",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/whitespace-deletion-posted.png": "70455dd42783a22490250dc0a6062460fd92867798bff58920becb3da8e3a597",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/whitespace-deletion-reopened-source.png": "6a7da3faba5f81dda31d5ec9f4cec3d377ccd75b15f86152a05138b52bcb5ba3",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/whitespace-deletion-source-draft.png": "1da6e120b49e700e42ddf63139da98c0a7acf6a8df25d33934737630863b0a1a",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/empty-deletion-applied.png": "5c15137b3a8b43384361f9a8b8480fd2283600937794c15acccc9817237a48af",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/empty-deletion-deletion-draft.png": "94a6fc44e2196dd7e9c44960d9833b057624d42e79bbec30a0e06ad343c51227",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/empty-deletion-deletion-warning.png": "4c16cbbf8528a0d5ef6bfa1b2f2021c29603873935941910066bd2844f5324ed",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/empty-deletion-posted.png": "a4af5710e9032c66e5ab4345565ffd11db117d8beb8162c7911548afd163485f",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/empty-deletion-reopened-source.png": "3b84a00389ca8555b513b9330d9d945e41bbf3872404a72062e80d0d99556fb6",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/empty-deletion-source-draft.png": "f3ca1ff1e1ea580a33da13cab4d213ba593ce3698f291ffa45e130ba93e87e9b",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/whitespace-deletion-applied.png": "c79fca9378ab4f56fc32a2fadd0abd2a89a6b6fe4004e3e13d5917d19115e778",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/whitespace-deletion-deletion-draft.png": "94a6fc44e2196dd7e9c44960d9833b057624d42e79bbec30a0e06ad343c51227",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/whitespace-deletion-deletion-warning.png": "2333f179cf010e76b3de0e2a379071acea3086428c088e23d41b599388f62924",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/whitespace-deletion-posted.png": "273be8514ca2ca0f3b21ad739e617c5903a20e17b9da76a5421f3dc46b98cf45",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/whitespace-deletion-reopened-source.png": "7e3981884568ade79d2cf87d0d195f700b67624e8d12d1ee79ee5426ec17a957",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/whitespace-deletion-source-draft.png": "afe0fb845a8a57ff6367068af4764b52dd454807258a4d999e41989b94283794"
+  }
+}

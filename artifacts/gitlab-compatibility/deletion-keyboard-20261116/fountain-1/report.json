@@ -1,0 +1,633 @@
+{
+  "formatVersion": 1,
+  "runId": "deletion-keyboard-20261116",
+  "attempt": 1,
+  "side": "fountain",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "deletions",
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-deletions.json",
+  "fixtureHash": "82a334624740159b915769024a626bc1220d245f1b8f9da688afb1988c766bfa",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "suggestion-deletion-effects",
+    "title": "Paired deletion compatibility",
+    "marker": "Compatibility deletion review",
+    "sourceObservationDelayMs": 1500,
+    "cases": [
+      {
+        "id": "empty-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      {
+        "id": "whitespace-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "\n",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      }
+    ],
+    "editingDelayMs": 1500
+  },
+  "observations": [
+    {
+      "id": "empty-deletion",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "empty-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Edit the replacement through the actual rich editor controls; observe deletion explanation and confirmation before accepting.",
+        "Switch to source; retain the exact captured deletion proposal and add only a prose marker.",
+        "Reload the saved proposal; reopen rich editing and inspect exact source; cancel without rewriting it.",
+        "Normal GitLab Apply suggestion creates a real source commit."
+      ],
+      "setup": {
+        "branch": "fountain-compat-deletion-keyboard-20261116-a1-fountain-empty-deletion",
+        "seedCommit": "737c57115446bbbc237ed6499ec3d9fe62a875a8",
+        "source": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo=",
+        "mergeRequest": {
+          "iid": 57,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/57"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "old();\n",
+      "deletion": {
+        "replacement": "",
+        "confirmationPresent": false,
+        "blockedBeforeConsent": false,
+        "visibleExplanation": "An empty replacement proposes deleting the target file lines. GitLab applies the deletion only after you save this comment and choose Apply suggestion.",
+        "explicitDeletionExplanation": true,
+        "actionLabel": "Apply deletion",
+        "richSource": "",
+        "effect": "deletion"
+      },
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1500.1476810000022
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\n```",
+      "saved": {
+        "id": 513,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:43:16.238Z",
+        "updated_at": "2026-11-16T23:43:16.238Z",
+        "system": false,
+        "noteable_id": 208,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "737c57115446bbbc237ed6499ec3d9fe62a875a8",
+          "old_path": "paired-deletion.js",
+          "new_path": "paired-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 174,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": true,
+            "applied": false,
+            "from_content": "old();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 57,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-deletion.js",
+        "file_path": "paired-deletion.js",
+        "size": 23,
+        "encoding": "base64",
+        "content_sha256": "a2a6db4c1c8cdf3e7e2082afb68e22a3d6609207deb9bbd80c23c228a50949f0",
+        "ref": "fountain-compat-deletion-keyboard-20261116-a1-fountain-empty-deletion",
+        "blob_id": "e57a323a219bdeba9b4b6780e2f82fb41d9ac21e",
+        "commit_id": "737c57115446bbbc237ed6499ec3d9fe62a875a8",
+        "last_commit_id": "737c57115446bbbc237ed6499ec3d9fe62a875a8",
+        "execute_filemode": false,
+        "content": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo="
+      },
+      "beforeApplyHead": "737c57115446bbbc237ed6499ec3d9fe62a875a8",
+      "reopenedDOM": "",
+      "reopenedSource": "```suggestion:-0+0\n```\n\nCompatibility deletion review",
+      "appliedFile": {
+        "file_name": "paired-deletion.js",
+        "file_path": "paired-deletion.js",
+        "size": 16,
+        "encoding": "base64",
+        "content_sha256": "c3575e03d640f105a387858276234dd0c89bde68b5addd21e739ed86c2c26778",
+        "ref": "fountain-compat-deletion-keyboard-20261116-a1-fountain-empty-deletion",
+        "blob_id": "027848952d1fe871052b8e4150659591462c8f78",
+        "commit_id": "20b80a762491c6aab7afeac6bce93c96f753e6ed",
+        "last_commit_id": "20b80a762491c6aab7afeac6bce93c96f753e6ed",
+        "execute_filemode": false,
+        "content": "a2VlcCgpOwpsYXN0KCk7Cg=="
+      },
+      "appliedCommit": {
+        "id": "20b80a762491c6aab7afeac6bce93c96f753e6ed",
+        "short_id": "20b80a76",
+        "created_at": "2026-11-16T23:43:23.000+00:00",
+        "parent_ids": [
+          "737c57115446bbbc237ed6499ec3d9fe62a875a8"
+        ],
+        "title": "Apply paired editor suggestion",
+        "message": "Apply paired editor suggestion",
+        "author_name": "Administrator",
+        "author_email": "gitlab_admin_5c5720@example.com",
+        "authored_date": "2026-11-16T23:43:23.000+00:00",
+        "committer_name": "Administrator",
+        "committer_email": "gitlab_admin_5c5720@example.com",
+        "committed_date": "2026-11-16T23:43:23.000+00:00",
+        "trailers": {},
+        "extended_trailers": {},
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/commit/20b80a762491c6aab7afeac6bce93c96f753e6ed",
+        "stats": {
+          "additions": 0,
+          "deletions": 1,
+          "total": 1
+        },
+        "status": null,
+        "project_id": 1,
+        "last_pipeline": null
+      },
+      "appliedNote": {
+        "id": 513,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:43:16.238Z",
+        "updated_at": "2026-11-16T23:43:23.783Z",
+        "system": false,
+        "noteable_id": 208,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "737c57115446bbbc237ed6499ec3d9fe62a875a8",
+          "old_path": "paired-deletion.js",
+          "new_path": "paired-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-16T23:43:23.783Z",
+        "suggestions": [
+          {
+            "id": 174,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": false,
+            "applied": true,
+            "from_content": "old();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 57,
+        "commands_changes": {}
+      }
+    },
+    {
+      "id": "whitespace-deletion",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "whitespace-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "\n",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Edit the replacement through the actual rich editor controls; observe deletion explanation and confirmation before accepting.",
+        "Switch to source; retain the exact captured deletion proposal and add only a prose marker.",
+        "Reload the saved proposal; reopen rich editing and inspect exact source; cancel without rewriting it.",
+        "Normal GitLab Apply suggestion creates a real source commit."
+      ],
+      "setup": {
+        "branch": "fountain-compat-deletion-keyboard-20261116-a1-fountain-whitespace-deletion",
+        "seedCommit": "3f31ef029fcf371391525af72a83777d8d77c43d",
+        "source": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo=",
+        "mergeRequest": {
+          "iid": 58,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/58"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "old();\n",
+      "deletion": {
+        "replacement": "\n",
+        "confirmationPresent": true,
+        "blockedBeforeConsent": true,
+        "visibleExplanation": "GitLab applies a whitespace-only suggestion as a deletion, not as blank lines. Your exact source is retained. Continuing proposes deleting the target file lines.",
+        "explicitDeletionExplanation": true,
+        "actionLabel": "Apply deletion",
+        "confirmed": true,
+        "richSource": "\n",
+        "effect": "deletion"
+      },
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1501.3251020000025
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\n\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\n\n```",
+      "saved": {
+        "id": 517,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\n\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:43:39.211Z",
+        "updated_at": "2026-11-16T23:43:39.211Z",
+        "system": false,
+        "noteable_id": 209,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "3f31ef029fcf371391525af72a83777d8d77c43d",
+          "old_path": "paired-deletion.js",
+          "new_path": "paired-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 175,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": true,
+            "applied": false,
+            "from_content": "old();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 58,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-deletion.js",
+        "file_path": "paired-deletion.js",
+        "size": 23,
+        "encoding": "base64",
+        "content_sha256": "a2a6db4c1c8cdf3e7e2082afb68e22a3d6609207deb9bbd80c23c228a50949f0",
+        "ref": "fountain-compat-deletion-keyboard-20261116-a1-fountain-whitespace-deletion",
+        "blob_id": "e57a323a219bdeba9b4b6780e2f82fb41d9ac21e",
+        "commit_id": "3f31ef029fcf371391525af72a83777d8d77c43d",
+        "last_commit_id": "3f31ef029fcf371391525af72a83777d8d77c43d",
+        "execute_filemode": false,
+        "content": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo="
+      },
+      "beforeApplyHead": "3f31ef029fcf371391525af72a83777d8d77c43d",
+      "reopenedDOM": "\n",
+      "reopenedSource": "```suggestion:-0+0\n\n```\n\nCompatibility deletion review",
+      "appliedFile": {
+        "file_name": "paired-deletion.js",
+        "file_path": "paired-deletion.js",
+        "size": 16,
+        "encoding": "base64",
+        "content_sha256": "c3575e03d640f105a387858276234dd0c89bde68b5addd21e739ed86c2c26778",
+        "ref": "fountain-compat-deletion-keyboard-20261116-a1-fountain-whitespace-deletion",
+        "blob_id": "027848952d1fe871052b8e4150659591462c8f78",
+        "commit_id": "17f81306dc5a6fb4e96d3e1f8d1cac6d484ec409",
+        "last_commit_id": "17f81306dc5a6fb4e96d3e1f8d1cac6d484ec409",
+        "execute_filemode": false,
+        "content": "a2VlcCgpOwpsYXN0KCk7Cg=="
+      },
+      "appliedCommit": {
+        "id": "17f81306dc5a6fb4e96d3e1f8d1cac6d484ec409",
+        "short_id": "17f81306",
+        "created_at": "2026-11-16T23:43:45.000+00:00",
+        "parent_ids": [
+          "3f31ef029fcf371391525af72a83777d8d77c43d"
+        ],
+        "title": "Apply paired editor suggestion",
+        "message": "Apply paired editor suggestion",
+        "author_name": "Administrator",
+        "author_email": "gitlab_admin_5c5720@example.com",
+        "authored_date": "2026-11-16T23:43:45.000+00:00",
+        "committer_name": "Administrator",
+        "committer_email": "gitlab_admin_5c5720@example.com",
+        "committed_date": "2026-11-16T23:43:45.000+00:00",
+        "trailers": {},
+        "extended_trailers": {},
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/commit/17f81306dc5a6fb4e96d3e1f8d1cac6d484ec409",
+        "stats": {
+          "additions": 0,
+          "deletions": 1,
+          "total": 1
+        },
+        "status": null,
+        "project_id": 1,
+        "last_pipeline": null
+      },
+      "appliedNote": {
+        "id": 517,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\n\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:43:39.211Z",
+        "updated_at": "2026-11-16T23:43:45.947Z",
+        "system": false,
+        "noteable_id": 209,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "3f31ef029fcf371391525af72a83777d8d77c43d",
+          "old_path": "paired-deletion.js",
+          "new_path": "paired-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-16T23:43:45.947Z",
+        "suggestions": [
+          {
+            "id": 175,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": false,
+            "applied": true,
+            "from_content": "old();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 58,
+        "commands_changes": {}
+      }
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "b802886d985fc9b15b28d55edd17303a8732662c7e50d8b8c11aa5e80747aa2b",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "2be5b11b3844d3c75d26f28bc782f16127bd7295eb4fd5eac1f058f393b3ec66"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [
+      {
+        "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+        "readOnly": true
+      }
+    ],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "ENABLE_RSPACK=true",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "14a1f4547a75e8ca9f2cca7aecb339c024cb934accdea2475ed2e4da60f3751c  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": true
+}

@@ -2,6 +2,14 @@
 
 Updated 2026-11-16.
 
+Matched deletion follow-up (2026-11-16): two additional real original/Fountain
+workflows verify 26 parity and four improvement outcomes across 30 checks, with
+zero regression. Native explicit deletion explanations, whitespace-intent gating
+and newline retention on rich reopen are now compared against the actual original
+UI. Stock whitespace deletion and the prior Applied-history failure remain open
+requirements; this is not overall product acceptance. 1381 integration tests /
+54 files and strict types pass. [Deletion results and reproduction](../integrations/gitlab/COMPATIBILITY_DELETION_RESULTS.md).
+
 First paired GitLab compatibility run completed (2026-11-16): matching stock
 backend/browser/fixtures/instruments verify 20 parity, 12 improvement, zero
 regression and four shared-limitation outcomes across 36 checks in four scenarios.

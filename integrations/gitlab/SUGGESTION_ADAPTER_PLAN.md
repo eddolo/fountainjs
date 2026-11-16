@@ -7,6 +7,11 @@ reject active configuration; full review/product acceptance remains open.
 Pinned target: GitLab CE 19.5.3, source
 `0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf`.
 
+Matched empty/newline deletion now has [original-editor UI evidence](COMPATIBILITY_DELETION_RESULTS.md):
+explicit effect explanation, whitespace consent and source reopening improve;
+application semantics match. The host still cannot apply meaningful blank-line
+replacement, and the earlier shared Applied-history failure remains open.
+
 ## Existing evidence
 
 The suggestion node/source codec retains empty versus blank replacement lines,

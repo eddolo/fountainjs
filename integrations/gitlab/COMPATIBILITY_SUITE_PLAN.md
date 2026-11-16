@@ -4,6 +4,8 @@ Status: first matched original-editor/Fountain source-handoff and application/
 prose-edit runs completed 2026-11-16. Four scenarios yield 20 parity, 12 improvement,
 zero regression and four shared-limitation outcomes across 36 invariants. Absolute
 feature acceptance remains false. [Results and reproduction](COMPATIBILITY_RESULTS.md).
+A second matched deletion pair adds 26 parity/four improvement outcomes across
+30 checks in two scenarios, with zero regression. [Deletion results](COMPATIBILITY_DELETION_RESULTS.md).
 Earlier native journeys/API controls remain separate single-sided evidence.
 
 ## Comparison contract
@@ -94,11 +96,14 @@ one substep does not establish that Fountain is globally better than Tiptap.
    apply. Verify comment updates do not write repository content before Apply.
 3. Empty and whitespace source: separately compare preserved Markdown, intended
    file effect, warnings/confirmation and actual application. Stock GitLab's
-   whitespace-only source becomes deletion. Native explicit warning/confirmation
-   is implemented, but no comparative improvement is claimed before baseline UI.
+   whitespace-only source becomes deletion. The matched empty/one-newline UI
+   pair now verifies explicit explanation, affirmative whitespace consent and
+   source reopening. Wider ranges/Unicode and meaningful blank-line replacement
+   remain separate requirements.
 4. Prose-only editing of an applied proposal: compare suggestion IDs/application
-   metadata and source commit before/after. An API-only control proves the stock
-   server recreates records; original-editor UI comparison remains pending.
+   metadata and source commit before/after. The original-editor UI pair now
+   verifies the same lost Applied flag/recreated identity on both sides. The
+   earlier stock API control remains separate attribution evidence.
 5. Extend the same harness to existing clipboard, table, task-state, media,
    source-switching, review and persistence journeys, followed by permissions,
    concurrency and additional browser/mobile profiles.
@@ -129,8 +134,8 @@ handoff discovery is retained; predefined immediate and settled profiles run
 identically on both sides. The comparator refuses environment/input/instrument
 mismatches, missing editor proof and unobserved outcomes.
 
-Next: extend matched workflows to posted source/range editing, deletion/whitespace
-warning/confirmation, clipboard/tables/tasks/media and then roles/concurrency,
+Next: extend matched workflows to posted source/range editing, wider deletion
+ranges/whitespace inputs, clipboard/tables/tasks/media and then roles/concurrency,
 additional browsers/mobile and matched restart. Keep the shared Applied-history
 failure open. Add repeated profiles before making frequency/performance claims.
 No broad superiority claim or release promotion follows from this initial corpus.

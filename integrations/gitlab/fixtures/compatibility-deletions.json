@@ -1,0 +1,34 @@
+{
+  "formatVersion": 1,
+  "workflow": "suggestion-deletion-effects",
+  "title": "Paired deletion compatibility",
+  "marker": "Compatibility deletion review",
+  "sourceObservationDelayMs": 1500,
+  "cases": [
+    {
+      "id": "empty-deletion",
+      "filePath": "paired-deletion.js",
+      "source": "old();\nkeep();\nlast();\n",
+      "range": {
+        "start": 1,
+        "end": 1
+      },
+      "replacement": "",
+      "handoffDelayMs": 1500,
+      "scope": "deletion"
+    },
+    {
+      "id": "whitespace-deletion",
+      "filePath": "paired-deletion.js",
+      "source": "old();\nkeep();\nlast();\n",
+      "range": {
+        "start": 1,
+        "end": 1
+      },
+      "replacement": "\n",
+      "handoffDelayMs": 1500,
+      "scope": "deletion"
+    }
+  ],
+  "editingDelayMs": 1500
+}

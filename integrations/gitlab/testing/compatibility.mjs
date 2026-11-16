@@ -39,6 +39,15 @@ function observedValues(report,item,input,fixture){
   const first=suggestionBlock(item.sourceAtFirstVisible),settled=suggestionBlock(item.sourceModeBeforeEdit),saved=suggestionBlock(item.saved?.body);
   const result={prefill,firstSource:first?.source,settledSource:settled?.source,range:settled?.params};
   if(input.scope==='handoff')return result;
+  if(input.scope==='deletion'){
+    result.richReplacement=item.deletion?.richSource;
+    result.deletionExplanation=item.deletion?.explicitDeletionExplanation;
+    if(item.deletion)result.consent=input.replacement.length>0
+      ?{present:item.deletion.confirmationPresent,blocked:item.deletion.blockedBeforeConsent,confirmed:item.deletion.confirmed??false}
+      :{present:item.deletion.confirmationPresent,blocked:item.deletion.blockedBeforeConsent};
+    result.reopenedSource=suggestionBlock(item.reopenedSource)?.source;
+    if(item.appliedNote?.suggestions?.length===1)result.appliedFlagAtCommit=item.appliedNote.suggestions[0].applied;
+  }
   result.savedSource=saved?.source;result.savedRange=saved?.params;
   result.beforeApplySource=decoded(item.beforeApplyFile);
   if(item.beforeApplyHead!==undefined&&item.setup?.seedCommit!==undefined)result.noEarlyCommit=item.beforeApplyHead===item.setup.seedCommit;
@@ -68,9 +77,21 @@ export function compareGitLabCompatibility(original,fountain){
     const left=observedValues(original,a,input,fixture),right=observedValues(fountain,b,input,fixture);
     const lines=input.source.split('\n'),selected=lines.slice(input.range.start-1,input.range.end).join('\n'),source=selected+'\n',replacement=source+fixture.appendLine;
     const prefix=lines.slice(0,input.range.start-1),expectedFile=(prefix.length?prefix.join('\n')+'\n':'')+replacement+lines.slice(input.range.end).join('\n');
-    const specs=[['prefill','Selected source characters',selected],['firstSource','Source at first visible Markdown field',source],
-      ['settledSource','Source after declared observation window',source],['range','Selected target offsets',`-${input.range.end-input.range.start}+0`]];
-    if(input.scope!=='handoff')specs.push(['savedSource','Saved replacement source',replacement],['savedRange','Saved target offsets',`-${input.range.end-input.range.start}+0`],
+    const deletion=input.scope==='deletion',editedSource=deletion?input.replacement:source;
+    const specs=[['prefill','Selected source characters',selected],['firstSource','Source at first visible Markdown field',editedSource],
+      ['settledSource','Source after declared observation window',editedSource],['range','Selected target offsets',`-${input.range.end-input.range.start}+0`]];
+    if(deletion){
+      const remaining=[...lines.slice(0,input.range.start-1),...lines.slice(input.range.end)].join('\n');
+      specs.push(['richReplacement','Rich editing preserves exact empty or whitespace replacement',input.replacement],
+        ['deletionExplanation','Rich editing explicitly explains the deletion effect in words',true],
+        ['consent',input.replacement.length?'Nonempty whitespace deletion requires affirmative intent before acceptance':'Empty deletion needs no extra whitespace consent',input.replacement.length?{present:true,blocked:true,confirmed:true}:{present:false,blocked:false}],
+        ['savedSource','Saved deletion source',input.replacement],['savedRange','Saved target offsets',`-${input.range.end-input.range.start}+0`],
+        ['reopenedSource','Reloaded rich proposal retains exact deletion source',input.replacement],
+        ['beforeApplySource','Draft does not write repository contents',input.source],['noEarlyCommit','Draft does not create a source commit',true],
+        ['appliedSource','Deletion removes only the intended file lines',remaining],['singleApplyCommit','Application creates one child of the seed commit',true],
+        ['appliedFlagAtCommit','Successful deletion has Applied metadata immediately after commit',true]);
+    }
+    if(input.scope!=='handoff'&&!deletion)specs.push(['savedSource','Saved replacement source',replacement],['savedRange','Saved target offsets',`-${input.range.end-input.range.start}+0`],
       ['beforeApplySource','Draft does not write repository contents',input.source],['noEarlyCommit','Draft does not create a source commit',true],
       ['appliedSource','Applied repository file contents',expectedFile],['singleApplyCommit','Application creates one child of the seed commit',true],
       ['proseOnlyBody','Prose editing changes only the intended comment suffix',true],['noProseFileChange','Prose editing retains repository content and head',true],

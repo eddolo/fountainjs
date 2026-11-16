@@ -8,13 +8,15 @@ import {readGitLabAuditCredential} from './gitlab-audit-credentials.mjs';
 import {runGitLabSuggestionCompatibility} from './audit-gitlab-compatibility-suggestions.mjs';
 if(process.platform!=='linux')throw new Error('Run beside the isolated Linux Docker engine.');
 const value=flag=>process.argv[process.argv.indexOf(flag)+1];
+const suite=process.argv.includes('--suite')?value('--suite'):'suggestions';
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
-if(!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99]');
+if(!['suggestions','deletions'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
+ throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--suite suggestions|deletions]');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-const fixtureBytes=await readFile(resolve(root,'integrations/gitlab/fixtures/compatibility-suggestions.json')),fixture=JSON.parse(fixtureBytes);
+const fixturePath=`integrations/gitlab/fixtures/compatibility-${suite}.json`;
+const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
 const pin=JSON.parse(await readFile(resolve(root,'integrations/gitlab/runtime/upstream.json')));
 const compose=['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')],env={...process.env};
 if(side==='fountain'){
@@ -33,7 +35,7 @@ if(prior.State.Running||prior.Config.Labels['com.docker.compose.project']!=='fou
  throw new Error('Stop the known isolated task deployment before switching editor modes.');
 let browser,started=false,authenticated=false;
 const report={formatVersion:1,runId,attempt,side,scope:'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
- fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
+ suite,fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
  harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
  started=true;execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
