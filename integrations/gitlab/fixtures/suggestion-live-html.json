@@ -1,0 +1,95 @@
+{
+  "scope": "Actual pinned project-preview responses. Does not prove MR suggestion application or inline review acceptance.",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "fixtures": [
+    {
+      "name": "single",
+      "source": "```suggestion\nreturn true;\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">return true;</span></code></pre></div>"
+    },
+    {
+      "name": "range",
+      "source": "```suggestion:-2+1\nfirst();\nsecond();\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-2+1\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">first();</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"suggestion\">second();</span></code></pre></div>"
+    },
+    {
+      "name": "one-blank-line",
+      "source": "```suggestion:-0+0\n\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\"></span></code></pre></div>"
+    },
+    {
+      "name": "two-blank-lines",
+      "source": "```suggestion:-0+0\n\n\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-4:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\"></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"suggestion\"></span></code></pre></div>"
+    },
+    {
+      "name": "crlf",
+      "source": "```suggestion:-1+0\r\nline\r\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-1+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">line</span></code></pre></div>"
+    },
+    {
+      "name": "tilde",
+      "source": "~~~suggestion:-0+0\n~literal~\n~~~",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">~literal~</span></code></pre></div>"
+    },
+    {
+      "name": "trailing-spaces",
+      "source": "```suggestion:-0+0\nkeep();  \n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">keep();  </span></code></pre></div>"
+    },
+    {
+      "name": "empty",
+      "source": "```suggestion:-0+0\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-2:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code></code></pre></div>"
+    },
+    {
+      "name": "blank-lines",
+      "source": "```suggestion:-1+0\n\n  keepIndent();\n\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-5:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-1+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\"></span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"suggestion\">  keepIndent();</span>&#x000A;<span id=\"LC3\" class=\"line\" data-lang=\"suggestion\"></span></code></pre></div>"
+    },
+    {
+      "name": "literal-unicode",
+      "source": "```suggestion:-0+0\nconst key = \"A​B\";\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">const key = \"A​B\";</span></code></pre></div>"
+    },
+    {
+      "name": "literal-html",
+      "source": "```suggestion:-0+0\n<div>&value</div>\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">&lt;div&gt;&amp;value&lt;/div&gt;</span></code></pre></div>"
+    },
+    {
+      "name": "inner-fence",
+      "source": "````suggestion:-0+0\n```js\nx();\n```\n````",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-5:4\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">```js</span>&#x000A;<span id=\"LC2\" class=\"line\" data-lang=\"suggestion\">x();</span>&#x000A;<span id=\"LC3\" class=\"line\" data-lang=\"suggestion\">```</span></code></pre></div>"
+    },
+    {
+      "name": "quoted",
+      "source": "> ```suggestion:-0+0\n> replacement\n> ```",
+      "body": "<blockquote data-sourcepos=\"1:1-3:5\" dir=\"auto\">&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:3-3:5\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">replacement</span></code></pre></div>&#x000A;</blockquote>"
+    },
+    {
+      "name": "nested-list",
+      "source": "- Review\n\n  ```suggestion:-0+0\n  replacement\n  ```",
+      "body": "<ul data-sourcepos=\"1:1-5:5\" dir=\"auto\">&#x000A;<li data-sourcepos=\"1:1-5:5\">&#x000A;<p data-sourcepos=\"1:3-1:8\">Review</p>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"3:3-5:5\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">replacement</span></code></pre></div>&#x000A;</li>&#x000A;</ul>"
+    },
+    {
+      "name": "two",
+      "source": "```suggestion:-1+0\nfirst\n```\n\n```suggestion:-0+2\nsecond\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-1+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">first</span></code></pre></div>&#x000A;<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"5:1-7:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-0+2\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">second</span></code></pre></div>"
+    },
+    {
+      "name": "invalid-offset",
+      "source": "```suggestion:wrong\nsource\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"wrong\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">source</span></code></pre></div>"
+    },
+    {
+      "name": "offset-spaces",
+      "source": "```suggestion:-1+0 extra\nsource\n```",
+      "body": "<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"1:1-3:3\" data-canonical-lang=\"suggestion\" data-lang-params=\"-1+0\" class=\"code highlight js-syntax-highlight language-suggestion\" v-pre=\"true\"><code><span id=\"LC1\" class=\"line\" data-lang=\"suggestion\">source</span></code></pre></div>"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
 import { readGitLabAuditCredential } from './gitlab-audit-credentials.mjs';
+import { captureGitLabSuggestionRendering } from './capture-gitlab-suggestion-rendering.mjs';
 import { captureGitLabTaskRendering } from './capture-gitlab-task-rendering.mjs';
 import { captureGitLabFootnoteRenaming } from './capture-gitlab-footnote-renaming.mjs';
 import { captureGitLabFootnoteServer } from './capture-gitlab-footnote-server.mjs';
@@ -11,6 +12,7 @@ import { captureGitLabFootnoteRoundtrip } from './capture-gitlab-footnote-roundt
 
 if (process.platform !== 'linux') throw new Error('Run beside the isolated Linux GitLab deployment.');
 const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
+const suggestions = process.argv.includes('--suggestions');
 const tasks = process.argv.includes('--tasks');
 const media = process.argv.includes('--media');
 const diagrams = process.argv.includes('--diagrams');
@@ -27,7 +29,7 @@ const footnotes = process.argv.includes('--footnotes') || footnoteProbe;
 const catalogue = quickActionCommands || autocomplete;
 const referenceContexts = process.argv.includes('--reference-context');
 const references = process.argv.includes('--references') || referenceContexts;
-if ([tasks, media, diagrams, references, frontmatter, quickActions, quickActionCommands, autocomplete, footnotes].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
+if ([suggestions, tasks, media, diagrams, references, frontmatter, quickActions, quickActionCommands, autocomplete, footnotes].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -139,17 +141,18 @@ try {
     console.log(JSON.stringify({ kind: 'autocomplete', captured: Object.fromEntries(Object.entries(results)
       .map(([kind, result]) => [kind, { status: result.status, count: Array.isArray(result.data) ? result.data.length : null }])) }));
   }
-  if (tasks || footnoteRenaming || footnoteServer || footnoteRoundtrip) {
+  if (suggestions || tasks || footnoteRenaming || footnoteServer || footnoteRoundtrip) {
     const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
     if (preview.origin !== base) throw new Error('Nonlocal footnote preview');
     preview.searchParams.set('no_header_anchors', 'true');
     const renderMarkdown = source => request(preview.href, { text: source });
-    if (tasks) await captureGitLabTaskRendering({ root, pin, version, renderMarkdown });
+    if (suggestions) await captureGitLabSuggestionRendering({ root, pin, version, renderMarkdown });
+    else if (tasks) await captureGitLabTaskRendering({ root, pin, version, renderMarkdown });
     else if (footnoteRoundtrip) await captureGitLabFootnoteRoundtrip({ root, pin, version, renderMarkdown, overlay: footnoteServerOverlay });
     else if (footnoteServer) await captureGitLabFootnoteServer({ root, pin, version, renderMarkdown, overlay: footnoteServerOverlay });
     else await captureGitLabFootnoteRenaming({ root, pin, version, renderMarkdown });
   }
-  if (!tasks && !catalogue && !footnoteRenaming && !footnoteServer && !footnoteRoundtrip) {
+  if (!suggestions && !tasks && !catalogue && !footnoteRenaming && !footnoteServer && !footnoteRoundtrip) {
   const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
   if (preview.origin !== base) throw new Error('Nonlocal preview');
   preview.searchParams.set('no_header_anchors', 'true');

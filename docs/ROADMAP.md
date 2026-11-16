@@ -2,6 +2,15 @@
 
 Updated 2026-11-16.
 
+Current work (2026-11-16): source-verified suggestion parsing is prepared
+against 17 actual project-preview captures. It preserves empty versus blank-only
+replacements, offsets, literal Unicode and whitespace; unsupported metadata is
+refused. All 1,227 GitLab tests / 48 files and types pass. This module is not yet
+wired into native editing: suggestion nodes, range controls, document/clipboard
+serialization, real inline review/apply and batching remain open. The active
+host-suggestion guard and previously verified runtime remain in place.
+[Suggestion source evidence](../artifacts/suggestion-source-preparation-20261116.json).
+
 Latest GitLab task-state checkpoint (2026-11-16): pending, completed and
 not-applicable tasks now remain distinct through author controls, Markdown,
 HTML and clipboard. Native buttons support Enter/Space; checking an N/A task

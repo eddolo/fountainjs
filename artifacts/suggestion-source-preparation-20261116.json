@@ -1,0 +1,87 @@
+{
+  "status": "verified-source-boundary-preparation",
+  "parentRevision": "bb912de0",
+  "scope": "Source-verified GitLab suggestion parsing and standalone serialization against actual project-preview rendering. Not enabled in the production codec or inline review UI.",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3",
+    "packagedRevision": "0d4c9a9a2fa"
+  },
+  "verification": {
+    "actualRendererCases": 17,
+    "acceptedSourceCases": 15,
+    "unsupportedHeaderCasesRefused": 2,
+    "gitlabTests": 1227,
+    "gitlabFiles": 48,
+    "typecheck": "passed",
+    "manyFenceRuns": 150000,
+    "nativeRuntimeChanged": false,
+    "actualInlineReviewAcceptance": false
+  },
+  "findings": [
+    "Empty and one-blank-line replacements decode to identical preview text; retain source body terminators to distinguish them.",
+    "Renderer discards extra header information after offsets; refuse it instead of silently normalizing unsupported metadata.",
+    "Read offsets independently from comment source positions. Repository target ranges belong to the host review context.",
+    "Retain literal U+200B, HTML-looking code, indentation, trailing spaces, nested fences and signed offsets. CRLF is normalized in the semantic body; complete source retention remains a surrounding document responsibility."
+  ],
+  "files": [
+    {
+      "path": "integrations/gitlab/services/code_suggestion_source.ts",
+      "sha256": "839c50739e558f89d5aaa0473d592a288e193657c343487b63f9a5eef945e9fb",
+      "retainedLocally": false
+    },
+    {
+      "path": "integrations/gitlab/fixtures/suggestion-live-html.json",
+      "sha256": "8d8d5d4c4ea03654ec929930ee9ece3f859a2ecbd8dcef1c3c2ae3a90e5158c8",
+      "retainedLocally": false
+    },
+    {
+      "path": "scripts/capture-gitlab-suggestion-rendering.mjs",
+      "sha256": "42b13824dd829e4d3ea7ecbadb0524a80d79f737cba4c217754b44e12b5d2159",
+      "retainedLocally": false
+    },
+    {
+      "path": "scripts/capture-gitlab-alert-rendering.mjs",
+      "sha256": "3aab90bf173337ecde83c08fd5f5d847d04e49d682488c86dce81217dd82b7ed",
+      "retainedLocally": false
+    },
+    {
+      "path": "scripts/run-gitlab-native-browser-audit.mjs",
+      "sha256": "6a92d4d8ce737318a5650a7b49ded9d8d020b2a77250c7d8df4b88817d0812a1",
+      "retainedLocally": false
+    },
+    {
+      "path": "tests/gitlab-suggestion-source.test.ts",
+      "sha256": "28cba27013f0dabedda350bf64f00549239ea8f6e6d58a3fe797944c10ace927",
+      "retainedLocally": false
+    },
+    {
+      "path": "artifacts/suggestion-capture-final-20261116.log",
+      "sha256": "48a83ddf8a7f010aab48363eb45de0f7694bc203c4bb22af77f4651d876570e7",
+      "retainedLocally": true
+    },
+    {
+      "path": "artifacts/suggestion-source-gitlab-final-20261116.log",
+      "sha256": "32b576f1a4cd5feb9329b77e77f3dce7b5afe29fbef88cddc230dca25008283d",
+      "retainedLocally": true
+    },
+    {
+      "path": "artifacts/suggestion-source-types-final-20261116.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+      "retainedLocally": true
+    }
+  ],
+  "sourceDigestFormat": "Windows working-tree bytes; Git may normalize text line endings.",
+  "next": [
+    "Represent suggestions as explicit editable source nodes with range metadata.",
+    "Connect document serialization and clipboard while retaining empty-body semantics and nested-container indentation.",
+    "Add insertion/range controls using validated host canSuggest/lines/lineRange context; keep stale target and permissions checks.",
+    "Verify real inline review, saved comments, repository suggestion application and review batching through UI and service state."
+  ],
+  "operationalState": {
+    "container": "exited",
+    "nativeRuntime": "unchanged from task-state checkpoint",
+    "hostSuggestionGuard": "active suggestions still refused",
+    "publication": "none"
+  }
+}
