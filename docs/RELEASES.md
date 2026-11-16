@@ -1,5 +1,32 @@
 # Release and API stability policy
 
+## Publication reconciliation — 2026-11-16
+
+The user flagged the old GitHub Latest badge. A live read confirms that
+[GitHub Latest](https://github.com/eddolo/fountainjs/releases/latest) resolves to
+[v0.3.0](https://github.com/eddolo/fountainjs/releases/tag/v0.3.0), published
+September 3. GitHub also has
+[v0.4.0-beta.2](https://github.com/eddolo/fountainjs/releases/tag/v0.4.0-beta.2),
+published September 8 and explicitly marked as a prerelease. The Latest badge
+therefore does not identify the newest available beta.
+
+The [npm registry](https://registry.npmjs.org/fountainjs-editor) currently reports
+`latest: 0.4.0-beta.2` and `next: 0.4.0-beta.1`; GitHub master also declares
+`0.4.0-beta.2`. The local candidate declares `0.5.0-beta.1` and includes newer
+unpublished work. These are separate publication states, not proof that the
+latest local changes have reached either service.
+
+Release follow-up: prepare notes around the final candidate, push and verify its
+exact revision through the hosted release matrix, and publish matching GitHub
+prerelease/tag and npm package/dist-tags. Review the stale npm `next` tag as part
+of that coordinated release. Point beta-facing website/documentation links to
+the intended beta release explicitly rather than relying on GitHub's stable
+Latest redirect. Keep prerelease status and the remaining acceptance gaps clear;
+do not mark an unfinished beta stable merely to change the badge.
+
+This reconciliation changes no release, tag, npm package or website deployment.
+
+
 ## Mixed lists and GitLab task source — 2026-11-16
 
 Current suggestion-node checkpoint (2026-11-16): source and range metadata now

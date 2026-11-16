@@ -2,6 +2,13 @@
 
 Updated 2026-11-16.
 
+Publication follow-up (2026-11-16): GitHub's stable Latest badge points to 0.3.0;
+the newer 0.4.0-beta.2 GitHub prerelease and npm package already exist. The local
+0.5.0-beta.1 candidate remains unpublished. Coordinate its verified GitHub/npm
+release, reconcile registry tags and make beta links explicit. See the
+[publication reconciliation](RELEASES.md#publication-reconciliation--2026-11-16).
+
+
 Current suggestion-node checkpoint (2026-11-16): source and range metadata now
 live in editable typed nodes. JSON/HTML clipboard and canonical Markdown retain
 empty/blank-only replacements and nested quote/list structure. A host-owned block
