@@ -1,0 +1,87 @@
+{
+  "scope": "Observed real default Rapid Diffs form contexts and private service validation; not production suggestion editing/posting/applying/batching acceptance.",
+  "parentRevision": "6b3fa06144e5e8ee4bb380f623c46e4e75ea503e",
+  "tests": {
+    "gitlabIntegration": {
+      "passed": 1307,
+      "files": 50,
+      "workers": 2
+    },
+    "types": "pnpm exec tsc --noEmit passed",
+    "capture": {
+      "passed": 3,
+      "cases": [
+        "unicode",
+        "empty",
+        "trailing-spaces"
+      ]
+    }
+  },
+  "source": {
+    "interface": "Rapid Diffs default UI",
+    "upstream": {
+      "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "version": "19.5.3",
+      "packagedRevision": "0d4c9a9a2fa"
+    },
+    "mergeRequest": {
+      "iid": 20,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/20"
+    },
+    "setupSHA": {
+      "source": "merge-request-api.sha",
+      "value": "a29a27a6d30f6b143ac18c8a5db001f6ead3728b"
+    },
+    "previewHeadSHAs": [
+      "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+    ]
+  },
+  "observations": [
+    "Actual hover/click opens the host form; no private Vue state mutation",
+    "Read-only Vue context capture matches actual authenticated raw file source",
+    "Native form shows the intentional active-suggestion guard error, not working production controls",
+    "Known preview file/revision fields are validated/frozen and included in edit ownership",
+    "Malformed/unknown preview fields and changed base revision refuse edits without model mutation",
+    "Screenshots inspected; no credentialed recording, trace, cookies or storage state retained"
+  ],
+  "remaining": [
+    "Multiline, literal backslash-n and context-line transport cases",
+    "MR API sha versus preview head_sha relationship and current branch-head verification",
+    "Context-aware expanded suggestion-preview codec",
+    "Production source/range controls and shortcut submission interaction",
+    "Real MR posting/editing/applying/batching with repository verification",
+    "Coherent native runtime/frontend/upstream/rollback/restart acceptance"
+  ],
+  "containerStopped": true,
+  "unchanged": [
+    "Active host configuration guard",
+    "Public API/size/performance limits",
+    "Package version and publication"
+  ],
+  "hashes": {
+    "artifacts/suggestion-context-live-20261116/context.json": "024f3bf7dfd73c1de37c808ec5599bc6964375147bf85686eb18c5ab4cc6810a",
+    "integrations/gitlab/fixtures/suggestion-context-live.json": "efcd3a94417b3cc2b6e8b89bc3471ef3ee3e9d656957440ccbf6b2b92a10f5ae",
+    "integrations/gitlab/services/code_suggestion_editing.ts": "08571cc21279bb0971b3dacee951c8252c91f24293e9fd579de66263ea5fd180",
+    "integrations/gitlab/services/host_configuration.ts": "5b8e2c650f3dbd65efd894c602f3cc7b39f3b74e681dadbe5dfc3a646248a05b",
+    "integrations/gitlab/SUGGESTION_ADAPTER_PLAN.md": "3fc49a2bdbce701d611fcc0cdf028a0383deb1c088f1cd3d36f856ecbfb26039",
+    "tests/gitlab-suggestion-editing.test.ts": "dcd25cc3f3b7c2df9bd85aa081ab914f4a48993b81658f398ff3d2b48294fbdd",
+    "tests/gitlab-host-configuration.test.ts": "399185e11e704f19c25e278b0a2e4437002048316bb6bb9c5edad02f9a80f2da",
+    "scripts/capture-gitlab-suggestion-context.mjs": "ab3e3b682400665333ad16d2c39b991592d2c52afba9a93e748d014dd47d396d",
+    "scripts/capture-gitlab-alert-rendering.mjs": "d25b378fb3f52bb7ebb6a5321cee1f28b13ac7d5ca51ca79e32c07f3f67c1a14",
+    "scripts/run-gitlab-native-browser-audit.mjs": "e11e12a66f3d521c059bc1b2311932ceb38b4242d91f15c53fa6a88cbbc1c3a4",
+    "artifacts/suggestion-context-unit-20261116.log": "ef205cec1dcb43adb52de8017b9296e0fce7951057c09825ea60c5e7af8d159b",
+    "artifacts/suggestion-context-unit-accepted-20261116.log": "90931fbcae18380cdf22b184c9c24b68e225941cb384059042efe500ae7fac05",
+    "artifacts/suggestion-context-types-20261116.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/suggestion-context-live-20261116.log": "ec16b7e48aae865da7753b89cea88cf0f836e3d4c0e7dec669a50c72c98341b7",
+    "artifacts/suggestion-context-live-accepted-20261116.log": "7f719c18c40650f33a8a9598c808803227df0545718f0488ff2997bb918b9f2e",
+    "artifacts/suggestion-context-live-rapid-20261116.log": "ac43b7458fabbdb1df0b5fb625884cb622a703106fe49c0cf19701fd341accd1",
+    "artifacts/suggestion-context-live-final-20261116.log": "2d5751d21ad7fbf6dce46c7e77730c725f561d2531a621724d9b1efc9ff32366",
+    "artifacts/suggestion-context-live-20261116/unicode.png": "e67551764ddef72bb9eac503ae9c709a597df9f7c6f4d6a3d337e1abab30506e",
+    "artifacts/suggestion-context-live-20261116/empty.png": "e67551764ddef72bb9eac503ae9c709a597df9f7c6f4d6a3d337e1abab30506e",
+    "artifacts/suggestion-context-live-20261116/trailing-spaces.png": "e67551764ddef72bb9eac503ae9c709a597df9f7c6f4d6a3d337e1abab30506e",
+    "artifacts/suggestion-context-live-20261116/legacy-selector-failure.json": "31746252c0eb634e43924c21ce51cd12ee55af74add69ecdc5e6d2feb5eab04b",
+    "artifacts/suggestion-context-live-20261116/legacy-selector-failure.png": "a7c4aeae5fa2281ba159d46ff9aa5070c4b2c67b9cecd18acb80f00923c15558",
+    "artifacts/suggestion-context-live-20261116/rapid-role-selector-failure.json": "47fd1ad401374f9b0477791335cdffd73a09e52150764b70e2ca16ea127c016f",
+    "artifacts/suggestion-context-live-20261116/rapid-initialization-failure.json": "404c7f94985b2eac8c05e6a223ff8a65aab9c021f2fb38b5c9eb097d5e1c306e"
+  }
+}

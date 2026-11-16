@@ -428,7 +428,11 @@ parity. This service is private integration code, not a newly published npm API.
 The service exposes `content.suggestions.available`, `insert()` and `begin()`.
 An optional host-owned `getSuggestionContext()` callback supplies the current
 `canSuggest`, original `lines`, inclusive `lineRange`, `lineType` and
-`blobRawPath`. Only known fields and contiguous positive line ranges are accepted.
+`blobRawPath`, plus optional Rapid Diffs `previewParams`. Only known fields and
+contiguous positive line ranges are accepted. Preview metadata must contain the
+exact supported file/line/40-character commit fields and is frozen into session
+ownership. It identifies preview context; it does not establish current branch
+head freshness or grant repository write permission.
 `showPopover` is UI metadata; it does not change source ownership. The callback
 is reread before mutations and after asynchronous operations. No callback means
 suggestions are unavailable. It does not enable the active native host adapter:

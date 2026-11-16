@@ -2,6 +2,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { createEditor, createHistoryPlugin, Plugin, Selection, insertText, undo, redo, type Editor } from 'fountainjs-editor';
 import { exitGitLabCode } from '../integrations/gitlab/services/code_editing';
 import { GitLabContentEditor } from '../integrations/gitlab/services/content_editor';
+import contexts from '../integrations/gitlab/fixtures/suggestion-context-live.json';
 import captures from '../integrations/gitlab/fixtures/suggestion-live-html.json';
 import { createGitLabSchemaSpec } from '../integrations/gitlab/services/markdown_codec';
 import { serializeGitLabSuggestionNode } from '../integrations/gitlab/services/code_suggestion_node';
@@ -228,4 +229,34 @@ it('refuses read-only code exit and rolls back a conversion refusal', () => {
   expect(() => exitGitLabCode(editor, () => { throw new Error('EXIT_REFUSED'); })).toThrow('EXIT_REFUSED');
   expect(editor.state.doc).toBe(before); expect(undo(editor)).toBe(false);
   editor.setEditable(false); expect(exitGitLabCode(editor, () => {})).toBe(false);
+});
+
+it.each(contexts.fixtures)('reads actual Rapid Diffs $name context with immutable file/revision ownership', fixture => {
+  const input = JSON.parse(JSON.stringify(fixture.context)), parsed = readGitLabSuggestionContext(input)!;
+  expect(parsed.previewParams).toEqual(fixture.context.previewParams); expect(Object.isFrozen(parsed.previewParams)).toBe(true);
+  input.previewParams.head_sha = 'a'.repeat(40); expect(parsed.previewParams!.head_sha).toBe(fixture.context.previewParams.head_sha);
+  expect(parsed.lines).toEqual(fixture.rawSource.split('\n').slice(parsed.lineRange.start - 1, parsed.lineRange.end));
+});
+it.each([
+  { preview_suggestions: false }, { line: 2 }, { file_path: '../file.js' }, { file_path: '/file.js' },
+  { file_path: 'file\u0000.js' }, { head_sha: 'not-a-commit' }, { extra: true },
+])('refuses malformed Rapid Diffs preview metadata %j', patch => {
+  const original = contexts.fixtures[0]!.context;
+  expect(() => readGitLabSuggestionContext({ ...original, previewParams: { ...original.previewParams, ...patch } })).toThrow('PREVIEW_CONTEXT_INVALID');
+});
+it('rejects a pending source edit when only the Rapid Diffs base revision changes', () => {
+  const current = JSON.parse(JSON.stringify(contexts.fixtures[0]!.context));
+  const { editing, editor } = setup({ getContext: () => current }), session = editing.begin(), before = editor.state.doc;
+  current.previewParams.base_sha = 'b'.repeat(40);
+  expect(() => session.applySource('late')).toThrow('CONTEXT_CHANGED'); expect(editor.state.doc).toBe(before); expect(undo(editor)).toBe(false);
+});
+
+it.each(contexts.fixtures)('inserts and prepares real $name line context without losing raw characters', async fixture => {
+  const { editing, editor } = setup({ getContext: () => fixture.context, loadSource: async () => fixture.rawSource });
+  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 6)));
+  expect(editing.insert()).toBe(true);
+  const proposal = editor.state.doc.child(1), expected = fixture.context.lines.join('\n') + '\n';
+  expect(proposal.textContent).toBe(expected); expect(proposal.attrs.params).toBe('-0+0');
+  const session = editing.begin(); await session.prepareRange(); expect(await session.applyRange(1, 5)).toBe(true);
+  expect(editor.state.doc.child(1).textContent).toBe(expected);
 });

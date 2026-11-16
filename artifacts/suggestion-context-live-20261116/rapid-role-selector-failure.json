@@ -1,0 +1,8 @@
+{
+  "mergeRequest": {
+    "iid": 20,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/20"
+  },
+  "fixtures": [],
+  "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('tr[data-hunk-lines]').filter({ has: locator('[data-position=\"new\"] [data-line-number=\"1\"]') }).first().getByRole('button', { name: 'Add a comment to line 1', exact: true })\u001b[22m\n"
+}

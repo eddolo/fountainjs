@@ -2,7 +2,21 @@
 
 ## Current programme status — 2026-11-16
 
-Current suggestion-editing service checkpoint (2026-11-16): the native content
+Latest live GitLab suggestion context check (2026-11-16): the default Rapid
+Diffs UI supplies extra file/commit preview metadata. Three actual form contexts
+(Unicode zero-width character, empty line, trailing spaces) match the raw
+repository response. The service now validates/freezes that known metadata and
+rejects pending edits if the revision context changes. The production host guard
+remains closed; the captured real forms visibly show its error state.
+
+1307 GitLab integration cases / 50 files and TypeScript pass for this checkpoint.
+This is not MR posting/application acceptance or a new full-root/hosted CI result.
+The capture records differing MR-reported and preview SHA values separately;
+their revision relationship still needs verification. Multiline/transport edge
+cases, expanded preview rendering, production controls, posting/applying/batching
+and native frontend/upstream/restart acceptance remain open. [Live context evidence](../artifacts/suggestion-context-integration-20261116.json).
+
+Previous suggestion-editing service checkpoint (2026-11-16): the native content
 service now owns proposal insertion and captured source/range edit sessions.
 Sessions follow unrelated edits but refuse an edited/removed/replaced target,
 changed host context, revoked permission and late or superseded raw-file loads.

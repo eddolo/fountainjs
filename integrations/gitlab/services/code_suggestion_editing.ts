@@ -1,17 +1,36 @@
 import { NodeSelection, closeHistory, insertBlock, mapSelection, type Editor, type Node, type Transaction } from 'fountainjs-editor';
 
+export interface GitLabSuggestionPreview {
+  readonly preview_suggestions: true;
+  readonly line: number;
+  readonly file_path: string;
+  readonly base_sha: string;
+  readonly start_sha: string;
+  readonly head_sha: string;
+}
 export interface GitLabSuggestionContext {
   readonly lines: readonly string[];
   readonly lineRange: Readonly<{ start: number; end: number }>;
   readonly lineType: string;
   readonly blobRawPath: string | null;
+  readonly previewParams?: Readonly<GitLabSuggestionPreview>;
 }
 const positive = (value: unknown): value is number => Number.isSafeInteger(value) && Number(value) > 0 && Number(value) < 1_000_000_000;
 const record = (value: unknown): value is Record<string, unknown> => Boolean(value && typeof value === 'object' && !Array.isArray(value));
 function fail(code: string): never { throw new Error('GITLAB_SUGGESTION_' + code); }
+function readPreviewParams(value: unknown, line: number): Readonly<GitLabSuggestionPreview> {
+  if (!record(value) || Object.keys(value).sort().join(',') !== 'base_sha,file_path,head_sha,line,preview_suggestions,start_sha'
+    || value.preview_suggestions !== true || value.line !== line
+    || typeof value.file_path !== 'string' || !value.file_path.length || value.file_path.length > 4096
+    || value.file_path.startsWith('/') || /[\\\u0000-\u001f\u007f]/u.test(value.file_path)
+    || value.file_path.split('/').some(part => !part || part === '.' || part === '..')
+    || [value.base_sha, value.start_sha, value.head_sha].some(sha => typeof sha !== 'string' || !/^[a-f0-9]{40}$/u.test(sha))) return fail('PREVIEW_CONTEXT_INVALID');
+  return Object.freeze({ preview_suggestions: true, line, file_path: value.file_path,
+    base_sha: value.base_sha as string, start_sha: value.start_sha as string, head_sha: value.head_sha as string });
+}
 export function readGitLabSuggestionContext(value: unknown): GitLabSuggestionContext | undefined {
   if (value == null) return undefined;
-  if (!record(value) || Object.keys(value).some(key => !['canSuggest', 'showPopover', 'lines', 'lineRange', 'lineType', 'blobRawPath'].includes(key))) return fail('CONTEXT_INVALID');
+  if (!record(value) || Object.keys(value).some(key => !['canSuggest', 'showPopover', 'lines', 'lineRange', 'lineType', 'blobRawPath', 'previewParams'].includes(key))) return fail('CONTEXT_INVALID');
   if (value.canSuggest !== undefined && typeof value.canSuggest !== 'boolean'
     || value.showPopover !== undefined && typeof value.showPopover !== 'boolean') return fail('CONTEXT_INVALID');
   if (value.canSuggest !== true) return undefined;
@@ -25,7 +44,8 @@ export function readGitLabSuggestionContext(value: unknown): GitLabSuggestionCon
     || blobRawPath !== null && (typeof blobRawPath !== 'string' || blobRawPath.length > 10_000
       || !blobRawPath.startsWith('/') || blobRawPath.startsWith('//') || /[\\\u0000-\u0020\u007f]/u.test(blobRawPath))) return fail('CONTEXT_INVALID');
   return Object.freeze({ lines: Object.freeze([...lines] as string[]), lineRange: Object.freeze({ start: lineRange.start, end: lineRange.end }),
-    lineType: String(lineType), blobRawPath: blobRawPath as string | null });
+    lineType: String(lineType), blobRawPath: blobRawPath as string | null,
+    ...(value.previewParams !== undefined ? { previewParams: readPreviewParams(value.previewParams, lineRange.end) } : {}) });
 }
 const key = (context: GitLabSuggestionContext): string => JSON.stringify(context);
 const at = (doc: Node, path: readonly number[]): Node => path.reduce((parent, index) => parent.child(index), doc);

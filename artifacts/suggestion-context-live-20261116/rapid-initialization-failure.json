@@ -1,0 +1,41 @@
+{
+  "dom": [
+    {
+      "html": "<button aria-label=\"Add comment\" class=\"rd-new-discussion-toggle has-tooltip\" data-click=\"newDiscussion\" data-new-discussion-toggle=\"\" data-testid=\"new_discussion_toggle\" hidden=\"\" title=\"Add a comment to this line or drag for multiple lines\" draggable=\"true\">\n<svg class=\"s12\" data-testid=\"comment-icon\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#comment\"></use></svg>\n</button>",
+      "parent": "DIV",
+      "hidden": true
+    }
+  ],
+  "mergeRequest": {
+    "iid": 20,
+    "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/20"
+  },
+  "fixtures": [
+    {
+      "name": "unicode",
+      "context": {
+        "canSuggest": true,
+        "lines": [
+          "const key = \"A​B\";"
+        ],
+        "lineType": "",
+        "showPopover": false,
+        "blobRawPath": "/root/fountain-product-integration/-/raw/d36f602d8bb8e5c0187793e7a30436cef52aae97/suggestion-context-mwjpfe74.js",
+        "lineRange": {
+          "start": 1,
+          "end": 1
+        },
+        "previewParams": {
+          "preview_suggestions": true,
+          "line": 1,
+          "file_path": "suggestion-context-mwjpfe74.js",
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "d36f602d8bb8e5c0187793e7a30436cef52aae97"
+        }
+      },
+      "rawSource": "const key = \"A​B\";\n\n  keep();  \nreturn 1;\n// end\n"
+    }
+  ],
+  "error": "Error: expect(locator).toBeVisible() failed\n\nLocator:  locator('[data-new-discussion-toggle]')\nExpected: visible\nReceived: hidden\nTimeout:  5000ms\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for locator('[data-new-discussion-toggle]')\n    4 × locator resolved to <button hidden=\"\" aria-label=\"Add comment\" data-click=\"newDiscussion\" data-new-discussion-toggle=\"\" data-testid=\"new_discussion_toggle\" class=\"rd-new-discussion-toggle has-tooltip\" title=\"Add a comment to this line or drag for multiple lines\">…</button>\n      - unexpected value \"hidden\"\n    9 × locator resolved to <button hidden=\"\" draggable=\"true\" aria-label=\"Add comment\" data-click=\"newDiscussion\" data-new-discussion-toggle=\"\" data-testid=\"new_discussion_toggle\" class=\"rd-new-discussion-toggle has-tooltip\" title=\"Add a comment to this line or drag for multiple lines\">…</button>\n      - unexpected value \"hidden\"\n"
+}

@@ -1,3 +1,4 @@
+import suggestionContexts from '../integrations/gitlab/fixtures/suggestion-context-live.json';
 import { expect, it } from 'vitest';
 import { assertGitLabNativeHostConfiguration as validate } from '../integrations/gitlab/services/host_configuration';
 
@@ -51,4 +52,8 @@ it('refuses active serializer hooks and legacy collaboration instead of ignoring
   expect(() => validate({ collaborationProvider: {} })).toThrow(
     'GITLAB_NATIVE_COLLABORATION_ADAPTER_REQUIRED',
   );
+});
+
+it.each(suggestionContexts.fixtures)('keeps real Rapid Diffs $name configuration guarded pending end-to-end acceptance', fixture => {
+  expect(() => validate({ codeSuggestionsConfig: fixture.context })).toThrow('GITLAB_NATIVE_SUGGESTIONS_ADAPTER_REQUIRED');
 });

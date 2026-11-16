@@ -4,6 +4,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
 import { readGitLabAuditCredential } from './gitlab-audit-credentials.mjs';
+import { captureGitLabSuggestionContext } from './capture-gitlab-suggestion-context.mjs';
 import { captureGitLabSuggestionRendering } from './capture-gitlab-suggestion-rendering.mjs';
 import { captureGitLabTaskRendering } from './capture-gitlab-task-rendering.mjs';
 import { captureGitLabFootnoteRenaming } from './capture-gitlab-footnote-renaming.mjs';
@@ -13,6 +14,7 @@ import { captureGitLabFootnoteRoundtrip } from './capture-gitlab-footnote-roundt
 if (process.platform !== 'linux') throw new Error('Run beside the isolated Linux GitLab deployment.');
 const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
 const suggestions = process.argv.includes('--suggestions');
+const suggestionContexts = process.argv.includes('--suggestion-context');
 const tasks = process.argv.includes('--tasks');
 const media = process.argv.includes('--media');
 const diagrams = process.argv.includes('--diagrams');
@@ -29,7 +31,7 @@ const footnotes = process.argv.includes('--footnotes') || footnoteProbe;
 const catalogue = quickActionCommands || autocomplete;
 const referenceContexts = process.argv.includes('--reference-context');
 const references = process.argv.includes('--references') || referenceContexts;
-if ([suggestions, tasks, media, diagrams, references, frontmatter, quickActions, quickActionCommands, autocomplete, footnotes].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
+if ([suggestions, suggestionContexts, tasks, media, diagrams, references, frontmatter, quickActions, quickActionCommands, autocomplete, footnotes].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -82,6 +84,7 @@ try {
   }
   const project = await request('/api/v4/projects/root%2Ffountain-product-integration');
   expect(project.visibility).toBe('private');
+  if (suggestionContexts) await captureGitLabSuggestionContext({ root, page, request, project, pin, version });
   const prior = catalogue ? JSON.parse(await readFile(new URL(autocomplete ? 'artifacts/gitlab-native-quick-action-controls-20261114/report.json' : 'artifacts/gitlab-native-quick-actions-20261114/report.json', root))) : null;
   const paths = await request('/api/graphql', { query: catalogue
     ? 'query($path:ID!,$iid:String){namespace(fullPath:$path){markdownPaths{markdownPreviewPath(iid:$iid) autocompleteSourcesPath(iid:$iid)}}}'
@@ -152,7 +155,7 @@ try {
     else if (footnoteServer) await captureGitLabFootnoteServer({ root, pin, version, renderMarkdown, overlay: footnoteServerOverlay });
     else await captureGitLabFootnoteRenaming({ root, pin, version, renderMarkdown });
   }
-  if (!suggestions && !tasks && !catalogue && !footnoteRenaming && !footnoteServer && !footnoteRoundtrip) {
+  if (!suggestionContexts && !suggestions && !tasks && !catalogue && !footnoteRenaming && !footnoteServer && !footnoteRoundtrip) {
   const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
   if (preview.origin !== base) throw new Error('Nonlocal preview');
   preview.searchParams.set('no_header_anchors', 'true');
