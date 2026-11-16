@@ -12,12 +12,29 @@ it('accepts the actual MarkdownEditor inactive suggestion defaults and empty ser
   expect(() => validate({})).not.toThrow();
 });
 
+it('accepts inactive NoteForm reply/edit context without enabling code suggestions', () => {
+  expect(() =>
+    validate({
+      codeSuggestionsConfig: {
+        canSuggest: false,
+        showPopover: false,
+        lines: [],
+        lineType: '',
+        blobRawPath: null,
+        lineRange: null,
+      },
+    }),
+  ).not.toThrow();
+});
+
 it.each([
   { canSuggest: true },
   { showPopover: true },
   { lines: [42] },
   { lineType: 'new' },
   { futureOption: false },
+  { blobRawPath: '/repository/raw/example.ts' },
+  { lineRange: { start: 1, end: 1 } },
 ])('refuses active or unknown suggestion settings %j', (codeSuggestionsConfig) => {
   expect(() => validate({ codeSuggestionsConfig })).toThrow(
     'GITLAB_NATIVE_SUGGESTIONS_ADAPTER_REQUIRED',

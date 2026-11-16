@@ -26,6 +26,8 @@ export function assertGitLabNativeHostConfiguration(options: GitLabHostConfigura
     if ((key === 'canSuggest' || key === 'showPopover') && value === false) continue;
     if (key === 'lineType' && value === '') continue;
     if (key === 'lines' && Array.isArray(value) && value.length === 0) continue;
+    // NoteForm supplies these fields even for ordinary replies and edits.
+    if ((key === 'blobRawPath' || key === 'lineRange') && value === null) continue;
     throw new Error('GITLAB_NATIVE_SUGGESTIONS_ADAPTER_REQUIRED');
   }
 }

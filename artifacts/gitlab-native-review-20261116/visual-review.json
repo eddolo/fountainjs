@@ -1,0 +1,41 @@
+{
+  "scope": "Named final-run screenshots and sampled video frames inspected; not uninterrupted full-video review or full GitLab acceptance.",
+  "observations": [
+    "Edit form loads the existing bold comment in native Fountain, with Save comment and Cancel controls.",
+    "Reply form displays its empty placeholder and disables submission until content is entered; review batching itself is not tested.",
+    "Resolved/reopened thread shows edited text, resolved styling and one collapsed reply. Exact reply body and resolved state are verified separately through the real API.",
+    "The restart capture visibly retains edited text and resolved styling; a host layout shift crops the lower portion of that card. The reopened capture and sampled video show its reply row.",
+    "Sampled video includes the actual MR/wiki editors and readers, native thread creation and resolved reader state.",
+    "During the intentional server restart the still-open GitLab page shows polling/network error banners. Graceful reconnect and reader loading remain open, despite later persistence checks passing.",
+    "The private integration warning remains visible because inline suggestions and broader product acceptance are unfinished."
+  ],
+  "screenshots": [
+    {
+      "path": "artifacts/gitlab-native-review-20261116/review-edit-form.png",
+      "sha256": "171585dbb09c0bf3145fe1dc192e6c2207de81fad2d8d576fff053001b67b94d"
+    },
+    {
+      "path": "artifacts/gitlab-native-review-20261116/review-reply-form.png",
+      "sha256": "3ae09a1d15d9313f2f71877562b737c8042bd094dc74c9ee3321b918c8cff47c"
+    },
+    {
+      "path": "artifacts/gitlab-native-review-20261116/review-thread-reopened.png",
+      "sha256": "10d91c2f406b02537a9e70eb3f804eb311bd1e3997531a053e6171ef77925e36"
+    },
+    {
+      "path": "artifacts/gitlab-native-review-20261116/review-thread-restart.png",
+      "sha256": "1559467240565e9ca299506ecb847d598e9b8570936cff42d658d07a7b2d0814"
+    }
+  ],
+  "frameSheet": {
+    "path": "artifacts/review-frames-20261116.png",
+    "sha256": "dc3f06dd76e31b1cdee245567f134fc28ce8062a4ee359d4c5e92e1cdf0ac5cb",
+    "sampling": "From 80 seconds, one frame per 6 seconds for 60 seconds."
+  },
+  "recording": {
+    "path": "artifacts/gitlab-native-review-20261116/recordings/page@426da46c57b33cb9e5f3cb6a43a9f964.webm",
+    "sha256": "c166c86e4f10e6928e535adc9a72f74d8aede10053610c98efce9b790cee0ff5",
+    "durationSeconds": 211.28,
+    "retainedLocally": true
+  }
+}

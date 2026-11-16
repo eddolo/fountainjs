@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Accept GitLab's inactive null suggestion context in ordinary thread edits and
+  replies. Keep active suggestion guards; verify real MR discussion persistence
+  through rich editing, replies, whole-thread resolution and application restart.
+
 - Load KaTeX styles on direct entry to the private GitLab editor, avoiding
   duplicate visual equations. Add real merge-request/wiki save and restart checks.
 

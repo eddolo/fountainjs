@@ -3,6 +3,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect } from '@playwright/test';
+import { auditNativeReview, assertSavedNativeReview } from './audit-gitlab-native-review.mjs';
 import { auditNativeWorkflows, assertSavedNativeWorkflows } from './audit-gitlab-native-workflows.mjs';
 import { auditNativeLinks } from './audit-gitlab-native-links.mjs';
 import { auditNativeCode } from './audit-gitlab-native-code.mjs';
@@ -25,7 +26,8 @@ import { auditNativeControlsLayout } from './audit-gitlab-native-controls-layout
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
-const nativeWorkflows = process.argv.includes('--native-workflows');
+const nativeReview = process.argv.includes('--native-review');
+const nativeWorkflows = nativeReview || process.argv.includes('--native-workflows');
 const nativeCapacity = process.argv.includes('--native-attachment-capacity');
 const nativeLinks = process.argv.includes('--native-links');
 const nativeContextUI = process.argv.includes('--native-context-ui');
@@ -61,6 +63,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
+  nativeReview ? 'artifacts/gitlab-native-review-20261116/' :
   nativeWorkflows ? 'artifacts/gitlab-native-workflows-20261116/' :
   nativeTableClipboard ? 'artifacts/gitlab-native-table-clipboard-20261115/' :
   nativeFootnoteControls ? 'artifacts/gitlab-native-footnote-controls-20261116/' :
@@ -933,6 +936,7 @@ try {
   report.checks.push('Private issue is unavailable to an unauthenticated browser context');
 
   if (nativeWorkflows) await auditNativeWorkflows({ page, api, project, upload, report, output });
+  if (nativeReview) await auditNativeReview({ page, api, project, report, output });
 
   if (process.argv.includes('--verify-restart')) {
     compose('restart', '--timeout', '60', 'baseline');
@@ -977,6 +981,8 @@ try {
   }
   if (nativeWorkflows && process.argv.includes('--verify-restart'))
     await assertSavedNativeWorkflows({ page, api, project, report, output, phase: 'restart' });
+  if (nativeReview && process.argv.includes('--verify-restart'))
+    await assertSavedNativeReview({ page, api, project, report, output, phase: 'restart' });
   if (nativeDiagramReader) {
     await repairInvalidSavedDiagrams({ page, report, output });
     const repaired = await api('GET', `/projects/${project.id}/issues/${issue.iid}`);

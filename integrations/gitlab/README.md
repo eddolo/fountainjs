@@ -1,6 +1,25 @@
 # GitLab application integration
 
-Latest workflow checkpoint (2026-11-16): existing merge-request descriptions
+Latest discussion checkpoint (2026-11-16): general MR threads now have recorded
+real-service coverage for creation, immediate rich editing, replies and whole-thread
+resolution, with exact saved bodies and state checked after reopen and restart.
+GitLab's NoteForm supplies null suggestion metadata even for ordinary edits/replies;
+the native adapter now accepts those inactive fields while still refusing active
+or unknown suggestion configurations. The profile passes 19 service checks;
+42 focused root cases, 540 selected upstream cases (one inherited skip), types,
+frontend build, 18-patch reconstruction and 28-file source rollback pass.
+Engine/API/limits are unchanged. [Discussion evidence](../../artifacts/review-integration-20261116.json).
+
+Inline suggestions, review batching, roles/concurrency and full product acceptance
+remain open. The recorded MR/wiki cycles also expose growing encoded task-leading
+spaces; investigate that conversion drift separately from saved-body persistence.
+No publication or parity-row promotion is implied.
+
+Run `node scripts/run-gitlab-native-browser-audit.mjs --review` after matching
+runtime/frontend preparation. It includes MR/wiki editing, restarts and stops
+the isolated app. The audit uses real accounts, APIs and UI controls.
+
+Previous workflow checkpoint (2026-11-16): existing merge-request descriptions
 and wiki pages now have recorded real-service coverage for rich/source switching,
 immediate rich-mode saving, reopening and an actual application restart. The
 wiki journey includes its commit-message dialog. Saved Markdown remains exact
