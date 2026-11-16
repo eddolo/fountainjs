@@ -1,0 +1,225 @@
+{
+  "scope": "Cold restart retention of observed proposals, comments and source commits; desired Applied metadata retention remains a failing host requirement.",
+  "acceptancePassed": false,
+  "retainedIssues": [
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "replacement",
+      "noteId": 336,
+      "before": [
+        {
+          "id": 34,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "after": [
+        {
+          "id": 35,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "serverControlNoteId": 332,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    },
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "deletion",
+      "noteId": 340,
+      "before": [
+        {
+          "id": 37,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "after": [
+        {
+          "id": 38,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "serverControlNoteId": 332,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    },
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "whitespace-deletion",
+      "noteId": 344,
+      "before": [
+        {
+          "id": 40,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "after": [
+        {
+          "id": 41,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "serverControlNoteId": 332,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    }
+  ],
+  "serverControl": {
+    "noteId": 332,
+    "suggestions": [
+      {
+        "id": 32,
+        "from_line": 1,
+        "to_line": 1,
+        "appliable": false,
+        "applied": false,
+        "from_content": "old();\n",
+        "to_content": "new();\n"
+      }
+    ],
+    "sourceCommit": "5b04ab7e32390ff7d258c1f81e93d5396e231353",
+    "computedEligibility": {
+      "before": [
+        true
+      ],
+      "after": [
+        false
+      ]
+    }
+  },
+  "negativeBlank": {
+    "scope": "Original negative case, read-only recheck after restart; not silently promoted to blank-line support",
+    "mergeRequest": {
+      "iid": 34,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/34"
+    },
+    "noteId": 314,
+    "body": "```suggestion:-0+0\n\n```\n\nReview blank mwjtk60s",
+    "source": "\n",
+    "desiredContent": "\nkeep();\nlast();\n",
+    "actualContent": "keep();\nlast();\n",
+    "commit": "a8f412ea6f2bb44a4ad4d20526bcbfe3cf2a9327",
+    "serverSuggestion": {
+      "id": 21,
+      "from_line": 1,
+      "to_line": 1,
+      "appliable": false,
+      "applied": true,
+      "from_content": "const key = \"A​B\";\n",
+      "to_content": ""
+    }
+  },
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3"
+  },
+  "checks": [
+    {
+      "kind": "replacement",
+      "noteId": 336,
+      "commit": "7c8368c8f0cb8b83ace3a6477383940ef6a96b47",
+      "body": "```suggestion:-0+0\nconst key = \"\\n\";\n```\n\nReview replacement mwju5hcw — confirmed",
+      "content": "const key = \"\\n\";\nkeep();\nlast();\n",
+      "readerAppliedVisible": false,
+      "suggestions": [
+        {
+          "id": 35,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "computedEligibility": {
+        "before": [
+          false
+        ],
+        "after": [
+          false
+        ]
+      }
+    },
+    {
+      "kind": "deletion",
+      "noteId": 340,
+      "commit": "21bd7f9183e1f61acd9b052d95f146d8187283cb",
+      "body": "```suggestion:-0+0\n```\n\nReview deletion mwju5yhc — confirmed",
+      "content": "keep();\nlast();\n",
+      "readerAppliedVisible": false,
+      "suggestions": [
+        {
+          "id": 38,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "computedEligibility": {
+        "before": [
+          false
+        ],
+        "after": [
+          false
+        ]
+      }
+    },
+    {
+      "kind": "whitespace-deletion",
+      "noteId": 344,
+      "commit": "5f02bf822a660cca45a809c395799fc26a8f925c",
+      "body": "```suggestion:-0+0\n\n```\n\nReview whitespace-deletion mwju6cdq — confirmed",
+      "content": "keep();\nlast();\n",
+      "readerAppliedVisible": false,
+      "suggestions": [
+        {
+          "id": 41,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "computedEligibility": {
+        "before": [
+          false
+        ],
+        "after": [
+          false
+        ]
+      }
+    }
+  ]
+}

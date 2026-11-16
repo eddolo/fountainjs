@@ -1,8 +1,9 @@
 # Native GitLab inline suggestion acceptance
 
-Status: explicit native candidate now verifies raw-source insertion, selected
-multiline authoring/editing/posting, single application and cold restart. Default guard callers still reject
-active configuration. Full review/product acceptance remains open.
+Status: raw-source/multiline and posted-review source workflows are verified.
+The deletion-effect safeguard is verified, but overall review acceptance remains
+failed on stock server Applied-metadata retention. Default guard callers still
+reject active configuration; full review/product acceptance remains open.
 Pinned target: GitLab CE 19.5.3, source
 `0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf`.
 
@@ -97,6 +98,55 @@ CRLF is split for line comparison without normalizing the stored snapshot.
 The private synchronous `insert()` helper refuses ambiguous U+E000 prefills; it is
 not the native product insertion path.
 
+## Real posted-review effects and remaining host requirement
+
+Deletion-effect and posted-review follow-up (2026-11-16): actual application
+proved that stock GitLab treats nonempty whitespace-only suggestion source as
+deletion. Fountain now labels deletion blocks, uses an explicit Apply deletion
+action, and requires intent confirmation for nonempty whitespace source in the
+source dialog. Changing the draft resets confirmation; the command itself also
+enforces it. Original source remains exact. The rule matches every Unicode scalar
+against the actual pinned embedded Ruby whitespace predicate; zero-width source
+and BOM are not blindly classified with JavaScript trim().
+
+Three real native posted-note workflows verify replacement, empty deletion and
+explicitly confirmed whitespace deletion, caption updates, one-step undo/redo,
+exact save/reopen/application and unchanged source commits during prose-only
+comment edits. Cold restart retains source, comments and commits. 1364 scoped
+integration tests / 53 files, strict types and 555 selected upstream tests / 23
+suites pass (one inherited skip); frontend build, 19 ordered test patches and
+28-file guarded source rollback/reinstall pass.
+
+Overall review acceptance deliberately remains FAILED: prose-only edits clear
+GitLab's persisted Applied metadata. A direct stock REST control reproduces the
+record replacement without Fountain editing. Its computed eligibility can also
+change after restart and is recorded separately from persisted fields. The original
+intended-blank-line application failure is retained; the new UI makes its deletion
+effect explicit and does not claim meaningful blank-line application support.
+No public API/capacity limit/version/publication or overall parity row changes.
+Paired original-editor UI classifications are still pending.
+
+Pinned server evidence:
+
+- `lib/gitlab/diff/suggestion.rb#to_content` returns empty replacement for
+  ActiveSupport `blank?`, including meaningful blank-line source. The original
+  negative case retains exact Markdown but applies a deletion to the real file.
+- `app/services/notes/update_service.rb#update_suggestions` deletes all suggestion
+  records and invokes `Suggestions::CreateService` on note updates. The new records
+  lose the original Applied flag even when replacement source is unchanged.
+- `app/models/suggestion.rb#appliable?` derives eligibility from current/cached
+  conditions. Do not confuse that computed field with persisted application
+  history or assert that its value is stable through restart.
+
+The host owns application history. Do not invent Applied metadata from Fountain
+undo state or mark a proposal applied merely because source text matches. A future
+host adapter/repair needs explicit identity/history rules and real controls for
+changed, duplicated, reordered and outdated proposals. This remains open.
+
+[Current scoped receipt](../../artifacts/suggestion-effects-integration-20261116.json).
+[Paired original-editor comparison plan](COMPATIBILITY_SUITE_PLAN.md): no parity,
+improvement, regression or shared-limitation classification before both UI runs.
+
 ## Required next acceptance
 
 1. Six actual Rapid Diffs contexts now cover selected multiline, literal
@@ -114,10 +164,11 @@ not the native product insertion path.
    and rollback now pass. Physical review caught and repaired host inline-code
    contrast and an unwanted empty paragraph on insertion. Keep broad mobile/
    browser, focus and accessibility coverage open beyond the tested profile.
-5. A newly authored single-anchor proposal expands to three file lines, posts
-   exact Markdown and survives reload/restart. Still cover editing already-posted
-   and applied/outdated proposals, additional multiline/context variants, empty deletions
-   and meaningful blank replacements through the real UI and APIs.
+5. Posted replacement, empty deletion, confirmed whitespace-deletion and
+   applied-note prose editing now retain exact source through actual UI/APIs.
+   Overall applied-history acceptance remains failed as above. Meaningful blank
+   replacement is a retained host limitation, not a claimed supported file effect.
+   Outdated proposals and additional multiline/context variants remain.
 6. Single application now verifies the exact file, new commit and branch head,
    plus cold-restart retention. Still cover review batches, revoked roles, changed
    branches/files, overlapping proposals and cancellation. Rapid Diffs collapsed

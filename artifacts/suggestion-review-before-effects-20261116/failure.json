@@ -1,0 +1,244 @@
+{
+  "scope": "Real posted-suggestion replacement/deletion/blank editing, repository application and applied-note prose editing; excludes review batches, role/concurrency and outdated proposals.",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3"
+  },
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "errors": [],
+  "cases": [
+    {
+      "kind": "replacement",
+      "replacement": "const key = \"\\n\";\n",
+      "branch": "fountain-review-replacement-mwjtjdsw",
+      "filePath": "review-mwjtjdsw.js",
+      "original": "const key = \"A​B\";\nkeep();\nlast();\n",
+      "marker": "Review replacement mwjtjdsw",
+      "seedCommit": "e97d302f3892d7aea69a12ccdb9787c126c4df97",
+      "mergeRequest": {
+        "iid": 32,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/32"
+      },
+      "checks": [
+        "Posted source reopens in the native suggestion node with exact original source.",
+        "Editing the posted proposal saves the intended replacement exactly; empty and blank remain distinct.",
+        "GitLab applies the edited proposal as a real source commit with exact remaining file content.",
+        "Applied note reopens natively; prose editing retains suggestion source and cannot write repository content."
+      ],
+      "noteId": 306,
+      "discussionId": "21305209f3f79eb7935ac72274d269c588360d98",
+      "initialBody": "```suggestion:-0+0\nconst key = \"A​B\";\n```\n\nReview replacement mwjtjdsw",
+      "savedBody": "```suggestion:-0+0\nconst key = \"\\n\";\n```\n\nReview replacement mwjtjdsw",
+      "applied": {
+        "commit": "6a340f82c943a8058776fca711fe460e1be27cd8",
+        "parents": [
+          "e97d302f3892d7aea69a12ccdb9787c126c4df97"
+        ],
+        "branchHead": "6a340f82c943a8058776fca711fe460e1be27cd8",
+        "content": "const key = \"\\n\";\nkeep();\nlast();\n"
+      },
+      "readerRoute": "Overview link and normal Expand replies control; resolved Rapid Diffs gutter remains separate.",
+      "beforeProseEdit": [
+        {
+          "id": 15,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "finalBody": "```suggestion:-0+0\nconst key = \"\\n\";\n```\n\nReview replacement mwjtjdsw — confirmed",
+      "afterProseEdit": [
+        {
+          "id": 16,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "readerAppliedVisible": false
+    },
+    {
+      "kind": "deletion",
+      "replacement": "",
+      "branch": "fountain-review-deletion-mwjtjsjz",
+      "filePath": "review-mwjtjsjz.js",
+      "original": "const key = \"A​B\";\nkeep();\nlast();\n",
+      "marker": "Review deletion mwjtjsjz",
+      "seedCommit": "d0520eba55eb61cb32102b553492da0273cf2816",
+      "mergeRequest": {
+        "iid": 33,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/33"
+      },
+      "checks": [
+        "Posted source reopens in the native suggestion node with exact original source.",
+        "Editing the posted proposal saves the intended replacement exactly; empty and blank remain distinct.",
+        "GitLab applies the edited proposal as a real source commit with exact remaining file content.",
+        "Applied note reopens natively; prose editing retains suggestion source and cannot write repository content."
+      ],
+      "noteId": 310,
+      "discussionId": "e5cba576c1d10621ec949cb49bf275734bd83d6a",
+      "initialBody": "```suggestion:-0+0\nconst key = \"A​B\";\n```\n\nReview deletion mwjtjsjz",
+      "savedBody": "```suggestion:-0+0\n```\n\nReview deletion mwjtjsjz",
+      "applied": {
+        "commit": "a1861b43692a60c3d68ec0415038cad2fc66e764",
+        "parents": [
+          "d0520eba55eb61cb32102b553492da0273cf2816"
+        ],
+        "branchHead": "a1861b43692a60c3d68ec0415038cad2fc66e764",
+        "content": "keep();\nlast();\n"
+      },
+      "readerRoute": "Overview link and normal Expand replies control; resolved Rapid Diffs gutter remains separate.",
+      "beforeProseEdit": [
+        {
+          "id": 18,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "finalBody": "```suggestion:-0+0\n```\n\nReview deletion mwjtjsjz — confirmed",
+      "afterProseEdit": [
+        {
+          "id": 19,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "readerAppliedVisible": false
+    },
+    {
+      "kind": "blank",
+      "replacement": "\n",
+      "branch": "fountain-review-blank-mwjtk60s",
+      "filePath": "review-mwjtk60s.js",
+      "original": "const key = \"A​B\";\nkeep();\nlast();\n",
+      "marker": "Review blank mwjtk60s",
+      "seedCommit": "024f1459787e816503524bbdd919b1d53a9b939c",
+      "mergeRequest": {
+        "iid": 34,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/34"
+      },
+      "checks": [
+        "Posted source reopens in the native suggestion node with exact original source.",
+        "Editing the posted proposal saves the intended replacement exactly; empty and blank remain distinct."
+      ],
+      "noteId": 314,
+      "discussionId": "d61ea3f2952355890e30986323625f9ba5033fe7",
+      "initialBody": "```suggestion:-0+0\nconst key = \"A​B\";\n```\n\nReview blank mwjtk60s",
+      "savedBody": "```suggestion:-0+0\n\n```\n\nReview blank mwjtk60s"
+    }
+  ],
+  "retainedIssues": [
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "replacement",
+      "noteId": 306,
+      "before": [
+        {
+          "id": 15,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "after": [
+        {
+          "id": 16,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "serverControlNoteId": 302,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    },
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "deletion",
+      "noteId": 310,
+      "before": [
+        {
+          "id": 18,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "after": [
+        {
+          "id": 19,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "serverControlNoteId": 302,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    }
+  ],
+  "acceptancePassed": false,
+  "serverControl": {
+    "scope": "Stock REST control; no Fountain document/editor operations",
+    "mergeRequest": {
+      "iid": 31,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/31"
+    },
+    "noteId": 302,
+    "original": "old();\nkeep();\n",
+    "replacement": "new();\n",
+    "before": [
+      {
+        "id": 12,
+        "from_line": 1,
+        "to_line": 1,
+        "appliable": false,
+        "applied": true,
+        "from_content": "old();\n",
+        "to_content": "new();\n"
+      }
+    ],
+    "after": [
+      {
+        "id": 13,
+        "from_line": 1,
+        "to_line": 1,
+        "appliable": true,
+        "applied": false,
+        "from_content": "old();\n",
+        "to_content": "new();\n"
+      }
+    ],
+    "sourceCommit": "29324fe4facd4ae81887b8266b961bb836e25c42",
+    "sourceUnchanged": true,
+    "body": "```suggestion:-0+0\nnew();\n```\n\nServer-only control mwjtjbup — prose-only API edit"
+  },
+  "failure": "Error: expect(received).toBe(expected) // Object.is equality\n\n- Expected  - 1\n+ Received  + 0\n\n-\n  keep();\n  last();\n  ↵\n\nCall Log:\n- Timeout 30000ms exceeded while waiting on the predicate"
+}

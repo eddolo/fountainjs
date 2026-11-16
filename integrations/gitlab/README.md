@@ -1,6 +1,40 @@
 # GitLab application integration
 
-Source-integrity follow-up (2026-11-16): native suggestion insertion now fetches
+Paired compatibility suite requested (2026-11-16): compare equivalent workflows
+in the original GitLab editor and Fountain on the same pinned backend and fixture
+content. Classify per invariant as parity, improvement, regression or shared
+limitation only after both real UI runs exist. Existing native/API-only evidence
+is not promoted to a completed pair. [Execution and evidence plan](COMPATIBILITY_SUITE_PLAN.md).
+
+Deletion-effect and posted-review follow-up (2026-11-16): actual application
+proved that stock GitLab treats nonempty whitespace-only suggestion source as
+deletion. Fountain now labels deletion blocks, uses an explicit Apply deletion
+action, and requires intent confirmation for nonempty whitespace source in the
+source dialog. Changing the draft resets confirmation; the command itself also
+enforces it. Original source remains exact. The rule matches every Unicode scalar
+against the actual pinned embedded Ruby whitespace predicate; zero-width source
+and BOM are not blindly classified with JavaScript trim().
+
+Three real native posted-note workflows verify replacement, empty deletion and
+explicitly confirmed whitespace deletion, caption updates, one-step undo/redo,
+exact save/reopen/application and unchanged source commits during prose-only
+comment edits. Cold restart retains source, comments and commits. 1364 scoped
+integration tests / 53 files, strict types and 555 selected upstream tests / 23
+suites pass (one inherited skip); frontend build, 19 ordered test patches and
+28-file guarded source rollback/reinstall pass.
+
+Overall review acceptance deliberately remains FAILED: prose-only edits clear
+GitLab's persisted Applied metadata. A direct stock REST control reproduces the
+record replacement without Fountain editing. Its computed eligibility can also
+change after restart and is recorded separately from persisted fields. The original
+intended-blank-line application failure is retained; the new UI makes its deletion
+effect explicit and does not claim meaningful blank-line application support.
+No public API/capacity limit/version/publication or overall parity row changes.
+Paired original-editor UI classifications are still pending.
+
+[Deletion-effect evidence](../../artifacts/suggestion-effects-integration-20261116.json).
+
+Previous raw-source integrity follow-up (2026-11-16): native suggestion insertion now fetches
 and validates raw repository lines before prefilling. Six real Rapid Diffs
 contexts include literal backslash-n, genuine U+E000, their mixture, invisible
 characters/trailing spaces, a blank line and an actual two-line drag selection.

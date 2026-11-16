@@ -425,6 +425,23 @@ parity. This service is private integration code, not a newly published npm API.
 
 ## Captured code suggestions — private integration foundation
 
+The native node derives a visible deletion-effect label from exact replacement
+source. `gitLabSuggestionDeletesLines()` follows the pinned host's Unicode
+whitespace rule; it never changes source. An empty draft uses Apply deletion.
+Nonempty whitespace-only source additionally requires an affirmative deletion
+intent checkbox in the source dialog. Draft changes reset it, and the apply
+command enforces the guard independently of button state. Source copy/export,
+undo and handoff ownership remain unchanged.
+
+Real review application showed that GitLab cannot represent the intended blank
+line through that whitespace-only suggestion syntax: it deletes the target lines.
+The UI now states that outcome rather than implying blank-line support. A separate
+stock REST control proves that prose-only note updates recreate suggestions and
+clear Applied history. That host requirement remains failed; the editor does not
+fabricate replacement application metadata.
+[Source safeguard and retained failures](../../../artifacts/suggestion-effects-integration-20261116.json).
+
+
 The service exposes `content.suggestions.available`, `insertVerified()` and
 `begin()`. The native UI awaits `insertVerified()`: it uses host-owned raw-file
 loading and the existing mapped asynchronous insertion queue. Its target belongs

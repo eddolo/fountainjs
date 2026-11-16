@@ -344,6 +344,43 @@ describe('FountainCodeMenu', () => {
     fireEvent.click(getByRole(suggestionDialog(), 'button', { name: 'Apply suggestion' })); await settle();
     expect(service.getSerializedContent()).toBe('```suggestion:-0+0\nsourceOnly();\n```');
   });
+  it('requires explicit intent for whitespace-only deletion while retaining the exact source and undo', async () => {
+    await createSuggestion(); await editSuggestion();
+    fireEvent.input(replacementField(), { target: { value: '\n' } }); await settle();
+    const dialog = suggestionDialog(), apply = getByRole(dialog, 'button', {name:'Apply deletion'});
+    expect(getByRole(dialog, 'alert').textContent).toContain('not as blank lines');
+    expect(apply.disabled || apply.getAttribute('aria-disabled') === 'true').toBe(true);
+    await wrapper.vm.applySource(); await settle();
+    expect(service.getSerializedContent()).toBe(suggestionFixture.source); expect(wrapper.vm.dialogOpen).toBe(true);
+    fireEvent.click(getByRole(dialog, 'checkbox', {name:'I intend to delete these file lines'})); await settle();
+    expect(apply.disabled || apply.getAttribute('aria-disabled') === 'true').toBe(false);
+    fireEvent.click(apply); await settle();
+    expect(service.getSerializedContent()).toBe('```suggestion:-0+0\n\n```');
+    expect(undo(service.editor)).toBe(true); expect(service.getSerializedContent()).toBe(suggestionFixture.source);
+  });
+  it('invalidates deletion consent when source changes and never calls invisible code source blank', async () => {
+    await createSuggestion(); await editSuggestion();
+    fireEvent.input(replacementField(), {target:{value:'\n'}}); await settle();
+    fireEvent.click(getByRole(suggestionDialog(), 'checkbox', {name:'I intend to delete these file lines'})); await settle();
+    expect(wrapper.vm.sourceDeletionConfirmed).toBe(true);
+    fireEvent.input(replacementField(), {target:{value:'\n\n'}}); await settle();
+    expect(wrapper.vm.sourceDeletionConfirmed).toBe(false);
+    const apply=getByRole(suggestionDialog(), 'button', {name:'Apply deletion'});
+    expect(apply.disabled || apply.getAttribute('aria-disabled') === 'true').toBe(true);
+    fireEvent.input(replacementField(), {target:{value:'\u200b'}}); await settle();
+    expect(queryByRole(suggestionDialog(), 'alert')).toBeNull();
+    expect(queryByRole(suggestionDialog(), 'checkbox')).toBeNull();
+    fireEvent.click(getByRole(suggestionDialog(), 'button', {name:'Apply suggestion'})); await settle();
+    expect(service.getSerializedContent()).toBe('```suggestion:-0+0\n\u200b\n```');
+  });
+  it('describes empty source as deletion without inventing a blank line or requiring whitespace consent', async () => {
+    await createSuggestion(); await editSuggestion();
+    fireEvent.input(replacementField(), {target:{value:''}}); await settle();
+    expect(getByRole(suggestionDialog(), 'alert').textContent).toContain('empty replacement');
+    expect(queryByRole(suggestionDialog(), 'checkbox')).toBeNull();
+    fireEvent.click(getByRole(suggestionDialog(), 'button', {name:'Apply deletion'})); await settle();
+    expect(service.getSerializedContent()).toBe('```suggestion:-0+0\n```');
+  });
   it('keeps read-only suggestion source inspectable while disabling mutation', async () => {
     await createSuggestion({ editable: false }); expect(disabled('Delete suggestion')).toBe(true);
     await editSuggestion(true); expect(replacementField().readOnly).toBe(true);

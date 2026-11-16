@@ -1,3 +1,4 @@
+import { auditGitLabSuggestionReview, verifyGitLabSuggestionReview } from './audit-gitlab-suggestion-review.mjs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
@@ -14,6 +15,8 @@ import { captureGitLabFootnoteRoundtrip } from './capture-gitlab-footnote-roundt
 
 if (process.platform !== 'linux') throw new Error('Run beside the isolated Linux GitLab deployment.');
 const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
+const suggestionReview = process.argv.includes('--suggestion-review');
+const suggestionReviewVerify = process.argv.includes('--suggestion-review-verify');
 const suggestions = process.argv.includes('--suggestions');
 const suggestionTransportAuthoring = process.argv.includes('--suggestion-transport-authoring');
 const suggestionTransportVerify = process.argv.includes('--suggestion-transport-verify');
@@ -21,7 +24,7 @@ const suggestionTransport = process.argv.includes('--suggestion-transport');
 const suggestionVerification = process.argv.includes('--suggestion-verify');
 const suggestionAuthoring = process.argv.includes('--suggestion-authoring');
 const suggestionPreviews = process.argv.includes('--suggestion-preview');
-const suggestionContexts = suggestionTransportAuthoring || suggestionTransportVerify || suggestionTransport || suggestionVerification || suggestionAuthoring || suggestionPreviews || process.argv.includes('--suggestion-context');
+const suggestionContexts = suggestionReview || suggestionReviewVerify || suggestionTransportAuthoring || suggestionTransportVerify || suggestionTransport || suggestionVerification || suggestionAuthoring || suggestionPreviews || process.argv.includes('--suggestion-context');
 const tasks = process.argv.includes('--tasks');
 const media = process.argv.includes('--media');
 const diagrams = process.argv.includes('--diagrams');
@@ -91,7 +94,9 @@ try {
   }
   const project = await request('/api/v4/projects/root%2Ffountain-product-integration');
   expect(project.visibility).toBe('private');
-  if (suggestionTransportVerify) await verifyGitLabSuggestionAfterRestart({ root, page, request, project, pin, version, transport: true });
+  if (suggestionReview) await auditGitLabSuggestionReview({ root, page, request, project, pin, version });
+  else if (suggestionReviewVerify) await verifyGitLabSuggestionReview({ root, page, request, project, pin, version });
+  else if (suggestionTransportVerify) await verifyGitLabSuggestionAfterRestart({ root, page, request, project, pin, version, transport: true });
   else if (suggestionTransportAuthoring) await auditGitLabSuggestionAuthoring({ root, page, request, project, pin, version, transport: true });
   else if (suggestionVerification) await verifyGitLabSuggestionAfterRestart({ root, page, request, project, pin, version });
   else if (suggestionAuthoring) await auditGitLabSuggestionAuthoring({ root, page, request, project, pin, version });

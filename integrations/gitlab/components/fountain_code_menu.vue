@@ -1,17 +1,17 @@
 <script>
-import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormTextarea, GlModal } from '@gitlab/ui';
+import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormCheckbox, GlFormTextarea, GlModal } from '@gitlab/ui';
 import { markRaw } from 'vue';
 import { uniqueId } from 'lodash-es';
 import { s__ } from '~/locale';
 import { copyToClipboard } from '~/lib/utils/copy_to_clipboard';
 import CODE_BLOCK_LANGUAGES from '../constants/code_block_languages';
-import { getGitLabCodeContext } from '../runtime/browser';
+import { getGitLabCodeContext, gitLabSuggestionDeletesLines } from '../runtime/browser';
 import FountainDiagramPreview from './fountain_diagram_preview.vue';
 import FountainContextSurface from './fountain_context_surface.vue';
 
 export default {
   name: 'FountainCodeMenu',
-  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormTextarea, GlModal, FountainDiagramPreview, FountainContextSurface },
+  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormCheckbox, GlFormTextarea, GlModal, FountainDiagramPreview, FountainContextSurface },
   props: {
     contentEditor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
@@ -23,7 +23,7 @@ export default {
     return { context: null, session: null, language: '', errorCode: null, copyState: null, showPreview: false,
       inputId: uniqueId('fountain-code-language-'), revision: 0,
       dialogOpen: false, dialogContext: null, sourceSession: null, sourceDraft: '', sourceError: null,
-      sourceCopyState: null, sourceComposing: false, sourceApplying: false, sourceRangeEnabled: false, rangeStart: 1, rangeEnd: 1, rangeLoading: false, fileLines: null, modalId: uniqueId('fountain-diagram-source-') };
+      sourceCopyState: null, sourceDeletionConfirmed: false, sourceComposing: false, sourceApplying: false, sourceRangeEnabled: false, rangeStart: 1, rangeEnd: 1, rangeLoading: false, fileLines: null, modalId: uniqueId('fountain-diagram-source-') };
   },
   computed: {
     visible() { return Boolean(this.context || this.session || this.dialogOpen); },
@@ -41,6 +41,8 @@ export default {
     isFrontmatter() { return Boolean(this.menuContext?.frontmatter); },
     isDiagram() { return !this.isFrontmatter && ['mermaid', 'plantuml'].includes(this.menuContext?.language); },
     isSuggestion() { return Boolean(this.menuContext?.suggestion); },
+    sourceDeletesLines() { return this.sourceIsSuggestion && gitLabSuggestionDeletesLines(this.sourceDraft); },
+    sourceWhitespaceDeletion() { return this.sourceDeletesLines && this.sourceDraft.length > 0; },
     sourceIsSuggestion() { return Boolean(this.dialogContext?.suggestion); },
     rangePreview() {
       if (!this.fileLines) return '';
@@ -56,8 +58,8 @@ export default {
     sourceConflict() { return this.revision >= 0 && Boolean(this.sourceSession?.conflict || this.sourceSession?.closed); },
     sourceAction() {
       if (this.disabled) return null;
-      return { text: this.sourceIsSuggestion ? s__('ContentEditor|Apply suggestion') : this.sourceIsFrontmatter ? s__('ContentEditor|Apply frontmatter source') : s__('ContentEditor|Apply diagram source'), attributes: { variant: 'confirm',
-        disabled: !this.sourceSession || this.sourceConflict || this.sourceComposing || this.sourceApplying || this.rangeLoading, loading: this.sourceApplying } };
+      return { text: this.sourceIsSuggestion ? (this.sourceDeletesLines ? s__('ContentEditor|Apply deletion') : s__('ContentEditor|Apply suggestion')) : this.sourceIsFrontmatter ? s__('ContentEditor|Apply frontmatter source') : s__('ContentEditor|Apply diagram source'), attributes: { variant: 'confirm',
+        disabled: !this.sourceSession || this.sourceConflict || this.sourceComposing || this.sourceApplying || this.rangeLoading || this.sourceWhitespaceDeletion && !this.sourceDeletionConfirmed, loading: this.sourceApplying } };
     },
     sourceCancel() {
       if (!this.disabled) return { text: s__('ContentEditor|Cancel source edit') };
@@ -92,7 +94,7 @@ export default {
       return '';
     },
   },
-  watch: { configuration: { deep: true, handler() { this.revision += 1; } } },
+  watch: { sourceDraft() { this.sourceDeletionConfirmed = false; }, configuration: { deep: true, handler() { this.revision += 1; } } },
   created() {
     this.disposed = false;
     this.releaseState = this.contentEditor.editor.subscribe(() => this.refresh());
@@ -173,7 +175,7 @@ export default {
         this.dialogContext = { ...context, ...(this.sourceSession?.initial || {}) };
         this.rangeStart = this.sourceSession?.initial.range?.start ?? 1; this.rangeEnd = this.sourceSession?.initial.range?.end ?? 1;
         this.fileLines = null; this.rangeLoading = false; this.sourceApplying = false;
-        this.sourceDraft = this.dialogContext.text; this.sourceError = null; this.sourceCopyState = null;
+        this.sourceDraft = this.dialogContext.text; this.sourceDeletionConfirmed = false; this.sourceError = null; this.sourceCopyState = null;
         this.sourceComposing = false; this.showPreview = false; this.errorCode = null; this.dialogOpen = true;
       } catch (error) { this.errorCode = error.message; }
     },
@@ -189,7 +191,7 @@ export default {
     },
     async applySource(event) {
       event?.preventDefault();
-      if (this.disabled || this.sourceConflict || this.sourceComposing || this.sourceApplying || this.rangeLoading || !this.sourceSession) return;
+      if (this.disabled || this.sourceConflict || this.sourceComposing || this.sourceApplying || this.rangeLoading || this.sourceWhitespaceDeletion && !this.sourceDeletionConfirmed || !this.sourceSession) return;
       const session = this.sourceSession; this.sourceApplying = true;
       try {
         if (this.sourceRangeEnabled) await session.applyChange(this.sourceDraft, Number(this.rangeStart), Number(this.rangeEnd));
@@ -263,6 +265,10 @@ export default {
           </div>
           <p v-else>{{ s__('ContentEditor|File range controls are available when this editor has a current diff-line context.') }}</p>
           <pre v-if="fileLines" role="region" class="gl-max-h-48 gl-overflow-auto" :aria-label="s__('ContentEditor|Original file lines')">{{ rangePreview }}</pre>
+          <gl-alert v-if="sourceDeletesLines" variant="warning" :dismissible="false" class="gl-mt-3">
+            {{ sourceWhitespaceDeletion ? s__('ContentEditor|GitLab applies a whitespace-only suggestion as a deletion, not as blank lines. Your exact source is retained. Continuing proposes deleting the target file lines.') : s__('ContentEditor|An empty replacement proposes deleting the target file lines. GitLab applies the deletion only after you save this comment and choose Apply suggestion.') }}
+          </gl-alert>
+          <gl-form-checkbox v-if="sourceWhitespaceDeletion && !disabled" v-model="sourceDeletionConfirmed" class="gl-mt-3">{{ s__('ContentEditor|I intend to delete these file lines') }}</gl-form-checkbox>
         </template>
         <p v-else-if="sourceIsFrontmatter">{{ disabled ? s__('ContentEditor|Read-only frontmatter source. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') : s__('ContentEditor|Edit the source contents without the opening and closing delimiters. Apply makes one undoable change. The source is preserved literally and is not evaluated or checked as YAML, TOML or JSON.') }}</p>
         <p v-else>{{ disabled ? s__('ContentEditor|Read-only source. Previewing does not change the document.') : s__('ContentEditor|Preview your draft here. Apply updates the selected diagram in one undoable change; Cancel leaves the document unchanged.') }}</p>

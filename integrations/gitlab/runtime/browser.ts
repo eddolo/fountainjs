@@ -1,3 +1,4 @@
+export { gitLabSuggestionDeletesLines } from '../services/code_suggestion_source';
 export { GitLabContentEditor, GitLabEditorNotReady } from '../services/content_editor';
 export { assertGitLabNativeHostConfiguration } from '../services/host_configuration';
 export { getGitLabLinkContext } from '../services/link_editing';

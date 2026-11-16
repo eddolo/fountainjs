@@ -4,6 +4,11 @@ import { readGitLabCodeRendering } from './code_rendering';
 type Element = DefaultTreeAdapterMap['element'];
 const attr = (node: Element, name: string): string | undefined => node.attrs.find(item => item.name === name)?.value;
 const offsets = /^[+-]\d{1,9}[+-]\d{1,9}$/u;
+/** Pinned GitLab uses ActiveSupport blank?, not JS trim(), when applying
+ * suggestions. Preserve the source; this only describes the host's effect. */
+export function gitLabSuggestionDeletesLines(text: string): boolean {
+  return /^[\u0009-\u000d\u0020\u0085\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]*$/u.test(text);
+}
 export interface GitLabSuggestionSource {
   /** Includes each source body line's terminator; an empty replacement is ''. */
   readonly text: string;

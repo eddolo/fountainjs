@@ -15,8 +15,9 @@ const run = (...args) => execFileSync('git', args, { cwd: source, env, encoding:
 const names = ['current-document', 'native-host-tests', 'native-component-tests', 'native-attachment-tests',
   'native-upload-capacity-tests', 'native-link-tests', 'native-code-tests', 'native-alert-tests', 'native-media-tests', 'native-reference-tests', 'native-diagram-tests'];
 const frontmatter = process.argv.includes('--frontmatter');
+const suggestionEffects = process.argv.includes('--suggestion-effects');
 const suggestionTransport = process.argv.includes('--suggestion-transport');
-const suggestions = suggestionTransport || process.argv.includes('--suggestions');
+const suggestions = suggestionEffects || suggestionTransport || process.argv.includes('--suggestions');
 const footnoteSource = suggestions || process.argv.includes('--footnote-source');
 const autocomplete = process.argv.includes('--autocomplete') || footnoteSource;
 const quickActionControls = process.argv.includes('--quick-action-controls') || autocomplete;
@@ -69,7 +70,7 @@ try {
     isolation: 'Upstream worktree and main index are unchanged; temporary index removed' };
   const authoring = process.argv.includes('--diagram-authoring');
   const reader = process.argv.includes('--diagram-reader');
-  const profile = suggestionTransport ? 'suggestion-transport' : suggestions ? 'suggestion' : footnoteSource ? 'footnote-source' : autocomplete ? 'autocomplete' : quickActionControls ? 'quick-action-controls' : quickActions ? 'quick-actions' : refined ? 'context-ui' : contextual ? 'context-menus' : frontmatter ? 'frontmatter' : reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
+  const profile = suggestionEffects ? 'suggestion-effects' : suggestionTransport ? 'suggestion-transport' : suggestions ? 'suggestion' : footnoteSource ? 'footnote-source' : autocomplete ? 'autocomplete' : quickActionControls ? 'quick-action-controls' : quickActions ? 'quick-actions' : refined ? 'context-ui' : contextual ? 'context-menus' : frontmatter ? 'frontmatter' : reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : 'media';
   await writeFile(new URL(`artifacts/gitlab-native-${profile}-patch-verification-${suggestions ? '20261116' : quickActions ? '20261114' : authoring || reader || frontmatter || contextual ? '20261113' : '20261112'}.json`, root), JSON.stringify(report, null, 2) + '\n');
   console.log(`${patches.length} ordered native patches reconstruct the tested pinned source.`);
 } finally { await rm(temporary, { recursive: true, force: true }); }

@@ -1,0 +1,313 @@
+{
+  "scope": "Real posted replacement, empty deletion and explicitly confirmed whitespace-deletion editing/application. Desired Applied-metadata retention is a failing host requirement; blank-line application is not claimed.",
+  "upstream": {
+    "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "version": "19.5.3"
+  },
+  "project": {
+    "id": 1,
+    "path": "root/fountain-product-integration"
+  },
+  "errors": [],
+  "cases": [
+    {
+      "kind": "replacement",
+      "replacement": "const key = \"\\n\";\n",
+      "branch": "fountain-review-replacement-mwju5hcw",
+      "filePath": "review-mwju5hcw.js",
+      "original": "const key = \"A​B\";\nkeep();\nlast();\n",
+      "marker": "Review replacement mwju5hcw",
+      "seedCommit": "bd5e953d0fbe2fd98e8c0c11c3996a2e7ab5131b",
+      "mergeRequest": {
+        "iid": 40,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/40"
+      },
+      "checks": [
+        "Posted source reopens in the native suggestion node with exact original source.",
+        "Native caption describes host effect and one-step undo/redo retains exact source.",
+        "Editing the posted proposal saves the intended replacement exactly; empty and whitespace source remain distinct, while confirmed whitespace has explicit deletion semantics.",
+        "GitLab applies the edited proposal as a real source commit with exact remaining file content.",
+        "Applied note reopens natively; prose editing retains suggestion source and cannot write repository content."
+      ],
+      "noteId": 336,
+      "discussionId": "19f025d319c6c6b7d2b64d72fd72aacf4bfbc9f5",
+      "initialBody": "```suggestion:-0+0\nconst key = \"A​B\";\n```\n\nReview replacement mwju5hcw",
+      "savedBody": "```suggestion:-0+0\nconst key = \"\\n\";\n```\n\nReview replacement mwju5hcw",
+      "applied": {
+        "commit": "7c8368c8f0cb8b83ace3a6477383940ef6a96b47",
+        "parents": [
+          "bd5e953d0fbe2fd98e8c0c11c3996a2e7ab5131b"
+        ],
+        "branchHead": "7c8368c8f0cb8b83ace3a6477383940ef6a96b47",
+        "content": "const key = \"\\n\";\nkeep();\nlast();\n"
+      },
+      "readerRoute": "Overview link and normal Expand replies control; resolved Rapid Diffs gutter remains separate.",
+      "beforeProseEdit": [
+        {
+          "id": 34,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "finalBody": "```suggestion:-0+0\nconst key = \"\\n\";\n```\n\nReview replacement mwju5hcw — confirmed",
+      "afterProseEdit": [
+        {
+          "id": 35,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "readerAppliedVisible": false
+    },
+    {
+      "kind": "deletion",
+      "replacement": "",
+      "branch": "fountain-review-deletion-mwju5yhc",
+      "filePath": "review-mwju5yhc.js",
+      "original": "const key = \"A​B\";\nkeep();\nlast();\n",
+      "marker": "Review deletion mwju5yhc",
+      "seedCommit": "5c13f0c457cec0d492f524a868a8f430f08b044f",
+      "mergeRequest": {
+        "iid": 41,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/41"
+      },
+      "checks": [
+        "Posted source reopens in the native suggestion node with exact original source.",
+        "Native caption describes host effect and one-step undo/redo retains exact source.",
+        "Editing the posted proposal saves the intended replacement exactly; empty and whitespace source remain distinct, while confirmed whitespace has explicit deletion semantics.",
+        "GitLab applies the edited proposal as a real source commit with exact remaining file content.",
+        "Applied note reopens natively; prose editing retains suggestion source and cannot write repository content."
+      ],
+      "noteId": 340,
+      "discussionId": "8fd3ef15c89a7d79cd29a8fed666c1eacd0ef0c2",
+      "initialBody": "```suggestion:-0+0\nconst key = \"A​B\";\n```\n\nReview deletion mwju5yhc",
+      "savedBody": "```suggestion:-0+0\n```\n\nReview deletion mwju5yhc",
+      "applied": {
+        "commit": "21bd7f9183e1f61acd9b052d95f146d8187283cb",
+        "parents": [
+          "5c13f0c457cec0d492f524a868a8f430f08b044f"
+        ],
+        "branchHead": "21bd7f9183e1f61acd9b052d95f146d8187283cb",
+        "content": "keep();\nlast();\n"
+      },
+      "readerRoute": "Overview link and normal Expand replies control; resolved Rapid Diffs gutter remains separate.",
+      "beforeProseEdit": [
+        {
+          "id": 37,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "finalBody": "```suggestion:-0+0\n```\n\nReview deletion mwju5yhc — confirmed",
+      "afterProseEdit": [
+        {
+          "id": 38,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "readerAppliedVisible": false
+    },
+    {
+      "kind": "whitespace-deletion",
+      "replacement": "\n",
+      "branch": "fountain-review-whitespace-deletion-mwju6cdq",
+      "filePath": "review-mwju6cdq.js",
+      "original": "const key = \"A​B\";\nkeep();\nlast();\n",
+      "marker": "Review whitespace-deletion mwju6cdq",
+      "seedCommit": "6017bf9f4f99683371d33c086b1d627131e7a764",
+      "mergeRequest": {
+        "iid": 42,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/42"
+      },
+      "checks": [
+        "Posted source reopens in the native suggestion node with exact original source.",
+        "Native caption describes host effect and one-step undo/redo retains exact source.",
+        "Editing the posted proposal saves the intended replacement exactly; empty and whitespace source remain distinct, while confirmed whitespace has explicit deletion semantics.",
+        "GitLab applies the edited proposal as a real source commit with exact remaining file content.",
+        "Applied note reopens natively; prose editing retains suggestion source and cannot write repository content."
+      ],
+      "noteId": 344,
+      "discussionId": "15f8150c4202d92bfcd29be6bae4120041c79ca6",
+      "initialBody": "```suggestion:-0+0\nconst key = \"A​B\";\n```\n\nReview whitespace-deletion mwju6cdq",
+      "savedBody": "```suggestion:-0+0\n\n```\n\nReview whitespace-deletion mwju6cdq",
+      "applied": {
+        "commit": "5f02bf822a660cca45a809c395799fc26a8f925c",
+        "parents": [
+          "6017bf9f4f99683371d33c086b1d627131e7a764"
+        ],
+        "branchHead": "5f02bf822a660cca45a809c395799fc26a8f925c",
+        "content": "keep();\nlast();\n"
+      },
+      "readerRoute": "Overview link and normal Expand replies control; resolved Rapid Diffs gutter remains separate.",
+      "beforeProseEdit": [
+        {
+          "id": 40,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "finalBody": "```suggestion:-0+0\n\n```\n\nReview whitespace-deletion mwju6cdq — confirmed",
+      "afterProseEdit": [
+        {
+          "id": 41,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "readerAppliedVisible": false
+    }
+  ],
+  "retainedIssues": [
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "replacement",
+      "noteId": 336,
+      "before": [
+        {
+          "id": 34,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "after": [
+        {
+          "id": 35,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "serverControlNoteId": 332,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    },
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "deletion",
+      "noteId": 340,
+      "before": [
+        {
+          "id": 37,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "after": [
+        {
+          "id": 38,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "serverControlNoteId": 332,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    },
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "whitespace-deletion",
+      "noteId": 344,
+      "before": [
+        {
+          "id": 40,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "after": [
+        {
+          "id": 41,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "serverControlNoteId": 332,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    }
+  ],
+  "limitations": [
+    "Stock GitLab applies whitespace-only source as deletion. Native warning and explicit confirmation describe that effect; meaningful blank-line application remains unsupported by the host."
+  ],
+  "acceptancePassed": false,
+  "serverControl": {
+    "scope": "Stock REST control; no Fountain document/editor operations",
+    "mergeRequest": {
+      "iid": 39,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/39"
+    },
+    "noteId": 332,
+    "original": "old();\nkeep();\n",
+    "replacement": "new();\n",
+    "before": [
+      {
+        "id": 31,
+        "from_line": 1,
+        "to_line": 1,
+        "appliable": false,
+        "applied": true,
+        "from_content": "old();\n",
+        "to_content": "new();\n"
+      }
+    ],
+    "after": [
+      {
+        "id": 32,
+        "from_line": 1,
+        "to_line": 1,
+        "appliable": true,
+        "applied": false,
+        "from_content": "old();\n",
+        "to_content": "new();\n"
+      }
+    ],
+    "sourceCommit": "5b04ab7e32390ff7d258c1f81e93d5396e231353",
+    "sourceUnchanged": true,
+    "body": "```suggestion:-0+0\nnew();\n```\n\nServer-only control mwju5ez5 — prose-only API edit"
+  }
+}

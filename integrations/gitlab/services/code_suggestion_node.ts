@@ -1,6 +1,6 @@
 import { Plugin, type Node, type NodeSpec } from 'fountainjs-editor';
 import type { DefaultTreeAdapterMap } from 'parse5';
-import { readGitLabSuggestionSource, serializeGitLabSuggestionSource } from './code_suggestion_source';
+import { readGitLabSuggestionSource, serializeGitLabSuggestionSource, gitLabSuggestionDeletesLines } from './code_suggestion_source';
 import { replaceGitLabCodeRendering } from './code_rendering';
 
 type Element = DefaultTreeAdapterMap['element'];
@@ -17,8 +17,9 @@ export function gitLabCodeSuggestion(): NodeSpec {
       return validParams(params) && validFence(fence) ? { params, fence } : false;
     } }],
     toDOM: node => ['pre', { [attribute]: node.attrs.params, 'data-fountain-suggestion-fence': node.attrs.fence,
+      'data-fountain-suggestion-effect': gitLabSuggestionDeletesLines(node.textContent) ? 'deletion' : 'replacement',
       tabindex: 0, role: 'region', 'aria-label': 'Suggested replacement', 'data-language': 'suggestion' }, ['span', { contenteditable: 'false', style: 'display:block;font:600 12px system-ui;margin-bottom:10px' },
-      'Suggested replacement' + (node.attrs.params ? ` · ${String(node.attrs.params)}` : '')], ['code', 0]],
+      'Suggested replacement' + (gitLabSuggestionDeletesLines(node.textContent) ? ' · Deletes target lines' : '') + (node.attrs.params ? ` · ${String(node.attrs.params)}` : '')], ['code', 0]],
   };
 }
 export function serializeGitLabSuggestionNode(node: Node): string {

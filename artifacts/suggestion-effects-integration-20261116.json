@@ -1,0 +1,262 @@
+{
+  "scope": "Private GitLab native deletion-effect safeguard and real posted review workflows; overall review acceptance remains failed on stock server Applied metadata retention.",
+  "parentRevision": "a6f129de3cd0808a824a0e28385892ada93b18cd",
+  "verification": {
+    "integrationUnit": {
+      "passed": 1364,
+      "files": 53,
+      "workers": 2
+    },
+    "types": "strict TypeScript passed",
+    "upstream": {
+      "passed": 555,
+      "suites": 23,
+      "inheritedSkip": 1
+    },
+    "sourceWorkflows": [
+      {
+        "kind": "replacement",
+        "mergeRequest": {
+          "iid": 40,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/40"
+        },
+        "noteId": 336,
+        "checks": [
+          "Posted source reopens in the native suggestion node with exact original source.",
+          "Native caption describes host effect and one-step undo/redo retains exact source.",
+          "Editing the posted proposal saves the intended replacement exactly; empty and whitespace source remain distinct, while confirmed whitespace has explicit deletion semantics.",
+          "GitLab applies the edited proposal as a real source commit with exact remaining file content.",
+          "Applied note reopens natively; prose editing retains suggestion source and cannot write repository content."
+        ],
+        "body": "```suggestion:-0+0\nconst key = \"\\n\";\n```\n\nReview replacement mwju5hcw — confirmed",
+        "commit": "7c8368c8f0cb8b83ace3a6477383940ef6a96b47",
+        "content": "const key = \"\\n\";\nkeep();\nlast();\n"
+      },
+      {
+        "kind": "deletion",
+        "mergeRequest": {
+          "iid": 41,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/41"
+        },
+        "noteId": 340,
+        "checks": [
+          "Posted source reopens in the native suggestion node with exact original source.",
+          "Native caption describes host effect and one-step undo/redo retains exact source.",
+          "Editing the posted proposal saves the intended replacement exactly; empty and whitespace source remain distinct, while confirmed whitespace has explicit deletion semantics.",
+          "GitLab applies the edited proposal as a real source commit with exact remaining file content.",
+          "Applied note reopens natively; prose editing retains suggestion source and cannot write repository content."
+        ],
+        "body": "```suggestion:-0+0\n```\n\nReview deletion mwju5yhc — confirmed",
+        "commit": "21bd7f9183e1f61acd9b052d95f146d8187283cb",
+        "content": "keep();\nlast();\n"
+      },
+      {
+        "kind": "whitespace-deletion",
+        "mergeRequest": {
+          "iid": 42,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/42"
+        },
+        "noteId": 344,
+        "checks": [
+          "Posted source reopens in the native suggestion node with exact original source.",
+          "Native caption describes host effect and one-step undo/redo retains exact source.",
+          "Editing the posted proposal saves the intended replacement exactly; empty and whitespace source remain distinct, while confirmed whitespace has explicit deletion semantics.",
+          "GitLab applies the edited proposal as a real source commit with exact remaining file content.",
+          "Applied note reopens natively; prose editing retains suggestion source and cannot write repository content."
+        ],
+        "body": "```suggestion:-0+0\n\n```\n\nReview whitespace-deletion mwju6cdq — confirmed",
+        "commit": "5f02bf822a660cca45a809c395799fc26a8f925c",
+        "content": "keep();\nlast();\n"
+      }
+    ],
+    "coldRestart": "Exact source/comments/commits and persisted suggestion fields verified; computed eligibility recorded separately",
+    "sourcePatches": 19,
+    "guardedRollbackFiles": 28,
+    "unicodeOracle": "Every Unicode scalar compared against the actual pinned embedded Ruby whitespace predicate",
+    "visualReview": "Inspected settled warning with disabled Apply deletion, visible intent checkbox, deletion captions, saved readers and cold-restart reader."
+  },
+  "repair": "Native deletion captions and explicit Apply deletion action. Nonempty whitespace-only source requires affirmative intent; changing source resets intent. Command guard and pending-draft handoff remain enforced. Source is never cleaned or rewritten.",
+  "overallReviewAcceptance": {
+    "passed": false,
+    "reason": "Stock Notes::UpdateService deletes/recreates suggestion records on prose-only updates, clearing Applied metadata. Confirmed independently by real REST control."
+  },
+  "retained": [
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "replacement",
+      "noteId": 336,
+      "before": [
+        {
+          "id": 34,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "after": [
+        {
+          "id": 35,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": "const key = \"\\n\";\n"
+        }
+      ],
+      "serverControlNoteId": 332,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    },
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "deletion",
+      "noteId": 340,
+      "before": [
+        {
+          "id": 37,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "after": [
+        {
+          "id": 38,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "serverControlNoteId": 332,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    },
+    {
+      "code": "GITLAB_APPLIED_METADATA_RECREATED_ON_PROSE_EDIT",
+      "kind": "whitespace-deletion",
+      "noteId": 344,
+      "before": [
+        {
+          "id": 40,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": true,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "after": [
+        {
+          "id": 41,
+          "from_line": 1,
+          "to_line": 1,
+          "appliable": false,
+          "applied": false,
+          "from_content": "const key = \"A​B\";\n",
+          "to_content": ""
+        }
+      ],
+      "serverControlNoteId": 332,
+      "desired": "Unchanged applied replacement retains its application metadata through prose-only note editing."
+    }
+  ],
+  "unsupportedHostMeaningfulBlankLine": {
+    "scope": "Original negative case, read-only recheck after restart; not silently promoted to blank-line support",
+    "mergeRequest": {
+      "iid": 34,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/34"
+    },
+    "noteId": 314,
+    "body": "```suggestion:-0+0\n\n```\n\nReview blank mwjtk60s",
+    "source": "\n",
+    "desiredContent": "\nkeep();\nlast();\n",
+    "actualContent": "keep();\nlast();\n",
+    "commit": "a8f412ea6f2bb44a4ad4d20526bcbfe3cf2a9327",
+    "serverSuggestion": {
+      "id": 21,
+      "from_line": 1,
+      "to_line": 1,
+      "appliable": false,
+      "applied": true,
+      "from_content": "const key = \"A​B\";\n",
+      "to_content": ""
+    }
+  },
+  "computedEligibility": {
+    "before": [
+      true
+    ],
+    "after": [
+      false
+    ]
+  },
+  "pairedComparison": {
+    "status": "pending-original-editor-workflows",
+    "classification": null,
+    "plan": "integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md",
+    "reason": "Native journeys and API-only controls do not substitute for paired original-editor UI runs."
+  },
+  "remaining": [
+    "Applied-metadata reconciliation through a verified host contract",
+    "Original-editor matched runs and per-invariant classifications",
+    "Actual unchanged/context/legacy source variants, outdated proposals, review batches, roles/concurrency, wider native browser/mobile and hosted/full-root release checks"
+  ],
+  "constraints": [
+    "Actual native UI uses Chromium and stock pinned server; no credentialed trace/video/auth storage retained",
+    "No public package/API/capacity limit/version/publication change or overall parity-row promotion",
+    "Application stopped after audit"
+  ],
+  "hashes": {
+    "integrations/gitlab/runtime/browser.ts": "9395e8c23d92ccfd3cb062d0e6cd0ecececf635cbaf74dba1219281e28c2da39",
+    "integrations/gitlab/services/code_suggestion_source.ts": "e8863986e052566f777187575ef0942cb70fcac3a05946363c717d5959c743d5",
+    "integrations/gitlab/services/code_suggestion_node.ts": "1aac07d4bc8f575a2d08ba9ef473753483d833ec77eb745c3f1be326be431489",
+    "integrations/gitlab/components/fountain_code_menu.vue": "5bbed5f3e0330c8efb0dc2aa16de88970d2eeebdc94c501562223a4ce8500e24",
+    "integrations/gitlab/specs/fountain_code_menu_spec.js": "c977a14c85a2de39118de58b907144c95fa994a7b9eb8dd18998af61daeabae8",
+    "integrations/gitlab/fixtures/suggestion-whitespace-live.json": "2e0afff97dfc26b5db842974709093ec52487e292643f9b2207d40c101d56bf9",
+    "tests/gitlab-suggestion-effects.test.ts": "ac2e70a660a2eb2e9ecd987d524ee88238452ea15e7dd4c46c9d970abc52a75e",
+    "integrations/gitlab/patches/gitlab-19.5.3-native-suggestion-tests.patch": "0154d3d2f7d6797ab3a3803f69fb001c3a1344211a9cd6625c4356f525306500",
+    "scripts/audit-gitlab-suggestion-review.mjs": "82b0a0c305e303f7db2c44945c4752965456b65d3b69c6cb254c2ac9d6586f38",
+    "scripts/capture-gitlab-alert-rendering.mjs": "761c33b07a6800510c6ea14e83c082901e7f9309dd97d17cb5c4c3fe407956d2",
+    "scripts/run-gitlab-native-browser-audit.mjs": "1841d466b92c001db3ff314975a9e2168cca632daaa757763239adbe5c52e6f0",
+    "scripts/check-gitlab-native-patches.mjs": "5dc0277ff64280184c9c1d3351f89cf64a17cc3470877d927ecca656613ba901",
+    "scripts/check-gitlab-native-install.mjs": "70eb9764bad22afb040ac57015add884328ab157ce4179d37a359f267a109ee7",
+    "integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md": "d25a49eba3ba4e40af08b98399cbca8cd4005752b69c10259e3f35f0cbca6a93",
+    "artifacts/gitlab-native-runtime/build.json": "15fbace93be93e5619bd0e5bd1a3367b8fff75effc864cd99a036d65becd1e36",
+    "artifacts/gitlab-native-browser-install/install.json": "cfc424f1302c78ab4d4969dd7b38b9072aef47d366ea81578605f0e33ab1e3f0",
+    "artifacts/gitlab-native-suggestion-effects-patch-verification-20261116.json": "205b06aa156260a79dd3dedba70ede8d64ce677fea4eac6873ed60da6d497b2c",
+    "artifacts/gitlab-native-suggestion-effects-install-roundtrip-20261116.json": "a202106af1d0fb73143d8cd856a38b2fdab3369f585e864c8e268958e540a8ff",
+    "artifacts/gitlab-suggestion-whitespace-oracle-20261116.json": "2e0afff97dfc26b5db842974709093ec52487e292643f9b2207d40c101d56bf9",
+    "artifacts/probe-suggestion-whitespace-20261116.mjs": "95f253aa2c13e17e4cb72bf3f1e51ed4d498318f91cc8443fcffd66cc168bd73",
+    "artifacts/run-suggestion-effects-upstream-20261116.mjs": "9570150f4b5f8b727d6560094b83a564f05e3fb2a48a1508c40e635dcdf69c40",
+    "artifacts/suggestion-effects-all-unit-20261116.log": "58daf2bb1294f98d1d61080c96761cc2a900e557a7f5b2ea6dd1742760382e32",
+    "artifacts/suggestion-effects-types-20261116.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/suggestion-effects-upstream-20261116.log": "2b11dc1965e98ea70f8d5f767c3d3da86c22d0f0cff97fe6bea15ed611a59872",
+    "artifacts/suggestion-effects-runtime-20261116.log": "c681c9c4d16117d05c165683929ed7f0e6d9391d6197a1f4757f00bd4c3e5ff9",
+    "artifacts/suggestion-effects-frontend-20261116.log": "f83f12c857f4c276e6d22199184fdd1e921408525c6a3bf1afc33c9da83f5173",
+    "artifacts/suggestion-effects-live-final-20261116.log": "841dbf493dc4e3f41dbe5d0b0517bbdc5d4bd4b0f31482078f160c5329f644c9",
+    "artifacts/suggestion-effects-restart-20261116.log": "038ec4de7975bcea8f43092a5434d76280aa1f74c888136af11ba12138feaf8b",
+    "artifacts/suggestion-effects-restart-final-20261116.log": "5aaf85e5f21600197a0274893f3c9d4b4b2e5ccca6c96323bd4f3297e7349cba",
+    "artifacts/suggestion-effects-rollback-20261116.log": "6e10a0e0abaf66c7b9ac662369b20022055d6d9ddb0665fab1ee2f579c65cb2a",
+    "artifacts/suggestion-review-before-effects-20261116/failure.json": "1b455bb4034b78a39930dde1736e3f2e3ccabd2bf41f14c50f82565fce424c8a",
+    "artifacts/suggestion-review-before-effects-20261116/failure.png": "29bdc6043bf13777299154364d3a4aaf542428db3a6970e2ac5ef4819e8f2fd1",
+    "artifacts/suggestion-review-live-20261116/report.json": "951a74da1450b3d7211043b66690a4b1e6f2ed1dc1a33fa813d716aa0fc17e58",
+    "artifacts/suggestion-review-live-20261116/restart.json": "83b914f3414d1c30ab37c1ea3711f92a2aa52c0b17a6f3c5a79bf2c1fc1f6ac2",
+    "artifacts/suggestion-review-live-20261116/whitespace-deletion-warning.png": "b9f8326a4eae8282e5c3cebe63e84ead065fbd5c37144964930ca3e98a297193",
+    "artifacts/suggestion-review-live-20261116/whitespace-deletion-edited-draft.png": "38fc23b9bf614921de579ddc66f72cc923520fa1c720f36bcded5b5f7fa41f9f",
+    "artifacts/suggestion-review-live-20261116/deletion-edited-draft.png": "1ef7b3d33a3fa4c7889b49de8aaaddd02be3dee157a8567d1904ba688d1accb4",
+    "artifacts/suggestion-review-live-20261116/deletion-posted-reader.png": "4a5faf27b61bb161674b4b8ad19f28d1ac33aeb4ce23106ccce9b0ed36f371ed",
+    "artifacts/suggestion-review-live-20261116/replacement-posted-reader.png": "4fb0fa17bb49d989861e8156883e3c45be3e321bcca26c73c669d26110c22dd1",
+    "artifacts/suggestion-review-live-20261116/replacement-after-restart.png": "d691b2a1143f45773b7c60676152d63124ac7772fd64e69262303c68421643fa",
+    "artifacts/suggestion-review-live-20261116/deletion-after-restart.png": "a2973a8e420b0e4dffe751d9869b833f285ccf884a99bde0bf0020bfaac1a06e",
+    "artifacts/suggestion-review-live-20261116/whitespace-deletion-after-restart.png": "2f69138dcbd5504f7d03df36f502976f3bcf1bfae31edb6942bc230cd41de51a"
+  }
+}

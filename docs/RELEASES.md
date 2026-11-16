@@ -26,6 +26,24 @@ do not mark an unfinished beta stable merely to change the badge.
 
 This reconciliation changes no release, tag, npm package or website deployment.
 
+## Native GitLab deletion-effect safeguard — 2026-11-16
+
+The unpublished integration candidate now labels deletion proposals and requires
+explicit intent before applying a nonempty whitespace-only draft in its source
+dialog. The pinned host applies that source as deletion; Fountain preserves the
+source and exposes the effect. Unicode classification is checked against the
+actual embedded Ruby predicate. 1364 scoped integration tests, strict types and
+555 selected upstream tests pass (one inherited skip), with native build/source
+reconstruction/rollback and physical posted-review/source-commit checks.
+
+Overall review acceptance remains failed: stock note updates clear Applied
+metadata, including through a direct API-only control. Meaningful blank-line
+application remains unsupported by the stock host. Neither finding is hidden by
+the safeguard or promoted to full compatibility. The new paired-suite plan
+requires original-editor UI results before classification or comparative claims.
+[Evidence](../artifacts/suggestion-effects-integration-20261116.json).
+No public API/capacity limit/package version/publication change.
+
 ## Native GitLab raw-source suggestion repair — 2026-11-16
 
 The unpublished candidate resolves a verified Rapid Diffs prefill collision
