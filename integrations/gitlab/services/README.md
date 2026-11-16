@@ -422,3 +422,38 @@ clipboard insertion, retained-source recovery, real saving and restart. The full
 toolbar, contextual menus, remaining media, suggestions and provider integration remain unfinished.
 Unknown/unrepresentable content is an explicit conversion error, not feature
 parity. This service is private integration code, not a newly published npm API.
+
+## Captured code suggestions — private integration foundation
+
+The service exposes `content.suggestions.available`, `insert()` and `begin()`.
+An optional host-owned `getSuggestionContext()` callback supplies the current
+`canSuggest`, original `lines`, inclusive `lineRange`, `lineType` and
+`blobRawPath`. Only known fields and contiguous positive line ranges are accepted.
+`showPopover` is UI metadata; it does not change source ownership. The callback
+is reread before mutations and after asynchronous operations. No callback means
+suggestions are unavailable. It does not enable the active native host adapter:
+that adapter remains guarded pending real inline review acceptance.
+
+A session owns one proposal, rather than whichever block the caret later enters.
+`initial` contains its source and offset header. `applySource(text)` preserves
+literal LF source; an empty value is a deletion proposal. `prepareRange()` calls
+optional `loadSuggestionSource(path, { signal })`, verifies the selected original
+lines, and returns file lines for range controls. `applyRange(start, end)` uses
+absolute inclusive file lines containing the host anchor, keeps replacement text
+unchanged, and rechecks the exact loaded snapshot before expansion. CRLF is only
+split for line comparison; the stored snapshot is not normalized. No repository
+write occurs. Posting/applying and permissions remain GitLab's responsibility.
+
+The host loader must enforce its own authenticated, same-origin allowed raw-file
+route, follow the abort signal and return bounded text. The service accepts no
+network client or credentials. Its 1 MiB character bound is a model limit, not an
+HTTP transport limit. Close/cancel, replacement, stale targets and superseded
+requests cannot apply a late draft. Beginning another session closes the first;
+content-service disposal closes the session and aborts its pending request.
+
+Ctrl/Cmd+Enter leaves literal code at its current parent boundary, creating or
+reusing an editable paragraph without changing code source. Ordinary Enter and
+Tab keep their source-editing behavior. This private shortcut needs verification
+in the live host alongside its submission shortcuts before production acceptance.
+
+[Service and recorded local-browser evidence](../../../artifacts/suggestion-editing-integration-20261116.json).

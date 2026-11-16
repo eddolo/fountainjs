@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Suggestion editing service audit</title>
+<style>body{font:16px system-ui;max-width:960px;margin:30px auto;padding:16px}button,input{font:inherit;padding:8px;margin:4px}fieldset{margin:16px 0;border:1px solid #bbb;border-radius:8px}textarea{display:block;width:100%;min-height:100px;font:14px monospace}#editor{border:1px solid #bbb}#status{min-height:24px}pre{white-space:pre-wrap}</style></head>
+<body><h1>Review a proposed code change</h1><p>Integration audit using a captured GitLab preview and a fixed raw-file fixture. Repository posting and application are not connected.</p>
+<button id="insert">Insert suggestion</button><button id="edit">Edit selected suggestion</button><button id="undo">Undo</button><button id="revoke">Revoke suggestion permission</button>
+<p role="status" id="status">Loading</p><div id="editor"></div>
+<fieldset id="panel" hidden><legend>Suggested replacement</legend><label>Replacement source<textarea id="replacement"></textarea></label><button id="apply-source">Apply source</button>
+<label>First file line<input id="start" type="number" min="1" value="2"></label><label>Last file line<input id="end" type="number" min="1" value="3"></label><button id="load">Load file lines</button><button id="apply-range">Apply range</button><button id="cancel">Cancel</button><pre id="original"></pre></fieldset>
+<button id="export">Export Markdown</button><label>Saved Markdown<textarea id="source" readonly></textarea></label>
+<script type="module" src="./gitlab-suggestion-editing-fixture.ts"></script></body></html>

@@ -1,0 +1,11 @@
+{
+  "sourceUpdated": true,
+  "rangeExpandedWithFile": true,
+  "sourceRetainedOnRangeChange": true,
+  "undoSeparate": true,
+  "insertion": true,
+  "revokedPermissionRefused": true,
+  "changed": "```suggestion:-2+1\nreturn 42;\n\n```",
+  "saved": "```suggestion\nreturn true;\n```\n\nReview notes.\n\n```suggestion:-1+0\noriginal A\noriginal B\n```",
+  "errors": []
+}

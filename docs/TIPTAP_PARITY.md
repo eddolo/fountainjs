@@ -2,7 +2,33 @@
 
 ## Current programme status — 2026-11-16
 
-Current suggestion-node checkpoint (2026-11-16): source and range metadata now
+Current suggestion-editing service checkpoint (2026-11-16): the native content
+service now owns proposal insertion and captured source/range edit sessions.
+Sessions follow unrelated edits but refuse an edited/removed/replaced target,
+changed host context, revoked permission and late or superseded raw-file loads.
+Range expansion checks the selected original lines and rechecks the exact file
+snapshot, including line endings, before committing. Changing a range keeps the
+author's replacement source intact. Conversion/filter refusals roll back content
+and history. Disposal cancels the owned session and request.
+
+A recorded browser journey found no prose paragraph after a suggestion-only
+document. Ctrl/Cmd+Enter now leaves GitLab code through the existing parent-aware
+gap command; ordinary Enter stays literal source. Root, quote and list cases
+retain their source and structure, with exit and later typing separately undoable.
+
+All 1290 GitLab integration unit cases / 50 files pass, including 43 new service
+cases; TypeScript passes. Two recorded Chromium/Firefox journeys exercise source,
+range, undo, insertion, permission refusal and keyboard exit. Screenshots and
+sampled video frames were inspected. [Suggestion-editing evidence](../artifacts/suggestion-editing-integration-20261116.json).
+
+This is local service/control evidence using captured GitLab previews and a
+fixed raw-file fixture. The actual native host still rejects active suggestions.
+Live inline context capture, production controls, MR posting/applying/batching
+and the new candidate's native runtime/frontend/upstream/restart acceptance remain
+open. No public API/size/performance limit changes, version bump or publication.
+The earlier full-root-suite results below belong to their own checkpoints.
+
+Previous suggestion-node checkpoint (2026-11-16): source and range metadata now
 live in editable typed nodes. JSON/HTML clipboard and canonical Markdown retain
 empty/blank-only replacements and nested quote/list structure. A host-owned block
 serializer hook reuses the native container writer. Physical tests exposed and

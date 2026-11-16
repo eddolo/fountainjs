@@ -22,7 +22,7 @@ import { createGitLabReferenceNavigationPlugin } from '../plugins/reference_navi
 import { GitLabMarkdownInsertion } from './markdown_insertion';
 import { GitLabAttachmentUploads, type GitLabUploadHandler, type GitLabUploadSnapshot } from './attachment_uploads';
 import { GitLabLinkEditingSession, type GitLabLinkSnapshot } from './link_editing';
-import { GitLabCodeEditingSession, getGitLabCodeContext, insertGitLabFrontmatter, setGitLabCodeBlock } from './code_editing';
+import { GitLabCodeEditingSession, getGitLabCodeContext, exitGitLabCode, insertGitLabFrontmatter, setGitLabCodeBlock } from './code_editing';
 import { selectionIncludesGitLabFrontmatter } from './frontmatter';
 import { GitLabAlertEditing } from './alert_editing';
 import type { GitLabPlayableKind } from './media';
@@ -30,6 +30,7 @@ import { GitLabMediaEditingSession, type GitLabMediaSnapshot } from './media_edi
 import { GitLabReferenceEditingSession, type GitLabReferenceSnapshot } from './reference_editing';
 import { beginGitLabFootnoteInsertion } from './footnote_editing';
 import { GitLabFootnoteRenameSession, type GitLabFootnoteRenameSnapshot } from './footnote_renaming';
+import { GitLabSuggestionEditing, type GitLabSuggestionEditingOptions } from './code_suggestion_editing';
 import { createGitLabSuggestionClipboardPlugin } from './code_suggestion_node';
 import { createGitLabTaskStatePlugin } from './task_state';
 import { gitLabFootnoteBoundary } from './footnote_boundary';
@@ -47,6 +48,8 @@ export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
   describeMedia?(kind: GitLabPlayableKind): string;
   quickActionProvider?: GitLabQuickActionProvider;
   autocompleteProvider?: GitLabAutocompleteProvider;
+  getSuggestionContext?: GitLabSuggestionEditingOptions['getContext'];
+  loadSuggestionSource?: GitLabSuggestionEditingOptions['loadSource'];
 }
 export class GitLabEditorNotReady extends Error {
   constructor(readonly status: GitLabEditorStatus) {
@@ -72,6 +75,7 @@ export class GitLabContentEditor {
   readonly alerts: GitLabAlertEditing;
   readonly quickActions: GitLabQuickActionEditing;
   readonly autocomplete: GitLabAutocompleteEditing;
+  readonly suggestions: GitLabSuggestionEditing;
   private readonly uploadListeners = new Set<(uploads: readonly GitLabUploadSnapshot[]) => void>();
   private readonly releaseChanges: () => void;
   private readonly listeners = new Set<(change: SerializedContentChange) => void>();
@@ -104,6 +108,8 @@ export class GitLabContentEditor {
       'describeMedia',
       'quickActionProvider',
       'autocompleteProvider',
+      'getSuggestionContext',
+      'loadSuggestionSource',
     ]);
     for (const key of Object.keys(options)) {
       if (!supported.has(key)) throw new TypeError(`UNSUPPORTED_GITLAB_NATIVE_OPTION:${key}`);
@@ -116,6 +122,10 @@ export class GitLabContentEditor {
       throw new TypeError('EXPECTED_GITLAB_QUICK_ACTION_PROVIDER');
     if (options.autocompleteProvider !== undefined && typeof options.autocompleteProvider !== 'function')
       throw new TypeError('EXPECTED_GITLAB_AUTOCOMPLETE_PROVIDER');
+    for (const key of ['getSuggestionContext', 'loadSuggestionSource'] as const) {
+      if (options[key] !== undefined && typeof options[key] !== 'function')
+        throw new TypeError('EXPECTED_GITLAB_SUGGESTION_CALLBACK:' + key);
+    }
     if (options.maxUploadEntries !== undefined && (!Number.isInteger(options.maxUploadEntries)
       || options.maxUploadEntries < 1 || options.maxUploadEntries > 1000))
       throw new RangeError('INVALID_GITLAB_UPLOAD_CAPACITY');
@@ -148,7 +158,9 @@ export class GitLabContentEditor {
           audio: options.describeMedia('audio'), video: options.describeMedia('video'),
         } : undefined),
         plugins: [new Plugin({ props: {
-          handleKeyDown: (editor, event) => !event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey
+          handleKeyDown: (editor, event) => !event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey
+            && event.key === 'Enter' && this.status === 'ready' && exitGitLabCode(editor, doc => { this.codec.serialize({ doc }); })
+            || !event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey
             && ['b', 'i', 'u'].includes(event.key.toLowerCase()) && (Boolean(getGitLabCodeContext(editor)) || selectionIncludesGitLabFrontmatter(editor))
             || (alertInput?.spec.props?.handleKeyDown?.(editor, event) ?? false),
           handleBeforeInput: (editor, event) => !event.isComposing && event.inputType?.startsWith('format')
@@ -218,6 +230,15 @@ export class GitLabContentEditor {
       validate: doc => { this.codec.serialize({ doc }); },
       explain: source => this.assetResolver.explainQuickAction(source, { strict: true }),
       onListenerError: this.reportListenerError,
+    });
+    this.suggestions = new GitLabSuggestionEditing({ editor: this.editor,
+      ensureReady: () => {
+        this.assertAlive();
+        if (this.status !== 'ready' || !this.editable) throw new GitLabEditorNotReady(this.status);
+      },
+      getContext: options.getSuggestionContext ?? (() => undefined),
+      loadSource: options.loadSuggestionSource,
+      validate: doc => { this.codec.serialize({ doc }); },
     });
     this.autocomplete = autocomplete = new GitLabAutocompleteEditing({ editor: this.editor, key: autocompletePlugin.key,
       provider: options.autocompleteProvider,
@@ -531,6 +552,7 @@ export class GitLabContentEditor {
   dispose(): void {
     if (this.destroyed) return;
     this.destroyed = true;
+    this.suggestions.dispose();
     this.autocomplete.destroy();
     this.quickActions.destroy();
     this.footnoteRenameSession?.close();

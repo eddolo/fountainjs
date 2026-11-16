@@ -1,0 +1,70 @@
+{
+  "scope": "Private GitLab service foundation and local browser controls; not actual MR suggestion posting/application or full product acceptance.",
+  "parentRevision": "d5965d247681199d4eaa3c3840718cd9346e684b",
+  "verified": {
+    "integrationUnitTests": {
+      "passed": 1290,
+      "files": 50,
+      "workers": 2
+    },
+    "newSessionTests": 43,
+    "types": "pnpm exec tsc --noEmit passed",
+    "browserJourneys": {
+      "passed": 2,
+      "browsers": [
+        "Chromium",
+        "Firefox"
+      ],
+      "workers": 1,
+      "recorded": true
+    },
+    "cases": [
+      "insertion with captured original lines and offsets",
+      "plain source/empty deletion suggestions",
+      "source-preserving range changes",
+      "exact raw snapshot recheck including line endings",
+      "owned target mapping across unrelated edits",
+      "cross-block selection refusal",
+      "equal-source replacement invalidation",
+      "atomic conversion/filter refusal",
+      "async supersession/close/revocation",
+      "service disposal aborts owned requests",
+      "Ctrl/Cmd+Enter leaves source at its actual parent",
+      "separate undo for exit and typing"
+    ]
+  },
+  "firstBrowserFailure": "The test assumed a trailing prose paragraph after a directly editable code suggestion. No paragraph existed. Added a real private Ctrl/Cmd+Enter exit using existing parent-aware commands and tested root/quote/list boundaries; retained ordinary Enter as literal source.",
+  "evidenceLimits": [
+    "Local browser controls use actual pinned GitLab preview captures and a declared fixed raw-file fixture, not a running GitLab repository.",
+    "The active native host configuration guard remains unchanged and refuses active suggestions.",
+    "Contiguous selected lines only; noncontiguous/unknown context requires further host adaptation.",
+    "No real inline context capture, MR posting/applying, batching, new native runtime/frontend/upstream/restart acceptance in this checkpoint.",
+    "1290 tests are the GitLab integration subset, not a fresh full root suite or hosted CI.",
+    "No new public package code, API/size/performance limit changes, version bump, release, push or publication.",
+    "Video contact sheets sample the recordings; they do not prove exhaustive continuous visual review."
+  ],
+  "hashes": {
+    "integrations/gitlab/services/code_suggestion_editing.ts": "ede30b8d3ce63bf1234c760cf200154b415be8d5d856b87925d97f2f558f634a",
+    "integrations/gitlab/services/content_editor.ts": "68084da871750fda093407f05cdcaa4aa8d6fa1a2f5466635befa67a847b8937",
+    "integrations/gitlab/services/code_editing.ts": "50ecaeb9f83264a2d8fb00c906ca29cd7716fddccf647c431a4cc6b711d20c89",
+    "integrations/gitlab/services/host_configuration.ts": "5b8e2c650f3dbd65efd894c602f3cc7b39f3b74e681dadbe5dfc3a646248a05b",
+    "tests/gitlab-suggestion-editing.test.ts": "bb2317c76ef823b4054529c4f864f21489f115158b30d568824121ea39109d35",
+    "tests/browser/gitlab-suggestion-editing-fixture.ts": "03826dbe74eccd3998bf1f2254db197ae7ce122fecf91c3d36daabdf853c63f7",
+    "tests/browser/gitlab-suggestion-editing.html": "297b1039ad6e7c64726a8e8193316129851571585288ac2186f4d912f1d4eaa5",
+    "tests/browser/gitlab-suggestion-editing.spec.ts": "1626d99a0c66d1e3126ef85632f7a7e7e72777f40b81db1f4281f302a7a84473",
+    "scripts/build-gitlab-native-runtime.mjs": "8e6bd5c107e6115449b08ffccc9e13850a98317ab6f98d7e108b9c841d690636",
+    "playwright.config.ts": "27607d6a58775acd4cb98e3403e74c42c64c2298509372e808da52734e367ba4",
+    "artifacts/suggestion-editing-unit-20261116.log": "c04faff944afea89f97a973bcf693a9c70d86ca33e97b59a4d230b24148592b0",
+    "artifacts/suggestion-editing-types-20261116.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/suggestion-editing-desktop-20261116.log": "c871c5fc87f688e63838e6e5d728ecbec4e17cbc381612a77505b147ffd8777b",
+    "artifacts/suggestion-editing-desktop-accepted-20261116.log": "99ce3ea7bf8f9854a3af4962e561b4c5ec9383dce4ad3149a0f06ea5aaa11b63",
+    "artifacts/suggestion-editing-desktop-20261116/chromium/range.png": "7f1d5186ae7c5b83dfc1f31f36eab4b6974e0cb7038775d4715b43bf3edab5f9",
+    "artifacts/suggestion-editing-desktop-20261116/chromium/frames.png": "49adc4ac3bd8c2cdf54d165a0881bad2b36d065dfed87486659c86a4a767b03f",
+    "artifacts/suggestion-editing-desktop-20261116/chromium/video.webm": "d9e8157151fd061daec828546e6fadbd2fd6ce888da97c00326b98d5d0e71775",
+    "artifacts/suggestion-editing-desktop-20261116/chromium/observations.json": "21f90721a852a67a6910d8d040668f0f0a6780f41f492a8645ce7b16e856025d",
+    "artifacts/suggestion-editing-desktop-20261116/firefox/range.png": "6a153f550b44a8e12dd24ee253f77be48ed5de1e4ab95a97feec13ad38fa6148",
+    "artifacts/suggestion-editing-desktop-20261116/firefox/frames.png": "c2f52c61b20f0cf4203bdb82215b16175feccbab834c61c69787ae5a64507729",
+    "artifacts/suggestion-editing-desktop-20261116/firefox/video.webm": "c3905a6f6f26b52a0b31eb18d27dcd1df38ead522ad8adc7c2f5170dc8c2613a",
+    "artifacts/suggestion-editing-desktop-20261116/firefox/observations.json": "21f90721a852a67a6910d8d040668f0f0a6780f41f492a8645ce7b16e856025d"
+  }
+}

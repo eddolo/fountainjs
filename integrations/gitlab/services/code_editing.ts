@@ -1,4 +1,4 @@
-import { NodeSelection, Selection, Step, closeHistory, mapSelection, removeNode, setBlockType,
+import { NodeSelection, Selection, Step, closeHistory, mapSelection, removeNode, setBlockType, splitBlock,
   type Editor, type Node, type Transaction } from 'fountainjs-editor';
 import { changeGitLabFrontmatterLanguage, getGitLabFrontmatter, type GitLabFrontmatter } from './frontmatter';
 
@@ -75,6 +75,22 @@ export function getGitLabCodeContext(editor: Editor): GitLabCodeContext | undefi
     }
   } catch { return undefined; }
   return undefined;
+}
+
+/** Leave literal code at its own parent boundary without modifying its source.
+ * Selecting the owned block lets the existing gap/split command preserve lists,
+ * quotes and tables instead of lifting the new paragraph to the document root. */
+export function exitGitLabCode(editor: Editor, validate: (doc: Node) => void): boolean {
+  if (!editor.editable) return false;
+  const context = getGitLabCodeContext(editor);
+  if (!context) return false;
+  closeHistory(editor);
+  return editor.runCommandBatch(() => {
+    const selection = new NodeSelection(editor.state.doc, context.path);
+    if (!editor.dispatch(editor.createTransaction().setSelection(selection)) || !splitBlock(editor)) return false;
+    validate(editor.state.doc);
+    return true;
+  });
 }
 
 /** Document-level insertion is explicit: a header never replaces selected prose. */
