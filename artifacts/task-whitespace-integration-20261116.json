@@ -1,0 +1,108 @@
+{
+  "date": "2026-11-16T17:23:11.955Z",
+  "status": "verified-bounded-candidate",
+  "parentRevision": "fa7f82824a616101becd38004c31d782a48e04d4",
+  "scope": "GitLab task checkbox and nested-block whitespace conversion. Actual MR/wiki checkbox undo/redo and three rich/source cycles each, with unrelated prose edits, saved source and restart. Nested/whitespace/escaped entity cases use actual renderer fixtures in Node tests.",
+  "fix": "Remove only renderer-owned checkbox spacing and structural newlines. Consult original source positions to retain authored terminal newline entities; preserve spaces, tabs, NBSP and literal escaped entities.",
+  "source": [
+    {
+      "path": "integrations/gitlab/services/markdown_codec.ts",
+      "sha256": "98749f1f1d8f36646633449ed49277e390e8347a04dfb66eb35a66ffeda90182"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/task-live-html.json",
+      "sha256": "9247135d81d6142d5aba5164957ed7798717c85188985c970e0852c25a1807e7"
+    },
+    {
+      "path": "tests/gitlab-task-whitespace.test.ts",
+      "sha256": "b732ed4c8e2b98037873da3ad7563fdc6bb4eaf2d8e4d27e3310bf21e030fd65"
+    },
+    {
+      "path": "scripts/capture-gitlab-task-rendering.mjs",
+      "sha256": "b66a7f7fe33fab85bc78910c24f147c5f54d908806e7d056c931f0f32b762663"
+    },
+    {
+      "path": "scripts/capture-gitlab-alert-rendering.mjs",
+      "sha256": "dc0f1931d4fa204f2c9197a05541660bfbae7520e95883fc454858f0a182487c"
+    },
+    {
+      "path": "scripts/audit-gitlab-native-workflows.mjs",
+      "sha256": "a297b98ed16bdad356ef77be67c9569b41228a632a70c38ee379c776f32e9ac5"
+    },
+    {
+      "path": "scripts/audit-gitlab-product-baseline.mjs",
+      "sha256": "af13dcd69b75f0cf46d21762d3f8a4ca14d262d3175e63033ba6456957792f43"
+    },
+    {
+      "path": "scripts/run-gitlab-native-browser-audit.mjs",
+      "sha256": "913b22492e27a2916b90337033c6f8758107ab9469db10bb3f1deb769f4aa327"
+    }
+  ],
+  "verification": {
+    "report": "artifacts/gitlab-native-task-roundtrip-20261116/report.json",
+    "actualChecks": 20,
+    "conversionCycles": 6,
+    "browserErrors": 0,
+    "actualRendererCases": 17,
+    "gitlabUnitCases": 1167,
+    "unitFiles": 43,
+    "unitLog": {
+      "path": "artifacts/task-whitespace-gitlab-20261116.log",
+      "sha256": "d4452cb3197bc188df380441d08143e18a6915f995f2341cf673786d0011ddd1",
+      "retainedLocally": true
+    },
+    "typecheck": "passed",
+    "selectedUpstream": "artifacts/task-upstream-summary-20261116.json",
+    "sourceVerification": [
+      "artifacts/gitlab-native-task-patch-verification-20261116.json",
+      "artifacts/gitlab-native-task-install-roundtrip-20261116.json"
+    ],
+    "patches": 18,
+    "installedFiles": 28,
+    "frontendBuild": {
+      "status": "passed",
+      "seconds": 72.21,
+      "existingSizeAdvisories": 2,
+      "path": "artifacts/task-rspack-20261116.log",
+      "sha256": "240af2d22b0eb092d72de9c7136425dc2a0cac6059f6629d28391ebf614dd90e",
+      "retainedLocally": true
+    },
+    "nativeRuntimeSha256": "95f33930d18b3e75587718fed5c8602a45df4507951f70ac695ee042c13a625d",
+    "footnoteServerOverlay": {
+      "source": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-footnote-server/footnote_filter.rb",
+      "readOnly": true,
+      "sha256": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+      "originalSha256": "3c3e2469ca0ce9191954f725548fa0bf3599ca9ccc8980b3fbdca46e14e1dc74",
+      "scope": "Read-only task server overlay; repeat-reference and generated-backlink repair, not an unmodified GitLab baseline"
+    },
+    "engineAndPublicAPIChanged": false,
+    "fullRootSuiteRerun": false,
+    "previousEngineEvidence": "artifacts/footnote-cut-integration-20261116.json"
+  },
+  "witnesses": [
+    {
+      "path": "artifacts/task-whitespace-before-20261116.log",
+      "sha256": "e744f96f0319e93eaf705a1ef86a176c7e0f26b75f1a682b01ab12808c40f524",
+      "retainedLocally": true
+    },
+    {
+      "path": "artifacts/task-nested-diagnosis-20261116.log",
+      "sha256": "4683f4b54653d46d239626f568953815d5bd0e47be61421809786cabcef62af4",
+      "retainedLocally": true
+    }
+  ],
+  "visualReview": "artifacts/gitlab-native-task-roundtrip-20261116/visual-review.json",
+  "operationalState": {
+    "auditContainer": "exited",
+    "sourceReinstalled": true,
+    "publication": "none",
+    "packageAndAcceptanceLimitsChanged": false
+  },
+  "remaining": [
+    "Mixed task/bullet and inapplicable task support beyond the accepted conversion contract",
+    "Inline review/suggestions, review batching, roles/concurrency/reconnect/mobile/IME matrices",
+    "Wiki creation/history/templates, broader real-product acceptance",
+    "Physical Safari/OS clipboard, earlier image-403 diagnosis, compiled deployment rollback",
+    "Remaining programme roadmap and naming evaluation"
+  ]
+}

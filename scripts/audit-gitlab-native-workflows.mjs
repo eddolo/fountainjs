@@ -17,11 +17,22 @@ async function richEditor(page, name) {
   return { host, native, editor, toolbar: native.getByTestId('formatting-toolbar') };
 }
 
-async function appendRich({ page, output, report, name, marker }) {
+async function appendRich({ page, output, report, name, marker, taskRoundtrip }) {
   const { host, native, editor, toolbar } = await richEditor(page, name);
   await expect(editor).toContainText('End of workflow notes.');
   await expect(editor.locator('table')).toHaveCount(1);
   await expect(editor.locator('h1')).toContainText('Release review');
+  if (taskRoundtrip) {
+    const checkbox = editor.locator('input[type="checkbox"]').first();
+    await checkbox.check();
+    await expect(checkbox).toBeChecked();
+    await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
+    await expect(checkbox).not.toBeChecked();
+    await toolbar.getByRole('button', { name: 'Redo', exact: true }).click();
+    await expect(checkbox).toBeChecked();
+    await toolbar.getByRole('button', { name: 'Undo', exact: true }).click();
+    await expect(checkbox).not.toBeChecked();
+  }
   const math = editor.locator('.katex-mathml');
   await expect(math).toHaveCount(1);
   await expect(math).toHaveCSS('position', 'absolute');
@@ -39,21 +50,32 @@ async function appendRich({ page, output, report, name, marker }) {
   await toolbar.getByRole('button', { name: 'Bold', exact: true }).click();
   await expect(editor.locator('strong')).toContainText(['Review carefully', marker]);
   await page.screenshot({ path: fileURLToPath(new URL(`${name}-author.png`, output)), fullPage: true });
-  // Switch through the real host; submitting this source would hide rich-editor submit defects.
-  await native.getByRole('button', { name: 'Switch to plain text editing', exact: true }).click();
-  const source = host.locator('textarea.markdown-area:visible');
-  await expect(source).toHaveCount(1);
-  expect(await source.inputValue()).toContain(`**${marker}**`);
-  await host.getByRole('button', { name: 'Switch to rich text editing', exact: true }).click();
-  const reopened = (await richEditor(page, name)).editor;
-  await expect(reopened).toContainText(marker);
-  await reopened.getByText(marker, { exact: true }).click();
-  await page.keyboard.press('End'); await page.keyboard.press('Enter');
-  await page.keyboard.insertText(`${name}: final rich edit.`);
+  // Every extra cycle edits unrelated prose, forcing conversion rather than an untouched-source shortcut.
+  let endMarker = marker;
+  const rounds = taskRoundtrip ? 3 : 1;
+  for (let cycle = 1; cycle <= rounds; cycle++) {
+    await native.getByRole('button', { name: 'Switch to plain text editing', exact: true }).click();
+    const source = host.locator('textarea.markdown-area:visible');
+    await expect(source).toHaveCount(1);
+    const markdown = await source.inputValue();
+    expect(markdown).toContain(`**${marker}**`);
+    if (taskRoundtrip) {
+      const tasks = markdown.split(/\r?\n/u).filter(line => /^- \[[ x]\]/u.test(line));
+      expect(tasks).toEqual(['- [ ] Verify deployment', '- [ ] Review migration']);
+      (report.workflows.taskRoundtrips ??= []).push({ name, cycle, tasks });
+    }
+    await host.getByRole('button', { name: 'Switch to rich text editing', exact: true }).click();
+    const reopened = (await richEditor(page, name)).editor;
+    await expect(reopened).toContainText(marker);
+    await reopened.getByText(endMarker, { exact: true }).click();
+    await page.keyboard.press('End'); await page.keyboard.press('Enter');
+    endMarker = cycle === rounds ? `${name}: final rich edit.` : `${name}: task conversion ${cycle}.`;
+    await page.keyboard.insertText(endMarker);
+  }
   // Caller submits immediately, without a source handoff or observer-delay wait.
 }
 
-export async function auditNativeWorkflows({ page, api, project, upload, report, output }) {
+export async function auditNativeWorkflows({ page, api, project, upload, report, output, taskRoundtrip = false }) {
   const suffix = Date.now().toString(36);
   const projectAPI = `/projects/${project.id}`;
   expect(typeof upload.full_path).toBe('string');
@@ -73,7 +95,7 @@ export async function auditNativeWorkflows({ page, api, project, upload, report,
   report.workflows = { commit: commit.id, mergeRequest: { iid: mr.iid, url: mr.web_url, original: source }, phases: [] };
   await page.goto(`${mr.web_url}/edit`);
   const mrMarker = 'Fountain merge request: rich changes survive submission.';
-  await appendRich({ page, output, report, name: 'merge-request', marker: mrMarker });
+  await appendRich({ page, output, report, name: 'merge-request', marker: mrMarker, taskRoundtrip });
   await page.getByRole('button', { name: 'Save changes', exact: true }).click();
   await expect(page).toHaveURL(mr.web_url);
   const savedMR = await api('GET', `${projectAPI}/merge_requests/${mr.iid}`);
@@ -95,7 +117,7 @@ export async function auditNativeWorkflows({ page, api, project, upload, report,
   report.workflows.wiki = { slug: wiki.slug, url: wikiURL, original: source };
   await page.goto(`${wikiURL}/edit`);
   const wikiMarker = 'Fountain wiki: rich changes survive submission.';
-  await appendRich({ page, output, report, name: 'wiki', marker: wikiMarker });
+  await appendRich({ page, output, report, name: 'wiki', marker: wikiMarker, taskRoundtrip });
   await page.getByTestId('wiki-submit-button').click();
   const confirm = page.getByTestId('wiki-confirm-message');
   await expect(async () => expect(page.url() === wikiURL || await confirm.isVisible()).toBe(true)).toPass();
@@ -115,6 +137,7 @@ export async function auditNativeWorkflows({ page, api, project, upload, report,
   await expect((await richEditor(page, 'wiki')).editor).toContainText(wikiMarker);
   await page.getByTestId('wiki-cancel-button').click();
   report.checks.push('Actual wiki form edits in Fountain, switches rich/source modes, saves from rich mode and reopens the persisted page');
+  if (taskRoundtrip) report.checks.push('Real MR/wiki task toggling and undo/redo work, with unchanged task source across six rich/source cycles and unrelated prose edits');
   await assertSavedNativeWorkflows({ page, api, project, report, output, phase: 'reopened' });
 }
 

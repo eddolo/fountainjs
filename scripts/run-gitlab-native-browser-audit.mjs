@@ -20,7 +20,7 @@ const env = {
   ...process.env,
   FOUNTAIN_GITLAB_FRONTEND_ASSETS: resolve(install.source, 'public/assets/webpack'),
 };
-const fixtureFlags = ['--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands', '--autocomplete-fixtures', '--footnote-fixtures', '--footnote-probe-fixtures', '--footnote-editing-fixtures', '--footnote-renaming-fixtures'];
+const fixtureFlags = ['--task-fixtures', '--alert-fixtures', '--media-fixtures', '--reference-fixtures', '--reference-context-fixtures', '--diagram-fixtures', '--frontmatter-fixtures', '--quick-actions-fixtures', '--quick-action-commands', '--autocomplete-fixtures', '--footnote-fixtures', '--footnote-probe-fixtures', '--footnote-editing-fixtures', '--footnote-renaming-fixtures'];
 const footnoteRoundtrip = process.argv.includes('--footnote-roundtrip-fixtures');
 const capturingFixtures = footnoteRoundtrip || fixtureFlags.some(flag => process.argv.includes(flag));
 // The stock baseline uses compose.yaml alone. Native integration runs declare
@@ -64,6 +64,7 @@ try {
     [
       resolve(root, capturingFixtures ? 'scripts/capture-gitlab-alert-rendering.mjs' : 'scripts/audit-gitlab-product-baseline.mjs'),
       ...(footnoteRoundtrip ? ['--footnote-roundtrip'] : []),
+      ...(process.argv.includes('--task-fixtures') ? ['--tasks'] : []),
       ...(process.argv.includes('--footnote-renaming-fixtures') ? ['--footnote-renaming'] : []),
       ...(process.argv.includes('--footnote-editing-fixtures') ? ['--footnote-editing'] : []),
       ...(process.argv.includes('--footnote-probe-fixtures') ? ['--footnote-probe'] : []),
@@ -76,7 +77,8 @@ try {
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--review') ? '--native-review'
+      process.argv.includes('--task-roundtrip') ? '--native-task-roundtrip'
+        : process.argv.includes('--review') ? '--native-review'
         : process.argv.includes('--workflows') ? '--native-workflows'
         : process.argv.includes('--footnote-controls') ? '--native-footnote-controls'
         : process.argv.includes('--footnote-cut') ? '--native-footnote-cut'

@@ -120,6 +120,18 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
     if ('tagName' in node) elements.push(node);
     if ('childNodes' in node) for (let index = node.childNodes.length - 1; index >= 0; index--) stack.push([node.childNodes[index]!, depth + 1]);
   }
+  const sourceLines = source.split(/\r\n|\r|\n/u);
+  const hasAuthoredTerminalNewline = (block: RawElement): boolean => {
+    const lineNumber = Number(attr(block, 'data-sourcepos')?.match(/^(\d+):/u)?.[1]);
+    const line = sourceLines[lineNumber - 2] ?? '';
+    // GitLab does not append a second separator when an authored entity already
+    // ends the inline body with LF. Escaped ampersands remain literal source.
+    const entity = /&(?:#0*10|#[xX]0*[aA]|NewLine);$/u.exec(line);
+    if (!entity) return false;
+    let backslashes = 0;
+    for (let index = entity.index - 1; index >= 0 && line[index] === '\\'; index--) backslashes++;
+    return backslashes % 2 === 0;
+  };
   const checkboxes = new Map<RawElement, RawElement[]>();
   for (const input of elements) {
     if (input.tagName !== 'input' || attr(input, 'type') !== 'checkbox') continue;
@@ -166,6 +178,23 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
       const owned = checkboxes.get(item), input = owned?.[0];
       if (!input || owned!.length !== 1) { issues.push({ stage: 'import', code: 'task-source', message: 'A GitLab task item requires one unambiguous own checkbox state.' }); continue; }
       setAttr(item, 'data-checked', input.attrs.some(value => value.name === 'checked') ? 'true' : 'false');
+      if (attr(input, 'data-checkbox-sourcepos')
+        && (attr(input, 'class') ?? '').split(/\s+/u).includes('task-list-item-checkbox')) {
+        // GitLab inserts one display separator after its checkbox. Preserve all
+        // authored whitespace beyond it, including additional spaces, tabs and NBSP.
+        const siblings = input.parentNode!.childNodes;
+        const next = siblings[siblings.indexOf(input) + 1];
+        if (next && 'value' in next && next.value.startsWith(' ')) next.value = next.value.slice(1);
+        // The renderer also separates an inline task body from following blocks
+        // with one newline. Remove that boundary, not an authored entity before it.
+        const blockTags = ['ul', 'ol', 'blockquote', 'pre', 'table', 'p', 'div', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+        for (let index = 1; index < item.childNodes.length; index++) {
+          const block = item.childNodes[index]!, previous = item.childNodes[index - 1]!;
+          if ('tagName' in block && blockTags.includes(block.tagName)
+            && 'value' in previous && previous.value.endsWith('\n')
+            && !hasAuthoredTerminalNewline(block)) previous.value = previous.value.slice(0, -1);
+        }
+      }
       input.parentNode!.childNodes = input.parentNode!.childNodes.filter(child => child !== input);
     }
   }

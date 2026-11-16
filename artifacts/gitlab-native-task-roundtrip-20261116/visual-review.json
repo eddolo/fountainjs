@@ -1,0 +1,40 @@
+{
+  "scope": "Named screenshots and sampled recording frames inspected; not uninterrupted full-video review or full product acceptance.",
+  "observations": [
+    "MR and wiki author screens retain aligned task labels/checkboxes, headings, tables, math and the uploaded image.",
+    "Both final readers retain the two unchanged task labels and all unrelated prose edits after application restart.",
+    "Six exact task-source comparisons use the actual visible Markdown textarea; checkbox checked/undo/redo states are asserted through DOM controls.",
+    "Sampled frames show the real author/source-handoff workflows and saved MR/wiki/thread pages. The first sampled frame is the host landing page.",
+    "Some intermediate reader-loading frames show raw math and pending image presentation; final readers are separately checked for rendered math and decoded images. Loading/reconnect polish remains open.",
+    "The integration warning remains because code review, broader list dialects and full product acceptance are unfinished."
+  ],
+  "screenshots": [
+    {
+      "path": "artifacts/gitlab-native-task-roundtrip-20261116/merge-request-author.png",
+      "sha256": "a635cff1f3b7f299875603148c6d939d54f3ff02c34d9aca802acff8950c6026"
+    },
+    {
+      "path": "artifacts/gitlab-native-task-roundtrip-20261116/wiki-author.png",
+      "sha256": "6fab465c7d0bf397b35030fd31838dea62653e2fd7b6196f6eb31c11ed33dedb"
+    },
+    {
+      "path": "artifacts/gitlab-native-task-roundtrip-20261116/merge-request-restart.png",
+      "sha256": "3d3d8d21c1ea440b2fa1b0241acb06087803d97d0a20c2815a92b131649057d9"
+    },
+    {
+      "path": "artifacts/gitlab-native-task-roundtrip-20261116/wiki-restart.png",
+      "sha256": "17dbb44a975cbddf25b749837aa608b3f7c34ca7e60a912435055c0273309b80"
+    }
+  ],
+  "frameSheet": {
+    "path": "artifacts/task-frames-20261116.png",
+    "sha256": "f4b4708330079958a86b29965bd60dca8a7a4f917cf0f416f3774d44306ed0f4",
+    "sampling": "From 100 seconds, one frame per 6 seconds for 60 seconds."
+  },
+  "recording": {
+    "path": "artifacts/gitlab-native-task-roundtrip-20261116/recordings/page@acb35d0fe52047eeb725cff234b03ed2.webm",
+    "sha256": "0772952acb081c688739da0f84719a8ebea54d2760afe53c3f9f4635b7bba658",
+    "durationSeconds": 280.48,
+    "retainedLocally": true
+  }
+}

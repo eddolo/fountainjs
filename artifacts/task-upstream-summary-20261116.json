@@ -1,0 +1,104 @@
+{
+  "passed": 540,
+  "skipped": 1,
+  "passedSuites": 23,
+  "suites": [
+    {
+      "name": "spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/work_items/components/work_item_description_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/super_sidebar/components/super_sidebar_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_diagram_preview_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_quick_action_menu_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_quick_action_host_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_reference_menu_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_diagram_authoring_host_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_context_surface_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_media_menu_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_link_menu_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_frontmatter_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_alert_menu_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_code_menu_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/fountain_autocomplete_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/content_editor/components/content_editor_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/behaviors/markdown/render_sandboxed_mermaid_spec.js",
+      "status": "focused"
+    },
+    {
+      "name": "spec/frontend/behaviors/markdown/render_gfm_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/behaviors/markdown/fountain_reader_images_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/behaviors/markdown/fountain_diagram_reader_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/behaviors/components/sandboxed_mermaid_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/issuable/issuable_form_spec.js",
+      "status": "passed"
+    },
+    {
+      "name": "spec/frontend/lazy_loader_spec.js",
+      "status": "passed"
+    }
+  ],
+  "raw": {
+    "path": "artifacts/gitlab-task-upstream-20261116.json",
+    "sha256": "1b073928ddeb0dbd9f099b626e8f1c39831768e7e14a30bc541b592ba485aea2",
+    "retainedLocally": true
+  }
+}

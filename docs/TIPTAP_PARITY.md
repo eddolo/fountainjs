@@ -2,7 +2,23 @@
 
 ## Current programme status — 2026-11-16
 
-Latest discussion checkpoint (2026-11-16): general MR threads now have recorded
+Latest task conversion checkpoint (2026-11-16): GitLab-generated checkbox spaces
+and newlines before nested blocks no longer become authored text on export. The
+adapter consults source positions to retain intentional newline entities and
+preserves additional spaces, tabs, NBSP and escaped entity text. Seventeen actual
+renderer samples cover these distinctions. All 1,167 GitLab unit cases / 43 files,
+540 selected upstream cases (one inherited skip), types and frontend build pass.
+The recorded application profile passes 20 checks, including checkbox undo/redo
+and six rich/source cycles across MR/wiki editors with unrelated prose edits.
+Task lines stay unchanged through Save/reopen/restart. The 18-patch reconstruction
+and 28-file source rollback pass. [Task conversion evidence](../artifacts/task-whitespace-integration-20261116.json).
+
+This resolves the spacing drift observed in the preceding discussion checkpoint.
+Mixed task/bullet lists, inapplicable tasks, inline review/suggestions and broader
+role/reconnect/mobile/product acceptance remain open. Public engine/API/package
+and acceptance limits are unchanged; no publication or parity-row promotion.
+
+Previous discussion checkpoint (2026-11-16): general MR threads now have recorded
 real-service coverage for creation, immediate rich editing, replies and whole-thread
 resolution, with exact saved bodies and state checked after reopen and restart.
 GitLab's NoteForm supplies null suggestion metadata even for ordinary edits/replies;

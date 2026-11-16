@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Prevent GitLab checkbox spacing and structural list newlines from accumulating
+  in task text during rich/source conversion. Preserve authored whitespace and
+  newline entities; verify task undo/redo and repeated MR/wiki edits through restart.
+
 - Accept GitLab's inactive null suggestion context in ordinary thread edits and
   replies. Keep active suggestion guards; verify real MR discussion persistence
   through rich editing, replies, whole-thread resolution and application restart.
