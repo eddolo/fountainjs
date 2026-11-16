@@ -2,16 +2,26 @@
 
 Updated 2026-11-16.
 
-Current work (2026-11-16): not-applicable `[~]` task rendering now has a
-source-verified normalization adapter. Eight actual renderer samples retain authored
-strike, whitespace, nested items and newline entities; eight malformed metadata
-cases are refused. All 1196 GitLab cases / 45 files and type checks pass.
-This is preparation: third-state editing remains guarded until schema, controls,
-serialization, clipboard/history and actual save/restart checks are complete.
-The installed app remains at the mixed-list checkpoint below.
-[Task-state preparation evidence](../artifacts/task-state-preparation-20261116.json).
+Latest GitLab task-state checkpoint (2026-11-16): pending, completed and
+not-applicable tasks now remain distinct through author controls, Markdown,
+HTML and clipboard. Native buttons support Enter/Space; checking an N/A task
+completes it, and splitting creates a pending task. Concurrent peer typing and
+author undo/redo retain state and text in both tested update orders.
 
-Latest mixed-list checkpoint (2026-11-16): ordinary bullets and checkboxes now
+All 6645 unit cases / 391 files pass, alongside framework types,
+540 selected upstream cases (one inherited skip), package/API/Node/Worker and
+headless checks. The recorded real GitLab profile passes 20 checks,
+including N/A keyboard changes, actual external-text and same-editor clipboard,
+six MR/wiki rich/source cycles and Save/reopen/restart. Screenshot review caught
+and repaired displaced numbered text; geometry and 24px control targets are now
+asserted. Source patch reconstruction and rollback pass. [Task-state evidence](../artifacts/task-states-integration-20261116.json).
+
+The third state belongs to the explicit GitLab schema; the default public task
+schema remains boolean-only. Generic third-state Markdown ingestion, native DOCX
+checkbox retention, inline review/suggestions and broader product acceptance
+remain open. Limits, package version and publication are unchanged.
+
+Previous mixed-list checkpoint (2026-11-16): ordinary bullets and checkboxes now
 share one list, including numbered tasks. Markdown, browser/server HTML and
 clipboard retain item kinds and state; indent/lift, split/join and selected-item
 conversion preserve neighbouring content and concurrent peer typing.

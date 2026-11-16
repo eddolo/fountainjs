@@ -1,0 +1,293 @@
+{
+  "date": "2026-11-16T19:00:20.855Z",
+  "status": "verified-bounded-candidate",
+  "parentRevision": "d2e2e42b91aea1aaa7114dead5c8d3b545973413",
+  "scope": "GitLab-specific pending/completed/not-applicable tasks with explicit checked-state validation, controls and interchange. The default public task schema remains boolean-only.",
+  "implementation": [
+    "The private schema adds the inapplicable enum value to checked; ordinary checkbox changes and split commands reset to the existing boolean states.",
+    "N/A controls use native buttons and transactions with mouse, Enter/Space and readonly guards. Checkboxes remain in their original DOM position.",
+    "Markdown, HTML and copied plain/structured content retain the third state. Deliberate strike marks remain distinct from generated rendering.",
+    "Concurrent peer typing and author undo/redo converge in both tested update orders."
+  ],
+  "verification": {
+    "root": {
+      "files": 391,
+      "tests": 6645,
+      "workers": 2,
+      "path": "artifacts/task-state-unit-final-20261116.log",
+      "sha256": "cab4e2a2024365f5953dbf66da00466542f7295ce71492065b517e8cf64901b5",
+      "retainedLocally": true
+    },
+    "actualApp": {
+      "report": "artifacts/gitlab-native-task-states-20261116/report.json",
+      "checks": 20,
+      "editors": [
+        {
+          "name": "merge-request",
+          "keyboard": [
+            "Enter",
+            "Space"
+          ],
+          "completionUndo": true,
+          "systemClipboardExternalText": true,
+          "sameEditorNativePaste": true
+        },
+        {
+          "name": "wiki",
+          "keyboard": [
+            "Enter",
+            "Space"
+          ],
+          "completionUndo": true,
+          "systemClipboardExternalText": true,
+          "sameEditorNativePaste": true
+        }
+      ],
+      "richSourceCycles": 6,
+      "phases": [
+        "reopened",
+        "restart"
+      ],
+      "path": "artifacts/task-state-browser-final-20261116.log",
+      "sha256": "5e6670d8368e6ec6e59ddd2eb9374a12f10dc703ac8614dad687849bd4805452",
+      "retainedLocally": true
+    },
+    "upstream": "artifacts/task-states-upstream-summary-20261116.json",
+    "sourceRollback": [
+      "artifacts/gitlab-native-task-states-patch-verification-20261116.json",
+      "artifacts/gitlab-native-task-states-install-roundtrip-20261116.json"
+    ],
+    "gates": [
+      {
+        "path": "artifacts/task-state-typecheck-final-20261116.log",
+        "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/task-state-budget-20261116.log",
+        "sha256": "c53b536e0fa5fdda188ae69e2296289c275838f2bca06f340bca67e9a09b6743",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/task-state-test-api-20261116.log",
+        "sha256": "6db6e86793e352fe883ae7e8a5377c9497286965dfec560b3205d3c6ea71bdbb",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/task-state-test-package-20261116.log",
+        "sha256": "1b06944f83fd821dbec808557dc70e49de905280394a8f570edf2fa27b3d439a",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/task-state-test-server-runtimes-20261116.log",
+        "sha256": "ae2a68e67c0733f11926e6dd48af1a3429c7e13dde0da9e97ac6277d43af3d96",
+        "retainedLocally": true
+      },
+      {
+        "path": "artifacts/task-state-test-headless-20261116.log",
+        "sha256": "b16f4c875130cea65b4e53ee00cae37fdcba9a90680dd15c148537485f29587d",
+        "retainedLocally": true
+      }
+    ],
+    "frontend": {
+      "path": "artifacts/task-state-rspack-final-20261116.log",
+      "sha256": "c6defe07db126c4dbda1a8c87cf3e095216535c448ad72c20f823c76e6a27461",
+      "retainedLocally": true
+    },
+    "nativeRuntime": {
+      "scope": "Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement",
+      "entry": "integrations/gitlab/runtime/browser.ts",
+      "target": "es2018",
+      "bytes": 1708004,
+      "sha256": "8f6e3c8cc7fc27eb17477e8df796588a16cb618b7f019dc72e2b6d712047629f",
+      "parentRevision": "d2e2e42b91aea1aaa7114dead5c8d3b545973413",
+      "inputs": {
+        "integrations/gitlab/runtime/browser.ts": "081c31c05b3bd8db1be64d77f7bb913a31bc11666a253609318f7b808f8a350c",
+        "integrations/gitlab/services/content_editor.ts": "18ec67df4a982d423086c9a15987b1f39b48c84ee75ec8afcfce6a279241eaab",
+        "src/core/plugin.ts": "f2e86912869e6cd109e8a45b51b446d351e483cb52f1ea869e8f74b2ad5dd362",
+        "src/core/clipboard-write.ts": "cc87852b647747d9a358bde7dd7016c9b9b1d0daa17d9e10bb63d95b81fef775",
+        "src/core/commands.ts": "7c8a10963bf853fedc853013c55d985714f1c26a239b3e6b54f439165286221d",
+        "src/core/table-commands.ts": "b0c1080dedb678ac9977a3ec1eddfc3279bebb365a886c515eddfa80916fa89c",
+        "src/core/table-clipboard.ts": "e4770be3644f77982e45fe7102bfbc3fa90350aa927fd561478119925bb4562a",
+        "src/view/input.ts": "2f7eca3b1762b18c7f0e2a9c33eb612581c4a39987b00f5e16efa89cf17b4657",
+        "src/pages/clipboard.ts": "c6587164da256aace4c39b1c50a3f1003707b5a8c331fa0546b2062d53a757c5",
+        "src/pages/index.ts": "a8fab75e0e4894e3990c5fbf668f8c5d1f3e02b993d45450a044b7f58b857a68",
+        "integrations/gitlab/services/markdown_insertion.ts": "8f67ac6cd8cbe5fc6c2dafb3d81b182fbca28f028562d92ef2a58a2d48df89f9",
+        "integrations/gitlab/services/attachment_uploads.ts": "d8117d60d24da48170daa07c4cc0bcdb129fe9ffbda5bacb752af28618191c99",
+        "integrations/gitlab/services/link_editing.ts": "a177c5203268eccf5f717bf8c5f72af19c53a88304a4ccf331b8eac57beafce5",
+        "integrations/gitlab/services/code_editing.ts": "a5ee552d6b645c25a15086cbc5ba91521ce432fecba12d8cd39fc07a33f697b6",
+        "integrations/gitlab/services/code_rendering.ts": "0d94359598fe6ead2cff4d0e2bc2821e934916ba47eca214bf02cc433dfe05d6",
+        "integrations/gitlab/services/frontmatter.ts": "36842d12b8f0509c44f17c9fa813d0543011e9bec4d67a8625c47f77db6146fe",
+        "integrations/gitlab/services/alerts.ts": "99bdc0f5353a27bb41173571fcc94fa8f28268d534ae7443e47cf62342ac7434",
+        "integrations/gitlab/services/alert_editing.ts": "b7a77519c59c752dabcb417695bb6b358a58277c7129d63d9effa083ae51a3b8",
+        "integrations/gitlab/services/media.ts": "ebf23fbcf462293b99214bad20d97155e35713cb599421eb21e9a2c626c077a6",
+        "integrations/gitlab/components/media_view.ts": "19fb0de0c3d1a77b10744bd60871ec950e84e58da9e0244f3f6b557b0247c65c",
+        "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
+        "integrations/gitlab/services/host_configuration.ts": "5b8e2c650f3dbd65efd894c602f3cc7b39f3b74e681dadbe5dfc3a646248a05b",
+        "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
+        "integrations/gitlab/services/markdown_codec.ts": "5ec46e7acfc8d876c8517071b33451a2d4ade43ecf5411dae1b181a413ad01b6",
+        "integrations/gitlab/services/task_rendering.ts": "2e0f977d8d5b9ca3faf181d96d496113ee9dce9dd05ae26a0a9f88420b0a9001",
+        "integrations/gitlab/services/task_state.ts": "b51a6a94e52d4c96a5c710c33196a025fc4675093ca80ae252f23a958f3c9360",
+        "integrations/gitlab/services/footnote_source.ts": "ae724e02065ac198f1f7f3364b82871b57c159ce60f494cdde41faea9fc29595",
+        "integrations/gitlab/services/footnote_codec.ts": "c800291c71af369b71d465b21b3043a3b0dcb44c6a90012dfb7d30f6b1fad6f7",
+        "integrations/gitlab/services/footnote_boundary.ts": "b2cb1ac6bb20590abff35c0331261a02006e2175cbb5068925c93a24da5c61f7",
+        "integrations/gitlab/services/footnote_editing.ts": "89ae8dd5346cc3b3da6c64a568f88596dd3ac7ee2123c389a2f634dea2aa2d70",
+        "integrations/gitlab/services/footnote_renaming.ts": "874734624c86c9958da6a7d8483c150c5e4d569f59e6bd6b24b3483b0798d958",
+        "integrations/gitlab/services/footnote_labels.ts": "622e70a0dccc7bafde0b346d39474ed9c34b96dc85025228f2e4e447037cdf63",
+        "integrations/gitlab/services/footnote_nodes.ts": "48321ca48f1eed9ee7379f952c46427070d85da73d02cc00e441a9b8f962980f",
+        "integrations/gitlab/services/footnote_positions.ts": "0020d65af8ab83d35d1955f8cf60ef34eb757b8b1d787b03d94ecb41f85f339a",
+        "integrations/gitlab/services/footnote_projection.ts": "c6c316be82b970aad6b9c8711b2f619286251683ca77d85e1b08a972dd40302a",
+        "integrations/gitlab/services/footnote_rendering.ts": "18f009bfb0246a01eeada0f716f21a393f0ddca636852bb32b17f7014f7334bb",
+        "integrations/gitlab/services/quick_actions.ts": "2efdddc85179d1905e7d5e93c279b50857a7259adee85d8d693f6b8f94eb5373",
+        "integrations/gitlab/services/quick_action_editing.ts": "42d37b3300907be0a8499ff7b0e64bb9410334fe13e82ce7515e412642b88ebe",
+        "integrations/gitlab/services/autocomplete_data.ts": "1741396673d51ce049777fa88bd00ff65184ce57e2d484ebde94c69f6cf98568",
+        "integrations/gitlab/services/autocomplete_editing.ts": "3244b67431ce508e9893b5166ab5f5ef798a4e63b770f7a8bfbe0fc6a7dec827",
+        "integrations/gitlab/services/math.ts": "2c514dc03a41ed4540943e12f8b74154ef785bca6f18dfa1f633665ea08844cd",
+        "integrations/gitlab/services/asset_resolver.ts": "7eeff16aa87af69b0fc12901a6404a8c7a0b6fd909df0d47a4712e67aee46257",
+        "integrations/gitlab/services/reference_editing.ts": "f98dace95ce28c3f2ebb7595190aac150fdd44e5c35cdc45129e46a5d5544655",
+        "integrations/gitlab/plugins/reference_navigation.ts": "528ba54723ff737a90d93b8242bc6c8b332c67d4d81d05db67292302aa591836",
+        "dist/index.js": "ec2085f74ccad9ff5ae0f3da81c2bc5400f4d3d72cb684c8007e79155e45ef95",
+        "dist/document-utilities.js": "1e1ca8e5871819f232bd4855b958d0389f11d975c21f6952cc932f67b4aad9af",
+        "dist/pages.js": "44db17fa8c0d6a50eee2ec0db937719e0d74cb55998d00817ec5726f1facb6c2"
+      }
+    },
+    "footnoteServerOverlay": {
+      "source": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-native-footnote-server/footnote_filter.rb",
+      "readOnly": true,
+      "sha256": "57601ea5790f5e6e0a64f4c38a6e75c256b98d001ba3ea82578e8b13f2b1ea8a",
+      "originalSha256": "3c3e2469ca0ce9191954f725548fa0bf3599ca9ccc8980b3fbdca46e14e1dc74",
+      "scope": "Read-only task server overlay; repeat-reference and generated-backlink repair, not an unmodified GitLab baseline"
+    }
+  },
+  "sourceDigestFormat": "Windows working-tree bytes; Git may normalize text line endings.",
+  "source": [
+    {
+      "path": "integrations/gitlab/components/fountain_editor_surface.vue",
+      "sha256": "660b2860c8f27ec0b5b5f8fedb1dda4611d7475a012de54fbb3e4d32fa290f84"
+    },
+    {
+      "path": "integrations/gitlab/services/content_editor.ts",
+      "sha256": "18ec67df4a982d423086c9a15987b1f39b48c84ee75ec8afcfce6a279241eaab"
+    },
+    {
+      "path": "integrations/gitlab/services/markdown_codec.ts",
+      "sha256": "5ec46e7acfc8d876c8517071b33451a2d4ade43ecf5411dae1b181a413ad01b6"
+    },
+    {
+      "path": "integrations/gitlab/services/task_rendering.ts",
+      "sha256": "2e0f977d8d5b9ca3faf181d96d496113ee9dce9dd05ae26a0a9f88420b0a9001"
+    },
+    {
+      "path": "scripts/audit-gitlab-native-workflows.mjs",
+      "sha256": "5dc03a74927319b6ae58557d07c2a0c2684618c1a46a232238ada7a5ccea2b61"
+    },
+    {
+      "path": "scripts/audit-gitlab-product-baseline.mjs",
+      "sha256": "accb2867de39a26fdb19e19e05f84f8f6c54ea50089e8358acbc4875f558aeaf"
+    },
+    {
+      "path": "scripts/build-gitlab-native-runtime.mjs",
+      "sha256": "d1920c45c3fe68f35bd1a391dc981275a57859c4ddc4804831eb539ef9f547aa"
+    },
+    {
+      "path": "scripts/run-gitlab-native-browser-audit.mjs",
+      "sha256": "57b4ac32f8d511c4c5326d8343fcbd9c6a12db7d286faacc831f73bc25d9dbc5"
+    },
+    {
+      "path": "src/core/exporters/html-exporter.ts",
+      "sha256": "1f33ef9af70302cf350dd51f064df49039d5c3459fced3485164324f83abec36"
+    },
+    {
+      "path": "src/core/exporters/markdown-exporter.ts",
+      "sha256": "eb6d9d887905cf39cc8e90a89d1b90e3f10b6f8a6ecf751b2a508e5b5d39dc68"
+    },
+    {
+      "path": "src/core/importers/html-importer.ts",
+      "sha256": "31d79e6b8757071b8b55cb4afa8f2d607064e396debcfe015b782824f4031352"
+    },
+    {
+      "path": "src/core/structure-commands.ts",
+      "sha256": "cae8a591345df9f191b01cf2aa414156f2019f52229f0e2838e9caa85eedf4a0"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "82191ddd291c0d4143adcf0f360c1f0b7689116429d904a0959d365c628bab86"
+    },
+    {
+      "path": "src/view/input.ts",
+      "sha256": "2f7eca3b1762b18c7f0e2a9c33eb612581c4a39987b00f5e16efa89cf17b4657"
+    },
+    {
+      "path": "tests/gitlab-mixed-lists.test.ts",
+      "sha256": "f0197c619c6d29ac666c65817fbeeb0a3f10d618f72a7d6ae7e0848c96d92e36"
+    },
+    {
+      "path": "integrations/gitlab/services/task_state.ts",
+      "sha256": "b51a6a94e52d4c96a5c710c33196a025fc4675093ca80ae252f23a958f3c9360"
+    },
+    {
+      "path": "tests/gitlab-task-state-collaboration.test.ts",
+      "sha256": "93d14c7db64708466a8f80c20874e8121d14ccc33e3646e3fd8ef1d4b1bb8453"
+    },
+    {
+      "path": "tests/gitlab-task-state.test.ts",
+      "sha256": "bc198d38afd78732c26a47d9d8b2677f543329aad0e8e85ec0030ba398481436"
+    }
+  ],
+  "visualReview": {
+    "observations": [
+      "Initial screenshot review found that wrapping checkboxes displaced numbered task text. The final DOM preserves the checkbox position and places the N/A control at the block edge.",
+      "The final browser profile asserts number/text alignment and a minimum 24px control target."
+    ],
+    "images": [
+      {
+        "path": "artifacts/gitlab-native-task-states-20261116/merge-request-not-applicable.png",
+        "sha256": "02c6fd16bf34e8ac9d7b27ce2b5f6d4f41836e2c35bf17dff5d63bafe96213f0"
+      },
+      {
+        "path": "artifacts/gitlab-native-task-states-20261116/wiki-not-applicable.png",
+        "sha256": "99a281f4f64c2e51e8075c1b900a06a338d0f930609128d8d1ccf9d390a2d085"
+      },
+      {
+        "path": "artifacts/gitlab-native-task-states-20261116/merge-request-numbered-tasks.png",
+        "sha256": "5e847c07652d333b48be203329acff5202924f1bbbf128cf86e84bae9f1b1eac"
+      },
+      {
+        "path": "artifacts/gitlab-native-task-states-20261116/wiki-numbered-tasks.png",
+        "sha256": "c3bda906e9db40c15dcfd85205ab378f43ac57a3bace6d831dfdf24b2827be84"
+      },
+      {
+        "path": "artifacts/gitlab-native-task-states-20261116/merge-request-author.png",
+        "sha256": "b530674582cb5f6d7e2689f229fbf7827fbdbb7fbbeac2d393bff434aebc21a4"
+      },
+      {
+        "path": "artifacts/gitlab-native-task-states-20261116/wiki-restart.png",
+        "sha256": "cb479c33396e6270cd0a5bc3320b761e15d825a1cac5676f7f0d205c740d78a0"
+      },
+      {
+        "path": "artifacts/gitlab-native-task-states-20261116/recording-samples.png",
+        "sha256": "350ff7e4f2c96d6c1a770b87f887af8c3ad81a35b657f0f72a7f363b6f45cfed"
+      }
+    ],
+    "recordingReview": "Screenshots and sampled frames visually inspected; not continuous full-video review. Initial loading frames, a final unused tile and transient environment-fetch banners during the deliberate restart appear in the contact sheet; final readers are checked after recovery.",
+    "recordingSeconds": 251.96,
+    "sampleIntervalSeconds": 30,
+    "recording": {
+      "path": "artifacts/gitlab-native-task-states-20261116/recordings/page@49e452d75d7a84bef93866273d6f0b85.webm",
+      "sha256": "ee6a914ad1dc57550f62bd3dfc978ba08decddf66d29ec1753af7d477ef657d6",
+      "retainedLocally": true
+    }
+  },
+  "remaining": [
+    "Inline review/suggestions and broader GitLab roles/reconnect/mobile/IME acceptance.",
+    "Generic third-state Markdown ingestion outside the explicit GitLab adapter.",
+    "Native DOCX checkbox retention; current export reports its loss.",
+    "Compiled deployment rollback and remaining programme roadmap."
+  ],
+  "publication": "none",
+  "limits": "unchanged",
+  "operationalState": {
+    "container": "exited",
+    "sourceReinstalled": true
+  }
+}

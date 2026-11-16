@@ -98,16 +98,16 @@ function clipboardText(node: Node, render?: (node: Node, serialize: (child: Node
     case 'blockquote': return node.content.map(serialize).join('\n')
       .split('\n').map((line) => `> ${line}`).join('\n');
     case 'bullet_list': return node.content.map((item) => (
-      `- ${item.type.name === 'task_item' ? item.attrs.checked ? '[x] ' : '[ ] ' : ''}${serialize(item).split('\n').join('\n  ')}`
+      `- ${item.type.name === 'task_item' ? item.attrs.checked === 'inapplicable' ? '[~] ' : item.attrs.checked ? '[x] ' : '[ ] ' : ''}${serialize(item).split('\n').join('\n  ')}`
     )).join('\n');
     case 'ordered_list': {
       const start = Number(node.attrs.start ?? 1);
       return node.content.map((item, index) => (
-        `${start + index}. ${item.type.name === 'task_item' ? item.attrs.checked ? '[x] ' : '[ ] ' : ''}${serialize(item).split('\n').join('\n   ')}`
+        `${start + index}. ${item.type.name === 'task_item' ? item.attrs.checked === 'inapplicable' ? '[~] ' : item.attrs.checked ? '[x] ' : '[ ] ' : ''}${serialize(item).split('\n').join('\n   ')}`
       )).join('\n');
     }
     case 'task_list': return node.content.map((item) => (
-      `${item.type.name === 'task_item' ? item.attrs.checked ? '[x]' : '[ ]' : '-'} ${serialize(item).split('\n').join('\n    ')}`
+      `${item.type.name === 'task_item' ? item.attrs.checked === 'inapplicable' ? '[~]' : item.attrs.checked ? '[x]' : '[ ]' : '-'} ${serialize(item).split('\n').join('\n    ')}`
     )).join('\n');
     case 'list_item': case 'task_item':
     case 'definition_list': case 'definition_term': case 'definition_description': case 'html_container': case 'direction_scope':

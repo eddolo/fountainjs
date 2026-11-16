@@ -113,7 +113,7 @@ function convertListItem(editor: Editor, item: Node, targetName: string): Node |
   try {
     return target.create(
       { ...Object.fromEntries(Object.entries(item.attrs).filter(([name]) => Object.hasOwn(target.spec.attrs ?? {}, name))), ...(targetName === 'task_item'
-        ? { checked: item.type.name === 'task_item' ? Boolean(item.attrs.checked) : false }
+        ? { checked: item.type.name === 'task_item' ? item.attrs.checked : false }
         : {}) },
       item.content,
     );

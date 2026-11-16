@@ -30,11 +30,22 @@ it.each(Object.keys(shapes))('retains actual GitLab mixed-list semantics after a
   expect(report.markdown).toBe(canonical + '\n\nUnrelated edit.');
 });
 
-it.each(data.fixtures.filter(item => item.name.startsWith('inapplicable')))('retains original source until the not-applicable state has its own editing adapter: $name', async fixture => {
+it.each(data.fixtures.filter(item => item.name.startsWith('inapplicable')))('retains not-applicable state and authored formatting: $name', async fixture => {
   const schema = new Schema(createGitLabSchemaSpec());
   const codec = new GitLabMarkdownCodec({ renderMarkdown: async () => ({ body: fixture.body }) });
-  await expect(codec.deserialize({ schema, markdown: fixture.source, signal: new AbortController().signal }))
-    .rejects.toMatchObject({ name: 'GitLabMarkdownConversionError', originalMarkdown: fixture.source });
+  const { document } = await codec.deserialize({ schema, markdown: fixture.source, signal: new AbortController().signal });
+  expect(document.child(0).child(0).attrs.checked).toBe('inapplicable');
+  expect(codec.serialize({ doc: document })).toBe(fixture.source);
+  const changed = document.copy([...document.content, schema.node('paragraph', {}, [schema.text('Other edit.')])]);
+  const result = codec.serializeWithReport({ doc: changed });
+  expect(result.issues).toEqual([]);
+  expect(result.markdown).toContain('[~]');
+  expect(result.markdown).not.toContain('~~Not needed~~');
+  if (fixture.name === 'inapplicable-marked') {
+    expect(result.markdown).toContain('**Bold**');
+    expect(result.markdown).toContain('~~authored strike~~');
+    expect(result.markdown).toContain('`code`');
+  }
 });
 
 it('does not trim an unowned nested-list separator merely because a task-list class is present', async () => {

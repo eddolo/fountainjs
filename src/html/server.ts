@@ -1054,7 +1054,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       return schema.node(
         itemType,
         { ...readContainerDirection(item, schema), ...(!task && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(task ? {
-          checked: item.getAttribute('data-checked') === 'true'
+          checked: item.getAttribute('data-checked') === 'inapplicable' ? 'inapplicable' : item.getAttribute('data-checked') === 'true'
             || item.querySelector('input')?.hasAttribute('checked') === true,
         } : {}) },
         listItemContent(item, schema, context),

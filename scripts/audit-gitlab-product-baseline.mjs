@@ -26,7 +26,8 @@ import { auditNativeControlsLayout } from './audit-gitlab-native-controls-layout
 
 const root = new URL('../', import.meta.url);
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
-const nativeMixedLists = process.argv.includes('--native-mixed-lists');
+const nativeTaskStates = process.argv.includes('--native-task-states');
+const nativeMixedLists = nativeTaskStates || process.argv.includes('--native-mixed-lists');
 const nativeTaskRoundtrip = nativeMixedLists || process.argv.includes('--native-task-roundtrip');
 const nativeReview = nativeTaskRoundtrip || process.argv.includes('--native-review');
 const nativeWorkflows = nativeReview || process.argv.includes('--native-workflows');
@@ -65,6 +66,7 @@ const nativeInsertion = process.argv.includes('--native-insertion') || nativeCom
 const nativeBrowser = process.argv.includes('--native-browser') || nativeInsertion;
 const preparedHost = process.argv.includes('--prepared-host') || nativeBrowser;
 const output = new URL(
+  nativeTaskStates ? 'artifacts/gitlab-native-task-states-20261116/' :
   nativeMixedLists ? 'artifacts/gitlab-native-mixed-lists-20261116/' :
   nativeTaskRoundtrip ? 'artifacts/gitlab-native-task-roundtrip-20261116/' :
   nativeReview ? 'artifacts/gitlab-native-review-20261116/' :
@@ -939,7 +941,7 @@ try {
   }
   report.checks.push('Private issue is unavailable to an unauthenticated browser context');
 
-  if (nativeWorkflows) await auditNativeWorkflows({ page, api, project, upload, report, output, taskRoundtrip: nativeTaskRoundtrip, mixedLists: nativeMixedLists });
+  if (nativeWorkflows) await auditNativeWorkflows({ page, api, project, upload, report, output, taskRoundtrip: nativeTaskRoundtrip, mixedLists: nativeMixedLists, taskStates: nativeTaskStates });
   if (nativeReview) await auditNativeReview({ page, api, project, report, output });
 
   if (process.argv.includes('--verify-restart')) {

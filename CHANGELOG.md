@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Support GitLab not-applicable tasks with N/A controls, keyboard activation,
+  undo and explicit third-state validation. Preserve state through Markdown,
+  HTML and clipboard; verify concurrent peer typing and real MR/wiki saving
+  across application restart. Keep numbered task text aligned.
+
 - Preserve mixed ordinary/task lists and numbered checkboxes through Markdown,
   HTML, clipboard and GitLab source conversion. Keep item kinds through list
   editing, undo and concurrent peer typing; render nested bullets and numbered

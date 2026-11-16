@@ -104,7 +104,7 @@ export function normalizeGitLabTasks(elements: readonly RawElement[], source: st
         inapplicable.add(item);
         setAttr(item, 'data-fountain-gitlab-task-state', 'inapplicable');
       }
-      setAttr(item, 'data-checked', input.attrs.some(value => value.name === 'checked') ? 'true' : 'false');
+      setAttr(item, 'data-checked', notApplicable ? 'inapplicable' : input.attrs.some(value => value.name === 'checked') ? 'true' : 'false');
       if (generated) {
         // GitLab inserts one display separator after its checkbox. Preserve all
         // authored whitespace beyond it, including additional spaces, tabs and NBSP.

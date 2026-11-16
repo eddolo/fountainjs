@@ -639,7 +639,7 @@ function render(
       const marker = node.type.name === 'ordered_list'
         ? `${((node.attrs.start as number) + index) % 1e9}${alternateListMarker ? ')' : '.'} `
         : alternateListMarker ? '+ ' : '- ';
-      const prefix = marker + (item.type.name === 'task_item' ? `[${item.attrs.checked ? 'x' : ' '}] ` : '');
+      const prefix = marker + (item.type.name === 'task_item' ? `[${item.attrs.checked === 'inapplicable' ? '~' : item.attrs.checked ? 'x' : ' '}] ` : '');
       const indentation = ' '.repeat(marker.length);
       let alternate = false;
       let previousRendered: Node | undefined;

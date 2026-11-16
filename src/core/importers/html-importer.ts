@@ -326,7 +326,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
       const itemType = task ? 'task_item' : 'list_item';
       return schema.node(
         itemType,
-        { ...readContainerDirection(item, schema), ...(!task && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(task ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}) },
+        { ...readContainerDirection(item, schema), ...(!task && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(task ? { checked: item.getAttribute('data-checked') === 'inapplicable' ? 'inapplicable' : item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}) },
         listItemContent(item, schema),
       );
     });

@@ -77,7 +77,8 @@ try {
       ...(process.argv.includes('--media-fixtures') ? ['--media'] : []),
       ...(process.argv.includes('--reference-fixtures') ? ['--references'] : []),
       ...(process.argv.includes('--reference-context-fixtures') ? ['--reference-context'] : []),
-      process.argv.includes('--mixed-lists') ? '--native-mixed-lists'
+      process.argv.includes('--task-states') ? '--native-task-states'
+        : process.argv.includes('--mixed-lists') ? '--native-mixed-lists'
         : process.argv.includes('--task-roundtrip') ? '--native-task-roundtrip'
         : process.argv.includes('--review') ? '--native-review'
         : process.argv.includes('--workflows') ? '--native-workflows'

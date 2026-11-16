@@ -313,7 +313,7 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
       return `<li${parent.type.name === 'task_list' ? ' data-type="list-item"' : ''}${listAttributes(node, true)}>${children()}</li>`;
     }
     case 'task_list': return `<ul data-type="task-list"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
-    case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''} aria-label="${escapeHTML(taskCheckboxLabel(node))}">${children()}</li>`;
+    case 'task_item': return `<li data-type="task-item" data-checked="${node.attrs.checked === 'inapplicable' ? 'inapplicable' : Boolean(node.attrs.checked)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><input type="checkbox" disabled${node.attrs.checked === true ? ' checked' : ''} aria-label="${escapeHTML(taskCheckboxLabel(node))}">${children()}</li>`;
     case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"${node.attrs.lineNumbers === false ? ' data-line-numbers="false"' : ''}${codeTheme(node) === 'light' ? ' data-fountain-code-theme="light"' : ''}${renderDOMAttributes({ ...paragraphLayoutDOMAttributes(node.attrs.layout), ...textDirectionDOMAttributes(node.attrs) })}><code class="language-${escapeHTML(node.attrs.language)}">${children()}</code></pre>`;
     case 'horizontal_rule': return '<hr>';
     case 'hard_break': return '<br>';

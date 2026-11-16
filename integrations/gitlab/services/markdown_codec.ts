@@ -10,6 +10,7 @@ import { getGitLabFrontmatter, gitlabFrontmatterCode, hydrateGitLabFrontmatter, 
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
 import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLabQuickAction, transformGitLabQuickActions } from './quick_actions';
+import { gitLabTaskItem } from './task_state';
 import { normalizeGitLabTasks } from './task_rendering';
 import { convertGitLabFootnotes } from './footnote_codec';
 import { gitLabFootnoteNodes, validGitLabFootnoteLabel } from './footnote_nodes';
@@ -63,6 +64,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
       alt: child.getAttribute('alt') ?? '', title: child.getAttribute('title') ?? '', width: size('width'), height: size('height') };
   };
   return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base), ...gitlabAlertNodes(), ...gitlabMediaNodes(mediaLabels), ...gitLabFootnoteNodes(),
+    task_item: gitLabTaskItem(base),
     paragraph: { ...base.nodes.paragraph!, attrs: { ...base.nodes.paragraph!.attrs,
       gitlabLiteralSlash: { default: false, validate: value => typeof value === 'boolean' } } },
     code_block: gitlabFrontmatterCode(base.nodes.code_block!),
@@ -140,7 +142,7 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
     }
     if (classes.some(name => ['katex', 'katex-display', 'js-render-math', 'frontmatter', 'mermaid', 'md-suggestion',
       'blob-embed', 'footnotes', 'footnote-ref', 'footnote-backref', 'js-render-iframe', 'section-nav',
-      'markdown-alert', 'gfm-color_chip', 'idiff', 'audio-container', 'video-container', 'inapplicable'].includes(name))
+      'markdown-alert', 'gfm-color_chip', 'idiff', 'audio-container', 'video-container'].includes(name))
       || attr(element, 'data-diagram') || attr(element, 'data-math-style')
       || attr(element, 'data-lang-params') === 'frontmatter'
       || ['mermaid', 'suggestion'].includes(attr(element, 'data-canonical-lang') ?? '')

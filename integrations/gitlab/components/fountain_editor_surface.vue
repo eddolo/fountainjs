@@ -152,4 +152,31 @@ export default {
   overflow-wrap: anywhere;
   content: attr(data-gitlab-footnote-label);
 }
+.fountain-editor .fountain-gitlab-task {
+  position: relative;
+  padding-inline-end: 40px;
+}
+.fountain-editor [data-fountain-gitlab-task-state-toggle] {
+  position: absolute;
+  inset-inline-end: 0;
+  top: 0;
+  min-width: 32px;
+  min-height: 24px;
+  display: block;
+  padding: 1px 3px;
+  border: 1px solid #bfbfc3;
+  border-radius: 3px;
+  background: transparent;
+  color: inherit;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.fountain-editor [data-fountain-gitlab-task-state-toggle][aria-pressed="true"] {
+  background: #ececef;
+  font-weight: 600;
+}
+.fountain-editor [data-fountain-gitlab-task-state-toggle]:focus-visible {
+  outline: 2px solid #1f75cb;
+  outline-offset: 2px;
+}
 </style>
