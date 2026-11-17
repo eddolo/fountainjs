@@ -1,0 +1,69 @@
+diff --git a/src/yjs/retained-document.ts b/src/yjs/retained-document.ts
+index dd5a1f8d..f48818f3 100644
+--- a/src/yjs/retained-document.ts
++++ b/src/yjs/retained-document.ts
+@@ -59,7 +59,7 @@ interface Leaf { node: Node; path: number[]; at: number; leaf: string }
+ interface Group { parent: string; leaves: Leaf[]; ids: string[]; field: string; pieces: Piece[]; empty: boolean; preserved?: boolean }
+ interface Piece { original: string; from: number; to: number; at: number; group: Group; start?: unknown; end?: unknown; id?: string; leaf: Leaf }
+ interface Segment { original: string; id: string; from: number; to: number; group: Group }
+-interface Fragment { node: Node; id?: string; leaf?: string; bindings?: Binding[]; children?: Fragment[] }
++interface Fragment { node: Node; id?: string; leaf?: string; bindings?: Binding[]; children?: Fragment[]; priorPath?: readonly number[] }
+ interface TextFragment { text: string; attrs: Attributes; marks: readonly Mark[]; leaf: string; bindings: Binding[] }
+ interface ProjectionFrame {
+   readonly projection: ReturnType<RetainedNodeStore['project']>;
+@@ -226,6 +226,7 @@ export class RetainedDocumentStore {
+   private nodePaths = new Map<string, string>();
+   private textPaths = new Map<string, Binding[]>();
+   private identityPaths = new Map<string, readonly number[]>();
++  private readonly pathKeys = new WeakMap<readonly number[], string>();
+   private partitionPaths = new Map<string, { path: readonly number[]; binding: Binding }[]>();
+   private textCandidates = new Map<string, { path: readonly number[]; bindings: readonly Binding[] } | null>();
+   private groups = new Map<string, GroupState>();
+@@ -504,13 +505,13 @@ export class RetainedDocumentStore {
+         const previous = previousTexts.get(bindingKey(child.bindings, child.leaf));
+         const candidate = previousModel && previous && sameBindings(previous.bindings, child.bindings)
+           ? getNodeAtPath(previousModel, previous.path) : undefined;
+-        return { node: this.projectionNode(this.schema.nodes.text, child.attrs, [], child.text, child.marks, used, candidate), leaf: child.leaf, bindings: child.bindings };
++        return { node: this.projectionNode(this.schema.nodes.text, child.attrs, [], child.text, child.marks, used, candidate), leaf: child.leaf, bindings: child.bindings, priorPath: previous?.path };
+       });
+       const type = this.schema.nodes[raw.type], marks = (raw.marks ?? []).map(mark => this.schema.markFromJSON(mark)), attrs = computeAttrs(type.spec.attrs, raw.attrs ?? {});
+       const path = previousIdentities.get(raw.id);
+       const candidate = previousModel && path ? getNodeAtPath(previousModel, path) : undefined;
+       const node = this.projectionNode(type, attrs, fragments.map(child => child.node), undefined, marks, used, candidate);
+-      return { node, id: raw.id, children: fragments };
++      return { node, id: raw.id, children: fragments, priorPath: path };
+     };
+     const result = visit(projection.root);
+     if (validate) this.schema.validate(result.node);
+@@ -518,8 +519,12 @@ export class RetainedDocumentStore {
+     const textCandidates = new Map<string, { path: readonly number[]; bindings: readonly Binding[] } | null>();
+     const identityPaths = new Map<string, readonly number[]>();
+     const partitionPaths = new Map<string, { path: readonly number[]; binding: Binding }[]>();
+-    const bind = (fragment: Fragment, path: number[]) => {
+-      const key = pathKey(path), frozen = Object.freeze(path);
++    const bind = (fragment: Fragment, path: readonly number[]) => {
++      // Only paths created and frozen by this index walk enter the weak cache.
++      // A preceding identity is a hint, never proof that its coordinates stayed.
++      const frozen = Object.freeze(path);
++      let key = this.pathKeys.get(frozen);
++      if (key === undefined) { key = pathKey(frozen); this.pathKeys.set(frozen, key); }
+       if (fragment.id) { nodePaths.set(key, fragment.id); identityPaths.set(fragment.id, frozen); }
+       if (fragment.bindings) {
+         textPaths.set(key, fragment.bindings);
+@@ -529,9 +534,14 @@ export class RetainedDocumentStore {
+           const entries = partitionPaths.get(binding.id) ?? []; entries.push({ path: frozen, binding }); partitionPaths.set(binding.id, entries);
+         }
+       }
+-      fragment.children?.forEach((child, index) => bind(child, [...path, index]));
++      fragment.children?.forEach((child, index) => {
++        const prior = child.priorPath;
++        const unchanged = prior?.length === path.length + 1 && prior[path.length] === index
++          && path.every((part, depth) => prior[depth] === part);
++        bind(child, unchanged ? prior : [...path, index]);
++      });
+     };
+-    bind(result, []); this.nodePaths = nodePaths; this.textPaths = textPaths; this.textCandidates = textCandidates;
++    bind(result, result.priorPath?.length === 0 ? result.priorPath : []); this.nodePaths = nodePaths; this.textPaths = textPaths; this.textCandidates = textCandidates;
+     this.identityPaths = identityPaths; this.partitionPaths = partitionPaths;
+     this.groups = groupStates; this.graph = projection.root; this.model = result.node;
+     return result.node;

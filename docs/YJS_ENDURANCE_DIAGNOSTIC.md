@@ -491,3 +491,45 @@ measured 415.2 and 403.2 ms. All four runs converged to the same document digest
 and exchanged 308 updates each. A separate continuous typing probe was also
 mixed. The candidate was discarded. Local reports are in
 `artifacts/yjs-owned-partitions-*.json`.
+
+## Frozen coordinate reuse experiment (2026-11-17)
+
+A fresh profile of the current `0.5.0-beta.1` installed package sampled 1,458.6 ms
+below the typing callback. The separate binding/index walk accounted for
+217.4 ms of self time and attribute computation for 193.0 ms. Root-level garbage
+collection samples cannot be attributed to individual typing actions and are
+excluded from those figures. Profiling is diagnostic evidence, not a latency
+comparison.
+
+The candidate reused preceding frozen coordinate arrays only when their full
+parent prefix and child index matched, with a weak cache for their string keys.
+It retained every normalization traversal, attribute/mark/node validator and
+atomic index publication. Four separate unprofiled runs used 5,000 paragraphs,
+six cycles and checkpoints every three cycles, with package order reversed.
+
+| Run | Median 11-character burst | Burst p95 | Median split | Median wrap |
+| --- | ---: | ---: | ---: | ---: |
+| Baseline first | 453.2 ms | 523.5 ms | 619.2 ms | 613.2 ms |
+| Candidate second | 480.5 ms | 624.2 ms | 615.4 ms | 615.2 ms |
+| Candidate first | 477.7 ms | 742.1 ms | 633.9 ms | 593.3 ms |
+| Baseline second | 431.7 ms | 488.6 ms | 702.7 ms | 566.5 ms |
+
+All four runs passed the mandatory assertions, ended with the same portable
+content digest, and exchanged 308 updates / 102,356 bytes, including twelve
+duplicate deliveries. Typing medians and p95 were slower in both orders; the
+runtime candidate was discarded. Structural timings were mixed. No acceptance
+limit, wire format or package dependency changed. Whole-document normalization
+remains an open typing-performance cost.
+
+The retained regression checks cursor ownership after a same-depth reparenting:
+the leaf index stays the same while its parent prefix changes. Anchors must
+resolve at the new location, held coordinate snapshots must remain frozen and
+unchanged, and new anchors must target the moved text.
+
+The [decision receipt](../artifacts/yjs-path-reuse-decision-20261117.json)
+records installed-package fingerprints, raw-report hashes, every timing sample,
+traffic and memory observations, and reproduction commands. The
+[discarded patch](../artifacts/yjs-path-reuse-rejected-20261117.patch) is evidence
+only; it is not present in the runtime. Raw CPU profiles, tarballs and consumers
+remain local artifacts. These single-host observations do not establish native
+GitLab performance, a universal regression rate or production readiness.

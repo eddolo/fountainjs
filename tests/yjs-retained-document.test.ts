@@ -381,6 +381,31 @@ it('keeps equal text in independently owned blocks distinct through a pending mo
   } finally { pair.destroy(); }
 });
 
+it('keeps held cursor coordinates immutable and resolves anchors after same-depth reparenting', () => {
+  const paragraph = (text: string): NodeJSON => ({ type: 'paragraph', content: [{ type: 'text', text }] });
+  const pair = fixture({ type: 'doc', content: [
+    { type: 'blockquote', content: [paragraph('Stay'), paragraph('Move')] },
+    { type: 'blockquote', content: [paragraph('Other'), paragraph('Tail')] },
+  ] });
+  try {
+    const moved = pair.store.identity([0, 1])!, parent = pair.store.identity([1])!;
+    const held = pair.store.path(moved)!, anchor = pair.store.textAnchor([0, 1, 0], 2, 1);
+    const heldCursor = pair.store.resolveTextAnchor(anchor)!;
+    expect(Object.isFrozen(held)).toBe(true); expect(Object.isFrozen(heldCursor.path)).toBe(true);
+    pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 1, 0], 2, 'X')); pair.apply();
+    expect(pair.store.resolveTextAnchor(anchor)).toEqual({ path: [0, 1, 0], offset: 3 });
+    pair.store.nodes.move(moved, parent, 1); const after = pair.store.read();
+    expect(after.child(0).content.map(node => node.textContent)).toEqual(['Stay']);
+    expect(after.child(1).content.map(node => node.textContent)).toEqual(['Other', 'MoXve', 'Tail']);
+    expect(pair.store.identity([0, 1])).toBeUndefined(); expect(pair.store.identity([1, 1])).toBe(moved);
+    expect(pair.store.path(moved)).toEqual([1, 1]);
+    expect(pair.store.resolveTextAnchor(anchor)).toEqual({ path: [1, 1, 0], offset: 3 });
+    expect(held).toEqual([0, 1]); expect(heldCursor).toEqual({ path: [0, 1, 0], offset: 2 });
+    const current = pair.store.resolveTextAnchor(pair.store.textAnchor([1, 1, 0], 3, 1));
+    expect(current).toEqual({ path: [1, 1, 0], offset: 3 }); expect(Object.isFrozen(current!.path)).toBe(true);
+  } finally { pair.destroy(); }
+});
+
 it('runs attribute and whole-node factory validators again before reusing an immutable value', () => {
   let attribute = true, invariant = true;
   const extension = defineExtension({ name: 'reuse-guard', nodes: { guarded: { group: 'block', atom: true,

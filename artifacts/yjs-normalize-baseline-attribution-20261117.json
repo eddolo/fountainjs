@@ -1,0 +1,1274 @@
+{
+  "scope": "Function samples below exact typing callback; does not attribute root-level GC samples. Not unprofiled latency.",
+  "typingSampledMs": 1458.56,
+  "self": [
+    {
+      "name": "u",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 447,
+      "sampledMs": 290.29
+    },
+    {
+      "name": "_",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 521,
+      "sampledMs": 217.36
+    },
+    {
+      "name": "l",
+      "source": "../src/core/schema/attributes.ts",
+      "line": 4,
+      "sampledMs": 192.98
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 502,
+      "sampledMs": 153.18
+    },
+    {
+      "name": "projectionNode",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 346,
+      "sampledMs": 101.62
+    },
+    {
+      "name": "D",
+      "source": "../src/node-ids/index.ts",
+      "line": 220,
+      "sampledMs": 41.41
+    },
+    {
+      "name": "",
+      "source": "../src/node-ids/index.ts",
+      "line": 190,
+      "sampledMs": 35.27
+    },
+    {
+      "name": "descendants",
+      "source": "../src/core/schema/node.ts",
+      "line": 88,
+      "sampledMs": 34.86
+    },
+    {
+      "name": "Q",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 25,
+      "sampledMs": 32.27
+    },
+    {
+      "name": "u",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 133,
+      "sampledMs": 31.22
+    },
+    {
+      "name": "Pr",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 38,
+      "sampledMs": 30.12
+    },
+    {
+      "name": "a",
+      "source": "../src/core/schema/schema.ts",
+      "line": 100,
+      "sampledMs": 26.72
+    },
+    {
+      "name": "changeText",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 729,
+      "sampledMs": 20.54
+    },
+    {
+      "name": "n",
+      "source": "../src/core/transaction/path.ts",
+      "line": 23,
+      "sampledMs": 19.54
+    },
+    {
+      "name": "",
+      "source": "../src/node-ids/index.ts",
+      "line": 223,
+      "sampledMs": 19.45
+    },
+    {
+      "name": "decode",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 359,
+      "sampledMs": 17.66
+    },
+    {
+      "name": "u",
+      "source": "../src/core/schema/attributes.ts",
+      "line": 25,
+      "sampledMs": 13.43
+    },
+    {
+      "name": "",
+      "source": "../src/core/schema/node.ts",
+      "line": 90,
+      "sampledMs": 11.2
+    },
+    {
+      "name": "g",
+      "source": "../src/core/schema/copy-validation.ts",
+      "line": 67,
+      "sampledMs": 10.19
+    },
+    {
+      "name": "v",
+      "source": "../src/node-ids/index.ts",
+      "line": 87,
+      "sampledMs": 9.82
+    },
+    {
+      "name": "RegExp: ^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+      "source": "",
+      "line": 0,
+      "sampledMs": 9.63
+    },
+    {
+      "name": "eq",
+      "source": "../src/core/schema/node.ts",
+      "line": 93,
+      "sampledMs": 8.29
+    },
+    {
+      "name": "zr",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 114,
+      "sampledMs": 8.21
+    },
+    {
+      "name": "l",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 128,
+      "sampledMs": 8.13
+    },
+    {
+      "name": "Ir",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 73,
+      "sampledMs": 8.07
+    },
+    {
+      "name": "computeDelta",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 7277,
+      "sampledMs": 6.5
+    },
+    {
+      "name": "apply",
+      "source": "../src/core/transaction/replace-text-step.ts",
+      "line": 14,
+      "sampledMs": 5.27
+    },
+    {
+      "name": "child",
+      "source": "../src/core/schema/node.ts",
+      "line": 61,
+      "sampledMs": 5.01
+    },
+    {
+      "name": "RegExp: ^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$",
+      "source": "",
+      "line": 0,
+      "sampledMs": 4.92
+    },
+    {
+      "name": "m",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 467,
+      "sampledMs": 4.89
+    },
+    {
+      "name": "p",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 452,
+      "sampledMs": 4.85
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 546,
+      "sampledMs": 4.8
+    },
+    {
+      "name": "validate",
+      "source": "../src/core/schema/schema.ts",
+      "line": 99,
+      "sampledMs": 3.75
+    },
+    {
+      "name": "br",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 129,
+      "sampledMs": 3.45
+    },
+    {
+      "name": "get nodeSize",
+      "source": "../src/core/schema/node.ts",
+      "line": 52,
+      "sampledMs": 3.3
+    },
+    {
+      "name": "S",
+      "source": "../src/node-ids/index.ts",
+      "line": 139,
+      "sampledMs": 3.21
+    },
+    {
+      "name": "normalizeFrame",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 441,
+      "sampledMs": 3.2
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 234,
+      "sampledMs": 3.12
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 532,
+      "sampledMs": 3.1
+    },
+    {
+      "name": "Rr",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 93,
+      "sampledMs": 2.46
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 512,
+      "sampledMs": 2.32
+    },
+    {
+      "name": "mr",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 76,
+      "sampledMs": 2.21
+    },
+    {
+      "name": "toDelta",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 7244,
+      "sampledMs": 1.72
+    },
+    {
+      "name": "p",
+      "source": "../src/core/schema/copy-validation.ts",
+      "line": 44,
+      "sampledMs": 1.69
+    },
+    {
+      "name": "getState",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 2865,
+      "sampledMs": 1.68
+    },
+    {
+      "name": "",
+      "source": "../src/node-ids/index.ts",
+      "line": 226,
+      "sampledMs": 1.68
+    },
+    {
+      "name": "B",
+      "source": "../src/extensions/collaboration-core.ts",
+      "line": 324,
+      "sampledMs": 1.67
+    },
+    {
+      "name": "c",
+      "source": "../src/core/transaction/document-point.ts",
+      "line": 26,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "copy",
+      "source": "../src/core/schema/node.ts",
+      "line": 67,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 3303,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "mergeDeleteSets",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 207,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "onLocalSelection",
+      "source": "../src/yjs/retained-adapter.ts",
+      "line": 383,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "isVisible",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 2719,
+      "sampledMs": 1.65
+    },
+    {
+      "name": "b",
+      "source": "../src/node-ids/index.ts",
+      "line": 118,
+      "sampledMs": 1.65
+    },
+    {
+      "name": "prepareChangeText",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 702,
+      "sampledMs": 1.64
+    },
+    {
+      "name": "Fr",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 72,
+      "sampledMs": 1.64
+    },
+    {
+      "name": "insertText",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 6489,
+      "sampledMs": 1.64
+    },
+    {
+      "name": "apply",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 540,
+      "sampledMs": 1.64
+    },
+    {
+      "name": "get",
+      "source": "../src/core/transaction/path.ts",
+      "line": 91,
+      "sampledMs": 1.61
+    },
+    {
+      "name": "finishChange",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 743,
+      "sampledMs": 1.61
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 123,
+      "sampledMs": 1.61
+    },
+    {
+      "name": "f",
+      "source": "../src/core/schema/copy-validation.ts",
+      "line": 36,
+      "sampledMs": 1.59
+    },
+    {
+      "name": "setURLContextFromBinding",
+      "source": "node:internal/url",
+      "line": 173,
+      "sampledMs": 1.58
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 3681,
+      "sampledMs": 1.57
+    },
+    {
+      "name": "typeMapGet",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 5648,
+      "sampledMs": 1.56
+    },
+    {
+      "name": "$",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 28,
+      "sampledMs": 0.98
+    },
+    {
+      "name": "step",
+      "source": "../src/core/transaction/transform.ts",
+      "line": 29,
+      "sampledMs": 0.92
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 563,
+      "sampledMs": 0.45
+    },
+    {
+      "name": "get childCount",
+      "source": "../src/core/schema/node.ts",
+      "line": 47,
+      "sampledMs": 0.35
+    },
+    {
+      "name": "vr",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 116,
+      "sampledMs": 0.15
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 349,
+      "sampledMs": 0.07
+    },
+    {
+      "name": "equalAttrs",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 6279,
+      "sampledMs": 0.05
+    },
+    {
+      "name": "scan",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 222,
+      "sampledMs": 0.03
+    },
+    {
+      "name": "provenance",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 179,
+      "sampledMs": 0.02
+    }
+  ],
+  "inclusive": [
+    {
+      "name": "pr",
+      "source": "../src/core/commands.ts",
+      "line": 388,
+      "sampledMs": 1458.56
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs",
+      "line": 209,
+      "sampledMs": 1458.56
+    },
+    {
+      "name": "measure",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs",
+      "line": 96,
+      "sampledMs": 1458.56
+    },
+    {
+      "name": "action",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs",
+      "line": 116,
+      "sampledMs": 1458.56
+    },
+    {
+      "name": "profile",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs",
+      "line": 93,
+      "sampledMs": 1458.56
+    },
+    {
+      "name": "dispatch",
+      "source": "../src/core/editor.ts",
+      "line": 90,
+      "sampledMs": 1447.26
+    },
+    {
+      "name": "qn",
+      "source": "../src/core/commands.ts",
+      "line": 41,
+      "sampledMs": 1447.26
+    },
+    {
+      "name": "",
+      "source": "../src/extensions/collaboration-core.ts",
+      "line": 579,
+      "sampledMs": 1279.33
+    },
+    {
+      "name": "",
+      "source": "../src/core/editor.ts",
+      "line": 117,
+      "sampledMs": 1279.33
+    },
+    {
+      "name": "B",
+      "source": "../src/extensions/collaboration-core.ts",
+      "line": 324,
+      "sampledMs": 1277.7
+    },
+    {
+      "name": "onLocalUpdate",
+      "source": "../src/yjs/retained-adapter.ts",
+      "line": 367,
+      "sampledMs": 1271.21
+    },
+    {
+      "name": "",
+      "source": "../src/extensions/collaboration-core.ts",
+      "line": 587,
+      "sampledMs": 1271.21
+    },
+    {
+      "name": "transact",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 3434,
+      "sampledMs": 1266.44
+    },
+    {
+      "name": "transact",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 583,
+      "sampledMs": 1266.44
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-adapter.ts",
+      "line": 374,
+      "sampledMs": 1259.87
+    },
+    {
+      "name": "apply",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 540,
+      "sampledMs": 1249.96
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 563,
+      "sampledMs": 1156.16
+    },
+    {
+      "name": "changeText",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 729,
+      "sampledMs": 1150.13
+    },
+    {
+      "name": "finishChange",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 743,
+      "sampledMs": 1122.7
+    },
+    {
+      "name": "normalizeFrame",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 441,
+      "sampledMs": 1114.43
+    },
+    {
+      "name": "u",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 447,
+      "sampledMs": 856.86
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs",
+      "line": 1,
+      "sampledMs": 763.14
+    },
+    {
+      "name": "evaluate",
+      "source": "",
+      "line": 0,
+      "sampledMs": 763.14
+    },
+    {
+      "name": "run",
+      "source": "node:internal/modules/esm/module_job",
+      "line": 550,
+      "sampledMs": 763.14
+    },
+    {
+      "name": "_",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 521,
+      "sampledMs": 254.37
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 532,
+      "sampledMs": 249.47
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 502,
+      "sampledMs": 248.6
+    },
+    {
+      "name": "l",
+      "source": "../src/core/schema/attributes.ts",
+      "line": 4,
+      "sampledMs": 194.56
+    },
+    {
+      "name": "apply",
+      "source": "../src/core/state.ts",
+      "line": 102,
+      "sampledMs": 167.92
+    },
+    {
+      "name": "D",
+      "source": "../src/node-ids/index.ts",
+      "line": 220,
+      "sampledMs": 163.45
+    },
+    {
+      "name": "O",
+      "source": "../src/node-ids/index.ts",
+      "line": 245,
+      "sampledMs": 163.45
+    },
+    {
+      "name": "apply",
+      "source": "../src/node-ids/index.ts",
+      "line": 433,
+      "sampledMs": 163.45
+    },
+    {
+      "name": "",
+      "source": "../src/core/state.ts",
+      "line": 121,
+      "sampledMs": 163.45
+    },
+    {
+      "name": "projectionNode",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 346,
+      "sampledMs": 145.24
+    },
+    {
+      "name": "descendants",
+      "source": "../src/core/schema/node.ts",
+      "line": 88,
+      "sampledMs": 100.92
+    },
+    {
+      "name": "E",
+      "source": "../src/node-ids/index.ts",
+      "line": 183,
+      "sampledMs": 100.92
+    },
+    {
+      "name": "",
+      "source": "../src/core/schema/node.ts",
+      "line": 90,
+      "sampledMs": 87.14
+    },
+    {
+      "name": "",
+      "source": "../src/node-ids/index.ts",
+      "line": 190,
+      "sampledMs": 54.86
+    },
+    {
+      "name": "zr",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 114,
+      "sampledMs": 50.81
+    },
+    {
+      "name": "validate",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 300,
+      "sampledMs": 50.81
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 546,
+      "sampledMs": 42.99
+    },
+    {
+      "name": "u",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 133,
+      "sampledMs": 39.36
+    },
+    {
+      "name": "validate",
+      "source": "../src/core/schema/schema.ts",
+      "line": 99,
+      "sampledMs": 34.09
+    },
+    {
+      "name": "Q",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 25,
+      "sampledMs": 32.27
+    },
+    {
+      "name": "a",
+      "source": "../src/core/schema/schema.ts",
+      "line": 100,
+      "sampledMs": 30.34
+    },
+    {
+      "name": "Pr",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 38,
+      "sampledMs": 30.12
+    },
+    {
+      "name": "decode",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 359,
+      "sampledMs": 27.29
+    },
+    {
+      "name": "n",
+      "source": "../src/core/transaction/path.ts",
+      "line": 23,
+      "sampledMs": 24.55
+    },
+    {
+      "name": "",
+      "source": "../src/node-ids/index.ts",
+      "line": 223,
+      "sampledMs": 19.45
+    },
+    {
+      "name": "Kr",
+      "source": "../src/yjs/retained-selection.ts",
+      "line": 14,
+      "sampledMs": 17.84
+    },
+    {
+      "name": "qr",
+      "source": "../src/yjs/retained-selection.ts",
+      "line": 28,
+      "sampledMs": 17.84
+    },
+    {
+      "name": "apply",
+      "source": "../src/core/transaction/replace-text-step.ts",
+      "line": 14,
+      "sampledMs": 17.12
+    },
+    {
+      "name": "scan",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 222,
+      "sampledMs": 16.4
+    },
+    {
+      "name": "readFrame",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 400,
+      "sampledMs": 16.1
+    },
+    {
+      "name": "point",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 482,
+      "sampledMs": 14.44
+    },
+    {
+      "name": "u",
+      "source": "../src/core/schema/attributes.ts",
+      "line": 25,
+      "sampledMs": 13.43
+    },
+    {
+      "name": "relative",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 542,
+      "sampledMs": 12.87
+    },
+    {
+      "name": "textAnchor",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 253,
+      "sampledMs": 12.87
+    },
+    {
+      "name": "copy",
+      "source": "../src/core/schema/node.ts",
+      "line": 67,
+      "sampledMs": 11.85
+    },
+    {
+      "name": "r",
+      "source": "../src/core/transaction/path.ts",
+      "line": 29,
+      "sampledMs": 11.85
+    },
+    {
+      "name": "step",
+      "source": "../src/core/transaction/transform.ts",
+      "line": 29,
+      "sampledMs": 11.3
+    },
+    {
+      "name": "replaceText",
+      "source": "../src/core/transaction/transform.ts",
+      "line": 70,
+      "sampledMs": 11.3
+    },
+    {
+      "name": "g",
+      "source": "../src/core/schema/copy-validation.ts",
+      "line": 67,
+      "sampledMs": 10.19
+    },
+    {
+      "name": "toDelta",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 7244,
+      "sampledMs": 9.86
+    },
+    {
+      "name": "v",
+      "source": "../src/node-ids/index.ts",
+      "line": 87,
+      "sampledMs": 9.82
+    },
+    {
+      "name": "RegExp: ^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+      "source": "",
+      "line": 0,
+      "sampledMs": 9.63
+    },
+    {
+      "name": "eq",
+      "source": "../src/core/schema/node.ts",
+      "line": 93,
+      "sampledMs": 8.29
+    },
+    {
+      "name": "m",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 467,
+      "sampledMs": 8.15
+    },
+    {
+      "name": "computeDelta",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 7277,
+      "sampledMs": 8.15
+    },
+    {
+      "name": "l",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 128,
+      "sampledMs": 8.13
+    },
+    {
+      "name": "S",
+      "source": "../src/node-ids/index.ts",
+      "line": 139,
+      "sampledMs": 8.13
+    },
+    {
+      "name": "Ir",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 73,
+      "sampledMs": 8.07
+    },
+    {
+      "name": "callAll",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/dist/function-314580f7.cjs",
+      "line": 19,
+      "sampledMs": 6.58
+    },
+    {
+      "name": "cleanupTransactions",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 3282,
+      "sampledMs": 6.58
+    },
+    {
+      "name": "br",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 129,
+      "sampledMs": 5.06
+    },
+    {
+      "name": "insert",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 510,
+      "sampledMs": 5.04
+    },
+    {
+      "name": "child",
+      "source": "../src/core/schema/node.ts",
+      "line": 61,
+      "sampledMs": 5.01
+    },
+    {
+      "name": "m",
+      "source": "../src/core/transaction/document-point.ts",
+      "line": 22,
+      "sampledMs": 4.97
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/dist/observable.cjs",
+      "line": 86,
+      "sampledMs": 4.92
+    },
+    {
+      "name": "emit",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/dist/observable.cjs",
+      "line": 84,
+      "sampledMs": 4.92
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 3335,
+      "sampledMs": 4.92
+    },
+    {
+      "name": "RegExp: ^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$",
+      "source": "",
+      "line": 0,
+      "sampledMs": 4.92
+    },
+    {
+      "name": "p",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 452,
+      "sampledMs": 4.85
+    },
+    {
+      "name": "onLocalSelection",
+      "source": "../src/yjs/retained-adapter.ts",
+      "line": 383,
+      "sampledMs": 4.82
+    },
+    {
+      "name": "",
+      "source": "../src/extensions/collaboration-core.ts",
+      "line": 600,
+      "sampledMs": 4.82
+    },
+    {
+      "name": "l",
+      "source": "../src/core/state.ts",
+      "line": 76,
+      "sampledMs": 4.47
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 514,
+      "sampledMs": 3.47
+    },
+    {
+      "name": "Rr",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 93,
+      "sampledMs": 3.44
+    },
+    {
+      "name": "get nodeSize",
+      "source": "../src/core/schema/node.ts",
+      "line": 52,
+      "sampledMs": 3.3
+    },
+    {
+      "name": "",
+      "source": "../src/core/schema/node.ts",
+      "line": 55,
+      "sampledMs": 3.3
+    },
+    {
+      "name": "prepareChangeText",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 702,
+      "sampledMs": 3.3
+    },
+    {
+      "name": "UndoManager.afterTransactionHandler",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 3662,
+      "sampledMs": 3.23
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 234,
+      "sampledMs": 3.12
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 512,
+      "sampledMs": 2.32
+    },
+    {
+      "name": "checkCapacity",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 423,
+      "sampledMs": 2.28
+    },
+    {
+      "name": "reserveCapacity",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 580,
+      "sampledMs": 2.28
+    },
+    {
+      "name": "mr",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 76,
+      "sampledMs": 2.21
+    },
+    {
+      "name": "p",
+      "source": "../src/core/schema/copy-validation.ts",
+      "line": 44,
+      "sampledMs": 2.04
+    },
+    {
+      "name": "index",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 217,
+      "sampledMs": 1.86
+    },
+    {
+      "name": "partitions",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 475,
+      "sampledMs": 1.86
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 344,
+      "sampledMs": 1.86
+    },
+    {
+      "name": "insertText",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 6489,
+      "sampledMs": 1.69
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 7365,
+      "sampledMs": 1.69
+    },
+    {
+      "name": "insert",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 7359,
+      "sampledMs": 1.69
+    },
+    {
+      "name": "getState",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 2865,
+      "sampledMs": 1.68
+    },
+    {
+      "name": "writeVersion",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 384,
+      "sampledMs": 1.68
+    },
+    {
+      "name": "Ur",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 207,
+      "sampledMs": 1.68
+    },
+    {
+      "name": "",
+      "source": "../src/node-ids/index.ts",
+      "line": 226,
+      "sampledMs": 1.68
+    },
+    {
+      "name": "c",
+      "source": "../src/core/transaction/document-point.ts",
+      "line": 26,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "u",
+      "source": "../src/core/transaction/document-point.ts",
+      "line": 32,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 3303,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "prepareNativeProjection",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 333,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "mergeDeleteSets",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 207,
+      "sampledMs": 1.66
+    },
+    {
+      "name": "isVisible",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 2719,
+      "sampledMs": 1.65
+    },
+    {
+      "name": "b",
+      "source": "../src/node-ids/index.ts",
+      "line": 118,
+      "sampledMs": 1.65
+    },
+    {
+      "name": "Fr",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 72,
+      "sampledMs": 1.64
+    },
+    {
+      "name": "get docChanged",
+      "source": "../src/core/transaction/transform.ts",
+      "line": 27,
+      "sampledMs": 1.63
+    },
+    {
+      "name": "provenance",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 179,
+      "sampledMs": 1.62
+    },
+    {
+      "name": "get",
+      "source": "../src/core/transaction/path.ts",
+      "line": 91,
+      "sampledMs": 1.61
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 123,
+      "sampledMs": 1.61
+    },
+    {
+      "name": "yr",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 122,
+      "sampledMs": 1.61
+    },
+    {
+      "name": "f",
+      "source": "../src/core/schema/copy-validation.ts",
+      "line": 36,
+      "sampledMs": 1.59
+    },
+    {
+      "name": "setURLContextFromBinding",
+      "source": "node:internal/url",
+      "line": 173,
+      "sampledMs": 1.58
+    },
+    {
+      "name": "URLContext",
+      "source": "node:internal/url",
+      "line": 206,
+      "sampledMs": 1.58
+    },
+    {
+      "name": "URL",
+      "source": "node:internal/url",
+      "line": 879,
+      "sampledMs": 1.58
+    },
+    {
+      "name": "i",
+      "source": "../src/core/url.ts",
+      "line": 12,
+      "sampledMs": 1.58
+    },
+    {
+      "name": "ft.src",
+      "source": "../src/extensions/nodes/image-attributes.ts",
+      "line": 30,
+      "sampledMs": 1.58
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 3681,
+      "sampledMs": 1.57
+    },
+    {
+      "name": "typeMapGet",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 5648,
+      "sampledMs": 1.56
+    },
+    {
+      "name": "get",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 6224,
+      "sampledMs": 1.56
+    },
+    {
+      "name": "readStream",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 208,
+      "sampledMs": 1.56
+    },
+    {
+      "name": "$",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 28,
+      "sampledMs": 0.98
+    },
+    {
+      "name": "get childCount",
+      "source": "../src/core/schema/node.ts",
+      "line": 47,
+      "sampledMs": 0.35
+    },
+    {
+      "name": "vr",
+      "source": "../src/yjs/retained-text.ts",
+      "line": 116,
+      "sampledMs": 0.15
+    },
+    {
+      "name": "",
+      "source": "../src/yjs/retained-document.ts",
+      "line": 349,
+      "sampledMs": 0.07
+    },
+    {
+      "name": "equalAttrs",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 6279,
+      "sampledMs": 0.05
+    },
+    {
+      "name": "insertAttributes",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs",
+      "line": 6459,
+      "sampledMs": 0.05
+    }
+  ]
+}
