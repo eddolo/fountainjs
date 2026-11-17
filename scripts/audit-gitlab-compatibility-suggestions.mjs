@@ -65,6 +65,64 @@ async function editDeletion({side,page,form,surface,input,output}) {
   }
   return result;
 }
+async function editPostedReview({side,page,form,surface,input,fixture,output}) {
+  const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const snapshot=async()=>{
+    const raw=await surface.code.textContent();let range;
+    if(side==='original'){
+      const values=await surface.editor.locator('[data-testid="code-suggestion-box"] strong').allTextContents();
+      if(values.length===2)range={start:Number(values[0]),end:Number(values[1])};
+    }else{
+      const params=await surface.editor.locator('pre[data-fountain-gitlab-suggestion]').getAttribute('data-fountain-gitlab-suggestion');
+      const match=params?.match(/^-(\d+)\+(\d+)$/u);
+      if(match)range={start:input.range.end-Number(match[1]),end:input.range.end+Number(match[2])};
+    }
+    return {source:side==='original'?raw+'\n':raw,range};
+  };
+  const open=async()=>{
+    await surface.code.click();await page.getByRole('button',{name:'Edit suggestion',exact:true}).click();
+    const dialog=page.getByRole('dialog',{name:'Suggested replacement',exact:true});await expect(dialog).toBeVisible();return dialog;
+  };
+  await pause(input.handoffDelayMs);const result={initial:await snapshot(),undoSteps:[],redoSteps:[]};
+  if(side==='original'){
+    await surface.code.click();await page.keyboard.press('Home');await page.keyboard.press('Shift+End');
+    result.selectedSource=await page.evaluate(()=>window.getSelection()?.toString());
+    expect(result.selectedSource).toBe(input.source.split('\n')[input.range.start-1]);
+    await page.keyboard.press('Backspace');
+    const lines=input.replacement.slice(0,-1).split('\n');
+    for(let index=0;index<lines.length;index++){if(index)await page.keyboard.press('Enter');await page.keyboard.insertText(lines[index]);}
+  }else{
+    const dialog=await open();await dialog.getByRole('textbox',{name:'Replacement source',exact:true}).fill(input.replacement);
+    await dialog.getByRole('button',{name:'Apply suggestion',exact:true}).click();await expect(dialog).toBeHidden();
+  }
+  await pause(fixture.historyBoundaryDelayMs);result.beforeRange=await snapshot();
+  if(side==='original'){
+    await surface.editor.getByRole('button',{name:'Decrement suggestion line start',exact:true}).click();
+    await pause(fixture.historyBoundaryDelayMs);
+    await surface.editor.getByRole('button',{name:'Increment suggestion line end',exact:true}).click();
+  }else{
+    const dialog=await open();await dialog.getByRole('button',{name:'Load original file',exact:true}).click();
+    await expect(dialog.getByRole('region',{name:'Original file lines',exact:true})).toContainText('keep();');
+    await dialog.getByRole('spinbutton',{name:'First file line',exact:true}).fill(String(input.editedRange.start));
+    await dialog.getByRole('spinbutton',{name:'Last file line',exact:true}).fill(String(input.editedRange.end));
+    await dialog.screenshot({path:join(output,input.id+'-range-dialog.png'),animations:'disabled',caret:'initial'});
+    await dialog.getByRole('button',{name:'Apply suggestion',exact:true}).click();await expect(dialog).toBeHidden();
+  }
+  await pause(fixture.historyBoundaryDelayMs);result.afterRange=await snapshot();
+  await form.screenshot({path:join(output,input.id+'-changed-rich.png'),animations:'disabled',caret:'initial'});
+  await surface.code.click();
+  for(let count=0;count<4;count++){
+    await page.keyboard.press('Control+z');await pause(100);const value=await snapshot();result.undoSteps.push(value);
+    if(JSON.stringify(value)===JSON.stringify(result.beforeRange))break;
+  }
+  result.afterUndo=await snapshot();
+  for(let count=0;count<result.undoSteps.length;count++){
+    await page.keyboard.press('Control+Shift+z');await pause(100);result.redoSteps.push(await snapshot());
+  }
+  result.afterRedo=await snapshot();
+  await form.screenshot({path:join(output,input.id+'-after-redo.png'),animations:'disabled',caret:'initial'});
+  return result;
+}
 async function openLineForm(page, mr, range) {
   await page.goto(mr.web_url+'/diffs');
   const rowAt=line=>page.locator('tr[data-hunk-lines]').filter({has:page.locator(`[data-position="new"] [data-line-number="${line}"]`)}).first();
@@ -127,8 +185,8 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       // append a deterministic line before its closing fence; never repair it.
       const closing=result.sourceModeBeforeEdit.lastIndexOf('\n```');
       if(closing<0||result.sourceModeBeforeEdit.slice(closing+4).trim()!=='')throw new Error('Unexpected suggestion source carrier');
-      const body=(input.scope==='deletion'?result.sourceModeBeforeEdit:result.sourceModeBeforeEdit.slice(0,closing+1)+fixture.appendLine+result.sourceModeBeforeEdit.slice(closing+1))+'\n\n'+fixture.marker;
-      await source.fill(body);result.actions.push(input.scope==='deletion'?'Switch to source; retain the exact captured deletion proposal and add only a prose marker.':'Switch to source; append review line without rewriting the captured replacement; add prose marker.');
+      const body=(['deletion','review'].includes(input.scope)?result.sourceModeBeforeEdit:result.sourceModeBeforeEdit.slice(0,closing+1)+fixture.appendLine+result.sourceModeBeforeEdit.slice(closing+1))+'\n\n'+fixture.marker;
+      await source.fill(body);result.actions.push(['deletion','review'].includes(input.scope)?'Switch to source; retain the exact captured deletion proposal and add only a prose marker.':'Switch to source; append review line without rewriting the captured replacement; add prose marker.');
       await form.screenshot({path:join(output,input.id+'-source-draft.png'),animations:'disabled',caret:'initial'});
       await stage('post');await form.getByRole('button',{name:/^(Add comment now|Comment)$/u}).click();
       let discussion;
@@ -139,7 +197,20 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       result.beforeApplyHead=(await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(branch)}`)).commit.id;
       await page.reload();const savedNote=page.locator('#note_'+note.id);await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
       await page.screenshot({path:join(output,input.id+'-posted.png'),fullPage:true,animations:'disabled',caret:'initial'});
-      if(input.scope==='deletion'){
+      if(input.scope==='review'){
+        await stage('edit-posted-review');await savedNote.getByRole('button',{name:'Edit comment',exact:true}).click();
+        const reviewForm=savedNote.locator('form.common-note-form');surface=await ui.rich(reviewForm);await expect(surface.code).toHaveCount(1);
+        result.review=await editPostedReview({side,page,form:reviewForm,surface,input,fixture,output});
+        await new Promise(resolve=>setTimeout(resolve,input.handoffDelayMs));
+        const reviewSource=await ui.source(reviewForm);await new Promise(resolve=>setTimeout(resolve,fixture.sourceObservationDelayMs));
+        result.review.sourceBeforeSave=await reviewSource.inputValue();
+        await reviewForm.getByRole('button',{name:'Save comment',exact:true}).click();
+        await expect.poll(async()=>{result.review.saved=await request(`${base}/notes/${note.id}`);return result.review.saved.body!==result.saved.body;},{timeout:30000}).toBe(true);
+        result.beforeApplyFile=await request(fileURL);result.beforeApplyHead=(await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(branch)}`)).commit.id;
+        result.actions.push('Edit posted source and expand its file range through real rich controls; undo the range adjustment and redo it; save normally.');
+        await page.reload();await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
+      }
+      if(['deletion','review'].includes(input.scope)){
         await savedNote.getByRole('button',{name:'Edit comment',exact:true}).click();
         const reopenForm=savedNote.locator('form.common-note-form');surface=await ui.rich(reopenForm);
         await expect(surface.code).toHaveCount(1);result.reopenedDOM=await surface.code.textContent();
@@ -157,8 +228,9 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       result.appliedCommit=await request(`/api/v4/projects/${project.id}/repository/commits/${result.appliedFile.last_commit_id}`);
       result.appliedNote=await request(`${base}/notes/${note.id}`);expect(result.appliedNote.suggestions[0].applied).toBe(true);
       result.actions.push('Normal GitLab Apply suggestion creates a real source commit.');
-      if(input.scope==='deletion'){
+      if(['deletion','review'].includes(input.scope)){
         await page.goto(mr.web_url+'#note_'+note.id);await expect(page.getByTestId('applied-badge')).toBeVisible({timeout:30000});
+        await page.getByTestId('applied-badge').scrollIntoViewIfNeeded();
         await page.screenshot({path:join(output,input.id+'-applied.png'),fullPage:true,animations:'disabled',caret:'initial'});
         result.status='observed';await stage('complete');continue;
       }

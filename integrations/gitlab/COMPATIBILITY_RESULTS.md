@@ -74,6 +74,10 @@ effect explanation, whitespace consent and exact source reopening. It does not
 close the shared history failure in this first corpus or add blank-line
 replacement support to the stock backend.
 
+The [posted-review pair](COMPATIBILITY_REVIEW_RESULTS.md) subsequently adds
+21 parity checks for source/range editing, undo/redo and exact save/reopen/apply.
+It leaves the Applied-history failure above open.
+
 ## Reproduce
 
 Use the matching Linux Docker environment and the prepared native source/assets

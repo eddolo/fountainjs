@@ -1,0 +1,371 @@
+{
+  "formatVersion": 1,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "deletion-keyboard-20261116",
+      "attempt": 1
+    },
+    "fountain": {
+      "runId": "deletion-keyboard-20261116",
+      "attempt": 1
+    }
+  },
+  "rows": [
+    {
+      "case": "empty-deletion",
+      "invariant": "prefill",
+      "label": "Selected source characters",
+      "expected": "old();",
+      "original": "old();",
+      "fountain": "old();",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "firstSource",
+      "label": "Source at first visible Markdown field",
+      "expected": "",
+      "original": "",
+      "fountain": "",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "settledSource",
+      "label": "Source after declared observation window",
+      "expected": "",
+      "original": "",
+      "fountain": "",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "range",
+      "label": "Selected target offsets",
+      "expected": "-0+0",
+      "original": "-0+0",
+      "fountain": "-0+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "richReplacement",
+      "label": "Rich editing preserves exact empty or whitespace replacement",
+      "expected": "",
+      "original": "",
+      "fountain": "",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "deletionExplanation",
+      "label": "Rich editing explicitly explains the deletion effect in words",
+      "expected": true,
+      "original": false,
+      "fountain": true,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "consent",
+      "label": "Empty deletion needs no extra whitespace consent",
+      "expected": {
+        "present": false,
+        "blocked": false
+      },
+      "original": {
+        "present": false,
+        "blocked": false
+      },
+      "fountain": {
+        "present": false,
+        "blocked": false
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "savedSource",
+      "label": "Saved deletion source",
+      "expected": "",
+      "original": "",
+      "fountain": "",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "savedRange",
+      "label": "Saved target offsets",
+      "expected": "-0+0",
+      "original": "-0+0",
+      "fountain": "-0+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "reopenedSource",
+      "label": "Reloaded rich proposal retains exact deletion source",
+      "expected": "",
+      "original": "",
+      "fountain": "",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "beforeApplySource",
+      "label": "Draft does not write repository contents",
+      "expected": "old();\nkeep();\nlast();\n",
+      "original": "old();\nkeep();\nlast();\n",
+      "fountain": "old();\nkeep();\nlast();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "noEarlyCommit",
+      "label": "Draft does not create a source commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "appliedSource",
+      "label": "Deletion removes only the intended file lines",
+      "expected": "keep();\nlast();\n",
+      "original": "keep();\nlast();\n",
+      "fountain": "keep();\nlast();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "singleApplyCommit",
+      "label": "Application creates one child of the seed commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "empty-deletion",
+      "invariant": "appliedFlagAtCommit",
+      "label": "Successful deletion has Applied metadata immediately after commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "prefill",
+      "label": "Selected source characters",
+      "expected": "old();",
+      "original": "old();",
+      "fountain": "old();",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "firstSource",
+      "label": "Source at first visible Markdown field",
+      "expected": "\n",
+      "original": "\n",
+      "fountain": "\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "settledSource",
+      "label": "Source after declared observation window",
+      "expected": "\n",
+      "original": "\n",
+      "fountain": "\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "range",
+      "label": "Selected target offsets",
+      "expected": "-0+0",
+      "original": "-0+0",
+      "fountain": "-0+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "richReplacement",
+      "label": "Rich editing preserves exact empty or whitespace replacement",
+      "expected": "\n",
+      "original": "\n",
+      "fountain": "\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "deletionExplanation",
+      "label": "Rich editing explicitly explains the deletion effect in words",
+      "expected": true,
+      "original": false,
+      "fountain": true,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "consent",
+      "label": "Nonempty whitespace deletion requires affirmative intent before acceptance",
+      "expected": {
+        "present": true,
+        "blocked": true,
+        "confirmed": true
+      },
+      "original": {
+        "present": false,
+        "blocked": false,
+        "confirmed": false
+      },
+      "fountain": {
+        "present": true,
+        "blocked": true,
+        "confirmed": true
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "savedSource",
+      "label": "Saved deletion source",
+      "expected": "\n",
+      "original": "\n",
+      "fountain": "\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "savedRange",
+      "label": "Saved target offsets",
+      "expected": "-0+0",
+      "original": "-0+0",
+      "fountain": "-0+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "reopenedSource",
+      "label": "Reloaded rich proposal retains exact deletion source",
+      "expected": "\n",
+      "original": "",
+      "fountain": "\n",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "beforeApplySource",
+      "label": "Draft does not write repository contents",
+      "expected": "old();\nkeep();\nlast();\n",
+      "original": "old();\nkeep();\nlast();\n",
+      "fountain": "old();\nkeep();\nlast();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "noEarlyCommit",
+      "label": "Draft does not create a source commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "appliedSource",
+      "label": "Deletion removes only the intended file lines",
+      "expected": "keep();\nlast();\n",
+      "original": "keep();\nlast();\n",
+      "fountain": "keep();\nlast();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "singleApplyCommit",
+      "label": "Application creates one child of the seed commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "whitespace-deletion",
+      "invariant": "appliedFlagAtCommit",
+      "label": "Successful deletion has Applied metadata immediately after commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    }
+  ],
+  "summary": {
+    "parity": 26,
+    "improvement": 4,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 30
+  },
+  "comparisonComplete": true,
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": true,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/deletion-keyboard-20261116/original-1/report.json",
+      "sha256": "2ade0a8a14c9cb8986eedb5589207dcfa1cc22a384d8abcffec89faaf74b319d"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/deletion-keyboard-20261116/fountain-1/report.json",
+      "sha256": "2ef797bfe9b46fbb14120f961628013eb323fbcc08853eec53c153838753f5a9"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "c5146468b9ac7edffdfdce0237121301f802b851284a1ebd2a76d253a4f35478"
+  }
+}

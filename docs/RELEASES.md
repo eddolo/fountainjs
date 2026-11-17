@@ -26,6 +26,15 @@ do not mark an unfinished beta stable merely to change the badge.
 
 This reconciliation changes no release, tag, npm package or website deployment.
 
+## Matched posted-review coverage — 2026-11-17
+
+The [source/range review pair](../integrations/gitlab/COMPATIBILITY_REVIEW_RESULTS.md)
+adds 21 verified parity checks through real original/Fountain UI, including
+undo/redo, exact save/reopen and repository application. Earlier source/history
+and deletion classifications replay unchanged. 1383 integration tests / 54 files
+and strict types pass. No runtime/API/capacity/version/publication change;
+Applied-history retention and wider product acceptance remain open.
+
 ## Matched GitLab regression harness — 2026-11-16
 
 The subsequent [deletion corpus](../integrations/gitlab/COMPATIBILITY_DELETION_RESULTS.md)

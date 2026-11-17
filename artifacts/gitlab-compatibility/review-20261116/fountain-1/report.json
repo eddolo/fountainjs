@@ -1,0 +1,489 @@
+{
+  "formatVersion": 1,
+  "runId": "review-20261116",
+  "attempt": 1,
+  "side": "fountain",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "reviews",
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-reviews.json",
+  "fixtureHash": "982b51125f5c4a45b04615ec6b2d24331c4a085150b23f72c27ea45a46e7229a",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "posted-suggestion-source-range-review",
+    "title": "Paired posted source and range review",
+    "marker": "Compatibility posted review",
+    "sourceObservationDelayMs": 1500,
+    "historyBoundaryDelayMs": 700,
+    "cases": [
+      {
+        "id": "posted-range-review",
+        "scope": "review",
+        "filePath": "paired-review.js",
+        "source": "before();\nold();\nafter();\nkeep();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        },
+        "editedRange": {
+          "start": 1,
+          "end": 3
+        },
+        "replacement": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "handoffDelayMs": 1500
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "posted-range-review",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "posted-range-review",
+        "scope": "review",
+        "filePath": "paired-review.js",
+        "source": "before();\nold();\nafter();\nkeep();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        },
+        "editedRange": {
+          "start": 1,
+          "end": 3
+        },
+        "replacement": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "handoffDelayMs": 1500
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Switch to source; retain the exact captured deletion proposal and add only a prose marker.",
+        "Edit posted source and expand its file range through real rich controls; undo the range adjustment and redo it; save normally.",
+        "Reload the saved proposal; reopen rich editing and inspect exact source; cancel without rewriting it.",
+        "Normal GitLab Apply suggestion creates a real source commit."
+      ],
+      "setup": {
+        "branch": "fountain-compat-review-20261116-a1-fountain-posted-range-review",
+        "seedCommit": "b4b9e5c150fcaf1171693f72d2246c8dfeca0653",
+        "source": "YmVmb3JlKCk7Cm9sZCgpOwphZnRlcigpOwprZWVwKCk7Cg==",
+        "mergeRequest": {
+          "iid": 60,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/60"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "old();\n",
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1501.3371090000146
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\nold();\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\nold();\n```",
+      "saved": {
+        "id": 579,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\nold();\n```\n\nCompatibility posted review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:59:15.020Z",
+        "updated_at": "2026-11-16T23:59:15.020Z",
+        "system": false,
+        "noteable_id": 274,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "b4b9e5c150fcaf1171693f72d2246c8dfeca0653",
+          "old_path": "paired-review.js",
+          "new_path": "paired-review.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 2,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 2,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 2,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 240,
+            "from_line": 2,
+            "to_line": 2,
+            "appliable": false,
+            "applied": false,
+            "from_content": "old();\n",
+            "to_content": "old();\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 60,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-review.js",
+        "file_path": "paired-review.js",
+        "size": 34,
+        "encoding": "base64",
+        "content_sha256": "4c37dadd7e892c323b1c2d67347d33860fff1d31034839b6116bf3f0df967fb5",
+        "ref": "fountain-compat-review-20261116-a1-fountain-posted-range-review",
+        "blob_id": "08b9bd79218528e5370b8e70aa5c2f09cc0c925e",
+        "commit_id": "b4b9e5c150fcaf1171693f72d2246c8dfeca0653",
+        "last_commit_id": "b4b9e5c150fcaf1171693f72d2246c8dfeca0653",
+        "execute_filemode": false,
+        "content": "YmVmb3JlKCk7Cm9sZCgpOwphZnRlcigpOwprZWVwKCk7Cg=="
+      },
+      "beforeApplyHead": "b4b9e5c150fcaf1171693f72d2246c8dfeca0653",
+      "review": {
+        "initial": {
+          "source": "old();\n",
+          "range": {
+            "start": 2,
+            "end": 2
+          }
+        },
+        "undoSteps": [
+          {
+            "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+            "range": {
+              "start": 2,
+              "end": 2
+            }
+          }
+        ],
+        "redoSteps": [
+          {
+            "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+            "range": {
+              "start": 1,
+              "end": 3
+            }
+          }
+        ],
+        "beforeRange": {
+          "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+          "range": {
+            "start": 2,
+            "end": 2
+          }
+        },
+        "afterRange": {
+          "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+          "range": {
+            "start": 1,
+            "end": 3
+          }
+        },
+        "afterUndo": {
+          "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+          "range": {
+            "start": 2,
+            "end": 2
+          }
+        },
+        "afterRedo": {
+          "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+          "range": {
+            "start": 1,
+            "end": 3
+          }
+        },
+        "sourceBeforeSave": "```suggestion:-1+1\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nCompatibility posted review",
+        "saved": {
+          "id": 579,
+          "type": "DiffNote",
+          "body": "```suggestion:-1+1\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nCompatibility posted review",
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "created_at": "2026-11-16T23:59:15.020Z",
+          "updated_at": "2026-11-16T23:59:26.235Z",
+          "system": false,
+          "noteable_id": 274,
+          "noteable_type": "MergeRequest",
+          "project_id": 1,
+          "commit_id": null,
+          "position": {
+            "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+            "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+            "head_sha": "b4b9e5c150fcaf1171693f72d2246c8dfeca0653",
+            "old_path": "paired-review.js",
+            "new_path": "paired-review.js",
+            "position_type": "text",
+            "old_line": null,
+            "new_line": 2,
+            "line_range": {
+              "start": {
+                "old_line": null,
+                "new_line": 2,
+                "type": "new"
+              },
+              "end": {
+                "old_line": null,
+                "new_line": 2,
+                "type": "new"
+              }
+            }
+          },
+          "resolvable": true,
+          "resolved": false,
+          "resolved_by": null,
+          "resolved_at": null,
+          "suggestions": [
+            {
+              "id": 241,
+              "from_line": 1,
+              "to_line": 3,
+              "appliable": true,
+              "applied": false,
+              "from_content": "before();\nold();\nafter();\n",
+              "to_content": "const token = \"\\n\";\nconst tag = \"\";\n"
+            }
+          ],
+          "confidential": false,
+          "internal": false,
+          "imported": false,
+          "imported_from": "none",
+          "noteable_iid": 60,
+          "commands_changes": {}
+        }
+      },
+      "reopenedDOM": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "reopenedSource": "```suggestion:-1+1\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nCompatibility posted review",
+      "appliedFile": {
+        "file_name": "paired-review.js",
+        "file_path": "paired-review.js",
+        "size": 47,
+        "encoding": "base64",
+        "content_sha256": "70046d699d6e55de30c04b656bc1f43764f2b770d5b7d79e2ea1e71740de52b2",
+        "ref": "fountain-compat-review-20261116-a1-fountain-posted-range-review",
+        "blob_id": "6c1c5957aa61e92bf5a7740d67ced393ec6c8953",
+        "commit_id": "d574f854f5ca9f306de52ec5b8b58e3cb0aa5e02",
+        "last_commit_id": "d574f854f5ca9f306de52ec5b8b58e3cb0aa5e02",
+        "execute_filemode": false,
+        "content": "Y29uc3QgdG9rZW4gPSAiXG4iOwpjb25zdCB0YWcgPSAi7oCAIjsKa2VlcCgpOwo="
+      },
+      "appliedCommit": {
+        "id": "d574f854f5ca9f306de52ec5b8b58e3cb0aa5e02",
+        "short_id": "d574f854",
+        "created_at": "2026-11-16T23:59:32.000+00:00",
+        "parent_ids": [
+          "b4b9e5c150fcaf1171693f72d2246c8dfeca0653"
+        ],
+        "title": "Apply paired editor suggestion",
+        "message": "Apply paired editor suggestion",
+        "author_name": "Administrator",
+        "author_email": "gitlab_admin_5c5720@example.com",
+        "authored_date": "2026-11-16T23:59:32.000+00:00",
+        "committer_name": "Administrator",
+        "committer_email": "gitlab_admin_5c5720@example.com",
+        "committed_date": "2026-11-16T23:59:32.000+00:00",
+        "trailers": {},
+        "extended_trailers": {},
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/commit/d574f854f5ca9f306de52ec5b8b58e3cb0aa5e02",
+        "stats": {
+          "additions": 2,
+          "deletions": 3,
+          "total": 5
+        },
+        "status": null,
+        "project_id": 1,
+        "last_pipeline": null
+      },
+      "appliedNote": {
+        "id": 579,
+        "type": "DiffNote",
+        "body": "```suggestion:-1+1\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nCompatibility posted review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-16T23:59:15.020Z",
+        "updated_at": "2026-11-16T23:59:32.900Z",
+        "system": false,
+        "noteable_id": 274,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "b4b9e5c150fcaf1171693f72d2246c8dfeca0653",
+          "old_path": "paired-review.js",
+          "new_path": "paired-review.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 2,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 2,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 2,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-16T23:59:32.900Z",
+        "suggestions": [
+          {
+            "id": 241,
+            "from_line": 1,
+            "to_line": 3,
+            "appliable": false,
+            "applied": true,
+            "from_content": "before();\nold();\nafter();\n",
+            "to_content": "const token = \"\\n\";\nconst tag = \"\";\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 60,
+        "commands_changes": {}
+      }
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "f2fc9cefd6e8c3831f5c707a264355232b3ea0bb22c1b1d71c64b121eb3fe7cb",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [
+      {
+        "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+        "readOnly": true
+      }
+    ],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "ENABLE_RSPACK=true",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "14a1f4547a75e8ca9f2cca7aecb339c024cb934accdea2475ed2e4da60f3751c  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": true
+}

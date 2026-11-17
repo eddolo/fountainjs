@@ -12,6 +12,10 @@ explicit effect explanation, whitespace consent and source reopening improve;
 application semantics match. The host still cannot apply meaningful blank-line
 replacement, and the earlier shared Applied-history failure remains open.
 
+Matched [posted source/range review](COMPATIBILITY_REVIEW_RESULTS.md) now verifies
+21 parity invariants including undo/redo and exact save/reopen/application. Wider
+range/concurrency and the separate Applied-history failure remain open.
+
 ## Existing evidence
 
 The suggestion node/source codec retains empty versus blank replacement lines,

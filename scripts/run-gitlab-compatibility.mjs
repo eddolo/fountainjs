@@ -10,8 +10,8 @@ if(process.platform!=='linux')throw new Error('Run beside the isolated Linux Doc
 const value=flag=>process.argv[process.argv.indexOf(flag)+1];
 const suite=process.argv.includes('--suite')?value('--suite'):'suggestions';
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
-if(!['suggestions','deletions'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--suite suggestions|deletions]');
+if(!['suggestions','deletions','reviews'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
+ throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--suite suggestions|deletions|reviews]');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');

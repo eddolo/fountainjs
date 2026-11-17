@@ -2,6 +2,13 @@
 
 ## Current programme status — 2026-11-16
 
+Matched posted-review follow-up (2026-11-17): actual original/Fountain editing
+verifies 21 parity outcomes across posted source changes, range expansion,
+undo/redo, exact save/reopen and a real apply commit. No regressions or additional
+improvement claim in this case. 1383 integration tests / 54 files and strict types
+pass. Shared Applied-history retention and wider range/role/browser/persistence
+requirements remain open. [Review evidence and reproduction](../integrations/gitlab/COMPATIBILITY_REVIEW_RESULTS.md).
+
 Matched deletion follow-up (2026-11-16): two additional real original/Fountain
 workflows verify 26 parity and four improvement outcomes across 30 checks, with
 zero regression. Native explicit deletion explanations, whitespace-intent gating

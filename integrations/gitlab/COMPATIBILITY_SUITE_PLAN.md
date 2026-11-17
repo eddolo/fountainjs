@@ -6,6 +6,8 @@ zero regression and four shared-limitation outcomes across 36 invariants. Absolu
 feature acceptance remains false. [Results and reproduction](COMPATIBILITY_RESULTS.md).
 A second matched deletion pair adds 26 parity/four improvement outcomes across
 30 checks in two scenarios, with zero regression. [Deletion results](COMPATIBILITY_DELETION_RESULTS.md).
+A third matched posted-review pair verifies 21 parity checks for source/range
+editing, undo/redo and save/reopen/application. [Review results](COMPATIBILITY_REVIEW_RESULTS.md).
 Earlier native journeys/API controls remain separate single-sided evidence.
 
 ## Comparison contract
@@ -93,7 +95,8 @@ one substep does not establish that Fountain is globally better than Tiptap.
    backslash-n, genuine U+E000, zero-width text and trailing whitespace; insert,
    save, reopen and apply. Compare exact source and resulting file/commit.
 2. Posted suggestion editing: change source/range, undo/redo, save/reopen, then
-   apply. Verify comment updates do not write repository content before Apply.
+   apply. One symmetric expansion is now matched through both actual UIs, with
+   no early source commit. Shrinking/asymmetric/stale/concurrent ranges remain.
 3. Empty and whitespace source: separately compare preserved Markdown, intended
    file effect, warnings/confirmation and actual application. Stock GitLab's
    whitespace-only source becomes deletion. The matched empty/one-newline UI
@@ -134,8 +137,8 @@ handoff discovery is retained; predefined immediate and settled profiles run
 identically on both sides. The comparator refuses environment/input/instrument
 mismatches, missing editor proof and unobserved outcomes.
 
-Next: extend matched workflows to posted source/range editing, wider deletion
-ranges/whitespace inputs, clipboard/tables/tasks/media and then roles/concurrency,
+Next: extend matched workflows to shrinking/asymmetric/stale source ranges,
+wider deletion ranges/whitespace inputs, clipboard/tables/tasks/media and then roles/concurrency,
 additional browsers/mobile and matched restart. Keep the shared Applied-history
 failure open. Add repeated profiles before making frequency/performance claims.
 No broad superiority claim or release promotion follows from this initial corpus.

@@ -1,0 +1,26 @@
+{
+  "formatVersion": 1,
+  "workflow": "posted-suggestion-source-range-review",
+  "title": "Paired posted source and range review",
+  "marker": "Compatibility posted review",
+  "sourceObservationDelayMs": 1500,
+  "historyBoundaryDelayMs": 700,
+  "cases": [
+    {
+      "id": "posted-range-review",
+      "scope": "review",
+      "filePath": "paired-review.js",
+      "source": "before();\nold();\nafter();\nkeep();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "editedRange": {
+        "start": 1,
+        "end": 3
+      },
+      "replacement": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "handoffDelayMs": 1500
+    }
+  ]
+}

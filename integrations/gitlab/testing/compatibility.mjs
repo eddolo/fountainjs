@@ -39,6 +39,15 @@ function observedValues(report,item,input,fixture){
   const first=suggestionBlock(item.sourceAtFirstVisible),settled=suggestionBlock(item.sourceModeBeforeEdit),saved=suggestionBlock(item.saved?.body);
   const result={prefill,firstSource:first?.source,settledSource:settled?.source,range:settled?.params};
   if(input.scope==='handoff')return result;
+  if(input.scope==='review'){
+    const review=item.review;
+    result.reviewInitial=review?.initial;result.reviewBeforeRange=review?.beforeRange;result.reviewAfterRange=review?.afterRange;
+    result.reviewUndo=review?.afterUndo;result.reviewRedo=review?.afterRedo;
+    const draft=suggestionBlock(review?.sourceBeforeSave),edited=suggestionBlock(review?.saved?.body),reopened=suggestionBlock(item.reopenedSource);
+    result.reviewDraftSource=draft?.source;result.reviewDraftRange=draft?.params;
+    result.reviewSavedBody=review?.saved?.body;result.reviewReopenedSource=reopened?.source;result.reviewReopenedRange=reopened?.params;
+    if(item.appliedNote?.suggestions?.length===1)result.appliedFlagAtCommit=item.appliedNote.suggestions[0].applied;
+  }
   if(input.scope==='deletion'){
     result.richReplacement=item.deletion?.richSource;
     result.deletionExplanation=item.deletion?.explicitDeletionExplanation;
@@ -80,6 +89,23 @@ export function compareGitLabCompatibility(original,fountain){
     const deletion=input.scope==='deletion',editedSource=deletion?input.replacement:source;
     const specs=[['prefill','Selected source characters',selected],['firstSource','Source at first visible Markdown field',editedSource],
       ['settledSource','Source after declared observation window',editedSource],['range','Selected target offsets',`-${input.range.end-input.range.start}+0`]];
+    const review=input.scope==='review';
+    if(review){
+      const range=input.editedRange,params=`-${input.range.end-range.start}+${range.end-input.range.end}`;
+      const before={source:input.replacement,range:input.range},after={source:input.replacement,range};
+      const remaining=lines.slice(0,range.start-1).join('\n');
+      const applied=(remaining?remaining+'\n':'')+input.replacement+lines.slice(range.end).join('\n');
+      specs.push(['savedSource','Initial posted proposal retains original source',source],['savedRange','Initial posted proposal retains target offsets',`-${input.range.end-input.range.start}+0`],
+        ['reviewInitial','Posted proposal reopens with exact source and range',{source,range:input.range}],
+        ['reviewBeforeRange','Editing source retains the original target range',before],['reviewAfterRange','Expanding the range retains edited source',after],
+        ['reviewUndo','Undoing range adjustment restores prior range and preserves edited source',before],['reviewRedo','Redoing range adjustment restores expanded range and edited source',after],
+        ['reviewDraftSource','Source-mode handoff retains reviewed source',input.replacement],['reviewDraftRange','Source-mode handoff retains reviewed offsets',params],
+        ['reviewSavedBody','Saving review changes only the intended source and range','```suggestion:'+params+'\n'+input.replacement+'```\n\n'+fixture.marker],
+        ['reviewReopenedSource','Reloading reviewed rich proposal retains source',input.replacement],['reviewReopenedRange','Reloading reviewed rich proposal retains offsets',params],
+        ['beforeApplySource','Posted review does not write repository contents',input.source],['noEarlyCommit','Posted review does not create a source commit',true],
+        ['appliedSource','Applying reviewed proposal changes exactly the expanded target',applied],['singleApplyCommit','Application creates one child of the seed commit',true],
+        ['appliedFlagAtCommit','Reviewed application has Applied metadata immediately after commit',true]);
+    }
     if(deletion){
       const remaining=[...lines.slice(0,input.range.start-1),...lines.slice(input.range.end)].join('\n');
       specs.push(['richReplacement','Rich editing preserves exact empty or whitespace replacement',input.replacement],
@@ -91,7 +117,7 @@ export function compareGitLabCompatibility(original,fountain){
         ['appliedSource','Deletion removes only the intended file lines',remaining],['singleApplyCommit','Application creates one child of the seed commit',true],
         ['appliedFlagAtCommit','Successful deletion has Applied metadata immediately after commit',true]);
     }
-    if(input.scope!=='handoff'&&!deletion)specs.push(['savedSource','Saved replacement source',replacement],['savedRange','Saved target offsets',`-${input.range.end-input.range.start}+0`],
+    if(input.scope!=='handoff'&&!deletion&&!review)specs.push(['savedSource','Saved replacement source',replacement],['savedRange','Saved target offsets',`-${input.range.end-input.range.start}+0`],
       ['beforeApplySource','Draft does not write repository contents',input.source],['noEarlyCommit','Draft does not create a source commit',true],
       ['appliedSource','Applied repository file contents',expectedFile],['singleApplyCommit','Application creates one child of the seed commit',true],
       ['proseOnlyBody','Prose editing changes only the intended comment suffix',true],['noProseFileChange','Prose editing retains repository content and head',true],

@@ -98,3 +98,26 @@ it('does not hide changed whitespace source behind an equivalent deletion result
  expect(result.rows.find((row:any)=>row.invariant==='appliedSource').classification).toBe('parity');
  expect(result.regressionGate.passed).toBe(false);
 });
+
+function reviewReports(){
+ const pair=reports();
+ for(const report of pair){
+  const input:any=report.fixture.cases[0];Object.assign(input,{scope:'review',source:'before\nexact\nafter\nkeep\n',range:{start:2,end:2},editedRange:{start:1,end:3},replacement:'new\n'});
+  (report.fixture as any).marker='review';const item:any=report.observations[0];item.input=structuredClone(input);
+  item.saved={body:'```suggestion:-0+0\nexact\n```\n\nreview'};
+  const before={source:'new\n',range:{start:2,end:2}},after={source:'new\n',range:{start:1,end:3}};
+  item.review={initial:{source:'exact\n',range:{start:2,end:2}},beforeRange:before,afterRange:after,afterUndo:before,afterRedo:after,
+   sourceBeforeSave:'```suggestion:-1+1\nnew\n```\n\nreview',saved:{body:'```suggestion:-1+1\nnew\n```\n\nreview'}};
+  item.reopenedSource=item.review.saved.body;item.setup={seedCommit:'seed'};item.beforeApplyHead='seed';item.beforeApplyFile={content:Buffer.from(input.source).toString('base64')};
+  item.appliedFile={content:Buffer.from('new\nkeep\n').toString('base64')};item.appliedCommit={id:'apply',parent_ids:['seed']};item.appliedNote={suggestions:[{applied:true}]};
+ }
+ return pair;
+}
+it('checks posted source/range history and final file effects independently',()=>{
+ const result=compareGitLabCompatibility(...reviewReports());expect(result.summary.parity).toBe(21);expect(result.summary.total).toBe(21);expect(result.featureAcceptance.passed).toBe(true);
+});
+it('fails reviewed range/history source loss even when the applied file is correct',()=>{
+ const [original,fountain]=reviewReports();(fountain.observations[0] as any).review.afterUndo={source:'lost\n',range:{start:2,end:2}};
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.regression).toBe(1);expect(result.regressionGate.passed).toBe(false);
+ expect(result.rows.find((row:any)=>row.invariant==='appliedSource').classification).toBe('parity');
+});

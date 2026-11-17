@@ -1,0 +1,116 @@
+{
+  "scope": "One matched real posted source/range review, with separate source/history/save/reopen/repository invariants. Not full GitLab parity.",
+  "parentRevision": "73cf32c7d191d4e490793f65e38b24207462db63",
+  "comparison": {
+    "path": "artifacts/gitlab-compatibility/review-20261116/comparison-1/report.json",
+    "parity": 21,
+    "improvement": 0,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 21,
+    "environmentMatched": true,
+    "complete": true,
+    "regressionGatePassed": true,
+    "candidateReviewFixtureAcceptance": true
+  },
+  "overallProductAcceptance": false,
+  "findings": [
+    "Both actual editors preserve edited special-character source while expanding the target range, undoing/redoing, saving and reopening.",
+    "Both apply only the intended three-line target as one child commit, with no repository write before Apply.",
+    "No extra superiority classification is assigned for the original two-action versus native one-action range history."
+  ],
+  "diagnostics": {
+    "originalUndoActions": 2,
+    "fountainUndoActions": 1
+  },
+  "verification": {
+    "integrationTests": 1383,
+    "files": 54,
+    "comparisonPolicyTests": 19,
+    "strictTypes": true,
+    "applicationStopped": true,
+    "unchangedEditorRuntimeHash": true,
+    "sourceProvenance": {
+      "scope": "Pinned upstream source and actual shared packaged server provenance. Package versions are upstream lock entries; active editor identity is separately observed in UI.",
+      "sourceRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+      "packagedRevision": "0d4c9a9a2fa",
+      "packages": {
+        "@tiptap/core": {
+          "descriptor": "^2.27.3",
+          "lockedVersion": "2.27.3"
+        },
+        "@tiptap/pm": {
+          "descriptor": "^2.27.3",
+          "lockedVersion": "2.27.3"
+        },
+        "@tiptap/vue-2": {
+          "descriptor": "^2.27.3",
+          "lockedVersion": "2.27.3"
+        }
+      },
+      "hashes": {
+        "yarn.lock": "fc13092874bb930af55b882372b530f6936aea9519d449c21c174232156be538",
+        "app/assets/javascripts/content_editor/components/wrappers/code_block.vue": "b88b3264286ee2abab07fab4ae295b3b113e5c88d72ddee048af18c78118e4e6",
+        "app/assets/javascripts/content_editor/extensions/code_suggestion.js": "118b972333a36faaa92ebd11c29708f872f55a61d5aac5ce2241a2dcc23f29fb",
+        "app/assets/javascripts/content_editor/components/editor_state_observer.vue": "c5679e7841ef19eccc83524527d7fbe55f3e9d8f2fa372cdf487dbaf7cf0bd17",
+        "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
+        "app/services/notes/update_service.rb": "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2",
+        "app/services/suggestions/create_service.rb": "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a",
+        "lib/gitlab/diff/suggestion.rb": "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546"
+      },
+      "packagedServerSourcesMatch": true,
+      "nativeRuntimeSha256": "90d81cd3b310db40a95608ddf807ba3c067936ac1f7608bfa9014b3d1c18bf31",
+      "candidateParent": "73cf32c7d191d4e490793f65e38b24207462db63"
+    },
+    "visualReview": "Inspected actual original/native changed rich proposals, native range dialog, reopened source and Applied reader. Exact source/API/file bytes support character and commit evidence."
+  },
+  "retainedRequirements": [
+    "Applied-history retention after later prose-only edits still fails in the earlier matched corpus.",
+    "Stock whitespace-only suggestions still apply as deletion, not meaningful blank lines.",
+    "Shrinking/asymmetric/stale/concurrent ranges, roles, mobile/other browsers and matched restarts remain."
+  ],
+  "limits": [
+    "One Linux Chromium run and one symmetric range expansion.",
+    "Undo action counts are diagnostics, not performance/ergonomics wins.",
+    "No engine runtime/API/capacity/version/publication/website claim change."
+  ],
+  "hashes": {
+    "scripts/run-gitlab-compatibility.mjs": "f2fc9cefd6e8c3831f5c707a264355232b3ea0bb22c1b1d71c64b121eb3fe7cb",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6",
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "c5146468b9ac7edffdfdce0237121301f802b851284a1ebd2a76d253a4f35478",
+    "integrations/gitlab/fixtures/compatibility-reviews.json": "982b51125f5c4a45b04615ec6b2d24331c4a085150b23f72c27ea45a46e7229a",
+    "tests/gitlab-compatibility.test.ts": "bbcc3da1c1fcbec6d7a358d013f235f74911d372775987bdcccb06afdb6f729d",
+    "integrations/gitlab/COMPATIBILITY_REVIEW_RESULTS.md": "542220f1b2200af39197112fb8edaf8189b36055a4328da7b72ec3b066ffb9c4",
+    "integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md": "f0c24fbdc5617810edb728454618a3cce974ec8b6f80d780d206bf0d793cd73e",
+    "artifacts/record-gitlab-review-source-20261116.mjs": "dfe1c8e702367c62c910b22258e8f833a71c7b8332fe3cc2acaa1009e2441a52",
+    "artifacts/compatibility-review-original-20261116.log": "9cef22cae158f8677c8f30f99038ea71108c9bb509720ecc53e17be5ed9296fd",
+    "artifacts/compatibility-review-fountain-20261116.log": "e4810facf0b81d433a8dbd9bab80a84c51d9653560f0716d61083386f5de3720",
+    "artifacts/compatibility-review-all-unit-20261116.log": "4ee996bf90efc13ef2bfd391cf20836ee87055fb47861f6210f429fff54e9f6b",
+    "artifacts/compatibility-review-types-20261116.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gitlab-compatibility/switch-20261116/comparison-4/report.json": "4b731305c181288a59c71087b3f4af2e111c3935eb00986d44e23d6fdc58e487",
+    "artifacts/gitlab-compatibility/switch-20261116/comparison-4/report.md": "3057aab69033f92ccfe1d3a626fe2c12bcc4f852cb02e1b87729ac5dbbd602b4",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/comparison-2/report.json": "cda9d6993d6587d5078da59c07a88941261392be986915bb479fb42b66952ea2",
+    "artifacts/gitlab-compatibility/deletion-keyboard-20261116/comparison-2/report.md": "9f34940b38007e53bd00f45b9e8ea5900e2eecb5fc331802c0213ea3ef57945f",
+    "artifacts/gitlab-compatibility/review-20261116/original-1/report.json": "7330fce8b865be25d09c83227f4eb1d36b0e446ecdf496bae326e06651f2f604",
+    "artifacts/gitlab-compatibility/review-20261116/fountain-1/report.json": "a483c9c92202142e85b6e8954c3c548236c248e288e33c5c73d6bf2c4c42dcd8",
+    "artifacts/gitlab-compatibility/review-20261116/comparison-1/report.json": "914136430ac18d4d8755eceada48d65a91b576fad530bdc6d3ab0330a1046136",
+    "artifacts/gitlab-compatibility/review-20261116/comparison-1/report.md": "c649338a0d4335ac994ea9e1a2415f5b36cbf444680f6a9ccfa36dc0376658af",
+    "artifacts/gitlab-compatibility/review-20261116/source-provenance.json": "cb9e46841ddf3c3e3359ddde84ef16fd03bbe938e02c6266e45dbad9c382949c",
+    "artifacts/gitlab-compatibility/review-20261116/original-1/posted-range-review-after-redo.png": "201627b33f89ea9637f22e7b719193702487478c973fcc0583b495dad6047552",
+    "artifacts/gitlab-compatibility/review-20261116/original-1/posted-range-review-applied.png": "d0c23595bad9ee9d82d6f82f60b7daf4a92c8f28c8c4f61cb7c22f553e431f07",
+    "artifacts/gitlab-compatibility/review-20261116/original-1/posted-range-review-changed-rich.png": "1e8da4212c8889467cbe07a3f2135beb38fce303564dff2fc01704fd5cf8633a",
+    "artifacts/gitlab-compatibility/review-20261116/original-1/posted-range-review-posted.png": "c61d6a44d0d046c6b62b381c98cd4354b9d65f5048764108b91dc2f30a08a67d",
+    "artifacts/gitlab-compatibility/review-20261116/original-1/posted-range-review-reopened-source.png": "43e405d4d24aee2c6040d3ad6f8c369961e9d05f1bbbc2f49192ad614037e491",
+    "artifacts/gitlab-compatibility/review-20261116/original-1/posted-range-review-source-draft.png": "499bbb43e45a51c744ac54b82d891d263c6db95f890d6a5f35a1bf79bfcf16f6",
+    "artifacts/gitlab-compatibility/review-20261116/fountain-1/posted-range-review-after-redo.png": "385796b0ea44d84d9a0916d8ebd4e7c24e8c9deea0932ef21d8f9a78a7d3522e",
+    "artifacts/gitlab-compatibility/review-20261116/fountain-1/posted-range-review-applied.png": "7106ae0ba7e90c6357638032a3c5d0d42b5d353198f23760642758fd83617f4c",
+    "artifacts/gitlab-compatibility/review-20261116/fountain-1/posted-range-review-changed-rich.png": "22fe49cc4a2c2cd5e9f74e2dca66d7a5009df3754c122bc5173de505c59d33dd",
+    "artifacts/gitlab-compatibility/review-20261116/fountain-1/posted-range-review-posted.png": "525cb24cfdcceb0a50eb0e38508feee59c43a170b70a7818f445e4272a835a7e",
+    "artifacts/gitlab-compatibility/review-20261116/fountain-1/posted-range-review-range-dialog.png": "4d6a94407a8e3ac59777f6578e9068bae4e73961d8ea464ccbb4bd63715fd074",
+    "artifacts/gitlab-compatibility/review-20261116/fountain-1/posted-range-review-reopened-source.png": "2c8109656568dea251ec3a3a47442be6ec7ed01feba1c8d54a5dc589a09d3a33",
+    "artifacts/gitlab-compatibility/review-20261116/fountain-1/posted-range-review-source-draft.png": "b0def1b3dfbc7029588ed0111a7e58fc9d6708a1cc57f75039a42a6b3fc474c5"
+  }
+}
