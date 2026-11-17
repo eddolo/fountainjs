@@ -171,3 +171,9 @@ The [matched task lifecycle](COMPATIBILITY_TASK_RESULTS.md) adds 22 parity/four
 improvement checks after repairing a native list-exit Save blocker. The four
 improvements concern one empty-task Enter behavior. Prior diagnostic/collector
 and startup failures remain retained; wider task/role/platform coverage remains.
+
+The [matched recovery follow-up](COMPATIBILITY_TASK_RECOVERY_RESULTS.md) verifies
+populated leaf-item deletion, reopened/reader checkbox updates and actual command
+effects. It adds 48 parity/eight correlated improvement checks for one scoped
+literal-text boundary, with a working active-root control. Wider task/role/platform
+coverage remains; original/native startup failures are retained separately.

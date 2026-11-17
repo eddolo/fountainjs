@@ -1,5 +1,14 @@
 # GitLab application integration
 
+Matched task recovery follow-up (2026-11-17): real populated leaf-item deletion,
+two-step undo/redo, reopened editor checkboxes and reader checkbox persistence
+pass. Two command-intent profiles yield 48 parity/eight improvement checks; the
+improvements concern one literal-container boundary, with an actual root-command
+positive control. 1,437 integration tests / 56 files and strict types pass. Terminal
+startup failures are retained separately; the runner now detects confirmed exits
+promptly without changing backend requirements. Wider role/platform/application
+coverage remains open. [Recovery evidence](COMPATIBILITY_TASK_RECOVERY_RESULTS.md).
+
 Matched task follow-up (2026-11-17): the actual original/Fountain lifecycle
 verifies 22 parity and four improvement checks across 26 invariants. The improved
 checks concern one empty-task Enter/list-exit behavior. A native conversion error

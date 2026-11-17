@@ -1,0 +1,1179 @@
+{
+  "formatVersion": 1,
+  "runId": "task-recovery-20261117",
+  "attempt": 1,
+  "side": "fountain",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "task-recovery",
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-task-recovery.json",
+  "fixtureHash": "7cf9f091f4bdef8ea5cb503a7c409bcf6ed9faf3cf625423c4634588973378e2",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "populated-task-deletion-and-reopened-controls",
+    "settlingMs": 700,
+    "cases": [
+      {
+        "id": "root-active",
+        "scope": "task-recovery",
+        "title": "Task recovery with active root command",
+        "markdown": "## Task recovery\n\n- [ ] Keep first\n- [x] Remove this task\n- [ ] Parent **review**\n  - [x] Nested check\n- [ ] Keep last\n\nWrite literal here.\n\nEnd of task recovery.",
+        "expectedState": "closed",
+        "expectedGraphs": {
+          "initial": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Remove this task",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "cleared": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "removed": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "removeUndo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "textUndo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Remove this task",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "textRedo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "removeRedo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "final": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "/close",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "reopened": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "toggled": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "toggleUndo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "toggleRedo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "readerReopened": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": true,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          }
+        }
+      },
+      {
+        "id": "scoped-literal",
+        "scope": "task-recovery",
+        "title": "Task recovery with literal container",
+        "markdown": "## Task recovery\n\n<div dir=\"auto\">\n\n- [ ] Keep first\n- [x] Remove this task\n- [ ] Parent **review**\n  - [x] Nested check\n- [ ] Keep last\n\nWrite literal here.\n\n</div>\n\nEnd of task recovery.",
+        "expectedState": "opened",
+        "expectedGraphs": {
+          "initial": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Remove this task",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "cleared": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "removed": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "removeUndo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "textUndo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Remove this task",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "textRedo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "removeRedo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Write literal here.",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "final": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "/close",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "reopened": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "/close",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "toggled": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "/close",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "toggleUndo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "/close",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "toggleRedo": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "/close",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          },
+          "readerReopened": {
+            "headings": [
+              "Task recovery"
+            ],
+            "tasks": [
+              {
+                "text": "Keep first",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Nested check",
+                "checked": true,
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "checked": true,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "/close",
+              "End of task recovery."
+            ],
+            "bold": [
+              "review"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "observations": [],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "18657777998e2a06da17cf1a3f9bf4926adff2e51ffa28615a4fd094f6ac433b",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "c31222766259f281ee92a9f9c07f6702b0a5cd2792e5f1b5f26c2fe6226e4fdf",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "8729a9e6b38d0b4c39838af7f4eef59bb4a94790381bcbb5fec26070fb5aa0b7",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [
+      {
+        "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+        "readOnly": true
+      }
+    ],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "ENABLE_RSPACK=true",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 16,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 17,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 18,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 19,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 20,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 21,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 22,
+      "running": false,
+      "status": "exited",
+      "health": "unhealthy",
+      "exitCode": 1
+    }
+  ],
+  "failure": "Deployment/authentication preflight failed; no credentialed details recorded."
+}

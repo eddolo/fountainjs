@@ -1,0 +1,155 @@
+{
+  "scope": "Two matched Linux Chromium checklist-recovery/command-intent profiles. Eight correlated improvements for one literal-container behavior; not full product or release acceptance.",
+  "parentRevision": "22899c184946ff0abab9d8dbf91ee6cdb77e2987",
+  "checks": {
+    "integrationTests": 1437,
+    "integrationFiles": 56,
+    "focusedPolicyAndReadinessTests": 69,
+    "strictTypes": true,
+    "freshOriginalAndNativeReaderPersistence": true,
+    "sameBackendAndResourceCaps": true,
+    "runtimeInputsUnchanged": true
+  },
+  "visualReview": {
+    "method": "Inspected original PNG bytes via image/png emission.",
+    "reviewed": [
+      "original root reader-after",
+      "original scoped removed/reader-after",
+      "native scoped removed/reader-after/reader-reopened",
+      "native root reader-after/reopened"
+    ],
+    "nativeLiteralIssueOpen": true,
+    "bothRootCommandIssuesClosed": true,
+    "readerCompletionDisplay": "3 of 4"
+  },
+  "files": [
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/comparison-1/report.json",
+      "sha256": "9b00abbba3dd3c79ad0148a43fc26cc4621d7d4d4af32d9fb97d4057c55eed4c"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/comparison-1/report.md",
+      "sha256": "75b7a5011dc465c05c6feaf6aa96dc93a261260bd1aaed9a42494a9a074702a9"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/fountain-1/report.json",
+      "sha256": "72d28f2d37cb9eeb698a29480d3945eeb1f8801844cdd18ebb66ba573858e157"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/fountain-2/report.json",
+      "sha256": "476e003fba17bb0a83bba8701fd7295f14fdb1eb906b92e0065cc01dc3a56818"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/fountain-2/root-active-reader-after.png",
+      "sha256": "f10882a697efd6ea674580b41f7ba642c0c427249376d63ae49e6a3c6e99ac88"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/fountain-2/root-active-reopened.png",
+      "sha256": "afffb52819eaac1a6784d36ed65e516d48478a177bce02144eaab51e357008db"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/fountain-2/scoped-literal-reader-after.png",
+      "sha256": "eee4eda17911befe18493d5dc5665f4164dd48cf74f202bcea1cbea2a4d07961"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/fountain-2/scoped-literal-reader-reopened.png",
+      "sha256": "978f8600282e7afaf38c722273cad5bf3835d239ec7c2fd0ecabff64b5f21c02"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/fountain-2/scoped-literal-removed.png",
+      "sha256": "e07a2f6f61001192739d273fedbd56d47ca621e1fe1ea1a9c32275e3bb3d4c4e"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/initial-instrument/audit-gitlab-compatibility-task-recovery.mjs",
+      "sha256": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/initial-instrument/compatibility-task-recovery.json",
+      "sha256": "7cf9f091f4bdef8ea5cb503a7c409bcf6ed9faf3cf625423c4634588973378e2"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/initial-instrument/compatibility.mjs",
+      "sha256": "8fc463535fe9cab4940d0bc9ab109e91ff36ae4a06bca1d98a01b043efb813c7"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/initial-instrument/manifest.json",
+      "sha256": "29b7a4c277f9dee45cd96512a00f655893e6c8cef846fa56cf26fb3a192df33f"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/initial-instrument/run-gitlab-compatibility.mjs",
+      "sha256": "60b9b23fa2b034690607075b3ad4f2dcbff3abda92de761e00110febdc98eefd"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/original-1/report.json",
+      "sha256": "8061c307ba9f362fadd0ccbf6c19ed1ff0cbfc43e386cc809c5e35694cb8c609"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/original-2/report.json",
+      "sha256": "15236ff540eb54f1fe0b4c2f3f3200de78ff1ee2d8f866ce0dd6f10f115a9162"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/original-2/root-active-reader-after.png",
+      "sha256": "7c31a7f4a7d7317be1d84e61c61660ed6e472f81b43bbd3c3e5c5892b3e32cb3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/original-2/scoped-literal-reader-after.png",
+      "sha256": "64f5a3668b189d17d404a84c9db056e8d24aa93942443c0fb847b8a595c52a46"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/original-2/scoped-literal-reader-reopened.png",
+      "sha256": "d610aa496ce2e78adb451dee17453426bce12ce8d67bf9927a9ac9ce118dbf92"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/original-2/scoped-literal-removed.png",
+      "sha256": "1ddfef5c0d53570e7adecfced60692e800cc47cd342bc6d8a4734c2e471aec0d"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/verification/gitlab-recovery-startup-policy-20261117.txt",
+      "sha256": "9d57a88704ebd0de8c1a59b37c7fcb8bbcc67216880779223a4fc079d842ab59"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/verification/gitlab-task-recovery-all-20261117.txt",
+      "sha256": "49eb2308ce739552d3606a0836613d4b425f6735e6266e43ae64a10fc087adbe"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/verification/log-provenance.json",
+      "sha256": "56026f9861adb49afca9f5ae0c8390a0c18e09093fce4b545f7ed166f4d9c6b1"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/compatibility-task-recovery.json",
+      "sha256": "7cf9f091f4bdef8ea5cb503a7c409bcf6ed9faf3cf625423c4634588973378e2"
+    },
+    {
+      "path": "integrations/gitlab/testing/compatibility.mjs",
+      "sha256": "8fc463535fe9cab4940d0bc9ab109e91ff36ae4a06bca1d98a01b043efb813c7"
+    },
+    {
+      "path": "scripts/audit-gitlab-compatibility-task-recovery.mjs",
+      "sha256": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b"
+    },
+    {
+      "path": "scripts/gitlab-deployment-readiness.mjs",
+      "sha256": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00"
+    },
+    {
+      "path": "scripts/run-gitlab-compatibility.mjs",
+      "sha256": "18657777998e2a06da17cf1a3f9bf4926adff2e51ffa28615a4fd094f6ac433b"
+    },
+    {
+      "path": "tests/gitlab-compatibility.test.ts",
+      "sha256": "c5b95e91c035e587cf659b51910b985ebbdba6a0e37b3c454f9079a11f628954"
+    },
+    {
+      "path": "tests/gitlab-deployment-readiness.test.ts",
+      "sha256": "52459e33599d4b6dd0e38e8830c3bcb3200081c583f4ed2a35ee9f47c850794c"
+    }
+  ],
+  "currentRuntime": {
+    "path": "artifacts/gitlab-native-runtime/build.json",
+    "sha256": "de73433cebb4fb21d59b13638821a2ddd0c95966c09474a8336274e518f8a92d"
+  },
+  "localTypeLog": {
+    "path": "artifacts/gitlab-task-recovery-types-20261117.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -89,6 +89,20 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='task-recovery'){
+      const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
+      const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});
+      for(const [phase,expected]of Object.entries(input.expectedGraphs))add(phase+'.graph',phase+': exact task text/state/nesting, marks and prose',expected,left?.graphs?.[phase],right?.graphs?.[phase]);
+      add('delete.selection','Actual populated-task text selected before deletion','Remove this task',left?.selectedTaskText,right?.selectedTaskText);
+      add('paragraph.selection','Actual intended command paragraph selected','Write literal here.',left?.selectedParagraph,right?.selectedParagraph);
+      for(const phase of ['saved','toggledSaved','readerAfter'])add(phase+'.state','Host issue state after '+phase,input.expectedState,left?.[phase]?.state,right?.[phase]?.state);
+      for(const [phase,graph]of [['saved','reopened'],['toggledSaved','toggleRedo'],['readerAfter','readerReopened']]){const tasks=input.expectedGraphs[graph].tasks;add(phase+'.tasks','Backend task counts after '+phase,{count:tasks.length,completed_count:tasks.filter(task=>task.checked).length},left?.[phase]?.task_completion_status,right?.[phase]?.task_completion_status);}
+      for(const phase of ['saved','toggledSaved'])add(phase+'.reachable','Normal Save is reachable: '+phase,true,left?.[phase+'Reachable'],right?.[phase+'Reachable']);
+      for(const key of ['visible','enabled'])add('reopenedCheckbox.'+key,'Reopened editor checkbox is '+key,true,left?.reopenedCheckbox?.[key],right?.reopenedCheckbox?.[key]);
+      for(const key of ['visible','enabled'])add('readerCheckbox.'+key,'Reader checkbox is '+key,true,left?.readerCheckbox?.[key],right?.readerCheckbox?.[key]);
+      add('reader.persisted','Real reader checkbox updates the persisted task counts',true,left?.readerPersisted,right?.readerPersisted);
+      continue;
+    }
     if(input.scope==='tasks'){
       const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
       const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});

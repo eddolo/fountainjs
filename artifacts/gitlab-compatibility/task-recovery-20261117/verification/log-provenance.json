@@ -1,0 +1,19 @@
+{
+  "scope": "LF-readable archives with one final newline; original collected bytes preserved as base64.",
+  "files": [
+    {
+      "originalPath": "artifacts/gitlab-task-recovery-all-20261117.log",
+      "originalSha256": "cc9cf74266a81c06a0a5ef82c28d2922f7782dc384f19b7ff7ee17345b089d2f",
+      "archive": "artifacts/gitlab-compatibility/task-recovery-20261117/verification/gitlab-task-recovery-all-20261117.txt",
+      "archiveSha256": "49eb2308ce739552d3606a0836613d4b425f6735e6266e43ae64a10fc087adbe",
+      "originalBytesBase64": "DQogUlVOICB2NS4wLjAgQzovVXNlcnMvY2FwcHUvRGVza3RvcC9wYW9sb2FwcC9mYWlsdXJlcy9Gb3VudGFpbmpzLUFwcA0KDQoNCiBUZXN0IEZpbGVzICA1NiBwYXNzZWQgKDU2KQ0KICAgICAgVGVzdHMgIDE0MzcgcGFzc2VkICgxNDM3KQ0KICAgU3RhcnQgYXQgIDEzOjI2OjQ5DQogICBEdXJhdGlvbiAgMjAuMDhzIChpbXBvcnQgMzMlLCBlbnZpcm9ubWVudCAzMSUsIHRlc3RzIDE5JSwgdHJhbnNmb3JtIDE2JSwgd29ya2VyIDElKQ0KDQogICAgIEltcG9ydCAgMTk2IG1vZHVsZXMgd2VyZSBldmFsdWF0ZWQgNTE1IHRpbWVzIMK3IDEwLjIycyB0b3RhbCwgMzMlIG9mIHRyYWNrZWQgdGltZQ0KICAgICAgICAgICAgIH4yLjIycyBmYXN0ZXIgd2l0aCBpc29sYXRlOiBmYWxzZSDigJQgc2hhcmVkIG1vZHVsZXMgYXJlIGV2YWx1YXRlZCBvbmNlIHBlciB3b3JrZXIgaW5zdGVhZCBvZiBvbmNlIHBlciBmaWxlDQogICAgICAgICAgICAgbGVhcm4gbW9yZTogaHR0cHM6Ly92aXRlc3QuZGV2L2d1aWRlL2ltcHJvdmluZy1wZXJmb3JtYW5jZSN0ZXN0LWlzb2xhdGlvbg0KDQo="
+    },
+    {
+      "originalPath": "artifacts/gitlab-recovery-startup-policy-20261117.log",
+      "originalSha256": "7ed68a8fa829180756910e7e0eeb2bc3e22e2c8728e5dfeb91ff44f52fd6e955",
+      "archive": "artifacts/gitlab-compatibility/task-recovery-20261117/verification/gitlab-recovery-startup-policy-20261117.txt",
+      "archiveSha256": "9d57a88704ebd0de8c1a59b37c7fcb8bbcc67216880779223a4fc079d842ab59",
+      "originalBytesBase64": "DQogUlVOICB2NS4wLjAgQzovVXNlcnMvY2FwcHUvRGVza3RvcC9wYW9sb2FwcC9mYWlsdXJlcy9Gb3VudGFpbmpzLUFwcA0KDQoNCiBUZXN0IEZpbGVzICAyIHBhc3NlZCAoMikNCiAgICAgIFRlc3RzICA2OSBwYXNzZWQgKDY5KQ0KICAgU3RhcnQgYXQgIDEzOjE4OjI1DQogICBEdXJhdGlvbiAgNDY5bXMgKHRyYW5zZm9ybSA0MCUsIHRlc3RzIDM3JSwgaW1wb3J0IDE4JSwgd29ya2VyIDYlKQ0KDQo="
+    }
+  ]
+}

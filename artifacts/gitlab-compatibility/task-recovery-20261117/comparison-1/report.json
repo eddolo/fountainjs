@@ -1,0 +1,3368 @@
+{
+  "formatVersion": 1,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "task-recovery-20261117",
+      "attempt": 2
+    },
+    "fountain": {
+      "runId": "task-recovery-20261117",
+      "attempt": 2
+    }
+  },
+  "rows": [
+    {
+      "case": "root-active",
+      "invariant": "initial.graph",
+      "label": "initial: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "cleared.graph",
+      "label": "cleared: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "removed.graph",
+      "label": "removed: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "removeUndo.graph",
+      "label": "removeUndo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "textUndo.graph",
+      "label": "textUndo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "textRedo.graph",
+      "label": "textRedo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "removeRedo.graph",
+      "label": "removeRedo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "final.graph",
+      "label": "final: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "reopened.graph",
+      "label": "reopened: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "toggled.graph",
+      "label": "toggled: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "toggleUndo.graph",
+      "label": "toggleUndo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "toggleRedo.graph",
+      "label": "toggleRedo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "readerReopened.graph",
+      "label": "readerReopened: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": true,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": true,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": true,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "delete.selection",
+      "label": "Actual populated-task text selected before deletion",
+      "expected": "Remove this task",
+      "original": "Remove this task",
+      "fountain": "Remove this task",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "paragraph.selection",
+      "label": "Actual intended command paragraph selected",
+      "expected": "Write literal here.",
+      "original": "Write literal here.",
+      "fountain": "Write literal here.",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "saved.state",
+      "label": "Host issue state after saved",
+      "expected": "closed",
+      "original": "closed",
+      "fountain": "closed",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "toggledSaved.state",
+      "label": "Host issue state after toggledSaved",
+      "expected": "closed",
+      "original": "closed",
+      "fountain": "closed",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "readerAfter.state",
+      "label": "Host issue state after readerAfter",
+      "expected": "closed",
+      "original": "closed",
+      "fountain": "closed",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "saved.tasks",
+      "label": "Backend task counts after saved",
+      "expected": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "toggledSaved.tasks",
+      "label": "Backend task counts after toggledSaved",
+      "expected": {
+        "count": 4,
+        "completed_count": 2
+      },
+      "original": {
+        "count": 4,
+        "completed_count": 2
+      },
+      "fountain": {
+        "count": 4,
+        "completed_count": 2
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "readerAfter.tasks",
+      "label": "Backend task counts after readerAfter",
+      "expected": {
+        "count": 4,
+        "completed_count": 3
+      },
+      "original": {
+        "count": 4,
+        "completed_count": 3
+      },
+      "fountain": {
+        "count": 4,
+        "completed_count": 3
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "saved.reachable",
+      "label": "Normal Save is reachable: saved",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "toggledSaved.reachable",
+      "label": "Normal Save is reachable: toggledSaved",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "reopenedCheckbox.visible",
+      "label": "Reopened editor checkbox is visible",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "reopenedCheckbox.enabled",
+      "label": "Reopened editor checkbox is enabled",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "readerCheckbox.visible",
+      "label": "Reader checkbox is visible",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "readerCheckbox.enabled",
+      "label": "Reader checkbox is enabled",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "root-active",
+      "invariant": "reader.persisted",
+      "label": "Real reader checkbox updates the persisted task counts",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "initial.graph",
+      "label": "initial: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "cleared.graph",
+      "label": "cleared: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "removed.graph",
+      "label": "removed: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "removeUndo.graph",
+      "label": "removeUndo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "textUndo.graph",
+      "label": "textUndo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Remove this task",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "textRedo.graph",
+      "label": "textRedo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "removeRedo.graph",
+      "label": "removeRedo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Write literal here.",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "final.graph",
+      "label": "final: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "reopened.graph",
+      "label": "reopened: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "toggled.graph",
+      "label": "toggled: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "toggleUndo.graph",
+      "label": "toggleUndo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "toggleRedo.graph",
+      "label": "toggleRedo: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "readerReopened.graph",
+      "label": "readerReopened: exact task text/state/nesting, marks and prose",
+      "expected": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": true,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": true,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task recovery"
+        ],
+        "tasks": [
+          {
+            "text": "Keep first",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Parent review",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Nested check",
+            "checked": true,
+            "depth": 1
+          },
+          {
+            "text": "Keep last",
+            "checked": true,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "/close",
+          "End of task recovery."
+        ],
+        "bold": [
+          "review"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "delete.selection",
+      "label": "Actual populated-task text selected before deletion",
+      "expected": "Remove this task",
+      "original": "Remove this task",
+      "fountain": "Remove this task",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "paragraph.selection",
+      "label": "Actual intended command paragraph selected",
+      "expected": "Write literal here.",
+      "original": "Write literal here.",
+      "fountain": "Write literal here.",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "saved.state",
+      "label": "Host issue state after saved",
+      "expected": "opened",
+      "original": "closed",
+      "fountain": "opened",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "toggledSaved.state",
+      "label": "Host issue state after toggledSaved",
+      "expected": "opened",
+      "original": "closed",
+      "fountain": "opened",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "readerAfter.state",
+      "label": "Host issue state after readerAfter",
+      "expected": "opened",
+      "original": "closed",
+      "fountain": "opened",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "saved.tasks",
+      "label": "Backend task counts after saved",
+      "expected": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "toggledSaved.tasks",
+      "label": "Backend task counts after toggledSaved",
+      "expected": {
+        "count": 4,
+        "completed_count": 2
+      },
+      "original": {
+        "count": 4,
+        "completed_count": 2
+      },
+      "fountain": {
+        "count": 4,
+        "completed_count": 2
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "readerAfter.tasks",
+      "label": "Backend task counts after readerAfter",
+      "expected": {
+        "count": 4,
+        "completed_count": 3
+      },
+      "original": {
+        "count": 4,
+        "completed_count": 3
+      },
+      "fountain": {
+        "count": 4,
+        "completed_count": 3
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "saved.reachable",
+      "label": "Normal Save is reachable: saved",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "toggledSaved.reachable",
+      "label": "Normal Save is reachable: toggledSaved",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "reopenedCheckbox.visible",
+      "label": "Reopened editor checkbox is visible",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "reopenedCheckbox.enabled",
+      "label": "Reopened editor checkbox is enabled",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "readerCheckbox.visible",
+      "label": "Reader checkbox is visible",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "readerCheckbox.enabled",
+      "label": "Reader checkbox is enabled",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "scoped-literal",
+      "invariant": "reader.persisted",
+      "label": "Real reader checkbox updates the persisted task counts",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    }
+  ],
+  "summary": {
+    "parity": 48,
+    "improvement": 8,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 56
+  },
+  "comparisonComplete": true,
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": true,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/original-2/report.json",
+      "sha256": "15236ff540eb54f1fe0b4c2f3f3200de78ff1ee2d8f866ce0dd6f10f115a9162"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/task-recovery-20261117/fountain-2/report.json",
+      "sha256": "476e003fba17bb0a83bba8701fd7295f14fdb1eb906b92e0065cc01dc3a56818"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "8fc463535fe9cab4940d0bc9ab109e91ff36ae4a06bca1d98a01b043efb813c7"
+  }
+}

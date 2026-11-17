@@ -1,0 +1,31 @@
+{
+  "scope": "Original attempt 1 exited during Nginx log-service reconfiguration before the editor was reached. Preserve the old startup wait and fixture/instruments; no editor outcome is inferred.",
+  "files": [
+    {
+      "path": "scripts/run-gitlab-compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-recovery-20261117/initial-instrument/run-gitlab-compatibility.mjs",
+      "sha256": "60b9b23fa2b034690607075b3ad4f2dcbff3abda92de761e00110febdc98eefd"
+    },
+    {
+      "path": "scripts/audit-gitlab-compatibility-task-recovery.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-recovery-20261117/initial-instrument/audit-gitlab-compatibility-task-recovery.mjs",
+      "sha256": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/compatibility-task-recovery.json",
+      "archive": "artifacts/gitlab-compatibility/task-recovery-20261117/initial-instrument/compatibility-task-recovery.json",
+      "sha256": "7cf9f091f4bdef8ea5cb503a7c409bcf6ed9faf3cf625423c4634588973378e2"
+    },
+    {
+      "path": "integrations/gitlab/testing/compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-recovery-20261117/initial-instrument/compatibility.mjs",
+      "sha256": "8fc463535fe9cab4940d0bc9ab109e91ff36ae4a06bca1d98a01b043efb813c7"
+    }
+  ],
+  "startupFailure": {
+    "exitCode": 1,
+    "oomKilled": false,
+    "finishedAt": "2026-11-17T13:14:56.308392959Z",
+    "reason": "sv restart /opt/gitlab/service/nginx/log timed out during gitlab-ctl reconfigure."
+  }
+}

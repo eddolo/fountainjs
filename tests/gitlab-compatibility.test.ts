@@ -298,3 +298,35 @@ it('leaves a missing task-state observation incomplete rather than treating it a
  const [original,fountain]=taskReports();delete (original.observations[0] as any).graphs.lifted;
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(1);expect(result.comparisonComplete).toBe(false);
 });
+
+function taskRecoveryReports(index=0){
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-task-recovery.json',import.meta.url),'utf8'));
+ const pair=reports();
+ for(const report of pair){
+  const input=structuredClone(fixture.cases[index]);report.fixture.cases=[input];
+  const item:any=report.observations[0];item.id=input.id;item.input=structuredClone(input);item.graphs=structuredClone(input.expectedGraphs);
+  item.selectedTaskText='Remove this task';item.selectedParagraph='Write literal here.';
+  for(const [phase,graph]of [['saved','reopened'],['toggledSaved','toggleRedo'],['readerAfter','readerReopened']]){
+   const tasks=input.expectedGraphs[graph].tasks;item[phase]={state:input.expectedState,task_completion_status:{count:tasks.length,completed_count:tasks.filter((task:any)=>task.checked).length}};
+  }
+  item.savedReachable=true;item.toggledSavedReachable=true;item.reopenedCheckbox={visible:true,enabled:true};item.readerCheckbox={visible:true,enabled:true};item.readerPersisted=true;
+ }
+ return pair;
+}
+it.each([0,1])('classifies explicit root-command and scoped-literal recovery profiles independently (%i)',index=>{
+ const result=compareGitLabCompatibility(...taskRecoveryReports(index));expect(result.summary.parity).toBe(28);expect(result.featureAcceptance.passed).toBe(true);
+});
+it.each([
+ ['reader.persisted',(item:any)=>{item.readerPersisted=false;}],
+ ['saved.state',(item:any)=>{item.saved.state='closed';}],
+ ['readerAfter.tasks',(item:any)=>{item.readerAfter.task_completion_status.completed_count=2;}],
+ ['readerReopened.graph',(item:any)=>{item.graphs.readerReopened.tasks[2].depth=0;}],
+ ['textUndo.graph',(item:any)=>{item.graphs.textUndo.tasks[1].text='Lost original task';}],
+])('rejects live recovery corruption independently: %s',(invariant,mutate)=>{
+ const [original,fountain]=taskRecoveryReports(1);mutate(fountain.observations[0]);const result=compareGitLabCompatibility(original,fountain);
+ expect(result.rows.find((row:any)=>row.invariant===invariant).classification).toBe('regression');expect(result.regressionGate.passed).toBe(false);
+});
+it('does not infer a working reopened checkbox from the saved task count',()=>{
+ const [original,fountain]=taskRecoveryReports();delete (fountain.observations[0] as any).reopenedCheckbox;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(2);expect(result.comparisonComplete).toBe(false);
+});
