@@ -1,0 +1,22 @@
+time="2026-11-17T15:49:52Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"kind":"gitlab-compatibility","side":"original","case":"quoted-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"quoted-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"original","case":"quoted-conversion","stage":"resave-parent"}
+{"kind":"gitlab-compatibility","side":"original","case":"quoted-conversion","stage":"complete"}
+{"kind":"gitlab-compatibility","side":"original","case":"deep-quoted-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"deep-quoted-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"original","case":"deep-quoted-conversion","stage":"resave-parent"}
+{"kind":"gitlab-compatibility","side":"original","case":"deep-quoted-conversion","stage":"complete"}
+{"kind":"gitlab-compatibility","side":"original","case":"listed-quote-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"listed-quote-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"original","case":"listed-quote-conversion","stage":"resave-parent"}
+{"kind":"gitlab-compatibility","side":"original","case":"listed-quote-conversion","stage":"complete"}
+{"kind":"gitlab-compatibility","side":"original","case":"inline-quote-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"inline-quote-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"original","case":"inline-quote-conversion","stage":"resave-parent"}
+{"kind":"gitlab-compatibility","side":"original","case":"inline-quote-conversion","stage":"complete"}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+{"kind":"gitlab-compatibility","side":"original","output":"/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-compatibility/task-containers-20261117/original-3","collectionComplete":true,"classification":null}

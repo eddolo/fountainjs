@@ -1,0 +1,2181 @@
+[
+  {
+    "id": "quoted-conversion",
+    "input": {
+      "id": "quoted-conversion",
+      "scope": "task-conversion",
+      "title": "quoted-conversion",
+      "markdown": "## Child conversion\n\n> - [ ] Keep root\n> - [ ] Convert this item\n>\n>   A **bold** detail and [link](https://example.com/reference).\n>   \n>   ```python\n>   def identity(value):\n>       return value\n>   ```\n>\n>   - [ ] Keep nested check\n> - [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1
+        ]
+      },
+      "targetOrdinal": 1,
+      "verifyParentResave": true,
+      "expectedParentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1
+        ]
+      },
+      "trackQuotes": true,
+      "focusCodeBeforeCapture": true,
+      "expectedInitialQuotes": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "status": "observed",
+    "stage": "complete",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "readerBefore": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item     \nA bold detail and link.\ndef identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "prefill": {
+        "tasks": [
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "A bold detail and link."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1
+        ]
+      },
+      "parentReopened": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1
+        ]
+      },
+      "parentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1
+        ]
+      },
+      "childReopened": {
+        "tasks": [
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "A bold detail and link."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1
+        ]
+      }
+    },
+    "setup": {
+      "iid": 340,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/340",
+      "description": "## Child conversion\n\n> - [ ] Keep root\n> - [ ] Convert this item\n>\n>   A **bold** detail and [link](https://example.com/reference).\n>   \n>   ```python\n>   def identity(value):\n>       return value\n>   ```\n>\n>   - [ ] Keep nested check\n> - [x] Keep sibling\n\nParent marker."
+    },
+    "documentReadiness": [
+      {
+        "expectedText": "Parent marker.",
+        "actualText": "Parent marker."
+      },
+      {
+        "expectedText": "Parent marker. Verified.",
+        "actualText": "Parent marker. Verified."
+      },
+      {
+        "expectedText": "Parent marker. Verified. Reopened.",
+        "actualText": "Parent marker. Verified. Reopened."
+      },
+      {
+        "expectedFragment": "detail",
+        "actualText": "A bold detail and link.    def identity(value):\n    return valueKeep nested check ",
+        "representationNeutral": true
+      }
+    ],
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "saved": {
+      "id": 1757,
+      "iid": 340,
+      "project_id": 1,
+      "title": "quoted-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n> - [ ] Keep root\n> - [ ] Convert this item\n>\n>   A **bold** detail and [link](https://example.com/reference).\n>\n>   ```python\n>   def identity(value):\n>       return value\n>   ```\n>   - [ ] Keep nested check\n> - [x] Keep sibling\n\nParent marker. Verified.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:50:55.576Z",
+      "updated_at": "2026-11-17T15:51:01.221Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/340",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/340",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/340/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/340/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#340",
+        "relative": "#340",
+        "full": "root/fountain-product-integration#340"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "target": {
+      "text": "\n        \n       \nConvert this item   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \nA bold detail and link.\ndef identity(value):\n    return value\n\n Keep nested check   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \n\n",
+      "sourcepos": "4:3-12:27"
+    },
+    "modalTitle": "> - [ ] Convert this item",
+    "prefillHTML": "<blockquote dir=\"auto\" multiline=\"false\"><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">A <strong>bold</strong> detail and <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://example.com/reference\">link</a>.</p> <!----></div><pre data-node-view-wrapper=\"\" class=\"content-editor-code-block gl-relative gl-p-3 code highlight code-syntax-highlight-theme\" dir=\"auto\" style=\"white-space: normal;\"><!----> <!----> <!----> <code data-node-view-content=\"\" spellcheck=\"false\" data-testid=\"suggestion-field\" class=\"gl-relative gl-z-1 !gl-break-words\" style=\"white-space: pre-wrap;\"><span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">identity</span>(<span class=\"hljs-params\">value</span>):\n    <span class=\"hljs-keyword\">return</span> value</code></pre><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep nested check\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep nested check</p> <!----></div></div></li></ul></blockquote>",
+    "modalEditorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "prefillCodeBlocks": 1,
+    "parentAfter": {
+      "id": 1757,
+      "iid": 340,
+      "project_id": 1,
+      "title": "quoted-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n> - [ ] Keep root\n> - [x] Keep sibling\n\nParent marker. Verified.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:50:55.576Z",
+      "updated_at": "2026-11-17T15:51:05.435Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/340",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/340",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/340/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/340/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#340",
+        "relative": "#340",
+        "full": "root/fountain-product-integration#340"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "childHref": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/341",
+    "child": {
+      "iid": "341",
+      "title": "> - [ ] Convert this item",
+      "type": "Task",
+      "description": "> A **bold** detail and [link](https://example.com/reference).\n>\n> ```python\n> def identity(value):\n>     return value\n> ```\n>\n> - [ ] Keep nested check",
+      "parentIid": "340"
+    },
+    "parentReopenedHTML": "<h2 dir=\"auto\">Child conversion</h2><blockquote dir=\"auto\" multiline=\"false\"><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep root\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep root</p> <!----></div></div></li><li dir=\"auto\" data-checked=\"true\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep sibling\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep sibling</p> <!----></div></div></li></ul></blockquote><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent marker. Verified.</p> <!----></div>",
+    "parentResaveReachable": true,
+    "parentResaved": {
+      "id": 1757,
+      "iid": 340,
+      "project_id": 1,
+      "title": "quoted-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n> - [ ] Keep root\n> - [x] Keep sibling\n\nParent marker. Verified. Reopened.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:50:55.576Z",
+      "updated_at": "2026-11-17T15:51:11.300Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/340",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/340",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/340/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/340/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#340",
+        "relative": "#340",
+        "full": "root/fountain-product-integration#340"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "parentResavedHTML": "<h2 dir=\"auto\">Child conversion</h2><blockquote dir=\"auto\" multiline=\"false\"><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep root\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep root</p> <!----></div></div></li><li dir=\"auto\" data-checked=\"true\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep sibling\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep sibling</p> <!----></div></div></li></ul></blockquote><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent marker. Verified. Reopened.</p> <!----></div>",
+    "childEditorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    }
+  },
+  {
+    "id": "deep-quoted-conversion",
+    "input": {
+      "id": "deep-quoted-conversion",
+      "scope": "task-conversion",
+      "title": "deep-quoted-conversion",
+      "markdown": "## Child conversion\n\n> > - [ ] Keep root\n> > 10. [ ] Convert this item\n> >\n> >     A **bold** detail and [link](https://example.com/reference).\n> >     \n> >     ```python\n> >     payload = \"\"\"\n> >     - [ ] literal source\n> >     \"\"\"\n> >     \n> >     def identity(value):\n> >         return value\n> >     ```\n> >\n> >     - [ ] Keep nested check\n> > - [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n```",
+      "expectedCode": "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2
+        ]
+      },
+      "targetOrdinal": 1,
+      "verifyParentResave": true,
+      "expectedParentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2
+        ]
+      },
+      "trackQuotes": true,
+      "focusCodeBeforeCapture": true,
+      "expectedInitialQuotes": {
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    "status": "observed",
+    "stage": "complete",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "readerBefore": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item     \nA bold detail and link.\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "prefill": {
+        "tasks": [],
+        "prose": [],
+        "bold": [],
+        "links": [],
+        "codes": [
+          "A **bold** detail and [link](https://example.com/reference).\n\n```python\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n```\n- [ ] Keep nested check"
+        ],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": []
+      },
+      "parentReopened": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2
+        ]
+      },
+      "parentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2
+        ]
+      },
+      "childReopened": {
+        "tasks": [],
+        "prose": [],
+        "bold": [],
+        "links": [],
+        "codes": [
+          "A **bold** detail and [link](https://example.com/reference).\n\n```python\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n```\n- [ ] Keep nested check"
+        ],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": []
+      }
+    },
+    "setup": {
+      "iid": 342,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/342",
+      "description": "## Child conversion\n\n> > - [ ] Keep root\n> > 10. [ ] Convert this item\n> >\n> >     A **bold** detail and [link](https://example.com/reference).\n> >     \n> >     ```python\n> >     payload = \"\"\"\n> >     - [ ] literal source\n> >     \"\"\"\n> >     \n> >     def identity(value):\n> >         return value\n> >     ```\n> >\n> >     - [ ] Keep nested check\n> > - [x] Keep sibling\n\nParent marker."
+    },
+    "documentReadiness": [
+      {
+        "expectedText": "Parent marker.",
+        "actualText": "Parent marker."
+      },
+      {
+        "expectedText": "Parent marker. Verified.",
+        "actualText": "Parent marker. Verified."
+      },
+      {
+        "expectedText": "Parent marker. Verified. Reopened.",
+        "actualText": "Parent marker. Verified. Reopened."
+      },
+      {
+        "expectedFragment": "detail",
+        "actualText": "   A **bold** detail and [link](https://example.com/reference).\n\n```python\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n```\n- [ ] Keep nested check",
+        "representationNeutral": true
+      }
+    ],
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "saved": {
+      "id": 1759,
+      "iid": 342,
+      "project_id": 1,
+      "title": "deep-quoted-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n> > - [ ] Keep root\n> >\n> >\n> > 10. [ ] Convert this item\n> >\n> >     A **bold** detail and [link](https://example.com/reference).\n> >\n> >     ```python\n> >     payload = \"\"\"\n> >     - [ ] literal source\n> >     \"\"\"\n> >     \n> >     def identity(value):\n> >         return value\n> >     ```\n> >     - [ ] Keep nested check\n> >\n> >\n> > - [x] Keep sibling\n\nParent marker. Verified.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:51:17.012Z",
+      "updated_at": "2026-11-17T15:51:21.880Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/342",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/342",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/342/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/342/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#342",
+        "relative": "#342",
+        "full": "root/fountain-product-integration#342"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "target": {
+      "text": " \nConvert this item   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \nA bold detail and link.\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n\n Keep nested check   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \n\n",
+      "sourcepos": "6:5-20:3"
+    },
+    "modalTitle": "> > 10. [ ] Convert this item",
+    "prefillHTML": "<blockquote dir=\"auto\" multiline=\"false\"><blockquote dir=\"auto\" multiline=\"false\"><pre data-node-view-wrapper=\"\" class=\"content-editor-code-block gl-relative gl-p-3 code highlight code-syntax-highlight-theme\" dir=\"auto\" style=\"white-space: normal;\"><!----> <!----> <!----> <code data-node-view-content=\"\" spellcheck=\"false\" data-testid=\"suggestion-field\" class=\"gl-relative gl-z-1 !gl-break-words\" style=\"white-space: pre-wrap;\">A **bold** detail <span class=\"hljs-keyword\">and</span> [link](https://example.com/reference).\n\n```python\npayload = <span class=\"hljs-string\">\"\"\"\n- [ ] literal source\n\"\"\"</span>\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">identity</span>(<span class=\"hljs-params\">value</span>):\n    <span class=\"hljs-keyword\">return</span> value\n```\n- [ ] Keep nested check</code></pre></blockquote></blockquote>",
+    "modalEditorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "prefillCodeBlocks": 1,
+    "parentAfter": {
+      "id": 1759,
+      "iid": 342,
+      "project_id": 1,
+      "title": "deep-quoted-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n> > - [ ] Keep root\n> >\n> >\n> > - [x] Keep sibling\n\nParent marker. Verified.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:51:17.012Z",
+      "updated_at": "2026-11-17T15:51:25.983Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/342",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/342",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/342/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/342/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#342",
+        "relative": "#342",
+        "full": "root/fountain-product-integration#342"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "childHref": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/343",
+    "child": {
+      "iid": "343",
+      "title": "> > 10. [ ] Convert this item",
+      "type": "Task",
+      "description": "> > ````\n> > A **bold** detail and [link](https://example.com/reference).\n> > \n> > ```python\n> > payload = \"\"\"\n> > - [ ] literal source\n> > \"\"\"\n> > \n> > def identity(value):\n> >     return value\n> > ```\n> > - [ ] Keep nested check\n> > ````",
+      "parentIid": "342"
+    },
+    "parentReopenedHTML": "<h2 dir=\"auto\">Child conversion</h2><blockquote dir=\"auto\" multiline=\"false\"><blockquote dir=\"auto\" multiline=\"false\"><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep root\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep root</p> <!----></div></div></li><li dir=\"auto\" data-checked=\"true\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep sibling\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep sibling</p> <!----></div></div></li></ul></blockquote></blockquote><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent marker. Verified.</p> <!----></div>",
+    "parentResaveReachable": true,
+    "parentResaved": {
+      "id": 1759,
+      "iid": 342,
+      "project_id": 1,
+      "title": "deep-quoted-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n> > - [ ] Keep root\n> > - [x] Keep sibling\n\nParent marker. Verified. Reopened.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:51:17.012Z",
+      "updated_at": "2026-11-17T15:51:31.909Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/342",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/342",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/342/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/342/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#342",
+        "relative": "#342",
+        "full": "root/fountain-product-integration#342"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "parentResavedHTML": "<h2 dir=\"auto\">Child conversion</h2><blockquote dir=\"auto\" multiline=\"false\"><blockquote dir=\"auto\" multiline=\"false\"><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep root\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep root</p> <!----></div></div></li><li dir=\"auto\" data-checked=\"true\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep sibling\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep sibling</p> <!----></div></div></li></ul></blockquote></blockquote><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent marker. Verified. Reopened.</p> <!----></div>",
+    "childEditorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    }
+  },
+  {
+    "id": "listed-quote-conversion",
+    "input": {
+      "id": "listed-quote-conversion",
+      "scope": "task-conversion",
+      "title": "listed-quote-conversion",
+      "markdown": "## Child conversion\n\n- [ ] Keep root\n- [ ] Parent batch\n  > - [ ] Convert this item\n  >\n  >   A **bold** detail and [link](https://example.com/reference).\n  >   \n  >   ```python\n  >   def identity(value):\n  >       return value\n  >   ```\n  >\n  >   - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "targetOrdinal": 2,
+      "verifyParentResave": true,
+      "expectedParentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "trackQuotes": true,
+      "focusCodeBeforeCapture": true,
+      "expectedInitialQuotes": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    "status": "observed",
+    "stage": "complete",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 2
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "readerBefore": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item     \nA bold detail and link.\ndef identity(value):\n    return value",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 2
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "prefill": {
+        "tasks": [
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "A bold detail and link."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1
+        ]
+      },
+      "parentReopened": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 0,
+        "taskQuoteDepths": [
+          0,
+          0,
+          0
+        ]
+      },
+      "parentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 0,
+        "taskQuoteDepths": [
+          0,
+          0,
+          0
+        ]
+      },
+      "childReopened": {
+        "tasks": [
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "A bold detail and link."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1
+        ]
+      }
+    },
+    "setup": {
+      "iid": 344,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/344",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Parent batch\n  > - [ ] Convert this item\n  >\n  >   A **bold** detail and [link](https://example.com/reference).\n  >   \n  >   ```python\n  >   def identity(value):\n  >       return value\n  >   ```\n  >\n  >   - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker."
+    },
+    "documentReadiness": [
+      {
+        "expectedText": "Parent marker.",
+        "actualText": "Parent marker."
+      },
+      {
+        "expectedText": "Parent marker. Verified.",
+        "actualText": "Parent marker. Verified."
+      },
+      {
+        "expectedText": "Parent marker. Verified. Reopened.",
+        "actualText": "Parent marker. Verified. Reopened."
+      },
+      {
+        "expectedFragment": "detail",
+        "actualText": "A bold detail and link.    def identity(value):\n    return valueKeep nested check ",
+        "representationNeutral": true
+      }
+    ],
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "saved": {
+      "id": 1761,
+      "iid": 344,
+      "project_id": 1,
+      "title": "listed-quote-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Parent batch\n\n  > - [ ] Convert this item\n  >\n  >   A **bold** detail and [link](https://example.com/reference).\n  >\n  >   ```python\n  >   def identity(value):\n  >       return value\n  >   ```\n  >   - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker. Verified.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:51:39.377Z",
+      "updated_at": "2026-11-17T15:51:44.258Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/344",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 5,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/344",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/344/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/344/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#344",
+        "relative": "#344",
+        "full": "root/fountain-product-integration#344"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "target": {
+      "text": " \nConvert this item   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \nA bold detail and link.\ndef identity(value):\n    return value\n\n Keep nested check   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \n\n",
+      "sourcepos": "6:5-14:29"
+    },
+    "modalTitle": "  > - [ ] Convert this item",
+    "prefillHTML": "<blockquote dir=\"auto\" multiline=\"false\"><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">A <strong>bold</strong> detail and <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://example.com/reference\">link</a>.</p> <!----></div><pre data-node-view-wrapper=\"\" class=\"content-editor-code-block gl-relative gl-p-3 code highlight code-syntax-highlight-theme\" dir=\"auto\" style=\"white-space: normal;\"><!----> <!----> <!----> <code data-node-view-content=\"\" spellcheck=\"false\" data-testid=\"suggestion-field\" class=\"gl-relative gl-z-1 !gl-break-words\" style=\"white-space: pre-wrap;\"><span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">identity</span>(<span class=\"hljs-params\">value</span>):\n    <span class=\"hljs-keyword\">return</span> value</code></pre><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep nested check\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep nested check</p> <!----></div></div></li></ul></blockquote>",
+    "modalEditorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "prefillCodeBlocks": 1,
+    "parentAfter": {
+      "id": 1761,
+      "iid": 344,
+      "project_id": 1,
+      "title": "listed-quote-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Parent batch\n\n- [x] Keep sibling\n\nParent marker. Verified.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:51:39.377Z",
+      "updated_at": "2026-11-17T15:51:45.718Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/344",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/344",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/344/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/344/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#344",
+        "relative": "#344",
+        "full": "root/fountain-product-integration#344"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "childHref": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/345",
+    "child": {
+      "iid": "345",
+      "title": "> - [ ] Convert this item",
+      "type": "Task",
+      "description": "> A **bold** detail and [link](https://example.com/reference).\n>\n> ```python\n> def identity(value):\n>     return value\n> ```\n>\n> - [ ] Keep nested check",
+      "parentIid": "344"
+    },
+    "parentReopenedHTML": "<h2 dir=\"auto\">Child conversion</h2><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep root\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep root</p> <!----></div></div></li><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Parent batch\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent batch</p> <!----></div></div></li><li dir=\"auto\" data-checked=\"true\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep sibling\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep sibling</p> <!----></div></div></li></ul><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent marker. Verified.</p> <!----></div>",
+    "parentResaveReachable": true,
+    "parentResaved": {
+      "id": 1761,
+      "iid": 344,
+      "project_id": 1,
+      "title": "listed-quote-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Parent batch\n- [x] Keep sibling\n\nParent marker. Verified. Reopened.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:51:39.377Z",
+      "updated_at": "2026-11-17T15:51:51.381Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/344",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/344",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/344/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/344/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#344",
+        "relative": "#344",
+        "full": "root/fountain-product-integration#344"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "parentResavedHTML": "<h2 dir=\"auto\">Child conversion</h2><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep root\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep root</p> <!----></div></div></li><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Parent batch\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent batch</p> <!----></div></div></li><li dir=\"auto\" data-checked=\"true\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep sibling\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep sibling</p> <!----></div></div></li></ul><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent marker. Verified. Reopened.</p> <!----></div>",
+    "childEditorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    }
+  },
+  {
+    "id": "inline-quote-conversion",
+    "input": {
+      "id": "inline-quote-conversion",
+      "scope": "task-conversion",
+      "title": "inline-quote-conversion",
+      "markdown": "## Child conversion\n\n- [ ] Keep root\n- > - [ ] Convert this item\n  >\n  >   A **bold** detail and [link](https://example.com/reference).\n  >   \n  >   ```python\n  >   def identity(value):\n  >       return value\n  >   ```\n  >\n  >   - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          0
+        ]
+      },
+      "targetOrdinal": 1,
+      "verifyParentResave": true,
+      "expectedParentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          0
+        ]
+      },
+      "trackQuotes": true,
+      "focusCodeBeforeCapture": true,
+      "expectedInitialQuotes": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    "status": "observed",
+    "stage": "complete",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "readerBefore": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item     \nA bold detail and link.\ndef identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "prefill": {
+        "tasks": [
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "A bold detail and link."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1
+        ]
+      },
+      "parentReopened": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 0,
+        "taskQuoteDepths": [
+          0,
+          0,
+          0
+        ]
+      },
+      "parentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 0,
+        "taskQuoteDepths": [
+          0,
+          0,
+          0
+        ]
+      },
+      "childReopened": {
+        "tasks": [
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "A bold detail and link."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1
+        ]
+      }
+    },
+    "setup": {
+      "iid": 346,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/346",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- > - [ ] Convert this item\n  >\n  >   A **bold** detail and [link](https://example.com/reference).\n  >   \n  >   ```python\n  >   def identity(value):\n  >       return value\n  >   ```\n  >\n  >   - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker."
+    },
+    "documentReadiness": [
+      {
+        "expectedText": "Parent marker.",
+        "actualText": "Parent marker."
+      },
+      {
+        "expectedText": "Parent marker. Verified.",
+        "actualText": "Parent marker. Verified."
+      },
+      {
+        "expectedText": "Parent marker. Verified. Reopened.",
+        "actualText": "Parent marker. Verified. Reopened."
+      },
+      {
+        "expectedFragment": "detail",
+        "actualText": "A bold detail and link.    def identity(value):\n    return valueKeep nested check ",
+        "representationNeutral": true
+      }
+    ],
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "saved": {
+      "id": 1763,
+      "iid": 346,
+      "project_id": 1,
+      "title": "inline-quote-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n- [ ] Keep root\n\n* \n\n> - [ ] Convert this item\n>\n>   A **bold** detail and [link](https://example.com/reference).\n>\n>   ```python\n>   def identity(value):\n>       return value\n>   ```\n>   - [ ] Keep nested check\n\n* [x] Keep sibling\n\nParent marker. Verified.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:51:59.097Z",
+      "updated_at": "2026-11-17T15:52:04.121Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/346",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/346",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/346/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/346/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#346",
+        "relative": "#346",
+        "full": "root/fountain-product-integration#346"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "target": {
+      "text": " \nConvert this item   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \nA bold detail and link.\ndef identity(value):\n    return value\n\n Keep nested check   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \n\n",
+      "sourcepos": "7:3-15:27"
+    },
+    "modalTitle": "> - [ ] Convert this item",
+    "prefillHTML": "<blockquote dir=\"auto\" multiline=\"false\"><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">A <strong>bold</strong> detail and <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://example.com/reference\">link</a>.</p> <!----></div><pre data-node-view-wrapper=\"\" class=\"content-editor-code-block gl-relative gl-p-3 code highlight code-syntax-highlight-theme\" dir=\"auto\" style=\"white-space: normal;\"><!----> <!----> <!----> <code data-node-view-content=\"\" spellcheck=\"false\" data-testid=\"suggestion-field\" class=\"gl-relative gl-z-1 !gl-break-words\" style=\"white-space: pre-wrap;\"><span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">identity</span>(<span class=\"hljs-params\">value</span>):\n    <span class=\"hljs-keyword\">return</span> value</code></pre><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep nested check\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep nested check</p> <!----></div></div></li></ul></blockquote>",
+    "modalEditorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "prefillCodeBlocks": 1,
+    "parentAfter": {
+      "id": 1763,
+      "iid": 346,
+      "project_id": 1,
+      "title": "inline-quote-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n- [ ] Keep root\n\n* \n\n\n* [x] Keep sibling\n\nParent marker. Verified.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:51:59.097Z",
+      "updated_at": "2026-11-17T15:52:08.102Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/346",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/346",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/346/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/346/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#346",
+        "relative": "#346",
+        "full": "root/fountain-product-integration#346"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "childHref": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/347",
+    "child": {
+      "iid": "347",
+      "title": "> - [ ] Convert this item",
+      "type": "Task",
+      "description": "> A **bold** detail and [link](https://example.com/reference).\n>\n> ```python\n> def identity(value):\n>     return value\n> ```\n>\n> - [ ] Keep nested check",
+      "parentIid": "346"
+    },
+    "parentReopenedHTML": "<h2 dir=\"auto\">Child conversion</h2><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep root\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep root</p> <!----></div></div></li></ul><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"*\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Task item checkbox for empty task item\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\"><br class=\"ProseMirror-trailingBreak\"></p> <!----></div></div></li></ul><ul dir=\"auto\" bullet=\"*\"><li dir=\"auto\"><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\"><br class=\"ProseMirror-trailingBreak\"></p> <!----></div></li></ul><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"*\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"true\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep sibling\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep sibling</p> <!----></div></div></li></ul><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent marker. Verified.</p> <!----></div>",
+    "parentResaveReachable": true,
+    "parentResaved": {
+      "id": 1763,
+      "iid": 346,
+      "project_id": 1,
+      "title": "inline-quote-conversion task-containers-20261117-a3",
+      "description": "## Child conversion\n\n- [ ] Keep root\n\n\n* [ ]\n\n* \n\n* [x] Keep sibling\n\nParent marker. Verified. Reopened.",
+      "state": "opened",
+      "created_at": "2026-11-17T15:51:59.097Z",
+      "updated_at": "2026-11-17T15:52:13.885Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/346",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/346",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/346/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/346/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#346",
+        "relative": "#346",
+        "full": "root/fountain-product-integration#346"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "parentResavedHTML": "<h2 dir=\"auto\">Child conversion</h2><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep root\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep root</p> <!----></div></div></li></ul><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"*\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"false\"><label contenteditable=\"false\"><input aria-label=\"Task item checkbox for empty task item\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\"><br class=\"ProseMirror-trailingBreak\"></p> <!----></div></div></li></ul><ul dir=\"auto\" bullet=\"*\"><li dir=\"auto\"><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\"><br class=\"ProseMirror-trailingBreak\"></p> <!----></div></li></ul><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"*\" data-type=\"taskList\"><li dir=\"auto\" data-checked=\"true\"><label contenteditable=\"false\"><input aria-label=\"Check option: Keep sibling\" type=\"checkbox\"><span></span></label><div><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Keep sibling</p> <!----></div></div></li></ul><div data-node-view-wrapper=\"\" class=\"\" style=\"white-space: normal;\"><p data-node-view-content=\"\" style=\"white-space: pre-wrap;\">Parent marker. Verified. Reopened.</p> <!----></div>",
+    "childEditorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    }
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "scope": "Separate native UI follow-up with improved capture; no new matched-comparison score.",
+  "checks": [
+    {
+      "case": "quoted-conversion",
+      "sameSemanticGraphsAndSource": true,
+      "codeFullyVisible": true,
+      "correctParentLink": true,
+      "noCheckboxesCreatedFromCode": true
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "sameSemanticGraphsAndSource": true,
+      "codeFullyVisible": true,
+      "correctParentLink": true,
+      "noCheckboxesCreatedFromCode": true
+    },
+    {
+      "case": "listed-quote-conversion",
+      "sameSemanticGraphsAndSource": true,
+      "codeFullyVisible": true,
+      "correctParentLink": true,
+      "noCheckboxesCreatedFromCode": true
+    },
+    {
+      "case": "inline-quote-conversion",
+      "sameSemanticGraphsAndSource": true,
+      "codeFullyVisible": true,
+      "correctParentLink": true,
+      "noCheckboxesCreatedFromCode": true
+    }
+  ]
+}

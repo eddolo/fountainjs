@@ -362,8 +362,8 @@ it('requires evidence that not-applicable source survived rich editing',()=>{
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(1);expect(result.comparisonComplete).toBe(false);
 });
 
-function taskConversionReports(index=0){
- const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-task-conversion.json',import.meta.url),'utf8'));
+function taskConversionReports(index=0,containers=false){
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/'+(containers?'compatibility-task-containers.json':'compatibility-task-conversion.json'),import.meta.url),'utf8'));
  const pair=reports();
  for(const report of pair){
   const input=structuredClone(fixture.cases[index]);report.fixture.cases=[input];
@@ -373,6 +373,7 @@ function taskConversionReports(index=0){
   item.childEditorProof=structuredClone(item.editorProof);item.modalEditorProof=structuredClone(item.editorProof);
   item.parentAfter={state:'opened',task_completion_status:{count:input.expectedParent.tasks.length,completed_count:1}};item.parentResaved=structuredClone(item.parentAfter);item.parentResaveReachable=true;
   item.graphs={prefill:{codes:[input.expectedCode]},before:{codes:[input.expectedCode]},readerBefore:{codes:[input.expectedCode]},parentReopened:structuredClone(input.expectedParent),parentResaved:structuredClone(input.expectedParentResaved),childReopened:{codes:[input.expectedCode],bold:['bold'],links:[{text:'link',href:'https://example.com/reference'}]}};
+  if(input.trackQuotes){const depths=input.expectedParent.tasks.map((task:{depth:number})=>task.depth);const target=input.targetOrdinal??1;const depth=depths[target];depths[target]=depth+1;depths.splice(target,0,depth);for(const phase of ['before','readerBefore'])Object.assign(item.graphs[phase],structuredClone(input.expectedInitialQuotes),{tasks:depths.map((depth:number)=>({depth}))});for(const phase of ['prefill','childReopened'])item.graphs[phase].quoteBlockCount=0;}
  }
  return pair;
 }
@@ -400,4 +401,16 @@ it.each([
 it('requires observed parent linkage rather than assuming a matching title proves it',()=>{
  const [original,fountain]=taskConversionReports();delete (fountain.observations[0] as any).child.parentIid;
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(1);expect(result.comparisonComplete).toBe(false);
+});
+
+it.each([0,1,2,3])('requires intact quote ownership and detached child wrappers (%i)',index=>{
+ const result=compareGitLabCompatibility(...taskConversionReports(index,true));expect(result.summary.parity).toBe(26);expect(result.featureAcceptance.passed).toBe(true);
+});
+it('rejects leaking parent-only quotes into the created child',()=>{
+ const [original,fountain]=taskConversionReports(0,true);(fountain.observations[0] as any).graphs.childReopened.quoteBlockCount=1;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.rows.find((row:any)=>row.invariant==='childReopened.quotes').classification).toBe('regression');
+});
+it('requires captured quote ownership instead of treating missing instrumentation as a failure',()=>{
+ const [original,fountain]=taskConversionReports(0,true);delete (fountain.observations[0] as any).graphs.before.taskQuoteDepths;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.rows.find((row:any)=>row.invariant==='before.quotes').classification).toBe(null);expect(result.summary.incomplete).toBe(1);
 });

@@ -1,0 +1,1 @@
+{"output":"artifacts/gitlab-compatibility/task-containers-20261117/renderer-1.json","count":4}

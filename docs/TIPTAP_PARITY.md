@@ -2,6 +2,16 @@
 
 ## Current programme status — 2026-11-17
 
+Quoted/container child conversion (2026-11-17): four actual workflows verify
+63 parity and 41 improvement checks / 104 correlated requirements, with zero
+regressions or incomplete outcomes. Child titles/source, code indentation and
+remaining parent quote/list ownership survive creation, Save and reopen. Two
+nesting improvements predate this repair. 1,500 integration tests / 58 files,
+strict types, 26 upstream tests and lint pass. A separate native visual follow-up
+shows all four complete code prefills; it adds no matched score. Tabbed/custom
+prefixes, other roles/platforms and broader application acceptance remain open.
+[Container evidence](../integrations/gitlab/COMPATIBILITY_TASK_CONTAINER_RESULTS.md).
+
 Matched child-conversion repair (2026-11-17): plain/scoped/ordered/nested real
 workflows verify 66 parity and 14 improvement checks, with zero regressions or
 incomplete outcomes. Code indentation and ordered child titles survive conversion;

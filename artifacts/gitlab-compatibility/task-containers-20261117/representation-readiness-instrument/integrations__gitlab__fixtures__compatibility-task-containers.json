@@ -1,0 +1,356 @@
+{
+  "formatVersion": 1,
+  "workflow": "quoted-and-nested-container-child-conversion",
+  "settlingMs": 700,
+  "cases": [
+    {
+      "id": "quoted-conversion",
+      "scope": "task-conversion",
+      "title": "quoted-conversion",
+      "markdown": "## Child conversion\n\n> - [ ] Keep root\n> - [ ] Convert this item\n>\n>   A **bold** detail and [link](https://example.com/reference).\n>   \n>   ```python\n>   def identity(value):\n>       return value\n>   ```\n>\n>   - [ ] Keep nested check\n> - [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1
+        ]
+      },
+      "targetOrdinal": 1,
+      "verifyParentResave": true,
+      "expectedParentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1
+        ]
+      },
+      "trackQuotes": true,
+      "focusCodeBeforeCapture": true,
+      "expectedInitialQuotes": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "deep-quoted-conversion",
+      "scope": "task-conversion",
+      "title": "deep-quoted-conversion",
+      "markdown": "## Child conversion\n\n> > - [ ] Keep root\n> > 10. [ ] Convert this item\n> >\n> >     A **bold** detail and [link](https://example.com/reference).\n> >     \n> >     ```python\n> >     payload = \"\"\"\n> >     - [ ] literal source\n> >     \"\"\"\n> >     \n> >     def identity(value):\n> >         return value\n> >     ```\n> >\n> >     - [ ] Keep nested check\n> > - [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n```",
+      "expectedCode": "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2
+        ]
+      },
+      "targetOrdinal": 1,
+      "verifyParentResave": true,
+      "expectedParentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2
+        ]
+      },
+      "trackQuotes": true,
+      "focusCodeBeforeCapture": true,
+      "expectedInitialQuotes": {
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "id": "listed-quote-conversion",
+      "scope": "task-conversion",
+      "title": "listed-quote-conversion",
+      "markdown": "## Child conversion\n\n- [ ] Keep root\n- [ ] Parent batch\n  > - [ ] Convert this item\n  >\n  >   A **bold** detail and [link](https://example.com/reference).\n  >   \n  >   ```python\n  >   def identity(value):\n  >       return value\n  >   ```\n  >\n  >   - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "targetOrdinal": 2,
+      "verifyParentResave": true,
+      "expectedParentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "trackQuotes": true,
+      "focusCodeBeforeCapture": true,
+      "expectedInitialQuotes": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "id": "inline-quote-conversion",
+      "scope": "task-conversion",
+      "title": "inline-quote-conversion",
+      "markdown": "## Child conversion\n\n- [ ] Keep root\n- > - [ ] Convert this item\n  >\n  >   A **bold** detail and [link](https://example.com/reference).\n  >   \n  >   ```python\n  >   def identity(value):\n  >       return value\n  >   ```\n  >\n  >   - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          0
+        ]
+      },
+      "targetOrdinal": 1,
+      "verifyParentResave": true,
+      "expectedParentResaved": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          0
+        ]
+      },
+      "trackQuotes": true,
+      "focusCodeBeforeCapture": true,
+      "expectedInitialQuotes": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      }
+    }
+  ]
+}

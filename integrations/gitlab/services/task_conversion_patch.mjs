@@ -10,9 +10,9 @@ export function prepareGitLabTaskConversion(source) {
     'const bulletTaskListItemRegex = /^[ \\t]*[-*+][ \\t]+\\[[ xX~]\\](?:[ \\t]+|$)/;');
   replace('const numericalTaskListItemRegex = /^\\s*[0-9]\\.\\s+\\[.]\\s+/;',
     'const numericalTaskListItemRegex = /^[ \\t]*[0-9]{1,9}[.)][ \\t]+\\[[ xX~]\\](?:[ \\t]+|$)/;');
-  replace('  const taskTitle = firstLine\n', "  const taskTitle = firstLine.replace(/\\r$/u, '')\n");
+  replace('  const taskTitle = firstLine\n', '  const taskTitle = body.titleLine\n');
   replace('  const firstLineIndentation = firstLine.length - firstLine.trimStart().length;',
-    '  const body = createGitLabTaskBodyExtractor(firstLine);\n  const firstLineIndentation = body.indent;');
+    '  const body = createGitLabTaskBodyExtractor(firstLine, sourcepos);\n  const firstLineIndentation = body.indent;');
   const slice = 'descriptionLines[i] = descriptionLines[i].slice(indentation);';
   if (source.split(slice).length !== 3) throw new Error('Inspect the pinned nested-task promotion boundary.');
   source = source.replaceAll(slice, 'descriptionLines[i] = body.strip(descriptionLines[i], indentation);');
@@ -22,5 +22,7 @@ export function prepareGitLabTaskConversion(source) {
     '      const currentLineIndentation = body.indentation(currentLine);');
   replace('taskDescription.push(descriptionLines[i].trimStart());',
     'taskDescription.push(body.strip(descriptionLines[i]));');
+  replace('  descriptionLines.splice(startIndex, linesToDelete);',
+    '  descriptionLines.splice(startIndex, linesToDelete);\n  if (body.retainedPrefix !== undefined) descriptionLines.splice(startIndex, 0, body.retainedPrefix);');
   return source;
 }

@@ -174,3 +174,7 @@ closes the demonstrated source/title and extra-paragraph gaps with a fresh match
 pair: 66 parity / 14 improvement checks across four workflows. The historical red
 report above remains unchanged as evidence of the earlier candidate. An intervening
 premature-loading comparison is excluded; broader conversion fidelity remains open.
+
+Follow-up: [quoted/container conversion repair](COMPATIBILITY_TASK_CONTAINER_RESULTS.md)
+verifies the separately recorded four-case corpus. Historical results above remain
+unchanged; broader application acceptance is still open.

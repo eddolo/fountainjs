@@ -107,6 +107,13 @@ export function compareGitLabCompatibility(original,fountain){
       add('child.code','Reopened child preserves executable code indentation',[input.expectedCode],left?.graphs?.childReopened?.codes,right?.graphs?.childReopened?.codes);
       add('child.bold','Reopened child retains bold detail',['bold'],left?.graphs?.childReopened?.bold,right?.graphs?.childReopened?.bold);
       add('child.link','Reopened child retains its link',[{text:'link',href:'https://example.com/reference'}],left?.graphs?.childReopened?.links,right?.graphs?.childReopened?.links);
+      if(input.trackQuotes){
+        const ownership=graph=>graph&&Number.isInteger(graph.quoteBlockCount)&&Array.isArray(graph.taskQuoteDepths)?{quoteBlockCount:graph.quoteBlockCount,taskQuoteDepths:graph.taskQuoteDepths}:undefined;
+        for(const phase of ['before','readerBefore'])add(phase+'.quotes',phase+': real outer quote ownership',input.expectedInitialQuotes,ownership(left?.graphs?.[phase]),ownership(right?.graphs?.[phase]));
+        const nested=input.expectedParent.tasks.map(task=>task.depth);const target=input.targetOrdinal??1;const depth=nested[target];nested[target]=depth+1;nested.splice(target,0,depth);
+        for(const phase of ['before','readerBefore'])add(phase+'.nesting',phase+': original list nesting survives import and Save',nested,left?.graphs?.[phase]?.tasks?.map(task=>task.depth),right?.graphs?.[phase]?.tasks?.map(task=>task.depth));
+        for(const phase of ['prefill','childReopened'])add(phase+'.quotes',phase+': child source excludes parent-only quote wrappers',0,left?.graphs?.[phase]?.quoteBlockCount,right?.graphs?.[phase]?.quoteBlockCount);
+      }
       if(input.verifyParentResave){
         add('parent.resaved','Typing, Save and reload retain the parent structure',input.expectedParentResaved,left?.graphs?.parentResaved,right?.graphs?.parentResaved);
         add('parent.resaveReachable','Normal Save remains reachable after parent reopen',true,left?.parentResaveReachable,right?.parentResaveReachable);

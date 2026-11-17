@@ -1,0 +1,22 @@
+time="2026-11-17T15:44:36Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"kind":"gitlab-compatibility","side":"original","case":"quoted-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"quoted-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"original","case":"quoted-conversion","stage":"resave-parent"}
+{"kind":"gitlab-compatibility","side":"original","case":"quoted-conversion","stage":"complete"}
+{"kind":"gitlab-compatibility","side":"original","case":"deep-quoted-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"deep-quoted-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"original","case":"deep-quoted-conversion","stage":"resave-parent"}
+{"kind":"gitlab-compatibility","side":"original","case":"deep-quoted-conversion","stage":"incomplete","error":"Error: expect(locator).toBeVisible() failed\n\nLocator: getByTestId('work-item-description-wrapper').locator('.ProseMirror[contenteditable=\"true\"]').getByText('A bold detail and link.', { exact: true })\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByTestId('work-item-description-wrapper').locator('.ProseMirror[contenteditable=\"true\"]').getByText('A bold detail and link.', { exact: true })\n"}
+{"kind":"gitlab-compatibility","side":"original","case":"listed-quote-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"listed-quote-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"original","case":"listed-quote-conversion","stage":"resave-parent"}
+{"kind":"gitlab-compatibility","side":"original","case":"listed-quote-conversion","stage":"complete"}
+{"kind":"gitlab-compatibility","side":"original","case":"inline-quote-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"inline-quote-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"original","case":"inline-quote-conversion","stage":"resave-parent"}
+{"kind":"gitlab-compatibility","side":"original","case":"inline-quote-conversion","stage":"complete"}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+{"kind":"gitlab-compatibility","side":"original","output":"/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-compatibility/task-containers-20261117/original-2","collectionComplete":false,"classification":null}

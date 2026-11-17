@@ -1,0 +1,2379 @@
+{
+  "formatVersion": 1,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "task-containers-20261117",
+      "attempt": 3
+    },
+    "fountain": {
+      "runId": "task-containers-20261117",
+      "attempt": 3
+    }
+  },
+  "rows": [
+    {
+      "case": "quoted-conversion",
+      "invariant": "before.code",
+      "label": "before: code indentation is intact before conversion",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "readerBefore.code",
+      "label": "readerBefore: code indentation is intact before conversion",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "modal.title",
+      "label": "Real creation dialog has the intended title",
+      "expected": "Convert this item",
+      "original": "> - [ ] Convert this item",
+      "fountain": "Convert this item",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "modal.code",
+      "label": "Untouched creation prefill preserves code indentation",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "modal.editor",
+      "label": "Creation dialog uses the verified editor",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "child.title",
+      "label": "Created child title",
+      "expected": "Convert this item",
+      "original": "> - [ ] Convert this item",
+      "fountain": "Convert this item",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "child.type",
+      "label": "Created child type",
+      "expected": "Task",
+      "original": "Task",
+      "fountain": "Task",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "child.description",
+      "label": "Saved child preserves exact description source",
+      "expected": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "original": "> A **bold** detail and [link](https://example.com/reference).\n>\n> ```python\n> def identity(value):\n>     return value\n> ```\n>\n> - [ ] Keep nested check",
+      "fountain": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "child.parent",
+      "label": "Created child is actually linked to the original parent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "parent.graph",
+      "label": "Reloaded parent retains nested checklist, siblings and prose",
+      "expected": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1
+        ]
+      },
+      "original": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1
+        ]
+      },
+      "fountain": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "parent.counts",
+      "label": "Backend parent retains the intended remaining task counts",
+      "expected": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "parent.state",
+      "label": "Conversion leaves parent Open",
+      "expected": "opened",
+      "original": "opened",
+      "fountain": "opened",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "child.editor",
+      "label": "Child reopens in the verified editor",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "child.code",
+      "label": "Reopened child preserves executable code indentation",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "child.bold",
+      "label": "Reopened child retains bold detail",
+      "expected": [
+        "bold"
+      ],
+      "original": [
+        "bold"
+      ],
+      "fountain": [
+        "bold"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "child.link",
+      "label": "Reopened child retains its link",
+      "expected": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "before.quotes",
+      "label": "before: real outer quote ownership",
+      "expected": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "original": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "fountain": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "readerBefore.quotes",
+      "label": "readerBefore: real outer quote ownership",
+      "expected": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "original": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "fountain": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "before.nesting",
+      "label": "before: original list nesting survives import and Save",
+      "expected": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "original": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "fountain": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "readerBefore.nesting",
+      "label": "readerBefore: original list nesting survives import and Save",
+      "expected": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "original": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "fountain": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "prefill.quotes",
+      "label": "prefill: child source excludes parent-only quote wrappers",
+      "expected": 0,
+      "original": 1,
+      "fountain": 0,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "childReopened.quotes",
+      "label": "childReopened: child source excludes parent-only quote wrappers",
+      "expected": 0,
+      "original": 1,
+      "fountain": 0,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "parent.resaved",
+      "label": "Typing, Save and reload retain the parent structure",
+      "expected": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1
+        ]
+      },
+      "original": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1
+        ]
+      },
+      "fountain": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          1,
+          1,
+          1
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "parent.resaveReachable",
+      "label": "Normal Save remains reachable after parent reopen",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "parent.resaveState",
+      "label": "Resaved parent remains Open",
+      "expected": "opened",
+      "original": "opened",
+      "fountain": "opened",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "quoted-conversion",
+      "invariant": "parent.resaveCounts",
+      "label": "Resaved backend checklist counts remain correct",
+      "expected": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "before.code",
+      "label": "before: code indentation is intact before conversion",
+      "expected": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "original": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "fountain": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "readerBefore.code",
+      "label": "readerBefore: code indentation is intact before conversion",
+      "expected": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "original": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "fountain": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "modal.title",
+      "label": "Real creation dialog has the intended title",
+      "expected": "Convert this item",
+      "original": "> > 10. [ ] Convert this item",
+      "fountain": "Convert this item",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "modal.code",
+      "label": "Untouched creation prefill preserves code indentation",
+      "expected": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "original": [
+        "A **bold** detail and [link](https://example.com/reference).\n\n```python\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n```\n- [ ] Keep nested check"
+      ],
+      "fountain": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "modal.editor",
+      "label": "Creation dialog uses the verified editor",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "child.title",
+      "label": "Created child title",
+      "expected": "Convert this item",
+      "original": "> > 10. [ ] Convert this item",
+      "fountain": "Convert this item",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "child.type",
+      "label": "Created child type",
+      "expected": "Task",
+      "original": "Task",
+      "fountain": "Task",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "child.description",
+      "label": "Saved child preserves exact description source",
+      "expected": "A **bold** detail and [link](https://example.com/reference).\n\n```python\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n```",
+      "original": "> > ````\n> > A **bold** detail and [link](https://example.com/reference).\n> > \n> > ```python\n> > payload = \"\"\"\n> > - [ ] literal source\n> > \"\"\"\n> > \n> > def identity(value):\n> >     return value\n> > ```\n> > - [ ] Keep nested check\n> > ````",
+      "fountain": "A **bold** detail and [link](https://example.com/reference).\n\n```python\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n```",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "child.parent",
+      "label": "Created child is actually linked to the original parent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "parent.graph",
+      "label": "Reloaded parent retains nested checklist, siblings and prose",
+      "expected": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2
+        ]
+      },
+      "original": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2
+        ]
+      },
+      "fountain": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "parent.counts",
+      "label": "Backend parent retains the intended remaining task counts",
+      "expected": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "parent.state",
+      "label": "Conversion leaves parent Open",
+      "expected": "opened",
+      "original": "opened",
+      "fountain": "opened",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "child.editor",
+      "label": "Child reopens in the verified editor",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "child.code",
+      "label": "Reopened child preserves executable code indentation",
+      "expected": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "original": [
+        "A **bold** detail and [link](https://example.com/reference).\n\n```python\npayload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value\n```\n- [ ] Keep nested check"
+      ],
+      "fountain": [
+        "payload = \"\"\"\n- [ ] literal source\n\"\"\"\n\ndef identity(value):\n    return value"
+      ],
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "child.bold",
+      "label": "Reopened child retains bold detail",
+      "expected": [
+        "bold"
+      ],
+      "original": [],
+      "fountain": [
+        "bold"
+      ],
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "child.link",
+      "label": "Reopened child retains its link",
+      "expected": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [],
+      "fountain": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "before.quotes",
+      "label": "before: real outer quote ownership",
+      "expected": {
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "original": {
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "fountain": {
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "readerBefore.quotes",
+      "label": "readerBefore: real outer quote ownership",
+      "expected": {
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "original": {
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "fountain": {
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "before.nesting",
+      "label": "before: original list nesting survives import and Save",
+      "expected": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "original": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "fountain": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "readerBefore.nesting",
+      "label": "readerBefore: original list nesting survives import and Save",
+      "expected": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "original": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "fountain": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "prefill.quotes",
+      "label": "prefill: child source excludes parent-only quote wrappers",
+      "expected": 0,
+      "original": 2,
+      "fountain": 0,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "childReopened.quotes",
+      "label": "childReopened: child source excludes parent-only quote wrappers",
+      "expected": 0,
+      "original": 2,
+      "fountain": 0,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "parent.resaved",
+      "label": "Typing, Save and reload retain the parent structure",
+      "expected": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2
+        ]
+      },
+      "original": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2
+        ]
+      },
+      "fountain": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 2,
+        "taskQuoteDepths": [
+          2,
+          2,
+          2
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "parent.resaveReachable",
+      "label": "Normal Save remains reachable after parent reopen",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "parent.resaveState",
+      "label": "Resaved parent remains Open",
+      "expected": "opened",
+      "original": "opened",
+      "fountain": "opened",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "deep-quoted-conversion",
+      "invariant": "parent.resaveCounts",
+      "label": "Resaved backend checklist counts remain correct",
+      "expected": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "before.code",
+      "label": "before: code indentation is intact before conversion",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "readerBefore.code",
+      "label": "readerBefore: code indentation is intact before conversion",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "modal.title",
+      "label": "Real creation dialog has the intended title",
+      "expected": "Convert this item",
+      "original": "  > - [ ] Convert this item",
+      "fountain": "Convert this item",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "modal.code",
+      "label": "Untouched creation prefill preserves code indentation",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "modal.editor",
+      "label": "Creation dialog uses the verified editor",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "child.title",
+      "label": "Created child title",
+      "expected": "Convert this item",
+      "original": "> - [ ] Convert this item",
+      "fountain": "Convert this item",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "child.type",
+      "label": "Created child type",
+      "expected": "Task",
+      "original": "Task",
+      "fountain": "Task",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "child.description",
+      "label": "Saved child preserves exact description source",
+      "expected": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "original": "> A **bold** detail and [link](https://example.com/reference).\n>\n> ```python\n> def identity(value):\n>     return value\n> ```\n>\n> - [ ] Keep nested check",
+      "fountain": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "child.parent",
+      "label": "Created child is actually linked to the original parent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "parent.graph",
+      "label": "Reloaded parent retains nested checklist, siblings and prose",
+      "expected": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "original": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 0,
+        "taskQuoteDepths": [
+          0,
+          0,
+          0
+        ]
+      },
+      "fountain": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "parent.counts",
+      "label": "Backend parent retains the intended remaining task counts",
+      "expected": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "parent.state",
+      "label": "Conversion leaves parent Open",
+      "expected": "opened",
+      "original": "opened",
+      "fountain": "opened",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "child.editor",
+      "label": "Child reopens in the verified editor",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "child.code",
+      "label": "Reopened child preserves executable code indentation",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "child.bold",
+      "label": "Reopened child retains bold detail",
+      "expected": [
+        "bold"
+      ],
+      "original": [
+        "bold"
+      ],
+      "fountain": [
+        "bold"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "child.link",
+      "label": "Reopened child retains its link",
+      "expected": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "before.quotes",
+      "label": "before: real outer quote ownership",
+      "expected": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "original": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "fountain": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "readerBefore.quotes",
+      "label": "readerBefore: real outer quote ownership",
+      "expected": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "original": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "fountain": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "before.nesting",
+      "label": "before: original list nesting survives import and Save",
+      "expected": [
+        0,
+        0,
+        1,
+        2,
+        0
+      ],
+      "original": [
+        0,
+        0,
+        1,
+        2,
+        0
+      ],
+      "fountain": [
+        0,
+        0,
+        1,
+        2,
+        0
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "readerBefore.nesting",
+      "label": "readerBefore: original list nesting survives import and Save",
+      "expected": [
+        0,
+        0,
+        1,
+        2,
+        0
+      ],
+      "original": [
+        0,
+        0,
+        1,
+        2,
+        0
+      ],
+      "fountain": [
+        0,
+        0,
+        1,
+        2,
+        0
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "prefill.quotes",
+      "label": "prefill: child source excludes parent-only quote wrappers",
+      "expected": 0,
+      "original": 1,
+      "fountain": 0,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "childReopened.quotes",
+      "label": "childReopened: child source excludes parent-only quote wrappers",
+      "expected": 0,
+      "original": 1,
+      "fountain": 0,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "parent.resaved",
+      "label": "Typing, Save and reload retain the parent structure",
+      "expected": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "original": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 0,
+        "taskQuoteDepths": [
+          0,
+          0,
+          0
+        ]
+      },
+      "fountain": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Parent batch",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "parent.resaveReachable",
+      "label": "Normal Save remains reachable after parent reopen",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "parent.resaveState",
+      "label": "Resaved parent remains Open",
+      "expected": "opened",
+      "original": "opened",
+      "fountain": "opened",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "listed-quote-conversion",
+      "invariant": "parent.resaveCounts",
+      "label": "Resaved backend checklist counts remain correct",
+      "expected": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "before.code",
+      "label": "before: code indentation is intact before conversion",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "readerBefore.code",
+      "label": "readerBefore: code indentation is intact before conversion",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "modal.title",
+      "label": "Real creation dialog has the intended title",
+      "expected": "Convert this item",
+      "original": "> - [ ] Convert this item",
+      "fountain": "Convert this item",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "modal.code",
+      "label": "Untouched creation prefill preserves code indentation",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "modal.editor",
+      "label": "Creation dialog uses the verified editor",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "child.title",
+      "label": "Created child title",
+      "expected": "Convert this item",
+      "original": "> - [ ] Convert this item",
+      "fountain": "Convert this item",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "child.type",
+      "label": "Created child type",
+      "expected": "Task",
+      "original": "Task",
+      "fountain": "Task",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "child.description",
+      "label": "Saved child preserves exact description source",
+      "expected": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "original": "> A **bold** detail and [link](https://example.com/reference).\n>\n> ```python\n> def identity(value):\n>     return value\n> ```\n>\n> - [ ] Keep nested check",
+      "fountain": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "child.parent",
+      "label": "Created child is actually linked to the original parent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "parent.graph",
+      "label": "Reloaded parent retains nested checklist, siblings and prose",
+      "expected": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          0
+        ]
+      },
+      "original": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 0,
+        "taskQuoteDepths": [
+          0,
+          0,
+          0
+        ]
+      },
+      "fountain": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          0
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "parent.counts",
+      "label": "Backend parent retains the intended remaining task counts",
+      "expected": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 2,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "parent.state",
+      "label": "Conversion leaves parent Open",
+      "expected": "opened",
+      "original": "opened",
+      "fountain": "opened",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "child.editor",
+      "label": "Child reopens in the verified editor",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "child.code",
+      "label": "Reopened child preserves executable code indentation",
+      "expected": [
+        "def identity(value):\n    return value"
+      ],
+      "original": [
+        "def identity(value):\n    return value"
+      ],
+      "fountain": [
+        "def identity(value):\n    return value"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "child.bold",
+      "label": "Reopened child retains bold detail",
+      "expected": [
+        "bold"
+      ],
+      "original": [
+        "bold"
+      ],
+      "fountain": [
+        "bold"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "child.link",
+      "label": "Reopened child retains its link",
+      "expected": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "link",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "before.quotes",
+      "label": "before: real outer quote ownership",
+      "expected": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "original": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "fountain": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "readerBefore.quotes",
+      "label": "readerBefore: real outer quote ownership",
+      "expected": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "original": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "fountain": {
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "before.nesting",
+      "label": "before: original list nesting survives import and Save",
+      "expected": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "original": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "fountain": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "readerBefore.nesting",
+      "label": "readerBefore: original list nesting survives import and Save",
+      "expected": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "original": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "fountain": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "prefill.quotes",
+      "label": "prefill: child source excludes parent-only quote wrappers",
+      "expected": 0,
+      "original": 1,
+      "fountain": 0,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "childReopened.quotes",
+      "label": "childReopened: child source excludes parent-only quote wrappers",
+      "expected": 0,
+      "original": 1,
+      "fountain": 0,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "parent.resaved",
+      "label": "Typing, Save and reload retain the parent structure",
+      "expected": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          0
+        ]
+      },
+      "original": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 0,
+        "taskQuoteDepths": [
+          0,
+          0,
+          0
+        ]
+      },
+      "fountain": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified. Reopened."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": [],
+        "quoteBlockCount": 1,
+        "taskQuoteDepths": [
+          0,
+          1,
+          0
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "parent.resaveReachable",
+      "label": "Normal Save remains reachable after parent reopen",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "parent.resaveState",
+      "label": "Resaved parent remains Open",
+      "expected": "opened",
+      "original": "opened",
+      "fountain": "opened",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "inline-quote-conversion",
+      "invariant": "parent.resaveCounts",
+      "label": "Resaved backend checklist counts remain correct",
+      "expected": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "original": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "fountain": {
+        "count": 3,
+        "completed_count": 1
+      },
+      "classification": "parity",
+      "status": "paired"
+    }
+  ],
+  "summary": {
+    "parity": 63,
+    "improvement": 41,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 104
+  },
+  "comparisonComplete": true,
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": true,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/task-containers-20261117/original-3/report.json",
+      "sha256": "c27baaad5d7c4731fa3c12b4e50fda53ff879a0c5689d7069bc2b2f6bc00a84f"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/task-containers-20261117/fountain-3/report.json",
+      "sha256": "a0a4bcd9655e692f2fd2f2b00d4a55cbc6b95cf3c068b54e3e464d6958eb3af8"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "6efe2cecbf84ec6b807dcbe99714a7de14721a9baf1a419df0f0c6bbd73fa419"
+  }
+}

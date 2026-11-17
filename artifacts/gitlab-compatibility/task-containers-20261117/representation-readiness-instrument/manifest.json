@@ -1,0 +1,17 @@
+{
+  "reason": "Original attempt 2 exposes a real deep-quote child representation failure, but its readiness gate required a formatted prose paragraph and stopped before capturing that malformed representation. The next gate checks literal payload presence without requiring prose/code formatting; expected source and structure are unchanged.",
+  "files": {
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": {
+      "archive": "artifacts/gitlab-compatibility/task-containers-20261117/representation-readiness-instrument/scripts__audit-gitlab-compatibility-task-conversion.mjs",
+      "sha256": "fea3f59ea5b0d14f4c6831c5f87e9988c629794454421c83d0de086551b8f953"
+    },
+    "scripts/run-gitlab-compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/task-containers-20261117/representation-readiness-instrument/scripts__run-gitlab-compatibility.mjs",
+      "sha256": "787b09bb5e055679bfea0497abf0c1f1f4568834209521789f54f18b8259bc33"
+    },
+    "integrations/gitlab/fixtures/compatibility-task-containers.json": {
+      "archive": "artifacts/gitlab-compatibility/task-containers-20261117/representation-readiness-instrument/integrations__gitlab__fixtures__compatibility-task-containers.json",
+      "sha256": "8ab8d61ab349b6e9c987f00a043b392d3463fbc6aa24588439ebaaff99521090"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "Existing native candidate collected as fountain-2 before the container repair.",
+  "files": {
+    "integrations/gitlab/services/task_body_extractor.js": {
+      "archive": "artifacts/gitlab-compatibility/task-containers-20261117/before-repair-production/integrations__gitlab__services__task_body_extractor.js",
+      "sha256": "27c25cb653b233ae147bb904fd03f1d73e0857b3638329e69938f26ffc75fc72"
+    },
+    "integrations/gitlab/services/task_conversion_patch.mjs": {
+      "archive": "artifacts/gitlab-compatibility/task-containers-20261117/before-repair-production/integrations__gitlab__services__task_conversion_patch.mjs",
+      "sha256": "70107bef37bf834bfb93569f9c04218171eaa75ef68bad267d609f3dd4bebb40"
+    },
+    "artifacts/gitlab-native-runtime/build.json": {
+      "archive": "artifacts/gitlab-compatibility/task-containers-20261117/before-repair-production/artifacts__gitlab-native-runtime__build.json",
+      "sha256": "77f1dd23bc8a4e8a361e7849d25699a71564674dddf6f503385a60707dedc2d4"
+    },
+    "artifacts/gitlab-native-browser-install/install.json": {
+      "archive": "artifacts/gitlab-compatibility/task-containers-20261117/before-repair-production/artifacts__gitlab-native-browser-install__install.json",
+      "sha256": "21217e8db721e12b89ae68a5e29e9d680b94806852b2a500d032384150a3cbbe"
+    }
+  }
+}

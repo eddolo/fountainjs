@@ -129,3 +129,7 @@ GitHub push/hosted CI still await CLI sign-in; no release was made.
 Use a fresh immutable run ID with the guarded runner and `--suite task-conversion`
 for both sides. This evidence closes the demonstrated source/title and extra-
 paragraph gaps in these workflows; it does not declare the full integration finished.
+
+Follow-up: [quoted/container conversion repair](COMPATIBILITY_TASK_CONTAINER_RESULTS.md)
+verifies the separately recorded four-case corpus. Historical results above remain
+unchanged; broader application acceptance is still open.

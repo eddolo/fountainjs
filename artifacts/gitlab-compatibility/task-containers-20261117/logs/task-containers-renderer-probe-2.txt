@@ -1,0 +1,9 @@
+file:///mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/gitlab-deployment-readiness.mjs:7
+  if(state.Status==='exited'||state.Status==='dead'||state.Dead===true)throw new Error('The isolated GitLab deployment exited before readiness.');
+                                                                             ^
+
+Error: The isolated GitLab deployment exited before readiness.
+    at waitForGitLabDeployment (file:///mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/gitlab-deployment-readiness.mjs:7:78)
+    at async file:///mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/probe-gitlab-task-container-html.mjs:10:1
+
+Node.js v22.23.1
