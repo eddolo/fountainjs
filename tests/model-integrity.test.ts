@@ -26,6 +26,36 @@ describe('attribute allocation and deep immutability', () => {
     expect(Object.isFrozen(attrs)).toBe(true);
   });
 
+  it('honors active ancestors for owned flat and nested attribute snapshots', () => {
+    const flat = freezeAttributes({ value: 'Frozen' });
+    const nested = freezeAttributes({ child: { value: 'Nested' } });
+    expect(isDeeplyImmutable(flat, new Set([flat]))).toBe(false);
+    expect(isDeeplyImmutable(nested, new Set([nested.child as object]))).toBe(false);
+    expect(isDeeplyImmutable(flat)).toBe(true);
+    expect(isDeeplyImmutable(nested)).toBe(true);
+  });
+
+  it('inspects foreign frozen accessors and proxy wrappers on every check', () => {
+    let value: unknown = 'Scalar', reads = 0;
+    const foreign = Object.freeze({ get value() { reads++; return value; } });
+    expect(isDeeplyImmutable(foreign)).toBe(true);
+    value = { mutable: true };
+    expect(isDeeplyImmutable(foreign)).toBe(false);
+    expect(reads).toBe(2);
+    let revoked = false;
+    const wrapper = new Proxy(freezeAttributes({ value: 'Owned' }), { getPrototypeOf(target) {
+      if (revoked) throw new Error('Host revoked inspection');
+      return Reflect.getPrototypeOf(target);
+    } });
+    expect(isDeeplyImmutable(wrapper)).toBe(true);
+    revoked = true;
+    expect(() => isDeeplyImmutable(wrapper)).toThrow('Host revoked inspection');
+  });
+
+  it.each([Symbol('host'), 1n, () => 'host'])('does not certify nonportable primitive/function attributes: %s', value => {
+    expect(isDeeplyImmutable(freezeAttributes({ value }))).toBe(false);
+  });
+
   it('clones/freezes portable aliases without freezing the caller or mistaking siblings for cycles', () => {
     const shared = { nested: ['α', { literal: 'value\r\n\u200b' }] };
     const supplied = { first: shared, second: shared };

@@ -533,3 +533,48 @@ traffic and memory observations, and reproduction commands. The
 only; it is not present in the runtime. Raw CPU profiles, tarballs and consumers
 remain local artifacts. These single-host observations do not establish native
 GitLab performance, a universal regression rate or production readiness.
+
+## Flat attribute certificate experiment (2026-11-17)
+
+A separate candidate recorded a weak immutability certificate for flat, frozen
+attribute bags made by Fountain's own factory. The read shortcut preserved active
+ancestor checks and did not skip attribute/whole-node validators. Foreign frozen
+accessors, proxy wrappers, nested objects and mutable host values retained their
+ordinary inspection paths. This targeted repeated immutability inspection while
+leaving full-document normalization intact.
+
+The installed-package experiment used the same 5,000-paragraph workload, six
+cycles and checkpoints every three cycles, with reversed package order:
+
+| Run | Median 11-character burst | Burst p95 | Median split | Median wrap |
+| --- | ---: | ---: | ---: | ---: |
+| Baseline first | 445.6 ms | 530.2 ms | 597.8 ms | 605.3 ms |
+| Candidate second | 485.1 ms | 539.9 ms | 677.5 ms | 700.8 ms |
+| Candidate first | 455.4 ms | 490.9 ms | 613.8 ms | 610.6 ms |
+| Baseline second | 440.3 ms | 554.5 ms | 624.3 ms | 610.4 ms |
+
+Typing medians were slower in both pairs; p95 and structural timings were mixed.
+After session destruction and forced GC, heap plus array buffers remained about
+2 MiB higher in both candidate processes. This is a single-host memory observation,
+not proof of a leak or a general threshold. All four runs passed the semantic
+assertions and ended with the same portable document digest. Each exchanged 308
+updates including twelve duplicate deliveries; encoded traffic ranged from
+102,345 to 102,356 bytes. Checkpoint reopen creates fresh client identities, and
+adapter IDs use compact random UUID prefixes. Actual byte counts are retained;
+byte-identical traffic is not claimed.
+
+The runtime candidate was discarded. Five new regression cases remain for active
+ancestors, live foreign accessors/proxy inspection and nonportable values. The
+restored code passed 1,019 focused model/Yjs tests across 39 files, TypeScript and
+a production rebuild. No runtime API, dependency, budget or acceptance limit
+changed. No new browser run is claimed for this discarded candidate.
+
+The [decision receipt](../artifacts/yjs-flat-certificate-decision-20261117.json)
+records package fingerprints, report hashes, every timing sample, memory and
+traffic observations, source comparison and reproduction commands. Its
+[discarded patch](../artifacts/yjs-flat-certificate-rejected-20261117.patch) is
+archival evidence only. The installed baseline's TypeScript, package manifest and
+lockfile match the current source before the experiment; its only later public
+source difference is CSS, which is not loaded by this Node workload. Raw reports,
+logs, packages and consumers remain local. Whole-document normalization and
+large-document collaborative typing latency remain open work.

@@ -2,6 +2,14 @@
 
 Updated 2026-11-17.
 
+Collaboration typing follow-up (2026-11-17): flat attribute immutability
+certificates did not improve the 5,000-paragraph installed-package workload.
+Reversed-order runs showed slower typing medians, so the runtime candidate was
+discarded. Five behavior regressions remain; 1,019 focused model/Yjs tests, types
+and a restored production build pass. No acceptance limit or capability status
+changed. Full-document normalization remains an open performance cost.
+[Experiment evidence](YJS_ENDURANCE_DIAGNOSTIC.md#flat-attribute-certificate-experiment-2026-11-17).
+
 Revoked-save repair (2026-11-17): the actual non-admin workflow now keeps the
 pending draft and shows a clear failure when returned update authority is false;
 restored access, reload, Save and reopen retain exact source. A false conflict
