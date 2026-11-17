@@ -213,6 +213,14 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       const source = sources.values().next().value!;
       if (source.matches(doc)) return { markdown: source.source, preservation: 'exact', issues: [] };
     }
+    // GitLab stores a cleared description as empty source, not an internal caret
+    // carrier. Exact authored source above and non-default structure stay intact.
+    const paragraph = doc.childCount === 1 ? doc.child(0) : undefined;
+    if (paragraph?.type.name === 'paragraph' && (paragraph.childCount === 0
+      || paragraph.childCount === 1 && paragraph.child(0).isText && paragraph.child(0).text === '')) {
+      const empty = doc.type.schema.node('paragraph', {}, paragraph.childCount ? [doc.type.schema.text('')] : []);
+      if (doc.eq(doc.type.create({}, [empty]))) return { markdown: '', preservation: 'canonical', issues: [] };
+    }
     const issues: GitLabMarkdownIssue[] = [], tokens = new Map<string, string>();
     let prefix = 'FOUNTAINGITLABSOURCETOKEN';
     const encoded = JSON.stringify(doc.toJSON());

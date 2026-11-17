@@ -21,8 +21,8 @@ if(process.platform!=='linux')throw new Error('Run beside the isolated Linux Doc
 const value=flag=>process.argv[process.argv.indexOf(flag)+1];
 const suite=process.argv.includes('--suite')?value('--suite'):'suggestions';
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
-if(!['suggestions','deletions','reviews','clipboard','partial','crossblock','paint','grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--suite suggestions|deletions|reviews|clipboard|partial|crossblock|paint|grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access]');
+if(!['suggestions','deletions','reviews','clipboard','partial','crossblock','paint','grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
+ throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--suite suggestions|deletions|reviews|clipboard|partial|crossblock|paint|grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal]');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -79,7 +79,7 @@ try{
  const request=async(path,data,method='POST')=>{
   const url=new URL(path,'http://127.0.0.1:5080');if(url.origin!=='http://127.0.0.1:5080')throw new Error('Only isolated local API requests are allowed.');
   const response=await page.request.fetch(url.href,{headers,...(data?{method,data}:{})});
-  if(!response.ok())throw new Error(`Task API ${data?method:'GET'} ${url.pathname}: ${response.status()}`);return response.json();
+  if(!response.ok())throw new Error(`Task API ${data?method:'GET'} ${url.pathname}: ${response.status()}`);return response.status()===204?null:response.json();
  };
  const version=await request('/api/v4/version');expect(version.version).toBe(pin.version);expect(version.revision).toBe(pin.packagedRevision);
  const project=await request('/api/v4/projects/root%2Ffountain-product-integration');expect(project.visibility).toBe('private');
@@ -90,7 +90,7 @@ try{
  const manifests=docker('exec',containerName,'find',assetTarget,'-maxdepth','1','-name','manifest*.json').trim().split('\n').filter(Boolean);
  report.frontendManifests=manifests.length?docker('exec',containerName,'sha256sum',...manifests).trim().split('\n'):[];
  page.on('pageerror',error=>report.errors.push(error.message));
- report.observations=await (suite==='access'?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:suite==='grid'?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
+ report.observations=await (['access','access-removal'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:suite==='grid'?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
  report.collectionComplete=report.observations.every(item=>item.status==='observed');
  if(!report.collectionComplete||report.errors.length)process.exitCode=1;
 }catch(error){report.failure=authenticated?String(error):'Deployment/authentication preflight failed; no credentialed details recorded.';process.exitCode=1;}

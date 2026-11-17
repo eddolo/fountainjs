@@ -105,10 +105,34 @@ export function compareGitLabCompatibility(original,fountain){
       }else{
         const nativeLeft=verifiedEditor(original,left)?left:undefined,nativeRight=verifiedEditor(fountain,right)?right:undefined;
         add('permission.initial','Developer starts with update authority',true,left?.permissionBefore,right?.permissionBefore);
-        add('permission.revoked','Downgrade revokes update authority',false,left?.permissionRevoked,right?.permissionRevoked);
+        if(input.revocationMode==='remove-membership'){
+          const fact=(item,key)=>{
+            if(!item)return undefined;
+            const before=item.accessBeforeRemoval,after=item.accessAfterRemoval;
+            if(key==='membership')return Array.isArray(item.membersAfterRemoval)?!item.membersAfterRemoval.some(member=>member.id===item.actor.id):undefined;
+            if(key==='positive')return before?before.restJSON===true&&before.graphqlEnvelope===true&&before.restStatus===200&&before.graphqlStatus===200&&before.graphqlErrors?.length===0&&before.restDescription===item.confirmedSource&&before.graphqlDescription===item.confirmedSource&&typeof item.confirmedSource==='string':undefined;
+            if(key==='rest')return after?after.restJSON===true&&[403,404].includes(after.restStatus)&&after.restDescription===null:undefined;
+            if(key==='graphql')return after?after.graphqlEnvelope===true&&after.graphqlStatus===200&&after.itemPresent===false&&after.graphqlDescription===null:undefined;
+            if(key==='session')return item.sessionAfterRemoval?item.sessionAfterRemoval.id===item.actor.id&&item.sessionAfterRemoval.username===item.actor.username:undefined;
+            if(key==='write')return item.removedRESTWriteStatus===undefined?undefined:[403,404].includes(item.removedRESTWriteStatus);
+            if(key==='unchanged')return item.afterRESTProbe&&typeof item.confirmedSaved?.description==='string'?item.afterRESTProbe.description===item.confirmedSaved.description:undefined;
+            if(key==='render')return item.deniedInspection&&Number.isInteger(item.deniedInspection.loadingCount)&&Array.isArray(item.errorAlertsAfterInspection)?item.deniedInspection.loadingCount===0&&item.deniedInspection.richVisible===true&&item.deniedInspection.errorCode===null&&!item.errorAlertsAfterInspection.some(text=>/render.*(?:rich text|Markdown)/i.test(text)):undefined;
+            return Array.isArray(item.errorAlerts)?!item.errorAlerts.some(text=>text.includes('Someone edited the description at the same time you did.')):undefined;
+          };
+          for(const [key,label]of [['membership','Task membership is fully removed'],['positive','REST and GraphQL description reads work before removal'],['rest','Removed actor cannot read private source through REST'],['graphql','Removed actor cannot read private work item through GraphQL'],['session','Denial preserves the same authenticated actor'],['write','Removed actor cannot write through REST'],['unchanged','Denied REST probe leaves persisted source unchanged'],['feedback','Denied Save does not report a false edit conflict'],['render','Returning from source inspection does not leave a render error']])add('removal.'+key,label,true,fact(nativeLeft,key),fact(nativeRight,key));
+        }else add('permission.revoked','Downgrade revokes update authority',false,left?.permissionRevoked,right?.permissionRevoked);
+        if(input.revocationMode==='remove-membership'){
+          for(const key of ['retainedSource','recoveredSource','finalReopenedSource']){const retained=item=>item&&typeof item.pendingSource==='string'&&Object.hasOwn(item,key)?item[key]===item.pendingSource:undefined;add('removal.source.'+key,'Exact pending source at '+key,true,retained(nativeLeft),retained(nativeRight));}
+          for(const key of ['deniedBeforeInspection','deniedAfterInspection']){const graph=item=>{const value=item?.graphs?.[key];return input.pendingMode==='empty'&&Array.isArray(value?.prose)?{...value,prose:value.prose.filter(text=>text!=='')}:value;};add('removal.graph.'+key,'Pending rich document remains visible at '+key,input.expectedPending,graph(nativeLeft),graph(nativeRight));}
+          if(input.pendingMode==='empty'){
+            add('removal.empty.intent','The author actually clears the draft','',nativeLeft?.pendingSource,nativeRight?.pendingSource);
+            const stored=item=>item?.finalSaved&&Object.hasOwn(item.finalSaved,'description')?input.allowedEmptyStoredValues.includes(item.finalSaved.description):undefined;
+            add('removal.empty.stored','Empty intent survives host null/empty persistence',true,stored(nativeLeft),stored(nativeRight));
+          }
+        }
         add('permission.restored','Restoring Developer grants update authority again',true,left?.permissionRestored,right?.permissionRestored);
-        for(const key of ['initialWriteSucceeded','draftStayedLocal','revokedWriteBlocked','deniedSaveReported','draftRetainedAfterDenial','draftRecoveredAfterReload','finalSourceExact','finalReopenExact'])add(key,key,true,nativeLeft?.[key],nativeRight?.[key]);
-        for(const [key,expected]of [['confirmed',input.expectedConfirmed],['recovered',input.expectedPending],['final',input.expectedPending]])add('graph.'+key,key+': content, marks, link and code are intact',expected,nativeLeft?.graphs?.[key],nativeRight?.graphs?.[key]);
+        for(const key of ['initialWriteSucceeded','draftStayedLocal','revokedWriteBlocked','deniedSaveReported','draftRetainedAfterDenial','draftRecoveredAfterReload',input.pendingMode==='empty'?'finalEmptyStored':'finalSourceExact','finalReopenExact'])add(key,key,true,nativeLeft?.[key],nativeRight?.[key]);
+        for(const [key,expected]of [['confirmed',input.expectedConfirmed],['recovered',input.expectedPending],['final',input.expectedPending]]){const graph=item=>{const value=item?.graphs?.[key];return input.pendingMode==='empty'&&key!=='confirmed'&&Array.isArray(value?.prose)?{...value,prose:value.prose.filter(text=>text!=='')}:value;};add('graph.'+key,key+': content, marks, link and code are intact',expected,graph(nativeLeft),graph(nativeRight));}
       }
       add('actor.errors','Authenticated task member has no browser errors',[],left?.actorErrors,right?.actorErrors);
       continue;

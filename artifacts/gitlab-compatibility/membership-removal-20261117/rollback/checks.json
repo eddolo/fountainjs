@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "installedFiles": 32,
+  "hostParentRestoredByteExact": true,
+  "preparedDescriptionRestoredByteExact": true,
+  "allReinstalledFileDigestsExact": true,
+  "compiledAssetsChanged": false,
+  "scope": "Source rollback/reinstall with task deployment stopped. Compiled deployment rollback is not claimed."
+}

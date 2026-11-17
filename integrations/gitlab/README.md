@@ -1,5 +1,16 @@
 # GitLab application integration
 
+Full membership removal (2026-11-17): the actual non-author workflow now warns
+on rejected Save, preserves empty/whitespace drafts and serializes a cleared
+native document as empty Markdown. Restored access, reload, Save and reopen keep
+text and empty intent. The final loading-aware pair records 52 parity/10
+improvement/zero regression/two shared checks across 64 requirements. Full
+acceptance stays red: nonempty source-to-rich rendering after access removal
+still fails on both sides. 1,567 integration tests / 60 files, strict types,
+194 upstream component tests, lint and 32-file source rollback pass. No overall
+capability status, public engine/API, budget, version or publication changes.
+[Membership-removal evidence](COMPATIBILITY_MEMBERSHIP_REMOVAL_RESULTS.md).
+
 Revoked-save repair (2026-11-17): the actual non-admin workflow now keeps the
 pending draft and shows a clear failure when returned update authority is false;
 restored access, reload, Save and reopen retain exact source. A false conflict

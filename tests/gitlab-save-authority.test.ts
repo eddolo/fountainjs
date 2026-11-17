@@ -68,3 +68,38 @@ it.each(['Pending local draft.',''])('keeps the original server baseline until s
 it('still detects a genuine remote change after submitting a retained draft',()=>{
  const t=childSetup();t.submit();t.host.workItemDescription.description='Another writer changed the server.';t.refresh();expect(t.host.conflictedDescription).toBe('Another writer changed the server.');expect(t.host.descriptionText).toBe('Pending local draft.');
 });
+
+const failedDescriptionMessage='The description could not be saved. Your draft has been kept. Check your access or connection and try again.';
+it.each(['Pending review.',''])('shows a retained-draft warning for a rejected description mutation %j',async draft=>{
+ const t=setup(true,draft);t.mutate.mockRejectedValueOnce(new Error('The resource does not exist or permission was removed.'));await t.save();
+ expect(t.clearDraft).not.toHaveBeenCalled();expect(t.host.editMode).toBe(true);expect(t.host.updateError).toBe(failedDescriptionMessage);expect(t.host.draftData.description).toBe(draft);expect(t.capture).toHaveBeenCalledOnce();expect(t.host.updateInProgress).toBe(false);
+});
+it('does not clear a description draft without a returned work item acknowledgement',async()=>{
+ const t=setup(true);t.mutate.mockResolvedValueOnce({data:{workItemUpdate:{errors:[],workItem:null}}});await t.save();
+ expect(t.clearDraft).not.toHaveBeenCalled();expect(t.host.editMode).toBe(true);expect(t.host.updateError).toBe(failedDescriptionMessage);
+});
+it('does not report a failed description save if acknowledged draft cleanup throws',async()=>{
+ const t=setup(true);t.clearDraft.mockImplementationOnce(()=>{throw new Error('Local cleanup unavailable');});await t.save();
+ expect(t.host.updateError).toBeNull();expect(t.capture).toHaveBeenCalledOnce();expect(t.host.updateInProgress).toBe(false);
+});
+it('does not apply description-specific failure text to a title-only mutation',async()=>{
+ const t=setup(true);t.host.draftData={title:'Changed title'};t.mutate.mockRejectedValueOnce(new Error('Offline'));await t.save();
+ expect(t.host.updateError).toBeNull();expect(t.clearDraft).not.toHaveBeenCalled();
+});
+function restoreDraftSetup(draft:string|null|undefined,prepared=true){
+ const original=readFileSync(new URL('../integrations/gitlab/fixtures/work-item-description-prepared.vue',import.meta.url),'utf8');
+ const code=prepared?prepareGitLabSaveBaseline(original):original;
+ const start=code.indexOf('    async startEditing() {'),end=code.indexOf('    async cancelEditing() {',start);
+ const method=runInNewContext('({'+code.slice(start,end)+'}).startEditing',{getDraft:()=>draft});
+ const host={createFlow:false,enableEditFromRedirect:false,workItemId:'record',workItemDescription:{description:'Saved server description.'},descriptionText:'',conflictedDescription:'Old conflict',$nextTick:async()=>{},$refs:{}};
+ return {host,open:()=>method.call(host)};
+}
+it('reproduces the pinned host replacing a stored empty draft with server content',async()=>{
+ const t=restoreDraftSetup('',false);await t.open();expect(t.host.descriptionText).toBe('Saved server description.');
+});
+it.each(['',' ','\t\n','Retained draft.'])('restores an explicitly stored draft %j without trimming it',async draft=>{
+ const t=restoreDraftSetup(draft);await t.open();expect(t.host.descriptionText).toBe(draft);expect(t.host.conflictedDescription).toBe('');
+});
+it.each([null,undefined])('uses saved server content only when no draft exists (%j)',async draft=>{
+ const t=restoreDraftSetup(draft);await t.open();expect(t.host.descriptionText).toBe('Saved server description.');
+});

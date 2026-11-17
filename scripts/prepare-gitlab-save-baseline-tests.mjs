@@ -33,9 +33,25 @@ const regression=`    describe('a submitted draft awaiting acknowledgement', () 
       });
     });
 
+    describe('an explicitly stored existing-item draft', () => {
+      beforeEach(async () => {
+        await createComponent();
+        await waitForPromises();
+      });
+
+      it.each(['', ' ', '\\t\\n', 'Retained draft.'])('restores source %j exactly on entering edit mode', async (draft) => {
+        getDraft.mockReturnValue(draft);
+        await wrapper.setProps({ editMode: true });
+        await waitForPromises();
+
+        expect(findMarkdownEditor().props('value')).toBe(draft);
+      });
+    });
+
+
 `;
 const require=createRequire(resolve(source,'package.json')),prettier=require('prettier'),options=await prettier.resolveConfig(target);
 const value=await prettier.format(baseline.replace(anchor,regression+anchor),{...options,filepath:target,plugins:(options.plugins??[]).map(name=>require.resolve(name)),tailwindConfig:resolve(source,options.tailwindConfig)});
-const current=await readFile(target,'utf8');if(current!==baseline&&current!==value)throw new Error('Refusing unrecognized conflict test edits.');
+const current=await readFile(target,'utf8');if(current!==baseline&&current!==value&&createHash('sha256').update(current).digest('hex')!=='1f80ca7599087b29266a4d52f097a799f4047d401be3d22e7f18caeed86fde12')throw new Error('Refusing unrecognized conflict test edits.');
 await writeFile(target,value);
-console.log('Prepared submitted-draft unchanged-server conflict regression.');
+console.log('Prepared submitted-draft baseline and exact stored-draft restoration regressions.');

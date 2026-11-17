@@ -1,0 +1,17 @@
+time="2026-11-17T21:03:32Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Recreate
+ Container fountain-gitlab-integration-baseline-1  Recreated
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"kind":"gitlab-compatibility","side":"fountain","case":"developer-removed-text","stage":"developer-save"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"developer-removed-text","stage":"revoke-edit-access"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"developer-removed-text","stage":"restore-and-recover"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"developer-removed-text","stage":"complete"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"developer-removed-empty","stage":"developer-save"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"developer-removed-empty","stage":"clear-pending-draft"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"developer-removed-empty","stage":"revoke-edit-access"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"developer-removed-empty","stage":"restore-and-recover"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"developer-removed-empty","stage":"complete"}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+{"kind":"gitlab-compatibility","side":"fountain","output":"/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-compatibility/membership-removal-20261117/fountain-4","collectionComplete":true,"classification":null}

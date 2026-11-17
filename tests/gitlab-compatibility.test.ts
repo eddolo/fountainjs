@@ -469,3 +469,73 @@ it('rejects native unauthorized writes or anonymous content disclosure',()=>{
 it('requires the same actual non-admin actor on both sides, not just the same role label',()=>{
  const pair=accessPolicyReports();pair[1].observations[0].actor.id=3;pair[1].observations[0].membership.id=3;const result=compareGitLabCompatibility(...pair);expect(result.environment.matched).toBe(false);expect(result.environment.mismatches).toContain('guest-readonly.actor');expect(result.summary.incomplete).toBe(31);
 });
+
+function membershipRemovalPolicyReports(): any[]{
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-access-removal.json',import.meta.url),'utf8'));
+ const pair=accessPolicyReports();for(const report of pair){
+  const base=report.observations[1];report.fixture=fixture;
+  report.observations=fixture.cases.map((input:any)=>{const pending=input.pendingMode==='empty'?'':'Pending source';return {...base,id:input.id,input,
+   graphs:{initial:structuredClone(input.expectedGraph),confirmed:structuredClone(input.expectedConfirmed),recovered:structuredClone(input.expectedPending),final:structuredClone(input.expectedPending),deniedBeforeInspection:structuredClone(input.expectedPending),deniedAfterInspection:structuredClone(input.expectedPending)},
+   confirmedSource:'Confirmed source',confirmedSaved:{description:'Confirmed source'},pendingSource:pending,retainedSource:pending,recoveredSource:pending,finalReopenedSource:pending,
+   membersAfterRemoval:[],accessBeforeRemoval:{restJSON:true,graphqlEnvelope:true,restStatus:200,restDescription:'Confirmed source',graphqlStatus:200,graphqlErrors:[],itemPresent:true,graphqlDescription:'Confirmed source'},
+   accessAfterRemoval:{restJSON:true,graphqlEnvelope:true,restStatus:404,restDescription:null,graphqlStatus:200,graphqlErrors:[],itemPresent:false,graphqlDescription:null},
+   sessionAfterRemoval:{id:2,username:fixture.username},removedRESTWriteStatus:404,afterRESTProbe:{description:'Confirmed source'},errorAlerts:['Access was denied.'],errorAlertsAfterInspection:['Access was denied.'],
+   deniedInspection:{loadingCount:0,richVisible:true,errorCode:null,alerts:['Access was denied.'],recoverySource:null},
+   finalSaved:{description:input.pendingMode==='empty'?null:pending},finalSourceExact:input.pendingMode!=='empty',finalEmptyStored:input.pendingMode==='empty',
+  };});
+ }
+ return pair;
+}
+it('interprets full membership-removal controls and text/empty recovery as separate bounded evidence',()=>{
+ const result=compareGitLabCompatibility(...membershipRemovalPolicyReports());
+ expect(result.summary).toEqual({parity:64,improvement:0,regression:0,'shared-limitation':0,incomplete:0,total:64});
+ expect(result.featureAcceptance.passed).toBe(true);
+});
+it.each([
+ (item:any)=>{item.accessAfterRemoval.restStatus=200;},
+ (item:any)=>{item.accessAfterRemoval.restDescription='Leaked private source';},
+ (item:any)=>{item.accessAfterRemoval.itemPresent=true;},
+ (item:any)=>{item.accessAfterRemoval.graphqlEnvelope=false;},
+ (item:any)=>{item.membersAfterRemoval=[{id:2,username:'fountain_compat_access',accessLevel:30}];},
+ (item:any)=>{item.sessionAfterRemoval.id=3;},
+ (item:any)=>{item.removedRESTWriteStatus=200;},
+ (item:any)=>{item.afterRESTProbe.description='Unauthorized change';},
+ (item:any)=>{item.errorAlerts=['Someone edited the description at the same time you did.'];},
+ (item:any)=>{item.errorAlertsAfterInspection=['An error occurred while trying to render the rich text editor.'];},
+ (item:any)=>{item.deniedInspection.richVisible=false;},
+ (item:any)=>{item.deniedInspection.loadingCount=1;},
+ (item:any)=>{item.deniedInspection.errorCode='GITLAB_NATIVE_OPERATION_FAILED';},
+])('rejects contradictory raw authorization or feedback evidence even with passing observation flags',mutate=>{
+ const pair=membershipRemovalPolicyReports();mutate(pair[1].observations[0]);const result=compareGitLabCompatibility(...pair);
+ expect(result.summary.regression).toBe(1);expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
+});
+it('requires observed positive controls and denies missing removal receipts a completed comparison',()=>{
+ for(const key of ['accessBeforeRemoval','accessAfterRemoval','membersAfterRemoval','sessionAfterRemoval','removedRESTWriteStatus','afterRESTProbe','errorAlerts','errorAlertsAfterInspection','deniedInspection']){
+  const pair=membershipRemovalPolicyReports();delete pair[1].observations[0][key];const result=compareGitLabCompatibility(...pair);
+  expect(result.summary.incomplete).toBeGreaterThan(0);expect(result.comparisonComplete).toBe(false);expect(result.regressionGate.passed).toBe(false);
+ }
+});
+it('does not mistake null/missing recovered draft source for an intentionally empty draft',()=>{
+ for(const value of [null,undefined,'Server content']){
+  const pair=membershipRemovalPolicyReports();pair[1].observations[1].recoveredSource=value;const result=compareGitLabCompatibility(...pair);
+  expect(result.featureAcceptance.passed).toBe(false);expect(result.regressionGate.passed).toBe(false);
+ }
+});
+it('ignores only a caret paragraph for explicit empty intent while preserving substantive content checks',()=>{
+ const pair=membershipRemovalPolicyReports();pair[1].observations[1].graphs.recovered.prose=[''];
+ expect(compareGitLabCompatibility(...pair).featureAcceptance.passed).toBe(true);
+ pair[1].observations[1].graphs.recovered.prose=['Unexpected text'];
+ expect(compareGitLabCompatibility(...pair).summary.regression).toBe(1);
+});
+
+it('does not count a private empty HTML carrier as the author clearing Markdown',()=>{
+ const pair=membershipRemovalPolicyReports();pair[1].observations[1].pendingSource='<p data-fountain-empty="text"></p>';
+ const result=compareGitLabCompatibility(...pair);
+ expect(result.rows.find((row:any)=>row.case==='developer-removed-empty'&&row.invariant==='removal.empty.intent')?.classification).toBe('regression');
+ expect(result.featureAcceptance.passed).toBe(false);
+});
+
+it('requires a completed loading observation for the removal render claim',()=>{
+ const pair=membershipRemovalPolicyReports();delete pair[1].observations[0].deniedInspection.loadingCount;
+ const result=compareGitLabCompatibility(...pair);expect(result.comparisonComplete).toBe(false);expect(result.summary.incomplete).toBeGreaterThan(0);
+});

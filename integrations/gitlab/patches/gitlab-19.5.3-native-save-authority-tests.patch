@@ -1,8 +1,8 @@
 diff --git a/spec/frontend/work_items/components/work_item_detail_spec.js b/spec/frontend/work_items/components/work_item_detail_spec.js
-index fcb0a3c6..56d84d54 100644
+index fcb0a3c6..37cfec64 100644
 --- a/spec/frontend/work_items/components/work_item_detail_spec.js
 +++ b/spec/frontend/work_items/components/work_item_detail_spec.js
-@@ -474,4 +474,61 @@ describe('WorkItemDetail component', () => {
+@@ -474,4 +474,114 @@ describe('WorkItemDetail component', () => {
      });
  
 +    describe('when description update authority is revoked', () => {
@@ -58,6 +58,59 @@ index fcb0a3c6..56d84d54 100644
 +        expect(findWorkItemDescription().props('editMode')).toBe(false);
 +        expect(wrapper.text()).not.toContain(
 +          'You no longer have permission to edit this description. Your draft has been kept.',
++        );
++      });
++    });
++
++    describe('when a description mutation rejects', () => {
++      let clearDraftSpy;
++
++      beforeEach(async () => {
++        setWindowLocation('?edit=true');
++        clearDraftSpy = jest.fn();
++        createComponent({ mutationHandler: jest.fn() });
++        await mockApollo.resolveAll();
++      });
++
++      it.each(['Pending review.', ''])(
++        'keeps source %j and displays a retry warning',
++        async (draft) => {
++          findWorkItemDescription().vm.$emit('update-draft', draft);
++          findWorkItemDescription().vm.$emit('update-work-item', { clearDraft: clearDraftSpy });
++          await mockApollo.rejectMutation(updateWorkItemMutation);
++
++          expect(clearDraftSpy).not.toHaveBeenCalled();
++          expect(findWorkItemDescription().props('editMode')).toBe(true);
++          expect(findWorkItemDescription().props('updateInProgress')).toBe(false);
++          expect(findAlert().text()).toBe(
++            'The description could not be saved. Your draft has been kept. Check your access or connection and try again.',
++          );
++        },
++      );
++    });
++
++    describe('when a description response has no work item acknowledgement', () => {
++      let clearDraftSpy;
++
++      beforeEach(async () => {
++        setWindowLocation('?edit=true');
++        clearDraftSpy = jest.fn();
++        createComponent({
++          mutationHandler: jest
++            .fn()
++            .mockResolvedValue({ data: { workItemUpdate: { errors: [], workItem: null } } }),
++        });
++        await mockApollo.resolveAll();
++        findWorkItemDescription().vm.$emit('update-draft', 'Pending review.');
++        findWorkItemDescription().vm.$emit('update-work-item', { clearDraft: clearDraftSpy });
++        await mockApollo.resolveMutation(updateWorkItemMutation);
++      });
++
++      it('retains the draft and displays a retry warning', () => {
++        expect(clearDraftSpy).not.toHaveBeenCalled();
++        expect(findWorkItemDescription().props('editMode')).toBe(true);
++        expect(findAlert().text()).toBe(
++          'The description could not be saved. Your draft has been kept. Check your access or connection and try again.',
 +        );
 +      });
 +    });

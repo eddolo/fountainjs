@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-compatibility.test.ts (116 tests | 1 failed) 158ms
+   × ignores only a caret paragraph for explicit empty intent while preserving substantive content checks 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-compatibility.test.ts > ignores only a caret paragraph for explicit empty intent while preserving substantive content checks
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/gitlab-compatibility.test.ts:523:65
+    521|  expect(compareGitLabCompatibility(...pair).featureAcceptance.passed).…
+    522|  pair[1].observations[1].graphs.recovered.prose=['Unexpected text'];
+    523|  expect(compareGitLabCompatibility(...pair).summary.regression).toBe(1…
+       |                                                                 ^
+    524| });
+    525|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 119 passed (120)
+   Start at  20:10:28
+   Duration  426ms (tests 46%, transform 39%, import 12%, worker 3%)

@@ -1,0 +1,121 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/work_items/components/work_item_detail_spec.js spec/frontend/work_items/components/work_item_description_spec.js
+FAIL spec/frontend/work_items/components/work_item_detail_spec.js
+  ● WorkItemDetail component › description › when a description mutation rejects › keeps source "Pending review." and displays a retry warning
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "The description could not be saved. Your draft has been kept. Check your access or connection and try again."
+    Received: "Failed to load stack trace."
+
+      551 |           expect(findWorkItemDescription().props('editMode')).toBe(true);
+      552 |           expect(findWorkItemDescription().props('updateInProgress')).toBe(false);
+    > 553 |           expect(findAlert().text()).toBe(
+          |                                      ^
+      554 |             'The description could not be saved. Your draft has been kept. Check your access or connection and try again.',
+      555 |           );
+      556 |         },
+
+      at toBe (spec/frontend/work_items/components/work_item_detail_spec.js:553:38)
+
+  ● WorkItemDetail component › description › when a description mutation rejects › keeps source "" and displays a retry warning
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "The description could not be saved. Your draft has been kept. Check your access or connection and try again."
+    Received: "Failed to load stack trace."
+
+      551 |           expect(findWorkItemDescription().props('editMode')).toBe(true);
+      552 |           expect(findWorkItemDescription().props('updateInProgress')).toBe(false);
+    > 553 |           expect(findAlert().text()).toBe(
+          |                                      ^
+      554 |             'The description could not be saved. Your draft has been kept. Check your access or connection and try again.',
+      555 |           );
+      556 |         },
+
+      at toBe (spec/frontend/work_items/components/work_item_detail_spec.js:553:38)
+
+  ● WorkItemDetail component › description › when a description response has no work item acknowledgement › retains the draft and displays a retry warning
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: called with 0 arguments
+
+      576 |
+      577 |       it('retains the draft and displays a retry warning', () => {
+    > 578 |         expect(clearDraftSpy).not.toHaveBeenCalled();
+          |                                   ^
+      579 |         expect(findWorkItemDescription().props('editMode')).toBe(true);
+      580 |         expect(findAlert().text()).toBe(
+      581 |           'The description could not be saved. Your draft has been kept. Check your access or connection and try again.',
+
+      at Object.toHaveBeenCalled (spec/frontend/work_items/components/work_item_detail_spec.js:578:35)
+
+FAIL spec/frontend/work_items/components/work_item_description_spec.js
+  ● WorkItemDescription › when edit mode is active › an explicitly stored existing-item draft › restores source "" exactly on entering edit mode
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: ""
+    Received: "some **great** text"
+
+      745 |           await waitForPromises();
+      746 |
+    > 747 |           expect(findMarkdownEditor().props('value')).toBe(draft);
+          |                                                       ^
+      748 |         },
+      749 |       );
+      750 |     });
+
+      at toBe (spec/frontend/work_items/components/work_item_description_spec.js:747:55)
+
+  ● WorkItemDescription › when edit mode is active › an explicitly stored existing-item draft › restores source " " exactly on entering edit mode
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: " "
+    Received: "some **great** text"
+
+      745 |           await waitForPromises();
+      746 |
+    > 747 |           expect(findMarkdownEditor().props('value')).toBe(draft);
+          |                                                       ^
+      748 |         },
+      749 |       );
+      750 |     });
+
+      at toBe (spec/frontend/work_items/components/work_item_description_spec.js:747:55)
+
+  ● WorkItemDescription › when edit mode is active › an explicitly stored existing-item draft › restores source "\t\n" exactly on entering edit mode
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 2
+    + Received  + 1
+
+    - \t
+    -
+    + some **great** text
+
+      745 |           await waitForPromises();
+      746 |
+    > 747 |           expect(findMarkdownEditor().props('value')).toBe(draft);
+          |                                                       ^
+      748 |         },
+      749 |       );
+      750 |     });
+
+      at toBe (spec/frontend/work_items/components/work_item_description_spec.js:747:55)
+
+Test Suites: 2 failed, 2 total
+Tests:       6 failed, 188 passed, 194 total
+Snapshots:   0 total
+Time:        15.697 s
+Ran all test suites matching /spec\/frontend\/work_items\/components\/work_item_detail_spec.js|spec\/frontend\/work_items\/components\/work_item_description_spec.js/i.
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

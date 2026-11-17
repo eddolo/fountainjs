@@ -133,3 +133,22 @@ it('does not discard an authored alignment while normalizing renderer-added auto
   expect(codec.serialize({ doc: document })).toBe(source);
   expect(codec.serializeWithReport({ doc: append(document) }).issues.some(issue => issue.code === 'attribute:paragraph')).toBe(true);
 });
+
+it.each([false,true])('serializes a cleared default document as empty host Markdown (caret leaf: %j)',async caret=>{
+ const {codec,document,schema}=await convert('Saved paragraph.','<p>Saved paragraph.</p>');
+ const cleared=document.copy([schema.node('paragraph',{},caret?[schema.text('')]:[])]);
+ expect(codec.serializeWithReport({doc:cleared})).toEqual({markdown:'',preservation:'canonical',issues:[]});
+});
+it.each([' \n\t','<p data-fountain-empty="text"></p>'])('keeps untouched authored empty-looking source exact: %j',async source=>{
+ const {codec,document}=await convert(source,'<p></p>');
+ expect(codec.serializeWithReport({doc:document})).toEqual({markdown:source,preservation:'exact',issues:[]});
+});
+it('does not erase an authored extra blank paragraph or its formatting',async()=>{
+ const {codec,document,schema}=await convert('Saved paragraph.','<p>Saved paragraph.</p>');
+ const blank=schema.node('paragraph',{},[schema.text('')]);
+ expect(codec.serialize({doc:document.copy([blank,blank])})).toContain('data-fountain-empty');
+ const formatted=schema.node('paragraph',{},[schema.text('',[schema.mark('strong')])]);
+ expect(codec.serializeWithReport({doc:document.copy([formatted])}).markdown).not.toBe('');
+ const attributed=schema.node('paragraph',{align:'center'},[schema.text('')]);
+ expect(codec.serializeWithReport({doc:document.copy([attributed])}).issues.length).toBeGreaterThan(0);
+});

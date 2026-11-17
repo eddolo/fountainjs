@@ -1,0 +1,158 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-save-authority.test.ts (29 tests | 6 failed) 42ms
+   × shows a retained-draft warning for a rejected description mutation "Pending review." 6ms
+   × shows a retained-draft warning for a rejected description mutation "" 2ms
+   × does not clear a description draft without a returned work item acknowledgement 2ms
+   × restores an explicitly stored draft "" without trimming it 2ms
+   × restores an explicitly stored draft " " without trimming it 3ms
+   × restores an explicitly stored draft "\t\n" without trimming it 2ms
+ ❯ tests/gitlab-markdown-codec.test.ts (36 tests | 2 failed) 87ms
+   × serializes a cleared default document as empty host Markdown (caret leaf: false) 6ms
+   × serializes a cleared default document as empty host Markdown (caret leaf: true) 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-markdown-codec.test.ts > serializes a cleared default document as empty host Markdown (caret leaf: false)
+AssertionError: expected { …(3) } to deeply equal { markdown: '', …(2) }
+
+- Expected
++ Received
+
+  {
+    "issues": [],
+-   "markdown": "",
++   "markdown": "<p data-fountain-empty=\"block\"></p>",
+    "preservation": "canonical",
+  }
+
+ ❯ tests/gitlab-markdown-codec.test.ts:140:51
+    138|  const {codec,document,schema}=await convert('Saved paragraph.','<p>Sa…
+    139|  const cleared=document.copy([schema.node('paragraph',{},caret?[schema…
+    140|  expect(codec.serializeWithReport({doc:cleared})).toEqual({markdown:''…
+       |                                                   ^
+    141| });
+    142| it.each([' \n\t','<p data-fountain-empty="text"></p>'])('keeps untouch…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/gitlab-markdown-codec.test.ts > serializes a cleared default document as empty host Markdown (caret leaf: true)
+AssertionError: expected { …(3) } to deeply equal { markdown: '', …(2) }
+
+- Expected
++ Received
+
+  {
+    "issues": [],
+-   "markdown": "",
++   "markdown": "<p data-fountain-empty=\"text\"></p>",
+    "preservation": "canonical",
+  }
+
+ ❯ tests/gitlab-markdown-codec.test.ts:140:51
+    138|  const {codec,document,schema}=await convert('Saved paragraph.','<p>Sa…
+    139|  const cleared=document.copy([schema.node('paragraph',{},caret?[schema…
+    140|  expect(codec.serializeWithReport({doc:cleared})).toEqual({markdown:''…
+       |                                                   ^
+    141| });
+    142| it.each([' \n\t','<p data-fountain-empty="text"></p>'])('keeps untouch…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/gitlab-save-authority.test.ts > shows a retained-draft warning for a rejected description mutation "Pending review."
+ FAIL  tests/gitlab-save-authority.test.ts > shows a retained-draft warning for a rejected description mutation ""
+AssertionError: expected null to be 'The description could not be saved. Y…' // Object.is equality
+
+- Expected:
+"The description could not be saved. Your draft has been kept. Check your access or connection and try again."
+
++ Received:
+null
+
+ ❯ tests/gitlab-save-authority.test.ts:75:108
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/gitlab-save-authority.test.ts > does not clear a description draft without a returned work item acknowledgement
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ tests/gitlab-save-authority.test.ts:79:27
+     77| it('does not clear a description draft without a returned work item ac…
+     78|  const t=setup(true);t.mutate.mockResolvedValueOnce({data:{workItemUpd…
+     79|  expect(t.clearDraft).not.toHaveBeenCalled();expect(t.host.editMode).t…
+       |                           ^
+     80| });
+     81| it('does not report a failed description save if acknowledged draft cl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/gitlab-save-authority.test.ts > restores an explicitly stored draft "" without trimming it
+AssertionError: expected 'Saved server description.' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Saved server description.
+
+ ❯ tests/gitlab-save-authority.test.ts:101:81
+     99| });
+    100| it.each(['',' ','\t\n','Retained draft.'])('restores an explicitly sto…
+    101|  const t=restoreDraftSetup(draft);await t.open();expect(t.host.descrip…
+       |                                                                                 ^
+    102| });
+    103| it.each([null,undefined])('uses saved server content only when no draf…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  tests/gitlab-save-authority.test.ts > restores an explicitly stored draft " " without trimming it
+AssertionError: expected 'Saved server description.' to be ' ' // Object.is equality
+
+Expected: " "
+Received: "Saved server description."
+
+ ❯ tests/gitlab-save-authority.test.ts:101:81
+     99| });
+    100| it.each(['',' ','\t\n','Retained draft.'])('restores an explicitly sto…
+    101|  const t=restoreDraftSetup(draft);await t.open();expect(t.host.descrip…
+       |                                                                                 ^
+    102| });
+    103| it.each([null,undefined])('uses saved server content only when no draf…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  tests/gitlab-save-authority.test.ts > restores an explicitly stored draft "\t\n" without trimming it
+AssertionError: expected 'Saved server description.' to be '\t\n' // Object.is equality
+
+- Expected
++ Received
+
+- \t
+-
++ Saved server description.
+
+ ❯ tests/gitlab-save-authority.test.ts:101:81
+     99| });
+    100| it.each(['',' ','\t\n','Retained draft.'])('restores an explicitly sto…
+    101|  const t=restoreDraftSetup(draft);await t.open();expect(t.host.descrip…
+       |                                                                                 ^
+    102| });
+    103| it.each([null,undefined])('uses saved server content only when no draf…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  8 failed | 57 passed (65)
+   Start at  20:42:12
+   Duration  1.42s (transform 72%, import 17%, tests 9%, worker 1%)
