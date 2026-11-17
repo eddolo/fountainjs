@@ -77,7 +77,7 @@
     "app/assets/javascripts/content_editor/components/fountain_editor_surface.vue": "a16231dc5e237a944b4030cee465011c1560840197314d8583f4c2c55ae14a5f",
     "app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue": "394b611d206cd6f7a773f1e0d802f8e3108bd28e24bfaa5055a107a5c4b7c902",
     "app/assets/javascripts/content_editor/components/fountain_context_surface.vue": "0ed961554fcd01f882248b9d7e9d9252d29df992a7f884ae661cc19e29a441b8",
-    "app/assets/javascripts/content_editor/components/fountain_link_menu.vue": "9bdf449c4181c9d8ae9c4aecd5bc8a2c6849235a6fdc17d7885b0b3180a712c9",
+    "app/assets/javascripts/content_editor/components/fountain_link_menu.vue": "967267179f82fe6267cc42dd1176150431bcd6e6e74e389a95b3e89723ce0c57",
     "app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js": "da2df3c21cc67b6062c9e8877f04c43567058d8d20655c1ee559593202180889",
     "app/assets/javascripts/content_editor/components/fountain_code_menu.vue": "4d7939765b6e72c7d37886aebe0f1788fe7680da04a330b01c132ed21ab1b74f",
     "app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js": "10e8f6ddb5dc496be35671064024c0952df5e4b6442fe3694ba4aaf3f960acf0",

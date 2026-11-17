@@ -164,7 +164,8 @@ export default {
 <template>
   <div :id="`${modalId}-preview-host`" data-testid="native-link-menu" class="gl-inline-flex">
     <gl-button :disabled="disabled || plainTitle || !available" size="small" icon="link" :aria-label="s__('ContentEditor|Insert or edit link')" :title="s__('ContentEditor|Insert or edit link')" @click="open" />
-    <gl-popover v-if="anchor && previewVisible" :key="anchorVersion" :target="anchor" :show="true" triggers="manual" placement="bottom" :title="s__('ContentEditor|Link')" :container="`${modalId}-preview-host`">
+    <!-- Keep final-line link actions above the document, clear of host Save/Cancel controls. -->
+    <gl-popover v-if="anchor && previewVisible" :key="anchorVersion" :target="anchor" :show="true" triggers="manual" placement="top" :title="s__('ContentEditor|Link')" :container="`${modalId}-preview-host`">
       <div ref="preview" @mousedown="preserveSelection" @focusin="onFocusIn" @focusout="onFocusOut">
         <gl-link :href="context.displayHref" :title="displayURL" target="_blank" rel="noopener noreferrer" class="gl-break-all">{{ displayURL }}</gl-link>
         <div class="gl-mt-3 gl-flex gl-flex-wrap gl-gap-2">

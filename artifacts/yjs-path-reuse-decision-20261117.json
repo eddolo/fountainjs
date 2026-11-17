@@ -15,7 +15,7 @@
     "path": "artifacts/yjs-normalize-baseline-20261117.cpuprofile",
     "sha256": "ae8499dc20d30dc2bea19ace4d8287bcf30ef0f3231c468b5fbd02e5ef0bdc3f",
     "output": "artifacts/yjs-normalize-baseline-attribution-20261117.json",
-    "outputSha256": "44a75eff53d90d486d9c29db1f4710b82f745d0392e73fb4cde20dedf837311c",
+    "outputSha256": "0a89f8c2352cc396aba82646411c2dfb8eb7330c8c979650be411d7af1bbcf86",
     "scope": "Sampled function attribution below the typing callback, excluding root-level GC; not used as an unprofiled timing comparison.",
     "attributionScript": {
       "path": "artifacts/inspect-yjs-normalize-profile-20261117.py",

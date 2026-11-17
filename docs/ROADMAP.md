@@ -2,6 +2,18 @@
 
 Updated 2026-11-17.
 
+Matched cross-paragraph follow-up (2026-11-17): four caret-ready keyboard/mouse
+forward/backward workflows verify 188 parity and 16 improvement outcomes across
+204 checks. The improved checks concern one plain-text boundary-loss issue in
+the pinned original GitLab editor. A reproduced native link popup blocking Save
+is repaired and checked through normal Save/reopen. Earlier inadequate profiles
+and the timing anomaly remain retained. 1404 integration cases / 54 files,
+40 comparison-policy tests and strict types pass. Wider selections/platforms,
+rapid input and full product acceptance remain open. One blank original reopen
+frame has correct DOM receipts but unresolved paint/capture verification; it is
+not counted as an improvement.
+[Cross-paragraph evidence](../integrations/gitlab/COMPATIBILITY_CROSSBLOCK_RESULTS.md).
+
 Matched directed-selection follow-up (2026-11-17): four keyboard/pointer
 forward/backward workflows verify 188 parity checks for rich partial copy/cut,
 external/internal paste, history and save/reopen. Document readiness is required;

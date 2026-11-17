@@ -1,7 +1,7 @@
 import {expect,it} from 'vitest';
 // These are tests of interpretation policy, not real application evidence.
 // @ts-expect-error Private JS audit helper intentionally has no published type entry.
-import {classifyInvariant,compareGitLabCompatibility,suggestionBlock} from '../integrations/gitlab/testing/compatibility.mjs';
+import {classifyInvariant,compareGitLabCompatibility,suggestionBlock,clipboardParagraphs} from '../integrations/gitlab/testing/compatibility.mjs';
 it.each([
  [true,true,true,'parity'],[true,false,true,'improvement'],[true,true,false,'regression'],[true,false,false,'shared-limitation'],
  ['exact','changed-a','changed-b',null],[true,undefined,true,null],[true,true,undefined,null],
@@ -182,5 +182,48 @@ it.each([['','parity'],['\u200B','regression']])('distinguishes empty caret wrap
 });
 it('rejects partial-selection evidence without actual document-load receipts',()=>{
  const [original,fountain]=partialReports();delete (original.observations[0] as any).documentReady;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(2);expect(result.regressionGate.passed).toBe(false);
+});
+
+it('detects cross-paragraph paste collapse even when all characters and marks survive',()=>{
+ const [original,fountain]=partialReports();
+ for(const report of [original,fountain]){
+  const input:any=report.fixture.cases[0];input.pastedGraph.prose=['start bold link tail','bold','link'];
+  const item:any=report.observations[0];item.input=structuredClone(input);
+  for(const phase of ['pasted','pasteRedo','reopened'])item[phase].prose=structuredClone(input.pastedGraph.prose);
+ }
+ (fountain.observations[0] as any).pasted.prose=['start bold link tail','boldlink'];
+ const result=compareGitLabCompatibility(original,fountain);
+ expect(result.rows.find((row:any)=>row.invariant==='pasted.prose').classification).toBe('regression');
+ expect(result.regressionGate.passed).toBe(false);
+});
+
+it.each(['one\ntwo','one\n\ntwo'])('accepts a text clipboard boundary between two nonempty paragraphs %j',value=>{
+ expect(clipboardParagraphs(value)).toEqual(['one','two']);
+});
+it.each(['onetwo','one\n\n\ntwo','one\r\ntwo','one\n\u200Btwo','one \ntwo'])('retains plain clipboard differences rather than hiding loss %j',value=>{
+ expect(clipboardParagraphs(value)).not.toEqual(['one','two']);
+});
+it('keeps missing plain clipboard evidence missing',()=>{expect(clipboardParagraphs(undefined)).toBeUndefined();});
+
+it('classifies actual plain-paste boundary loss separately from an obstructed host save button',()=>{
+ const [original,fountain]=partialReports();
+ for(const report of [original,fountain]){
+  const input:any=report.fixture.cases[0];input.clipboardParagraphs=['bold','link'];input.verifySaveAccess=true;
+  const item:any=report.observations[0];item.input=structuredClone(input);
+  const text=report.side==='original'?'boldlink':'bold\nlink';
+  item.clipboard.text=text;item.cutClipboardText=text;item.beforePasteClipboardText=text;item.externalPlain=text;
+  item.saveButtonReachable=report.side==='original';
+ }
+ const result=compareGitLabCompatibility(original,fountain);
+ for(const invariant of ['clipboard.text','externalPlain.paragraphs','cutClipboardText','beforePasteClipboardText'])
+  expect(result.rows.find((row:any)=>row.invariant===invariant).classification).toBe('improvement');
+ expect(result.rows.find((row:any)=>row.invariant==='saveButtonReachable').classification).toBe('regression');
+ expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
+});
+
+it('does not approve keyboard cross-paragraph evidence without its declared caret readiness',()=>{
+ const [original,fountain]=partialReports();
+ for(const report of [original,fountain]){const input:any=report.fixture.cases[0];input.requireCaretReady=true;(report.observations[0] as any).input=structuredClone(input);}
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(2);expect(result.regressionGate.passed).toBe(false);
 });

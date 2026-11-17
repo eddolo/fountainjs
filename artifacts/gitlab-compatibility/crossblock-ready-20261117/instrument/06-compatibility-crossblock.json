@@ -1,0 +1,477 @@
+{
+  "formatVersion": 1,
+  "workflow": "rich-cross-paragraph-selection-clipboard",
+  "settlingMs": 700,
+  "keyActionDelayMs": 20,
+  "cases": [
+    {
+      "id": "keyboard-forward",
+      "scope": "partial",
+      "title": "Paired cross-paragraph selection",
+      "method": "keyboard",
+      "direction": "forward",
+      "markdown": "## Cross-paragraph review\n\nStart **critical** tail.\n\nNext [linked](https://example.com/reference) end.\n\nPaste here.",
+      "sourceText": "Start critical tail.",
+      "start": 6,
+      "end": 11,
+      "selectedText": "critical tail.\n\nNext linked",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start critical tail.",
+          "Next linked end.",
+          "Paste here."
+        ],
+        "bold": [
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start  end.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start critical tail.",
+          "Next linked end.",
+          "Paste here.",
+          "critical tail.",
+          "Next linked"
+        ],
+        "bold": [
+          "critical",
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "bold": [
+          "critical"
+        ],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "prose": [
+          "critical tail.",
+          "Next linked"
+        ],
+        "outsideParagraphs": []
+      },
+      "endSourceText": "Next linked end.",
+      "clipboardParagraphs": [
+        "critical tail.",
+        "Next linked"
+      ],
+      "verifySaveAccess": true
+    },
+    {
+      "id": "keyboard-backward",
+      "scope": "partial",
+      "title": "Paired cross-paragraph selection",
+      "method": "keyboard",
+      "direction": "backward",
+      "markdown": "## Cross-paragraph review\n\nStart **critical** tail.\n\nNext [linked](https://example.com/reference) end.\n\nPaste here.",
+      "sourceText": "Start critical tail.",
+      "start": 6,
+      "end": 11,
+      "selectedText": "critical tail.\n\nNext linked",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start critical tail.",
+          "Next linked end.",
+          "Paste here."
+        ],
+        "bold": [
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start  end.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start critical tail.",
+          "Next linked end.",
+          "Paste here.",
+          "critical tail.",
+          "Next linked"
+        ],
+        "bold": [
+          "critical",
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "bold": [
+          "critical"
+        ],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "prose": [
+          "critical tail.",
+          "Next linked"
+        ],
+        "outsideParagraphs": []
+      },
+      "endSourceText": "Next linked end.",
+      "clipboardParagraphs": [
+        "critical tail.",
+        "Next linked"
+      ],
+      "verifySaveAccess": true
+    },
+    {
+      "id": "mouse-forward",
+      "scope": "partial",
+      "title": "Paired cross-paragraph selection",
+      "method": "mouse",
+      "direction": "forward",
+      "markdown": "## Cross-paragraph review\n\nStart **critical** tail.\n\nNext [linked](https://example.com/reference) end.\n\nPaste here.",
+      "sourceText": "Start critical tail.",
+      "start": 6,
+      "end": 11,
+      "selectedText": "critical tail.\n\nNext linked",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start critical tail.",
+          "Next linked end.",
+          "Paste here."
+        ],
+        "bold": [
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start  end.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start critical tail.",
+          "Next linked end.",
+          "Paste here.",
+          "critical tail.",
+          "Next linked"
+        ],
+        "bold": [
+          "critical",
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "bold": [
+          "critical"
+        ],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "prose": [
+          "critical tail.",
+          "Next linked"
+        ],
+        "outsideParagraphs": []
+      },
+      "endSourceText": "Next linked end.",
+      "clipboardParagraphs": [
+        "critical tail.",
+        "Next linked"
+      ],
+      "verifySaveAccess": true
+    },
+    {
+      "id": "mouse-backward",
+      "scope": "partial",
+      "title": "Paired cross-paragraph selection",
+      "method": "mouse",
+      "direction": "backward",
+      "markdown": "## Cross-paragraph review\n\nStart **critical** tail.\n\nNext [linked](https://example.com/reference) end.\n\nPaste here.",
+      "sourceText": "Start critical tail.",
+      "start": 6,
+      "end": 11,
+      "selectedText": "critical tail.\n\nNext linked",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start critical tail.",
+          "Next linked end.",
+          "Paste here."
+        ],
+        "bold": [
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start  end.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Cross-paragraph review"
+          }
+        ],
+        "prose": [
+          "Start critical tail.",
+          "Next linked end.",
+          "Paste here.",
+          "critical tail.",
+          "Next linked"
+        ],
+        "bold": [
+          "critical",
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "bold": [
+          "critical"
+        ],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "prose": [
+          "critical tail.",
+          "Next linked"
+        ],
+        "outsideParagraphs": []
+      },
+      "endSourceText": "Next linked end.",
+      "clipboardParagraphs": [
+        "critical tail.",
+        "Next linked"
+      ],
+      "verifySaveAccess": true
+    }
+  ],
+  "observationContract": "Exact DOM selection text is distinct from clipboard plain text and rendered paragraph content. Two nonempty paragraph boundaries accept one LF or one blank line; all other characters remain exact. Root HTML-formatting whitespace is not document prose."
+}

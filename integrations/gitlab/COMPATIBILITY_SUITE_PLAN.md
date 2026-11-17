@@ -16,6 +16,11 @@ A fifth corpus verifies 188 parity checks across four paced keyboard/pointer
 forward/backward partial selections. Document-loaded receipts and semantic
 empty-wrapper handling prevent false claims from earlier observations. Rapid
 input remains open. [Directed selection results](COMPATIBILITY_PARTIAL_RESULTS.md).
+A sixth corpus verifies 188 parity and 16 improvement checks across four
+caret-ready cross-paragraph selections. It repairs a reproduced native link
+popup obstructing Save, and demonstrates retained plain-text separation where
+the pinned original flattens it. Earlier inadequate profiles remain archived.
+[Cross-paragraph results](COMPATIBILITY_CROSSBLOCK_RESULTS.md).
 Earlier native journeys/API controls remain separate single-sided evidence.
 
 ## Comparison contract
@@ -147,8 +152,9 @@ handoff discovery is retained; predefined immediate and settled profiles run
 identically on both sides. The comparator refuses environment/input/instrument
 mismatches, missing editor proof and unobserved outcomes.
 
-Next: extend matched workflows to shrinking/asymmetric/stale source ranges,
-wider deletion ranges/whitespace inputs, clipboard partial/cell-grid/ownership
+Next: investigate the retained blank original backward-mouse reopen frame
+against its correct DOM receipts, then extend matched workflows to shrinking/asymmetric/stale source ranges,
+wider deletion ranges/whitespace inputs, clipboard wrapped-line/Unicode/cell-grid/ownership
 workflows plus rapid-input profiles, tables/tasks/media and then roles/concurrency,
 additional browsers/mobile and matched restart. Keep the shared Applied-history
 failure open. Add repeated profiles before making frequency/performance claims.

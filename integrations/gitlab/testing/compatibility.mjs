@@ -9,6 +9,10 @@ export function classifyInvariant(expected,original,fountain){
   if(a&&!b)return 'regression';
   return equal(original,fountain)?'shared-limitation':null;
 }
+// For fixtures with exactly two nonempty paragraphs, one LF or a blank-line
+// separator expresses that boundary. Preserve all other characters and reject
+// missing boundaries, extra empty paragraphs, CR and invisible alterations.
+export const clipboardParagraphs=value=>typeof value==='string'?value.split(/\n{1,2}/u):undefined;
 export function suggestionBlock(markdown){
   if(typeof markdown!=='string')return undefined;
   if(markdown==='')return {source:'',params:null,emptyDocument:true};
@@ -102,12 +106,16 @@ export function compareGitLabCompatibility(original,fountain){
       }
       const selected=item=>item?{text:item.text,direction:item.direction,inside:item.inside,activeInside:item.activeInside,collapsed:item.collapsed}:undefined;
       for(const phase of ['copySelection','cutSelection'])add(phase,'Actual '+phase+' retains intended text and direction',{text:input.selectedText,direction:input.direction,inside:true,activeInside:true,collapsed:false},selected(left?.[phase]),selected(right?.[phase]));
+      if(input.requireCaretReady)for(const phase of ['copySelection','cutSelection'])add(phase+'.caretReady','Keyboard '+phase+' begins at a verified focused paragraph boundary',true,left?.[phase]?.caretReady,right?.[phase]?.caretReady);
       for(const [key,value]of Object.entries(input.fragment))add('externalFragment.'+key,'External selected fragment: '+key,value,left?.externalFragment?.[key],right?.externalFragment?.[key]);
-      add('clipboard.text','Copied plain text is exactly the selected fragment',input.selectedText,left?.clipboard?.text,right?.clipboard?.text);
+      const plain=value=>input.clipboardParagraphs?clipboardParagraphs(value):value,expectedPlain=input.clipboardParagraphs??input.selectedText;
+      add('clipboard.text','Copied plain text retains the selected content and paragraph boundaries',expectedPlain,plain(left?.clipboard?.text),plain(right?.clipboard?.text));
+      if(input.clipboardParagraphs)add('externalPlain.paragraphs','Actual external plain paste retains both nonempty paragraphs',expectedPlain,plain(left?.externalPlain),plain(right?.externalPlain));
+      if(input.verifySaveAccess)add('saveButtonReachable','Save button remains directly reachable after pasted-link history',true,left?.saveButtonReachable,right?.saveButtonReachable);
       const html=item=>item?.clipboard?typeof item.clipboard.html==='string'&&item.clipboard.html.length>0:undefined;
       add('clipboard.html','Selected fragment supplies actual HTML payload',true,html(left),html(right));
-      add('cutClipboardText','Cut clipboard retains exactly the selected fragment',input.selectedText,left?.cutClipboardText,right?.cutClipboardText);
-      add('beforePasteClipboardText','Paste clipboard retains exactly the selected fragment',input.selectedText,left?.beforePasteClipboardText,right?.beforePasteClipboardText);
+      add('cutClipboardText','Cut clipboard retains exactly the selected fragment',expectedPlain,plain(left?.cutClipboardText),plain(right?.cutClipboardText));
+      add('beforePasteClipboardText','Paste clipboard retains exactly the selected fragment',expectedPlain,plain(left?.beforePasteClipboardText),plain(right?.beforePasteClipboardText));
       const ready=item=>{const state=item?.pasteSelection;return state===undefined?undefined:state.collapsed===true&&state.inside===true&&state.activeInside===true&&state.anchorText===''&&state.anchorOffset===0;};
       add('pasteCaretReady','Paste begins at verified focused empty paragraph',true,ready(left),ready(right));
       for(const phase of ['initial','reopened'])add('documentReady.'+phase,phase+': document loaded before snapshot',true,left?.documentReady?.[phase],right?.documentReady?.[phase]);

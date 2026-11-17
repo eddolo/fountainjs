@@ -134,3 +134,10 @@ a Firefox/WebKit/mobile result, a general latest-Tiptap benchmark or a matched
 cold-restart/role/concurrency result. The [suite plan](COMPATIBILITY_SUITE_PLAN.md)
 retains the wider workflow requirements. No overall parity row, public API,
 capacity limit, package version, publication or website marketing claim changes.
+
+The [caret-ready cross-paragraph pair](COMPATIBILITY_CROSSBLOCK_RESULTS.md)
+adds 188 parity and 16 improvement checks across four workflows. The improved
+checks concern one plain-text separator-loss behavior. The first native run's
+Save-obstructing link popup was repaired and verified in fresh real workflows;
+its negative evidence remains retained. This does not close the Applied-history
+failure above or establish wider GitLab/Tiptap acceptance.

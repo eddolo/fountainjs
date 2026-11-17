@@ -1,0 +1,52 @@
+{
+  "scope": "Manual inspection of original unedited PNGs. Semantic comparisons and visual observations remain separate.",
+  "completeVisualAcceptance": false,
+  "openFinding": "Original backward-mouse reopen frame is blank despite correct DOM receipts. Paint/capture investigation remains open.",
+  "images": [
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/keyboard-backward-external.png",
+      "sha256": "a16d68f1df1ff46fbc162a9bf94a9560f8f61a05033376d9530464f3b7208aff",
+      "finding": "Rich paragraphs retain marks and link; plain textarea joins paragraph text without a separator."
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/mouse-backward-selected.png",
+      "sha256": "7a2ddc7ef1441965a9693173b257259a00616051d4c7266a8485b33f5f4c0674",
+      "finding": "Requested cross-paragraph text visibly selected; direction is proved separately by DOM receipt."
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/keyboard-backward-pasted.png",
+      "sha256": "4fdac16d6b86737988cc0666cf4c7bea7d78fb9acf90a3902b042f0d8765594f",
+      "finding": "Rich pasted fragment remains two paragraphs with bold/link styling."
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/keyboard-backward-reopened.png",
+      "sha256": "687c561fdc4b31cb011639d923f8facd26a5d69d3af756e2e85697f875ce9e83",
+      "finding": "Saved rich fragment visibly reopens correctly."
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/mouse-backward-reopened.png",
+      "sha256": "dbcc623de2b6c808238c2c58cbfb0a6473bf3380cd56cf7417947ca317b9ec46",
+      "finding": "Unresolved blank paint/capture despite loaded-heading and correct semantic DOM receipts. Not a claimed Fountain improvement."
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/fountain-1/keyboard-backward-external.png",
+      "sha256": "c1a65806564ad5fbe18b10b25a455b94eb0516288b06650d716783d1c6b6f46c",
+      "finding": "Rich paragraphs retain marks and link; actual textarea paste retains a line break."
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/fountain-1/keyboard-backward-pasted.png",
+      "sha256": "5c439cf14cb2715c28397367db853bd468e643b1b7255fd77fbc19756bf24388",
+      "finding": "Link popover is above final link; Save is visible and unobstructed."
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/fountain-1/mouse-backward-selected.png",
+      "sha256": "6d2cb39ef60e04d1813145be3b9facb55583e5b2f0fe6a9af1376e7bc9fa13ae",
+      "finding": "Requested cross-paragraph fragment visibly selected; direction separately verified."
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/fountain-1/mouse-backward-reopened.png",
+      "sha256": "b08c418f5a911bc7b5c4c7206eb8db95bf39b814d7b7329fbdd05713cd17099b",
+      "finding": "Saved rich fragment and its paragraph separation visibly reopen correctly."
+    }
+  ]
+}

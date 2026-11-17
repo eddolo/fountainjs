@@ -1,0 +1,66 @@
+{
+  "scope": "Reinterpretation of unchanged recorded observations; not fresh browser runs.",
+  "comparatorSha256": "c429a92c7e30dbf3e2521bcf624028499a90fee7fc560319ed4d779741937cba",
+  "checks": [
+    {
+      "path": "switch-20261116/comparison-2",
+      "summary": {
+        "parity": 20,
+        "improvement": 12,
+        "regression": 0,
+        "shared-limitation": 4,
+        "incomplete": 0,
+        "total": 36
+      },
+      "unchanged": true
+    },
+    {
+      "path": "deletion-keyboard-20261116/comparison-1",
+      "summary": {
+        "parity": 26,
+        "improvement": 4,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 30
+      },
+      "unchanged": true
+    },
+    {
+      "path": "review-20261116/comparison-1",
+      "summary": {
+        "parity": 21,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 21
+      },
+      "unchanged": true
+    },
+    {
+      "path": "clipboard-ready-20261117/comparison-1",
+      "summary": {
+        "parity": 84,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 84
+      },
+      "unchanged": true
+    },
+    {
+      "path": "partial-ready-20261117/comparison-1",
+      "summary": {
+        "parity": 188,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 188
+      },
+      "unchanged": true
+    }
+  ]
+}
