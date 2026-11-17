@@ -1,0 +1,407 @@
+{
+  "scope": "Read-only saved-issue capture diagnostic, not additional editor superiority or performance outcomes.",
+  "method": "Decode existing PNG bytes with Pillow, read RGB regions; no images modified. Dark heading pixels corroborate visible text in these controlled captures, not a universal visual threshold.",
+  "environmentMatched": true,
+  "sourceUnchanged": true,
+  "captures": 12,
+  "sameEditorDocumentPixels": {
+    "original": true,
+    "fountain": true
+  },
+  "reports": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/original-1/report.json",
+      "sha256": "3b4241654661d66d73c051810966b8ff353a6fd6de82ac5f2926095a1c23acba"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/fountain-1/report.json",
+      "sha256": "a84d38e1f53dfd2013422752d737aea761f4850abddc45f5f8985f4557469b1f"
+    }
+  },
+  "checks": [
+    {
+      "side": "original",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/original-1/mouse-backward-legacy-disabled-first-0-disabled.png",
+      "sha256": "53ef855778c371984d6c75e75717d4c1a97a8012a40019a41a319cc0a01c932e",
+      "profile": {
+        "id": "legacy-disabled-first",
+        "ready": "heading",
+        "animations": [
+          "disabled",
+          "allow"
+        ]
+      },
+      "animations": "disabled",
+      "headingBounds": [
+        270,
+        294,
+        903,
+        321
+      ],
+      "darkHeadingPixels": 1300,
+      "headingRgbSha256": "8d60334ce83ffbdc5a5d6e7198b717809f272b1f246750ff09fab3d6fd7039fa",
+      "documentBounds": [
+        259,
+        286,
+        916,
+        518
+      ],
+      "documentRgbSha256": "d03b5c76eb35e59f1a32269097a0ef0faddf238991b537d36c86ff661c616123",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "original",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/original-1/mouse-backward-legacy-disabled-first-1-allow.png",
+      "sha256": "bbcef719246e47a5aa70a2e3a2d87815d40979eceef4fcd3d9c6234be8454d5b",
+      "profile": {
+        "id": "legacy-disabled-first",
+        "ready": "heading",
+        "animations": [
+          "disabled",
+          "allow"
+        ]
+      },
+      "animations": "allow",
+      "headingBounds": [
+        270,
+        294,
+        903,
+        321
+      ],
+      "darkHeadingPixels": 1300,
+      "headingRgbSha256": "8d60334ce83ffbdc5a5d6e7198b717809f272b1f246750ff09fab3d6fd7039fa",
+      "documentBounds": [
+        259,
+        286,
+        916,
+        518
+      ],
+      "documentRgbSha256": "d03b5c76eb35e59f1a32269097a0ef0faddf238991b537d36c86ff661c616123",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "original",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/original-1/mouse-backward-legacy-allow-first-0-allow.png",
+      "sha256": "ad2655c4c633a620b276641479535790ef9d24c6172ffca1851a7eaa07b3a84a",
+      "profile": {
+        "id": "legacy-allow-first",
+        "ready": "heading",
+        "animations": [
+          "allow",
+          "disabled"
+        ]
+      },
+      "animations": "allow",
+      "headingBounds": [
+        270,
+        294,
+        903,
+        321
+      ],
+      "darkHeadingPixels": 1300,
+      "headingRgbSha256": "8d60334ce83ffbdc5a5d6e7198b717809f272b1f246750ff09fab3d6fd7039fa",
+      "documentBounds": [
+        259,
+        286,
+        916,
+        518
+      ],
+      "documentRgbSha256": "d03b5c76eb35e59f1a32269097a0ef0faddf238991b537d36c86ff661c616123",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "original",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/original-1/mouse-backward-legacy-allow-first-1-disabled.png",
+      "sha256": "c63680e5c5a750d4b89beeca7ae22814f2f141d4574ad2549c057ddc2eb8d4f1",
+      "profile": {
+        "id": "legacy-allow-first",
+        "ready": "heading",
+        "animations": [
+          "allow",
+          "disabled"
+        ]
+      },
+      "animations": "disabled",
+      "headingBounds": [
+        270,
+        294,
+        903,
+        321
+      ],
+      "darkHeadingPixels": 1300,
+      "headingRgbSha256": "8d60334ce83ffbdc5a5d6e7198b717809f272b1f246750ff09fab3d6fd7039fa",
+      "documentBounds": [
+        259,
+        286,
+        916,
+        518
+      ],
+      "documentRgbSha256": "d03b5c76eb35e59f1a32269097a0ef0faddf238991b537d36c86ff661c616123",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "original",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/original-1/mouse-backward-paint-ready-0-disabled.png",
+      "sha256": "53ef855778c371984d6c75e75717d4c1a97a8012a40019a41a319cc0a01c932e",
+      "profile": {
+        "id": "paint-ready",
+        "ready": "fonts-and-frames",
+        "animations": [
+          "disabled",
+          "allow"
+        ]
+      },
+      "animations": "disabled",
+      "headingBounds": [
+        270,
+        294,
+        903,
+        321
+      ],
+      "darkHeadingPixels": 1300,
+      "headingRgbSha256": "8d60334ce83ffbdc5a5d6e7198b717809f272b1f246750ff09fab3d6fd7039fa",
+      "documentBounds": [
+        259,
+        286,
+        916,
+        518
+      ],
+      "documentRgbSha256": "d03b5c76eb35e59f1a32269097a0ef0faddf238991b537d36c86ff661c616123",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "original",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/original-1/mouse-backward-paint-ready-1-allow.png",
+      "sha256": "53ef855778c371984d6c75e75717d4c1a97a8012a40019a41a319cc0a01c932e",
+      "profile": {
+        "id": "paint-ready",
+        "ready": "fonts-and-frames",
+        "animations": [
+          "disabled",
+          "allow"
+        ]
+      },
+      "animations": "allow",
+      "headingBounds": [
+        270,
+        294,
+        903,
+        321
+      ],
+      "darkHeadingPixels": 1300,
+      "headingRgbSha256": "8d60334ce83ffbdc5a5d6e7198b717809f272b1f246750ff09fab3d6fd7039fa",
+      "documentBounds": [
+        259,
+        286,
+        916,
+        518
+      ],
+      "documentRgbSha256": "d03b5c76eb35e59f1a32269097a0ef0faddf238991b537d36c86ff661c616123",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "fountain",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/fountain-1/mouse-backward-legacy-disabled-first-0-disabled.png",
+      "sha256": "fb32f2563a5ef64ffed8de025ff52df4ae937db935b2e804e7802730831bc167",
+      "profile": {
+        "id": "legacy-disabled-first",
+        "ready": "heading",
+        "animations": [
+          "disabled",
+          "allow"
+        ]
+      },
+      "animations": "disabled",
+      "headingBounds": [
+        298,
+        416,
+        877,
+        443
+      ],
+      "darkHeadingPixels": 2020,
+      "headingRgbSha256": "89c64090847bb74cc8467f49cb91d8fb94848c56f335a5a977a8a76a1d4a4ebf",
+      "documentBounds": [
+        257,
+        375,
+        918,
+        699
+      ],
+      "documentRgbSha256": "e445a033cd3f074d9d483bc375b440ebc34e1ebdeb4c4e90fef0fe349ce1d50f",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "fountain",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/fountain-1/mouse-backward-legacy-disabled-first-1-allow.png",
+      "sha256": "94c54be0e5eee7ca009c53229c97da7075ae7fa429a1a474689556611799c0e3",
+      "profile": {
+        "id": "legacy-disabled-first",
+        "ready": "heading",
+        "animations": [
+          "disabled",
+          "allow"
+        ]
+      },
+      "animations": "allow",
+      "headingBounds": [
+        298,
+        416,
+        877,
+        443
+      ],
+      "darkHeadingPixels": 2020,
+      "headingRgbSha256": "89c64090847bb74cc8467f49cb91d8fb94848c56f335a5a977a8a76a1d4a4ebf",
+      "documentBounds": [
+        257,
+        375,
+        918,
+        699
+      ],
+      "documentRgbSha256": "e445a033cd3f074d9d483bc375b440ebc34e1ebdeb4c4e90fef0fe349ce1d50f",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "fountain",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/fountain-1/mouse-backward-legacy-allow-first-0-allow.png",
+      "sha256": "378bbfa08f0b4c680bddff18749eafc45953d59eecdecd6ec8e6ea8404f80062",
+      "profile": {
+        "id": "legacy-allow-first",
+        "ready": "heading",
+        "animations": [
+          "allow",
+          "disabled"
+        ]
+      },
+      "animations": "allow",
+      "headingBounds": [
+        298,
+        416,
+        877,
+        443
+      ],
+      "darkHeadingPixels": 2020,
+      "headingRgbSha256": "89c64090847bb74cc8467f49cb91d8fb94848c56f335a5a977a8a76a1d4a4ebf",
+      "documentBounds": [
+        257,
+        375,
+        918,
+        699
+      ],
+      "documentRgbSha256": "e445a033cd3f074d9d483bc375b440ebc34e1ebdeb4c4e90fef0fe349ce1d50f",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "fountain",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/fountain-1/mouse-backward-legacy-allow-first-1-disabled.png",
+      "sha256": "f51b9c3b4c44f9daecad626f905bbde285ec5dc153c36fff47cb1e2e633fbc58",
+      "profile": {
+        "id": "legacy-allow-first",
+        "ready": "heading",
+        "animations": [
+          "allow",
+          "disabled"
+        ]
+      },
+      "animations": "disabled",
+      "headingBounds": [
+        298,
+        416,
+        877,
+        443
+      ],
+      "darkHeadingPixels": 2020,
+      "headingRgbSha256": "89c64090847bb74cc8467f49cb91d8fb94848c56f335a5a977a8a76a1d4a4ebf",
+      "documentBounds": [
+        257,
+        375,
+        918,
+        699
+      ],
+      "documentRgbSha256": "e445a033cd3f074d9d483bc375b440ebc34e1ebdeb4c4e90fef0fe349ce1d50f",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "fountain",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/fountain-1/mouse-backward-paint-ready-0-disabled.png",
+      "sha256": "5338d8733f450089f7c9fb9f1c51c9deca9fe3e499a161bef02cfd116ee24545",
+      "profile": {
+        "id": "paint-ready",
+        "ready": "fonts-and-frames",
+        "animations": [
+          "disabled",
+          "allow"
+        ]
+      },
+      "animations": "disabled",
+      "headingBounds": [
+        298,
+        416,
+        877,
+        443
+      ],
+      "darkHeadingPixels": 2020,
+      "headingRgbSha256": "89c64090847bb74cc8467f49cb91d8fb94848c56f335a5a977a8a76a1d4a4ebf",
+      "documentBounds": [
+        257,
+        375,
+        918,
+        699
+      ],
+      "documentRgbSha256": "e445a033cd3f074d9d483bc375b440ebc34e1ebdeb4c4e90fef0fe349ce1d50f",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    },
+    {
+      "side": "fountain",
+      "path": "artifacts/gitlab-compatibility/paint-reopen-20261117/fountain-1/mouse-backward-paint-ready-1-allow.png",
+      "sha256": "5338d8733f450089f7c9fb9f1c51c9deca9fe3e499a161bef02cfd116ee24545",
+      "profile": {
+        "id": "paint-ready",
+        "ready": "fonts-and-frames",
+        "animations": [
+          "disabled",
+          "allow"
+        ]
+      },
+      "animations": "allow",
+      "headingBounds": [
+        298,
+        416,
+        877,
+        443
+      ],
+      "darkHeadingPixels": 2020,
+      "headingRgbSha256": "89c64090847bb74cc8467f49cb91d8fb94848c56f335a5a977a8a76a1d4a4ebf",
+      "documentBounds": [
+        257,
+        375,
+        918,
+        699
+      ],
+      "documentRgbSha256": "e445a033cd3f074d9d483bc375b440ebc34e1ebdeb4c4e90fef0fe349ce1d50f",
+      "fonts": "loaded",
+      "checkVisibility": true,
+      "expectedGraphBeforeAndAfter": true
+    }
+  ]
+}

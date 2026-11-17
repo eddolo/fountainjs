@@ -1,0 +1,78 @@
+{
+  "scope": "Correction of the earlier visual assessment of unchanged saved PNGs; no editor or image repair.",
+  "reason": "Manual reinspection shows the document; its heading/body RGB regions are byte-identical to the visibly rendered control. The earlier blank observation was a review error.",
+  "inputs": [
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/mouse-backward-reopened.png",
+      "sha256": "dbcc623de2b6c808238c2c58cbfb0a6473bf3380cd56cf7417947ca317b9ec46",
+      "size": [
+        1280,
+        900
+      ]
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/keyboard-backward-reopened.png",
+      "sha256": "687c561fdc4b31cb011639d923f8facd26a5d69d3af756e2e85697f875ce9e83",
+      "size": [
+        1280,
+        900
+      ]
+    }
+  ],
+  "analysis": {
+    "tool": "Python Pillow",
+    "conversion": "Decode both existing PNGs to RGB; read regions only, write no images.",
+    "darkPixelCriterion": "All RGB channels < 180; corroborating observation, not a performance or visual acceptance threshold."
+  },
+  "regions": [
+    {
+      "name": "heading",
+      "bounds": [
+        270,
+        295,
+        760,
+        325
+      ],
+      "identicalRgbPixels": true,
+      "rgbSha256": "d12732959a839acb1eb51b4f3f590889137b41a37e59ebed1b4ae93baf4e498d",
+      "darkPixels": 1300
+    },
+    {
+      "name": "first-paragraph",
+      "bounds": [
+        270,
+        335,
+        760,
+        360
+      ],
+      "identicalRgbPixels": true,
+      "rgbSha256": "cd9f765a65a2a5bfe5e3f5934d51f3a0b19111aa671eedf30952c55917366fcd",
+      "darkPixels": 338
+    },
+    {
+      "name": "last-paragraph",
+      "bounds": [
+        270,
+        480,
+        760,
+        510
+      ],
+      "identicalRgbPixels": true,
+      "rgbSha256": "195d636b603d33e218a83c146dcb12c12615d49a064a9c1c8568b699da892d10",
+      "darkPixels": 182
+    },
+    {
+      "name": "document-content",
+      "bounds": [
+        270,
+        290,
+        905,
+        515
+      ],
+      "identicalRgbPixels": true,
+      "rgbSha256": "6e6c5cf900e49e9ec5a912dd2d074f5a41f4e816d4c8ba773cb1c297b7df26bc",
+      "darkPixels": 2513
+    }
+  ],
+  "conclusion": "The stored mouse-backward reopened capture contains painted document content. No original-editor blank-paint defect is established."
+}

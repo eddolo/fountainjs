@@ -60,14 +60,17 @@ removal, DOM mutation or extra dismissal actions bypass this requirement.
 
 The final original/native backward-selection, external-paste, pasted-link and
 reopened captures were physically inspected. The repaired popup remains visible
-and Save is clear. Original keyboard reopen captures show the saved content,
-but the original backward-mouse reopen frame is blank despite its loaded-heading
-and semantic DOM receipts. Retain that frame as an unresolved paint/capture
-anomaly, not a Fountain improvement. The 204 outcomes cover the declared DOM,
-clipboard, persistence and hit-target invariants; they do not certify that
-anomalous visual frame. A follow-up must distinguish capture readiness from
-original-editor paint behavior. DOM/clipboard/API receipts provide direction
-and semantic proof that screenshots alone cannot provide.
+and Save is clear. A prior review mistakenly described the original backward-mouse
+reopen frame as blank. Reinspection of the unchanged PNG shows the saved content;
+its heading, paragraph and whole document-content pixel regions are identical to
+the rendered keyboard control. [Pixel evidence and unchanged-file hashes](../../artifacts/gitlab-compatibility/crossblock-caret-20261117/reopened-pixel-review.json)
+correct that assessment. A [read-only twelve-capture follow-up](CAPTURE_DIAGNOSTIC_RESULTS.md)
+also verifies the saved original/native issues across animation/readiness profiles.
+No editor fix or image alteration was needed, and no
+blank-paint superiority claim is made. Selected capture review is complete;
+this does not certify unreviewed cases or whole-product visual behavior.
+DOM/clipboard/API receipts provide direction and semantic proof that screenshots
+alone cannot provide.
 
 ## Observation contracts and retained inadequate runs
 

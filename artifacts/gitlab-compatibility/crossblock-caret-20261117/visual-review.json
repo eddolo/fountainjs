@@ -1,7 +1,7 @@
 {
   "scope": "Manual inspection of original unedited PNGs. Semantic comparisons and visual observations remain separate.",
-  "completeVisualAcceptance": false,
-  "openFinding": "Original backward-mouse reopen frame is blank despite correct DOM receipts. Paint/capture investigation remains open.",
+  "completeVisualAcceptance": true,
+  "openFinding": null,
   "images": [
     {
       "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/keyboard-backward-external.png",
@@ -26,7 +26,7 @@
     {
       "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/mouse-backward-reopened.png",
       "sha256": "dbcc623de2b6c808238c2c58cbfb0a6473bf3380cd56cf7417947ca317b9ec46",
-      "finding": "Unresolved blank paint/capture despite loaded-heading and correct semantic DOM receipts. Not a claimed Fountain improvement."
+      "finding": "Reinspection shows saved rich content. Its document-content pixels equal the rendered keyboard control; the earlier blank assessment was incorrect."
     },
     {
       "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/fountain-1/keyboard-backward-external.png",
@@ -48,5 +48,11 @@
       "sha256": "b08c418f5a911bc7b5c4c7206eb8db95bf39b814d7b7329fbdd05713cd17099b",
       "finding": "Saved rich fragment and its paragraph separation visibly reopen correctly."
     }
-  ]
+  ],
+  "assessmentCorrection": {
+    "previousAssessment": "Original backward-mouse reopen frame appeared blank.",
+    "correctedAssessment": "Unchanged PNG contains the document; earlier manual assessment was incorrect.",
+    "evidence": "reopened-pixel-review.json",
+    "scope": "Only the reviewed selected captures; not whole-product visual acceptance."
+  }
 }

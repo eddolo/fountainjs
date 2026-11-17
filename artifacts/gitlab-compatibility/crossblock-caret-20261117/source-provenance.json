@@ -123,8 +123,9 @@
     "isolatedApplicationStopped": true,
     "visualReview": {
       "path": "visual-review.json",
-      "completeVisualAcceptance": false,
-      "openFinding": "Original backward-mouse reopen frame is blank despite correct DOM receipts. Paint/capture investigation remains open."
+      "completeVisualAcceptance": true,
+      "scope": "Selected retained captures only. Earlier blank assessment corrected by unchanged-file pixel evidence.",
+      "correction": "reopened-pixel-review.json"
     }
   },
   "limits": [

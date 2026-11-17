@@ -1,0 +1,46 @@
+{
+  "formatVersion": 1,
+  "workflow": "read-only-saved-issue-paint-diagnostic",
+  "settlingMs": 700,
+  "savedReports": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/original-1/report.json",
+      "sha256": "534132b6b1a0e11002d880c7371790b0b77a019200418e2b48b8633757375d7d"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/crossblock-caret-20261117/fountain-1/report.json",
+      "sha256": "f42c570a78167f36a6c08d3ca695697b145d55c2f219c8db2602f04e28d8b114"
+    }
+  },
+  "cases": [
+    {
+      "id": "mouse-backward",
+      "profiles": [
+        {
+          "id": "legacy-disabled-first",
+          "ready": "heading",
+          "animations": [
+            "disabled",
+            "allow"
+          ]
+        },
+        {
+          "id": "legacy-allow-first",
+          "ready": "heading",
+          "animations": [
+            "allow",
+            "disabled"
+          ]
+        },
+        {
+          "id": "paint-ready",
+          "ready": "fonts-and-frames",
+          "animations": [
+            "disabled",
+            "allow"
+          ]
+        }
+      ]
+    }
+  ]
+}

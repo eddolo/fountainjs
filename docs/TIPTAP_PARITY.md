@@ -9,9 +9,9 @@ the pinned original GitLab editor. A reproduced native link popup blocking Save
 is repaired and checked through normal Save/reopen. Earlier inadequate profiles
 and the timing anomaly remain retained. 1404 integration cases / 54 files,
 40 comparison-policy tests and strict types pass. Wider selections/platforms,
-rapid input and full product acceptance remain open. One blank original reopen
-frame has correct DOM receipts but unresolved paint/capture verification; it is
-not counted as an improvement.
+rapid input and full product acceptance remain open. The earlier blank-frame
+assessment was a review error: unchanged PNG pixels confirm rendered content.
+Selected visual checks are complete; no paint improvement is claimed.
 [Cross-paragraph evidence](../integrations/gitlab/COMPATIBILITY_CROSSBLOCK_RESULTS.md).
 
 Matched directed-selection follow-up (2026-11-17): four keyboard/pointer
