@@ -2,6 +2,15 @@
 
 ## Current programme status — 2026-11-17
 
+Matched table follow-up (2026-11-17): two forward/backward real GitLab cell-grid
+workflows verify 42 parity checks. Initial semantic success missed a visible
+third-column selection-paint regression; it is repaired with CSS and fresh
+matched evidence. The unchanged pixel regression passes Chromium, Firefox and
+WebKit. Full local check passes all 6,861 tests / 400 files and existing package,
+runtime, conformance, size/performance and type gates. No budget increase or
+broad superiority claim. Wider tables/platforms and full product acceptance
+remain open. [Table evidence](../integrations/gitlab/COMPATIBILITY_GRID_RESULTS.md).
+
 Matched cross-paragraph follow-up (2026-11-17): four caret-ready keyboard/mouse
 forward/backward workflows verify 188 parity and 16 improvement outcomes across
 204 checks. The improved checks concern one plain-text boundary-loss issue in

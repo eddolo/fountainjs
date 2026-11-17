@@ -92,6 +92,6 @@
     "app/assets/javascripts/content_editor/components/fountain_quick_action_menu.stories.js": "4c3c0b0c7a982874280d1ca85578d45bfb889584c4c607f6da97ff7af96355a3",
     "app/assets/javascripts/content_editor/services/fountain_runtime.js": "90d81cd3b310db40a95608ddf807ba3c067936ac1f7608bfa9014b3d1c18bf31",
     "app/assets/javascripts/content_editor/services/fountain_autocomplete.js": "d43875339749f6507b287e363dcd60f0e0979b7d73711458036fc05c9b9db9cb",
-    "app/assets/javascripts/content_editor/services/fountain_runtime.css": "ac3d8f810a600d2b849647488226d7292bdde402de9e3402ee582a97fb5986dd"
+    "app/assets/javascripts/content_editor/services/fountain_runtime.css": "fecacdcd4a22240ec5c5067f0c66b5dbe86d97c564ff88f0e2577aa3e4090714"
   }
 }

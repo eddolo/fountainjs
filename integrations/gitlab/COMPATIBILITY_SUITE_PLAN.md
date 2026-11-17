@@ -124,8 +124,8 @@ one substep does not establish that Fountain is globally better than Tiptap.
    verifies the same lost Applied flag/recreated identity on both sides. The
    earlier stock API control remains separate attribution evidence.
 5. Whole-document rich clipboard and a short cross-mark partial fragment now
-   have matched UI fixtures, including keyboard/pointer direction. Cross-block,
-   cell-grid, ownership and external-app-specific imports remain. Extend table, task-state, media,
+   have matched UI fixtures, including keyboard/pointer direction. Cross-paragraph and rectangular body-cell transfers now also have matched
+   fixtures and retained visual controls. Ownership and external-app-specific imports remain. Extend table, task-state, media,
    source-switching, review and persistence journeys, followed by permissions,
    concurrency and additional browser/mobile profiles.
 
@@ -156,8 +156,13 @@ identically on both sides. The comparator refuses environment/input/instrument
 mismatches, missing editor proof and unobserved outcomes.
 
 Next: extend matched workflows to shrinking/asymmetric/stale source ranges,
-wider deletion ranges/whitespace inputs, clipboard wrapped-line/Unicode/cell-grid/ownership
+wider deletion ranges/whitespace inputs, clipboard wrapped-line/Unicode/merged-cell/ownership
 workflows plus rapid-input profiles, tables/tasks/media and then roles/concurrency,
 additional browsers/mobile and matched restart. Keep the shared Applied-history
 failure open. Add repeated profiles before making frequency/performance claims.
 No broad superiority claim or release promotion follows from this initial corpus.
+
+The [table follow-up](COMPATIBILITY_GRID_RESULTS.md) retains an initial semantic
+pass that missed visible stray selection paint, followed by a repair and fresh
+42-check matched pair. Continue requiring visual controls alongside semantic
+checks; scoped parity alone does not establish complete application acceptance.

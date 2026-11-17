@@ -141,3 +141,8 @@ checks concern one plain-text separator-loss behavior. The first native run's
 Save-obstructing link popup was repaired and verified in fresh real workflows;
 its negative evidence remains retained. This does not close the Applied-history
 failure above or establish wider GitLab/Tiptap acceptance.
+
+The [rectangular table pair](COMPATIBILITY_GRID_RESULTS.md) adds 42 parity checks
+after repairing a visually confirmed native selection-paint regression. Initial
+semantic-only success and negative evidence remain retained. Three desktop
+engines pass the dedicated pixel regression; wider table/platform scope remains.

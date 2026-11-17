@@ -1,0 +1,30 @@
+{
+  "scope": "Initial grid pair: semantic checks pass, but native rectangular selection paints text in an unselected column. Preserve before visual repair.",
+  "files": [
+    {
+      "repositoryPath": "scripts/run-gitlab-compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/grid-transfer-20261117/initial-instrument/00-run-gitlab-compatibility.mjs",
+      "sha256": "b6c5a56a7522c56534e7d9bac7c078da39608bd840ed2ee8eb545ce9d1889cd8"
+    },
+    {
+      "repositoryPath": "scripts/audit-gitlab-compatibility-grid.mjs",
+      "archive": "artifacts/gitlab-compatibility/grid-transfer-20261117/initial-instrument/01-audit-gitlab-compatibility-grid.mjs",
+      "sha256": "b33c3b5dd317bfe0b6d465f9b0734df66527ec6e500c75db4aceae176a3436e3"
+    },
+    {
+      "repositoryPath": "integrations/gitlab/testing/compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/grid-transfer-20261117/initial-instrument/02-compatibility.mjs",
+      "sha256": "4fd009b61c2d3e10a49b908b33be34db342697593bf2c33065afdad27c6da12a"
+    },
+    {
+      "repositoryPath": "integrations/gitlab/fixtures/compatibility-grid.json",
+      "archive": "artifacts/gitlab-compatibility/grid-transfer-20261117/initial-instrument/03-compatibility-grid.json",
+      "sha256": "39d304420b36ea32140a4f8af5b57632d48485cbec3a329901141f026dedd677"
+    },
+    {
+      "repositoryPath": "src/styles.css",
+      "archive": "artifacts/gitlab-compatibility/grid-transfer-20261117/initial-instrument/04-styles.css",
+      "sha256": "ac3d8f810a600d2b849647488226d7292bdde402de9e3402ee582a97fb5986dd"
+    }
+  ]
+}

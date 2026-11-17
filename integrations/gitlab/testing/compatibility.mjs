@@ -89,6 +89,23 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='grid'){
+      const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
+      const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});
+      for(const [phase,expected]of [['initial',input.initialGraph],['cut',input.cutGraph],['cutUndo',input.initialGraph],['pasted',input.pastedGraph],['pasteUndo',input.initialGraph],['pasteRedo',input.pastedGraph],['reopened',input.pastedGraph]])add(phase+'.graph',phase+': exact table geometry, cell roles, paragraphs, marks, links and surrounding prose',expected,left?.[phase],right?.[phase]);
+      for(const phase of ['copySelection','cutSelection'])add(phase+'.cells','Actual '+phase+' covers exactly the requested rectangle',input.selectedCells,left?.[phase]?.cells,right?.[phase]?.cells);
+      if(input.paintControl)for(const phase of ['copySelection','cutSelection'])add(phase+'.outsidePaint','Unselected control cell keeps identical pixels during '+phase,true,left?.[phase]?.outsidePaintUnchanged,right?.[phase]?.outsidePaintUnchanged);
+      for(const phase of ['initial','reopened'])add('documentReady.'+phase,phase+': document and both tables are loaded',true,left?.documentReady?.[phase],right?.documentReady?.[phase]);
+      add('clipboard.text','Cell copy supplies exact TSV boundaries',input.plain,left?.clipboard?.text,right?.clipboard?.text);
+      add('clipboard.html','Cell copy supplies actual rich HTML',true,left?.clipboard?typeof left.clipboard.html==='string'&&left.clipboard.html.length>0:undefined,right?.clipboard?typeof right.clipboard.html==='string'&&right.clipboard.html.length>0:undefined);
+      add('cutClipboardText','Cell cut supplies exact TSV boundaries',input.plain,left?.cutClipboardText,right?.cutClipboardText);
+      add('beforePasteClipboardText','Cell paste retains the copied payload',input.plain,left?.beforePasteClipboardText,right?.beforePasteClipboardText);
+      add('externalRich','Actual external rich paste preserves body-cell roles and semantics',input.externalGraph,left?.externalRich,right?.externalRich);
+      add('externalPlain','Actual external plain paste preserves TSV',input.plain,left?.externalPlain,right?.externalPlain);
+      add('destinationReady','Paste begins with a verified caret in the target cell',true,left?.destinationReady,right?.destinationReady);
+      add('saveButtonReachable','Save remains directly reachable after table paste',true,left?.saveButtonReachable,right?.saveButtonReachable);
+      continue;
+    }
     if(input.scope==='partial'){
       const add=(key,label,expected,left,right)=>rows.push({case:input.id,invariant:key,label,expected,original:left,fountain:right,classification:null});
       const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;

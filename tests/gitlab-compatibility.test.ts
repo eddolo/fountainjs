@@ -1,3 +1,4 @@
+import {readFileSync} from 'node:fs';
 import {expect,it} from 'vitest';
 // These are tests of interpretation policy, not real application evidence.
 // @ts-expect-error Private JS audit helper intentionally has no published type entry.
@@ -226,4 +227,42 @@ it('does not approve keyboard cross-paragraph evidence without its declared care
  const [original,fountain]=partialReports();
  for(const report of [original,fountain]){const input:any=report.fixture.cases[0];input.requireCaretReady=true;(report.observations[0] as any).input=structuredClone(input);}
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(2);expect(result.regressionGate.passed).toBe(false);
+});
+
+function gridReports(){
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-grid.json',import.meta.url),'utf8'));
+ const pair=reports();
+ for(const report of pair){
+  const input=structuredClone(fixture.cases[0]);report.fixture.cases=[input];
+  const item:any=report.observations[0];item.id=input.id;item.input=structuredClone(input);
+  for(const phase of ['initial','cutUndo','pasteUndo'])item[phase]=structuredClone(input.initialGraph);
+  for(const phase of ['pasted','pasteRedo','reopened'])item[phase]=structuredClone(input.pastedGraph);
+  item.cut=structuredClone(input.cutGraph);item.copySelection={cells:input.selectedCells,outsidePaintUnchanged:true};item.cutSelection={cells:input.selectedCells,outsidePaintUnchanged:true};
+  item.clipboard={text:input.plain,html:'<table><tbody><tr><td>Actual payload</td></tr></tbody></table>'};
+  item.cutClipboardText=input.plain;item.beforePasteClipboardText=input.plain;item.externalPlain=input.plain;item.externalRich=structuredClone(input.externalGraph);
+  item.destinationReady=true;item.saveButtonReachable=true;item.documentReady={initial:true,reopened:true};
+ }
+ return pair;
+}
+it('checks real-grid interpretation separately from selection, geometry, TSV and persistence',()=>{
+ const result=compareGitLabCompatibility(...gridReports());expect(result.summary.parity).toBe(21);expect(result.featureAcceptance.passed).toBe(true);
+});
+it.each([
+ ['pasted.graph',(item:any)=>item.pasted.tables[1].pop()],
+ ['externalRich',(item:any)=>{item.externalRich.tables[0][0][0].tag='TH';}],
+ ['cut.graph',(item:any)=>{item.cut.tables[0][1][2].paragraphs=['Changed outside the rectangle'];}],
+ ['copySelection.cells',(item:any)=>{item.copySelection.cells=[];}],
+ ['clipboard.text',(item:any)=>{item.clipboard.text='A boldB linkCD';}],
+])('rejects table-transfer corruption %s',(invariant,mutate)=>{
+ const [original,fountain]=gridReports();mutate(fountain.observations[0]);
+ const result=compareGitLabCompatibility(original,fountain);expect(result.rows.find((row:any)=>row.invariant===invariant).classification).toBe('regression');expect(result.regressionGate.passed).toBe(false);
+});
+
+it('rejects stray selection paint even when table semantics and clipboard remain correct',()=>{
+ const [original,fountain]=gridReports();(fountain.observations[0] as any).copySelection.outsidePaintUnchanged=false;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.rows.find((row:any)=>row.invariant==='copySelection.outsidePaint').classification).toBe('regression');expect(result.regressionGate.passed).toBe(false);
+});
+it('requires the declared unselected-cell pixel control',()=>{
+ const [original,fountain]=gridReports();delete (original.observations[0] as any).copySelection.outsidePaintUnchanged;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(1);expect(result.regressionGate.passed).toBe(false);
 });

@@ -1,0 +1,375 @@
+{
+  "scope": "Matched GitLab table workflows and focused cross-engine presentation regression; not a release or full application acceptance.",
+  "fullCheck": {
+    "command": "pnpm run check --maxWorkers=2",
+    "exitCode": 0,
+    "unitTests": 6861,
+    "testFiles": 400
+  },
+  "recordedBrowserCheck": {
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "passed": 3,
+    "workers": 1,
+    "retries": 0,
+    "negativeChromiumBeforeRepair": true
+  },
+  "css": {
+    "beforeBytes": 91242,
+    "afterBytes": 91247,
+    "unchangedLimitBytes": 91264
+  },
+  "visualReview": {
+    "method": "Inspected original PNG bytes through image/png emission; no image edits.",
+    "native": [
+      "forward selected/cut/pasted",
+      "backward selected/reopened/external"
+    ],
+    "original": [
+      "forward selected/reopened"
+    ],
+    "outsideControlPairs": 8
+  },
+  "runtimeInputsVerified": true,
+  "files": [
+    {
+      "path": "src/styles.css",
+      "sha256": "fecacdcd4a22240ec5c5067f0c66b5dbe86d97c564ff88f0e2577aa3e4090714"
+    },
+    {
+      "path": "tests/browser/cell-range-paint-journey.ts",
+      "sha256": "7e9b81197429433cc95c03411be3f7237783150787086407dd1eac4d513b25da"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "cb92f04d7ec77713a052a9dd5bd8874103e0e130ca33a2ea6ae3b32d5f807128"
+    },
+    {
+      "path": "tests/gitlab-compatibility.test.ts",
+      "sha256": "8fe807a9e0f1e4b22942e3bc2e865d11047672e525ef09d2f060b35ebde58630"
+    },
+    {
+      "path": "scripts/audit-gitlab-compatibility-grid.mjs",
+      "sha256": "8729a9e6b38d0b4c39838af7f4eef59bb4a94790381bcbb5fec26070fb5aa0b7"
+    },
+    {
+      "path": "scripts/run-gitlab-compatibility.mjs",
+      "sha256": "b6c5a56a7522c56534e7d9bac7c078da39608bd840ed2ee8eb545ce9d1889cd8"
+    },
+    {
+      "path": "integrations/gitlab/testing/compatibility.mjs",
+      "sha256": "36a57209fcfca5bbd04c81bbe14c2e18d4038cfcc51881b86c5a0c7f56bec47c"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/compatibility-grid.json",
+      "sha256": "a8630c714b0b1158671a51b72be463c4d694d075ed7cff430959bb0a1e27e085"
+    },
+    {
+      "path": "artifacts/gitlab-native-browser-install/install.json",
+      "sha256": "672d2049f2e47117de11269d4d2672adb41c2186df4a0b7d566fa91f5ecdeee5"
+    },
+    {
+      "path": "artifacts/gitlab-native-runtime/build.json",
+      "sha256": "15fbace93be93e5619bd0e5bd1a3367b8fff75effc864cd99a036d65becd1e36"
+    },
+    {
+      "path": "artifacts/cell-range-paint-pixel-evidence-20261117.json",
+      "sha256": "4bd24d45cd484e20cc357e9e0510082a93cd3265af41e7bdb43fe1a85c13d3ab"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-transfer-20261117/original-1/report.json",
+      "sha256": "2a6acfcc6a9d32048dc8cea7d227528bd862e8425a8b1596a37b927a8162f717"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-transfer-20261117/fountain-1/report.json",
+      "sha256": "55178f4307e010640a902f1694d00e37ad5a339b1c3904d8a96a5e0a9de4453a"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-transfer-20261117/comparison-1/report.json",
+      "sha256": "aaa7e56f38e6731f107167844925bc74a517ebf6f829549be6336cac34a687aa"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-transfer-20261117/comparison-1/report.md",
+      "sha256": "724c6bc69e4546be974321298254653c384e306f67b65d3be0c06053a0755ff1"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/report.json",
+      "sha256": "420144f2791321f09b3dab4450c32a7e93525a9bd5d48dc9657e021f3dca5d9e"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/report.json",
+      "sha256": "eecbda84d116d975fe85ea60e3f4d57221c556c13ab57a0af06eb7189502e241"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/comparison-1/report.json",
+      "sha256": "5b24bc338170c3672b1355f37dc3558689a66d2c89756ec1862515f12a30ff6e"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/comparison-1/report.md",
+      "sha256": "5f11741f09b021d91ae74625489150a44dd7894b153445dac8a73cf742970679"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-forward-copy-outside-before.png",
+      "sha256": "4f2833e3cf1f40bc3f455f98deff7f04de7218452c5a4639452154867130a6d3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-forward-copy-outside-after.png",
+      "sha256": "4f2833e3cf1f40bc3f455f98deff7f04de7218452c5a4639452154867130a6d3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-forward-cut-outside-before.png",
+      "sha256": "4f2833e3cf1f40bc3f455f98deff7f04de7218452c5a4639452154867130a6d3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-forward-cut-outside-after.png",
+      "sha256": "4f2833e3cf1f40bc3f455f98deff7f04de7218452c5a4639452154867130a6d3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-backward-copy-outside-before.png",
+      "sha256": "4f2833e3cf1f40bc3f455f98deff7f04de7218452c5a4639452154867130a6d3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-backward-copy-outside-after.png",
+      "sha256": "4f2833e3cf1f40bc3f455f98deff7f04de7218452c5a4639452154867130a6d3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-backward-cut-outside-before.png",
+      "sha256": "4f2833e3cf1f40bc3f455f98deff7f04de7218452c5a4639452154867130a6d3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-backward-cut-outside-after.png",
+      "sha256": "4f2833e3cf1f40bc3f455f98deff7f04de7218452c5a4639452154867130a6d3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-forward-copy-outside-before.png",
+      "sha256": "a34a0b2f919cb53e8cc2eff1d2184c22824daebda6dfd1176d0f5090708e97d9"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-forward-copy-outside-after.png",
+      "sha256": "a34a0b2f919cb53e8cc2eff1d2184c22824daebda6dfd1176d0f5090708e97d9"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-forward-cut-outside-before.png",
+      "sha256": "a34a0b2f919cb53e8cc2eff1d2184c22824daebda6dfd1176d0f5090708e97d9"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-forward-cut-outside-after.png",
+      "sha256": "a34a0b2f919cb53e8cc2eff1d2184c22824daebda6dfd1176d0f5090708e97d9"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-backward-copy-outside-before.png",
+      "sha256": "a34a0b2f919cb53e8cc2eff1d2184c22824daebda6dfd1176d0f5090708e97d9"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-backward-copy-outside-after.png",
+      "sha256": "a34a0b2f919cb53e8cc2eff1d2184c22824daebda6dfd1176d0f5090708e97d9"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-backward-cut-outside-before.png",
+      "sha256": "a34a0b2f919cb53e8cc2eff1d2184c22824daebda6dfd1176d0f5090708e97d9"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-backward-cut-outside-after.png",
+      "sha256": "a34a0b2f919cb53e8cc2eff1d2184c22824daebda6dfd1176d0f5090708e97d9"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-forward-selected-0.png",
+      "sha256": "a6949d1471bedec69834bf57f95e96ad59f8cfd0f4cbd287de8a898c10f013d1"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-forward-reopened-1.png",
+      "sha256": "594dfaed83b38e9eb2f4bb536d758888a5d3951935112f2cef76b885758f6bab"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-backward-selected-0.png",
+      "sha256": "472d97ec74d7136e4c9224c81cd724cf6330df541e6e7e96d875a4b38218d493"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-backward-reopened-1.png",
+      "sha256": "dcd94e4f673423ac34751020fc481cce94150bc0043fb8fb2d0566f7845f5145"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/original-1/cell-grid-backward-external.png",
+      "sha256": "5432e04ea3cd9869bcb631bb60c08f747ed63d06c5fe50b9d073d00166a8b4fb"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-forward-selected-0.png",
+      "sha256": "47280273d552798a24b3f6b69c82e7b20e5a1e9d17b0b8b80ff3dcf859a7c0a8"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-forward-reopened-1.png",
+      "sha256": "414c0078bf7712be386e6c9c71f6ea485eee92fd6bc3c68a181c41a46c42d032"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-backward-selected-0.png",
+      "sha256": "2b5d22801c975898710f8c7b1257603426cc784342148cb92cc661317d2424df"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-backward-reopened-1.png",
+      "sha256": "2f2e15d52598e5dcd6bdffef517a2e9f3065379625456c174d444a0fc4bf7eee"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/cell-grid-backward-external.png",
+      "sha256": "5432e04ea3cd9869bcb631bb60c08f747ed63d06c5fe50b9d073d00166a8b4fb"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-transfer-20261117/fountain-1/cell-grid-forward-selected-0.png",
+      "sha256": "dfe6baff31ee4b03ab564e6ac20b33bbc74ffd8754c3afa41481f48eded98b15"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/grid-transfer-20261117/fountain-1/cell-grid-forward-cut-0.png",
+      "sha256": "4830b1a3e2273f5b7209ab6c4769466e0dc78af8e17e2fd1bafab791f6d09b35"
+    },
+    {
+      "path": "artifacts/cell-range-paint-before-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/outside-control.png",
+      "sha256": "559321a49bd407d5d23bfd0dc1a88f9df0aeed070739dd5057cddb4b9dffb0c7"
+    },
+    {
+      "path": "artifacts/cell-range-paint-before-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/pointer-outside.png",
+      "sha256": "86d72e721cbe8bfe28bd22ce19e2369cb54552c20ea84f09caf4056f8f1fbadd"
+    },
+    {
+      "path": "artifacts/cell-range-paint-before-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/pointer-table.png",
+      "sha256": "73343eb945f72de510070d2423fd05fac1264924868ffcb90c4b63f1cc847299"
+    },
+    {
+      "path": "artifacts/cell-range-paint-before-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/test-failed-1.png",
+      "sha256": "9ff1504b685801b8aa59131a563393d213977a1dddda0a35ae4ac9d077e8bdc4"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/keyboard-outside.png",
+      "sha256": "559321a49bd407d5d23bfd0dc1a88f9df0aeed070739dd5057cddb4b9dffb0c7"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/keyboard-table.png",
+      "sha256": "35b1161bd7323fc8c731d393769b249009e0b828767143a2c48505111c97dcaf"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/normal-text-selection.png",
+      "sha256": "c38955867d2354267c65f5fc6ab148f6fe02fc8e1da676f70826dfc9369fb6b9"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/outside-control.png",
+      "sha256": "559321a49bd407d5d23bfd0dc1a88f9df0aeed070739dd5057cddb4b9dffb0c7"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/pointer-outside.png",
+      "sha256": "559321a49bd407d5d23bfd0dc1a88f9df0aeed070739dd5057cddb4b9dffb0c7"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/pointer-table.png",
+      "sha256": "35b1161bd7323fc8c731d393769b249009e0b828767143a2c48505111c97dcaf"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/keyboard-outside.png",
+      "sha256": "2b6e0f4185368dcc58c3b3459dce417803dd9d20975a3be316a29c4e0387cef2"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/keyboard-table.png",
+      "sha256": "253409cc149b0a8ac23767614bfd323c99e13fd90d697de38290750829b08211"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/normal-text-selection.png",
+      "sha256": "237fdf42673d28f74e6c3beb70c7a194f785ce5990276596f40996eee25e9632"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/outside-control.png",
+      "sha256": "2b6e0f4185368dcc58c3b3459dce417803dd9d20975a3be316a29c4e0387cef2"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/pointer-outside.png",
+      "sha256": "2b6e0f4185368dcc58c3b3459dce417803dd9d20975a3be316a29c4e0387cef2"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/pointer-table.png",
+      "sha256": "253409cc149b0a8ac23767614bfd323c99e13fd90d697de38290750829b08211"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/keyboard-outside.png",
+      "sha256": "7d8e8c5988bc5f7e74b639b0e85ed4061c3f619880a54d62f3c029258168b778"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/keyboard-table.png",
+      "sha256": "17b05adccc4e5252a61cd5651960128c7e03f2ce391e5ea1f1d63b7e6a611f44"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/normal-text-selection.png",
+      "sha256": "403097bc4bc3e64fbe75d78e2187e0197848f30ce0f4f9045f18f52b6efadb68"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/outside-control.png",
+      "sha256": "7d8e8c5988bc5f7e74b639b0e85ed4061c3f619880a54d62f3c029258168b778"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/pointer-outside.png",
+      "sha256": "7d8e8c5988bc5f7e74b639b0e85ed4061c3f619880a54d62f3c029258168b778"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/pointer-table.png",
+      "sha256": "17b05adccc4e5252a61cd5651960128c7e03f2ce391e5ea1f1d63b7e6a611f44"
+    }
+  ],
+  "localLogs": [
+    {
+      "path": "artifacts/cell-range-paint-full-check-20261117.log",
+      "sha256": "bc3004a5c19fcf2086f68d766965e6a7433936dd7ce42d5e91e82ce77e3a2d59"
+    },
+    {
+      "path": "artifacts/cell-range-paint-before-20261117.log",
+      "sha256": "717f40aae6f2f64c899b8fcab48396b2b361b4e6c5371e270edcb2c4d38dcc49"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117.log",
+      "sha256": "f8a6ac7f61cb9808344b4df5ace45679f5bd08993f6c6d7a0210e2300f439668"
+    },
+    {
+      "path": "artifacts/cell-range-paint-budgets-20261117.log",
+      "sha256": "dfe0caa7ffcfa9c70ef270d65b6f5e3c1bcfc415292ed341230fcdddf603dc9b"
+    },
+    {
+      "path": "artifacts/gitlab-grid-paint-install-20261117.log",
+      "sha256": "b457a06109363f4594da1156b30f1e50b68401ad2ce10c14b69c70e3d08adeca"
+    },
+    {
+      "path": "artifacts/gitlab-grid-paint-rspack-20261117.log",
+      "sha256": "bad7fd7f04fb156917e3dd41ab4007c31071469b015de08d56f1658deb387866"
+    }
+  ],
+  "localRecordings": [
+    {
+      "path": "artifacts/cell-range-paint-before-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/trace.zip",
+      "sha256": "ff285c14acdabbcca9c4bb6de230c19e2f3348f20db645e7ad3e3a0b07f236b5"
+    },
+    {
+      "path": "artifacts/cell-range-paint-before-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/video.webm",
+      "sha256": "c6dd2acb528ca3604d96dec408cbf369ea89e2c1c22aeb4fd7c0e571aefb3285"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/trace.zip",
+      "sha256": "925470f08c496e81836e4f45150a5d6f4bf147a5f17dd9ddcf79f3c507a493ad"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/video.webm",
+      "sha256": "29b2d3705dfb123fb105a91027acc23d5bf95caf9f3154d587d6cb897771697e"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/trace.zip",
+      "sha256": "c5f4507d5539ca58ea98f0709c6a719d96af3fb0c839a39c02ce1c08b5271db7"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/video.webm",
+      "sha256": "b5ddbeb11e880b2f8a3767513ff9330c1c551b0250c6efc77114663a296c3f43"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/trace.zip",
+      "sha256": "83048cfbfe9ea68222931ff40a43e27e4a5e5727de377feca1a7c5c654e8bc99"
+    },
+    {
+      "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/video.webm",
+      "sha256": "bdd398b83eaf92a7a111ada1988a4bb5711a0ba12ace737b63d3e4c9f82869d7"
+    }
+  ]
+}

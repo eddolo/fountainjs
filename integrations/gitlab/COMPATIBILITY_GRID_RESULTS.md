@@ -1,0 +1,91 @@
+# Matched rectangular table clipboard results — 2026-11-17
+
+Two real issue-description workflows ran against GitLab CE 19.5.3 with its
+original Tiptap editor and the Fountain replacement. The same pinned backend,
+fixture, actor, browser and collector were used sequentially. The deployed
+editor and frontend assets differ deliberately; the backend was not replaced.
+
+The final result is **42 parity checks, zero improvements, regressions, shared
+limitations or incomplete checks**. These are correlated invariants in two
+workflows, not 42 independent capabilities. Both scoped gates pass. This does
+not establish complete GitLab compatibility or a general Tiptap advantage.
+
+## What was exercised
+
+Actual forward and backward Shift-click selections copy/cut a 2×2 body-cell
+rectangle from a three-column table. The third column must remain untouched.
+Real system clipboard copy/paste is checked in a separate browser textarea and
+rich editable field, then pasted into a second table that must grow a row.
+Undo/redo, ordinary Save and a fresh rich-editor reopen must preserve exact
+cell roles, geometry, paragraph text, bold, links and surrounding prose.
+A source paragraph in the unselected column must keep byte-identical PNG pixels
+through copy and cut selection. The external fields are generic browser controls,
+not evidence of Word, Google Docs or other application-specific compatibility.
+
+API calls only create/inspect fixtures and confirm persistence. Editing uses real
+pointer, keyboard and clipboard actions, not private editor commands, synthetic
+clipboard events or direct model injection. See the [collector](../../scripts/audit-gitlab-compatibility-grid.mjs)
+and [fixture](fixtures/compatibility-grid.json).
+
+## A real visual regression found and fixed
+
+The initial pair passed 38 semantic checks, but visual review showed that
+Fountain's linear DOM selection also painted text in the unselected third column.
+Correct clipboard data did not make that presentation acceptable. The initial
+observations, instruments and negative screenshots remain retained separately.
+
+The repair scopes native selection-paint suppression to a focused Fountain view
+with existing selected-cell markers. The markers already paint the intended
+whole-cell rectangle. No transaction, selection mapping, clipboard or history
+algorithm changed. Ordinary text selection paints again after leaving cell mode.
+Four adjacent identical CSS declarations were combined into comma selector lists
+with their original selectors/specificity. Net stylesheet growth is five bytes:
+91,242 → 91,247, below the unchanged 91,264-byte limit. No acceptance limit changed.
+
+A separate real-browser pixel regression failed in Chromium before the repair.
+With the same assertions, Chromium, Firefox and WebKit all pass: both pointer and
+keyboard cell selection leave the outside paragraph unchanged; ordinary text
+selection is a positive control. The before capture changed 3,051 outside pixels;
+after the repair all six outside-region checks change zero pixels. Recorded
+videos and traces remain local, and screenshot hashes are retained.
+
+The native GitLab stylesheet was installed with its guarded installer and the
+actual frontend rebuilt before the fresh matched pair. Final native forward and
+backward selection, cut, destination paste, external transfer and reopen captures
+were visually inspected from their original PNG bytes, along with original-editor
+selection/reopen controls. The third column remains unpainted and the destination
+has the intended four body cells. This supports scoped parity, not superiority.
+
+## Verification and retained evidence
+
+- [Final comparison](../../artifacts/gitlab-compatibility/grid-paint-20261117/comparison-1/report.md)
+- [Original observations](../../artifacts/gitlab-compatibility/grid-paint-20261117/original-1/report.json)
+- [Fountain observations](../../artifacts/gitlab-compatibility/grid-paint-20261117/fountain-1/report.json)
+- [Initial semantic-only comparison](../../artifacts/gitlab-compatibility/grid-transfer-20261117/comparison-1/report.md)
+- [Initial instrument snapshot](../../artifacts/gitlab-compatibility/grid-transfer-20261117/initial-instrument/manifest.json)
+- [Public pixel evidence](../../artifacts/cell-range-paint-pixel-evidence-20261117.json)
+- [Validation and source hashes](../../artifacts/gitlab-compatibility/grid-paint-20261117/validation.json)
+- [Earlier-corpus interpretation replay](../../artifacts/gitlab-compatibility/grid-paint-20261117/prior-corpus-replay.json)
+
+`pnpm run check --maxWorkers=2` exited zero: build, API/package contracts,
+server/headless runtimes, Markdown/math references, DOCX interoperability,
+unchanged size/performance budgets, TypeScript/Svelte/Angular checks and all
+**6,861 unit tests across 400 files** passed. The targeted recorded desktop
+browser journey passed three projects with one worker and no retries. This is
+not a rerun of the full browser matrix or hosted release CI.
+
+Reproduce using fresh immutable run IDs and the guarded deployment described in
+[the suite instructions](COMPATIBILITY_RESULTS.md#reproduce): run each editor with
+`node scripts/run-gitlab-compatibility.mjs --editor original|fountain --run-id NEW_ID --suite grid`,
+then compare the two report files with `scripts/compare-gitlab-compatibility.mjs`.
+Run sequentially against the stopped isolated application. Never overwrite a
+failed attempt or reuse a semantic-only result as visual acceptance.
+
+## Remaining scope
+
+These fixtures use unmerged ASCII body cells. Header-source transfer, merged
+cells/rowspans, Unicode/IME, nested content, ownership rules, rapid input, other
+external applications, permissions/concurrency, physical mobile devices and
+matched restart remain separate requirements. The earlier shared Applied-history
+failure and blank-line suggestion limitation remain open. No overall roadmap
+percentage, release version or public marketing claim is promoted by this result.

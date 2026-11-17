@@ -1,0 +1,90 @@
+{
+  "scope": "Reinterpretation of unchanged recorded observations; not fresh browser runs.",
+  "comparatorSha256": "36a57209fcfca5bbd04c81bbe14c2e18d4038cfcc51881b86c5a0c7f56bec47c",
+  "checks": [
+    {
+      "path": "switch-20261116/comparison-2",
+      "summary": {
+        "parity": 20,
+        "improvement": 12,
+        "regression": 0,
+        "shared-limitation": 4,
+        "incomplete": 0,
+        "total": 36
+      },
+      "unchanged": true
+    },
+    {
+      "path": "deletion-keyboard-20261116/comparison-1",
+      "summary": {
+        "parity": 26,
+        "improvement": 4,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 30
+      },
+      "unchanged": true
+    },
+    {
+      "path": "review-20261116/comparison-1",
+      "summary": {
+        "parity": 21,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 21
+      },
+      "unchanged": true
+    },
+    {
+      "path": "clipboard-ready-20261117/comparison-1",
+      "summary": {
+        "parity": 84,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 84
+      },
+      "unchanged": true
+    },
+    {
+      "path": "partial-ready-20261117/comparison-1",
+      "summary": {
+        "parity": 188,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 188
+      },
+      "unchanged": true
+    },
+    {
+      "path": "crossblock-caret-20261117/comparison-1",
+      "summary": {
+        "parity": 188,
+        "improvement": 16,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 204
+      },
+      "unchanged": true
+    },
+    {
+      "path": "grid-transfer-20261117/comparison-1",
+      "summary": {
+        "parity": 38,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 38
+      },
+      "unchanged": true
+    }
+  ]
+}

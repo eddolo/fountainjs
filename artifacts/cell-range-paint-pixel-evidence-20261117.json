@@ -1,0 +1,134 @@
+{
+  "scope": "Read existing PNG pixels only. Same third-column paragraph before/after native pointer and keyboard cell selection; ordinary text-selection paint is a positive control.",
+  "expectationsUnchanged": true,
+  "before": "Chromium fails at the pointer pixel assertion before stylesheet repair.",
+  "after": "All three desktop engines pass with unchanged test assertions.",
+  "sourceStylesheet": {
+    "path": "src/styles.css",
+    "sha256": "fecacdcd4a22240ec5c5067f0c66b5dbe86d97c564ff88f0e2577aa3e4090714",
+    "bytes": 91247,
+    "ceilingBytes": 91264
+  },
+  "journey": {
+    "path": "tests/browser/cell-range-paint-journey.ts",
+    "sha256": "7e9b81197429433cc95c03411be3f7237783150787086407dd1eac4d513b25da"
+  },
+  "reports": [
+    {
+      "phase": "before",
+      "case": "editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium",
+      "control": {
+        "path": "artifacts/cell-range-paint-before-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/outside-control.png",
+        "sha256": "559321a49bd407d5d23bfd0dc1a88f9df0aeed070739dd5057cddb4b9dffb0c7",
+        "size": [
+          551,
+          28
+        ]
+      },
+      "checks": [
+        {
+          "path": "artifacts/cell-range-paint-before-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/pointer-outside.png",
+          "sha256": "86d72e721cbe8bfe28bd22ce19e2369cb54552c20ea84f09caf4056f8f1fbadd",
+          "identicalRgbPixels": false,
+          "differentPixels": 3051
+        }
+      ]
+    },
+    {
+      "phase": "fixed",
+      "case": "editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium",
+      "control": {
+        "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/outside-control.png",
+        "sha256": "559321a49bd407d5d23bfd0dc1a88f9df0aeed070739dd5057cddb4b9dffb0c7",
+        "size": [
+          551,
+          28
+        ]
+      },
+      "checks": [
+        {
+          "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/pointer-outside.png",
+          "sha256": "559321a49bd407d5d23bfd0dc1a88f9df0aeed070739dd5057cddb4b9dffb0c7",
+          "identicalRgbPixels": true,
+          "differentPixels": 0
+        },
+        {
+          "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/keyboard-outside.png",
+          "sha256": "559321a49bd407d5d23bfd0dc1a88f9df0aeed070739dd5057cddb4b9dffb0c7",
+          "identicalRgbPixels": true,
+          "differentPixels": 0
+        },
+        {
+          "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-chromium/normal-text-selection.png",
+          "sha256": "c38955867d2354267c65f5fc6ab148f6fe02fc8e1da676f70826dfc9369fb6b9",
+          "identicalRgbPixels": false,
+          "differentPixels": 15330
+        }
+      ]
+    },
+    {
+      "phase": "fixed",
+      "case": "editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox",
+      "control": {
+        "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/outside-control.png",
+        "sha256": "2b6e0f4185368dcc58c3b3459dce417803dd9d20975a3be316a29c4e0387cef2",
+        "size": [
+          551,
+          28
+        ]
+      },
+      "checks": [
+        {
+          "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/pointer-outside.png",
+          "sha256": "2b6e0f4185368dcc58c3b3459dce417803dd9d20975a3be316a29c4e0387cef2",
+          "identicalRgbPixels": true,
+          "differentPixels": 0
+        },
+        {
+          "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/keyboard-outside.png",
+          "sha256": "2b6e0f4185368dcc58c3b3459dce417803dd9d20975a3be316a29c4e0387cef2",
+          "identicalRgbPixels": true,
+          "differentPixels": 0
+        },
+        {
+          "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-firefox/normal-text-selection.png",
+          "sha256": "237fdf42673d28f74e6c3beb70c7a194f785ce5990276596f40996eee25e9632",
+          "identicalRgbPixels": false,
+          "differentPixels": 15266
+        }
+      ]
+    },
+    {
+      "phase": "fixed",
+      "case": "editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit",
+      "control": {
+        "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/outside-control.png",
+        "sha256": "7d8e8c5988bc5f7e74b639b0e85ed4061c3f619880a54d62f3c029258168b778",
+        "size": [
+          1078,
+          56
+        ]
+      },
+      "checks": [
+        {
+          "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/pointer-outside.png",
+          "sha256": "7d8e8c5988bc5f7e74b639b0e85ed4061c3f619880a54d62f3c029258168b778",
+          "identicalRgbPixels": true,
+          "differentPixels": 0
+        },
+        {
+          "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/keyboard-outside.png",
+          "sha256": "7d8e8c5988bc5f7e74b639b0e85ed4061c3f619880a54d62f3c029258168b778",
+          "identicalRgbPixels": true,
+          "differentPixels": 0
+        },
+        {
+          "path": "artifacts/cell-range-paint-fixed-20261117/editor-paints-only-rectang-e3f13-res-ordinary-text-selection-webkit/normal-text-selection.png",
+          "sha256": "403097bc4bc3e64fbe75d78e2187e0197848f30ce0f4f9045f18f52b6efadb68",
+          "identicalRgbPixels": false,
+          "differentPixels": 59360
+        }
+      ]
+    }
+  ]
+}

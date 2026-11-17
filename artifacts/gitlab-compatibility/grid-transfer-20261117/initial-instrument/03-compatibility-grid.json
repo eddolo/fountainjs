@@ -1,0 +1,1215 @@
+{
+  "formatVersion": 1,
+  "workflow": "rectangular-body-cell-transfer",
+  "settlingMs": 700,
+  "cases": [
+    {
+      "id": "cell-grid-forward",
+      "scope": "grid",
+      "title": "Paired cell grid transfer",
+      "anchor": [
+        1,
+        0
+      ],
+      "head": [
+        2,
+        1
+      ],
+      "selectedCells": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "destination": [
+        1,
+        0
+      ],
+      "markdown": "## Cell grid review\n\n| S1 | S2 | Keep |\n| --- | --- | --- |\n| A **bold** | [B link](https://example.com/grid) | Untouched one |\n| C | D | Untouched two |\n\nBetween tables.\n\n| T1 | T2 |\n| --- | --- |\n| Old one | Old two |\n\nEnd of table fixture.",
+      "plain": "A bold\tB link\nC\tD",
+      "initialGraph": {
+        "headings": [
+          "Cell grid review"
+        ],
+        "prose": [
+          "Between tables.",
+          "End of table fixture."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S2"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Keep"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "A bold"
+                ],
+                "bold": [
+                  "bold"
+                ],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "B link"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "B link",
+                    "href": "https://example.com/grid"
+                  }
+                ]
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched one"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "C"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "D"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T2"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Old one"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Old two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ]
+        ]
+      },
+      "cutGraph": {
+        "headings": [
+          "Cell grid review"
+        ],
+        "prose": [
+          "Between tables.",
+          "End of table fixture."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S2"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Keep"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  ""
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  ""
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched one"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  ""
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  ""
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T2"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Old one"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Old two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ]
+        ]
+      },
+      "pastedGraph": {
+        "headings": [
+          "Cell grid review"
+        ],
+        "prose": [
+          "Between tables.",
+          "End of table fixture."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S2"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Keep"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "A bold"
+                ],
+                "bold": [
+                  "bold"
+                ],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "B link"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "B link",
+                    "href": "https://example.com/grid"
+                  }
+                ]
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched one"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "C"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "D"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T2"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "A bold"
+                ],
+                "bold": [
+                  "bold"
+                ],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "B link"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "B link",
+                    "href": "https://example.com/grid"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "C"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "D"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ]
+        ]
+      },
+      "externalGraph": {
+        "headings": [],
+        "prose": [],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "A bold"
+                ],
+                "bold": [
+                  "bold"
+                ],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "B link"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "B link",
+                    "href": "https://example.com/grid"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "C"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "D"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cell-grid-backward",
+      "scope": "grid",
+      "title": "Paired cell grid transfer",
+      "anchor": [
+        2,
+        1
+      ],
+      "head": [
+        1,
+        0
+      ],
+      "selectedCells": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "destination": [
+        1,
+        0
+      ],
+      "markdown": "## Cell grid review\n\n| S1 | S2 | Keep |\n| --- | --- | --- |\n| A **bold** | [B link](https://example.com/grid) | Untouched one |\n| C | D | Untouched two |\n\nBetween tables.\n\n| T1 | T2 |\n| --- | --- |\n| Old one | Old two |\n\nEnd of table fixture.",
+      "plain": "A bold\tB link\nC\tD",
+      "initialGraph": {
+        "headings": [
+          "Cell grid review"
+        ],
+        "prose": [
+          "Between tables.",
+          "End of table fixture."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S2"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Keep"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "A bold"
+                ],
+                "bold": [
+                  "bold"
+                ],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "B link"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "B link",
+                    "href": "https://example.com/grid"
+                  }
+                ]
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched one"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "C"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "D"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T2"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Old one"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Old two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ]
+        ]
+      },
+      "cutGraph": {
+        "headings": [
+          "Cell grid review"
+        ],
+        "prose": [
+          "Between tables.",
+          "End of table fixture."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S2"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Keep"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  ""
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  ""
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched one"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  ""
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  ""
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T2"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Old one"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Old two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ]
+        ]
+      },
+      "pastedGraph": {
+        "headings": [
+          "Cell grid review"
+        ],
+        "prose": [
+          "Between tables.",
+          "End of table fixture."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "S2"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Keep"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "A bold"
+                ],
+                "bold": [
+                  "bold"
+                ],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "B link"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "B link",
+                    "href": "https://example.com/grid"
+                  }
+                ]
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched one"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "C"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "D"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Untouched two"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T1"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TH",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "T2"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "A bold"
+                ],
+                "bold": [
+                  "bold"
+                ],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "B link"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "B link",
+                    "href": "https://example.com/grid"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "C"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "D"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ]
+        ]
+      },
+      "externalGraph": {
+        "headings": [],
+        "prose": [],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "A bold"
+                ],
+                "bold": [
+                  "bold"
+                ],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "B link"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "B link",
+                    "href": "https://example.com/grid"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "C"
+                ],
+                "bold": [],
+                "links": []
+              },
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "D"
+                ],
+                "bold": [],
+                "links": []
+              }
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

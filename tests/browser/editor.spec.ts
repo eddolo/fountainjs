@@ -5147,6 +5147,10 @@ test('tracks and cancels browser-native image upload tasks', async ({ page }) =>
   expect(cancelled).toBe('cancelled');
 });
 
+import {cellRangePaintJourney} from './cell-range-paint-journey';
+
+test('paints only rectangular cells and restores ordinary text selection',async({page},info)=>{await cellRangePaintJourney(page,info);});
+
 test('extends and replaces a rectangular cell selection through real pointer input', async ({ page }) => {
   const inserted = await page.evaluate(() => {
     const contract = (globalThis as any).fountainBrowserTest;
