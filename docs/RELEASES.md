@@ -26,6 +26,15 @@ do not mark an unfinished beta stable merely to change the badge.
 
 This reconciliation changes no release, tag, npm package or website deployment.
 
+## Matched directed-selection coverage — 2026-11-17
+
+The [partial-selection corpus](../integrations/gitlab/COMPATIBILITY_PARTIAL_RESULTS.md)
+verifies four keyboard/pointer forward/backward workflows through real copy/cut,
+paste/history and save/reopen: 188 parity checks, no superiority claim. Readiness
+receipts reject premature snapshots; empty caret markup is not treated as marked
+content. Earlier unpaced failures remain open. 1393 integration tests / 54 files
+and strict types pass. No runtime/API/capacity/version/publication change.
+
 ## Matched clipboard coverage — 2026-11-17
 
 The [rich clipboard fixture](../integrations/gitlab/COMPATIBILITY_CLIPBOARD_RESULTS.md)

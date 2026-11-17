@@ -1,0 +1,423 @@
+{
+  "formatVersion": 1,
+  "workflow": "rich-partial-selection-clipboard",
+  "settlingMs": 700,
+  "cases": [
+    {
+      "id": "keyboard-forward",
+      "scope": "partial",
+      "title": "Paired rich partial selection",
+      "method": "keyboard",
+      "direction": "forward",
+      "markdown": "## Selection review\n\nStart **critical** [linked](https://example.com/reference) tail.\n\nPaste here.",
+      "sourceText": "Start critical linked tail.",
+      "start": 6,
+      "end": 21,
+      "selectedText": "critical linked",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start critical linked tail.",
+          "Paste here."
+        ],
+        "bold": [
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start  tail.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start critical linked tail.",
+          "Paste here.",
+          "critical linked"
+        ],
+        "bold": [
+          "critical",
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "text": "critical linked",
+        "bold": [
+          "critical"
+        ],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ]
+      }
+    },
+    {
+      "id": "keyboard-backward",
+      "scope": "partial",
+      "title": "Paired rich partial selection",
+      "method": "keyboard",
+      "direction": "backward",
+      "markdown": "## Selection review\n\nStart **critical** [linked](https://example.com/reference) tail.\n\nPaste here.",
+      "sourceText": "Start critical linked tail.",
+      "start": 6,
+      "end": 21,
+      "selectedText": "critical linked",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start critical linked tail.",
+          "Paste here."
+        ],
+        "bold": [
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start  tail.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start critical linked tail.",
+          "Paste here.",
+          "critical linked"
+        ],
+        "bold": [
+          "critical",
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "text": "critical linked",
+        "bold": [
+          "critical"
+        ],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pointer-forward",
+      "scope": "partial",
+      "title": "Paired rich partial selection",
+      "method": "pointer",
+      "direction": "forward",
+      "markdown": "## Selection review\n\nStart **critical** [linked](https://example.com/reference) tail.\n\nPaste here.",
+      "sourceText": "Start critical linked tail.",
+      "start": 6,
+      "end": 21,
+      "selectedText": "critical linked",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start critical linked tail.",
+          "Paste here."
+        ],
+        "bold": [
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start  tail.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start critical linked tail.",
+          "Paste here.",
+          "critical linked"
+        ],
+        "bold": [
+          "critical",
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "text": "critical linked",
+        "bold": [
+          "critical"
+        ],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pointer-backward",
+      "scope": "partial",
+      "title": "Paired rich partial selection",
+      "method": "pointer",
+      "direction": "backward",
+      "markdown": "## Selection review\n\nStart **critical** [linked](https://example.com/reference) tail.\n\nPaste here.",
+      "sourceText": "Start critical linked tail.",
+      "start": 6,
+      "end": 21,
+      "selectedText": "critical linked",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start critical linked tail.",
+          "Paste here."
+        ],
+        "bold": [
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start  tail.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Selection review"
+          }
+        ],
+        "prose": [
+          "Start critical linked tail.",
+          "Paste here.",
+          "critical linked"
+        ],
+        "bold": [
+          "critical",
+          "critical"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "text": "critical linked",
+        "bold": [
+          "critical"
+        ],
+        "links": [
+          {
+            "text": "linked",
+            "href": "https://example.com/reference"
+          }
+        ]
+      }
+    }
+  ]
+}

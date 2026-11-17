@@ -82,6 +82,10 @@ The [rich clipboard pair](COMPATIBILITY_CLIPBOARD_RESULTS.md) adds 84 parity
 checks with recorded caret/clipboard preconditions and visible capture guards.
 Its earlier timing-sensitive anomaly is retained without a superiority claim.
 
+The [directed partial-selection pair](COMPATIBILITY_PARTIAL_RESULTS.md) adds
+four paced keyboard/pointer cases, with explicit document-ready evidence and
+semantic caret-wrapper handling. Rapid-input failures remain separate/open.
+
 ## Reproduce
 
 Use the matching Linux Docker environment and the prepared native source/assets

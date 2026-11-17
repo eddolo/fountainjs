@@ -1,0 +1,22 @@
+{
+  "scripts/run-gitlab-compatibility.mjs": {
+    "archive": "artifacts/gitlab-compatibility/partial-paced-20261117/instrument/run-gitlab-compatibility.mjs",
+    "sha256": "a4d8108a26f579bff0d23f1a44097e17f28fa4fbf40ebb0a38086845fa0aab18"
+  },
+  "scripts/audit-gitlab-compatibility-suggestions.mjs": {
+    "archive": "artifacts/gitlab-compatibility/partial-paced-20261117/instrument/audit-gitlab-compatibility-suggestions.mjs",
+    "sha256": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6"
+  },
+  "scripts/audit-gitlab-compatibility-clipboard.mjs": {
+    "archive": "artifacts/gitlab-compatibility/partial-paced-20261117/instrument/audit-gitlab-compatibility-clipboard.mjs",
+    "sha256": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e"
+  },
+  "scripts/audit-gitlab-compatibility-partial.mjs": {
+    "archive": "artifacts/gitlab-compatibility/partial-paced-20261117/instrument/audit-gitlab-compatibility-partial.mjs",
+    "sha256": "5aafce6b2dc48635df156cf8e2d8f92486e01cde7fb39d7f24126d69ae5e57f0"
+  },
+  "integrations/gitlab/fixtures/compatibility-partial.json": {
+    "archive": "artifacts/gitlab-compatibility/partial-paced-20261117/instrument/compatibility-partial.json",
+    "sha256": "2e8cec902cebaae1a7c5ca5121633633061d7271a99444b7002323fde35a612e"
+  }
+}

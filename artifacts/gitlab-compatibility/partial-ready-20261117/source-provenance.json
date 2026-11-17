@@ -1,0 +1,33 @@
+{
+  "scope": "Pinned upstream source and actual shared packaged server provenance. Package versions are upstream lock entries; active editor identity is separately observed in UI.",
+  "sourceRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+  "packagedRevision": "0d4c9a9a2fa",
+  "packages": {
+    "@tiptap/core": {
+      "descriptor": "^2.27.3",
+      "lockedVersion": "2.27.3"
+    },
+    "@tiptap/pm": {
+      "descriptor": "^2.27.3",
+      "lockedVersion": "2.27.3"
+    },
+    "@tiptap/vue-2": {
+      "descriptor": "^2.27.3",
+      "lockedVersion": "2.27.3"
+    }
+  },
+  "hashes": {
+    "yarn.lock": "fc13092874bb930af55b882372b530f6936aea9519d449c21c174232156be538",
+    "app/assets/javascripts/content_editor/components/wrappers/code_block.vue": "b88b3264286ee2abab07fab4ae295b3b113e5c88d72ddee048af18c78118e4e6",
+    "app/assets/javascripts/content_editor/extensions/code_suggestion.js": "118b972333a36faaa92ebd11c29708f872f55a61d5aac5ce2241a2dcc23f29fb",
+    "app/assets/javascripts/content_editor/components/editor_state_observer.vue": "c5679e7841ef19eccc83524527d7fbe55f3e9d8f2fa372cdf487dbaf7cf0bd17",
+    "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "fe712de3ab988b025a6b5a24b29dab079b066a88d0e35145e06a4a184ec275c6",
+    "app/services/notes/update_service.rb": "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2",
+    "app/services/suggestions/create_service.rb": "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a",
+    "lib/gitlab/diff/suggestion.rb": "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546"
+  },
+  "packagedServerSourcesMatch": true,
+  "nativeRuntimeSha256": "90d81cd3b310db40a95608ddf807ba3c067936ac1f7608bfa9014b3d1c18bf31",
+  "candidateParent": "5ddf0fe67d6e0fbf61d185ab24ba3ac75e3d7c3e"
+}

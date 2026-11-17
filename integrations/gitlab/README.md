@@ -1,5 +1,13 @@
 # GitLab application integration
 
+Matched directed-selection follow-up (2026-11-17): four keyboard/pointer
+forward/backward workflows verify 188 parity checks for rich partial copy/cut,
+external/internal paste, history and save/reopen. Document readiness is required;
+empty caret formatting is distinguished from marked content. Earlier unpaced
+failures and premature snapshots remain retained and unapproved as wins. 1393
+integration tests / 54 files and strict types pass. Rapid input, cross-block/Unicode
+and wider platform behavior remain open. [Selection evidence](COMPATIBILITY_PARTIAL_RESULTS.md).
+
 Matched clipboard follow-up (2026-11-17): one actual original/Fountain rich
 workflow verifies 84 parity outcomes across internal/external transfer, paste
 history, cut/paste and save/reopen, including actual caret/clipboard readiness.

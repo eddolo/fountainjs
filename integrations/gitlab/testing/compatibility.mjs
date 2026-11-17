@@ -85,6 +85,34 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='partial'){
+      const add=(key,label,expected,left,right)=>rows.push({case:input.id,invariant:key,label,expected,original:left,fountain:right,classification:null});
+      const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
+      for(const [phase,expected]of [['initial',input.initialGraph],['cut',input.cutGraph],['cutUndo',input.initialGraph],['pasted',input.pastedGraph],['pasteUndo',input.initialGraph],['pasteRedo',input.pastedGraph],['reopened',input.pastedGraph]]){
+        const primary=['headings','prose','bold','links'];
+        // A zero-character emphasis wrapper represents no marked content.
+        // Keep all nonempty strings, including invisible Unicode characters.
+        const content=(item,key)=>{const value=item?.[phase]?.[key];return key==='bold'&&Array.isArray(value)?value.filter(text=>text!==''):value;};
+        for(const key of primary)if(Object.hasOwn(expected,key))add(phase+'.'+key,phase+': '+key,expected[key],content(left,key),content(right,key));
+        const others=Object.keys(expected).filter(key=>!primary.includes(key));
+        if(others.length){
+          const extra=item=>item?.[phase]?Object.fromEntries(others.map(key=>[key,item[phase][key]])):undefined;
+          add(phase+'.otherStructure',phase+': no unintended other structure',Object.fromEntries(others.map(key=>[key,expected[key]])),extra(left),extra(right));
+        }
+      }
+      const selected=item=>item?{text:item.text,direction:item.direction,inside:item.inside,activeInside:item.activeInside,collapsed:item.collapsed}:undefined;
+      for(const phase of ['copySelection','cutSelection'])add(phase,'Actual '+phase+' retains intended text and direction',{text:input.selectedText,direction:input.direction,inside:true,activeInside:true,collapsed:false},selected(left?.[phase]),selected(right?.[phase]));
+      for(const [key,value]of Object.entries(input.fragment))add('externalFragment.'+key,'External selected fragment: '+key,value,left?.externalFragment?.[key],right?.externalFragment?.[key]);
+      add('clipboard.text','Copied plain text is exactly the selected fragment',input.selectedText,left?.clipboard?.text,right?.clipboard?.text);
+      const html=item=>item?.clipboard?typeof item.clipboard.html==='string'&&item.clipboard.html.length>0:undefined;
+      add('clipboard.html','Selected fragment supplies actual HTML payload',true,html(left),html(right));
+      add('cutClipboardText','Cut clipboard retains exactly the selected fragment',input.selectedText,left?.cutClipboardText,right?.cutClipboardText);
+      add('beforePasteClipboardText','Paste clipboard retains exactly the selected fragment',input.selectedText,left?.beforePasteClipboardText,right?.beforePasteClipboardText);
+      const ready=item=>{const state=item?.pasteSelection;return state===undefined?undefined:state.collapsed===true&&state.inside===true&&state.activeInside===true&&state.anchorText===''&&state.anchorOffset===0;};
+      add('pasteCaretReady','Paste begins at verified focused empty paragraph',true,ready(left),ready(right));
+      for(const phase of ['initial','reopened'])add('documentReady.'+phase,phase+': document loaded before snapshot',true,left?.documentReady?.[phase],right?.documentReady?.[phase]);
+      continue;
+    }
     if(input.scope==='clipboard'){
       const add=(key,label,expected,left,right)=>rows.push({case:input.id,invariant:key,label,expected,original:left,fountain:right,classification:null});
       const provenLeft=verifiedEditor(original,a)?a:undefined,provenRight=verifiedEditor(fountain,b)?b:undefined;

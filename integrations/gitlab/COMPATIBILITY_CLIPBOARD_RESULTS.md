@@ -90,6 +90,10 @@ retry failed workflows until they pass. Visible heading/table/code captures
 require their targets fully in the viewport. Original failed/inadequate evidence
 is retained rather than overwritten.
 
+A subsequent [directed partial-selection corpus](COMPATIBILITY_PARTIAL_RESULTS.md)
+verifies one short fragment in both keyboard/mouse directions. It does not expand
+this whole-document pair into proof of arbitrary partial or cross-block behavior.
+
 ## Reproduce and limits
 
 Use the [prepared Linux runtime/assets](runtime/README.md), with the isolated

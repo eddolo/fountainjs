@@ -150,3 +150,37 @@ it('does not approve clipboard claims from runs that lack actual append caret/cl
  const [original,fountain]=clipboardReports();delete (original.observations[0] as any).appendSelection;delete (original.observations[0] as any).appendClipboardText;
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(2);expect(result.comparisonComplete).toBe(false);expect(result.regressionGate.passed).toBe(false);
 });
+
+function partialReports(){
+ const pair=reports();
+ for(const report of pair){
+  const input:any=report.fixture.cases[0];Object.assign(input,{scope:'partial',direction:'backward',selectedText:'bold link',initialGraph:{prose:['start bold link tail'],bold:['bold']},cutGraph:{prose:['start  tail'],bold:[]},pastedGraph:{prose:['start bold link tail','bold link'],bold:['bold','bold']},fragment:{text:'bold link',bold:['bold'],links:[]}});
+  const item:any=report.observations[0];item.input=structuredClone(input);
+  for(const phase of ['initial','cutUndo','pasteUndo'])item[phase]=structuredClone(input.initialGraph);
+  item.cut=structuredClone(input.cutGraph);for(const phase of ['pasted','pasteRedo','reopened'])item[phase]=structuredClone(input.pastedGraph);
+  item.copySelection={text:'bold link',direction:'backward',inside:true,activeInside:true,collapsed:false};item.cutSelection=item.copySelection;
+  item.clipboard={text:'bold link',html:'<strong>bold</strong> link'};item.cutClipboardText='bold link';item.beforePasteClipboardText='bold link';item.externalFragment=input.fragment;
+  item.pasteSelection={collapsed:true,inside:true,activeInside:true,anchorText:'',anchorOffset:0};item.documentReady={initial:true,reopened:true};
+ }
+ return pair;
+}
+it('verifies directed partial selection, clipboard, marks and history separately',()=>{
+ const result=compareGitLabCompatibility(...partialReports());expect(result.summary.total).toBe(26);expect(result.summary.parity).toBe(26);expect(result.featureAcceptance.passed).toBe(true);
+});
+it('does not treat forward selection as equivalent evidence for a backward workflow',()=>{
+ const [original,fountain]=partialReports();(fountain.observations[0] as any).copySelection={...(fountain.observations[0] as any).copySelection,direction:'forward'};
+ const result=compareGitLabCompatibility(original,fountain);expect(result.rows.find((row:any)=>row.invariant==='copySelection').classification).toBe('regression');expect(result.regressionGate.passed).toBe(false);
+});
+it('detects partial-paste mark loss even when text and saved content match',()=>{
+ const [original,fountain]=partialReports();(fountain.observations[0] as any).pasted.bold=['bold'];
+ const result=compareGitLabCompatibility(original,fountain);expect(result.rows.find((row:any)=>row.invariant==='pasted.bold').classification).toBe('regression');expect(result.regressionGate.passed).toBe(false);
+});
+
+it.each([['','parity'],['\u200B','regression']])('distinguishes empty caret wrappers from actual invisible marked content %j',(text,classification)=>{
+ const [original,fountain]=partialReports();(fountain.observations[0] as any).cut.bold=[text];
+ const result=compareGitLabCompatibility(original,fountain);expect(result.rows.find((row:any)=>row.invariant==='cut.bold').classification).toBe(classification);
+});
+it('rejects partial-selection evidence without actual document-load receipts',()=>{
+ const [original,fountain]=partialReports();delete (original.observations[0] as any).documentReady;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(2);expect(result.regressionGate.passed).toBe(false);
+});
