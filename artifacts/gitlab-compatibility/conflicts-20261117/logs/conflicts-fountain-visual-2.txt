@@ -1,0 +1,18 @@
+time="2026-11-17T16:48:13Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-discard","stage":"local-draft"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-discard","stage":"remote-save"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-discard","stage":"observe-conflict"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-discard","stage":"resolve-discard"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-discard","stage":"fresh-session"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-discard","stage":"complete"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-overwrite","stage":"local-draft"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-overwrite","stage":"remote-save"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-overwrite","stage":"observe-conflict"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-overwrite","stage":"resolve-overwrite"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-overwrite","stage":"fresh-session"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"conflict-overwrite","stage":"complete"}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+{"kind":"gitlab-compatibility","side":"fountain","output":"/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-compatibility/conflicts-20261117/fountain-2","collectionComplete":true,"classification":null}

@@ -414,3 +414,28 @@ it('requires captured quote ownership instead of treating missing instrumentatio
  const [original,fountain]=taskConversionReports(0,true);delete (fountain.observations[0] as any).graphs.before.taskQuoteDepths;
  const result=compareGitLabCompatibility(original,fountain);expect(result.rows.find((row:any)=>row.invariant==='before.quotes').classification).toBe(null);expect(result.summary.incomplete).toBe(1);
 });
+
+function conflictPolicyReports(): any[]{
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-conflicts.json',import.meta.url),'utf8'));
+ const pair=reports();for(const report of pair){report.fixture=fixture;report.observations=fixture.cases.map((input:any)=>({id:input.id,input,editorProof:report.observations[0].editorProof,remoteEditorProof:report.observations[0].editorProof,
+  graphs:{initial:input.expectedInitial,remoteInitial:input.expectedInitial,local:input.expectedLocal,remoteSaved:input.expectedRemote,resolved:input.expectedResolved,final:input.expectedFinal},
+  independentContexts:true,noAutomaticOverwrite:true,localDraftRetained:true,conflictObserved:true,conflictSourceExact:true,conflictSourceReadonly:true,resolutionSourceExact:true,freshWarningAbsent:true,freshSourceMatchesServer:true,normalSaveReachable:true,finalSourceMatchesServer:true,explicitOverwrite:true,remoteErrors:[]}));}
+ return pair;
+}
+it('interprets completed two-session conflict requirements without treating policy fixtures as browser proof',()=>{
+ const result=compareGitLabCompatibility(...conflictPolicyReports());expect(result.summary).toEqual({parity:37,improvement:0,regression:0,'shared-limitation':0,incomplete:0,total:37});expect(result.featureAcceptance.passed).toBe(true);
+});
+it('fails feature acceptance for a shared absent conflict warning',()=>{
+ const pair=conflictPolicyReports();for(const report of pair)for(const item of report.observations)item.conflictObserved=false;
+ const result=compareGitLabCompatibility(...pair);expect(result.summary['shared-limitation']).toBe(2);expect(result.regressionGate.passed).toBe(true);expect(result.featureAcceptance.passed).toBe(false);
+});
+it('does not credit a second session without actual editor proof',()=>{
+ const pair=conflictPolicyReports();delete pair[1].observations[0].remoteEditorProof;
+ const result=compareGitLabCompatibility(...pair);expect(result.summary.incomplete).toBe(18);expect(result.regressionGate.passed).toBe(false);
+});
+it('flags draft loss, premature overwrite and stale-session warnings as regressions',()=>{
+ for(const key of ['localDraftRetained','noAutomaticOverwrite','freshWarningAbsent']){
+  const pair=conflictPolicyReports();pair[1].observations[0][key]=false;
+  const result=compareGitLabCompatibility(...pair);expect(result.summary.regression).toBe(1);expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
+ }
+});

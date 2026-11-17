@@ -1,0 +1,1801 @@
+{
+  "formatVersion": 1,
+  "runId": "conflicts-20261117",
+  "attempt": 1,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "conflicts",
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-conflicts.json",
+  "fixtureHash": "d60a89317893519bc94cf52411cf6ec5ffd21d366314d9590bbb916920009db5",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "independent-session-conflict-warning-and-recovery",
+    "settlingMs": 700,
+    "conflictObservationMs": 20000,
+    "cases": [
+      {
+        "id": "conflict-discard",
+        "scope": "conflict",
+        "title": "Two-session discard",
+        "markdown": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "resolution": "discard",
+        "localSuffix": " Local draft.",
+        "remoteSuffix": " Remote draft.",
+        "resumeSuffix": " Resumed.",
+        "expectedInitial": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedLocal": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedRemote": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedResolved": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedFinal": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft. Resumed.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        }
+      },
+      {
+        "id": "conflict-overwrite",
+        "scope": "conflict",
+        "title": "Two-session overwrite",
+        "markdown": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "resolution": "overwrite",
+        "localSuffix": " Local draft.",
+        "remoteSuffix": " Remote draft.",
+        "resumeSuffix": " Resumed.",
+        "expectedInitial": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedLocal": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedRemote": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedResolved": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedFinal": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft. Resumed.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        }
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "conflict-discard",
+      "input": {
+        "id": "conflict-discard",
+        "scope": "conflict",
+        "title": "Two-session discard",
+        "markdown": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "resolution": "discard",
+        "localSuffix": " Local draft.",
+        "remoteSuffix": " Remote draft.",
+        "resumeSuffix": " Resumed.",
+        "expectedInitial": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedLocal": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedRemote": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedResolved": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedFinal": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft. Resumed.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        }
+      },
+      "status": "observed",
+      "stage": "complete",
+      "graphs": {
+        "initial": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "remoteInitial": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "local": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "remoteSaved": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "resolved": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "final": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft. Resumed.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        }
+      },
+      "actions": [
+        "Two independent authenticated browser contexts, same root actor; both open actual rich editor before typing. Local draft, remote UI Save, bounded observation, current-version disclosure, explicit discard/overwrite, fresh edit, normal Save/reload. API writes establish fixtures only."
+      ],
+      "setup": {
+        "iid": 372,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/372",
+        "description": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker."
+      },
+      "independentContexts": true,
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "remoteEditorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "localSource": "## Concurrent review\n\nShared record. Local draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "serverBeforeRemote": {
+        "id": 1889,
+        "iid": 372,
+        "project_id": 1,
+        "title": "Two-session discard conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:42:45.930Z",
+        "updated_at": "2026-11-17T16:42:45.930Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/372",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/372",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#372",
+          "relative": "#372",
+          "full": "root/fountain-product-integration#372"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "remoteSource": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "remoteSaved": {
+        "id": 1889,
+        "iid": 372,
+        "project_id": 1,
+        "title": "Two-session discard conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:42:45.930Z",
+        "updated_at": "2026-11-17T16:42:57.873Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/372",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/372",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#372",
+          "relative": "#372",
+          "full": "root/fountain-product-integration#372"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "conflictObserved": true,
+      "serverBeforeResolution": {
+        "id": 1889,
+        "iid": 372,
+        "project_id": 1,
+        "title": "Two-session discard conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:42:45.930Z",
+        "updated_at": "2026-11-17T16:42:57.873Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/372",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/372",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#372",
+          "relative": "#372",
+          "full": "root/fountain-product-integration#372"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "noAutomaticOverwrite": true,
+      "localSourceAfterRemote": "## Concurrent review\n\nShared record. Local draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "localDraftRetained": true,
+      "conflictSourceExact": true,
+      "conflictSourceReadonly": true,
+      "conflictSource": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "resolvedSaved": {
+        "id": 1889,
+        "iid": 372,
+        "project_id": 1,
+        "title": "Two-session discard conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:42:45.930Z",
+        "updated_at": "2026-11-17T16:42:57.873Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/372",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/372",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#372",
+          "relative": "#372",
+          "full": "root/fountain-product-integration#372"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "resolutionSourceExact": true,
+      "freshWarningAbsent": true,
+      "freshSource": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "freshSourceMatchesServer": true,
+      "resumedSource": "## Concurrent review\n\nShared record. Remote draft. Resumed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "normalSaveReachable": true,
+      "finalSaved": {
+        "id": 1889,
+        "iid": 372,
+        "project_id": 1,
+        "title": "Two-session discard conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record. Remote draft. Resumed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:42:45.930Z",
+        "updated_at": "2026-11-17T16:43:07.271Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/372",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/372",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/372/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#372",
+          "relative": "#372",
+          "full": "root/fountain-product-integration#372"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "finalSource": "## Concurrent review\n\nShared record. Remote draft. Resumed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "finalSourceMatchesServer": true
+    },
+    {
+      "id": "conflict-overwrite",
+      "input": {
+        "id": "conflict-overwrite",
+        "scope": "conflict",
+        "title": "Two-session overwrite",
+        "markdown": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "resolution": "overwrite",
+        "localSuffix": " Local draft.",
+        "remoteSuffix": " Remote draft.",
+        "resumeSuffix": " Resumed.",
+        "expectedInitial": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedLocal": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedRemote": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedResolved": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "expectedFinal": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft. Resumed.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        }
+      },
+      "status": "observed",
+      "stage": "complete",
+      "graphs": {
+        "initial": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "remoteInitial": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "local": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "remoteSaved": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Remote draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "resolved": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "final": {
+          "headings": [
+            "Concurrent review"
+          ],
+          "prose": [
+            "Shared record. Local draft. Resumed.",
+            "Keep important reference.",
+            "End marker."
+          ],
+          "bold": [
+            "important"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        }
+      },
+      "actions": [
+        "Two independent authenticated browser contexts, same root actor; both open actual rich editor before typing. Local draft, remote UI Save, bounded observation, current-version disclosure, explicit discard/overwrite, fresh edit, normal Save/reload. API writes establish fixtures only."
+      ],
+      "setup": {
+        "iid": 373,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/373",
+        "description": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker."
+      },
+      "independentContexts": true,
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "remoteEditorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "localSource": "## Concurrent review\n\nShared record. Local draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "serverBeforeRemote": {
+        "id": 1890,
+        "iid": 373,
+        "project_id": 1,
+        "title": "Two-session overwrite conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:43:12.518Z",
+        "updated_at": "2026-11-17T16:43:12.518Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/373",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/373",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#373",
+          "relative": "#373",
+          "full": "root/fountain-product-integration#373"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "remoteSource": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "remoteSaved": {
+        "id": 1890,
+        "iid": 373,
+        "project_id": 1,
+        "title": "Two-session overwrite conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:43:12.518Z",
+        "updated_at": "2026-11-17T16:43:23.077Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/373",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/373",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#373",
+          "relative": "#373",
+          "full": "root/fountain-product-integration#373"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "conflictObserved": true,
+      "serverBeforeResolution": {
+        "id": 1890,
+        "iid": 373,
+        "project_id": 1,
+        "title": "Two-session overwrite conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:43:12.518Z",
+        "updated_at": "2026-11-17T16:43:23.077Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/373",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/373",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#373",
+          "relative": "#373",
+          "full": "root/fountain-product-integration#373"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "noAutomaticOverwrite": true,
+      "localSourceAfterRemote": "## Concurrent review\n\nShared record. Local draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "localDraftRetained": true,
+      "conflictSourceExact": true,
+      "conflictSourceReadonly": true,
+      "conflictSource": "## Concurrent review\n\nShared record. Remote draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "explicitOverwrite": true,
+      "resolvedSaved": {
+        "id": 1890,
+        "iid": 373,
+        "project_id": 1,
+        "title": "Two-session overwrite conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record. Local draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:43:12.518Z",
+        "updated_at": "2026-11-17T16:43:25.329Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/373",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/373",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#373",
+          "relative": "#373",
+          "full": "root/fountain-product-integration#373"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "resolutionSourceExact": true,
+      "freshWarningAbsent": true,
+      "freshSource": "## Concurrent review\n\nShared record. Local draft.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "freshSourceMatchesServer": true,
+      "resumedSource": "## Concurrent review\n\nShared record. Local draft. Resumed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "normalSaveReachable": true,
+      "finalSaved": {
+        "id": 1890,
+        "iid": 373,
+        "project_id": 1,
+        "title": "Two-session overwrite conflicts-20261117-a1",
+        "description": "## Concurrent review\n\nShared record. Local draft. Resumed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T16:43:12.518Z",
+        "updated_at": "2026-11-17T16:43:33.366Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/373",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 0,
+          "completed_count": 0
+        },
+        "has_tasks": true,
+        "task_status": "0 of 0 checklist items completed",
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/373",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/373/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#373",
+          "relative": "#373",
+          "full": "root/fountain-product-integration#373"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "finalSource": "## Concurrent review\n\nShared record. Local draft. Resumed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "finalSourceMatchesServer": true
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "bf2317d4d081e51da0180d603048141694c580f99d3af7ea40dbf875c16c85f8",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "c94224dd8c3552e824205d52c67e4a476ed0d7a936cd0c4765ee61d0ca2459f4",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "c31222766259f281ee92a9f9c07f6702b0a5cd2792e5f1b5f26c2fe6226e4fdf",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "8729a9e6b38d0b4c39838af7f4eef59bb4a94790381bcbb5fec26070fb5aa0b7",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "c84c64884a3063a56b1e32df26384a11bbc0571b0aebf4f7b84eca9bb5ea1c3f"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 16,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 17,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 18,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 19,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 20,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 21,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 22,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 23,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 24,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 25,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 26,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 27,
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "exitCode": 0
+    }
+  ],
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "008e6f1d990965db5abffb6739a39f06c463de8e681c761315e84f836db4b802  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.json",
+    "36ebdd7dddd055eb892ff6ef5538947e463db218d3051c33cd04d304101030b9  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": true
+}

@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-17",
+  "parentRevision": "df43f8916ec0a0f6b7b8dc24d82243206566ceea",
+  "scope": "Two independent sessions, same root actor; real local-draft conflict disclosure and explicit resolution. Not multi-role/offline/atomic-concurrency certification.",
+  "acceptedPair": [
+    "original-1",
+    "fountain-1"
+  ],
+  "acceptedComparison": "comparison-1",
+  "summary": {
+    "parity": 37,
+    "improvement": 0,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 37
+  },
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": true,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "independentNativeVisualFollowup": {
+    "attempt": "fountain-2",
+    "addsMatchedComparisonScores": false,
+    "graphsAndExactSourcesMatch": true,
+    "bothDecisionControlsVisibleAndUnobstructed": true
+  },
+  "unitTests": {
+    "passed": 1504,
+    "files": 58,
+    "workers": 2
+  },
+  "strictTypes": "passed",
+  "priorCorpusReplayCount": 14,
+  "runtimeInputsUnchanged": true,
+  "runtimeInputCount": 52,
+  "installedFilesUnchanged": 30,
+  "productionCoreHostOrBudgetChanged": false,
+  "initialFailure": "Audit-policy test-fixture typing only; corrected before real runs. Raw log retained.",
+  "visuallyReviewedPNGBytes": [
+    "original-1/conflict-discard-conflict.png",
+    "original-1/conflict-overwrite-reopened.png",
+    "fountain-1/conflict-discard-conflict.png",
+    "fountain-1/conflict-overwrite-reopened.png",
+    "fountain-2/conflict-discard-decision.png",
+    "fountain-2/conflict-overwrite-decision.png",
+    "original-1/conflict-discard-resolved.png",
+    "fountain-1/conflict-discard-resolved.png"
+  ],
+  "visualCaveat": "First native conflict capture clips decision controls. Native-2 decision screenshots show them after normal scrolling. Reader screenshots have ready description content while unrelated child/activity panels still load.",
+  "remaining": [
+    "Different users/roles and revoked permissions",
+    "Offline/late/racing updates and simultaneous submits",
+    "Server atomic locking/merging not established by UI warning",
+    "Mobile/other engines and broader product acceptance"
+  ],
+  "publication": "Local review only; GitHub CLI signed out at checkpoint.",
+  "files": {
+    "artifacts/finalize-gitlab-conflicts-20261117.mjs": "d373571d63f177b7ad7375307bc4b732147f2759964df432055fb30e44928c61",
+    "artifacts/gitlab-compatibility/conflicts-20261117/comparison-1/report.json": "b824545b668498e85985531ed1bb57461c0fcce43be4e35a566ac28433febb46",
+    "artifacts/gitlab-compatibility/conflicts-20261117/comparison-1/report.md": "f94bfddeb55e2080573919606b668fa1ccbc36c432bbc6863778c851ef47cd80",
+    "artifacts/gitlab-compatibility/conflicts-20261117/fountain-1/conflict-discard-conflict.png": "7813fd1421a1069261716eb5e833f47b8255290fd24353968bb0eac2a4af7f1f",
+    "artifacts/gitlab-compatibility/conflicts-20261117/fountain-1/conflict-discard-resolved.png": "d37dff74a7844569492341ec1047ee953a0d4b000c14f62d9e9cd3e166c89711",
+    "artifacts/gitlab-compatibility/conflicts-20261117/fountain-1/conflict-overwrite-reopened.png": "c21c62f7d4b51204b80050f21eb1093dbec3c3942ec0bfc5372925902a8c30ad",
+    "artifacts/gitlab-compatibility/conflicts-20261117/fountain-1/observations.json": "b8285d537ff527ee0b5d97d720553e5686c60ff8b31a421f16888fa0677d0187",
+    "artifacts/gitlab-compatibility/conflicts-20261117/fountain-1/report.json": "57860ec205e6bb283bdf7e63be54d3f459ea744ea79a396816ef5b85694cf020",
+    "artifacts/gitlab-compatibility/conflicts-20261117/fountain-2/conflict-discard-decision.png": "044016014b1751b03e4e7a00df85f375d97893253f1c3dce37bc864b2557041d",
+    "artifacts/gitlab-compatibility/conflicts-20261117/fountain-2/conflict-overwrite-decision.png": "c197bf8cf2c4447f8a41e834c62a3894bb905d8f7ad39fcd6744db377d74ca95",
+    "artifacts/gitlab-compatibility/conflicts-20261117/fountain-2/observations.json": "ffe09cbfadea3233dd0deb0913f8baa50edc6507c3ccca20c0548c765d413a75",
+    "artifacts/gitlab-compatibility/conflicts-20261117/fountain-2/report.json": "4c98624c9147746db3f6211cabbe28fba2a2f1cc5662332e78fb8a6dfdc12524",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-fountain-1.txt": "0e3b1f33052b4fd3b42e5c153fafbc4ecbd614425ebbd8c9022e157dc160d871",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-fountain-visual-2.txt": "e495a090bc550915cf753665a393bf800206a36e3bd628204b97da3aef950c35",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-integration-final.txt": "c3d604397ac9a581d5a992a0c08ec0261f28600d88e5777ead10a00d112f2f82",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-original-1.txt": "0e1984af12348e39a361db5e60b81c21060c998df21aa465aea5ae6b68ae2081",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-policy-initial.txt": "85c4c414d956f2e9e784894969299cc1274faec5f225728acb70fccada9bcb78",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-replay-final.txt": "cf2decb34c0ef9bd8ae2ed1782c3bfce69786afbf3dc24fa37a5e915c1c7b8f9",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-replay.txt": "cf2decb34c0ef9bd8ae2ed1782c3bfce69786afbf3dc24fa37a5e915c1c7b8f9",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-types-corrected.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-types-final.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/conflicts-types-initial.txt": "5314eee0fd5fdf8305a3d14809da329a91200811eedf5b45751864d5f5542fe4",
+    "artifacts/gitlab-compatibility/conflicts-20261117/logs/manifest.json": "1ff58496cf6c046a374418ac2be1d468d06d711d1572b10641f78fbfe0de77cc",
+    "artifacts/gitlab-compatibility/conflicts-20261117/original-1/conflict-discard-conflict.png": "ed71ecc0cc30f1195be81a2deef4268ee971f9ad7f69f9c4da67c617b206082a",
+    "artifacts/gitlab-compatibility/conflicts-20261117/original-1/conflict-discard-resolved.png": "fd91696982e4c54bc5c232a75dd88dce478d1c3023f221977823892469478261",
+    "artifacts/gitlab-compatibility/conflicts-20261117/original-1/conflict-overwrite-reopened.png": "7642c789261bd56b2dc617befb7395ab7cf594f93a38799bf5a1242acc14c09e",
+    "artifacts/gitlab-compatibility/conflicts-20261117/original-1/observations.json": "c8c125e5e706ec62036e6d30ca444f08a141e4d6e2fc49b07c3b6b6a1288cd48",
+    "artifacts/gitlab-compatibility/conflicts-20261117/original-1/report.json": "8b50eefffcb4b735ec947256df3ae1948752ed6275ca384d4976ddaf2b76ea0f",
+    "artifacts/gitlab-compatibility/conflicts-20261117/prior-corpus-replay.json": "a2f20021587b2648c0c98853147ec1ff52203feacaf02ef136238aebb07aa708",
+    "artifacts/gitlab-compatibility/conflicts-20261117/semantic-instrument/integrations__gitlab__fixtures__compatibility-conflicts.json": "d60a89317893519bc94cf52411cf6ec5ffd21d366314d9590bbb916920009db5",
+    "artifacts/gitlab-compatibility/conflicts-20261117/semantic-instrument/integrations__gitlab__testing__compatibility.mjs": "717af7e2d6fb91109f0e5ffea34dab6e6fab581409901cb65cad61ab62813170",
+    "artifacts/gitlab-compatibility/conflicts-20261117/semantic-instrument/manifest.json": "3d4997a12766fd369c20f991999d7ff6f8346739fbe65f373cf05a751790358f",
+    "artifacts/gitlab-compatibility/conflicts-20261117/semantic-instrument/scripts__audit-gitlab-compatibility-conflicts.mjs": "c94224dd8c3552e824205d52c67e4a476ed0d7a936cd0c4765ee61d0ca2459f4",
+    "artifacts/gitlab-compatibility/conflicts-20261117/semantic-instrument/scripts__run-gitlab-compatibility.mjs": "bf2317d4d081e51da0180d603048141694c580f99d3af7ea40dbf875c16c85f8",
+    "artifacts/gitlab-compatibility/conflicts-20261117/visual-followup-checks.json": "8875333172c0b6e0a9b9f6451ba2accdf17e21024b8c407104ea979ec9481609",
+    "artifacts/replay-gitlab-conflicts-20261117.mjs": "6d99ac875f84ca5b6d76796a704e88f51a931b92ae0784e1a28061713238d449",
+    "docs/ROADMAP.md": "66d630597c95da776771f076994f8efde08081a1d70e4471268346bd9500c3f7",
+    "docs/TIPTAP_PARITY.md": "1d84580453d79d9c2c5217b29fa8079015c538e9ec76c58e84e7af0c113a5f11",
+    "integrations/gitlab/COMPATIBILITY_CONFLICT_RESULTS.md": "7082dbc7ec90290e48752ab6aa7931df668ad9816cca6e076ad5ecc9bb8b134e",
+    "integrations/gitlab/COMPATIBILITY_RESULTS.md": "19ce396a50c8bc62814f10741ed52feb8450f50d9d2b874936cd3589f3368be4",
+    "integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md": "e57f43a337a3197c3ed19ad3e84859035f7d84378fc86be8b1772e669fd2d0b5",
+    "integrations/gitlab/README.md": "7f97740474ff8cc1cd316cf1f6b5ed3823106f622a106c0f290d057824d0eb90",
+    "integrations/gitlab/fixtures/compatibility-conflicts.json": "d60a89317893519bc94cf52411cf6ec5ffd21d366314d9590bbb916920009db5",
+    "integrations/gitlab/testing/compatibility.mjs": "717af7e2d6fb91109f0e5ffea34dab6e6fab581409901cb65cad61ab62813170",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "277024a259238694df0f0f1e52d667ee9316a0dad8955258702163cec76950a6",
+    "scripts/run-gitlab-compatibility.mjs": "bf2317d4d081e51da0180d603048141694c580f99d3af7ea40dbf875c16c85f8",
+    "tests/gitlab-compatibility.test.ts": "dc023adf631f16479a63b59d62c457f357f5e0cbbf6ef65d8862808ca221eceb"
+  }
+}

@@ -2,6 +2,14 @@
 
 Updated 2026-11-17.
 
+Matched competing-edit audit (2026-11-17): two independent browser sessions
+using the same root account verify 37 parity checks for local-draft retention,
+actual conflict/current-version disclosure, explicit discard/overwrite and normal
+fresh-session Save/reopen. 1,504 integration tests / 58 files and strict types pass.
+No production repair was needed. This is UI conflict
+recovery, not CRDT/atomic locking or a multi-role/offline/racing-submit matrix.
+[Conflict evidence](../integrations/gitlab/COMPATIBILITY_CONFLICT_RESULTS.md).
+
 Quoted/container child conversion (2026-11-17): four actual workflows verify
 63 parity and 41 improvement checks / 104 correlated requirements, with zero
 regressions or incomplete outcomes. Child titles/source, code indentation and

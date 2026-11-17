@@ -90,6 +90,18 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='conflict'){
+      const valid=(report,item)=>verifiedEditor(report,item)&&verifiedEditor(report,{editorProof:item?.remoteEditorProof});
+      const left=valid(original,a)?a:undefined,right=valid(fountain,b)?b:undefined;
+      const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});
+      for(const [key,expected]of [['initial',input.expectedInitial],['remoteInitial',input.expectedInitial],['local',input.expectedLocal],['remoteSaved',input.expectedRemote],['resolved',input.expectedResolved],['final',input.expectedFinal]])
+        add('graph.'+key,key+': content, marks, links and code stay intact',expected,left?.graphs?.[key],right?.graphs?.[key]);
+      for(const key of ['independentContexts','noAutomaticOverwrite','localDraftRetained','conflictObserved','conflictSourceExact','conflictSourceReadonly','resolutionSourceExact','freshWarningAbsent','freshSourceMatchesServer','normalSaveReachable','finalSourceMatchesServer'])
+        add(key,key,true,left?.[key],right?.[key]);
+      if(input.resolution==='overwrite')add('explicitOverwrite','Overwriting requires the named overwrite action',true,left?.explicitOverwrite,right?.explicitOverwrite);
+      add('remoteErrors','Second session has no browser errors',[],left?.remoteErrors??(left?[]:undefined),right?.remoteErrors??(right?[]:undefined));
+      continue;
+    }
     if(input.scope==='task-conversion'){
       const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
       const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});

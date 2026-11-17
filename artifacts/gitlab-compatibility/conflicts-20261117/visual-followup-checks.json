@@ -1,0 +1,35 @@
+{
+  "scope": "Native-only improved capture; no new matched-comparison score.",
+  "checks": [
+    {
+      "case": "conflict-discard",
+      "sameGraphsAndExactSource": true,
+      "decision": {
+        "label": "Discard changes",
+        "fullyVisible": true,
+        "unobstructed": true,
+        "rect": {
+          "top": 467.625,
+          "bottom": 499.625,
+          "left": 450,
+          "right": 587
+        }
+      }
+    },
+    {
+      "case": "conflict-overwrite",
+      "sameGraphsAndExactSource": true,
+      "decision": {
+        "label": "Save and overwrite",
+        "fullyVisible": true,
+        "unobstructed": true,
+        "rect": {
+          "top": 467.625,
+          "bottom": 499.625,
+          "left": 286,
+          "right": 442
+        }
+      }
+    }
+  ]
+}

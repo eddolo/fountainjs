@@ -1,0 +1,1176 @@
+{
+  "formatVersion": 1,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "conflicts-20261117",
+      "attempt": 1
+    },
+    "fountain": {
+      "runId": "conflicts-20261117",
+      "attempt": 1
+    }
+  },
+  "rows": [
+    {
+      "case": "conflict-discard",
+      "invariant": "graph.initial",
+      "label": "initial: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "graph.remoteInitial",
+      "label": "remoteInitial: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "graph.local",
+      "label": "local: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "graph.remoteSaved",
+      "label": "remoteSaved: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "graph.resolved",
+      "label": "resolved: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "graph.final",
+      "label": "final: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft. Resumed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft. Resumed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft. Resumed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "independentContexts",
+      "label": "independentContexts",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "noAutomaticOverwrite",
+      "label": "noAutomaticOverwrite",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "localDraftRetained",
+      "label": "localDraftRetained",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "conflictObserved",
+      "label": "conflictObserved",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "conflictSourceExact",
+      "label": "conflictSourceExact",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "conflictSourceReadonly",
+      "label": "conflictSourceReadonly",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "resolutionSourceExact",
+      "label": "resolutionSourceExact",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "freshWarningAbsent",
+      "label": "freshWarningAbsent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "freshSourceMatchesServer",
+      "label": "freshSourceMatchesServer",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "normalSaveReachable",
+      "label": "normalSaveReachable",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "finalSourceMatchesServer",
+      "label": "finalSourceMatchesServer",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-discard",
+      "invariant": "remoteErrors",
+      "label": "Second session has no browser errors",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "graph.initial",
+      "label": "initial: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "graph.remoteInitial",
+      "label": "remoteInitial: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "graph.local",
+      "label": "local: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "graph.remoteSaved",
+      "label": "remoteSaved: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "graph.resolved",
+      "label": "resolved: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "graph.final",
+      "label": "final: content, marks, links and code stay intact",
+      "expected": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft. Resumed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft. Resumed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft. Resumed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "independentContexts",
+      "label": "independentContexts",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "noAutomaticOverwrite",
+      "label": "noAutomaticOverwrite",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "localDraftRetained",
+      "label": "localDraftRetained",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "conflictObserved",
+      "label": "conflictObserved",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "conflictSourceExact",
+      "label": "conflictSourceExact",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "conflictSourceReadonly",
+      "label": "conflictSourceReadonly",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "resolutionSourceExact",
+      "label": "resolutionSourceExact",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "freshWarningAbsent",
+      "label": "freshWarningAbsent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "freshSourceMatchesServer",
+      "label": "freshSourceMatchesServer",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "normalSaveReachable",
+      "label": "normalSaveReachable",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "finalSourceMatchesServer",
+      "label": "finalSourceMatchesServer",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "explicitOverwrite",
+      "label": "Overwriting requires the named overwrite action",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "conflict-overwrite",
+      "invariant": "remoteErrors",
+      "label": "Second session has no browser errors",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    }
+  ],
+  "summary": {
+    "parity": 37,
+    "improvement": 0,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 37
+  },
+  "comparisonComplete": true,
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": true,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/conflicts-20261117/original-1/report.json",
+      "sha256": "8b50eefffcb4b735ec947256df3ae1948752ed6275ca384d4976ddaf2b76ea0f"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/conflicts-20261117/fountain-1/report.json",
+      "sha256": "57860ec205e6bb283bdf7e63be54d3f459ea744ea79a396816ef5b85694cf020"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "717af7e2d6fb91109f0e5ffea34dab6e6fab581409901cb65cad61ab62813170"
+  }
+}

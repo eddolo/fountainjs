@@ -1,0 +1,248 @@
+{
+  "formatVersion": 1,
+  "workflow": "independent-session-conflict-warning-and-recovery",
+  "settlingMs": 700,
+  "conflictObservationMs": 20000,
+  "cases": [
+    {
+      "id": "conflict-discard",
+      "scope": "conflict",
+      "title": "Two-session discard",
+      "markdown": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "resolution": "discard",
+      "localSuffix": " Local draft.",
+      "remoteSuffix": " Remote draft.",
+      "resumeSuffix": " Resumed.",
+      "expectedInitial": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedLocal": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedRemote": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedResolved": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedFinal": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft. Resumed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    {
+      "id": "conflict-overwrite",
+      "scope": "conflict",
+      "title": "Two-session overwrite",
+      "markdown": "## Concurrent review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "resolution": "overwrite",
+      "localSuffix": " Local draft.",
+      "remoteSuffix": " Remote draft.",
+      "resumeSuffix": " Resumed.",
+      "expectedInitial": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedLocal": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedRemote": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Remote draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedResolved": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedFinal": {
+        "headings": [
+          "Concurrent review"
+        ],
+        "prose": [
+          "Shared record. Local draft. Resumed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    }
+  ]
+}

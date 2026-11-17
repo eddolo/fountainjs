@@ -1,0 +1,21 @@
+{
+  "scope": "Exact instrument for matched original-1/fountain-1. A later native-only capture verifies visible decision controls and adds no comparison score.",
+  "files": {
+    "scripts/run-gitlab-compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/conflicts-20261117/semantic-instrument/scripts__run-gitlab-compatibility.mjs",
+      "sha256": "bf2317d4d081e51da0180d603048141694c580f99d3af7ea40dbf875c16c85f8"
+    },
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": {
+      "archive": "artifacts/gitlab-compatibility/conflicts-20261117/semantic-instrument/scripts__audit-gitlab-compatibility-conflicts.mjs",
+      "sha256": "c94224dd8c3552e824205d52c67e4a476ed0d7a936cd0c4765ee61d0ca2459f4"
+    },
+    "integrations/gitlab/testing/compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/conflicts-20261117/semantic-instrument/integrations__gitlab__testing__compatibility.mjs",
+      "sha256": "717af7e2d6fb91109f0e5ffea34dab6e6fab581409901cb65cad61ab62813170"
+    },
+    "integrations/gitlab/fixtures/compatibility-conflicts.json": {
+      "archive": "artifacts/gitlab-compatibility/conflicts-20261117/semantic-instrument/integrations__gitlab__fixtures__compatibility-conflicts.json",
+      "sha256": "d60a89317893519bc94cf52411cf6ec5ffd21d366314d9590bbb916920009db5"
+    }
+  }
+}

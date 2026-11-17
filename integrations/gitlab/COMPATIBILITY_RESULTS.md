@@ -178,3 +178,8 @@ premature-loading comparison is excluded; broader conversion fidelity remains op
 Follow-up: [quoted/container conversion repair](COMPATIBILITY_TASK_CONTAINER_RESULTS.md)
 verifies the separately recorded four-case corpus. Historical results above remain
 unchanged; broader application acceptance is still open.
+
+The [matched two-session conflict audit](COMPATIBILITY_CONFLICT_RESULTS.md) verifies
+draft retention, current-version disclosure, explicit discard/overwrite and fresh
+editing with the same root account. Other actors/roles, offline and late/racing
+updates, and simultaneous submits remain open.
