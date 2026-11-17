@@ -101,12 +101,19 @@ export function compareGitLabCompatibility(original,fountain){
       add('child.description','Saved child preserves exact description source',input.expectedDescription,conversionDescription(left?.child?.description),conversionDescription(right?.child?.description));
       add('child.parent','Created child is actually linked to the original parent',true,left?.child?.parentIid!==undefined?String(left.child.parentIid)===String(left.setup?.iid):undefined,right?.child?.parentIid!==undefined?String(right.child.parentIid)===String(right.setup?.iid):undefined);
       add('parent.graph','Reloaded parent retains nested checklist, siblings and prose',input.expectedParent,left?.graphs?.parentReopened,right?.graphs?.parentReopened);
-      add('parent.counts','Backend parent contains three remaining tasks with one complete',{count:3,completed_count:1},left?.parentAfter?.task_completion_status,right?.parentAfter?.task_completion_status);
+      add('parent.counts','Backend parent retains the intended remaining task counts',{count:input.expectedParent.tasks.length,completed_count:input.expectedParent.tasks.filter(task=>task.state==='completed').length},left?.parentAfter?.task_completion_status,right?.parentAfter?.task_completion_status);
       add('parent.state','Conversion leaves parent Open','opened',left?.parentAfter?.state,right?.parentAfter?.state);
       add('child.editor','Child reopens in the verified editor',true,left?.childEditorProof?verifiedEditor(original,{editorProof:left.childEditorProof}):undefined,right?.childEditorProof?verifiedEditor(fountain,{editorProof:right.childEditorProof}):undefined);
       add('child.code','Reopened child preserves executable code indentation',[input.expectedCode],left?.graphs?.childReopened?.codes,right?.graphs?.childReopened?.codes);
       add('child.bold','Reopened child retains bold detail',['bold'],left?.graphs?.childReopened?.bold,right?.graphs?.childReopened?.bold);
       add('child.link','Reopened child retains its link',[{text:'link',href:'https://example.com/reference'}],left?.graphs?.childReopened?.links,right?.graphs?.childReopened?.links);
+      if(input.verifyParentResave){
+        add('parent.resaved','Typing, Save and reload retain the parent structure',input.expectedParentResaved,left?.graphs?.parentResaved,right?.graphs?.parentResaved);
+        add('parent.resaveReachable','Normal Save remains reachable after parent reopen',true,left?.parentResaveReachable,right?.parentResaveReachable);
+        add('parent.resaveState','Resaved parent remains Open','opened',left?.parentResaved?.state,right?.parentResaved?.state);
+        add('parent.resaveCounts','Resaved backend checklist counts remain correct',{count:input.expectedParent.tasks.length,completed_count:input.expectedParent.tasks.filter(task=>task.state==='completed').length},left?.parentResaved?.task_completion_status,right?.parentResaved?.task_completion_status);
+      }
+
       continue;
     }
     if(input.scope==='task-menu'){

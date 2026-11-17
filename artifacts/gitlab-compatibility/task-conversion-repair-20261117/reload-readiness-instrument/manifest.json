@@ -1,0 +1,21 @@
+{
+  "reason": "Comparison-1 is excluded: three original reload graphs were captured without content readiness. The plain parent-resaved PNG visibly shows skeletons and a loading spinner; the other two snapshots precede successful marker interaction. Persisted source contains the document. The corrected instrument waits for exact saved marker/prose text before every parent/child snapshot. Expected graphs/source requirements are unchanged.",
+  "files": {
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": {
+      "archive": "artifacts/gitlab-compatibility/task-conversion-repair-20261117/reload-readiness-instrument/scripts__audit-gitlab-compatibility-task-conversion.mjs",
+      "sha256": "5f3da08ff253e8e30724e18cbc8849ef397e841e44449db3636ef4a7746fd749"
+    },
+    "scripts/run-gitlab-compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/task-conversion-repair-20261117/reload-readiness-instrument/scripts__run-gitlab-compatibility.mjs",
+      "sha256": "966dbbf664b1aa1702cee06a0f545f3b28285fba723463d13dba8b1f06560cc2"
+    },
+    "integrations/gitlab/fixtures/compatibility-task-conversion.json": {
+      "archive": "artifacts/gitlab-compatibility/task-conversion-repair-20261117/reload-readiness-instrument/integrations__gitlab__fixtures__compatibility-task-conversion.json",
+      "sha256": "46b0cba2d888b9e3300fe8625abb58fe5b4d0dffe48824f5e6f48ef91a73910a"
+    },
+    "integrations/gitlab/testing/compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/task-conversion-repair-20261117/reload-readiness-instrument/integrations__gitlab__testing__compatibility.mjs",
+      "sha256": "5b101463a5939cfd924b6903779f56514e91b4c7779dd37a585bc88f6a3e1ae5"
+    }
+  }
+}

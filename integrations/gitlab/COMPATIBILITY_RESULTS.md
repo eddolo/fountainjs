@@ -168,3 +168,9 @@ The [child-task conversion audit](COMPATIBILITY_TASK_CONVERSION_RESULTS.md) reco
 Both create real linked children, but code indentation is lost by a shared host
 helper. The extra native paragraph needs caret-provenance qualification. Neither
 gate passes; these findings remain open rather than being relabeled as parity.
+
+The [verified repair follow-up](COMPATIBILITY_TASK_CONVERSION_REPAIR_RESULTS.md)
+closes the demonstrated source/title and extra-paragraph gaps with a fresh matched
+pair: 66 parity / 14 improvement checks across four workflows. The historical red
+report above remains unchanged as evidence of the earlier candidate. An intervening
+premature-loading comparison is excluded; broader conversion fidelity remains open.

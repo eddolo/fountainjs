@@ -1,0 +1,25 @@
+{
+  "scope": "First collected native candidate. Comparison-1 is not accepted because three original reload graphs were captured while loading. The subsequent candidate retains legacy extraction for unverified quoted prefixes. Instruments and requirements are archived separately.",
+  "files": {
+    "artifacts/gitlab-native-browser-install/install.json": {
+      "archive": "artifacts/gitlab-compatibility/task-conversion-repair-20261117/candidate-1-production/artifacts__gitlab-native-browser-install__install.json",
+      "sha256": "cdabe8f1bc3e62b7fc3b4f722917e76c6bd9d11494bb4ac5b1f7c73806628681"
+    },
+    "artifacts/gitlab-native-runtime/build.json": {
+      "archive": "artifacts/gitlab-compatibility/task-conversion-repair-20261117/candidate-1-production/artifacts__gitlab-native-runtime__build.json",
+      "sha256": "5b04f6e549562b94f74e1600f51a4797424b080c275f451c2237e86b3f33d791"
+    },
+    "integrations/gitlab/services/task_body_extractor.js": {
+      "archive": "artifacts/gitlab-compatibility/task-conversion-repair-20261117/candidate-1-production/integrations__gitlab__services__task_body_extractor.js",
+      "sha256": "78a30aec0d2a79b027bba959495687a828247c90a458d8bfc1600d023c71d58f"
+    },
+    "integrations/gitlab/services/task_conversion_patch.mjs": {
+      "archive": "artifacts/gitlab-compatibility/task-conversion-repair-20261117/candidate-1-production/integrations__gitlab__services__task_conversion_patch.mjs",
+      "sha256": "70107bef37bf834bfb93569f9c04218171eaa75ef68bad267d609f3dd4bebb40"
+    },
+    "integrations/gitlab/services/footnote_boundary.ts": {
+      "archive": "artifacts/gitlab-compatibility/task-conversion-repair-20261117/candidate-1-production/integrations__gitlab__services__footnote_boundary.ts",
+      "sha256": "92a836644139d1394ea4bfbc73f7af429c3374d7fcc8450d5eafdacd506d93ce"
+    }
+  }
+}

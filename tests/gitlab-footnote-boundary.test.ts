@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { createEditor, StarterKit, Selection, insertText, splitBlock, undo, redo } from 'fountainjs-editor';
+import { createEditor, composeExtensions, StarterKit, Selection, insertText, splitBlock, undo, redo } from 'fountainjs-editor';
 import captures from '../integrations/gitlab/fixtures/footnote-editing-live-html.json';
 import probe from '../integrations/gitlab/fixtures/footnote-probe-live-html.json';
 import { GitLabContentEditor } from '../integrations/gitlab/services/content_editor';
@@ -87,4 +87,36 @@ it('never removes an authored paragraph or an authored empty paragraph after a n
 
 it('refuses wrapping an unrelated extension', () => {
   expect(() => gitLabFootnoteBoundary({ name: 'other' })).toThrow('GITLAB_FOOTNOTE_BOUNDARY_EXTENSION');
+});
+
+
+it('keeps a terminal direction container editable without manufacturing a root paragraph',()=>{
+ const kit=StarterKit.extensions.map(extension=>extension.name==='trailing-editable-block'?gitLabFootnoteBoundary(extension):extension);
+ const {plugins}=composeExtensions(kit);
+ const editor=createEditor({schema:createGitLabSchemaSpec(),plugins,content:{type:'doc',content:[{type:'direction_scope',attrs:{dir:'auto'},content:[{type:'paragraph',content:[{type:'text',text:'Marker.'}]}]}]}});
+ try{
+  expect(editor.state.doc.childCount).toBe(1);editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0,0,0],7)));
+  expect(insertText(editor,' Typed.')).toBe(true);expect(splitBlock(editor)).toBe(true);expect(insertText(editor,'Next line.')).toBe(true);
+  expect(editor.state.doc.childCount).toBe(1);expect(editor.state.doc.child(0).content.map(node=>node.textContent)).toEqual(['Marker. Typed.','Next line.']);
+  expect(undo(editor)).toBe(true);expect(redo(editor)).toBe(true);
+ }finally{editor.destroy();}
+});
+it('still repairs an atomic direction-container ending and preserves an authored empty root paragraph',()=>{
+ const {plugins}=composeExtensions(StarterKit.extensions.map(extension=>extension.name==='trailing-editable-block'?gitLabFootnoteBoundary(extension):extension));
+ const editor=createEditor({schema:createGitLabSchemaSpec(),plugins,content:{type:'doc',content:[{type:'direction_scope',attrs:{dir:'auto'},content:[{type:'horizontal_rule'}]}]}});
+ try{
+  expect(editor.state.doc.content.map(node=>node.type.name)).toEqual(['direction_scope','paragraph']);
+  const {schema}=editor.state;const blank=schema.node('paragraph',{},[schema.text('')]);
+  editor.dispatch(editor.createTransaction().replaceDocument(schema.node('doc',{},[schema.node('direction_scope',{dir:'auto'},[schema.node('paragraph',{},[schema.text('Editable')])]),blank])));
+  expect(editor.state.doc.child(1)).toBe(blank);
+ }finally{editor.destroy();}
+});
+
+it.each([
+ {type:'bullet_list',content:[{type:'list_item',content:[{type:'paragraph',content:[{type:'text',text:'Item'}]}]}]},
+ {type:'table',content:[{type:'table_row',content:[{type:'table_cell',content:[{type:'paragraph',content:[{type:'text',text:'Cell'}]}]}]}]},
+])('retains the exit paragraph after a terminal direction-wrapped $type',block=>{
+ const {plugins}=composeExtensions(StarterKit.extensions.map(extension=>extension.name==='trailing-editable-block'?gitLabFootnoteBoundary(extension):extension));
+ const editor=createEditor({schema:createGitLabSchemaSpec(),plugins,content:{type:'doc',content:[{type:'direction_scope',attrs:{dir:'auto'},content:[block]}]}});
+ try{expect(editor.state.doc.content.map(node=>node.type.name)).toEqual(['direction_scope','paragraph']);}finally{editor.destroy();}
 });

@@ -1,0 +1,120 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-task-conversion.test.ts (15 tests | 10 failed) 27ms
+   ❯ source-retaining host checklist extraction (15)
+     × preserves fenced Python under - 8ms
+     × preserves fenced Python under * 1ms
+     × preserves fenced Python under + 2ms
+     × preserves fenced Python under 10. 1ms
+     × preserves fenced Python under 10) 1ms
+     × preserves fenced Python under   - 1ms
+     × preserves fenced Python under -\t 1ms
+     × does not mistake a checkbox-looking line inside a fence for a nested task 1ms
+     × keeps tabs, trailing spaces and invisible code points within the technical source 1ms
+     × requires a same-character sufficiently long closing fence 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > preserves fenced Python under -
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > preserves fenced Python under *
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > preserves fenced Python under +
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > preserves fenced Python under 10.
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > preserves fenced Python under 10)
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > preserves fenced Python under   -
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > preserves fenced Python under -\t
+AssertionError: expected '\n```python\ndef identity(value):\n  …' to be '\n```python\ndef identity(value):\n  …' // Object.is equality
+
+- Expected
++ Received
+
+@@ -2,5 +2,6 @@
+  ```python
+  def identity(value):
+      return value
+  ```
+
++ - [ ] Keep child
+
+ ❯ tests/gitlab-task-conversion.test.ts:20:75
+     18|  it.each([['-','  '],['*','  '],['+','  '],['10.','    '],['10)','    …
+     19|   const value=fixture(marker,prefix),result=load().deleteTaskListItem(…
+     20|   expect(result.taskTitle).toBe('Convert');expect(result.taskDescripti…
+       |                                                                           ^
+     21|   expect(result.newDescription).toBe('Before\n'+(marker.startsWith('  …
+     22|  });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > does not mistake a checkbox-looking line inside a fence for a nested task
+AssertionError: expected '\n```python\n- [ ] literal source\n  …' to be '\n```python\n- [ ] literal source\n  …' // Object.is equality
+
+- Expected
++ Received
+
+@@ -2,5 +2,6 @@
+  ```python
+  - [ ] literal source
+      keep indentation
+  ```
+
++ - [ ] Keep child
+
+ ❯ tests/gitlab-task-conversion.test.ts:28:34
+     26|  it('does not mistake a checkbox-looking line inside a fence for a nes…
+     27|   const value=fixture('-','  ','- [ ] literal source\n    keep indenta…
+     28|   expect(result.taskDescription).toBe('\n```python\n- [ ] literal sour…
+       |                                  ^
+     29|  });
+     30|  it('keeps indented-code task syntax in the child source',()=>{
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > keeps tabs, trailing spaces and invisible code points within the technical source
+AssertionError: expected '\n```python\n\tvalue = "​ "  \n\t\tre…' to be '\n```python\n\tvalue = "​ "  \n\t\tre…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -2,5 +2,6 @@
+  ```python
+  \tvalue = "​ "\x20\x20
+  \t\treturn value
+  ```
+
++ - [ ] Keep child
+
+ ❯ tests/gitlab-task-conversion.test.ts:36:77
+     34|  it('keeps tabs, trailing spaces and invisible code points within the …
+     35|   const body='\tvalue = "\u200b\u00a0"  \n\t\treturn value';const valu…
+     36|   expect(load().deleteTaskListItem(value.source,value.pos).taskDescrip…
+       |                                                                             ^
+     37|  });
+     38|  it('promotes a tab-indented descendant by columns while retaining its…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > requires a same-character sufficiently long closing fence
+AssertionError: expected '````python\n~~~~\n- [ ] still code\n`…' to be '````python\n~~~~\n- [ ] still code\n`…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -2,5 +2,6 @@
+  ~~~~
+  - [ ] still code
+  ```
+  - [ ] also code
+  ````
++ - [ ] Keep child
+
+ ❯ tests/gitlab-task-conversion.test.ts:44:92
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  10 failed | 19 passed (29)
+   Start at  14:59:15
+   Duration  1.66s (transform 76%, import 17%, tests 7%, worker 1%)

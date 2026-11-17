@@ -1,0 +1,8 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+
+ Test Files  2 passed (2)
+      Tests  30 passed (30)
+   Start at  15:02:54
+   Duration  1.60s (transform 74%, import 17%, tests 8%, worker 1%)

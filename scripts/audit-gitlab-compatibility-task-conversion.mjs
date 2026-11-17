@@ -28,7 +28,7 @@ export async function runGitLabTaskConversionCompatibility({side,runId,page,requ
    const api=`/api/v4/projects/${project.id}/issues/${issue.iid}`;result.setup={iid:issue.iid,url:issue.web_url,description:issue.description};expect(issue.description).toBe(input.markdown);
    const host=page.getByTestId('work-item-description-wrapper'),reader=page.locator('.js-work-item-description');
    const editor=host.locator(side==='original'?'.ProseMirror[contenteditable="true"]':'.fountain-editor[contenteditable="true"]');
-   const edit=async()=>{await page.getByTestId('work-item-edit-form-button').click();const switcher=host.getByRole('button',{name:'Switch to rich text editing',exact:true});if(await switcher.isVisible())await switcher.click();await expect(editor).toBeVisible({timeout:30000});await pause();};
+   const edit=async(marker='Parent marker.')=>{await page.getByTestId('work-item-edit-form-button').click();const switcher=host.getByRole('button',{name:'Switch to rich text editing',exact:true});if(await switcher.isVisible())await switcher.click();await expect(editor).toBeVisible({timeout:30000});if(marker!==null)await expect(editor.getByRole('heading',{name:'Child conversion',exact:true})).toBeVisible({timeout:30000});const sentinel=editor.getByText(marker??'A bold detail and link.',{exact:true});await expect(sentinel).toBeVisible({timeout:30000});result.documentReadiness??=[];result.documentReadiness.push({expectedText:marker??'A bold detail and link.',actualText:await sentinel.textContent()});await pause();};
    await page.goto(issue.web_url);await edit();await expect(editor.getByRole('heading',{name:'Child conversion',exact:true})).toBeVisible();
    await expect(host.locator(side==='original'?'.fountain-editor[contenteditable="true"]':'.ProseMirror[contenteditable="true"]')).toHaveCount(0);
    result.editorProof={native:await host.locator('[data-fountain-integration="native"]').count()>0,className:await editor.getAttribute('class')};
@@ -39,7 +39,7 @@ export async function runGitLabTaskConversionCompatibility({side,runId,page,requ
    await expect.poll(async()=>{result.saved=await request(api);return result.saved.description;},{timeout:30000}).toContain('Parent marker. Verified.');
    await expect(reader.locator('h2').filter({hasText:'Child conversion'})).toBeVisible();await pause();
    result.graphs.readerBefore=await reader.evaluate(conversionGraph);await shot('before-menu');await stage('open-conversion');
-   const item=reader.locator('input.task-list-item-checkbox').nth(1).locator('xpath=ancestor::li[1]');await item.hover();const trigger=item.getByRole('button',{name:'Checklist item actions',exact:true}).first();const owner=await item.getAttribute('data-sourcepos');expect(await trigger.evaluate((n,pos)=>n.closest('li')?.getAttribute('data-sourcepos')===pos,owner)).toBe(true);await trigger.click();
+   const item=reader.locator('input.task-list-item-checkbox').nth(input.targetOrdinal??1).locator('xpath=ancestor::li[1]');await item.hover();const trigger=item.getByRole('button',{name:'Checklist item actions',exact:true}).first();const owner=await item.getAttribute('data-sourcepos');expect(await trigger.evaluate((n,pos)=>n.closest('li')?.getAttribute('data-sourcepos')===pos,owner)).toBe(true);await trigger.click();
    result.target=await item.evaluate(n=>({text:n.textContent,sourcepos:n.dataset.sourcepos}));await shot('menu');
    await page.getByRole('menuitem',{name:'Convert to child item',exact:true}).or(page.getByRole('button',{name:'Convert to child item',exact:true})).click();
    const modal=page.getByRole('dialog',{name:'New task',exact:true});await expect(modal).toBeVisible({timeout:30000});
@@ -48,16 +48,24 @@ export async function runGitLabTaskConversionCompatibility({side,runId,page,requ
    // Never repair the prefill: Create submits exactly what the real UI prepared.
    await stage('create-child');await modal.getByTestId('create-button').click();await expect(modal).toBeHidden({timeout:30000});
    await expect.poll(async()=>{result.parentAfter=await request(api);return result.parentAfter.description;},{timeout:30000}).not.toBe(result.saved.description);
-   const childLink=page.getByRole('link',{name:input.childTitle,exact:true});await expect(childLink).toHaveCount(1,{timeout:30000});result.childHref=await childLink.getAttribute('href');await childLink.scrollIntoViewIfNeeded();await shot('parent-child');
+   const childLink=page.getByRole('link',{name:result.modalTitle,exact:true});await expect(childLink).toHaveCount(1,{timeout:30000});result.childHref=await childLink.getAttribute('href');await childLink.scrollIntoViewIfNeeded();await shot('parent-child');
    const match=result.childHref.match(/\/(\d+)(?:[?#].*)?$/u);if(!match)throw new Error('Child UI link has no numeric work-item IID');
    const childIid=match[1];
    const data=await request('/api/graphql',{query:'query AuditChild($path: ID!, $iid: String!) { namespace(fullPath:$path) { workItem(iid:$iid) { id iid title workItemType { name } widgets { type ... on WorkItemWidgetDescription { description } ... on WorkItemWidgetHierarchy { parent { iid } } } } } }',variables:{path:project.path_with_namespace,iid:childIid}});
    if(data.errors?.length)throw new Error('Read-only child verification query failed: '+JSON.stringify(data.errors));
    const child=data.data?.namespace?.workItem;if(!child)throw new Error('Created child not found');
    result.child={iid:child.iid,title:child.title,type:child.workItemType.name,description:child.widgets.find(w=>w.type==='DESCRIPTION')?.description,parentIid:child.widgets.find(w=>w.type==='HIERARCHY')?.parent?.iid};
-   await page.reload();await edit();result.graphs.parentReopened=await editor.evaluate(conversionGraph);await shot('parent-reopened');
+   await page.reload();await edit('Parent marker. Verified.');result.graphs.parentReopened=await editor.evaluate(conversionGraph);result.parentReopenedHTML=await editor.innerHTML();await shot('parent-reopened');
+   if(input.verifyParentResave){
+    await stage('resave-parent');const marker=editor.getByText('Parent marker. Verified.',{exact:true});await marker.click();await page.keyboard.press('End');await pause();
+    await expect.poll(()=>page.evaluate(()=>{const s=window.getSelection();return {text:s?.anchorNode?.textContent,offset:s?.anchorOffset,collapsed:s?.isCollapsed};})).toEqual({text:'Parent marker. Verified.',offset:24,collapsed:true});
+    await page.keyboard.insertText(' Reopened.');await pause();await expect(editor.getByText('Parent marker. Verified. Reopened.',{exact:true})).toBeVisible();
+    const submit=page.getByRole('button',{name:'Save changes',exact:true});await submit.scrollIntoViewIfNeeded();result.parentResaveReachable=await submit.evaluate(node=>{const r=node.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return node===hit||node.contains(hit);});await submit.click();await expect(editor).toBeHidden({timeout:30000});
+    await expect.poll(async()=>{result.parentResaved=await request(api);return result.parentResaved.description;},{timeout:30000}).toContain('Parent marker. Verified. Reopened.');
+    await page.reload();await edit('Parent marker. Verified. Reopened.');result.graphs.parentResaved=await editor.evaluate(conversionGraph);result.parentResavedHTML=await editor.innerHTML();await shot('parent-resaved');
+   }
    const childURL=new URL(result.childHref,issue.web_url);if(childURL.origin!==new URL(issue.web_url).origin)throw new Error('Child link changed origin');
-   await page.goto(childURL.href);await edit();result.childEditorProof={native:await host.locator('[data-fountain-integration="native"]').count()>0,className:await editor.getAttribute('class')};result.graphs.childReopened=await editor.evaluate(conversionGraph);await shot('child-reopened');
+   await page.goto(childURL.href);await edit(null);result.childEditorProof={native:await host.locator('[data-fountain-integration="native"]').count()>0,className:await editor.getAttribute('class')};result.graphs.childReopened=await editor.evaluate(conversionGraph);await shot('child-reopened');
    result.status='observed';await stage('complete');
   }catch(error){result.error=String(error);await page.screenshot({path:join(output,input.id+'-failure.png'),fullPage:true,animations:'disabled'}).catch(()=>{});onProgress({side,case:input.id,stage:'incomplete',error:result.error});await save();}
  }

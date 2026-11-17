@@ -1,0 +1,55 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js spec/frontend/issues/show/utils_spec.js --runInBand
+PASS spec/frontend/issues/show/utils_spec.js
+  app/assets/javascripts/issues/show/utils.js
+    convertDescriptionWithNewSort
+      ✓ converts markdown description with nested lists with new list sort order (5 ms)
+      ✓ converts markdown description with multi-line list items with new list sort order (5 ms)
+    deleteTaskListItem
+      ✓ deletes item with no children (1 ms)
+      ✓ deletes deeply nested item with no children (1 ms)
+      ✓ deletes item with children and moves sub-tasks up a level (1 ms)
+      ✓ deletes item with associated paragraph text
+      ✓ deletes item with associated paragraph text and moves sub-tasks up a level (1 ms)
+    disableTaskListItem
+      ✓ disable unchecked item (1 ms)
+      ✓ disable checked item
+    enableTaskListItem
+      ✓ enable item (1 ms)
+    extractTaskTitleAndDescription
+      when title is pure code block
+        ✓ moves the title to the description (3 ms)
+        ✓ moves the title to the description and appends the description to it (1 ms)
+      when title is too long
+        ✓ moves the title beyond the character limit to the description
+        ✓ moves the title beyond the character limit to the description and appends the description to it (1 ms)
+      when title is fine
+        ✓ uses the title with no modifications
+        ✓ uses the title and description with no modifications
+  insertNextToTaskListItemText
+    when simple checkbox with text
+      ✓ inserts element as sibling to checkbox, last child of ul element (3 ms)
+    when checkbox with nested checkbox
+      ✓ inserts element as sibling to checkbox, before the nested checkbox (3 ms)
+    when multi-paragraph checkbox
+      ✓ inserts element as sibling to checkbox, inside p element (2 ms)
+  task list drag clone helpers
+    wrapTaskListDragClone
+      ✓ wraps the body-parented drag clone in a shell carrying the row style scopes (3 ms)
+      ✓ replaces a stale shell from a drag that never ended (1 ms)
+      ✓ does nothing when no drag clone is present (1 ms)
+    removeTaskListDragCloneWrapper
+      ✓ removes the shell (1 ms)
+      ✓ removes every orphaned shell (1 ms)
+      ✓ does nothing when no shell is present
+    taskListSortableOptions
+      ✓ toggles the body drag class and the clone shell around a drag (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       26 passed, 26 total
+Snapshots:   0 total
+Time:        2.416 s
+Ran all test suites matching /spec\/frontend\/issues\/show\/utils_spec.js/i.
+Done in 3.90s.

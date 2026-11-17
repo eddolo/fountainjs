@@ -2,6 +2,16 @@
 
 ## Current programme status — 2026-11-17
 
+Matched child-conversion repair (2026-11-17): plain/scoped/ordered/nested real
+workflows verify 66 parity and 14 improvement checks, with zero regressions or
+incomplete outcomes. Code indentation and ordered child titles survive conversion;
+the native extra paragraph is repaired without dropping authored blanks or table/
+list exits. Reopened parents can be edited, saved and reloaded. 1,485 integration
+cases / 58 files, strict types, 26 upstream helper tests and lint pass. Premature
+loading snapshots are excluded. Quoted/custom-prefix fidelity, other roles and
+broader application/UI acceptance remain open.
+[Repair evidence](../integrations/gitlab/COMPATIBILITY_TASK_CONVERSION_REPAIR_RESULTS.md).
+
 Matched child-task conversion audit (2026-11-17): actual parent/child records,
 remaining checklist items, marks and links survive, but both implementations lose
 Python indentation in GitLab's shared extraction helper. Across two profiles:

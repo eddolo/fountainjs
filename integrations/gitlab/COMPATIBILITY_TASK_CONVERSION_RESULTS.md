@@ -107,3 +107,9 @@ The native integration-incomplete warning remains visible and accurate.
 Run the guarded compatibility runner sequentially with a fresh immutable run ID,
 `--suite task-conversion` and each editor side. This checkpoint is a saved audit
 finding, not a release-ready claim of successful technical-content conversion.
+
+The [verified repair follow-up](COMPATIBILITY_TASK_CONVERSION_REPAIR_RESULTS.md)
+closes the demonstrated source/title and extra-paragraph gaps with a fresh matched
+pair: 66 parity / 14 improvement checks across four workflows. The historical red
+report above remains unchanged as evidence of the earlier candidate. An intervening
+premature-loading comparison is excluded; broader conversion fidelity remains open.

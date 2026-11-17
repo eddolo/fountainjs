@@ -1,0 +1,63 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/gitlab-task-conversion.test.ts (15 tests | 2 failed) 23ms
+   ❯ source-retaining host checklist extraction (15)
+     × preserves fenced Python under -\t 6ms
+     × requires a same-character sufficiently long closing fence 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > preserves fenced Python under -\t
+AssertionError: expected '\n```python\ndef identity(value):\n  …' to be '\n```python\ndef identity(value):\n  …' // Object.is equality
+
+- Expected
++ Received
+
+
+  ```python
+  def identity(value):
+-     return value
++    return value
+  ```
+
+
+ ❯ tests/gitlab-task-conversion.test.ts:20:75
+     18|  it.each([['-','  '],['*','  '],['+','  '],['10.','    '],['10)','    …
+     19|   const value=fixture(marker,prefix),result=load().deleteTaskListItem(…
+     20|   expect(result.taskTitle).toBe('Convert');expect(result.taskDescripti…
+       |                                                                           ^
+     21|   expect(result.newDescription).toBe('Before\n'+(marker.startsWith('  …
+     22|  });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/gitlab-task-conversion.test.ts > source-retaining host checklist extraction > requires a same-character sufficiently long closing fence
+AssertionError: expected '\n```python\n~~~\n- [ ] still code\n~…' to contain '- [ ] also code'
+
+- Expected
++ Received
+
+- - [ ] also code
++
++ ```python
++ ~~~
++ - [ ] still code
++ ~~~
++ ```
+
+ ❯ tests/gitlab-task-conversion.test.ts:44:158
+     42|  it('requires a same-character sufficiently long closing fence',()=>{
+     43|   const value=fixture('-','  ','~~~\n- [ ] still code\n~~~\n```\n- [ ]…
+     44|   const result=load().deleteTaskListItem(value.source,value.pos);expec…
+       |                                                                                                                                                              ^
+     45|  });
+     46|  it('removes only structural tab columns, retaining the remaining inde…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 25 passed (27)
+   Start at  14:52:04
+   Duration  1.62s (transform 75%, import 18%, tests 7%, worker 1%)

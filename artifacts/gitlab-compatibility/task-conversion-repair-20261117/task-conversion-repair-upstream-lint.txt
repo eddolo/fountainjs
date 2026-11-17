@@ -1,0 +1,16 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/issues/show/utils.js app/assets/javascripts/issues/show/fountain_task_body_extractor.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/issues/show/fountain_task_body_extractor.js
+  50:9  error  Use array destructuring  prefer-destructuring
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/issues/show/utils.js
+  1:1  error  `./fountain_task_body_extractor` import should occur after import of `~/sortable/utils`  import-x/order
+
+✖ 2 problems (2 errors, 0 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

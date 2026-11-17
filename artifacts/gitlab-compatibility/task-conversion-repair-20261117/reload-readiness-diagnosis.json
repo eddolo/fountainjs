@@ -1,0 +1,52 @@
+{
+  "reportSHA256": "fec57bb07529395fc737f13b7efe94a4d3d8e5c964bcf6bcad6621dfc10c8c2b",
+  "status": "Excluded observer experiment; not editor data-loss evidence.",
+  "visuallyInspectedLoadingPNG": "original-1/plain-conversion-parent-resaved.png",
+  "cases": [
+    {
+      "case": "plain-conversion",
+      "phase": "parentResaved",
+      "prematureGraph": {
+        "tasks": [],
+        "prose": [
+          ""
+        ],
+        "bold": [],
+        "links": [],
+        "codes": []
+      },
+      "persistedSourceContainsHeading": true,
+      "persistedSourceContainsMarker": true
+    },
+    {
+      "case": "ordered-conversion",
+      "phase": "parentReopened",
+      "prematureGraph": {
+        "tasks": [],
+        "prose": [
+          ""
+        ],
+        "bold": [],
+        "links": [],
+        "codes": []
+      },
+      "persistedSourceContainsHeading": true,
+      "persistedSourceContainsMarker": true
+    },
+    {
+      "case": "nested-conversion",
+      "phase": "parentReopened",
+      "prematureGraph": {
+        "tasks": [],
+        "prose": [
+          ""
+        ],
+        "bold": [],
+        "links": [],
+        "codes": []
+      },
+      "persistedSourceContainsHeading": true,
+      "persistedSourceContainsMarker": true
+    }
+  ]
+}

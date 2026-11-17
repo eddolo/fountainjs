@@ -371,13 +371,13 @@ function taskConversionReports(index=0){
   item.setup={iid:42};item.modalTitle=input.childTitle;item.prefill='\n'+input.expectedDescription+'\n';
   item.child={title:input.childTitle,type:'Task',parentIid:'42',description:input.expectedDescription};
   item.childEditorProof=structuredClone(item.editorProof);item.modalEditorProof=structuredClone(item.editorProof);
-  item.parentAfter={state:'opened',task_completion_status:{count:3,completed_count:1}};
-  item.graphs={prefill:{codes:[input.expectedCode]},before:{codes:[input.expectedCode]},readerBefore:{codes:[input.expectedCode]},parentReopened:structuredClone(input.expectedParent),childReopened:{codes:[input.expectedCode],bold:['bold'],links:[{text:'link',href:'https://example.com/reference'}]}};
+  item.parentAfter={state:'opened',task_completion_status:{count:input.expectedParent.tasks.length,completed_count:1}};item.parentResaved=structuredClone(item.parentAfter);item.parentResaveReachable=true;
+  item.graphs={prefill:{codes:[input.expectedCode]},before:{codes:[input.expectedCode]},readerBefore:{codes:[input.expectedCode]},parentReopened:structuredClone(input.expectedParent),parentResaved:structuredClone(input.expectedParentResaved),childReopened:{codes:[input.expectedCode],bold:['bold'],links:[{text:'link',href:'https://example.com/reference'}]}};
  }
  return pair;
 }
-it.each([0,1])('requires complete real-child conversion outcomes (%i)',index=>{
- const result=compareGitLabCompatibility(...taskConversionReports(index));expect(result.summary.parity).toBe(16);expect(result.featureAcceptance.passed).toBe(true);
+it.each([0,1,2,3])('requires complete real-child conversion outcomes (%i)',index=>{
+ const result=compareGitLabCompatibility(...taskConversionReports(index));expect(result.summary.parity).toBe(20);expect(result.featureAcceptance.passed).toBe(true);
 });
 it('preserves significant indentation and invisible characters when comparing conversion source',()=>{
  expect(conversionDescription('\n  code\n\tinner\n\u200b\n')).toBe('  code\n\tinner\n\u200b');

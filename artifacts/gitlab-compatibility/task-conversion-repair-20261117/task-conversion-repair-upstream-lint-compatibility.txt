@@ -1,0 +1,5 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/issues/show/utils.js app/assets/javascripts/issues/show/fountain_task_body_extractor.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+Done in 4.43s.

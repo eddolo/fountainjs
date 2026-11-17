@@ -57,6 +57,8 @@ for (const path of [
   'integrations/gitlab/services/footnote_source.ts',
   'integrations/gitlab/services/footnote_codec.ts',
   'integrations/gitlab/services/footnote_boundary.ts',
+  'integrations/gitlab/services/task_body_extractor.js',
+  'integrations/gitlab/services/task_conversion_patch.mjs',
   'integrations/gitlab/services/footnote_editing.ts',
   'integrations/gitlab/services/footnote_renaming.ts',
   'integrations/gitlab/services/footnote_labels.ts',
