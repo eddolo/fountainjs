@@ -1,0 +1,14 @@
+time="2026-11-17T14:36:12Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Recreate
+ Container fountain-gitlab-integration-baseline-1  Recreated
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"kind":"gitlab-compatibility","side":"fountain","case":"plain-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"plain-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"plain-conversion","stage":"complete"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"scoped-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"scoped-conversion","stage":"create-child"}
+{"kind":"gitlab-compatibility","side":"fountain","case":"scoped-conversion","stage":"complete"}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+{"kind":"gitlab-compatibility","side":"fountain","output":"/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-compatibility/task-conversion-20261117/fountain-1","collectionComplete":true,"classification":null}

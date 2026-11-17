@@ -1,0 +1,392 @@
+[
+  {
+    "id": "plain-conversion",
+    "input": {
+      "id": "plain-conversion",
+      "scope": "task-conversion",
+      "title": "plain-conversion",
+      "markdown": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": []
+      }
+    },
+    "status": "incomplete",
+    "stage": "open-conversion",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "readerBefore": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item     \nA bold detail and link.\ndef identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "setup": {
+      "iid": 286,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/286",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker."
+    },
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "saved": {
+      "id": 1427,
+      "iid": 286,
+      "project_id": 1,
+      "title": "plain-conversion task-conversion-20261117-a1",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n\n  ```python\n  def identity(value):\n      return value\n  ```\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+      "state": "opened",
+      "created_at": "2026-11-17T14:27:32.940Z",
+      "updated_at": "2026-11-17T14:27:37.823Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/286",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/286",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/286/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/286/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#286",
+        "relative": "#286",
+        "full": "root/fountain-product-integration#286"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "error": "Error: locator.click: Error: strict mode violation: locator('.js-work-item-description').locator('input.task-list-item-checkbox').nth(1).locator('xpath=ancestor::li[1]').getByRole('button', { name: 'Checklist item actions', exact: true }) resolved to 2 elements:\n    1) <button type=\"button\" aria-expanded=\"false\" id=\"dropdown-toggle-btn-220\" aria-controls=\"base-dropdown-222\" data-testid=\"base-dropdown-toggle\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret gl-cursor-grab gl-opacity-10\">…</button> aka locator('#dropdown-toggle-btn-220')\n    2) <button type=\"button\" aria-expanded=\"false\" id=\"dropdown-toggle-btn-223\" aria-controls=\"base-dropdown-225\" data-testid=\"base-dropdown-toggle\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\">…</button> aka locator('#dropdown-toggle-btn-223')\n\nCall log:\n\u001b[2m  - waiting for locator('.js-work-item-description').locator('input.task-list-item-checkbox').nth(1).locator('xpath=ancestor::li[1]').getByRole('button', { name: 'Checklist item actions', exact: true })\u001b[22m\n"
+  },
+  {
+    "id": "scoped-conversion",
+    "input": {
+      "id": "scoped-conversion",
+      "scope": "task-conversion",
+      "title": "scoped-conversion",
+      "markdown": "<div dir=\"auto\">\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": []
+      }
+    },
+    "status": "incomplete",
+    "stage": "open-conversion",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "readerBefore": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item     \nA bold detail and link.\ndef identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "setup": {
+      "iid": 287,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/287",
+      "description": "<div dir=\"auto\">\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>"
+    },
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "saved": {
+      "id": 1428,
+      "iid": 287,
+      "project_id": 1,
+      "title": "scoped-conversion task-conversion-20261117-a1",
+      "description": "<div>\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n\n  ```python\n  def identity(value):\n      return value\n  ```\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>",
+      "state": "opened",
+      "created_at": "2026-11-17T14:27:39.662Z",
+      "updated_at": "2026-11-17T14:27:44.258Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/287",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/287",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/287/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/287/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#287",
+        "relative": "#287",
+        "full": "root/fountain-product-integration#287"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "error": "Error: locator.click: Error: strict mode violation: locator('.js-work-item-description').locator('input.task-list-item-checkbox').nth(1).locator('xpath=ancestor::li[1]').getByRole('button', { name: 'Checklist item actions', exact: true }) resolved to 2 elements:\n    1) <button type=\"button\" aria-expanded=\"false\" id=\"dropdown-toggle-btn-220\" aria-controls=\"base-dropdown-222\" data-testid=\"base-dropdown-toggle\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret gl-cursor-grab gl-opacity-10\">…</button> aka locator('#dropdown-toggle-btn-220')\n    2) <button type=\"button\" aria-expanded=\"false\" id=\"dropdown-toggle-btn-223\" aria-controls=\"base-dropdown-225\" data-testid=\"base-dropdown-toggle\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\">…</button> aka locator('#dropdown-toggle-btn-223')\n\nCall log:\n\u001b[2m  - waiting for locator('.js-work-item-description').locator('input.task-list-item-checkbox').nth(1).locator('xpath=ancestor::li[1]').getByRole('button', { name: 'Checklist item actions', exact: true })\u001b[22m\n"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "reason": "Original attempt 1 stopped before conversion because the parent li contains both its own and nested menu buttons; no product outcome inferred. The next instrument verifies button ownership by sourcepos.",
+  "instruments": {
+    "scripts/run-gitlab-compatibility.mjs": {
+      "path": "artifacts/gitlab-compatibility/task-conversion-20261117/initial-instrument/run-gitlab-compatibility.mjs",
+      "sha256": "966dbbf664b1aa1702cee06a0f545f3b28285fba723463d13dba8b1f06560cc2"
+    },
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": {
+      "path": "artifacts/gitlab-compatibility/task-conversion-20261117/initial-instrument/audit-gitlab-compatibility-task-conversion.mjs",
+      "sha256": "cd6bd342039b8051d633980815d0ddf991e476ffe26d9d02b7ba49656e95d20c"
+    },
+    "integrations/gitlab/fixtures/compatibility-task-conversion.json": {
+      "path": "artifacts/gitlab-compatibility/task-conversion-20261117/initial-instrument/compatibility-task-conversion.json",
+      "sha256": "9711467eb649e411a753a3680860be124756846b0b921d1d8373a53dafc507c7"
+    }
+  }
+}

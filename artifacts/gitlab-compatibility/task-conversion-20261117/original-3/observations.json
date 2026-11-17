@@ -1,0 +1,182 @@
+[
+  {
+    "id": "plain-conversion",
+    "input": {
+      "id": "plain-conversion",
+      "scope": "task-conversion",
+      "title": "plain-conversion",
+      "markdown": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": []
+      }
+    },
+    "status": "incomplete",
+    "stage": "setup",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "setup": {
+      "iid": 290,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/290",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker."
+    },
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator: getByTestId('work-item-description-wrapper').locator('.ProseMirror[contenteditable=\"true\"]').getByText('Parent marker.', { exact: true })\nExpected: \"Parent marker. Verified.\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.have.text\" with timeout 5000ms\n  - waiting for getByTestId('work-item-description-wrapper').locator('.ProseMirror[contenteditable=\"true\"]').getByText('Parent marker.', { exact: true })\n"
+  },
+  {
+    "id": "scoped-conversion",
+    "input": {
+      "id": "scoped-conversion",
+      "scope": "task-conversion",
+      "title": "scoped-conversion",
+      "markdown": "<div dir=\"auto\">\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": []
+      }
+    },
+    "status": "incomplete",
+    "stage": "setup",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "setup": {
+      "iid": 291,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/291",
+      "description": "<div dir=\"auto\">\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>"
+    },
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator: getByTestId('work-item-description-wrapper').locator('.ProseMirror[contenteditable=\"true\"]').getByText('Parent marker.', { exact: true })\nExpected: \"Parent marker. Verified.\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.have.text\" with timeout 5000ms\n  - waiting for getByTestId('work-item-description-wrapper').locator('.ProseMirror[contenteditable=\"true\"]').getByText('Parent marker.', { exact: true })\n"
+  }
+]

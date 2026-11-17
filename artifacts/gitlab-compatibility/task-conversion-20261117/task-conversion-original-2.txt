@@ -1,0 +1,10 @@
+time="2026-11-17T14:28:28Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"kind":"gitlab-compatibility","side":"original","case":"plain-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"plain-conversion","stage":"incomplete","error":"Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\n"}
+{"kind":"gitlab-compatibility","side":"original","case":"scoped-conversion","stage":"open-conversion"}
+{"kind":"gitlab-compatibility","side":"original","case":"scoped-conversion","stage":"incomplete","error":"Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\n"}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+{"kind":"gitlab-compatibility","side":"original","output":"/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-compatibility/task-conversion-20261117/original-2","collectionComplete":false,"classification":null}

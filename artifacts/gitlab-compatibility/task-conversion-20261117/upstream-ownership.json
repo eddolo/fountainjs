@@ -1,0 +1,26 @@
+{
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "sources": [
+    {
+      "path": "app/assets/javascripts/issues/show/utils.js",
+      "lineReferences": {
+        "deleteTaskListItem": 153,
+        "trimStart": 179
+      },
+      "currentSHA256": "548b3dbacbbe72bc77c75f3fcce77984364df7d9fc0422b00ca0f80d06f29575",
+      "pinnedSHA256": "548b3dbacbbe72bc77c75f3fcce77984364df7d9fc0422b00ca0f80d06f29575",
+      "matchesPinned": true
+    },
+    {
+      "path": "app/assets/javascripts/work_items/components/work_item_description_rendered.vue",
+      "lineReferences": {
+        "convertTaskListItem": 334,
+        "handleWorkItemCreated": 369
+      },
+      "currentSHA256": "2eb59a655c28f0983e87aee58cb2c83e409f4197f2b5e016de74c37bf3b15416",
+      "pinnedSHA256": "2eb59a655c28f0983e87aee58cb2c83e409f4197f2b5e016de74c37bf3b15416",
+      "matchesPinned": true
+    }
+  ],
+  "attribution": "Description extraction belongs to the shared GitLab frontend helper, not the Tiptap or Fountain transaction engine. No production source changed in this audit."
+}

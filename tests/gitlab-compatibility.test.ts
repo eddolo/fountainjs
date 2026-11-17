@@ -2,7 +2,7 @@ import {readFileSync} from 'node:fs';
 import {expect,it} from 'vitest';
 // These are tests of interpretation policy, not real application evidence.
 // @ts-expect-error Private JS audit helper intentionally has no published type entry.
-import {classifyInvariant,compareGitLabCompatibility,suggestionBlock,clipboardParagraphs} from '../integrations/gitlab/testing/compatibility.mjs';
+import {classifyInvariant,compareGitLabCompatibility,suggestionBlock,clipboardParagraphs,conversionDescription} from '../integrations/gitlab/testing/compatibility.mjs';
 it.each([
  [true,true,true,'parity'],[true,false,true,'improvement'],[true,true,false,'regression'],[true,false,false,'shared-limitation'],
  ['exact','changed-a','changed-b',null],[true,undefined,true,null],[true,true,undefined,null],
@@ -359,5 +359,45 @@ it.each([
 });
 it('requires evidence that not-applicable source survived rich editing',()=>{
  const [original,fountain]=taskMenuReports();delete (fountain.observations[0] as any).thirdStateSourceRetained;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(1);expect(result.comparisonComplete).toBe(false);
+});
+
+function taskConversionReports(index=0){
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-task-conversion.json',import.meta.url),'utf8'));
+ const pair=reports();
+ for(const report of pair){
+  const input=structuredClone(fixture.cases[index]);report.fixture.cases=[input];
+  const item:any=report.observations[0];item.id=input.id;item.input=structuredClone(input);
+  item.setup={iid:42};item.modalTitle=input.childTitle;item.prefill='\n'+input.expectedDescription+'\n';
+  item.child={title:input.childTitle,type:'Task',parentIid:'42',description:input.expectedDescription};
+  item.childEditorProof=structuredClone(item.editorProof);item.modalEditorProof=structuredClone(item.editorProof);
+  item.parentAfter={state:'opened',task_completion_status:{count:3,completed_count:1}};
+  item.graphs={prefill:{codes:[input.expectedCode]},before:{codes:[input.expectedCode]},readerBefore:{codes:[input.expectedCode]},parentReopened:structuredClone(input.expectedParent),childReopened:{codes:[input.expectedCode],bold:['bold'],links:[{text:'link',href:'https://example.com/reference'}]}};
+ }
+ return pair;
+}
+it.each([0,1])('requires complete real-child conversion outcomes (%i)',index=>{
+ const result=compareGitLabCompatibility(...taskConversionReports(index));expect(result.summary.parity).toBe(16);expect(result.featureAcceptance.passed).toBe(true);
+});
+it('preserves significant indentation and invisible characters when comparing conversion source',()=>{
+ expect(conversionDescription('\n  code\n\tinner\n\u200b\n')).toBe('  code\n\tinner\n\u200b');
+ expect(conversionDescription(' x \r\n')).toBe(' x \r');expect(conversionDescription(undefined)).toBeUndefined();
+});
+it('classifies shared code damage as an unmet feature rather than successful parity',()=>{
+ const pair=taskConversionReports();for(const report of pair){const item:any=report.observations[0];item.graphs.prefill.codes=[item.graphs.prefill.codes[0].replace('    return','return')];}
+ const result=compareGitLabCompatibility(...pair);expect(result.rows.find((row:any)=>row.invariant==='modal.code').classification).toBe('shared-limitation');expect(result.featureAcceptance.passed).toBe(false);
+});
+it.each([
+ ['child.parent',(item:any)=>{item.child.parentIid='43';}],
+ ['child.description',(item:any)=>{item.child.description=item.child.description.replace('    return','return');}],
+ ['parent.graph',(item:any)=>{item.graphs.parentReopened.tasks.splice(1,1);}],
+ ['child.code',(item:any)=>{item.graphs.childReopened.codes=['def identity(value):\nreturn value'];}],
+ ['child.editor',(item:any)=>{item.childEditorProof={native:false,className:'ProseMirror'};}],
+])('rejects conversion damage or wrong linkage: %s',(invariant,mutate)=>{
+ const [original,fountain]=taskConversionReports();mutate(fountain.observations[0]);const result=compareGitLabCompatibility(original,fountain);
+ expect(result.rows.find((row:any)=>row.invariant===invariant).classification).toBe('regression');expect(result.regressionGate.passed).toBe(false);
+});
+it('requires observed parent linkage rather than assuming a matching title proves it',()=>{
+ const [original,fountain]=taskConversionReports();delete (fountain.observations[0] as any).child.parentIid;
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(1);expect(result.comparisonComplete).toBe(false);
 });

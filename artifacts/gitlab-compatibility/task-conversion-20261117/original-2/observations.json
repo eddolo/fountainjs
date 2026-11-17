@@ -1,0 +1,402 @@
+[
+  {
+    "id": "plain-conversion",
+    "input": {
+      "id": "plain-conversion",
+      "scope": "task-conversion",
+      "title": "plain-conversion",
+      "markdown": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": []
+      }
+    },
+    "status": "incomplete",
+    "stage": "open-conversion",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "readerBefore": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item     \nA bold detail and link.\ndef identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "setup": {
+      "iid": 288,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/288",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker."
+    },
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "saved": {
+      "id": 1460,
+      "iid": 288,
+      "project_id": 1,
+      "title": "plain-conversion task-conversion-20261117-a2",
+      "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n\n  ```python\n  def identity(value):\n      return value\n  ```\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+      "state": "opened",
+      "created_at": "2026-11-17T14:29:32.932Z",
+      "updated_at": "2026-11-17T14:29:37.824Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/288",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/288",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/288/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/288/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#288",
+        "relative": "#288",
+        "full": "root/fountain-product-integration#288"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "target": {
+      "text": "\n        \n       \nConvert this item   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \nA bold detail and link.\ndef identity(value):\n    return value\n\n Keep nested check   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \n\n",
+      "sourcepos": "4:1-12:25"
+    },
+    "modalTitle": "Convert this item",
+    "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\n"
+  },
+  {
+    "id": "scoped-conversion",
+    "input": {
+      "id": "scoped-conversion",
+      "scope": "task-conversion",
+      "title": "scoped-conversion",
+      "markdown": "<div dir=\"auto\">\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>",
+      "childTitle": "Convert this item",
+      "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+      "expectedCode": "def identity(value):\n    return value",
+      "expectedParent": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker. Verified."
+        ],
+        "bold": [],
+        "links": [],
+        "codes": []
+      }
+    },
+    "status": "incomplete",
+    "stage": "open-conversion",
+    "graphs": {
+      "before": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "readerBefore": {
+        "tasks": [
+          {
+            "text": "Keep root",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Convert this item     \nA bold detail and link.\ndef identity(value):\n    return value",
+            "state": "pending",
+            "depth": 0
+          },
+          {
+            "text": "Keep nested check",
+            "state": "pending",
+            "depth": 1
+          },
+          {
+            "text": "Keep sibling",
+            "state": "completed",
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Parent marker."
+        ],
+        "bold": [
+          "bold"
+        ],
+        "links": [
+          {
+            "text": "link",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "setup": {
+      "iid": 289,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/289",
+      "description": "<div dir=\"auto\">\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>"
+    },
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "saved": {
+      "id": 1461,
+      "iid": 289,
+      "project_id": 1,
+      "title": "scoped-conversion task-conversion-20261117-a2",
+      "description": "<div>\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n\n  ```python\n  def identity(value):\n      return value\n  ```\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>",
+      "state": "opened",
+      "created_at": "2026-11-17T14:30:07.786Z",
+      "updated_at": "2026-11-17T14:30:12.896Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/289",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 4,
+        "completed_count": 1
+      },
+      "has_tasks": false,
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/289",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/289/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/289/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#289",
+        "relative": "#289",
+        "full": "root/fountain-product-integration#289"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "target": {
+      "text": "\n        \n       \nConvert this item   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \nA bold detail and link.\ndef identity(value):\n    return value\n\n Keep nested check   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \n\n",
+      "sourcepos": "6:1-14:25"
+    },
+    "modalTitle": "Convert this item",
+    "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\n"
+  }
+]

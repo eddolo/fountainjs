@@ -182,3 +182,9 @@ The [reader-menu follow-up](COMPATIBILITY_TASK_MENU_RESULTS.md) adds 54 parity
 checks for duplicate-target disable/restore/delete, not-applicable retention through
 rich editing and authored strike preservation. Heading/prose observer corrections
 are retained separately; no product improvement is credited to representation differences.
+
+The [child-task conversion audit](COMPATIBILITY_TASK_CONVERSION_RESULTS.md) records
+25 parity, one strict native UI-structure difference and six shared-loss checks.
+Both create real linked children, but code indentation is lost by a shared host
+helper. The extra native paragraph needs caret-provenance qualification. Neither
+gate passes; these findings remain open rather than being relabeled as parity.

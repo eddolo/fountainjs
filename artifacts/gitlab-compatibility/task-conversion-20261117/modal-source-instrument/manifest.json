@@ -1,0 +1,17 @@
+{
+  "reason": "Original attempt 2 reached the modal but queried the source-mode switch before the editor finished mounting. The later rendered dialog does expose that switch. No completed conversion claim. Next instrument waits for rich modal DOM and verifies saved source through a read-only query without modifying prefill. It also waits for the existing UI debounce before parent Save.",
+  "instruments": {
+    "scripts/run-gitlab-compatibility.mjs": {
+      "path": "artifacts/gitlab-compatibility/task-conversion-20261117/modal-source-instrument/run-gitlab-compatibility.mjs",
+      "sha256": "966dbbf664b1aa1702cee06a0f545f3b28285fba723463d13dba8b1f06560cc2"
+    },
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": {
+      "path": "artifacts/gitlab-compatibility/task-conversion-20261117/modal-source-instrument/audit-gitlab-compatibility-task-conversion.mjs",
+      "sha256": "8b9c8da8fe420a3f3c54572c8b51dcb6cd1420cd1838dac95ac40e6459be915a"
+    },
+    "integrations/gitlab/fixtures/compatibility-task-conversion.json": {
+      "path": "artifacts/gitlab-compatibility/task-conversion-20261117/modal-source-instrument/compatibility-task-conversion.json",
+      "sha256": "9711467eb649e411a753a3680860be124756846b0b921d1d8373a53dafc507c7"
+    }
+  }
+}

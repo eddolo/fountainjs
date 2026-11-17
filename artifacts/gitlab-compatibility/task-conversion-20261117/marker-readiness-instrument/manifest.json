@@ -1,0 +1,17 @@
+{
+  "reason": "Original attempt 3 stopped at an observer lookup: the exact old marker locator correctly no longer matched after typing changed its text. No product failure inferred. Next instrument looks up the new marker and still requires the exact saved marker.",
+  "instruments": {
+    "scripts/run-gitlab-compatibility.mjs": {
+      "path": "artifacts/gitlab-compatibility/task-conversion-20261117/marker-readiness-instrument/run-gitlab-compatibility.mjs",
+      "sha256": "966dbbf664b1aa1702cee06a0f545f3b28285fba723463d13dba8b1f06560cc2"
+    },
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": {
+      "path": "artifacts/gitlab-compatibility/task-conversion-20261117/marker-readiness-instrument/audit-gitlab-compatibility-task-conversion.mjs",
+      "sha256": "22a531afd974bfacc563d8d0adbee48d1aed0790c5ce8b38a625c3a3755217a1"
+    },
+    "integrations/gitlab/fixtures/compatibility-task-conversion.json": {
+      "path": "artifacts/gitlab-compatibility/task-conversion-20261117/marker-readiness-instrument/compatibility-task-conversion.json",
+      "sha256": "9711467eb649e411a753a3680860be124756846b0b921d1d8373a53dafc507c7"
+    }
+  }
+}

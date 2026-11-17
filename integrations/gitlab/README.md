@@ -1,5 +1,14 @@
 # GitLab application integration
 
+Matched child-task conversion audit (2026-11-17): actual parent/child records,
+remaining checklist items, marks and links survive, but both implementations lose
+Python indentation in GitLab's shared extraction helper. Across two profiles:
+25 parity, one strict UI-structure regression (a native empty paragraph requiring
+caret-provenance qualification), and six correlated shared-limitation checks.
+**Acceptance remains red.** 1,462 integration cases / 57 files and strict types
+pass; neither production behavior nor requirements were changed to pass the audit.
+[Conversion findings](COMPATIBILITY_TASK_CONVERSION_RESULTS.md).
+
 Matched reader-menu follow-up (2026-11-17): plain/scoped documents verify 54
 parity checks for disable, rich-edit retention, restore and deletion of the nested
 item among duplicate labels. Authored strike remains distinct from generated

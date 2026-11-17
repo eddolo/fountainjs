@@ -12,6 +12,7 @@ export function classifyInvariant(expected,original,fountain){
 // For fixtures with exactly two nonempty paragraphs, one LF or a blank-line
 // separator expresses that boundary. Preserve all other characters and reject
 // missing boundaries, extra empty paragraphs, CR and invisible alterations.
+export const conversionDescription=value=>typeof value==='string'?value.replace(/^\n+|\n+$/gu,''):undefined;
 export const clipboardParagraphs=value=>typeof value==='string'?value.split(/\n{1,2}/u):undefined;
 export function suggestionBlock(markdown){
   if(typeof markdown!=='string')return undefined;
@@ -89,6 +90,25 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='task-conversion'){
+      const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
+      const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});
+      for(const phase of ['before','readerBefore'])add(phase+'.code',phase+': code indentation is intact before conversion',[input.expectedCode],left?.graphs?.[phase]?.codes,right?.graphs?.[phase]?.codes);
+      add('modal.title','Real creation dialog has the intended title',input.childTitle,left?.modalTitle,right?.modalTitle);
+      add('modal.code','Untouched creation prefill preserves code indentation',[input.expectedCode],left?.graphs?.prefill?.codes,right?.graphs?.prefill?.codes);
+      add('modal.editor','Creation dialog uses the verified editor',true,left?.modalEditorProof?verifiedEditor(original,{editorProof:left.modalEditorProof}):undefined,right?.modalEditorProof?verifiedEditor(fountain,{editorProof:right.modalEditorProof}):undefined);
+      for(const [key,expected]of [['title',input.childTitle],['type','Task']])add('child.'+key,'Created child '+key,expected,left?.child?.[key],right?.child?.[key]);
+      add('child.description','Saved child preserves exact description source',input.expectedDescription,conversionDescription(left?.child?.description),conversionDescription(right?.child?.description));
+      add('child.parent','Created child is actually linked to the original parent',true,left?.child?.parentIid!==undefined?String(left.child.parentIid)===String(left.setup?.iid):undefined,right?.child?.parentIid!==undefined?String(right.child.parentIid)===String(right.setup?.iid):undefined);
+      add('parent.graph','Reloaded parent retains nested checklist, siblings and prose',input.expectedParent,left?.graphs?.parentReopened,right?.graphs?.parentReopened);
+      add('parent.counts','Backend parent contains three remaining tasks with one complete',{count:3,completed_count:1},left?.parentAfter?.task_completion_status,right?.parentAfter?.task_completion_status);
+      add('parent.state','Conversion leaves parent Open','opened',left?.parentAfter?.state,right?.parentAfter?.state);
+      add('child.editor','Child reopens in the verified editor',true,left?.childEditorProof?verifiedEditor(original,{editorProof:left.childEditorProof}):undefined,right?.childEditorProof?verifiedEditor(fountain,{editorProof:right.childEditorProof}):undefined);
+      add('child.code','Reopened child preserves executable code indentation',[input.expectedCode],left?.graphs?.childReopened?.codes,right?.graphs?.childReopened?.codes);
+      add('child.bold','Reopened child retains bold detail',['bold'],left?.graphs?.childReopened?.bold,right?.graphs?.childReopened?.bold);
+      add('child.link','Reopened child retains its link',[{text:'link',href:'https://example.com/reference'}],left?.graphs?.childReopened?.links,right?.graphs?.childReopened?.links);
+      continue;
+    }
     if(input.scope==='task-menu'){
       const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
       const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});

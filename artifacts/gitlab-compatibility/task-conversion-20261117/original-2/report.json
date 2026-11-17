@@ -1,0 +1,686 @@
+{
+  "formatVersion": 1,
+  "runId": "task-conversion-20261117",
+  "attempt": 2,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "task-conversion",
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-task-conversion.json",
+  "fixtureHash": "9711467eb649e411a753a3680860be124756846b0b921d1d8373a53dafc507c7",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "reader-checklist-to-real-child-task",
+    "settlingMs": 700,
+    "cases": [
+      {
+        "id": "plain-conversion",
+        "scope": "task-conversion",
+        "title": "plain-conversion",
+        "markdown": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+        "childTitle": "Convert this item",
+        "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+        "expectedCode": "def identity(value):\n    return value",
+        "expectedParent": {
+          "tasks": [
+            {
+              "text": "Keep root",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep nested check",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep sibling",
+              "state": "completed",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Parent marker. Verified."
+          ],
+          "bold": [],
+          "links": [],
+          "codes": []
+        }
+      },
+      {
+        "id": "scoped-conversion",
+        "scope": "task-conversion",
+        "title": "scoped-conversion",
+        "markdown": "<div dir=\"auto\">\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>",
+        "childTitle": "Convert this item",
+        "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+        "expectedCode": "def identity(value):\n    return value",
+        "expectedParent": {
+          "tasks": [
+            {
+              "text": "Keep root",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep nested check",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep sibling",
+              "state": "completed",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Parent marker. Verified."
+          ],
+          "bold": [],
+          "links": [],
+          "codes": []
+        }
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "plain-conversion",
+      "input": {
+        "id": "plain-conversion",
+        "scope": "task-conversion",
+        "title": "plain-conversion",
+        "markdown": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+        "childTitle": "Convert this item",
+        "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+        "expectedCode": "def identity(value):\n    return value",
+        "expectedParent": {
+          "tasks": [
+            {
+              "text": "Keep root",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep nested check",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep sibling",
+              "state": "completed",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Parent marker. Verified."
+          ],
+          "bold": [],
+          "links": [],
+          "codes": []
+        }
+      },
+      "status": "incomplete",
+      "stage": "open-conversion",
+      "graphs": {
+        "before": {
+          "tasks": [
+            {
+              "text": "Keep root",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep nested check",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep sibling",
+              "state": "completed",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Parent marker."
+          ],
+          "bold": [
+            "bold"
+          ],
+          "links": [
+            {
+              "text": "link",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "readerBefore": {
+          "tasks": [
+            {
+              "text": "Keep root",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Convert this item     \nA bold detail and link.\ndef identity(value):\n    return value",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep nested check",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep sibling",
+              "state": "completed",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Parent marker."
+          ],
+          "bold": [
+            "bold"
+          ],
+          "links": [
+            {
+              "text": "link",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        }
+      },
+      "setup": {
+        "iid": 288,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/288",
+        "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker."
+      },
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "saved": {
+        "id": 1460,
+        "iid": 288,
+        "project_id": 1,
+        "title": "plain-conversion task-conversion-20261117-a2",
+        "description": "## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n\n  ```python\n  def identity(value):\n      return value\n  ```\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.",
+        "state": "opened",
+        "created_at": "2026-11-17T14:29:32.932Z",
+        "updated_at": "2026-11-17T14:29:37.824Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/288",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 4,
+          "completed_count": 1
+        },
+        "has_tasks": false,
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/288",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/288/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/288/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#288",
+          "relative": "#288",
+          "full": "root/fountain-product-integration#288"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "target": {
+        "text": "\n        \n       \nConvert this item   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \nA bold detail and link.\ndef identity(value):\n    return value\n\n Keep nested check   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \n\n",
+        "sourcepos": "4:1-12:25"
+      },
+      "modalTitle": "Convert this item",
+      "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\n"
+    },
+    {
+      "id": "scoped-conversion",
+      "input": {
+        "id": "scoped-conversion",
+        "scope": "task-conversion",
+        "title": "scoped-conversion",
+        "markdown": "<div dir=\"auto\">\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>",
+        "childTitle": "Convert this item",
+        "expectedDescription": "A **bold** detail and [link](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```",
+        "expectedCode": "def identity(value):\n    return value",
+        "expectedParent": {
+          "tasks": [
+            {
+              "text": "Keep root",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep nested check",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep sibling",
+              "state": "completed",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Parent marker. Verified."
+          ],
+          "bold": [],
+          "links": [],
+          "codes": []
+        }
+      },
+      "status": "incomplete",
+      "stage": "open-conversion",
+      "graphs": {
+        "before": {
+          "tasks": [
+            {
+              "text": "Keep root",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Convert this item A bold detail and link.    def identity(value):\n    return value",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep nested check",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep sibling",
+              "state": "completed",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Parent marker."
+          ],
+          "bold": [
+            "bold"
+          ],
+          "links": [
+            {
+              "text": "link",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        },
+        "readerBefore": {
+          "tasks": [
+            {
+              "text": "Keep root",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Convert this item     \nA bold detail and link.\ndef identity(value):\n    return value",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Keep nested check",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep sibling",
+              "state": "completed",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Parent marker."
+          ],
+          "bold": [
+            "bold"
+          ],
+          "links": [
+            {
+              "text": "link",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "codes": [
+            "def identity(value):\n    return value"
+          ]
+        }
+      },
+      "setup": {
+        "iid": 289,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/289",
+        "description": "<div dir=\"auto\">\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n  \n  ```python\n  def identity(value):\n      return value\n  ```\n\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>"
+      },
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "saved": {
+        "id": 1461,
+        "iid": 289,
+        "project_id": 1,
+        "title": "scoped-conversion task-conversion-20261117-a2",
+        "description": "<div>\n\n## Child conversion\n\n- [ ] Keep root\n- [ ] Convert this item\n\n  A **bold** detail and [link](https://example.com/reference).\n\n  ```python\n  def identity(value):\n      return value\n  ```\n  - [ ] Keep nested check\n- [x] Keep sibling\n\nParent marker.\n\n</div>",
+        "state": "opened",
+        "created_at": "2026-11-17T14:30:07.786Z",
+        "updated_at": "2026-11-17T14:30:12.896Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/289",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 4,
+          "completed_count": 1
+        },
+        "has_tasks": false,
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/289",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/289/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/289/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#289",
+          "relative": "#289",
+          "full": "root/fountain-product-integration#289"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "target": {
+        "text": "\n        \n       \nConvert this item   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \nA bold detail and link.\ndef identity(value):\n    return value\n\n Keep nested check   \n        Checklist item actions\n            \n      Convert to child item\n     \n      Disable list item\n      Delete \n\n",
+        "sourcepos": "6:1-14:25"
+      },
+      "modalTitle": "Convert this item",
+      "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByRole('dialog', { name: 'New task', exact: true }).locator('textarea.markdown-area:visible')\n"
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "966dbbf664b1aa1702cee06a0f545f3b28285fba723463d13dba8b1f06560cc2",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "c31222766259f281ee92a9f9c07f6702b0a5cd2792e5f1b5f26c2fe6226e4fdf",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "8729a9e6b38d0b4c39838af7f4eef59bb4a94790381bcbb5fec26070fb5aa0b7",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "8b9c8da8fe420a3f3c54572c8b51dcb6cd1420cd1838dac95ac40e6459be915a"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "exitCode": 0
+    }
+  ],
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "008e6f1d990965db5abffb6739a39f06c463de8e681c761315e84f836db4b802  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.json",
+    "36ebdd7dddd055eb892ff6ef5538947e463db218d3051c33cd04d304101030b9  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": false
+}
