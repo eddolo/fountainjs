@@ -1,0 +1,29 @@
+
+[WebServer] (node:8820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[WebServer] ✗ Build failed in 116ms
+
+[WebServer] error during build:
+[WebServer] Build failed with 1 error:
+[WebServer]\x20
+[WebServer] [plugin fountain-gitlab-vue2-bridge] C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/integrations/gitlab/components/fountain_editor_surface.vue?gitlab-vue2
+[WebServer] Error: Inspect the GitLab bridge SFC: expected a script/template without inline styles or custom blocks.
+[WebServer]     at TransformPluginContextImpl.transform (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.vite-temp/vite.gitlab-bridge.config.ts.timestamp-1794952819658-874daf9035d068.mjs:13:120)
+[WebServer]     at TransformPluginContextImpl.handler (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/vite@8.2.2_@types+node@26.4.1_terser@5.51.2/node_modules/vite/dist/node/chunks/node.js:34063:13)
+[WebServer]     at plugin (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/rolldown@1.2.6/node_modules/rolldown/dist/shared/bindingify-input-options-4JJxbZl2.mjs:1539:30)
+[WebServer]     at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/rolldown@1.2.6/node_modules/rolldown/dist/shared/bindingify-input-options-4JJxbZl2.mjs:1930:21
+[WebServer]     at plugin.<computed> (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/rolldown@1.2.6/node_modules/rolldown/dist/shared/bindingify-input-options-4JJxbZl2.mjs:2127:18)
+[WebServer]     at aggregateBindingErrorsIntoJsError (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/rolldown@1.2.6/node_modules/rolldown/dist/shared/error-HDibX49O.mjs:48:18)
+[WebServer]     at unwrapBindingResult (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/rolldown@1.2.6/node_modules/rolldown/dist/shared/error-HDibX49O.mjs:18:128)
+[WebServer]     at #build (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/rolldown@1.2.6/node_modules/rolldown/dist/shared/rolldown-C9Hfg50O.mjs:133:34)
+[WebServer]     at async buildEnvironment (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/vite@8.2.2_@types+node@26.4.1_terser@5.51.2/node_modules/vite/dist/node/chunks/node.js:33821:66)
+[WebServer]     at async Object.build (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/vite@8.2.2_@types+node@26.4.1_terser@5.51.2/node_modules/vite/dist/node/chunks/node.js:34242:19)
+[WebServer]     at async Object.buildApp (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/vite@8.2.2_@types+node@26.4.1_terser@5.51.2/node_modules/vite/dist/node/chunks/node.js:34239:153)
+[WebServer]     at async CAC.<anonymous> (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/vite@8.2.2_@types+node@26.4.1_terser@5.51.2/node_modules/vite/dist/node/cli.js:776:3) {
+[WebServer]   errors: [Getter/Setter]
+[WebServer] }
+Error: Process from config.webServer was not able to start. Exit code: 1

@@ -1,0 +1,5 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue app/assets/javascripts/content_editor/components/content_editor.vue app/assets/javascripts/content_editor/components/fountain_editor_surface.vue app/assets/javascripts/content_editor/components/fountain_context_surface.vue app/assets/javascripts/content_editor/components/fountain_link_menu.vue app/assets/javascripts/content_editor/components/fountain_media_menu.vue spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+Done in 9.24s.

@@ -34,7 +34,7 @@ export default {
     expanded() { this.reportVisibility(); },
   },
   created() {
-    this.disposed = false; this.root = null; this.popup = null; this.frame = null;
+    this.disposed = false; this.inactive = false; this.root = null; this.popup = null; this.frame = null;
     this.pendingFocus = false; this.rootObserver = null; this.sizeObserver = null;
     this.controller = new FountainMenuController(this.editor, 'bubble', {
       showWhenReadOnly: true, shouldShow: () => this.active && Boolean(this.anchorPath?.length),
@@ -42,13 +42,15 @@ export default {
     this.release = this.controller.subscribe(this.schedule);
   },
   mounted() { this.refreshRoot(); },
+  activated() { this.inactive = false; this.refreshRoot(); },
+  deactivated() { this.inactive = true; this.unbindRoot(); },
   beforeDestroy() {
     this.disposed = true; this.release(); this.controller.destroy(); this.unbindRoot();
   },
   methods: {
     reportVisibility() { this.$emit('visibility-change', { floating: this.floating, expanded: this.expanded }); },
     refreshRoot() {
-      if (this.disposed) return;
+      if (this.disposed || this.inactive) return;
       const root = this.getEditorRoot?.() || null;
       if (root !== this.root) {
         this.unbindRoot(); this.root = root ? markRaw(root) : null;
@@ -89,7 +91,7 @@ export default {
       this.dock(); this.root = null;
     },
     schedule() {
-      if (this.disposed || !this.$refs.content || this.frame !== null) return;
+      if (this.disposed || this.inactive || !this.$refs.content || this.frame !== null) return;
       const window = this.$refs.content.ownerDocument.defaultView;
       this.frame = window.requestAnimationFrame(() => { this.frame = null; this.updateSurface(); });
     },

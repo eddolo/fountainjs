@@ -26,9 +26,18 @@ export default {
     // The host service owns the model; Vue owns only this browser view.
     this.fountainView = null;
     this.composing = false;
+    this.surfaceActive = true;
   },
   mounted() {
     this.mountSurface();
+  },
+  activated() {
+    this.surfaceActive = true;
+    if (!this.fountainView) this.mountSurface();
+  },
+  deactivated() {
+    this.surfaceActive = false;
+    this.releaseSurface();
   },
   beforeDestroy() {
     this.releaseSurface();
@@ -47,6 +56,7 @@ export default {
       }
     },
     mountSurface() {
+      if (!this.surfaceActive) return;
       this.releaseSurface();
       if (!this.$refs.mount || !this.syncInteractionMode()) return;
       try {

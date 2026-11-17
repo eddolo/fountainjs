@@ -55,6 +55,12 @@ export default {
     this.releaseState = this.contentEditor.editor.subscribe(() => this.refresh());
   },
   mounted() { this.refreshRoot(); },
+  activated() { this.refreshRoot(); },
+  deactivated() {
+    this.dialogOpen = false;
+    this.onHide();
+    this.unbindRoot();
+  },
   beforeDestroy() {
     this.disposed = true;
     this.releaseState();

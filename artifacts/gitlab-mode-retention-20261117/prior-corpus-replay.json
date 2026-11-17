@@ -1,0 +1,222 @@
+{
+  "scope": "Reinterpretation of unchanged recorded observations; not fresh browser runs.",
+  "comparatorSha256": "313df266e34a0b6be4d7aac093ef87fb81560ce0dc492e5741d15b5a6f438e8a",
+  "checks": [
+    {
+      "path": "switch-20261116/comparison-2",
+      "summary": {
+        "parity": 20,
+        "improvement": 12,
+        "regression": 0,
+        "shared-limitation": 4,
+        "incomplete": 0,
+        "total": 36
+      },
+      "unchanged": true
+    },
+    {
+      "path": "deletion-keyboard-20261116/comparison-1",
+      "summary": {
+        "parity": 26,
+        "improvement": 4,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 30
+      },
+      "unchanged": true
+    },
+    {
+      "path": "review-20261116/comparison-1",
+      "summary": {
+        "parity": 21,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 21
+      },
+      "unchanged": true
+    },
+    {
+      "path": "clipboard-ready-20261117/comparison-1",
+      "summary": {
+        "parity": 84,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 84
+      },
+      "unchanged": true
+    },
+    {
+      "path": "partial-ready-20261117/comparison-1",
+      "summary": {
+        "parity": 188,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 188
+      },
+      "unchanged": true
+    },
+    {
+      "path": "crossblock-caret-20261117/comparison-1",
+      "summary": {
+        "parity": 188,
+        "improvement": 16,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 204
+      },
+      "unchanged": true
+    },
+    {
+      "path": "grid-transfer-20261117/comparison-1",
+      "summary": {
+        "parity": 38,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 38
+      },
+      "unchanged": true
+    },
+    {
+      "path": "grid-paint-20261117/comparison-1",
+      "summary": {
+        "parity": 42,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 42
+      },
+      "unchanged": true
+    },
+    {
+      "path": "task-lifecycle-20261117/comparison-1",
+      "summary": {
+        "parity": 22,
+        "improvement": 4,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 26
+      },
+      "unchanged": true
+    },
+    {
+      "path": "task-recovery-20261117/comparison-1",
+      "summary": {
+        "parity": 48,
+        "improvement": 8,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 56
+      },
+      "unchanged": true
+    },
+    {
+      "path": "task-menu-20261117/comparison-1",
+      "summary": {
+        "parity": 54,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 54
+      },
+      "unchanged": true
+    },
+    {
+      "path": "task-conversion-20261117/comparison-1",
+      "summary": {
+        "parity": 25,
+        "improvement": 0,
+        "regression": 1,
+        "shared-limitation": 6,
+        "incomplete": 0,
+        "total": 32
+      },
+      "unchanged": true
+    },
+    {
+      "path": "task-conversion-repair-20261117/comparison-2",
+      "summary": {
+        "parity": 66,
+        "improvement": 14,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 80
+      },
+      "unchanged": true
+    },
+    {
+      "path": "task-containers-20261117/comparison-1",
+      "summary": {
+        "parity": 63,
+        "improvement": 41,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 104
+      },
+      "unchanged": true
+    },
+    {
+      "path": "conflicts-20261117/comparison-1",
+      "summary": {
+        "parity": 37,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 37
+      },
+      "unchanged": true
+    },
+    {
+      "path": "access-20261117/comparison-1",
+      "summary": {
+        "parity": 24,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 7,
+        "incomplete": 0,
+        "total": 31
+      },
+      "unchanged": true
+    },
+    {
+      "path": "access-repair-20261117/comparison-2",
+      "summary": {
+        "parity": 24,
+        "improvement": 7,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 31
+      },
+      "unchanged": true
+    },
+    {
+      "path": "membership-removal-20261117/comparison-final",
+      "summary": {
+        "parity": 52,
+        "improvement": 10,
+        "regression": 0,
+        "shared-limitation": 2,
+        "incomplete": 0,
+        "total": 64
+      },
+      "unchanged": true
+    }
+  ]
+}

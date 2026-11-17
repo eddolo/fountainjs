@@ -2,6 +2,17 @@
 
 ## Current programme status — 2026-11-17
 
+Native mode retention (2026-11-17): the real GitLab integration keeps the same
+owned model/history across unchanged source mode, with hidden view/listener/menu
+cleanup and context/host-option revalidation. The recorded matched pair passes
+all 64 requirements: 52 parity/12 improvement/zero regression or shared failures.
+This closes the earlier nonempty rich-return failure in these two workflows,
+without relaxing backend access. 1,573 integration tests / 61 files, strict types,
+429 upstream cases, nine recorded bridge journeys and 32-file source rollback
+pass. Larger/native-browser/mobile/modal matrices and full release proof remain
+open. Capability counts, public APIs, budgets, version and publication are unchanged.
+[Mode-retention evidence](../integrations/gitlab/COMPATIBILITY_MODE_RETENTION_RESULTS.md).
+
 Guarded native index refresh (2026-11-17): preserve complete normalization and
 factory checks, then reuse proven unchanged binding/position indexes. Reversed
 5,000-paragraph/twelve-cycle runs improve eleven-character burst medians by 8–9%;

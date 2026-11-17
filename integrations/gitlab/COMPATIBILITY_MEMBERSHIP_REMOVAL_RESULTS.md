@@ -1,5 +1,9 @@
 # Full membership removal and draft recovery — 2026-11-17
 
+Follow-up: the [recorded mode-retention repair](COMPATIBILITY_MODE_RETENTION_RESULTS.md)
+closes the shared rich-return failure. The original-4/fountain-4 results below
+remain the historical checkpoint.
+
 The final **original-4 / fountain-4** pair records **52 parity, 10 improvement,
 zero regression, two shared-limitation and zero incomplete checks across 64
 requirements**. The regression gate passes. **Full feature acceptance is red**:

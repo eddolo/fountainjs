@@ -1,0 +1,10 @@
+{
+  "parentBoundary": "Byte-exact previous installed MarkdownEditor renderer",
+  "previousSha256": "f4d35a1425d46cc0e4de1caae146f3a035c9c853da8ba08d241c8e12c3cffe10",
+  "testSha256": "4be99cd6be85a74bf90a54e7a7d28b29204d71b666f1009e0a1f11d15c5d3a1a",
+  "candidateSha256": "4cf746744c45a254d836155e4e72f72bd1b2de4c71ec0f047fd0f37cae7d96ff",
+  "candidateCleanupComponents": true,
+  "exitCode": 1,
+  "candidateRestoredExact": true,
+  "scope": "Mounted component counterfactual with mocked transport; not a real backend browser comparison."
+}

@@ -1,0 +1,69 @@
+{
+  "scope": "Post-authentication task-document recordings; selected evenly sampled contact sheets complement exact-state PNGs. Raw videos retained locally; hashes support reproduction.",
+  "recordings": [
+    {
+      "side": "original",
+      "case": "developer-removed-text",
+      "path": "artifacts/gitlab-compatibility/membership-removal-20261117/original-5/videos/page@2a7eb3821f9dc14394df3065ac49e2bc.webm",
+      "sha256": "e811b3f8479b9e7f8c91ced2f9f461f502004076de8063a93988cbf1da14dfcc",
+      "bytes": 4813649,
+      "durationSeconds": 46.72,
+      "stream": {
+        "codec_name": "vp8",
+        "width": 1280,
+        "height": 900
+      },
+      "authenticationExcluded": true,
+      "rawVideoLocalOnly": true,
+      "contactSheet": "artifacts/gitlab-mode-retention-20261117/video-review/original-developer-removed-text.png"
+    },
+    {
+      "side": "original",
+      "case": "developer-removed-empty",
+      "path": "artifacts/gitlab-compatibility/membership-removal-20261117/original-5/videos/page@4cdf2230713e271713acefcfdf4c6a02.webm",
+      "sha256": "defe5261f7b74490a35da877607997e7a8c77a551f3bfbdd52810ed7dd13e4b1",
+      "bytes": 4504481,
+      "durationSeconds": 45.12,
+      "stream": {
+        "codec_name": "vp8",
+        "width": 1280,
+        "height": 900
+      },
+      "authenticationExcluded": true,
+      "rawVideoLocalOnly": true,
+      "contactSheet": "artifacts/gitlab-mode-retention-20261117/video-review/original-developer-removed-empty.png"
+    },
+    {
+      "side": "fountain",
+      "case": "developer-removed-text",
+      "path": "artifacts/gitlab-compatibility/membership-removal-20261117/fountain-5/videos/page@77ac058be39229ee123acd2f03135953.webm",
+      "sha256": "b4f30857a1d0f99374cc7ba2f615f6611bd1e0fc9e645cbda01c2f3f9705d692",
+      "bytes": 4759952,
+      "durationSeconds": 47.96,
+      "stream": {
+        "codec_name": "vp8",
+        "width": 1280,
+        "height": 900
+      },
+      "authenticationExcluded": true,
+      "rawVideoLocalOnly": true,
+      "contactSheet": "artifacts/gitlab-mode-retention-20261117/video-review/fountain-developer-removed-text.png"
+    },
+    {
+      "side": "fountain",
+      "case": "developer-removed-empty",
+      "path": "artifacts/gitlab-compatibility/membership-removal-20261117/fountain-5/videos/page@23d15a3d11952e6b279b2e472b550b5d.webm",
+      "sha256": "e925c07a98d060d87e8593de6e18bcf06ba1cea9f064dd74e4c503afa9720c7f",
+      "bytes": 5210894,
+      "durationSeconds": 48.48,
+      "stream": {
+        "codec_name": "vp8",
+        "width": 1280,
+        "height": 900
+      },
+      "authenticationExcluded": true,
+      "rawVideoLocalOnly": true,
+      "contactSheet": "artifacts/gitlab-mode-retention-20261117/video-review/fountain-developer-removed-empty.png"
+    }
+  ]
+}

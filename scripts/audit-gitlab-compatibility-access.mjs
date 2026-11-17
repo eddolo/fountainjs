@@ -1,7 +1,7 @@
 import {expect} from '@playwright/test';
 import {randomBytes} from 'node:crypto';
 import {writeFile} from 'node:fs/promises';
-import {join} from 'node:path';
+import {join,relative} from 'node:path';
 import {conflictGraph} from './audit-gitlab-compatibility-conflicts.mjs';
 
 const origin='http://127.0.0.1:5080';
@@ -47,6 +47,13 @@ export async function runGitLabAccessCompatibility({side,runId,page,request,proj
     result.authenticatedDestination=new URL(actor.url()).pathname;
     authenticated=true;
    }catch{throw new Error('Task-member sign-in or required password update failed; credentialed details omitted.');}
+   if(input.revocationMode==='remove-membership'){
+    // Authentication is completed without recording. Reuse its live session in
+    // memory, then record only the task document workflow.
+    const storageState=await actorContext.storageState();await actorContext.close();
+    actorContext=await page.context().browser().newContext({storageState,viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezoneId:'UTC',recordVideo:{dir:join(output,'videos'),size:{width:1280,height:900}}});
+    actor=await actorContext.newPage();result.recording={authenticationExcluded:true};await actor.goto(issue.web_url);
+   }
    actor.on('pageerror',error=>result.actorErrors.push(error.message));
    const token=await actor.locator('meta[name="csrf-token"]').getAttribute('content');
    const actorFetch=(path,data,method='POST')=>{const url=new URL(path,origin);if(url.origin!==origin)throw new Error('LOCAL_ONLY');return actor.request.fetch(url.href,{headers:{'X-CSRF-Token':token},...(data?{method,data}:{})});};
@@ -112,7 +119,7 @@ export async function runGitLabAccessCompatibility({side,runId,page,request,proj
    }
    result.status='observed';await stage('complete');
   }catch(error){result.error=String(error);if(authenticated)await actor.screenshot({path:join(output,input.id+'-failure.png'),animations:'disabled'}).catch(()=>{});onProgress({side,case:input.id,stage:'incomplete',error:result.error});await save();}
-  finally{await anonymousContext?.close();await actorContext?.close();try{result.cleanupMembership=await setRole(10);}catch{result.cleanupError='Task-member role cleanup failed.';result.status='incomplete';}await save();}
+  finally{const video=actor?.video();await anonymousContext?.close();await actorContext?.close();if(video)result.recording.path=relative(output,await video.path()).replaceAll('\\','/');try{result.cleanupMembership=await setRole(10);}catch{result.cleanupError='Task-member role cleanup failed.';result.status='incomplete';}await save();}
  }
  return observations;
 }

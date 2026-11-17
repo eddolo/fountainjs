@@ -1,0 +1,14 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js spec/frontend/content_editor/components/content_editor_spec.js
+PASS spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+PASS spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+PASS spec/frontend/content_editor/components/content_editor_spec.js
+
+Test Suites: 3 passed, 3 total
+Tests:       153 passed, 153 total
+Snapshots:   0 total
+Time:        11.391 s
+Ran all test suites matching /spec\/frontend\/vue_shared\/components\/markdown\/fountain_mode_retention_spec.js|spec\/frontend\/vue_shared\/components\/markdown\/markdown_editor_spec.js|spec\/frontend\/content_editor\/components\/content_editor_spec.js/i.
+Done in 12.76s.

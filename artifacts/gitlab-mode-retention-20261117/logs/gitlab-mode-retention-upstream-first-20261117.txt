@@ -1,0 +1,67 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js spec/frontend/content_editor/components/content_editor_spec.js
+FAIL spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+  ● native MarkdownEditor mode ownership › returns unchanged pending source to the owned rich model without a renderer request
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"data": "{\"text\":\"Initial source.\"}", "headers": {"Accept": "application/json, text/plain, */*", "Content-Type": "application/json", "X-CSRF-Token": null, "X-GitLab-Client-Type": "browser", "X-Requested-With": "XMLHttpRequest"}, "maxBodyLength": -1, "maxContentLength": -1, "method": "post", "signal": {}, "timeout": 0, "transformRequest": [[Function transformRequest]], "transformResponse": [[Function transformResponse]], "transitional": {"clarifyTimeoutError": false, "forcedJSONParsing": true, "silentJSONParsing": true}, "url": "http://test.host/project/preview_markdown?target_id=1&render_quick_actions=false&no_header_anchors=true", "validateStatus": [Function validateStatus], "xsrfCookieName": "XSRF-TOKEN", "xsrfHeaderName": "X-XSRF-TOKEN"}, {"data": "{\"text\":\"Pending review.\"}", "headers": {"Accept": "application/json, text/plain, */*", "Content-Type": "application/json", "X-CSRF-Token": null, "X-GitLab-Client-Type": "browser", "X-Requested-With": "XMLHttpRequest"}, "maxBodyLength": -1, "maxContentLength": -1, "method": "post", "signal": {}, "timeout": 0, "transformRequest": [[Function transformRequest]], "transformResponse": [[Function transformResponse]], "transitional": {"clarifyTimeoutError": false, "forcedJSONParsing": true, "silentJSONParsing": true}, "url": "http://test.host/project/preview_markdown?target_id=1&render_quick_actions=false&no_header_anchors=true", "validateStatus": [Function validateStatus], "xsrfCookieName": "XSRF-TOKEN", "xsrfHeaderName": "X-XSRF-TOKEN"}]
+
+      82 |     mock.onPost().reply(403, {});
+      83 |     await openRich();
+    > 84 |     expect(mock.history.post).toHaveLength(1);
+         |                               ^
+      85 |     expect(root().text()).toBe('Pending review.');
+      86 |     expect(wrapper.findByTestId('content-editor-error').exists()).toBe(false);
+      87 |   });
+
+      at Object.toHaveLength (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:84:31)
+
+  ● native MarkdownEditor mode ownership › ignores rich paste events while the retained view is inactive
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Pending review."
+    Received: "Initial source."
+
+      101 |     expect(textarea().element.value).toBe('Pending review.');
+      102 |     await openRich();
+    > 103 |     expect(root().text()).toBe('Pending review.');
+          |                           ^
+      104 |   });
+      105 |   it('uses the real renderer for changed source', async () => {
+      106 |     await openRich();
+
+      at Object.toBe (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:103:27)
+
+  ● native MarkdownEditor mode ownership › retains both the old model and changed source if new conversion is denied
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Pending review."
+    Received: ""
+
+      121 |     await openRich();
+      122 |     expect(mock.history.post).toHaveLength(2);
+    > 123 |     expect(root().text()).toBe('Pending review.');
+          |                           ^
+      124 |     expect(wrapper.find('textarea[aria-label="Retained document Markdown"]').element.value).toBe(
+      125 |       'Changed source.',
+      126 |     );
+
+      at Object.toBe (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:123:27)
+
+PASS spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js
+PASS spec/frontend/content_editor/components/content_editor_spec.js
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       3 failed, 146 passed, 149 total
+Snapshots:   0 total
+Time:        10.751 s
+Ran all test suites matching /spec\/frontend\/vue_shared\/components\/markdown\/fountain_mode_retention_spec.js|spec\/frontend\/vue_shared\/components\/markdown\/markdown_editor_spec.js|spec\/frontend\/content_editor\/components\/content_editor_spec.js/i.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

@@ -1,0 +1,43 @@
+[WebServer] (node:16280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:22252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[WebServer] [plugin builtin:vite-reporter]\x20
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+[WebServer] (node:20080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+
+(node:6472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/9] [chromium] › tests\browser\gitlab-vue2.spec.ts:523:1 › hands the latest rich edit to the actual patched host mode method before unmounting
+[2/9] [chromium] › tests\browser\gitlab-vue2.spec.ts:552:1 › blocks a lossy handoff without dropping the rich document and recovers after undo
+[3/9] [chromium] › tests\browser\gitlab-vue2.spec.ts:584:1 › retains the surface during an unfinished composition handoff
+
+(node:16600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/9] [firefox] › tests\browser\gitlab-vue2.spec.ts:523:1 › hands the latest rich edit to the actual patched host mode method before unmounting
+[5/9] [firefox] › tests\browser\gitlab-vue2.spec.ts:552:1 › blocks a lossy handoff without dropping the rich document and recovers after undo
+[6/9] [firefox] › tests\browser\gitlab-vue2.spec.ts:584:1 › retains the surface during an unfinished composition handoff
+
+(node:2564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/9] [webkit] › tests\browser\gitlab-vue2.spec.ts:523:1 › hands the latest rich edit to the actual patched host mode method before unmounting
+[8/9] [webkit] › tests\browser\gitlab-vue2.spec.ts:552:1 › blocks a lossy handoff without dropping the rich document and recovers after undo
+[9/9] [webkit] › tests\browser\gitlab-vue2.spec.ts:584:1 › retains the surface during an unfinished composition handoff
+  9 passed (20.7s)

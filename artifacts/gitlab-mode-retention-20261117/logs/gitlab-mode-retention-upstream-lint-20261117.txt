@@ -1,0 +1,16 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/eslint app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue app/assets/javascripts/content_editor/components/content_editor.vue app/assets/javascripts/content_editor/components/fountain_editor_surface.vue app/assets/javascripts/content_editor/components/fountain_context_surface.vue app/assets/javascripts/content_editor/components/fountain_link_menu.vue app/assets/javascripts/content_editor/components/fountain_media_menu.vue spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+[V] Using Vue.js 2 (compiler 2)
+IncrementalWebpackCompiler: Status – disabled
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/app/assets/javascripts/content_editor/components/content_editor.vue
+  402:32  error  Avoid hardcoded URLs. See https://docs.gitlab.com/development/urls_in_gitlab/  @gitlab/no-hardcoded-urls
+
+/home/eddolo/.cache/fountainjs-gitlab-product/source/spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+  220:7  error  Unexpected `await` inside a loop  no-await-in-loop
+  221:7  error  Unexpected `await` inside a loop  no-await-in-loop
+
+✖ 3 problems (3 errors, 0 warnings)
+
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

@@ -53,6 +53,11 @@ export default {
     this.disposed = false; this.session = null; this.replacementTarget = null; this.refresh();
     this.releaseState = this.contentEditor.editor.subscribe(() => this.refresh());
   },
+  deactivated() {
+    this.dialogOpen = false;
+    this.onHide();
+    this.cancelReplacement();
+  },
   beforeDestroy() {
     this.disposed = true; this.releaseState(); this.session?.close(); this.cancelReplacement(); this.stopPreview();
   },

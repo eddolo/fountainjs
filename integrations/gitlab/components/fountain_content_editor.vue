@@ -49,6 +49,7 @@ export default {
   data() {
     return {
       focused: false,
+      inactive: false,
       isLoading: false,
       latestMarkdown: null,
       failure: null,
@@ -63,7 +64,7 @@ export default {
   },
   computed: {
     surfaceEditable() {
-      return this.editable && !this.isLoading && !this.loadFailed && !this.fatal;
+      return this.editable && !this.inactive && !this.isLoading && !this.loadFailed && !this.fatal;
     },
     canUpload() {
       return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
@@ -122,8 +123,18 @@ export default {
   },
   watch: {
     markdown(value) {
-      if (value !== this.latestMarkdown && this.contentEditor)
-        this.setSerializedContent(value, { addToHistory: true });
+      if (value === this.latestMarkdown || !this.contentEditor) return;
+      // A fresh handoff may echo an edit suppressed from change events. Reuse
+      // only an exact serialization of this owner's already-ready model.
+      if (this.contentEditor.status === 'ready') {
+        try {
+          if (this.contentEditor.getSerializedContent() === value) {
+            this.latestMarkdown = value;
+            return;
+          }
+        } catch { /* An unreadable model still needs normal source conversion. */ }
+      }
+      this.setSerializedContent(value, { addToHistory: true });
     },
   },
   created() {
@@ -133,13 +144,10 @@ export default {
     this.loadRequest = 0;
     this.loadOptions = undefined;
     this.disposed = false;
+    this.pasteConnected = false;
     this.quickActionCache = null;
     try {
-      assertGitLabNativeHostConfiguration({
-        collaborationProvider: this.collaborationProvider,
-        serializerConfig: this.serializerConfig,
-        codeSuggestionsConfig: this.codeSuggestionsConfig,
-      }, { codeSuggestions: true });
+      this.validateHostConfiguration();
       this.contentEditor = markRaw(
         new GitLabContentEditor({
           renderMarkdown: (markdown, options) =>
@@ -175,11 +183,31 @@ export default {
   },
   async mounted() {
     this.$emit('initialized');
-    markdownEditorEventHub.$on(CONTENT_EDITOR_PASTE, this.pasteContent);
+    this.connectPasteHub();
     if (this.contentEditor) await this.setSerializedContent(this.markdown);
   },
+  activated() {
+    try { this.validateHostConfiguration(); }
+    catch (error) {
+      this.fatal = true;
+      this.disconnectPasteHub();
+      this.onSurfaceError(error);
+      return;
+    }
+    this.inactive = false;
+    this.connectPasteHub();
+    this.$nextTick(() => {
+      if (!this.disposed && !this.inactive && !this.isLoading && !this.loadFailed
+        && !this.fatal && this.latestMarkdown === this.markdown && this.contentEditor?.status === 'ready')
+        markdownEditorEventHub.$emit(CONTENT_EDITOR_READY_EVENT);
+    });
+  },
+  deactivated() {
+    this.inactive = true;
+    this.disconnectPasteHub();
+  },
   beforeDestroy() {
-    markdownEditorEventHub.$off(CONTENT_EDITOR_PASTE, this.pasteContent);
+    this.disconnectPasteHub();
     this.disposed = true;
     this.loadRequest += 1;
     this.releaseChange?.();
@@ -188,6 +216,23 @@ export default {
     this.contentEditor?.dispose();
   },
   methods: {
+    validateHostConfiguration() {
+      assertGitLabNativeHostConfiguration({
+        collaborationProvider: this.collaborationProvider,
+        serializerConfig: this.serializerConfig,
+        codeSuggestionsConfig: this.codeSuggestionsConfig,
+      }, { codeSuggestions: true });
+    },
+    connectPasteHub() {
+      if (this.pasteConnected || !this.contentEditor || this.fatal || this.inactive) return;
+      markdownEditorEventHub.$on(CONTENT_EDITOR_PASTE, this.pasteContent);
+      this.pasteConnected = true;
+    },
+    disconnectPasteHub() {
+      if (!this.pasteConnected) return;
+      markdownEditorEventHub.$off(CONTENT_EDITOR_PASTE, this.pasteContent);
+      this.pasteConnected = false;
+    },
     getEditorRoot() { return this.$refs.surface?.getRootElement(); },
     onSurfaceReady() {
       this.$refs.linkMenu?.refreshRoot?.();
@@ -206,7 +251,7 @@ export default {
       if (path !== this.codeSuggestionsConfig?.blobRawPath) throw new Error('GITLAB_SUGGESTION_CONTEXT_CHANGED');
       const url = new URL(path, window.location.href);
       if (!['http:', 'https:'].includes(url.protocol) || url.origin !== window.location.origin
-        || url.username || url.password || url.hash || !url.pathname.includes('/-/raw/'))
+        || url.username || url.password || url.hash || !/\/-\/raw\//u.test(url.pathname))
         throw new Error('GITLAB_SUGGESTION_SOURCE_ENDPOINT_REFUSED');
       const { data } = await axios.get(url.href, { signal, responseType: 'text', transformResponse: [value => value] });
       if (signal.aborted || this.disposed) throw new DOMException('GITLAB_SUGGESTION_CANCELLED', 'AbortError');

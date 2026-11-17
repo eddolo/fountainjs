@@ -1,0 +1,62 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+FAIL spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+  native MarkdownEditor mode ownership
+    ✓ returns unchanged pending source to the owned rich model without a renderer request (348 ms)
+    ✓ keeps exactly one successful form control while source mode is active (147 ms)
+    ✓ ignores rich paste events while the retained view is inactive (171 ms)
+    ✓ uses the real renderer for changed source (147 ms)
+    ✓ retains both the old model and changed source if new conversion is denied (147 ms)
+    ✓ does not replay an old model under a different document renderer (137 ms)
+    ✓ retains native undo and redo across unchanged source mode (144 ms)
+    ✓ does not destroy an active model when a capability prop changes (71 ms)
+    ✓ revalidates a changed capability profile on the next mode entry (136 ms)
+    ✕ reuses the current owned model after a fresh unreported handoff (133 ms)
+    ✕ honors read-only changes across retained mode entry without reloading source (131 ms)
+    ✓ keeps a single active paste subscription after repeated mode entries (239 ms)
+    ✓ does not reuse a model after its MarkdownEditor owner is destroyed (171 ms)
+
+  ● native MarkdownEditor mode ownership › reuses the current owned model after a fresh unreported handoff
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"data": "{\"text\":\"Initial source.\"}", "headers": {"Accept": "application/json, text/plain, */*", "Content-Type": "application/json", "X-CSRF-Token": null, "X-GitLab-Client-Type": "browser", "X-Requested-With": "XMLHttpRequest"}, "maxBodyLength": -1, "maxContentLength": -1, "method": "post", "signal": {}, "timeout": 0, "transformRequest": [[Function transformRequest]], "transformResponse": [[Function transformResponse]], "transitional": {"clarifyTimeoutError": false, "forcedJSONParsing": true, "silentJSONParsing": true}, "url": "http://test.host/project/preview_markdown?target_id=1&render_quick_actions=false&no_header_anchors=true", "validateStatus": [Function validateStatus], "xsrfCookieName": "XSRF-TOKEN", "xsrfHeaderName": "X-XSRF-TOKEN"}, {"data": "{\"text\":\"Unreported edit.\"}", "headers": {"Accept": "application/json, text/plain, */*", "Content-Type": "application/json", "X-CSRF-Token": null, "X-GitLab-Client-Type": "browser", "X-Requested-With": "XMLHttpRequest"}, "maxBodyLength": -1, "maxContentLength": -1, "method": "post", "signal": {}, "timeout": 0, "transformRequest": [[Function transformRequest]], "transformResponse": [[Function transformResponse]], "transitional": {"clarifyTimeoutError": false, "forcedJSONParsing": true, "silentJSONParsing": true}, "url": "http://test.host/project/preview_markdown?target_id=1&render_quick_actions=false&no_header_anchors=true", "validateStatus": [Function validateStatus], "xsrfCookieName": "XSRF-TOKEN", "xsrfHeaderName": "X-XSRF-TOKEN"}]
+
+      191 |     mock.onPost().reply(403, {});
+      192 |     await openRich();
+    > 193 |     expect(mock.history.post).toHaveLength(1);
+          |                               ^
+      194 |     expect(root().text()).toBe('Unreported edit.');
+      195 |   });
+      196 |   it('honors read-only changes across retained mode entry without reloading source', async () => {
+
+      at Object.toHaveLength (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:193:31)
+
+  ● native MarkdownEditor mode ownership › honors read-only changes across retained mode entry without reloading source
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "false"
+    Received: undefined
+
+      200 |     await wrapper.setProps({ disabled: true });
+      201 |     await openRich();
+    > 202 |     expect(root().attributes('contenteditable')).toBe('false');
+          |                                                  ^
+      203 |     expect(root().text()).toBe('Pending review.');
+      204 |     await wrapper.setProps({ disabled: false });
+      205 |     await settle();
+
+      at Object.toBe (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:202:50)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 11 passed, 13 total
+Snapshots:   0 total
+Time:        5.784 s
+Ran all test suites matching /spec\/frontend\/vue_shared\/components\/markdown\/fountain_mode_retention_spec.js/i.
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

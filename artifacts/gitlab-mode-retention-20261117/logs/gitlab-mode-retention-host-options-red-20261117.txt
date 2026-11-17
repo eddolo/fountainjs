@@ -1,0 +1,237 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+FAIL spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+  native MarkdownEditor mode ownership
+    ✓ returns unchanged pending source to the owned rich model without a renderer request (326 ms)
+    ✓ keeps exactly one successful form control while source mode is active (173 ms)
+    ✓ ignores rich paste events while the retained view is inactive (156 ms)
+    ✓ uses the real renderer for changed source (164 ms)
+    ✓ retains both the old model and changed source if new conversion is denied (149 ms)
+    ✓ does not replay an old model under a different document renderer (152 ms)
+    ✓ retains native undo and redo across unchanged source mode (140 ms)
+    ✓ does not destroy an active model when a capability prop changes (73 ms)
+    ✓ revalidates a changed capability profile on the next mode entry (138 ms)
+    ✓ reuses the current owned model after a fresh unreported handoff (114 ms)
+    ✓ honors read-only changes across retained mode entry without reloading source (136 ms)
+    ✕ revalidates unsupported host configuration on retained entry: {"collaborationProvider":{}} (126 ms)
+    ✕ revalidates unsupported host configuration on retained entry: {"codeSuggestionsConfig":{"unexpected":true}} (119 ms)
+    ✕ keeps a single active paste subscription after repeated mode entries (50 ms)
+    ✕ does not reuse a model after its MarkdownEditor owner is destroyed (44 ms)
+
+  ● native MarkdownEditor mode ownership › revalidates unsupported host configuration on retained entry: {"collaborationProvider":{}}
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      223 |       await wrapper.setProps(props);
+      224 |       await openRich();
+    > 225 |       expect(wrapper.findByTestId('content-editor-error').exists()).toBe(true);
+          |                                                                     ^
+      226 |       expect(root().element.contentEditable).toBe('false');
+      227 |       markdownEditorEventHub.$emit(CONTENT_EDITOR_PASTE, 'Hidden paste.');
+      228 |       await settle();
+
+      at toBe (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:225:69)
+
+  ● native MarkdownEditor mode ownership › revalidates unsupported host configuration on retained entry: {"codeSuggestionsConfig":{"unexpected":true}}
+
+    Unexpected calls to console (1) with:
+    \t
+    \t[1] error: [Vue warn]: Error in nextTick: "Error: Unexpected calls to console (1) with:
+    \t\t
+    \t\t[1] error: [Vue warn]: Error in render: "TypeError: Cannot read properties of undefined (reading 'join')"
+    \t\t
+    \t\tfound in
+    \t\t
+    \t\t---> <MarkdownField>
+    \t\t       <MarkdownEditor>
+    \t\t         <Root>
+    \t\t
+    \t"
+
+      23 |     .join('\n');
+      24 |
+    > 25 |   throw new Error(
+         |         ^
+      26 |     `Unexpected calls to console (${consoleCalls.length}) with:\n${consoleCallsList}\n`,
+      27 |   );
+      28 | };
+
+      \t
+      at throwErrorFromCalls (spec/frontend/__helpers__/console_watcher.js:25:9)
+      at ConsoleWatcher.throwErrorFromCalls (spec/frontend/__helpers__/console_watcher.js:127:7)
+      at console.call [as error] (spec/frontend/__helpers__/console_watcher.js:81:15)
+      at warn (node_modules/vue/dist/vue.runtime.common.dev.js:4564:21)
+      at logError (node_modules/vue/dist/vue.runtime.common.dev.js:2959:9)
+      at globalHandleError (node_modules/vue/dist/vue.runtime.common.dev.js:2955:5)
+      at handleError (node_modules/vue/dist/vue.runtime.common.dev.js:2922:9)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3060:17)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● native MarkdownEditor mode ownership › revalidates unsupported host configuration on retained entry: {"codeSuggestionsConfig":{"unexpected":true}}
+
+    TypeError: Cannot read properties of undefined (reading 'join')
+
+      157 |     },
+      158 |     lineContent() {
+    > 159 |       return this.codeSuggestionsConfig.lines.join('\\n');
+          |                                               ^
+      160 |     },
+      161 |     addMultipleToDiscussionWarning() {
+      162 |       return sprintf(
+
+      at VueComponent.join (app/assets/javascripts/vue_shared/components/markdown/field.vue:159:47)
+      at Watcher.get (node_modules/vue/dist/vue.runtime.common.dev.js:3412:33)
+      at Watcher.evaluate (node_modules/vue/dist/vue.runtime.common.dev.js:3513:27)
+      at VueComponent.computedGetter [as lineContent] (node_modules/vue/dist/vue.runtime.common.dev.js:5480:25)
+      at Object.get (node_modules/vue/dist/vue.runtime.common.dev.js:5280:26)
+      at Proxy.render (app/assets/javascripts/vue_shared/components/markdown/field.vue:369:35)
+      at VueComponent.Vue._render (node_modules/vue/dist/vue.runtime.common.dev.js:2602:28)
+      at VueComponent.updateComponent (node_modules/vue/dist/vue.runtime.common.dev.js:3840:27)
+      at Watcher.get (node_modules/vue/dist/vue.runtime.common.dev.js:3412:33)
+      at Watcher.run (node_modules/vue/dist/vue.runtime.common.dev.js:3488:32)
+      at flushSchedulerQueue (node_modules/vue/dist/vue.runtime.common.dev.js:4089:17)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● native MarkdownEditor mode ownership › revalidates unsupported host configuration on retained entry: {"codeSuggestionsConfig":{"unexpected":true}}
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● native MarkdownEditor mode ownership › keeps a single active paste subscription after repeated mode entries
+
+    TypeError: Cannot read properties of undefined (reading '$emit')
+
+      37 |   const openSource = async () => {
+      38 |     window.gon.text_editor = 'plain_text_editor';
+    > 39 |     rich().vm.$emit('enable-markdown-editor');
+         |              ^
+      40 |     await settle();
+      41 |   };
+      42 |   const create = () => {
+
+      at openSource (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:39:14)
+      at Object.openSource (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:235:11)
+
+  ● native MarkdownEditor mode ownership › keeps a single active paste subscription after repeated mode entries
+
+    TypeError: Cannot read properties of undefined (reading 'join')
+
+      157 |     },
+      158 |     lineContent() {
+    > 159 |       return this.codeSuggestionsConfig.lines.join('\\n');
+          |                                               ^
+      160 |     },
+      161 |     addMultipleToDiscussionWarning() {
+      162 |       return sprintf(
+
+      at VueComponent.join (app/assets/javascripts/vue_shared/components/markdown/field.vue:159:47)
+      at Watcher.get (node_modules/vue/dist/vue.runtime.common.dev.js:3412:33)
+      at Watcher.evaluate (node_modules/vue/dist/vue.runtime.common.dev.js:3513:27)
+      at VueComponent.computedGetter [as lineContent] (node_modules/vue/dist/vue.runtime.common.dev.js:5480:25)
+      at Object.get (node_modules/vue/dist/vue.runtime.common.dev.js:5280:26)
+      at Proxy.render (app/assets/javascripts/vue_shared/components/markdown/field.vue:369:35)
+      at VueComponent.Vue._render (node_modules/vue/dist/vue.runtime.common.dev.js:2602:28)
+      at VueComponent.updateComponent (node_modules/vue/dist/vue.runtime.common.dev.js:3840:27)
+      at Watcher.get (node_modules/vue/dist/vue.runtime.common.dev.js:3412:33)
+      at Watcher.run (node_modules/vue/dist/vue.runtime.common.dev.js:3488:32)
+      at flushSchedulerQueue (node_modules/vue/dist/vue.runtime.common.dev.js:4089:17)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● native MarkdownEditor mode ownership › keeps a single active paste subscription after repeated mode entries
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+  ● native MarkdownEditor mode ownership › does not reuse a model after its MarkdownEditor owner is destroyed
+
+    TypeError: Cannot read properties of undefined (reading 'contentEditor')
+
+      58 |   };
+      59 |   const edit = async (text) => {
+    > 60 |     const { editor } = rich().vm.contentEditor;
+         |                                 ^
+      61 |     const { schema } = editor.state;
+      62 |     editor.dispatch(
+      63 |       editor
+
+      at edit (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:60:33)
+      at Object.edit (spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js:254:11)
+
+  ● native MarkdownEditor mode ownership › does not reuse a model after its MarkdownEditor owner is destroyed
+
+    TypeError: Cannot read properties of undefined (reading 'join')
+
+      157 |     },
+      158 |     lineContent() {
+    > 159 |       return this.codeSuggestionsConfig.lines.join('\\n');
+          |                                               ^
+      160 |     },
+      161 |     addMultipleToDiscussionWarning() {
+      162 |       return sprintf(
+
+      at VueComponent.join (app/assets/javascripts/vue_shared/components/markdown/field.vue:159:47)
+      at Watcher.get (node_modules/vue/dist/vue.runtime.common.dev.js:3412:33)
+      at Watcher.evaluate (node_modules/vue/dist/vue.runtime.common.dev.js:3513:27)
+      at VueComponent.computedGetter [as lineContent] (node_modules/vue/dist/vue.runtime.common.dev.js:5480:25)
+      at Object.get (node_modules/vue/dist/vue.runtime.common.dev.js:5280:26)
+      at Proxy.render (app/assets/javascripts/vue_shared/components/markdown/field.vue:369:35)
+      at VueComponent.Vue._render (node_modules/vue/dist/vue.runtime.common.dev.js:2602:28)
+      at VueComponent.updateComponent (node_modules/vue/dist/vue.runtime.common.dev.js:3840:27)
+      at Watcher.get (node_modules/vue/dist/vue.runtime.common.dev.js:3412:33)
+      at Watcher.run (node_modules/vue/dist/vue.runtime.common.dev.js:3488:32)
+      at flushSchedulerQueue (node_modules/vue/dist/vue.runtime.common.dev.js:4089:17)
+      at Array.<anonymous> (node_modules/vue/dist/vue.runtime.common.dev.js:3057:20)
+      at flushCallbacks (node_modules/vue/dist/vue.runtime.common.dev.js:2979:18)
+
+  ● native MarkdownEditor mode ownership › does not reuse a model after its MarkdownEditor owner is destroyed
+
+    expect.hasAssertions()
+
+    Expected at least one assertion to be called but received none.
+
+      73 |   // see https://jestjs.io/docs/en/expect#expecthasassertions
+      74 |   // eslint-disable-next-line jest/no-standalone-expect
+    > 75 |   expect.hasAssertions();
+         |          ^
+      76 |
+      77 |   // Reset globals: This ensures tests don't interfere with
+      78 |   // each other, and removes the need to tidy up if it was
+
+      at Object.hasAssertions (spec/frontend/__helpers__/shared_test_setup.js:75:10)
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 11 passed, 15 total
+Snapshots:   0 total
+Time:        6.022 s
+Ran all test suites matching /spec\/frontend\/vue_shared\/components\/markdown\/fountain_mode_retention_spec.js/i.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

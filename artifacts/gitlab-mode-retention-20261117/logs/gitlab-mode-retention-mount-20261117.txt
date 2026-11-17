@@ -1,0 +1,20 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+PASS spec/frontend/vue_shared/components/markdown/fountain_mode_retention_spec.js
+  native MarkdownEditor mode ownership
+    ✓ returns unchanged pending source to the owned rich model without a renderer request (344 ms)
+    ✓ keeps exactly one successful form control while source mode is active (175 ms)
+    ✓ ignores rich paste events while the retained view is inactive (158 ms)
+    ✓ uses the real renderer for changed source (161 ms)
+    ✓ retains both the old model and changed source if new conversion is denied (149 ms)
+    ✓ does not replay an old model under a different document renderer (144 ms)
+    ✓ does not reuse a model after its MarkdownEditor owner is destroyed (202 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        4.88 s
+Ran all test suites matching /spec\/frontend\/vue_shared\/components\/markdown\/fountain_mode_retention_spec.js/i.
+Done in 6.19s.

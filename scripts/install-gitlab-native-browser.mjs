@@ -9,6 +9,7 @@ import { prepareGitLabDiagramSandbox } from '../integrations/gitlab/services/dia
 import { prepareGitLabMermaidReader } from '../integrations/gitlab/services/diagram_reader_patch.mjs';
 import { prepareGitLabTaskConversion } from '../integrations/gitlab/services/task_conversion_patch.mjs';
 import { prepareGitLabSaveAuthority, prepareGitLabSaveBaseline } from '../integrations/gitlab/services/save_authority_patch.mjs';
+import { prepareGitLabModeRetention } from '../integrations/gitlab/services/mode_retention_patch.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const restore = process.argv[3] === '--restore';
@@ -333,7 +334,7 @@ if (
   throw new Error('Inspect the pinned renderer adapter sites.');
 files.set(
   rendererPath,
-  originalRenderer
+  prepareGitLabModeRetention(originalRenderer)
     .replace(
       rendererSignature,
       'renderMarkdown(markdown, { noHeaderAnchors = false, signal } = {}) {',
