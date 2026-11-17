@@ -1,0 +1,1786 @@
+{
+  "formatVersion": 1,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "task-lifecycle-20261117",
+      "attempt": 2
+    },
+    "fountain": {
+      "runId": "task-lifecycle-20261117",
+      "attempt": 3
+    }
+  },
+  "rows": [
+    {
+      "case": "task-editing",
+      "invariant": "initial.graph",
+      "label": "initial: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "toggled.graph",
+      "label": "toggled: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "toggleUndo.graph",
+      "label": "toggleUndo: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "toggleRedo.graph",
+      "label": "toggleRedo: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "newEmpty.graph",
+      "label": "newEmpty: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "newFilled.graph",
+      "label": "newFilled: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Follow up",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Follow up",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Follow up",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "cleared.graph",
+      "label": "cleared: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "lifted.graph",
+      "label": "lifted: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "liftUndo.graph",
+      "label": "liftUndo: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "liftRedo.graph",
+      "label": "liftRedo: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "newBeforeExit.graph",
+      "label": "newBeforeExit: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "exited.graph",
+      "label": "exited: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "",
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "",
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "final.graph",
+      "label": "final: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Decision recorded.",
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Decision recorded.",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Decision recorded.",
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "reopened.graph",
+      "label": "reopened: task text, completion, nesting, prose and marks",
+      "expected": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Decision recorded.",
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "",
+            "checked": false,
+            "depth": 0
+          },
+          {
+            "text": "Decision recorded.",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Task editing review"
+        ],
+        "tasks": [
+          {
+            "text": "Draft brief",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Review technical notes",
+            "checked": true,
+            "depth": 0
+          },
+          {
+            "text": "Verify nested check",
+            "checked": false,
+            "depth": 1
+          },
+          {
+            "text": "Share draft",
+            "checked": false,
+            "depth": 0
+          }
+        ],
+        "prose": [
+          "Decision recorded.",
+          "End of task fixture."
+        ],
+        "bold": [
+          "technical"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "documentReady.initial",
+      "label": "initial: document heading loaded before task outcome inspection",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "documentReady.reopened",
+      "label": "reopened: document heading loaded before task outcome inspection",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "beforeEnter.caret",
+      "label": "Settled caret before Enter is at the last task end",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "newEmpty.visible",
+      "label": "Enter creates a physically visible separate empty task row",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "newEmpty.caret.inside",
+      "label": "New empty task caret: inside",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "newEmpty.caret.activeInside",
+      "label": "New empty task caret: activeInside",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "newEmpty.caret.collapsed",
+      "label": "New empty task caret: collapsed",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "newEmpty.caret.text",
+      "label": "New empty task caret: text",
+      "expected": "",
+      "original": "",
+      "fountain": "",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "newEmpty.caret.offset",
+      "label": "New empty task caret: offset",
+      "expected": 0,
+      "original": 0,
+      "fountain": 0,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "exit.caret",
+      "label": "Explicit empty-task Enter exits to a focused plain paragraph",
+      "expected": {
+        "inside": true,
+        "activeInside": true,
+        "collapsed": true,
+        "text": "",
+        "offset": 0,
+        "inTask": false
+      },
+      "original": {
+        "inside": true,
+        "activeInside": true,
+        "collapsed": true,
+        "text": "",
+        "offset": 0,
+        "inTask": true
+      },
+      "fountain": {
+        "inside": true,
+        "activeInside": true,
+        "collapsed": true,
+        "text": "",
+        "offset": 0,
+        "inTask": false
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "remove.selection",
+      "label": "Actual selected task text before deletion",
+      "expected": "Follow up",
+      "original": "Follow up",
+      "fountain": "Follow up",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "task-editing",
+      "invariant": "saveButtonReachable",
+      "label": "Save remains directly reachable after task editing",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    }
+  ],
+  "summary": {
+    "parity": 22,
+    "improvement": 4,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 26
+  },
+  "comparisonComplete": true,
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": true,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/task-lifecycle-20261117/original-2/report.json",
+      "sha256": "6a24bb7ba7052e45c9ba98a128fc4b356b13ff5b9d7795952380d0c0afcc48e1"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/task-lifecycle-20261117/fountain-3/report.json",
+      "sha256": "4f627b1757f571545261dd7a15d966bb3f50c78d90c18a7e4fc4fc549ee0b44f"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "0b558930504ad57dc99ac724b57c0b99e53f29fbc634cdaf52251c014eea6ac6"
+  }
+}

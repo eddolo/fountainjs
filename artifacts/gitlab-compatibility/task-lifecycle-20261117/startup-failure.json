@@ -1,0 +1,13 @@
+{
+  "scope": "Native attempt 2 failed before authentication/editor use. Not an editor outcome or completed comparison.",
+  "attempt": "fountain-2",
+  "observedState": {
+    "status": "exited",
+    "exitCode": 1,
+    "oomKilled": false,
+    "startedAt": "2026-11-17T12:50:19.40755969Z",
+    "finishedAt": "2026-11-17T12:51:42.720515876Z"
+  },
+  "error": "gitlab-ctl reconfigure failed while restarting sidekiq/log: sv restart timed out. Backend configuration, image and volumes were not changed to bypass it.",
+  "report": "artifacts/gitlab-compatibility/task-lifecycle-20261117/fountain-2/report.json"
+}

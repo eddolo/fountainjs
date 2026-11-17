@@ -1,0 +1,37 @@
+{
+  "scope": "Actual pinned GitLab Markdown API probes; raw Fountain HTML is lossy, Markdown inside an ordinary dir container retains task controls and source positions.",
+  "backend": {
+    "version": "19.5.3",
+    "revision": "0d4c9a9a2fa",
+    "kas": {
+      "enabled": true,
+      "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+      "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+      "version": "19.5.3"
+    },
+    "enterprise": false
+  },
+  "probes": [
+    {
+      "id": "native-html",
+      "source": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ul data-type=\"task-list\"><li data-type=\"task-item\" data-checked=\"false\"><input type=\"checkbox\" disabled aria-label=\"Task completion\"><p>Pending</p></li></ul><p>Decision</p></div>",
+      "response": {
+        "html": "<div dir=\"auto\"><ul><li><p>Pending</p></li></ul><p>Decision</p></div>"
+      }
+    },
+    {
+      "id": "markdown-container",
+      "source": "<div data-fountain-direction-scope=\"\" dir=\"auto\">\n\n- [ ] Pending\n\nDecision\n\n</div>",
+      "response": {
+        "html": "<div dir=\"auto\">\n<ul class=\"task-list\" data-sourcepos=\"3:1-3:13\">\n<li class=\"task-list-item\" data-sourcepos=\"3:1-3:13\"><input type=\"checkbox\" data-checkbox-sourcepos=\"3:4-3:4\" class=\"task-list-item-checkbox\" disabled=\"\" aria-label=\"Check option: Pending\"> Pending</li>\n</ul>\n<p data-sourcepos=\"5:1-5:8\">Decision</p>\n</div>"
+      }
+    },
+    {
+      "id": "gitlab-html",
+      "source": "<div dir=\"auto\"><ul class=\"task-list\"><li class=\"task-list-item\"><input type=\"checkbox\" class=\"task-list-item-checkbox\" disabled> Pending</li></ul><p>Decision</p></div>",
+      "response": {
+        "html": "<div dir=\"auto\"><ul class=\"task-list\"><li class=\"task-list-item\"><input type=\"checkbox\" class=\"task-list-item-checkbox\" disabled=\"\" aria-label=\"Check option: Pending\"> Pending</li></ul><p>Decision</p></div>"
+      }
+    }
+  ]
+}

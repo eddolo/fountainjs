@@ -89,6 +89,19 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='tasks'){
+      const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
+      const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});
+      for(const [phase,expected]of Object.entries(input.expectedGraphs))add(phase+'.graph',phase+': task text, completion, nesting, prose and marks',expected,left?.graphs?.[phase],right?.graphs?.[phase]);
+      for(const phase of ['initial','reopened'])add('documentReady.'+phase,phase+': document heading loaded before task outcome inspection',true,left?.documentReady?.[phase],right?.documentReady?.[phase]);
+      if(input.requireCaretReady)add('beforeEnter.caret','Settled caret before Enter is at the last task end',true,left?.beforeEnter?equal(left.beforeEnter,{inside:true,activeInside:true,collapsed:true,text:'Share draft',offset:11}):undefined,right?.beforeEnter?equal(right.beforeEnter,{inside:true,activeInside:true,collapsed:true,text:'Share draft',offset:11}):undefined);
+      add('newEmpty.visible','Enter creates a physically visible separate empty task row',true,left?.emptyTaskLayout?.visible,right?.emptyTaskLayout?.visible);
+      for(const [key,expected]of [['inside',true],['activeInside',true],['collapsed',true],['text',''],['offset',0]])add('newEmpty.caret.'+key,'New empty task caret: '+key,expected,left?.emptyCaret?.[key],right?.emptyCaret?.[key]);
+      add('exit.caret','Explicit empty-task Enter exits to a focused plain paragraph',{inside:true,activeInside:true,collapsed:true,text:'',offset:0,inTask:false},left?.exitCaret,right?.exitCaret);
+      add('remove.selection','Actual selected task text before deletion','Follow up',left?.selectedForRemoval,right?.selectedForRemoval);
+      add('saveButtonReachable','Save remains directly reachable after task editing',true,left?.saveButtonReachable,right?.saveButtonReachable);
+      continue;
+    }
     if(input.scope==='grid'){
       const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
       const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});

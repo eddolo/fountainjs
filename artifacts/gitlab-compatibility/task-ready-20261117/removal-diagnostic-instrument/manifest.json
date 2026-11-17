@@ -1,0 +1,25 @@
+{
+  "scope": "Settled removal diagnostic. The final expected paragraph was not justified by the requested key actions: Backspace on an empty task can join the preceding task. No compatibility score or superiority claim from this diagnostic. Final lifecycle will explicitly exit the list before paragraph entry.",
+  "files": [
+    {
+      "path": "scripts/audit-gitlab-compatibility-tasks.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-ready-20261117/removal-diagnostic-instrument/0-audit-gitlab-compatibility-tasks.mjs",
+      "sha256": "81d62131295147fd10e9c5be1c5d31dfcda1b3f0685c757194e5c759d56faaf9"
+    },
+    {
+      "path": "scripts/run-gitlab-compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-ready-20261117/removal-diagnostic-instrument/1-run-gitlab-compatibility.mjs",
+      "sha256": "310bac2644639d879e3936d2cdc0315ef3ceb43ad885179eeb83d8ed2b4c6173"
+    },
+    {
+      "path": "integrations/gitlab/testing/compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-ready-20261117/removal-diagnostic-instrument/2-compatibility.mjs",
+      "sha256": "10f955d12c5757d9bf2c9aa877cf1bd24f7fe86847482c8aba2cfda16ab7c318"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/compatibility-tasks.json",
+      "archive": "artifacts/gitlab-compatibility/task-ready-20261117/removal-diagnostic-instrument/3-compatibility-tasks.json",
+      "sha256": "471d33d4bd0f2bcd41d2862a416cae1e2a945299640fada8bda5b42c28954c2a"
+    }
+  ]
+}

@@ -2,6 +2,15 @@
 
 ## Current programme status — 2026-11-17
 
+Matched task follow-up (2026-11-17): the actual original/Fountain lifecycle
+verifies 22 parity and four improvement checks across 26 invariants. The improved
+checks concern one empty-task Enter/list-exit behavior. A native conversion error
+blocking Save after list exit is repaired with an explicit GitLab direction
+container; real Save/reopen and backend task counts pass. Earlier collector,
+expectation and startup failures remain retained separately. 1,426 integration
+tests / 55 files and strict types pass. Wider task/platform/application acceptance
+remains open. [Task evidence](../integrations/gitlab/COMPATIBILITY_TASK_RESULTS.md).
+
 Matched table follow-up (2026-11-17): two forward/backward real GitLab cell-grid
 workflows verify 42 parity checks. Initial semantic success missed a visible
 third-column selection-paint regression; it is repaired with CSS and fresh

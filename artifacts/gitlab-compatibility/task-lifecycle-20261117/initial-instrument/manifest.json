@@ -1,0 +1,25 @@
+{
+  "scope": "Original completed save but reopen collection incorrectly required the expected four checkboxes as a readiness condition. Six actual checkboxes were present after empty-task Enter. Keep the failed collector and observations; no completed-pair claim. Reopen readiness will require the heading, and exact task count remains an outcome check.",
+  "files": [
+    {
+      "path": "scripts/audit-gitlab-compatibility-tasks.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-lifecycle-20261117/initial-instrument/0-audit-gitlab-compatibility-tasks.mjs",
+      "sha256": "9ffe576c7a5cfe748596127cc6108c8cd1cfe686f249808fb07a0896b782ade5"
+    },
+    {
+      "path": "scripts/run-gitlab-compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-lifecycle-20261117/initial-instrument/1-run-gitlab-compatibility.mjs",
+      "sha256": "310bac2644639d879e3936d2cdc0315ef3ceb43ad885179eeb83d8ed2b4c6173"
+    },
+    {
+      "path": "integrations/gitlab/testing/compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-lifecycle-20261117/initial-instrument/2-compatibility.mjs",
+      "sha256": "bb1e3d8703ef386bc345587e3081e56db6b97e09302352cb14b50724722cf9e4"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/compatibility-tasks.json",
+      "archive": "artifacts/gitlab-compatibility/task-lifecycle-20261117/initial-instrument/3-compatibility-tasks.json",
+      "sha256": "8d8f662609125c7d933fcccc86280924af37ab0d4f1366d33a9d6cf663f9d61e"
+    }
+  ]
+}

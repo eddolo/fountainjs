@@ -1,0 +1,1474 @@
+{
+  "formatVersion": 1,
+  "runId": "task-editing-20261117",
+  "attempt": 1,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "tasks",
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-tasks.json",
+  "fixtureHash": "d1564664cfe8dbff3e97fb8de0f02f336a865394733fdf17148b292c763ce80d",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "task-list-editing",
+    "settlingMs": 700,
+    "cases": [
+      {
+        "id": "task-editing",
+        "scope": "tasks",
+        "title": "Paired task lifecycle",
+        "markdown": "## Task editing review\n\n- [ ] Draft brief\n- [x] Review **technical** notes\n  - [ ] Verify nested check\n- [ ] Share draft\n\nEnd of task fixture.",
+        "expectedGraphs": {
+          "initial": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "toggled": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "toggleUndo": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "toggleRedo": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "newEmpty": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "newFilled": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Follow up",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "cleared": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "lifted": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "liftUndo": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "liftRedo": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "final": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Decision recorded.",
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "reopened": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Decision recorded.",
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "task-editing",
+      "input": {
+        "id": "task-editing",
+        "scope": "tasks",
+        "title": "Paired task lifecycle",
+        "markdown": "## Task editing review\n\n- [ ] Draft brief\n- [x] Review **technical** notes\n  - [ ] Verify nested check\n- [ ] Share draft\n\nEnd of task fixture.",
+        "expectedGraphs": {
+          "initial": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "toggled": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "toggleUndo": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "toggleRedo": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "newEmpty": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "newFilled": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "Follow up",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "cleared": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "lifted": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "liftUndo": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              },
+              {
+                "text": "",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "liftRedo": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "final": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Decision recorded.",
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          },
+          "reopened": {
+            "headings": [
+              "Task editing review"
+            ],
+            "tasks": [
+              {
+                "text": "Draft brief",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Review technical notes",
+                "checked": true,
+                "depth": 0
+              },
+              {
+                "text": "Verify nested check",
+                "checked": false,
+                "depth": 1
+              },
+              {
+                "text": "Share draft",
+                "checked": false,
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Decision recorded.",
+              "End of task fixture."
+            ],
+            "bold": [
+              "technical"
+            ]
+          }
+        }
+      },
+      "status": "observed",
+      "stage": "complete",
+      "graphs": {
+        "initial": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": false,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixture."
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "toggled": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixture."
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "toggleUndo": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": false,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixture."
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "toggleRedo": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixture."
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "newEmpty": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixture."
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "newFilled": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixture.",
+            "Follow up"
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "cleared": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixture.Follow up"
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "lifted": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixtureFollow up"
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "liftUndo": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixture.Follow up"
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "liftRedo": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixtureFollow up"
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "final": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixtureDecision recorded.Follow up"
+          ],
+          "bold": [
+            "technical"
+          ]
+        },
+        "reopened": {
+          "headings": [
+            "Task editing review"
+          ],
+          "tasks": [
+            {
+              "text": "Draft brief",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Review technical notes",
+              "checked": true,
+              "depth": 0
+            },
+            {
+              "text": "Verify nested check",
+              "checked": false,
+              "depth": 1
+            },
+            {
+              "text": "Share draft",
+              "checked": false,
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "End of task fixtureDecision recorded.Follow up"
+          ],
+          "bold": [
+            "technical"
+          ]
+        }
+      },
+      "actions": [
+        "Actual checkbox click; Ctrl+Z/redo; Enter creates an empty task; text entry and selected-text deletion; Backspace removes the empty task; undo/redo; ordinary paragraph entry."
+      ],
+      "setup": {
+        "iid": 267,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/267",
+        "description": "## Task editing review\n\n- [ ] Draft brief\n- [x] Review **technical** notes\n  - [ ] Verify nested check\n- [ ] Share draft\n\nEnd of task fixture."
+      },
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "documentReady": {
+        "initial": true,
+        "reopened": true
+      },
+      "beforeEnter": {
+        "inside": true,
+        "activeInside": true,
+        "collapsed": true,
+        "text": "Share draft",
+        "offset": 11
+      },
+      "emptyTaskLayout": {
+        "previous": {
+          "top": 381.234375,
+          "bottom": 403.640625,
+          "height": 22.40625
+        },
+        "next": {
+          "top": 403.640625,
+          "bottom": 426.046875,
+          "height": 22.40625
+        },
+        "visible": true
+      },
+      "emptyCaret": {
+        "inside": true,
+        "activeInside": true,
+        "collapsed": true,
+        "text": "",
+        "offset": 0
+      },
+      "selectedForRemoval": "Follow up",
+      "saveButtonReachable": true,
+      "saved": {
+        "id": 998,
+        "iid": 267,
+        "project_id": 1,
+        "title": "Paired task lifecycle task-editing-20261117-a1",
+        "description": "## Task editing review\n\n- [x] Draft brief\n- [x] Review **technical** notes\n  - [ ] Verify nested check\n- [ ] Share draft\n\nEnd of task fixtureDecision recorded.Follow up",
+        "state": "opened",
+        "created_at": "2026-11-17T04:12:37.347Z",
+        "updated_at": "2026-11-17T04:12:50.215Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/267",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 4,
+          "completed_count": 2
+        },
+        "has_tasks": false,
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/267",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/267/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/267/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#267",
+          "relative": "#267",
+          "full": "root/fountain-product-integration#267"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      }
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "310bac2644639d879e3936d2cdc0315ef3ceb43ad885179eeb83d8ed2b4c6173",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "c31222766259f281ee92a9f9c07f6702b0a5cd2792e5f1b5f26c2fe6226e4fdf",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "8729a9e6b38d0b4c39838af7f4eef59bb4a94790381bcbb5fec26070fb5aa0b7",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "310f744e25efa4739b3b2d454c6b5a0d291a8aa51cb856fc3cf5e755d592eddf"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "008e6f1d990965db5abffb6739a39f06c463de8e681c761315e84f836db4b802  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.json",
+    "36ebdd7dddd055eb892ff6ef5538947e463db218d3051c33cd04d304101030b9  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": true
+}

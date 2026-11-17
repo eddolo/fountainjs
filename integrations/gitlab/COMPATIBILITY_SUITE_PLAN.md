@@ -166,3 +166,8 @@ The [table follow-up](COMPATIBILITY_GRID_RESULTS.md) retains an initial semantic
 pass that missed visible stray selection paint, followed by a repair and fresh
 42-check matched pair. Continue requiring visual controls alongside semantic
 checks; scoped parity alone does not establish complete application acceptance.
+
+The [matched task lifecycle](COMPATIBILITY_TASK_RESULTS.md) adds 22 parity/four
+improvement checks after repairing a native list-exit Save blocker. The four
+improvements concern one empty-task Enter behavior. Prior diagnostic/collector
+and startup failures remain retained; wider task/role/platform coverage remains.

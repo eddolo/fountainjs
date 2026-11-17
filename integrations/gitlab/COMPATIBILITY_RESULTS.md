@@ -146,3 +146,8 @@ The [rectangular table pair](COMPATIBILITY_GRID_RESULTS.md) adds 42 parity check
 after repairing a visually confirmed native selection-paint regression. Initial
 semantic-only success and negative evidence remain retained. Three desktop
 engines pass the dedicated pixel regression; wider table/platform scope remains.
+
+The [matched task lifecycle](COMPATIBILITY_TASK_RESULTS.md) adds 22 parity/four
+improvement checks after repairing a native list-exit Save blocker. The four
+improvements concern one empty-task Enter behavior. Prior diagnostic/collector
+and startup failures remain retained; wider task/role/platform coverage remains.

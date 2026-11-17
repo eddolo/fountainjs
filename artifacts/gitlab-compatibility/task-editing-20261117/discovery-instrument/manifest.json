@@ -1,0 +1,25 @@
+{
+  "scope": "Unpaced original-only discovery; no comparative classification or superiority claim. Browser caret points to Share draft, but subsequent Enter changes a paragraph outside the list. Preserve before adding readiness waits.",
+  "files": [
+    {
+      "path": "scripts/audit-gitlab-compatibility-tasks.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-editing-20261117/discovery-instrument/0-audit-gitlab-compatibility-tasks.mjs",
+      "sha256": "310f744e25efa4739b3b2d454c6b5a0d291a8aa51cb856fc3cf5e755d592eddf"
+    },
+    {
+      "path": "scripts/run-gitlab-compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-editing-20261117/discovery-instrument/1-run-gitlab-compatibility.mjs",
+      "sha256": "310bac2644639d879e3936d2cdc0315ef3ceb43ad885179eeb83d8ed2b4c6173"
+    },
+    {
+      "path": "integrations/gitlab/testing/compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-editing-20261117/discovery-instrument/2-compatibility.mjs",
+      "sha256": "77da9d33de28f3854d5d72c1652949d9a3a0fdb5c81e01abfbef0f8f6b345f0f"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/compatibility-tasks.json",
+      "archive": "artifacts/gitlab-compatibility/task-editing-20261117/discovery-instrument/3-compatibility-tasks.json",
+      "sha256": "d1564664cfe8dbff3e97fb8de0f02f336a865394733fdf17148b292c763ce80d"
+    }
+  ]
+}

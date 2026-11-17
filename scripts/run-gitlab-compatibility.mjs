@@ -5,6 +5,7 @@ import {resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {chromium,expect} from '@playwright/test';
 import {readGitLabAuditCredential} from './gitlab-audit-credentials.mjs';
+import {runGitLabTaskCompatibility} from './audit-gitlab-compatibility-tasks.mjs';
 import {runGitLabGridClipboardCompatibility} from './audit-gitlab-compatibility-grid.mjs';
 import {runGitLabPaintDiagnostic} from './audit-gitlab-compatibility-paint.mjs';
 import {runGitLabPartialClipboardCompatibility} from './audit-gitlab-compatibility-partial.mjs';
@@ -14,8 +15,8 @@ if(process.platform!=='linux')throw new Error('Run beside the isolated Linux Doc
 const value=flag=>process.argv[process.argv.indexOf(flag)+1];
 const suite=process.argv.includes('--suite')?value('--suite'):'suggestions';
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
-if(!['suggestions','deletions','reviews','clipboard','partial','crossblock','paint','grid'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--suite suggestions|deletions|reviews|clipboard|partial|crossblock|paint|grid]');
+if(!['suggestions','deletions','reviews','clipboard','partial','crossblock','paint','grid','tasks'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
+ throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--suite suggestions|deletions|reviews|clipboard|partial|crossblock|paint|grid|tasks]');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -40,7 +41,7 @@ if(prior.State.Running||prior.Config.Labels['com.docker.compose.project']!=='fou
 let browser,started=false,authenticated=false;
 const report={formatVersion:1,runId,attempt,side,scope:'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
  suite,fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
- harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
+ harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs','scripts/audit-gitlab-compatibility-tasks.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
  started=true;execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
  const deployment=JSON.parse(docker('inspect',containerName))[0];
@@ -81,7 +82,7 @@ try{
  const manifests=docker('exec',containerName,'find',assetTarget,'-maxdepth','1','-name','manifest*.json').trim().split('\n').filter(Boolean);
  report.frontendManifests=manifests.length?docker('exec',containerName,'sha256sum',...manifests).trim().split('\n'):[];
  page.on('pageerror',error=>report.errors.push(error.message));
- report.observations=await (suite==='grid'?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
+ report.observations=await (suite==='tasks'?runGitLabTaskCompatibility:suite==='grid'?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
  report.collectionComplete=report.observations.every(item=>item.status==='observed');
  if(!report.collectionComplete||report.errors.length)process.exitCode=1;
 }catch(error){report.failure=authenticated?String(error):'Deployment/authentication preflight failed; no credentialed details recorded.';process.exitCode=1;}

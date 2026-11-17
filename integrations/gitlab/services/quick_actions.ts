@@ -1,7 +1,7 @@
 import { CoreSchemaSpec, MarkdownImporter, Schema, type Node } from 'fountainjs-editor';
 
 /** Match the pinned host's fence-aware quick-action isolation, not execution. */
-export function transformGitLabQuickActions(markdown: string): string {
+export function transformGitLabQuickActions(markdown: string, mode: 'isolate' | 'literal' = 'isolate'): string {
   let fence = '';
   const lines = markdown.split('\n');
   return lines.map((line, index) => {
@@ -12,6 +12,7 @@ export function transformGitLabQuickActions(markdown: string): string {
       return line;
     }
     if (marker && !(marker[0] === '`' && info.includes('`'))) fence = marker;
+    if (mode === 'literal') return fence ? line : line.replace(/^\/(?=\w)/u, '\\/');
     return fence || index === lines.length - 1 ? line : line.replace(/^\/(.+)$/u, '/$1\n\n');
   }).join('\n');
 }

@@ -66,6 +66,16 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
   };
   return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base), ...gitlabAlertNodes(), ...gitlabMediaNodes(mediaLabels), ...gitLabFootnoteNodes(),
     gitlab_code_suggestion: gitLabCodeSuggestion(),
+    ...(base.nodes.direction_scope ? { direction_scope: { ...base.nodes.direction_scope,
+      parseHTML: [...(base.nodes.direction_scope.parseHTML ?? []), { tag: 'div[dir]', priority: 55,
+        getAttrs: (element: HTMLParseElement) => {
+          const dir = element.getAttribute('dir');
+          const names = element.getAttributeNames?.();
+          if (!['auto', 'ltr', 'rtl'].includes(dir ?? '') || !names
+            || names.some(name => !['dir', 'data-sourcepos'].includes(name))) return false;
+          return { dir };
+        } }],
+    } } : {}),
     task_item: gitLabTaskItem(base),
     paragraph: { ...base.nodes.paragraph!, attrs: { ...base.nodes.paragraph!.attrs,
       gitlabLiteralSlash: { default: false, validate: value => typeof value === 'boolean' } } },
@@ -369,7 +379,24 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         && Object.entries(attrs).every(([key, value]) => value === node.attrs[key])) return node;
       return node.type.create(attrs, content, text, retainedMarks);
     };
-    const exported = new MarkdownExporter().exportWithReport(project(doc, []), { omitTrailingCaret: true, blockSerializers: { gitlab_code_suggestion: serializeGitLabSuggestionNode } });
+    const projected = project(doc, []), paths = new WeakMap<Node, readonly number[]>();
+    projected.descendants((node, path) => { paths.set(node, path); });
+    const blockSerializers = {
+      gitlab_code_suggestion: serializeGitLabSuggestionNode,
+      direction_scope: (node: Node): string | undefined => {
+        // GitLab strips Fountain data attributes and bare checkbox inputs. A
+        // plain direction container with Markdown children keeps its task/source
+        // mapping and lets the actual renderer own specialized descendants.
+        if (!['auto', 'ltr', 'rtl'].includes(String(node.attrs.dir)) || node.marks.length
+          || Object.entries(node.attrs).some(([key, value]) => key !== 'dir' && value !== undefined)) return undefined;
+        const inner = new MarkdownExporter().exportWithReport(node.type.schema.node('doc', {}, node.content),
+          { omitTrailingCaret: true, blockSerializers });
+        issues.push(...inner.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type,
+          message: loss.detail, path: [...(paths.get(node) ?? []), ...loss.path] })));
+        return `<div dir="${node.attrs.dir}">\n\n${transformGitLabQuickActions(inner.markdown, 'literal')}\n\n</div>`;
+      },
+    };
+    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, blockSerializers });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
     let markdown = exported.markdown;
     for (const [token, original] of tokens) markdown = markdown.replaceAll(token, () => original);

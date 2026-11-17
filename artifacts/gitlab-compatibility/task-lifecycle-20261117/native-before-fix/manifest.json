@@ -1,0 +1,15 @@
+{
+  "scope": "Native task exit Save failure before the private GitLab direction-container codec repair. Runtime source inputs are preserved in the archived build receipt; no successful save/reopen is claimed.",
+  "files": [
+    {
+      "path": "artifacts/gitlab-native-runtime/build.json",
+      "archive": "artifacts/gitlab-compatibility/task-lifecycle-20261117/native-before-fix/runtime-build.json",
+      "sha256": "15fbace93be93e5619bd0e5bd1a3367b8fff75effc864cd99a036d65becd1e36"
+    },
+    {
+      "path": "artifacts/gitlab-native-browser-install/install.json",
+      "archive": "artifacts/gitlab-compatibility/task-lifecycle-20261117/native-before-fix/browser-install.json",
+      "sha256": "672d2049f2e47117de11269d4d2672adb41c2186df4a0b7d566fa91f5ecdeee5"
+    }
+  ]
+}

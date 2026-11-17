@@ -266,3 +266,35 @@ it('requires the declared unselected-cell pixel control',()=>{
  const [original,fountain]=gridReports();delete (original.observations[0] as any).copySelection.outsidePaintUnchanged;
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(1);expect(result.regressionGate.passed).toBe(false);
 });
+
+function taskReports(){
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-tasks.json',import.meta.url),'utf8'));
+ const pair=reports();
+ for(const report of pair){
+  const input=structuredClone(fixture.cases[0]);report.fixture.cases=[input];
+  const item:any=report.observations[0];item.id=input.id;item.input=structuredClone(input);item.graphs=structuredClone(input.expectedGraphs);
+  item.beforeEnter={inside:true,activeInside:true,collapsed:true,text:'Share draft',offset:11};item.documentReady={initial:true,reopened:true};item.emptyTaskLayout={visible:true};item.emptyCaret={inside:true,activeInside:true,collapsed:true,text:'',offset:0};
+  item.exitCaret={inside:true,activeInside:true,collapsed:true,text:'',offset:0,inTask:false};item.selectedForRemoval='Follow up';item.saveButtonReachable=true;
+ }
+ return pair;
+}
+it('classifies the complete task lifecycle without inferring editability from import success',()=>{
+ const result=compareGitLabCompatibility(...taskReports());expect(result.summary.parity).toBe(26);expect(result.featureAcceptance.passed).toBe(true);
+});
+it.each([
+ ['toggleUndo.graph',(item:any)=>{item.graphs.toggleUndo.tasks[0].checked=true;}],
+ ['newEmpty.graph',(item:any)=>{item.graphs.newEmpty.tasks.pop();}],
+ ['newEmpty.visible',(item:any)=>{item.emptyTaskLayout.visible=false;}],
+ ['newEmpty.caret.inside',(item:any)=>{item.emptyCaret.inside=false;}],
+ ['liftUndo.graph',(item:any)=>{item.graphs.liftUndo.tasks.at(-1).depth=1;}],
+ ['exited.graph',(item:any)=>{item.graphs.exited.prose.shift();}],
+ ['exit.caret',(item:any)=>{item.exitCaret.inTask=true;}],
+ ['reopened.graph',(item:any)=>{item.graphs.reopened.tasks[2].depth=0;}],
+])('rejects task-editing regressions independently: %s',(invariant,mutate)=>{
+ const [original,fountain]=taskReports();mutate(fountain.observations[0]);const result=compareGitLabCompatibility(original,fountain);
+ expect(result.rows.find((row:any)=>row.invariant===invariant).classification).toBe('regression');expect(result.regressionGate.passed).toBe(false);
+});
+it('leaves a missing task-state observation incomplete rather than treating it as shared behavior',()=>{
+ const [original,fountain]=taskReports();delete (original.observations[0] as any).graphs.lifted;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(1);expect(result.comparisonComplete).toBe(false);
+});
