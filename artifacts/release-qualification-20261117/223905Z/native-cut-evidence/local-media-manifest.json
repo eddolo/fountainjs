@@ -1,0 +1,74 @@
+[
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-before/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-chromium/trace.zip",
+    "bytes": 1369103,
+    "sha256": "f8cb755c99821a6f34dfacbc2164864707f66e52f1db02c7b6b4b3fff865956f",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-before/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-chromium/video.webm",
+    "bytes": 494318,
+    "sha256": "de2e51e80eb5a419d09effc2fc4c200461c75b50f321c7a3a2c84748177d0355",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-before/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-firefox/trace.zip",
+    "bytes": 2075788,
+    "sha256": "b9675bfb1608ae103fb39417c6df3b84be0ac699bb53e096d19ba4bfa3b94727",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-before/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-firefox/video.webm",
+    "bytes": 364972,
+    "sha256": "ce125bc07a826870c3eb5e75090cee7e554239110d6764f1fcd0c78fef5039b7",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-before/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-webkit/trace.zip",
+    "bytes": 1144779,
+    "sha256": "d7121c08b76d1dd486b804793d056538acd547263133f0120498458469e5badc",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-before/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-webkit/video.webm",
+    "bytes": 231500,
+    "sha256": "efd93a2eef1a93af82a420a96d992c735c1f0c57cff2391342de0b5ddbef6263",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-after/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-chromium/trace.zip",
+    "bytes": 1877537,
+    "sha256": "b724aefdf877528e1921eda1181ee360aa40e4373f3b672ed019978021a147d9",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-after/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-chromium/video.webm",
+    "bytes": 314131,
+    "sha256": "e0426b45322fcc54635aa48b42b558fa917032084530b780943b476a8fe23554",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-after/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-firefox/trace.zip",
+    "bytes": 1951086,
+    "sha256": "ea67cc7b5f2e7cce1009ef68f7e876ff69c085455a02120ffbb5c4aede82a917",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-after/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-firefox/video.webm",
+    "bytes": 339127,
+    "sha256": "a4e628bc9d4a69015bccb93733027d9cb2c9717b75551b40b1a2cb1085896f13",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-after/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-webkit/trace.zip",
+    "bytes": 1179106,
+    "sha256": "e8ae7116454e50adf1fc9d216e365c8a42ec6c6e2fcb89bf1efbc07a64b929c0",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/native-cut-after/editor-copies-and-cuts-a-p-e0f5d-ted-native-clipboard-events-webkit/video.webm",
+    "bytes": 244879,
+    "sha256": "cce7dfd83fc6f70687bcf07e6895714fa252c923cdbc288a417bd7136fd5d666",
+    "localOnly": true
+  }
+]

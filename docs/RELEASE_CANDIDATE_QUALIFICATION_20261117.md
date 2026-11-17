@@ -62,6 +62,33 @@ Raw downloaded videos/traces/PDFs remain local, with digests in the evidence
 manifest. Curated PNGs and loss/report receipts are preserved. Review is selected
 states, not a claim to have inspected every video frame.
 
+## Native cut ownership follow-up
+
+The broader Linux display-backed matrix on `9cd1d7b3` and `22fd4a98` reaches
+36 passes / three failures in its native clipboard group. All three failures
+are the same byte-string expectation: a cut payload was required to equal the
+copy payload, although successful cuts now add an opaque ownership token for
+footnote moves. The document JSON itself is unchanged. This is stale test
+coverage of an existing feature, not three newly repaired engine defects.
+
+An unchanged recorded Windows control fails in Chromium/Firefox/WebKit. The
+updated case requires the complete cut JSON to equal the copied payload plus
+one nonempty token, exact matching plain text, and exact copied HTML inside the
+wrapper bearing that same token. Ordinary copy must have no token in either
+format. Existing cut deletion, undo and paste assertions remain in place.
+
+All three recorded Windows cases now pass. Chromium additionally checks actual
+OS paste into an independent contenteditable, paste back into Fountain, and
+continued typing after the image. The cut, external paste and internal paste
+PNG states receive visual review. The existing ownership/refusal/forged-token/
+history suites pass 25 unit cases, and fresh strict types pass. A related native
+assertion search finds no other copy-versus-cut byte-string expectation.
+
+The correction changes no engine, API, dependency, budget, retry policy or
+production clipboard behavior. Fresh headed Linux display-backed verification
+and all subsequent browser gates remain required. The earlier hosted and local
+red attempts, source hashes, recordings and transport observations are retained.
+
 ## Next gate
 
 Push the tested follow-up and require fresh exact-revision hosted CI before

@@ -1,0 +1,53 @@
+{
+  "parentRevision": "22fd4a9866e029a24359fdb29f8517825703a7ae",
+  "scope": "Native cut payload assertion aligned with existing ownership transport; no runtime repair.",
+  "unchangedWindowsControl": "3 failed",
+  "updatedWindowsJourneys": "3 passed",
+  "ownershipAndRefusalTests": 25,
+  "strictTypes": "passed",
+  "copyDocumentExact": true,
+  "cutDocumentExact": true,
+  "plainTextExact": true,
+  "htmlExactExceptMatchingOwnershipWrapper": true,
+  "copyHasNoCutMarker": true,
+  "trustedNativeEventsAllThreeEngines": true,
+  "externalAndInternalPaste": "Chromium only",
+  "visualReview": [
+    {
+      "path": "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/mixed-range-cut.png",
+      "sha256": "ea2319f495c71bdd0ddb3ee2bf1a1da02f174c9464bc1b0d3875ccb9052f9030"
+    },
+    {
+      "path": "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/mixed-range-external-paste.png",
+      "sha256": "a427d3d5578f2b760b7fcf8f8620d0795daeb856ef751b4e10527bf5c0eb5ad1"
+    },
+    {
+      "path": "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/mixed-range-internal-paste.png",
+      "sha256": "444e3f9386f93941d1d40f55a4fcc2538dc90f9656b5282131e2924cd125c119"
+    }
+  ],
+  "rawRecordingsCommitted": false,
+  "freshHeadedLinuxAndRemainingMatrixRequired": true,
+  "noRuntimeApiDependencyBudgetRetryOrLimitChanges": true,
+  "files": {
+    "tests/manual/document-boundary-range-real.spec.ts": "007f9c79a5ab9f00d19bbb8c972464c3c9430600efa3ea992becfc964e5dfe55",
+    "docs/RELEASE_CANDIDATE_QUALIFICATION_20261117.md": "e2b5f0bd9e59e7ec47867aba11c88469b1a6c2dad6352524b7bf34f40a2fd70e",
+    "artifacts/release-qualification-20261117/223905Z/clipboard-native.config.ts": "2144cd6cd3bda2a0a26ef2d76508dcc2f7e095cf714a41d17358e8c041cf148f",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-contract-before.json": "5f3c57549a6b47c65d7649146f3e674bb6d568fc5fdfccb01907bb2f6763c2d2",
+    "artifacts/release-qualification-20261117/223905Z/hosted-ci-followup-terminal.json": "6573f45e46e718d0aab68dbfcc21dbf5f7074abf00b8502a12bf98f9ce48f84e",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/chromium-observations.json": "9a267583b9632f13c5ca36a93ccd66bef00ae68c699b1d10832b2ea65aa4b1e7",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/firefox-observations.json": "3823d73723c77606e0040a30a77ac21fa01b89e746e3733058261d5bbe124b07",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/hosted-browser-doc-head-raw.log.json": "d18fb38d3901816fc3573bbfb716927ffbd12f8ad83fec7d8d56ae5aab0ee765",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/hosted-browser-followup-raw.log.json": "424e409a5eff59708ece4453e1cd784d4e49762c115574a18971b5f303d1af25",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/local-media-manifest.json": "90d8c254ad13b6889b51cd016f7418db8610d188aa4e2b28204cb712910cfa2c",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/mixed-range-cut.png": "ea2319f495c71bdd0ddb3ee2bf1a1da02f174c9464bc1b0d3875ccb9052f9030",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/mixed-range-external-paste.png": "a427d3d5578f2b760b7fcf8f8620d0795daeb856ef751b4e10527bf5c0eb5ad1",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/mixed-range-internal-paste.png": "444e3f9386f93941d1d40f55a4fcc2538dc90f9656b5282131e2924cd125c119",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/native-cut-after.log.json": "a37bc543bb5285ca2d9131196a1b8c8bd4774239e6721c2134d5ad2bb47a13d2",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/native-cut-before.log.json": "197f166358db936a8c81dec4d89f9e131911234bd543e75371cc67bd1b284878",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/native-cut-types.log.json": "03e63755492518c7de8425c59d5f59d5faf26feef3834a2e9e842cc1c56a3ade",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/native-cut-unit.log.json": "fadec691b4ce189009d00859026db5463e1ceded3744b1c211d6ef7d4d96565b",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/source-before.json": "25e422e76ac780da5546eb867f00ce8a30e81e6768278315b01db876dfee95e3",
+    "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/webkit-observations.json": "2f30e291a1830650195c99570a135ca3aa4be2cb1aa2ca160596a89894f210e3"
+  }
+}

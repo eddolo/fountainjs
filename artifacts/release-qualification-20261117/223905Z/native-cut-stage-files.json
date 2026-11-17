@@ -1,0 +1,23 @@
+[
+  "artifacts/release-qualification-20261117/223905Z/clipboard-native.config.ts",
+  "artifacts/release-qualification-20261117/223905Z/hosted-ci-followup-terminal.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-contract-before.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/chromium-observations.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/firefox-observations.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/hosted-browser-doc-head-raw.log.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/hosted-browser-followup-raw.log.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/local-media-manifest.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/mixed-range-cut.png",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/mixed-range-external-paste.png",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/mixed-range-internal-paste.png",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/native-cut-after.log.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/native-cut-before.log.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/native-cut-types.log.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/native-cut-unit.log.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/source-before.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-evidence/webkit-observations.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-stage-files.json",
+  "artifacts/release-qualification-20261117/223905Z/native-cut-validation.json",
+  "docs/RELEASE_CANDIDATE_QUALIFICATION_20261117.md",
+  "tests/manual/document-boundary-range-real.spec.ts"
+]

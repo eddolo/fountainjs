@@ -48,7 +48,15 @@ test('copies and cuts a partial text-to-image range using trusted native clipboa
   await expect(editor.locator('img')).toHaveCount(1);
   await page.keyboard.press('Control+x');
   await expect.poll(async () => (await records()).length).toBe(2);
-  expect((await records())[1]).toMatchObject({ type: 'cut', trusted: true, prevented: true, fountain: copy.fountain });
+  const cut = (await records())[1]!;
+  expect(cut).toMatchObject({ type: 'cut', trusted: true, prevented: true, plain: copy.plain });
+  const cutPayload = JSON.parse(cut.fountain);
+  // A successful cut adds an opaque ownership marker; the document is exact.
+  expect(copied).not.toHaveProperty('cutToken');
+  expect(copy.html).not.toContain('data-fountain-cut=');
+  expect(cutPayload).toStrictEqual({ ...copied, cutToken: expect.any(String) });
+  expect(cutPayload.cutToken).toMatch(/\S/);
+  expect(cut.html).toBe(`<div data-fountain-cut="${cutPayload.cutToken}">${copy.html}</div>`);
   await expect(editor.locator('img')).toHaveCount(0);
   await expect(editor.locator(':scope > p')).toHaveText('Le');
   await editor.screenshot({ path: info.outputPath('mixed-range-cut.png') });
