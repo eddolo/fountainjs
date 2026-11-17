@@ -1,0 +1,109 @@
+diff --git a/src/yjs/retained-document.ts b/src/yjs/retained-document.ts
+index dd5a1f8d..cf6ed27a 100644
+--- a/src/yjs/retained-document.ts
++++ b/src/yjs/retained-document.ts
+@@ -444,43 +444,52 @@ export class RetainedDocumentStore {
+     const previousModel = this.model, previousIdentities = this.identityPaths, previousTexts = this.textCandidates;
+     const used = new Set<Node>();
+     const groupStates = new Map<string, GroupState>();
++    // Share per-pass helpers; each node still normalizes and validates in order.
++    const append = (children: (Fragment | TextFragment)[], next: Fragment | TextFragment) => {
++      const previous = children.at(-1);
++      if (previous && 'text' in previous && 'text' in next && previous.leaf === next.leaf
++        && same(previous.attrs, next.attrs) && same(previous.marks.map(mark => mark.toJSON()), next.marks.map(mark => mark.toJSON()))) {
++        const length = previous.text.length;
++        previous.text += next.text;
++        previous.bindings.push(...next.bindings.map(binding => ({ ...binding, modelFrom: binding.modelFrom + length })));
++      } else if (previous && 'node' in previous && 'node' in next && previous.leaf && previous.leaf === next.leaf
++        && previous.node.isText && next.node.isText && same(previous.node.attrs, next.node.attrs)
++        && same(previous.node.marks.map(mark => mark.toJSON()), next.node.marks.map(mark => mark.toJSON()))) {
++        const length = previous.node.nodeSize;
++        previous.node = previous.node.withText(previous.node.text! + next.node.text!);
++        previous.bindings!.push(...next.bindings!.map(binding => ({ ...binding, modelFrom: binding.modelFrom + length })));
++      } else children.push(next);
++    };
++    const appendText = (children: (Fragment | TextFragment)[], text: string, attrs: Attributes, markJSON: readonly MarkJSON[], leaf: string, bindings: Binding[]) => {
++      const type = this.schema.nodes.text, marks = markJSON.map(mark => this.schema.markFromJSON(mark));
++      // Preserve factory validation on every source run before merging when
++      // a custom text invariant exists, rather than checking only the result.
++      if (type.spec.validate) { append(children, { node: type.create(attrs, [], text, marks), leaf, bindings }); return; }
++      const specs = type.spec.attrs;
++      const prepared = specs === undefined && !Object.keys(attrs).length ? EMPTY_ATTRS : computeAttrs(specs, attrs);
++      append(children, { text, attrs: Object.keys(prepared).length ? freezeAttributes(prepared) : EMPTY_ATTRS, marks, leaf, bindings });
++    };
++    const projectFragment = (child: Fragment | TextFragment): Fragment => {
++      if ('node' in child) return child;
++      const previous = previousTexts.get(bindingKey(child.bindings, child.leaf));
++      const candidate = previousModel && previous && sameBindings(previous.bindings, child.bindings)
++        ? getNodeAtPath(previousModel, previous.path) : undefined;
++      return { node: this.projectionNode(this.schema.nodes.text, child.attrs, [], child.text, child.marks, used, candidate), leaf: child.leaf, bindings: child.bindings };
++    };
++    const fragmentNode = (fragment: Fragment): Node => fragment.node;
+     const visit = (raw: RetainedNodeProjection): Fragment => {
+       if (!Object.hasOwn(this.schema.nodes, raw.type)) throw new Error(`Unknown retained node type: ${raw.type}`);
+       const ordered = this.orderedChildren(raw, partitions, placements);
+       let occupiedFields: Set<string> | undefined;
+       const children: (Fragment | TextFragment)[] = [];
+-      const append = (next: Fragment | TextFragment) => {
+-        const previous = children.at(-1);
+-        if (previous && 'text' in previous && 'text' in next && previous.leaf === next.leaf
+-          && same(previous.attrs, next.attrs) && same(previous.marks.map(mark => mark.toJSON()), next.marks.map(mark => mark.toJSON()))) {
+-          const length = previous.text.length;
+-          previous.text += next.text;
+-          previous.bindings.push(...next.bindings.map(binding => ({ ...binding, modelFrom: binding.modelFrom + length })));
+-        } else if (previous && 'node' in previous && 'node' in next && previous.leaf && previous.leaf === next.leaf
+-          && previous.node.isText && next.node.isText && same(previous.node.attrs, next.node.attrs)
+-          && same(previous.node.marks.map(mark => mark.toJSON()), next.node.marks.map(mark => mark.toJSON()))) {
+-          const length = previous.node.nodeSize;
+-          previous.node = previous.node.withText(previous.node.text! + next.node.text!);
+-          previous.bindings!.push(...next.bindings!.map(binding => ({ ...binding, modelFrom: binding.modelFrom + length })));
+-        } else children.push(next);
+-      };
+-      const appendText = (text: string, attrs: Attributes, markJSON: readonly MarkJSON[], leaf: string, bindings: Binding[]) => {
+-        const type = this.schema.nodes.text, marks = markJSON.map(mark => this.schema.markFromJSON(mark));
+-        // Preserve factory validation on every source run before merging when
+-        // a custom text invariant exists, rather than checking only the result.
+-        if (type.spec.validate) { append({ node: type.create(attrs, [], text, marks), leaf, bindings }); return; }
+-        const specs = type.spec.attrs;
+-        const prepared = specs === undefined && !Object.keys(attrs).length ? EMPTY_ATTRS : computeAttrs(specs, attrs);
+-        append({ text, attrs: Object.keys(prepared).length ? freezeAttributes(prepared) : EMPTY_ATTRS, marks, leaf, bindings });
+-      };
+       for (const child of ordered) {
+-        if (child.type !== 'text') { append(visit(child)); continue; }
++        if (child.type !== 'text') { append(children, visit(child)); continue; }
+         groupStates.set(child.id, { id: child.id, parent: raw.id, value: child });
+         const partition = partitions.get(child.id)!;
+         let offset = 0;
+         for (const run of partition.runs) {
+           const decoded = this.decode(run);
+-          appendText(run.text, decoded.attrs, decoded.marks, decoded.leaf,
++          appendText(children, run.text, decoded.attrs, decoded.marks, decoded.leaf,
+             [{ id: child.id, from: offset, length: run.text.length, modelFrom: 0, leaf: decoded.leaf }]);
+           offset += run.text.length;
+         }
+@@ -494,22 +503,16 @@ export class RetainedDocumentStore {
+           }
+           if (!occupiedFields.has(layout.field)) {
+             occupiedFields.add(layout.field);
+-            appendText('', child.attrs ?? {}, child.marks ?? [], child.id,
++            appendText(children, '', child.attrs ?? {}, child.marks ?? [], child.id,
+               [{ id: child.id, from: 0, length: 0, modelFrom: 0, leaf: child.id }]);
+           }
+         }
+       }
+-      const fragments: Fragment[] = children.map(child => {
+-        if ('node' in child) return child;
+-        const previous = previousTexts.get(bindingKey(child.bindings, child.leaf));
+-        const candidate = previousModel && previous && sameBindings(previous.bindings, child.bindings)
+-          ? getNodeAtPath(previousModel, previous.path) : undefined;
+-        return { node: this.projectionNode(this.schema.nodes.text, child.attrs, [], child.text, child.marks, used, candidate), leaf: child.leaf, bindings: child.bindings };
+-      });
++      const fragments = children.map(projectFragment);
+       const type = this.schema.nodes[raw.type], marks = (raw.marks ?? []).map(mark => this.schema.markFromJSON(mark)), attrs = computeAttrs(type.spec.attrs, raw.attrs ?? {});
+       const path = previousIdentities.get(raw.id);
+       const candidate = previousModel && path ? getNodeAtPath(previousModel, path) : undefined;
+-      const node = this.projectionNode(type, attrs, fragments.map(child => child.node), undefined, marks, used, candidate);
++      const node = this.projectionNode(type, attrs, fragments.map(fragmentNode), undefined, marks, used, candidate);
+       return { node, id: raw.id, children: fragments };
+     };
+     const result = visit(projection.root);

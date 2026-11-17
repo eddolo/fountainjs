@@ -1,0 +1,2255 @@
+{
+  "format": "fountain-node-id-index-repair/1",
+  "decision": "retain-index-collision-group-repair",
+  "sourceBase": "34b8fc4b68cca7a1b88d6738eaaf41dbc0c25ec1",
+  "source": {
+    "path": "src/node-ids/index.ts",
+    "sha256": "cf5e95cc5c09bec0bde4a9e0b2f44e3b88f37589db898452561640cd5ef78b68"
+  },
+  "harness": {
+    "path": "scripts/diagnose-node-id-index.mjs",
+    "sha256": "54d36d717360caa1258d2bba70d47d74a3d3ccf1c755b25ab0506b1098d06c6e"
+  },
+  "baselineSource": "8e9b519a6861c41e6c6af907fd07682e93e01d7d",
+  "baselineCompatibility": "Baseline TypeScript, package manifest and lockfile match sourceBase. Only CSS differs; it is not loaded by these pure-Node diagnostics.",
+  "change": "Accumulate each private collision bucket with push, freeze its final array once, and retain the same private Map. Avoids repeatedly cloning growing duplicate buckets and copying the entire dictionary. Public entries, order, ambiguity, paths, eligibility callbacks and immutable snapshots are unchanged.",
+  "claimScope": "Installed public CommonJS index construction on one Windows host, 1000/5000/10000 blocks, unique/all-colliding/16 mixed groups, 7 samples each in two process orders. Fixtures, GC and correctness assertions are outside the measured constructor. This is not paste-to-paint, a Tiptap comparison or proof that large-document collaborative typing is solved.",
+  "runs": [
+    {
+      "order": "baseline-first",
+      "report": "artifacts/node-id-index-verified-baseline-first-20261117.json",
+      "reportSha256": "e89b498e935f8a5ed510db6635714b36c52891acf2625a600454e9c0bdd14d58",
+      "data": {
+        "format": "fountain-node-id-index-diagnostic/1",
+        "harnessSha256": "54d36d717360caa1258d2bba70d47d74a3d3ccf1c755b25ab0506b1098d06c6e",
+        "startedAt": "2026-11-17T19:03:01.714Z",
+        "package": {
+          "root": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\.pnpm\\fountainjs-editor@file+arti_a9ae6e16ec6786491ba8d1976ff6d9a9\\node_modules\\fountainjs-editor",
+          "version": "0.5.0-beta.1",
+          "fingerprint": {
+            "algorithm": "SHA-256(sorted relative path + NUL + contents + NUL)",
+            "scope": "dist/** and package.json",
+            "sha256": "6af2f220d29799eb3e8de0d4db4e4c49ca9bd2f12e8d0bfcc05a13900d0bcb42",
+            "files": 1021,
+            "bytes": 16331554
+          },
+          "tarball": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\fountain-yjs-normalize-baseline-20261117.tgz",
+          "tarballSha256": "9ad23af075c5fdd16803984a2c5e610ae0a25bcc170a77165d77bd3b591e1948"
+        },
+        "runtime": {
+          "node": "v24.22.1",
+          "platform": "win32",
+          "release": "10.0.26200",
+          "arch": "x64",
+          "cpu": "12th Gen Intel(R) Core(TM) i3-12100F"
+        },
+        "configuration": {
+          "sizes": [
+            1000,
+            5000,
+            10000
+          ],
+          "repeats": 7,
+          "gc": "before each measured construction; outside timer",
+          "cases": [
+            "unique",
+            "all-colliding",
+            "mixed-groups"
+          ],
+          "timed": "createStableNodeIdIndex only; fixture creation and assertions excluded",
+          "timingThresholds": null
+        },
+        "scope": "Single-host public CommonJS package diagnostic of index construction, not paste-to-paint, collaborative typing or production certification. Every source node remains intact. Duplicate IDs must fail closed while preserving all paths and collision diagnostics.",
+        "cases": [
+          {
+            "size": 1000,
+            "kind": "unique",
+            "groups": 1000,
+            "duplicateIssues": 0,
+            "sourceSha256": "06496a0c1de3641cc8c6acac231eeb613aff3849960a675aaba251377f1b7d8c",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 0.9895999999999958,
+              "p95Ms": 1.8196000000000367,
+              "samplesMs": [
+                1.8196000000000367,
+                0.9212999999999738,
+                0.9366999999999734,
+                1.0095000000000027,
+                0.9895999999999958,
+                1.385499999999979,
+                0.9248999999999796
+              ]
+            }
+          },
+          {
+            "size": 1000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 999,
+            "sourceSha256": "cf8ff6d2fef2cd901e742796280cebdc5067780cbb311c0f629d78ca349ca9b0",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 2.0617999999999483,
+              "p95Ms": 2.8577000000000226,
+              "samplesMs": [
+                2.8577000000000226,
+                2.0617999999999483,
+                1.8420999999999594,
+                1.8754000000000133,
+                2.3221999999999525,
+                1.806100000000015,
+                2.3631999999998925
+              ]
+            }
+          },
+          {
+            "size": 1000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 984,
+            "sourceSha256": "7332e7e49271432dd6cbcdbd8ebf8235669c47dcc33759d7a5d7444e8e2c612a",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 0.88900000000001,
+              "p95Ms": 1.1742000000000417,
+              "samplesMs": [
+                1.1742000000000417,
+                0.88900000000001,
+                0.8987999999999374,
+                0.8926999999999907,
+                0.7772999999999683,
+                0.7413000000000238,
+                0.8835000000000264
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "unique",
+            "groups": 5000,
+            "duplicateIssues": 0,
+            "sourceSha256": "91b9f170826f7be8b124c46db994b7e76d9e3972b2f6450fd617c7405f32e9a7",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 5.1802000000000135,
+              "p95Ms": 7.470600000000104,
+              "samplesMs": [
+                4.122100000000046,
+                4.7883999999999105,
+                4.851400000000012,
+                5.962200000000166,
+                7.470600000000104,
+                5.1802000000000135,
+                5.421600000000126
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 4999,
+            "sourceSha256": "606af858ad6b9696a49d3ee4e27e3036f4679ea99e7c09f466ebdc603c702e54",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 34.97910000000002,
+              "p95Ms": 41.25700000000006,
+              "samplesMs": [
+                38.38719999999989,
+                34.97910000000002,
+                34.29300000000012,
+                30.9688000000001,
+                41.25700000000006,
+                39.37650000000008,
+                34.89319999999998
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 4984,
+            "sourceSha256": "50058a337545ccea0177b8bb370e720b629ce8fb9bef637d71d3fa82e4e59465",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 6.218000000000075,
+              "p95Ms": 8.386700000000019,
+              "samplesMs": [
+                4.394999999999982,
+                7.184499999999844,
+                4.615099999999984,
+                8.386700000000019,
+                7.970199999999977,
+                5.643000000000029,
+                6.218000000000075
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "unique",
+            "groups": 10000,
+            "duplicateIssues": 0,
+            "sourceSha256": "1241f64baee0ba462d5f2cc1d4e27794197587d90a7fc3e3fe6688ca6058d78b",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 9.545699999999897,
+              "p95Ms": 10.48779999999988,
+              "samplesMs": [
+                8.857500000000073,
+                8.986499999999978,
+                9.900900000000092,
+                9.468899999999849,
+                10.48779999999988,
+                9.545699999999897,
+                10.107099999999946
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 9999,
+            "sourceSha256": "7a0e975600d6ab29acb626673dffecf8759463e95a18cfc5364f08db257dbc73",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 126.03719999999976,
+              "p95Ms": 136.6344999999999,
+              "samplesMs": [
+                136.6344999999999,
+                125.81719999999996,
+                126.01650000000018,
+                126.3135000000002,
+                125.72839999999997,
+                126.03719999999976,
+                127.31309999999985
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 9984,
+            "sourceSha256": "d475745d9dce43b9ff88ef6ffdcbc15f5259632831f974dd3435972642a0a67a",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 14.428100000000086,
+              "p95Ms": 15.784799999999905,
+              "samplesMs": [
+                13.848300000000108,
+                13.886299999999665,
+                14.58789999999999,
+                15.784799999999905,
+                14.735900000000129,
+                14.428100000000086,
+                14.117600000000039
+              ]
+            }
+          }
+        ],
+        "ok": true,
+        "finishedAt": "2026-11-17T19:03:04.870Z"
+      }
+    },
+    {
+      "order": "candidate-second",
+      "report": "artifacts/node-id-index-verified-candidate-second-20261117.json",
+      "reportSha256": "4759c8b8fffce274383bd1dd663362bfb757868006c1e6d06d7320269a0bd96d",
+      "data": {
+        "format": "fountain-node-id-index-diagnostic/1",
+        "harnessSha256": "54d36d717360caa1258d2bba70d47d74a3d3ccf1c755b25ab0506b1098d06c6e",
+        "startedAt": "2026-11-17T19:03:05.057Z",
+        "package": {
+          "root": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\node-id-index-20261117\\node_modules\\.pnpm\\fountainjs-editor@file+..+f_ac5f556e9dc6e55124d5e1a9d34733a6\\node_modules\\fountainjs-editor",
+          "version": "0.5.0-beta.1",
+          "fingerprint": {
+            "algorithm": "SHA-256(sorted relative path + NUL + contents + NUL)",
+            "scope": "dist/** and package.json",
+            "sha256": "4be1354b3ad3989a7b5d4696c3392ad3f72cb0e1dc7dca5bc85dca94670e5772",
+            "files": 1021,
+            "bytes": 16327764
+          },
+          "tarball": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\fountain-node-id-index-20261117.tgz",
+          "tarballSha256": "0a45660111f8782414a5aa38e402f4280cc588a557a370d1bfa9d9de5b5b531c"
+        },
+        "runtime": {
+          "node": "v24.22.1",
+          "platform": "win32",
+          "release": "10.0.26200",
+          "arch": "x64",
+          "cpu": "12th Gen Intel(R) Core(TM) i3-12100F"
+        },
+        "configuration": {
+          "sizes": [
+            1000,
+            5000,
+            10000
+          ],
+          "repeats": 7,
+          "gc": "before each measured construction; outside timer",
+          "cases": [
+            "unique",
+            "all-colliding",
+            "mixed-groups"
+          ],
+          "timed": "createStableNodeIdIndex only; fixture creation and assertions excluded",
+          "timingThresholds": null
+        },
+        "scope": "Single-host public CommonJS package diagnostic of index construction, not paste-to-paint, collaborative typing or production certification. Every source node remains intact. Duplicate IDs must fail closed while preserving all paths and collision diagnostics.",
+        "cases": [
+          {
+            "size": 1000,
+            "kind": "unique",
+            "groups": 1000,
+            "duplicateIssues": 0,
+            "sourceSha256": "06496a0c1de3641cc8c6acac231eeb613aff3849960a675aaba251377f1b7d8c",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 0.8851999999999407,
+              "p95Ms": 2.2251999999999725,
+              "samplesMs": [
+                2.2251999999999725,
+                0.8706000000000813,
+                0.8851999999999407,
+                0.922800000000052,
+                0.7513000000000147,
+                0.986699999999928,
+                0.873299999999972
+              ]
+            }
+          },
+          {
+            "size": 1000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 999,
+            "sourceSha256": "cf8ff6d2fef2cd901e742796280cebdc5067780cbb311c0f629d78ca349ca9b0",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 0.8204000000000633,
+              "p95Ms": 1.1400000000001,
+              "samplesMs": [
+                0.8204000000000633,
+                0.9972999999999956,
+                1.1270999999999276,
+                0.7460999999999558,
+                1.1400000000001,
+                0.7593000000000529,
+                0.8171000000000959
+              ]
+            }
+          },
+          {
+            "size": 1000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 984,
+            "sourceSha256": "7332e7e49271432dd6cbcdbd8ebf8235669c47dcc33759d7a5d7444e8e2c612a",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 0.7639000000000351,
+              "p95Ms": 1.313600000000065,
+              "samplesMs": [
+                1.313600000000065,
+                0.6617999999999711,
+                0.7639000000000351,
+                0.6710000000000491,
+                0.6231000000000222,
+                0.78449999999998,
+                1.1024999999999636
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "unique",
+            "groups": 5000,
+            "duplicateIssues": 0,
+            "sourceSha256": "91b9f170826f7be8b124c46db994b7e76d9e3972b2f6450fd617c7405f32e9a7",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 4.334299999999985,
+              "p95Ms": 5.672800000000052,
+              "samplesMs": [
+                4.334299999999985,
+                5.672800000000052,
+                3.302599999999984,
+                3.6159000000000106,
+                5.316199999999981,
+                5.598700000000008,
+                3.2014999999998963
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 4999,
+            "sourceSha256": "606af858ad6b9696a49d3ee4e27e3036f4679ea99e7c09f466ebdc603c702e54",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 3.2914999999998145,
+              "p95Ms": 4.941700000000083,
+              "samplesMs": [
+                4.926600000000008,
+                2.746399999999994,
+                4.941700000000083,
+                3.2914999999998145,
+                3.658200000000079,
+                2.7806000000000495,
+                3.0773000000001502
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 4984,
+            "sourceSha256": "50058a337545ccea0177b8bb370e720b629ce8fb9bef637d71d3fa82e4e59465",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 4.101599999999962,
+              "p95Ms": 4.968499999999949,
+              "samplesMs": [
+                4.968499999999949,
+                3.203100000000177,
+                4.181800000000067,
+                4.6961999999998625,
+                4.07100000000014,
+                4.101599999999962,
+                3.407600000000002
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "unique",
+            "groups": 10000,
+            "duplicateIssues": 0,
+            "sourceSha256": "1241f64baee0ba462d5f2cc1d4e27794197587d90a7fc3e3fe6688ca6058d78b",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 8.701199999999972,
+              "p95Ms": 11.566400000000158,
+              "samplesMs": [
+                7.866899999999987,
+                8.36480000000006,
+                9.23479999999995,
+                11.566400000000158,
+                8.472699999999804,
+                8.917200000000093,
+                8.701199999999972
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 9999,
+            "sourceSha256": "7a0e975600d6ab29acb626673dffecf8759463e95a18cfc5364f08db257dbc73",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 6.471700000000055,
+              "p95Ms": 9.944100000000162,
+              "samplesMs": [
+                5.927900000000136,
+                7.79970000000003,
+                7.648000000000138,
+                9.944100000000162,
+                5.927199999999857,
+                6.471700000000055,
+                5.922700000000077
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 9984,
+            "sourceSha256": "d475745d9dce43b9ff88ef6ffdcbc15f5259632831f974dd3435972642a0a67a",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 7.468599999999924,
+              "p95Ms": 9.829400000000078,
+              "samplesMs": [
+                7.468599999999924,
+                6.766700000000128,
+                9.03599999999983,
+                6.4452000000001135,
+                9.829400000000078,
+                5.999499999999898,
+                9.824200000000019
+              ]
+            }
+          }
+        ],
+        "ok": true,
+        "finishedAt": "2026-11-17T19:03:07.102Z"
+      }
+    },
+    {
+      "order": "candidate-first",
+      "report": "artifacts/node-id-index-verified-candidate-first-20261117.json",
+      "reportSha256": "a90cf0045ad488cc03c1ccc94cbe7595a39238c66ac64c649f6209292cbb0065",
+      "data": {
+        "format": "fountain-node-id-index-diagnostic/1",
+        "harnessSha256": "54d36d717360caa1258d2bba70d47d74a3d3ccf1c755b25ab0506b1098d06c6e",
+        "startedAt": "2026-11-17T19:03:07.304Z",
+        "package": {
+          "root": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\node-id-index-20261117\\node_modules\\.pnpm\\fountainjs-editor@file+..+f_ac5f556e9dc6e55124d5e1a9d34733a6\\node_modules\\fountainjs-editor",
+          "version": "0.5.0-beta.1",
+          "fingerprint": {
+            "algorithm": "SHA-256(sorted relative path + NUL + contents + NUL)",
+            "scope": "dist/** and package.json",
+            "sha256": "4be1354b3ad3989a7b5d4696c3392ad3f72cb0e1dc7dca5bc85dca94670e5772",
+            "files": 1021,
+            "bytes": 16327764
+          },
+          "tarball": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\fountain-node-id-index-20261117.tgz",
+          "tarballSha256": "0a45660111f8782414a5aa38e402f4280cc588a557a370d1bfa9d9de5b5b531c"
+        },
+        "runtime": {
+          "node": "v24.22.1",
+          "platform": "win32",
+          "release": "10.0.26200",
+          "arch": "x64",
+          "cpu": "12th Gen Intel(R) Core(TM) i3-12100F"
+        },
+        "configuration": {
+          "sizes": [
+            1000,
+            5000,
+            10000
+          ],
+          "repeats": 7,
+          "gc": "before each measured construction; outside timer",
+          "cases": [
+            "unique",
+            "all-colliding",
+            "mixed-groups"
+          ],
+          "timed": "createStableNodeIdIndex only; fixture creation and assertions excluded",
+          "timingThresholds": null
+        },
+        "scope": "Single-host public CommonJS package diagnostic of index construction, not paste-to-paint, collaborative typing or production certification. Every source node remains intact. Duplicate IDs must fail closed while preserving all paths and collision diagnostics.",
+        "cases": [
+          {
+            "size": 1000,
+            "kind": "unique",
+            "groups": 1000,
+            "duplicateIssues": 0,
+            "sourceSha256": "06496a0c1de3641cc8c6acac231eeb613aff3849960a675aaba251377f1b7d8c",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 1.1169999999999618,
+              "p95Ms": 1.7813999999999623,
+              "samplesMs": [
+                1.7813999999999623,
+                1.2281000000000404,
+                1.1169999999999618,
+                0.8233000000000175,
+                1.3123000000000502,
+                1.0792000000000144,
+                0.9892999999999574
+              ]
+            }
+          },
+          {
+            "size": 1000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 999,
+            "sourceSha256": "cf8ff6d2fef2cd901e742796280cebdc5067780cbb311c0f629d78ca349ca9b0",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 1.0404999999999518,
+              "p95Ms": 2.207499999999982,
+              "samplesMs": [
+                0.7740000000000009,
+                1.0404999999999518,
+                1.0214999999999463,
+                1.1598000000000184,
+                2.207499999999982,
+                1.0447000000000344,
+                0.8166999999999689
+              ]
+            }
+          },
+          {
+            "size": 1000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 984,
+            "sourceSha256": "7332e7e49271432dd6cbcdbd8ebf8235669c47dcc33759d7a5d7444e8e2c612a",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 0.8147999999999911,
+              "p95Ms": 1.2345000000000255,
+              "samplesMs": [
+                0.809099999999944,
+                0.8147999999999911,
+                0.6865000000000236,
+                0.9075000000000273,
+                0.6731999999999516,
+                1.0394000000000005,
+                1.2345000000000255
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "unique",
+            "groups": 5000,
+            "duplicateIssues": 0,
+            "sourceSha256": "91b9f170826f7be8b124c46db994b7e76d9e3972b2f6450fd617c7405f32e9a7",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 5.238900000000058,
+              "p95Ms": 6.349999999999909,
+              "samplesMs": [
+                4.168599999999969,
+                5.238900000000058,
+                3.819400000000087,
+                6.349999999999909,
+                5.4741999999998825,
+                6.282699999999977,
+                3.8351000000000113
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 4999,
+            "sourceSha256": "606af858ad6b9696a49d3ee4e27e3036f4679ea99e7c09f466ebdc603c702e54",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 4.081600000000208,
+              "p95Ms": 7.259700000000066,
+              "samplesMs": [
+                3.65930000000003,
+                4.8607999999999265,
+                4.081600000000208,
+                3.5890999999999167,
+                3.833799999999883,
+                5.890600000000177,
+                7.259700000000066
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 4984,
+            "sourceSha256": "50058a337545ccea0177b8bb370e720b629ce8fb9bef637d71d3fa82e4e59465",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 3.6748999999999796,
+              "p95Ms": 6.832499999999982,
+              "samplesMs": [
+                5.749900000000025,
+                3.6748999999999796,
+                3.5474999999999,
+                5.351599999999962,
+                3.498800000000074,
+                6.832499999999982,
+                3.639499999999998
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "unique",
+            "groups": 10000,
+            "duplicateIssues": 0,
+            "sourceSha256": "1241f64baee0ba462d5f2cc1d4e27794197587d90a7fc3e3fe6688ca6058d78b",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 7.973700000000008,
+              "p95Ms": 11.075800000000072,
+              "samplesMs": [
+                7.349500000000035,
+                11.075800000000072,
+                8.993099999999913,
+                8.835100000000011,
+                7.973700000000008,
+                7.391800000000103,
+                7.711000000000013
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 9999,
+            "sourceSha256": "7a0e975600d6ab29acb626673dffecf8759463e95a18cfc5364f08db257dbc73",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 7.238599999999906,
+              "p95Ms": 10.580299999999852,
+              "samplesMs": [
+                7.238599999999906,
+                7.767699999999877,
+                5.949200000000019,
+                7.842399999999998,
+                6.125799999999799,
+                10.580299999999852,
+                5.657799999999952
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 9984,
+            "sourceSha256": "d475745d9dce43b9ff88ef6ffdcbc15f5259632831f974dd3435972642a0a67a",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 6.288900000000012,
+              "p95Ms": 8.78630000000021,
+              "samplesMs": [
+                7.223700000000008,
+                5.588200000000143,
+                8.78630000000021,
+                5.5978000000000065,
+                7.746899999999641,
+                6.288900000000012,
+                6.088799999999992
+              ]
+            }
+          }
+        ],
+        "ok": true,
+        "finishedAt": "2026-11-17T19:03:09.478Z"
+      }
+    },
+    {
+      "order": "baseline-second",
+      "report": "artifacts/node-id-index-verified-baseline-second-20261117.json",
+      "reportSha256": "80cee43252c5519d92048830802fe280a684e0f0a5b18820c2f7955b1989fb90",
+      "data": {
+        "format": "fountain-node-id-index-diagnostic/1",
+        "harnessSha256": "54d36d717360caa1258d2bba70d47d74a3d3ccf1c755b25ab0506b1098d06c6e",
+        "startedAt": "2026-11-17T19:03:09.654Z",
+        "package": {
+          "root": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\.pnpm\\fountainjs-editor@file+arti_a9ae6e16ec6786491ba8d1976ff6d9a9\\node_modules\\fountainjs-editor",
+          "version": "0.5.0-beta.1",
+          "fingerprint": {
+            "algorithm": "SHA-256(sorted relative path + NUL + contents + NUL)",
+            "scope": "dist/** and package.json",
+            "sha256": "6af2f220d29799eb3e8de0d4db4e4c49ca9bd2f12e8d0bfcc05a13900d0bcb42",
+            "files": 1021,
+            "bytes": 16331554
+          },
+          "tarball": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\fountain-yjs-normalize-baseline-20261117.tgz",
+          "tarballSha256": "9ad23af075c5fdd16803984a2c5e610ae0a25bcc170a77165d77bd3b591e1948"
+        },
+        "runtime": {
+          "node": "v24.22.1",
+          "platform": "win32",
+          "release": "10.0.26200",
+          "arch": "x64",
+          "cpu": "12th Gen Intel(R) Core(TM) i3-12100F"
+        },
+        "configuration": {
+          "sizes": [
+            1000,
+            5000,
+            10000
+          ],
+          "repeats": 7,
+          "gc": "before each measured construction; outside timer",
+          "cases": [
+            "unique",
+            "all-colliding",
+            "mixed-groups"
+          ],
+          "timed": "createStableNodeIdIndex only; fixture creation and assertions excluded",
+          "timingThresholds": null
+        },
+        "scope": "Single-host public CommonJS package diagnostic of index construction, not paste-to-paint, collaborative typing or production certification. Every source node remains intact. Duplicate IDs must fail closed while preserving all paths and collision diagnostics.",
+        "cases": [
+          {
+            "size": 1000,
+            "kind": "unique",
+            "groups": 1000,
+            "duplicateIssues": 0,
+            "sourceSha256": "06496a0c1de3641cc8c6acac231eeb613aff3849960a675aaba251377f1b7d8c",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 1.494199999999978,
+              "p95Ms": 2.0762999999999465,
+              "samplesMs": [
+                2.023900000000026,
+                0.9150999999999385,
+                1.494199999999978,
+                1.7069000000000187,
+                1.009900000000016,
+                2.0762999999999465,
+                1.0832000000000335
+              ]
+            }
+          },
+          {
+            "size": 1000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 999,
+            "sourceSha256": "cf8ff6d2fef2cd901e742796280cebdc5067780cbb311c0f629d78ca349ca9b0",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 2.0883999999999787,
+              "p95Ms": 3.356700000000046,
+              "samplesMs": [
+                2.039099999999962,
+                1.9247000000000298,
+                2.1212000000000444,
+                2.060699999999997,
+                2.0883999999999787,
+                3.356700000000046,
+                2.4424000000000206
+              ]
+            }
+          },
+          {
+            "size": 1000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 984,
+            "sourceSha256": "7332e7e49271432dd6cbcdbd8ebf8235669c47dcc33759d7a5d7444e8e2c612a",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 0.8642000000000962,
+              "p95Ms": 0.9726000000000568,
+              "samplesMs": [
+                0.9073999999999387,
+                0.7850999999999431,
+                0.7851000000000568,
+                0.898200000000088,
+                0.83400000000006,
+                0.9726000000000568,
+                0.8642000000000962
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "unique",
+            "groups": 5000,
+            "duplicateIssues": 0,
+            "sourceSha256": "91b9f170826f7be8b124c46db994b7e76d9e3972b2f6450fd617c7405f32e9a7",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 5.546899999999823,
+              "p95Ms": 7.867899999999963,
+              "samplesMs": [
+                4.188199999999938,
+                7.867899999999963,
+                4.517499999999927,
+                7.76419999999996,
+                7.840599999999995,
+                5.546899999999823,
+                4.838700000000017
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 4999,
+            "sourceSha256": "606af858ad6b9696a49d3ee4e27e3036f4679ea99e7c09f466ebdc603c702e54",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 35.44360000000006,
+              "p95Ms": 38.08609999999999,
+              "samplesMs": [
+                38.08609999999999,
+                30.810600000000022,
+                36.44270000000006,
+                36.05319999999983,
+                35.38200000000006,
+                35.44360000000006,
+                31.832499999999982
+              ]
+            }
+          },
+          {
+            "size": 5000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 4984,
+            "sourceSha256": "50058a337545ccea0177b8bb370e720b629ce8fb9bef637d71d3fa82e4e59465",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 4.992499999999836,
+              "p95Ms": 5.4401000000000295,
+              "samplesMs": [
+                4.628100000000131,
+                5.001600000000053,
+                4.289299999999912,
+                5.4401000000000295,
+                4.992499999999836,
+                5.382900000000063,
+                4.75890000000004
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "unique",
+            "groups": 10000,
+            "duplicateIssues": 0,
+            "sourceSha256": "1241f64baee0ba462d5f2cc1d4e27794197587d90a7fc3e3fe6688ca6058d78b",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 9.210500000000138,
+              "p95Ms": 12.415099999999939,
+              "samplesMs": [
+                8.590599999999995,
+                8.620200000000068,
+                9.210500000000138,
+                8.599199999999882,
+                11.839899999999943,
+                12.415099999999939,
+                10.675199999999904
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "all-colliding",
+            "groups": 1,
+            "duplicateIssues": 9999,
+            "sourceSha256": "7a0e975600d6ab29acb626673dffecf8759463e95a18cfc5364f08db257dbc73",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 130.29670000000033,
+              "p95Ms": 131.96580000000017,
+              "samplesMs": [
+                131.96580000000017,
+                131.3525999999997,
+                128.91490000000022,
+                126.42319999999972,
+                130.7415000000001,
+                129.0592999999999,
+                130.29670000000033
+              ]
+            }
+          },
+          {
+            "size": 10000,
+            "kind": "mixed-groups",
+            "groups": 16,
+            "duplicateIssues": 9984,
+            "sourceSha256": "d475745d9dce43b9ff88ef6ffdcbc15f5259632831f974dd3435972642a0a67a",
+            "ok": true,
+            "construction": {
+              "count": 7,
+              "medianMs": 15.418199999999615,
+              "p95Ms": 17.33809999999994,
+              "samplesMs": [
+                13.636700000000019,
+                16.286599999999908,
+                15.418199999999615,
+                17.33809999999994,
+                14.058300000000145,
+                16.57719999999972,
+                13.555399999999736
+              ]
+            }
+          }
+        ],
+        "ok": true,
+        "finishedAt": "2026-11-17T19:03:12.779Z"
+      }
+    }
+  ],
+  "verification": {
+    "focused": {
+      "command": "pnpm exec vitest run tests/model-integrity.test.ts tests/yjs tests/widgets-yjs.test.ts tests/node-ids --maxWorkers=2",
+      "passed": true,
+      "log": "artifacts/node-id-index-model-yjs-tests-20261117.log",
+      "logSha256": "3e760ecefa663733e350bda7fa8aa617b63b37e7bd4b0a7c3a597443e1f8befc",
+      "tests": 1034,
+      "files": 40
+    },
+    "types": {
+      "command": "pnpm exec tsc --noEmit",
+      "passed": true,
+      "log": "artifacts/node-id-index-types-20261117.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "api": {
+      "command": "pnpm test:api",
+      "passed": true,
+      "log": "artifacts/node-id-index-api-20261117.log",
+      "logSha256": "6db6e86793e352fe883ae7e8a5377c9497286965dfec560b3205d3c6ea71bdbb"
+    },
+    "headless": {
+      "command": "pnpm test:headless",
+      "passed": true,
+      "log": "artifacts/node-id-index-headless-20261117.log",
+      "logSha256": "b16f4c875130cea65b4e53ee00cae37fdcba9a90680dd15c148537485f29587d"
+    },
+    "budget": {
+      "command": "pnpm test:budget",
+      "passed": true,
+      "log": "artifacts/node-id-index-budget-20261117.log",
+      "logSha256": "dfb4b578f0fa2844764b378820422cea38f035d2da5acf9a9e3dfb606c739562"
+    },
+    "package": {
+      "command": "pnpm test:package",
+      "passed": true,
+      "log": "artifacts/node-id-index-package-20261117.log",
+      "logSha256": "1b06944f83fd821dbec808557dc70e49de905280394a8f570edf2fa27b3d439a"
+    }
+  },
+  "endurance": {
+    "report": "artifacts/node-id-index-yjs-endurance-20261117.json",
+    "reportSha256": "0efbf2b5e7322b68a6076f9c45bed4a4efdf8ccb6d3d29806ff8399a4bf320bc",
+    "data": {
+      "format": "fountain-yjs-endurance-diagnostic/1",
+      "startedAt": "2026-11-17T19:07:20.885Z",
+      "package": {
+        "root": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\node-id-index-20261117\\node_modules\\.pnpm\\fountainjs-editor@file+..+f_ac5f556e9dc6e55124d5e1a9d34733a6\\node_modules\\fountainjs-editor",
+        "version": "0.5.0-beta.1",
+        "fingerprint": {
+          "algorithm": "SHA-256(sorted relative path + NUL + contents + NUL)",
+          "scope": "dist/** and package.json",
+          "sha256": "4be1354b3ad3989a7b5d4696c3392ad3f72cb0e1dc7dca5bc85dca94670e5772",
+          "files": 1021,
+          "bytes": 16327764
+        },
+        "tarball": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\fountain-node-id-index-20261117.tgz",
+        "tarballSha256": "0a45660111f8782414a5aa38e402f4280cc588a557a370d1bfa9d9de5b5b531c"
+      },
+      "runtime": {
+        "node": "v24.22.1",
+        "yjs": "13.6.32",
+        "platform": "win32",
+        "release": "10.0.26200",
+        "arch": "x64",
+        "cpu": "12th Gen Intel(R) Core(TM) i3-12100F"
+      },
+      "configuration": {
+        "sizes": [
+          5000
+        ],
+        "cycles": 6,
+        "checkpointEvery": 3,
+        "gc": true,
+        "entry": "fountainjs-editor/yjs",
+        "module": "CommonJS public exports",
+        "clientIDs": [
+          101,
+          202
+        ],
+        "transport": "deterministic in-memory state-vector update relay; relay withheld for offline edits",
+        "timingThresholds": null
+      },
+      "scope": "Semantic diagnostic, not a production performance certification. No history clearing, forced Yjs GC policy changes, network transport, compaction, or migration. Same-room checkpoints preserve native identity but do not restore local undo stacks.",
+      "profiles": [
+        {
+          "size": 5000,
+          "cycles": 6,
+          "ok": true,
+          "traffic": {
+            "updates": 308,
+            "bytes": 102356,
+            "duplicateUpdates": 12,
+            "duplicateBytes": 11983
+          },
+          "milestones": [
+            {
+              "name": "seed",
+              "cycle": -1,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7846370,
+                  "sharedSha256": "2c202be0fdc24fb1a9197f0baa92f8d01c7ced8b2145eb891a9b122f0f53cc43",
+                  "documentSha256": "5d15ebf04e71a197e7cefc0fe65ae1df4aa5ff4455dabaace3e356a2f44936db",
+                  "topLevelBlocks": 5005,
+                  "characters": 123996,
+                  "canUndo": false
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 202,
+                  "sharedBytes": 7846370,
+                  "sharedSha256": "2c202be0fdc24fb1a9197f0baa92f8d01c7ced8b2145eb891a9b122f0f53cc43",
+                  "documentSha256": "5d15ebf04e71a197e7cefc0fe65ae1df4aa5ff4455dabaace3e356a2f44936db",
+                  "topLevelBlocks": 5005,
+                  "characters": 123996,
+                  "canUndo": false
+                }
+              ],
+              "memory": {
+                "heapUsed": 176295616,
+                "arrayBuffers": 8044155,
+                "heapAndArrayBuffers": 184339771,
+                "external": 10481493,
+                "rss": 389185536
+              },
+              "traffic": {
+                "updates": 0,
+                "bytes": 0,
+                "duplicateUpdates": 0,
+                "duplicateBytes": 0
+              }
+            },
+            {
+              "name": "cycle-complete",
+              "cycle": 0,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7850482,
+                  "sharedSha256": "568a6e8fcc95a8747fcd5aa091235b5c1a6fdbbcc5d364f9514b19481fceb3fe",
+                  "documentSha256": "48dd287a97451ffbcf84ab027af1e14ec7dcb8c726ba6a1e690c14aee0850e7a",
+                  "topLevelBlocks": 5005,
+                  "characters": 124009,
+                  "canUndo": true
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 202,
+                  "sharedBytes": 7848812,
+                  "sharedSha256": "4bb650417b2d40e33a8be77c925462015c04519185ca8c4ebd296649bacfc445",
+                  "documentSha256": "48dd287a97451ffbcf84ab027af1e14ec7dcb8c726ba6a1e690c14aee0850e7a",
+                  "topLevelBlocks": 5005,
+                  "characters": 124009,
+                  "canUndo": true
+                }
+              ],
+              "memory": {
+                "heapUsed": 179155760,
+                "arrayBuffers": 197785,
+                "heapAndArrayBuffers": 179353545,
+                "external": 2666595,
+                "rss": 775118848
+              },
+              "traffic": {
+                "updates": 46,
+                "bytes": 8590,
+                "duplicateUpdates": 2,
+                "duplicateBytes": 2124
+              }
+            },
+            {
+              "name": "cycle-complete",
+              "cycle": 1,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7853469,
+                  "sharedSha256": "6a9473cde81d01f40fa8ccda4b12c83a6a60d7148776d7f734ae28411f2aa528",
+                  "documentSha256": "5ed95a75f6afb8e149a145d0751c1ad4843365bc40394bef4f11dd8f175e30fc",
+                  "topLevelBlocks": 5005,
+                  "characters": 124022,
+                  "canUndo": true
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 202,
+                  "sharedBytes": 7850628,
+                  "sharedSha256": "0a97902e2679a6fd9ef480c88198e31446e3b0ab65c420b013181e7b925e661c",
+                  "documentSha256": "5ed95a75f6afb8e149a145d0751c1ad4843365bc40394bef4f11dd8f175e30fc",
+                  "topLevelBlocks": 5005,
+                  "characters": 124022,
+                  "canUndo": true
+                }
+              ],
+              "memory": {
+                "heapUsed": 177884888,
+                "arrayBuffers": 197785,
+                "heapAndArrayBuffers": 178082673,
+                "external": 2662847,
+                "rss": 780496896
+              },
+              "traffic": {
+                "updates": 92,
+                "bytes": 18307,
+                "duplicateUpdates": 4,
+                "duplicateBytes": 3452
+              }
+            },
+            {
+              "name": "cycle-complete",
+              "cycle": 2,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7857483,
+                  "sharedSha256": "34bf88828cd6b3da7f509a2d5f519e478ea2a64a50ca06ce163f1842fd4fa0c7",
+                  "documentSha256": "bb510473f886e3d1273d41eb7381a33c45bd89247d12367fa5519b0a718e0dc2",
+                  "topLevelBlocks": 5005,
+                  "characters": 124035,
+                  "canUndo": true
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 202,
+                  "sharedBytes": 7852915,
+                  "sharedSha256": "0c4fbf1e16702c6324ef578a7f54cd30b2460b16961ae22c248dd526b1c45bb8",
+                  "documentSha256": "bb510473f886e3d1273d41eb7381a33c45bd89247d12367fa5519b0a718e0dc2",
+                  "topLevelBlocks": 5005,
+                  "characters": 124035,
+                  "canUndo": true
+                }
+              ],
+              "memory": {
+                "heapUsed": 176877552,
+                "arrayBuffers": 197785,
+                "heapAndArrayBuffers": 177075337,
+                "external": 2662847,
+                "rss": 786608128
+              },
+              "traffic": {
+                "updates": 138,
+                "bytes": 32840,
+                "duplicateUpdates": 6,
+                "duplicateBytes": 5741
+              }
+            },
+            {
+              "name": "checkpoint-reopened",
+              "cycle": 2,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7857483,
+                  "sharedSha256": "34bf88828cd6b3da7f509a2d5f519e478ea2a64a50ca06ce163f1842fd4fa0c7",
+                  "documentSha256": "bb510473f886e3d1273d41eb7381a33c45bd89247d12367fa5519b0a718e0dc2",
+                  "topLevelBlocks": 5005,
+                  "characters": 124035,
+                  "canUndo": true
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 3202798154,
+                  "sharedBytes": 7857483,
+                  "sharedSha256": "34bf88828cd6b3da7f509a2d5f519e478ea2a64a50ca06ce163f1842fd4fa0c7",
+                  "documentSha256": "bb510473f886e3d1273d41eb7381a33c45bd89247d12367fa5519b0a718e0dc2",
+                  "topLevelBlocks": 5005,
+                  "characters": 124035,
+                  "canUndo": false
+                }
+              ],
+              "memory": {
+                "heapUsed": 186934120,
+                "arrayBuffers": 15912751,
+                "heapAndArrayBuffers": 202846871,
+                "external": 18377845,
+                "rss": 799916032
+              },
+              "traffic": {
+                "updates": 138,
+                "bytes": 32840,
+                "duplicateUpdates": 6,
+                "duplicateBytes": 5741
+              }
+            },
+            {
+              "name": "cycle-complete",
+              "cycle": 3,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7860831,
+                  "sharedSha256": "a03dc9fa791cff8a27d1c0fcd8cd16434e5c1493ecb71e3ed66974deba123fd2",
+                  "documentSha256": "c39dfbacf0d40c8d5ce2c584d90e45e775ba1fa3fdb36715e099ab75bdae916e",
+                  "topLevelBlocks": 5005,
+                  "characters": 124048,
+                  "canUndo": true
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 3202798154,
+                  "sharedBytes": 7859489,
+                  "sharedSha256": "9d60a27366980a5c354b52e64bdcb449d984b87f007fe5e7e879ebc916cc2cb6",
+                  "documentSha256": "c39dfbacf0d40c8d5ce2c584d90e45e775ba1fa3fdb36715e099ab75bdae916e",
+                  "topLevelBlocks": 5005,
+                  "characters": 124048,
+                  "canUndo": true
+                }
+              ],
+              "memory": {
+                "heapUsed": 181276144,
+                "arrayBuffers": 197785,
+                "heapAndArrayBuffers": 181473929,
+                "external": 2662879,
+                "rss": 836771840
+              },
+              "traffic": {
+                "updates": 200,
+                "bytes": 52519,
+                "duplicateUpdates": 8,
+                "duplicateBytes": 7468
+              }
+            },
+            {
+              "name": "cycle-complete",
+              "cycle": 4,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7864951,
+                  "sharedSha256": "27e6925312e940811a01f74dc9f2d8ff637d63acadd598b31ee6692a0f83eef3",
+                  "documentSha256": "914712f8133e4dfd8b855989183d3bdc232fb3054f6cc1249b00ca80a3e23911",
+                  "topLevelBlocks": 5005,
+                  "characters": 124061,
+                  "canUndo": true
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 3202798154,
+                  "sharedBytes": 7861889,
+                  "sharedSha256": "3028b91858d17eb35b32c67707e98e04263fdcefe949283fd6efaef1572779df",
+                  "documentSha256": "914712f8133e4dfd8b855989183d3bdc232fb3054f6cc1249b00ca80a3e23911",
+                  "topLevelBlocks": 5005,
+                  "characters": 124061,
+                  "canUndo": true
+                }
+              ],
+              "memory": {
+                "heapUsed": 180212016,
+                "arrayBuffers": 197785,
+                "heapAndArrayBuffers": 180409801,
+                "external": 2662879,
+                "rss": 840085504
+              },
+              "traffic": {
+                "updates": 246,
+                "bytes": 73559,
+                "duplicateUpdates": 10,
+                "duplicateBytes": 10082
+              }
+            },
+            {
+              "name": "cycle-complete",
+              "cycle": 5,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7867911,
+                  "sharedSha256": "5c79e8c6290359e61124ce3ecaf338f478361218a8a130f5b276045d5469d478",
+                  "documentSha256": "a599e2fc60102a41e2484c0c1348dfdda208ffbc60f5b50f774643493af0cf8d",
+                  "topLevelBlocks": 5005,
+                  "characters": 124074,
+                  "canUndo": true
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 3202798154,
+                  "sharedBytes": 7863723,
+                  "sharedSha256": "43050a8a8b6a8da780ee636c97c28d40e4a2116e239da518659923964f9f1b3c",
+                  "documentSha256": "a599e2fc60102a41e2484c0c1348dfdda208ffbc60f5b50f774643493af0cf8d",
+                  "topLevelBlocks": 5005,
+                  "characters": 124074,
+                  "canUndo": true
+                }
+              ],
+              "memory": {
+                "heapUsed": 180381592,
+                "arrayBuffers": 197785,
+                "heapAndArrayBuffers": 180579377,
+                "external": 2662879,
+                "rss": 842653696
+              },
+              "traffic": {
+                "updates": 292,
+                "bytes": 95556,
+                "duplicateUpdates": 12,
+                "duplicateBytes": 11983
+              }
+            },
+            {
+              "name": "checkpoint-reopened",
+              "cycle": 5,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7867911,
+                  "sharedSha256": "5c79e8c6290359e61124ce3ecaf338f478361218a8a130f5b276045d5469d478",
+                  "documentSha256": "a599e2fc60102a41e2484c0c1348dfdda208ffbc60f5b50f774643493af0cf8d",
+                  "topLevelBlocks": 5005,
+                  "characters": 124074,
+                  "canUndo": true
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 82680960,
+                  "sharedBytes": 7867899,
+                  "sharedSha256": "00634ebd45d3587cbc75845f7d4f535fd4b3dec6625974ab36e853c4f6cbad9e",
+                  "documentSha256": "a599e2fc60102a41e2484c0c1348dfdda208ffbc60f5b50f774643493af0cf8d",
+                  "topLevelBlocks": 5005,
+                  "characters": 124074,
+                  "canUndo": false
+                }
+              ],
+              "memory": {
+                "heapUsed": 188948328,
+                "arrayBuffers": 15933595,
+                "heapAndArrayBuffers": 204881923,
+                "external": 18398689,
+                "rss": 849473536
+              },
+              "traffic": {
+                "updates": 292,
+                "bytes": 95556,
+                "duplicateUpdates": 12,
+                "duplicateBytes": 11983
+              }
+            },
+            {
+              "name": "complete",
+              "cycle": 6,
+              "documents": [
+                {
+                  "author": "Ada",
+                  "nativeClientID": 101,
+                  "sharedBytes": 7868213,
+                  "sharedSha256": "beb9aba283080e92fb62b4e32ff8cf86777d2862c80c43f12482396ce560ad5e",
+                  "documentSha256": "a599e2fc60102a41e2484c0c1348dfdda208ffbc60f5b50f774643493af0cf8d",
+                  "topLevelBlocks": 5005,
+                  "characters": 124074,
+                  "canUndo": true
+                },
+                {
+                  "author": "Grace",
+                  "nativeClientID": 82680960,
+                  "sharedBytes": 7868003,
+                  "sharedSha256": "4973d0460479dd3e8bafbf5c7411fa5560627222ae9f779baf4258666ee6a693",
+                  "documentSha256": "a599e2fc60102a41e2484c0c1348dfdda208ffbc60f5b50f774643493af0cf8d",
+                  "topLevelBlocks": 5005,
+                  "characters": 124074,
+                  "canUndo": false
+                }
+              ],
+              "memory": {
+                "heapUsed": 181007272,
+                "arrayBuffers": 197785,
+                "heapAndArrayBuffers": 181205057,
+                "external": 2662879,
+                "rss": 832524288
+              },
+              "traffic": {
+                "updates": 308,
+                "bytes": 102356,
+                "duplicateUpdates": 12,
+                "duplicateBytes": 11983
+              }
+            }
+          ],
+          "measurements": {
+            "local.typing-burst": {
+              "count": 6,
+              "firstMs": 487.45989999999983,
+              "medianMs": 446.4553999999989,
+              "p95Ms": 528.5806999999986,
+              "maximumMs": 528.5806999999986,
+              "samplesMs": [
+                487.45989999999983,
+                451.58140000000094,
+                426.65029999999933,
+                443.7039999999979,
+                528.5806999999986,
+                446.4553999999989
+              ]
+            },
+            "transport.encode": {
+              "count": 148,
+              "firstMs": 8.455500000000029,
+              "medianMs": 8.300699999999779,
+              "p95Ms": 10.60740000000078,
+              "maximumMs": 15.478499999997439,
+              "samplesMs": [
+                8.455500000000029,
+                9.432000000000244,
+                9.330199999999877,
+                8.300699999999779,
+                8.615999999999985,
+                7.855599999999868,
+                9.201399999999921,
+                8.147600000000239,
+                8.561899999999696,
+                10.324499999999716,
+                10.248599999999897,
+                8.467800000000352,
+                8.074799999999414,
+                8.28440000000046,
+                8.32050000000072,
+                8.433399999999892,
+                7.917699999999968,
+                8.049399999999878,
+                7.937300000000505,
+                8.377800000000207,
+                8.725199999999859,
+                7.885299999999916,
+                8.413300000000163,
+                7.583800000000338,
+                9.142299999999523,
+                9.375200000000405,
+                8.918099999998958,
+                8.065200000000914,
+                8.199999999998909,
+                7.871399999999994,
+                8.048099999999977,
+                8.057399999999689,
+                8.073700000000827,
+                9.63260000000082,
+                7.775700000000143,
+                7.789899999999761,
+                8.948099999999613,
+                7.72729999999865,
+                7.980799999999363,
+                7.962099999998827,
+                8.01929999999993,
+                8.03230000000076,
+                8.125900000000911,
+                9.54949999999917,
+                8.963299999999435,
+                7.905499999998938,
+                7.996800000000803,
+                8.642000000001644,
+                7.8770999999997,
+                8.196899999999005,
+                8.015000000001237,
+                8.063700000000608,
+                8.103299999998853,
+                9.082699999999022,
+                8.212900000002264,
+                7.989099999998871,
+                8.016300000002957,
+                7.998800000001211,
+                8.116899999997258,
+                8.507300000001123,
+                7.985300000000279,
+                8.766599999999016,
+                8.226199999997334,
+                8.043900000000576,
+                7.954799999999523,
+                7.961600000002363,
+                9.649799999999232,
+                8.614799999999377,
+                8.360999999997148,
+                8.114999999997963,
+                9.758099999999104,
+                7.959200000001147,
+                7.848099999999249,
+                7.941300000002229,
+                9.643700000000536,
+                8.381199999999808,
+                9.354100000000471,
+                9.916399999998248,
+                8.732199999998556,
+                7.735099999998056,
+                9.095799999999144,
+                8.393999999996595,
+                8.058400000001711,
+                8.54320000000007,
+                9.981700000000274,
+                7.834000000002561,
+                11.255199999999604,
+                9.274000000001251,
+                10.60740000000078,
+                8.946700000000419,
+                11.59270000000106,
+                9.464700000000448,
+                12.27589999999691,
+                10.149300000000949,
+                8.69720000000234,
+                10.552199999998265,
+                10.153000000002066,
+                15.478499999997439,
+                14.559700000001612,
+                13.064899999997579,
+                8.927499999997963,
+                12.875,
+                9.33690000000206,
+                8.386899999997695,
+                8.238600000004226,
+                8.220799999995506,
+                8.347600000000966,
+                8.198600000003353,
+                7.882799999999406,
+                7.822899999999208,
+                8.260699999998906,
+                8.4971000000005,
+                7.901400000002468,
+                9.14600000000064,
+                8.99949999999808,
+                8.35729999999603,
+                8.291799999999057,
+                7.844599999996717,
+                8.49369999999908,
+                7.970199999996112,
+                7.875999999996566,
+                8.024199999999837,
+                8.686199999996461,
+                8.003799999998591,
+                8.684199999996054,
+                8.322599999999511,
+                8.232499999998254,
+                8.17659999999887,
+                7.870699999999488,
+                8.265900000005786,
+                8.238100000002305,
+                7.779400000006717,
+                9.16700000000128,
+                8.49489999999787,
+                8.19720000000234,
+                7.960500000001048,
+                9.329700000002049,
+                8.81760000000213,
+                8.27719999999681,
+                8.178899999998976,
+                9.806700000001001,
+                9.680599999999686,
+                8.401000000005297,
+                9.046999999998661,
+                8.020799999998417,
+                7.817299999995157,
+                9.744599999998172,
+                7.80619999999908
+              ]
+            },
+            "remote.apply": {
+              "count": 308,
+              "firstMs": 37.515100000000075,
+              "medianMs": 0.2224999999962165,
+              "p95Ms": 148.87019999999757,
+              "maximumMs": 283.9167000000016,
+              "samplesMs": [
+                37.515100000000075,
+                0.06870000000026266,
+                0.07009999999991123,
+                0.1054999999996653,
+                0.0684000000001106,
+                40.070000000000164,
+                0.08789999999999054,
+                0.1595999999999549,
+                51.53059999999914,
+                0.15499999999974534,
+                0.0739000000003216,
+                0.08899999999994179,
+                0.10930000000007567,
+                42.372699999999895,
+                0.09659999999985303,
+                0.10019999999985885,
+                150.4467999999997,
+                137.76779999999962,
+                0.08819999999923311,
+                0.14100000000053114,
+                0.27599999999983993,
+                0.1875,
+                0.08989999999994325,
+                134.58569999999963,
+                0.19790000000011787,
+                0.28799999999955617,
+                0.12110000000029686,
+                158.4391999999998,
+                0.1216999999996915,
+                0.11149999999997817,
+                145.3149999999996,
+                0.1430000000000291,
+                0.23880000000008295,
+                0.125,
+                149.42030000000068,
+                0.15869999999995343,
+                0.12600000000020373,
+                0.12439999999969586,
+                31.461700000000747,
+                0.12260000000060245,
+                0.09320000000025175,
+                0.1172999999998865,
+                0.08920000000034634,
+                36.195700000000215,
+                0.10560000000077707,
+                0.1066000000009808,
+                158.49889999999868,
+                0.14769999999953143,
+                0.075700000001234,
+                0.09840000000076543,
+                0.09989999999925203,
+                37.79949999999917,
+                0.25010000000111177,
+                0.1797999999998865,
+                40.1296999999995,
+                0.13740000000143482,
+                0.09490000000005239,
+                0.20730000000003201,
+                0.12789999999949941,
+                32.778699999998935,
+                0.1147000000000844,
+                0.10429999999905704,
+                35.66539999999986,
+                151.51310000000012,
+                0.12360000000080618,
+                0.11310000000048603,
+                0.22689999999965949,
+                0.15079999999943539,
+                0.11000000000058208,
+                136.01529999999912,
+                0.1473999999998341,
+                0.16389999999955762,
+                0.12819999999919673,
+                146.71359999999913,
+                0.27590000000054715,
+                0.12700000000040745,
+                141.09640000000036,
+                0.15940000000045984,
+                0.0930000000007567,
+                0.2415999999993801,
+                137.9331999999995,
+                0.14810000000034051,
+                0.09369999999944412,
+                0.14350000000013097,
+                38.94350000000122,
+                0.21850000000085856,
+                0.12449999999989814,
+                0.12159999999857973,
+                0.10239999999976135,
+                32.784200000000055,
+                0.3006999999997788,
+                0.1525999999994383,
+                34.03440000000046,
+                0.1893999999992957,
+                0.10180000000036671,
+                0.1499999999996362,
+                0.12190000000009604,
+                77.55139999999847,
+                0.14090000000032887,
+                0.17910000000119908,
+                50.1786000000011,
+                0.17030000000158907,
+                0.26630000000113796,
+                0.2752999999993335,
+                0.24099999999998545,
+                33.13869999999952,
+                0.13520000000062282,
+                0.18879999999990105,
+                154.94250000000102,
+                37.459899999998015,
+                0.11460000000079162,
+                0.15610000000015134,
+                0.28290000000197324,
+                0.18100000000049477,
+                0.12150000000110595,
+                134.06269999999859,
+                0.1091999999989639,
+                0.30350000000180444,
+                0.14419999999881838,
+                147.9965000000011,
+                0.1635999999998603,
+                0.200700000001234,
+                142.19350000000122,
+                0.16499999999723514,
+                0.12000000000261934,
+                0.20190000000002328,
+                146.16609999999855,
+                0.5918999999994412,
+                0.12670000000071013,
+                0.17799999999988358,
+                34.11999999999898,
+                0.2014000000017404,
+                0.14760000000023865,
+                0.14540000000124564,
+                0.11019999999916763,
+                36.688500000000204,
+                0.11500000000160071,
+                0.20980000000054133,
+                49.153000000002066,
+                0.2125000000014552,
+                0.10970000000088476,
+                0.14749999999912689,
+                46.95990000000165,
+                0.3605999999999767,
+                0.11929999999847496,
+                0.15049999999973807,
+                0.15170000000216532,
+                32.58010000000286,
+                0.15279999999984284,
+                0.14789999999993597,
+                37.362700000001496,
+                0.16710000000239233,
+                0.11310000000230502,
+                0.13460000000122818,
+                46.383099999999104,
+                0.19710000000122818,
+                0.11750000000029104,
+                0.14619999999922584,
+                0.22400000000197906,
+                42.76629999999932,
+                0.16930000000138534,
+                0.19279999999707798,
+                36.85359999999855,
+                0.18009999999776483,
+                0.1209000000017113,
+                0.18170000000100117,
+                0.4036999999989348,
+                34.813200000000506,
+                0.1658000000024913,
+                0.16419999999925494,
+                151.4610999999968,
+                153.28330000000278,
+                0.4183999999986554,
+                0.53519999999844,
+                0.3227000000006228,
+                0.2691000000013446,
+                0.42969999999695574,
+                140.99079999999958,
+                0.1882000000005064,
+                0.18800000000192085,
+                0.5848000000005413,
+                238.15490000000136,
+                0.3153999999994994,
+                0.30279999999766005,
+                176.55049999999756,
+                0.20379999999931897,
+                0.6059999999997672,
+                0.23620000000300934,
+                283.9167000000016,
+                0.4563000000016473,
+                0.32879999999931897,
+                0.22420000000056461,
+                59.44810000000143,
+                0.21259999999892898,
+                0.26490000000194414,
+                0.4014999999999418,
+                0.17329999999856227,
+                61.441900000001624,
+                0.3257999999987078,
+                0.22989999999845168,
+                68.22420000000056,
+                1.395699999997305,
+                0.22760000000198488,
+                0.46159999999872525,
+                0.6648999999997613,
+                110.67380000000048,
+                0.5455999999976484,
+                0.6021999999975378,
+                92.17659999999887,
+                0.5887999999977183,
+                0.48959999999351567,
+                0.5977999999959138,
+                0.19580000000132713,
+                55.14010000000417,
+                0.2716000000000349,
+                0.16540000000532018,
+                163.66999999999825,
+                41.11829999999463,
+                0.1319999999977881,
+                0.21779999999853317,
+                0.28399999999965075,
+                0.19860000000335276,
+                0.1356000000014319,
+                138.4123000000036,
+                0.13190000000031432,
+                0.194100000000617,
+                0.18269999999756692,
+                174.98649999999907,
+                0.19649999999819556,
+                0.26299999999901047,
+                161.70880000000034,
+                0.22419999999692664,
+                0.14770000000135042,
+                0.49539999999979045,
+                175.87309999999707,
+                0.20910000000003492,
+                0.16279999999824213,
+                0.22780000000057044,
+                32.709100000000035,
+                0.16929999999410938,
+                0.18159999999625143,
+                0.23840000000200234,
+                0.13440000000264263,
+                32.358500000002095,
+                0.1326000000044587,
+                0.2076999999990221,
+                35.86999999999534,
+                0.28210000000399305,
+                0.16140000000450527,
+                0.26579999999376014,
+                0.33980000000155997,
+                44.70769999999902,
+                0.20429999999760184,
+                0.1978000000017346,
+                46.33840000000055,
+                0.23619999999937136,
+                0.15899999999965075,
+                0.20660000000498258,
+                0.415499999995518,
+                43.91660000000411,
+                0.25499999999738066,
+                0.21199999999953434,
+                43.18319999999949,
+                142.9655000000057,
+                0.3393999999971129,
+                0.1960999999937485,
+                0.30480000000534346,
+                0.6110000000044238,
+                0.25570000000152504,
+                139.34769999999844,
+                0.2076999999990221,
+                0.2257000000026892,
+                0.22370000000228174,
+                148.16769999999815,
+                0.21550000000570435,
+                0.18839999999909196,
+                146.79739999999583,
+                0.23539999999775318,
+                0.1779000000024098,
+                0.23899999999412103,
+                148.87019999999757,
+                0.2731000000057975,
+                0.16729999999370193,
+                0.2198999999964144,
+                35.90950000000157,
+                0.20449999999982538,
+                0.30529999999998836,
+                0.2592000000004191,
+                0.22480000000359723,
+                38.194500000005064,
+                0.18630000000121072,
+                0.22149999999965075,
+                0.40890000000217697,
+                58.11490000000049,
+                0.36789999999746215,
+                0.2419000000008964,
+                43.566899999997986,
+                0.3863999999957741,
+                0.17129999999451684,
+                0.2379000000000815,
+                0.2224999999962165,
+                34.62319999999454,
+                0.2220999999990454,
+                0.20089999999618158,
+                39.9890000000014,
+                0.2445000000006985,
+                0.158000000003085,
+                0.2220999999990454
+              ]
+            },
+            "local.delete": {
+              "count": 6,
+              "firstMs": 287.5742,
+              "medianMs": 287.5742,
+              "p95Ms": 632.3614999999991,
+              "maximumMs": 632.3614999999991,
+              "samplesMs": [
+                287.5742,
+                315.2948000000015,
+                263.42139999999927,
+                333.6919000000016,
+                632.3614999999991,
+                271.5879000000059
+              ]
+            },
+            "local.mark-add": {
+              "count": 6,
+              "firstMs": 389.26429999999937,
+              "medianMs": 348.2624999999971,
+              "p95Ms": 677.4911000000029,
+              "maximumMs": 677.4911000000029,
+              "samplesMs": [
+                389.26429999999937,
+                377.3714999999993,
+                310.15500000000065,
+                278.7929000000004,
+                677.4911000000029,
+                348.2624999999971
+              ]
+            },
+            "local.mark-remove": {
+              "count": 6,
+              "firstMs": 272.66859999999997,
+              "medianMs": 264.7389000000003,
+              "p95Ms": 315.6412999999957,
+              "maximumMs": 315.6412999999957,
+              "samplesMs": [
+                272.66859999999997,
+                264.5679999999993,
+                264.7389000000003,
+                248.3263999999981,
+                315.6412999999957,
+                268.84470000000147
+              ]
+            },
+            "local.split": {
+              "count": 3,
+              "firstMs": 622.8550999999998,
+              "medianMs": 622.8550999999998,
+              "p95Ms": 639.1834000000017,
+              "maximumMs": 639.1834000000017,
+              "samplesMs": [
+                622.8550999999998,
+                570.1690999999992,
+                639.1834000000017
+              ]
+            },
+            "local.offline-peer-text": {
+              "count": 6,
+              "firstMs": 301.2336000000005,
+              "medianMs": 284.6762999999992,
+              "p95Ms": 333.3780999999981,
+              "maximumMs": 333.3780999999981,
+              "samplesMs": [
+                301.2336000000005,
+                267.2626,
+                259.29299999999785,
+                333.3780999999981,
+                284.6762999999992,
+                289.43500000000495
+              ]
+            },
+            "local.neutral-metadata": {
+              "count": 6,
+              "firstMs": 249.08299999999963,
+              "medianMs": 262.55059999999503,
+              "p95Ms": 265.2615000000005,
+              "maximumMs": 265.2615000000005,
+              "samplesMs": [
+                249.08299999999963,
+                257.8649999999998,
+                263.0181999999986,
+                263.3896999999997,
+                265.2615000000005,
+                262.55059999999503
+              ]
+            },
+            "local.undo": {
+              "count": 22,
+              "firstMs": 132.26180000000022,
+              "medianMs": 140.22810000000027,
+              "p95Ms": 235.5474000000031,
+              "maximumMs": 264.53610000000117,
+              "samplesMs": [
+                132.26180000000022,
+                132.35960000000068,
+                147.1893,
+                136.71020000000135,
+                138.54849999999897,
+                147.7541000000001,
+                133.29290000000037,
+                127.65769999999975,
+                140.22810000000027,
+                146.54190000000017,
+                128.31110000000263,
+                156.2510000000002,
+                204.17990000000282,
+                264.53610000000117,
+                149.84010000000126,
+                142.35239999999612,
+                145.41549999999552,
+                130.99980000000505,
+                131.5599000000002,
+                142.54009999999835,
+                235.5474000000031,
+                129.98479999999836
+              ]
+            },
+            "local.redo": {
+              "count": 14,
+              "firstMs": 133.01859999999942,
+              "medianMs": 142.71289999999863,
+              "p95Ms": 240.61109999999826,
+              "maximumMs": 240.61109999999826,
+              "samplesMs": [
+                133.01859999999942,
+                143.83860000000004,
+                135.14769999999953,
+                151.42220000000088,
+                128.29230000000098,
+                142.6244000000006,
+                138.6175000000003,
+                240.61109999999826,
+                233.01880000000165,
+                175.02859999999782,
+                142.71289999999863,
+                132.7832000000053,
+                148.28800000000047,
+                146.24039999999513
+              ]
+            },
+            "local.wrap": {
+              "count": 3,
+              "firstMs": 591.744200000001,
+              "medianMs": 591.744200000001,
+              "p95Ms": 799.4365000000034,
+              "maximumMs": 799.4365000000034,
+              "samplesMs": [
+                591.744200000001,
+                568.7037000000018,
+                799.4365000000034
+              ]
+            },
+            "checkpoint.capture": {
+              "count": 2,
+              "firstMs": 1534.3752999999997,
+              "medianMs": 1534.3752999999997,
+              "p95Ms": 2048.9553000000014,
+              "maximumMs": 2048.9553000000014,
+              "samplesMs": [
+                1534.3752999999997,
+                2048.9553000000014
+              ]
+            },
+            "checkpoint.restore": {
+              "count": 2,
+              "firstMs": 1040.3243000000002,
+              "medianMs": 1040.3243000000002,
+              "p95Ms": 1209.167300000001,
+              "maximumMs": 1209.167300000001,
+              "samplesMs": [
+                1040.3243000000002,
+                1209.167300000001
+              ]
+            },
+            "local.continue-after-reopen": {
+              "count": 2,
+              "firstMs": 313.4520999999986,
+              "medianMs": 313.4520999999986,
+              "p95Ms": 340.8735000000015,
+              "maximumMs": 340.8735000000015,
+              "samplesMs": [
+                313.4520999999986,
+                340.8735000000015
+              ]
+            }
+          },
+          "memory": {
+            "before": {
+              "heapUsed": 10340728,
+              "arrayBuffers": 197785,
+              "heapAndArrayBuffers": 10538513,
+              "external": 2609848,
+              "rss": 67813376
+            },
+            "afterDestroy": {
+              "heapUsed": 13204176,
+              "arrayBuffers": 197785,
+              "heapAndArrayBuffers": 13401961,
+              "external": 2662847,
+              "rss": 814112768
+            },
+            "retainedHeapAndArrayBuffers": 2863448,
+            "note": "After forced JS GC; public modules/JIT and this numeric report remain resident. No universal leak threshold is asserted."
+          }
+        }
+      ],
+      "ok": true,
+      "finishedAt": "2026-11-17T19:08:10.108Z"
+    },
+    "scope": "Mandatory semantic diagnostic on the exact installed candidate, not a matched typing-speed claim."
+  },
+  "browser": {
+    "command": "pnpm exec playwright test --config artifacts/playwright.node-id-index-20261117.config.ts --grep 'keeps offline text through|continues editing after competing offline wraps|copies a settings card through the real Chromium clipboard'",
+    "passed": 22,
+    "skipped": 2,
+    "skipReason": "The existing native system-clipboard journey is Chromium-only; its Firefox and WebKit variants skip. Seven offline/structural/undo journeys pass in every engine.",
+    "log": "artifacts/node-id-index-browser-run2-20261117.log",
+    "logSha256": "e23ff537095144e37d7526c6be6e0b4b0e56335870fbb2a990f5924b1dfc8193",
+    "configSha256": "94420c5f21b67ea4c297f4a18e342464021b43bf91593264aaf25565416c9589",
+    "viteConfigSha256": "6ee6b473014f379ad2bc9d3215cf39a57eec1de6599a4d52b9a04ba9ea034a51",
+    "headless": true,
+    "workers": 1,
+    "freshCache": true,
+    "loadedModule": [
+      {
+        "url": "http://127.0.0.1:4198/@fs/C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-ids.js",
+        "status": 200
+      }
+    ],
+    "moduleSha256": "d0fc1a0663814ee1cf6bc07181d9f314f557bce998ab174d041d46fe7d5f923a",
+    "clipboardTrace": {
+      "path": "artifacts/node-id-index-browser-20261117/collaboration-demo-copies--cd234-ipboard-before-its-original-chromium/trace.zip",
+      "sha256": "1e282659b2306528dfbce056c92c855a33cba06bb74502acfc038141ce6e5078"
+    },
+    "visualReview": [
+      {
+        "path": "artifacts/node-id-index-browser-20261117/collaboration-demo-keeps-o-712fc-e-public-collaboration-demo-chromium/retained-offline-merged.png",
+        "sha256": "2ef644e20235047b3468c06e428d0600c5d59484bb8e2476f96ba177b7c03d95",
+        "observation": "Both editors show the merged inline edit and partial bold, with the shared settings card retained."
+      },
+      {
+        "path": "artifacts/node-id-index-browser-20261117/collaboration-demo-keeps-o-2477c-e-public-collaboration-demo-firefox/retained-offline-merged.png",
+        "sha256": "5f634eeffb19ce04cdb7499a92fae7895d5b79b530eba5962a9d58545a6660aa",
+        "observation": "Both editors show matching quoted content, the inserted character, peer markers and retained shared settings."
+      },
+      {
+        "path": "artifacts/node-id-index-browser-20261117/collaboration-demo-continu-1d6e4-e-public-collaboration-demo-webkit/competing-wraps-merged.png",
+        "sha256": "cc73bc424bd4c8492ca4309a1b2e35530f63e09f543ef9d75b6a84bc51f9b470",
+        "observation": "Both editors show matching merged list content, peer markers and shared settings. Full-element capture includes a sticky header and distinct platform font rendering; no site-layout certification is claimed."
+      }
+    ],
+    "recordingsRetainedLocally": true,
+    "setupCorrection": "The first attempt stopped before any tests because artifact-local config cwd doubled artifacts in the Vite config path. The original error log remains local. Explicit repository cwd fixes setup; expectations, retries and tests are unchanged."
+  },
+  "preliminaryReports": "The initial index baseline preceded additional per-issue assertions. All four accepted reports were freshly rerun with the identical final harness SHA-256. Preliminary reports were not overwritten and are not used for the comparison.",
+  "reproduction": {
+    "build": "pnpm build",
+    "pack": "pnpm pack --out <fresh-tarball>",
+    "install": "pnpm --dir <fresh-consumer> add --offline --ignore-scripts --ignore-workspace <tarball> yjs@13.6.32",
+    "index": "node --expose-gc scripts/diagnose-node-id-index.mjs --package-root <consumer>/node_modules/fountainjs-editor --tarball <tarball> --sizes 1000,5000,10000 --repeats 7 --output <fresh-report.json>"
+  },
+  "limits": "No new dependency, public API, wire format, acceptance threshold or package-size allowance. Overall collaboration production acceptance remains partial; full-document normalization is still expensive."
+}

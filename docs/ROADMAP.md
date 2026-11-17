@@ -2,6 +2,16 @@
 
 Updated 2026-11-17.
 
+Stable-ID index repair (2026-11-17): collision groups no longer repeatedly copy
+their growing arrays. At 10,000 colliding IDs, installed-package construction
+medians improve from 126–130 ms to 6.5–7.2 ms in reversed run orders. This is index
+construction, not paste-to-paint or overall collaborative typing. Complete frozen
+collision groups and later snapshots are covered; 1,034 focused model/Yjs tests,
+22 recorded desktop journeys, types, package/API, headless and unchanged bundle
+limits pass. The installed 5,000-paragraph endurance diagnostic passes; expensive
+full-document normalization remains open. Capability counts/statuses are unchanged.
+[Repair evidence](NODE_IDS.md#collision-group-construction-repair--2026-11-17).
+
 Collaboration typing follow-up (2026-11-17): flat attribute immutability
 certificates did not improve the 5,000-paragraph installed-package workload.
 Reversed-order runs showed slower typing medians, so the runtime candidate was

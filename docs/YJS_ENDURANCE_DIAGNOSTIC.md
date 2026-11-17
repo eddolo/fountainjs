@@ -578,3 +578,31 @@ lockfile match the current source before the experiment; its only later public
 source difference is CSS, which is not loaded by this Node workload. Raw reports,
 logs, packages and consumers remain local. Whole-document normalization and
 large-document collaborative typing latency remain open work.
+
+## Per-pass normalization helper experiment (2026-11-17)
+
+Hoisting append, text-preparation and fragment-mapping callbacks out of each
+visited block did not produce a repeatable improvement. The candidate preserved
+all traversal, factory validation, binding reconstruction and atomic publication.
+The same installed 5,000-paragraph/six-cycle workload ran in both process orders:
+
+| Run | Median 11-character burst | Burst p95 | Median split | Median wrap |
+| --- | ---: | ---: | ---: | ---: |
+| Baseline first | 440.4 ms | 471.2 ms | 610.2 ms | 586.8 ms |
+| Candidate second | 434.0 ms | 539.2 ms | 573.3 ms | 629.5 ms |
+| Candidate first | 479.4 ms | 710.5 ms | 669.5 ms | 598.0 ms |
+| Baseline second | 439.1 ms | 508.6 ms | 632.4 ms | 674.0 ms |
+
+The slight first-pair median gain did not repeat; typing p95 was slower in both
+pairs. All runs passed semantic assertions and ended with the same portable
+document digest. The runtime refactor was discarded. Its
+[decision](../artifacts/yjs-normalize-closures-decision-20261117.json) and
+[patch](../artifacts/yjs-normalize-closures-rejected-20261117.patch) remain evidence
+only, with package/report hashes and full timing samples. No budget or acceptance
+limit changed.
+
+The subsequent [stable-ID collision-group repair](NODE_IDS.md#collision-group-construction-repair--2026-11-17)
+removes quadratic array copying in that separate index. Its installed package
+passes this 5,000-paragraph diagnostic; it does not remove whole-document
+normalization or establish a matched typing-latency improvement. Collaboration
+performance and production adoption remain open.

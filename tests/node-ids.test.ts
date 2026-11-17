@@ -142,6 +142,35 @@ describe('stable node identities', () => {
     ]);
   });
 
+  it('retains complete immutable collision groups and independent later snapshots', () => {
+    const kit = composeExtensions([CoreExtension]);
+    const editor = createEditor({ schema: kit.schema,
+      content: content(...Array.from({ length: 2500 }, (_, index) => paragraph(`Copy ${index}`, 'copied-id'))),
+    });
+    try {
+      const original = editor.state.doc, index = createStableNodeIdIndex(original);
+      const copies = index.getAll('copied-id');
+      expect(index.size).toBe(1);
+      expect(index.has('copied-id')).toBe(false);
+      expect(index.get('copied-id')).toBeUndefined();
+      expect(copies).toHaveLength(2500);
+      expect(copies.map(entry => entry.node.textContent)).toEqual(original.content.map(node => node.textContent));
+      expect(copies.map(entry => entry.path)).toEqual(Array.from({ length: 2500 }, (_, offset) => [offset]));
+      expect(index.issues).toHaveLength(2499);
+      expect(index.issues.every(issue => issue.reason === 'duplicate' && issue.duplicateOf?.[0] === 0)).toBe(true);
+      expect(Object.isFrozen(copies)).toBe(true);
+      expect(Object.isFrozen(index.entries)).toBe(true);
+      expect(copies.every(entry => Object.isFrozen(entry) && Object.isFrozen(entry.path))).toBe(true);
+      expect(Reflect.set(copies, 0, copies[1])).toBe(false);
+      const later = createStableNodeIdIndex(original.copy(original.content.slice(1)));
+      expect(later.getAll('copied-id')).toHaveLength(2499);
+      expect(later.getAll('copied-id')[0].node).toBe(original.child(1));
+      expect(index.getAll('copied-id')).toBe(copies);
+      expect(copies[0].node).toBe(original.child(0));
+      expect(copies).toHaveLength(2500);
+    } finally { editor.destroy(); }
+  });
+
   it('normalizes missing, invalid, and duplicate IDs without a browser or fake DOM', () => {
     expect(typeof document).toBe('undefined');
     const kit = composeExtensions([CoreExtension]);

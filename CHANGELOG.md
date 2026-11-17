@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Avoid quadratic copying when indexing many duplicate stable node IDs. Preserve
+  complete immutable collision groups, fail-closed lookup, paths and snapshots;
+  remove the redundant private dictionary copy during ordinary index rebuilding.
+
 - Add an explicit JSON export option to omit only a proven automatic trailing
   caret repair before persistence. Preserve authored blanks and root metadata.
 

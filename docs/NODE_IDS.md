@@ -158,7 +158,7 @@ repairs the shared Yjs document. The repair is deterministic and Yjs attributes
 converge normally; provider choice remains host-owned.
 
 The implementation rebuilds its immutable index after a document-changing
-transaction and performs one linear normalization pass when repairs are needed.
+transaction and normalizes missing, invalid, or duplicate IDs when repairs are needed.
 Repeated lookup is constant-time. The Node-only suite exercises initialization,
 maintenance, and 100,000 indexed reads over a 10,000-block document under
 explicit timing budgets.
@@ -174,3 +174,44 @@ explicit timing budgets.
 - Eligibility policy should be agreed by collaborating clients. Mixed clients
   still converge, but an ID-aware peer may add identities that an older peer
   merely preserves as ordinary attributes.
+
+## Collision-group construction repair — 2026-11-17
+
+The index now accumulates each private collision group and freezes its array
+once, then retains the private lookup map. Previously every duplicate cloned the
+entire growing group, followed by a second dictionary copy. Large collision groups
+therefore incurred quadratic array-copying work. Lookup remains ambiguous until
+repair: `get(id)` returns `undefined`, while `getAll(id)` retains every immutable
+entry in document order with all duplicate diagnostics and paths.
+
+A new semantic regression indexes 2,500 copies of the same ID and checks complete
+collision groups, immutable paths/results, fail-closed lookup and independent
+later snapshots. The installed-package diagnostic uses 1,000, 5,000 and 10,000
+blocks, seven samples per unique/colliding/mixed case, and reversed process order.
+At 10,000 blocks on this host:
+
+| Input | Baseline first | Repair second | Repair first | Baseline second |
+| --- | ---: | ---: | ---: | ---: |
+| Unique IDs | 9.55 ms | 8.70 ms | 7.97 ms | 9.21 ms |
+| All IDs collide | 126.04 ms | 6.47 ms | 7.24 ms | 130.30 ms |
+| Sixteen collision groups | 14.43 ms | 7.47 ms | 6.29 ms | 15.42 ms |
+
+These are index-construction medians, excluding fixture creation, assertions and
+GC. They are not end-to-end paste, typing, universal scaling or competitor claims.
+Every run checks all entries, paths, duplicate ownership, frozen results and
+unchanged source documents. The [receipt](../artifacts/node-id-index-repair-20261117.json)
+records the identical diagnostic hash, package fingerprints, raw-report hashes,
+every timing sample and reproduction commands. Run it against an installed build:
+
+```powershell
+node --expose-gc scripts/diagnose-node-id-index.mjs --package-root <consumer>/node_modules/fountainjs-editor --tarball <tarball> --sizes 1000,5000,10000 --repeats 7 --output <fresh-report.json>
+```
+
+Validation also passes 1,034 focused model/Yjs tests, TypeScript, package/API,
+headless and unchanged bundle-budget checks. Twenty-two recorded browser journeys
+pass across Chromium, Firefox and WebKit; two native-clipboard variants skip
+because that existing automation is Chromium-only. Captured inline/quote/merge
+states were visually reviewed. The exact installed repair passes the retained-Yjs
+5,000-paragraph/six-cycle offline, undo/redo and checkpoint diagnostic. That run's
+447 ms eleven-character burst still exposes full-document normalization cost;
+this repair does not close overall collaboration performance acceptance.

@@ -220,10 +220,15 @@ export class StableNodeIdIndex {
   constructor(document: Node, options: StableNodeIdOptions = {}) {
     const inspected = entriesAndIssues(document, resolveOptions(options));
     const mutable = new Map<string, StableNodeIdEntry[]>();
-    inspected.entries.forEach((entry) => mutable.set(entry.id, [...(mutable.get(entry.id) ?? []), entry]));
+    for (const entry of inspected.entries) {
+      const entries = mutable.get(entry.id);
+      if (entries) entries.push(entry);
+      else mutable.set(entry.id, [entry]);
+    }
+    for (const entries of mutable.values()) Object.freeze(entries);
     this.entries = Object.freeze(inspected.entries);
     this.issues = Object.freeze(inspected.issues);
-    this.byId = new Map([...mutable].map(([id, entries]) => [id, Object.freeze(entries)]));
+    this.byId = mutable;
     Object.freeze(this);
   }
 
