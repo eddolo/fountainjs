@@ -1,0 +1,19 @@
+{
+  "scope": "First data-retention candidate: semantic gate passed but independent feedback gate found a spurious conflict. Exact candidate inputs retained.",
+  "files": {
+    "artifacts/gitlab-native-runtime/build.json": {
+      "archive": "artifacts/gitlab-compatibility/access-repair-20261117/before-ui-repair/artifacts__gitlab-native-runtime__build.json",
+      "sha256": "f6e21503a7db720bc018e87731ffd25f2bfbfcb7a0615ebc8b68695bf66f1150"
+    },
+    "artifacts/gitlab-native-browser-install/install.json": {
+      "archive": "artifacts/gitlab-compatibility/access-repair-20261117/before-ui-repair/artifacts__gitlab-native-browser-install__install.json",
+      "sha256": "0c08db0260b52c30bcb9dd46b4f5e259e6bfca81c142c62233e42b9cd0320fae"
+    },
+    "integrations/gitlab/services/save_authority_patch.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-repair-20261117/before-ui-repair/integrations__gitlab__services__save_authority_patch.mjs",
+      "sha256": "bec35930746764c69eb47a9fd1f04c3c53d332b99cbca27f3f219e6bbb3c45e0"
+    }
+  },
+  "preparedChildSha256": "196782ab7ab05e76aa261a129f1ad8865e34ec240b1e2288539d6d36b093f114",
+  "preparedChildSpecSha256": "06977f290ef7a05c07f7f48f81a8054ad9894e1e12fa9cff70d71e14ad82ccb1"
+}

@@ -208,3 +208,8 @@ The [matched non-author access audit](COMPATIBILITY_ACCESS_RESULTS.md) now verif
 Guest/anonymous boundaries and exposes shared pending-draft loss after live edit
 permission revocation. Feature acceptance remains red; repair the host Save
 acknowledgement/draft-clearing path and rerun before promoting this workflow.
+
+The [verified revoked-save repair](COMPATIBILITY_ACCESS_REPAIR_RESULTS.md) keeps
+the draft, explains revoked authority and avoids a false conflict. Its fresh
+matched and independent feedback gates pass; genuine-conflict controls also pass.
+Historical red results above remain unchanged; broader acceptance remains open.

@@ -4,7 +4,7 @@
   "target": "es2018",
   "bytes": 1738299,
   "sha256": "b5f0108103090aba651c591a243dcee27c77fa8255a6d8c765e158aff7a3db05",
-  "parentRevision": "dce8dc2c771dee0512bf8020e7233896f87c406f",
+  "parentRevision": "eadfffc384b1aff7afdc62334959d6902ac73016",
   "inputs": {
     "integrations/gitlab/runtime/browser.ts": "9395e8c23d92ccfd3cb062d0e6cd0ecececf635cbaf74dba1219281e28c2da39",
     "integrations/gitlab/services/content_editor.ts": "f0072efec90161ac0262233693f76b3011935f50946127dc282ee377e54d95e7",
@@ -40,6 +40,7 @@
     "integrations/gitlab/services/footnote_boundary.ts": "92a836644139d1394ea4bfbc73f7af429c3374d7fcc8450d5eafdacd506d93ce",
     "integrations/gitlab/services/task_body_extractor.js": "751b15e023e137e04dbb84450300875fb69a23579b928244a73270163b6f5191",
     "integrations/gitlab/services/task_conversion_patch.mjs": "1539b06ac815a1856e741344cd3a2317ff564a4170cbee5daebcd94bac025247",
+    "integrations/gitlab/services/save_authority_patch.mjs": "93a81dcc67fe7713b622bc1007d4355d0fc24f3074a7357c410f6664f41ec1a0",
     "integrations/gitlab/services/footnote_editing.ts": "89ae8dd5346cc3b3da6c64a568f88596dd3ac7ee2123c389a2f634dea2aa2d70",
     "integrations/gitlab/services/footnote_renaming.ts": "874734624c86c9958da6a7d8483c150c5e4d569f59e6bd6b24b3483b0798d958",
     "integrations/gitlab/services/footnote_labels.ts": "622e70a0dccc7bafde0b346d39474ed9c34b96dc85025228f2e4e447037cdf63",

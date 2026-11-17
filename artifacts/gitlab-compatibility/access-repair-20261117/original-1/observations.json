@@ -1,0 +1,723 @@
+[
+  {
+    "id": "guest-readonly",
+    "input": {
+      "id": "guest-readonly",
+      "scope": "access",
+      "kind": "guest",
+      "title": "Non-author Guest access",
+      "initialAccessLevel": 10,
+      "markdown": "## Access review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "expectedGraph": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "status": "observed",
+    "stage": "complete",
+    "graphs": {
+      "initial": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "reloaded": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "actions": [
+      "Actual non-author Guest login and private issue reader; explicit denied REST write is an authorization probe, not a user edit. Anonymous UI/API access checked separately."
+    ],
+    "actorErrors": [],
+    "mutations": [],
+    "membership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 10
+    },
+    "setup": {
+      "iid": 390,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/390",
+      "description": "## Access review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "authorId": 1
+    },
+    "signInDestination": "/-/user_settings/password/new",
+    "passwordUpdateCompleted": true,
+    "authenticatedDestination": "/",
+    "actor": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "isAdmin": false
+    },
+    "adminIdentityProof": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "isAdmin": false
+    },
+    "initialReaderHTML": "<div data-testid=\"work-item-description\" class=\"\"><h2 id=\"user-content-access-review\" data-sourcepos=\"1:1-1:16\" dir=\"auto\">Access review<a href=\"#access-review\" aria-label=\"Link to heading 'Access review'\" data-heading-content=\"Access review\" class=\"anchor\"></a></h2>\n<p data-sourcepos=\"3:1-3:14\" dir=\"auto\">Shared record.</p>\n<p data-sourcepos=\"5:1-5:62\" dir=\"auto\">Keep <strong data-sourcepos=\"5:6-5:18\">important</strong> <a data-sourcepos=\"5:20-5:61\" href=\"https://example.com/reference\" rel=\"nofollow noreferrer noopener\" target=\"_blank\">reference</a>.</p>\n<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"7:1-10:3\" data-canonical-lang=\"python\" class=\"code highlight js-syntax-highlight language-python code-syntax-highlight-theme\" id=\"code-72\"><code><span id=\"LC1\" class=\"line\" data-lang=\"python\"><span class=\"k\">def</span> <span class=\"nf\">identity</span><span class=\"p\">(</span><span class=\"n\">value</span><span class=\"p\">):</span></span>\n<span id=\"LC2\" class=\"line\" data-lang=\"python\">    <span class=\"k\">return</span> <span class=\"n\">value</span></span></code></pre><copy-code><button type=\"button\" class=\"btn btn-default btn-md gl-button btn-icon has-tooltip\" data-title=\"Copy to clipboard\" aria-label=\"Copy to clipboard\" data-clipboard-target=\"pre#code-72\"><svg><use xlink:href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#copy-to-clipboard\"></use></svg></button></copy-code></div>\n<p data-sourcepos=\"12:1-12:11\" dir=\"auto\">End marker.</p></div> <!---->",
+    "permissionBefore": false,
+    "editControlAbsent": true,
+    "editableRootsAbsent": true,
+    "denialStatus": 403,
+    "writeDenied": true,
+    "afterDenied": {
+      "id": 2186,
+      "iid": 390,
+      "project_id": 1,
+      "title": "Non-author Guest access access-repair-20261117-a1",
+      "description": "## Access review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "state": "opened",
+      "created_at": "2026-11-17T17:46:40.589Z",
+      "updated_at": "2026-11-17T17:46:40.589Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/390",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "has_tasks": true,
+      "task_status": "0 of 0 checklist items completed",
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/390",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/390/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/390/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#390",
+        "relative": "#390",
+        "full": "root/fountain-product-integration#390"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "serverUnchanged": true,
+    "anonymousPage": {
+      "status": 200,
+      "path": "/users/sign_in"
+    },
+    "anonymousContentAbsent": true,
+    "anonymousEditAbsent": true,
+    "anonymousAPIStatus": 404,
+    "anonymousAPIDenied": true,
+    "cleanupMembership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 10
+    }
+  },
+  {
+    "id": "developer-revocation",
+    "input": {
+      "id": "developer-revocation",
+      "scope": "access",
+      "kind": "revocation",
+      "title": "Developer access removed during editing",
+      "initialAccessLevel": 30,
+      "markdown": "## Access review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "confirmedSuffix": " Confirmed.",
+      "pendingSuffix": " Pending review.",
+      "expectedGraph": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedConfirmed": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedPending": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed. Pending review.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "status": "observed",
+    "stage": "complete",
+    "graphs": {
+      "initial": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "confirmed": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "recovered": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "final": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "actions": [
+      "Actual Developer rich edit and UI Save prove initial authority. A root API fixture transition downgrades only the task-owned member to Guest while its draft remains open. Attempted UI Save is observed; backend/source and actual errors verify refusal. Restore Developer access, reload the existing autosaved draft without reinjection, Save and reopen."
+    ],
+    "actorErrors": [],
+    "mutations": [
+      {
+        "stage": "revoke-edit-access",
+        "status": 200,
+        "operation": "workItemUpdate",
+        "errors": [],
+        "updateErrors": [],
+        "updatedId": "gid://gitlab/WorkItem/2187",
+        "canUpdate": false
+      },
+      {
+        "stage": "restore-and-recover",
+        "status": 200,
+        "operation": "workItemUpdate",
+        "errors": [],
+        "updateErrors": [],
+        "updatedId": "gid://gitlab/WorkItem/2187",
+        "canUpdate": true
+      }
+    ],
+    "membership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 30
+    },
+    "setup": {
+      "iid": 391,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/391",
+      "description": "## Access review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "authorId": 1
+    },
+    "signInDestination": "/",
+    "authenticatedDestination": "/",
+    "actor": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "isAdmin": false
+    },
+    "adminIdentityProof": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "isAdmin": false
+    },
+    "initialReaderHTML": "<div data-testid=\"work-item-description\" class=\"\"><h2 id=\"user-content-access-review\" data-sourcepos=\"1:1-1:16\" dir=\"auto\">Access review<a href=\"#access-review\" aria-label=\"Link to heading 'Access review'\" data-heading-content=\"Access review\" class=\"anchor\"></a></h2>\n<p data-sourcepos=\"3:1-3:14\" dir=\"auto\">Shared record.</p>\n<p data-sourcepos=\"5:1-5:62\" dir=\"auto\">Keep <strong data-sourcepos=\"5:6-5:18\">important</strong> <a data-sourcepos=\"5:20-5:61\" href=\"https://example.com/reference\" rel=\"nofollow noreferrer noopener\" target=\"_blank\">reference</a>.</p>\n<div class=\"gl-relative markdown-code-block js-markdown-code\"><pre data-sourcepos=\"7:1-10:3\" data-canonical-lang=\"python\" class=\"code highlight js-syntax-highlight language-python code-syntax-highlight-theme\" id=\"code-72\"><code><span id=\"LC1\" class=\"line\" data-lang=\"python\"><span class=\"k\">def</span> <span class=\"nf\">identity</span><span class=\"p\">(</span><span class=\"n\">value</span><span class=\"p\">):</span></span>\n<span id=\"LC2\" class=\"line\" data-lang=\"python\">    <span class=\"k\">return</span> <span class=\"n\">value</span></span></code></pre><copy-code><button type=\"button\" class=\"btn btn-default btn-md gl-button btn-icon has-tooltip\" data-title=\"Copy to clipboard\" aria-label=\"Copy to clipboard\" data-clipboard-target=\"pre#code-72\"><svg><use xlink:href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#copy-to-clipboard\"></use></svg></button></copy-code></div>\n<p data-sourcepos=\"12:1-12:11\" dir=\"auto\">End marker.</p></div> <!---->",
+    "permissionBefore": true,
+    "editorProof": {
+      "native": false,
+      "className": "tiptap ProseMirror rte-text-box"
+    },
+    "confirmedSource": "## Access review\n\nShared record. Confirmed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+    "confirmedSaved": {
+      "id": 2187,
+      "iid": 391,
+      "project_id": 1,
+      "title": "Developer access removed during editing access-repair-20261117-a1",
+      "description": "## Access review\n\nShared record. Confirmed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "state": "opened",
+      "created_at": "2026-11-17T17:46:49.117Z",
+      "updated_at": "2026-11-17T17:46:57.442Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/391",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "has_tasks": true,
+      "task_status": "0 of 0 checklist items completed",
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/391",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/391/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/391/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#391",
+        "relative": "#391",
+        "full": "root/fountain-product-integration#391"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "initialWriteSucceeded": true,
+    "pendingSource": "## Access review\n\nShared record. Confirmed. Pending review.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+    "beforeRevocation": {
+      "id": 2187,
+      "iid": 391,
+      "project_id": 1,
+      "title": "Developer access removed during editing access-repair-20261117-a1",
+      "description": "## Access review\n\nShared record. Confirmed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "state": "opened",
+      "created_at": "2026-11-17T17:46:49.117Z",
+      "updated_at": "2026-11-17T17:46:57.442Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/391",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "has_tasks": true,
+      "task_status": "0 of 0 checklist items completed",
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/391",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/391/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/391/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#391",
+        "relative": "#391",
+        "full": "root/fountain-product-integration#391"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "draftStayedLocal": true,
+    "downgradedMembership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 10
+    },
+    "permissionRevoked": false,
+    "saveVisibleAfterRevocation": true,
+    "afterRevokedSave": {
+      "id": 2187,
+      "iid": 391,
+      "project_id": 1,
+      "title": "Developer access removed during editing access-repair-20261117-a1",
+      "description": "## Access review\n\nShared record. Confirmed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "state": "opened",
+      "created_at": "2026-11-17T17:46:49.117Z",
+      "updated_at": "2026-11-17T17:46:57.442Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/391",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "has_tasks": true,
+      "task_status": "0 of 0 checklist items completed",
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/391",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/391/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/391/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#391",
+        "relative": "#391",
+        "full": "root/fountain-product-integration#391"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "revokedWriteBlocked": true,
+    "errorAlerts": [],
+    "deniedSaveReported": false,
+    "retainedSource": null,
+    "draftRetainedAfterDenial": false,
+    "restoredMembership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 30
+    },
+    "permissionRestored": true,
+    "recoveredSource": "## Access review\n\nShared record. Confirmed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+    "draftRecoveredAfterReload": false,
+    "finalSaved": {
+      "id": 2187,
+      "iid": 391,
+      "project_id": 1,
+      "title": "Developer access removed during editing access-repair-20261117-a1",
+      "description": "## Access review\n\nShared record. Confirmed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "state": "opened",
+      "created_at": "2026-11-17T17:46:49.117Z",
+      "updated_at": "2026-11-17T17:46:57.442Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 1,
+        "username": "root",
+        "public_email": null,
+        "name": "Administrator",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+        "web_url": "http://127.0.0.1:5080/root"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/391",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "has_tasks": true,
+      "task_status": "0 of 0 checklist items completed",
+      "_links": {
+        "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/391",
+        "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/391/notes",
+        "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/391/award_emoji",
+        "project": "http://127.0.0.1:5080/api/v4/projects/1",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#391",
+        "relative": "#391",
+        "full": "root/fountain-product-integration#391"
+      },
+      "severity": "UNKNOWN",
+      "subscribed": true,
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "finalSourceExact": false,
+    "finalReopenedSource": "## Access review\n\nShared record. Confirmed.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+    "finalReopenExact": false,
+    "cleanupMembership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 10
+    }
+  }
+]

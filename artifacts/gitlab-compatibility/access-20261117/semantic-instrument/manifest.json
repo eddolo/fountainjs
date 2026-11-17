@@ -1,0 +1,21 @@
+{
+  "scope": "Exact instruments for the historical red original-5/fountain-2 pair. The repair follow-up adds returned-authority observation and uses fresh matched runs.",
+  "files": {
+    "scripts/run-gitlab-compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/semantic-instrument/scripts__run-gitlab-compatibility.mjs",
+      "sha256": "4a837771d04cbf6d79c5aec20f5639e91c3e8f85ee9059ff65b1c43e317b38da"
+    },
+    "scripts/audit-gitlab-compatibility-access.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/semantic-instrument/scripts__audit-gitlab-compatibility-access.mjs",
+      "sha256": "602544503ab2397f6badb0a42bedce2fdc27f5fd3292f35c3e688f3134114891"
+    },
+    "integrations/gitlab/fixtures/compatibility-access.json": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/semantic-instrument/integrations__gitlab__fixtures__compatibility-access.json",
+      "sha256": "f09954826f1d36e53a60293b8103239b2beb3d12686cfde79baa0b451f3adf68"
+    },
+    "integrations/gitlab/testing/compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/semantic-instrument/integrations__gitlab__testing__compatibility.mjs",
+      "sha256": "a92768803eb3666b2b071f9e7fda38906e83ec838b4c1f9a144a7c117800eb50"
+    }
+  }
+}

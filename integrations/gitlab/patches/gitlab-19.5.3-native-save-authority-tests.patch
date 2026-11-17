@@ -1,0 +1,66 @@
+diff --git a/spec/frontend/work_items/components/work_item_detail_spec.js b/spec/frontend/work_items/components/work_item_detail_spec.js
+index fcb0a3c6..56d84d54 100644
+--- a/spec/frontend/work_items/components/work_item_detail_spec.js
++++ b/spec/frontend/work_items/components/work_item_detail_spec.js
+@@ -474,4 +474,61 @@ describe('WorkItemDetail component', () => {
+     });
+ 
++    describe('when description update authority is revoked', () => {
++      let clearDraftSpy;
++      let mutationHandler;
++
++      beforeEach(async () => {
++        setWindowLocation('?edit=true');
++        clearDraftSpy = jest.fn();
++        mutationHandler = jest.fn().mockReturnValue({
++          data: {
++            workItemUpdate: {
++              workItem: workItemQueryResponseWithNoPermissions.data.namespace.workItem,
++              errors: [],
++            },
++          },
++        });
++        createComponent({ mutationHandler });
++        await mockApollo.resolveAll();
++      });
++
++      it.each(['Pending review.', ''])('keeps the %j draft and shows a failure', async (draft) => {
++        findWorkItemDescription().vm.$emit('update-draft', draft);
++        findWorkItemDescription().vm.$emit('update-work-item', { clearDraft: clearDraftSpy });
++        await mockApollo.resolveMutation(updateWorkItemMutation);
++
++        expect(clearDraftSpy).not.toHaveBeenCalled();
++        expect(findWorkItemDescription().props('editMode')).toBe(true);
++        expect(findWorkItemDescription().props('updateInProgress')).toBe(false);
++        expect(findAlert().text()).toBe(
++          'You no longer have permission to edit this description. Your draft has been kept.',
++        );
++      });
++
++      it('permits retry after authority returns and removes the old warning', async () => {
++        findWorkItemDescription().vm.$emit('update-draft', 'Pending review.');
++        findWorkItemDescription().vm.$emit('update-work-item', { clearDraft: clearDraftSpy });
++        await mockApollo.resolveMutation(updateWorkItemMutation);
++        expect(findAlert().exists()).toBe(true);
++
++        mutationHandler.mockReturnValue({
++          data: {
++            workItemUpdate: {
++              workItem: workItemByIidQueryResponse.data.namespace.workItem,
++              errors: [],
++            },
++          },
++        });
++        findWorkItemDescription().vm.$emit('update-work-item', { clearDraft: clearDraftSpy });
++        await mockApollo.resolveMutation(updateWorkItemMutation);
++
++        expect(clearDraftSpy).toHaveBeenCalledTimes(1);
++        expect(findWorkItemDescription().props('editMode')).toBe(false);
++        expect(wrapper.text()).not.toContain(
++          'You no longer have permission to edit this description. Your draft has been kept.',
++        );
++      });
++    });
++
+     it('does not call clearDraft when description is unsuccessfully updated', async () => {
+       const clearDraftSpy = jest.fn();

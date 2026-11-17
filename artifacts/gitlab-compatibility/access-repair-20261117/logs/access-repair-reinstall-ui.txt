@@ -1,0 +1,1 @@
+Installed native browser integration into matching GitLab source (32 files). Build and real-service browser verification are required.

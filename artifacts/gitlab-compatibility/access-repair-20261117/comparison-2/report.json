@@ -1,0 +1,738 @@
+{
+  "formatVersion": 1,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "access-repair-20261117",
+      "attempt": 1
+    },
+    "fountain": {
+      "runId": "access-repair-20261117",
+      "attempt": 2
+    }
+  },
+  "rows": [
+    {
+      "case": "guest-readonly",
+      "invariant": "member.role",
+      "label": "Initial project membership is the declared role",
+      "expected": 10,
+      "original": 10,
+      "fountain": 10,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "reader.initial",
+      "label": "Non-author member can read intact content",
+      "expected": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "cleanup.role",
+      "label": "Task-owned account ends with Guest access",
+      "expected": 10,
+      "original": 10,
+      "fountain": 10,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "permission.update",
+      "label": "Guest has no update permission on this root-authored record",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "editControlAbsent",
+      "label": "editControlAbsent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "editableRootsAbsent",
+      "label": "editableRootsAbsent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "writeDenied",
+      "label": "writeDenied",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "serverUnchanged",
+      "label": "serverUnchanged",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "anonymousContentAbsent",
+      "label": "anonymousContentAbsent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "anonymousEditAbsent",
+      "label": "anonymousEditAbsent",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "anonymousAPIDenied",
+      "label": "anonymousAPIDenied",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "reader.reloaded",
+      "label": "Denied update leaves the reloaded document intact",
+      "expected": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "guest-readonly",
+      "invariant": "actor.errors",
+      "label": "Authenticated task member has no browser errors",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "member.role",
+      "label": "Initial project membership is the declared role",
+      "expected": 30,
+      "original": 30,
+      "fountain": 30,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "reader.initial",
+      "label": "Non-author member can read intact content",
+      "expected": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "cleanup.role",
+      "label": "Task-owned account ends with Guest access",
+      "expected": 10,
+      "original": 10,
+      "fountain": 10,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "permission.initial",
+      "label": "Developer starts with update authority",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "permission.revoked",
+      "label": "Downgrade revokes update authority",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "permission.restored",
+      "label": "Restoring Developer grants update authority again",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "initialWriteSucceeded",
+      "label": "initialWriteSucceeded",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "draftStayedLocal",
+      "label": "draftStayedLocal",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "revokedWriteBlocked",
+      "label": "revokedWriteBlocked",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "deniedSaveReported",
+      "label": "deniedSaveReported",
+      "expected": true,
+      "original": false,
+      "fountain": true,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "draftRetainedAfterDenial",
+      "label": "draftRetainedAfterDenial",
+      "expected": true,
+      "original": false,
+      "fountain": true,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "draftRecoveredAfterReload",
+      "label": "draftRecoveredAfterReload",
+      "expected": true,
+      "original": false,
+      "fountain": true,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "finalSourceExact",
+      "label": "finalSourceExact",
+      "expected": true,
+      "original": false,
+      "fountain": true,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "finalReopenExact",
+      "label": "finalReopenExact",
+      "expected": true,
+      "original": false,
+      "fountain": true,
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "graph.confirmed",
+      "label": "confirmed: content, marks, link and code are intact",
+      "expected": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "graph.recovered",
+      "label": "recovered: content, marks, link and code are intact",
+      "expected": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed. Pending review.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed. Pending review.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "graph.final",
+      "label": "final: content, marks, link and code are intact",
+      "expected": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed. Pending review.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "original": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "fountain": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed. Pending review.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "developer-revocation",
+      "invariant": "actor.errors",
+      "label": "Authenticated task member has no browser errors",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    }
+  ],
+  "summary": {
+    "parity": 24,
+    "improvement": 7,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 31
+  },
+  "comparisonComplete": true,
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": true,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/access-repair-20261117/original-1/report.json",
+      "sha256": "f53eea6d129ca83bdfcd7e681ea74ce7d6c6c090ba838c5cce3a6a01707c3edc"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/access-repair-20261117/fountain-2/report.json",
+      "sha256": "d16aab0e4bbf7760d2ee971b32df8db3762ad6f285c87620bd44b68adea1ece2"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "a92768803eb3666b2b071f9e7fda38906e83ec838b4c1f9a144a7c117800eb50"
+  }
+}

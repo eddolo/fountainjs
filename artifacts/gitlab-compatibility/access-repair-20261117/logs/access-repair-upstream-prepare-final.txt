@@ -1,0 +1,8 @@
+file:///mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/prepare-gitlab-save-authority-tests.mjs:73
+const current=await readFile(target,'utf8');if(current!==baseline&&current!==value)throw new Error('Refusing unrecognized description Save test edits.');
+                                                                                         ^
+
+Error: Refusing unrecognized description Save test edits.
+    at file:///mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/prepare-gitlab-save-authority-tests.mjs:73:90
+
+Node.js v22.23.1

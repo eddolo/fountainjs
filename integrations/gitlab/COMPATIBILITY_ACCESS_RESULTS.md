@@ -114,3 +114,8 @@ CLI sign-in; no release was made.
 - [Fountain observations](../../artifacts/gitlab-compatibility/access-20261117/fountain-2/report.json)
 - [Unchanged production boundary](../../artifacts/gitlab-compatibility/access-20261117/production-before-repair/manifest.json)
 - [Validation receipt](../../artifacts/gitlab-compatibility/access-20261117/validation.json)
+
+The [verified revoked-save repair](COMPATIBILITY_ACCESS_REPAIR_RESULTS.md) keeps
+the draft, explains revoked authority and avoids a false conflict. Its fresh
+matched and independent feedback gates pass; genuine-conflict controls also pass.
+Historical red results above remain unchanged; broader acceptance remains open.

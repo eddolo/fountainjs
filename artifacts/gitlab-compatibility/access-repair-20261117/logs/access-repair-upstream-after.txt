@@ -1,0 +1,204 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js spec/frontend/work_items/components/work_item_detail_spec.js --runInBand
+FAIL spec/frontend/work_items/components/work_item_detail_spec.js
+  WorkItemDetail component
+    ✓ passes isDrawer prop to child component props (138 ms)
+    ✓ passes isDrawer prop to child component props (79 ms)
+    ✓ renders the resources widget when the work item has the widget (60 ms)
+    ✓ does not render the resources widget when the work item lacks the widget (54 ms)
+    ✓ calls the work item query (59 ms)
+    ✓ calls the work item query by workItemId (37 ms)
+    ✓ skips calling the work item query when there is no workItemIid and no workItemId (27 ms)
+    ✓ renders created/updated (59 ms)
+    ✓ applied correct classes to refetch error banner in the drawer (72 ms)
+    when there is no `workItemIid` prop
+      ✓ skips the work item query (32 ms)
+      ✓ skips the work item updated subscription (30 ms)
+      ✓ does not fetch allowed children types for current work item (30 ms)
+    when loading
+      ✓ renders skeleton loader (32 ms)
+    when loaded
+      ✓ does not render skeleton (68 ms)
+      ✓ updates the document title (68 ms)
+      ✓ renders todos widget if logged in (77 ms)
+      ✓ calls the work item updated subscription (62 ms)
+      ✓ fetches allowed children types for current work item (63 ms)
+      ✓ fetches and sets allowedChildTypes when workItem.id changes (66 ms)
+      ✓ handles Apollo error when fetching allowedChildTypes (105 ms)
+      ✓ passes `parentMilestone` prop to work item tree (66 ms)
+      ✓ renders error tracking widget (61 ms)
+      when `features` has a milestone
+        ✓ passes `parentMilestone` prop from `features` to work item tree (137 ms)
+    confidentiality
+      ✓ sends updateInProgress props to child component (85 ms)
+      ✓ shows a toast when mutation is successful (77 ms)
+      ✓ shows an alert when mutation fails (76 ms)
+    description
+      ✓ does not show description widget if loading description fails (32 ms)
+      ✓ shows description widget if description loads (59 ms)
+      ✓ calls clearDraft when description is successfully updated (73 ms)
+      ✓ does not call clearDraft when description is unsuccessfully updated (68 ms)
+      when description update authority is revoked
+        ✓ keeps the "Pending review." draft and shows a failure (73 ms)
+        ✓ keeps the "" draft and shows a failure (74 ms)
+        ✕ permits retry after authority returns and removes the old warning (88 ms)
+      task list item toggling
+        when the mutation succeeds
+          ✓ sends only the task list toggle in the mutation input (70 ms)
+        when the mutation reports a conflict
+          ✓ shows an alert (72 ms)
+          ✓ does not revert the checkbox (67 ms)
+        when the response has no work item to resync from
+          ✓ reverts the checkbox (68 ms)
+    ancestors widget
+      ✓ does not show ancestors widget by default (30 ms)
+      ✓ does not show ancestors widget if there is no parent (59 ms)
+      ✓ shows title in the header when there is no parent (61 ms)
+      `subepics` is unavailable
+        ✓ does not show ancestors widget and shows title in the header (54 ms)
+      `linked_items_epics` is unavailable
+        ✓ does not show linked items widget (58 ms)
+      with parent
+        ✓ shows ancestors widget if there is a parent (58 ms)
+        ✓ does not show title in the header when parent exists (59 ms)
+      with inaccessible parent
+        ✓ shows ancestors widget if there is a inaccessible parent (57 ms)
+        ✓ does not show title in the header when parent exists (56 ms)
+    when the work item query is unsuccessful
+      full view
+        ✓ does not show the work item detail wrapper (38 ms)
+        ✓ shows empty state with an error message (35 ms)
+        ✓ does not render work item UI elements (35 ms)
+    hierarchy widget
+      ✓ does not render children tree by when widget is not present (53 ms)
+      work item has children
+        ✓ renders children tree when work item type is Objective (54 ms)
+        ✓ renders children tree when work item type is Epic (60 ms)
+        ✓ sets the prop `hasChildren` to false for WorkItemActions when there are no child items (56 ms)
+        ✓ sets the prop `hasChildren` to true for WorkItemActions when there are child items (55 ms)
+        ✓ opens the drawer with the child when `select-child` is emitted (57 ms)
+        ✓ closes the drawer when `close-drawer` is emitted from the selected work item (60 ms)
+        ✓ closes the drawer when `select-child` is emitted with `null` (59 ms)
+    relationship widget
+      ✓ does not render when no linkedItems present (55 ms)
+      ✓ re-fetches workItem query when `WorkItemActions` emits `work-item-created` event (64 ms)
+      work item has children
+        ✓ renders relationship widget when work item has linked items (56 ms)
+        ✓ opens the drawer with the linked item when `show-modal` is emitted (58 ms)
+        ✓ passes the open panel down to the relationship widget (59 ms)
+    notes widget
+      ✓ renders notes by default (59 ms)
+      ✓ emits `duo-question-answered` when the notes widget emits it (57 ms)
+      comment templates
+        ✓ passes fetched comment template paths to WorkItemNotes component (56 ms)
+    abuse category selector
+      ✓ should not be visible by default (56 ms)
+      ✓ should be visible when the work item actions button emits `toggle-report-abuse-modal` event (61 ms)
+    work item change type
+      ✓ should call work item query on type change (60 ms)
+    todos widget
+      ✓ does not renders if not logged in (56 ms)
+    design widget
+      ✓ does not render if application has no router (59 ms)
+      ✓ renders if work item has design widget (60 ms)
+      ✓ renders if within a drawer (70 ms)
+      ✓ does not render upload design button if user does not have permission to upload (70 ms)
+      ✓ does not call permisisons query for a group work item (56 ms)
+      ✓ uploads a design (104 ms)
+      ✓ when upload is skipped (95 ms)
+      ✓ when upload fails - dismisses error (67 ms)
+      when designs are not added and no versions exist
+        ✓ renders the design dropzone when valid file is dragged and the Add design button is in viewport (61 ms)
+        ✓ does not render the design dropzone if add design button is not in viewport (63 ms)
+        ✓ does not render the design dropzone when invalid file is dragged (61 ms)
+    canPasteDesign
+      ✓ sets `canPasteDesign` to true on work item notes focus event (59 ms)
+      ✓ sets `canPasteDesign` to false on work item notes blur event (66 ms)
+    widgets slot
+      ✓ provides workItem data through the widgets scoped slot (61 ms)
+    work item dev widget create split button
+      ✓ should not show the button by default (57 ms)
+      ✓ should show the button when the widget is applicable (70 ms)
+      ✓ should not show the button when the work item is closed (66 ms)
+    work item attributes wrapper
+      ✓ renders the work item attributes wrapper (59 ms)
+      ✓ shows an error message when it emits an `error` event (60 ms)
+    work item two column view
+      ✓ renders the work item sticky header component (67 ms)
+      ✓ has the right sidebar (71 ms)
+    work item sticky header
+      ✓ sticky header is visible by default (60 ms)
+      ✓ sticky header is visible in drawer view (126 ms)
+      when content is passed for the sticky header
+        ✓ renders it inside the sticky header (125 ms)
+    edit button for work item title and description
+      with permissions to update
+        ✓ shows the edit button (66 ms)
+        ✓ renders the work item title with edit component (67 ms)
+        ✓ work item description is not shown in edit mode by default (70 ms)
+        when edit is clicked
+          ✓ work item title component shows in edit mode (74 ms)
+          ✓ work item description component shows in edit mode (71 ms)
+      without permissions
+        ✓ does not show edit button when user does not have the permissions for it (69 ms)
+    calculates correct isGroup prop for attributes wrapper
+      ✓ equal to isGroup injection when provided (66 ms)
+    work item parent id
+      ✓ passes the `parentWorkItemId` value down to the `WorkItemActions` component (68 ms)
+      ✓ passes the `parentWorkItemId` value down to the `WorkItemNotes` component (65 ms)
+    displays flash message when resolves a discussion
+      ✓ when it resolves one discussion (70 ms)
+      ✓ when it resolves all discussions (61 ms)
+    shows sidebar based on view options
+      ✓ when sidebar is shown based on view options (58 ms)
+      ✓ when sidebar is hidden based on view options (72 ms)
+      ✓ when show sidebar button is used (61 ms)
+    tracking
+      sidebar visibility tracking
+        ✓ tracks when sidebar is toggled (66 ms)
+        ✓ tracks when show sidebar button is clicked (137 ms)
+      description truncation tracking
+        ✓ tracks when truncation setting is toggled (64 ms)
+    when websocket is reconnecting
+      ✓ refetches work item when `actioncable:reconnected` event is emitted (74 ms)
+      ✓ does not refetch work item if less than 5 minutes have passed since last fetch (61 ms)
+    when refetching work item fails
+      ✓ renders refetch alert (63 ms)
+      ✓ applies correct classes to refetch alert (80 ms)
+      ✓ hides refetch alert when it is dismissed (68 ms)
+      ✓ hides refetch alert on successful refetch (85 ms)
+    when archived is true
+      ✓ passes correct props (58 ms)
+    when archived is false
+      ✓ passes correct props (69 ms)
+    Enables edit mode based on `edit` query parameter
+      ✓ enables edit mode when edit=true query parameter is present (67 ms)
+      ✓ does not enable edit mode when edit query parameter is false (60 ms)
+      ✓ does not enable edit mode when edit query parameter is not present (60 ms)
+
+  ● WorkItemDetail component › description › when description update authority is revoked › permits retry after authority returns and removes the old warning
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      525 |         expect(clearDraftSpy).toHaveBeenCalledTimes(1);
+      526 |         expect(findWorkItemDescription().props('editMode')).toBe(false);
+    > 527 |         expect(findAlert().exists()).toBe(false);
+          |                                      ^
+      528 |       });
+      529 |     });
+      530 |
+
+      at Object.toBe (spec/frontend/work_items/components/work_item_detail_spec.js:527:38)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 120 passed, 121 total
+Snapshots:   0 total
+Time:        12.526 s
+Ran all test suites matching /spec\/frontend\/work_items\/components\/work_item_detail_spec.js/i.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

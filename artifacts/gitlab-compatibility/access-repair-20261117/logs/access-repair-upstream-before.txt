@@ -1,0 +1,248 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js spec/frontend/work_items/components/work_item_detail_spec.js --runInBand --testNamePattern 'description update authority is revoked'
+Warning: fragment with name MilestoneFragment already exists.
+graphql-tag enforces all fragment names across your application to be unique; read more about
+this in the docs: http://dev.apollodata.com/core/fragments.html#unique-names
+Warning: fragment with name TimelogFragment already exists.
+graphql-tag enforces all fragment names across your application to be unique; read more about
+this in the docs: http://dev.apollodata.com/core/fragments.html#unique-names
+FAIL spec/frontend/work_items/components/work_item_detail_spec.js
+  WorkItemDetail component
+    ○ skipped passes isDrawer prop to child component props
+    ○ skipped passes isDrawer prop to child component props
+    ○ skipped renders the resources widget when the work item has the widget
+    ○ skipped does not render the resources widget when the work item lacks the widget
+    ○ skipped calls the work item query
+    ○ skipped calls the work item query by workItemId
+    ○ skipped skips calling the work item query when there is no workItemIid and no workItemId
+    ○ skipped renders created/updated
+    ○ skipped applied correct classes to refetch error banner in the drawer
+    when there is no `workItemIid` prop
+      ○ skipped skips the work item query
+      ○ skipped skips the work item updated subscription
+      ○ skipped does not fetch allowed children types for current work item
+    when loading
+      ○ skipped renders skeleton loader
+    when loaded
+      ○ skipped does not render skeleton
+      ○ skipped updates the document title
+      ○ skipped renders todos widget if logged in
+      ○ skipped calls the work item updated subscription
+      ○ skipped fetches allowed children types for current work item
+      ○ skipped fetches and sets allowedChildTypes when workItem.id changes
+      ○ skipped handles Apollo error when fetching allowedChildTypes
+      ○ skipped passes `parentMilestone` prop to work item tree
+      ○ skipped renders error tracking widget
+      when `features` has a milestone
+        ○ skipped passes `parentMilestone` prop from `features` to work item tree
+    confidentiality
+      ○ skipped sends updateInProgress props to child component
+      ○ skipped shows a toast when mutation is successful
+      ○ skipped shows an alert when mutation fails
+    description
+      ○ skipped does not show description widget if loading description fails
+      ○ skipped shows description widget if description loads
+      ○ skipped calls clearDraft when description is successfully updated
+      ○ skipped does not call clearDraft when description is unsuccessfully updated
+      when description update authority is revoked
+        ✕ keeps the "Pending review." draft and shows a failure (206 ms)
+        ✕ keeps the "" draft and shows a failure (104 ms)
+        ✕ permits retry after authority returns and removes the old warning (117 ms)
+      task list item toggling
+        when the mutation succeeds
+          ○ skipped sends only the task list toggle in the mutation input
+        when the mutation reports a conflict
+          ○ skipped shows an alert
+          ○ skipped does not revert the checkbox
+        when the response has no work item to resync from
+          ○ skipped reverts the checkbox
+    ancestors widget
+      ○ skipped does not show ancestors widget by default
+      ○ skipped does not show ancestors widget if there is no parent
+      ○ skipped shows title in the header when there is no parent
+      `subepics` is unavailable
+        ○ skipped does not show ancestors widget and shows title in the header
+      `linked_items_epics` is unavailable
+        ○ skipped does not show linked items widget
+      with parent
+        ○ skipped shows ancestors widget if there is a parent
+        ○ skipped does not show title in the header when parent exists
+      with inaccessible parent
+        ○ skipped shows ancestors widget if there is a inaccessible parent
+        ○ skipped does not show title in the header when parent exists
+    when the work item query is unsuccessful
+      full view
+        ○ skipped does not show the work item detail wrapper
+        ○ skipped shows empty state with an error message
+        ○ skipped does not render work item UI elements
+    hierarchy widget
+      ○ skipped does not render children tree by when widget is not present
+      work item has children
+        ○ skipped renders children tree when work item type is Objective
+        ○ skipped renders children tree when work item type is Epic
+        ○ skipped sets the prop `hasChildren` to false for WorkItemActions when there are no child items
+        ○ skipped sets the prop `hasChildren` to true for WorkItemActions when there are child items
+        ○ skipped opens the drawer with the child when `select-child` is emitted
+        ○ skipped closes the drawer when `close-drawer` is emitted from the selected work item
+        ○ skipped closes the drawer when `select-child` is emitted with `null`
+    relationship widget
+      ○ skipped does not render when no linkedItems present
+      ○ skipped re-fetches workItem query when `WorkItemActions` emits `work-item-created` event
+      work item has children
+        ○ skipped renders relationship widget when work item has linked items
+        ○ skipped opens the drawer with the linked item when `show-modal` is emitted
+        ○ skipped passes the open panel down to the relationship widget
+    notes widget
+      ○ skipped renders notes by default
+      ○ skipped emits `duo-question-answered` when the notes widget emits it
+      comment templates
+        ○ skipped passes fetched comment template paths to WorkItemNotes component
+    abuse category selector
+      ○ skipped should not be visible by default
+      ○ skipped should be visible when the work item actions button emits `toggle-report-abuse-modal` event
+    work item change type
+      ○ skipped should call work item query on type change
+    todos widget
+      ○ skipped does not renders if not logged in
+    design widget
+      ○ skipped does not render if application has no router
+      ○ skipped renders if work item has design widget
+      ○ skipped renders if within a drawer
+      ○ skipped does not render upload design button if user does not have permission to upload
+      ○ skipped does not call permisisons query for a group work item
+      ○ skipped uploads a design
+      ○ skipped when upload is skipped
+      ○ skipped when upload fails - dismisses error
+      when designs are not added and no versions exist
+        ○ skipped renders the design dropzone when valid file is dragged and the Add design button is in viewport
+        ○ skipped does not render the design dropzone if add design button is not in viewport
+        ○ skipped does not render the design dropzone when invalid file is dragged
+    canPasteDesign
+      ○ skipped sets `canPasteDesign` to true on work item notes focus event
+      ○ skipped sets `canPasteDesign` to false on work item notes blur event
+    widgets slot
+      ○ skipped provides workItem data through the widgets scoped slot
+    work item dev widget create split button
+      ○ skipped should not show the button by default
+      ○ skipped should show the button when the widget is applicable
+      ○ skipped should not show the button when the work item is closed
+    work item attributes wrapper
+      ○ skipped renders the work item attributes wrapper
+      ○ skipped shows an error message when it emits an `error` event
+    work item two column view
+      ○ skipped renders the work item sticky header component
+      ○ skipped has the right sidebar
+    work item sticky header
+      ○ skipped sticky header is visible by default
+      ○ skipped sticky header is visible in drawer view
+      when content is passed for the sticky header
+        ○ skipped renders it inside the sticky header
+    edit button for work item title and description
+      with permissions to update
+        ○ skipped shows the edit button
+        ○ skipped renders the work item title with edit component
+        ○ skipped work item description is not shown in edit mode by default
+        when edit is clicked
+          ○ skipped work item title component shows in edit mode
+          ○ skipped work item description component shows in edit mode
+      without permissions
+        ○ skipped does not show edit button when user does not have the permissions for it
+    calculates correct isGroup prop for attributes wrapper
+      ○ skipped equal to isGroup injection when provided
+    work item parent id
+      ○ skipped passes the `parentWorkItemId` value down to the `WorkItemActions` component
+      ○ skipped passes the `parentWorkItemId` value down to the `WorkItemNotes` component
+    displays flash message when resolves a discussion
+      ○ skipped when it resolves one discussion
+      ○ skipped when it resolves all discussions
+    shows sidebar based on view options
+      ○ skipped when sidebar is shown based on view options
+      ○ skipped when sidebar is hidden based on view options
+      ○ skipped when show sidebar button is used
+    tracking
+      sidebar visibility tracking
+        ○ skipped tracks when sidebar is toggled
+        ○ skipped tracks when show sidebar button is clicked
+      description truncation tracking
+        ○ skipped tracks when truncation setting is toggled
+    when websocket is reconnecting
+      ○ skipped refetches work item when `actioncable:reconnected` event is emitted
+      ○ skipped does not refetch work item if less than 5 minutes have passed since last fetch
+    when refetching work item fails
+      ○ skipped renders refetch alert
+      ○ skipped applies correct classes to refetch alert
+      ○ skipped hides refetch alert when it is dismissed
+      ○ skipped hides refetch alert on successful refetch
+    when archived is true
+      ○ skipped passes correct props
+    when archived is false
+      ○ skipped passes correct props
+    Enables edit mode based on `edit` query parameter
+      ○ skipped enables edit mode when edit=true query parameter is present
+      ○ skipped does not enable edit mode when edit query parameter is false
+      ○ skipped does not enable edit mode when edit query parameter is not present
+
+  ● WorkItemDetail component › description › when description update authority is revoked › keeps the "Pending review." draft and shows a failure
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: called with 0 arguments
+
+      498 |         await mockApollo.resolveMutation(updateWorkItemMutation);
+      499 |
+    > 500 |         expect(clearDraftSpy).not.toHaveBeenCalled();
+          |                                   ^
+      501 |         expect(findWorkItemDescription().props('editMode')).toBe(true);
+      502 |         expect(findWorkItemDescription().props('updateInProgress')).toBe(false);
+      503 |         expect(findAlert().text()).toBe(
+
+      at toHaveBeenCalled (spec/frontend/work_items/components/work_item_detail_spec.js:500:35)
+
+  ● WorkItemDetail component › description › when description update authority is revoked › keeps the "" draft and shows a failure
+
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected number of calls: 0
+    Received number of calls: 1
+
+    1: called with 0 arguments
+
+      498 |         await mockApollo.resolveMutation(updateWorkItemMutation);
+      499 |
+    > 500 |         expect(clearDraftSpy).not.toHaveBeenCalled();
+          |                                   ^
+      501 |         expect(findWorkItemDescription().props('editMode')).toBe(true);
+      502 |         expect(findWorkItemDescription().props('updateInProgress')).toBe(false);
+      503 |         expect(findAlert().text()).toBe(
+
+      at toHaveBeenCalled (spec/frontend/work_items/components/work_item_detail_spec.js:500:35)
+
+  ● WorkItemDetail component › description › when description update authority is revoked › permits retry after authority returns and removes the old warning
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 2
+
+      523 |         await mockApollo.resolveMutation(updateWorkItemMutation);
+      524 |
+    > 525 |         expect(clearDraftSpy).toHaveBeenCalledTimes(1);
+          |                               ^
+      526 |         expect(findWorkItemDescription().props('editMode')).toBe(false);
+      527 |         expect(findAlert().exists()).toBe(false);
+      528 |       });
+
+      at Object.toHaveBeenCalledTimes (spec/frontend/work_items/components/work_item_detail_spec.js:525:31)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 118 skipped, 121 total
+Snapshots:   0 total
+Time:        9.715 s
+Ran all test suites matching /spec\/frontend\/work_items\/components\/work_item_detail_spec.js/i with tests matching "description update authority is revoked".
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+error Command failed with exit code 1.

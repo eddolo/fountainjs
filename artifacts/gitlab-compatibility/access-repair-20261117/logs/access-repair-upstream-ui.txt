@@ -1,0 +1,13 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js spec/frontend/work_items/components/work_item_detail_spec.js spec/frontend/work_items/components/work_item_description_spec.js --runInBand
+PASS spec/frontend/work_items/components/work_item_description_spec.js
+PASS spec/frontend/work_items/components/work_item_detail_spec.js
+
+Test Suites: 2 passed, 2 total
+Tests:       187 passed, 187 total
+Snapshots:   0 total
+Time:        16.948 s
+Ran all test suites matching /spec\/frontend\/work_items\/components\/work_item_detail_spec.js|spec\/frontend\/work_items\/components\/work_item_description_spec.js/i.
+Done in 18.25s.

@@ -1,0 +1,6 @@
+{
+  "scope": "Preparation failure observed in tool output, not a raw shell-log archive.",
+  "failure": "Python SyntaxError: unterminated string literal at the test-preparation step. No new test file was written.",
+  "consequence": "The outer shell continued and ran only the existing 13 host tests before build/install. That result is not claimed as new baseline/feedback coverage.",
+  "next": "Correct preparation, assert its exit code and rerun both new test groups."
+}

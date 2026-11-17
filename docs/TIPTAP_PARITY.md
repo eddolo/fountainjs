@@ -2,6 +2,17 @@
 
 ## Current programme status — 2026-11-17
 
+Revoked-save repair (2026-11-17): the actual non-admin workflow now keeps the
+pending draft and shows a clear failure when returned update authority is false;
+restored access, reload, Save and reopen retain exact source. A false conflict
+exposed by the retained form is also repaired. The fresh matched pair verifies
+24 parity/seven improvement checks, with a separate passing feedback gate and
+native-only genuine-conflict controls. 1,531 integration tests / 60 files, strict
+types and 187 upstream component tests pass. Older red/partial results remain
+retained. Broader roles, offline/racing cases and full application acceptance
+remain open.
+[Repair evidence](../integrations/gitlab/COMPATIBILITY_ACCESS_REPAIR_RESULTS.md).
+
 Matched non-author access audit (2026-11-17): Guest description access and
 anonymous private-record refusal pass. A real Developer-to-Guest downgrade while
 editing exposes shared draft loss: UI Save closes without an error, persisted

@@ -1,0 +1,4 @@
+yarn run v1.22.22
+$ /home/eddolo/.cache/fountainjs-gitlab-product/source/node_modules/.bin/prettier --write spec/frontend/work_items/components/work_item_detail_spec.js
+spec/frontend/work_items/components/work_item_detail_spec.js 775ms
+Done in 1.21s.
