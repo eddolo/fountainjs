@@ -272,6 +272,7 @@ test('human homepage journey: live outline, invisible text review, and structura
     const target = editor.locator(':scope > p').first();
     await target.scrollIntoViewIfNeeded();
     const currentHeading = editor.locator(':scope > h2').first();
+    const headingText = await currentHeading.textContent();
     await currentHeading.hover();
     const pointerDrag = page.getByRole('button', { name: 'Drag Heading block' });
     const dragBox = await pointerDrag.boundingBox();
@@ -283,13 +284,22 @@ test('human homepage journey: live outline, invisible text review, and structura
       await page.mouse.down();
       await page.mouse.move(dragBox.x + dragBox.width / 2 + 12, dragBox.y + dragBox.height / 2 + 12, { steps: 4 });
       await page.mouse.move(targetBox.x + 20, targetBox.y + 2, { steps: 14 });
+      // A second move over the destination emits dragover in every engine.
+      // https://playwright.dev/docs/input#dragging-manually
+      await page.mouse.move(targetBox.x + 20, targetBox.y + 2);
       const indicator = page.locator('[data-fountain-block-drop-indicator]');
       await expect(indicator).toBeVisible();
       await expect(target).toHaveAttribute('data-fountain-drop-position', 'before');
       await capture(page, testInfo, '05-separate-pointer-drop-indicator');
       await pause(page);
+      // Native drag auto-scroll can move the target while recording pauses.
+      // Re-enter the intended destination before release, using real input.
+      await target.hover({ position: { x: 20, y: 2 } });
+      await target.hover({ position: { x: 20, y: 2 } });
+      await expect(target).toHaveAttribute('data-fountain-drop-position', 'before');
       await page.mouse.up();
       await expect(indicator).toBeHidden();
+      await expect.poll(() => target.evaluate(element => element.previousElementSibling?.textContent)).toBe(headingText);
     }
   });
 

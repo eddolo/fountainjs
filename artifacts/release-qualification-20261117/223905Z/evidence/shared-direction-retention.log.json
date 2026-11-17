@@ -1,0 +1,7 @@
+{
+  "original": "artifacts/release-qualification-20261117/223905Z/shared-direction-retention.log",
+  "sha256": "60985f2a31fc5160873151f1e5f98811d9e21e8a480be6b78a4a494407f66010",
+  "bytes": 310,
+  "rawBase64": "ewogICJzY29wZSI6ICJCb3VuZGVkIHB1YmxpYyBIVE1MIHByb2plY3Rpb24gd2l0aCBzaGFyZWQgZGlyZWN0aW9uOyBubyBET00gb3IgaGlzdG9yeSBwbHVnaW4iLAogICJlZGl0cyI6IDIwMDAsCiAgImJsb2NrcyI6IDEwMDAsCiAgImVsYXBzZWRNcyI6IDc3NTQuMjM4NywKICAibGl2ZUdyb3d0aEJ5dGVzIjogMzc4MDcyLAogICJsaXZlTGltaXRCeXRlcyI6IDgzODg2MDgsCiAgImRlc3Ryb3llZEVkaXRvcnMiOiA0MCwKICAiZGVzdHJveWVkR3Jvd3RoQnl0ZXMiOiAyNTY2OTYsCiAgImRlc3Ryb3llZExpbWl0Qnl0ZXMiOiAxNjc3NzIxNgp9Cg==",
+  "readableText": "{\n  \"scope\": \"Bounded public HTML projection with shared direction; no DOM or history plugin\",\n  \"edits\": 2000,\n  \"blocks\": 1000,\n  \"elapsedMs\": 7754.2387,\n  \"liveGrowthBytes\": 378072,\n  \"liveLimitBytes\": 8388608,\n  \"destroyedEditors\": 40,\n  \"destroyedGrowthBytes\": 256696,\n  \"destroyedLimitBytes\": 16777216\n}\n"
+}

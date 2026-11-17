@@ -1,0 +1,27 @@
+{
+  "phrase": "Cooling study 2026",
+  "tolerancePt": 0.01,
+  "deltasPtByPageIndex": {
+    "0": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "1": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "negativeControl": {
+    "retainedPreRepairPDF": "artifacts/table-column-precision-native-evidence-20261104/unpacked/native",
+    "deltasPtByPageIndex": {
+      "0": {
+        "x": -18.099999999999994,
+        "y": 0.0
+      },
+      "1": {
+        "x": -18.099999999999994,
+        "y": 0.0
+      }
+    }
+  }
+}

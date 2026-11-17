@@ -1,0 +1,7 @@
+{
+  "original": "artifacts/release-qualification-20261117/223905Z/test-headless.log",
+  "sha256": "1dbf0cfa212fecac66fb2bdb5d429f2c3db657816d4a341c4338b0a3f8f09952",
+  "bytes": 130,
+  "rawBase64": "JCBub2RlIHNjcmlwdHMvY2hlY2staGVhZGxlc3MtYm91bmRhcnkubWpzICYmIHRzYyAtcCB0c2NvbmZpZy5oZWFkbGVzcy5qc29uCkhlYWRsZXNzIHNvdXJjZSBib3VuZGFyeSB2ZXJpZmllZCBhY3Jvc3MgMTQ0IG1vZHVsZXMuCg==",
+  "readableText": "$ node scripts/check-headless-boundary.mjs && tsc -p tsconfig.headless.json\nHeadless source boundary verified across 144 modules.\n"
+}

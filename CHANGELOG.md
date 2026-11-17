@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.5.0-beta.1 — 2026-11-17
+
 - Reuse proven unchanged retained-collaboration position indexes after native
   text edits while preserving complete factory validation and full fallbacks.
   Keep held/fresh anchors coherent through length changes and reentrant reads.
@@ -179,8 +181,6 @@
   Refused valid rich content is not retried as plain text to bypass editing
   rules. Hosts handling the outcome union exhaustively should add the new case.
   The homepage displays its character limit and explains refused pastes.
-
-## 0.5.0-beta.1 — 2026-11-11
 
 - Defer pending virtual viewport/measurement work during an external control
   press so it cannot move the target before the click. Resume on pointer release,

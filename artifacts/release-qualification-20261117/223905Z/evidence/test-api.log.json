@@ -1,0 +1,7 @@
+{
+  "original": "artifacts/release-qualification-20261117/223905Z/test-api.log",
+  "sha256": "95f42eeb293f0803af78c448d47fc672ee1d785fb8d30bae5e1e371b903e50b7",
+  "bytes": 95,
+  "rawBase64": "JCBub2RlIHNjcmlwdHMvY2hlY2stYXBpLXN1cmZhY2UubWpzClB1YmxpYyBBUEkgc3VyZmFjZSB2ZXJpZmllZCBhY3Jvc3MgNDUyIGRlY2xhcmF0aW9uIGZpbGVzLgo=",
+  "readableText": "$ node scripts/check-api-surface.mjs\nPublic API surface verified across 452 declaration files.\n"
+}

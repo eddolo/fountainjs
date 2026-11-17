@@ -1,0 +1,7 @@
+{
+  "original": "artifacts/release-qualification-20261117/223905Z/typecheck.log",
+  "sha256": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+  "bytes": 522,
+  "rawBase64": "JCB0c2MgLS1ub0VtaXQgJiYgcG5wbSB0ZXN0OnN2ZWx0ZS10eXBlcyAmJiBwbnBtIHRlc3Q6YW5ndWxhci10eXBlcwokIHBucG0gLS1kaXIgdG9vbHMvc3ZlbHRlLWNoZWNrIGV4ZWMgc3ZlbHRlLWNoZWNrIC0td29ya3NwYWNlIC4uLy4uIC0tdHNjb25maWcgdHNjb25maWcuc3ZlbHRlLmpzb24gLS1mYWlsLW9uLXdhcm5pbmdzCkxvYWRpbmcgc3ZlbHRlLWNoZWNrIGluIHdvcmtzcGFjZTogYzpcVXNlcnNcY2FwcHVcRGVza3RvcFxwYW9sb2FwcFxmYWlsdXJlc1xGb3VudGFpbmpzLUFwcApHZXR0aW5nIFN2ZWx0ZSBkaWFnbm9zdGljcy4uLgoKc3ZlbHRlLWNoZWNrIGZvdW5kIDAgZXJyb3JzIGFuZCAwIHdhcm5pbmdzCiQgcG5wbSAtLWRpciB0b29scy9hbmd1bGFyLWJ1aWxkIGV4ZWMgbmdjIC1wIC4uLy4uL3RzY29uZmlnLmFuZ3VsYXIuanNvbiAtLW5vRW1pdCAmJiBwbnBtIC0tZGlyIHRvb2xzL2FuZ3VsYXItYnVpbGQgZXhlYyBuZ2MgLXAgLi4vLi4vdHNjb25maWcuYW5ndWxhci1kZW1vLmpzb24gLS1ub0VtaXQK",
+  "readableText": "$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types\n$ pnpm --dir tools/svelte-check exec svelte-check --workspace ../.. --tsconfig tsconfig.svelte.json --fail-on-warnings\nLoading svelte-check in workspace: c:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\nGetting Svelte diagnostics...\n\nsvelte-check found 0 errors and 0 warnings\n$ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json --noEmit && pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json --noEmit\n"
+}

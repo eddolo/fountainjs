@@ -1,0 +1,26 @@
+[
+  {
+    "name": "recorded-ui-final",
+    "exitCode": 0,
+    "seconds": 78.19,
+    "log": "artifacts\\release-qualification-20261117\\223905Z\\recorded-ui-final.log"
+  },
+  {
+    "name": "types-final",
+    "exitCode": 0,
+    "seconds": 3.18,
+    "log": "artifacts\\release-qualification-20261117\\223905Z\\types-final.log"
+  },
+  {
+    "name": "performance-idle-control",
+    "exitCode": 0,
+    "seconds": 6.93,
+    "log": "artifacts\\release-qualification-20261117\\223905Z\\performance-idle-control.log"
+  },
+  {
+    "name": "release-metadata",
+    "exitCode": 0,
+    "seconds": 0.06,
+    "log": "artifacts\\release-qualification-20261117\\223905Z\\release-metadata.log"
+  }
+]

@@ -1,0 +1,1022 @@
+[
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/editor-capabilities-audit--096fd-an-paste-and-trailing-input/trace.zip",
+    "bytes": 15630957,
+    "sha256": "cc6c281f3032985c0bdbb4a4b551fea77c8b1681a0c3764d82c3c1f3c82b1fe1",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/editor-capabilities-audit--096fd-an-paste-and-trailing-input/video.webm",
+    "bytes": 1261952,
+    "sha256": "4be8b3bb178c191a8c101000494cba17d1d3676f0d2d820489663aa07b5ab7f0",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/editor-capabilities-audit--97386-it-undo-export-and-reimport/trace.zip",
+    "bytes": 8481636,
+    "sha256": "d618d0f415164605067c2d949b3b105fc75ef04fd212396e54f668eac21364d2",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/editor-capabilities-audit--97386-it-undo-export-and-reimport/video.webm",
+    "bytes": 681926,
+    "sha256": "b480c0f3e67c6e51ac166e7ed8a6f4d64df4a496c4731fd0e68d123ad2a6bf4c",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/editor-capabilities-audit--e9265-ntain-and-Fountain-back-out/trace.zip",
+    "bytes": 3420479,
+    "sha256": "5523c105694a7da7c32117e0e50c157803af8d9c1938056725346680cadf0431",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/editor-capabilities-audit--e9265-ntain-and-Fountain-back-out/video.webm",
+    "bytes": 774338,
+    "sha256": "1583723f2536a249fc1133db594e72d1a638233e6060a1dc0d7a1440a0b9e7e1",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/trace.zip",
+    "bytes": 18776470,
+    "sha256": "7f79339e864a0b752731e5d64af0c24a79275be749eb56fafa29081f15215da7",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/video.webm",
+    "bytes": 1425430,
+    "sha256": "cfa4938011d4583aa0c3754fb22c3a5775078eca92a6e59d1b0e53d78569a1b3",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-docu-5477f-e-import-and-inspect-output/trace.zip",
+    "bytes": 6837189,
+    "sha256": "33f1ad623c4381dde717903d82f7dee7011778eaf6045562d070f982e3645e34",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-docu-5477f-e-import-and-inspect-output/video.webm",
+    "bytes": 911108,
+    "sha256": "41ee5a84134223719330b2d25409529c0a4f01f8ed2b0ca3b472dd5ee911eb74",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-rele-6714f-n-structured-tools-and-undo/trace.zip",
+    "bytes": 28304561,
+    "sha256": "9a1f1089e84c602bc45a219d81d0b64d6d24cf7b362ee7f4a337c58e90bdbd01",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-rele-6714f-n-structured-tools-and-undo/video.webm",
+    "bytes": 2117289,
+    "sha256": "c35de52e221d67b1557860a7b9e21e17bc81851a3cfc3dc7b65e8fba93768791",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/attachments/fountain-a4-export-6588b7187816182be611b49d093a381644e7317e.pdf",
+    "bytes": 19758,
+    "sha256": "348a0928b8e970033beb2456de231ada57a62e1cbef954f5c2481b398ed63b22",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/fountain-a4-export.pdf",
+    "bytes": 19758,
+    "sha256": "348a0928b8e970033beb2456de231ada57a62e1cbef954f5c2481b398ed63b22",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/trace.zip",
+    "bytes": 1386754,
+    "sha256": "b10ba544cc519cad9dffa643c35a746bc3f241df709741bd105453cd0770491c",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/video.webm",
+    "bytes": 238590,
+    "sha256": "8f00951d768b9d63f736c20f7ecac1f0da940f650e9c5d763b350af92994ad6f",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-visu-7a965--an-independent-DOCX-render/trace.zip",
+    "bytes": 5286505,
+    "sha256": "de9d5e9a9a8e94d7be147567939209022ddae617b03a050489dbceae793109b5",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui/results/latest-ui-audit-human-visu-7a965--an-independent-DOCX-render/video.webm",
+    "bytes": 282666,
+    "sha256": "6eb1aa25c6476800099836c184fd440941844d7eda6868d2b1bc0173cc06bc29",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-chromium/trace.zip",
+    "bytes": 2444482,
+    "sha256": "5ca3db4528454756de1c7b6e858fd3e4e4f993569771365bf5c77758df62e07f",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-chromium/video.webm",
+    "bytes": 221247,
+    "sha256": "6c480050852ae4373ce8485b4a7c890ee7006819aaaa49e5b711851da1fc4e32",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-firefox/trace.zip",
+    "bytes": 2896476,
+    "sha256": "f90abb4697d4ecd93808c04acfb4a475a3a75ea3337929f65f43f460901f69e8",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-firefox/video.webm",
+    "bytes": 232955,
+    "sha256": "4db10591defa2ef89d5bda49f4b22d76ab9c7e48de0efa4cbc80d3b6ac5f3462",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-webkit/trace.zip",
+    "bytes": 1902589,
+    "sha256": "8398a419e65bd1bf432520c844aef3e51cbbcf15a8935fa1882dee9482e9c709",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-webkit/video.webm",
+    "bytes": 227523,
+    "sha256": "b437bc705d1883e347b918aefa6d2acf02684ff1701a71ad67f25e85450001c9",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-chromium/trace.zip",
+    "bytes": 2392665,
+    "sha256": "c65620e945a167cf5256167d0965bce6b8464d13fd482ed960fb284bcaf7c261",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-chromium/video-1.webm",
+    "bytes": 24116,
+    "sha256": "52bbfa3fa695562b727774a70ae46b37d1b95cdf78e634df434f1dd810bdb5f6",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-chromium/video.webm",
+    "bytes": 649395,
+    "sha256": "2be506631291cee40cc059b9fd38ff6802f8d363ec88af7529d0f58603ced858",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-firefox/trace.zip",
+    "bytes": 6557236,
+    "sha256": "daaf6afd1d463c6cdd7baa985e4cde8003445b433f0a7d452028e2d736a437b7",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-firefox/video-1.webm",
+    "bytes": 48550,
+    "sha256": "c559fb9c2591526533787b886d85efeac214d2ee6dee35214db8e4c9dbf2c105",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-firefox/video.webm",
+    "bytes": 636828,
+    "sha256": "2e8aa6f04a412ec19288fd18f25d2e3923be354ecfd84001f3d94fabbaa9b2a8",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-webkit/trace.zip",
+    "bytes": 2393622,
+    "sha256": "0ae55a091c646674157d99e82fe2350c19001a96f5821dc6087d40a5e744929d",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-webkit/video-1.webm",
+    "bytes": 23472,
+    "sha256": "b0c4a226b5ec909e43c3821accaba4494e2f29d621acfed8e42b580003ddba53",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-webkit/video.webm",
+    "bytes": 583281,
+    "sha256": "d49d3009b3eb403e8f36806bf4281b2dfa075396229e075697f9f90583ab164a",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-chromium/trace.zip",
+    "bytes": 3676806,
+    "sha256": "99e77e2191907f6191a0815baca6f0a9b0b661ad775116ea3574b42c4df1af8c",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-chromium/video.webm",
+    "bytes": 262754,
+    "sha256": "83c9b73ba71f5b2530b4f707772f649eeb89c6ecf3bdf8e096f2dd07ebf5b54b",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-firefox/trace.zip",
+    "bytes": 3702509,
+    "sha256": "c445bb9900be75aa943505b3625d533132cc6c200d953a0caad2c5bdd8ead3ce",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-firefox/video.webm",
+    "bytes": 294278,
+    "sha256": "5a358397a9f2dd634bd7843a871b89202696af171c934cd9dec882f19678ab93",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-webkit/trace.zip",
+    "bytes": 4122246,
+    "sha256": "6870a870917c0082b9a44e3949ce4848ea86148c33a964d05e0bf5848cd58e53",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-webkit/video.webm",
+    "bytes": 357377,
+    "sha256": "252f0506ead924dbecf7567a50eb573eca676eabf8c293808f99777cd74ea82e",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-325b3--room-after-explicit-review-chromium/trace.zip",
+    "bytes": 3286258,
+    "sha256": "0525af36fefedb32e341a59c4f1a177211caba38be9bf03080b6b0eb841cbcd5",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-325b3--room-after-explicit-review-chromium/video.webm",
+    "bytes": 209154,
+    "sha256": "c3e6c7979e789e9665cf8f6a2b22a21dbc29f358de765497ef567bfda353f0ec",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-325b3--room-after-explicit-review-firefox/trace.zip",
+    "bytes": 3243345,
+    "sha256": "546af21b0aed21f2ba9c58e373eea625e751796d5540b58d6b51e524b7fb6997",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-325b3--room-after-explicit-review-firefox/video.webm",
+    "bytes": 243219,
+    "sha256": "4137bfac6d99e547e8cc9a989391edc994117cf93bf5b324e194ed9d90c72f1a",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-325b3--room-after-explicit-review-webkit/trace.zip",
+    "bytes": 3974129,
+    "sha256": "e53d6db49c815401805b64ef7499fc0d2bd1fd27798f4eac636b64b68b79fbda",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-325b3--room-after-explicit-review-webkit/video.webm",
+    "bytes": 335110,
+    "sha256": "cfb15f064f3a5865bc775f10e357aad1bf64b0d7448bf3386f0fd90fdb9092fd",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-chromium/trace.zip",
+    "bytes": 2215486,
+    "sha256": "a58068a957f7b81539787dac1677508254365b5159ee6c5176692fefd363ce9d",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-chromium/video.webm",
+    "bytes": 177723,
+    "sha256": "059ba25cc2aa43c1f87bb7d90ce4e85ae9c7c0f52975115ca4c62e62e0977818",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-firefox/trace.zip",
+    "bytes": 2300145,
+    "sha256": "fff4daae680079a6a9774a70de50f5bc4022f36b69415ab27332896a5b8d0ecd",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-firefox/video.webm",
+    "bytes": 202361,
+    "sha256": "22469560d6601ea6d41f55fce4e2bdd940ddc93475d49f9ad83e0c4bb2e7b432",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-webkit/trace.zip",
+    "bytes": 3181877,
+    "sha256": "7d23d8c3339ddeb089c3270b77f8e2d896ec088126f02246fbd745042ec62b1d",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-webkit/video.webm",
+    "bytes": 215575,
+    "sha256": "16a6811925193eec5dac295cf24d8df90ec0fc93e82dbfd6df6b7e61cdd03d18",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-chromium/trace.zip",
+    "bytes": 2985692,
+    "sha256": "145e126382d60a4aeeb70300e53375ebbad6500ccda2b2a913af0bc4ee4ea8fd",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-chromium/video.webm",
+    "bytes": 229632,
+    "sha256": "fc17f07e2357e89fc72b2f04f809247d096b33e0e50ee8ba6e1922fc3488dc0b",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-firefox/trace.zip",
+    "bytes": 3321273,
+    "sha256": "23dcfcd4caa14d1f9ac4ae0f265522cea45412901c7ed24f423f88468a437a8e",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-firefox/video.webm",
+    "bytes": 263534,
+    "sha256": "2efa2408766f0bfac6df3041044c270e436b7df0a897c2ee8425d78295d2b30c",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-webkit/trace.zip",
+    "bytes": 3230228,
+    "sha256": "2d948e07562d272bde81b7e01e01bb11d2dcaaa2be75fc654ec79b0769748f56",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-webkit/video.webm",
+    "bytes": 277625,
+    "sha256": "889d9fb095d46877f8278a618eb22a52fc94fe28b0220a46652dac81cdf77228",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-chromium/trace.zip",
+    "bytes": 2191775,
+    "sha256": "4ddf6f603454ae5faab4c9e089c7c3b26094d36cfdb28972d86085a23d309fde",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-chromium/video.webm",
+    "bytes": 241083,
+    "sha256": "ea093aa13141b113703d7339fade310a5ae2834323fef0fa85f409e70fb31312",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-firefox/trace.zip",
+    "bytes": 3064279,
+    "sha256": "b096226ff2a3cd1f9b0bc12973854744695054eac5da3ddd3ab5c541360c8252",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-firefox/video.webm",
+    "bytes": 243975,
+    "sha256": "efe0d0b20fae744773b00da60fd419d29e6121af33fbc7316d3e66aeaa2d9296",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-webkit/trace.zip",
+    "bytes": 2573698,
+    "sha256": "92cae794e690a3863cecb0ed6b08ed8f31b0c79614e7d7d1aa900a21f7497e41",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-migration/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-webkit/video.webm",
+    "bytes": 233111,
+    "sha256": "2f49ca9123c76b2ea1f5a4bc902ff42c0c7dea13ac1da98ed964991d19e48603",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-native-docx/browser/editor-edits-the-independe-06d44-ads-the-native-audit-export-chromium/trace.zip",
+    "bytes": 13194858,
+    "sha256": "3389473a151ef56891edf185924b72bdb7af4ddaf0a13c6d2cf99d0ec629eb53",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-native-docx/browser/editor-edits-the-independe-06d44-ads-the-native-audit-export-chromium/video-1.webm",
+    "bytes": 63338,
+    "sha256": "b7e6f1b5f369213e98edb3ad5a051abd2c3195d0a2b59833794dd2249527c3f4",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-native-docx/browser/editor-edits-the-independe-06d44-ads-the-native-audit-export-chromium/video-2.webm",
+    "bytes": 58031,
+    "sha256": "10524c198864d36c348392e57dba340ae01a7f868d3f87193da7ac4a4edcf2dc",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-native-docx/browser/editor-edits-the-independe-06d44-ads-the-native-audit-export-chromium/video.webm",
+    "bytes": 842114,
+    "sha256": "330eccbb40aef33315f9a205edcd94272aa8c4041072c49e663fcb960a8865e0",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-native-docx/native/exported/exported.pdf",
+    "bytes": 136822,
+    "sha256": "56b4326b3bd074b43c728f26d63b0b5290a7d0413ad807a83db198566f8491c6",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-native-docx/native/source/source.pdf",
+    "bytes": 137314,
+    "sha256": "81e104a8865225aba4682118cfd134634b40f3d22ad254d4a92d05d13394c243",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/hosted-native-docx/native/typed-source-control/typed-source-control.pdf",
+    "bytes": 137504,
+    "sha256": "263cf5dd2e0a5f4228dff70f1dec7c4bbe211bff3b97abe806143ead622cec37",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-chromium/trace.zip",
+    "bytes": 2231163,
+    "sha256": "a4bf6a7c722047f3b2cb4dbe3653d77e913e28f0501e43041342f938860452d2",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-chromium/video-1.webm",
+    "bytes": 11720,
+    "sha256": "ec7d160bad0d2b53d250c0d60bab2c1e8dc6bcc63df4498bad88cffdefe2f66f",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-chromium/video.webm",
+    "bytes": 383131,
+    "sha256": "3c5c0e952af708b035de917f5175bf5083c730f8bb3157e510df211602caf47b",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-firefox/trace.zip",
+    "bytes": 6036667,
+    "sha256": "499c607c472b4f7d58a966bfbab53d3db7f5d7ac6c6e4e9bb4b5b5aa8e60ec67",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-firefox/video-1.webm",
+    "bytes": 18958,
+    "sha256": "4f118991214810fa9b8b5689ae969feac34b391d36a2abb30008f669e9c0b7e6",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-firefox/video.webm",
+    "bytes": 554887,
+    "sha256": "f96d3451c73b30ff52f8e28ef4844777da5d301bcfbdf6986bbcd337af1bb6c7",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-webkit/trace.zip",
+    "bytes": 2905980,
+    "sha256": "f183d4a03cd5d96209f8bf4b9bc73e0f2342fbb950bf5c35b9ce68e8e8090199",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-webkit/video-1.webm",
+    "bytes": 46577,
+    "sha256": "c282ae368d4cedb989dcf9387f76fb1ea889ddfeaf59bd556b68ba2da2973d4d",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-webkit/video.webm",
+    "bytes": 947787,
+    "sha256": "e56e2368b02551186a3f9d7dc6c78b3ac82b5f84e829223a9a710aa86cef75be",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-chromium/trace.zip",
+    "bytes": 3730483,
+    "sha256": "b9cc1449f11d43993f0777dbd7853ecd7b9e2bcdf0adc88283da0b6c3445b495",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-chromium/video.webm",
+    "bytes": 283771,
+    "sha256": "fa65af27436bb4a24d725e92d0be846ab26e8a8cf061b08690edcf302f667783",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-firefox/trace.zip",
+    "bytes": 5886970,
+    "sha256": "17e4ce1ea88aaec2d96e2754acd725999c3dfec31ad7418d83f96e5a7994ab1c",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-firefox/video.webm",
+    "bytes": 518697,
+    "sha256": "1da2c38582881372546c6e986cd1222b0c209cf2a281856aabafe2fe5021d7c0",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-webkit/trace.zip",
+    "bytes": 3850915,
+    "sha256": "5dcb0cf154473461057a4f09c68de49243870e80ce732ffa9dc6862c1e332f49",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-before/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-webkit/video.webm",
+    "bytes": 612630,
+    "sha256": "e72e9e2b77fd68da607e65677d46239d9602ef4e700eb66b2ab4676dceebd3f2",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-chromium/trace.zip",
+    "bytes": 2105781,
+    "sha256": "22d494dc6d25ce7eaf7649ff6aedcd14918c9887bce81810d27359ddb9981ef7",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-chromium/video.webm",
+    "bytes": 213135,
+    "sha256": "cb9301efd55dca7ebfa9bdf38200d944541ad5f870433dbc74659e3e947f2704",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-firefox/trace.zip",
+    "bytes": 3561298,
+    "sha256": "e21665496a05be7e274728c1da642e7ef5be7951151ef5a13d321befb5f1328b",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-firefox/video.webm",
+    "bytes": 280530,
+    "sha256": "0f6f1b57707e86847474aa1e2562b28e94d08863aaf4bb5bbb2fe366683d5838",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-webkit/trace.zip",
+    "bytes": 2215986,
+    "sha256": "613b828a0ac84dc73d3e7a78eb55f06aeb7806d37dfd1f27ace7f1029d663fd2",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-keeps-a-b57bb-ed-rollback-loses-its-reply-webkit/video.webm",
+    "bytes": 447387,
+    "sha256": "41c44af80302f69997e11eda564e421a5c52b5e6d82d2381455cead62220d6be",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-chromium/trace.zip",
+    "bytes": 1999169,
+    "sha256": "630ffbf5535b69f40c16c6bc23fa3f611945af22c1a0484f5560e4d39ede7f1a",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-chromium/video-1.webm",
+    "bytes": 11635,
+    "sha256": "fd5bbd1919bac2898927dbc6c59be51e53fd5054ce6725b5ebefcadef3753f02",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-chromium/video.webm",
+    "bytes": 325666,
+    "sha256": "458a91f5af974c515eaf0ba90bed6ebad2752e07a2a3d76af689095e3311f701",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-firefox/trace.zip",
+    "bytes": 4693738,
+    "sha256": "a30fac4d56cf59a18f0fa3107d6c2d3653b73aa8b4648b1b03be28f7403572ae",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-firefox/video-1.webm",
+    "bytes": 16866,
+    "sha256": "52268ae17a54e820494a351f78423848c171b3851bbe8360a3f982cd435d8236",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-firefox/video.webm",
+    "bytes": 453496,
+    "sha256": "d4bfc5f204a7f7e700f14717b1103d13110709919015bc2bcbeac30c9b580f0d",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-webkit/trace.zip",
+    "bytes": 2871533,
+    "sha256": "5b91fa50b4e9a1af1b803b31bd23b283c81f9bc20a826cb3d999b61312f38acf",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-webkit/video-1.webm",
+    "bytes": 46067,
+    "sha256": "64143006499d98afc23518813cbdf1aede4757adcd24c2941773245861d4fe8f",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-opens-a-2b2e7-d-keeps-the-recovered-draft-webkit/video.webm",
+    "bytes": 919175,
+    "sha256": "6c786bec820e65b88025ea1e70ffe4c58b36e65c150c8be127981fc34892a53a",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-chromium/trace.zip",
+    "bytes": 3723844,
+    "sha256": "886a3952918c99354c9f0a1687e0146d148bbe69e6437f4069e85ab15cca4c78",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-chromium/video.webm",
+    "bytes": 265245,
+    "sha256": "4532277ca3157cd25535017b18f171cddf10a095af7c872ef13ca817677be1bd",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-firefox/trace.zip",
+    "bytes": 5103436,
+    "sha256": "42370d4d4d13886e59c992af460af44d19d3cc1b7ae074b12cd9c177cf6b7144",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-firefox/video.webm",
+    "bytes": 431606,
+    "sha256": "edceb4fb5f1e183354e07b29b8752ea45ab734f06dd64febd2d9c1825392e705",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-webkit/trace.zip",
+    "bytes": 3452743,
+    "sha256": "eaaeea29e6f83640cd9e41e4fe58194911379205f54d2b31061c5e9338b69dd1",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-0f613--reply-and-repeated-reloads-webkit/video.webm",
+    "bytes": 555805,
+    "sha256": "eb3194beea149eb78559230f864bdad20a84d03661109904291bd88563a2e098",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-325b3--room-after-explicit-review-chromium/trace.zip",
+    "bytes": 3166832,
+    "sha256": "e1fae09e251c456b6eef4eaba11d3304bedb53b7cf2e141253ca9ce3bee7dadc",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-325b3--room-after-explicit-review-chromium/video.webm",
+    "bytes": 206447,
+    "sha256": "7a213613611d0889b02975cf545182d1221ae2529594f14fda6753ea26f8bb48",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-325b3--room-after-explicit-review-firefox/trace.zip",
+    "bytes": 4162262,
+    "sha256": "51173affe8d8f6ebb52162f56386ad42f17c929024d75bd3c528a9fcb31223df",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-325b3--room-after-explicit-review-firefox/video.webm",
+    "bytes": 295382,
+    "sha256": "b8073b0640158e59408f1022ee1b0213a5f9c2c648e361478a2f93f58ddc6571",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-325b3--room-after-explicit-review-webkit/trace.zip",
+    "bytes": 3476349,
+    "sha256": "6c2f3774f1f71e114296d6847cec696e0c89479df3a27549d60cc14241a02c76",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-325b3--room-after-explicit-review-webkit/video.webm",
+    "bytes": 429630,
+    "sha256": "7ac0c6d88b7d8177f443961ed656042d0688b46363040e2f0745342b935e91bc",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-chromium/trace.zip",
+    "bytes": 2220788,
+    "sha256": "2615a11b2f15542865ccdbe792a4f9233201720c6c5f08132b704fe9b73aebdf",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-chromium/video.webm",
+    "bytes": 151546,
+    "sha256": "701d2c5686d3019ce7c67ed419d30e2e70455b46c33d8bdfe4dd80963a9c774d",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-firefox/trace.zip",
+    "bytes": 2755109,
+    "sha256": "ba29f3444866f82bf80c98dd0116c62acd5dbf4c8c8d92e3139ad37d50c4c649",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-firefox/video.webm",
+    "bytes": 218628,
+    "sha256": "0174eeac7d172e23c0cf5b68160a79ce8996af77cd7355d033a64ff947dedb6e",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-webkit/trace.zip",
+    "bytes": 2585204,
+    "sha256": "f128e8de434120e14d6c396bd0861d16675de96af54a07a95d5477e8dd5ed222",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-72ce8-ected-from-multiple-changes-webkit/video.webm",
+    "bytes": 391653,
+    "sha256": "6df2c6777a4de7be18ebf1c76e69ec0fadd181dacc61ce8ff7c86c78fefdec7d",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-chromium/trace.zip",
+    "bytes": 2860761,
+    "sha256": "dd785631f546f824ab849175a50f7fb119514a1cafb2df3472d5b39ceb43d2c0",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-chromium/video.webm",
+    "bytes": 209372,
+    "sha256": "3083ca9367a281701d6bd4f3853bf4c82d6709a5aaffc335f64e9d427b0bc719",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-firefox/trace.zip",
+    "bytes": 3950791,
+    "sha256": "4487a1329052df0a527e5ade6b3b5123d8b1c5c234df2379decaba152ffe3414",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-firefox/video.webm",
+    "bytes": 299586,
+    "sha256": "53801763c906b8f1d7093078688ea02f432eb85e9ab74f993f67e6b471d5edfe",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-webkit/trace.zip",
+    "bytes": 2914202,
+    "sha256": "21182659f85c850b0f2a6b5e39c9bb2f21b8d0c1528cbf9200396683cdcdd38c",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-948dc-is-lost-and-the-tab-reloads-webkit/video.webm",
+    "bytes": 450447,
+    "sha256": "4dc87b7e4cb9d9c6bf18fd2dc5478a7cbb8ea77bffb33142c57dc9791921a093",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-chromium/trace.zip",
+    "bytes": 2227151,
+    "sha256": "d4a2d65a0436e1405f0b09d46653a5ec1891a23b438c5237339ccbfe9a46c1ea",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-chromium/video.webm",
+    "bytes": 201536,
+    "sha256": "13776b1f8923a81cf7bcf929dff622798a785d2461418bb41f0010fd695224e6",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-firefox/trace.zip",
+    "bytes": 3291834,
+    "sha256": "43ef95c196cf322337d60353ee307d47b31d1df7bd19937b08323dfd754fa6e3",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-firefox/video.webm",
+    "bytes": 269471,
+    "sha256": "38903061dffe691a4c3ca5a78f25b75b611f8a9bcda798b9971502a202ab2a5d",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-webkit/trace.zip",
+    "bytes": 2535615,
+    "sha256": "69bb03d14d8425174f39ee227a4a0db63e24da5d7cc744d4524df87c430ef59f",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-migration-after/yjs-namespace-real-recover-b1399--lost-save-reply-and-reload-webkit/video.webm",
+    "bytes": 457932,
+    "sha256": "ab678387dc6fd3603ed816faa76c53a5b344f2a45703832d31e3c3e1ef376b69",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/editor-capabilities-audit--096fd-an-paste-and-trailing-input/trace.zip",
+    "bytes": 18246219,
+    "sha256": "ec1ca15c560a0a4f3edec20a8c0518e63bc01893c91f447d281afd5f29f195f4",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/editor-capabilities-audit--096fd-an-paste-and-trailing-input/video.webm",
+    "bytes": 1097864,
+    "sha256": "806578c11a294ee173a29990f269c84836cdc05a6deb115dc1232a9cafc9d67a",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/editor-capabilities-audit--97386-it-undo-export-and-reimport/trace.zip",
+    "bytes": 8675165,
+    "sha256": "aa3113bb4e517dbb7b6d695007fed568d596c63391ebbb2083aad8c55dc6ffd8",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/editor-capabilities-audit--97386-it-undo-export-and-reimport/video.webm",
+    "bytes": 1450775,
+    "sha256": "839c4498ae052a49af98ad9f2355bd0e63c5da75b8c52a3930b43196224b93a4",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/editor-capabilities-audit--e9265-ntain-and-Fountain-back-out/trace.zip",
+    "bytes": 3620708,
+    "sha256": "074d0e726ce4d7a2ef52178b344ce36edf9b53ee72dd1976598197f7597a6dca",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/editor-capabilities-audit--e9265-ntain-and-Fountain-back-out/video.webm",
+    "bytes": 698939,
+    "sha256": "f5ea2f61a120868a330f3a2c7029ea72e4d7357249d280921c07fdc52383cdb1",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/trace.zip",
+    "bytes": 30148024,
+    "sha256": "3a70d8116b1fd325d49565cc53a6d13d2150b10a859a1c6abf1c0495f1c41592",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/video.webm",
+    "bytes": 1450958,
+    "sha256": "f430b7fa22bd5c9488b7764d45ec638229aca485ab50266cda2cc4d6af8e6da6",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-docu-5477f-e-import-and-inspect-output/trace.zip",
+    "bytes": 6657867,
+    "sha256": "7a6142bc77c0f85c7c6162be9774dbeafb963a07c14b6c16beb1de7b2aee14f9",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-docu-5477f-e-import-and-inspect-output/video.webm",
+    "bytes": 839937,
+    "sha256": "8198982c9840b7137452d96cbbefff3da884e1cc44a631f1074d18447369c56e",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-rele-6714f-n-structured-tools-and-undo/trace.zip",
+    "bytes": 27305622,
+    "sha256": "91f6d61cce26fafcc2fb01e75282239958729f1acc8b3cc229db95e101e9e26c",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-rele-6714f-n-structured-tools-and-undo/video.webm",
+    "bytes": 2123370,
+    "sha256": "6e04cfcf0e6f7148153a698088f48e09aafabd9be21cd460ea43e804083553fa",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/attachments/fountain-a4-export-6218961cd5d6d6b18f3505c262160e60260cb6bd.pdf",
+    "bytes": 26090,
+    "sha256": "5480f18b580ca5751064b5fc320d58c233a40ec95189e984c2f266941bc15e4b",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/fountain-a4-export.pdf",
+    "bytes": 26090,
+    "sha256": "5480f18b580ca5751064b5fc320d58c233a40ec95189e984c2f266941bc15e4b",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/trace.zip",
+    "bytes": 1054442,
+    "sha256": "7362d145cc71bda23ae48a6cf6d78a2a3de8ba7246d4f1746a37dda40f5aee3c",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/video.webm",
+    "bytes": 202918,
+    "sha256": "590ee514dc550dd13165cce16bdbdc2a3e1b287dd7d4ccc0517d749f870aabf6",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-visu-7a965--an-independent-DOCX-render/trace.zip",
+    "bytes": 5235022,
+    "sha256": "768454426f8b153c3867ec218ca3732a42ee9e91cdb99db0a60ce0b787610492",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-after/latest-ui-audit-human-visu-7a965--an-independent-DOCX-render/video.webm",
+    "bytes": 287449,
+    "sha256": "b63c65bf61896718247131e1718f8de7c68af0f41dac38fc8bea6b6d1d2038cb",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/editor-capabilities-audit--096fd-an-paste-and-trailing-input/trace.zip",
+    "bytes": 16042961,
+    "sha256": "b9e77537505736ff918a685e1cda4a9c8ed9c5e6891a55fe0ce507b094a458be",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/editor-capabilities-audit--096fd-an-paste-and-trailing-input/video.webm",
+    "bytes": 1002758,
+    "sha256": "f5d01642acb1b63d83134b029395a192a8a046b0dc3e14da4099ab4517ca076e",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/editor-capabilities-audit--97386-it-undo-export-and-reimport/trace.zip",
+    "bytes": 8114556,
+    "sha256": "51c5e708eeb82e84b1d80d14c23b474056aa814c3bae51bb652c4ca2b5b155fd",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/editor-capabilities-audit--97386-it-undo-export-and-reimport/video.webm",
+    "bytes": 486883,
+    "sha256": "91eb109d27765b9f9501f8d43220952c4e6bd4cabe51af4008af07cd197f1446",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/editor-capabilities-audit--e9265-ntain-and-Fountain-back-out/trace.zip",
+    "bytes": 3173272,
+    "sha256": "a02c3aaaa54915645ba6238d5cd8564c7f90e599b1a365b86da0fa53eb271048",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/editor-capabilities-audit--e9265-ntain-and-Fountain-back-out/video.webm",
+    "bytes": 499418,
+    "sha256": "ed1c328d5b9267968642e47b3c4beb378c7e0c17f58edf49c5e91cc34827a395",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/trace.zip",
+    "bytes": 28761456,
+    "sha256": "ce499a8a48f43cf1533d2e3424bd81de537f2856476a1239c0092655c57b4bd1",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/video.webm",
+    "bytes": 1104514,
+    "sha256": "17c8f083400271cec9558abf1e30651b36781cccb17ff4b131a87eff6a8192a0",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-docu-5477f-e-import-and-inspect-output/trace.zip",
+    "bytes": 6957841,
+    "sha256": "074e9e12d84bdea0808b3a6791ffef46422a45d1eeff45fd83b93a7e340799da",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-docu-5477f-e-import-and-inspect-output/video.webm",
+    "bytes": 825048,
+    "sha256": "87561eccfbde04ec62b9295acee553a1669ef74869d9ccd04d6768983f118b95",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-rele-6714f-n-structured-tools-and-undo/trace.zip",
+    "bytes": 28028179,
+    "sha256": "1feccec801152bdb40cd684f9af200e77c5925f0955f1b10463467297a1595f3",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-rele-6714f-n-structured-tools-and-undo/video.webm",
+    "bytes": 1993809,
+    "sha256": "2501e26edae9b3a7a19707a66b28ba0d4ef117604d7e0a0cbc774cb2b6b17f5a",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/attachments/fountain-a4-export-06b11806fd11e473fc203e16798d53eabe64d835.pdf",
+    "bytes": 26090,
+    "sha256": "3638b137de149e07e2d08ed0eb60aa021fd1852de566b5928278ed58bbede87f",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/fountain-a4-export.pdf",
+    "bytes": 26090,
+    "sha256": "3638b137de149e07e2d08ed0eb60aa021fd1852de566b5928278ed58bbede87f",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/trace.zip",
+    "bytes": 1058260,
+    "sha256": "442392acd817aaad866ba9a425aacced43da1f54aa9f63cc51fd2a18992e32cd",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/video.webm",
+    "bytes": 207355,
+    "sha256": "1382cbef4bf0e529dc334b69efe05d10a7cffcefc724629eca9bb74c640048c3",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-visu-7a965--an-independent-DOCX-render/trace.zip",
+    "bytes": 5200579,
+    "sha256": "626a79822a684c1242bbf1f961fc77371f0e4b25651f05e9b6065078291c09f2",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-recorded-ui-final/latest-ui-audit-human-visu-7a965--an-independent-DOCX-render/video.webm",
+    "bytes": 249847,
+    "sha256": "ece07ad218e24c21b0ed9e1302a3af6eeec53c8bfb5e6333a6f6b04416d546f7",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-drag-before/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/trace.zip",
+    "bytes": 29417947,
+    "sha256": "dc81bbc81b715a489f1a631b3e50c933302d9470298ea747ee513befcac9fc42",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-drag-before/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/video.webm",
+    "bytes": 1897405,
+    "sha256": "933457bfe6d8472a5a52d057c535641ace2da54ca9ed1f213c83be0127931a00",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-drag-after2/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/trace.zip",
+    "bytes": 30426055,
+    "sha256": "bd2468c548ab8059003ce055711df87c4989b30071bf01559f3a390c5a2040f9",
+    "localOnly": true
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/local-drag-after2/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/video.webm",
+    "bytes": 1190666,
+    "sha256": "13f43c3860a5b826631063068a04c40d40c17145f02f90da8b34ab57be83d492",
+    "localOnly": true
+  }
+]

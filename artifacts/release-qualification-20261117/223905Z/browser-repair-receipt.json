@@ -1,0 +1,14 @@
+[
+  {
+    "name": "migration-after",
+    "exitCode": 0,
+    "seconds": 126.08,
+    "log": "artifacts\\release-qualification-20261117\\223905Z\\migration-after.log"
+  },
+  {
+    "name": "recorded-ui-after",
+    "exitCode": 1,
+    "seconds": 101.4,
+    "log": "artifacts\\release-qualification-20261117\\223905Z\\recorded-ui-after.log"
+  }
+]

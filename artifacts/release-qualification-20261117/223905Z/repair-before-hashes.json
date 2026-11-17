@@ -1,0 +1,5 @@
+{
+  "tests/manual/editor-capabilities-audit.spec.ts": "15769177ec16e28da41a698ff46d738f20e21e42758e32c39347d320d61feaff",
+  "tests/manual/yjs-namespace-real.spec.ts": "b97271c4f7f807b3b56bace148fcf59f5af8f23af230e6f2b9fa79cc507831c5",
+  "artifacts/yjs-namespace-fixture-20261107.html": "a397ba0649c93e78f20414adbf611a4ff5dc05b4f5b7a251c821b13891ee42ef"
+}

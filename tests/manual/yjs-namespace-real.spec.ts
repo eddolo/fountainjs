@@ -2,7 +2,36 @@ import {expect,test} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
 const errors=new WeakMap<object,string[]>(),state=(page:any)=>page.evaluate(()=>(window as any).audit.snapshot());
 async function capture(page:any,info:any,name:string){await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));const size=await page.evaluate(()=>({height:document.documentElement.scrollHeight,viewport:innerHeight,width:document.documentElement.scrollWidth,viewportWidth:innerWidth}));expect(size.height).toBeLessThanOrEqual(size.viewport);expect(size.width).toBeLessThanOrEqual(size.viewportWidth);await page.screenshot({path:info.outputPath(name),fullPage:false,scale:'css'})}
-async function type(page:any,name:string,text:string){await page.getByRole('textbox',{name,exact:true}).click();await page.keyboard.press('Control+Home');await page.keyboard.press('End');await page.keyboard.type(text)}
+async function type(page: import('@playwright/test').Page, name: string, text: string) {
+  const editor = page.getByRole('textbox', { name, exact: true });
+  const paragraph = editor.locator(':scope > p').first();
+  await paragraph.scrollIntoViewIfNeeded();
+  // End means visual-line end. Click the paragraph's last rendered text line
+  // first, so wrapping and platform fonts cannot redirect an intended append.
+  const end = await paragraph.evaluate(element => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    let last: Text | undefined;
+    while (walker.nextNode()) if (walker.currentNode.textContent) last = walker.currentNode as Text;
+    if (!last) throw new Error('Expected a nonempty first paragraph for native typing.');
+    const range = document.createRange();
+    range.selectNodeContents(last);
+    const lines = Array.from(range.getClientRects());
+    const line = lines.at(-1);
+    if (!line || !line.height) throw new Error('Expected a visible final text line.');
+    return { x: line.right - 1, y: line.top + line.height / 2 };
+  });
+  await page.mouse.click(end.x, end.y);
+  await page.keyboard.press('End');
+  await expect.poll(() => paragraph.evaluate(element => {
+    const selection = document.getSelection();
+    if (!selection?.isCollapsed || !selection.focusNode || !element.contains(selection.focusNode)) return false;
+    const remaining = document.createRange();
+    remaining.selectNodeContents(element);
+    remaining.setStart(selection.focusNode, selection.focusOffset);
+    return remaining.toString() === '';
+  }), { message: 'Native caret must be at the end of the intended paragraph before typing' }).toBe(true);
+  await page.keyboard.type(text);
+}
 async function sampleLayout(page: import('@playwright/test').Page) {
   await page.evaluate(() => {
     const summary = { frames: 0, minViewport: innerWidth, minPane: Infinity, maxOverflow: 0, invalid: [] as unknown[] };

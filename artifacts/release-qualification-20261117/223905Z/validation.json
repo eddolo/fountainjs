@@ -1,0 +1,141 @@
+{
+  "parentRevision": "4c66f386d1a3754eceb1cd0f97db45a0c4e6a72c",
+  "initialHostedCI": "https://github.com/eddolo/fountainjs/actions/runs/44192678347",
+  "independentDOCX": "https://github.com/eddolo/fountainjs/actions/runs/44192678583",
+  "unitTests": 7030,
+  "unitFiles": 407,
+  "recoveryJourneys": 21,
+  "recordedReleaseJourneys": 8,
+  "strictTypes": "passed",
+  "performanceP95Ms": {
+    "firstLocalFailed": 942.93,
+    "hostedPassed": 671.25,
+    "idleLocalPassed": 428.08,
+    "unchangedLimit": 900
+  },
+  "visualReview": [
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/correct-final-order.png",
+      "sha256": "1fc0a13fbf3f5c3e2e669d17fadaaf85ba64dd3667e1c7a4b5fd56ad2e4504e4"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/drop-highlight.png",
+      "sha256": "a0a007c675133b279b4c7bf2d5d63a686221ee7843fb605caf89d3fa633f3959"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/expanded-review-webkit.png",
+      "sha256": "47e19c0ff510cb9f29c9f45c9582d73f271a0d3ad196077d27c8752a65ce67a6"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/hosted-drag-failure.png",
+      "sha256": "f8cb36afd24e87553c53e8a85c581948c4ee262320de81b11b16f3f17e7f93ab"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/initial-final-order-failure.png",
+      "sha256": "0e9052ad119359774b282dad1847f3dcd416959b38f6b4b39796eea31f57f947"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/native-editor-equation-1.png",
+      "sha256": "cba99bfe57e2a2090b33944ee6c8b603b39e80537f1faefb32f0ca1b4f8b65d8"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/native-editor-top.png",
+      "sha256": "c8fdc4a6de6faa2d3be99effab62a80b5bafc5c4d863d4cb71c7943575f9c31e"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/native-exported-page-1.png",
+      "sha256": "2d74a9899ebf2493290dcf04ce3ff4cff207eb9c1398767d1f0147f740a2622b"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/native-exported-page-2.png",
+      "sha256": "3f59a0ee934fd297fad44cc41e65bf9125fed92abdcfeaba69c238c9007b910b"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/native-source-page-1.png",
+      "sha256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/native-source-page-2.png",
+      "sha256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223"
+    },
+    {
+      "file": "artifacts/release-qualification-20261117/223905Z/evidence/reopened-storage-firefox.png",
+      "sha256": "68f4c4c3da6cfc83b480e2ba5ace1eda4fe1a79d622a16ef7b2f56bc3e762e76"
+    }
+  ],
+  "rawMediaCommitted": false,
+  "noProductionEngineApiDependencyOrAcceptanceLimitChanges": true,
+  "freshHostedFollowupRequired": true,
+  "files": {
+    "CHANGELOG.md": "5f6736b83d299858d8d3221eada7cc89447fd0c5ecfcee3af6c84cbf9ebb4158",
+    "artifacts/release-qualification-20261117/223905Z/browser-repair-receipt.json": "7034252c39c9bb75efa353a0ad2421bd6d65e761af544698fc490ede9777186c",
+    "artifacts/release-qualification-20261117/223905Z/evidence/browser-repair-receipt.json.original-bytes.json": "c8ccaf59e240cc231b2361ab6d4f326f2aef4e030d85fcf74ca54120943a02fa",
+    "artifacts/release-qualification-20261117/223905Z/evidence/build.log.json": "925d16b5e127aa15e006a44f830652f15ec17252fff892e25aac48e5c46e80d7",
+    "artifacts/release-qualification-20261117/223905Z/evidence/correct-final-order.png": "1fc0a13fbf3f5c3e2e669d17fadaaf85ba64dd3667e1c7a4b5fd56ad2e4504e4",
+    "artifacts/release-qualification-20261117/223905Z/evidence/drop-highlight.png": "a0a007c675133b279b4c7bf2d5d63a686221ee7843fb605caf89d3fa633f3959",
+    "artifacts/release-qualification-20261117/223905Z/evidence/editor-capabilities-audit.spec.ts.before.json": "420829887891fa8d6afbd3719770cff19019cff6609c021aba66d7dcfeca50c5",
+    "artifacts/release-qualification-20261117/223905Z/evidence/expanded-review-webkit.png": "47e19c0ff510cb9f29c9f45c9582d73f271a0d3ad196077d27c8752a65ce67a6",
+    "artifacts/release-qualification-20261117/223905Z/evidence/final-receipt.json.original-bytes.json": "2aa3eda4f7e0d767394e389d0b8a9a2e30954d70f227668e0ef8c5977fba4a03",
+    "artifacts/release-qualification-20261117/223905Z/evidence/hosted-browser-raw.log.json": "1def720402d25de4ba8f667078aad14a46379e9e2e81ad1d601ae76b3bc96ea0",
+    "artifacts/release-qualification-20261117/223905Z/evidence/hosted-drag-failure.png": "f8cb36afd24e87553c53e8a85c581948c4ee262320de81b11b16f3f17e7f93ab",
+    "artifacts/release-qualification-20261117/223905Z/evidence/hosted-performance-raw.log.json": "d5d67a640628884bf4f498779f0153d7e919a85e8af50068672b07520a7e4cdb",
+    "artifacts/release-qualification-20261117/223905Z/evidence/hosted-performance.log.json": "1cb7f9c3df53511226c6c41872386ef2b46d862a4434af1ae91908be4ef84c20",
+    "artifacts/release-qualification-20261117/223905Z/evidence/hosted-recorded-ui-raw.log.json": "bf805ff9bcd2802b8fb9204e6c4fba11b208e0a10d8bb3164e37acefb272f6b0",
+    "artifacts/release-qualification-20261117/223905Z/evidence/initial-final-order-failure.png": "0e9052ad119359774b282dad1847f3dcd416959b38f6b4b39796eea31f57f947",
+    "artifacts/release-qualification-20261117/223905Z/evidence/local-drag-after2.log.json": "a8b050491623acdbb5f3c302721de25ad892dd1a2511ff0fc69ec46ea6ddfed6",
+    "artifacts/release-qualification-20261117/223905Z/evidence/local-drag-before.log.json": "f80d3f3ca1f0a1ee92b26469ea66a55a808547d38ec031e6d83b39e88d850d7a",
+    "artifacts/release-qualification-20261117/223905Z/evidence/local-media-manifest.json": "9ef4055841506cc573430e4a0b3ab1df9084cc50c75c5fbf1b851a83423f5367",
+    "artifacts/release-qualification-20261117/223905Z/evidence/local-migration-before.log.json": "00fc8c7033c52c27805b8444e3d4badb6c47f2630e3a0ee72bc8ac38e8a22dfd",
+    "artifacts/release-qualification-20261117/223905Z/evidence/migration-after.log.json": "9d1936ce71b76fdfdd8fe342189016a841f812a92b6622e7b90a1aa8a1f8f4c6",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-browser-observations.json": "25efc98b02d7e58b729e86eb445f69d276c32b5b08db17611e0ee34f31cb5fb7",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-conversion-report.json": "53796739a4f3e21a509ccb0e0c720910b09efa8f4fdb509078102251df47556f",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-editor-equation-1.png": "cba99bfe57e2a2090b33944ee6c8b603b39e80537f1faefb32f0ca1b4f8b65d8",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-editor-top.png": "c8fdc4a6de6faa2d3be99effab62a80b5bafc5c4d863d4cb71c7943575f9c31e",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-exported-page-1.png": "2d74a9899ebf2493290dcf04ce3ff4cff207eb9c1398767d1f0147f740a2622b",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-exported-page-2.png": "3f59a0ee934fd297fad44cc41e65bf9125fed92abdcfeaba69c238c9007b910b",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-header-position-report.json": "0f73084c08dac7bde6a766a2c556734c7572015d7ca5a5df429e94847991a53f",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-interchange-report.json": "80abda9d36e794a7307d8a3a3cb3ef96a262c5c802bd309eff58ef7f7d83a86f",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-native-report.json": "cbfafcb171d3cf20b183be9e84eeedd436cbbc4e6f9c1c095b46205d8a0f73d4",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-paragraph-position-report.json": "40a5c66cc5e1a68d25d9a4fd4dde5562e826e37a69b92cf3eff7a7b9ae686887",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-source-page-1.png": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+    "artifacts/release-qualification-20261117/223905Z/evidence/native-source-page-2.png": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223",
+    "artifacts/release-qualification-20261117/223905Z/evidence/performance-idle-control.log.json": "9167815239de30de5f7fe0cd6473160433173218f20b8b4a9eb8095758dd436b",
+    "artifacts/release-qualification-20261117/223905Z/evidence/position-mapping-retention.log.json": "81e8bbefb093872c5c7f3fc00e4bd2ed82972a7a3d66ecd9f2873d1f1b9ffe77",
+    "artifacts/release-qualification-20261117/223905Z/evidence/receipt.json.original-bytes.json": "16a32dba8e81effaa3a350067bb3ca99380b83bbe2e69e333bdc9636c3991c1b",
+    "artifacts/release-qualification-20261117/223905Z/evidence/recorded-ui-after.log.json": "c64b46f06eaa74e022faa60c32126dae881bc1c11249f6e43899e6f651297d33",
+    "artifacts/release-qualification-20261117/223905Z/evidence/recorded-ui-final.log.json": "9e5e746ec4c31fab3bd825bbd4b77d01103991ac01ff47389f7c9d0cedd5b45a",
+    "artifacts/release-qualification-20261117/223905Z/evidence/release-metadata.log.json": "f622858c911774ed8980adc266988e9b47508397d322f95dd120c3b967f54170",
+    "artifacts/release-qualification-20261117/223905Z/evidence/reopened-storage-firefox.png": "68f4c4c3da6cfc83b480e2ba5ace1eda4fe1a79d622a16ef7b2f56bc3e762e76",
+    "artifacts/release-qualification-20261117/223905Z/evidence/repair-before-hashes.json.original-bytes.json": "733729f05c80ff4c6ae6af65158c0905ccd43d057783769ada1d2160b4e28a1d",
+    "artifacts/release-qualification-20261117/223905Z/evidence/shared-direction-retention.log.json": "99a8acc0f5fa9c77e705d4c9e97d11fa49d1192615cd547eb804b83e22673602",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test-api.log.json": "37996fd817c1d293abac9b1f8fd7c17e41b5562bb5f39b7889a1d390977931ec",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test-budget.log.json": "938cd19f44c4bdf663b370f13107dc6dc8fe69a2322fb399c4d7adc4a1d0ef7d",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test-docx-interoperability.log.json": "d20d15dac5381a43771c0e9a58807e5a04e2f84ee0fa37615a94e109ef60907c",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test-headless.log.json": "ab7ff2c88ebaaf1321ee5cda908d65c1ad0195a6f474d107bb205519c7da4769",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test-markdown-conformance.log.json": "c9deb239bad8cf61fd8b2861070590ff9a40b65f1c46296b8c3544ab899e7eb0",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test-math-reference.log.json": "91aae7e16edaea051313042b5413ea8e33f1db05f9fbbd8813a4f2598b432752",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test-package.log.json": "b1c636be5591ebdb9de2c9fcb7ff2cfb0e59be894b50fe821adea93fba2c26f1",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test-performance.log.json": "e13d951e04c9718fcf3b13994e1d0545a06c489e2a2cd1c3c9f0e92fc8ef0dbb",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test-server-runtimes.log.json": "0bc0dbced4d29272139a7c995de30193006d5ef7e2052f86c6ea7021c2d795a4",
+    "artifacts/release-qualification-20261117/223905Z/evidence/test.log.json": "dc6fa905dba6c13118941f887a9f562bfb3f0499968e2ac3da2a0b3a54553148",
+    "artifacts/release-qualification-20261117/223905Z/evidence/typecheck.log.json": "caee01ad1402080c2f2916409ae469c05a568346aad4d23236313b396047dd8a",
+    "artifacts/release-qualification-20261117/223905Z/evidence/types-final.log.json": "10c0abbfa3e5692f731b091a8036fc1084045cfba16f78f722294aed135f361a",
+    "artifacts/release-qualification-20261117/223905Z/evidence/yjs-namespace-fixture-20261107.html.before.json": "f3500df55b1ec12c04ff9c1b570fb0483369a4addd6ae42ef9c958e809d7498a",
+    "artifacts/release-qualification-20261117/223905Z/evidence/yjs-namespace-real.spec.ts.before.json": "628a6264b36f81e1be67311867dcfdbfec7020aae525b8ff798884450d0cf7a1",
+    "artifacts/release-qualification-20261117/223905Z/final-receipt.json": "a3442cf386f81bad1c6df672944aa4e7a5d117c42d8d8af04f985be759c8cfa7",
+    "artifacts/release-qualification-20261117/223905Z/hosted-ci-first-run.json": "a792f2d88fb6a6bbd42181674ba92666e07c885e38653edb8f33c1dae6991a89",
+    "artifacts/release-qualification-20261117/223905Z/hosted-native-docx-artifacts.json": "08106ae4c575cd378b138ca163b723372a8200228e4b0dc85bf8ef1051310082",
+    "artifacts/release-qualification-20261117/223905Z/hosted-native-docx-first-run.json": "026af35fa132bec6a4ac54b5381feb98040e9e99cf8ce7f906cbf45be0bc4dfa",
+    "artifacts/release-qualification-20261117/223905Z/performance-idle-control.json": "4296e85d19b8e42a772c08b4846ae146d3836f2c95d03b9653761b939f3f9a7d",
+    "artifacts/release-qualification-20261117/223905Z/receipt.json": "b248142f7cac7c0503d8d356fe531b135c9bac2d1e911ac67a3c92a6e18ba699",
+    "artifacts/release-qualification-20261117/223905Z/repair-before-hashes.json": "6ceda6172f1a8bca6e90f7608ecc8c18e53678593215792a45f64c36b1e93ee8",
+    "artifacts/yjs-namespace-fixture-20261107.html": "2daf10286ce18cb61aaeb831bd615dd05633cf8e16466d5afa491fc87760a61e",
+    "docs/RELEASES.md": "93b71fc04dd7c766f9138d75389f681cc495ee0ec0c9ee62e7d9de7e463b27c6",
+    "docs/RELEASE_0_5_0_BETA_1.md": "b5c9469569a1c39c3930274c1474d5c7c5254709a8a35d3b17aba7410186aceb",
+    "docs/RELEASE_CANDIDATE_QUALIFICATION_20261117.md": "a645e348015bf3b58d0c39d960da69b4b85dc24a30587c8ad3bee45601d4b491",
+    "tests/manual/editor-capabilities-audit.spec.ts": "45abc8dceb46394711ca74b6ae654261de2d7a569618d3d0411901df7bda57fa",
+    "tests/manual/yjs-namespace-real.spec.ts": "1a2c33b4a118ff12fdd5a4419f71eeed626b5a29e01373739ab5ae89d9d89926",
+    "artifacts/release-qualification-20261117/223905Z/evidence/hosted-ci-first-run.json.original-bytes.json": "a50d602d8cbb30aeea0cd6a2b120cb98c666a856ab4d88c388b74058b209f7a5",
+    "artifacts/release-qualification-20261117/223905Z/evidence/hosted-native-docx-first-run.json.original-bytes.json": "9c1b55832e44f4010dacb428fd9e2e49a64f7921d693c27002671786e1a1bb9d"
+  }
+}

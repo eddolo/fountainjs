@@ -1,0 +1,91 @@
+{
+  "revision": "4c66f386d1a3754eceb1cd0f97db45a0c4e6a72c",
+  "startedAt": "2026-11-17T22:39:05.222848+00:00",
+  "steps": [
+    {
+      "name": "build",
+      "exitCode": 0,
+      "seconds": 17.88,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\build.log"
+    },
+    {
+      "name": "test:api",
+      "exitCode": 0,
+      "seconds": 1.26,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test-api.log"
+    },
+    {
+      "name": "test:package",
+      "exitCode": 0,
+      "seconds": 8.43,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test-package.log"
+    },
+    {
+      "name": "test:server-runtimes",
+      "exitCode": 0,
+      "seconds": 3.51,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test-server-runtimes.log"
+    },
+    {
+      "name": "test:headless",
+      "exitCode": 0,
+      "seconds": 0.96,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test-headless.log"
+    },
+    {
+      "name": "test:markdown-conformance",
+      "exitCode": 0,
+      "seconds": 7.28,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test-markdown-conformance.log"
+    },
+    {
+      "name": "test:math-reference",
+      "exitCode": 0,
+      "seconds": 0.87,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test-math-reference.log"
+    },
+    {
+      "name": "test:docx-interoperability",
+      "exitCode": 0,
+      "seconds": 2.53,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test-docx-interoperability.log"
+    },
+    {
+      "name": "test:budget",
+      "exitCode": 0,
+      "seconds": 0.65,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test-budget.log"
+    },
+    {
+      "name": "test:performance",
+      "exitCode": 1,
+      "seconds": 8.96,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test-performance.log"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "seconds": 25.21,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\typecheck.log"
+    },
+    {
+      "name": "test",
+      "exitCode": 0,
+      "seconds": 270.5,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\test.log"
+    },
+    {
+      "name": "shared-direction-retention",
+      "exitCode": 0,
+      "seconds": 8.11,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\shared-direction-retention.log"
+    },
+    {
+      "name": "position-mapping-retention",
+      "exitCode": 0,
+      "seconds": 0.38,
+      "log": "artifacts\\release-qualification-20261117\\223905Z\\position-mapping-retention.log"
+    }
+  ],
+  "remainingChecksCompletedAt": "2026-11-17T22:45:55.695275+00:00"
+}

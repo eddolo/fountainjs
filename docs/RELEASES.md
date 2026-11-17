@@ -1,5 +1,32 @@
 # Release and API stability policy
 
+## Candidate qualification and restored GitHub access — 2026-11-17
+
+The candidate is pushed to [draft PR #25](https://github.com/eddolo/fountainjs/pull/25).
+The initial `4c66f386` hosted run passes package verification, performance and real
+Lean integration; its separate independent native DOCX audit also passes. Local
+verification passes 7,030 unit tests / 407 files, framework types, build/package,
+headless/runtime, format/reference and unchanged size/retention checks.
+
+The first hosted browser/recording jobs fail. Their evidence identifies a visual-
+line End key used as a paragraph-end append, incomplete native dragover input and
+recording-time native drag auto-scroll, plus a three-pixel expanded-review fixture
+overflow. The corrections keep exact text/layout assertions, verify the actual
+native caret before typing, and additionally require the final dropped block order.
+All 21 selected recovery journeys, eight recorded release journeys and fresh
+strict types pass locally. A new exact-revision hosted run is still required.
+No production engine behavior, API, dependency or acceptance limit changes here.
+
+The first local HTML p95 result is 943 ms against the 900 ms ceiling; the hosted
+sample is 671 ms and the later idle local control is 428 ms. Retain every result;
+this is timing variability evidence, not permission to raise the limit. Selected
+native source/export/editor PNGs receive visual review; green rendering is not
+universal pixel fidelity. The existing beta changelog is reconciled through this
+checkpoint and its tag/version guard passes. No tag, merge or publication occurs.
+
+[Candidate notes](RELEASE_0_5_0_BETA_1.md) and
+[qualification evidence](RELEASE_CANDIDATE_QUALIFICATION_20261117.md).
+
 ## Publication reconciliation — 2026-11-16
 
 The user flagged the old GitHub Latest badge. A live read confirms that

@@ -1,0 +1,7 @@
+{
+  "original": "artifacts/release-qualification-20261117/223905Z/position-mapping-retention.log",
+  "sha256": "427e95ac3660ed92c4b27d43b43000338820de6e8fed42116fc0669fc8423244",
+  "bytes": 258,
+  "rawBase64": "ewogICJibG9ja3MiOiA1MDAwLAogICJzbmFwc2hvdHMiOiA1MDAsCiAgInZhbGlkYXRlZEV2ZXJ5U25hcHNob3QiOiB0cnVlLAogICJtZWFzdXJlbWVudCI6ICJoZWFwVXNlZCArIGFycmF5QnVmZmVycyBhZnRlciBmb3JjZWQgR0MiLAogICJyZXRhaW5lZEJ5dGVzIjogMjQwNzE1MzYsCiAgInJldGFpbmVkTGltaXRCeXRlcyI6IDMzNTU0NDMyLAogICJyZWxlYXNlZEJ5dGVzIjogNzg1NjU2LAogICJyZWxlYXNlZExpbWl0Qnl0ZXMiOiA0MTk0MzA0Cn0K",
+  "readableText": "{\n  \"blocks\": 5000,\n  \"snapshots\": 500,\n  \"validatedEverySnapshot\": true,\n  \"measurement\": \"heapUsed + arrayBuffers after forced GC\",\n  \"retainedBytes\": 24071536,\n  \"retainedLimitBytes\": 33554432,\n  \"releasedBytes\": 785656,\n  \"releasedLimitBytes\": 4194304\n}\n"
+}
