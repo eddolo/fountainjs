@@ -89,6 +89,20 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='task-menu'){
+      const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
+      const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});
+      for(const [phase,expected]of Object.entries(input.expectedGraphs))add(phase+'.graph',phase+': task state/nesting, prose and authored formatting',expected,left?.graphs?.[phase],right?.graphs?.[phase]);
+      for(const phase of ['disabled','restored','deleted']){
+        add(phase+'.target','Reader menu acts on the nested duplicate: '+phase,{text:input.target.text,depth:input.target.depth},left?.[phase]?.target?{text:left[phase].target.text,depth:left[phase].target.depth}:undefined,right?.[phase]?.target?{text:right[phase].target.text,depth:right[phase].target.depth}:undefined);
+        add(phase+'.source','Only the intended source marker/line changes: '+phase,true,left?.[phase]?.sourceDeltaExact,right?.[phase]?.sourceDeltaExact);
+        add(phase+'.state','Issue remains open after '+phase,'opened',left?.[phase]?.after?.state,right?.[phase]?.after?.state);
+      }
+      for(const phase of ['saved','retained']){add(phase+'.reachable','Normal Save remains reachable: '+phase,true,left?.[phase+'Reachable'],right?.[phase+'Reachable']);add(phase+'.state','Issue remains open after '+phase,'opened',left?.[phase]?.state,right?.[phase]?.state);}
+      add('third-state.source','Unrelated rich editing preserves the not-applicable source marker',true,left?.thirdStateSourceRetained,right?.thirdStateSourceRetained);
+      for(const [phase,count]of [['disabled',3],['restored',4],['deleted',3]])add(phase+'.counts','Persisted task counts after '+phase,{count,completed_count:1},left?.[phase]?.after?.task_completion_status,right?.[phase]?.after?.task_completion_status);
+      continue;
+    }
     if(input.scope==='task-recovery'){
       const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
       const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});

@@ -157,3 +157,8 @@ populated leaf-item deletion, reopened/reader checkbox updates and actual comman
 effects. It adds 48 parity/eight correlated improvement checks for one scoped
 literal-text boundary, with a working active-root control. Wider task/role/platform
 coverage remains; original/native startup failures are retained separately.
+
+The [reader-menu follow-up](COMPATIBILITY_TASK_MENU_RESULTS.md) adds 54 parity
+checks for duplicate-target disable/restore/delete, not-applicable retention through
+rich editing and authored strike preservation. Heading/prose observer corrections
+are retained separately; no product improvement is credited to representation differences.

@@ -1,0 +1,19 @@
+{
+  "scope": "Readable LF logs with one final newline; exact collected bytes are base64-preserved.",
+  "files": [
+    {
+      "originalPath": "artifacts/gitlab-task-menu-all-fixed-20261117.log",
+      "originalSha256": "37f5219ab51a0d9634c6512b11f2edee6a424564a11ed0f5ee70068041bfff66",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/verification/gitlab-task-menu-all-fixed-20261117.txt",
+      "archiveSha256": "8924ccde0ac4493b798470bdd2974b385e6377821bec406d2dc83cb6b70d2966",
+      "originalBytesBase64": "DQogUlVOICB2NS4wLjAgQzovVXNlcnMvY2FwcHUvRGVza3RvcC9wYW9sb2FwcC9mYWlsdXJlcy9Gb3VudGFpbmpzLUFwcA0KDQoNCiBUZXN0IEZpbGVzICA1NyBwYXNzZWQgKDU3KQ0KICAgICAgVGVzdHMgIDE0NTIgcGFzc2VkICgxNDUyKQ0KICAgU3RhcnQgYXQgIDE0OjA0OjI0DQogICBEdXJhdGlvbiAgMjEuOTlzIChpbXBvcnQgMzUlLCBlbnZpcm9ubWVudCAzMiUsIHRlc3RzIDE4JSwgdHJhbnNmb3JtIDE0JSwgd29ya2VyIDElKQ0KDQogICAgIEltcG9ydCAgMjAxIG1vZHVsZXMgd2VyZSBldmFsdWF0ZWQgNTIwIHRpbWVzIMK3IDEyLjMzcyB0b3RhbCwgMzUlIG9mIHRyYWNrZWQgdGltZQ0KICAgICAgICAgICAgIH4yLjY1cyBmYXN0ZXIgd2l0aCBpc29sYXRlOiBmYWxzZSDigJQgc2hhcmVkIG1vZHVsZXMgYXJlIGV2YWx1YXRlZCBvbmNlIHBlciB3b3JrZXIgaW5zdGVhZCBvZiBvbmNlIHBlciBmaWxlDQogICAgICAgICAgICAgbGVhcm4gbW9yZTogaHR0cHM6Ly92aXRlc3QuZGV2L2d1aWRlL2ltcHJvdmluZy1wZXJmb3JtYW5jZSN0ZXN0LWlzb2xhdGlvbg0KDQo="
+    },
+    {
+      "originalPath": "artifacts/gitlab-task-menu-captured-policy-20261117.log",
+      "originalSha256": "e0f83636904f4eeba3fe03d44dc3664916cba42367b534973341ef95c54eedf0",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/verification/gitlab-task-menu-captured-policy-20261117.txt",
+      "archiveSha256": "9ca00d5603021b070e6831de249dffb3ac417b644539ca59bc39bc3317a70567",
+      "originalBytesBase64": "DQogUlVOICB2NS4wLjAgQzovVXNlcnMvY2FwcHUvRGVza3RvcC9wYW9sb2FwcC9mYWlsdXJlcy9Gb3VudGFpbmpzLUFwcA0KDQoNCiBUZXN0IEZpbGVzICAyIHBhc3NlZCAoMikNCiAgICAgIFRlc3RzICA4MSBwYXNzZWQgKDgxKQ0KICAgU3RhcnQgYXQgIDEzOjU5OjIxDQogICBEdXJhdGlvbiAgMy4xMnMgKGltcG9ydCA4NCUsIHRlc3RzIDExJSwgdHJhbnNmb3JtIDQlLCB3b3JrZXIgMSUpDQoNCg=="
+    }
+  ]
+}

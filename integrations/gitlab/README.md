@@ -1,5 +1,14 @@
 # GitLab application integration
 
+Matched reader-menu follow-up (2026-11-17): plain/scoped documents verify 54
+parity checks for disable, rich-edit retention, restore and deletion of the nested
+item among duplicate labels. Authored strike remains distinct from generated
+inactive styling; exact menu source deltas and persisted task totals pass. Earlier
+heading/prose observer mistakes are retained and contribute no improvement claim.
+1,452 integration cases / 57 files and strict types pass. Other roles, parent/child
+operations and broader platform/layout acceptance remain open.
+[Reader-menu evidence](COMPATIBILITY_TASK_MENU_RESULTS.md).
+
 Matched task recovery follow-up (2026-11-17): real populated leaf-item deletion,
 two-step undo/redo, reopened editor checkboxes and reader checkbox persistence
 pass. Two command-intent profiles yield 48 parity/eight improvement checks; the

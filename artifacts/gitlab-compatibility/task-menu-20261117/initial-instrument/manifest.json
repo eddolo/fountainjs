@@ -1,0 +1,25 @@
+{
+  "scope": "Original attempt 1 completed authoring Save but the reader heading lookup found no matching accessible name. No reader menu action was reached. Preserve before correcting reader readiness; this is not a product comparison.",
+  "files": [
+    {
+      "path": "scripts/run-gitlab-compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/initial-instrument/0-run-gitlab-compatibility.mjs",
+      "sha256": "4256377e9b245fddb808ecd8cf24a846d989357e6866a946b7b05f129f5d1aa4"
+    },
+    {
+      "path": "scripts/audit-gitlab-compatibility-task-menu.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/initial-instrument/1-audit-gitlab-compatibility-task-menu.mjs",
+      "sha256": "bc1d594f0ca7eaab97105843e9d59ef4501bba656da9ed6b4fa2738c90f7d473"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/compatibility-task-menu.json",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/initial-instrument/2-compatibility-task-menu.json",
+      "sha256": "8bbe02abf4e989100e30a99b68f82430602b3833cf260d4d33c2ea143b6e47e1"
+    },
+    {
+      "path": "integrations/gitlab/testing/compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/initial-instrument/3-compatibility.mjs",
+      "sha256": "9bbe5297d0f15cd46d8167ea148bd020e82629cd2b95223e51b8e3a89fff7126"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "scope": "Original attempt 2 has correct heading readiness, but its observer only counts p elements and misses visible orphan prose after a raw HTML container. Keep the original observations and instruments; no product improvement is inferred from that missing graph value.",
+  "files": [
+    {
+      "path": "scripts/run-gitlab-compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/reader-observer-instrument/0-run-gitlab-compatibility.mjs",
+      "sha256": "4256377e9b245fddb808ecd8cf24a846d989357e6866a946b7b05f129f5d1aa4"
+    },
+    {
+      "path": "scripts/audit-gitlab-compatibility-task-menu.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/reader-observer-instrument/1-audit-gitlab-compatibility-task-menu.mjs",
+      "sha256": "1d3a0938873ef54e0e41270a8d7f18b9d648aafd0d85bd8a0c4517927eb0cb0b"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/compatibility-task-menu.json",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/reader-observer-instrument/2-compatibility-task-menu.json",
+      "sha256": "8bbe02abf4e989100e30a99b68f82430602b3833cf260d4d33c2ea143b6e47e1"
+    },
+    {
+      "path": "integrations/gitlab/testing/compatibility.mjs",
+      "archive": "artifacts/gitlab-compatibility/task-menu-20261117/reader-observer-instrument/3-compatibility.mjs",
+      "sha256": "9bbe5297d0f15cd46d8167ea148bd020e82629cd2b95223e51b8e3a89fff7126"
+    }
+  ]
+}

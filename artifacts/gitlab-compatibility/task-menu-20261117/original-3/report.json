@@ -1,0 +1,3571 @@
+{
+  "formatVersion": 1,
+  "runId": "task-menu-20261117",
+  "attempt": 3,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "task-menu",
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-task-menu.json",
+  "fixtureHash": "8bbe02abf4e989100e30a99b68f82430602b3833cf260d4d33c2ea143b6e47e1",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "reader-context-actions-and-third-state-retention",
+    "settlingMs": 700,
+    "cases": [
+      {
+        "id": "plain-menu",
+        "scope": "task-menu",
+        "title": "Reader menu in plain Markdown",
+        "markdown": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\nReader marker.",
+        "target": {
+          "label": "Check option: Repeated task",
+          "ordinal": 1,
+          "text": "Repeated task",
+          "depth": 1
+        },
+        "expectedGraphs": {
+          "initial": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "authored": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "readerBefore": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "disabledReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "disabledEditor": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "retainedEditor": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "retainedReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "restoredReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "deletedReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "reopenedFinal": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          }
+        }
+      },
+      {
+        "id": "scoped-menu",
+        "scope": "task-menu",
+        "title": "Reader menu in direction container",
+        "markdown": "## Reader actions\n\n<div dir=\"auto\">\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\n</div>\n\nReader marker.",
+        "target": {
+          "label": "Check option: Repeated task",
+          "ordinal": 1,
+          "text": "Repeated task",
+          "depth": 1
+        },
+        "expectedGraphs": {
+          "initial": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "authored": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "readerBefore": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "disabledReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "disabledEditor": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "retainedEditor": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "retainedReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "restoredReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "deletedReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "reopenedFinal": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "plain-menu",
+      "input": {
+        "id": "plain-menu",
+        "scope": "task-menu",
+        "title": "Reader menu in plain Markdown",
+        "markdown": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\nReader marker.",
+        "target": {
+          "label": "Check option: Repeated task",
+          "ordinal": 1,
+          "text": "Repeated task",
+          "depth": 1
+        },
+        "expectedGraphs": {
+          "initial": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "authored": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "readerBefore": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "disabledReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "disabledEditor": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "retainedEditor": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "retainedReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "restoredReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "deletedReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "reopenedFinal": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          }
+        }
+      },
+      "status": "observed",
+      "stage": "complete",
+      "graphs": {
+        "initial": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "authored": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "readerBefore": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "disabledReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "disabledEditor": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "retainedEditor": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "retainedReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "restoredReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "deletedReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "reopenedFinal": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        }
+      },
+      "actions": [
+        "Actual reader menu disable/enable/delete on the nested duplicate, with a rich-editor reopen and unrelated edit while disabled. APIs only create fixtures and inspect results. Source deltas are checked against the exact pre-action text."
+      ],
+      "setup": {
+        "iid": 282,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/282",
+        "description": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\nReader marker."
+      },
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "savedReachable": true,
+      "saved": {
+        "id": 1361,
+        "iid": 282,
+        "project_id": 1,
+        "title": "Reader menu in plain Markdown task-menu-20261117-a3",
+        "description": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\nReader marker. Verified.",
+        "state": "opened",
+        "created_at": "2026-11-17T13:56:31.914Z",
+        "updated_at": "2026-11-17T13:56:39.948Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/282",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 4,
+          "completed_count": 1
+        },
+        "has_tasks": false,
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/282",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#282",
+          "relative": "#282",
+          "full": "root/fountain-product-integration#282"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "readerReadiness": [
+        {
+          "phase": "saved",
+          "legacyRootCount": 1,
+          "legacyExactHeadingCount": 0,
+          "heading": {
+            "text": "Reader actions",
+            "html": "<h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>"
+          }
+        },
+        {
+          "phase": "retained",
+          "legacyRootCount": 1,
+          "legacyExactHeadingCount": 0,
+          "heading": {
+            "text": "Reader actions",
+            "html": "<h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>"
+          }
+        }
+      ],
+      "readerHTML": {
+        "readerBefore": "<div data-testid=\"work-item-description\" class=\"has-task-list-item-actions\"><h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>\n<ul class=\"task-list\" data-sourcepos=\"3:1-6:15\" dir=\"auto\">\n<li class=\"task-list-item\" data-sourcepos=\"3:1-3:23\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"3:4-3:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Repeated task\"> <del data-sourcepos=\"3:7-3:23\">Repeated task</del><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-215\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-217\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-217\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-216\" aria-labelledby=\"dropdown-toggle-btn-215\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n<li class=\"task-list-item\" data-sourcepos=\"4:1-5:21\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"4:4-4:4\" class=\"task-list-item-checkbox\" checked=\"\" aria-label=\"Check option: Parent review\"> Parent <strong data-sourcepos=\"4:14-4:23\">review</strong>\n<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-218\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-220\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-220\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-219\" aria-labelledby=\"dropdown-toggle-btn-218\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div><ul class=\"task-list\" data-sourcepos=\"5:3-5:21\">\n<li class=\"task-list-item\" data-sourcepos=\"5:3-5:21\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:6-5:6\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Repeated task\"> Repeated task<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-221\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-223\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-223\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-222\" aria-labelledby=\"dropdown-toggle-btn-221\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n</li>\n<li class=\"task-list-item\" data-sourcepos=\"6:1-6:15\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"6:4-6:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Keep last\"> Keep last<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-224\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-226\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-226\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-225\" aria-labelledby=\"dropdown-toggle-btn-224\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n<p data-sourcepos=\"8:1-8:24\" dir=\"auto\">Reader marker. Verified.</p></div> <!---->",
+        "retainedReader": "<div data-testid=\"work-item-description\" class=\"has-task-list-item-actions\"><h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>\n<ul class=\"task-list\" data-sourcepos=\"3:1-6:15\" dir=\"auto\">\n<li class=\"task-list-item\" data-sourcepos=\"3:1-3:23\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"3:4-3:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Repeated task\"> <del data-sourcepos=\"3:7-3:23\">Repeated task</del><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-215\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-217\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-217\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-216\" aria-labelledby=\"dropdown-toggle-btn-215\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n<li class=\"task-list-item\" data-sourcepos=\"4:1-5:21\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"4:4-4:4\" class=\"task-list-item-checkbox\" checked=\"\" aria-label=\"Check option: Parent review\"> Parent <strong data-sourcepos=\"4:14-4:23\">review</strong>\n<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-218\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-220\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-220\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-219\" aria-labelledby=\"dropdown-toggle-btn-218\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div><ul class=\"task-list\" data-sourcepos=\"5:3-5:21\">\n<li class=\"inapplicable task-list-item\" data-sourcepos=\"5:3-5:21\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:6-5:6\" class=\"task-list-item-checkbox\" data-inapplicable=\"\" disabled=\"\" aria-label=\"Check option: Repeated task\"> <s class=\"inapplicable\"> Repeated task</s><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-221\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-223\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-223\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-222\" aria-labelledby=\"dropdown-toggle-btn-221\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><!----> <!----> <li tabindex=\"0\" data-testid=\"enable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Enable list item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n</li>\n<li class=\"task-list-item\" data-sourcepos=\"6:1-6:15\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"6:4-6:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Keep last\"> Keep last<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-224\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-226\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-226\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-225\" aria-labelledby=\"dropdown-toggle-btn-224\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n<p data-sourcepos=\"8:1-8:34\" dir=\"auto\">Reader marker. Verified. Retained.</p></div> <!---->",
+        "deletedReader": "<div data-testid=\"work-item-description\" class=\"has-task-list-item-actions\"><h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>\n<ul class=\"task-list\" data-sourcepos=\"3:1-5:15\" dir=\"auto\">\n<li class=\"task-list-item\" data-sourcepos=\"3:1-3:23\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"3:4-3:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Repeated task\"> <del data-sourcepos=\"3:7-3:23\">Repeated task</del><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-239\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-241\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-241\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-240\" aria-labelledby=\"dropdown-toggle-btn-239\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n<li class=\"task-list-item\" data-sourcepos=\"4:1-4:23\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"4:4-4:4\" class=\"task-list-item-checkbox\" checked=\"\" aria-label=\"Check option: Parent review\"> Parent <strong data-sourcepos=\"4:14-4:23\">review</strong><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-242\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-244\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-244\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-243\" aria-labelledby=\"dropdown-toggle-btn-242\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n<li class=\"task-list-item\" data-sourcepos=\"5:1-5:15\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Keep last\"> Keep last<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-245\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-247\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-247\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-246\" aria-labelledby=\"dropdown-toggle-btn-245\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n<p data-sourcepos=\"7:1-7:34\" dir=\"auto\">Reader marker. Verified. Retained.</p></div> <!---->"
+      },
+      "disabled": {
+        "target": {
+          "text": "Repeated task",
+          "depth": 1,
+          "sourcepos": "5:3-5:21"
+        },
+        "before": {
+          "id": 1361,
+          "iid": 282,
+          "project_id": 1,
+          "title": "Reader menu in plain Markdown task-menu-20261117-a3",
+          "description": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\nReader marker. Verified.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:31.914Z",
+          "updated_at": "2026-11-17T13:56:39.948Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/282",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 4,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/282",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#282",
+            "relative": "#282",
+            "full": "root/fountain-product-integration#282"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "after": {
+          "id": 1361,
+          "iid": 282,
+          "project_id": 1,
+          "title": "Reader menu in plain Markdown task-menu-20261117-a3",
+          "description": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [~] Repeated task\n- [ ] Keep last\n\nReader marker. Verified.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:31.914Z",
+          "updated_at": "2026-11-17T13:56:42.563Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/282",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 3,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/282",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#282",
+            "relative": "#282",
+            "full": "root/fountain-product-integration#282"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "sourceDeltaExact": true
+      },
+      "retainedReachable": true,
+      "retained": {
+        "id": 1361,
+        "iid": 282,
+        "project_id": 1,
+        "title": "Reader menu in plain Markdown task-menu-20261117-a3",
+        "description": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [~] Repeated task\n- [ ] Keep last\n\nReader marker. Verified. Retained.",
+        "state": "opened",
+        "created_at": "2026-11-17T13:56:31.914Z",
+        "updated_at": "2026-11-17T13:56:51.142Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/282",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 3,
+          "completed_count": 1
+        },
+        "has_tasks": false,
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/282",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#282",
+          "relative": "#282",
+          "full": "root/fountain-product-integration#282"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "thirdStateSourceRetained": true,
+      "restored": {
+        "target": {
+          "text": "Repeated task",
+          "depth": 1,
+          "sourcepos": "5:3-5:21"
+        },
+        "before": {
+          "id": 1361,
+          "iid": 282,
+          "project_id": 1,
+          "title": "Reader menu in plain Markdown task-menu-20261117-a3",
+          "description": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [~] Repeated task\n- [ ] Keep last\n\nReader marker. Verified. Retained.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:31.914Z",
+          "updated_at": "2026-11-17T13:56:51.142Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/282",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 3,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/282",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#282",
+            "relative": "#282",
+            "full": "root/fountain-product-integration#282"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "after": {
+          "id": 1361,
+          "iid": 282,
+          "project_id": 1,
+          "title": "Reader menu in plain Markdown task-menu-20261117-a3",
+          "description": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\nReader marker. Verified. Retained.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:31.914Z",
+          "updated_at": "2026-11-17T13:56:53.773Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/282",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 4,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/282",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#282",
+            "relative": "#282",
+            "full": "root/fountain-product-integration#282"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "sourceDeltaExact": true
+      },
+      "deleted": {
+        "target": {
+          "text": "Repeated task",
+          "depth": 1,
+          "sourcepos": "5:3-5:21"
+        },
+        "before": {
+          "id": 1361,
+          "iid": 282,
+          "project_id": 1,
+          "title": "Reader menu in plain Markdown task-menu-20261117-a3",
+          "description": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\nReader marker. Verified. Retained.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:31.914Z",
+          "updated_at": "2026-11-17T13:56:53.773Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/282",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 4,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/282",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#282",
+            "relative": "#282",
+            "full": "root/fountain-product-integration#282"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "after": {
+          "id": 1361,
+          "iid": 282,
+          "project_id": 1,
+          "title": "Reader menu in plain Markdown task-menu-20261117-a3",
+          "description": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n- [ ] Keep last\n\nReader marker. Verified. Retained.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:31.914Z",
+          "updated_at": "2026-11-17T13:56:55.995Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/282",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 3,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/282",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/282/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#282",
+            "relative": "#282",
+            "full": "root/fountain-product-integration#282"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "sourceDeltaExact": true
+      }
+    },
+    {
+      "id": "scoped-menu",
+      "input": {
+        "id": "scoped-menu",
+        "scope": "task-menu",
+        "title": "Reader menu in direction container",
+        "markdown": "## Reader actions\n\n<div dir=\"auto\">\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\n</div>\n\nReader marker.",
+        "target": {
+          "label": "Check option: Repeated task",
+          "ordinal": 1,
+          "text": "Repeated task",
+          "depth": 1
+        },
+        "expectedGraphs": {
+          "initial": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "authored": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "readerBefore": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "disabledReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "disabledEditor": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "retainedEditor": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "retainedReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "inapplicable",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "restoredReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 1
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "deletedReader": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          },
+          "reopenedFinal": {
+            "headings": [
+              "Reader actions"
+            ],
+            "tasks": [
+              {
+                "text": "Repeated task",
+                "state": "pending",
+                "depth": 0
+              },
+              {
+                "text": "Parent review",
+                "state": "completed",
+                "depth": 0
+              },
+              {
+                "text": "Keep last",
+                "state": "pending",
+                "depth": 0
+              }
+            ],
+            "prose": [
+              "Reader marker. Verified. Retained."
+            ],
+            "bold": [
+              "review"
+            ],
+            "strikes": [
+              "Repeated task"
+            ]
+          }
+        }
+      },
+      "status": "observed",
+      "stage": "complete",
+      "graphs": {
+        "initial": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "authored": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "readerBefore": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "disabledReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "disabledEditor": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "retainedEditor": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "retainedReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "restoredReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "deletedReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "reopenedFinal": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        }
+      },
+      "actions": [
+        "Actual reader menu disable/enable/delete on the nested duplicate, with a rich-editor reopen and unrelated edit while disabled. APIs only create fixtures and inspect results. Source deltas are checked against the exact pre-action text."
+      ],
+      "setup": {
+        "iid": 283,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/283",
+        "description": "## Reader actions\n\n<div dir=\"auto\">\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\n</div>\n\nReader marker."
+      },
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "savedReachable": true,
+      "saved": {
+        "id": 1362,
+        "iid": 283,
+        "project_id": 1,
+        "title": "Reader menu in direction container task-menu-20261117-a3",
+        "description": "## Reader actions\n\n<div>\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\n</div>Reader marker. Verified.",
+        "state": "opened",
+        "created_at": "2026-11-17T13:56:59.857Z",
+        "updated_at": "2026-11-17T13:57:06.454Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/283",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 4,
+          "completed_count": 1
+        },
+        "has_tasks": false,
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/283",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#283",
+          "relative": "#283",
+          "full": "root/fountain-product-integration#283"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "readerReadiness": [
+        {
+          "phase": "saved",
+          "legacyRootCount": 1,
+          "legacyExactHeadingCount": 0,
+          "heading": {
+            "text": "Reader actions",
+            "html": "<h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>"
+          }
+        },
+        {
+          "phase": "retained",
+          "legacyRootCount": 1,
+          "legacyExactHeadingCount": 0,
+          "heading": {
+            "text": "Reader actions",
+            "html": "<h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>"
+          }
+        }
+      ],
+      "readerHTML": {
+        "readerBefore": "<div data-testid=\"work-item-description\" class=\"has-task-list-item-actions\"><h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>\n<div>\n<ul class=\"task-list\" data-sourcepos=\"5:1-8:15\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-5:23\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Repeated task\"> <del data-sourcepos=\"5:7-5:23\">Repeated task</del><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-215\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-217\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-217\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-216\" aria-labelledby=\"dropdown-toggle-btn-215\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n<li class=\"task-list-item\" data-sourcepos=\"6:1-7:21\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"6:4-6:4\" class=\"task-list-item-checkbox\" checked=\"\" aria-label=\"Check option: Parent review\"> Parent <strong data-sourcepos=\"6:14-6:23\">review</strong>\n<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-218\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-220\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-220\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-219\" aria-labelledby=\"dropdown-toggle-btn-218\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div><ul class=\"task-list\" data-sourcepos=\"7:3-7:21\">\n<li class=\"task-list-item\" data-sourcepos=\"7:3-7:21\"><input type=\"checkbox\" data-checkbox-sourcepos=\"7:6-7:6\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Repeated task\"> Repeated task<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-221\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-223\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-223\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-222\" aria-labelledby=\"dropdown-toggle-btn-221\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n</li>\n<li class=\"task-list-item\" data-sourcepos=\"8:1-9:0\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"8:4-8:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Keep last\"> Keep last<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-224\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-226\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-226\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-225\" aria-labelledby=\"dropdown-toggle-btn-224\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n</div>Reader marker. Verified.</div> <!---->",
+        "retainedReader": "<div data-testid=\"work-item-description\" class=\"has-task-list-item-actions\"><h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>\n<div>\n<ul class=\"task-list\" data-sourcepos=\"5:1-8:15\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-5:23\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Repeated task\"> <del data-sourcepos=\"5:7-5:23\">Repeated task</del><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-215\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-217\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-217\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-216\" aria-labelledby=\"dropdown-toggle-btn-215\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n<li class=\"task-list-item\" data-sourcepos=\"6:1-7:21\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"6:4-6:4\" class=\"task-list-item-checkbox\" checked=\"\" aria-label=\"Check option: Parent review\"> Parent <strong data-sourcepos=\"6:14-6:23\">review</strong>\n<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-218\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-220\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-220\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-219\" aria-labelledby=\"dropdown-toggle-btn-218\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div><ul class=\"task-list\" data-sourcepos=\"7:3-7:21\">\n<li class=\"inapplicable task-list-item\" data-sourcepos=\"7:3-7:21\"><input type=\"checkbox\" data-checkbox-sourcepos=\"7:6-7:6\" class=\"task-list-item-checkbox\" data-inapplicable=\"\" disabled=\"\" aria-label=\"Check option: Repeated task\"> <s class=\"inapplicable\"> Repeated task</s><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-221\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-223\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-223\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-222\" aria-labelledby=\"dropdown-toggle-btn-221\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><!----> <!----> <li tabindex=\"0\" data-testid=\"enable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Enable list item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n</li>\n<li class=\"task-list-item\" data-sourcepos=\"8:1-9:0\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"8:4-8:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Keep last\"> Keep last<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-224\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-226\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-226\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-225\" aria-labelledby=\"dropdown-toggle-btn-224\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n</div>Reader marker. Verified. Retained.</div> <!---->",
+        "deletedReader": "<div data-testid=\"work-item-description\" class=\"has-task-list-item-actions\"><h2 id=\"user-content-reader-actions\" data-sourcepos=\"1:1-1:17\" dir=\"auto\">Reader actions<a href=\"#reader-actions\" aria-label=\"Link to heading 'Reader actions'\" data-heading-content=\"Reader actions\" class=\"anchor\"></a></h2>\n<div>\n<ul class=\"task-list\" data-sourcepos=\"5:1-7:15\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-5:23\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Repeated task\"> <del data-sourcepos=\"5:7-5:23\">Repeated task</del><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-239\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-241\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-241\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-240\" aria-labelledby=\"dropdown-toggle-btn-239\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n<li class=\"task-list-item\" data-sourcepos=\"6:1-6:23\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"6:4-6:4\" class=\"task-list-item-checkbox\" checked=\"\" aria-label=\"Check option: Parent review\"> Parent <strong data-sourcepos=\"6:14-6:23\">review</strong><div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-242\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-244\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-244\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-243\" aria-labelledby=\"dropdown-toggle-btn-242\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n<li class=\"task-list-item\" data-sourcepos=\"7:1-8:0\"><svg class=\"drag-icon s14 gl-icon gl-cursor-grab gl-opacity-0\" role=\"img\" aria-hidden=\"true\">\n        <use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#grip\"></use>\n      </svg><input type=\"checkbox\" data-checkbox-sourcepos=\"7:4-7:4\" class=\"task-list-item-checkbox\" aria-label=\"Check option: Keep last\"> Keep last<div class=\"gl-disclosure-dropdown task-list-item-actions-wrapper gl-new-dropdown\"><button id=\"dropdown-toggle-btn-245\" data-testid=\"base-dropdown-toggle\" aria-controls=\"base-dropdown-247\" aria-expanded=\"false\" type=\"button\" class=\"btn gl-button btn-default btn-sm btn-default-tertiary task-list-item-actions gl-opacity-0 !gl-p-2 gl-new-dropdown-toggle gl-new-dropdown-icon-only btn-icon gl-new-dropdown-toggle-no-caret\"><!----> <svg data-testid=\"ellipsis_v-icon\" role=\"img\" aria-hidden=\"true\" class=\"gl-button-icon gl-icon s16 gl-fill-current\"><use href=\"/assets/icons-557611e974a59dbbc29ee0980dc4bc97610b136af3a30b5c715d47d566317bc5.svg#ellipsis_v\"></use></svg>  <span class=\"gl-button-text\"><span data-testid=\"base-dropdown-span\" class=\"gl-new-dropdown-button-text gl-sr-only\">\n        Checklist item actions\n      </span> <!----> <!----></span></button> <div class=\"gl-new-dropdown-container\"><div id=\"base-dropdown-247\" data-testid=\"base-dropdown-menu\" class=\"gl-new-dropdown-panel !gl-w-31\"><div class=\"gl-new-dropdown-arrow\"></div> <div class=\"gl-new-dropdown-inner\">  <ul id=\"disclosure-246\" aria-labelledby=\"dropdown-toggle-btn-245\" data-testid=\"disclosure-content\" tabindex=\"-1\" class=\"gl-new-dropdown-contents\"><li tabindex=\"0\" data-testid=\"convert\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Convert to child item\n    </span></button></li> <li tabindex=\"0\" data-testid=\"disable\" class=\"!gl-ml-2 gl-new-dropdown-item\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">\n      Disable list item\n    </span></button></li> <!----> <li tabindex=\"0\" data-testid=\"delete\" class=\"!gl-ml-2 gl-new-dropdown-item gl-new-dropdown-item-danger\"><button tabindex=\"-1\" type=\"button\" class=\"gl-new-dropdown-item-content\"><span class=\"gl-new-dropdown-item-text-wrapper\">Delete</span></button></li></ul> </div></div></div></div></li>\n</ul>\n</div>Reader marker. Verified. Retained.</div> <!---->"
+      },
+      "disabled": {
+        "target": {
+          "text": "Repeated task",
+          "depth": 1,
+          "sourcepos": "7:3-7:21"
+        },
+        "before": {
+          "id": 1362,
+          "iid": 283,
+          "project_id": 1,
+          "title": "Reader menu in direction container task-menu-20261117-a3",
+          "description": "## Reader actions\n\n<div>\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\n</div>Reader marker. Verified.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:59.857Z",
+          "updated_at": "2026-11-17T13:57:06.454Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/283",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 4,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/283",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#283",
+            "relative": "#283",
+            "full": "root/fountain-product-integration#283"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "after": {
+          "id": 1362,
+          "iid": 283,
+          "project_id": 1,
+          "title": "Reader menu in direction container task-menu-20261117-a3",
+          "description": "## Reader actions\n\n<div>\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [~] Repeated task\n- [ ] Keep last\n\n</div>Reader marker. Verified.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:59.857Z",
+          "updated_at": "2026-11-17T13:57:09.097Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/283",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 3,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/283",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#283",
+            "relative": "#283",
+            "full": "root/fountain-product-integration#283"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "sourceDeltaExact": true
+      },
+      "retainedReachable": true,
+      "retained": {
+        "id": 1362,
+        "iid": 283,
+        "project_id": 1,
+        "title": "Reader menu in direction container task-menu-20261117-a3",
+        "description": "## Reader actions\n\n<div>\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [~] Repeated task\n- [ ] Keep last\n\n</div>Reader marker. Verified. Retained.",
+        "state": "opened",
+        "created_at": "2026-11-17T13:56:59.857Z",
+        "updated_at": "2026-11-17T13:57:17.715Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/283",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 3,
+          "completed_count": 1
+        },
+        "has_tasks": false,
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/283",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#283",
+          "relative": "#283",
+          "full": "root/fountain-product-integration#283"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "thirdStateSourceRetained": true,
+      "restored": {
+        "target": {
+          "text": "Repeated task",
+          "depth": 1,
+          "sourcepos": "7:3-7:21"
+        },
+        "before": {
+          "id": 1362,
+          "iid": 283,
+          "project_id": 1,
+          "title": "Reader menu in direction container task-menu-20261117-a3",
+          "description": "## Reader actions\n\n<div>\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [~] Repeated task\n- [ ] Keep last\n\n</div>Reader marker. Verified. Retained.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:59.857Z",
+          "updated_at": "2026-11-17T13:57:17.715Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/283",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 3,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/283",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#283",
+            "relative": "#283",
+            "full": "root/fountain-product-integration#283"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "after": {
+          "id": 1362,
+          "iid": 283,
+          "project_id": 1,
+          "title": "Reader menu in direction container task-menu-20261117-a3",
+          "description": "## Reader actions\n\n<div>\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\n</div>Reader marker. Verified. Retained.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:59.857Z",
+          "updated_at": "2026-11-17T13:57:20.318Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/283",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 4,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/283",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#283",
+            "relative": "#283",
+            "full": "root/fountain-product-integration#283"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "sourceDeltaExact": true
+      },
+      "deleted": {
+        "target": {
+          "text": "Repeated task",
+          "depth": 1,
+          "sourcepos": "7:3-7:21"
+        },
+        "before": {
+          "id": 1362,
+          "iid": 283,
+          "project_id": 1,
+          "title": "Reader menu in direction container task-menu-20261117-a3",
+          "description": "## Reader actions\n\n<div>\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\n</div>Reader marker. Verified. Retained.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:59.857Z",
+          "updated_at": "2026-11-17T13:57:20.318Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/283",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 4,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/283",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#283",
+            "relative": "#283",
+            "full": "root/fountain-product-integration#283"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "after": {
+          "id": 1362,
+          "iid": 283,
+          "project_id": 1,
+          "title": "Reader menu in direction container task-menu-20261117-a3",
+          "description": "## Reader actions\n\n<div>\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n- [ ] Keep last\n\n</div>Reader marker. Verified. Retained.",
+          "state": "opened",
+          "created_at": "2026-11-17T13:56:59.857Z",
+          "updated_at": "2026-11-17T13:57:22.599Z",
+          "closed_at": null,
+          "closed_by": null,
+          "labels": [],
+          "milestone": null,
+          "assignees": [],
+          "author": {
+            "id": 1,
+            "username": "root",
+            "public_email": null,
+            "name": "Administrator",
+            "state": "active",
+            "locked": false,
+            "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+            "web_url": "http://127.0.0.1:5080/root"
+          },
+          "type": "ISSUE",
+          "assignee": null,
+          "user_notes_count": 0,
+          "merge_requests_count": 0,
+          "upvotes": 0,
+          "downvotes": 0,
+          "start_date": null,
+          "due_date": null,
+          "confidential": false,
+          "discussion_locked": null,
+          "issue_type": "issue",
+          "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/283",
+          "time_stats": {
+            "time_estimate": 0,
+            "total_time_spent": 0,
+            "human_time_estimate": null,
+            "human_total_time_spent": null
+          },
+          "task_completion_status": {
+            "count": 3,
+            "completed_count": 1
+          },
+          "has_tasks": false,
+          "_links": {
+            "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/283",
+            "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/notes",
+            "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/283/award_emoji",
+            "project": "http://127.0.0.1:5080/api/v4/projects/1",
+            "closed_as_duplicate_of": null
+          },
+          "references": {
+            "short": "#283",
+            "relative": "#283",
+            "full": "root/fountain-product-integration#283"
+          },
+          "severity": "UNKNOWN",
+          "subscribed": true,
+          "moved_to_id": null,
+          "imported": false,
+          "imported_from": "none",
+          "service_desk_reply_to": null
+        },
+        "sourceDeltaExact": true
+      }
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "4256377e9b245fddb808ecd8cf24a846d989357e6866a946b7b05f129f5d1aa4",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "c31222766259f281ee92a9f9c07f6702b0a5cd2792e5f1b5f26c2fe6226e4fdf",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "8729a9e6b38d0b4c39838af7f4eef59bb4a94790381bcbb5fec26070fb5aa0b7",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "exitCode": 0
+    }
+  ],
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "008e6f1d990965db5abffb6739a39f06c463de8e681c761315e84f836db4b802  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.json",
+    "36ebdd7dddd055eb892ff6ef5538947e463db218d3051c33cd04d304101030b9  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": true
+}

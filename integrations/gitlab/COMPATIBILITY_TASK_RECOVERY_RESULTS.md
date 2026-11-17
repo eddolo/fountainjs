@@ -107,3 +107,8 @@ and bidi mixtures, rapid input, mobile/other engines, concurrent users and resta
 Boundary task text is trimmed after controls are removed, so this is not a raw
 whitespace/byte-integrity claim. Earlier Applied-history and blank-line suggestion
 limitations remain open. No overall parity percentage or release claim is promoted.
+
+The [reader-menu follow-up](COMPATIBILITY_TASK_MENU_RESULTS.md) adds 54 parity
+checks for duplicate-target disable/restore/delete, not-applicable retention through
+rich editing and authored strike preservation. Heading/prose observer corrections
+are retained separately; no product improvement is credited to representation differences.

@@ -330,3 +330,34 @@ it('does not infer a working reopened checkbox from the saved task count',()=>{
  const [original,fountain]=taskRecoveryReports();delete (fountain.observations[0] as any).reopenedCheckbox;
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(2);expect(result.comparisonComplete).toBe(false);
 });
+
+function taskMenuReports(index=0){
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-task-menu.json',import.meta.url),'utf8'));
+ const pair=reports();
+ for(const report of pair){
+  const input=structuredClone(fixture.cases[index]);report.fixture.cases=[input];
+  const item:any=report.observations[0];item.id=input.id;item.input=structuredClone(input);item.graphs=structuredClone(input.expectedGraphs);
+  for(const phase of ['disabled','restored','deleted'])item[phase]={target:{text:input.target.text,depth:input.target.depth,sourcepos:'5:3-5:21'},sourceDeltaExact:true,after:{state:'opened',task_completion_status:{count:phase==='restored'?4:3,completed_count:1}}};
+  for(const phase of ['saved','retained']){item[phase]={state:'opened'};item[phase+'Reachable']=true;}
+  item.thirdStateSourceRetained=true;
+ }
+ return pair;
+}
+it.each([0,1])('classifies reader-menu third-state and source-position coverage (%i)',index=>{
+ const result=compareGitLabCompatibility(...taskMenuReports(index));expect(result.summary.parity).toBe(27);expect(result.featureAcceptance.passed).toBe(true);
+});
+it.each([
+ ['disabled.target',(item:any)=>{item.disabled.target.depth=0;}],
+ ['disabled.counts',(item:any)=>{item.disabled.after.task_completion_status.count=4;}],
+ ['restored.source',(item:any)=>{item.restored.sourceDeltaExact=false;}],
+ ['retainedEditor.graph',(item:any)=>{item.graphs.retainedEditor.tasks[2].state='pending';}],
+ ['retainedReader.graph',(item:any)=>{item.graphs.retainedReader.strikes=[];}],
+ ['deleted.counts',(item:any)=>{item.deleted.after.task_completion_status.count=4;}],
+])('rejects reader-menu corruption without masking it as a successful action: %s',(invariant,mutate)=>{
+ const [original,fountain]=taskMenuReports();mutate(fountain.observations[0]);const result=compareGitLabCompatibility(original,fountain);
+ expect(result.rows.find((row:any)=>row.invariant===invariant).classification).toBe('regression');expect(result.regressionGate.passed).toBe(false);
+});
+it('requires evidence that not-applicable source survived rich editing',()=>{
+ const [original,fountain]=taskMenuReports();delete (fountain.observations[0] as any).thirdStateSourceRetained;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(1);expect(result.comparisonComplete).toBe(false);
+});

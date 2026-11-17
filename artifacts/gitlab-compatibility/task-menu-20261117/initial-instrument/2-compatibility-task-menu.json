@@ -1,0 +1,735 @@
+{
+  "formatVersion": 1,
+  "workflow": "reader-context-actions-and-third-state-retention",
+  "settlingMs": 700,
+  "cases": [
+    {
+      "id": "plain-menu",
+      "scope": "task-menu",
+      "title": "Reader menu in plain Markdown",
+      "markdown": "## Reader actions\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\nReader marker.",
+      "target": {
+        "label": "Check option: Repeated task",
+        "ordinal": 1,
+        "text": "Repeated task",
+        "depth": 1
+      },
+      "expectedGraphs": {
+        "initial": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "authored": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "readerBefore": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "disabledReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "disabledEditor": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "retainedEditor": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "retainedReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "restoredReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "deletedReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "reopenedFinal": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        }
+      }
+    },
+    {
+      "id": "scoped-menu",
+      "scope": "task-menu",
+      "title": "Reader menu in direction container",
+      "markdown": "## Reader actions\n\n<div dir=\"auto\">\n\n- [ ] ~~Repeated task~~\n- [x] Parent **review**\n  - [ ] Repeated task\n- [ ] Keep last\n\n</div>\n\nReader marker.",
+      "target": {
+        "label": "Check option: Repeated task",
+        "ordinal": 1,
+        "text": "Repeated task",
+        "depth": 1
+      },
+      "expectedGraphs": {
+        "initial": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "authored": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "readerBefore": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "disabledReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "disabledEditor": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "retainedEditor": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "retainedReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "inapplicable",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "restoredReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 1
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "deletedReader": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        },
+        "reopenedFinal": {
+          "headings": [
+            "Reader actions"
+          ],
+          "tasks": [
+            {
+              "text": "Repeated task",
+              "state": "pending",
+              "depth": 0
+            },
+            {
+              "text": "Parent review",
+              "state": "completed",
+              "depth": 0
+            },
+            {
+              "text": "Keep last",
+              "state": "pending",
+              "depth": 0
+            }
+          ],
+          "prose": [
+            "Reader marker. Verified. Retained."
+          ],
+          "bold": [
+            "review"
+          ],
+          "strikes": [
+            "Repeated task"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "scope": "Two matched root-admin Linux Chromium reader-menu workflows. Functional state/text/formatting/source deltas only, not identical DOM/layout/accessibility or full product acceptance.",
+  "parentRevision": "f705991fdb3281251aec86f5fe68e82210957828",
+  "checks": {
+    "integrationTests": 1452,
+    "integrationFiles": 57,
+    "focusedPolicyAndObserverTests": 81,
+    "strictTypes": true,
+    "runtimeInputsUnchanged": true,
+    "retainedDisabledCountsVerified": true,
+    "matchedMenuSourceDeltasVerified": true
+  },
+  "visualReview": {
+    "method": "Inspected original PNG bytes via image/png emission; no image edits.",
+    "reviewed": [
+      "both scoped disable menus",
+      "native scoped disabled editor/retained reader/restored reader/final editor",
+      "original plain retained reader",
+      "native plain final editor"
+    ],
+    "authoredStrikePreserved": true,
+    "nestedDuplicateOnlyDeleted": true
+  },
+  "files": [
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/comparison-1/report.json",
+      "sha256": "8737e5c532cecf68ddda697b523a33b492736774f4e690f0dceeb4b6520e70f1"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/comparison-1/report.md",
+      "sha256": "7528848a30295801c643db7bc8cb73267768b880d6c8ebd348eba389b2b416fc"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/fountain-1/plain-menu-reopened-final.png",
+      "sha256": "b57410cc66052cb30596976207bf88809843f096d69540fe2a0d31ee1a3e6c67"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/fountain-1/report.json",
+      "sha256": "9e4557fe96cf5b3f8af02820c98ec10c5b812f0e417215faad2d7eb55ca3f85d"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/fountain-1/scoped-menu-disabled-editor.png",
+      "sha256": "7eef99f58a04a59b8f6767c2f0ef64658e1ce87acbb4c5898169963daf6979f3"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/fountain-1/scoped-menu-disabled-menu.png",
+      "sha256": "56a6708d5bfb60c2a8b6ffb7f89cd52ce3cf1375542d669d11f6a916db286b87"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/fountain-1/scoped-menu-reopened-final.png",
+      "sha256": "adf000497060895bbd6a9c1cfb28bb239f794e17c2c0e3410b5c619c08bd13e4"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/fountain-1/scoped-menu-restored-reader.png",
+      "sha256": "c21627b27ff8524e34b217ae73947693b8e0ff3d08da8fd0744f2781abcd0f60"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/fountain-1/scoped-menu-retained-reader.png",
+      "sha256": "d5d27d302b70dc0993ca4f937045c63dbbb272651711a2b2a66cf86b9f9a5ed7"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/initial-instrument/0-run-gitlab-compatibility.mjs",
+      "sha256": "4256377e9b245fddb808ecd8cf24a846d989357e6866a946b7b05f129f5d1aa4"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/initial-instrument/1-audit-gitlab-compatibility-task-menu.mjs",
+      "sha256": "bc1d594f0ca7eaab97105843e9d59ef4501bba656da9ed6b4fa2738c90f7d473"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/initial-instrument/2-compatibility-task-menu.json",
+      "sha256": "8bbe02abf4e989100e30a99b68f82430602b3833cf260d4d33c2ea143b6e47e1"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/initial-instrument/3-compatibility.mjs",
+      "sha256": "9bbe5297d0f15cd46d8167ea148bd020e82629cd2b95223e51b8e3a89fff7126"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/initial-instrument/manifest.json",
+      "sha256": "14c304ff8d9ee4bb96ad3e065035bfd0303c4e1606e87b536c03612b492c788e"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/original-1/plain-menu-failure.png",
+      "sha256": "2ef44f5fd600a71c710ddd29473c52b9d264270beede22683484211c117d7b7d"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/original-1/report.json",
+      "sha256": "61d0c9a4ee2d01c411eb3725139feee6c7dd8132665606c922b11b8e8d387508"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/original-1/scoped-menu-failure.png",
+      "sha256": "0936575b500448c926e2332a2fc002546d2c2e69526e2b9e6142209920cf01da"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/original-2/report.json",
+      "sha256": "efdd99a109a4cdfbe158ac173a4f379fd90f6ad2158f77222683a26556caaa95"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/original-2/scoped-menu-retained-reader.png",
+      "sha256": "0514c92a9f721012fc8ac0d3c31cf46e30b4e98dbe375e3633e6b6c947c970b0"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/original-3/plain-menu-retained-reader.png",
+      "sha256": "59d45e537d552539be1b7d8f18d3c5d70e9673719557df1971648e802173bf86"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/original-3/report.json",
+      "sha256": "24e2cfc7d18332e8317f2e6bfb3a2dccde9b184e5f462e08a86fdf32410e778d"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/original-3/scoped-menu-disabled-menu.png",
+      "sha256": "39f2a5a65b6111b8342bb05e11f756141d11417dabec1074b9941601bac153c8"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/reader-observer-instrument/0-run-gitlab-compatibility.mjs",
+      "sha256": "4256377e9b245fddb808ecd8cf24a846d989357e6866a946b7b05f129f5d1aa4"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/reader-observer-instrument/1-audit-gitlab-compatibility-task-menu.mjs",
+      "sha256": "1d3a0938873ef54e0e41270a8d7f18b9d648aafd0d85bd8a0c4517927eb0cb0b"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/reader-observer-instrument/2-compatibility-task-menu.json",
+      "sha256": "8bbe02abf4e989100e30a99b68f82430602b3833cf260d4d33c2ea143b6e47e1"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/reader-observer-instrument/3-compatibility.mjs",
+      "sha256": "9bbe5297d0f15cd46d8167ea148bd020e82629cd2b95223e51b8e3a89fff7126"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/reader-observer-instrument/manifest.json",
+      "sha256": "c5860e0f60660e681a9424c2806ba6dd150238fb53d8c2d358d1df9aa289d80b"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/verification/gitlab-task-menu-all-fixed-20261117.txt",
+      "sha256": "8924ccde0ac4493b798470bdd2974b385e6377821bec406d2dc83cb6b70d2966"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/verification/gitlab-task-menu-captured-policy-20261117.txt",
+      "sha256": "9ca00d5603021b070e6831de249dffb3ac417b644539ca59bc39bc3317a70567"
+    },
+    {
+      "path": "artifacts/gitlab-compatibility/task-menu-20261117/verification/log-provenance.json",
+      "sha256": "55e4df5d6bf53aa39a82d9dba67d82c8e4e95324925bcb83e9b64e4991818731"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/compatibility-task-menu.json",
+      "sha256": "8bbe02abf4e989100e30a99b68f82430602b3833cf260d4d33c2ea143b6e47e1"
+    },
+    {
+      "path": "integrations/gitlab/fixtures/task-reader-live-dom.json",
+      "sha256": "f6ae3bf6a3f606860d83c97459784cbc572fac812548318a5cb796e1f288b65d"
+    },
+    {
+      "path": "integrations/gitlab/testing/compatibility.mjs",
+      "sha256": "320b99aafdc53e82268c5eeaeecf017f055e01c396d0d855a2e71b16fea880fb"
+    },
+    {
+      "path": "scripts/audit-gitlab-compatibility-task-menu.mjs",
+      "sha256": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b"
+    },
+    {
+      "path": "scripts/run-gitlab-compatibility.mjs",
+      "sha256": "4256377e9b245fddb808ecd8cf24a846d989357e6866a946b7b05f129f5d1aa4"
+    },
+    {
+      "path": "tests/gitlab-compatibility.test.ts",
+      "sha256": "e6912485cde59b387873aae6ee0318bc1c342a72eac212f5e74285f943e1b637"
+    },
+    {
+      "path": "tests/gitlab-task-menu-graph.test.ts",
+      "sha256": "e40c609dfaba5a361d3b146bd455344f5a972a5f488f8cf4b632f1391da9ad6b"
+    }
+  ],
+  "currentRuntime": {
+    "path": "artifacts/gitlab-native-runtime/build.json",
+    "sha256": "de73433cebb4fb21d59b13638821a2ddd0c95966c09474a8336274e518f8a92d"
+  },
+  "localTypeLog": {
+    "path": "artifacts/gitlab-task-menu-types-fixed-20261117.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
