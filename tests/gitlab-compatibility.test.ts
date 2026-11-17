@@ -121,3 +121,32 @@ it('fails reviewed range/history source loss even when the applied file is corre
  const result=compareGitLabCompatibility(original,fountain);expect(result.summary.regression).toBe(1);expect(result.regressionGate.passed).toBe(false);
  expect(result.rows.find((row:any)=>row.invariant==='appliedSource').classification).toBe('parity');
 });
+
+function clipboardReports(){
+ const pair=reports();
+ for(const report of pair){
+  const input:any=report.fixture.cases[0];Object.assign(input,{scope:'clipboard',expectedGraph:{headings:[{level:2,text:'Heading'}],tasks:[{text:'Task',checked:true}],code:['A\\n\uE000']},plainTokens:['A\\n','\uE000']});
+  const item:any=report.observations[0];item.input=structuredClone(input);
+  for(const key of ['initial','externalRich','undo'])item[key]=structuredClone(input.expectedGraph);
+  for(const key of ['pasted','redo','afterCutPaste','reopened'])item[key]=Object.fromEntries(Object.entries(input.expectedGraph).map(([name,values]:any)=>[name,[...values,...values]]));
+  item.cut={headings:[],tasks:[],code:[]};item.clipboard={text:'A\\n\uE000',html:'<p>rich</p>'};item.externalPlain=item.clipboard.text;item.appendClipboardText=item.clipboard.text;item.appendSelection={readyForPaste:{collapsed:true,inside:true,activeInside:true,anchorText:'',anchorOffset:0}};
+ }
+ return pair;
+}
+it('checks clipboard source/marks/tasks/history separately from the eventual save',()=>{
+ const result=compareGitLabCompatibility(...clipboardReports());expect(result.featureAcceptance.passed).toBe(true);expect(result.summary.total).toBe(28);
+});
+it('detects internal task loss without requiring a generic external editor to implement task widgets',()=>{
+ const [original,fountain]=clipboardReports();const item:any=fountain.observations[0];item.externalRich.tasks=[];item.pasted.tasks=[];
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.regression).toBe(1);expect(result.regressionGate.passed).toBe(false);
+ expect(result.rows.some((row:any)=>row.invariant==='externalRich.tasks')).toBe(false);
+});
+it('cannot classify a clipboard comparison without actual active editor proof',()=>{
+ const [original,fountain]=clipboardReports();delete (fountain.observations[0] as any).editorProof;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(28);expect(result.regressionGate.passed).toBe(false);
+});
+
+it('does not approve clipboard claims from runs that lack actual append caret/clipboard preconditions',()=>{
+ const [original,fountain]=clipboardReports();delete (original.observations[0] as any).appendSelection;delete (original.observations[0] as any).appendClipboardText;
+ const result=compareGitLabCompatibility(original,fountain);expect(result.summary.incomplete).toBe(2);expect(result.comparisonComplete).toBe(false);expect(result.regressionGate.passed).toBe(false);
+});

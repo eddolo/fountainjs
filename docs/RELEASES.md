@@ -26,6 +26,15 @@ do not mark an unfinished beta stable merely to change the badge.
 
 This reconciliation changes no release, tag, npm package or website deployment.
 
+## Matched clipboard coverage — 2026-11-17
+
+The [rich clipboard fixture](../integrations/gitlab/COMPATIBILITY_CLIPBOARD_RESULTS.md)
+verifies 84 parity checks through actual internal/external transfer, history,
+cut/paste and save/reopen. The evidence gate now requires observed caret and
+clipboard readiness; earlier apparent wins lacking that evidence do not pass.
+An intermittent baseline anomaly remains open. 1387 integration tests / 54 files
+and strict types pass; no engine runtime, release or acceptance-limit change.
+
 ## Matched posted-review coverage — 2026-11-17
 
 The [source/range review pair](../integrations/gitlab/COMPATIBILITY_REVIEW_RESULTS.md)

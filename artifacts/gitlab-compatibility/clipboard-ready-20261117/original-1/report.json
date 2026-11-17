@@ -1,0 +1,1125 @@
+{
+  "formatVersion": 1,
+  "runId": "clipboard-ready-20261117",
+  "attempt": 1,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "clipboard",
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-clipboard.json",
+  "fixtureHash": "e5d9f718fdc64b012fed816ef1564d9a9ba628eb9022c757ccbb7a13f635641e",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "rich-clipboard-internal-and-external",
+    "settlingMs": 1500,
+    "cases": [
+      {
+        "id": "rich-clipboard",
+        "scope": "clipboard",
+        "title": "Paired rich clipboard workflow",
+        "markdown": "## Clipboard review\n\nA **critical** and *careful* [reference](https://example.com/reference) with `value_n`.\n\n> Read the whole record.\n\n- [ ] Pending review\n- [x] Completed review\n\n| Stage | Owner |\n| --- | --- |\n| **bold cell** | Ada |\n\n```js\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nEnd of clipboard fixture.",
+        "expectedGraph": {
+          "headings": [
+            {
+              "level": 2,
+              "text": "Clipboard review"
+            }
+          ],
+          "prose": [
+            "A critical and careful reference with value_n.",
+            "End of clipboard fixture."
+          ],
+          "bold": [
+            "critical",
+            "bold cell"
+          ],
+          "italic": [
+            "careful"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "inlineCode": [
+            "value_n"
+          ],
+          "quotes": [
+            "Read the whole record."
+          ],
+          "tables": [
+            [
+              [
+                {
+                  "tag": "TH",
+                  "text": "Stage"
+                },
+                {
+                  "tag": "TH",
+                  "text": "Owner"
+                }
+              ],
+              [
+                {
+                  "tag": "TD",
+                  "text": "bold cell"
+                },
+                {
+                  "tag": "TD",
+                  "text": "Ada"
+                }
+              ]
+            ]
+          ],
+          "tasks": [
+            {
+              "text": "Pending review",
+              "checked": false
+            },
+            {
+              "text": "Completed review",
+              "checked": true
+            }
+          ],
+          "code": [
+            "const token = \"\\n\";\nconst tag = \"\";"
+          ]
+        },
+        "plainTokens": [
+          "Clipboard review",
+          "critical",
+          "careful",
+          "reference",
+          "value_n",
+          "Read the whole record.",
+          "Pending review",
+          "Completed review",
+          "Stage",
+          "Owner",
+          "bold cell",
+          "Ada",
+          "const token = \"\\n\";",
+          "const tag = \"\";",
+          "End of clipboard fixture."
+        ]
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "rich-clipboard",
+      "input": {
+        "id": "rich-clipboard",
+        "scope": "clipboard",
+        "title": "Paired rich clipboard workflow",
+        "markdown": "## Clipboard review\n\nA **critical** and *careful* [reference](https://example.com/reference) with `value_n`.\n\n> Read the whole record.\n\n- [ ] Pending review\n- [x] Completed review\n\n| Stage | Owner |\n| --- | --- |\n| **bold cell** | Ada |\n\n```js\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nEnd of clipboard fixture.",
+        "expectedGraph": {
+          "headings": [
+            {
+              "level": 2,
+              "text": "Clipboard review"
+            }
+          ],
+          "prose": [
+            "A critical and careful reference with value_n.",
+            "End of clipboard fixture."
+          ],
+          "bold": [
+            "critical",
+            "bold cell"
+          ],
+          "italic": [
+            "careful"
+          ],
+          "links": [
+            {
+              "text": "reference",
+              "href": "https://example.com/reference"
+            }
+          ],
+          "inlineCode": [
+            "value_n"
+          ],
+          "quotes": [
+            "Read the whole record."
+          ],
+          "tables": [
+            [
+              [
+                {
+                  "tag": "TH",
+                  "text": "Stage"
+                },
+                {
+                  "tag": "TH",
+                  "text": "Owner"
+                }
+              ],
+              [
+                {
+                  "tag": "TD",
+                  "text": "bold cell"
+                },
+                {
+                  "tag": "TD",
+                  "text": "Ada"
+                }
+              ]
+            ]
+          ],
+          "tasks": [
+            {
+              "text": "Pending review",
+              "checked": false
+            },
+            {
+              "text": "Completed review",
+              "checked": true
+            }
+          ],
+          "code": [
+            "const token = \"\\n\";\nconst tag = \"\";"
+          ]
+        },
+        "plainTokens": [
+          "Clipboard review",
+          "critical",
+          "careful",
+          "reference",
+          "value_n",
+          "Read the whole record.",
+          "Pending review",
+          "Completed review",
+          "Stage",
+          "Owner",
+          "bold cell",
+          "Ada",
+          "const token = \"\\n\";",
+          "const tag = \"\";",
+          "End of clipboard fixture."
+        ]
+      },
+      "status": "observed",
+      "stage": "complete",
+      "actions": [
+        "Select the actual whole rich document with keyboard; copy to the system clipboard and inspect its real MIME payload.",
+        "Paste the same clipboard with real Ctrl+V into separate plain-text and generic rich contenteditable destinations.",
+        "Paste the copied rich document after the original; undo and redo the paste with actual editor keyboard shortcuts.",
+        "Cut the duplicated document through the actual system clipboard; paste it back into the now-empty editor."
+      ],
+      "setup": {
+        "iid": 213,
+        "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/213",
+        "description": "## Clipboard review\n\nA **critical** and *careful* [reference](https://example.com/reference) with `value_n`.\n\n> Read the whole record.\n\n- [ ] Pending review\n- [x] Completed review\n\n| Stage | Owner |\n| --- | --- |\n| **bold cell** | Ada |\n\n```js\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nEnd of clipboard fixture."
+      },
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "initial": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          }
+        ],
+        "prose": [
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture."
+        ],
+        "bold": [
+          "critical",
+          "bold cell"
+        ],
+        "italic": [
+          "careful"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [
+          "value_n"
+        ],
+        "quotes": [
+          "Read the whole record."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ]
+        ],
+        "tasks": [
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          }
+        ],
+        "code": [
+          "const token = \"\\n\";\nconst tag = \"\";"
+        ]
+      },
+      "selectedText": "Clipboard review\nA critical and careful reference with value_n.\n\nRead the whole record.\n\n\nPending review\n\n\nCompleted review\n\nStage\n\nOwner\n\nbold cell\n\nAda\n\nconst token = \"\\n\";\nconst tag = \"\";\nEnd of clipboard fixture.",
+      "clipboard": {
+        "types": [
+          "text/plain",
+          "text/html"
+        ],
+        "text": "Clipboard reviewA critical and careful reference with value_n.Read the whole record.Pending reviewCompleted reviewStageOwnerbold cellAdaconst token = \"\\n\";\nconst tag = \"\";End of clipboard fixture.",
+        "html": "<h2 dir=\"auto\">Clipboard review</h2><p dir=\"auto\">A <strong>critical</strong> and <em>careful</em> <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://example.com/reference\">reference</a> with <code>value_n</code>.</p><blockquote dir=\"auto\" multiline=\"false\"><p dir=\"auto\">Read the whole record.</p></blockquote><ul dir=\"auto\" start=\"1\" parens=\"false\" bullet=\"-\" data-type=\"taskList\"><li dir=\"auto\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p dir=\"auto\">Pending review</p></div></li><li dir=\"auto\" data-checked=\"true\" data-type=\"taskItem\"><label><input type=\"checkbox\" checked=\"checked\"><span></span></label><div><p dir=\"auto\">Completed review</p></div></li></ul><div><div class=\"gl-table-shadow-overlay gl-my-5\"><div data-sticky-header=\"true\" class=\"gl-max-h-[70vh] gl-w-fit gl-max-w-full gl-overflow-x-auto gl-overflow-y-auto print:gl-max-h-none\"><table ismarkdown=\"true\"><tbody><tr><th colspan=\"1\" rowspan=\"1\"><p dir=\"auto\">Stage</p></th><th colspan=\"1\" rowspan=\"1\"><p dir=\"auto\">Owner</p></th></tr><tr><td colspan=\"1\" rowspan=\"1\"><p dir=\"auto\"><strong>bold cell</strong></p></td><td colspan=\"1\" rowspan=\"1\"><p dir=\"auto\">Ada</p></td></tr></tbody></table></div></div></div><pre dir=\"auto\" language=\"js\" class=\"content-editor-code-block code-syntax-highlight-theme code highlight js-syntax-highlight language-javascript\"><code>const token = \"\\n\";\nconst tag = \"\";</code></pre><p dir=\"auto\">End of clipboard fixture.</p>"
+      },
+      "externalPlain": "Clipboard reviewA critical and careful reference with value_n.Read the whole record.Pending reviewCompleted reviewStageOwnerbold cellAdaconst token = \"\\n\";\nconst tag = \"\";End of clipboard fixture.",
+      "externalRich": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          }
+        ],
+        "prose": [
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture."
+        ],
+        "bold": [
+          "critical",
+          "bold cell"
+        ],
+        "italic": [
+          "careful"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [
+          "value_n"
+        ],
+        "quotes": [
+          "Read the whole record."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ]
+        ],
+        "tasks": [
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          }
+        ],
+        "code": [
+          "const token = \"\\n\";\nconst tag = \"\";"
+        ]
+      },
+      "appendSelection": {
+        "beforeClick": {
+          "collapsed": false,
+          "text": "Clipboard review\nA critical and careful reference with value_n.\n\nRead the whole record.\n\n\nPending review\n\n\nCompleted review\n\nStage\n\nOwner\n\nbold cell\n\nAda\n\nconst token = \"\\n\";\nconst tag = \"\";\nEnd of clipboard fixture.",
+          "anchorText": "Clipboard reviewA critical and careful reference with value_n. Read the whole record. Pending review Completed review Stage Owner bold cell Ada    const token = \"\\n\";\nconst tag = \"\";End of clipboard fixture. ",
+          "anchorOffset": 0,
+          "focusText": "Clipboard reviewA critical and careful reference with value_n. Read the whole record. Pending review Completed review Stage Owner bold cell Ada    const token = \"\\n\";\nconst tag = \"\";End of clipboard fixture. ",
+          "focusOffset": 7,
+          "inside": true,
+          "activeInside": true,
+          "activeTag": "DIV"
+        },
+        "afterClick": {
+          "collapsed": true,
+          "text": "",
+          "anchorText": "End of clipboard fixture.",
+          "anchorOffset": 25,
+          "focusText": "End of clipboard fixture.",
+          "focusOffset": 25,
+          "inside": true,
+          "activeInside": true,
+          "activeTag": "DIV"
+        },
+        "afterEnd": {
+          "collapsed": true,
+          "text": "",
+          "anchorText": "End of clipboard fixture.",
+          "anchorOffset": 25,
+          "focusText": "End of clipboard fixture.",
+          "focusOffset": 25,
+          "inside": true,
+          "activeInside": true,
+          "activeTag": "DIV"
+        },
+        "afterEnter": {
+          "collapsed": true,
+          "text": "",
+          "anchorText": "",
+          "anchorOffset": 0,
+          "focusText": "",
+          "focusOffset": 0,
+          "inside": true,
+          "activeInside": true,
+          "activeTag": "DIV"
+        },
+        "readyForPaste": {
+          "collapsed": true,
+          "text": "",
+          "anchorText": "",
+          "anchorOffset": 0,
+          "focusText": "",
+          "focusOffset": 0,
+          "inside": true,
+          "activeInside": true,
+          "activeTag": "DIV"
+        },
+        "afterPaste": {
+          "collapsed": true,
+          "text": "",
+          "anchorText": "End of clipboard fixture.",
+          "anchorOffset": 25,
+          "focusText": "End of clipboard fixture.",
+          "focusOffset": 25,
+          "inside": true,
+          "activeInside": true,
+          "activeTag": "DIV"
+        }
+      },
+      "appendClipboardText": "Clipboard reviewA critical and careful reference with value_n.Read the whole record.Pending reviewCompleted reviewStageOwnerbold cellAdaconst token = \"\\n\";\nconst tag = \"\";End of clipboard fixture.",
+      "pasted": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          },
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          }
+        ],
+        "prose": [
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture.",
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture."
+        ],
+        "bold": [
+          "critical",
+          "bold cell",
+          "critical",
+          "bold cell"
+        ],
+        "italic": [
+          "careful",
+          "careful"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [
+          "value_n",
+          "value_n"
+        ],
+        "quotes": [
+          "Read the whole record.",
+          "Read the whole record."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ]
+        ],
+        "tasks": [
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          },
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          }
+        ],
+        "code": [
+          "const token = \"\\n\";\nconst tag = \"\";",
+          "const token = \"\\n\";\nconst tag = \"\";"
+        ]
+      },
+      "undo": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          }
+        ],
+        "prose": [
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture."
+        ],
+        "bold": [
+          "critical",
+          "bold cell"
+        ],
+        "italic": [
+          "careful"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [
+          "value_n"
+        ],
+        "quotes": [
+          "Read the whole record."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ]
+        ],
+        "tasks": [
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          }
+        ],
+        "code": [
+          "const token = \"\\n\";\nconst tag = \"\";"
+        ]
+      },
+      "redo": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          },
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          }
+        ],
+        "prose": [
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture.",
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture."
+        ],
+        "bold": [
+          "critical",
+          "bold cell",
+          "critical",
+          "bold cell"
+        ],
+        "italic": [
+          "careful",
+          "careful"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [
+          "value_n",
+          "value_n"
+        ],
+        "quotes": [
+          "Read the whole record.",
+          "Read the whole record."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ]
+        ],
+        "tasks": [
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          },
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          }
+        ],
+        "code": [
+          "const token = \"\\n\";\nconst tag = \"\";",
+          "const token = \"\\n\";\nconst tag = \"\";"
+        ]
+      },
+      "cut": {
+        "headings": [],
+        "prose": [],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "afterCutPaste": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          },
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          }
+        ],
+        "prose": [
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture.",
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture."
+        ],
+        "bold": [
+          "critical",
+          "bold cell",
+          "critical",
+          "bold cell"
+        ],
+        "italic": [
+          "careful",
+          "careful"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [
+          "value_n",
+          "value_n"
+        ],
+        "quotes": [
+          "Read the whole record.",
+          "Read the whole record."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ]
+        ],
+        "tasks": [
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          },
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          }
+        ],
+        "code": [
+          "const token = \"\\n\";\nconst tag = \"\";",
+          "const token = \"\\n\";\nconst tag = \"\";"
+        ]
+      },
+      "saved": {
+        "id": 437,
+        "iid": 213,
+        "project_id": 1,
+        "title": "Paired rich clipboard workflow clipboard-ready-20261117-a1",
+        "description": "## Clipboard review\n\nA **critical** and _careful_ [reference](https://example.com/reference) with `value_n`.\n\n> Read the whole record.\n\n- [ ] Pending review\n- [x] Completed review\n\n| Stage | Owner |\n|-------|-------|\n| **bold cell** | Ada |\n\n```js\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nEnd of clipboard fixture.\n\n## Clipboard review\n\nA **critical** and _careful_ [reference](https://example.com/reference) with `value_n`.\n\n> Read the whole record.\n\n- [ ] Pending review\n- [x] Completed review\n\n| Stage | Owner |\n|-------|-------|\n| **bold cell** | Ada |\n\n```js\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nEnd of clipboard fixture.",
+        "state": "opened",
+        "created_at": "2026-11-17T00:29:39.245Z",
+        "updated_at": "2026-11-17T00:29:56.231Z",
+        "closed_at": null,
+        "closed_by": null,
+        "labels": [],
+        "milestone": null,
+        "assignees": [],
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "type": "ISSUE",
+        "assignee": null,
+        "user_notes_count": 0,
+        "merge_requests_count": 0,
+        "upvotes": 0,
+        "downvotes": 0,
+        "start_date": null,
+        "due_date": null,
+        "confidential": false,
+        "discussion_locked": null,
+        "issue_type": "issue",
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/213",
+        "time_stats": {
+          "time_estimate": 0,
+          "total_time_spent": 0,
+          "human_time_estimate": null,
+          "human_total_time_spent": null
+        },
+        "task_completion_status": {
+          "count": 4,
+          "completed_count": 2
+        },
+        "has_tasks": false,
+        "_links": {
+          "self": "http://127.0.0.1:5080/api/v4/projects/1/issues/213",
+          "notes": "http://127.0.0.1:5080/api/v4/projects/1/issues/213/notes",
+          "award_emoji": "http://127.0.0.1:5080/api/v4/projects/1/issues/213/award_emoji",
+          "project": "http://127.0.0.1:5080/api/v4/projects/1",
+          "closed_as_duplicate_of": null
+        },
+        "references": {
+          "short": "#213",
+          "relative": "#213",
+          "full": "root/fountain-product-integration#213"
+        },
+        "severity": "UNKNOWN",
+        "subscribed": true,
+        "moved_to_id": null,
+        "imported": false,
+        "imported_from": "none",
+        "service_desk_reply_to": null
+      },
+      "reopened": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          },
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          }
+        ],
+        "prose": [
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture.",
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture."
+        ],
+        "bold": [
+          "critical",
+          "bold cell",
+          "critical",
+          "bold cell"
+        ],
+        "italic": [
+          "careful",
+          "careful"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [
+          "value_n",
+          "value_n"
+        ],
+        "quotes": [
+          "Read the whole record.",
+          "Read the whole record."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ]
+        ],
+        "tasks": [
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          },
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          }
+        ],
+        "code": [
+          "const token = \"\\n\";\nconst tag = \"\";",
+          "const token = \"\\n\";\nconst tag = \"\";"
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "895ba422cbb04fefa2a37c2f401ec97f1c5e33d0989db61ebb1dfdc104e744a2",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": [
+      "clipboard-read",
+      "clipboard-write"
+    ]
+  },
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "008e6f1d990965db5abffb6739a39f06c463de8e681c761315e84f836db4b802  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.json",
+    "36ebdd7dddd055eb892ff6ef5538947e463db218d3051c33cd04d304101030b9  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": true
+}

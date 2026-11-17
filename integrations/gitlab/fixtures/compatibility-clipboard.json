@@ -1,0 +1,98 @@
+{
+  "formatVersion": 1,
+  "workflow": "rich-clipboard-internal-and-external",
+  "settlingMs": 1500,
+  "cases": [
+    {
+      "id": "rich-clipboard",
+      "scope": "clipboard",
+      "title": "Paired rich clipboard workflow",
+      "markdown": "## Clipboard review\n\nA **critical** and *careful* [reference](https://example.com/reference) with `value_n`.\n\n> Read the whole record.\n\n- [ ] Pending review\n- [x] Completed review\n\n| Stage | Owner |\n| --- | --- |\n| **bold cell** | Ada |\n\n```js\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nEnd of clipboard fixture.",
+      "expectedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Clipboard review"
+          }
+        ],
+        "prose": [
+          "A critical and careful reference with value_n.",
+          "End of clipboard fixture."
+        ],
+        "bold": [
+          "critical",
+          "bold cell"
+        ],
+        "italic": [
+          "careful"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [
+          "value_n"
+        ],
+        "quotes": [
+          "Read the whole record."
+        ],
+        "tables": [
+          [
+            [
+              {
+                "tag": "TH",
+                "text": "Stage"
+              },
+              {
+                "tag": "TH",
+                "text": "Owner"
+              }
+            ],
+            [
+              {
+                "tag": "TD",
+                "text": "bold cell"
+              },
+              {
+                "tag": "TD",
+                "text": "Ada"
+              }
+            ]
+          ]
+        ],
+        "tasks": [
+          {
+            "text": "Pending review",
+            "checked": false
+          },
+          {
+            "text": "Completed review",
+            "checked": true
+          }
+        ],
+        "code": [
+          "const token = \"\\n\";\nconst tag = \"\";"
+        ]
+      },
+      "plainTokens": [
+        "Clipboard review",
+        "critical",
+        "careful",
+        "reference",
+        "value_n",
+        "Read the whole record.",
+        "Pending review",
+        "Completed review",
+        "Stage",
+        "Owner",
+        "bold cell",
+        "Ada",
+        "const token = \"\\n\";",
+        "const tag = \"\";",
+        "End of clipboard fixture."
+      ]
+    }
+  ]
+}

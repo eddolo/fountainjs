@@ -1,0 +1,14 @@
+{
+  "scripts/run-gitlab-compatibility.mjs": {
+    "archive": "artifacts/gitlab-compatibility/clipboard-visible-20261117/instrument/run-gitlab-compatibility.mjs",
+    "sha256": "895ba422cbb04fefa2a37c2f401ec97f1c5e33d0989db61ebb1dfdc104e744a2"
+  },
+  "scripts/audit-gitlab-compatibility-suggestions.mjs": {
+    "archive": "artifacts/gitlab-compatibility/clipboard-visible-20261117/instrument/audit-gitlab-compatibility-suggestions.mjs",
+    "sha256": "400629584c0e3d5364b8a546c7430e9f1f320259af82bfb370180dba0630b6c6"
+  },
+  "scripts/audit-gitlab-compatibility-clipboard.mjs": {
+    "archive": "artifacts/gitlab-compatibility/clipboard-visible-20261117/instrument/audit-gitlab-compatibility-clipboard.mjs",
+    "sha256": "d07b230dd11ec609ecc841334a83faba10da9b1a0a231750313cda31b4b45180"
+  }
+}

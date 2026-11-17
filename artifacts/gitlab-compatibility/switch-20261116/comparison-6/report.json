@@ -1,0 +1,410 @@
+{
+  "formatVersion": 1,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "switch-20261116",
+      "attempt": 1
+    },
+    "fountain": {
+      "runId": "switch-20261116",
+      "attempt": 1
+    }
+  },
+  "rows": [
+    {
+      "case": "ordinary-immediate",
+      "invariant": "prefill",
+      "label": "Selected source characters",
+      "expected": "const key = \"old\";",
+      "original": "const key = \"old\";",
+      "fountain": "const key = \"old\";",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-immediate",
+      "invariant": "firstSource",
+      "label": "Source at first visible Markdown field",
+      "expected": "const key = \"old\";\n",
+      "original": "",
+      "fountain": "const key = \"old\";\n",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-immediate",
+      "invariant": "settledSource",
+      "label": "Source after declared observation window",
+      "expected": "const key = \"old\";\n",
+      "original": "",
+      "fountain": "const key = \"old\";\n",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-immediate",
+      "invariant": "range",
+      "label": "Selected target offsets",
+      "expected": "-0+0",
+      "original": null,
+      "fountain": "-0+0",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "prefill",
+      "label": "Selected source characters",
+      "expected": "const key = \"old\";",
+      "original": "const key = \"old\";",
+      "fountain": "const key = \"old\";",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "firstSource",
+      "label": "Source at first visible Markdown field",
+      "expected": "const key = \"old\";\n",
+      "original": "const key = \"old\";\n",
+      "fountain": "const key = \"old\";\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "settledSource",
+      "label": "Source after declared observation window",
+      "expected": "const key = \"old\";\n",
+      "original": "const key = \"old\";\n",
+      "fountain": "const key = \"old\";\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "range",
+      "label": "Selected target offsets",
+      "expected": "-0+0",
+      "original": "-0+0",
+      "fountain": "-0+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "savedSource",
+      "label": "Saved replacement source",
+      "expected": "const key = \"old\";\n// reviewed by the compatibility workflow\n",
+      "original": "const key = \"old\";\n// reviewed by the compatibility workflow\n",
+      "fountain": "const key = \"old\";\n// reviewed by the compatibility workflow\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "savedRange",
+      "label": "Saved target offsets",
+      "expected": "-0+0",
+      "original": "-0+0",
+      "fountain": "-0+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "beforeApplySource",
+      "label": "Draft does not write repository contents",
+      "expected": "const key = \"old\";\nkeep();\nlast();\n",
+      "original": "const key = \"old\";\nkeep();\nlast();\n",
+      "fountain": "const key = \"old\";\nkeep();\nlast();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "noEarlyCommit",
+      "label": "Draft does not create a source commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "appliedSource",
+      "label": "Applied repository file contents",
+      "expected": "const key = \"old\";\n// reviewed by the compatibility workflow\nkeep();\nlast();\n",
+      "original": "const key = \"old\";\n// reviewed by the compatibility workflow\nkeep();\nlast();\n",
+      "fountain": "const key = \"old\";\n// reviewed by the compatibility workflow\nkeep();\nlast();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "singleApplyCommit",
+      "label": "Application creates one child of the seed commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "proseOnlyBody",
+      "label": "Prose editing changes only the intended comment suffix",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "noProseFileChange",
+      "label": "Prose editing retains repository content and head",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "appliedFlag",
+      "label": "Prose editing retains Applied flag",
+      "expected": true,
+      "original": false,
+      "fountain": false,
+      "classification": "shared-limitation",
+      "status": "paired"
+    },
+    {
+      "case": "ordinary-settled",
+      "invariant": "stableSuggestionId",
+      "label": "Prose editing retains unchanged suggestion identity",
+      "expected": true,
+      "original": false,
+      "fountain": false,
+      "classification": "shared-limitation",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-immediate",
+      "invariant": "prefill",
+      "label": "Selected source characters",
+      "expected": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  ",
+      "original": "const value = \"\";\nconst value = \"\";\nconst key = \"A​B\";  ",
+      "fountain": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  ",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-immediate",
+      "invariant": "firstSource",
+      "label": "Source at first visible Markdown field",
+      "expected": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "original": "",
+      "fountain": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-immediate",
+      "invariant": "settledSource",
+      "label": "Source after declared observation window",
+      "expected": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "original": "",
+      "fountain": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-immediate",
+      "invariant": "range",
+      "label": "Selected target offsets",
+      "expected": "-2+0",
+      "original": null,
+      "fountain": "-2+0",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "prefill",
+      "label": "Selected source characters",
+      "expected": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  ",
+      "original": "const value = \"\";\nconst value = \"\";\nconst key = \"A​B\";  ",
+      "fountain": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  ",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "firstSource",
+      "label": "Source at first visible Markdown field",
+      "expected": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "original": "const value = \"\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "fountain": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "settledSource",
+      "label": "Source after declared observation window",
+      "expected": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "original": "const value = \"\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "fountain": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "range",
+      "label": "Selected target offsets",
+      "expected": "-2+0",
+      "original": "-2+0",
+      "fountain": "-2+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "savedSource",
+      "label": "Saved replacement source",
+      "expected": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n",
+      "original": "const value = \"\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n",
+      "fountain": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\n",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "savedRange",
+      "label": "Saved target offsets",
+      "expected": "-2+0",
+      "original": "-2+0",
+      "fountain": "-2+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "beforeApplySource",
+      "label": "Draft does not write repository contents",
+      "expected": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+      "original": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+      "fountain": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \nkeep();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "noEarlyCommit",
+      "label": "Draft does not create a source commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "appliedSource",
+      "label": "Applied repository file contents",
+      "expected": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\nkeep();\n",
+      "original": "const value = \"\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\nkeep();\n",
+      "fountain": "const value = \"\\n\";\nconst value = \"\";\nconst key = \"A​B\";  \n// reviewed by the compatibility workflow\nkeep();\n",
+      "classification": "improvement",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "singleApplyCommit",
+      "label": "Application creates one child of the seed commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "proseOnlyBody",
+      "label": "Prose editing changes only the intended comment suffix",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "noProseFileChange",
+      "label": "Prose editing retains repository content and head",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "appliedFlag",
+      "label": "Prose editing retains Applied flag",
+      "expected": true,
+      "original": false,
+      "fountain": false,
+      "classification": "shared-limitation",
+      "status": "paired"
+    },
+    {
+      "case": "transport-collision-settled",
+      "invariant": "stableSuggestionId",
+      "label": "Prose editing retains unchanged suggestion identity",
+      "expected": true,
+      "original": false,
+      "fountain": false,
+      "classification": "shared-limitation",
+      "status": "paired"
+    }
+  ],
+  "summary": {
+    "parity": 20,
+    "improvement": 12,
+    "regression": 0,
+    "shared-limitation": 4,
+    "incomplete": 0,
+    "total": 36
+  },
+  "comparisonComplete": true,
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": false,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/switch-20261116/original-1/report.json",
+      "sha256": "14138d573e6ef1feba62774de1cad5d812b38d7276f38b8d6965e158bd7b1cc1"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/switch-20261116/fountain-1/report.json",
+      "sha256": "12509d11b7f69017b55166334a1b4fecdcc287153733b9c6dbf1583d07ff6d20"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "1db42457b47e8fdc4d2f94ba6a2dd075f56aec146f7017f45595ac27fb6317cb"
+  }
+}

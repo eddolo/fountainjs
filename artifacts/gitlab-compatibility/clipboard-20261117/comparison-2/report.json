@@ -1,0 +1,2635 @@
+{
+  "formatVersion": 1,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "clipboard-20261117",
+      "attempt": 1
+    },
+    "fountain": {
+      "runId": "clipboard-20261117",
+      "attempt": 1
+    }
+  },
+  "rows": [
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.headings",
+      "label": "initial: headings",
+      "expected": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "original": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "fountain": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.prose",
+      "label": "initial: prose",
+      "expected": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "original": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "fountain": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.bold",
+      "label": "initial: bold",
+      "expected": [
+        "critical",
+        "bold cell"
+      ],
+      "original": [
+        "critical",
+        "bold cell"
+      ],
+      "fountain": [
+        "critical",
+        "bold cell"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.italic",
+      "label": "initial: italic",
+      "expected": [
+        "careful"
+      ],
+      "original": [
+        "careful"
+      ],
+      "fountain": [
+        "careful"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.links",
+      "label": "initial: links",
+      "expected": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.inlineCode",
+      "label": "initial: inlineCode",
+      "expected": [
+        "value_n"
+      ],
+      "original": [
+        "value_n"
+      ],
+      "fountain": [
+        "value_n"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.quotes",
+      "label": "initial: quotes",
+      "expected": [
+        "Read the whole record."
+      ],
+      "original": [
+        "Read the whole record."
+      ],
+      "fountain": [
+        "Read the whole record."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.tables",
+      "label": "initial: tables",
+      "expected": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "original": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "fountain": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.tasks",
+      "label": "initial: tasks",
+      "expected": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "original": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "fountain": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "initial.code",
+      "label": "initial: code",
+      "expected": [
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "original": [
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "fountain": [
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalRich.headings",
+      "label": "externalRich: headings",
+      "expected": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "original": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "fountain": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalRich.prose",
+      "label": "externalRich: prose",
+      "expected": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "original": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "fountain": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalRich.bold",
+      "label": "externalRich: bold",
+      "expected": [
+        "critical",
+        "bold cell"
+      ],
+      "original": [
+        "critical",
+        "bold cell"
+      ],
+      "fountain": [
+        "critical",
+        "bold cell"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalRich.italic",
+      "label": "externalRich: italic",
+      "expected": [
+        "careful"
+      ],
+      "original": [
+        "careful"
+      ],
+      "fountain": [
+        "careful"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalRich.links",
+      "label": "externalRich: links",
+      "expected": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalRich.inlineCode",
+      "label": "externalRich: inlineCode",
+      "expected": [
+        "value_n"
+      ],
+      "original": [
+        "value_n"
+      ],
+      "fountain": [
+        "value_n"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalRich.quotes",
+      "label": "externalRich: quotes",
+      "expected": [
+        "Read the whole record."
+      ],
+      "original": [
+        "Read the whole record."
+      ],
+      "fountain": [
+        "Read the whole record."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalRich.tables",
+      "label": "externalRich: tables",
+      "expected": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "original": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "fountain": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalRich.code",
+      "label": "externalRich: code",
+      "expected": [
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "original": [
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "fountain": [
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.headings",
+      "label": "pasted: headings",
+      "expected": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "original": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "fountain": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.prose",
+      "label": "pasted: prose",
+      "expected": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "original": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "fountain": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.bold",
+      "label": "pasted: bold",
+      "expected": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "original": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "fountain": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.italic",
+      "label": "pasted: italic",
+      "expected": [
+        "careful",
+        "careful"
+      ],
+      "original": [
+        "careful",
+        "careful"
+      ],
+      "fountain": [
+        "careful",
+        "careful"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.links",
+      "label": "pasted: links",
+      "expected": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.inlineCode",
+      "label": "pasted: inlineCode",
+      "expected": [
+        "value_n",
+        "value_n"
+      ],
+      "original": [
+        "value_n",
+        "value_n"
+      ],
+      "fountain": [
+        "value_n",
+        "value_n"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.quotes",
+      "label": "pasted: quotes",
+      "expected": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "original": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "fountain": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.tables",
+      "label": "pasted: tables",
+      "expected": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "original": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "fountain": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.tasks",
+      "label": "pasted: tasks",
+      "expected": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "original": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "fountain": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "pasted.code",
+      "label": "pasted: code",
+      "expected": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "original": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "fountain": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.headings",
+      "label": "undo: headings",
+      "expected": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "original": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "fountain": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.prose",
+      "label": "undo: prose",
+      "expected": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "original": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "fountain": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.bold",
+      "label": "undo: bold",
+      "expected": [
+        "critical",
+        "bold cell"
+      ],
+      "original": [
+        "critical",
+        "bold cell"
+      ],
+      "fountain": [
+        "critical",
+        "bold cell"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.italic",
+      "label": "undo: italic",
+      "expected": [
+        "careful"
+      ],
+      "original": [
+        "careful"
+      ],
+      "fountain": [
+        "careful"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.links",
+      "label": "undo: links",
+      "expected": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.inlineCode",
+      "label": "undo: inlineCode",
+      "expected": [
+        "value_n"
+      ],
+      "original": [
+        "value_n"
+      ],
+      "fountain": [
+        "value_n"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.quotes",
+      "label": "undo: quotes",
+      "expected": [
+        "Read the whole record."
+      ],
+      "original": [
+        "Read the whole record."
+      ],
+      "fountain": [
+        "Read the whole record."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.tables",
+      "label": "undo: tables",
+      "expected": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "original": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "fountain": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.tasks",
+      "label": "undo: tasks",
+      "expected": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "original": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "fountain": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "undo.code",
+      "label": "undo: code",
+      "expected": [
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "original": [
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "fountain": [
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.headings",
+      "label": "redo: headings",
+      "expected": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "original": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "fountain": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.prose",
+      "label": "redo: prose",
+      "expected": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "original": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "fountain": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.bold",
+      "label": "redo: bold",
+      "expected": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "original": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "fountain": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.italic",
+      "label": "redo: italic",
+      "expected": [
+        "careful",
+        "careful"
+      ],
+      "original": [
+        "careful",
+        "careful"
+      ],
+      "fountain": [
+        "careful",
+        "careful"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.links",
+      "label": "redo: links",
+      "expected": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.inlineCode",
+      "label": "redo: inlineCode",
+      "expected": [
+        "value_n",
+        "value_n"
+      ],
+      "original": [
+        "value_n",
+        "value_n"
+      ],
+      "fountain": [
+        "value_n",
+        "value_n"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.quotes",
+      "label": "redo: quotes",
+      "expected": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "original": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "fountain": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.tables",
+      "label": "redo: tables",
+      "expected": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "original": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "fountain": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.tasks",
+      "label": "redo: tasks",
+      "expected": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "original": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "fountain": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "redo.code",
+      "label": "redo: code",
+      "expected": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "original": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "fountain": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.headings",
+      "label": "cut: headings",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.prose",
+      "label": "cut: prose",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.bold",
+      "label": "cut: bold",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.italic",
+      "label": "cut: italic",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.links",
+      "label": "cut: links",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.inlineCode",
+      "label": "cut: inlineCode",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.quotes",
+      "label": "cut: quotes",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.tables",
+      "label": "cut: tables",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.tasks",
+      "label": "cut: tasks",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "cut.code",
+      "label": "cut: code",
+      "expected": [],
+      "original": [],
+      "fountain": [],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.headings",
+      "label": "afterCutPaste: headings",
+      "expected": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "original": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "fountain": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.prose",
+      "label": "afterCutPaste: prose",
+      "expected": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "original": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "fountain": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.bold",
+      "label": "afterCutPaste: bold",
+      "expected": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "original": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "fountain": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.italic",
+      "label": "afterCutPaste: italic",
+      "expected": [
+        "careful",
+        "careful"
+      ],
+      "original": [
+        "careful",
+        "careful"
+      ],
+      "fountain": [
+        "careful",
+        "careful"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.links",
+      "label": "afterCutPaste: links",
+      "expected": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.inlineCode",
+      "label": "afterCutPaste: inlineCode",
+      "expected": [
+        "value_n",
+        "value_n"
+      ],
+      "original": [
+        "value_n",
+        "value_n"
+      ],
+      "fountain": [
+        "value_n",
+        "value_n"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.quotes",
+      "label": "afterCutPaste: quotes",
+      "expected": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "original": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "fountain": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.tables",
+      "label": "afterCutPaste: tables",
+      "expected": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "original": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "fountain": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.tasks",
+      "label": "afterCutPaste: tasks",
+      "expected": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "original": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "fountain": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "afterCutPaste.code",
+      "label": "afterCutPaste: code",
+      "expected": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "original": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "fountain": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.headings",
+      "label": "reopened: headings",
+      "expected": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "original": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "fountain": [
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        },
+        {
+          "level": 2,
+          "text": "Clipboard review"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.prose",
+      "label": "reopened: prose",
+      "expected": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "original": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "fountain": [
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture.",
+        "A critical and careful reference with value_n.",
+        "End of clipboard fixture."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.bold",
+      "label": "reopened: bold",
+      "expected": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "original": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "fountain": [
+        "critical",
+        "bold cell",
+        "critical",
+        "bold cell"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.italic",
+      "label": "reopened: italic",
+      "expected": [
+        "careful",
+        "careful"
+      ],
+      "original": [
+        "careful",
+        "careful"
+      ],
+      "fountain": [
+        "careful",
+        "careful"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.links",
+      "label": "reopened: links",
+      "expected": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "original": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "fountain": [
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        },
+        {
+          "text": "reference",
+          "href": "https://example.com/reference"
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.inlineCode",
+      "label": "reopened: inlineCode",
+      "expected": [
+        "value_n",
+        "value_n"
+      ],
+      "original": [
+        "value_n",
+        "value_n"
+      ],
+      "fountain": [
+        "value_n",
+        "value_n"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.quotes",
+      "label": "reopened: quotes",
+      "expected": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "original": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "fountain": [
+        "Read the whole record.",
+        "Read the whole record."
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.tables",
+      "label": "reopened: tables",
+      "expected": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "original": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "fountain": [
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "tag": "TH",
+              "text": "Stage"
+            },
+            {
+              "tag": "TH",
+              "text": "Owner"
+            }
+          ],
+          [
+            {
+              "tag": "TD",
+              "text": "bold cell"
+            },
+            {
+              "tag": "TD",
+              "text": "Ada"
+            }
+          ]
+        ]
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.tasks",
+      "label": "reopened: tasks",
+      "expected": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "original": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "fountain": [
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        },
+        {
+          "text": "Pending review",
+          "checked": false
+        },
+        {
+          "text": "Completed review",
+          "checked": true
+        }
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "reopened.code",
+      "label": "reopened: code",
+      "expected": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "original": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "fountain": [
+        "const token = \"\\n\";\nconst tag = \"\";",
+        "const token = \"\\n\";\nconst tag = \"\";"
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "clipboard.plainTokens",
+      "label": "Copied plain text retains every declared token",
+      "expected": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "original": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "fountain": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "clipboard.html",
+      "label": "Copy supplies an actual rich HTML clipboard payload",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "externalPlain",
+      "label": "External text paste equals the actual copied plain payload",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "appendCaretReady",
+      "label": "Append begins with a verified caret in the intended empty paragraph",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "rich-clipboard",
+      "invariant": "appendClipboardUnchanged",
+      "label": "Append clipboard still contains the original copied payload",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    }
+  ],
+  "summary": {
+    "parity": 82,
+    "improvement": 0,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 2,
+    "total": 84
+  },
+  "comparisonComplete": false,
+  "regressionGate": {
+    "passed": false
+  },
+  "featureAcceptance": {
+    "passed": false,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/clipboard-20261117/original-1/report.json",
+      "sha256": "a3d3dabfcbd961f12941df9e88d73de8ad93fa52d9258254be91a3dc4445d88f"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/clipboard-20261117/fountain-1/report.json",
+      "sha256": "c4c2593160d976a574a9d0aa5d3b249abb5883320dadfc4d169f2b710e72f3f8"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "1db42457b47e8fdc4d2f94ba6a2dd075f56aec146f7017f45595ac27fb6317cb"
+  }
+}

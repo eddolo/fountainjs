@@ -8,6 +8,10 @@ A second matched deletion pair adds 26 parity/four improvement outcomes across
 30 checks in two scenarios, with zero regression. [Deletion results](COMPATIBILITY_DELETION_RESULTS.md).
 A third matched posted-review pair verifies 21 parity checks for source/range
 editing, undo/redo and save/reopen/application. [Review results](COMPATIBILITY_REVIEW_RESULTS.md).
+A fourth matched clipboard fixture verifies 84 parity outcomes with explicit
+caret/clipboard preconditions and visible captures. Earlier apparent clipboard
+wins fail the hardened evidence gate; a timing/selection anomaly remains open.
+[Clipboard results](COMPATIBILITY_CLIPBOARD_RESULTS.md).
 Earlier native journeys/API controls remain separate single-sided evidence.
 
 ## Comparison contract
@@ -107,7 +111,8 @@ one substep does not establish that Fountain is globally better than Tiptap.
    metadata and source commit before/after. The original-editor UI pair now
    verifies the same lost Applied flag/recreated identity on both sides. The
    earlier stock API control remains separate attribution evidence.
-5. Extend the same harness to existing clipboard, table, task-state, media,
+5. Whole-document rich clipboard now has one matched fixture; partial selections,
+   cell grids, ownership and external-app-specific imports remain. Extend table, task-state, media,
    source-switching, review and persistence journeys, followed by permissions,
    concurrency and additional browser/mobile profiles.
 
@@ -138,7 +143,8 @@ identically on both sides. The comparator refuses environment/input/instrument
 mismatches, missing editor proof and unobserved outcomes.
 
 Next: extend matched workflows to shrinking/asymmetric/stale source ranges,
-wider deletion ranges/whitespace inputs, clipboard/tables/tasks/media and then roles/concurrency,
+wider deletion ranges/whitespace inputs, clipboard partial/cell-grid/ownership
+workflows, tables/tasks/media and then roles/concurrency,
 additional browsers/mobile and matched restart. Keep the shared Applied-history
 failure open. Add repeated profiles before making frequency/performance claims.
 No broad superiority claim or release promotion follows from this initial corpus.

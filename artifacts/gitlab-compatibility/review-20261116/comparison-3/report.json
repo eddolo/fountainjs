@@ -1,0 +1,350 @@
+{
+  "formatVersion": 1,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "review-20261116",
+      "attempt": 1
+    },
+    "fountain": {
+      "runId": "review-20261116",
+      "attempt": 1
+    }
+  },
+  "rows": [
+    {
+      "case": "posted-range-review",
+      "invariant": "prefill",
+      "label": "Selected source characters",
+      "expected": "old();",
+      "original": "old();",
+      "fountain": "old();",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "firstSource",
+      "label": "Source at first visible Markdown field",
+      "expected": "old();\n",
+      "original": "old();\n",
+      "fountain": "old();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "settledSource",
+      "label": "Source after declared observation window",
+      "expected": "old();\n",
+      "original": "old();\n",
+      "fountain": "old();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "range",
+      "label": "Selected target offsets",
+      "expected": "-0+0",
+      "original": "-0+0",
+      "fountain": "-0+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "savedSource",
+      "label": "Initial posted proposal retains original source",
+      "expected": "old();\n",
+      "original": "old();\n",
+      "fountain": "old();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "savedRange",
+      "label": "Initial posted proposal retains target offsets",
+      "expected": "-0+0",
+      "original": "-0+0",
+      "fountain": "-0+0",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewInitial",
+      "label": "Posted proposal reopens with exact source and range",
+      "expected": {
+        "source": "old();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        }
+      },
+      "original": {
+        "source": "old();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        }
+      },
+      "fountain": {
+        "source": "old();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        }
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewBeforeRange",
+      "label": "Editing source retains the original target range",
+      "expected": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        }
+      },
+      "original": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        }
+      },
+      "fountain": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        }
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewAfterRange",
+      "label": "Expanding the range retains edited source",
+      "expected": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        }
+      },
+      "original": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        }
+      },
+      "fountain": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        }
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewUndo",
+      "label": "Undoing range adjustment restores prior range and preserves edited source",
+      "expected": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        }
+      },
+      "original": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        }
+      },
+      "fountain": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        }
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewRedo",
+      "label": "Redoing range adjustment restores expanded range and edited source",
+      "expected": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        }
+      },
+      "original": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        }
+      },
+      "fountain": {
+        "source": "const token = \"\\n\";\nconst tag = \"\";\n",
+        "range": {
+          "start": 1,
+          "end": 3
+        }
+      },
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewDraftSource",
+      "label": "Source-mode handoff retains reviewed source",
+      "expected": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "original": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "fountain": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewDraftRange",
+      "label": "Source-mode handoff retains reviewed offsets",
+      "expected": "-1+1",
+      "original": "-1+1",
+      "fountain": "-1+1",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewSavedBody",
+      "label": "Saving review changes only the intended source and range",
+      "expected": "```suggestion:-1+1\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nCompatibility posted review",
+      "original": "```suggestion:-1+1\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nCompatibility posted review",
+      "fountain": "```suggestion:-1+1\nconst token = \"\\n\";\nconst tag = \"\";\n```\n\nCompatibility posted review",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewReopenedSource",
+      "label": "Reloading reviewed rich proposal retains source",
+      "expected": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "original": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "fountain": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "reviewReopenedRange",
+      "label": "Reloading reviewed rich proposal retains offsets",
+      "expected": "-1+1",
+      "original": "-1+1",
+      "fountain": "-1+1",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "beforeApplySource",
+      "label": "Posted review does not write repository contents",
+      "expected": "before();\nold();\nafter();\nkeep();\n",
+      "original": "before();\nold();\nafter();\nkeep();\n",
+      "fountain": "before();\nold();\nafter();\nkeep();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "noEarlyCommit",
+      "label": "Posted review does not create a source commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "appliedSource",
+      "label": "Applying reviewed proposal changes exactly the expanded target",
+      "expected": "const token = \"\\n\";\nconst tag = \"\";\nkeep();\n",
+      "original": "const token = \"\\n\";\nconst tag = \"\";\nkeep();\n",
+      "fountain": "const token = \"\\n\";\nconst tag = \"\";\nkeep();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "singleApplyCommit",
+      "label": "Application creates one child of the seed commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "posted-range-review",
+      "invariant": "appliedFlagAtCommit",
+      "label": "Reviewed application has Applied metadata immediately after commit",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    }
+  ],
+  "summary": {
+    "parity": 21,
+    "improvement": 0,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 0,
+    "total": 21
+  },
+  "comparisonComplete": true,
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": true,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/review-20261116/original-1/report.json",
+      "sha256": "7330fce8b865be25d09c83227f4eb1d36b0e446ecdf496bae326e06651f2f604"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/review-20261116/fountain-1/report.json",
+      "sha256": "a483c9c92202142e85b6e8954c3c548236c248e288e33c5c73d6bf2c4c42dcd8"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "9a8673bd45c5ce3c2fd84eee0b6d0cbcb208b5f93912d9ffe7b7633e764ea8be",
+    "integrations/gitlab/testing/compatibility.mjs": "1db42457b47e8fdc4d2f94ba6a2dd075f56aec146f7017f45595ac27fb6317cb"
+  }
+}

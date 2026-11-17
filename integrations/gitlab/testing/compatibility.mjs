@@ -28,10 +28,12 @@ export function suggestionBlock(markdown){
   return undefined;
 }
 const decoded=file=>typeof file?.content==='string'?Buffer.from(file.content,'base64').toString('utf8'):undefined;
+function verifiedEditor(report,item){
+  if(!item?.editorProof)return false;
+  return report.side==='original'?item.editorProof.native===false&&/\bProseMirror\b/u.test(item.editorProof.className):item.editorProof.native===true&&/\bfountain-editor\b/u.test(item.editorProof.className);
+}
 function observedValues(report,item,input,fixture){
-  if(!item?.editorProof)return {};
-  const validEngine=report.side==='original'?item.editorProof.native===false&&/\bProseMirror\b/u.test(item.editorProof.className):item.editorProof.native===true&&/\bfountain-editor\b/u.test(item.editorProof.className);
-  if(!validEngine)return {};
+  if(!verifiedEditor(report,item))return {};
   const raw=item.prefillDOM;
   // Native source owns one final line terminator; remove exactly that terminator,
   // never trim whitespace or remove invisible/private-use characters.
@@ -83,6 +85,31 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='clipboard'){
+      const add=(key,label,expected,left,right)=>rows.push({case:input.id,invariant:key,label,expected,original:left,fountain:right,classification:null});
+      const provenLeft=verifiedEditor(original,a)?a:undefined,provenRight=verifiedEditor(fountain,b)?b:undefined;
+      const doubled=Object.fromEntries(Object.entries(input.expectedGraph).map(([key,value])=>[key,[...value,...value]]));
+      const empty=Object.fromEntries(Object.keys(input.expectedGraph).map(key=>[key,[]]));
+      for(const [phase,expected]of [['initial',input.expectedGraph],['externalRich',input.expectedGraph],['pasted',doubled],['undo',input.expectedGraph],['redo',doubled],['cut',empty],['afterCutPaste',doubled],['reopened',doubled]]){
+        for(const [key,value]of Object.entries(expected)){
+          // Generic contenteditable is not a task-widget implementation. Its
+          // ordinary rich semantics are checked; task state is checked internally.
+          if(phase==='externalRich'&&key==='tasks')continue;
+          add(phase+'.'+key,phase+': '+key,value,provenLeft?.[phase]?.[key],provenRight?.[phase]?.[key]);
+        }
+      }
+      const tokens=item=>typeof item?.clipboard?.text==='string'?input.plainTokens.map(token=>item.clipboard.text.includes(token)):undefined;
+      const html=item=>item?.clipboard?typeof item.clipboard.html==='string'&&item.clipboard.html.length>0:undefined;
+      const externalPlain=item=>typeof item?.externalPlain==='string'&&typeof item?.clipboard?.text==='string'?item.externalPlain===item.clipboard.text:undefined;
+      add('clipboard.plainTokens','Copied plain text retains every declared token',input.plainTokens.map(()=>true),tokens(provenLeft),tokens(provenRight));
+      add('clipboard.html','Copy supplies an actual rich HTML clipboard payload',true,html(provenLeft),html(provenRight));
+      add('externalPlain','External text paste equals the actual copied plain payload',true,externalPlain(provenLeft),externalPlain(provenRight));
+      const ready=item=>{const state=item?.appendSelection?.readyForPaste;return state===undefined?undefined:state.collapsed===true&&state.inside===true&&state.activeInside===true&&state.anchorText===''&&state.anchorOffset===0;};
+      const unchanged=item=>typeof item?.appendClipboardText==='string'&&typeof item?.clipboard?.text==='string'?item.appendClipboardText===item.clipboard.text:undefined;
+      add('appendCaretReady','Append begins with a verified caret in the intended empty paragraph',true,ready(provenLeft),ready(provenRight));
+      add('appendClipboardUnchanged','Append clipboard still contains the original copied payload',true,unchanged(provenLeft),unchanged(provenRight));
+      continue;
+    }
     const left=observedValues(original,a,input,fixture),right=observedValues(fountain,b,input,fixture);
     const lines=input.source.split('\n'),selected=lines.slice(input.range.start-1,input.range.end).join('\n'),source=selected+'\n',replacement=source+fixture.appendLine;
     const prefix=lines.slice(0,input.range.start-1),expectedFile=(prefix.length?prefix.join('\n')+'\n':'')+replacement+lines.slice(input.range.end).join('\n');

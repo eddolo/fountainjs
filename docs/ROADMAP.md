@@ -2,6 +2,14 @@
 
 Updated 2026-11-17.
 
+Matched clipboard follow-up (2026-11-17): one actual original/Fountain rich
+workflow verifies 84 parity outcomes across internal/external transfer, paste
+history, cut/paste and save/reopen, including actual caret/clipboard readiness.
+No superiority claim is made. Earlier inadequate screenshots and an intermittent
+baseline append anomaly are retained; the latter remains open for stress/selection
+investigation. 1387 integration tests / 54 files and strict types pass.
+[Clipboard evidence and limits](../integrations/gitlab/COMPATIBILITY_CLIPBOARD_RESULTS.md).
+
 Matched posted-review follow-up (2026-11-17): actual original/Fountain editing
 verifies 21 parity outcomes across posted source changes, range expansion,
 undo/redo, exact save/reopen and a real apply commit. No regressions or additional
