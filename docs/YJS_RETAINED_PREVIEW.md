@@ -1,8 +1,8 @@
 # Retained collaboration guide
 
-**Current local branch, 2026-11-10.** The ordinary
-`fountainjs-editor/yjs` entry now uses the retained adapter. This is an
-unreleased beta compatibility change. Existing XML rooms require the explicit
+**Version 0.5 collaboration contract.** The ordinary
+`fountainjs-editor/yjs` entry uses the retained adapter. This is a beta
+compatibility change. Existing XML rooms require the explicit
 `fountainjs-editor/yjs/legacy` entry or a deliberate authority-backed migration.
 Changing an import never converts stored data. Read the
 [default adoption and migration contract](YJS_DEFAULT_ADOPTION.md) before
@@ -174,7 +174,7 @@ The host supplies the loader and binding through the extension options.
 
 ### Open a room through the application authority
 
-The unreleased `fountainjs-editor/yjs/room` entry defaults to retained rooms.
+The `fountainjs-editor/yjs/room` entry in the 0.5 line defaults to retained rooms.
 It verifies the offered room, the bound checkpoint and the native document
 identity before it returns an extension factory. The same entry exports the
 retained extension factory and both checkpoint capture functions for hosts that need to
@@ -256,8 +256,8 @@ includes the snapshot and the native identity required for admission. Bind
 through the authority before mounting the matching adapter or starting its
 provider. A format or epoch change between these steps requires a fresh open.
 The client must keep its local draft through that retry. The authority API
-belongs to the host reference. Clients on the published beta still use the
-legacy adapter. This local branch requires `/yjs/legacy` to select it directly.
+belongs to the host reference. Clients on the 0.4 line use the legacy adapter. The 0.5 line requires
+`/yjs/legacy` to select it directly.
 
 The opening flow passed 84 focused source cases and 21 recorded journeys in
 Chromium, Firefox and WebKit. The provisioning demo opens the same retained

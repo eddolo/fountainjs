@@ -1,9 +1,11 @@
-# FountainJS 0.5.0-beta.1 candidate
+# FountainJS 0.5.0-beta.1
 
-This is an **unpublished beta candidate**, prepared for review in
-[PR #25](https://github.com/eddolo/fountainjs/pull/25). Creating this document does
-not publish a package, tag a release, merge the branch or deploy the website.
-The full [changelog](../CHANGELOG.md) records the detailed changes.
+These beta notes describe the 0.5 upgrade and its known limits, prepared in
+[PR #25](https://github.com/eddolo/fountainjs/pull/25). Check
+[npm versions](https://www.npmjs.com/package/fountainjs-editor?activeTab=versions)
+and [GitHub releases](https://github.com/eddolo/fountainjs/releases) for actual
+publication state. The full [changelog](../CHANGELOG.md) records the changes.
+Neither a version number nor publication certifies completed product parity.
 
 ## Upgrade persisted collaboration rooms deliberately
 
@@ -34,7 +36,8 @@ migration/rollback workflow with the application's own backend.
 
 ## Qualification status
 
-The initial review revision is `4c66f386`. Fresh local checks pass build,
+The initial review revision is `4c66f386`; follow-up `9cd1d7b3` corrects native
+recording interactions and prepares these notes. Fresh local checks pass build,
 API/package validation, server/headless operation, Markdown conformance, math
 references, DOCX interoperability, bundle limits and strict framework types.
 All 7,030 unit tests in 407 files pass, as do the direction and position retention
@@ -46,8 +49,13 @@ The first hosted run passes package verification, performance and real Lean
 integration. Recorded UI and migration jobs expose platform-sensitive interaction
 and fixture-layout failures. Follow-up native-interaction corrections pass all
 21 desktop recovery journeys, eight recorded release journeys and strict types
-locally; they require a fresh exact-revision hosted run. The independent native
-DOCX job passes on the initial revision. Its two source/export pages and selected
+locally. On `9cd1d7b3`, hosted verification, performance, Lean, eight recorded
+journeys, 33 production checks, 48 GitLab bridge checks, six installed-starter
+checks and independent native DOCX all pass. The broader browser job is still
+in dependency installation at this checkpoint. The npm trusted-publisher
+diagnostic passes, with package staging explicitly skipped.
+
+The initial native DOCX audit’s two source/export pages and selected
 editor states were visually inspected; this is not pixel-fidelity or Microsoft
 Word certification. This candidate is not yet approved by the complete release
 matrix.
@@ -60,7 +68,7 @@ open. Missing roadmap capabilities include editable charts/source-backed diagram
 authorable template fields and a structured whiteboard. Capability coverage is
 61/74 delivered; that percentage is not a production-readiness score.
 
-Publishing requires green exact-revision release checks, inspection of the final
+Publication requires green exact-revision release checks, inspection of the final
 package, coordinated GitHub prerelease/tag and npm distribution tags. Public npm
 still identifies 0.4.0-beta.2 as latest at this checkpoint. Keep beta maturity and
 the collaboration storage change visible when announcing the candidate.

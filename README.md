@@ -10,50 +10,45 @@ FountainJS is an open-source TypeScript library you add to a website or web app.
 
 Underneath those ready-made features is a modular editing engine: a typed document model, selections, transactions, plugins, history, and a plain DOM view. The interfaces and optional capabilities are replaceable, so a product can add or change content types, commands, formats, UI, storage, collaboration, and services without forking the core.
 
-> `0.3.0` is an early public beta and a ground-up replacement for the `0.2.x` proof of concept.
+`0.5.0-beta.1` is an early beta. Read the [versioned release notes](docs/RELEASE_0_5_0_BETA_1.md)
+for upgrade requirements, verification scope and known limitations. The
+[npm versions](https://www.npmjs.com/package/fountainjs-editor?activeTab=versions)
+and [GitHub releases](https://github.com/eddolo/fountainjs/releases) report actual
+publication state; this repository and the development website can be ahead of
+the package you installed.
 
-`0.4.0-beta.2` is the public-beta checkpoint, not a claim of completed parity.
-Install it with `npm install fountainjs-editor@0.4.0-beta.2`; npm's `latest` tag
-currently points to that version. See the [GitHub prerelease](https://github.com/eddolo/fountainjs/releases/tag/v0.4.0-beta.2)
-and its [known limitations](docs/RELEASE_0_4_0_BETA_2.md).
-Newer changes listed under Unreleased are not in this package.
-The unreleased [Markdown/HTML work](docs/MARKDOWN_DOCUMENT_FLOW.md) keeps the
-default and optional safe-reader reference profiles at 563/652 and 613/652.
-A separate [complete-file source-data profile](docs/HTML_INERT_SOURCE.md#complete-file-commonmark-verification-2026-11-03-unreleased)
-matches 635/652 body projections while independently checking declarations and
-unfinished EOF data. That opt-in unsanitized source output is not reader HTML;
-none of these scores claims full CommonMark or native document-layout fidelity.
-An additional optional anonymous-flow model repairs the recorded cross-paragraph
-link-spacing case without dropping its whitespace. A stricter URL audit and
-source-bound HTML navigation repair leave the current checkpoint at 613:
-four previously hidden Markdown failures are fixed, the raw HTML regression is
-repaired, and two HTML-control cases now retain their actual navigation intent.
-Raw backslashes and encoded data are not always interchangeable browser
-destinations. [Link integrity and remaining differences](docs/MARKDOWN_DOCUMENT_FLOW.md#link-destination-integrity-and-oracle-correction).
-Its canonical save/reopen path also retains a cleared caret leaf, with public
-unmarked/childless editing examples. These remain unreleased; real Safari
-clipboard and broader native-format fidelity are not certified by those checks.
-The latest local [DOCX audit](docs/DOCX_FIDELITY_CHECKPOINT.md#source-owned-quote-appearance-and-desktop-audit-2026-10-05)
-fixes doubled imported quote decoration and checks real caption editing,
-Undo/Redo and native re-export. Independent-preview disagreements remain visible;
-this unreleased work does not certify native Word page fidelity.
-Try the [real-world workflow demos](https://eddolo.github.io/fountainjs/workflows.html):
-a GitLab-style issue editor and a Todoist-style task workspace, with linked
-[API walkthroughs](docs/WORKFLOW_DEMOS.md). These run the current development
-website, which can be ahead of the published package. The local candidate adds a
-[generated build label](docs/WEBSITE_BUILD_IDENTITY.md) showing its source revision,
-package version and build-time verified npm version; this label is not deployed yet. Check npm's published
-versions and distribution tags before choosing a release.
+**Upgrading a persisted collaboration room:** the 0.5 default Yjs entry uses
+retained storage. Existing XML rooms need `fountainjs-editor/yjs/legacy` or an
+explicit migration. Changing an import does not migrate data. Read the
+[adoption and recovery guide](docs/YJS_DEFAULT_ADOPTION.md) before upgrading.
+
+Markdown has separate [document and source profiles](docs/MARKDOWN_DOCUMENT_FLOW.md).
+The default matches 563/652 official CommonMark examples; the complete-file
+profile matches 635/652. An explicit source-data profile matches all 652 body
+projections while retaining inactive URI data. Those scores do not establish
+full GFM support, exact model reopening or safe reader HTML for source-only data.
+[Native DOCX verification](docs/DOCX_NATIVE_AUDIT.md) covers supported scientific
+document workflows, with remaining layout and interoperability limits reported.
+
+Try the [workflow demos](https://eddolo.github.io/fountainjs/workflows.html) and
+[API walkthroughs](docs/WORKFLOW_DEMOS.md). Their bounded issue/task workflows
+and the [professional showcase requirements](docs/PROFESSIONAL_REFERENCE_PRODUCTS.md)
+have separate acceptance criteria. Development builds include a
+[build identity](docs/WEBSITE_BUILD_IDENTITY.md) showing their revision, package
+version and build-time verified npm version. Check the deployed identity when
+comparing a website demo with an installed package.
 
 ## What “language agnostic” means
 
-The editor runtime is JavaScript/TypeScript because it edits a browser DOM. FountainJS does not pretend an npm package executes natively in Python or Go.
+FountainJS is a JavaScript/TypeScript engine. Its browser view uses the DOM; its
+platform-neutral core also runs on servers without a browser. Other languages
+can exchange portable document JSON or call a host service.
 
 Its boundaries are language and framework agnostic:
 
 - Use the DOM API directly from any frontend framework.
 - Register the standards-based `<fountain-editor>` Web Component in React, Vue, Svelte, Angular, plain HTML, or any Custom-Element-capable environment.
-- Use the first-party React, [Vue](docs/VUE.md), [Svelte](docs/SVELTE.md), or [Angular binding](docs/ANGULAR.md) when framework-specific hooks, stores, signals, actions or components are useful. Vue/Svelte/Angular entries are in the repository build; npm publication remains gated on verification.
+- Use the first-party React, [Vue](docs/VUE.md), [Svelte](docs/SVELTE.md), or [Angular binding](docs/ANGULAR.md) when framework-specific hooks, stores, signals, actions or components are useful. Each binding is a separate optional entry with its own framework requirements.
 - Persist stable JSON that any backend language can store, validate, index, or transform.
 - Add nodes, marks, plugins, commands, formats, and host services through one extension contract.
 
@@ -84,8 +79,10 @@ npm install fountainjs-editor
 
 For a complete project, download the plain JavaScript, React, or Node.js
 starter from the [developer guide](https://eddolo.github.io/fountainjs/developers.html#starters).
-The source is in [examples/starters](examples/starters). Each project uses the
-published beta and has its own run instructions.
+The source is in [examples/starters](examples/starters). Choose a starter for the release you install; its `package.json` pins the
+editor version and its README provides run instructions. Candidate starters
+require that version to be published or the locally packed candidate used by
+the installed-starter audit (`pnpm audit:starters:prepare`).
 
 React is an optional peer dependency. Install `react` and `react-dom` only when importing `fountainjs-editor/react`.
 Yjs is also optional. Install `yjs` only when importing

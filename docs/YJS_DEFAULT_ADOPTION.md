@@ -1,9 +1,10 @@
 # Retained default adoption — 2026-11-10
 
-This is an **unreleased local beta change**. The ordinary
-`fountainjs-editor/yjs` entry now uses retained character and node identities.
-The published beta and existing deployed clients do not change when this source
-branch changes. Full release validation and deployment remain pending.
+**Version 0.5 changes the default collaboration storage format.** The ordinary
+`fountainjs-editor/yjs` entry uses retained character and node identities.
+Existing XML rooms need the explicit legacy entry or a deliberate migration.
+Check the [versioned notes](RELEASE_0_5_0_BETA_1.md) and installed package version
+before upgrading; a source branch change never updates deployed clients.
 
 The public names `YjsCollaborationAdapter` and
 `createYjsCollaborationExtension` stay the same. Their shared storage format
@@ -18,7 +19,7 @@ copy an old document over it, or fall back to XML editing.
 
 ## Entry points and compatibility
 
-| Entry | Behavior in this local branch |
+| Entry | Behavior in the 0.5 line |
 | --- | --- |
 | `fountainjs-editor/yjs` | Retained default for new or verified retained rooms. Existing XML data is refused. |
 | `fountainjs-editor/yjs/legacy` | Explicit compatibility entry for existing XML rooms, including embedded fragments. Exports the former class and factory names. |

@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "sha256": "673a72005e45ff9e0169188f39a0e224b174c7970fe5971123c2b29823d6ed56"
+  },
+  "docs/YJS_DEFAULT_ADOPTION.md": {
+    "sha256": "f358065b904219683f4844984cfd9ed0ae125ee1495844706bb83327c9657c8e"
+  },
+  "docs/YJS_RETAINED_PREVIEW.md": {
+    "sha256": "b3eff7122d5be8a34a6e5d5f4aa5b8e9ad4e6fcca7f87ebafe1486203970dad0"
+  },
+  "docs/RELEASE_0_5_0_BETA_1.md": {
+    "sha256": "b5c9469569a1c39c3930274c1474d5c7c5254709a8a35d3b17aba7410186aceb"
+  }
+}

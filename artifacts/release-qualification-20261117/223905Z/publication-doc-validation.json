@@ -1,0 +1,19 @@
+{
+  "parentRevision": "9cd1d7b3f08d1455e7f8d6870181bb4fd3ed92c2",
+  "scope": "Release-facing documentation and completed hosted receipts only; browser job remains live on the parent.",
+  "releaseTests": 11,
+  "localFileLinks": "no new broken targets",
+  "noRuntimeApiDependencyOrLimitChanges": true,
+  "files": {
+    "README.md": "41802e726e1d23aa561a93b942c63abc155f6dec1a14c8d581a0b5bf8c95cceb",
+    "docs/RELEASE_0_5_0_BETA_1.md": "46792c5b203e09a99d6fe3eaa1a141fb6e232536154c5a0f4d11942aa4dd3b1f",
+    "docs/YJS_DEFAULT_ADOPTION.md": "fda06ae1d1d402d6966af590ec090ce02fbe54d8e228908f6871016ecd3a37ad",
+    "docs/YJS_RETAINED_PREVIEW.md": "fa46795e90b5a8d1519cca6ea8cc92df166925844cb6c2397332804f1c743e33",
+    "artifacts/release-qualification-20261117/223905Z/publication-doc-before-hashes.json": "06301aea62df50f8ec97c3785bed070cbf5b6a4f797bb2825fda90d6125f63be",
+    "artifacts/release-qualification-20261117/223905Z/publication-doc-release-tests.json": "b873518e021b95e9e124400c75914d6ff9bafb7c7b2d178d11769d36ad785f41",
+    "artifacts/release-qualification-20261117/223905Z/publication-doc-hosted-snapshot.json": "48d11ada77f991ec46bc7f5c6a5dd167205e6ef30dde9c88b5f6373f4f4a372a",
+    "artifacts/release-qualification-20261117/223905Z/hosted-recorded-ui-followup-log.json": "5e62abf955d9b1370c7b8b08377216b9d3bdb870e53459ff9e432a7b0e925b99",
+    "artifacts/release-qualification-20261117/223905Z/hosted-native-docx-followup.json": "a765ac479350857b7db5249e898b7bb2ed9b553b8b92507bb8697a4695208806",
+    "artifacts/release-qualification-20261117/223905Z/hosted-trusted-publisher-final.json": "79aa8bdf9c2229beeeda97bba7e0cff2f275dc428da68670ff0b08b8ed9b36c1"
+  }
+}
