@@ -1,0 +1,18 @@
+{
+  "scope": "Unchanged native production manifests and exact pinned host Save boundary used by the red access audit. No repair has been applied.",
+  "files": {
+    "artifacts/gitlab-native-runtime/build.json": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/production-before-repair/artifacts__gitlab-native-runtime__build.json",
+      "sha256": "521b743b0928f3a53d008cf9d9669ddcb60895af9fcda8a6ab21752d071edd53"
+    },
+    "artifacts/gitlab-native-browser-install/install.json": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/production-before-repair/artifacts__gitlab-native-browser-install__install.json",
+      "sha256": "b6a1aad5a43c14b00f76b2442d5a8303e338a428a4bf6bdf0c8a4f8c4921f622"
+    },
+    "app/assets/javascripts/work_items/components/work_item_detail.vue": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/production-before-repair/work_item_detail.vue",
+      "sha256": "de78e4fba269c61e90d2e077b32e6fffe2d0d03aad499e6432780fc60e9a216d",
+      "matchesPinnedHead": true
+    }
+  }
+}

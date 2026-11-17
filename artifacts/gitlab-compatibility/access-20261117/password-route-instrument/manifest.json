@@ -1,0 +1,17 @@
+{
+  "scope": "Original-3 did not enter password-update handling because it assumed a different route. Same observed mandatory-update screen; no product access workflows completed.",
+  "files": {
+    "scripts/run-gitlab-compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/password-route-instrument/scripts__run-gitlab-compatibility.mjs",
+      "sha256": "4a837771d04cbf6d79c5aec20f5639e91c3e8f85ee9059ff65b1c43e317b38da"
+    },
+    "scripts/audit-gitlab-compatibility-access.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/password-route-instrument/scripts__audit-gitlab-compatibility-access.mjs",
+      "sha256": "48b9656cfbd3661b688d621be5365f3b9cd3776ac5c65bb325edf14276f3cdae"
+    },
+    "integrations/gitlab/fixtures/compatibility-access.json": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/password-route-instrument/integrations__gitlab__fixtures__compatibility-access.json",
+      "sha256": "f09954826f1d36e53a60293b8103239b2beb3d12686cfde79baa0b451f3adf68"
+    }
+  }
+}

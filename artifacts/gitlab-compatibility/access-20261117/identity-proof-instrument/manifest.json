@@ -1,0 +1,17 @@
+{
+  "scope": "Initial audit stopped at identity proof: non-admin self-user response omits is_admin. No product workflow completed. Exact instruments retained.",
+  "files": {
+    "scripts/run-gitlab-compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/identity-proof-instrument/scripts__run-gitlab-compatibility.mjs",
+      "sha256": "4a837771d04cbf6d79c5aec20f5639e91c3e8f85ee9059ff65b1c43e317b38da"
+    },
+    "scripts/audit-gitlab-compatibility-access.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/identity-proof-instrument/scripts__audit-gitlab-compatibility-access.mjs",
+      "sha256": "f8ab2b879b5a283be5fa2f3e06b189ce738bfbe1daa54a0fe6bd83226f61c427"
+    },
+    "integrations/gitlab/fixtures/compatibility-access.json": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/identity-proof-instrument/integrations__gitlab__fixtures__compatibility-access.json",
+      "sha256": "f09954826f1d36e53a60293b8103239b2beb3d12686cfde79baa0b451f3adf68"
+    }
+  }
+}

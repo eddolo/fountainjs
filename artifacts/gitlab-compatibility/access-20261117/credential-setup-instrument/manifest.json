@@ -1,0 +1,17 @@
+{
+  "scope": "Original-2 stopped at the normal mandatory password-update screen after admin reset. No access workflow completed. No credentials retained.",
+  "files": {
+    "scripts/run-gitlab-compatibility.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/credential-setup-instrument/scripts__run-gitlab-compatibility.mjs",
+      "sha256": "4a837771d04cbf6d79c5aec20f5639e91c3e8f85ee9059ff65b1c43e317b38da"
+    },
+    "scripts/audit-gitlab-compatibility-access.mjs": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/credential-setup-instrument/scripts__audit-gitlab-compatibility-access.mjs",
+      "sha256": "38419da957a38b4e11f46ba82d15e31458f8eb400b7945892ba30b36e2bb9e4b"
+    },
+    "integrations/gitlab/fixtures/compatibility-access.json": {
+      "archive": "artifacts/gitlab-compatibility/access-20261117/credential-setup-instrument/integrations__gitlab__fixtures__compatibility-access.json",
+      "sha256": "f09954826f1d36e53a60293b8103239b2beb3d12686cfde79baa0b451f3adf68"
+    }
+  }
+}

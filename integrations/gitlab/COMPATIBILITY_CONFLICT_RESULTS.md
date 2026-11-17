@@ -81,3 +81,8 @@ GitHub push and hosted CI still await CLI sign-in; no release was made.
 - [Original real-session report](../../artifacts/gitlab-compatibility/conflicts-20261117/original-1/report.json)
 - [Fountain real-session report](../../artifacts/gitlab-compatibility/conflicts-20261117/fountain-1/report.json)
 - [Validation receipt](../../artifacts/gitlab-compatibility/conflicts-20261117/validation.json)
+
+The [matched non-author access audit](COMPATIBILITY_ACCESS_RESULTS.md) now verifies
+Guest/anonymous boundaries and exposes shared pending-draft loss after live edit
+permission revocation. Feature acceptance remains red; repair the host Save
+acknowledgement/draft-clearing path and rerun before promoting this workflow.

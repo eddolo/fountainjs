@@ -1,5 +1,15 @@
 # GitLab application integration
 
+Matched non-author access audit (2026-11-17): Guest description access and
+anonymous private-record refusal pass. A real Developer-to-Guest downgrade while
+editing exposes shared draft loss: UI Save closes without an error, persisted
+source stays unchanged, and restoring access/reloading does not recover the draft.
+The pair records 24 parity and seven correlated shared-failure checks / 31;
+**feature acceptance remains red**. 1,510 integration tests / 58 files and strict
+types pass. The next repair belongs at the host Save acknowledgement/draft-clearing
+boundary. No production repair or capability promotion is claimed.
+[Access findings](COMPATIBILITY_ACCESS_RESULTS.md).
+
 Matched competing-edit audit (2026-11-17): two independent browser sessions
 using the same root account verify 37 parity checks for local-draft retention,
 actual conflict/current-version disclosure, explicit discard/overwrite and normal

@@ -90,6 +90,29 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='access'){
+      const valid=item=>item?.actor?.username===fixture.username&&item.actor.isAdmin===false&&Number.isInteger(item.actor.id)&&Number.isInteger(item.setup?.authorId)&&item.actor.id!==item.setup.authorId&&item.membership?.id===item.actor.id;
+      const left=valid(a)?a:undefined,right=valid(b)?b:undefined;
+      if(left&&right)check(input.id+'.actor',left.actor,right.actor);
+      const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});
+      add('member.role','Initial project membership is the declared role',input.initialAccessLevel,left?.membership?.accessLevel,right?.membership?.accessLevel);
+      add('reader.initial','Non-author member can read intact content',input.expectedGraph,left?.graphs?.initial,right?.graphs?.initial);
+      add('cleanup.role','Task-owned account ends with Guest access',10,left?.cleanupMembership?.accessLevel,right?.cleanupMembership?.accessLevel);
+      if(input.kind==='guest'){
+        add('permission.update','Guest has no update permission on this root-authored record',false,left?.permissionBefore,right?.permissionBefore);
+        for(const key of ['editControlAbsent','editableRootsAbsent','writeDenied','serverUnchanged','anonymousContentAbsent','anonymousEditAbsent','anonymousAPIDenied'])add(key,key,true,left?.[key],right?.[key]);
+        add('reader.reloaded','Denied update leaves the reloaded document intact',input.expectedGraph,left?.graphs?.reloaded,right?.graphs?.reloaded);
+      }else{
+        const nativeLeft=verifiedEditor(original,left)?left:undefined,nativeRight=verifiedEditor(fountain,right)?right:undefined;
+        add('permission.initial','Developer starts with update authority',true,left?.permissionBefore,right?.permissionBefore);
+        add('permission.revoked','Downgrade revokes update authority',false,left?.permissionRevoked,right?.permissionRevoked);
+        add('permission.restored','Restoring Developer grants update authority again',true,left?.permissionRestored,right?.permissionRestored);
+        for(const key of ['initialWriteSucceeded','draftStayedLocal','revokedWriteBlocked','deniedSaveReported','draftRetainedAfterDenial','draftRecoveredAfterReload','finalSourceExact','finalReopenExact'])add(key,key,true,nativeLeft?.[key],nativeRight?.[key]);
+        for(const [key,expected]of [['confirmed',input.expectedConfirmed],['recovered',input.expectedPending],['final',input.expectedPending]])add('graph.'+key,key+': content, marks, link and code are intact',expected,nativeLeft?.graphs?.[key],nativeRight?.graphs?.[key]);
+      }
+      add('actor.errors','Authenticated task member has no browser errors',[],left?.actorErrors,right?.actorErrors);
+      continue;
+    }
     if(input.scope==='conflict'){
       const valid=(report,item)=>verifiedEditor(report,item)&&verifiedEditor(report,{editorProof:item?.remoteEditorProof});
       const left=valid(original,a)?a:undefined,right=valid(fountain,b)?b:undefined;

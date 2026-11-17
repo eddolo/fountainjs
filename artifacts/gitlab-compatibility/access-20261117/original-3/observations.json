@@ -1,0 +1,160 @@
+[
+  {
+    "id": "guest-readonly",
+    "input": {
+      "id": "guest-readonly",
+      "scope": "access",
+      "kind": "guest",
+      "title": "Non-author Guest access",
+      "initialAccessLevel": 10,
+      "markdown": "## Access review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "expectedGraph": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "status": "incomplete",
+    "stage": "setup",
+    "graphs": {},
+    "actions": [],
+    "actorErrors": [],
+    "mutations": [],
+    "membership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 10
+    },
+    "setup": {
+      "iid": 382,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/382",
+      "description": "## Access review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "authorId": 1
+    },
+    "error": "Error: Task actor verification 403",
+    "cleanupMembership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 10
+    }
+  },
+  {
+    "id": "developer-revocation",
+    "input": {
+      "id": "developer-revocation",
+      "scope": "access",
+      "kind": "revocation",
+      "title": "Developer access removed during editing",
+      "initialAccessLevel": 30,
+      "markdown": "## Access review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "confirmedSuffix": " Confirmed.",
+      "pendingSuffix": " Pending review.",
+      "expectedGraph": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedConfirmed": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      },
+      "expectedPending": {
+        "headings": [
+          "Access review"
+        ],
+        "prose": [
+          "Shared record. Confirmed. Pending review.",
+          "Keep important reference.",
+          "End marker."
+        ],
+        "bold": [
+          "important"
+        ],
+        "links": [
+          {
+            "text": "reference",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "codes": [
+          "def identity(value):\n    return value"
+        ]
+      }
+    },
+    "status": "incomplete",
+    "stage": "setup",
+    "graphs": {},
+    "actions": [],
+    "actorErrors": [],
+    "mutations": [],
+    "membership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 30
+    },
+    "setup": {
+      "iid": 383,
+      "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/383",
+      "description": "## Access review\n\nShared record.\n\nKeep **important** [reference](https://example.com/reference).\n\n```python\ndef identity(value):\n    return value\n```\n\nEnd marker.",
+      "authorId": 1
+    },
+    "error": "Error: Task actor verification 403",
+    "cleanupMembership": {
+      "id": 3,
+      "username": "fountain_compat_access",
+      "accessLevel": 10
+    }
+  }
+]

@@ -1,0 +1,8 @@
+time="2026-11-17T17:09:03Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"kind":"gitlab-compatibility","side":"original","case":"guest-readonly","stage":"incomplete","error":"Error: expect(locator).toBeVisible() failed\n\nLocator: locator('.js-work-item-description').getByRole('heading', { name: 'Access review', exact: true })\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for locator('.js-work-item-description').getByRole('heading', { name: 'Access review', exact: true })\n"}
+{"kind":"gitlab-compatibility","side":"original","case":"developer-revocation","stage":"incomplete","error":"Error: expect(locator).toBeVisible() failed\n\nLocator: locator('.js-work-item-description').getByRole('heading', { name: 'Access review', exact: true })\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for locator('.js-work-item-description').getByRole('heading', { name: 'Access review', exact: true })\n"}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+{"kind":"gitlab-compatibility","side":"original","output":"/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-compatibility/access-20261117/original-4","collectionComplete":false,"classification":null}

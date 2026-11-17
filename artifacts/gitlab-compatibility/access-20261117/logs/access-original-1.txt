@@ -1,0 +1,10 @@
+time="2026-11-17T17:00:02Z" level=warning msg="Found orphan containers ([fountain-gitlab-integration-diagram-server-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container fountain-gitlab-integration-baseline-1  Recreate
+ Container fountain-gitlab-integration-baseline-1  Recreated
+ Container fountain-gitlab-integration-baseline-1  Starting
+ Container fountain-gitlab-integration-baseline-1  Started
+{"kind":"gitlab-compatibility","side":"original","case":"guest-readonly","stage":"incomplete","error":"Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: false\nReceived: undefined"}
+{"kind":"gitlab-compatibility","side":"original","case":"developer-revocation","stage":"incomplete","error":"Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: false\nReceived: undefined"}
+ Container fountain-gitlab-integration-baseline-1  Stopping
+ Container fountain-gitlab-integration-baseline-1  Stopped
+{"kind":"gitlab-compatibility","side":"original","output":"/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-compatibility/access-20261117/original-1","collectionComplete":false,"classification":null}

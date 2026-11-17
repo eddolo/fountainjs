@@ -439,3 +439,33 @@ it('flags draft loss, premature overwrite and stale-session warnings as regressi
   const result=compareGitLabCompatibility(...pair);expect(result.summary.regression).toBe(1);expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
  }
 });
+
+function accessPolicyReports(): any[]{
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-access.json',import.meta.url),'utf8'));
+ const pair=reports();for(const report of pair){report.fixture=fixture;const proof=report.observations[0].editorProof;
+  report.observations=fixture.cases.map((input:any)=>({id:input.id,input,actor:{id:2,username:fixture.username,isAdmin:false},setup:{authorId:1},membership:{id:2,accessLevel:input.initialAccessLevel},cleanupMembership:{accessLevel:10},editorProof:proof,
+   graphs:{initial:input.expectedGraph,reloaded:input.expectedGraph,confirmed:input.expectedConfirmed,recovered:input.expectedPending,final:input.expectedPending},permissionBefore:input.kind==='revocation',permissionRevoked:false,permissionRestored:true,
+   editControlAbsent:true,editableRootsAbsent:true,writeDenied:true,serverUnchanged:true,anonymousContentAbsent:true,anonymousEditAbsent:true,anonymousAPIDenied:true,
+   initialWriteSucceeded:true,draftStayedLocal:true,revokedWriteBlocked:true,deniedSaveReported:true,draftRetainedAfterDenial:true,draftRecoveredAfterReload:true,finalSourceExact:true,finalReopenExact:true,actorErrors:[]}));}
+ return pair;
+}
+it('interprets bounded non-author Guest and live-revocation evidence separately from browser execution',()=>{
+ const result=compareGitLabCompatibility(...accessPolicyReports());expect(result.summary).toEqual({parity:31,improvement:0,regression:0,'shared-limitation':0,incomplete:0,total:31});expect(result.featureAcceptance.passed).toBe(true);
+});
+it('refuses a reader claim made with an administrator or record author',()=>{
+ for(const patch of [{isAdmin:true},{id:1}]){const pair=accessPolicyReports();Object.assign(pair[1].observations[0].actor,patch);const result=compareGitLabCompatibility(...pair);expect(result.summary.incomplete).toBe(13);expect(result.regressionGate.passed).toBe(false);}
+});
+it('fails acceptance if both editors silently lose the denied draft',()=>{
+ const pair=accessPolicyReports();for(const report of pair)report.observations[1].draftRetainedAfterDenial=false;
+ const result=compareGitLabCompatibility(...pair);expect(result.summary['shared-limitation']).toBe(1);expect(result.featureAcceptance.passed).toBe(false);
+});
+it('requires actual rich editor proof for the active Developer workflow',()=>{
+ const pair=accessPolicyReports();delete pair[1].observations[1].editorProof;const result=compareGitLabCompatibility(...pair);expect(result.summary.incomplete).toBe(11);expect(result.regressionGate.passed).toBe(false);
+});
+it('rejects native unauthorized writes or anonymous content disclosure',()=>{
+ for(const [index,key]of [[0,'writeDenied'],[0,'anonymousContentAbsent'],[1,'revokedWriteBlocked']] as const){const pair=accessPolicyReports();pair[1].observations[index][key]=false;const result=compareGitLabCompatibility(...pair);expect(result.summary.regression).toBe(1);expect(result.regressionGate.passed).toBe(false);}
+});
+
+it('requires the same actual non-admin actor on both sides, not just the same role label',()=>{
+ const pair=accessPolicyReports();pair[1].observations[0].actor.id=3;pair[1].observations[0].membership.id=3;const result=compareGitLabCompatibility(...pair);expect(result.environment.matched).toBe(false);expect(result.environment.mismatches).toContain('guest-readonly.actor');expect(result.summary.incomplete).toBe(31);
+});

@@ -183,3 +183,8 @@ The [matched two-session conflict audit](COMPATIBILITY_CONFLICT_RESULTS.md) veri
 draft retention, current-version disclosure, explicit discard/overwrite and fresh
 editing with the same root account. Other actors/roles, offline and late/racing
 updates, and simultaneous submits remain open.
+
+The [matched non-author access audit](COMPATIBILITY_ACCESS_RESULTS.md) now verifies
+Guest/anonymous boundaries and exposes shared pending-draft loss after live edit
+permission revocation. Feature acceptance remains red; repair the host Save
+acknowledgement/draft-clearing path and rerun before promoting this workflow.
