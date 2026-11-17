@@ -313,6 +313,63 @@ it('refreshes all shared-stream partition coordinates after an eligible local ed
   } finally { control.destroy(); pair.destroy(); }
 });
 
+it('keeps fresh and held anchors coherent through repeated native length changes in a nested block', () => {
+  const pair = fixture({ type: 'doc', attrs: { retained: 'metadata' }, content: [
+    { type: 'paragraph', content: [{ type: 'text', text: 'Before' }] },
+    { type: 'blockquote', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Alpha', marks: [{ type: 'em' }] }] }] },
+    { type: 'paragraph', content: [{ type: 'text', text: 'After' }] },
+  ] });
+  const control = new RetainedDocumentStore(pair.doc, 'candidate', pair.editor.state.schema, factory('native-index-control'));
+  try {
+    const identity = pair.store.identity([1, 0])!, heldPath = pair.store.path(identity)!;
+    const untouched = pair.store.textAnchor([2, 0], 3, 1);
+    let current = pair.editor.state.doc;
+    for (const [from, to, text] of [[2, 2, '👩‍💻'], [0, 1, 'Z'], [1, 7, ''], [0, 0, 'e\u0301']] as const) {
+      const native = EditorState.create({ schema: pair.editor.state.schema, doc: current })
+        .createTransaction().step(new ReplaceTextStep([1, 0, 0], from, to, text));
+      current = pair.store.apply(native);
+      expect(current.toJSON()).toEqual(native.doc.toJSON());
+      expect(current.toJSON()).toEqual(control.read().toJSON());
+      const length = current.child(1).child(0).child(0).nodeSize;
+      expect(pair.store.resolveTextAnchor(pair.store.textAnchor([1, 0, 0], length, 1)))
+        .toEqual({ path: [1, 0, 0], offset: length });
+      expect(pair.store.resolveTextAnchor(untouched)).toEqual({ path: [2, 0], offset: 3 });
+      expect(pair.store.path(identity)).toEqual([1, 0]);
+      expect(heldPath).toEqual([1, 0]); expect(Object.isFrozen(heldPath)).toBe(true);
+      expect(current.attrs.retained).toBe('metadata');
+    }
+  } finally { control.destroy(); pair.destroy(); }
+});
+
+it('keeps index publication coherent when a factory validator performs a reentrant read', () => {
+  const kit = composeExtensions([CoreExtension]), document = new Y.Doc();
+  let armed = false, reads = 0, store: RetainedDocumentStore;
+  const schema = new Schema({ ...kit.schema, nodes: { ...kit.schema.nodes, text: { ...kit.schema.nodes.text,
+    validate: () => { if (armed) { armed = false; reads++; store.read(); } return true; },
+  } } });
+  const original = schema.nodeFromJSON({ type: 'doc', content: [
+    { type: 'paragraph', content: [{ type: 'text', text: 'Alpha' }] },
+    { type: 'paragraph', content: [{ type: 'text', text: 'Untouched' }] },
+  ] });
+  store = new RetainedDocumentStore(document, 'reentrant-index', schema, factory('reentrant-index'));
+  try {
+    store.seed(original);
+    const insert = store.text.insert.bind(store.text);
+    store.text.insert = (...args) => { insert(...args); armed = true; };
+    const held = store.textAnchor([1, 0], 4, 1);
+    let current = original;
+    for (const text of ['X', 'YZ']) {
+      const transaction = EditorState.create({ schema, doc: current }).createTransaction().insertText([0, 0], 2, text);
+      current = store.apply(transaction);
+      expect(current.toJSON()).toEqual(transaction.doc.toJSON());
+      expect(store.resolveTextAnchor(held)).toEqual({ path: [1, 0], offset: 4 });
+      expect(store.resolveTextAnchor(store.textAnchor([0, 0], current.child(0).textContent.length, 1)))
+        .toEqual({ path: [0, 0], offset: current.child(0).textContent.length });
+    }
+    expect(reads).toBe(2);
+  } finally { store.destroy(); document.destroy(); }
+});
+
 it.each(['insert', 'delete'] as const)('detects an extra same-stream %s during cached normalization', kind => {
   const kit = composeExtensions([CoreExtension]), document = new Y.Doc();
   let armed = false, written = false, field = '';

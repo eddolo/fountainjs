@@ -606,3 +606,54 @@ removes quadratic array copying in that separate index. Its installed package
 passes this 5,000-paragraph diagnostic; it does not remove whole-document
 normalization or establish a matched typing-latency improvement. Collaboration
 performance and production adoption remain open.
+
+## Guarded native binding-index refresh — 2026-11-17
+
+A proven native text edit still runs the complete source normalization and every
+factory validator. Afterward, an isolated helper checks every retained identity
+and text binding at its full previous path. It reuses unchanged position indexes
+only when the projected model equals the expected native result and index
+ownership has not changed. A single length-changing binding is published through
+new map snapshots; existing coordinate arrays and maps are not mutated in place.
+Ambiguous bindings, topology changes and reentrant publication keep the full
+index-reconstruction fallback. The ordinary per-node normalization body remains
+unchanged. This reduces indexing work, not validation scope.
+
+The final installed-package comparison used 5,000 paragraphs, twelve cycles and
+checkpoints every three cycles, in both process orders:
+
+| Run | Median 11-character burst | Burst p95 | Median split | Median wrap |
+| --- | ---: | ---: | ---: | ---: |
+| Baseline first | 378.6 ms | 418.1 ms | 518.2 ms | 511.2 ms |
+| Candidate second | 343.6 ms | 377.9 ms | 543.5 ms | 528.9 ms |
+| Candidate first | 349.0 ms | 465.0 ms | 528.3 ms | 544.8 ms |
+| Baseline second | 379.4 ms | 468.2 ms | 519.3 ms | 516.6 ms |
+
+Typing medians improve by about 8–9% in both orders. P95 improves in both pairs,
+only marginally in the reverse pair. Split/wrap medians are **9–28 ms slower**
+in these same runs. A separate, single-order 100/1,000-paragraph probe passes all
+semantic checks: the 100-paragraph burst median is 23.9 → 26.0 ms; the
+1,000-paragraph median is 116.3 → 105.3 ms. These smaller observations do not
+establish a reversed-order or universal gain. The optimization is retained for
+its repeated large-document typing benefit, with the structural tradeoff explicit.
+It does not close overall collaboration performance acceptance.
+
+Two added regressions check repeated nested Unicode/same-length/deletion edits,
+fresh and held anchors, metadata retention and a reentrant factory read. The
+1,036 affected model/Yjs tests, TypeScript, API/package/headless checks, and the
+existing bundle/performance/retention gates pass without limit changes.
+Thirty-three recorded Chromium/Firefox/WebKit journeys pass: twelve native-input
+cases cover a 1,000-paragraph document, keyboard history, observer updates,
+backward selection and room/download/reopen; twenty-one public-demo cases cover
+offline text, structural edits, competing wraps and author undo/redo. Selected
+native captures were visually inspected. This is desktop automation, not physical
+mobile/IME or production-service certification.
+
+The [decision receipt](../artifacts/yjs-native-index-decision-20261117.json)
+retains package fingerprints, exact embedded-source matches, all timing samples,
+traffic/memory observations, gate hashes, recording configurations and reproduction
+commands. It includes the superseded inline prototype and its shorter/noisier
+runs; the [inline patch](../artifacts/yjs-native-index-inline-prototype-20261117.patch)
+is archival only. Raw reports, logs, tarballs and recordings remain local.
+Whole-document normalization, storage/history growth and production adoption
+remain open.

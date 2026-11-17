@@ -1,0 +1,104 @@
+diff --git a/src/yjs/retained-document.ts b/src/yjs/retained-document.ts
+index dd5a1f8d..6a3b090b 100644
+--- a/src/yjs/retained-document.ts
++++ b/src/yjs/retained-document.ts
+@@ -438,10 +438,19 @@ export class RetainedDocumentStore {
+     return result;
+   }
+
+-  private normalizeFrame({ projection, partitions, placements }: ProjectionFrame, validate: boolean): Node {
++  private normalizeFrame({ projection, partitions, placements }: ProjectionFrame, validate: boolean,
++    nativeIndex?: { path: readonly number[]; binding: Binding; after: Node }): Node {
+     // Candidates come only from this store's existing model/bindings. Shared
+     // data was checked by acquisition or the guarded native-write proof.
+     const previousModel = this.model, previousIdentities = this.identityPaths, previousTexts = this.textCandidates;
++    const previousNodes = this.nodePaths, previousPaths = this.textPaths, previousPartitions = this.partitionPaths;
++    let reuseIndexes = !!nativeIndex;
++    let changed: { path: readonly number[]; bindings: Binding[]; key: string } | undefined;
++    const childPath = (path: readonly number[] | undefined, parent: readonly number[] | undefined, index: number): boolean => {
++      if (!path || !parent || path.length !== parent.length + 1 || path.at(-1) !== index) return false;
++      for (let part = 0; part < parent.length; part++) if (path[part] !== parent[part]) return false;
++      return true;
++    };
+     const used = new Set<Node>();
+     const groupStates = new Map<string, GroupState>();
+     const visit = (raw: RetainedNodeProjection): Fragment => {
+@@ -510,10 +519,49 @@ export class RetainedDocumentStore {
+       const path = previousIdentities.get(raw.id);
+       const candidate = previousModel && path ? getNodeAtPath(previousModel, path) : undefined;
+       const node = this.projectionNode(type, attrs, fragments.map(child => child.node), undefined, marks, used, candidate);
++      if (reuseIndexes) for (let index = 0; index < fragments.length; index++) {
++        const fragment = fragments[index]!;
++        if (fragment.id) {
++          if (!childPath(previousIdentities.get(fragment.id), path, index)) reuseIndexes = false;
++        } else if (fragment.bindings) {
++          const key = bindingKey(fragment.bindings, fragment.leaf!), previous = previousTexts.get(key);
++          if (!previous || !childPath(previous.path, path, index)) { reuseIndexes = false; break; }
++          if (sameBindings(previous.bindings, fragment.bindings)) continue;
++          const before = previous.bindings[0], next = fragment.bindings[0];
++          if (changed || previous.bindings.length !== 1 || fragment.bindings.length !== 1 || before !== nativeIndex!.binding
++            || previous.path.length !== nativeIndex!.path.length || previous.path.some((part, at) => part !== nativeIndex!.path[at])
++            || before.id !== next.id || before.from !== next.from || before.modelFrom !== next.modelFrom || before.leaf !== next.leaf
++            || next.length !== getNodeAtPath(nativeIndex!.after, nativeIndex!.path).nodeSize) { reuseIndexes = false; break; }
++          changed = { path: previous.path, bindings: fragment.bindings, key };
++        } else { reuseIndexes = false; break; }
++      }
+       return { node, id: raw.id, children: fragments };
+     };
+     const result = visit(projection.root);
+     if (validate) this.schema.validate(result.node);
++    // Only indexes are reused. Every source run and factory rule above still
++    // runs, and every retained identity/binding must retain its complete path.
++    if (reuseIndexes && nativeIndex && result.node.eq(nativeIndex.after)
++      && this.model === previousModel && this.nodePaths === previousNodes && this.identityPaths === previousIdentities
++      && this.textPaths === previousPaths && this.textCandidates === previousTexts && this.partitionPaths === previousPartitions) {
++      let paths = previousPaths, candidates = previousTexts, partitionsByPath = previousPartitions;
++      let eligible = true;
++      if (changed) {
++        const entries = previousPartitions.get(nativeIndex.binding.id), positions = entries?.filter(entry => entry.binding === nativeIndex.binding && entry.path === changed!.path);
++        eligible = positions?.length === 1 && previousPaths.get(pathKey(changed.path)) === previousTexts.get(changed.key)?.bindings;
++        if (eligible) {
++          paths = new Map(previousPaths).set(pathKey(changed.path), changed.bindings);
++          candidates = new Map(previousTexts).set(changed.key, { path: changed.path, bindings: changed.bindings });
++          partitionsByPath = new Map(previousPartitions).set(nativeIndex.binding.id,
++            entries!.map(entry => entry === positions![0] ? { path: entry.path, binding: changed!.bindings[0] } : entry));
++        }
++      }
++      if (eligible) {
++        this.textPaths = paths; this.textCandidates = candidates; this.partitionPaths = partitionsByPath;
++        this.groups = groupStates; this.graph = projection.root; this.model = result.node;
++        return result.node;
++      }
++    }
+     const nodePaths = new Map<string, string>(), textPaths = new Map<string, Binding[]>();
+     const textCandidates = new Map<string, { path: readonly number[]; bindings: readonly Binding[] } | null>();
+     const identityPaths = new Map<string, readonly number[]>();
+@@ -726,7 +774,7 @@ export class RetainedDocumentStore {
+     return { binding, frame, proof, desired, from: binding.from + from, to: binding.from + to };
+   }
+
+-  private changeText(after: Node, { text }: NativeTextProof, shared: Y.Transaction,
++  private changeText(after: Node, { text, path }: NativeTextProof, shared: Y.Transaction,
+     { binding, frame, proof, desired, from, to }: NonNullable<ReturnType<RetainedDocumentStore['prepareChangeText']>>): Node {
+     if (to > from) this.text.delete(binding.id, from, to);
+     if (text) this.text.insert(binding.id, from, text, desired);
+@@ -737,15 +785,16 @@ export class RetainedDocumentStore {
+       for (const entry of current) if (partitions.has(entry.id)) partitions.set(entry.id, entry);
+       next = { ...frame, partitions };
+     }
+-    return this.finishChange(after, next, shared, proof?.unchangedOutside);
++    return this.finishChange(after, next, shared, proof?.unchangedOutside, next ? { path, binding, after } : undefined);
+   }
+
+-  private finishChange(after: Node, frame?: ProjectionFrame, shared?: Y.Transaction, guard?: () => boolean): Node {
++  private finishChange(after: Node, frame?: ProjectionFrame, shared?: Y.Transaction, guard?: () => boolean,
++    nativeIndex?: { path: readonly number[]; binding: Binding; after: Node }): Node {
+     this.clearFrame();
+     const stamp = shared ? this.text.writeVersion(shared) : undefined;
+     let projected: Node;
+     if (frame && shared && guard) {
+-      projected = this.normalizeFrame(frame, false);
++      projected = this.normalizeFrame(frame, false, nativeIndex);
+       if (stamp !== this.text.writeVersion(shared) || !guard()) projected = this.read(false);
+       else this.frame = frame;
+     } else projected = this.read(false);

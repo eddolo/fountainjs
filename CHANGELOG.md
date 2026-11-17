@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Reuse proven unchanged retained-collaboration position indexes after native
+  text edits while preserving complete factory validation and full fallbacks.
+  Keep held/fresh anchors coherent through length changes and reentrant reads.
+
 - Avoid quadratic copying when indexing many duplicate stable node IDs. Preserve
   complete immutable collision groups, fail-closed lookup, paths and snapshots;
   remove the redundant private dictionary copy during ordinary index rebuilding.

@@ -2,6 +2,16 @@
 
 Updated 2026-11-17.
 
+Guarded native index refresh (2026-11-17): preserve complete normalization and
+factory checks, then reuse proven unchanged binding/position indexes. Reversed
+5,000-paragraph/twelve-cycle runs improve eleven-character burst medians by 8–9%;
+split/wrap medians are 9–28 ms slower and the 100-paragraph probe is slightly
+slower. This is a measured tradeoff, not universal performance parity. 1,036
+affected tests, 33 recorded desktop journeys and unchanged package/size/performance/
+retention gates pass. Full normalization and overall collaboration acceptance
+remain open; no capability status changes.
+[Measured scope](YJS_ENDURANCE_DIAGNOSTIC.md#guarded-native-binding-index-refresh--2026-11-17).
+
 Stable-ID index repair (2026-11-17): collision groups no longer repeatedly copy
 their growing arrays. At 10,000 colliding IDs, installed-package construction
 medians improve from 126–130 ms to 6.5–7.2 ms in reversed run orders. This is index
