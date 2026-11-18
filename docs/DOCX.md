@@ -6,7 +6,10 @@ In the development build, exporting a supported bar, column, line or pie chart w
 Office chart with an embedded Excel worksheet. The accompanying Word table keeps the
 author's cell text and formatting. In Word, use the chart's **Edit Data** command to
 change the plotted values. The accompanying table is a separate copy and edits to it
-do not update the chart. Invalid chart data exports as a table with a conversion notice.
+do not update the chart. For a chart linked to a CSV feed, the export report flags the
+omitted source link. The workbook contains the values saved at export time. Keep the
+Fountain JSON or HTML to refresh the chart later. Invalid chart data exports as a table
+with a conversion notice.
 
 With the charts extension installed, Fountain reopens horizontal bars, vertical columns and
 lines with one or more named series on a shared category axis. Each series occupies its own

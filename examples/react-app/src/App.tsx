@@ -81,6 +81,7 @@ import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/ve
 import { FountainVersions } from 'fountainjs-editor/react/versions';
 import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity';
 import { downloadDocumentFile } from './math-document-files';
+import { ChartCSVControls } from './ChartCSVControls';
 import { ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartType, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
@@ -756,6 +757,7 @@ function App() {
                 onClick={() => setCompactToolbar((current) => !current)}
               >{compactToolbar ? 'Show full toolbar' : 'Use compact toolbar'}</button>
             </div>
+            <ChartCSVControls editor={editor} />
             {chartAction === 'unwrap' && <div className="quick-insert" role="group" aria-label="Chart export">
               <label>Chart type <select value={String(selectedChart(editor)?.attrs.kind ?? 'bar')} onChange={event => {
                 setChartType(editor, event.target.value as ChartType);

@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChart, insertBarChart, setChartType, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -402,5 +402,64 @@ it.each(['bar', 'column', 'line'] as const)('keeps both named series across %s e
   expect(() => exportBarChartSVG(selectedBarChart(editor)!)).toThrow('one value column');
   expect(undo(editor)).toBe(true);
   expect(selectedBarChart(editor)!.attrs.kind).toBe(kind);
+  editor.destroy();
+});
+
+it('imports quoted CSV into portable cells and refreshes by category and series in one undoable edit', async () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  const sourceURL = 'https://example.org/orders.csv';
+  const csv = '\uFEFFRegion,Plan,Actual\r\n"North, ""Q1""",0012.00,-4\r\n"South\nQ1",+1e2,3\r\n';
+  expect(insertChartFromCSV(editor, csv, { title: 'Orders', sourceURL })).toBe(true);
+  const chartIndex = editor.state.selection.path[0]!;
+  const markedNumber = [chartIndex, 1, 1, 2, 0, 0];
+  editor.dispatch(editor.createTransaction().addMark(markedNumber, 0, 2, editor.state.schema.mark('strong')));
+  const original = selectedBarChart(editor)!;
+  const table = original.child(1);
+  expect(table.child(2).child(0).textContent).toBe('South\nQ1');
+  const html = HTMLExporter.export(editor.state.doc, { document: false });
+  expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(editor.getJSON());
+  expect(exportDOCX(editor.state.doc).report.issues.some(issue => issue.code === 'chart-csv-link-omitted')).toBe(true);
+  const before = editor.state.doc;
+  expect(await refreshChartFromCSV(editor, async url => { expect(url).toBe(sourceURL); return csv; })).toBe(true);
+  expect(editor.state.doc).toBe(before);
+  expect(await refreshChartFromCSV(editor, async () => 'Region,Actual,Plan\n"South\nQ1",3,+1e2\n"North, ""Q1""",-5,0012.00')).toBe(true);
+  const changed = selectedBarChart(editor)!.child(1);
+  expect(changed.child(1).child(2)).toBe(table.child(2).child(1));
+  expect(changed.child(2).child(2).textContent).toBe('0012.00');
+  expect(changed.child(2).child(1).child(0).child(0).marks.map(mark => mark.type.name)).toEqual(['strong']);
+  expect(changed.child(2).child(1).textContent).toBe('-5');
+  expect(undo(editor)).toBe(true);
+  expect(editor.state.doc.eq(before)).toBe(true);
+  editor.destroy();
+});
+
+it('leaves charts intact on invalid data, superseded loads and rejected sources', async () => {
+  const editor = createEditor({ schema: kit.schema });
+  const sourceURL = 'https://example.org/orders.csv';
+  const csv = 'Region,Orders\nNorth,3';
+  const before = editor.state.doc;
+  for (const value of ['A,B\nx', 'A,B\n"North,3', 'A,B\nx,=1+1', 'A,B\nx,3,', 'A,B\nx,']) {
+    expect(() => insertChartFromCSV(editor, value, { title: 'Orders' })).toThrow();
+    expect(editor.state.doc).toBe(before);
+  }
+  expect(() => insertChartFromCSV(editor, csv, { title: '', sourceURL: 'file:///orders.csv' })).toThrow();
+  insertChartFromCSV(editor, csv, { title: 'Orders', sourceURL });
+  const category = Selection.cursor([editor.state.selection.path[0]!, 1, 1, 0, 0, 0], 2);
+  editor.dispatch(editor.createTransaction().setSelection(category));
+  let finish!: (value: string) => void;
+  const stale = refreshChartFromCSV(editor, () => new Promise(resolve => { finish = resolve; }));
+  expect(await refreshChartFromCSV(editor, async () => 'Region,Orders\nNorth,7')).toBe(true);
+  finish(csv);
+  expect(await stale).toBe(false);
+  expect(editor.state.selection.eq(category)).toBe(true);
+  const latest = editor.state.doc;
+  await expect(refreshChartFromCSV(editor, async () => 'Region,Orders\nNorth,broken')).rejects.toThrow('Enter a number');
+  await expect(refreshChartFromCSV(editor, async () => { throw new Error('Offline'); })).rejects.toThrow('Offline');
+  expect(editor.state.doc).toBe(latest);
+  const changed = refreshChartFromCSV(editor, () => new Promise(resolve => { finish = resolve; }));
+  setChartType(editor, 'column');
+  finish(csv);
+  expect(await changed).toBe(false);
+  expect(selectedBarChart(editor)!.child(1).child(1).child(1).textContent).toBe('7');
   editor.destroy();
 });

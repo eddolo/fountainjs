@@ -1,3 +1,4 @@
+import { readDelimitedRows } from './delimited-text';
 import type { Editor } from './editor';
 import { HTMLExporter } from './exporters/html-exporter';
 import { Node, type Attributes } from './schema';
@@ -11,7 +12,6 @@ import { pasteRichTableCells } from './table-clipboard';
 const CELL_NAMES = new Set(['table_cell', 'table_header']);
 const MIN_COLUMN_WIDTH = 40;
 const MAX_COLUMN_WIDTH = 2_000;
-const MAX_PASTE_CELLS = 10_000;
 
 function pathKey(path: readonly number[]): string { return path.join('.'); }
 
@@ -386,32 +386,11 @@ export function repairTable(editor: Editor, requestedTablePath?: readonly number
   return !repaired.eq(table) && replaceTable(editor, tablePath, repaired);
 }
 
-function parseTabularText(text: string): readonly (readonly string[])[] | null {
-  if (!/[\t\r\n]/.test(text)) return null;
-  // Spreadsheet text quotes fields containing separators and doubles embedded quotes.
-  const field = /(?:"((?:[^"]|"")*)"|([^\t\r\n]*))(\t|\r\n?|\n|$)/gy;
-  const rows: string[][] = [[]];
-  let width = 0;
-  while (true) {
-    const match = field.exec(text);
-    if (!match) return null;
-    const row = rows[rows.length - 1];
-    row.push(match[1] === undefined ? match[2] : match[1].replaceAll('""', '"'));
-    width = Math.max(width, row.length);
-    if (rows.length * width > MAX_PASTE_CELLS) return null;
-    if (!match[3]) break;
-    if (match[3] !== '\t') {
-      if (field.lastIndex === text.length) break;
-      rows.push([]);
-    }
-  }
-  return rows.map(row => Array.from({ length: width }, (_, column) => row[column] ?? ''));
-}
-
 export function pasteTableCells(editor: Editor, text: string | Node): boolean {
   if (typeof text !== 'string') return pasteRichTableCells(editor, text);
   if (!editor.editable) return false;
-  const matrix = parseTabularText(text);
+  if (!/[\t\r\n]/.test(text)) return false;
+  const matrix = readDelimitedRows(text, 'tsv');
   if (!matrix) return false;
   const context = selectionContext(editor);
   if (!context) {

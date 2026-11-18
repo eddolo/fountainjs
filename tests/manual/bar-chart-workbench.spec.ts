@@ -1,3 +1,4 @@
+import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { strFromU8, unzipSync } from 'fflate';
 import { expect, test, type Page } from '@playwright/test';
@@ -346,4 +347,57 @@ test('pastes planned and actual orders and edits both series through a Word roun
   await expect(reopened.getByRole('row').nth(1).getByRole('cell')).toHaveText(['First', '12', '-9']);
   await expect(reopened.locator('[data-fountain-chart-plot]')).toContainText('Actual');
   await sheet.close();
+});
+
+test('imports a CSV file and refreshes a linked chart from a real HTTP feed', async ({ page }, info) => {
+  let hits = 0;
+  let csv = 'Region,Plan,Actual\r\n"North, Q1",0012.00,-4\r\nSouth,8,3\r\n';
+  const server = createServer((_request, response) => {
+    hits++;
+    response.writeHead(200, { 'Content-Type': 'text/csv', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' });
+    response.end(csv);
+  });
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Missing feed port');
+    const url = 'http://127.0.0.1:' + address.port + '/orders.csv';
+    await page.goto('index.html#playground');
+    const demo = page.locator('#playground');
+    await demo.getByText('Chart from CSV', { exact: true }).click();
+    const input = demo.getByLabel('CSV file', { exact: true });
+    await input.setInputFiles({ name: 'Local orders.csv', mimeType: 'text/csv', buffer: Buffer.from('\uFEFF' + csv) });
+    const chart = demo.locator('figure[data-fountain-chart]');
+    await expect(chart).toHaveCount(1);
+    await expect(chart.getByRole('cell', { name: '0012.00' })).toBeVisible();
+    await expect(chart.locator('[data-fountain-chart-plot]')).toContainText('North, Q1');
+    await input.setInputFiles({ name: 'Bad.csv', mimeType: 'text/csv', buffer: Buffer.from('Region,Value\nA,broken') });
+    await expect(demo.locator('.chart-csv output')).toContainText('Enter a number');
+    await expect(chart).toHaveCount(1);
+    expect(hits).toBe(0);
+    await demo.getByLabel('CSV source URL').fill(url);
+    await demo.getByRole('button', { name: 'Insert linked chart' }).click();
+    const linked = demo.locator('figure[data-fountain-csv-url]');
+    await expect(linked).toHaveAttribute('data-fountain-csv-url', url);
+    expect(hits).toBe(1);
+    await linked.locator('td p').first().click();
+    csv = csv.replace(',-4', ',-16');
+    await demo.getByRole('button', { name: 'Refresh data' }).click();
+    await expect(linked.getByRole('cell').getByText('-16', { exact: true })).toBeVisible();
+    await expect(linked.locator('[title="Actual · -16"]')).toHaveCount(1);
+    await linked.screenshot({ path: info.outputPath('refreshed-csv-chart.png') });
+    await linked.locator('td p').first().click();
+    await page.keyboard.press('ControlOrMeta+z');
+    await expect(linked.getByRole('cell').getByText('-4', { exact: true })).toBeVisible();
+    await demo.getByRole('button', { name: 'html', exact: true }).click();
+    const exported = await demo.locator('pre').filter({ hasText: 'data-fountain-csv-url' }).innerText();
+    await page.goto('conversion-lab.html');
+    await page.getByLabel('Choose documents').setInputFiles({ name: 'orders.html', mimeType: 'text/html', buffer: Buffer.from(exported) });
+    const reopened = page.getByRole('textbox', { name: 'Imported document editor' }).locator('figure[data-fountain-csv-url]');
+    await expect(reopened).toHaveAttribute('data-fountain-csv-url', url);
+    await expect(reopened.getByRole('cell').getByText('-4', { exact: true })).toBeVisible();
+    expect(hits).toBe(2);
+  } finally {
+    await new Promise<void>(resolve => { server.close(() => resolve()); server.closeAllConnections(); });
+  }
 });
