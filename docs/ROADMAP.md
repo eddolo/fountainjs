@@ -2,11 +2,11 @@
 
 Updated 2026-11-18.
 
-The [0.5.0-beta.1 GitHub prerelease](https://github.com/eddolo/fountainjs/releases/tag/v0.5.0-beta.1)
-and [live site build](https://eddolo.github.io/fountainjs/build-info.json) were published
-from `b1161fd5`. The [release workflow](https://github.com/eddolo/fountainjs/actions/runs/44310781735)
-passed and staged the package on npm. The [npm version list](https://www.npmjs.com/package/fountainjs-editor?activeTab=versions)
-shows which versions maintainers have approved for installation.
+FountainJS 0.5.0-beta.1 is available on GitHub and npm from commit `b1161fd5`.
+On November 18 the public `latest` tag installed this version. A clean Node
+consumer applied document edits through both ESM and CommonJS. The website
+reports its own deployment revision. [Release verification](RELEASE_0_5_0_BETA_1.md#npm-publication) ·
+[Website build](https://eddolo.github.io/fountainjs/build-info.json).
 
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu
