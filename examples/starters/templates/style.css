@@ -184,3 +184,13 @@ select:focus-visible {
     padding: 0.8rem;
   }
 }
+
+.field-error:empty {
+  display: none;
+}
+.field-error {
+  color: #922d28;
+}
+input[aria-invalid='true'] {
+  border-color: #922d28;
+}
