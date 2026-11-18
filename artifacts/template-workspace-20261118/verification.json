@@ -37,5 +37,21 @@
     "nodeChecksPassed": 5,
     "hostSessionEvidence": "A local HTTP host authenticates separate author, recipient and colleague accounts, sets an opaque HttpOnly session, and invalidates it at logout. Four browser contexts per engine cover reopened drafts, forwarding and author review. The providers are application-owned.",
     "cli": "Loaded a configured ES module, offered its sign-in address and refused a module with no adapter export."
+  },
+  "answerRules": {
+    "package": "fountainjs-editor@0.5.0-beta.1",
+    "downloadSha256": "5b3c5c275cd2cda2749384b129859e608668aa4188c339ce86ac6ed532cd5ec1",
+    "productionDownloadFilesChecked": 10,
+    "bundledFountainModulesFromInstalledPackage": 35,
+    "nodeTestsPassed": 6,
+    "browserJourneysPassed": 12,
+    "browsers": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ],
+    "workflow": "Rename a referenced field, preserve its key mapping, save mismatched dates as a draft, change the author template, reject submission with the original invitation rules, focus the invalid answer, correct the date and reopen the submitted document.",
+    "fileRoundTrip": "Independently repeated the date workflow in each browser with a template JSON download, import and inspection of the restored comparison and both keys.",
+    "screenshot": "answer-rule-date.png"
   }
 }
