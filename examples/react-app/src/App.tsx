@@ -83,7 +83,7 @@ import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity';
 import { downloadDocumentFile } from './math-document-files';
 import { ChartTextControls, EditChartSource } from './ChartTextControls';
 import { ChartCSVControls } from './ChartCSVControls';
-import { ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartAxisTitle, setChartType, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
+import { chartInputPlugin, ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartAxisTitle, setChartType, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import { SitePageLink } from './SitePageLink';
@@ -330,6 +330,7 @@ const slashCommandExtension = createSlashCommandExtension({
 
 const demoKit = composeExtensions([
   CoreExtension,
+  defineExtension({ name: 'chart-input', plugins: [chartInputPlugin] }),
   InvisibleCharacterExtension,
   StableNodeIdsExtension,
   TableOfContentsExtension,

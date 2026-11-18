@@ -10,6 +10,8 @@ import {
   defineExtension,
   inputRulesPlugin,
   insertText,
+  markdownShortcutsPlugin,
+  Selection,
   markPasteRule,
   pasteRulesPlugin,
   textInputRule,
@@ -182,6 +184,21 @@ describe('modular extension composition', () => {
     expect(editor.getText()).toBe('—');
     expect(undoInputRule(editor)).toBe(true);
     expect(editor.getText()).toBe('-- ');
+  });
+
+  it('keeps Markdown markers literal inside code and beside existing paragraph content', () => {
+    const rule = markdownShortcutsPlugin.spec.props!.handleTextInput!;
+    for (const [type, text, handled] of [
+      ['code_block', '#', false], ['paragraph', '#existing', false], ['paragraph', '#', true],
+    ] as const) {
+      const editor = createEditor({ schema: CoreSchemaSpec, plugins: [markdownShortcutsPlugin],
+        content: { type: 'doc', content: [{ type, content: [{ type: 'text', text }] }] } });
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 1)));
+      expect(rule(editor, 1, 1, ' ')).toBe(handled);
+      if (handled) expect(editor.state.doc.child(0).type.name).toBe('heading');
+      else expect(editor.state.doc.textContent).toBe(text);
+      editor.destroy();
+    }
   });
 
   it('commits a successful command chain atomically as one history event', () => {

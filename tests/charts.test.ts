@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, chartFromText, chartToText, previewChartText, updateChartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, refreshChartSnapshotFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
+import { chartInputPlugin, chartInputStatus, drawChartInput, isChartInput, BarChartExtension, chartFromText, chartToText, previewChartText, updateChartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, refreshChartSnapshotFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -925,5 +925,28 @@ it('discards aborted, removed, ambiguous and superseded feed results, with indep
   let reads = 0;
   expect(await refreshChartSnapshotFromCSV(editor, first, async () => { reads++; return csv; })).toBeNull();
   expect(reads).toBe(0);
+  editor.destroy();
+});
+
+it('only opens inline chart input in an empty paragraph and restores the source on undo', () => {
+  const schema = new Schema(kit.schema);
+  const paragraph = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
+  const editor = createEditor({ schema: kit.schema, plugins: [...kit.plugins, chartInputPlugin],
+    content: schema.node('doc', {}, [paragraph('keep'), paragraph('::tail')]).toJSON() });
+  const type = chartInputPlugin.spec.props!.handleTextInput!;
+  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([1, 0], 2)));
+  expect(type(editor, 2, 2, ':')).toBe(false);
+  editor.dispatch(editor.createTransaction().replaceText([1, 0], 2, 6, '').setSelection(Selection.cursor([1, 0], 2)));
+  expect(type(editor, 2, 2, ':')).toBe(true);
+  expect(isChartInput(editor)).toBe(true);
+  expect(drawChartInput(editor)).toBe(false);
+  expect(chartInputStatus.get(editor.state)).toBe('Paste the rows to chart.');
+  editor.dispatch(editor.createTransaction().replaceText([1, 0], 0, 0, 'Day|Orders\nMonday|12'));
+  const draft = editor.state.doc;
+  expect(drawChartInput(editor)).toBe(true);
+  expect(selectedBarChart(editor)?.child(1).child(1).textContent).toBe('Monday12');
+  expect(undo(editor)).toBe(true);
+  expect(editor.state.doc.eq(draft)).toBe(true);
+  expect(editor.state.doc.child(0).textContent).toBe('keep');
   editor.destroy();
 });

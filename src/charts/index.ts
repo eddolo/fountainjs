@@ -1,5 +1,5 @@
 import { readDelimitedRows } from '../core/delimited-text';
-import { insertNode, nodeRangeAtPath, NodeSelection, type DOMOutputSpec, type Editor, type Node, type NodeSpec, type Schema } from '../core';
+import { insertNode, insertText, nodeRangeAtPath, NodeSelection, Selection, Plugin, PluginKey, type DOMOutputSpec, type Editor, type Node, type NodeSpec, type Schema } from '../core';
 import { ReplaceTextRangeStep } from '../core/transaction/replace-text-range-step';
 import { RestructureChildrenStep } from '../core/transaction/restructure-children-step';
 import { defineExtension } from '../extensions/extension';
@@ -565,6 +565,77 @@ export function setChartValueRange(editor: Editor, min: number | null, max: numb
   if (attrs.axisMin === min && attrs.axisMax === max && attrs.axisInterval === axisInterval) return false;
   return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...attrs, axisMin: min, axisMax: max, axisInterval }));
 }
+
+// A draft is an ordinary code block so it can be saved and reopened before drawing.
+function inputBlock(editor: Editor) {
+  const { selection, doc } = editor.state;
+  if (selection.kind !== 'text' || !selection.isSingleText || selection.path.length < 2) return null;
+  const path = selection.path.slice(0, -1);
+  const block = path.reduce((parent, index) => parent.child(index), doc);
+  return { path, block };
+}
+
+function replaceInputBlock(editor: Editor, path: readonly number[], original: Node, next: Node, draft: boolean) {
+  const tr = editor.createTransaction().step(new RestructureChildrenStep(path.slice(0, -1), path[path.length - 1]!, [original], [next]));
+  try { editor.state.schema.validate(tr.doc); } catch { return false; }
+  tr.setSelection(draft ? Selection.cursor([...path, 0], 0) : new NodeSelection(tr.doc, path));
+  return editor.dispatch(tr);
+}
+
+export const chartInputStatus = new PluginKey<string>('chart-input-status');
+
+/** True when the text selection is inside a chart-data draft. */
+export function isChartInput(editor: Editor): boolean {
+  const block = inputBlock(editor)?.block;
+  return block?.type.name === 'code_block' && block.attrs.language === 'chart-data';
+}
+
+/** Draw the selected chart-data code block. Invalid rows remain editable. */
+export function drawChartInput(editor: Editor): boolean {
+  const input = inputBlock(editor);
+  if (!supportsCharts(editor) || input?.block.type.name !== 'code_block' || input.block.attrs.language !== 'chart-data') return false;
+  let chart: Node;
+  try { chart = chartFromText(editor.state.schema, input.block.textContent, { title: '' }); }
+  catch (error) {
+    editor.dispatch(editor.createTransaction().setMeta('force', true).setMeta('chartInputError', error instanceof Error ? error.message : 'Check the chart rows.').setMeta('addToHistory', false));
+    return false;
+  }
+  return replaceInputBlock(editor, input.path, input.block, chart, false);
+}
+
+/** Optional keyboard entry for hosts that reserve ::: for chart drafts. */
+export const chartInputPlugin = new Plugin<string>({
+  key: chartInputStatus,
+  state: {
+    init: () => '',
+    apply: (tr, previous) => tr.getMeta<string>('chartInputError') ?? (tr.docChanged || tr.selectionSet ? '' : previous),
+  },
+  props: {
+    handleTextInput(editor, from, to, text) {
+      if (!text.endsWith(':') || from !== to || !editor.state.selection.isCollapsed || !supportsCharts(editor) || !editor.state.schema.nodes.code_block) return false;
+      const input = inputBlock(editor);
+      if (input?.block.type.name !== 'paragraph' || input.block.childCount !== 1 || from !== input.block.textContent.length || input.block.textContent + text !== ':::') return false;
+      const draft = editor.state.schema.node('code_block', { language: 'chart-data', lineNumbers: false }, [editor.state.schema.text('')]);
+      return replaceInputBlock(editor, input.path, input.block, draft, true);
+    },
+    handleKeyDown(editor, event) {
+      if (event.key !== 'Enter' || event.isComposing || event.altKey || event.shiftKey || !editor.editable) return false;
+      const input = inputBlock(editor);
+      if (input?.block.type.name !== 'code_block' || input.block.attrs.language !== 'chart-data') return false;
+      const selection = editor.state.selection;
+      if (!(event.metaKey || event.ctrlKey) && !(selection.isCollapsed && selection.path.at(-1) === input.block.childCount - 1 &&
+        selection.from === input.block.child(input.block.childCount - 1).textContent.length && input.block.textContent.endsWith('\n'))) return false;
+      drawChartInput(editor);
+      return true;
+    },
+    handlePaste(editor, event) {
+      const input = inputBlock(editor);
+      if (!editor.editable || input?.block.type.name !== 'code_block' || input.block.attrs.language !== 'chart-data') return false;
+      const text = event.clipboardData?.getData('text/plain');
+      return !!text && insertText(editor, text);
+    },
+  },
+});
 
 export const BarChartExtension = defineExtension({
   name: 'bar-chart',

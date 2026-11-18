@@ -13,6 +13,11 @@ function replaceTopLevelBlock(
   return new InputRule(pattern, ({ state, range, match }) => {
     if (range.path.length !== 2 || range.from !== 0) return null;
     const blockIndex = range.path[0] as number;
+    const block = state.doc.child(blockIndex);
+    // These rules replace the whole paragraph. A match in a single text leaf
+    // must never remove following content or reinterpret a source-code block.
+    if (block.type.name !== 'paragraph' || block.childCount !== 1 ||
+        !state.selection.isCollapsed || range.to !== block.child(0).nodeSize) return null;
     const { node, selectionPath } = create(state.schema, match);
     return state.createTransaction()
       .replace(blockIndex, blockIndex + 1, [node])

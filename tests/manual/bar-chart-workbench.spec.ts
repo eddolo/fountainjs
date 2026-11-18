@@ -709,3 +709,44 @@ test('automatically refreshes weekly orders while writing elsewhere and keeps an
     await new Promise<void>(resolve => { server.close(() => resolve()); server.closeAllConnections(); });
   }
 });
+
+test('draws weekly orders from an inline draft and undoes back to the exact rows', async ({ page }, info) => {
+  const source = await page.context().newPage();
+  const rows = 'column\nDay\tOrders\nMonday\t12\nTuesday\tbad';
+  await source.setContent('<textarea aria-label="Order rows"></textarea>');
+  await source.getByLabel('Order rows').fill(rows);
+  await source.keyboard.press('ControlOrMeta+a');
+  await source.keyboard.press('ControlOrMeta+c');
+  await page.bringToFront();
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  const paragraph = demo.locator('[contenteditable=true] p').filter({ hasText: 'Integrity sample:' });
+  await paragraph.click();
+  await page.keyboard.press('ControlOrMeta+End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type(':::');
+  const draft = demo.locator('pre[data-language="chart-data"] code');
+  await expect(draft).toHaveCount(1);
+  await page.keyboard.type('# ');
+  await expect(draft).toHaveJSProperty('textContent', '# ');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('ControlOrMeta+v');
+  await expect.poll(async () => (await draft.textContent())?.replace(/\r\n?/g, '\n')).toBe(rows);
+  const pasted = (await draft.textContent())!;
+  await page.keyboard.press('ControlOrMeta+Enter');
+  await expect(demo.getByRole('alert').filter({ hasText: 'Enter a number in row 3' })).toBeVisible();
+  for (let i = 0; i < 3; i++) await page.keyboard.press('Backspace');
+  await page.keyboard.type('-4');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Enter');
+  const chart = demo.locator('figure[data-fountain-chart="column"]');
+  await expect(chart.locator('[data-fountain-chart-plot]')).toContainText('Tuesday · -4');
+  await expect(draft).toHaveCount(0);
+  await chart.screenshot({ path: info.outputPath('inline-orders.png') });
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(draft).toHaveJSProperty('textContent', pasted.replace('bad', '-4') + '\n');
+  await demo.getByRole('button', { name: 'Draw chart from these rows' }).click();
+  await expect(chart).toBeVisible();
+  await expect(paragraph).toHaveCount(1);
+});

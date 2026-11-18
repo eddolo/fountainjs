@@ -1,6 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { insertNode, type Editor, type Node } from 'fountainjs-editor/core';
-import { chartFromText, chartToText, exportChartSVG, previewChartText, updateChartFromText, type ChartType, type TextChartOptions } from 'fountainjs-editor/charts';
+import { chartInputStatus, drawChartInput, isChartInput, chartFromText, chartToText, exportChartSVG, previewChartText, updateChartFromText, type ChartType, type TextChartOptions } from 'fountainjs-editor/charts';
 
 interface Preview { chart: Node; image?: string }
 
@@ -50,8 +50,14 @@ export function ChartTextControls({ editor, focusEditor }: { editor: Editor; foc
     }
   }
 
-  return <details className="chart-csv chart-text">
+  return <>
+    {isChartInput(editor) && <div className="quick-insert">
+      <button type="button" onClick={() => { drawChartInput(editor); focusEditor(); }}>Draw chart from these rows</button>
+    </div>}
+    {chartInputStatus.get(editor.state) && <p role="alert">{chartInputStatus.get(editor.state)}</p>}
+    <details className="chart-csv chart-text">
     <summary>Chart from text</summary>
+    <p>To draw a chart in the document, type <code>:::</code> in an empty paragraph. Enter the rows, then press Enter on an empty final line.</p>
     <form onSubmit={previewRows} onChange={() => { setPreview(null); setMessage(''); }}>
       <label>Chart rows
         <textarea rows={5} value={draft} onChange={event => setDraft(event.target.value)}
@@ -85,7 +91,7 @@ export function ChartTextControls({ editor, focusEditor }: { editor: Editor; foc
       }}>Insert previewed chart</button></div>
     </div>}
     <output>{message}</output>
-  </details>;
+  </details></>;
 }
 
 export function EditChartSource({ editor, chart, focusEditor }: { editor: Editor; chart: Node | null; focusEditor: () => void }) {
