@@ -158,3 +158,18 @@ it('fills a grid from a text caret, grows its edges and preserves quoted spreads
     expect(editor.getJSON()).toEqual(before);
   } finally { editor.destroy(); }
 });
+
+it.each(['col', 'row'] as const)('grows pasted column headings only across a column-header row (%s)', scope => {
+  const heading = schema.node('table_header', { scope }, [p('Category')]);
+  const editor = editorFor(table([[heading], [cell('Monday')]]));
+  try {
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0, 0, 0, 0], 0)));
+    const before = editor.getJSON();
+    expect(pasteTableCells(editor, 'Week\tActual\nFirst\t12')).toBe(true);
+    const result = editor.state.doc.child(0);
+    expect(result.child(0).child(1).type.name).toBe(scope === 'col' ? 'table_header' : 'table_cell');
+    expect(result.child(1).child(1).type.name).toBe('table_cell');
+    expect(undo(editor)).toBe(true);
+    expect(editor.getJSON()).toEqual(before);
+  } finally { editor.destroy(); }
+});

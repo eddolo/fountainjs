@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertBarChart, setChartType, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChart, insertBarChart, setChartType, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -365,4 +365,42 @@ it('recovers the authored cell spelling and rich marks when the Office plot stil
   const cell = restored.child(0).child(0).child(1);
   expect(cell.textContent).toBe('04.00');
   expect(cell.child(0).child(0).marks.map(mark => mark.type.name)).toContain('strong');
+});
+
+it.each(['bar', 'column', 'line'] as const)('keeps both named series across %s editing, image and Office interchange', kind => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  expect(insertChart(editor, { kind, title: 'Orders', series: ['Plan', 'Actual'],
+    rows: [['Monday', 12, -4], ['Tuesday', 8, 6]] })).toBe(true);
+  const doc = editor.state.doc;
+  const node = selectedBarChart(editor)!;
+  const html = HTMLExporter.export(doc, { document: false });
+  expect(ServerHTMLImporter.parse(html, editor.state.schema).eq(doc)).toBe(true);
+  const svg = exportBarChartSVG(node);
+  expect(svg).toContain('Monday · Plan 12, Actual -4');
+  expect(svg).toContain('#007768');
+  const parts = unzipSync(exportDOCX(doc).bytes);
+  const path = 'word/charts/chart1.xml';
+  const xml = strFromU8(parts[path]);
+  expect(xml.match(/<c:ser>/g)).toHaveLength(2);
+  expect(xml).toContain('Data!$C$2:$C$3');
+  const workbook = unzipSync(parts['word/embeddings/chart1.xlsx']);
+  expect(strFromU8(workbook['xl/worksheets/sheet1.xml'])).toContain('<c r="C2"><v>-4</v></c>');
+  const read = (chartXML: string) => importDOCX(zipSync({ ...parts, [path]: strToU8(chartXML) }), editor.state.schema).document;
+  const reopened = read(xml);
+  const seriesTable = reopened.content.find(child => child.type.name === 'bar_chart')!.child(1);
+  expect(seriesTable.content.map(row => row.content.map(cell => cell.textContent))).toEqual([
+    ['Category', 'Plan', 'Actual'], ['Monday', '12', '-4'], ['Tuesday', '8', '6']]);
+  expect(reopened.content.some(child => child.type.name === 'table')).toBe(false);
+  const changed = read(xml.replace('<c:v>-4</c:v>', '<c:v>5</c:v>'));
+  expect(changed.content.find(child => child.type.name === 'table')!.child(1).child(2).textContent).toBe('-4');
+  expect(changed.content.find(child => child.type.name === 'bar_chart')!.child(1).child(1).child(2).textContent).toBe('5');
+  const second = xml.lastIndexOf('<c:ser>');
+  const mismatch = read(xml.slice(0, second) + xml.slice(second).replace('<c:v>Monday</c:v>', '<c:v>Sunday</c:v>'));
+  expect(mismatch.content.some(child => child.type.name === 'bar_chart')).toBe(false);
+  expect(mismatch.content.find(child => child.type.name === 'table')!.child(0).childCount).toBe(3);
+  setChartType(editor, 'pie');
+  expect(() => exportBarChartSVG(selectedBarChart(editor)!)).toThrow('one value column');
+  expect(undo(editor)).toBe(true);
+  expect(selectedBarChart(editor)!.attrs.kind).toBe(kind);
+  editor.destroy();
 });

@@ -12,7 +12,11 @@ function percent(value: number): string {
 function plot(node: Node): DOMOutputSpec {
   const layout = chartLayout(node);
   if (typeof layout === 'string') return ['p', layout];
-  const { title, zero, kind } = layout;
+  const { title, zero, kind, series } = layout;
+  const multiple = series.length > 1;
+  const legend: DOMOutputSpec[] = multiple ? [['div', { style: 'display:flex;gap:1em;flex-wrap:wrap' },
+    ...series.map((item): DOMOutputSpec => ['span', ['span', { style: 'color:' + item.color }, '■ '], item.name])]] : [];
+  const label = (index: number) => layout.rows[index]!.label + (multiple ? '' : ' · ' + layout.rows[index]!.source);
   const graphic = (children: DOMOutputSpec[]): DOMOutputSpec => ['div', {
     role: 'img', style: 'display:flow-root', 'aria-label': (title || kind + ' chart') + '. Values are in the accompanying table.',
   }, ...children];
@@ -26,44 +30,49 @@ function plot(node: Node): DOMOutputSpec {
       style = 'position:relative;aspect-ratio:4;margin:12px 6px;background:#f5f3fa';
       markers.push(['span', { style: `position:absolute;top:${percent(100 - zero)};width:100%;border-top:1px solid #aaa` }]);
       const position = (point: { x: number; y: number }) => `position:absolute;left:${percent(point.x)};top:${percent(point.y)}`;
-      layout.rows.forEach((row, index) => {
-        if (kind === 'column') {
-          const bounds = columnBounds(index, layout.rows.length, row.y, zero);
-          markers.push(['span', { style: `position:absolute;left:${percent(bounds.left)};top:${percent(bounds.top)};width:${percent(bounds.width)};height:${percent(bounds.height)};background:#55409c` }]);
-          return;
-        }
-        const previous = layout.rows[index - 1];
-        if (previous) {
-          const dx = row.x - previous.x, dy = (row.y - previous.y) / 4;
-          markers.push(['span', { style: `${position(previous)};width:${percent(Math.hypot(dx, dy))};height:2px;background:#55409c;transform-origin:0 0;transform:rotate(${Math.atan2(dy, dx)}rad)` }]);
-        }
-        markers.push(['span', { style: `${position(row)};background:#55409c;border-radius:50%;width:6px;height:6px;transform:translate(-50%,-50%)` }]);
-      });
+      for (const [j, item] of series.entries()) {
+        item.rows.forEach((row, index) => {
+          if (kind === 'column') {
+            const bounds = columnBounds(index, layout.rows.length, row.y, zero, j, series.length);
+            markers.push(['span', { style: `position:absolute;left:${percent(bounds.left)};top:${percent(bounds.top)};width:${percent(bounds.width)};height:${percent(bounds.height)};background:${item.color}` }]);
+            return;
+          }
+          const previous = item.rows[index - 1];
+          if (previous) {
+            const dx = row.x - previous.x, dy = (row.y - previous.y) / 4;
+            markers.push(['span', { style: `${position(previous)};width:${percent(Math.hypot(dx, dy))};height:2px;background:${item.color};transform-origin:0 0;transform:rotate(${Math.atan2(dy, dx)}rad)` }]);
+          }
+          markers.push(['span', { style: `${position(row)};background:${item.color};border-radius:50%;width:6px;height:6px;transform:translate(-50%,-50%)` }]);
+        });
+      }
     }
     if (kind === 'column' && layout.rows.length <= 6) {
       return graphic([
+        ...legend,
         ['div', { dir: 'ltr', style }, ...markers],
         ['div', { dir: 'ltr', style: `display:grid;grid-template-columns:repeat(${layout.rows.length},minmax(0,1fr));margin:0 6px;text-align:center;overflow-wrap:anywhere` },
-          ...layout.rows.map((row): DOMOutputSpec => ['span', { dir: 'auto' }, row.label + ' · ' + row.source])],
+          ...layout.rows.map((_, i): DOMOutputSpec => ['span', { dir: 'auto' }, label(i)])],
       ]);
     }
     return graphic([
+      ...legend,
       ['div', { dir: 'ltr', style }, ...markers],
       ...layout.rows.map((row, i): DOMOutputSpec => ['div',
         ['span', { style: kind === 'pie' ? `color:${row.color}` : '' }, kind === 'pie' ? '■ ' : (i + 1) + '. '],
-        row.label + ' · ' + row.source]),
+        label(i)]),
     ]);
   }
-  const rows: DOMOutputSpec[] = layout.rows.map(({ label, source, width, left }) => {
-    return ['div', { style: 'margin:.45em 0' },
-      ['span', label + ' · ' + source],
-      ['div', { dir: 'ltr', style: 'position:relative;height:.8em;background:#edeaf6' },
-        ['span', { style: `position:absolute;left:${percent(left)};width:${percent(width)};height:100%;background:#55409c` }],
+  const rows = layout.rows.map((_, i): DOMOutputSpec => ['div', { style: 'margin:.45em 0' },
+    ['span', label(i)],
+    ...series.map((item): DOMOutputSpec => {
+      const row = item.rows[i]!;
+      return ['div', { dir: 'ltr', title: item.name + ' · ' + row.source, style: 'position:relative;height:.8em;background:#edeaf6' },
+        ['span', { style: `position:absolute;left:${percent(row.left)};width:${percent(row.width)};height:100%;background:${item.color}` }],
         ['span', { style: `position:absolute;left:${percent(zero)};height:100%;border-left:1px solid #564e62` }],
-      ],
-    ];
-  });
-  return graphic(rows);
+      ];
+    }),
+  ]);
+  return graphic([...legend, ...rows]);
 }
 
 const parseRules = chartTypes.map(kind => ({
@@ -84,21 +93,37 @@ const barChartNode: NodeSpec = {
   ],
 };
 
-/** Inserts editable title and data cells, with a bar plot derived from the same table. */
-export function insertBarChart(editor: Editor, title: string, values: readonly (readonly [string, number])[]): boolean {
+export interface ChartData {
+  readonly title: string;
+  readonly kind?: ChartType;
+  readonly categoryLabel?: string;
+  readonly series: readonly string[];
+  readonly rows: readonly (readonly [string, ...number[]])[];
+}
+
+/** One category column followed by one numeric column per named series. */
+export function insertChart(editor: Editor, data: ChartData): boolean {
   const { schema } = editor.state;
   const required = ['bar_chart', 'table', 'table_row', 'table_header', 'table_cell', 'paragraph', 'text'];
   if (!editor.editable || required.some(name => !schema.nodes[name])) return false;
-  if (typeof title !== 'string' || !Array.isArray(values) || !values.every(pair => Array.isArray(pair) && pair.length === 2
-    && typeof pair[0] === 'string' && Number.isFinite(pair[1]))) return false;
+  if (!data || typeof data.title !== 'string' || !Array.isArray(data.series) || !data.series.length ||
+    !data.series.every(name => typeof name === 'string') || !chartTypes.includes(data.kind ?? 'bar') ||
+    (data.categoryLabel !== undefined && typeof data.categoryLabel !== 'string') ||
+    (data.kind === 'pie' && data.series.length !== 1) || !Array.isArray(data.rows) ||
+    !data.rows.every(row => Array.isArray(row) && row.length === data.series.length + 1 &&
+      typeof row[0] === 'string' && row.slice(1).every(Number.isFinite))) return false;
   const paragraph = (value: string) => schema.node('paragraph', {}, [schema.text(value)]);
-  const row = (type: string, ...cells: string[]) => schema.node('table_row', {},
-    cells.map(value => schema.node(type, {}, [paragraph(value)])));
-  const table = schema.node('table', {}, [row('table_header', 'Category', 'Value'),
-    ...values.map(([label, value]) => row('table_cell', label, String(value)))]);
-  const chart = schema.node('bar_chart', {}, [paragraph(title), table]);
+  const row = (type: string, cells: readonly (string | number)[]) => schema.node('table_row', {},
+    cells.map(value => schema.node(type, {}, [paragraph(String(value))])));
+  const table = schema.node('table', {}, [row('table_header', [data.categoryLabel ?? 'Category', ...data.series]),
+    ...data.rows.map(values => row('table_cell', values))]);
+  const chart = schema.node('bar_chart', { kind: data.kind ?? 'bar' }, [paragraph(data.title), table]);
   const previous = editor.state.doc;
   return insertNode(editor, chart) && editor.state.doc !== previous;
+}
+
+export function insertBarChart(editor: Editor, title: string, values: readonly (readonly [string, number])[]): boolean {
+  return insertChart(editor, { title, series: ['Value'], rows: values });
 }
 
 function chartTarget(editor: Editor) {
@@ -163,7 +188,7 @@ export function setChartType(editor: Editor, kind: ChartType): boolean {
 export const BarChartExtension = defineExtension({
   name: 'bar-chart',
   nodes: { bar_chart: barChartNode },
-  commands: { insertBarChart, toggleTableChart, setChartType },
+  commands: { insertChart, insertBarChart, toggleTableChart, setChartType },
 });
 
 export { BarChartExtension as ChartExtension, selectedBarChart as selectedChart };

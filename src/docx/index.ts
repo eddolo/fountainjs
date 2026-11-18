@@ -1867,7 +1867,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
       message: 'The chart source could not be recovered as a local XLSX workbook. Keep the original document.' });
   }
   const supportsCharts = ['bar_chart', 'paragraph', 'text', 'table', 'table_row', 'table_cell', 'table_header'].every(name => schema.nodes[name]);
-  let chartRows = 0;
+  let chartPoints = 0;
   const readChartPart = (path: string) => {
     if ((!supportsCharts && !options.includeChartWorkbooks)
         || !entrySizes.has(path) || path === '__proto__' || (entrySizes.get(path) ?? 0) > limits.maxDocumentXmlBytes) return;
@@ -1889,8 +1889,9 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     }
     const chart = chartParts.get(path);
     if (chart) {
-      chartRows += chart.child(chart.childCount - 1).childCount;
-      if (chartRows > limits.maxXmlNodes) throw new RangeError('DOCX chart rows exceed the import limit.');
+      const table = chart.child(chart.childCount - 1);
+      chartPoints += table.childCount * (table.child(0).childCount - 1);
+      if (chartPoints > limits.maxXmlNodes) throw new RangeError('DOCX chart points exceed the import limit.');
     }
     return chart;
   };

@@ -36,20 +36,25 @@ function drawChart(node: Node) {
     }
   }
   text(title, 24);
+  if (layout.series.length > 1) {
+    for (const item of layout.series) text('■ ' + item.name, 16, item.color);
+  }
   y += 10;
   const x = (p: number) => Number((track * p / 100).toFixed(4));
   if (layout.kind === 'column' || layout.kind === 'line') {
     const graphHeight = track / 4;
     drawing.push(`<path d="M${inset} ${y + graphHeight * (1 - layout.zero / 100)}h${track}" stroke="#aaa"/>`);
-    if (layout.kind === 'column') {
-      layout.rows.forEach((row, index) => {
-        const bounds = columnBounds(index, layout.rows.length, row.y, layout.zero);
-        drawing.push(`<rect x="${inset + x(bounds.left)}" y="${y + graphHeight * bounds.top / 100}" width="${x(bounds.width)}" height="${graphHeight * bounds.height / 100}" fill="#55409c"/>`);
-      });
-    } else {
-      const points = layout.rows.map(row => [inset + x(row.x), y + graphHeight * row.y / 100]);
-      drawing.push(`<polyline points="${points.map(point => point.join(',')).join(' ')}" fill="none" stroke="#55409c" stroke-width="2"/>`);
-      for (const [cx, cy] of points) drawing.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="#55409c"/>`);
+    for (const [j, item] of layout.series.entries()) {
+      if (layout.kind === 'column') {
+        item.rows.forEach((row, index) => {
+          const bounds = columnBounds(index, layout.rows.length, row.y, layout.zero, j, layout.series.length);
+          drawing.push(`<rect x="${inset + x(bounds.left)}" y="${y + graphHeight * bounds.top / 100}" width="${x(bounds.width)}" height="${graphHeight * bounds.height / 100}" fill="${item.color}"/>`);
+        });
+      } else {
+        const points = item.rows.map(row => [inset + x(row.x), y + graphHeight * row.y / 100]);
+        drawing.push(`<polyline points="${points.map(point => point.join(',')).join(' ')}" fill="none" stroke="${item.color}" stroke-width="2"/>`);
+        for (const [cx, cy] of points) drawing.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="${item.color}"/>`);
+      }
     }
     y += graphHeight + 12;
   } else if (layout.kind === 'pie') {
@@ -66,16 +71,21 @@ function drawChart(node: Node) {
     y += radius * 2 + 12;
   }
   for (const [index, row] of layout.rows.entries()) {
-    const label = row.label + ' · ' + row.source;
+    const label = row.label + ' · ' + (layout.series.length === 1 ? row.source :
+      layout.series.map(item => item.name + ' ' + item.rows[index]!.source).join(', '));
     if (layout.kind === 'pie') text('■ ' + label, 16, row.color);
     else if (layout.kind !== 'bar') text((index + 1) + '. ' + label, 16);
     else {
       text(label, 16);
       y += 7;
-      drawing.push(`<rect x="${inset}" y="${y}" width="${track}" height="12" fill="#edeaf6"/>`,
-        `<rect x="${inset + x(row.left)}" y="${y}" width="${x(row.width)}" height="12" fill="#55409c"/>`,
-        `<path d="M${inset + x(layout.zero)} ${y}v12" stroke="#564e62"/>`);
-      y += 23;
+      for (const item of layout.series) {
+        const point = item.rows[index]!;
+        drawing.push(`<rect x="${inset}" y="${y}" width="${track}" height="12" fill="#edeaf6"/>`,
+          `<rect x="${inset + x(point.left)}" y="${y}" width="${x(point.width)}" height="12" fill="${item.color}"/>`,
+          `<path d="M${inset + x(layout.zero)} ${y}v12" stroke="#564e62"/>`);
+        y += 14;
+      }
+      y += 9;
     }
   }
   const height = y + 12;

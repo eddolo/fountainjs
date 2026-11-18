@@ -8,8 +8,10 @@ author's cell text and formatting. In Word, use the chart's **Edit Data** comman
 change the plotted values. The accompanying table is a separate copy and edits to it
 do not update the chart. Invalid chart data exports as a table with a conversion notice.
 
-With the charts extension installed, Fountain reopens a single-series horizontal bar, vertical
-column, line or pie chart from its saved category labels and numeric points. Fountain
+With the charts extension installed, Fountain reopens horizontal bars, vertical columns and
+lines with one or more named series on a shared category axis. Each series occupies its own
+numeric table column and worksheet column. Pie charts use one series. Stacked charts,
+mixed chart families and series with different category labels receive a conversion warning. Fountain
 groups its own matching caption, formatted table and plot into one editable chart.
 When the table and plot disagree, both remain editable independently. Ordinary
 Word tables outside that group remain separate.

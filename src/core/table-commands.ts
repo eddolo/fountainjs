@@ -419,11 +419,19 @@ export function pasteTableCells(editor: Editor, text: string | Node): boolean {
     if (!(selection instanceof Selection) || !selection.isCollapsed || !text.includes('\t')) return false;
     const target = getActiveTableCell(editor);
     if (!target || !target.map.valid || !schema.nodes.table_cell || !schema.nodes.paragraph) return false;
-    const rows = matrix.map((values, dy) => schema.node('table_row', {}, values.map((value, dx) => {
-      const existing = target.map.cellAt(target.cell.row + dy, target.cell.column + dx);
-      const paragraph = schema.node('paragraph', {}, [schema.text(value)]);
-      return existing ? existing.node.copy([paragraph]) : schema.node('table_cell', {}, [paragraph]);
-    })));
+    const rows = matrix.map((values, dy) => {
+      const y = target.cell.row + dy;
+      const original = target.table.content[y];
+      const extendHeader = original?.childCount && original.content.every(cell =>
+        cell.type.name === 'table_header' && cell.attrs.scope !== 'row' && cell.attrs.scope !== 'rowgroup');
+      return schema.node('table_row', {}, values.map((value, dx) => {
+        const existing = target.map.cellAt(y, target.cell.column + dx);
+        const paragraph = schema.node('paragraph', {}, [schema.text(value)]);
+        if (existing) return existing.node.copy([paragraph]);
+        return extendHeader ? schema.node('table_header', { scope: 'col' }, [paragraph])
+          : schema.node('table_cell', {}, [paragraph]);
+      }));
+    });
     // An inferred text grid carries no merge information. Leave merged ownership intact.
     if (rows.some(row => row.content.some(cell => Number(cell.attrs.rowspan) > 1 || Number(cell.attrs.colspan) > 1))) return false;
     return pasteRichTableCells(editor, schema.node('table', {}, rows));

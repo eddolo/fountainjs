@@ -49,23 +49,36 @@ export function readNativeChart(root: XMLElement, schema: Schema): Node | undefi
   const kind = family === 'bar' && direction === 'col' ? 'column' : family;
   const grouping = one(plot, 'grouping')?.attrs.val;
   if (grouping && grouping !== 'standard' && grouping !== 'clustered') return;
-  const series = one(plot, 'ser');
-  const cat = one(series, 'cat'), val = one(series, 'val');
-  const labels = values(one(one(cat, 'strRef'), 'strCache') ?? one(cat, 'strLit'));
-  const numbers = values(one(one(val, 'numRef'), 'numCache') ?? one(val, 'numLit'));
-  if (!labels || !numbers || labels.length !== numbers.length) return;
-
-  const tx = one(series, 'tx');
-  const seriesName = text(one(tx, 'v')) ?? values(one(one(tx, 'strRef'), 'strCache'))?.[0] ?? 'Value';
+  const seriesNodes = children(plot, 'ser');
+  if (!seriesNodes.length || (kind === 'pie' && seriesNodes.length !== 1)) return;
+  const series: { name: string; numbers: string[]; order: number }[] = [];
+  const orders = new Set<number>();
+  let categories: string[] | undefined;
+  for (const [index, item] of seriesNodes.entries()) {
+    const cat = one(item, 'cat'), val = one(item, 'val');
+    const labels = values(one(one(cat, 'strRef'), 'strCache') ?? one(cat, 'strLit'));
+    const numbers = values(one(one(val, 'numRef'), 'numCache') ?? one(val, 'numLit'));
+    if (!labels || !numbers || labels.length !== numbers.length) return;
+    if (categories && (labels.length !== categories.length || labels.some((label, i) => label !== categories![i]))) return;
+    categories ??= labels;
+    const tx = one(item, 'tx');
+    const name = text(one(tx, 'v')) ?? values(one(one(tx, 'strRef'), 'strCache'))?.[0]
+      ?? (seriesNodes.length === 1 ? 'Value' : 'Series ' + (index + 1));
+    const order = Number(one(item, 'order')?.attrs.val ?? index);
+    if (!Number.isSafeInteger(order) || order < 0 || orders.has(order)) return;
+    orders.add(order);
+    series.push({ name, numbers, order });
+  }
+  series.sort((a, b) => a.order - b.order);
   const titleTx = one(one(chart, 'title'), 'tx');
   const title = children(one(titleTx, 'rich'), 'p', DRAWING_NS).map(p =>
     children(p, 'r', DRAWING_NS).map(run => text(one(run, 't', DRAWING_NS)) ?? '').join('')).join('\n')
     || values(one(one(titleTx, 'strRef'), 'strCache'))?.[0];
   const paragraph = (value: string) => schema.node('paragraph', {}, value ? [schema.text(value)] : []);
-  const row = (type: string, label: string, value: string) => schema.node('table_row', {},
-    [label, value].map(cell => schema.node(type, {}, [paragraph(cell)])));
-  const table = schema.node('table', {}, [row('table_header', 'Category', seriesName),
-    ...labels.map((label, i) => row('table_cell', label, numbers[i]!))]);
+  const row = (type: string, cells: string[]) => schema.node('table_row', {},
+    cells.map(cell => schema.node(type, {}, [paragraph(cell)])));
+  const table = schema.node('table', {}, [row('table_header', ['Category', ...series.map(item => item.name)]),
+    ...categories!.map((label, i) => row('table_cell', [label, ...series.map(item => item.numbers[i]!)]))]);
   const result = schema.node('bar_chart', { kind }, title ? [paragraph(title), table] : [table]);
   return typeof chartLayout(result) === 'string' ? undefined : result;
 }
@@ -79,10 +92,12 @@ export function reconcileChartGroup(blocks: Node[], schema: Schema): Node[] {
   const candidate = schema.node('bar_chart', chart.attrs, title ? [title, table] : [table]);
   const native = chartLayout(chart), source = chartLayout(candidate);
   if (typeof native === 'string' || typeof source === 'string' || native.rows.length !== source.rows.length) return blocks;
-  const header = table.child(0);
-  const series = header.content.every(cell => cell.type.name === 'table_header') ? header.child(1).textContent || 'Value' : 'Value';
-  const nativeTable = chart.child(chart.childCount - 1);
-  if ((source.title || series) !== native.title || nativeTable.child(0).child(1).textContent !== series ||
-    !native.rows.every((row, i) => row.label === source.rows[i]!.label && Number(row.source) === Number(source.rows[i]!.source))) return blocks;
+  const titleText = source.title || (source.series.length === 1 ? source.series[0]!.name : 'Chart');
+  if (native.title !== titleText || native.series.length !== source.series.length) return blocks;
+  for (const [j, item] of native.series.entries()) {
+    const original = source.series[j]!;
+    if (item.name !== original.name || !item.rows.every((point, i) =>
+      point.label === original.rows[i]!.label && Number(point.source) === Number(original.rows[i]!.source))) return blocks;
+  }
   return [candidate];
 }

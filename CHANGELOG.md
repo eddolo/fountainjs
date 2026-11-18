@@ -2,11 +2,11 @@
 
 ## Unreleased
 
-- Paste tab-separated spreadsheet rows at a table or chart cell. The grid grows to fit, and Undo restores the original cells. Quoted tabs, line breaks and quotes survive plain-text grid copying.
+- Paste tab-separated spreadsheet rows at a table or chart cell. The grid grows to fit, extends column headers across new columns, and Undo restores the original cells. Quoted tabs, line breaks and quotes survive plain-text grid copying.
 
 - Keep table headings visible in DOCX viewers and restore header scope when reopening older Fountain exports.
 
-- Add optional table-backed bar, column, line and pie charts to the editor with SVG and bitmap image downloads. Convert an existing table to a chart and back while keeping its cells and formatting. HTML retains the plot and editable data. DOCX export includes a native Office chart, an embedded Excel worksheet and the formatted table. Reimport restores supported plotted series and keeps independently edited companion tables. Download the original embedded XLSX from the Conversion Lab, or request its bytes with the DOCX importer.
+- Add optional table-backed bar, column, line and pie charts to the editor with SVG and bitmap image downloads. Convert an existing table to a chart and back while keeping its cells and formatting. HTML retains the plot and editable data. DOCX export includes a native Office chart, an embedded Excel worksheet and the formatted table. Grouped bars, columns and lines compare multiple named data series on one scale. Use the chart table or the new `insertChart` command. Reimport restores supported plotted series and keeps independently edited companion tables. Download the original embedded XLSX from the Conversion Lab, or request its bytes with the DOCX importer.
 
 ## 0.5.0-beta.2 — Shared editor views and collaboration performance
 

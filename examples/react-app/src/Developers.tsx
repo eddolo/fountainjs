@@ -817,17 +817,19 @@ function Developers() {
             <h3>Details are document content, not hidden UI state</h3>
             <p>The isolated <code>fountainjs-editor/details</code> entry adds semantic <code>details</code> and <code>details_summary</code> nodes without changing <code>StarterKit</code>. The editable summary supports inline marks; the body accepts any configured block, including nested disclosures. Native click or tap, Ctrl/Cmd+Enter, and public commands persist the open state in the portable document. Read-only readers can still open it locally without causing an edit.</p>
             <Code>{detailsExample}</Code>
-            <h3 id="bar-charts">Editable charts</h3>
-            <p>In the development build, choose <b>Bar chart</b> in the <a href="./#playground">live editor</a>. To plot an existing two-column table, select a cell and choose <b>Chart this table</b>. Choose <b>Keep as table</b> to return to the table. A chart title becomes an ordinary paragraph. Edit category names and values directly in the cells, or paste tab-separated spreadsheet rows into the first destination cell. Correcting a value redraws the plot. Undo restores both. Use <b>Chart type</b> to switch between bar, column, line and pie. Pie charts need nonnegative values with at least one positive share. Select the chart and choose <b>Download chart</b> to save an SVG, PNG, JPEG or browser-supported WebP image. Server applications can call <code>exportChartSVG(chartNode)</code> directly. HTML export carries the plot and table. DOCX export includes the chart and its Excel data. In Word, use <b>Edit Data</b> on the chart to change the plot. The accompanying table can be edited independently. Reopen the DOCX to edit the saved plot again. If its accompanying table differs, Fountain keeps both.</p>
-            <Code>{`import { composeExtensions, createEditor, StarterKit } from 'fountainjs-editor'
-import { BarChartExtension, insertBarChart } from 'fountainjs-editor/charts'
-
-const kit = composeExtensions([...StarterKit.extensions, BarChartExtension])
-const editor = createEditor({ schema: kit.schema, plugins: kit.plugins })
-insertBarChart(editor, 'Change in weekly orders', [
-  ['Monday', 12], ['Tuesday', -4], ['Wednesday', 8],
-])`}</Code>
             <p>Insert, top-level wrap, unwrap, and explicit open-state commands each dispatch one validated transaction, so history, subscriptions, tracked changes, and generic Yjs synchronization keep working. JSON is exact; safe HTML uses native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code>; Markdown uses the same semantic HTML form; text keeps summary and body readable. See the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DETAILS.md">complete schema, keyboard, interchange, and accessibility guide</a>.</p>
+            <h3 id="bar-charts">Editable charts</h3>
+            <p>In the development build, choose <b>Bar chart</b> in the <a href="./#playground">live editor</a>. To plot an existing table of categories and values, select a cell and choose <b>Chart this table</b>. Choose <b>Keep as table</b> to return to the table. A chart title becomes an ordinary paragraph. Edit category names and values directly in the cells, or paste tab-separated spreadsheet rows into the first destination cell. Correcting a value redraws the plot. Undo restores both. Use <b>Chart type</b> to switch between bar, column, line and pie. To compare forecasts with actuals, put the categories in the first column and each series in its own named numeric column. Paste the whole grid starting at the first header cell. Pie charts need one nonnegative series with at least one positive value. Select the chart and choose <b>Download chart</b> to save an SVG, PNG, JPEG or browser-supported WebP image. Server applications can call <code>exportChartSVG(chartNode)</code> directly. HTML export carries the plot and table. DOCX export includes the chart and its Excel data. In Word, use <b>Edit Data</b> on the chart to change the plot. The accompanying table can be edited independently. Reopen the DOCX to edit the saved plot again. If its accompanying table differs, Fountain keeps both.</p>
+            <Code>{`import { composeExtensions, createEditor, StarterKit } from 'fountainjs-editor'
+import { ChartExtension, insertChart } from 'fountainjs-editor/charts'
+
+const kit = composeExtensions([...StarterKit.extensions, ChartExtension])
+const editor = createEditor({ schema: kit.schema, plugins: kit.plugins })
+insertChart(editor, {
+  title: 'Change in weekly orders', kind: 'column', categoryLabel: 'Week',
+  series: ['Plan', 'Actual'],
+  rows: [['First', 12, -9], ['Second', 8, 6], ['Third', 15, 17]],
+})`}</Code>
             <h3>Complete text styles are typed document data</h3>
             <p><code>CoreExtension</code> and <code>StarterKit</code> include independent marks for foreground colour, background colour, font family, font size, and line height. The <code>fountainjs-editor/text-style</code> entry exposes the same validated specs plus framework-neutral setters, removers, normalizers, and mixed-selection inspection for custom kits and interfaces.</p>
             <Code>{textStyleExample}</Code>
