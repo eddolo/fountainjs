@@ -86,6 +86,7 @@ import { ChartCSVControls } from './ChartCSVControls';
 import { chartInputPlugin, ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartAxisTitle, setChartType, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
+import { MermaidPreviewExtension } from './mermaid-preview';
 import { SitePageLink } from './SitePageLink';
 import 'fountainjs-editor/styles.css';
 import { LiveExportOutput } from './LiveExportOutput';
@@ -330,6 +331,7 @@ const slashCommandExtension = createSlashCommandExtension({
 
 const demoKit = composeExtensions([
   CoreExtension,
+  MermaidPreviewExtension,
   defineExtension({ name: 'chart-input', plugins: [chartInputPlugin] }),
   InvisibleCharacterExtension,
   StableNodeIdsExtension,
@@ -620,9 +622,12 @@ function App() {
   const words = characterCount.words(editor);
   const blocks = state?.doc.childCount ?? 0;
 
-  const addBlock = (kind: 'quote' | 'task' | 'table' | 'details' | 'callout' | 'chart') => {
+  const addBlock = (kind: 'quote' | 'task' | 'table' | 'details' | 'callout' | 'chart' | 'mermaid') => {
     if (kind === 'callout') demoKit.commands.insertCallout?.(editor);
-    else if (kind === 'chart') insertBarChart(editor, 'Change in weekly orders', [['Monday', 12], ['Tuesday', -4], ['Wednesday', 8]]);
+    else if (kind === 'mermaid') {
+      const { schema } = editor.state;
+      demoInsertNode(editor, schema.node('code_block', { language: 'mermaid' }, [schema.text('flowchart TD\n  draft[Draft] --> review[Review]\n  review --> publish[Publish]')]));
+    } else if (kind === 'chart') insertBarChart(editor, 'Change in weekly orders', [['Monday', 12], ['Tuesday', -4], ['Wednesday', 8]]);
     else if (kind === 'details') insertDetails(editor, { summary: 'Click to edit this summary', open: true });
     else if (kind === 'quote') demoKit.commands.insertQuote?.(editor, 'A thought worth keeping…');
     else if (kind === 'task') demoKit.commands.insertList?.(editor, 'task', ['Review the document', 'Publish when ready']);
@@ -748,6 +753,7 @@ function App() {
               <button onClick={() => addBlock('task')}>☑ Tasks</button>
               <button onClick={() => addBlock('table')}>▦ Table</button>
               <button onClick={() => addBlock('chart')}>Bar chart</button>
+              <button onMouseDown={event => event.preventDefault()} onClick={() => addBlock('mermaid')}>Mermaid diagram</button>
               {chartAction && <button onMouseDown={event => event.preventDefault()} onClick={() => {
                 if (toggleTableChart(editor)) editorHandle.current?.focus();
               }}>{chartAction === 'wrap' ? 'Chart this table' : 'Keep as table'}</button>}

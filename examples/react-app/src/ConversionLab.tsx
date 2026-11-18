@@ -4,6 +4,7 @@ import type { DOCXPackagePart } from 'fountainjs-editor/docx';
 import { FountainComposer, FountainEditor, useFountain, useFountainState, type FountainEditorHandle } from 'fountainjs-editor/react';
 import { computeFootnoteNumbering, inspectFootnotes, insertFootnote, selectFootnoteDefinition, reconnectFootnote, removeFootnote, inspectPageTemplates, selectPageTemplate, insertPageBreak, setDocumentPageSettings } from 'fountainjs-editor/pages';
 import { createLabContext, detectLabFormat, exportLab, importLab, labImages, labReportIssues, sameLabDocument, type LabContext, type LabFormat, type LabIssue } from './conversion-lab';
+import { diagramPlugin } from './mermaid-preview';
 import { SitePageLink } from './SitePageLink';
 import { ConversionPagePreview } from './ConversionPagePreview';
 import packageInfo from '../../../package.json';
@@ -32,7 +33,7 @@ function download(data: BlobPart, name: string, type = 'application/octet-stream
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 function Preview({ document, context }: { document: Node; context: LabContext }) {
-  const editor = useFountain({ schema: context.kit.schema, content: document.toJSON(), editable: false });
+  const editor = useFountain({ schema: context.kit.schema, content: document.toJSON(), plugins: [diagramPlugin], editable: false });
   return <FountainEditor editor={editor} ariaLabel="Reopened export preview" />;
 }
 function IssueList({ issues }: { issues: readonly LabIssue[] }) {
@@ -104,7 +105,7 @@ function SourceImageRecovery({ file, parts, editor }: { file: File; parts: reado
 }
 function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const [initialState] = useState(() => EditorState.create({ schema: entry.context.schema,
-    doc: entry.result!.document, plugins: entry.context.kit.plugins }));
+    doc: entry.result!.document, plugins: [...entry.context.kit.plugins, diagramPlugin] }));
   const editor = useFountain({ schema: entry.context.kit.schema, state: initialState });
   const surface = useRef<FountainEditorHandle>(null);
   const insertFootnoteButton = useRef<HTMLButtonElement>(null);
