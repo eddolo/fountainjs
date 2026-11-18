@@ -811,3 +811,71 @@ test('draws weekly orders from an inline draft and undoes back to the exact rows
   await expect(chart).toBeVisible();
   await expect(paragraph).toHaveCount(1);
 });
+
+test('detaches a live chart, edits the snapshot and reconnects without losing the draft on failure', async ({ page }, info) => {
+  let hits = 0;
+  let offline = false;
+  let release: (() => void) | undefined;
+  const server = createServer((_request, response) => {
+    hits++;
+    response.writeHead(offline ? 503 : 200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' });
+    const send = () => response.end(JSON.stringify([{ Day: 'Monday', Orders: hits === 1 ? 12 : 45 }]));
+    if (hits === 2) release = send;
+    else send();
+  });
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Missing feed port');
+    const url = 'http://127.0.0.1:' + address.port + '/orders';
+    await page.goto('index.html#playground');
+    const demo = page.locator('#playground');
+    await demo.getByText('Chart from CSV or JSON', { exact: true }).click();
+    await demo.getByRole('combobox', { name: 'Data format' }).selectOption('JSON');
+    await demo.getByLabel('JSON source URL').fill(url);
+    await demo.getByRole('button', { name: 'Insert linked chart' }).click();
+    const chart = demo.locator('figure[data-fountain-json-url]');
+    const value = chart.getByRole('row').last().getByRole('cell').last().locator('p');
+    await expect(value).toHaveText('12');
+    await demo.getByLabel('Refresh every (seconds)').fill('1');
+    await demo.getByRole('button', { name: 'Start automatic refresh' }).click();
+    await expect.poll(() => hits).toBe(2);
+    await demo.getByRole('button', { name: 'Detach feed' }).click();
+    release!();
+    release = undefined;
+    await expect(chart).toHaveAttribute('data-fountain-feed-detached', 'true');
+    await expect(demo.getByRole('button', { name: 'Stop automatic refresh' })).toHaveCount(0);
+    await expect(value).toHaveText('12');
+    await value.click();
+    await page.keyboard.press('Home');
+    await page.keyboard.press('Shift+End');
+    await page.keyboard.insertText('27');
+    await expect(chart.locator('[data-fountain-chart-plot]')).toContainText('Monday · 27');
+    offline = true;
+    const reconnect = demo.getByRole('button', { name: 'Reconnect and replace values' });
+    await reconnect.click();
+    await expect(demo.getByRole('status', { name: 'Chart import status' })).toContainText('503');
+    await expect(value).toHaveText('27');
+    await expect(reconnect).toBeVisible();
+    offline = false;
+    await reconnect.click();
+    await expect(value).toHaveText('45');
+    await expect(chart).not.toHaveAttribute('data-fountain-feed-detached');
+    await value.click();
+    await page.keyboard.press('ControlOrMeta+z');
+    await expect(value).toHaveText('27');
+    await expect(reconnect).toBeVisible();
+    await chart.screenshot({ path: info.outputPath('detached-order-snapshot.png') });
+    await demo.getByRole('button', { name: 'html', exact: true }).click();
+    const html = await demo.locator('pre').filter({ hasText: 'data-fountain-feed-detached' }).innerText();
+    await page.goto('conversion-lab.html');
+    await page.getByLabel('Choose documents').setInputFiles({ name: 'orders.html', mimeType: 'text/html', buffer: Buffer.from(html) });
+    const reopened = page.getByRole('textbox', { name: 'Imported document editor' }).locator('[data-fountain-feed-detached="true"]');
+    await expect(reopened).toHaveAttribute('data-fountain-json-url', url);
+    await expect(reopened.locator('[data-fountain-chart-plot]')).toContainText('Monday · 27');
+    expect(hits).toBe(4);
+  } finally {
+    release?.();
+    await new Promise<void>(resolve => { server.close(() => resolve()); server.closeAllConnections(); });
+  }
+});

@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { insertChartFromJSON, refreshChartFromSource, refreshChartSnapshotFromSource, chartInputPlugin, chartInputStatus, drawChartInput, isChartInput, BarChartExtension, chartFromText, chartToText, previewChartText, updateChartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, refreshChartSnapshotFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
+import { detachChartSource, reconnectChartSource, insertChartFromJSON, refreshChartFromSource, refreshChartSnapshotFromSource, chartInputPlugin, chartInputStatus, drawChartInput, isChartInput, BarChartExtension, chartFromText, chartToText, previewChartText, updateChartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, refreshChartSnapshotFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -838,7 +838,7 @@ it('rejects stale text drafts, filtered edits and invalid data without changing 
   editor.destroy();
 });
 
-it('merges a bulk chart edit with a concurrent cell edit and rejects an already superseded draft', () => {
+it('merges a bulk chart edit with a concurrent cell edit and rejects an already superseded draft', async () => {
   const a = new Y.Doc(), b = new Y.Doc();
   function mount(room: Y.Doc, id: string) {
     const setup = composeExtensions([CoreExtension, BarChartExtension, createYjsCollaborationExtension({
@@ -847,7 +847,7 @@ it('merges a bulk chart edit with a concurrent cell edit and rejects an already 
     return createEditor({ schema: setup.schema, plugins: setup.plugins });
   }
   const left = mount(a, 'left');
-  insertChartFromCSV(left, 'Region,Actual,Plan\nNorth,5,9\nSouth,1,3', { title: 'Orders' });
+  insertChartFromCSV(left, 'Region,Actual,Plan\nNorth,5,9\nSouth,1,3', { title: 'Orders', sourceURL: 'https://example.org/feed' });
   Y.applyUpdate(b, Y.encodeStateAsUpdate(a));
   const right = mount(b, 'right');
   try {
@@ -865,6 +865,19 @@ it('merges a bulk chart edit with a concurrent cell edit and rejects an already 
     expect(chartToText(left.state.doc.child(index))).toContain('North,7,12');
     expect(left.state.doc.child(index).attrs.kind).toBe('column');
     expect(updateChartFromText(right, source, draft)).toBe(false);
+    // A collaborator detaching while the other replica is reading the feed
+    // keeps the shared hand edits, even if the older request finishes later.
+    const watched = right.state.doc.child(index);
+    let finish!: (csv: string) => void;
+    const pending = refreshChartSnapshotFromSource(right, watched, () => new Promise(resolve => { finish = resolve; }));
+    left.dispatch(left.createTransaction().setSelection(new NodeSelection(left.state.doc, [index])));
+    expect(detachChartSource(left)).toBe(true);
+    Y.applyUpdate(b, Y.encodeStateAsUpdate(a, Y.encodeStateVector(b)));
+    finish('Region,Actual,Plan\nNorth,999,9\nSouth,1,3');
+    expect(await pending).toBeNull();
+    expect(right.state.doc.child(index).attrs.feedDetached).toBe(true);
+    expect(left.getJSON()).toEqual(right.getJSON());
+    expect(chartToText(right.state.doc.child(index))).toContain('North,7,12');
   } finally { left.destroy(); right.destroy(); a.destroy(); b.destroy(); }
 });
 
@@ -999,5 +1012,62 @@ it('rejects invalid JSON refreshes without losing the previous chart or undo his
   }
   expect(undo(editor)).toBe(true);
   expect(editor.state.doc.eq(before)).toBe(true);
+  editor.destroy();
+});
+
+it.each(['csv', 'json'] as const)('keeps a detached %s snapshot editable and reconnects it in one undoable change', async format => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  const feed = (value: number) => format === 'csv' ? 'Day,Orders\nMonday,' + value : JSON.stringify([{ Day: 'Monday', Orders: value }]);
+  const url = 'https://example.org/weekly';
+  const insert = format === 'csv' ? insertChartFromCSV : insertChartFromJSON;
+  expect(insert(editor, feed(12), { title: 'Weekly', sourceURL: url })).toBe(true);
+  const before = selectedBarChart(editor)!;
+  expect(detachChartSource(editor)).toBe(true);
+  const detached = selectedBarChart(editor)!;
+  expect(detached.child(1)).toBe(before.child(1));
+  expect(detached.attrs[format + 'URL']).toBe(url);
+  expect(detachChartSource(editor)).toBe(false);
+  const untouched = async () => { throw new Error('A detached chart requested data'); };
+  expect(await refreshChartFromSource(editor, untouched)).toBe(false);
+  expect(await refreshChartSnapshotFromSource(editor, detached, untouched)).toBeNull();
+  expect(updateChartFromText(editor, chartToText(detached).replace('12', '15'), detached)).toBe(true);
+  const local = editor.state.doc;
+  expect(ServerHTMLImporter.parse(HTMLExporter.export(local, { document: false }), editor.state.schema).eq(local)).toBe(true);
+  expect(editor.state.schema.nodeFromJSON(local.toJSON()).eq(local)).toBe(true);
+  for (const bad of [async () => 'bad', async () => { throw new Error('Offline'); }]) {
+    await expect(reconnectChartSource(editor, bad)).rejects.toThrow();
+    expect(editor.state.doc).toBe(local);
+  }
+  expect(await reconnectChartSource(editor, async address => { expect(address).toBe(url); return feed(22); })).toBe(true);
+  expect(selectedBarChart(editor)?.attrs.feedDetached).toBe(false);
+  expect(chartToText(selectedBarChart(editor)!)).toContain('Monday,22');
+  expect(undo(editor)).toBe(true);
+  expect(editor.state.doc.eq(local)).toBe(true);
+  expect(await reconnectChartSource(editor, async () => feed(15))).toBe(true);
+  expect(selectedBarChart(editor)?.attrs.feedDetached).toBe(false);
+  expect(undo(editor)).toBe(true);
+  expect(editor.state.doc.eq(local)).toBe(true);
+  editor.destroy();
+});
+
+it('discards late reads across detach/undo and edits during reconnection', async () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  insertChartFromCSV(editor, 'Day,Orders\nMonday,12', { title: 'Weekly', sourceURL: 'https://example.org/weekly' });
+  const chart = selectedBarChart(editor)!;
+  let finish!: (source: string) => void;
+  const delayed = () => new Promise<string>(resolve => { finish = resolve; });
+  const refresh = refreshChartFromSource(editor, delayed);
+  expect(detachChartSource(editor)).toBe(true);
+  expect(undo(editor)).toBe(true);
+  finish('Day,Orders\nMonday,999');
+  expect(await refresh).toBe(false);
+  expect(chartToText(selectedBarChart(editor)!)).toBe(chartToText(chart));
+  expect(detachChartSource(editor)).toBe(true);
+  const reconnect = reconnectChartSource(editor, delayed);
+  expect(updateChartFromText(editor, chartToText(chart).replace('12', '15'))).toBe(true);
+  finish('Day,Orders\nMonday,999');
+  expect(await reconnect).toBe(false);
+  expect(selectedBarChart(editor)?.attrs.feedDetached).toBe(true);
+  expect(chartToText(selectedBarChart(editor)!)).toContain('Monday,15');
   editor.destroy();
 });

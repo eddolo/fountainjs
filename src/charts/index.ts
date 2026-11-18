@@ -104,19 +104,40 @@ function validSourceURL(value: unknown): value is string {
   } catch { return false; }
 }
 
+// Map the portable chart settings to the HTML attributes used by the reader and editor.
+const chartHTMLFields = {
+  targetValue: 'data-axis-target', targetLabel: 'data-target-label',
+  axisMin: 'data-axis-min', axisMax: 'data-axis-max', axisInterval: 'data-axis-interval',
+  categoryAxisTitle: 'data-category-axis-title', valueAxisTitle: 'data-value-axis-title',
+  jsonURL: 'data-fountain-json-url', csvURL: 'data-fountain-csv-url', feedDetached: 'data-fountain-feed-detached',
+};
+
+function readChartField(key: string, value: string | null) {
+  if (key === 'feedDetached') return value === 'true';
+  if (key.endsWith('URL')) return validSourceURL(value) ? value : null;
+  if (key.startsWith('axis') || key === 'targetValue') {
+    const number = value?.trim() ? Number(value) : NaN;
+    return Number.isFinite(number) && (key !== 'axisInterval' || number > 0) ? number : null;
+  }
+  return value ?? '';
+}
+
 const parseRules = chartTypes.map(kind => ({
   tag: `figure[data-fountain-chart="${kind}"]`, getAttrs: (element: { getAttribute(name: string): string | null }) => {
-    const bound = (key: string) => {
-      const raw = element.getAttribute('data-axis-' + key);
-      return raw?.trim() && Number.isFinite(Number(raw)) ? Number(raw) : null;
-    };
-    const source = element.getAttribute('data-fountain-csv-url');
-    const json = element.getAttribute('data-fountain-json-url');
-    const interval = bound('interval');
-    return { kind, targetValue: bound('target'), targetLabel: element.getAttribute('data-target-label') ?? '', axisInterval: interval !== null && interval > 0 ? interval : null, axisMin: bound('min'), axisMax: bound('max'), jsonURL: validSourceURL(json) ? json : null, csvURL: validSourceURL(source) ? source : null, categoryAxisTitle: element.getAttribute('data-category-axis-title') ?? '',
-      valueAxisTitle: element.getAttribute('data-value-axis-title') ?? '' };
+    const attrs: Record<string, unknown> = { kind };
+    for (const [key, name] of Object.entries(chartHTMLFields)) attrs[key] = readChartField(key, element.getAttribute(name));
+    return attrs;
   }, contentElement: '[data-fountain-chart-source]',
 }));
+
+function chartHTMLAttrs(node: Node) {
+  const attrs: Record<string, string | number> = { 'data-fountain-chart': String(node.attrs.kind), style: 'margin:1em 0' };
+  for (const [key, name] of Object.entries(chartHTMLFields)) {
+    const value = node.attrs[key];
+    if (value === 0 || value) attrs[name] = String(value);
+  }
+  return attrs;
+}
 
 const axisTitle = { default: '', validate: (value: unknown) => typeof value === 'string' };
 
@@ -130,17 +151,13 @@ const feedURL = { default: null, validate: (value: unknown) => value === null ||
 
 const barChartNode: NodeSpec = {
   group: 'block',
-  attrs: { targetValue: axisBound, targetLabel: axisTitle, axisInterval: { default: null, validate: validInterval }, axisMin: axisBound, axisMax: axisBound, categoryAxisTitle: axisTitle, valueAxisTitle: axisTitle, kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: feedURL, jsonURL: feedURL },
+  attrs: { targetValue: axisBound, targetLabel: axisTitle, axisInterval: { default: null, validate: validInterval }, axisMin: axisBound, axisMax: axisBound, categoryAxisTitle: axisTitle, valueAxisTitle: axisTitle, kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: feedURL, jsonURL: feedURL, feedDetached: { default: false, validate: value => typeof value === 'boolean' } },
   content: 'paragraph? table',
   selectable: true,
   parseHTML: parseRules,
   parseDOM: parseRules,
   markdown: 'html',
-  toDOM: node => ['figure', { 'data-fountain-chart': node.attrs.kind, ...(node.attrs.jsonURL ? { 'data-fountain-json-url': node.attrs.jsonURL } : {}), ...(node.attrs.csvURL ? { 'data-fountain-csv-url': node.attrs.csvURL } : {}), ...(node.attrs.categoryAxisTitle ? { 'data-category-axis-title': node.attrs.categoryAxisTitle } : {}),
-    ...(node.attrs.targetValue != null ? { 'data-axis-target': node.attrs.targetValue } : {}), ...(node.attrs.targetLabel ? { 'data-target-label': node.attrs.targetLabel } : {}),
-    ...(node.attrs.axisInterval != null ? { 'data-axis-interval': node.attrs.axisInterval } : {}),
-    ...(node.attrs.axisMin != null ? { 'data-axis-min': node.attrs.axisMin } : {}), ...(node.attrs.axisMax != null ? { 'data-axis-max': node.attrs.axisMax } : {}),
-    ...(node.attrs.valueAxisTitle ? { 'data-value-axis-title': node.attrs.valueAxisTitle } : {}), style: 'margin:1em 0' },
+  toDOM: node => ['figure', chartHTMLAttrs(node),
     ['div', { 'data-fountain-chart-source': 'true' }, 0],
     ['div', { contenteditable: 'false', 'data-fountain-chart-plot': 'true' }, plot(node)],
   ],
@@ -447,8 +464,8 @@ export function previewChartText(chart: Node, source: string): Node {
 
 /** Apply to the selected chart. Supply the chart that was opened to reject stale edits. */
 export function updateChartFromText(editor: Editor, source: string, expected?: Node): boolean {
-  const target = chartTarget(editor);
-  if (editor.isDestroyed || !editor.editable || target?.node.type.name !== 'bar_chart' || (expected && target.node !== expected)) return false;
+  const target = editableChartTarget(editor);
+  if (!target || (expected && target.node !== expected)) return false;
   const chart = target.node;
   const result = previewChartText(chart, source);
   if (result === chart) return true;
@@ -474,10 +491,10 @@ function locateChart(doc: Node, original: Node): ChartTarget | null {
 }
 
 async function refreshFeed(editor: Editor, original: Node, resolve: () => ChartTarget | null,
-  load: (url: string) => Promise<string>, signal?: AbortSignal): Promise<ChartTarget | null> {
+  load: (url: string) => Promise<string>, signal?: AbortSignal, reconnect = false): Promise<ChartTarget | null> {
   const format = original.attrs.jsonURL ? 'json' : 'csv';
   const url = original.attrs[format + 'URL'];
-  if (editor.isDestroyed || !editor.editable || signal?.aborted || !validSourceURL(url) || (original.attrs.jsonURL && original.attrs.csvURL)) return null;
+  if (Boolean(original.attrs.feedDetached) !== reconnect || editor.isDestroyed || !editor.editable || signal?.aborted || !validSourceURL(url) || (original.attrs.jsonURL && original.attrs.csvURL)) return null;
   const requests = pendingRefresh.get(editor) ?? new WeakMap<Node, object>();
   pendingRefresh.set(editor, requests);
   const request = {};
@@ -493,10 +510,14 @@ async function refreshFeed(editor: Editor, original: Node, resolve: () => ChartT
     if (!target) return null;
     const previous = simpleChartTable(original);
     const table = refreshedTable(previous, sourceTable(editor, source, format));
-    if (table === previous) return target;
+    if (table === previous && !reconnect) return target;
     const at = original.childCount - 1;
     checkPlot(original.copy([...original.content.slice(0, at), table]));
-    const transaction = editor.createTransaction().step(new RestructureChildrenStep(target.path, at, [previous], [table]));
+    const transaction = editor.createTransaction();
+    if (table !== previous) {
+      transaction.step(new RestructureChildrenStep(target.path, at, [previous], [table]));
+    }
+    if (reconnect) transaction.setNodeAttrs(target.path, { ...original.attrs, feedDetached: false });
     if (!editor.dispatch(transaction)) return null;
     return { path: target.path, node: target.path.reduce((parent, index) => parent.child(index), transaction.doc) };
   } catch (error) {
@@ -505,6 +526,21 @@ async function refreshFeed(editor: Editor, original: Node, resolve: () => ChartT
   } finally {
     if (requests.get(original) === request) requests.delete(original);
   }
+}
+
+/** Detach the selected chart from its feed, keeping the address and editable snapshot. */
+export function detachChartSource(editor: Editor): boolean {
+  const target = editableChartTarget(editor);
+  if (!target || !(target.node.attrs.csvURL || target.node.attrs.jsonURL)) return false;
+  const detached = setChartAttrs(editor, target, { feedDetached: true });
+  if (detached) pendingRefresh.get(editor)?.delete(target.node);
+  return detached;
+}
+
+/** Reconnect only after a valid read, replacing the snapshot and mode in one undoable edit. */
+export async function reconnectChartSource(editor: Editor, load: (url: string) => Promise<string>, signal?: AbortSignal): Promise<boolean> {
+  const chart = !editor.isDestroyed && selectedBarChart(editor);
+  return !!chart && !!await refreshFeed(editor, chart, () => chartTarget(editor), load, signal, true);
 }
 
 /** Manual refresh follows the selection and returns false if the request was superseded. */
@@ -598,42 +634,41 @@ export function toggleTableChart(editor: Editor): boolean {
   } catch { return false; }
 }
 
+function editableChartTarget(editor: Editor, withAxes = false) {
+  const target = !editor.isDestroyed && editor.editable && chartTarget(editor);
+  return target && target.node.type.name === 'bar_chart' && !(withAxes && target.node.attrs.kind === 'pie') ? target : null;
+}
+
+function setChartAttrs(editor: Editor, target: ChartTarget, changes: Record<string, unknown>): boolean {
+  const attrs = target.node.attrs;
+  if (Object.entries(changes).every(([key, value]) => attrs[key] === value)) return false;
+  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...attrs, ...changes }));
+}
+
 export function setChartType(editor: Editor, kind: ChartType): boolean {
-  const target = chartTarget(editor);
-  if (!editor.editable || target?.node.type.name !== 'bar_chart' || !chartTypes.includes(kind) || target.node.attrs.kind === kind) return false;
-  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...target.node.attrs, kind }));
+  const target = editableChartTarget(editor);
+  return !!target && chartTypes.includes(kind) && setChartAttrs(editor, target, { kind });
 }
 
 export function setChartAxisTitle(editor: Editor, axis: 'category' | 'value', title: string): boolean {
-  const target = chartTarget(editor);
-  if (!editor.editable || target?.node.type.name !== 'bar_chart' || target.node.attrs.kind === 'pie' ||
-      (axis !== 'category' && axis !== 'value') || typeof title !== 'string') return false;
-  const key = axis + 'AxisTitle';
-  if (target.node.attrs[key] === title) return false;
-  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...target.node.attrs, [key]: title }));
+  const target = editableChartTarget(editor, true);
+  if (!target || (axis !== 'category' && axis !== 'value') || typeof title !== 'string') return false;
+  return setChartAttrs(editor, target, { [axis + 'AxisTitle']: title });
 }
 
 /** Draw a labeled target across the numeric axis. Pass null to remove it. */
 export function setChartTarget(editor: Editor, value: number | null, label = ''): boolean {
-  const target = chartTarget(editor);
-  if (!editor.editable || target?.node.type.name !== 'bar_chart' || target.node.attrs.kind === 'pie' ||
-      !axisBound.validate(value) || typeof label !== 'string') return false;
-  const attrs = target.node.attrs;
-  const targetLabel = value === null ? '' : label.trim();
-  if (attrs.targetValue === value && attrs.targetLabel === targetLabel) return false;
-  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...attrs, targetValue: value, targetLabel }));
+  const target = editableChartTarget(editor, true);
+  if (!target || !axisBound.validate(value) || typeof label !== 'string') return false;
+  return setChartAttrs(editor, target, { targetValue: value, targetLabel: value === null ? '' : label.trim() });
 }
 
 /** Null lets the plot derive that end of the value axis from the table. */
 export function setChartValueRange(editor: Editor, min: number | null, max: number | null, interval?: number | null): boolean {
-  const target = chartTarget(editor);
-  if (!editor.editable || target?.node.type.name !== 'bar_chart' || target.node.attrs.kind === 'pie' ||
-      !axisBound.validate(min) || !axisBound.validate(max) || (min !== null && max !== null && min >= max)) return false;
-  const attrs = target.node.attrs;
-  const axisInterval = interval === undefined ? attrs.axisInterval ?? null : interval;
-  if (!validInterval(axisInterval)) return false;
-  if (attrs.axisMin === min && attrs.axisMax === max && attrs.axisInterval === axisInterval) return false;
-  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...attrs, axisMin: min, axisMax: max, axisInterval }));
+  const target = editableChartTarget(editor, true);
+  if (!target || !axisBound.validate(min) || !axisBound.validate(max) || (min !== null && max !== null && min >= max)) return false;
+  const axisInterval = interval === undefined ? target.node.attrs.axisInterval ?? null : interval;
+  return validInterval(axisInterval) && setChartAttrs(editor, target, { axisMin: min, axisMax: max, axisInterval });
 }
 
 // A draft is an ordinary code block so it can be saved and reopened before drawing.
@@ -713,7 +748,7 @@ export const chartInputPlugin = new Plugin<string>({
 export const BarChartExtension = defineExtension({
   name: 'bar-chart',
   nodes: { bar_chart: barChartNode },
-  commands: { updateChartFromText, insertChartFromText, insertChartFromCSV, insertChartFromJSON, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange },
+  commands: { detachChartSource, updateChartFromText, insertChartFromText, insertChartFromCSV, insertChartFromJSON, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange },
 });
 
 export { BarChartExtension as ChartExtension, selectedBarChart as selectedChart };

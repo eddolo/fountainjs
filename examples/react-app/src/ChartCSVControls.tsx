@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Editor, Node } from 'fountainjs-editor/core';
-import { insertChartFromCSV, insertChartFromJSON, refreshChartFromSource, refreshChartSnapshotFromSource, selectedChart } from 'fountainjs-editor/charts';
+import { detachChartSource, reconnectChartSource, insertChartFromCSV, insertChartFromJSON, refreshChartFromSource, refreshChartSnapshotFromSource, selectedChart } from 'fountainjs-editor/charts';
 
 const maxBytes = 1_048_576;
 
@@ -35,6 +35,7 @@ export function ChartCSVControls({ editor }: { editor: Editor }) {
   const [schedule, setSchedule] = useState<{ chart: Node; seconds: number } | null>(null);
   const [seconds, setSeconds] = useState('30');
   const [pollStatus, setPollStatus] = useState('');
+  const watchedChart = useRef<Node | null>(null);
   const polling = useRef<AbortController | null>(null);
   const pending = useRef<AbortController | null>(null);
   useEffect(() => () => pending.current?.abort(), [editor]);
@@ -46,6 +47,7 @@ export function ChartCSVControls({ editor }: { editor: Editor }) {
     polling.current = controller;
     const intervalMs = schedule.seconds * 1000;
     let watched = schedule.chart;
+    watchedChart.current = watched;
     let timer: ReturnType<typeof setTimeout>;
     function queue() { timer = setTimeout(poll, intervalMs); }
     async function poll() {
@@ -59,6 +61,7 @@ export function ChartCSVControls({ editor }: { editor: Editor }) {
         }
         setPollStatus(next === watched ? 'Feed checked. Data is current.' : 'Chart updated from the feed.');
         watched = next;
+        watchedChart.current = next;
       } catch (error) {
         if (controller.signal.aborted) return;
         setPollStatus((error instanceof Error ? error.message : 'Could not read chart data.') + ' Will retry at the next interval.');
@@ -66,20 +69,21 @@ export function ChartCSVControls({ editor }: { editor: Editor }) {
       if (!controller.signal.aborted) queue();
     }
     queue();
-    return () => { clearTimeout(timer); controller.abort(); };
+    return () => { clearTimeout(timer); controller.abort(); watchedChart.current = null; };
   }, [editor, schedule]);
 
 
-  async function run(file?: File, refresh = false) {
+  async function run(file?: File, action: 'insert' | 'refresh' | 'reconnect' = 'insert') {
     pending.current?.abort();
     const controller = new AbortController();
     pending.current = controller;
     const { doc, selection } = editor.state;
     setStatus('Reading chart data…');
     try {
-      if (refresh) {
-        const applied = await refreshChartFromSource(editor, url => readFeed(url, controller.signal));
-        if (!controller.signal.aborted) setStatus(applied ? 'Chart data refreshed.' : 'The selected chart changed. Select it again to refresh.');
+      if (action !== 'insert') {
+        const load = (url: string) => readFeed(url, controller.signal);
+        const applied = action === 'reconnect' ? await reconnectChartSource(editor, load, controller.signal) : await refreshChartFromSource(editor, load);
+        if (!controller.signal.aborted) setStatus(applied ? (action === 'reconnect' ? 'Feed reconnected. Chart values updated.' : 'Chart data refreshed.') : 'The selected chart changed. Select it again to refresh.');
         return;
       }
       if (file && file.size > maxBytes) throw new Error('Choose a chart file of 1 MiB or less.');
@@ -116,10 +120,26 @@ export function ChartCSVControls({ editor }: { editor: Editor }) {
       }} /></label>
       <label>{format} source URL <input type="url" value={address} onChange={event => setAddress(event.target.value)} /></label>
       <button type="button" disabled={!address.trim()} onClick={() => void run()}>Insert linked chart</button>
-      {typeof source === 'string' && <><span>{source}</span><button type="button" onClick={() => void run(undefined, true)}>Refresh data</button></>}
     </div>
+    {typeof source === 'string' && <div className="quick-insert" role="group" aria-label="Selected chart feed">
+      <span>{selected?.attrs.feedDetached ? 'Detached' : 'Linked'} · {source}</span>
+      {selected?.attrs.feedDetached ? <button type="button" onClick={() => void run(undefined, 'reconnect')}>Reconnect and replace values</button> : <>
+        <button type="button" onClick={() => void run(undefined, 'refresh')}>Refresh data</button>
+        <button type="button" onClick={() => {
+          if (!selected || !detachChartSource(editor)) return;
+          pending.current?.abort();
+          const watched = watchedChart.current;
+          if (selected === watched || (selected.attrs.nodeId && selected.attrs.nodeId === watched?.attrs.nodeId)) {
+            polling.current?.abort();
+            setSchedule(null);
+            setPollStatus('');
+          }
+          setStatus('Feed detached. The current values are yours to edit.');
+        }}>Detach feed</button>
+      </>}
+    </div>}
     {format === 'JSON' && <p>Use one record per category, such as <code>{'[{"Day":"Monday","Orders":12}]'}</code>, or a table with a header row.</p>}
-    {(schedule || typeof source === 'string') && <div className="quick-insert" role="group" aria-label="Automatic feed refresh">
+    {(schedule || (typeof source === 'string' && !selected?.attrs.feedDetached)) && <div className="quick-insert" role="group" aria-label="Automatic feed refresh">
       {schedule ? <>
         <span>Watching {String(schedule.chart.attrs.jsonURL ?? schedule.chart.attrs.csvURL)} every {schedule.seconds} s</span>
         <button type="button" onClick={() => { polling.current?.abort(); setSchedule(null); setPollStatus('Automatic refresh stopped.'); }}>Stop automatic refresh</button>
