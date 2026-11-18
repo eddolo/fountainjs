@@ -1,8 +1,8 @@
 import { readDelimitedRows } from '../core/delimited-text';
-import { insertNode, nodeRangeAtPath, NodeSelection, type DOMOutputSpec, type Editor, type Node, type NodeSpec } from '../core';
+import { insertNode, nodeRangeAtPath, NodeSelection, type DOMOutputSpec, type Editor, type Node, type NodeSpec, type Schema } from '../core';
 import { RestructureChildrenStep } from '../core/transaction/restructure-children-step';
 import { defineExtension } from '../extensions/extension';
-import { chartLayout, columnBounds, chartTypes, type ChartType } from './layout';
+import { chartLayout, chartNumber, columnBounds, chartTypes, type ChartType } from './layout';
 export type { ChartType } from './layout';
 export { exportChartSVG, exportChartImage, exportChartSVG as exportBarChartSVG, exportChartImage as exportBarChartImage, type ChartImageFormat } from './image';
 
@@ -150,8 +150,7 @@ export interface ChartData {
   readonly rows: readonly (readonly [string, ...number[]])[];
 }
 
-function chartTable(editor: Editor, cells: readonly (readonly (string | number)[])[]) {
-  const { schema } = editor.state;
+function chartTable(schema: Schema, cells: readonly (readonly (string | number)[])[]) {
   return schema.node('table', {}, cells.map((row, i) => schema.node('table_row', {},
     row.map(value => schema.node(i ? 'table_cell' : 'table_header', {},
       [schema.node('paragraph', {}, [schema.text(String(value))])])))));
@@ -172,7 +171,7 @@ export function insertChart(editor: Editor, data: ChartData): boolean {
     (data.kind === 'pie' && data.series.length !== 1) || !Array.isArray(data.rows) ||
     !data.rows.every(row => Array.isArray(row) && row.length === data.series.length + 1 &&
       typeof row[0] === 'string' && row.slice(1).every(Number.isFinite))) return false;
-  const table = chartTable(editor, [[data.categoryLabel ?? 'Category', ...data.series], ...data.rows]);
+  const table = chartTable(schema, [[data.categoryLabel ?? 'Category', ...data.series], ...data.rows]);
   const title = schema.node('paragraph', {}, [schema.text(data.title)]);
   const chart = schema.node('bar_chart', { kind: data.kind ?? 'bar' }, [title, table]);
   const previous = editor.state.doc;
@@ -190,12 +189,83 @@ function csvTable(editor: Editor, csv: string) {
   if (typeof csv !== 'string' || csv.length > 1_048_576) throw new Error('Chart CSV exceeds the one-million-character input limit.');
   const rows = readDelimitedRows(csv.replace(/^\uFEFF/u, ''), 'csv');
   if (!rows || rows.length < 2 || rows[0]!.length < 2) throw new Error('Expected a CSV header and rectangular data rows with at least two columns, up to 10,000 cells.');
-  return chartTable(editor, rows);
+  return chartTable(editor.state.schema, rows);
 }
 
 function checkPlot(chart: Node) {
   const layout = chartLayout(chart);
   if (typeof layout === 'string') throw new Error(layout);
+}
+
+export interface TextChartOptions {
+  readonly title: string;
+  readonly kind?: ChartType;
+  /** Omit to infer whether the first row names the series. */
+  readonly header?: boolean;
+  /** Omit to detect the field separator, or use null for one value per line. */
+  readonly delimiter?: ',' | ';' | '|' | '\t' | null;
+  /** Numeric cells use a decimal point unless the author selects a comma. */
+  readonly decimalSeparator?: '.' | ',';
+}
+
+/** The first record chooses the separator. Punctuation inside a quoted label is data. */
+function textSeparator(source: string) {
+  const found = new Set<string>();
+  let quoted = false;
+  for (const char of source) {
+    if (char === '"') quoted = !quoted;
+    else if (!quoted) {
+      if (char === '\r' || char === '\n') break;
+      if ('\t|;,'.includes(char)) found.add(char);
+    }
+  }
+  return (['\t', '|', ';', ','] as const).find(separator => found.has(separator));
+}
+
+/** Build and validate a detached chart for a preview or a server-side import. */
+export function chartFromText(schema: Schema, text: string, options: TextChartOptions): Node {
+  if (typeof text !== 'string' || text.length > 1_048_576) throw new Error('Use up to one million characters of chart data.');
+  let source = text.replace(/^\uFEFF/u, '').replace(/^[\r\n]+|(?<![\r\n])[\r\n]+$/g, '');
+  if (!source.trim()) throw new Error('Paste the rows to chart.');
+  const firstLine = source.match(/^([^\r\n]+)(?:\r\n?|\n)/);
+  const declared = chartTypes.find(kind => kind === firstLine?.[1]?.trim().toLowerCase());
+  if (declared) source = source.slice(firstLine![0].length);
+  const kind = declared ?? options?.kind ?? 'bar';
+  if (typeof options?.title !== 'string' || !chartTypes.includes(kind)) throw new Error('Choose a supported chart type and a title.');
+  const delimiter = options.delimiter === undefined ? textSeparator(source) ?? null : options.delimiter;
+  if (delimiter !== null && ![',', ';', '|', '\t'].includes(delimiter)) throw new Error('Choose a supported column separator.');
+  const rows = readDelimitedRows(source, 'chart', delimiter)!;
+  const first = rows[0]!;
+  const valueText = (cell: string) => {
+    const value = cell.trim();
+    return options.decimalSeparator === ',' && /^[+-]?(?:\d+,\d*|,\d+)(?:e[+-]?\d+)?$/i.test(value) ? value.replace(',', '.') : value;
+  };
+  const single = first.length === 1;
+  const marked = first.some(cell => cell.trimStart().startsWith('{H}'));
+  const hasHeader = options.header ?? (marked || (single ? !Number.isFinite(chartNumber(valueText(first[0]!))) :
+    first.slice(1).every(cell => !Number.isFinite(chartNumber(valueText(cell))))));
+  const headers = hasHeader ? first.map(cell => cell.replace(/^\{H\}\s*/, '')) : [];
+  if (single) {
+    if (!hasHeader) headers.push('Value');
+    headers.unshift('Category');
+  } else if (!hasHeader) {
+    headers.push('Category', ...first.slice(1).map((_, i) => first.length === 2 ? 'Value' : 'Series ' + (i + 1)));
+  }
+  const data = (hasHeader ? rows.slice(1) : rows).map((row, i) => single ? [String(i + 1), valueText(row[0]!)] :
+    [row[0]!, ...row.slice(1).map(valueText)]);
+  if ((data.length + 1) * headers.length > 10_000) throw new Error('Use up to 10,000 cells per chart, including category and header cells.');
+  const title = schema.node('paragraph', {}, options.title ? [schema.text(options.title)] : []);
+  const chart = schema.node('bar_chart', { kind }, [title, chartTable(schema, [headers, ...data])]);
+  checkPlot(chart);
+  return chart;
+}
+
+/** Insert validated text as one chart transaction at the current selection. */
+export function insertChartFromText(editor: Editor, text: string, options: TextChartOptions): boolean {
+  if (!supportsCharts(editor)) return false;
+  const chart = chartFromText(editor.state.schema, text, options);
+  const previous = editor.state.doc;
+  return insertNode(editor, chart) && editor.state.doc !== previous;
 }
 
 /** Imports cell spellings as text. Invalid CSV leaves the editor untouched. */
@@ -379,7 +449,7 @@ export function setChartValueRange(editor: Editor, min: number | null, max: numb
 export const BarChartExtension = defineExtension({
   name: 'bar-chart',
   nodes: { bar_chart: barChartNode },
-  commands: { insertChartFromCSV, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange },
+  commands: { insertChartFromText, insertChartFromCSV, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange },
 });
 
 export { BarChartExtension as ChartExtension, selectedBarChart as selectedChart };

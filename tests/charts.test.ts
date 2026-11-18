@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, chartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -713,5 +713,57 @@ it('reads a changed Word target by series identity and honors its deletion', () 
   const varying = rewrite(original.replace(series[1]!, series[1]!.replace('<c:v>8</c:v>', '<c:v>7</c:v>')));
   expect(varying.attrs.targetValue).toBeNull();
   expect(varying.child(1).child(0).content.map(cell => cell.textContent)).toEqual(['Category', 'Value', 'Weekly goal']);
+  editor.destroy();
+});
+
+it('previews delimited text in Node and inserts the same chart with one undo', () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  const before = editor.state.doc;
+  const options = { title: 'Weekly revenue', decimalSeparator: ',' as const };
+  const input = '\uFEFF Column \r\nRegion | {H}2025 | {H}2026\r\n "North | West" | +01,50 | -3\r\nSouth | 6 | 4e2\r\n';
+  const preview = chartFromText(editor.state.schema, input, options);
+  expect(preview.attrs.kind).toBe('column');
+  const values = preview.child(1).content.map(row => row.content.map(cell => cell.textContent));
+  expect(values).toEqual([['Region', '2025', '2026'], ['North | West', '+01.50', '-3'], ['South', '6', '4e2']]);
+  expect(editor.state.doc).toBe(before);
+  expect(insertChartFromText(editor, input, options)).toBe(true);
+  expect(selectedBarChart(editor)!.eq(preview)).toBe(true);
+  expect(undo(editor)).toBe(true);
+  expect(editor.state.doc.eq(before)).toBe(true);
+  expect(redo(editor)).toBe(true);
+  editor.destroy();
+});
+
+it.each([
+  ['North\t2\nSouth\t-4', [['Category', 'Value'], ['North', '2'], ['South', '-4']]],
+  ['"A;B",3\nC,4', [['Category', 'Value'], ['A;B', '3'], ['C', '4']]],
+  ['Group;Sales\n"A ""B""";8', [['Group', 'Sales'], ['A "B"', '8']]],
+  ['Orders\n2\n-4', [['Category', 'Orders'], ['1', '2'], ['2', '-4']]],
+  ['3.2\r4e1', [['Category', 'Value'], ['1', '3.2'], ['2', '4e1']]],
+])('reads headerless, quoted and single-series text: %s', (input, expected) => {
+  const table = chartFromText(new Schema(kit.schema), input as string, { title: '' }).child(1);
+  expect(table.content.map(row => row.content.map(cell => cell.textContent))).toEqual(expected);
+});
+
+it('lets authors override header inference and refuses malformed or unplottable data before inserting', () => {
+  const editor = createEditor({ schema: kit.schema });
+  const before = editor.state.doc;
+  const withHeader = chartFromText(editor.state.schema, 'Area|2025\nSouth|3', { title: '', header: true });
+  expect(withHeader.child(1).child(0).child(1).textContent).toBe('2025');
+  const single = chartFromText(editor.state.schema, '1,5\n-2,5', { title: '', delimiter: null, decimalSeparator: ',' });
+  expect(single.child(1).content.slice(1).map(row => row.child(1).textContent)).toEqual(['1.5', '-2.5']);
+  const quoted = chartFromText(editor.state.schema, '"  East  "|1\nWest|2', { title: '' });
+  expect(quoted.child(1).child(1).child(0).textContent).toBe('  East  ');
+  for (const [input, reason] of [
+    ['A,2\nB,3,4', 'Row 2 has 3 cells'], ['A,2\n"B,3', 'quotation marks in row 2'],
+    ['Day|Net\nM|1,5', 'Enter a number'], ['pie\nDay|Net\nM|-3', 'nonnegative'],
+    ['0\n'.repeat(5001), '10,000 cells'],
+  ] as const) {
+    expect(() => insertChartFromText(editor, input, { title: 'Chart' })).toThrow(reason);
+    expect(editor.state.doc).toBe(before);
+  }
+  const reader = createEditor({ schema: kit.schema, editable: false });
+  expect(insertChartFromText(reader, 'A,3', { title: '' })).toBe(false);
+  reader.destroy();
   editor.destroy();
 });

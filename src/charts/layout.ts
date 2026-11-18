@@ -66,6 +66,10 @@ function axisTicks(low: number, high: number, interval: number | null, automatic
   return ticks;
 }
 
+export function chartNumber(source: string) {
+  return /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(source) ? Number(source) : NaN;
+}
+
 export function chartLayout(node: Node) {
   if (node.type.name !== 'bar_chart') return 'Select a chart to export.';
   const table = node.child(node.childCount - 1);
@@ -90,8 +94,8 @@ export function chartLayout(node: Node) {
     labels.push(cells[0]);
     for (const [j, column] of columns.entries()) {
       const source = cells[j + 1]!;
-      const value = Number(source);
-      if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(source) || !Number.isFinite(value)) {
+      const value = chartNumber(source);
+      if (!Number.isFinite(value)) {
         const position = count === 1 ? '' : ', column ' + (j + 2);
         return `Enter a number in row ${index + 1}${position} to draw the chart.`;
       }

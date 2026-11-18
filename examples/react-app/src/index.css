@@ -104,6 +104,12 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .chart-csv { margin-bottom: 12px; font-size: 13px; }
 .chart-axis-titles label { display: grid; gap: 4px; margin-block: 6px; }
 .chart-axis-titles summary { cursor: pointer; font-size: 13px; }
+.chart-text form { margin-top: 10px; }
+.chart-text textarea { width: 100%; box-sizing: border-box; font: 14px/1.4 monospace; padding: .6em; }
+.chart-text-preview { margin: 12px 0; }
+.chart-text-preview img { display: block; max-width: 100%; max-height: 22rem; margin-bottom: 8px; }
+.chart-text-scroll { overflow-x: auto; max-width: 100%; }
+.chart-text-scroll th, .chart-text-scroll td { padding: 3px 8px; text-align: start; }
 .chart-csv summary { width: fit-content; cursor: pointer; font-weight: 600; }
 .chart-csv .quick-insert { margin: 10px 0 4px; }
 .chart-csv label { display: grid; gap: 4px; max-width: 100%; }
