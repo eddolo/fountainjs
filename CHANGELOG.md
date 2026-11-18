@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add an optional table-backed bar chart to the editor. HTML retains the plot and editable data. Word export retains the title and table and reports the omitted plot.
+
 - Reuse verified collaboration lookup indexes after eligible remote text edits.
 
 - Avoid rewriting unchanged DOM cursor paths during typing. Moved blocks and stale path prefixes are still repaired.

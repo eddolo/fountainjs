@@ -1179,8 +1179,8 @@ application verification remain outstanding.
 
 ## Remaining parity work
 
-The [capability ledger](TIPTAP_PARITY.md) records 61 Delivered, nine Partial,
-two Host boundary and two Missing rows. The November 11 upstream catalogue
+The [capability ledger](TIPTAP_PARITY.md) records 61 Delivered, ten Partial,
+two Host boundary and one Missing row, including unreleased work on bar charts. The November 11 upstream catalogue
 review added charts/diagrams, template slots and a whiteboard surface to the
 previous 71-row scope. These are capability counts. Release readiness also
 depends on the evidence above; the new outcomes do not expand this beta.

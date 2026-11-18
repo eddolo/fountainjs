@@ -17,6 +17,8 @@
     "dist/ai/types.d.ts": "52d4a2756269f1a931b745557cb355d29b9b8880831156448b48d827c1c20b70",
     "dist/angular/forms.d.ts": "407d1dfc83cfaa3cb4c84ed60d4dd8df2888785b18fbdb33537fcd4349326997",
     "dist/angular/index.d.ts": "0a276ece506e023a6475de2b3e2199804395d34c7570a9c982180433af6bb18a",
+    "dist/charts/index.d.cts": "8b1621249bb67b6373e4181ada784343e4dc651990ef5ec2cc8111952248b45e",
+    "dist/charts/index.d.ts": "ee1423eb53951c692c005e0995107ab12bdefddba364230665f61bf11259b750",
     "dist/comments/index.d.cts": "6bb126d4de47cb679f79b23320923f9aa7cd49e2b719100253323ae6a9e1dc1e",
     "dist/comments/index.d.ts": "37aa33c77054f4f6f675ea6a442ca99e1dc571f47518db1d0e39e67a2b30e499",
     "dist/core/commands.d.cts": "32e90514d543f1fc8307da893b447325c7c3d0c2adcb92f0f19fcc5e5263dc81",

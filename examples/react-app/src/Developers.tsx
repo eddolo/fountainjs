@@ -816,6 +816,16 @@ function Developers() {
             <h3>Details are document content, not hidden UI state</h3>
             <p>The isolated <code>fountainjs-editor/details</code> entry adds semantic <code>details</code> and <code>details_summary</code> nodes without changing <code>StarterKit</code>. The editable summary supports inline marks; the body accepts any configured block, including nested disclosures. Native click or tap, Ctrl/Cmd+Enter, and public commands persist the open state in the portable document. Read-only readers can still open it locally without causing an edit.</p>
             <Code>{detailsExample}</Code>
+            <h3 id="bar-charts">Editable bar charts</h3>
+            <p>In the development build, choose <b>Bar chart</b> in the <a href="./#playground">live editor</a>. Edit the title, category names or values directly in the table. Correcting a value redraws the plot. Undo restores both. HTML export carries the plot and table. Word export keeps an editable title and table and reports the omitted plot.</p>
+            <Code>{`import { composeExtensions, createEditor, StarterKit } from 'fountainjs-editor'
+import { BarChartExtension, insertBarChart } from 'fountainjs-editor/charts'
+
+const kit = composeExtensions([...StarterKit.extensions, BarChartExtension])
+const editor = createEditor({ schema: kit.schema, plugins: kit.plugins })
+insertBarChart(editor, 'Change in weekly orders', [
+  ['Monday', 12], ['Tuesday', -4], ['Wednesday', 8],
+])`}</Code>
             <p>Insert, top-level wrap, unwrap, and explicit open-state commands each dispatch one validated transaction, so history, subscriptions, tracked changes, and generic Yjs synchronization keep working. JSON is exact; safe HTML uses native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code>; Markdown uses the same semantic HTML form; text keeps summary and body readable. See the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DETAILS.md">complete schema, keyboard, interchange, and accessibility guide</a>.</p>
             <h3>Complete text styles are typed document data</h3>
             <p><code>CoreExtension</code> and <code>StarterKit</code> include independent marks for foreground colour, background colour, font family, font size, and line height. The <code>fountainjs-editor/text-style</code> entry exposes the same validated specs plus framework-neutral setters, removers, normalizers, and mixed-selection inspection for custom kits and interfaces.</p>

@@ -36,7 +36,7 @@ function isModuleRead(node, moduleBindings) {
 
 function shareableUse(node, parent, moduleBindings, code) {
   const value = literalValue(node);
-  if (value?.length >= 8 && canShare(node, parent, code)) {
+  if (value?.length >= 6 && canShare(node, parent, code)) {
     return { value, start: node.start, end: node.end, member: false };
   }
   if (node.type === 'MemberExpression' && !node.computed

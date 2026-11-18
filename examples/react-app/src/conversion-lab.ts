@@ -1,3 +1,4 @@
+import { BarChartExtension } from 'fountainjs-editor/charts';
 import katex from 'katex';
 import { HTMLAnchorExtension, HTMLCommentExtension, HTMLContainerExtension, HTMLFlowExtension, HTMLExporter, MarkdownExporter, MarkdownImporter, Schema, StarterKit, composeExtensions, createKaTeXRenderer, createMathExtension, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { PagesExtension } from 'fountainjs-editor/pages';
@@ -35,13 +36,14 @@ export function createLabContext(options: LabImportOptions = {}) {
     retainBlockedAutolinks: commonMarkSourceReview || preserveHTMLStructure && options.retainBlockedAutolinks === true,
     commonMarkSourceReview,
   });
-  const kit = composeExtensions([...StarterKit.extensions, PagesExtension, createMathExtension({
+  const kit = composeExtensions([...StarterKit.extensions, PagesExtension, BarChartExtension, createMathExtension({
     renderer: createKaTeXRenderer(katex, { maxExpand: 1000, maxSize: 20 }),
   }), ...(settings.preserveHTMLStructure ? [HTMLContainerExtension, HTMLCommentExtension, HTMLFlowExtension, HTMLAnchorExtension] : []),
   ...(settings.retainBlockedAutolinks ? [createInertHTMLAnchorExtension()] : []),
   ...(commonMarkSourceReview ? [createHTMLSourceEmptyBodyExtension(), createHTMLSourceEOFExtension(),
     createInertHTMLRawTextExtension({ tags: ['script', 'style', 'textarea'] })] : [])]);
   const policy = (settings.preserveHTMLStructure ? 'starter-kit-pages-html-structure-v1; markdown-document-html; bounded-html-docx; json-depth64-nodes20000' : labPolicy)
+    + '; table-backed-bar-charts-v1'
     + (settings.retainBlockedAutolinks ? '; blocked-autolinks-inert' : '')
     + (commonMarkSourceReview ? '; markdown-source-review-v1' : '');
   return Object.freeze({ options: settings, kit, schema: new Schema(kit.schema),

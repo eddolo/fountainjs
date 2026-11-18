@@ -80,6 +80,7 @@ import { FountainTrackedChanges } from 'fountainjs-editor/react/tracked-changes'
 import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/versions';
 import { FountainVersions } from 'fountainjs-editor/react/versions';
 import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity';
+import { BarChartExtension, insertBarChart } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import { SitePageLink } from './SitePageLink';
@@ -343,6 +344,7 @@ const demoKit = composeExtensions([
   TableEditingExtension,
   TrailingEditableBlockExtension,
   ClipboardHistoryExtension,
+  BarChartExtension,
   DetailsExtension,
   RubyExtension,
   calloutExtension,
@@ -599,8 +601,9 @@ function App() {
   const words = characterCount.words(editor);
   const blocks = state?.doc.childCount ?? 0;
 
-  const addBlock = (kind: 'quote' | 'task' | 'table' | 'details' | 'callout') => {
+  const addBlock = (kind: 'quote' | 'task' | 'table' | 'details' | 'callout' | 'chart') => {
     if (kind === 'callout') demoKit.commands.insertCallout?.(editor);
+    else if (kind === 'chart') insertBarChart(editor, 'Change in weekly orders', [['Monday', 12], ['Tuesday', -4], ['Wednesday', 8]]);
     else if (kind === 'details') insertDetails(editor, { summary: 'Click to edit this summary', open: true });
     else if (kind === 'quote') demoKit.commands.insertQuote?.(editor, 'A thought worth keeping…');
     else if (kind === 'task') demoKit.commands.insertList?.(editor, 'task', ['Review the document', 'Publish when ready']);
@@ -725,6 +728,7 @@ function App() {
               <button onClick={() => addBlock('quote')}>❝ Quote</button>
               <button onClick={() => addBlock('task')}>☑ Tasks</button>
               <button onClick={() => addBlock('table')}>▦ Table</button>
+              <button onClick={() => addBlock('chart')}>Bar chart</button>
               <button onClick={() => addBlock('details')}>▸ Details</button>
               <button onClick={() => setRuby(editor, 'reading')}>あ Ruby</button>
               <button onClick={() => addBlock('callout')}>✦ Callout</button>

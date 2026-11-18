@@ -89,6 +89,7 @@ const reactTrackedChangesNames = ['FountainTrackedChanges'];
 const versionsNames = ['InMemoryVersionProvider', 'VersionController', 'compareVersionDocuments', 'versionContentFingerprint'];
 const reactVersionsNames = ['FountainVersions'];
 const reactIntegrityNames = ['FountainIntegrityInspector'];
+const chartNames = ['BarChartExtension', 'insertBarChart'];
 const detailsNames = ['DetailsExtension', 'insertDetails', 'wrapInDetails', 'unwrapDetails', 'toggleDetailsOpen'];
 const rubyNames = ['RubyExtension', 'createRubyExtension', 'setRuby', 'updateRuby', 'unsetRuby', 'toggleRuby'];
 const textStyleNames = ['TextStyleExtension', 'setTextColor', 'setBackgroundColor', 'setFontFamily', 'setFontSize', 'setLineHeight', 'getActiveTextStyle'];
@@ -295,6 +296,7 @@ assertExports(await import('fountainjs-editor/versions'), versionsNames, 'ESM ve
 assertExports(await import('fountainjs-editor/react/versions'), reactVersionsNames, 'ESM React versions entry');
 assertExports(await import('fountainjs-editor/react/integrity'), reactIntegrityNames, 'ESM React integrity entry');
 assertExports(await import('fountainjs-editor/details'), detailsNames, 'ESM details entry');
+assertExports(await import('fountainjs-editor/charts'), chartNames, 'ESM charts entry');
 assertExports(await import('fountainjs-editor/ruby'), rubyNames, 'ESM ruby entry');
 assertExports(await import('fountainjs-editor/text-style'), textStyleNames, 'ESM text style entry');
 assertExports(await import('fountainjs-editor/testing'), testingNames, 'ESM extension testing entry');
@@ -490,6 +492,7 @@ assertExports(require('fountainjs-editor/versions'), versionsNames, 'CommonJS ve
 assertExports(require('fountainjs-editor/react/versions'), reactVersionsNames, 'CommonJS React versions entry');
 assertExports(require('fountainjs-editor/react/integrity'), reactIntegrityNames, 'CommonJS React integrity entry');
 assertExports(require('fountainjs-editor/details'), detailsNames, 'CommonJS details entry');
+assertExports(require('fountainjs-editor/charts'), chartNames, 'CommonJS charts entry');
 assertExports(require('fountainjs-editor/ruby'), rubyNames, 'CommonJS ruby entry');
 assertExports(require('fountainjs-editor/text-style'), textStyleNames, 'CommonJS text style entry');
 assertExports(require('fountainjs-editor/testing'), testingNames, 'CommonJS extension testing entry');
@@ -615,4 +618,4 @@ try {
   rmSync(smokeDirectory, { recursive: true, force: true });
 }
 
-console.log('ESM, CommonJS, headless core, AI document tools, conversations, generated media, DOCX interchange, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, headless core, AI document tools, conversations, generated media, DOCX interchange, document utilities, full emoji data, React, comments, tracked changes, versions, charts, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
