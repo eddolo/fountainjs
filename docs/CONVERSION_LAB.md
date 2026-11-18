@@ -11,6 +11,13 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+**Download export** saves the generated file even if the lab cannot reopen it.
+For example, a DOCX can store a chart once and display it several times. Fountain
+JSON embeds the image at each location, so the JSON may exceed the lab’s 1 MiB
+input limit. The result shows the exported byte count and why reopening failed.
+The diagnostic report records `reopened: false` and leaves equality undetermined.
+**Check round trip** runs the same check in memory without starting a download.
+
 ### Standalone HTML equations
 
 The local candidate’s HTML export offers **Render equations in the downloaded

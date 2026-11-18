@@ -121,7 +121,7 @@ test('keeps native form emptiness custom policy failures and canceled invalid ev
 test('validates required documents custom errors and labels through the native form workshop', async ({ page }, info) => {
   await webComponentValidationJourney(page, info);
 });
-import { conversionCellAlignmentJourney, conversionComplexPageFieldsJourney, conversionLabJourney, conversionPagePreviewJourney, conversionRowHeightJourney, conversionRowSplittingJourney, conversionScientificPreviewJourney, conversionSlowImagePreviewJourney, conversionTableIndentJourney, conversionWordHyperlinksJourney, conversionWordHyphensJourney } from './conversion-lab-journey';
+import { conversionCellAlignmentJourney, conversionComplexPageFieldsJourney, conversionLabJourney, conversionLargeImageExportJourney, conversionPagePreviewJourney, conversionRowHeightJourney, conversionRowSplittingJourney, conversionScientificPreviewJourney, conversionSlowImagePreviewJourney, conversionTableIndentJourney, conversionWordHyperlinksJourney, conversionWordHyphensJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
 import { childOffsetJourney } from './child-offset-journey';
 
@@ -374,6 +374,10 @@ test('prints the edited scientific DOCX in the conversion lab', async ({ page },
 
 test('imports private files in the conversion lab with reports and export reopen', async ({ page }, info) => {
   await conversionLabJourney(page, info);
+});
+
+test('downloads embedded images when the converted file exceeds the reopen limit', async ({ page }, info) => {
+  await conversionLargeImageExportJourney(page, info);
 });
 
 test('edits cached Word field results without exposing instructions in the conversion lab', async ({ page }, info) => {
