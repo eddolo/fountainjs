@@ -74,11 +74,11 @@ function input(parent, label, value, set, choices) {
   parent.append(l);
   return c;
 }
-function rich(parent, label, content, onUpdate, fields) {
+function rich(parent, label, content, onUpdate, fields, existingEditor) {
   const card = el('div', undefined, onUpdate ? 'rich' : 'reader'),
     mount = el('div');
   parent.append(card);
-  const editor = createEditor({
+  const editor = existingEditor ?? createEditor({
     schema: schemaSpec,
     content,
     editable: !!onUpdate,
@@ -137,7 +137,7 @@ function rich(parent, label, content, onUpdate, fields) {
   const view = new EditorView(mount, editor, { ariaLabel: label });
   views.push(() => {
     view.destroy();
-    editor.destroy();
+    if (!existingEditor) editor.destroy();
   });
   return editor;
 }
@@ -197,7 +197,7 @@ async function action(fn) {
   }
 }
 function redraw() {
-  for (const dispose of views) dispose();
+  for (const dispose of views.reverse()) dispose();
   views = [];
   root.replaceChildren();
   if (!route) {
@@ -370,6 +370,13 @@ function author() {
         fields().map((f) => [f.key, f.label]),
       );
       select.dataset.reference = '';
+      const editing = el('label', undefined, 'check');
+      const editable = el('input');
+      editable.type = 'checkbox';
+      editable.checked = b.editable === true;
+      editable.onchange = () => { b.editable = editable.checked; markDirty(); };
+      editing.append(editable, ' Allow editing here');
+      card.append(editing);
     }
     const controls = row(card, 'row actions');
     for (const [name, delta] of [
@@ -548,9 +555,13 @@ function respondent() {
     return;
   }
   root.append(el('h1', template.title));
-  const mirrors = new Map(),
+  const fields = new Map(template.blocks.filter((block) => block.type === 'field').map((field) => [field.key,field]));
+  const richEditors = new Map(), textInputs = new Map(), mirrors = new Map(),
     inlinePreviews = new Map();
   function refresh(key) {
+    for (const input of textInputs.get(key) ?? []) {
+      if (input.value !== (answers[key] ?? '')) input.value = answers[key] ?? '';
+    }
     for (const update of inlinePreviews.get(key) ?? []) update();
     for (const target of mirrors.get(key) ?? []) {
       const val = answers[key];
@@ -593,27 +604,30 @@ function respondent() {
       }
       continue;
     }
-    if (b.type === 'reference') {
-      const target = box(
-        root,
-        'Repeated answer · ' + template.blocks.find((f) => f.type === 'field' && f.key === b.key).label,
-      );
-      const output = row(target, 'reader');
+    const field = fields.get(b.key);
+    const peer = b.type === 'reference';
+    const card = box(root, peer ? 'Repeated answer · ' + field.label : undefined);
+    if (peer && !b.editable) {
+      const output = row(card,'reader');
       if (!mirrors.has(b.key)) mirrors.set(b.key, []);
       mirrors.get(b.key).push(output);
       refresh(b.key);
       continue;
     }
-    const card = box(root),
-      label = b.label + (b.required ? ' (required)' : '');
-    const set = (v) => {
-      answers[b.key] = v;
-      refresh(b.key);
+    const label = (peer ? 'Repeated ' : '') + field.label + (field.required ? ' (required)' : '');
+    const set = (value) => {
+      answers[field.key] = value;
+      refresh(field.key);
     };
-    if (b.kind === 'rich') {
-      card.append(el('h2', label));
-      rich(card, label, answers[b.key] ?? documentOf(), set);
-    } else input(card, label, answers[b.key] ?? '', set);
+    if (field.kind === 'rich') {
+      if (!peer) card.append(el('h2', label));
+      const editor = rich(card,label,answers[field.key] ?? documentOf(),set,undefined,richEditors.get(field.key));
+      richEditors.set(field.key,editor);
+    } else {
+      const control = input(card,label,answers[field.key] ?? '',set);
+      if (!textInputs.has(field.key)) textInputs.set(field.key,[]);
+      textInputs.get(field.key).push(control);
+    }
   }
   const commands = row(root, 'row actions');
   for (const submitting of [false, true]) {
@@ -658,7 +672,7 @@ async function open() {
     }
     redraw();
   } catch (e) {
-    for (const dispose of views) dispose();
+    for (const dispose of views.reverse()) dispose();
     views = [];
     root.replaceChildren();
     showError(e);

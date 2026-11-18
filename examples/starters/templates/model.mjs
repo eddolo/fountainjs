@@ -107,7 +107,8 @@ export function validateTemplate(template) {
     check(block?.type === 'field' || block?.type === 'reference', 'Unknown template block.');
     check(validFieldKey(block.key), 'Use a lowercase field key with letters, numbers or underscores.');
     if (block.type === 'reference') {
-      shape(block, ['type', 'key']);
+      shape(block, ['type', 'key', 'editable']);
+      check(!Object.hasOwn(block,'editable') || typeof block.editable === 'boolean','Invalid repeated answer editing option.');
       continue;
     }
     shape(block, ['type', 'key', 'label', 'kind', 'required']);

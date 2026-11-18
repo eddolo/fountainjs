@@ -170,3 +170,60 @@ test('revoking an open draft blocks further writes while a separate invitation s
     await respondent.close();
   }
 });
+
+test('a respondent can edit either repeated field with one saved answer and one rich-text history', async ({page,browser},info)=>{
+  await page.goto('http://127.0.0.1:4203/');
+  await page.getByRole('button',{name:'Create template',exact:true}).click();
+  async function repeat(key:string,editable:boolean) {
+    await page.getByRole('button',{name:'Repeat an answer',exact:true}).click();
+    const card=page.locator('section.card').filter({has:page.getByRole('heading',{name:'Repeated answer',exact:true})}).last();
+    await card.getByRole('combobox',{name:'Repeat field',exact:true}).selectOption(key);
+    if(editable) await card.getByLabel('Allow editing here').check();
+    return card;
+  }
+  const first=await repeat('findings',true);
+  await first.getByRole('button',{name:'Move up'}).click();
+  await repeat('findings',false);
+  await repeat('study',true);
+  await page.getByRole('button',{name:'Save template',exact:true}).click();
+  await expect(page.getByRole('status')).toHaveText('Template saved.');
+  await page.getByRole('button',{name:'Create respondent link'}).click();
+  const link=await page.getByRole('link',{name:'Open response'}).getAttribute('href');
+  const context=await browser.newContext({viewport:{width:390,height:844},recordVideo:{dir:info.outputPath('peer-videos')}});
+  try {
+    const response=await context.newPage(); await response.goto(link!);
+    const study=response.getByRole('textbox',{name:'Study title (required)',exact:true});
+    const otherStudy=response.getByRole('textbox',{name:'Repeated Study title (required)',exact:true});
+    await otherStudy.fill('Trial 9');await expect(study).toHaveValue('Trial 9');
+    await study.fill('Trial 10');await expect(otherStudy).toHaveValue('Trial 10');
+    const source=response.getByRole('textbox',{name:'Findings (required)',exact:true});
+    const peer=response.getByRole('textbox',{name:'Repeated Findings (required)',exact:true});
+    const sourceCard=response.locator('section.card').filter({has:source});
+    const peerCard=response.locator('section.card').filter({has:peer});
+    await peer.click();await response.keyboard.type('Sample ready');
+    await expect(source).toHaveText('Sample ready');await expect(peer).toBeFocused();
+    await source.click();await response.keyboard.press('End');
+    for(let i=0;i<5;i++)await response.keyboard.press('Shift+ArrowLeft');
+    await sourceCard.getByRole('button',{name:'Bold',exact:true}).click();
+    await expect(peer.locator('strong')).toHaveText('ready');
+    const fixed=response.locator('section.card').filter({has:response.getByRole('heading',{name:'Repeated answer · Findings'})}).filter({has:response.locator('.reader')});
+    await expect(fixed.locator('strong')).toHaveText('ready');
+    await expect(fixed.locator('[contenteditable=true]')).toHaveCount(0);
+    await peerCard.getByRole('button',{name:'Undo',exact:true}).click();
+    await expect(source.locator('strong')).toHaveCount(0);
+    await peerCard.getByRole('button',{name:'Redo',exact:true}).click();
+    await expect(source.locator('strong')).toHaveText('ready');
+    await peer.click();await response.keyboard.press('End');await response.keyboard.type('!');
+    await expect(source).toHaveText('Sample ready!');
+    await response.getByRole('button',{name:'Save draft'}).click();
+    await expect(response.getByRole('status')).toHaveText('Draft saved.');await response.reload();
+    await expect(peer).toHaveText('Sample ready!');await expect(otherStudy).toHaveValue('Trial 10');
+    await response.screenshot({path:info.outputPath('editable-peers.png'),fullPage:true});
+    await response.getByRole('button',{name:'Submit response'}).click();
+    const doc=response.getByRole('textbox',{name:'Completed document'});
+    await expect(doc).not.toBeEditable();
+    await expect(doc.locator('p').filter({hasText:'Sample ready!'})).toHaveCount(3);
+    await expect(doc.locator('p').filter({hasText:'Trial 10'})).toHaveCount(2);
+  } finally {await context.close();}
+});
+
