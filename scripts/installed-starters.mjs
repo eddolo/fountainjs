@@ -48,7 +48,7 @@ if (mode === 'prepare') {
   const archive = join(root, `fountainjs-editor-${manifest.version}.tgz`);
   receipt.archive = { path: archive, sha256: sha256(archive) };
   cpSync(archive, join(evidence, 'candidate.tgz'));
-  for (const name of ['plain-dom', 'react', 'node']) {
+  for (const name of ['plain-dom', 'react', 'node', 'templates']) {
     const source = join(repository, 'examples/starters', name);
     const project = join(root, name);
     cpSync(source, project, { recursive: true });
@@ -57,6 +57,8 @@ if (mode === 'prepare') {
     projectManifest.dependencies['fountainjs-editor'] = `file:${archive.replaceAll('\\', '/')}`;
     writeFileSync(join(project, 'package.json'), JSON.stringify(projectManifest, null, 2) + '\n');
     console.log(`Installing ${name} outside the checkout`);
+    writeFileSync(join(project, 'pnpm-workspace.yaml'), "packages:\n  - '.'\n");
+    assert.equal(realpathSync(project), realpathSync(join(run(process.execPath, [pnpm, 'root', '-w'], project).trim(), '..')));
     const install = run(process.execPath, [pnpm, '--ignore-workspace', 'install', '--config.auto-install-peers=false'], project);
     writeFileSync(join(evidence, `${name}-install.log`), install);
     const installed = realpathSync(join(project, 'node_modules/fountainjs-editor'));
@@ -71,6 +73,8 @@ if (mode === 'prepare') {
       const output = run(process.execPath, [pnpm, '--ignore-workspace', 'run', 'build'], project);
       writeFileSync(join(evidence, `${name}-build.log`), output);
       assert(existsSync(join(project, 'dist/index.html')));
+      if (name === 'templates') writeFileSync(join(evidence,'templates-workflow.log'),
+        run(process.execPath,['--test','workflow.test.mjs'],project));
     } else {
       const convert = (...args) => run(process.execPath, ['convert.mjs', ...args], project);
       const sample = readFileSync(join(project, 'sample.md'), 'utf8');
@@ -108,17 +112,22 @@ if (mode === 'prepare') {
   receipt.complete = true;
   save();
   console.log(`Installed candidate starters prepared; evidence: ${receiptPath}`);
-} else if (mode === 'serve' && ['plain-dom', 'react'].includes(kind)) {
+} else if (mode === 'serve' && ['plain-dom', 'react', 'templates'].includes(kind)) {
   const receipt = readJSON(receiptPath);
   assert(receipt.complete, 'Run pnpm audit:starters:prepare before starting the preview servers.');
   const project = receipt.projects[kind].path;
   assert(inside(realpathSync(receipt.root), realpathSync(project)));
-  const require = createRequire(join(project, 'package.json'));
-  const { preview } = await import(pathToFileURL(require.resolve('vite')).href);
-  const server = await preview({ root: project, configFile: false, preview: {
-    host: '127.0.0.1', port: kind === 'plain-dom' ? 4201 : 4202, strictPort: true, open: false,
-  } });
-  server.printUrls();
+  if (kind === 'templates') {
+    const { createWorkspace } = await import(pathToFileURL(join(project, 'server.mjs')).href);
+    createWorkspace(':memory:', join(project, 'dist')).listen(4203, '127.0.0.1');
+  } else {
+    const require = createRequire(join(project, 'package.json'));
+    const { preview } = await import(pathToFileURL(require.resolve('vite')).href);
+    const server = await preview({ root: project, configFile: false, preview: {
+      host: '127.0.0.1', port: kind === 'plain-dom' ? 4201 : 4202, strictPort: true, open: false,
+    } });
+    server.printUrls();
+  }
 } else {
-  throw new Error('Usage: pnpm audit:starters:prepare, or node scripts/installed-starters.mjs serve plain-dom|react');
+  throw new Error('Usage: pnpm audit:starters:prepare, or node scripts/installed-starters.mjs serve plain-dom|react|templates');
 }

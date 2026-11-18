@@ -1179,8 +1179,8 @@ application verification remain outstanding.
 
 ## Remaining parity work
 
-The [capability ledger](TIPTAP_PARITY.md) records 61 Delivered, eight Partial,
-two Host boundary and three Missing rows. The November 11 upstream catalogue
+The [capability ledger](TIPTAP_PARITY.md) records 61 Delivered, nine Partial,
+two Host boundary and two Missing rows. The November 11 upstream catalogue
 review added charts/diagrams, template slots and a whiteboard surface to the
 previous 71-row scope. These are capability counts. Release readiness also
 depends on the evidence above; the new outcomes do not expand this beta.
@@ -1225,9 +1225,8 @@ including their scope, sources, and required proof.
   proof checking, review, and verified publication output.
 - Native renderer prototypes and a language-neutral document/operation protocol.
 - Monaco/CodeMirror, Jupyter-kernel, and terminal adapters for structured workspaces.
-- Authorable forms with separate definitions, respondent views, and submissions.
-- Editable charts/source-backed diagrams, validated template slots and variable
-  bindings, and an optional structured whiteboard surface. The
+- Extend the [working template project](../examples/starters/templates/README.md) with editable peer bindings, computed variables and cross-field validation. Signed-in account assignment and inline fields in a host-defined caption schema have separate browser and Node checks.
+- Editable charts/source-backed diagrams and an optional structured whiteboard surface. The
   [November 11 catalogue audit](TIPTAP_PARITY.md#catalogue-review--2026-11-11)
   records the missing outcomes and their upstream references.
 - Provider-based audio/video transcription and further language-service modules.

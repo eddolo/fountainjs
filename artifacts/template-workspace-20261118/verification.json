@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-18",
+  "npmPackage": "fountainjs-editor@0.5.0-beta.1",
+  "registryInstallation": "Fresh project extracted from the locally built production developer site",
+  "zipFilesComparedByteForByte": 10,
+  "publicPackageBrowserJourneys": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "databaseCheck": "Real HTTP, two respondents, denied edits, revision conflicts, required answers and reload from disk after restart",
+  "recordedWorkflow": "Author a template, edit instructions, add a field and repeat a rich answer. Issue a private link, edit the original, save and reopen the respondent draft, submit, review the captured revision, export JSON, reopen the template into a separate workspace.",
+  "invitationAccess": {
+    "installedCandidateChecks": 13,
+    "databaseChecks": 2,
+    "browsers": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ],
+    "workflow": "Revoke a named link while a respondent edits a private draft. Its next save and reload are denied. A second independent link still saves and reopens. Revoke a submitted link and retain the author review.",
+    "migration": "Opened a database created with the earlier schema, recovered the saved draft and revoked the existing link."
+  },
+  "inlineFields": {
+    "registryPackage": "fountainjs-editor@0.5.0-beta.1",
+    "productionZipFileCount": 10,
+    "publicPackageBrowserJourneysPassed": 6,
+    "installedCandidateChecksPassed": 13,
+    "nodeChecksPassed": 4,
+    "tests": "Compose an inline field into a nested host-defined caption. Verify independent position mapping, inherited emphasis, mixed-format replacements, undo/redo, empty captions, unknown fields and expansion limits. In three browsers author an inline field, fill and save a response, export ordinary text, and reopen the template with its original binding."
+  },
+  "hostAccounts": {
+    "publicPackage": "fountainjs-editor@0.5.0-beta.1",
+    "productionFilesComparedByteForByte": 10,
+    "installedCandidateChecksPassed": 16,
+    "publicPackageBrowserJourneysPassed": 9,
+    "nodeChecksPassed": 5,
+    "hostSessionEvidence": "A local HTTP host authenticates separate author, recipient and colleague accounts, sets an opaque HttpOnly session, and invalidates it at logout. Four browser contexts per engine cover reopened drafts, forwarding and author review. The providers are application-owned.",
+    "cli": "Loaded a configured ES module, offered its sign-in address and refused a module with no adapter export."
+  }
+}

@@ -3,11 +3,14 @@
 import { useState } from 'react';
 
 const templates = import.meta.glob<string>(
-  '../../starters/{plain-dom,react,node}/{package.json,index.html,main.js,main.jsx,convert.mjs,sample.md,README.md}',
-  { eager: true, query: '?raw', import: 'default' },
+  [
+    '../../starters/{plain-dom,react,node}/{package.json,index.html,main.js,main.jsx,convert.mjs,sample.md,README.md}',
+    '../../starters/templates/{package.json,index.html,main.js,inline-fields.mjs,model.mjs,server.mjs,workflow.test.mjs,style.css,README.md}',
+  ],
+  { query: '?raw', import: 'default' },
 );
 
-export function StarterDownload({ kind, label }: { kind: 'plain-dom' | 'react' | 'node'; label: string }) {
+export function StarterDownload({ kind, label }: { kind: 'plain-dom' | 'react' | 'node' | 'templates'; label: string }) {
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -18,9 +21,14 @@ export function StarterDownload({ kind, label }: { kind: 'plain-dom' | 'react' |
       const { strToU8, zipSync } = await import('fflate');
       const prefix = `../../starters/${kind}/`;
       const folder = `fountainjs-${kind}`;
-      const files = Object.fromEntries(Object.entries(templates)
+      const files = Object.fromEntries(await Promise.all(Object.entries(templates)
         .filter(([path]) => path.startsWith(prefix))
-        .map(([path, source]) => [`${folder}/${path.slice(prefix.length)}`, strToU8(source)]));
+        .map(async ([path, read]) => [`${folder}/${path.slice(prefix.length)}`, strToU8(await read())])));
+      // Production glob expansion skips dotfiles. Include the SQLite ignore rules explicitly.
+      if (kind === 'templates') {
+        const { default: ignore } = await import('../../starters/templates/.gitignore?raw');
+        files[`${folder}/.gitignore`] = strToU8(ignore);
+      }
       const zip = new Blob([Uint8Array.from(zipSync(files))], { type: 'application/zip' });
       const url = URL.createObjectURL(zip);
       const link = document.createElement('a');

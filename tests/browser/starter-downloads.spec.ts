@@ -3,13 +3,17 @@ import { expect, test } from '@playwright/test';
 import { strFromU8, unzipSync } from 'fflate';
 
 test('downloads complete standalone projects from the developer guide', async ({ page }, info) => {
-  await page.goto('developers.html');
+  await page.goto('workflows.html');
+  await page.getByRole('link', { name: /Download the template workspace/ }).click();
+  await expect(page).toHaveURL(/developers\.html#starter-templates$/);
+  await expect(page.getByRole('button', { name: 'Download template workspace' })).toBeVisible();
   await page.getByRole('link', { name: 'Download a starter' }).click();
   await expect(page.getByRole('heading', { name: 'Start with a working project.' })).toBeVisible();
   for (const { kind, label, projectFiles } of [
     { kind: 'plain-dom', label: 'Download plain DOM starter', projectFiles: ['index.html', 'main.js'] },
     { kind: 'react', label: 'Download React starter', projectFiles: ['index.html', 'main.jsx'] },
     { kind: 'node', label: 'Download Node.js starter', projectFiles: ['convert.mjs', 'sample.md'] },
+    { kind: 'templates', label: 'Download template workspace', projectFiles: ['.gitignore','index.html','main.js','inline-fields.mjs','model.mjs','server.mjs','style.css','workflow.test.mjs'] },
   ]) {
     const name = `fountainjs-${kind}`;
     const pending = page.waitForEvent('download');
