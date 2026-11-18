@@ -414,7 +414,7 @@ test('imports a CSV file and refreshes a linked chart from a real HTTP feed', as
     const url = 'http://127.0.0.1:' + address.port + '/orders.csv';
     await page.goto('index.html#playground');
     const demo = page.locator('#playground');
-    await demo.getByText('Chart from CSV', { exact: true }).click();
+    await demo.getByText('Chart from CSV or JSON', { exact: true }).click();
     const input = demo.getByLabel('CSV file', { exact: true });
     await input.setInputFiles({ name: 'Local orders.csv', mimeType: 'text/csv', buffer: Buffer.from('\uFEFF' + csv) });
     const chart = demo.locator('figure[data-fountain-chart]');
@@ -422,7 +422,7 @@ test('imports a CSV file and refreshes a linked chart from a real HTTP feed', as
     await expect(chart.getByRole('cell', { name: '0012.00' })).toBeVisible();
     await expect(chart.locator('[data-fountain-chart-plot]')).toContainText('North, Q1');
     await input.setInputFiles({ name: 'Bad.csv', mimeType: 'text/csv', buffer: Buffer.from('Region,Value\nA,broken') });
-    await expect(demo.getByRole('status', { name: 'CSV import status' })).toContainText('Enter a number');
+    await expect(demo.getByRole('status', { name: 'Chart import status' })).toContainText('Enter a number');
     await expect(chart).toHaveCount(1);
     expect(hits).toBe(0);
     await demo.getByLabel('CSV source URL').fill(url);
@@ -449,6 +449,67 @@ test('imports a CSV file and refreshes a linked chart from a real HTTP feed', as
     expect(hits).toBe(2);
   } finally {
     await new Promise<void>(resolve => { server.close(() => resolve()); server.closeAllConnections(); });
+  }
+});
+
+test('imports a JSON order report, refreshes from an API and reopens the saved snapshot offline', async ({ page }, info) => {
+  let hits = 0;
+  let body = JSON.stringify({ data: [{ Day: 'Monday', Shipped: 18, Returned: -2 }] });
+  const server = createServer((_request, response) => {
+    hits++;
+    response.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' });
+    response.end(body);
+  });
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Missing feed port');
+    const url = 'http://127.0.0.1:' + address.port + '/weekly';
+    await page.goto('index.html#playground');
+    const demo = page.locator('#playground');
+    await demo.getByText('Chart from CSV or JSON', { exact: true }).click();
+    await demo.getByRole('combobox', { name: 'Data format', exact: true }).selectOption('JSON');
+    await demo.getByLabel('JSON file').setInputFiles({ name: 'January.json', mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify([['Day', 'Orders'], ['Monday', '0012.50']])) });
+    await expect(demo.getByRole('cell', { name: '0012.50' })).toBeVisible();
+    expect(hits).toBe(0);
+    await demo.getByLabel('JSON source URL').fill(url);
+    await demo.getByRole('button', { name: 'Insert linked chart' }).click();
+    const linked = demo.locator('figure[data-fountain-json-url]');
+    await expect(linked).toHaveAttribute('data-fountain-json-url', url);
+    await linked.getByRole('cell', { name: 'Monday' }).click();
+    body = JSON.stringify([{ Day: 'Monday', Shipped: 19, Returned: null }]);
+    await demo.getByRole('button', { name: 'Refresh data' }).click();
+    await expect(demo.getByRole('status', { name: 'Chart import status' })).toContainText('JSON data row 1');
+    await expect(linked.getByRole('cell').getByText('18', { exact: true })).toBeVisible();
+    body = JSON.stringify({ data: [{ Day: 'Monday', Shipped: '019.00', Returned: -3 }] });
+    await demo.getByRole('button', { name: 'Refresh data' }).click();
+    await expect(linked.locator('[title="Shipped · 019.00"]')).toBeVisible();
+    await expect(linked.locator('[title="Returned · -3"]')).toBeVisible();
+    expect(hits).toBe(3);
+    body = JSON.stringify({ columns: ['Day', 'Shipped', 'Returned'], rows: [['Monday', '020.00', -4]] });
+    await demo.getByLabel('Refresh every (seconds)').fill('1');
+    await demo.getByRole('button', { name: 'Start automatic refresh' }).click();
+    const note = demo.locator('[contenteditable=true] > p').filter({ hasText: 'Select text' }).first();
+    await note.click();
+    await expect(linked.locator('[title="Shipped · 020.00"]')).toBeVisible();
+    await page.keyboard.insertText('Weekly review. ');
+    await expect(note).toContainText('Weekly review.');
+    await demo.getByRole('button', { name: 'Stop automatic refresh' }).click();
+    await linked.screenshot({ path: info.outputPath('json-orders.png') });
+    await demo.getByRole('button', { name: 'html', exact: true }).click();
+    const html = await demo.locator('pre').filter({ hasText: 'data-fountain-json-url' }).innerText();
+    await new Promise<void>(resolve => { server.close(() => resolve()); server.closeAllConnections(); });
+    const reopenRequests: string[] = [];
+    page.on('request', request => { if (request.url() === url) reopenRequests.push(request.url()); });
+    await page.goto('conversion-lab.html');
+    await page.getByLabel('Choose documents').setInputFiles({ name: 'orders.html', mimeType: 'text/html', buffer: Buffer.from(html) });
+    const reopened = page.getByRole('textbox', { name: 'Imported document editor' }).locator('figure[data-fountain-json-url]');
+    await expect(reopened).toHaveAttribute('data-fountain-json-url', url);
+    await expect(reopened.getByRole('cell').getByText('020.00', { exact: true })).toBeVisible();
+    expect(reopenRequests).toEqual([]);
+  } finally {
+    if (server.listening) await new Promise<void>(resolve => { server.close(() => resolve()); server.closeAllConnections(); });
   }
 });
 
@@ -668,7 +729,7 @@ test('automatically refreshes weekly orders while writing elsewhere and keeps an
     if (!address || typeof address === 'string') throw new Error('Missing feed port');
     await page.goto('index.html#playground');
     const demo = page.locator('#playground');
-    await demo.getByText('Chart from CSV', { exact: true }).click();
+    await demo.getByText('Chart from CSV or JSON', { exact: true }).click();
     await demo.getByLabel('CSV source URL').fill('http://127.0.0.1:' + address.port + '/orders.csv');
     await demo.getByRole('button', { name: 'Insert linked chart' }).click();
     const chart = demo.locator('figure[data-fountain-csv-url]');

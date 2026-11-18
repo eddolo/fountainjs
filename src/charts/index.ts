@@ -96,7 +96,7 @@ function plot(node: Node): DOMOutputSpec {
   return graphic([...legend, ...rows, ...ruler]);
 }
 
-function csvURL(value: unknown): value is string {
+function validSourceURL(value: unknown): value is string {
   if (typeof value !== 'string' || !/^https?:\/\//i.test(value) || /[\s\\]/.test(value)) return false;
   try {
     const url = new URL(value);
@@ -111,8 +111,9 @@ const parseRules = chartTypes.map(kind => ({
       return raw?.trim() && Number.isFinite(Number(raw)) ? Number(raw) : null;
     };
     const source = element.getAttribute('data-fountain-csv-url');
+    const json = element.getAttribute('data-fountain-json-url');
     const interval = bound('interval');
-    return { kind, targetValue: bound('target'), targetLabel: element.getAttribute('data-target-label') ?? '', axisInterval: interval !== null && interval > 0 ? interval : null, axisMin: bound('min'), axisMax: bound('max'), csvURL: csvURL(source) ? source : null, categoryAxisTitle: element.getAttribute('data-category-axis-title') ?? '',
+    return { kind, targetValue: bound('target'), targetLabel: element.getAttribute('data-target-label') ?? '', axisInterval: interval !== null && interval > 0 ? interval : null, axisMin: bound('min'), axisMax: bound('max'), jsonURL: validSourceURL(json) ? json : null, csvURL: validSourceURL(source) ? source : null, categoryAxisTitle: element.getAttribute('data-category-axis-title') ?? '',
       valueAxisTitle: element.getAttribute('data-value-axis-title') ?? '' };
   }, contentElement: '[data-fountain-chart-source]',
 }));
@@ -125,15 +126,17 @@ function validInterval(value: unknown) {
   return value === null || (typeof value === 'number' && Number.isFinite(value) && value > 0);
 }
 
+const feedURL = { default: null, validate: (value: unknown) => value === null || validSourceURL(value) };
+
 const barChartNode: NodeSpec = {
   group: 'block',
-  attrs: { targetValue: axisBound, targetLabel: axisTitle, axisInterval: { default: null, validate: validInterval }, axisMin: axisBound, axisMax: axisBound, categoryAxisTitle: axisTitle, valueAxisTitle: axisTitle, kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: { default: null, validate: value => value === null || csvURL(value) } },
+  attrs: { targetValue: axisBound, targetLabel: axisTitle, axisInterval: { default: null, validate: validInterval }, axisMin: axisBound, axisMax: axisBound, categoryAxisTitle: axisTitle, valueAxisTitle: axisTitle, kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: feedURL, jsonURL: feedURL },
   content: 'paragraph? table',
   selectable: true,
   parseHTML: parseRules,
   parseDOM: parseRules,
   markdown: 'html',
-  toDOM: node => ['figure', { 'data-fountain-chart': node.attrs.kind, ...(node.attrs.csvURL ? { 'data-fountain-csv-url': node.attrs.csvURL } : {}), ...(node.attrs.categoryAxisTitle ? { 'data-category-axis-title': node.attrs.categoryAxisTitle } : {}),
+  toDOM: node => ['figure', { 'data-fountain-chart': node.attrs.kind, ...(node.attrs.jsonURL ? { 'data-fountain-json-url': node.attrs.jsonURL } : {}), ...(node.attrs.csvURL ? { 'data-fountain-csv-url': node.attrs.csvURL } : {}), ...(node.attrs.categoryAxisTitle ? { 'data-category-axis-title': node.attrs.categoryAxisTitle } : {}),
     ...(node.attrs.targetValue != null ? { 'data-axis-target': node.attrs.targetValue } : {}), ...(node.attrs.targetLabel ? { 'data-target-label': node.attrs.targetLabel } : {}),
     ...(node.attrs.axisInterval != null ? { 'data-axis-interval': node.attrs.axisInterval } : {}),
     ...(node.attrs.axisMin != null ? { 'data-axis-min': node.attrs.axisMin } : {}), ...(node.attrs.axisMax != null ? { 'data-axis-max': node.attrs.axisMax } : {}),
@@ -162,6 +165,11 @@ function supportsCharts(editor: Editor) {
     .every(name => editor.state.schema.nodes[name]);
 }
 
+function insertBuiltChart(editor: Editor, chart: Node): boolean {
+  const previous = editor.state.doc;
+  return insertNode(editor, chart) && editor.state.doc !== previous;
+}
+
 /** One category column followed by one numeric column per named series. */
 export function insertChart(editor: Editor, data: ChartData): boolean {
   const { schema } = editor.state;
@@ -175,8 +183,7 @@ export function insertChart(editor: Editor, data: ChartData): boolean {
   const table = chartTable(schema, [[data.categoryLabel ?? 'Category', ...data.series], ...data.rows]);
   const title = schema.node('paragraph', {}, [schema.text(data.title)]);
   const chart = schema.node('bar_chart', { kind: data.kind ?? 'bar' }, [title, table]);
-  const previous = editor.state.doc;
-  return insertNode(editor, chart) && editor.state.doc !== previous;
+  return insertBuiltChart(editor, chart);
 }
 
 export interface CSVChartOptions {
@@ -186,11 +193,53 @@ export interface CSVChartOptions {
   readonly sourceURL?: string;
 }
 
-function csvTable(editor: Editor, csv: string) {
-  if (typeof csv !== 'string' || csv.length > 1_048_576) throw new Error('Chart CSV exceeds the one-million-character input limit.');
-  const rows = readDelimitedRows(csv.replace(/^\uFEFF/u, ''), 'csv');
-  if (!rows || rows.length < 2 || rows[0]!.length < 2) throw new Error('Expected a CSV header and rectangular data rows with at least two columns, up to 10,000 cells.');
-  return chartTable(editor.state.schema, rows);
+export type ChartFeedOptions = CSVChartOptions;
+
+type FeedFormat = 'csv' | 'json';
+
+function sourceTable(editor: Editor, source: string, format: FeedFormat) {
+  if (typeof source !== 'string' || source.length > 1_048_576) throw new Error('Chart data exceeds the one-million-character input limit.');
+  source = source.replace(/^\uFEFF/u, '');
+  if (format === 'csv') {
+    const rows = readDelimitedRows(source, 'csv');
+    if (!rows || rows.length < 2 || rows[0]!.length < 2) throw new Error('Expected a CSV header and rectangular data rows with at least two columns, up to 10,000 cells.');
+    return chartTable(editor.state.schema, rows);
+  }
+  let data;
+  try { data = JSON.parse(source); }
+  catch { throw new Error('Invalid chart JSON.'); }
+  data = data?.data ?? data;
+  let rows: unknown[];
+  let headers: unknown[];
+  if (Array.isArray(data) && Array.isArray(data[0])) {
+    [headers, ...rows] = data;
+  } else if (Array.isArray(data) && data[0] && typeof data[0] === 'object') {
+    const first = data[0];
+    const keys = Object.keys(first);
+    const textKeys = keys.filter(key => typeof first[key] === 'string');
+    const label = textKeys.find(key => !Number.isFinite(chartNumber(first[key].trim()))) ?? textKeys[0] ?? keys[0];
+    const fields = [label, ...keys.filter(key => key !== label)];
+    headers = fields;
+    if ((data.length + 1) * fields.length > 10_000) throw new Error('Use up to 10,000 cells per chart.');
+    rows = data.map((row: unknown) => {
+      if (!row || typeof row !== 'object' || Array.isArray(row) || Object.keys(row).length !== fields.length ||
+          !fields.every(key => Object.hasOwn(row, key))) throw new Error('Each JSON record must have the same fields.');
+      return fields.map(key => (row as Record<string, unknown>)[key]);
+    });
+  } else if (Array.isArray(data?.columns) && Array.isArray(data.rows)) {
+    headers = data.columns.map((column: string | { label?: string } | null) => typeof column === 'string' ? column : column?.label);
+    rows = data.rows;
+  } else throw new Error('Expected JSON records, a header and rows, or columns and rows.');
+  if (headers.length < 2 || !headers.every(h => typeof h === 'string') || !rows.length ||
+      (rows.length + 1) * headers.length > 10_000) throw new Error('Use text headers, data rows and up to 10,000 cells per chart.');
+  const cells = rows.map((row, index) => {
+    if (!Array.isArray(row) || row.length !== headers.length || !row.every(v => typeof v === 'string' ||
+        (typeof v === 'number' && Number.isFinite(v) && (!Number.isInteger(v) || Number.isSafeInteger(v))))) {
+      throw new Error('Check the cells in JSON data row ' + (index + 1) + '. Use text or finite numbers and quote large integers.');
+    }
+    return row;
+  });
+  return chartTable(editor.state.schema, [headers as string[], ...cells]);
 }
 
 function checkPlot(chart: Node) {
@@ -265,21 +314,27 @@ export function chartFromText(schema: Schema, text: string, options: TextChartOp
 export function insertChartFromText(editor: Editor, text: string, options: TextChartOptions): boolean {
   if (!supportsCharts(editor)) return false;
   const chart = chartFromText(editor.state.schema, text, options);
-  const previous = editor.state.doc;
-  return insertNode(editor, chart) && editor.state.doc !== previous;
+  return insertBuiltChart(editor, chart);
 }
 
-/** Imports cell spellings as text. Invalid CSV leaves the editor untouched. */
-export function insertChartFromCSV(editor: Editor, csv: string, options: CSVChartOptions): boolean {
+function insertFeed(editor: Editor, source: string, options: ChartFeedOptions, format: FeedFormat): boolean {
   if (!supportsCharts(editor)) return false;
   if (typeof options?.title !== 'string' || !chartTypes.includes(options.kind ?? 'bar')) return false;
-  if (options.sourceURL !== undefined && !csvURL(options.sourceURL)) throw new Error('Expected an HTTP or HTTPS data address without credentials or a fragment.');
+  if (options.sourceURL !== undefined && !validSourceURL(options.sourceURL)) throw new Error('Expected an HTTP or HTTPS data address without credentials or a fragment.');
   const { schema } = editor.state;
   const title = schema.node('paragraph', {}, [schema.text(options.title)]);
-  const chart = schema.node('bar_chart', { kind: options.kind ?? 'bar', csvURL: options.sourceURL ?? null }, [title, csvTable(editor, csv)]);
+  const chart = schema.node('bar_chart', { kind: options.kind ?? 'bar', [format + 'URL']: options.sourceURL ?? null }, [title, sourceTable(editor, source, format)]);
   checkPlot(chart);
-  const previous = editor.state.doc;
-  return insertNode(editor, chart) && editor.state.doc !== previous;
+  return insertBuiltChart(editor, chart);
+}
+
+/** Imports cell spellings as text. Invalid data leaves the editor untouched. */
+export function insertChartFromCSV(editor: Editor, csv: string, options: CSVChartOptions): boolean {
+  return insertFeed(editor, csv, options, 'csv');
+}
+
+export function insertChartFromJSON(editor: Editor, json: string, options: ChartFeedOptions): boolean {
+  return insertFeed(editor, json, options, 'json');
 }
 
 // Match rows by category and columns by heading. Duplicate labels are paired in source order.
@@ -418,9 +473,11 @@ function locateChart(doc: Node, original: Node): ChartTarget | null {
   return matches.length === 1 ? matches[0]! : null;
 }
 
-async function refreshCSV(editor: Editor, original: Node, resolve: () => ChartTarget | null,
+async function refreshFeed(editor: Editor, original: Node, resolve: () => ChartTarget | null,
   load: (url: string) => Promise<string>, signal?: AbortSignal): Promise<ChartTarget | null> {
-  if (editor.isDestroyed || !editor.editable || signal?.aborted || !csvURL(original.attrs.csvURL)) return null;
+  const format = original.attrs.jsonURL ? 'json' : 'csv';
+  const url = original.attrs[format + 'URL'];
+  if (editor.isDestroyed || !editor.editable || signal?.aborted || !validSourceURL(url) || (original.attrs.jsonURL && original.attrs.csvURL)) return null;
   const requests = pendingRefresh.get(editor) ?? new WeakMap<Node, object>();
   pendingRefresh.set(editor, requests);
   const request = {};
@@ -431,11 +488,11 @@ async function refreshCSV(editor: Editor, original: Node, resolve: () => ChartTa
     return target?.node === original ? target : null;
   };
   try {
-    const csv = await load(original.attrs.csvURL);
+    const source = await load(url);
     const target = current();
     if (!target) return null;
     const previous = simpleChartTable(original);
-    const table = refreshedTable(previous, csvTable(editor, csv));
+    const table = refreshedTable(previous, sourceTable(editor, source, format));
     if (table === previous) return target;
     const at = original.childCount - 1;
     checkPlot(original.copy([...original.content.slice(0, at), table]));
@@ -451,24 +508,37 @@ async function refreshCSV(editor: Editor, original: Node, resolve: () => ChartTa
 }
 
 /** Manual refresh follows the selection and returns false if the request was superseded. */
-export async function refreshChartFromCSV(editor: Editor, load: (url: string) => Promise<string>): Promise<boolean> {
-  if (editor.isDestroyed || !editor.editable) return false;
-  const chart = selectedBarChart(editor);
-  return !!chart && !!await refreshCSV(editor, chart, () => chartTarget(editor), load);
+function refreshSelectedFeed(editor: Editor, load: (url: string) => Promise<string>, csvOnly: boolean): Promise<boolean> {
+  const chart = !editor.isDestroyed && selectedBarChart(editor);
+  if (!chart || (csvOnly && !chart.attrs.csvURL)) return Promise.resolve(false);
+  return refreshFeed(editor, chart, () => chartTarget(editor), load).then(Boolean);
+}
+
+export function refreshChartFromSource(editor: Editor, load: (url: string) => Promise<string>): Promise<boolean> {
+  return refreshSelectedFeed(editor, load, false);
 }
 
 /** Refresh a captured chart independently of the caret. Use the returned snapshot for
  * the next poll. Null means the chart was edited, removed, ambiguous or cancelled. */
-export async function refreshChartSnapshotFromCSV(editor: Editor, chart: Node, load: (url: string) => Promise<string>, signal?: AbortSignal): Promise<Node | null> {
-  if (editor.isDestroyed || !editor.editable || signal?.aborted || chart?.type.name !== 'bar_chart' || !csvURL(chart.attrs.csvURL)) return null;
+export async function refreshChartSnapshotFromSource(editor: Editor, chart: Node, load: (url: string) => Promise<string>, signal?: AbortSignal): Promise<Node | null> {
+  if (editor.isDestroyed || !editor.editable || signal?.aborted || chart?.type.name !== 'bar_chart' || !(chart.attrs.csvURL || chart.attrs.jsonURL)) return null;
   const before = editor.state.doc;
   const initial = locateChart(before, chart);
   if (!initial) return null;
-  const result = await refreshCSV(editor, chart, () => editor.state.doc === before ? initial : locateChart(editor.state.doc, chart), load, signal);
+  const result = await refreshFeed(editor, chart, () => editor.state.doc === before ? initial : locateChart(editor.state.doc, chart), load, signal);
   if (!result || editor.isDestroyed || signal?.aborted) return null;
   // Appended transactions and synchronous subscribers can edit the chart during dispatch.
   const live = result.path.reduce<Node | undefined>((parent, index) => parent?.content[index], editor.state.doc);
   return live === result.node ? live : null;
+}
+
+/** CSV-only entry points retained for hosts with a CSV-specific loader. */
+export function refreshChartFromCSV(editor: Editor, load: (url: string) => Promise<string>): Promise<boolean> {
+  return refreshSelectedFeed(editor, load, true);
+}
+
+export async function refreshChartSnapshotFromCSV(editor: Editor, chart: Node, load: (url: string) => Promise<string>, signal?: AbortSignal): Promise<Node | null> {
+  return chart?.attrs.csvURL ? refreshChartSnapshotFromSource(editor, chart, load, signal) : null;
 }
 
 export function insertBarChart(editor: Editor, title: string, values: readonly (readonly [string, number])[]): boolean {
@@ -584,16 +654,20 @@ function replaceInputBlock(editor: Editor, path: readonly number[], original: No
 
 export const chartInputStatus = new PluginKey<string>('chart-input-status');
 
+function chartDraft(editor: Editor) {
+  const input = inputBlock(editor);
+  return input?.block.type.name === 'code_block' && input.block.attrs.language === 'chart-data' ? input : null;
+}
+
 /** True when the text selection is inside a chart-data draft. */
 export function isChartInput(editor: Editor): boolean {
-  const block = inputBlock(editor)?.block;
-  return block?.type.name === 'code_block' && block.attrs.language === 'chart-data';
+  return !!chartDraft(editor);
 }
 
 /** Draw the selected chart-data code block. Invalid rows remain editable. */
 export function drawChartInput(editor: Editor): boolean {
-  const input = inputBlock(editor);
-  if (!supportsCharts(editor) || input?.block.type.name !== 'code_block' || input.block.attrs.language !== 'chart-data') return false;
+  const input = chartDraft(editor);
+  if (!input || !supportsCharts(editor)) return false;
   let chart: Node;
   try { chart = chartFromText(editor.state.schema, input.block.textContent, { title: '' }); }
   catch (error) {
@@ -620,8 +694,8 @@ export const chartInputPlugin = new Plugin<string>({
     },
     handleKeyDown(editor, event) {
       if (event.key !== 'Enter' || event.isComposing || event.altKey || event.shiftKey || !editor.editable) return false;
-      const input = inputBlock(editor);
-      if (input?.block.type.name !== 'code_block' || input.block.attrs.language !== 'chart-data') return false;
+      const input = chartDraft(editor);
+      if (!input) return false;
       const selection = editor.state.selection;
       if (!(event.metaKey || event.ctrlKey) && !(selection.isCollapsed && selection.path.at(-1) === input.block.childCount - 1 &&
         selection.from === input.block.child(input.block.childCount - 1).textContent.length && input.block.textContent.endsWith('\n'))) return false;
@@ -629,8 +703,7 @@ export const chartInputPlugin = new Plugin<string>({
       return true;
     },
     handlePaste(editor, event) {
-      const input = inputBlock(editor);
-      if (!editor.editable || input?.block.type.name !== 'code_block' || input.block.attrs.language !== 'chart-data') return false;
+      if (!editor.editable || !chartDraft(editor)) return false;
       const text = event.clipboardData?.getData('text/plain');
       return !!text && insertText(editor, text);
     },
@@ -640,7 +713,7 @@ export const chartInputPlugin = new Plugin<string>({
 export const BarChartExtension = defineExtension({
   name: 'bar-chart',
   nodes: { bar_chart: barChartNode },
-  commands: { updateChartFromText, insertChartFromText, insertChartFromCSV, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange },
+  commands: { updateChartFromText, insertChartFromText, insertChartFromCSV, insertChartFromJSON, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange },
 });
 
 export { BarChartExtension as ChartExtension, selectedBarChart as selectedChart };

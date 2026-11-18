@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { chartInputPlugin, chartInputStatus, drawChartInput, isChartInput, BarChartExtension, chartFromText, chartToText, previewChartText, updateChartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, refreshChartSnapshotFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
+import { insertChartFromJSON, refreshChartFromSource, refreshChartSnapshotFromSource, chartInputPlugin, chartInputStatus, drawChartInput, isChartInput, BarChartExtension, chartFromText, chartToText, previewChartText, updateChartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, refreshChartSnapshotFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -948,5 +948,56 @@ it('only opens inline chart input in an empty paragraph and restores the source 
   expect(undo(editor)).toBe(true);
   expect(editor.state.doc.eq(draft)).toBe(true);
   expect(editor.state.doc.child(0).textContent).toBe('keep');
+  editor.destroy();
+});
+
+it('imports JSON row matrices, records and explicit columns with the same editable table', async () => {
+  const url = 'https://example.org/orders';
+  const headers = ['Day', 'Plan', 'Actual'];
+  const rows = [['Monday', '0012.00', -4], ['Tuesday', '8', 3]];
+  for (const source of [
+    [headers, ...rows],
+    { data: [{ Plan: '0012.00', Day: 'Monday', Actual: -4 }, { Actual: 3, Day: 'Tuesday', Plan: '8' }] },
+    { columns: headers.map(label => ({ label })), rows },
+  ]) {
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    expect(insertChartFromJSON(editor, '\uFEFF' + JSON.stringify(source), { title: 'Forecast', sourceURL: url })).toBe(true);
+    const original = selectedBarChart(editor)!;
+    expect(original.child(1).content.map(row => row.content.map(cell => cell.textContent)))
+      .toEqual([headers, ...rows.map(row => row.map(String))]);
+    const html = HTMLExporter.export(editor.state.doc, { document: false });
+    expect(ServerHTMLImporter.parse(html, editor.state.schema).eq(editor.state.doc)).toBe(true);
+    const word = exportDOCX(editor.state.doc);
+    expect(word.report.issues.some(issue => issue.code === 'chart-json-link-omitted')).toBe(true);
+    const reopened = importDOCX(word.bytes, editor.state.schema).document.content.find(node => node.type.name === 'bar_chart')!;
+    expect(reopened.attrs.jsonURL).toBeNull();
+    expect(reopened.child(1).child(1).child(2).textContent).toBe('-4');
+    const unexpected = async () => { throw new Error('CSV loader was called for JSON'); };
+    expect(await refreshChartFromCSV(editor, unexpected)).toBe(false);
+    expect(await refreshChartSnapshotFromCSV(editor, original, unexpected)).toBeNull();
+    const changed = await refreshChartSnapshotFromSource(editor, original, async address => {
+      expect(address).toBe(url);
+      return JSON.stringify([headers, ['Monday', '13', -5], rows[1]]);
+    });
+    expect(changed?.child(1).child(1).child(2).textContent).toBe('-5');
+    expect(undo(editor)).toBe(true);
+    expect(selectedBarChart(editor)?.eq(original)).toBe(true);
+    editor.destroy();
+  }
+});
+
+it('rejects invalid JSON refreshes without losing the previous chart or undo history', async () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  const before = editor.state.doc;
+  insertChartFromJSON(editor, '[{"Week":"A","Orders":2}]', { title: 'Orders', sourceURL: 'https://example.org/orders' });
+  const saved = editor.state.doc;
+  for (const source of ['[', '[]', '[["A","B"],["M",null]]',
+    '[{"Day":"M","Orders":1},{"Day":"T","Other":2}]', '[["A","B"],["M",9007199254740993]]',
+    '[["Day","Orders"],["Monday","missing"]]']) {
+    await expect(refreshChartFromSource(editor, async () => source)).rejects.toThrow();
+    expect(editor.state.doc).toBe(saved);
+  }
+  expect(undo(editor)).toBe(true);
+  expect(editor.state.doc.eq(before)).toBe(true);
   editor.destroy();
 });

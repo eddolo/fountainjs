@@ -2637,8 +2637,8 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       }
       if (node.attrs.kind === 'bar' && node.attrs.targetValue != null) context.issues.push({ code: 'chart-target-caption', severity: 'warning', path,
         message: 'The horizontal Word bar chart shows its target in the chart title. The vertical target marker is restored in Fountain.' });
-      if (node.attrs.csvURL) context.issues.push({ code: 'chart-csv-link-omitted', severity: 'warning', path,
-        message: 'The chart values are saved in the DOCX. Refreshing them from the original CSV address requires the Fountain document.' });
+      if (node.attrs.csvURL || node.attrs.jsonURL) context.issues.push({ code: node.attrs.jsonURL ? 'chart-json-link-omitted' : 'chart-csv-link-omitted', severity: 'warning', path,
+        message: 'The chart values are saved in the DOCX. Refreshing them from the original feed address requires the Fountain document.' });
       const chart = wordChart(node, context.charts.length + 1, context.nextDrawingId);
       if (typeof chart === 'string') {
         context.issues.push({ code: 'chart-exported-as-table', severity: 'warning', path, message: chart + ' The editable table is retained.' });
