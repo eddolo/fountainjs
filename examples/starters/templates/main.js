@@ -1,5 +1,6 @@
 import { createEditor, EditorView, toggleMark, createHistoryPlugin, undo, redo } from 'fountainjs-editor';
 import { schemaSpec, initialTemplate, documentOf, validateTemplate } from './model.mjs';
+import { insertTemplateField, resolveTemplateFields, validFieldKey } from './inline-fields.mjs';
 import './style.css';
 
 const root = document.querySelector('#workspace'),
@@ -65,14 +66,14 @@ function input(parent, label, value, set, choices) {
     }
   c.value = value;
   c.addEventListener(choices ? 'change' : 'input', () => {
-    set(c.value);
+    if (set(c.value) === false) return;
     markDirty();
   });
   l.append(c);
   parent.append(l);
   return c;
 }
-function rich(parent, label, content, onUpdate) {
+function rich(parent, label, content, onUpdate, fields) {
   const card = el('div', undefined, onUpdate ? 'rich' : 'reader'),
     mount = el('div');
   parent.append(card);
@@ -103,6 +104,33 @@ function rich(parent, label, content, onUpdate) {
       b.addEventListener('mousedown', (e) => e.preventDefault());
       tools.append(b);
     }
+    if (fields) {
+      const select = el('select');
+      select.setAttribute('aria-label', 'Field to insert');
+      const populate = () => {
+        const previous = select.value;
+        const single = fields().filter((field) => field.kind === 'text');
+        select.replaceChildren(
+          ...single.map((field) => {
+            const option = el('option', field.label);
+            option.value = field.key;
+            return option;
+          }),
+        );
+        if (single.some((field) => field.key === previous)) select.value = previous;
+      };
+      populate();
+      select.addEventListener('focus', populate);
+      const insert = button('Insert field', () => {
+        populate();
+        if (!select.value) throw Error('Add a single-line field to the template first.');
+        if (!insertTemplateField(editor, select.value))
+          throw Error('Place the cursor in a paragraph or select text within that paragraph.');
+        view.focus();
+      });
+      insert.addEventListener('mousedown', (e) => e.preventDefault());
+      tools.append(select, insert);
+    }
   }
   card.append(mount);
   const view = new EditorView(mount, editor, { ariaLabel: label });
@@ -110,6 +138,7 @@ function rich(parent, label, content, onUpdate) {
     view.destroy();
     editor.destroy();
   });
+  return editor;
 }
 async function request(path, method = 'GET', value) {
   const headers = {};
@@ -218,6 +247,14 @@ function author() {
   );
   input(root, 'Template title', template.title, (v) => (template.title = v));
   const fields = () => template.blocks.filter((b) => b.type === 'field');
+  const usesInline = (key) =>
+    template.blocks.some(
+      (block) =>
+        block.type === 'prose' &&
+        block.document.content.some((p) =>
+          p.content?.some((run) => run.type === 'template_field' && run.attrs.key === key),
+        ),
+    );
   const add = (block) => {
     template.blocks.push(block);
     markDirty();
@@ -228,7 +265,8 @@ function author() {
       root,
       b.type === 'field' ? 'Response field' : b.type === 'prose' ? 'Fixed instructions' : 'Repeated answer',
     );
-    if (b.type === 'prose') rich(card, 'Instructions ' + (i + 1), b.document, (v) => (b.document = v));
+    if (b.type === 'prose')
+      rich(card, 'Instructions ' + (i + 1), b.document, (v) => (b.document = v), fields);
     if (b.type === 'field') {
       const r = row(card);
       input(r, 'Field label', b.label, (v) => (b.label = v));
@@ -239,11 +277,12 @@ function author() {
       r.append(keyLabel);
       keyInput.addEventListener('change', () => {
         const key = keyInput.value;
-        if (
-          !/^[a-z][a-z0-9_]{0,47}$/.test(key) ||
-          Object.hasOwn(Object.prototype, key) ||
-          fields().some((f) => f !== b && f.key === key)
-        ) {
+        if (key !== b.key && usesInline(b.key)) {
+          keyInput.value = b.key;
+          status.textContent = 'Remove inline uses before changing this field key.';
+          return;
+        }
+        if (!validFieldKey(key) || fields().some((f) => f !== b && f.key === key)) {
           keyInput.value = b.key;
           status.textContent = 'Choose a unique lowercase field key.';
           return;
@@ -256,10 +295,23 @@ function author() {
           for (const option of select.options) if (option.value === old) option.value = key;
         markDirty();
       });
-      input(r, 'Answer type', b.kind, (v) => (b.kind = v), [
-        ['text', 'Single line'],
-        ['rich', 'Rich text'],
-      ]);
+      const kind = input(
+        r,
+        'Answer type',
+        b.kind,
+        (v) => {
+          if (v !== 'text' && usesInline(b.key)) {
+            kind.value = b.kind;
+            status.textContent = 'Remove inline uses before changing this answer type.';
+            return false;
+          }
+          b.kind = v;
+        },
+        [
+          ['text', 'Single line'],
+          ['rich', 'Rich text'],
+        ],
+      );
       const l = el('label', undefined, 'check'),
         c = el('input');
       c.type = 'checkbox';
@@ -297,6 +349,7 @@ function author() {
     }
     controls.append(
       button('Remove block', () => {
+        if (b.type === 'field' && usesInline(b.key)) throw Error('Remove its inline uses first.');
         if (
           b.type === 'field' &&
           template.blocks.some((ref) => ref.type === 'reference' && ref.key === b.key)
@@ -444,8 +497,10 @@ function respondent() {
     return;
   }
   root.append(el('h1', template.title));
-  const mirrors = new Map();
+  const mirrors = new Map(),
+    inlinePreviews = new Map();
   function refresh(key) {
+    for (const update of inlinePreviews.get(key) ?? []) update();
     for (const target of mirrors.get(key) ?? []) {
       const val = answers[key];
       target.replaceChildren();
@@ -468,7 +523,23 @@ function respondent() {
   }
   for (const b of template.blocks) {
     if (b.type === 'prose') {
-      rich(box(root), 'Fixed instructions', b.document);
+      const keys = new Set();
+      const project = () =>
+        resolveTemplateFields(b.document, (key) => {
+          keys.add(key);
+          return answers[key] || '{{' + key + '}}';
+        });
+      const editor = rich(box(root), 'Fixed instructions', project());
+      for (const key of keys) {
+        if (!inlinePreviews.has(key)) inlinePreviews.set(key, []);
+        inlinePreviews
+          .get(key)
+          .push(() =>
+            editor.dispatch(
+              editor.createTransaction().replaceDocument(editor.state.schema.nodeFromJSON(project())),
+            ),
+          );
+      }
       continue;
     }
     if (b.type === 'reference') {

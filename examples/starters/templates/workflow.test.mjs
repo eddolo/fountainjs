@@ -6,7 +6,129 @@ import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createWorkspace } from './server.mjs';
-import { initialTemplate, documentOf } from './model.mjs';
+import { createEditor, composeExtensions, createHistoryPlugin, undo, redo } from 'fountainjs-editor';
+import { NodeSelection, Selection, Schema, textPointToPosition } from 'fountainjs-editor/core';
+import { templateFieldExtension, resolveTemplateFields } from './inline-fields.mjs';
+import { initialTemplate, documentOf, renderResponse, validateTemplate } from './model.mjs';
+
+test('a custom nested schema can insert, undo, redo and resolve inline fields without a DOM', () => {
+  const kit = composeExtensions([
+    {
+      name: 'laboratory',
+      nodes: {
+        doc: { content: 'section+' },
+        section: { content: 'caption+', attrs: { ref: { default: '' } } },
+        caption: { content: 'inline*' },
+        text: { group: 'inline' },
+      },
+      marks: { em: {} },
+    },
+    templateFieldExtension,
+  ]);
+  const spec = kit.schema;
+  const document = {
+    type: 'doc',
+    content: [
+      {
+        type: 'section',
+        attrs: { ref: 'figure-3' },
+        content: [
+          {
+            type: 'caption',
+            content: [{ type: 'text', text: 'Before SAMPLE after', marks: [{ type: 'em' }] }],
+          },
+          { type: 'caption' },
+        ],
+      },
+    ],
+  };
+  let mapping;
+  const editor = createEditor({
+    schema: spec,
+    content: document,
+    plugins: [createHistoryPlugin()],
+    onUpdate: (_state, tr) => {
+      if (tr.docChanged) mapping = tr.mapping;
+    },
+  });
+  try {
+    const select = (s) => editor.dispatch(editor.createTransaction().setSelection(s));
+    select(new Selection([0, 0, 0], 7, 13));
+    const earlier = textPointToPosition(editor.state.doc, [0, 0, 0], 3),
+      later = textPointToPosition(editor.state.doc, [0, 0, 0], 17);
+    assert.equal(kit.commands.insertTemplateField(editor, 'instrument'), true);
+    assert.equal(mapping.map(earlier), earlier);
+    assert.equal(mapping.map(later), textPointToPosition(editor.state.doc, [0, 0, 2], 4));
+    const authored = editor.getJSON();
+    assert.equal(authored.content[0].content[0].content[1].type, 'template_field');
+    assert.equal(undo(editor), true);
+    assert.deepEqual(editor.getJSON(), document);
+    assert.equal(redo(editor), true);
+    assert.deepEqual(editor.getJSON(), authored);
+    const result = resolveTemplateFields(authored, () => '<scope & 2>');
+    new Schema(spec).nodeFromJSON(result);
+    assert.deepEqual(result.content[0].content[0].content[1], {
+      type: 'text',
+      text: '<scope & 2>',
+      marks: [{ type: 'em' }],
+    });
+    assert.deepEqual(result.content[0].attrs, { ref: 'figure-3' });
+    assert.equal(resolveTemplateFields(authored, () => '').content[0].content[0].content.length, 2);
+    assert.throws(() => resolveTemplateFields(authored, () => undefined), /text answer/);
+    assert.equal(kit.commands.insertTemplateField(editor, 'bad key'), false);
+    select(new NodeSelection(editor.state.doc, [0, 1]));
+    assert.equal(kit.commands.insertTemplateField(editor, 'empty_caption'), true);
+    assert.equal(editor.getJSON().content[0].content[1].content[0].attrs.key, 'empty_caption');
+    const mixed = {
+      type: 'caption',
+      content: [
+        { type: 'text', text: 'AA x', marks: [{ type: 'em' }] },
+        { type: 'text', text: 'y BB' },
+      ],
+    };
+    editor.dispatch(
+      editor.createTransaction().replaceNode([0, 0], [editor.state.schema.nodeFromJSON(mixed)]),
+    );
+    select(Selection.range([0, 0, 0], 3, [0, 0, 1], 1));
+    assert.equal(kit.commands.insertTemplateField(editor, 'instrument'), true);
+    const formatted = resolveTemplateFields(editor.getJSON(), () => 'Ω').content[0].content[0];
+    assert.deepEqual(
+      formatted.content.map((run) => run.text),
+      ['AA ', 'Ω', ' BB'],
+    );
+    assert.deepEqual(formatted.content[1].marks, [{ type: 'em' }]);
+  } finally {
+    editor.destroy();
+  }
+});
+
+test('inline substitutions use declared single-line answers and enforce the completed output limit', () => {
+  const template = initialTemplate(),
+    slot = { type: 'template_field', attrs: { key: 'study' } };
+  const paragraph = template.blocks[0].document.content[0];
+  paragraph.content = [{ type: 'text', text: 'Study ' }, slot, { type: 'text', text: ' completed.' }];
+  const answers = { study: 'α', findings: documentOf('Reviewed') };
+  const result = renderResponse(template, answers);
+  assert.equal(result.content[1].content.map((n) => n.text).join(''), 'Study α completed.');
+  assert.equal(JSON.stringify(result).includes('template_field'), false);
+  assert.throws(
+    () =>
+      renderResponse(template, {
+        ...answers,
+        findings: { type: 'doc', content: [{ type: 'paragraph', content: [slot] }] },
+      }),
+    /Unexpected document property|Invalid text/,
+  );
+  slot.attrs.key = 'findings';
+  assert.throws(() => validateTemplate(template), /single-line/);
+  slot.attrs.key = 'missing';
+  assert.throws(() => validateTemplate(template), /single-line/);
+  slot.attrs.key = 'study';
+  paragraph.content = Array(129).fill(slot);
+  assert.throws(() => validateTemplate(template), /128 inline/);
+  paragraph.content = Array(128).fill(slot);
+  assert.throws(() => renderResponse(template, { ...answers, study: '"'.repeat(4000) }), /output limit/);
+});
 
 test('existing invitation links survive a SQLite upgrade and can be revoked', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'fountain-template-upgrade-'));

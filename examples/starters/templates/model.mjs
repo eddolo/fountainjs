@@ -1,5 +1,7 @@
 import { Schema } from 'fountainjs-editor/core';
 
+import { templateFieldExtension, validFieldKey, resolveTemplateFields } from './inline-fields.mjs';
+
 export const schemaSpec = {
   nodes: {
     doc: { content: 'block+' },
@@ -9,7 +11,8 @@ export const schemaSpec = {
       attrs: { level: { default: 1, validate: (n) => n === 1 || n === 2 } },
       toDOM: (node) => ['h' + node.attrs.level, 0],
     },
-    paragraph: { group: 'block', content: 'text*', toDOM: () => ['p', 0] },
+    paragraph: { group: 'block', content: 'inline*', toDOM: () => ['p', 0] },
+    ...templateFieldExtension.nodes,
     text: { group: 'inline' },
   },
   marks: {
@@ -42,7 +45,7 @@ function label(value, name) {
   );
 }
 
-function rich(doc) {
+function rich(doc, acceptField) {
   shape(doc, ['type', 'content']);
   check(
     doc.type === 'doc' && Array.isArray(doc.content) && doc.content.length > 0 && doc.content.length <= 128,
@@ -56,10 +59,17 @@ function rich(doc) {
       'Use paragraphs in a rich-text field.',
     );
     for (const run of block.content ?? []) {
-      shape(run, ['type', 'text', 'marks']);
-      check(run.type === 'text' && typeof run.text === 'string', 'Invalid text.');
-      length += run.text.length;
-      check(length <= 16000, 'Rich text is limited to 16,000 characters.');
+      if (acceptField && run?.type === 'template_field') {
+        shape(run, ['type', 'attrs', 'marks']);
+        shape(run.attrs, ['key']);
+        check(validFieldKey(run.attrs.key), 'Invalid inline field key.');
+        acceptField(run.attrs.key);
+      } else {
+        shape(run, ['type', 'text', 'marks']);
+        check(run.type === 'text' && typeof run.text === 'string', 'Invalid text.');
+        length += run.text.length;
+        check(length <= 16000, 'Rich text is limited to 16,000 characters.');
+      }
       if (Object.hasOwn(run, 'marks')) {
         check(Array.isArray(run.marks) && run.marks.length <= 2, 'Invalid text formatting.');
         const seen = new Set();
@@ -82,20 +92,20 @@ export function validateTemplate(template) {
     Array.isArray(template.blocks) && template.blocks.length > 0 && template.blocks.length <= 64,
     'Use 1 to 64 blocks.',
   );
-  const keys = new Set();
+  const keys = new Set(),
+    inline = [];
+  const textKeys = new Set();
   for (const block of template.blocks) {
     if (block?.type === 'prose') {
       shape(block, ['type', 'document']);
-      rich(block.document);
+      rich(block.document, (key) => {
+        check(inline.length < 128, 'Use up to 128 inline fields per template.');
+        inline.push(key);
+      });
       continue;
     }
     check(block?.type === 'field' || block?.type === 'reference', 'Unknown template block.');
-    check(
-      typeof block.key === 'string' &&
-        /^[a-z][a-z0-9_]{0,47}$/.test(block.key) &&
-        !Object.hasOwn(Object.prototype, block.key),
-      'Use a lowercase field key with letters, numbers or underscores.',
-    );
+    check(validFieldKey(block.key), 'Use a lowercase field key with letters, numbers or underscores.');
     if (block.type === 'reference') {
       shape(block, ['type', 'key']);
       continue;
@@ -108,7 +118,12 @@ export function validateTemplate(template) {
     );
     check(!keys.has(block.key), 'Each field needs a unique key.');
     keys.add(block.key);
+    if (block.kind === 'text') textKeys.add(block.key);
   }
+  check(
+    inline.every((key) => textKeys.has(key)),
+    'Inline fields require an existing single-line answer.',
+  );
   check(keys.size > 0, 'Add at least one field.');
   check(
     template.blocks.every((b) => b.type !== 'reference' || keys.has(b.key)),
@@ -153,7 +168,10 @@ export function renderResponse(template, answers) {
   let size = 0;
   for (const block of template.blocks) {
     if (block.type === 'prose') {
-      content.push(...block.document.content);
+      const resolved = resolveTemplateFields(block.document, (key) => answers[key] ?? '');
+      size += JSON.stringify(resolved.content).length;
+      check(size <= 1_000_000, 'Completed document exceeds the output limit.');
+      content.push(...resolved.content);
       continue;
     }
     if (block.type === 'field') content.push(heading(block.label, 2));

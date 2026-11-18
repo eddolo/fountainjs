@@ -2,7 +2,7 @@
   "date": "2026-11-18",
   "npmPackage": "fountainjs-editor@0.5.0-beta.1",
   "registryInstallation": "Fresh project extracted from the locally built production developer site",
-  "zipFilesComparedByteForByte": 9,
+  "zipFilesComparedByteForByte": 10,
   "publicPackageBrowserJourneys": [
     "chromium",
     "firefox",
@@ -20,5 +20,13 @@
     ],
     "workflow": "Revoke a named link while a respondent edits a private draft. Its next save and reload are denied. A second independent link still saves and reopens. Revoke a submitted link and retain the author review.",
     "migration": "Opened a database created with the earlier schema, recovered the saved draft and revoked the existing link."
+  },
+  "inlineFields": {
+    "registryPackage": "fountainjs-editor@0.5.0-beta.1",
+    "productionZipFileCount": 10,
+    "publicPackageBrowserJourneysPassed": 6,
+    "installedCandidateChecksPassed": 13,
+    "nodeChecksPassed": 4,
+    "tests": "Compose an inline field into a nested host-defined caption. Verify independent position mapping, inherited emphasis, mixed-format replacements, undo/redo, empty captions, unknown fields and expansion limits. In three browsers author an inline field, fill and save a response, export ordinary text, and reopen the template with its original binding."
   }
 }

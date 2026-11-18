@@ -5,7 +5,7 @@ import { useState } from 'react';
 const templates = import.meta.glob<string>(
   [
     '../../starters/{plain-dom,react,node}/{package.json,index.html,main.js,main.jsx,convert.mjs,sample.md,README.md}',
-    '../../starters/templates/{package.json,index.html,main.js,model.mjs,server.mjs,workflow.test.mjs,style.css,README.md}',
+    '../../starters/templates/{package.json,index.html,main.js,inline-fields.mjs,model.mjs,server.mjs,workflow.test.mjs,style.css,README.md}',
   ],
   { query: '?raw', import: 'default' },
 );

@@ -11,7 +11,15 @@ test('an author issues a template and reads a separate respondent’s completed 
   const instructions = page.getByRole('textbox', { name: 'Instructions 1' });
   await instructions.click();
   await page.keyboard.press('End');
-  await page.keyboard.type(' Include the instrument ID.');
+  await page.keyboard.type(' Include the instrument ID. Study: ');
+  const prose = page.locator('section').filter({ has: instructions });
+  await prose.getByRole('combobox', { name: 'Field to insert' }).selectOption('study');
+  await prose.getByRole('button', { name: 'Insert field', exact: true }).click();
+  await expect(instructions.locator('[data-template-field="study"]')).toHaveCount(1);
+  await prose.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(instructions.locator('[data-template-field]')).toHaveCount(0);
+  await prose.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(instructions.locator('[data-template-field="study"]')).toHaveCount(1);
   await page.getByRole('button', { name: 'Add field', exact: true }).click();
   await page.getByLabel('Field label', { exact: true }).last().fill('Instrument');
   await page.getByLabel('Field key', { exact: true }).last().fill('instrument');
@@ -42,6 +50,7 @@ test('an author issues a template and reads a separate respondent’s completed 
     await other.getByRole('button', { name: 'Submit response' }).click();
     await expect(other.getByRole('status')).toContainText('Study title');
     await other.getByLabel('Study title (required)', { exact: true }).fill('Run 17');
+    await expect(other.getByRole('textbox', { name: 'Fixed instructions' })).toContainText('Study: Run 17');
     await other.getByLabel('Instrument', { exact: true }).fill('Scope B');
     const findings = other.getByRole('textbox', { name: 'Findings (required)' });
     await findings.click();
@@ -66,6 +75,10 @@ test('an author issues a template and reads a separate respondent’s completed 
     await other.getByRole('button', { name: 'Download Fountain JSON' }).click();
     const file = await download,
       json = JSON.parse(await readFile((await file.path())!, 'utf8'));
+    expect(json.content[1].content.map((run: { text: string }) => run.text).join('')).toContain(
+      'Study: Run 17',
+    );
+    expect(JSON.stringify(json)).not.toContain('template_field');
     expect(json.content[0]).toMatchObject({ type: 'heading', content: [{ text: 'Telescope calibration' }] });
     expect(
       json.content.filter((p: { content?: { text?: string }[] }) =>
@@ -100,6 +113,9 @@ test('an author issues a template and reads a separate respondent’s completed 
     await page.goto('http://127.0.0.1:4203/');
     await page.getByLabel('Open template file').setInputFiles(templateFile!);
     await expect(page.getByLabel('Template title')).toHaveValue('Template for next week');
+    await expect(
+      page.getByRole('textbox', { name: 'Instructions 1' }).locator('[data-template-field="study"]'),
+    ).toHaveCount(1);
     expect(page.url()).not.toBe(priorAddress);
     await expect(page.getByText('No submissions yet.')).toBeVisible();
     expect(errors).toEqual([]);

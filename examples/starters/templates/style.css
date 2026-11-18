@@ -124,7 +124,13 @@ select:focus-visible {
   border-radius: 0.4rem;
   background: white;
 }
-.rich [contenteditable] {
+.rich [data-template-field] {
+  background: #e5f2eb;
+  color: #124e40;
+  padding: 0.05em 0.2em;
+  border-radius: 0.2em;
+}
+.rich [contenteditable='true'] {
   padding: 0.7rem;
   min-height: 4rem;
   outline-offset: 1px;
