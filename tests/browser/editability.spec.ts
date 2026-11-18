@@ -48,3 +48,34 @@ test('changes interaction mode without replacing the editor or consuming documen
     blockedEditing: true, historyRetained: true, viewRetained: true, errors }, null, 2));
   expect(errors).toEqual([]);
 });
+
+test('a host rejection keeps widget edits pending and preserves the native input focus', async ({ page }, info) => {
+  await page.goto('/browser-tests.html?fixture=widget-host-review');
+  const input = page.getByRole('textbox', { name: 'Assignee', exact: true });
+  const editor = page.getByRole('textbox', { name: 'Review widget editor' });
+  const save = page.getByRole('button', { name: 'Save assignee' });
+  const result = page.getByLabel('Save result', { exact: true });
+  const saved = page.getByLabel('Saved assignee', { exact: true });
+  await input.fill('Ada');
+  await save.click();
+  await expect(result).toHaveText('Change rejected');
+  await expect(saved).toHaveText('Mina');
+  await input.press('Enter');
+  await expect(input).toBeFocused();
+  await expect(input).toHaveValue('Ada');
+  const draftControl = await input.elementHandle();
+  await editor.screenshot({ path: info.outputPath('widget-held.png') });
+  expect(await draftControl!.evaluate(element => element.isConnected)).toBe(true);
+  await expect(input).toBeFocused();
+
+  await page.getByLabel('Hold changes for review').uncheck();
+  await expect(input).toHaveValue('Ada');
+  await save.click();
+  await expect(result).toHaveText('Saved');
+  await expect(saved).toHaveText('Ada');
+  await input.press('Enter');
+  await expect(editor).toBeFocused();
+  await page.keyboard.type('Next: ');
+  await expect(editor.locator('p')).toHaveText('Next: Follow-up');
+  await editor.screenshot({ path: info.outputPath('widget-released.png') });
+});

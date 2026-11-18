@@ -296,8 +296,7 @@ export function insertWidget(
     const path = [index];
     const meta: WidgetTransactionMeta = Object.freeze({ action: 'insert', widget: definition.name, path: Object.freeze(path) });
     transaction.setSelection(new NodeSelection(transaction.doc, path)).setMeta(WIDGET_TRANSACTION_META, meta);
-    editor.dispatch(transaction);
-    return true;
+    return editor.dispatch(transaction);
   }
   const { selection } = editor.state;
   if (selection.kind !== 'text' || !selection.isSingleText) return false;
@@ -317,8 +316,7 @@ export function insertWidget(
   const meta: WidgetTransactionMeta = Object.freeze({ action: 'insert', widget: definition.name, path: Object.freeze(path) });
   const transaction = editor.state.createTransaction().replaceNode(selection.path, replacement);
   transaction.setSelection(new NodeSelection(transaction.doc, path)).setMeta(WIDGET_TRANSACTION_META, meta);
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 /** Returns a widget node at a path, or null for a stale path or different node kind. */
@@ -362,8 +360,7 @@ export function updateWidget(
   const transaction = editor.state.createTransaction()
     .setNodeAttrs(path, attributes)
     .setMeta(WIDGET_TRANSACTION_META, meta);
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 /** Removes a widget through the normal schema-aware structural command. */
@@ -386,20 +383,17 @@ export function exitWidget(
   if (!getWidgetNode(editor, definition, path)) return false;
   try {
     if (action === 'select') {
-      editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, path)));
-      return true;
+      return editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, path)));
     }
     const candidates = getTextLeaves(editor.state.doc).filter((leaf) => !pathStartsWith(leaf.path, path));
     const target = action === 'before'
       ? [...candidates].reverse().find((leaf) => comparePaths(leaf.path, path) < 0)
       : candidates.find((leaf) => comparePaths(leaf.path, path) > 0);
     if (!target) {
-      editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, path)));
-      return true;
+      return editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, path)));
     }
     const offset = action === 'before' ? target.node.text?.length ?? 0 : 0;
-    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor(target.path, offset)));
-    return true;
+    return editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor(target.path, offset)));
   } catch {
     return false;
   }

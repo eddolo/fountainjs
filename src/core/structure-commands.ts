@@ -228,8 +228,7 @@ export function setNodeAttributes(editor: Editor, path: readonly number[], attrs
   try { node.type.create(next, node.content, node.text, node.marks); }
   catch { return false; }
   const transaction = editor.state.createTransaction().setNodeAttrs(path, next);
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 export function removeNode(editor: Editor, path: readonly number[]): boolean {
