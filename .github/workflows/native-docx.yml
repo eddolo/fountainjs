@@ -36,7 +36,8 @@ permissions:
 jobs:
   render:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    # A cold runner can spend over 20 minutes installing Writer and Chromium.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
