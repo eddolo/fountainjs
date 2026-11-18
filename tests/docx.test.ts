@@ -194,6 +194,21 @@ describe('DOCX interchange', () => {
     expect(imported.report.issues.map((issue) => issue.code)).toEqual(['accepted-insertion', 'omitted-deletion']);
   });
 
+  it('shares a Word relationship between repeated targets while keeping each link in document order', () => {
+    const targets = ['https://example.org/a', 'https://example.org/b', 'https://example.org/a'];
+    const doc = schema.node('doc', {}, targets.map((href, index) => schema.node('paragraph', {}, [
+      schema.text('Link ' + index, [schema.mark('link', { href })]),
+    ])));
+    const { bytes } = exportDOCX(doc);
+    const parts = unzipSync(bytes);
+    expect(Array.from(strFromU8(parts['word/document.xml']).matchAll(/<w:hyperlink r:id="([^"]+)"/g), match => match[1]))
+      .toEqual(['rId1', 'rId2', 'rId1']);
+    const relationships = strFromU8(parts['word/_rels/document.xml.rels']);
+    expect(relationships.match(/relationships\/hyperlink"/g)).toHaveLength(2);
+    const { document } = importDOCX(bytes, schema);
+    expect(document.content.map(node => node.child(0).marks.find(mark => mark.type.name === 'link')?.attrs.href)).toEqual(targets);
+  });
+
   it('preserves hyperlink text but reports and drops an unsafe external target', () => {
     const documentXML = `<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><w:body><w:p><w:hyperlink r:id="rId9"><w:r><w:t>Readable label</w:t></w:r></w:hyperlink></w:p></w:body></w:document>`;
     const relationships = `<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId9" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="javascript:alert(1)" TargetMode="External"/></Relationships>`;
