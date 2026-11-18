@@ -9,7 +9,7 @@ import { createWorkspace } from './server.mjs';
 import { createEditor, composeExtensions, createHistoryPlugin, undo, redo } from 'fountainjs-editor';
 import { NodeSelection, Selection, Schema, textPointToPosition } from 'fountainjs-editor/core';
 import { templateFieldExtension, resolveTemplateFields } from './inline-fields.mjs';
-import { initialTemplate, documentOf, renderResponse, validateTemplate } from './model.mjs';
+import { initialTemplate, documentOf, renderResponse, validateTemplate, validateAnswers, InputError } from './model.mjs';
 
 test('a custom nested schema can insert, undo, redo and resolve inline fields without a DOM', () => {
   const kit = composeExtensions([
@@ -374,4 +374,44 @@ test('host accounts control ownership, assignments, forwarding and account chang
     if (server?.listening) await stop();
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+test('answer rules retain incomplete drafts and validate exact text and calendar dates on submission', () => {
+  const template = initialTemplate();
+  const first = template.blocks[1];
+  first.required = false;
+  template.blocks[2].required = false;
+  const second = { ...first, key: 'second', label: 'Confirmation' };
+  template.blocks.unshift(second); // A rule can refer to a later field.
+  const rule = { field: 'second', other: 'study', operator: 'matches' };
+  template.rules = [rule];
+  validateTemplate(template);
+  const answers = (value, other) => ({ second: value, study: other });
+  const reject = (values, field) => assert.throws(() => renderResponse(template, values),
+    (error) => error instanceof InputError && error.field === field);
+  validateAnswers(template, answers('A', 'a'), false);
+  renderResponse(template, {});
+  for (const other of ['study', '  Study', 'e\u0301']) {
+    const value = other === 'e\u0301' ? 'é' : 'Study';
+    reject(answers(value, other), 'second');
+  }
+  reject({ second: 'present' }, 'study');
+  renderResponse(template, answers(' A ', ' A '));
+  rule.operator = 'differs';
+  reject(answers('A', 'A'), 'second');
+  renderResponse(template, answers('A', 'B'));
+  rule.operator = 'onOrAfter';
+  renderResponse(template, answers('2024-02-29', '2024-02-29'));
+  renderResponse(template, answers('2024-03-01', '2024-02-29'));
+  reject(answers('2024-02-28', '2024-02-29'), 'second');
+  reject(answers('2024-02-29', '2023-02-29'), 'study');
+  for (const invalid of ['2023-02-29', '2024-02-30', '2024-2-29', '0000-01-01', '2024-02-29 '])
+    reject(answers(invalid, '2024-01-01'), 'second');
+  for (const bad of [null, { ...rule, field: 'findings' }, { ...rule, other: 'gone' },
+    { ...rule, other: 'second' }, { ...rule, operator: {} }, { ...rule, operator: 'unknown' },
+    { ...rule, expression: 'unused' }]) {
+    assert.throws(() => validateTemplate({ ...template, rules: [bad] }), InputError);
+  }
+  for (const bad of [null, {}, Array(65).fill(rule)])
+    assert.throws(() => validateTemplate({ ...template, rules: bad }), InputError);
 });

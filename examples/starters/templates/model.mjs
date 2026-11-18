@@ -85,7 +85,7 @@ function rich(doc, acceptField) {
 }
 
 export function validateTemplate(template) {
-  shape(template, ['version', 'title', 'blocks']);
+  shape(template, ['version', 'title', 'blocks', 'rules']);
   check(template.version === 1, 'Unsupported template version.');
   label(template.title, 'title');
   check(
@@ -129,7 +129,55 @@ export function validateTemplate(template) {
     template.blocks.every((b) => b.type !== 'reference' || keys.has(b.key)),
     'Choose an existing field for every reference.',
   );
+  if (Object.hasOwn(template, 'rules')) {
+    check(Array.isArray(template.rules) && template.rules.length <= 64, 'Use up to 64 answer rules.');
+    for (const rule of template.rules) {
+      shape(rule, ['field', 'other', 'operator']);
+      check(textKeys.has(rule.field) && textKeys.has(rule.other) && rule.field !== rule.other,
+        'Choose two different single-line fields for each answer rule.');
+      check(typeof rule.operator === 'string' && Object.hasOwn(comparisonLabels, rule.operator),
+        'Choose a supported answer comparison.');
+    }
+  }
   return template;
+}
+
+export const comparisonLabels = Object.freeze({
+  matches: 'Must match',
+  differs: 'Must differ from',
+  onOrAfter: 'Date on or after',
+});
+
+function validDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || value.startsWith('0000')) return false;
+  const timestamp = Date.parse(value + 'T00:00:00Z');
+  return Number.isFinite(timestamp) && new Date(timestamp).toISOString().slice(0, 10) === value;
+}
+
+function answerError(field, message) {
+  throw Object.assign(new InputError(message), { field });
+}
+
+function compareAnswers(template, answers, fields) {
+  const labels = new Map(fields.map((field) => [field.key, field.label]));
+  for (const { field, other, operator } of template.rules ?? []) {
+    const value = answers[field], reference = answers[other];
+    if (value === undefined || value === '') continue;
+    const name = labels.get(field), otherName = labels.get(other);
+    if (reference === undefined || reference === '') {
+      answerError(other, 'Complete “' + otherName + '” to check “' + name + '”.');
+    }
+    if (operator === 'onOrAfter') {
+      for (const key of [other, field]) {
+        if (!validDate(answers[key])) answerError(key, 'Enter a valid date in YYYY-MM-DD format for “' + labels.get(key) + '”.');
+      }
+      if (value < reference) answerError(field, '“' + name + '” must be on or after “' + otherName + '”.');
+    } else if (operator === 'matches' && value !== reference) {
+      answerError(field, '“' + name + '” must exactly match “' + otherName + '”.');
+    } else if (operator === 'differs' && value === reference) {
+      answerError(field, '“' + name + '” must differ from “' + otherName + '”.');
+    }
+  }
 }
 
 export function validateAnswers(template, answers, submitting) {
@@ -158,6 +206,7 @@ export function validateAnswers(template, answers, submitting) {
       'Complete the required field “' + field.label + '”.',
     );
   }
+  if (submitting && template.rules?.length) compareAnswers(template, answers, fields);
 }
 
 export function renderResponse(template, answers) {
