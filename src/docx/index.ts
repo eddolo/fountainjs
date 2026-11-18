@@ -1,4 +1,5 @@
 import { xmlEscape, REL_NS, OFFICE_REL_NS, OFFICE_CONTENT_TYPE, relationshipXML, relationshipsXML } from './opc';
+import { CHART_NS, CHART_GROUP, readNativeChart, reconcileChartGroup } from './chart-reader';
 import { wordChart, CHART_TYPE, WORKBOOK_TYPE } from './chart';
 import { readWordListLayout, WORD_LIST_MARKER_FORMATS } from './list-layout';
 import { isListLayout, listMarkerAffixes, type ListLayout } from '../core/list-layout';
@@ -336,12 +337,13 @@ function runMarks(run: XMLElement, schema: Schema, hyperlink?: string, issues: D
 
 interface ImportedRelationship {
   readonly target: string;
-  readonly type: 'hyperlink' | 'image';
+  readonly type: 'hyperlink' | 'image' | 'chart';
   readonly external: boolean;
   readonly packageImage: boolean;
 }
 
 interface ImportMediaContext {
+  readonly readChartPart: (path: string) => FountainNode | undefined;
   readonly readImagePart: (path: string) => Uint8Array | undefined;
   readonly relationships: ReadonlyMap<string, ImportedRelationship>;
   readonly options: DOCXImportOptions;
@@ -425,8 +427,20 @@ function embeddedImageNode(
   path: readonly number[],
   hyperlink?: string,
 ): FountainNode | undefined {
-  if (descendants(element, 'chart').some(chart => expandedName(chart) === 'http://schemas.openxmlformats.org/drawingml/2006/chart|chart')) {
-    issues.push({ code: 'native-chart-not-imported', severity: 'warning', message: 'The native Word chart and its linked data were not imported. Any accompanying Word table remains editable.', path });
+  const charts = descendants(element, 'chart').filter(item => expandedName(item) === CHART_NS + '|chart');
+  if (charts.length) {
+    const id = charts.length === 1 && qualifiedAttribute(charts[0]!, 'id', OFFICE_REL_NS);
+    const relationship = id && media.relationships.get(id);
+    const target = relationship && relationship.type === 'chart' && !relationship.external &&
+      packagePartPath(media.sourcePart ?? 'word/document.xml', relationship.target);
+    const chart = target && media.readChartPart(target);
+    if (chart) {
+      issues.push({ code: 'native-chart-data-projection', severity: 'warning', path, sourcePart: target,
+        message: 'The chart uses the saved plotted series. Workbook formulas, separate worksheet edits and native chart styling are outside this projection.' });
+      return chart;
+    }
+    issues.push({ code: 'native-chart-not-imported', severity: 'warning', path,
+      message: 'This chart could not be represented from its saved series and active schema. Any accompanying Word table remains editable.' });
     return undefined;
   }
   const blip = descendants(element, 'blip')[0];
@@ -904,7 +918,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
     inline = [];
   };
   for (const node of content) {
-    if (node.type.name === 'math_block' || node.type.name === 'page_break') {
+    if (node.type.name === 'math_block' || node.type.name === 'page_break' || node.type.name === 'bar_chart') {
       flush();
       parts.push(node.type.name === 'math_block' && ownsDisplayLayout && layout
         ? schema.node('math_block', { ...node.attrs, layout }) : node);
@@ -1087,6 +1101,18 @@ function parseBlocks(container: XMLElement, schema: Schema, media: ImportMediaCo
         flush();
         blocks.push(parseTable(item, schema, media, numbering, issues, currentPath));
       } else if (name === 'sdt') {
+        const control = structuralControl(item);
+        if (control?.tag === CHART_GROUP) {
+          flush();
+          const content = parseBlocks(control.content, schema, media, numbering, issues, [...currentPath, control.index]);
+          const grouped = reconcileChartGroup(content, schema);
+          if (grouped === content && content.at(-1)?.type.name === 'bar_chart') {
+            issues.push({ code: 'chart-companion-kept-separate', severity: 'info', path: currentPath,
+              message: 'The accompanying Word content differs from the chart. Both versions are retained independently.' });
+          }
+          blocks.push(...grouped);
+          continue;
+        }
         const glossary = parseDefinitionList(item, schema, media, numbering, issues, currentPath);
         if (glossary) { flush(); blocks.push(...glossary); continue; }
         // Inline/row/cell controls have different shapes. This branch only
@@ -1448,6 +1474,14 @@ function relationshipMap(root: XMLElement | undefined): ReadonlyMap<string, Impo
     const id = attr(relationship, 'Id');
     const target = attr(relationship, 'Target');
     const type = attr(relationship, 'Type') ?? '';
+    if (type === OFFICE_REL_NS + '/chart' && packageRelationships.has(relationship) &&
+      expandedName(relationship) === REL_NS + '|Relationship' && id && target &&
+      relationship.attrs.Id === id && relationship.attrs.Target === target && relationship.attrs.Type === type &&
+      [undefined, 'Internal'].includes(relationship.attrs.TargetMode)) {
+      if (map.has(id)) throw new Error('Ambiguous DOCX chart relationship.');
+      map.set(id, { target, type: 'chart', external: false, packageImage: false });
+      continue;
+    }
     const kind = /\/hyperlink$/i.test(type) ? 'hyperlink' : /\/image$/i.test(type) ? 'image' : undefined;
     if (id && target && kind) {
       const external = attr(relationship, 'TargetMode') === 'External';
@@ -1455,6 +1489,7 @@ function relationshipMap(root: XMLElement | undefined): ReadonlyMap<string, Impo
       // Only explicit OPC image relationships may look outside Word's usual media folder.
       const packageImage = type === `${OFFICE_REL_NS}/image` && (mode === undefined || mode === 'Internal')
         && packageRelationships.has(relationship) && expandedName(relationship) === `${REL_NS}|Relationship`;
+      if (map.get(id)?.type === 'chart') throw new Error('Ambiguous DOCX chart relationship.');
       map.set(id, { target, type: kind, external, packageImage });
     }
   }
@@ -1773,7 +1808,33 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     catch (error) { issues.push({ code: 'invalid-math-source-metadata', severity: 'warning', message: error instanceof Error ? error.message : String(error) }); }
   }
   const importedParts = new Set<string>();
-  const media: ImportMediaContext = { readImagePart, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles, paragraphBridge, hiddenFieldContent: hiddenComplexFieldContent(body) };
+  const chartParts = new Map<string, FountainNode | undefined>();
+  let chartRows = 0;
+  const readChartPart = (path: string) => {
+    if (!['bar_chart', 'paragraph', 'text', 'table', 'table_row', 'table_cell', 'table_header'].every(name => schema.nodes[name])
+        || !entrySizes.has(path) || path === '__proto__' || (entrySizes.get(path) ?? 0) > limits.maxDocumentXmlBytes) return;
+    if (!chartParts.has(path)) {
+      readExtraParts([path]);
+      let chart: FountainNode | undefined;
+      try {
+        const root = parse(path);
+        chart = root && readNativeChart(root, schema);
+        if (chart) schema.validate(chart);
+      } catch (error) {
+        if (error instanceof RangeError) throw error;
+        // An invalid optional chart or an incompatible schema leaves the rest of the story readable.
+        chart = undefined;
+      }
+      chartParts.set(path, chart);
+    }
+    const chart = chartParts.get(path);
+    if (chart) {
+      chartRows += chart.child(chart.childCount - 1).childCount;
+      if (chartRows > limits.maxXmlNodes) throw new RangeError('DOCX chart rows exceed the import limit.');
+    }
+    return chart;
+  };
+  const media: ImportMediaContext = { readChartPart, readImagePart, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles, paragraphBridge, hiddenFieldContent: hiddenComplexFieldContent(body) };
   const blocks = parseBlocks(body, schema, media, numbering, issues, []);
   const importedStories = new Set<string>();
   const sections = descendants(body, 'sectPr').filter(item => expandedName(item) === `${WORD_NS}|sectPr`);
@@ -2516,7 +2577,7 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       context.charts.push({ story: context.sourcePart, xml: chart.xml, workbook: chart.workbook });
       context.issues.push({ code: 'chart-workbook-projection', severity: 'warning', path,
         message: 'Word stores the chart data in an embedded Excel workbook. The accompanying table preserves the source cells. Edits to one do not update the other.' });
-      return table + chart.drawing;
+      return `<w:sdt><w:sdtPr><w:tag w:val="${CHART_GROUP}"/><w:id w:val="${context.nextControlId++}"/></w:sdtPr><w:sdtContent>${table}${chart.drawing}</w:sdtContent></w:sdt>`;
     }
     case 'page_break':
       if (path.length > 1) context.issues.push({ code: 'nested-page-break-projection', severity: 'warning', message: 'The nested page break is written natively, but enclosing list/quote identity and table or story layout are not certified on reimport.', path });

@@ -57,8 +57,8 @@ export function parseDOCXXML(source: string, limits: DOCXXMLLimits): XMLElement 
     const name = split < 0 ? body : body.slice(0, split);
     if (!name) throw new Error('Malformed DOCX XML start tag.');
     nodes += 1;
-    if (nodes > limits.maxXmlNodes) throw new Error(`DOCX XML exceeds ${limits.maxXmlNodes} nodes.`);
-    if (!selfClosing && stack.length >= limits.maxXmlDepth) throw new Error(`DOCX XML exceeds depth ${limits.maxXmlDepth}.`);
+    if (nodes > limits.maxXmlNodes) throw new RangeError(`DOCX XML exceeds ${limits.maxXmlNodes} nodes.`);
+    if (!selfClosing && stack.length >= limits.maxXmlDepth) throw new RangeError(`DOCX XML exceeds depth ${limits.maxXmlDepth}.`);
     const attrs = parseAttributes(split < 0 ? '' : body.slice(split + 1));
     let namespaces = stack.at(-1)!.namespaces;
     const declarations = Object.entries(attrs).filter(([key]) => key === 'xmlns' || key.startsWith('xmlns:'));

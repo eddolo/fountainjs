@@ -8,8 +8,16 @@ author's cell text and formatting. In Word, use the chart's **Edit Data** comman
 change the plotted values. The accompanying table is a separate copy and edits to it
 do not update the chart. Invalid chart data exports as a table with a conversion notice.
 
-On reimport, Fountain reads that table and reports the native chart separately.
-Changes made only in the embedded workbook are outside the current import support.
+With the charts extension installed, Fountain reopens a single-series horizontal
+bar, line or pie chart from its saved category labels and numeric points. Fountain
+groups its own matching caption, formatted table and plot into one editable chart.
+When the table and plot disagree, both remain editable independently. Ordinary
+Word tables outside that group remain separate.
+
+A DOCX can contain different values in the plot cache and the embedded spreadsheet.
+Import uses the values that the office application saved for display. It reports
+the limits on workbook-only edits, formulas and native styling. Unsupported or
+incomplete series receive a warning. Keep the original DOCX for its workbook.
 
 ## Source-owned quote appearance
 

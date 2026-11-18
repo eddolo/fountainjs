@@ -4,7 +4,7 @@
 
 - Keep table headings visible in DOCX viewers and restore header scope when reopening older Fountain exports.
 
-- Add optional table-backed bar, line and pie charts to the editor with SVG and bitmap image downloads. Convert an existing table to a chart and back while keeping its cells and formatting. HTML retains the plot and editable data. DOCX export includes a native Office chart, an embedded Excel worksheet and the formatted table. Reimport retains the table and reports the chart omission.
+- Add optional table-backed bar, line and pie charts to the editor with SVG and bitmap image downloads. Convert an existing table to a chart and back while keeping its cells and formatting. HTML retains the plot and editable data. DOCX export includes a native Office chart, an embedded Excel worksheet and the formatted table. Reimport restores supported plotted series and keeps independently edited companion tables.
 
 - Reuse verified collaboration lookup indexes after eligible remote text edits.
 

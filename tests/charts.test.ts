@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { unzipSync, strFromU8 } from 'fflate';
+import { unzipSync, strFromU8, strToU8, zipSync } from 'fflate';
 import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
@@ -26,8 +26,9 @@ it('keeps chart edits in native cells and reopens the exported data without dupl
   const word = exportDOCX(edited);
   expect(word.report.issues).toContainEqual(expect.objectContaining({ code: 'chart-workbook-projection', path: [chartIndex] }));
   const reopened = importDOCX(word.bytes, editor.state.schema).document;
-  expect(reopened.child(chartIndex).textContent).toBe('Net change');
-  const wordTable = reopened.child(chartIndex + 1);
+  expect(reopened.childCount).toBe(edited.childCount);
+  expect(reopened.child(chartIndex).child(0).textContent).toBe('Net change');
+  const wordTable = reopened.child(chartIndex).child(1);
   expect(wordTable.type.name).toBe('table');
   expect(wordTable.child(0).content.map(cell => cell.textContent)).toEqual(['Category', 'Value']);
   expect(wordTable.child(1).child(0).textContent).toBe('A < B');
@@ -226,7 +227,12 @@ it.each(['bar', 'line', 'pie'] as const)('embeds a native %s chart with Excel da
   expect(sheet).not.toContain('<f>');
   expect(sheet).toContain('<c r="B3"><v>4</v></c>');
   const imported = importDOCX(output.bytes, editor.state.schema);
-  expect(imported.report.issues.some(issue => issue.code === 'native-chart-not-imported')).toBe(true);
+  expect(imported.report.issues.some(issue => issue.code === 'native-chart-data-projection')).toBe(true);
+  const reopened = imported.document.content.find(node => node.type.name === 'bar_chart')!;
+  expect(reopened.attrs.kind).toBe(kind);
+  expect(reopened.child(1).child(1).child(0).textContent).toBe('=SUM(1,2)');
+  const twice = importDOCX(exportDOCX(imported.document).bytes, editor.state.schema).document;
+  expect(twice.content.map(node => node.type.name)).toEqual(imported.document.content.map(node => node.type.name));
   editor.destroy();
 });
 
@@ -268,4 +274,60 @@ it('retains the original table when the data cannot become an Excel numeric seri
   expect(unzipSync(output.bytes)['word/charts/chart1.xml']).toBeUndefined();
   expect(importDOCX(output.bytes, editor.state.schema).document.textContent).toContain(String(Number.MAX_VALUE));
   editor.destroy();
+});
+
+
+it('keeps independently edited companion content and plotted data through two DOCX imports', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Change', [['Tuesday', -16]]);
+  const parts = unzipSync(exportDOCX(editor.state.doc).bytes);
+  const part = 'word/charts/chart1.xml';
+  parts[part] = strToU8(strFromU8(parts[part]).replace('<c:v>-16</c:v>', '<c:v>24</c:v>'));
+  const imported = importDOCX(zipSync(parts), editor.state.schema);
+  expect(imported.report.issues.some(issue => issue.code === 'chart-companion-kept-separate')).toBe(true);
+  for (const doc of [imported.document, importDOCX(exportDOCX(imported.document).bytes, editor.state.schema).document]) {
+    expect(doc.content.filter(node => node.type.name === 'table').map(node => node.child(1).child(1).textContent)).toEqual(['-16']);
+    expect(doc.content.filter(node => node.type.name === 'bar_chart').map(node => node.child(1).child(1).child(1).textContent)).toEqual(['24']);
+  }
+  editor.destroy();
+});
+
+it('keeps the table and reports unsupported native series, absent chart schema and external targets', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Data', [['A', 2]]);
+  const original = exportDOCX(editor.state.doc).bytes;
+  const base = new Schema(composeExtensions([CoreExtension]).schema);
+  for (const change of ['external', 'second series', 'missing point', 'foreign cache', 'malformed XML', 'custom schema']) {
+    const parts = unzipSync(original);
+    const name = 'word/charts/chart1.xml', rel = 'word/_rels/document.xml.rels';
+    let chart = strFromU8(parts[name]);
+    if (change === 'external') parts[rel] = strToU8(strFromU8(parts[rel]).replace('Target="charts/chart1.xml"', 'TargetMode="External" Target="https://example.test/chart1.xml"'));
+    if (change === 'second series') chart = chart.replace('</c:ser>', '</c:ser><c:ser/>');
+    if (change === 'missing point') chart = chart.replace('<c:numCache><c:formatCode>General</c:formatCode><c:ptCount val="1"/>', '<c:numCache><c:ptCount val="2"/>');
+    if (change === 'malformed XML') chart = chart.slice(0, -12);
+    if (change === 'foreign cache') chart = chart.replace('<c:numCache>', '<c:numCache xmlns:c="urn:foreign">');
+    parts[name] = strToU8(chart);
+    const imported = importDOCX(zipSync(parts), change === 'custom schema' ? base : editor.state.schema);
+    expect(imported.document.content.some(node => node.type.name === 'bar_chart'), change).toBe(false);
+    expect(imported.document.content.find(node => node.type.name === 'table')?.child(1).textContent, change).toBe('A2');
+    expect(imported.report.issues.some(issue => issue.code === 'native-chart-not-imported'), change).toBe(true);
+  }
+  editor.destroy();
+});
+
+
+it('recovers the authored cell spelling and rich marks when the Office plot still agrees', () => {
+  const schema = new Schema(kit.schema);
+  const plain = (s: string) => schema.node('paragraph', {}, [schema.text(s)]);
+  const first = schema.node('table_cell', {}, [plain('Region')]);
+  const value = schema.node('table_cell', {}, [schema.node('paragraph', {}, [schema.text('04.00', [schema.mark('strong')])])]);
+  const table = schema.node('table', {}, [schema.node('table_row', {}, [first, value])]);
+  const chart = schema.node('bar_chart', { kind: 'line' }, [table]);
+  const doc = schema.node('doc', {}, [chart]);
+  const restored = importDOCX(exportDOCX(doc).bytes, schema).document.child(0);
+  expect(restored.type.name).toBe('bar_chart');
+  expect(restored.childCount).toBe(1);
+  const cell = restored.child(0).child(0).child(1);
+  expect(cell.textContent).toBe('04.00');
+  expect(cell.child(0).child(0).marks.map(mark => mark.type.name)).toContain('strong');
 });

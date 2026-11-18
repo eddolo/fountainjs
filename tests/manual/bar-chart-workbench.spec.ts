@@ -46,6 +46,8 @@ test('edits chart data in the public editor and exports the same data and plot',
   await input.setInputFiles({ name: 'reopened.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', buffer: await readFile(file) });
   const reopened = page.getByRole('region', { name: 'Conversion workspace: reopened.docx', exact: true })
     .getByRole('textbox', { name: 'Imported document editor' });
+  await expect(reopened.locator('[data-fountain-chart-plot]')).toContainText('Tuesday · -16');
+  await expect(reopened.locator('table')).toHaveCount(1);
   await expect(reopened.getByRole('row').filter({ hasText: 'Tuesday' }).getByRole('cell').last()).toHaveText('-16');
 });
 
@@ -163,4 +165,41 @@ test('changes a signed line chart to a pie, fixes the data, and reopens the save
   await page.getByLabel('Choose documents').setInputFiles({ name: 'share.html', mimeType: 'text/html', buffer: Buffer.from(html) });
   const reopened = page.getByRole('textbox', { name: 'Imported document editor' });
   await expect(reopened.locator('figure[data-fountain-chart="pie"] [data-fountain-chart-plot]')).toContainText('Tuesday · 4');
+});
+
+
+test('reopens the chart edited in LibreOffice and preserves its independently edited Word table', async ({ page }, info) => {
+  // The browser export started at -16. LibreOffice saved +24 in the plotted series,
+  // while the visible Word table and embedded worksheet both retained -16.
+  const name = 'weekly-orders-libreoffice.docx';
+  await page.goto('conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles('tests/fixtures/native-docx/' + name);
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: ' + name, exact: true });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  const chart = editor.locator('figure[data-fountain-chart="bar"]');
+  const plot = chart.locator('[data-fountain-chart-plot]');
+  const tableValue = (table: ReturnType<typeof page.locator>) =>
+    table.getByRole('row').filter({ hasText: 'Tuesday' }).getByRole('cell').last();
+  await expect(plot).toContainText('Tuesday · 24');
+  await expect(editor.locator('table')).toHaveCount(2);
+  await expect(tableValue(editor.locator('table').first())).toHaveText('-16');
+  await chart.screenshot({ path: info.outputPath('reopened-native-chart.png') });
+  await tableValue(chart).locator('p').click();
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Shift+End');
+  await page.keyboard.insertText('32');
+  await expect(plot).toContainText('Tuesday · 32');
+  await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('docx');
+  await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+  const pending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const path = info.outputPath('fountain-edited.docx');
+  await (await pending).saveAs(path);
+  await input.setInputFiles(path);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-edited.docx', exact: true })
+    .getByRole('textbox', { name: 'Imported document editor' });
+  await expect(reopened.locator('table')).toHaveCount(2);
+  await expect(tableValue(reopened.locator('table').first())).toHaveText('-16');
+  await expect(reopened.locator('[data-fountain-chart-plot]')).toContainText('Tuesday · 32');
 });
