@@ -20,6 +20,7 @@ test('an author issues a template and reads a separate respondent’s completed 
   await page.getByRole('button', { name: 'Save template', exact: true }).click();
   await expect(page.getByRole('status')).toHaveText('Template saved.');
   await page.screenshot({ path: info.outputPath('author.png'), fullPage: true });
+  await page.getByLabel('Invitation label (optional)').fill('Optics lab');
   await page.getByRole('button', { name: 'Create respondent link' }).click();
   const address = await page.getByRole('link', { name: 'Open response' }).getAttribute('href');
   expect(address).toBeTruthy();
@@ -77,6 +78,20 @@ test('an author issues a template and reads a separate respondent’s completed 
     await page.screenshot({ path: info.outputPath('completed.png'), fullPage: true });
     await page.getByRole('button', { name: 'Back to template' }).click();
     await expect(page.getByLabel('Template title')).toHaveValue('Template for next week');
+    await page.reload();
+    await expect(page.getByText('Optics lab · revision 2')).toBeVisible();
+    page.once('dialog', (d) => d.dismiss());
+    await page.getByRole('button', { name: 'Revoke access' }).click();
+    await expect(page.getByRole('button', { name: 'Revoke access' })).toBeVisible();
+    page.once('dialog', (d) => d.accept());
+    await page.getByRole('button', { name: 'Revoke access' }).click();
+    await expect(page.getByRole('status')).toHaveText('Access revoked for Optics lab.');
+    await other.reload();
+    await expect(other.getByRole('status')).toHaveText('This link cannot open a document.');
+    await expect(other.getByRole('textbox', { name: 'Completed document' })).toHaveCount(0);
+    await page.getByRole('button', { name: /Read submission 1/ }).click();
+    await expect(page.getByRole('textbox', { name: 'Completed document' })).toContainText('Scope B');
+    await page.getByRole('button', { name: 'Back to template' }).click();
     const templateDownload = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Download template JSON' }).click();
     const templateFile = await (await templateDownload).path();
@@ -88,6 +103,53 @@ test('an author issues a template and reads a separate respondent’s completed 
     expect(page.url()).not.toBe(priorAddress);
     await expect(page.getByText('No submissions yet.')).toBeVisible();
     expect(errors).toEqual([]);
+  } finally {
+    await respondent.close();
+  }
+});
+
+test('revoking an open draft blocks further writes while a separate invitation still works', async ({
+  page,
+  browser,
+}, info) => {
+  await page.goto('http://127.0.0.1:4203/');
+  await page.getByRole('button', { name: 'Create template', exact: true }).click();
+  async function invite(label: string) {
+    await page.getByLabel('Invitation label (optional)').fill(label);
+    await page.getByRole('button', { name: 'Create respondent link' }).click();
+    await expect(page.getByText(label + ' · revision 1', { exact: true })).toBeVisible();
+    return (await page.getByRole('link', { name: 'Open response' }).getAttribute('href'))!;
+  }
+  const first = await invite('Morning shift');
+  const second = await invite('Evening shift');
+  const respondent = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  try {
+    const draft = await respondent.newPage();
+    await draft.goto(first);
+    await draft.getByLabel('Study title (required)', { exact: true }).fill('Original notes');
+    await draft.getByRole('button', { name: 'Save draft' }).click();
+    await expect(draft.getByRole('status')).toHaveText('Draft saved.');
+    await page.reload();
+    const morning = page
+      .locator('.row')
+      .filter({ has: page.getByText('Morning shift · revision 1', { exact: true }) });
+    page.once('dialog', (dialog) => dialog.accept());
+    await morning.getByRole('button', { name: 'Revoke access' }).click();
+    await expect(morning.getByText('Access revoked')).toBeVisible();
+    await morning.locator('..').screenshot({ path: info.outputPath('invitation-access.png') });
+    await draft.getByLabel('Study title (required)', { exact: true }).fill('Edited after revocation');
+    await draft.getByRole('button', { name: 'Save draft' }).click();
+    await expect(draft.getByRole('status')).toHaveText('This link cannot open a document.');
+    await draft.reload();
+    await expect(draft.getByRole('status')).toHaveText('This link cannot open a document.');
+    await draft.goto(second);
+    await draft.getByLabel('Study title (required)', { exact: true }).fill('Evening shift notes');
+    await draft.getByRole('button', { name: 'Save draft' }).click();
+    await expect(draft.getByRole('status')).toHaveText('Draft saved.');
+    await draft.reload();
+    await expect(draft.getByLabel('Study title (required)', { exact: true })).toHaveValue(
+      'Evening shift notes',
+    );
   } finally {
     await respondent.close();
   }

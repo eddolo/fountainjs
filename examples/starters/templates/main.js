@@ -335,15 +335,6 @@ function author() {
         }),
       true,
     ),
-    button('Create respondent link', () =>
-      action(async () => {
-        if (dirty) throw Error('Save the template before inviting a respondent.');
-        const result = await request(path() + '/invite', 'POST', { revision });
-        invitation = makeURL('responses', result);
-        redraw();
-        status.textContent = 'Respondent link created.';
-      }),
-    ),
   );
   commands.append(
     button('Download template JSON', () => {
@@ -351,10 +342,34 @@ function author() {
       downloadJSON('document-template.json', template);
     }),
   );
+  const links = box(root, 'Respondent invitations');
+  const label = el('label', 'Invitation label (optional)');
+  const name = el('input');
+  name.maxLength = 120;
+  label.append(name);
+  links.append(
+    label,
+    button('Create respondent link', () =>
+      action(async () => {
+        if (dirty) throw Error('Save the template before inviting a respondent.');
+        const label = name.value.trim();
+        const result = await request(path() + '/invite', 'POST', { revision, label });
+        invitation = { id: result.id, url: makeURL('responses', result) };
+        documentState.invitations.unshift({
+          id: result.id,
+          label,
+          templateRevision: revision,
+          revoked: false,
+        });
+        redraw();
+        status.textContent = 'Respondent link created.';
+      }),
+    ),
+  );
   if (invitation) {
-    const share = box(root, 'Respondent link');
+    const share = box(links, 'Respondent link');
     share.classList.add('share');
-    const openLink = link('Open response', invitation);
+    const openLink = link('Open response', invitation.url);
     openLink.target = '_blank';
     openLink.rel = 'noopener';
     share.append(
@@ -363,10 +378,31 @@ function author() {
     );
     const field = el('input');
     field.readOnly = true;
-    field.value = invitation;
+    field.value = invitation.url;
     field.setAttribute('aria-label', 'Respondent link');
     field.onclick = () => field.select();
     share.append(field);
+  }
+  for (const entry of documentState.invitations) {
+    const line = row(links, 'row invitation-entry');
+    const title = entry.label || 'Invitation ' + entry.id.slice(0, 8);
+    line.append(el('span', title + ' · revision ' + entry.templateRevision));
+    if (entry.revoked) {
+      line.append(el('span', 'Access revoked'));
+    } else {
+      line.append(
+        button('Revoke access', () =>
+          action(async () => {
+            if (!window.confirm('Revoke access for ' + title + '? This link will stop working.')) return;
+            await request('responses/' + entry.id + '/revoke', 'POST');
+            entry.revoked = true;
+            if (invitation?.id === entry.id) invitation = undefined;
+            redraw();
+            status.textContent = 'Access revoked for ' + title + '.';
+          }),
+        ),
+      );
+    }
   }
   const received = box(root, 'Submitted responses');
   received.append(
@@ -374,6 +410,9 @@ function author() {
       action(async () => {
         const fresh = await request(path());
         documentState.responses = fresh.responses;
+        documentState.invitations = fresh.invitations;
+        if (fresh.invitations.some((entry) => entry.id === invitation?.id && entry.revoked))
+          invitation = undefined;
         redraw();
         status.textContent = dirty
           ? 'Submissions refreshed. Template has unsaved changes.'

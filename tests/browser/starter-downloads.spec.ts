@@ -3,7 +3,10 @@ import { expect, test } from '@playwright/test';
 import { strFromU8, unzipSync } from 'fflate';
 
 test('downloads complete standalone projects from the developer guide', async ({ page }, info) => {
-  await page.goto('developers.html');
+  await page.goto('workflows.html');
+  await page.getByRole('link', { name: /Download the template workspace/ }).click();
+  await expect(page).toHaveURL(/developers\.html#starter-templates$/);
+  await expect(page.getByRole('button', { name: 'Download template workspace' })).toBeVisible();
   await page.getByRole('link', { name: 'Download a starter' }).click();
   await expect(page.getByRole('heading', { name: 'Start with a working project.' })).toBeVisible();
   for (const { kind, label, projectFiles } of [

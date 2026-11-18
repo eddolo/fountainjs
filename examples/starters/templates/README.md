@@ -26,7 +26,7 @@ The template and final document have different file structures. The template env
 
 A fragment in the author or respondent URL holds a random capability. Possession grants the corresponding access. The client sends it as an Authorization header on same-origin API calls. SQLite stores its digest. Keep author links private and share each respondent link only with its intended holder. The server accepts changes only to the role's own resource. It constructs completed documents from the invitation's stored template and validated answers. Submitted responses are read-only.
 
-The local host can create templates. For a multi-user deployment, integrate your application's authenticated sessions, invitation delivery and revocation, storage policy and HTTPS origin. The starter's loopback URLs and checks are specific to local use.
+The local host can create templates. Authors can label and revoke individual links under **Respondent invitations**, including after reopening their workspace. Revocation prevents subsequent reads, saves and submissions through that link. A submitted document remains available to the author. Content already displayed or downloaded can remain with the recipient. For a multi-user deployment, integrate your application's authenticated sessions, invitation delivery, storage policy and HTTPS origin. The starter's loopback URLs and checks are specific to local use.
 
 ## Verify the workflow
 

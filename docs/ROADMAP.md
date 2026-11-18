@@ -1225,7 +1225,7 @@ including their scope, sources, and required proof.
   proof checking, review, and verified publication output.
 - Native renderer prototypes and a language-neutral document/operation protocol.
 - Monaco/CodeMirror, Jupyter-kernel, and terminal adapters for structured workspaces.
-- Extend the [working template project](../examples/starters/templates/README.md) to inline slots in arbitrary schemas and deployment-specific identity and revocation policies.
+- Extend the [working template project](../examples/starters/templates/README.md) to inline slots in arbitrary schemas and deployment-specific account policies.
 - Editable charts/source-backed diagrams and an optional structured whiteboard surface. The
   [November 11 catalogue audit](TIPTAP_PARITY.md#catalogue-review--2026-11-11)
   records the missing outcomes and their upstream references.

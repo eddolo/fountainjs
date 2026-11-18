@@ -44,6 +44,23 @@ export function createWorkspace(database, publicDir) {
       respondent TEXT NOT NULL, template_revision INTEGER NOT NULL, template TEXT NOT NULL, revision INTEGER NOT NULL,
       answers TEXT NOT NULL, submitted INTEGER NOT NULL DEFAULT 0);
     CREATE INDEX IF NOT EXISTS responses_by_template ON responses(template_id,submitted);`);
+  // Upgrade invitations already issued by earlier versions of this starter.
+  db.exec('BEGIN IMMEDIATE');
+  try {
+    const columns = db
+      .prepare('PRAGMA table_info(responses)')
+      .all()
+      .map((column) => column.name);
+    if (!columns.includes('label'))
+      db.exec("ALTER TABLE responses ADD COLUMN label TEXT NOT NULL DEFAULT ''");
+    if (!columns.includes('revoked'))
+      db.exec('ALTER TABLE responses ADD COLUMN revoked INTEGER NOT NULL DEFAULT 0');
+    db.exec('COMMIT');
+  } catch (error) {
+    db.exec('ROLLBACK');
+    db.close();
+    throw error;
+  }
   const snapshot = (row) => ({
     revision: row.revision,
     templateRevision: row.template_revision,
@@ -52,7 +69,9 @@ export function createWorkspace(database, publicDir) {
     submitted: !!row.submitted,
   });
   async function api(req, path) {
-    const match = /^\/api\/(templates|responses)(?:\/([0-9a-f-]{36})(?:\/(invite|submit))?)?$/.exec(path);
+    const match = /^\/api\/(templates|responses)(?:\/([0-9a-f-]{36})(?:\/(invite|submit|revoke))?)?$/.exec(
+      path,
+    );
     if (!match) throw absent();
     const [, type, id, action] = match;
     const method = req.method;
@@ -77,20 +96,28 @@ export function createWorkspace(database, publicDir) {
             'SELECT id,template_revision AS templateRevision FROM responses WHERE template_id=? AND submitted=1 ORDER BY rowid DESC',
           )
           .all(id);
-        return { revision: row.revision, template: JSON.parse(row.document), responses };
+        const invitations = db
+          .prepare(
+            'SELECT id,label,template_revision AS templateRevision,revoked FROM responses WHERE template_id=? ORDER BY rowid DESC',
+          )
+          .all(id);
+        return { revision: row.revision, template: JSON.parse(row.document), responses, invitations };
       }
       if ((method === 'PUT' && !action) || (method === 'POST' && action === 'invite')) {
         const data = await body(req);
-        shape(data, action ? ['revision'] : ['revision', 'template']);
+        shape(data, action ? ['revision', 'label'] : ['revision', 'template']);
         if (data.revision !== row.revision) throw conflict();
         if (action) {
+          const label = data.label ?? '';
+          if (typeof label !== 'string' || label.length > 120)
+            throw new InputError('Use an invitation label of up to 120 characters.');
           const responseId = randomUUID(),
             key = randomBytes(32).toString('base64url');
           const result = db
             .prepare(
-              "INSERT INTO responses SELECT ?,id,?,revision,document,1,'{}',0 FROM templates WHERE id=? AND revision=?",
+              "INSERT INTO responses(id,template_id,respondent,template_revision,template,revision,answers,label) SELECT ?,id,?,revision,document,1,'{}',? FROM templates WHERE id=? AND revision=?",
             )
-            .run(responseId, digest(key), id, data.revision);
+            .run(responseId, digest(key), label.trim(), id, data.revision);
           if (!result.changes) throw conflict();
           return { id: responseId, key, templateRevision: data.revision };
         }
@@ -104,10 +131,19 @@ export function createWorkspace(database, publicDir) {
         return { revision: data.revision + 1 };
       }
     } else {
+      if (method === 'POST' && action === 'revoke') {
+        const updated = db
+          .prepare(
+            'UPDATE responses SET revoked=1 WHERE id=? AND template_id IN (SELECT id FROM templates WHERE owner=?)',
+          )
+          .run(id, credential);
+        if (!updated.changes) throw absent();
+        return { revoked: true };
+      }
       const row = db
         .prepare(
           `SELECT r.*,t.owner FROM responses r JOIN templates t ON t.id=r.template_id
-        WHERE r.id=? AND (r.respondent=? OR (t.owner=? AND r.submitted=1))`,
+        WHERE r.id=? AND ((r.respondent=? AND r.revoked=0) OR (t.owner=? AND r.submitted=1))`,
         )
         .get(id, credential, credential);
       if (!row) throw absent();
@@ -128,7 +164,7 @@ export function createWorkspace(database, publicDir) {
         if (
           !db
             .prepare(
-              'UPDATE responses SET answers=?,submitted=?,revision=revision+1 WHERE id=? AND revision=? AND submitted=0',
+              'UPDATE responses SET answers=?,submitted=?,revision=revision+1 WHERE id=? AND revision=? AND submitted=0 AND revoked=0',
             )
             .run(JSON.stringify(data.answers), action ? 1 : 0, id, data.revision).changes
         )

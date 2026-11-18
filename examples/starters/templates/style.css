@@ -61,6 +61,13 @@ p {
   flex-wrap: wrap;
   align-items: center;
 }
+.invitation-entry {
+  margin-top: 0.75rem;
+  border-top: 1px solid #dae2dc;
+  padding-top: 0.75rem;
+  justify-content: space-between;
+  overflow-wrap: anywhere;
+}
 label {
   display: grid;
   gap: 0.25rem;
