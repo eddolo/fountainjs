@@ -71,3 +71,52 @@ test('plots an existing editable table, updates a value, and returns to the tabl
   await page.keyboard.press('ControlOrMeta+z');
   await expect(plot).toContainText('Pears · 90');
 });
+
+test('downloads chart images with the edited labels and signed bars', async ({ page }, info) => {
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.getByRole('button', { name: 'Bar chart', exact: true }).click();
+  const value = demo.locator('[data-fountain-chart-source] tr').nth(2).locator('td p').last();
+  await value.click();
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Shift+End');
+  await page.keyboard.insertText('-24');
+  const controls = demo.getByRole('group', { name: 'Chart export' });
+  for (const format of ['svg', 'png', 'jpeg', 'webp']) {
+    await controls.getByRole('combobox').selectOption(format);
+    const supported = format !== 'webp' || await page.evaluate(() =>
+      document.createElement('canvas').toDataURL('image/webp').startsWith('data:image/webp'));
+    if (!supported) {
+      await controls.getByRole('button').click();
+      await expect(controls.getByRole('status')).toContainText('cannot export WEBP');
+      continue;
+    }
+    const pending = page.waitForEvent('download');
+    await controls.getByRole('button').click();
+    const download = await pending;
+    expect(download.suggestedFilename()).toBe('chart.' + format);
+    const path = info.outputPath(download.suggestedFilename());
+    await download.saveAs(path);
+    const file = await readFile(path);
+    if (format === 'svg') expect(file.toString()).toContain('Tuesday · -24');
+    if (format === 'png') expect(file.subarray(1, 4).toString()).toBe('PNG');
+    if (format === 'jpeg') expect(file.readUInt16BE(0)).toBe(0xffd8);
+    if (format === 'webp') expect(file.subarray(8, 12).toString()).toBe('WEBP');
+    const colors = await page.evaluate(async data => {
+      const img = new Image();
+      img.src = data;
+      await img.decode();
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0);
+      return [[120, 85], [700, 85], [120, 136], [700, 136]].map(([x,y]) => ctx.getImageData(x, y, 1, 1).data[0]);
+    }, 'data:image/' + (format === 'svg' ? 'svg+xml' : format) + ';base64,' + file.toString('base64'));
+    // Monday's positive bar is right of zero and Tuesday's negative bar is left.
+    expect(colors[0]).toBeGreaterThan(210);
+    expect(colors[1]).toBeLessThan(105);
+    expect(colors[2]).toBeLessThan(105);
+    expect(colors[3]).toBeGreaterThan(210);
+  }
+});

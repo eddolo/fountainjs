@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, insertBarChart, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertBarChart, tableChartAction, toggleTableChart } from '../src/charts';
 import { ServerHTMLImporter } from '../src/html/server';
 
 const kit = composeExtensions([CoreExtension, HistoryExtension, BarChartExtension]);
@@ -144,5 +144,20 @@ it('keeps an authored chart title as a paragraph and selects the table when the 
   expect(editor.state.doc.child(i)).toBe(chart.child(0));
   expect(editor.state.doc.child(i + 1)).toBe(chart.child(1));
   expect(editor.state.selection.eq(new NodeSelection(editor.state.doc, [i + 1]))).toBe(true);
+  editor.destroy();
+});
+
+it('exports current data as a standalone SVG in Node and explains incomplete rows', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'A & B', [['<North>', -1], ['South', 3]]);
+  const chart = selectedBarChart(editor)!;
+  const svg = exportBarChartSVG(chart);
+  expect(svg).toContain('<title id="chart-title">A &amp; B</title>');
+  expect(svg).toContain('&lt;North&gt; · -1');
+  expect(svg).toContain('width="188" height="12" fill="#55409c"');
+  expect(svg).toContain('width="564" height="12" fill="#55409c"');
+  const path = [editor.state.selection.path[0], 1, 1, 1, 0, 0];
+  editor.dispatch(editor.createTransaction().replaceText(path, 0, 2, 'TBD'));
+  expect(() => exportBarChartSVG(selectedBarChart(editor)!)).toThrow('Enter a number in row 2');
   editor.destroy();
 });

@@ -80,7 +80,8 @@ import { FountainTrackedChanges } from 'fountainjs-editor/react/tracked-changes'
 import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/versions';
 import { FountainVersions } from 'fountainjs-editor/react/versions';
 import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity';
-import { BarChartExtension, insertBarChart, tableChartAction, toggleTableChart } from 'fountainjs-editor/charts';
+import { downloadDocumentFile } from './math-document-files';
+import { BarChartExtension, exportBarChartImage, insertBarChart, selectedBarChart, tableChartAction, toggleTableChart, type ChartImageFormat } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import { SitePageLink } from './SitePageLink';
@@ -591,6 +592,19 @@ function App() {
 
   const document = state?.doc;
   const chartAction = tableChartAction(editor);
+  const [chartFormat, setChartFormat] = useState<ChartImageFormat>('png');
+  const [chartExportError, setChartExportError] = useState('');
+  const downloadChart = async (owner: Document) => {
+    const chart = selectedBarChart(editor);
+    if (!chart) return;
+    setChartExportError('');
+    try {
+      const blob = await exportBarChartImage(chart, chartFormat, owner);
+      downloadDocumentFile(owner, 'chart.' + chartFormat, blob, blob.type);
+    } catch (error) {
+      setChartExportError(error instanceof Error ? error.message : 'Chart download failed.');
+    }
+  };
   const output = useMemo(() => {
     if (!document) return '';
     if (format === 'html') return HTMLExporter.export(document, { document: false });
@@ -742,6 +756,16 @@ function App() {
                 onClick={() => setCompactToolbar((current) => !current)}
               >{compactToolbar ? 'Show full toolbar' : 'Use compact toolbar'}</button>
             </div>
+            {chartAction === 'unwrap' && <div className="quick-insert" role="group" aria-label="Chart export">
+              <select aria-label="Chart image format" value={chartFormat} onChange={event => {
+                setChartFormat(event.target.value as ChartImageFormat);
+                setChartExportError('');
+              }}>
+                {(['png', 'svg', 'jpeg', 'webp'] as const).map(format => <option key={format} value={format}>{format.toUpperCase()}</option>)}
+              </select>
+              <button onMouseDown={event => event.preventDefault()} onClick={event => void downloadChart(event.currentTarget.ownerDocument)}>Download chart</button>
+              {chartExportError && <output>{chartExportError}</output>}
+            </div>}
             <FountainComposer
               ref={editorHandle}
               editor={editor}

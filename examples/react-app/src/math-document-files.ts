@@ -50,8 +50,8 @@ export function nextEquationLabel(doc: Node, after: number): { label: string; co
   return { label, counter };
 }
 
-export function downloadDocumentFile(owner: Document, filename: string, text: string, type: string): void {
-  const url = URL.createObjectURL(new Blob([text], { type }));
+export function downloadDocumentFile(owner: Document, filename: string, content: BlobPart, type: string): void {
+  const url = URL.createObjectURL(new Blob([content], { type }));
   const link = owner.createElement('a');
   link.href = url;
   link.download = filename;

@@ -2,42 +2,18 @@ import { insertNode, nodeRangeAtPath, NodeSelection, type DOMOutputSpec, type Ed
 import { RestructureChildrenStep } from '../core/transaction/restructure-children-step';
 import { defineExtension } from '../extensions/extension';
 
-function cellText(cell: Node): string | null {
-  if (Number(cell.attrs.colspan) > 1 || Number(cell.attrs.rowspan) > 1 || cell.childCount !== 1) return null;
-  const paragraph = cell.child(0);
-  return paragraph.type.name === 'paragraph' && paragraph.content.every(child => child.isText)
-    ? paragraph.textContent.trim() : null;
-}
+import { barChartLayout } from './layout';
+export { exportBarChartSVG, exportBarChartImage, type ChartImageFormat } from './image';
 
 function percent(value: number): string {
   return Number(value.toFixed(5)) + '%';
 }
 
 function plot(node: Node): DOMOutputSpec {
-  const table = node.child(node.childCount - 1);
-  const bars: { label: string; source: string; value: number }[] = [];
-  let minimum = 0, maximum = 0;
-  for (const [index, row] of table.content.entries()) {
-    if (row.childCount !== 2) return ['p', 'Use two columns for a bar chart: a category and a value.'];
-    const label = cellText(row.child(0)), source = cellText(row.child(1));
-    if (label === null || source === null) return ['p', 'Use unmerged cells containing one line of text for each chart entry.'];
-    if (index === 0 && row.content.every(cell => cell.type.name === 'table_header')) continue;
-    if (!label) return ['p', `Enter a category in row ${index + 1}.`];
-    const value = Number(source);
-    if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(source) || !Number.isFinite(value))
-      return ['p', `Enter a number in row ${index + 1} to draw the chart.`];
-    bars.push({ label, value, source });
-    minimum = Math.min(minimum, value);
-    maximum = Math.max(maximum, value);
-  }
-  if (!bars.length) return ['p', 'Add a data row below the column headings to draw the chart.'];
-  // Scale before subtracting so opposite finite extremes cannot overflow.
-  const magnitude = Math.max(-minimum, maximum) || 1;
-  const span = maximum / magnitude - minimum / magnitude || 1;
-  const zero = -(minimum / magnitude) / span * 100;
-  const rows: DOMOutputSpec[] = bars.map(({ label, value, source }) => {
-    const width = Math.abs(value / magnitude) / span * 100;
-    const left = value < 0 ? Math.max(0, zero - width) : zero;
+  const layout = barChartLayout(node);
+  if (typeof layout === 'string') return ['p', layout];
+  const { title, zero } = layout;
+  const rows: DOMOutputSpec[] = layout.rows.map(({ label, source, width, left }) => {
     return ['div', { style: 'margin:.45em 0' },
       ['span', label + ' · ' + source],
       ['div', { dir: 'ltr', style: 'position:relative;height:.8em;background:#edeaf6' },
@@ -46,7 +22,6 @@ function plot(node: Node): DOMOutputSpec {
       ],
     ];
   });
-  const title = node.childCount === 2 ? node.child(0).textContent : '';
   return ['div', { role: 'img', 'aria-label': (title ? 'Bar chart: ' + title : 'Bar chart') + '. Values are in the accompanying table.' }, ...rows];
 }
 
@@ -85,7 +60,7 @@ export function insertBarChart(editor: Editor, title: string, values: readonly (
 
 function chartTarget(editor: Editor) {
   const { doc, schema, selection } = editor.state;
-  if (!editor.editable || !schema.nodes.bar_chart || selection.kind === 'gap' || selection.kind === 'all') return null;
+  if (!schema.nodes.bar_chart || selection.kind === 'gap' || selection.kind === 'all') return null;
   const start = selection.kind === 'node' ? selection.nodePath : selection.path;
   const end = selection.kind === 'node' ? selection.nodePath : selection.endPath;
   let node = doc;
@@ -105,8 +80,14 @@ function chartTarget(editor: Editor) {
   return target;
 }
 
+export function selectedBarChart(editor: Editor): Node | null {
+  const target = chartTarget(editor);
+  return target?.node.type.name === 'bar_chart' ? target.node : null;
+}
+
 /** The chart action for the current table or chart selection. */
 export function tableChartAction(editor: Editor): 'wrap' | 'unwrap' | null {
+  if (!editor.editable) return null;
   const target = chartTarget(editor);
   return target ? (target.node.type.name === 'bar_chart' ? 'unwrap' : 'wrap') : null;
 }
@@ -114,7 +95,7 @@ export function tableChartAction(editor: Editor): 'wrap' | 'unwrap' | null {
 /** Wraps the selected table or lifts a chart's title and table in one undoable change. */
 export function toggleTableChart(editor: Editor): boolean {
   const target = chartTarget(editor);
-  if (!target) return false;
+  if (!editor.editable || !target) return false;
   const { node, path } = target;
   const { schema, selection } = editor.state;
   const unwrap = node.type.name === 'bar_chart';
