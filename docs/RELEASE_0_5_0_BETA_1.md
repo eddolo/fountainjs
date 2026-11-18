@@ -16,7 +16,7 @@ import alone does not migrate stored documents. Supported Yjs versions start at
 before upgrading a persisted room. Preserve recovery copies and verify the
 migration/rollback workflow with the application's own backend.
 
-## Candidate highlights
+## Release highlights
 
 - Authoring embeds load provider content only after explicit interaction and
   unload it when returning to prose; reader playback is unchanged.
@@ -37,6 +37,17 @@ migration/rollback workflow with the application's own backend.
   server operations remain denied; changed source still uses GitLab conversion.
 
 ## Qualification status
+
+Commit `b1161fd5` passed all five qualification jobs. The final matrix
+passed 51 display-backed clipboard cases and 1,131 headless cases, with
+18 skipped. The independent native DOCX job passed. The GitHub prerelease
+and deployed website use this commit. Check the npm version list above for
+the separate package publication.
+[GitHub prerelease](https://github.com/eddolo/fountainjs/releases/tag/v0.5.0-beta.1) ·
+[CI](https://github.com/eddolo/fountainjs/actions/runs/44218762181) ·
+[Native DOCX](https://github.com/eddolo/fountainjs/actions/runs/44218762064).
+
+### Earlier candidate checks
 
 The initial review revision is `4c66f386`; follow-up `9cd1d7b3` corrects native
 recording interactions and prepares these notes. Fresh local checks pass build,
@@ -62,13 +73,11 @@ The remaining headless matrix finishes with 1,132 passes, 18 skips, five failure
 and one flaky mobile Angular case. The five failures are the stalled-image PDF
 text checker and four WebKit native clipboard workflows. November 18 follow-up
 work adds a real provider-focus regression and repairs the text-run oracle and
-display partition. Fresh complete hosted qualification remains required; earlier
-green subsets do not approve the release.
+display partition. The completed run above verifies both repairs.
 
 The initial native DOCX audit’s two source/export pages and selected
 editor states were visually inspected; this is not pixel-fidelity or Microsoft
-Word certification. This candidate is not yet approved by the complete release
-matrix.
+Word certification.
 
 ## Remaining acceptance work
 
@@ -78,7 +87,4 @@ open. Missing roadmap capabilities include editable charts/source-backed diagram
 authorable template fields and a structured whiteboard. Capability coverage is
 61/74 delivered; that percentage is not a production-readiness score.
 
-Publication requires green exact-revision release checks, inspection of the final
-package, coordinated GitHub prerelease/tag and npm distribution tags. Public npm
-still identifies 0.4.0-beta.2 as latest at this checkpoint. Keep beta maturity and
-the collaboration storage change visible when announcing the candidate.
+The [npm release workflow](https://github.com/eddolo/fountainjs/actions/runs/44310781735) tracks staging for this exact tag. npm publication requires separate maintainer approval.

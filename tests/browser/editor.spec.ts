@@ -5591,7 +5591,11 @@ test('pairs the optional AI demo with developer recipes for every public workflo
 
 test('shows verified room setup before the legacy collaboration recipe', async ({ page }, info) => {
   await page.goto('/developers.html#collaboration');
-  await expect(page.getByRole('heading', { name: 'New rooms on the unreleased branch' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'New rooms in 0.5.0-beta.1' })).toBeVisible();
+  await expect(page.getByText('Version 0.4.0-beta.2 uses XML.', { exact: false })).toBeVisible();
+  await expect(page.getByRole('link', { name: '0.5 beta release notes' })).toHaveAttribute(
+    'href', 'https://github.com/eddolo/fountainjs/releases/tag/v0.5.0-beta.1',
+  );
   const setup = page.locator('pre').filter({ hasText: 'const bound = await openYjsRoom' });
   await expect(setup).toBeVisible();
   await expect(setup).toContainText('createProvider(bound.document, bound.lease)');
