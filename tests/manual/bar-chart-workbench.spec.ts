@@ -650,3 +650,62 @@ test('reopens the weekly chart as text, previews the edits and restores the orig
   await demo.getByRole('button', { name: 'Cancel edit' }).click();
   await expect(restored.getByRole('img')).toHaveAccessibleName(/Weekly goal · 11/);
 });
+
+test('automatically refreshes weekly orders while writing elsewhere and keeps an edit made during the next request', async ({ page }, info) => {
+  let hits = 0;
+  let release: (() => void) | undefined;
+  const server = createServer((_request, response) => {
+    hits++;
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Content-Type', 'text/csv');
+    if (hits === 2) { response.writeHead(503); response.end(); return; }
+    if (hits === 4) { release = () => response.end('Day,Actual\nMonday,999'); return; }
+    response.end('Day,Actual\nMonday,' + (hits === 1 ? 5 : 12));
+  });
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Missing feed port');
+    await page.goto('index.html#playground');
+    const demo = page.locator('#playground');
+    await demo.getByText('Chart from CSV', { exact: true }).click();
+    await demo.getByLabel('CSV source URL').fill('http://127.0.0.1:' + address.port + '/orders.csv');
+    await demo.getByRole('button', { name: 'Insert linked chart' }).click();
+    const chart = demo.locator('figure[data-fountain-csv-url]');
+    const value = chart.getByRole('row').last().getByRole('cell').last().locator('p');
+    await expect(value).toHaveText('5');
+    await demo.getByLabel('Refresh every (seconds)').fill('1');
+    await demo.getByRole('button', { name: 'Start automatic refresh' }).click();
+    const note = demo.locator('[contenteditable=true] > p').filter({ hasText: 'Select text' }).first();
+    await note.click();
+    await page.keyboard.press('End');
+    await page.keyboard.insertText(' Background');
+    const output = demo.getByRole('status', { name: 'Automatic refresh status' });
+    await expect(output).toContainText('503');
+    await expect(value).toHaveText('5');
+    await expect(value).toHaveText('12');
+    await page.keyboard.insertText(' check.');
+    await expect(note).toContainText(' Background check.');
+    await expect(demo.getByRole('button', { name: 'Stop automatic refresh' })).toBeVisible();
+    await expect.poll(() => hits).toBe(4);
+    await value.click();
+    await page.keyboard.press('Home');
+    await page.keyboard.press('Shift+End');
+    await page.keyboard.insertText('27');
+    release!();
+    release = undefined;
+    await expect(output).toContainText('Automatic refresh stopped');
+    await expect(value).toHaveText('27');
+    await chart.screenshot({ path: info.outputPath('retained-order-edit.png') });
+    // Restart and stop a new schedule away from the chart.
+    await demo.getByRole('button', { name: 'Start automatic refresh' }).click();
+    await note.click();
+    await demo.getByRole('button', { name: 'Stop automatic refresh' }).click();
+    await expect(output).toHaveText('Automatic refresh stopped.');
+    await page.waitForTimeout(1150);
+    expect(hits).toBe(4);
+  } finally {
+    release?.();
+    await new Promise<void>(resolve => { server.close(() => resolve()); server.closeAllConnections(); });
+  }
+});

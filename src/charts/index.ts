@@ -404,33 +404,71 @@ export function updateChartFromText(editor: Editor, source: string, expected?: N
   return editor.dispatch(transaction);
 }
 
-const pendingRefresh = new WeakMap<Editor, object>();
+type ChartTarget = { node: Node; path: readonly number[] };
+const pendingRefresh = new WeakMap<Editor, WeakMap<Node, object>>();
 
-/** Refresh only the chart the user requested. A newer request or intervening edit wins. */
-export async function refreshChartFromCSV(editor: Editor, load: (url: string) => Promise<string>): Promise<boolean> {
-  if (editor.isDestroyed || !editor.editable) return false;
-  const original = selectedBarChart(editor);
-  if (!original || !csvURL(original.attrs.csvURL)) return false;
+// An immutable snapshot identifies the requested chart after unrelated document
+// edits, including a move. Shared copies with ambiguous identity require reselection.
+function locateChart(doc: Node, original: Node): ChartTarget | null {
+  const matches: ChartTarget[] = [];
+  doc.descendants((node, path) => {
+    if (node === original) matches.push({ node, path });
+    return matches.length < 2 && node.type.name !== 'bar_chart' && node.type.spec.content !== 'inline*';
+  });
+  return matches.length === 1 ? matches[0]! : null;
+}
+
+async function refreshCSV(editor: Editor, original: Node, resolve: () => ChartTarget | null,
+  load: (url: string) => Promise<string>, signal?: AbortSignal): Promise<ChartTarget | null> {
+  if (editor.isDestroyed || !editor.editable || signal?.aborted || !csvURL(original.attrs.csvURL)) return null;
+  const requests = pendingRefresh.get(editor) ?? new WeakMap<Node, object>();
+  pendingRefresh.set(editor, requests);
   const request = {};
-  pendingRefresh.set(editor, request);
+  requests.set(original, request);
+  const current = () => {
+    if (editor.isDestroyed || !editor.editable || signal?.aborted || requests.get(original) !== request) return null;
+    const target = resolve();
+    return target?.node === original ? target : null;
+  };
   try {
     const csv = await load(original.attrs.csvURL);
-    if (editor.isDestroyed || !editor.editable || pendingRefresh.get(editor) !== request) return false;
-    const target = chartTarget(editor);
-    if (target?.node !== original) return false;
-    const at = original.childCount - 1;
+    const target = current();
+    if (!target) return null;
     const previous = simpleChartTable(original);
     const table = refreshedTable(previous, csvTable(editor, csv));
-    if (table === previous) return true;
-    const candidate = original.copy([...original.content.slice(0, at), table]);
-    checkPlot(candidate);
-    return editor.dispatch(editor.createTransaction().step(new RestructureChildrenStep(target.path, at, [previous], [table])));
+    if (table === previous) return target;
+    const at = original.childCount - 1;
+    checkPlot(original.copy([...original.content.slice(0, at), table]));
+    const transaction = editor.createTransaction().step(new RestructureChildrenStep(target.path, at, [previous], [table]));
+    if (!editor.dispatch(transaction)) return null;
+    return { path: target.path, node: target.path.reduce((parent, index) => parent.child(index), transaction.doc) };
   } catch (error) {
-    if (editor.isDestroyed || !editor.editable || pendingRefresh.get(editor) !== request || selectedBarChart(editor) !== original) return false;
+    if (!current()) return null;
     throw error;
   } finally {
-    if (pendingRefresh.get(editor) === request) pendingRefresh.delete(editor);
+    if (requests.get(original) === request) requests.delete(original);
   }
+}
+
+/** Manual refresh follows the selection and returns false if the request was superseded. */
+export async function refreshChartFromCSV(editor: Editor, load: (url: string) => Promise<string>): Promise<boolean> {
+  if (editor.isDestroyed || !editor.editable) return false;
+  const chart = selectedBarChart(editor);
+  return !!chart && !!await refreshCSV(editor, chart, () => chartTarget(editor), load);
+}
+
+/** Refresh a captured chart independently of the caret. Use the returned snapshot for
+ * the next poll. Null means the chart was edited, removed, ambiguous or cancelled. */
+export async function refreshChartSnapshotFromCSV(editor: Editor, chart: Node, load: (url: string) => Promise<string>, signal?: AbortSignal): Promise<Node | null> {
+  if (editor.isDestroyed || !editor.editable || signal?.aborted || chart?.type.name !== 'bar_chart' || !csvURL(chart.attrs.csvURL)) return null;
+  const before = editor.state.doc;
+  const initial = locateChart(before, chart);
+  if (!initial) return null;
+  const result = await refreshCSV(editor, chart, () => editor.state.doc === before ? initial : locateChart(editor.state.doc, chart), load, signal);
+  if (!result || editor.isDestroyed || signal?.aborted) return null;
+  // Appended transactions and synchronous subscribers can edit the chart during dispatch.
+  const live = result.path.reduce<Node | undefined>((parent, index) => parent?.content[index], editor.state.doc);
+  return live === result.node ? live : null;
 }
 
 export function insertBarChart(editor: Editor, title: string, values: readonly (readonly [string, number])[]): boolean {

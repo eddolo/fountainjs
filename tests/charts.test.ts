@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, chartFromText, chartToText, previewChartText, updateChartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, chartFromText, chartToText, previewChartText, updateChartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, refreshChartSnapshotFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -866,4 +866,64 @@ it('merges a bulk chart edit with a concurrent cell edit and rejects an already 
     expect(left.state.doc.child(index).attrs.kind).toBe('column');
     expect(updateChartFromText(right, source, draft)).toBe(false);
   } finally { left.destroy(); right.destroy(); a.destroy(); b.destroy(); }
+});
+
+it('refreshes a moved chart off-selection without stealing the caret or recording identical snapshots', async () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  insertChartFromCSV(editor, 'Day,Actual\nMonday,5', { title: 'Orders', sourceURL: 'https://example.org/orders.csv' });
+  const original = selectedBarChart(editor)!;
+  const schema = editor.state.schema;
+  const note = schema.node('paragraph', {}, [schema.text('Editing a note')]);
+  let finish!: (csv: string) => void;
+  const pending = refreshChartSnapshotFromCSV(editor, original, () => new Promise(resolve => { finish = resolve; }));
+  editor.dispatch(editor.createTransaction().replaceDocument(schema.node('doc', {}, [note, original])).setSelection(Selection.cursor([0, 0], 7)));
+  const before = editor.state.doc;
+  finish('Day,Actual\nMonday,-12');
+  const updated = await pending;
+  expect(updated).toBe(editor.state.doc.child(1));
+  expect(chartToText(updated!)).toContain('Monday,-12');
+  expect(editor.state.selection.eq(Selection.cursor([0, 0], 7))).toBe(true);
+  const stable = editor.state.doc;
+  expect(await refreshChartSnapshotFromCSV(editor, updated!, async () => 'Day,Actual\nMonday,-12')).toBe(updated);
+  expect(editor.state.doc).toBe(stable);
+  expect(undo(editor)).toBe(true);
+  expect(editor.state.doc.eq(before)).toBe(true);
+  editor.destroy();
+});
+
+it('discards aborted, removed, ambiguous and superseded feed results, with independent requests per chart', async () => {
+  const editor = createEditor({ schema: kit.schema });
+  const schema = editor.state.schema;
+  const sourceURL = 'https://example.org/orders.csv';
+  insertChartFromCSV(editor, 'Day,Actual\nMonday,5', { title: 'A', sourceURL });
+  const first = selectedBarChart(editor)!;
+  const second = first.copy([schema.node('paragraph', {}, [schema.text('B')]), first.child(1)]);
+  const replace = (...charts: typeof first[]) => editor.dispatch(editor.createTransaction().replaceDocument(schema.node('doc', {}, charts)));
+  replace(first, second);
+  let finish!: (csv: string) => void;
+  const delay = () => new Promise<string>(resolve => { finish = resolve; });
+  const csv = 'Day,Actual\nMonday,8';
+  const one = refreshChartSnapshotFromCSV(editor, first, delay);
+  expect(await refreshChartSnapshotFromCSV(editor, second, async () => csv)).toBe(editor.state.doc.child(1));
+  finish(csv);
+  expect(await one).toBe(editor.state.doc.child(0));
+  const changed = editor.state.doc.child(0);
+  const stale = refreshChartSnapshotFromCSV(editor, changed, delay);
+  expect(await refreshChartSnapshotFromCSV(editor, changed, async () => csv)).toBe(changed);
+  finish('Day,Actual\nMonday,1');
+  expect(await stale).toBeNull();
+  const controller = new AbortController();
+  const cancelled = refreshChartSnapshotFromCSV(editor, changed, delay, controller.signal);
+  controller.abort();
+  finish('Day,Actual\nMonday,2');
+  expect(await cancelled).toBeNull();
+  const deleted = refreshChartSnapshotFromCSV(editor, changed, delay);
+  replace(second);
+  finish(csv);
+  expect(await deleted).toBeNull();
+  replace(first, first);
+  let reads = 0;
+  expect(await refreshChartSnapshotFromCSV(editor, first, async () => { reads++; return csv; })).toBeNull();
+  expect(reads).toBe(0);
+  editor.destroy();
 });
