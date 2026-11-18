@@ -1,0 +1,19 @@
+{
+  "reviewed": [
+    "stalled-image-final.png",
+    "embed-protected-desktop.png",
+    "embed-activated-provider.png",
+    "embed-returned-mobile-safari.png"
+  ],
+  "observations": [
+    "Final PDF renders intact figures text, unavailable-image disclosure, embedded figure and caption.",
+    "Authoring button is legible over the inactive embed.",
+    "Controlled provider input receives native typing after activation.",
+    "Mobile Safari emulation retains complete resumed prose after deactivation."
+  ],
+  "boundaries": [
+    "Controlled provider fixture, not certification of arbitrary third-party players.",
+    "Selected states inspected, not every video frame.",
+    "No physical mobile/IME certification or universal PDF/Word fidelity claim."
+  ]
+}

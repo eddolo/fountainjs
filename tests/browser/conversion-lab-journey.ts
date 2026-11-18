@@ -600,6 +600,7 @@ export async function conversionSlowImagePreviewJourney(page: Page, info: TestIn
     const pdf = info.project.name === 'chromium'
       ? await page.pdf({ path: info.outputPath('preview-with-unavailable-image.pdf'), preferCSSPageSize: true })
       : undefined;
+    if (pdf) await info.attach('Printed stalled-image preview', { body: pdf, contentType: 'application/pdf' });
     await page.emulateMedia({ media: 'screen' });
     await build.click();
     await expect(sheets.locator('img[alt="Weather chart"]')).toHaveJSProperty('naturalWidth', 400);

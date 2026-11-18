@@ -1,0 +1,177 @@
+{
+  "source": "artifacts/release-qualification-20261117/223905Z/candidate-native-docx-2604c802-terminal.json",
+  "sha256": "2b9921f36f382343e31eeaa20923bc104f261899c8f00b1ecca19412b367667e",
+  "rawBase64": "ewogICJjaGVja2VkQXQiOiAiMjAyNi0xMS0xOFQwMDoxODoxNy44NDA3MTgrMDA6MDAiLAogICJjb25jbHVzaW9uIjogInN1Y2Nlc3MiLAogICJoZWFkU2hhIjogIjI2MDRjODAyNzlmYzhjM2JlNDIzN2RmZmRkM2I0ZjczMzE4YmViNzQiLAogICJqb2JzIjogWwogICAgewogICAgICAiY29tcGxldGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMTozNloiLAogICAgICAiY29uY2x1c2lvbiI6ICJzdWNjZXNzIiwKICAgICAgImRhdGFiYXNlSWQiOiAxMzQ0NTkwNTg0MjMsCiAgICAgICJuYW1lIjogInJlbmRlciIsCiAgICAgICJzdGFydGVkQXQiOiAiMjAyNi0xMS0xN1QyMzo0NjoyMFoiLAogICAgICAic3RhdHVzIjogImNvbXBsZXRlZCIsCiAgICAgICJzdGVwcyI6IFsKICAgICAgICB7CiAgICAgICAgICAiY29tcGxldGVkQXQiOiAiMjAyNi0xMS0xN1QyMzo0NjoyNFoiLAogICAgICAgICAgImNvbmNsdXNpb24iOiAic3VjY2VzcyIsCiAgICAgICAgICAibmFtZSI6ICJTZXQgdXAgam9iIiwKICAgICAgICAgICJudW1iZXIiOiAxLAogICAgICAgICAgInN0YXJ0ZWRBdCI6ICIyMDI2LTExLTE3VDIzOjQ2OjIxWiIsCiAgICAgICAgICAic3RhdHVzIjogImNvbXBsZXRlZCIKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJjb21wbGV0ZWRBdCI6ICIyMDI2LTExLTE3VDIzOjQ2OjM2WiIsCiAgICAgICAgICAiY29uY2x1c2lvbiI6ICJzdWNjZXNzIiwKICAgICAgICAgICJuYW1lIjogIlJ1biBhY3Rpb25zL2NoZWNrb3V0QHY0IiwKICAgICAgICAgICJudW1iZXIiOiAyLAogICAgICAgICAgInN0YXJ0ZWRBdCI6ICIyMDI2LTExLTE3VDIzOjQ2OjI0WiIsCiAgICAgICAgICAic3RhdHVzIjogImNvbXBsZXRlZCIKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJjb21wbGV0ZWRBdCI6ICIyMDI2LTExLTE3VDIzOjQ2OjM4WiIsCiAgICAgICAgICAiY29uY2x1c2lvbiI6ICJzdWNjZXNzIiwKICAgICAgICAgICJuYW1lIjogIlJ1biBwbnBtL2FjdGlvbi1zZXR1cEB2NCIsCiAgICAgICAgICAibnVtYmVyIjogMywKICAgICAgICAgICJzdGFydGVkQXQiOiAiMjAyNi0xMS0xN1QyMzo0NjozNloiLAogICAgICAgICAgInN0YXR1cyI6ICJjb21wbGV0ZWQiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAiY29tcGxldGVkQXQiOiAiMjAyNi0xMS0xN1QyMzo0Njo0M1oiLAogICAgICAgICAgImNvbmNsdXNpb24iOiAic3VjY2VzcyIsCiAgICAgICAgICAibmFtZSI6ICJSdW4gYWN0aW9ucy9zZXR1cC1ub2RlQHY0IiwKICAgICAgICAgICJudW1iZXIiOiA0LAogICAgICAgICAgInN0YXJ0ZWRBdCI6ICIyMDI2LTExLTE3VDIzOjQ2OjM4WiIsCiAgICAgICAgICAic3RhdHVzIjogImNvbXBsZXRlZCIKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJjb21wbGV0ZWRBdCI6ICIyMDI2LTExLTE3VDIzOjQ2OjQzWiIsCiAgICAgICAgICAiY29uY2x1c2lvbiI6ICJzdWNjZXNzIiwKICAgICAgICAgICJuYW1lIjogIlJ1biBhY3Rpb25zL3NldHVwLXB5dGhvbkB2NSIsCiAgICAgICAgICAibnVtYmVyIjogNSwKICAgICAgICAgICJzdGFydGVkQXQiOiAiMjAyNi0xMS0xN1QyMzo0Njo0M1oiLAogICAgICAgICAgInN0YXR1cyI6ICJjb21wbGV0ZWQiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAiY29tcGxldGVkQXQiOiAiMjAyNi0xMS0xN1QyMzo1NjoyMVoiLAogICAgICAgICAgImNvbmNsdXNpb24iOiAic3VjY2VzcyIsCiAgICAgICAgICAibmFtZSI6ICJJbnN0YWxsIHRoZSBpbmRlcGVuZGVudCBuYXRpdmUgb2ZmaWNlIHJlbmRlcmVyIiwKICAgICAgICAgICJudW1iZXIiOiA2LAogICAgICAgICAgInN0YXJ0ZWRBdCI6ICIyMDI2LTExLTE3VDIzOjQ2OjQzWiIsCiAgICAgICAgICAic3RhdHVzIjogImNvbXBsZXRlZCIKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJjb21wbGV0ZWRBdCI6ICIyMDI2LTExLTE3VDIzOjU2OjI1WiIsCiAgICAgICAgICAiY29uY2x1c2lvbiI6ICJzdWNjZXNzIiwKICAgICAgICAgICJuYW1lIjogIlJ1biBwbnBtIGluc3RhbGwgLS1mcm96ZW4tbG9ja2ZpbGUiLAogICAgICAgICAgIm51bWJlciI6IDcsCiAgICAgICAgICAic3RhcnRlZEF0IjogIjIwMjYtMTEtMTdUMjM6NTY6MjFaIiwKICAgICAgICAgICJzdGF0dXMiOiAiY29tcGxldGVkIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImNvbXBsZXRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDA6NTZaIiwKICAgICAgICAgICJjb25jbHVzaW9uIjogInN1Y2Nlc3MiLAogICAgICAgICAgIm5hbWUiOiAiUnVuIHBucG0gZXhlYyBwbGF5d3JpZ2h0IGluc3RhbGwgLS13aXRoLWRlcHMgY2hyb21pdW0iLAogICAgICAgICAgIm51bWJlciI6IDgsCiAgICAgICAgICAic3RhcnRlZEF0IjogIjIwMjYtMTEtMTdUMjM6NTY6MjVaIiwKICAgICAgICAgICJzdGF0dXMiOiAiY29tcGxldGVkIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImNvbXBsZXRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MDhaIiwKICAgICAgICAgICJjb25jbHVzaW9uIjogInN1Y2Nlc3MiLAogICAgICAgICAgIm5hbWUiOiAiUnVuIHBucG0gYnVpbGQiLAogICAgICAgICAgIm51bWJlciI6IDksCiAgICAgICAgICAic3RhcnRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDA6NTZaIiwKICAgICAgICAgICJzdGF0dXMiOiAiY29tcGxldGVkIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImNvbXBsZXRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MDlaIiwKICAgICAgICAgICJjb25jbHVzaW9uIjogInN1Y2Nlc3MiLAogICAgICAgICAgIm5hbWUiOiAiUHJlcGFyZSB0aGUgb3JpZ2luYWwgaW5kZXBlbmRlbnQgc291cmNlIiwKICAgICAgICAgICJudW1iZXIiOiAxMCwKICAgICAgICAgICJzdGFydGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMTowOFoiLAogICAgICAgICAgInN0YXR1cyI6ICJjb21wbGV0ZWQiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAiY29tcGxldGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMToyN1oiLAogICAgICAgICAgImNvbmNsdXNpb24iOiAic3VjY2VzcyIsCiAgICAgICAgICAibmFtZSI6ICJJbXBvcnQgZWRpdCB1bmRvIHJlZG8gZG93bmxvYWQgYW5kIHJlb3BlbiBpbiB0aGUgYWN0dWFsIGxhYiIsCiAgICAgICAgICAibnVtYmVyIjogMTEsCiAgICAgICAgICAic3RhcnRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MDlaIiwKICAgICAgICAgICJzdGF0dXMiOiAiY29tcGxldGVkIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImNvbXBsZXRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MjdaIiwKICAgICAgICAgICJjb25jbHVzaW9uIjogInN1Y2Nlc3MiLAogICAgICAgICAgIm5hbWUiOiAiQ2hlY2sgdGhlIGFjdHVhbCBicm93c2VyLWRvd25sb2FkZWQgV29yZCBmaWxlIiwKICAgICAgICAgICJudW1iZXIiOiAxMiwKICAgICAgICAgICJzdGFydGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMToyN1oiLAogICAgICAgICAgInN0YXR1cyI6ICJjb21wbGV0ZWQiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAiY29tcGxldGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMTozMloiLAogICAgICAgICAgImNvbmNsdXNpb24iOiAic3VjY2VzcyIsCiAgICAgICAgICAibmFtZSI6ICJSZW5kZXIgb3JpZ2luYWwgZXhwb3J0ZWQgYW5kIHNlcGFyYXRvciBjb250cm9sIFdvcmQgZmlsZXMgaW5kZXBlbmRlbnRseSIsCiAgICAgICAgICAibnVtYmVyIjogMTMsCiAgICAgICAgICAic3RhcnRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MjdaIiwKICAgICAgICAgICJzdGF0dXMiOiAiY29tcGxldGVkIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImNvbXBsZXRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MzRaIiwKICAgICAgICAgICJjb25jbHVzaW9uIjogInN1Y2Nlc3MiLAogICAgICAgICAgIm5hbWUiOiAiUnVuIGFjdGlvbnMvdXBsb2FkLWFydGlmYWN0QHY0IiwKICAgICAgICAgICJudW1iZXIiOiAxNCwKICAgICAgICAgICJzdGFydGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMTozMloiLAogICAgICAgICAgInN0YXR1cyI6ICJjb21wbGV0ZWQiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAiY29tcGxldGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMTozNFoiLAogICAgICAgICAgImNvbmNsdXNpb24iOiAic3VjY2VzcyIsCiAgICAgICAgICAibmFtZSI6ICJQb3N0IFJ1biBhY3Rpb25zL3NldHVwLXB5dGhvbkB2NSIsCiAgICAgICAgICAibnVtYmVyIjogMjUsCiAgICAgICAgICAic3RhcnRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MzRaIiwKICAgICAgICAgICJzdGF0dXMiOiAiY29tcGxldGVkIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImNvbXBsZXRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MzRaIiwKICAgICAgICAgICJjb25jbHVzaW9uIjogInN1Y2Nlc3MiLAogICAgICAgICAgIm5hbWUiOiAiUG9zdCBSdW4gYWN0aW9ucy9zZXR1cC1ub2RlQHY0IiwKICAgICAgICAgICJudW1iZXIiOiAyNiwKICAgICAgICAgICJzdGFydGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMTozNFoiLAogICAgICAgICAgInN0YXR1cyI6ICJjb21wbGV0ZWQiCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAiY29tcGxldGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMTozNFoiLAogICAgICAgICAgImNvbmNsdXNpb24iOiAic3VjY2VzcyIsCiAgICAgICAgICAibmFtZSI6ICJQb3N0IFJ1biBwbnBtL2FjdGlvbi1zZXR1cEB2NCIsCiAgICAgICAgICAibnVtYmVyIjogMjcsCiAgICAgICAgICAic3RhcnRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MzRaIiwKICAgICAgICAgICJzdGF0dXMiOiAiY29tcGxldGVkIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImNvbXBsZXRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MzRaIiwKICAgICAgICAgICJjb25jbHVzaW9uIjogInN1Y2Nlc3MiLAogICAgICAgICAgIm5hbWUiOiAiUG9zdCBSdW4gYWN0aW9ucy9jaGVja291dEB2NCIsCiAgICAgICAgICAibnVtYmVyIjogMjgsCiAgICAgICAgICAic3RhcnRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MzRaIiwKICAgICAgICAgICJzdGF0dXMiOiAiY29tcGxldGVkIgogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgImNvbXBsZXRlZEF0IjogIjIwMjYtMTEtMThUMDA6MDE6MzRaIiwKICAgICAgICAgICJjb25jbHVzaW9uIjogInN1Y2Nlc3MiLAogICAgICAgICAgIm5hbWUiOiAiQ29tcGxldGUgam9iIiwKICAgICAgICAgICJudW1iZXIiOiAyOSwKICAgICAgICAgICJzdGFydGVkQXQiOiAiMjAyNi0xMS0xOFQwMDowMTozNFoiLAogICAgICAgICAgInN0YXR1cyI6ICJjb21wbGV0ZWQiCiAgICAgICAgfQogICAgICBdLAogICAgICAidXJsIjogImh0dHBzOi8vZ2l0aHViLmNvbS9lZGRvbG8vZm91bnRhaW5qcy9hY3Rpb25zL3J1bnMvNDQyMDIyNTQ3MjYvam9iLzEzNDQ1OTA1ODQyMyIKICAgIH0KICBdLAogICJzdGF0dXMiOiAiY29tcGxldGVkIiwKICAidXJsIjogImh0dHBzOi8vZ2l0aHViLmNvbS9lZGRvbG8vZm91bnRhaW5qcy9hY3Rpb25zL3J1bnMvNDQyMDIyNTQ3MjYiCn0K",
+  "parsed": {
+    "checkedAt": "2026-11-18T00:18:17.840718+00:00",
+    "conclusion": "success",
+    "headSha": "2604c80279fc8c3be4237dffdd3b4f73318beb74",
+    "jobs": [
+      {
+        "completedAt": "2026-11-18T00:01:36Z",
+        "conclusion": "success",
+        "databaseId": 134459058423,
+        "name": "render",
+        "startedAt": "2026-11-17T23:46:20Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-17T23:46:24Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-17T23:46:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-17T23:46:36Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-11-17T23:46:24Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-17T23:46:38Z",
+            "conclusion": "success",
+            "name": "Run pnpm/action-setup@v4",
+            "number": 3,
+            "startedAt": "2026-11-17T23:46:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-17T23:46:43Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@v4",
+            "number": 4,
+            "startedAt": "2026-11-17T23:46:38Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-17T23:46:43Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-python@v5",
+            "number": 5,
+            "startedAt": "2026-11-17T23:46:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-17T23:56:21Z",
+            "conclusion": "success",
+            "name": "Install the independent native office renderer",
+            "number": 6,
+            "startedAt": "2026-11-17T23:46:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-17T23:56:25Z",
+            "conclusion": "success",
+            "name": "Run pnpm install --frozen-lockfile",
+            "number": 7,
+            "startedAt": "2026-11-17T23:56:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:00:56Z",
+            "conclusion": "success",
+            "name": "Run pnpm exec playwright install --with-deps chromium",
+            "number": 8,
+            "startedAt": "2026-11-17T23:56:25Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:08Z",
+            "conclusion": "success",
+            "name": "Run pnpm build",
+            "number": 9,
+            "startedAt": "2026-11-18T00:00:56Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:09Z",
+            "conclusion": "success",
+            "name": "Prepare the original independent source",
+            "number": 10,
+            "startedAt": "2026-11-18T00:01:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:27Z",
+            "conclusion": "success",
+            "name": "Import edit undo redo download and reopen in the actual lab",
+            "number": 11,
+            "startedAt": "2026-11-18T00:01:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:27Z",
+            "conclusion": "success",
+            "name": "Check the actual browser-downloaded Word file",
+            "number": 12,
+            "startedAt": "2026-11-18T00:01:27Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:32Z",
+            "conclusion": "success",
+            "name": "Render original exported and separator control Word files independently",
+            "number": 13,
+            "startedAt": "2026-11-18T00:01:27Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:34Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 14,
+            "startedAt": "2026-11-18T00:01:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:34Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-python@v5",
+            "number": 25,
+            "startedAt": "2026-11-18T00:01:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:34Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@v4",
+            "number": 26,
+            "startedAt": "2026-11-18T00:01:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:34Z",
+            "conclusion": "success",
+            "name": "Post Run pnpm/action-setup@v4",
+            "number": 27,
+            "startedAt": "2026-11-18T00:01:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:34Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 28,
+            "startedAt": "2026-11-18T00:01:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-18T00:01:34Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 29,
+            "startedAt": "2026-11-18T00:01:34Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/eddolo/fountainjs/actions/runs/44202254726/job/134459058423"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/eddolo/fountainjs/actions/runs/44202254726"
+  }
+}

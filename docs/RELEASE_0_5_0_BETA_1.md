@@ -18,6 +18,8 @@ migration/rollback workflow with the application's own backend.
 
 ## Candidate highlights
 
+- Authoring embeds load provider content only after explicit interaction and
+  unload it when returning to prose; reader playback is unchanged.
 - Rich editing and clipboard fixes preserve structural selections, footnotes,
   mixed ordinary/task lists, numbered checkboxes and authored blank content.
 - Markdown and HTML interchange retain more source/container intent and report
@@ -51,9 +53,17 @@ and fixture-layout failures. Follow-up native-interaction corrections pass all
 21 desktop recovery journeys, eight recorded release journeys and strict types
 locally. On `9cd1d7b3`, hosted verification, performance, Lean, eight recorded
 journeys, 33 production checks, 48 GitLab bridge checks, six installed-starter
-checks and independent native DOCX all pass. The broader browser job is still
-in dependency installation at this checkpoint. The npm trusted-publisher
+checks and independent native DOCX all pass. The npm trusted-publisher
 diagnostic passes, with package staging explicitly skipped.
+
+On `2604c802`, those non-browser jobs and native DOCX pass again. The display
+clipboard group passes all 39 cases, including the corrected cut-token contract.
+The remaining headless matrix finishes with 1,132 passes, 18 skips, five failures
+and one flaky mobile Angular case. The five failures are the stalled-image PDF
+text checker and four WebKit native clipboard workflows. November 18 follow-up
+work adds a real provider-focus regression and repairs the text-run oracle and
+display partition. Fresh complete hosted qualification remains required; earlier
+green subsets do not approve the release.
 
 The initial native DOCX audit’s two source/export pages and selected
 editor states were visually inspected; this is not pixel-fidelity or Microsoft

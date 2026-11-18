@@ -1,0 +1,7 @@
+{
+  "source": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/unit-full-final.log",
+  "bytes": 556,
+  "sha256": "8b606ede9f7207be6ca77a86147f19c742a1170c520ca03e6e9380138ef47bcd",
+  "rawBase64": "DQogUlVOICB2NS4wLjAgQzovVXNlcnMvY2FwcHUvRGVza3RvcC9wYW9sb2FwcC9mYWlsdXJlcy9Gb3VudGFpbmpzLUFwcA0KDQoNCiBUZXN0IEZpbGVzICA0MDkgcGFzc2VkICg0MDkpDQogICAgICBUZXN0cyAgNzAzNSBwYXNzZWQgKDcwMzUpDQogICBTdGFydCBhdCAgMDE6NDI6NTcNCiAgIER1cmF0aW9uICAyNzcuMjZzIChlbnZpcm9ubWVudCA0NSUsIGltcG9ydCAyOCUsIHRlc3RzIDIzJSwgdHJhbnNmb3JtIDQlLCB3b3JrZXIgMSUpDQoNCiAgICAgSW1wb3J0ICA5NjAgbW9kdWxlcyB3ZXJlIGV2YWx1YXRlZCAyMDY1IHRpbWVzIMK3IDEzMy4yMHMgdG90YWwsIDI4JSBvZiB0cmFja2VkIHRpbWUNCiAgICAgICAgICAgICB+MjIuNDJzIGZhc3RlciB3aXRoIGlzb2xhdGU6IGZhbHNlIOKAlCBzaGFyZWQgbW9kdWxlcyBhcmUgZXZhbHVhdGVkIG9uY2UgcGVyIHdvcmtlciBpbnN0ZWFkIG9mIG9uY2UgcGVyIGZpbGUNCiAgICAgICAgICAgICBsZWFybiBtb3JlOiBodHRwczovL3ZpdGVzdC5kZXYvZ3VpZGUvaW1wcm92aW5nLXBlcmZvcm1hbmNlI3Rlc3QtaXNvbGF0aW9uDQoNCg==",
+  "text": "\r\n RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App\r\n\r\n\r\n Test Files  409 passed (409)\r\n      Tests  7035 passed (7035)\r\n   Start at  01:42:57\r\n   Duration  277.26s (environment 45%, import 28%, tests 23%, transform 4%, worker 1%)\r\n\r\n     Import  960 modules were evaluated 2065 times \u00b7 133.20s total, 28% of tracked time\r\n             ~22.42s faster with isolate: false \u2014 shared modules are evaluated once per worker instead of once per file\r\n             learn more: https://vitest.dev/guide/improving-performance#test-isolation\r\n\r\n"
+}

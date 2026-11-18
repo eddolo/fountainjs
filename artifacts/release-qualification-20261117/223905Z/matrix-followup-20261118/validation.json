@@ -1,0 +1,124 @@
+{
+  "baseCommit": "2604c80279fc8c3be4237dffdd3b4f73318beb74",
+  "qualification": "Local follow-up verified; full exact-head hosted qualification required before publication.",
+  "finalChecks": {
+    "unit": {
+      "passed": 7035,
+      "files": 409,
+      "workers": 2
+    },
+    "focusedBrowser": {
+      "passed": 8,
+      "workers": 1,
+      "platform": "Linux WSL",
+      "engines": [
+        "chromium",
+        "webkit",
+        "mobile-chrome",
+        "mobile-safari"
+      ],
+      "physicalMobile": false
+    },
+    "typecheck": "passed, including Angular and Svelte",
+    "api": "passed, 452 declaration files",
+    "package": "passed",
+    "build": "passed",
+    "sizeLimits": "passed unchanged"
+  },
+  "clipboard": {
+    "headlessCounterexamples": 4,
+    "localCompleteDisplayGroup": "not green; intermittent pre-click/download stalls retained",
+    "hostedDisplayGroupRequired": 51,
+    "skipsOrContentAssertionsRelaxed": false
+  },
+  "registeredBrowserInventory": {
+    "total": 1200,
+    "display": 51,
+    "headless": 1149,
+    "isExecutionEvidence": false
+  },
+  "remaining": [
+    "Fresh complete hosted CI and independent native DOCX on the pushed head",
+    "Inspect the final hosted package before staging",
+    "Coordinated beta publication; npm staging approval still requires maintainer interaction if reached"
+  ],
+  "scope": {
+    "dependencyChanges": false,
+    "publicAPIChanges": false,
+    "budgetChanges": false,
+    "retryChanges": false,
+    "publicationPerformedByFollowup": false
+  },
+  "sourceFiles": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 23120,
+      "sha256": "fc058d32d12bd32cb64852b162b1696ed1718cfee20de0af4b8e9c0e10506045"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 226433,
+      "sha256": "97deb499a0789a30db55189aa5801860d9edb75adc6deea831889fa791df81b3"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 71914,
+      "sha256": "4b5c037dec98f28e0fc0455a6dcd386e541b9290952fb8b93293c39fd516ef50"
+    },
+    {
+      "path": "docs/RELEASE_0_5_0_BETA_1.md",
+      "bytes": 5153,
+      "sha256": "d32c559f588203bb73466dd329451bcabfabe43ab12940f87fc880f9a5fbdac9"
+    },
+    {
+      "path": "docs/RELEASE_CANDIDATE_QUALIFICATION_20261117.md",
+      "bytes": 9640,
+      "sha256": "3ab7b2ee2b9a207f388d717f815b5b494b115bc88d185ba3fda45784e6370c2e"
+    },
+    {
+      "path": "src/extensions/media.ts",
+      "bytes": 33271,
+      "sha256": "f415e5971b4990e08c54ad9ea0def20a4f3a69d845f1a7dc6d944808bf38f70c"
+    },
+    {
+      "path": "src/styles.css",
+      "bytes": 91238,
+      "sha256": "a934b2bce4759132bd9016fadf5756c5c97c52a617de36a73ca83dd63b0c9246"
+    },
+    {
+      "path": "tests/browser/conversion-lab-journey.ts",
+      "bytes": 46190,
+      "sha256": "4875d7963e2a3fc75be0d8f16d24ad2dc534d50c5cbca4188f1bc7eb80cd4757"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "bytes": 456912,
+      "sha256": "ffb0f65766ded08fb68f65bcb3066e47d7a7e23d804a8315b28c94a9fe7e37e3"
+    },
+    {
+      "path": "tests/browser/mobile.spec.ts",
+      "bytes": 37016,
+      "sha256": "182616a42f4d11081db116a2442176ec751c34d8bab3c03c42476be2eb6e9bc3"
+    },
+    {
+      "path": "tests/browser/embed-focus-journey.ts",
+      "bytes": 4021,
+      "sha256": "4efaf19c381d3290d2bd217fc6b4e60d2391664ab386ffdf4fa15a40650e9e69"
+    },
+    {
+      "path": "tests/browser/pdf-page-text.ts",
+      "bytes": 335,
+      "sha256": "310bc05b60bde9b3f4f9c926324cd3eb3284eb8069eef7dba12282c80ee40f65"
+    },
+    {
+      "path": "tests/media-embed-focus.test.ts",
+      "bytes": 2209,
+      "sha256": "d844070bfacb9340a2dfe3238c8a7892a4a41b536f4a012e25e22fb92e7f5765"
+    },
+    {
+      "path": "tests/pdf-page-text.test.ts",
+      "bytes": 1193,
+      "sha256": "814f5b6352880a2b1f2a9c4073fe3f6ae34614a13931e3e32f8d0ad36938b7fe"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "source": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/api-final.log",
+  "bytes": 97,
+  "sha256": "6db6e86793e352fe883ae7e8a5377c9497286965dfec560b3205d3c6ea71bdbb",
+  "rawBase64": "JCBub2RlIHNjcmlwdHMvY2hlY2stYXBpLXN1cmZhY2UubWpzDQpQdWJsaWMgQVBJIHN1cmZhY2UgdmVyaWZpZWQgYWNyb3NzIDQ1MiBkZWNsYXJhdGlvbiBmaWxlcy4NCg==",
+  "text": "$ node scripts/check-api-surface.mjs\r\nPublic API surface verified across 452 declaration files.\r\n"
+}

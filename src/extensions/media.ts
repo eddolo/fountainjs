@@ -321,6 +321,7 @@ class MediaNodeView implements NodeViewLike {
   private readonly caption = document.createElement('figcaption');
   private readonly error = document.createElement('div');
   private readonly retry = document.createElement('button');
+  private releaseEmbedFocus?: () => void;
 
   constructor(node: Node, private readonly view: unknown, private readonly getPath: () => number[]) {
     this.current = node;
@@ -355,12 +356,14 @@ class MediaNodeView implements NodeViewLike {
   }
 
   ignoreMutation(mutation: MutationRecord): boolean {
-    if (this.error.contains(mutation.target)) return true;
+    if (this.error.contains(mutation.target)
+      || this.current.type.name === 'embed' && this.interactive?.contains(mutation.target)) return true;
     return mutation.target === this.dom
       && ['data-fountain-media-selected', 'data-fountain-media-error'].includes(mutation.attributeName ?? '');
   }
 
   destroy(): void {
+    this.releaseEmbedFocus?.();
     this.detachMediaListeners();
     this.retry.removeEventListener('click', this.retryMedia);
   }
@@ -368,6 +371,8 @@ class MediaNodeView implements NodeViewLike {
   private get editable(): boolean { return (this.view as Partial<MediaEditorView> | null)?.editor?.editable === true; }
 
   private render(): void {
+    this.releaseEmbedFocus?.();
+    this.releaseEmbedFocus = undefined;
     this.detachMediaListeners();
     const { attrs } = this.current;
     this.dom.dataset.align = String(attrs.align || 'center');
@@ -442,7 +447,30 @@ class MediaNodeView implements NodeViewLike {
       if (attrs.allowFullscreen) frame.setAttribute('allowfullscreen', '');
       frame.style.width = '100%';
       frame.style.height = String(attrs.height || '360px');
-      return frame;
+      if (!this.editable) return frame;
+      // Approved providers still run third-party scripts. Explicit interaction
+      // keeps its browsing context unloaded while the author edits prose.
+      const shell = document.createElement('div');
+      shell.className = 'fountain-embed-shell';
+      const activate = document.createElement('button');
+      activate.type = 'button';
+      activate.className = 'fountain-embed__activate';
+      activate.textContent = `Interact with ${String(attrs.title || 'embed')}`;
+      frame.srcdoc = '';
+      activate.addEventListener('click', () => {
+        frame.removeAttribute('srcdoc');
+        activate.hidden = true;
+        frame.focus();
+      });
+      const protect = (event: FocusEvent) => {
+        if (shell.contains(event.target as globalThis.Node)) return;
+        if (!frame.hasAttribute('srcdoc')) frame.srcdoc = '';
+        activate.hidden = false;
+      };
+      frame.ownerDocument.addEventListener('focusin', protect);
+      this.releaseEmbedFocus = () => frame.ownerDocument.removeEventListener('focusin', protect);
+      shell.append(frame, activate);
+      return shell;
     }
     const element = document.createElement(this.current.type.name) as HTMLMediaElement;
     element.className = 'fountain-media__native';

@@ -89,6 +89,64 @@ production clipboard behavior. Fresh headed Linux display-backed verification
 and all subsequent browser gates remain required. The earlier hosted and local
 red attempts, source hashes, recordings and transport observations are retained.
 
+## November 18 browser-matrix follow-up
+
+The full run on `2604c802` ends with 1,132 passes, 18 skips, five failures
+and one flaky mobile Angular journey. Its independent display clipboard group
+passes all 39 cases. Verification, performance, recorded UI, Lean and independent
+native DOCX jobs pass; the whole release remains unqualified because the browser
+job fails.
+
+The stalled-image PDF failure is an oracle defect: PDF.js splits `fi` from
+`gures`, and the helper inserts spaces between every item. The real Linux PDF
+renders the words correctly. The new helper uses the returned spaces and EOL
+flags rather than inventing word boundaries. Controls still reject missing or
+reordered letters and extra spaces or line breaks within a word, while retaining
+actual word spaces and line boundaries.
+The final one-page PDF and editor preview receive visual review; arbitrary
+PDF/Word fidelity is not certified.
+
+A controlled approved-provider frame reproduces interrupted native typing by
+requesting focus midway through input. Editable embeds now retain an empty
+`srcdoc` until **Interact with [title]** is activated. Returning to prose unloads
+the provider. Reader rendering, document JSON, provider policy and exported
+attributes are unchanged. The node view owns its transient iframe/control DOM
+mutations, and the asynchronous unit control proves activation preserves the
+same iframe rather than being immediately reset by document repair.
+
+Eight final diagnostic journeys pass serially on Linux Chromium/WebKit and both
+mobile emulations: protected typing, native keyboard activation, real provider
+input, immediate resumed prose, the original Angular lifecycle/history journeys
+and the stalled-image preview/PDF. Selected desktop/mobile PNGs and the PDF are
+visually inspected. The provider is a controlled fixture, not certification of
+arbitrary live third-party players or physical mobile/IME.
+
+Four newer native clipboard journeys were omitted from the existing display
+partition. All four reproduce lost rich structure in headless Linux WebKit;
+the display-backed cases retain all original semantic assertions. Local WSL GTK display
+attempts also stall intermittently before the first click or download; those
+failures remain failures. Software-compositing and explicit-front experiments
+are retained and are not applied to CI. The normal hosted display must still
+pass the complete group. No forced clicks, skips, extra retries or changed
+content expectations are introduced. The inventory registers all 1,200 cases:
+51 display-backed and 1,149 headless, including five new focus regressions.
+
+Visual capture leaves the caret visible. The earlier screenshot helper injected
+caret-color styles into atomic media, causing the editor's defensive repair to
+replace the iframe. That recording artifact is retained. Earlier local results
+from a server kept alive across library rebuilds are nonqualifying; the final
+run verifies that served imports match the rebuilt module set. The final local
+diagnostic server omits only its build-information banner to avoid the slow
+cross-filesystem Git scan. Hosted qualification keeps the complete normal
+configuration.
+
+Build-size limits are unchanged. Comment compaction offsets the added CSS;
+existing declarations and UI behavior in those compacted rules are unchanged.
+No package dependency, public API, performance limit or retry policy changes.
+The final source passes 7,035 unit cases in 409 files, strict framework types,
+public API/package checks and the existing bundle limits. Exact raw-log bytes,
+media hashes and reviewed PNGs are in the [follow-up evidence](../artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/validation.json).
+
 ## Next gate
 
 Push the tested follow-up and require fresh exact-revision hosted CI before

@@ -1,0 +1,7 @@
+{
+  "source": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/activation-mutation-after.log",
+  "bytes": 491,
+  "sha256": "f62cb9f7555fad8f7e181066183059393af85d7620acd11d82e4df6d8c2510a5",
+  "rawBase64": "DQogUlVOICB2NS4wLjAgQzovVXNlcnMvY2FwcHUvRGVza3RvcC9wYW9sb2FwcC9mYWlsdXJlcy9Gb3VudGFpbmpzLUFwcA0KDQoNCiBUZXN0IEZpbGVzICA0IHBhc3NlZCAoNCkNCiAgICAgIFRlc3RzICA2NSBwYXNzZWQgKDY1KQ0KICAgU3RhcnQgYXQgIDAxOjI4OjIzDQogICBEdXJhdGlvbiAgNi4yMnMgKGVudmlyb25tZW50IDUxJSwgdHJhbnNmb3JtIDI5JSwgaW1wb3J0IDExJSwgdGVzdHMgOCUpDQoNCiAgVHJhbnNmb3JtICB0cmFuc2Zvcm1pbmcgbW9kdWxlcyB0b29rIDIuODlzIMK3IDI5JSBvZiB0cmFja2VkIHRpbWUsIHJlLWRvbmUgb24gZXZlcnkgcnVuDQogICAgICAgICAgICAgcGVyc2lzdCB0cmFuc2Zvcm1zIGFjcm9zcyBydW5zIHdpdGggZnNNb2R1bGVDYWNoZTogdHJ1ZQ0KICAgICAgICAgICAgIGxlYXJuIG1vcmU6IGh0dHBzOi8vdml0ZXN0LmRldi9ndWlkZS9pbXByb3ZpbmctcGVyZm9ybWFuY2UjY2FjaGluZy1iZXR3ZWVuLXJlcnVucw0KDQo=",
+  "text": "\r\n RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App\r\n\r\n\r\n Test Files  4 passed (4)\r\n      Tests  65 passed (65)\r\n   Start at  01:28:23\r\n   Duration  6.22s (environment 51%, transform 29%, import 11%, tests 8%)\r\n\r\n  Transform  transforming modules took 2.89s \u00b7 29% of tracked time, re-done on every run\r\n             persist transforms across runs with fsModuleCache: true\r\n             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns\r\n\r\n"
+}

@@ -1,3 +1,4 @@
+import { embedFocusJourney } from './embed-focus-journey';
 import { expect, test } from '@playwright/test';
 import { markdownCodeLabelsJourney } from './markdown-code-labels-journey';
 import { workflowTaskRemovalJourney } from './workflow-task-removal-journey';
@@ -674,4 +675,9 @@ test('keeps a 100,000-block virtual document bounded on mobile engines', async (
   expect(metrics.remainingDOM).toBe(0);
   expect(metrics.printMounted).toBe(300);
   expect(metrics.printRestored).toBe(true);
+});
+
+
+test('protects touch authoring from embedded provider focus requests while allowing explicit interaction', async ({ page }, info) => {
+  await embedFocusJourney(page, info);
 });

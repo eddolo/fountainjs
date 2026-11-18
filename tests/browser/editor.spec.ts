@@ -47,6 +47,12 @@ import { blockDirectionKeyboardJourney, blockDirectionPointerJourney } from './b
 import { listDirectionCases, listDirectionTransformJourney } from './list-direction-transform-journey';
 import { tableColumnSideCases, tableColumnSideJourney } from './table-column-side-journey';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { pdfPageText } from './pdf-page-text';
+import { embedFocusJourney } from './embed-focus-journey';
+
+test('protects prose from embedded provider focus requests while allowing explicit interaction', async ({ page }, info) => {
+  await embedFocusJourney(page, info);
+});
 
 for (const format of ['html', 'markdown'] as const) test(`keeps per-file HTML conversion settings through ${format} editing and export`, async ({ page }, info) => {
   await conversionHTMLPolicyJourney(page, info, format);
@@ -918,7 +924,7 @@ async function extractPDFPageText(pdf: Buffer): Promise<readonly string[]> {
     const pages: string[] = [];
     for (let pageNumber = 1; pageNumber <= document.numPages; pageNumber += 1) {
       const content = await (await document.getPage(pageNumber)).getTextContent();
-      pages.push(content.items.flatMap((item) => ('str' in item ? [item.str] : [])).join(' ').replace(/\s+/gu, ' ').trim());
+      pages.push(pdfPageText(content.items));
     }
     return pages;
   } finally {

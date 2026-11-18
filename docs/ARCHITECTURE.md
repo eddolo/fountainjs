@@ -840,7 +840,12 @@ canonical output. Whole-node schema validation binds the canonical URL to that
 provider and prevents persisted or imported content from widening its policy.
 YouTube and Vimeo are the default allowlist; a host can replace the list but an
 arbitrary iframe never becomes trusted implicitly. Native controls and file
-links remain interactive inside atomic, selectable, accessible NodeViews.
+links remain interactive inside atomic, selectable, accessible NodeViews. In an
+editable view, approved iframe embeds require **Interact with [title]** before
+loading provider content. Returning to another document control or prose unloads
+that iframe and re-arms the control, so provider scripts cannot interrupt typing.
+The reader view keeps the ordinary interactive iframe; document attributes,
+provider policy and export output are unchanged.
 
 ## Optional AI and MCP
 

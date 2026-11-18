@@ -1,0 +1,271 @@
+{
+  "kind": "registered test inventory, not execution evidence",
+  "total": 1200,
+  "display": 51,
+  "headless": 1149,
+  "byProject": {
+    "chromium": 380,
+    "firefox": 380,
+    "mobile-chrome": 30,
+    "mobile-safari": 30,
+    "webkit": 380
+  },
+  "pattern": "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy|native shared-context|inherited node direction survives trusted|copies and cuts a partial text-to-image range|recovers homepage copy by native manual copying|copies homepage output using the native clipboard API|explains refused homepage paste|edits (range|quoted|nested-list) suggestion through focused input, clipboard and saved JSON|edits, copies and reopens mixed bullets and numbered tasks through the public conversion UI",
+  "displayTests": [
+    {
+      "title": "copies and cuts a partial text-to-image range using trusted native clipboard events",
+      "file": "../manual/document-boundary-range-real.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "native shared-context complete copy",
+      "file": "../manual/shared-direction-copy-real.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "native shared-context partial snapshot",
+      "file": "../manual/shared-direction-copy-real.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "inherited node direction survives trusted copy into native and Fountain destinations",
+      "file": "../manual/inherited-clipboard-real.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "inherited node direction survives trusted cut into native and Fountain destinations",
+      "file": "../manual/inherited-clipboard-real.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "pastes native rich research notes with structure, marks, source and undo",
+      "file": "editor.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "retains technical code reading direction and disabled line numbers through native copy and HTML fallback",
+      "file": "editor.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "copies shared automatic list scope through real internal and external clipboard: convert",
+      "file": "editor.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "copies shared automatic list scope through real internal and external clipboard: lift",
+      "file": "editor.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "copies and cuts a partial text-to-image range using trusted native clipboard events",
+      "file": "../manual/document-boundary-range-real.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "native shared-context complete copy",
+      "file": "../manual/shared-direction-copy-real.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "native shared-context partial snapshot",
+      "file": "../manual/shared-direction-copy-real.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "inherited node direction survives trusted copy into native and Fountain destinations",
+      "file": "../manual/inherited-clipboard-real.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "inherited node direction survives trusted cut into native and Fountain destinations",
+      "file": "../manual/inherited-clipboard-real.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "pastes native rich research notes with structure, marks, source and undo",
+      "file": "editor.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "retains technical code reading direction and disabled line numbers through native copy and HTML fallback",
+      "file": "editor.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "copies shared automatic list scope through real internal and external clipboard: convert",
+      "file": "editor.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "copies shared automatic list scope through real internal and external clipboard: lift",
+      "file": "editor.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "copies and cuts a partial text-to-image range using trusted native clipboard events",
+      "file": "../manual/document-boundary-range-real.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "native shared-context complete copy",
+      "file": "../manual/shared-direction-copy-real.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "native shared-context partial snapshot",
+      "file": "../manual/shared-direction-copy-real.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "inherited node direction survives trusted copy into native and Fountain destinations",
+      "file": "../manual/inherited-clipboard-real.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "inherited node direction survives trusted cut into native and Fountain destinations",
+      "file": "../manual/inherited-clipboard-real.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "pastes native rich research notes with structure, marks, source and undo",
+      "file": "editor.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "retains technical code reading direction and disabled line numbers through native copy and HTML fallback",
+      "file": "editor.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "copies shared automatic list scope through real internal and external clipboard: convert",
+      "file": "editor.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "copies shared automatic list scope through real internal and external clipboard: lift",
+      "file": "editor.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "edits range suggestion through focused input, clipboard and saved JSON",
+      "file": "gitlab-suggestion-node.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "edits quoted suggestion through focused input, clipboard and saved JSON",
+      "file": "gitlab-suggestion-node.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "edits nested-list suggestion through focused input, clipboard and saved JSON",
+      "file": "gitlab-suggestion-node.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "edits range suggestion through focused input, clipboard and saved JSON",
+      "file": "gitlab-suggestion-node.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "edits quoted suggestion through focused input, clipboard and saved JSON",
+      "file": "gitlab-suggestion-node.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "edits nested-list suggestion through focused input, clipboard and saved JSON",
+      "file": "gitlab-suggestion-node.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "edits range suggestion through focused input, clipboard and saved JSON",
+      "file": "gitlab-suggestion-node.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "edits quoted suggestion through focused input, clipboard and saved JSON",
+      "file": "gitlab-suggestion-node.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "edits nested-list suggestion through focused input, clipboard and saved JSON",
+      "file": "gitlab-suggestion-node.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "explains refused homepage paste and recovers using the native clipboard",
+      "file": "homepage-paste.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "explains refused homepage paste and recovers using the native clipboard",
+      "file": "homepage-paste.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "explains refused homepage paste and recovers using the native clipboard",
+      "file": "homepage-paste.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "edits, copies and reopens mixed bullets and numbered tasks through the public conversion UI",
+      "file": "mixed-lists.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "edits, copies and reopens mixed bullets and numbered tasks through the public conversion UI",
+      "file": "mixed-lists.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "edits, copies and reopens mixed bullets and numbered tasks through the public conversion UI",
+      "file": "mixed-lists.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "copies homepage output using the native clipboard API",
+      "file": "site-copy-contrast.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "recovers homepage copy by native manual copying when clipboard access is denied",
+      "file": "site-copy-contrast.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "recovers homepage copy by native manual copying when clipboard access is unavailable",
+      "file": "site-copy-contrast.spec.ts",
+      "project": "chromium"
+    },
+    {
+      "title": "copies homepage output using the native clipboard API",
+      "file": "site-copy-contrast.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "recovers homepage copy by native manual copying when clipboard access is denied",
+      "file": "site-copy-contrast.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "recovers homepage copy by native manual copying when clipboard access is unavailable",
+      "file": "site-copy-contrast.spec.ts",
+      "project": "firefox"
+    },
+    {
+      "title": "copies homepage output using the native clipboard API",
+      "file": "site-copy-contrast.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "recovers homepage copy by native manual copying when clipboard access is denied",
+      "file": "site-copy-contrast.spec.ts",
+      "project": "webkit"
+    },
+    {
+      "title": "recovers homepage copy by native manual copying when clipboard access is unavailable",
+      "file": "site-copy-contrast.spec.ts",
+      "project": "webkit"
+    }
+  ]
+}

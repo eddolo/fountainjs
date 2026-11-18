@@ -4,6 +4,11 @@
 
 ## 0.5.0-beta.1 — 2026-11-17
 
+- Require explicit interaction before loading third-party iframe content in an
+  editable view. Returning to prose unloads the provider so late script-driven
+  focus cannot truncate typing. Reader playback and stored/exported attributes
+  remain unchanged.
+
 - Reuse proven unchanged retained-collaboration position indexes after native
   text edits while preserving complete factory validation and full fallbacks.
   Keep held/fresh anchors coherent through length changes and reentrant reads.

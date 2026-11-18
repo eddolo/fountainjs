@@ -1,0 +1,15 @@
+{
+  "diagnostic-delayed-keydown": "Unprotected original compiled editor; actual mid-typing provider focus counterexample.",
+  "embed-before": "Original compiled editor; focus-ownership assertion fails after provider focus request.",
+  "embed-after": "Nonqualifying: server remained live across library rebuild; do not use to assess inert-only behavior.",
+  "focused-linux-final": "Aborted: stale built chunk imports verified; not a final-build qualification.",
+  "embed-srcdoc-final": "Fresh-server run; keyboard activation reset by unowned internal mutation.",
+  "activation-mutation-before": "Strengthened asynchronous unit control reproduces iframe replacement.",
+  "activation-mutation-after": "65 focused unit cases pass after embed-owned mutation correction.",
+  "embed-owned-controls-final": "Native activation/input pass; screenshot caret-style injection replaces NodeViews.",
+  "embed-screenshot-mutation-diagnostic": "Observer records screenshot caret-color changes and root repair; use caret initial for visual capture.",
+  "linux-display-reproduction": "2 pass / 2 fail before the first click (local display stability); not 4 passes.",
+  "linux-display-focus-recheck": "1 pass / 1 fail before the first click; failures remain retained.",
+  "linux-display-active-pages": "2 pass / 2 pre-click stability timeouts; bringing a page forward is not sufficient and the test change was removed.",
+  "linux-display-software": "2 pass / 2 local display failures (pre-click and download); software compositing is not applied to CI."
+}

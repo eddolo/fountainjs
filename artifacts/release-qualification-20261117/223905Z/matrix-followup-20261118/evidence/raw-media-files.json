@@ -1,0 +1,582 @@
+[
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-chromium/preview-after-image-loaded.png",
+    "bytes": 46849,
+    "sha256": "b0c4d8b63774633406c01cd7447a7a43db493e61072d0bc98a89b9e717491749"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-chromium/preview-with-unavailable-image.pdf",
+    "bytes": 16702,
+    "sha256": "2175e2a7f04bf8d2a28a9aba101e4967ec9c548031563ce405299a49d18d157d"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-chromium/preview-with-unavailable-image.png",
+    "bytes": 47916,
+    "sha256": "9e8e2093409636f5964b7b3739313cb88f2e5afe80c124bb87f352b247b8fbc0"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-chromium/test-finished-1.png",
+    "bytes": 39645,
+    "sha256": "e28f5d809d8268fa9d25cdbea245a284da00b50d5ab2a5cf072995ce73fdc7ff"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-chromium/trace.zip",
+    "bytes": 2111176,
+    "sha256": "e0280f5fb7715a8c6a24e051b50b62cebcac539d2130fdadcd1077c3f47f7213"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-chromium/video.webm",
+    "bytes": 334922,
+    "sha256": "0b59a7667ff4c7f05d571fb91b5576fe67466a0b92252192cdf7f45aefff9283"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-webkit/preview-after-image-loaded.png",
+    "bytes": 119511,
+    "sha256": "8b513afa274e2ac2e4604251c7d63e30f83ee72edc85a00ff81f4abde0e0455d"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-webkit/preview-with-unavailable-image.png",
+    "bytes": 117340,
+    "sha256": "c2036b90e2f1c5f9758e9835784ffac8d3a248da9856d41b3f5fcb67fe93d482"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-webkit/test-finished-1.png",
+    "bytes": 70899,
+    "sha256": "51f0f092b595d91d5fe753b495a295d634f575f669dc4ea9e2f29912b1da5ba1"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-webkit/trace.zip",
+    "bytes": 1304306,
+    "sha256": "cdbcb49361d1f7f3002c6885ad4cc4addeb9e2abc6feabc90a1da798ef7c71c6"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-conversion-lab-prev-be5b8-while-a-linked-image-stalls-webkit/video.webm",
+    "bytes": 298457,
+    "sha256": "74400d8c89fa2c10614b13d04d3917d8b46aca0823af00d0611d1982ccaff706"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-chromium/embed-activated-provider.png",
+    "bytes": 5089,
+    "sha256": "f4148fb53b376b34b35fd2637fb02a36c9ca84ffcd763c506a8ca5e1fb6139e8"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-chromium/embed-protected-typing.png",
+    "bytes": 34826,
+    "sha256": "2a148adf65cb47bac9fa66063389029148294ba73ff422276e7c1ea865fee21a"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-chromium/embed-returned-to-authoring.png",
+    "bytes": 35717,
+    "sha256": "cc3dc205c53b248aa52ccb3cee84dc217405985d5e93b9b2ed4b147ea8851c96"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-chromium/test-finished-1.png",
+    "bytes": 87101,
+    "sha256": "c28a869d856146a5bc53584deeab434b306f211a97521041ed5e613e5287af9a"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-chromium/trace.zip",
+    "bytes": 2334947,
+    "sha256": "88ca3b01ef2e872d6babd64ab1a67089af1a83fd0c7dfa1d3def99345e0984da"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-chromium/video.webm",
+    "bytes": 226860,
+    "sha256": "9524583552b96e3ecc59700ff66cb729dac1aa2497654c11d88d6c4660296a27"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-webkit/embed-activated-provider.png",
+    "bytes": 17836,
+    "sha256": "ad08588dfc685901c65425fe66e4b6ac8c1134ea5b5af427522bb5cd90615c2d"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-webkit/embed-protected-typing.png",
+    "bytes": 99871,
+    "sha256": "13d7631afff9b9d8c9a0b9172b329a9d4728ca8a63604173a611530e6793c7f0"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-webkit/embed-returned-to-authoring.png",
+    "bytes": 101993,
+    "sha256": "3ea0c6ff99696cf68a728c6fe16ce829553d8cdc0a83a97c052e35f500c862dc"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-webkit/test-finished-1.png",
+    "bytes": 262516,
+    "sha256": "d3529bded8a7abd713857f36de56524f52582e175bcc0c026813dc054be5905e"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-webkit/trace.zip",
+    "bytes": 2819197,
+    "sha256": "b8daf8acc64adcaa111c550c95d52b4ff4711984f4555747e03316f4e7c93232"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/editor-protects-prose-from-2bbc0-lowing-explicit-interaction-webkit/video.webm",
+    "bytes": 316433,
+    "sha256": "424052f4839746f06d5a496c3ddceab03d361829bd5fd6724b30a19098103b81"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-chrome/embed-activated-provider.png",
+    "bytes": 16047,
+    "sha256": "d2a6ac45b156f0dcc7ac001a14b124c533b98cafd70e1a0959ff6f58fcbffda7"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-chrome/embed-protected-typing.png",
+    "bytes": 116927,
+    "sha256": "810693059a8b980ba8cbcacc6c600e15f46cd9969ec048fd7a1a718ae48dbc2c"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-chrome/embed-returned-to-authoring.png",
+    "bytes": 118715,
+    "sha256": "03dd8d6fe679a28727918fdf61c705b1820a9e021fe6113a401588d4cca047e6"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-chrome/test-finished-1.png",
+    "bytes": 194946,
+    "sha256": "69160fcdb57417ad6f8e9797ff9180640df636f9126a17222fc297ec716a816f"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-chrome/trace.zip",
+    "bytes": 2586624,
+    "sha256": "e8aeaf1e495d2a883603d331b670dd94d1c84bbad146dab75d6a71549d9e8278"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-chrome/video.webm",
+    "bytes": 238573,
+    "sha256": "443b51949cf9b3b50e889b56ec0c4087c785c0fa43a0e2b0eae4747d83b44916"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-safari/embed-activated-provider.png",
+    "bytes": 22972,
+    "sha256": "f8a999a0cf03b563187adb8a465777e4dc885b956738228e5d50443cbf8b90e1"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-safari/embed-protected-typing.png",
+    "bytes": 165902,
+    "sha256": "91344b9cc2680db5ba0c388c269146a0f09b34c3adb8c8187dcb7a870f2e6373"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-safari/embed-returned-to-authoring.png",
+    "bytes": 169320,
+    "sha256": "f856d970b79330c10dd75907b7d6a5336b29886ae592d56b37c30695083c8cca"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-safari/test-finished-1.png",
+    "bytes": 225494,
+    "sha256": "76dc84bd93c1d95046bad275a8f7f6f49a978e0f6a6cc9d81f2ea26d93fdfcc8"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-safari/trace.zip",
+    "bytes": 2352399,
+    "sha256": "cb8408feebcfeb4b8da9b642da22843f9de5db7b2758bb78fde9a6cebbc49bd2"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-protects-touch-auth-ebfd7-lowing-explicit-interaction-mobile-safari/video.webm",
+    "bytes": 327430,
+    "sha256": "c757cb35dfc5377a321de26423d6c16daaea1fa492c55e760debe1d43509ef6c"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-chrome/angular-touch-campaign.png",
+    "bytes": 192966,
+    "sha256": "2fe1832261cc9128298d938f96588c151cd9469b771ce03709bf8700a2b506b7"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-chrome/test-finished-1.png",
+    "bytes": 161355,
+    "sha256": "abcf9c81a3e78c2c0a0120a0bd3fe47a3eac47e6aaa6c6c4e25d8eb5a3d8160d"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-chrome/trace.zip",
+    "bytes": 3879117,
+    "sha256": "dc009b23620e8068c88eeec99e66a33be4e5f61a21a70bf7f69aae114e37aea6"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-chrome/video.webm",
+    "bytes": 403514,
+    "sha256": "5f708d16469f39675846ed767bf0ab4bd6cd1c140360a2ee15c87ec36a632c83"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-safari/angular-touch-campaign.png",
+    "bytes": 191498,
+    "sha256": "1219b63fd9e043dd3e3e01dbd6431c444633108a1543166f86f3e632b9de178a"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-safari/test-finished-1.png",
+    "bytes": 215222,
+    "sha256": "51b2faa73d0ab01d66d49404777de5b0e5d26e9e50fc9ab10daa4e9d38edf19f"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-safari/trace.zip",
+    "bytes": 2719728,
+    "sha256": "dca8728c4ae9eabd68409662422407fa09e8c97e57abc57423f591d0ac3c57f9"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-safari/video.webm",
+    "bytes": 427929,
+    "sha256": "ba3d8522bcbe2044e5d351fe6c13d8afe767a561edc73272ae8d1049554719b4"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-safari/attachments/Angular-touch-editing-ea57491a2f86c02d635260d45c84fb714b6f961b.png",
+    "bytes": 191498,
+    "sha256": "1219b63fd9e043dd3e3e01dbd6431c444633108a1543166f86f3e632b9de178a"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/focused-linux-visible-caret/mobile-uses-Angular-campai-4de29-history-across-view-remount-mobile-chrome/attachments/Angular-touch-editing-ca873341d37be2001245f42339c1befe115f1f1b.png",
+    "bytes": 192966,
+    "sha256": "2fe1832261cc9128298d938f96588c151cd9469b771ce03709bf8700a2b506b7"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/test-failed-1.png",
+    "bytes": 103869,
+    "sha256": "4dd1e68a8f6227252d132ffe6a7f13e85026caf8cd3a89621fed5fb896a84294"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 456029,
+    "sha256": "d4f857bf63499b5893a09b92d7923e38d6ee916928f92cefa725497b6fed09dd"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "e6a3b7ba98c1b0ae27ee06fd641ef78244104f7ad614465f00ceecc23062ca5e"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 148502,
+    "sha256": "08f0e2d2c89c8c9815c90bd7035eff2429830638254f02d15ac35d98ab45baa5"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/test-failed-1.png",
+    "bytes": 104517,
+    "sha256": "be264806f2755f40aaedd869c74b80cdcd6399cf0eaa28846797d4af1e316c20"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 508383,
+    "sha256": "63ff445f74a886de800bd746bc3c198177f780e8316444caada83f345b4c8957"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "fda4b92cfcb0107296511f61b0fd3e67f3255f6c71a4d7a370784bc3150bf6fa"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 141127,
+    "sha256": "0af6f00a8c3df55b5a84bf35603c463b383cbeb1659f6d10b6bfbee61a145357"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/test-failed-1.png",
+    "bytes": 104908,
+    "sha256": "68af6ec4850e4de92fd91f303512c008af7f0951326dfeaa75005fa663e4e2b1"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 547676,
+    "sha256": "7db99661544f409c4f4793b46bb0897d05d99cb79cb015241beb9702f488913c"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "3b7984e3b572ad0090e072587963e52cbd9667a2eed1b92c796142f1b06f5a84"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 132984,
+    "sha256": "214cd074e8b23687bfb18b6e73eb089d4c2779a0581e48661137ae83d7eec102"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/test-failed-1.png",
+    "bytes": 141727,
+    "sha256": "be870286441b1f208e51da4ff9f58c6c87a97a767cec0eda72f08b7dff696bad"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/trace.zip",
+    "bytes": 1718739,
+    "sha256": "cc921fc1f1709c8d70bec9b0fb9232a3fe233ceff5da833bf8b1e1ffc0d85352"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "3c03357ed6c05cbe2a8e06e4d0ff46d7b7252854a5175c4ed127df0f79971426"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-headless-reproduction/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/video.webm",
+    "bytes": 317722,
+    "sha256": "92838acb1d823b468130613188eb403d95d070c1595ee892c78ee4dac0ad4b47"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/test-failed-1.png",
+    "bytes": 102272,
+    "sha256": "de2ecebac94db8212097547d5e532102cac2c231139acca4941c400a73be1672"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 119571,
+    "sha256": "e3a883de8db9061662ad44dc4eee5df28eecddf0f2c2ca87ee71ae676606ec4e"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 1954,
+    "sha256": "04225317a7be58ee4b7d69110301a5fb81049954b15dc9abb973c7fcb4e3be2a"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/test-finished-1.png",
+    "bytes": 122091,
+    "sha256": "89858a93a809210e195da954601e4a6f22494867b1fa5926d7030d392e2f9365"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 473063,
+    "sha256": "7a0c0a7a2d118abedf42d2d2f4119ccdb864f3b8bc9256d89d1b07e71a520bd4"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "c8fcd8c39429a7bfb8e02d7972af0b6b588f804744800390fee9f40cb7a6d998"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 98308,
+    "sha256": "3d88b4be1fa585a49f5d6822402e52253f6cc060f64e500158591e0dbc5e5400"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/test-failed-1.png",
+    "bytes": 103657,
+    "sha256": "90159a8cf09a2a8b61c2c48cd8e6b9d76a5d557e36e864303b143527e3f17006"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 120781,
+    "sha256": "ffba5829d2775769490ab98c597e55ac6d4d90966217835e58148db76dc2cf4a"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 1954,
+    "sha256": "e4f4128f40a07d3ca8d5da981d1c3f395c60cfb0a1498bcee27213461342109d"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/test-finished-1.png",
+    "bytes": 166803,
+    "sha256": "414302d3c389e56ac3b2381bfbadb3b741e694f255749076c77d335837558a00"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/trace.zip",
+    "bytes": 2154273,
+    "sha256": "36acbf1bbd871405e9f34594f704ad6ac306cad0b039a47461aee35a20f4d3aa"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "97e629d7b0f334c0e38104b49eab26cdaf7018050857ca678e2a623bffda7aec"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/video.webm",
+    "bytes": 375667,
+    "sha256": "74e5aee996f68e7b6829c37385397556bf65245528a8181b0b0ecea621ee3835"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-reproduction/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/attachments/Mixed-list-editor-4259ae8886dacc8eaad829e542b2b6a94aec5674.png",
+    "bytes": 50031,
+    "sha256": "3cdef8c4562fec2b5027c83a45f6a8b0a0c37e9c8e94c79e33a819b265485043"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/test-failed-1.png",
+    "bytes": 102272,
+    "sha256": "de2ecebac94db8212097547d5e532102cac2c231139acca4941c400a73be1672"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 119685,
+    "sha256": "7f86bbf32740ae357a373fed8416b806caa165a7841e01b5d633246e4e5c52c7"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 1954,
+    "sha256": "5d47abcd7a2cc90e83107af16e1285739c7cfea8607010785b14bc052b35b8aa"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/test-finished-1.png",
+    "bytes": 122091,
+    "sha256": "89858a93a809210e195da954601e4a6f22494867b1fa5926d7030d392e2f9365"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 449142,
+    "sha256": "b82eae56497ba55f1614fb658f01653e97a3235f25bcb74dfa85209b8678464d"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "2c5812267424540fb3f151bb420967fa6b406d97b1d4c9912906c099d94e696d"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 94329,
+    "sha256": "a196c8ff9afb05c01dd7eb2f24fe6848d10f12677adfeddc8bdbfa1a3ce116ab"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/test-failed-1.png",
+    "bytes": 103657,
+    "sha256": "90159a8cf09a2a8b61c2c48cd8e6b9d76a5d557e36e864303b143527e3f17006"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 120734,
+    "sha256": "59717ae2c9052917daae03c1ec3d29d94ba8f2535f07ff314ea498ee6e991cc9"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 1954,
+    "sha256": "f3b94c7ea71fecc4522788025bfc5ae0d1a8812d0dcae1c6faf03f80a001a14b"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/test-finished-1.png",
+    "bytes": 166822,
+    "sha256": "b207cffbadeb4a1320663d0084f939d69e1b81c5254a40c9eaa2133e31b7adc2"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/trace.zip",
+    "bytes": 2108941,
+    "sha256": "e58a2de8d97b806cc865b71f2f42acc488c0aca57bc38b66733221ba50b1229b"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "1d377761733d738d09b7095486b622e061ef873e98e9ef03ed127f4476025d30"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/video.webm",
+    "bytes": 419107,
+    "sha256": "8f70547a7aa676cd09818d0f506db751e2f3314e0305432bc126d6acc8ab0180"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-active-pages/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/attachments/Mixed-list-editor-4259ae8886dacc8eaad829e542b2b6a94aec5674.png",
+    "bytes": 50031,
+    "sha256": "3cdef8c4562fec2b5027c83a45f6a8b0a0c37e9c8e94c79e33a819b265485043"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/test-finished-1.png",
+    "bytes": 127427,
+    "sha256": "534292e164b6568837f464ca04c7f375d2d3dee2e9c880d261a565313209a178"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 477195,
+    "sha256": "9415cec7644ad175ea6edbe6ebc4e70ddebc37a7901090161d93147dbda01b7f"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "ec47c1458267ddd1b7df9c8b19ecc84ccf253862e6eed474d7347f069d1de41a"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-12e6e-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 100105,
+    "sha256": "cab8df8b5c3fd73ac3d873bd06edd2b701efb95a967f2b29592e8500780fe6c2"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/test-failed-1.png",
+    "bytes": 100136,
+    "sha256": "e6a68a5366db746dd20e2a86169aac4b954688815b54fba544e3c8009bf66758"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 117392,
+    "sha256": "c4c58d71eae03f32d4950d24a06e7c9a75e2ef6085047ea56648a395930d10a3"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-4d761-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 1954,
+    "sha256": "810336d5c2d118de5f7db00a9bb9873aa91529e89112cef0f8a84d044ff9407a"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/test-finished-1.png",
+    "bytes": 119595,
+    "sha256": "560079974bbd8a8e167578f6bfc7f14e0538ea4cd394df4a359dbeb95a34eda0"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/trace.zip",
+    "bytes": 449618,
+    "sha256": "291e32b61d1ca89f27a8849c05d1f1fbb43e96e28f6ce67240e0ba3256e6e934"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/video-1.webm",
+    "bytes": 1954,
+    "sha256": "5f202333cede053002e38f91b1eef2fa3f7b64d5f0a678b89e668fe1df965d6f"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/gitlab-suggestion-node-edi-f93e9-ut-clipboard-and-saved-JSON-webkit/video.webm",
+    "bytes": 106817,
+    "sha256": "d624441a8266a32d8a25d814c3b73d080431b4d0d9e33a07157afa5833e82e86"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/test-failed-1.png",
+    "bytes": 237950,
+    "sha256": "2515ff4fa3c14b0eea209256f666442dbc25ee49ca42cd68701ebd2c77b4f547"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/trace.zip",
+    "bytes": 283223,
+    "sha256": "6c4071b0515631ee0eeed4a6ec890b79ac0038f8d569e16c0ac36404ac80de09"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/linux-display-software/mixed-lists-edits-copies-a-2c1ce-gh-the-public-conversion-UI-webkit/video.webm",
+    "bytes": 1954,
+    "sha256": "01f87a51198935f80127c409c7a21bcf56271fdef02db8bcbd5330dadac8ba87"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-before/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/test-failed-1.png",
+    "bytes": 162628,
+    "sha256": "dbc9b76dfacdec5c33b47c7291dfb066d59ce156a1bf5a0a4f06a6e6ae24a09d"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-before/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/trace.zip",
+    "bytes": 1819012,
+    "sha256": "d09121c3a41814a0e3755f07a06fbf15d7a948737d18ef788c1a8e500433c923"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-before/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/video.webm",
+    "bytes": 364560,
+    "sha256": "b7ff687ec24905a410372d059df7ae3efaea749ee02500122dc6011642bd0270"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-srcdoc-final/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/embed-protected-typing.png",
+    "bytes": 116748,
+    "sha256": "9dd14e538bf04cf8a99c7362c99942a30de7ce5846d81ef61cc40d022b3474e3"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-srcdoc-final/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/test-failed-1.png",
+    "bytes": 184000,
+    "sha256": "940840860903f3fd6086661cebf6971b6257dcd02e8438dbceda575bace85347"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-srcdoc-final/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/trace.zip",
+    "bytes": 2560091,
+    "sha256": "d9c3010de325c211c4101063f6fdc7df26f9c1a70cbf32a5437fbe696505af0a"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-srcdoc-final/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/video.webm",
+    "bytes": 497733,
+    "sha256": "8107e4875368539e7904d4306df736f5d7a02436e4f17be3dc5dfb2f6eda9385"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-screenshot-mutation-diagnostic/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/embed-protected-typing.png",
+    "bytes": 116721,
+    "sha256": "6ebaa652b674faae663883cc6cb20fe85a24e6abf92d833cffdfe64c01f1f292"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-screenshot-mutation-diagnostic/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/test-failed-1.png",
+    "bytes": 184023,
+    "sha256": "ec19c3335b9c11884a942f7496b5a8bd414d95599f91f46322b11f3dbf754a1f"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-screenshot-mutation-diagnostic/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/trace.zip",
+    "bytes": 2514162,
+    "sha256": "cdaebbd78c64b2e78019743cb2e3cb624f51dca6d8c4914a2af08812bce9caf2"
+  },
+  {
+    "path": "artifacts/release-qualification-20261117/223905Z/matrix-followup-20261118/embed-screenshot-mutation-diagnostic/embed-control-protects-nat-06f03-dded-provider-focus-request-mobile-chrome/video.webm",
+    "bytes": 278083,
+    "sha256": "9f5972db20eb169763b03c42b4694cc34fcf4681a126dc89526f4436ed60b058"
+  }
+]
