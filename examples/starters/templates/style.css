@@ -1,0 +1,164 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: #f5f5ef;
+  color: #202f33;
+  font:
+    1rem/1.5 system-ui,
+    sans-serif;
+}
+header {
+  border-bottom: 1px solid #cbd2c8;
+  padding: 0.9rem max(1rem, calc((100% - 52rem) / 2));
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background: #fff;
+}
+header a {
+  color: #155949;
+  font-weight: 750;
+  text-decoration: none;
+}
+header span {
+  border-left: 1px solid #aab8ae;
+  padding-left: 1rem;
+}
+main {
+  max-width: 54rem;
+  margin: auto;
+  padding: 1rem 1rem 5rem;
+}
+h1 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+  margin: 0.5rem 0 1.5rem;
+}
+h2 {
+  font-size: 1.2rem;
+  margin: 0 0 0.6rem;
+}
+p {
+  margin: 0.4rem 0 0.9rem;
+}
+#status {
+  min-height: 1.5rem;
+  color: #205c49;
+}
+.card {
+  background: #fff;
+  border: 1px solid #c5cfc6;
+  border-radius: 0.65rem;
+  padding: clamp(0.85rem, 3vw, 1.45rem);
+  margin: 0.9rem 0;
+}
+.row {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+label {
+  display: grid;
+  gap: 0.25rem;
+  flex: 1 1 12rem;
+  font-weight: 600;
+  margin-bottom: 0.65rem;
+}
+input:not([type='checkbox']),
+select {
+  font: inherit;
+  padding: 0.53rem;
+  border: 1px solid #879990;
+  border-radius: 0.3rem;
+  max-width: 100%;
+  width: 100%;
+}
+label.check {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+input[type='checkbox'] {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+button,
+.action {
+  font: inherit;
+  color: #24423b;
+  background: white;
+  border: 1px solid #9eafa4;
+  padding: 0.43rem 0.8rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+button.primary {
+  background: #135844;
+  color: white;
+  border-color: #135844;
+}
+button:disabled {
+  opacity: 0.48;
+  cursor: default;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #5741af;
+  outline-offset: 2px;
+}
+.rich {
+  border: 1px solid #9eafa4;
+  border-radius: 0.4rem;
+  background: white;
+}
+.rich [contenteditable] {
+  padding: 0.7rem;
+  min-height: 4rem;
+  outline-offset: 1px;
+}
+.rich p,
+.reader p {
+  margin: 0.3rem 0;
+  min-height: 1.4em;
+}
+.reader {
+  overflow-wrap: anywhere;
+}
+.tools {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.25rem;
+  border-bottom: 1px solid #d3dbd3;
+}
+.tools button {
+  padding: 0.2rem 0.65rem;
+}
+.actions {
+  margin: 1rem 0;
+}
+.share {
+  overflow-wrap: anywhere;
+}
+.share a {
+  display: inline-block;
+  margin: 0.5rem 0;
+  color: #115845;
+}
+.small {
+  color: #506259;
+  font-size: 0.92rem;
+}
+@media (max-width: 35rem) {
+  .row > label {
+    flex-basis: 100%;
+  }
+  .card {
+    padding: 0.8rem;
+  }
+}

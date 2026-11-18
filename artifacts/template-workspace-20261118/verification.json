@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-18",
+  "npmPackage": "fountainjs-editor@0.5.0-beta.1",
+  "registryInstallation": "Fresh project extracted from the locally built production developer site",
+  "zipFilesComparedByteForByte": 9,
+  "publicPackageBrowserJourneys": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "databaseCheck": "Real HTTP, two respondents, denied edits, revision conflicts, required answers and reload from disk after restart",
+  "recordedWorkflow": "Author a template, edit instructions, add a field and repeat a rich answer. Issue a private link, edit the original, save and reopen the respondent draft, submit, review the captured revision, export JSON, reopen the template into a separate workspace."
+}

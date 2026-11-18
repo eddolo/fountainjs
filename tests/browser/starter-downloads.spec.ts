@@ -10,6 +10,7 @@ test('downloads complete standalone projects from the developer guide', async ({
     { kind: 'plain-dom', label: 'Download plain DOM starter', projectFiles: ['index.html', 'main.js'] },
     { kind: 'react', label: 'Download React starter', projectFiles: ['index.html', 'main.jsx'] },
     { kind: 'node', label: 'Download Node.js starter', projectFiles: ['convert.mjs', 'sample.md'] },
+    { kind: 'templates', label: 'Download template workspace', projectFiles: ['.gitignore','index.html','main.js','model.mjs','server.mjs','style.css','workflow.test.mjs'] },
   ]) {
     const name = `fountainjs-${kind}`;
     const pending = page.waitForEvent('download');

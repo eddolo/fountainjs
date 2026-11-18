@@ -696,6 +696,12 @@ function Developers() {
                 <StarterDownload kind="node" label="Download Node.js starter" />
                 <a href="./demos/node-markdown.html">Explore the server conversion demo →</a>
               </article>
+              <article id="starter-templates">
+                <h3>Document templates</h3>
+                <p>Create a template, invite a respondent and review their completed document. Run <code>npm start</code> on Node 24.12+ to open the workspace with local SQLite storage.</p>
+                <StarterDownload kind="templates" label="Download template workspace" />
+                <a href="https://github.com/eddolo/fountainjs/tree/master/examples/starters/templates">Author and respondent guide ↗</a>
+              </article>
             </div>
           </section>
 
