@@ -107,7 +107,8 @@ export function validateTemplate(template) {
     check(block?.type === 'field' || block?.type === 'reference', 'Unknown template block.');
     check(validFieldKey(block.key), 'Use a lowercase field key with letters, numbers or underscores.');
     if (block.type === 'reference') {
-      shape(block, ['type', 'key']);
+      shape(block, ['type', 'key', 'editable']);
+      check(!Object.hasOwn(block,'editable') || typeof block.editable === 'boolean','Invalid repeated answer editing option.');
       continue;
     }
     shape(block, ['type', 'key', 'label', 'kind', 'required']);
@@ -191,20 +192,22 @@ export function validateAnswers(template, answers, submitting) {
     if (Object.hasOwn(answers, field.key)) {
       const value = answers[field.key];
       if (field.kind === 'text') {
-        check(
-          typeof value === 'string' && value.length <= 4000 && !/[\r\n]/.test(value),
-          field.label + ' needs a single line of up to 4,000 characters.',
-        );
+        if (typeof value !== 'string' || value.length > 4000 || /[\r\n]/.test(value))
+          answerError(field.key, field.label + ' needs a single line of up to 4,000 characters.');
         text = value;
       } else {
-        const doc = rich(value);
+        let doc;
+        try {
+          doc = rich(value);
+        } catch (error) {
+          if (error instanceof InputError) error.field = field.key;
+          throw error;
+        }
         text = doc.content.flatMap((p) => (p.content ?? []).map((t) => t.text)).join('');
       }
     }
-    check(
-      !submitting || !field.required || !!text.trim(),
-      'Complete the required field “' + field.label + '”.',
-    );
+    if (submitting && field.required && !text.trim())
+      answerError(field.key, 'Complete the required field “' + field.label + '”.');
   }
   if (submitting && template.rules?.length) compareAnswers(template, answers, fields);
 }

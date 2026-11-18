@@ -1,3 +1,5 @@
+import { caretRangeAtPoint } from './caret-range';
+
 export type DropCursorOrientation = 'inline' | 'block';
 
 export interface DropCursorOptions {
@@ -11,25 +13,6 @@ function pathElement(node: globalThis.Node, root: HTMLElement): HTMLElement | nu
   const element = node instanceof Element ? node : node.parentElement;
   const candidate = element?.closest<HTMLElement>('[data-fountain-path]') ?? null;
   return candidate && root.contains(candidate) ? candidate : null;
-}
-
-function caretRangeAtPoint(ownerDocument: Document, x: number, y: number): Range | null {
-  const documentWithCaret = ownerDocument as Document & {
-    caretPositionFromPoint?: (x: number, y: number) => { offsetNode: globalThis.Node; offset: number } | null;
-    caretRangeFromPoint?: (x: number, y: number) => Range | null;
-  };
-  const position = documentWithCaret.caretPositionFromPoint?.(x, y);
-  if (position) {
-    const range = ownerDocument.createRange();
-    try {
-      range.setStart(position.offsetNode, position.offset);
-      range.collapse(true);
-      return range;
-    } catch {
-      return null;
-    }
-  }
-  return documentWithCaret.caretRangeFromPoint?.(x, y) ?? null;
 }
 
 /**

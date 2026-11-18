@@ -130,6 +130,18 @@ test('inline substitutions use declared single-line answers and enforce the comp
   assert.throws(() => renderResponse(template, { ...answers, study: '"'.repeat(4000) }), /output limit/);
 });
 
+test('invalid answers identify their field for both drafts and submissions', () => {
+  const template = initialTemplate();
+  const invalid = (answers, submitting, key) =>
+    assert.throws(() => validateAnswers(template, answers, submitting),
+      (error) => error instanceof InputError && error.field === key);
+  validateAnswers(template, {}, false);
+  invalid({}, true, 'study');
+  invalid({ study: 'Trial', findings: documentOf('  ') }, true, 'findings');
+  invalid({ study: 'Two\nlines' }, false, 'study');
+  invalid({ findings: documentOf('x'.repeat(16001)) }, false, 'findings');
+});
+
 test('existing invitation links survive a SQLite upgrade and can be revoked', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'fountain-template-upgrade-'));
   const file = join(directory, 'workspace.sqlite');

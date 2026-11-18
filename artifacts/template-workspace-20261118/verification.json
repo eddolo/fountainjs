@@ -38,6 +38,29 @@
     "hostSessionEvidence": "A local HTTP host authenticates separate author, recipient and colleague accounts, sets an opaque HttpOnly session, and invalidates it at logout. Four browser contexts per engine cover reopened drafts, forwarding and author review. The providers are application-owned.",
     "cli": "Loaded a configured ES module, offered its sign-in address and refused a module with no adapter export."
   },
+  "editableRepeats": {
+    "runtimeCommit": "ce6dd11d",
+    "starterCommit": "9d9ba82f",
+    "candidateTarballSha256": "b54e5fbfffef3a280ea42691e1897fa6bd6be9f897ef815d62f00dc193f77834",
+    "verifiedInstalledRuntimeAndCssFiles": 192,
+    "verifiedBrowserBundleModules": 35,
+    "nodeChecksPassed": 5,
+    "browserJourneysPassed": 9,
+    "browsers": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ],
+    "screenshot": "editable-repeats-webkit.png",
+    "workflow": "A respondent edits the same plain or rich answer in either location. Both copies share rich formatting and undo/redo. A third copy stays read-only. Saving, reopening and submitting preserve the answers.",
+    "releaseDependency": "The published 0.5.0-beta.1 runtime loses focus between shared views. Enable the starter feature in a published download only with a runtime carrying the repair.",
+    "combinedAnswerRuleChecks": {
+      "nodeTestsPassed": 6,
+      "browserJourneysPassed": 15,
+      "verifiedBrowserBundleModules": 35,
+      "workflow": "Enter an invalid study end date through a repeated field, save and reopen the draft, receive the server error in both places, correct the date through the repeat, submit, and reopen the exported template in an independent workspace."
+    }
+  },
   "answerRules": {
     "package": "fountainjs-editor@0.5.0-beta.1",
     "downloadSha256": "5b3c5c275cd2cda2749384b129859e608668aa4188c339ce86ac6ed532cd5ec1",

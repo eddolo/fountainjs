@@ -79,3 +79,30 @@ test('a host rejection keeps widget edits pending and preserves the native input
   await expect(editor.locator('p')).toHaveText('Next: Follow-up');
   await editor.screenshot({ path: info.outputPath('widget-released.png') });
 });
+
+test('keeps the caret and backward presence selection in the active view of a shared editor', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=shared-editor-views');
+  const first = page.getByRole('textbox', { name: 'Browser contract editor', exact: true });
+  const second = page.getByRole('textbox', { name: 'Second view', exact: true });
+  async function typeAndSelect(active: typeof first, peer: typeof first, character: string, text: string) {
+    await active.locator('p').first().click();
+    await page.keyboard.press('End');
+    await page.keyboard.type(character);
+    await expect(active).toBeFocused();
+    await expect.poll(() => readDocumentDOMText(peer.locator('p').first())).toBe(text);
+    await page.keyboard.press('Shift+ArrowLeft');
+    await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe(character);
+    await page.getByRole('button', { name: 'Read presence selection' }).click();
+    await expect(page.getByLabel('Presence selection', { exact: true })).toHaveText('backward');
+  }
+  await typeAndSelect(first, second, 'A', 'Alpha BetaA');
+  await typeAndSelect(second, first, 'B', 'Alpha BetaAB');
+  await page.getByRole('button', { name: 'Close second view' }).click();
+  await expect(second).toHaveCount(0);
+  await first.locator('p').first().click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Shift+ArrowLeft');
+  await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('B');
+  await page.getByRole('button', { name: 'Read presence selection' }).click();
+  await expect(page.getByLabel('Presence selection', { exact: true })).toHaveText('backward');
+});

@@ -74,11 +74,11 @@ function input(parent, label, value, set, choices) {
   parent.append(l);
   return c;
 }
-function rich(parent, label, content, onUpdate, fields) {
+function rich(parent, label, content, onUpdate, fields, existingEditor) {
   const card = el('div', undefined, onUpdate ? 'rich' : 'reader'),
     mount = el('div');
   parent.append(card);
-  const editor = createEditor({
+  const editor = existingEditor ?? createEditor({
     schema: schemaSpec,
     content,
     editable: !!onUpdate,
@@ -137,9 +137,9 @@ function rich(parent, label, content, onUpdate, fields) {
   const view = new EditorView(mount, editor, { ariaLabel: label });
   views.push(() => {
     view.destroy();
-    editor.destroy();
+    if (!existingEditor) editor.destroy();
   });
-  return editor;
+  return { editor, control: view.dom };
 }
 async function request(path, method = 'GET', value) {
   const headers = { 'X-Fountain-Workspace': '1' };
@@ -184,9 +184,11 @@ function showError(error) {
   if (validFieldKey(error.field)) {
     const control = document.getElementById('answer-' + error.field);
     if (control) {
-      const message = document.getElementById('error-' + error.field);
-      message.textContent = error.message;
-      control.setAttribute('aria-invalid', 'true');
+      for (const copy of root.querySelectorAll('[data-answer-key]')) {
+        if (copy.dataset.answerKey !== error.field) continue;
+        document.getElementById('error-' + copy.id).textContent = error.message;
+        copy.setAttribute('aria-invalid', 'true');
+      }
       queueMicrotask(() => control.focus());
     }
   }
@@ -206,7 +208,7 @@ async function action(fn) {
   }
 }
 function redraw() {
-  for (const dispose of views) dispose();
+  for (const dispose of views.reverse()) dispose();
   views = [];
   root.replaceChildren();
   if (!route) {
@@ -446,6 +448,13 @@ function author() {
         fields().map((f) => [f.key, f.label]),
       );
       select.dataset.reference = '';
+      const editing = el('label', undefined, 'check');
+      const editable = el('input');
+      editable.type = 'checkbox';
+      editable.checked = b.editable === true;
+      editable.onchange = () => { b.editable = editable.checked; markDirty(); };
+      editing.append(editable, ' Allow editing here');
+      card.append(editing);
     }
     const controls = row(card, 'row actions');
     for (const [name, delta] of [
@@ -626,15 +635,19 @@ function respondent() {
     return;
   }
   root.append(el('h1', template.title));
-  const mirrors = new Map(),
+  const fields = new Map(template.blocks.filter((block) => block.type === 'field').map((field) => [field.key,field]));
+  const richEditors = new Map(), textInputs = new Map(), mirrors = new Map(),
     inlinePreviews = new Map();
   function refresh(key) {
+    for (const input of textInputs.get(key) ?? []) {
+      if (input.value !== (answers[key] ?? '')) input.value = answers[key] ?? '';
+    }
     for (const invalid of root.querySelectorAll('[aria-invalid="true"]')) {
-      const invalidKey = invalid.id.slice('answer-'.length);
+      const invalidKey = invalid.dataset.answerKey;
       if (invalidKey === key || template.rules?.some((rule) =>
         (rule.field === invalidKey && rule.other === key) || (rule.other === invalidKey && rule.field === key))) {
         invalid.removeAttribute('aria-invalid');
-        document.getElementById('error-' + invalidKey).textContent = '';
+        document.getElementById('error-' + invalid.id).textContent = '';
       }
     }
     for (const update of inlinePreviews.get(key) ?? []) update();
@@ -666,7 +679,7 @@ function respondent() {
           keys.add(key);
           return answers[key] || '{{' + key + '}}';
         });
-      const editor = rich(box(root), 'Fixed instructions', project());
+      const { editor } = rich(box(root), 'Fixed instructions', project());
       for (const key of keys) {
         if (!inlinePreviews.has(key)) inlinePreviews.set(key, []);
         inlinePreviews
@@ -679,45 +692,51 @@ function respondent() {
       }
       continue;
     }
-    if (b.type === 'reference') {
-      const target = box(
-        root,
-        'Repeated answer · ' + template.blocks.find((f) => f.type === 'field' && f.key === b.key).label,
-      );
-      const output = row(target, 'reader');
+    const field = fields.get(b.key);
+    const peer = b.type === 'reference';
+    const card = box(root, peer ? 'Repeated answer · ' + field.label : undefined);
+    if (peer && !b.editable) {
+      const output = row(card,'reader');
       if (!mirrors.has(b.key)) mirrors.set(b.key, []);
       mirrors.get(b.key).push(output);
       refresh(b.key);
       continue;
     }
-    const card = box(root),
-      label = b.label + (b.required ? ' (required)' : '');
-    const set = (v) => {
-      answers[b.key] = v;
-      refresh(b.key);
+    const label = (peer ? 'Repeated ' : '') + field.label + (field.required ? ' (required)' : '');
+    const set = (value) => {
+      answers[field.key] = value;
+      refresh(field.key);
     };
-    if (b.kind === 'rich') {
-      card.append(el('h2', label));
-      rich(card, label, answers[b.key] ?? documentOf(), set);
+    let control;
+    if (field.kind === 'rich') {
+      if (!peer) card.append(el('h2', label));
+      const binding = rich(card, label, answers[field.key] ?? documentOf(), set, undefined, richEditors.get(field.key));
+      richEditors.set(field.key, binding.editor);
+      control = binding.control;
     } else {
-      const control = input(card, label, answers[b.key] ?? '', set);
-      control.id = 'answer-' + b.key;
-      const notes = el('div');
-      notes.id = 'hint-' + b.key;
-      for (const rule of template.rules ?? []) {
-        if (rule.field === b.key) {
-          const other = template.blocks.find((block) => block.type === 'field' && block.key === rule.other);
-          const hint = comparisonLabels[rule.operator] + ' “' + other.label + '”.';
-          notes.append(el('p', hint, 'small'));
-        }
-      }
-      if (template.rules?.some((rule) => rule.operator === 'onOrAfter' && (rule.field === b.key || rule.other === b.key)))
-        notes.append(el('p', 'Use YYYY-MM-DD.', 'small'));
-      const error = el('p', undefined, 'field-error');
-      error.id = 'error-' + b.key;
-      card.append(notes, error);
-      control.setAttribute('aria-describedby', [notes.childElementCount && notes.id, error.id].filter(Boolean).join(' '));
+      control = input(card, label, answers[field.key] ?? '', set);
+      if (!textInputs.has(field.key)) textInputs.set(field.key, []);
+      textInputs.get(field.key).push(control);
     }
+    const suffix = peer ? 'repeat-' + template.blocks.indexOf(b) + '-' + field.key : field.key;
+    control.dataset.answerKey = field.key;
+    control.id = 'answer-' + suffix;
+    if (field.required) control.setAttribute('aria-required', 'true');
+    const notes = el('div');
+    notes.id = 'hint-' + suffix;
+    for (const rule of template.rules ?? []) {
+      if (rule.field === b.key) {
+        const other = fields.get(rule.other);
+        notes.append(el('p', comparisonLabels[rule.operator] + ' “' + other.label + '”.', 'small'));
+      }
+    }
+    if (template.rules?.some((rule) => rule.operator === 'onOrAfter' && (rule.field === b.key || rule.other === b.key)))
+      notes.append(el('p', 'Use YYYY-MM-DD.', 'small'));
+    const error = el('p', undefined, 'field-error');
+    error.id = 'error-' + control.id;
+    if (notes.childElementCount) card.append(notes);
+    card.append(error);
+    control.setAttribute('aria-describedby', notes.childElementCount ? notes.id + ' ' + error.id : error.id);
   }
   const commands = row(root, 'row actions');
   for (const submitting of [false, true]) {
@@ -762,7 +781,7 @@ async function open() {
     }
     redraw();
   } catch (e) {
-    for (const dispose of views) dispose();
+    for (const dispose of views.reverse()) dispose();
     views = [];
     root.replaceChildren();
     showError(e);

@@ -171,6 +171,76 @@ test('revoking an open draft blocks further writes while a separate invitation s
   }
 });
 
+test('a respondent can edit either repeated field with one saved answer and one rich-text history', async ({page,browser},info)=>{
+  await page.goto('http://127.0.0.1:4203/');
+  await page.getByRole('button',{name:'Create template',exact:true}).click();
+  async function repeat(key:string,editable:boolean) {
+    await page.getByRole('button',{name:'Repeat an answer',exact:true}).click();
+    const card=page.locator('section.card').filter({has:page.getByRole('heading',{name:'Repeated answer',exact:true})}).last();
+    await card.getByRole('combobox',{name:'Repeat field',exact:true}).selectOption(key);
+    if(editable) await card.getByLabel('Allow editing here').check();
+    return card;
+  }
+  const first=await repeat('findings',true);
+  await first.getByRole('button',{name:'Move up'}).click();
+  await repeat('findings',false);
+  await repeat('study',true);
+  await page.getByRole('button',{name:'Save template',exact:true}).click();
+  await expect(page.getByRole('status')).toHaveText('Template saved.');
+  await page.getByRole('button',{name:'Create respondent link'}).click();
+  const link=await page.getByRole('link',{name:'Open response'}).getAttribute('href');
+  const context=await browser.newContext({viewport:{width:390,height:844},recordVideo:{dir:info.outputPath('peer-videos')}});
+  try {
+    const response=await context.newPage(); await response.goto(link!);
+    const study=response.getByRole('textbox',{name:'Study title (required)',exact:true});
+    const otherStudy=response.getByRole('textbox',{name:'Repeated Study title (required)',exact:true});
+    await response.getByRole('button', { name: 'Submit response' }).click();
+    await expect(study).toBeFocused();
+    await expect(otherStudy).toHaveAccessibleDescription('Complete the required field “Study title”.');
+    await otherStudy.fill('Trial 9');
+    await expect(study).toHaveValue('Trial 9');
+    await expect(study).not.toHaveAttribute('aria-invalid');
+    await expect(otherStudy).not.toHaveAttribute('aria-invalid');
+    await study.fill('Trial 10');await expect(otherStudy).toHaveValue('Trial 10');
+    const source=response.getByRole('textbox',{name:'Findings (required)',exact:true});
+    const peer=response.getByRole('textbox',{name:'Repeated Findings (required)',exact:true});
+    const sourceCard=response.locator('section.card').filter({has:source});
+    const peerCard=response.locator('section.card').filter({has:peer});
+    await response.getByRole('button', { name: 'Submit response' }).click();
+    await expect(source).toBeFocused();
+    await expect(source).toHaveAttribute('aria-required', 'true');
+    await expect(source).toHaveAccessibleDescription('Complete the required field “Findings”.');
+    await expect(peer).toHaveAccessibleDescription('Complete the required field “Findings”.');
+    await sourceCard.screenshot({ path: info.outputPath('missing-required-findings.png') });
+    await peer.click();await response.keyboard.type('Sample ready');
+    await expect(source).not.toHaveAttribute('aria-invalid');
+    await expect(peer).not.toHaveAttribute('aria-invalid');
+    await expect(source).toHaveText('Sample ready');await expect(peer).toBeFocused();
+    await source.click();await response.keyboard.press('End');
+    for(let i=0;i<5;i++)await response.keyboard.press('Shift+ArrowLeft');
+    await sourceCard.getByRole('button',{name:'Bold',exact:true}).click();
+    await expect(peer.locator('strong')).toHaveText('ready');
+    const fixed=response.locator('section.card').filter({has:response.getByRole('heading',{name:'Repeated answer · Findings'})}).filter({has:response.locator('.reader')});
+    await expect(fixed.locator('strong')).toHaveText('ready');
+    await expect(fixed.locator('[contenteditable=true]')).toHaveCount(0);
+    await peerCard.getByRole('button',{name:'Undo',exact:true}).click();
+    await expect(source.locator('strong')).toHaveCount(0);
+    await peerCard.getByRole('button',{name:'Redo',exact:true}).click();
+    await expect(source.locator('strong')).toHaveText('ready');
+    await peer.click();await response.keyboard.press('End');await response.keyboard.type('!');
+    await expect(source).toHaveText('Sample ready!');
+    await response.getByRole('button',{name:'Save draft'}).click();
+    await expect(response.getByRole('status')).toHaveText('Draft saved.');await response.reload();
+    await expect(peer).toHaveText('Sample ready!');await expect(otherStudy).toHaveValue('Trial 10');
+    await response.screenshot({path:info.outputPath('editable-peers.png'),fullPage:true});
+    await response.getByRole('button',{name:'Submit response'}).click();
+    const doc=response.getByRole('textbox',{name:'Completed document'});
+    await expect(doc).not.toBeEditable();
+    await expect(doc.locator('p').filter({hasText:'Sample ready!'})).toHaveCount(3);
+    await expect(doc.locator('p').filter({hasText:'Trial 10'})).toHaveCount(2);
+  } finally {await context.close();}
+});
+
 test('a researcher saves an inconsistent draft, corrects its dates and submits under the issued rules', async ({ page, browser }, info) => {
   await page.goto('http://127.0.0.1:4203/');
   await page.getByRole('button', { name: 'Create template', exact: true }).click();
@@ -185,6 +255,10 @@ test('a researcher saves an inconsistent draft, corrects its dates and submits u
   await endField.getByLabel('Field key').fill('end_date');
   await endField.getByLabel('Field key').press('Tab');
   await expect(rules.getByRole('combobox', { name: 'Answer to check' })).toHaveValue('end_date');
+  await page.getByRole('button', { name: 'Repeat an answer' }).click();
+  const repeat = page.getByRole('heading', { name: 'Repeated answer', exact: true }).locator('..');
+  await repeat.getByRole('combobox', { name: 'Repeat field' }).selectOption('end_date');
+  await repeat.getByLabel('Allow editing here').check();
   await endField.getByRole('button', { name: 'Remove block' }).click();
   await expect(page.getByRole('status')).toHaveText('Remove its answer rules first.');
   await page.getByRole('button', { name: 'Save template', exact: true }).click();
@@ -209,7 +283,9 @@ test('a researcher saves an inconsistent draft, corrects its dates and submits u
     const end = draft.getByRole('textbox', { name: 'Study end', exact: true });
     await start.fill('2024-02-29');
     await draft.getByRole('textbox', { name: 'Findings (required)' }).fill('Samples collected.');
-    await end.fill('2024-02-28');
+    const copy = draft.getByRole('textbox', { name: 'Repeated Study end', exact: true });
+    await copy.fill('2024-02-28');
+    await expect(end).toHaveValue('2024-02-28');
     await draft.getByRole('button', { name: 'Save draft' }).click();
     await expect(draft.getByRole('status')).toHaveText('Draft saved.');
     await draft.reload();
@@ -221,7 +297,10 @@ test('a researcher saves an inconsistent draft, corrects its dates and submits u
     await expect(end).toHaveAttribute('aria-invalid', 'true');
     await expect(end).toHaveAccessibleDescription(/must be on or after.*Study start/);
     await end.locator('xpath=../..').screenshot({ path: info.outputPath('date-rule-error.png') });
-    await end.fill('2024-03-01');
+    await expect(copy).toHaveAttribute('aria-invalid', 'true');
+    await copy.fill('2024-03-01');
+    await expect(end).toHaveValue('2024-03-01');
+    await expect(copy).not.toHaveAttribute('aria-invalid');
     await expect(end).not.toHaveAttribute('aria-invalid');
     await draft.getByRole('button', { name: 'Submit response' }).click();
     const completed = draft.getByRole('textbox', { name: 'Completed document' });
