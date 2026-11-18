@@ -1,0 +1,1665 @@
+{
+  "date": "2026-11-18T13:14:56.515Z",
+  "chromium": "151.0.7922.34",
+  "host": [
+    "win32",
+    "10.0.26200",
+    "x64",
+    "12th Gen Intel(R) Core(TM) i3-12100F"
+  ],
+  "mode": "Single foreground headless page, local starter kits, independent native keypresses without Yjs",
+  "eventTimingThresholdMs": 16,
+  "results": [
+    {
+      "size": 100,
+      "index": 0,
+      "engine": "fountain",
+      "samples": [
+        {
+          "key": "a",
+          "start": 403.7000000476837,
+          "frameTask": 421.5,
+          "nextFrameTaskMs": 17.799999952316284,
+          "eventTiming": {
+            "start": 403.7000000476837,
+            "duration": 16,
+            "interactionId": 2242,
+            "processingStart": 404.2000000476837,
+            "processingEnd": 404.5
+          }
+        },
+        {
+          "key": "b",
+          "start": 426.5,
+          "frameTask": 432,
+          "nextFrameTaskMs": 5.5,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 451,
+          "frameTask": 465.7000000476837,
+          "nextFrameTaskMs": 14.700000047683716,
+          "eventTiming": {
+            "start": 451,
+            "duration": 16,
+            "interactionId": 2256,
+            "processingStart": 451.10000002384186,
+            "processingEnd": 451.2000000476837
+          }
+        },
+        {
+          "key": "d",
+          "start": 485.3000000715256,
+          "frameTask": 499.3000000715256,
+          "nextFrameTaskMs": 14,
+          "eventTiming": {
+            "start": 485.3000000715256,
+            "duration": 16,
+            "interactionId": 2263,
+            "processingStart": 485.39999997615814,
+            "processingEnd": 485.39999997615814
+          }
+        },
+        {
+          "key": "e",
+          "start": 518.3999999761581,
+          "frameTask": 533.1000000238419,
+          "nextFrameTaskMs": 14.700000047683716,
+          "eventTiming": {
+            "start": 518.3999999761581,
+            "duration": 16,
+            "interactionId": 2270,
+            "processingStart": 518.5,
+            "processingEnd": 518.6000000238419
+          }
+        },
+        {
+          "key": "f",
+          "start": 551.7000000476837,
+          "frameTask": 565.6000000238419,
+          "nextFrameTaskMs": 13.899999976158142,
+          "eventTiming": {
+            "start": 551.7000000476837,
+            "duration": 16,
+            "interactionId": 2277,
+            "processingStart": 551.8000000715256,
+            "processingEnd": 552
+          }
+        },
+        {
+          "key": "g",
+          "start": 585,
+          "frameTask": 598.7000000476837,
+          "nextFrameTaskMs": 13.700000047683716,
+          "eventTiming": {
+            "start": 585,
+            "duration": 16,
+            "interactionId": 2284,
+            "processingStart": 585.2000000476837,
+            "processingEnd": 585.3000000715256
+          }
+        },
+        {
+          "key": "h",
+          "start": 618.8000000715256,
+          "frameTask": 633.6000000238419,
+          "nextFrameTaskMs": 14.799999952316284,
+          "eventTiming": {
+            "start": 618.8000000715256,
+            "duration": 16,
+            "interactionId": 2291,
+            "processingStart": 618.8999999761581,
+            "processingEnd": 619
+          }
+        },
+        {
+          "key": "i",
+          "start": 651.5,
+          "frameTask": 665.8999999761581,
+          "nextFrameTaskMs": 14.399999976158142,
+          "eventTiming": {
+            "start": 651.5,
+            "duration": 16,
+            "interactionId": 2298,
+            "processingStart": 651.7000000476837,
+            "processingEnd": 651.7000000476837
+          }
+        },
+        {
+          "key": "j",
+          "start": 684.8000000715256,
+          "frameTask": 698.7000000476837,
+          "nextFrameTaskMs": 13.899999976158142,
+          "eventTiming": {
+            "start": 684.8000000715256,
+            "duration": 16,
+            "interactionId": 2305,
+            "processingStart": 684.8999999761581,
+            "processingEnd": 685
+          }
+        },
+        {
+          "key": "k",
+          "start": 718.8000000715256,
+          "frameTask": 732.2000000476837,
+          "nextFrameTaskMs": 13.399999976158142,
+          "eventTiming": {
+            "start": 718.8000000715256,
+            "duration": 16,
+            "interactionId": 2312,
+            "processingStart": 718.8999999761581,
+            "processingEnd": 719
+          }
+        }
+      ]
+    },
+    {
+      "size": 100,
+      "index": 1,
+      "engine": "tiptap",
+      "samples": [
+        {
+          "key": "a",
+          "start": 138.59999990463257,
+          "frameTask": 148.79999995231628,
+          "nextFrameTaskMs": 10.200000047683716,
+          "eventTiming": {
+            "start": 138.59999990463257,
+            "duration": 16,
+            "interactionId": 323,
+            "processingStart": 138.59999990463257,
+            "processingEnd": 138.69999992847443
+          }
+        },
+        {
+          "key": "b",
+          "start": 163.79999995231628,
+          "frameTask": 165.69999992847443,
+          "nextFrameTaskMs": 1.899999976158142,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 168.39999997615814,
+          "frameTask": 181,
+          "nextFrameTaskMs": 12.600000023841858,
+          "eventTiming": {
+            "start": 168.39999997615814,
+            "duration": 16,
+            "interactionId": 337,
+            "processingStart": 168.39999997615814,
+            "processingEnd": 168.59999990463257
+          }
+        },
+        {
+          "key": "d",
+          "start": 198.89999997615814,
+          "frameTask": 213.29999995231628,
+          "nextFrameTaskMs": 14.399999976158142,
+          "eventTiming": {
+            "start": 198.89999997615814,
+            "duration": 16,
+            "interactionId": 344,
+            "processingStart": 199,
+            "processingEnd": 199.09999990463257
+          }
+        },
+        {
+          "key": "e",
+          "start": 232.69999992847443,
+          "frameTask": 247.59999990463257,
+          "nextFrameTaskMs": 14.899999976158142,
+          "eventTiming": {
+            "start": 232.69999992847443,
+            "duration": 16,
+            "interactionId": 351,
+            "processingStart": 232.79999995231628,
+            "processingEnd": 232.79999995231628
+          }
+        },
+        {
+          "key": "f",
+          "start": 265.6999999284744,
+          "frameTask": 280.39999997615814,
+          "nextFrameTaskMs": 14.700000047683716,
+          "eventTiming": {
+            "start": 265.6999999284744,
+            "duration": 16,
+            "interactionId": 358,
+            "processingStart": 265.7999999523163,
+            "processingEnd": 265.7999999523163
+          }
+        },
+        {
+          "key": "g",
+          "start": 300.6999999284744,
+          "frameTask": 313.6999999284744,
+          "nextFrameTaskMs": 13,
+          "eventTiming": {
+            "start": 300.6999999284744,
+            "duration": 16,
+            "interactionId": 365,
+            "processingStart": 300.89999997615814,
+            "processingEnd": 301
+          }
+        },
+        {
+          "key": "h",
+          "start": 332,
+          "frameTask": 346.39999997615814,
+          "nextFrameTaskMs": 14.399999976158142,
+          "eventTiming": {
+            "start": 332,
+            "duration": 16,
+            "interactionId": 372,
+            "processingStart": 332.09999990463257,
+            "processingEnd": 332.1999999284744
+          }
+        },
+        {
+          "key": "i",
+          "start": 365.1999999284744,
+          "frameTask": 380.39999997615814,
+          "nextFrameTaskMs": 15.200000047683716,
+          "eventTiming": {
+            "start": 365.1999999284744,
+            "duration": 16,
+            "interactionId": 379,
+            "processingStart": 365.1999999284744,
+            "processingEnd": 365.2999999523163
+          }
+        },
+        {
+          "key": "j",
+          "start": 398.5,
+          "frameTask": 413.6999999284744,
+          "nextFrameTaskMs": 15.199999928474426,
+          "eventTiming": {
+            "start": 398.5,
+            "duration": 16,
+            "interactionId": 386,
+            "processingStart": 398.59999990463257,
+            "processingEnd": 398.6999999284744
+          }
+        },
+        {
+          "key": "k",
+          "start": 431.59999990463257,
+          "frameTask": 447,
+          "nextFrameTaskMs": 15.400000095367432,
+          "eventTiming": {
+            "start": 431.59999990463257,
+            "duration": 16,
+            "interactionId": 393,
+            "processingStart": 431.6999999284744,
+            "processingEnd": 431.6999999284744
+          }
+        }
+      ]
+    },
+    {
+      "size": 100,
+      "index": 2,
+      "engine": "tiptap",
+      "samples": [
+        {
+          "key": "a",
+          "start": 133.60000002384186,
+          "frameTask": 141.70000004768372,
+          "nextFrameTaskMs": 8.100000023841858,
+          "eventTiming": {
+            "start": 133.60000002384186,
+            "duration": 16,
+            "interactionId": 7518,
+            "processingStart": 133.60000002384186,
+            "processingEnd": 133.70000004768372
+          }
+        },
+        {
+          "key": "b",
+          "start": 154,
+          "frameTask": 159,
+          "nextFrameTaskMs": 5,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 176.5,
+          "frameTask": 192.39999997615814,
+          "nextFrameTaskMs": 15.899999976158142,
+          "eventTiming": {
+            "start": 176.5,
+            "duration": 16,
+            "interactionId": 7532,
+            "processingStart": 176.60000002384186,
+            "processingEnd": 176.60000002384186
+          }
+        },
+        {
+          "key": "d",
+          "start": 210.20000004768372,
+          "frameTask": 225.70000004768372,
+          "nextFrameTaskMs": 15.5,
+          "eventTiming": {
+            "start": 210.20000004768372,
+            "duration": 16,
+            "interactionId": 7539,
+            "processingStart": 210.20000004768372,
+            "processingEnd": 210.30000007152557
+          }
+        },
+        {
+          "key": "e",
+          "start": 244.5,
+          "frameTask": 258.60000002384186,
+          "nextFrameTaskMs": 14.100000023841858,
+          "eventTiming": {
+            "start": 244.5,
+            "duration": 16,
+            "interactionId": 7546,
+            "processingStart": 244.5,
+            "processingEnd": 244.70000004768372
+          }
+        },
+        {
+          "key": "f",
+          "start": 277,
+          "frameTask": 292.2000000476837,
+          "nextFrameTaskMs": 15.200000047683716,
+          "eventTiming": {
+            "start": 277,
+            "duration": 16,
+            "interactionId": 7553,
+            "processingStart": 277.2000000476837,
+            "processingEnd": 277.2000000476837
+          }
+        },
+        {
+          "key": "g",
+          "start": 310.10000002384186,
+          "frameTask": 326,
+          "nextFrameTaskMs": 15.899999976158142,
+          "eventTiming": {
+            "start": 310.10000002384186,
+            "duration": 16,
+            "interactionId": 7560,
+            "processingStart": 310.2000000476837,
+            "processingEnd": 310.3000000715256
+          }
+        },
+        {
+          "key": "h",
+          "start": 343.7000000476837,
+          "frameTask": 359.10000002384186,
+          "nextFrameTaskMs": 15.399999976158142,
+          "eventTiming": {
+            "start": 343.7000000476837,
+            "duration": 16,
+            "interactionId": 7567,
+            "processingStart": 343.8000000715256,
+            "processingEnd": 343.89999997615814
+          }
+        },
+        {
+          "key": "i",
+          "start": 377.10000002384186,
+          "frameTask": 393.5,
+          "nextFrameTaskMs": 16.399999976158142,
+          "eventTiming": {
+            "start": 377.10000002384186,
+            "duration": 16,
+            "interactionId": 7574,
+            "processingStart": 377.2000000476837,
+            "processingEnd": 377.3000000715256
+          }
+        },
+        {
+          "key": "j",
+          "start": 411.10000002384186,
+          "frameTask": 426,
+          "nextFrameTaskMs": 14.899999976158142,
+          "eventTiming": {
+            "start": 411.10000002384186,
+            "duration": 16,
+            "interactionId": 7581,
+            "processingStart": 411.2000000476837,
+            "processingEnd": 411.3000000715256
+          }
+        },
+        {
+          "key": "k",
+          "start": 443.8000000715256,
+          "frameTask": 459,
+          "nextFrameTaskMs": 15.199999928474426,
+          "eventTiming": {
+            "start": 443.8000000715256,
+            "duration": 16,
+            "interactionId": 7588,
+            "processingStart": 443.89999997615814,
+            "processingEnd": 444
+          }
+        }
+      ]
+    },
+    {
+      "size": 100,
+      "index": 3,
+      "engine": "fountain",
+      "samples": [
+        {
+          "key": "a",
+          "start": 133,
+          "frameTask": 148.69999992847443,
+          "nextFrameTaskMs": 15.699999928474426,
+          "eventTiming": {
+            "start": 133,
+            "duration": 24,
+            "interactionId": 5327,
+            "processingStart": 133.09999990463257,
+            "processingEnd": 133.09999990463257
+          }
+        },
+        {
+          "key": "b",
+          "start": 155,
+          "frameTask": 160.09999990463257,
+          "nextFrameTaskMs": 5.099999904632568,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 177.09999990463257,
+          "frameTask": 191.5,
+          "nextFrameTaskMs": 14.400000095367432,
+          "eventTiming": {
+            "start": 177.09999990463257,
+            "duration": 16,
+            "interactionId": 5341,
+            "processingStart": 177.09999990463257,
+            "processingEnd": 177.29999995231628
+          }
+        },
+        {
+          "key": "d",
+          "start": 209.69999992847443,
+          "frameTask": 225.39999997615814,
+          "nextFrameTaskMs": 15.700000047683716,
+          "eventTiming": {
+            "start": 209.69999992847443,
+            "duration": 16,
+            "interactionId": 5348,
+            "processingStart": 209.69999992847443,
+            "processingEnd": 209.89999997615814
+          }
+        },
+        {
+          "key": "e",
+          "start": 243.69999992847443,
+          "frameTask": 258.6999999284744,
+          "nextFrameTaskMs": 15,
+          "eventTiming": {
+            "start": 243.69999992847443,
+            "duration": 16,
+            "interactionId": 5355,
+            "processingStart": 243.79999995231628,
+            "processingEnd": 244.09999990463257
+          }
+        },
+        {
+          "key": "f",
+          "start": 277,
+          "frameTask": 291.5,
+          "nextFrameTaskMs": 14.5,
+          "eventTiming": {
+            "start": 277,
+            "duration": 16,
+            "interactionId": 5362,
+            "processingStart": 277.09999990463257,
+            "processingEnd": 277.1999999284744
+          }
+        },
+        {
+          "key": "g",
+          "start": 311.39999997615814,
+          "frameTask": 325.09999990463257,
+          "nextFrameTaskMs": 13.699999928474426,
+          "eventTiming": {
+            "start": 311.39999997615814,
+            "duration": 16,
+            "interactionId": 5369,
+            "processingStart": 311.5,
+            "processingEnd": 311.59999990463257
+          }
+        },
+        {
+          "key": "h",
+          "start": 344.6999999284744,
+          "frameTask": 359.2999999523163,
+          "nextFrameTaskMs": 14.600000023841858,
+          "eventTiming": {
+            "start": 344.6999999284744,
+            "duration": 16,
+            "interactionId": 5376,
+            "processingStart": 344.89999997615814,
+            "processingEnd": 345.09999990463257
+          }
+        },
+        {
+          "key": "i",
+          "start": 376.7999999523163,
+          "frameTask": 391.59999990463257,
+          "nextFrameTaskMs": 14.799999952316284,
+          "eventTiming": {
+            "start": 376.7999999523163,
+            "duration": 16,
+            "interactionId": 5383,
+            "processingStart": 377,
+            "processingEnd": 377
+          }
+        },
+        {
+          "key": "j",
+          "start": 410.2999999523163,
+          "frameTask": 425.6999999284744,
+          "nextFrameTaskMs": 15.399999976158142,
+          "eventTiming": {
+            "start": 410.2999999523163,
+            "duration": 16,
+            "interactionId": 5390,
+            "processingStart": 410.39999997615814,
+            "processingEnd": 410.5
+          }
+        },
+        {
+          "key": "k",
+          "start": 444.39999997615814,
+          "frameTask": 459.59999990463257,
+          "nextFrameTaskMs": 15.199999928474426,
+          "eventTiming": {
+            "start": 444.39999997615814,
+            "duration": 16,
+            "interactionId": 5397,
+            "processingStart": 444.5,
+            "processingEnd": 444.59999990463257
+          }
+        }
+      ]
+    },
+    {
+      "size": 1000,
+      "index": 0,
+      "engine": "fountain",
+      "samples": [
+        {
+          "key": "a",
+          "start": 165.10000002384186,
+          "frameTask": 176.70000004768372,
+          "nextFrameTaskMs": 11.600000023841858,
+          "eventTiming": {
+            "start": 165.10000002384186,
+            "duration": 16,
+            "interactionId": 3172,
+            "processingStart": 165.29999995231628,
+            "processingEnd": 165.39999997615814
+          }
+        },
+        {
+          "key": "b",
+          "start": 193.29999995231628,
+          "frameTask": 200.5,
+          "nextFrameTaskMs": 7.200000047683716,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 205.60000002384186,
+          "frameTask": 210.89999997615814,
+          "nextFrameTaskMs": 5.299999952316284,
+          "eventTiming": null
+        },
+        {
+          "key": "d",
+          "start": 215.29999995231628,
+          "frameTask": 223.10000002384186,
+          "nextFrameTaskMs": 7.800000071525574,
+          "eventTiming": null
+        },
+        {
+          "key": "e",
+          "start": 242.20000004768372,
+          "frameTask": 255.60000002384186,
+          "nextFrameTaskMs": 13.399999976158142,
+          "eventTiming": {
+            "start": 242.20000004768372,
+            "duration": 16,
+            "interactionId": 3200,
+            "processingStart": 242.29999995231628,
+            "processingEnd": 242.39999997615814
+          }
+        },
+        {
+          "key": "f",
+          "start": 278.39999997615814,
+          "frameTask": 289.7000000476837,
+          "nextFrameTaskMs": 11.300000071525574,
+          "eventTiming": null
+        },
+        {
+          "key": "g",
+          "start": 308.7000000476837,
+          "frameTask": 323.2000000476837,
+          "nextFrameTaskMs": 14.5,
+          "eventTiming": {
+            "start": 308.7000000476837,
+            "duration": 16,
+            "interactionId": 3214,
+            "processingStart": 309.2000000476837,
+            "processingEnd": 309.5
+          }
+        },
+        {
+          "key": "h",
+          "start": 341.7999999523163,
+          "frameTask": 356.2000000476837,
+          "nextFrameTaskMs": 14.400000095367432,
+          "eventTiming": {
+            "start": 341.7999999523163,
+            "duration": 16,
+            "interactionId": 3221,
+            "processingStart": 341.89999997615814,
+            "processingEnd": 342
+          }
+        },
+        {
+          "key": "i",
+          "start": 375,
+          "frameTask": 388.89999997615814,
+          "nextFrameTaskMs": 13.899999976158142,
+          "eventTiming": {
+            "start": 375,
+            "duration": 16,
+            "interactionId": 3228,
+            "processingStart": 375.2000000476837,
+            "processingEnd": 375.2999999523163
+          }
+        },
+        {
+          "key": "j",
+          "start": 408.5,
+          "frameTask": 422.89999997615814,
+          "nextFrameTaskMs": 14.399999976158142,
+          "eventTiming": {
+            "start": 408.5,
+            "duration": 16,
+            "interactionId": 3235,
+            "processingStart": 408.60000002384186,
+            "processingEnd": 408.7000000476837
+          }
+        },
+        {
+          "key": "k",
+          "start": 442.5,
+          "frameTask": 455.7000000476837,
+          "nextFrameTaskMs": 13.200000047683716,
+          "eventTiming": {
+            "start": 442.5,
+            "duration": 16,
+            "interactionId": 3242,
+            "processingStart": 442.89999997615814,
+            "processingEnd": 443
+          }
+        }
+      ]
+    },
+    {
+      "size": 1000,
+      "index": 1,
+      "engine": "tiptap",
+      "samples": [
+        {
+          "key": "a",
+          "start": 149.10000002384186,
+          "frameTask": 158.29999995231628,
+          "nextFrameTaskMs": 9.199999928474426,
+          "eventTiming": {
+            "start": 149.10000002384186,
+            "duration": 16,
+            "interactionId": 8659,
+            "processingStart": 149.20000004768372,
+            "processingEnd": 149.20000004768372
+          }
+        },
+        {
+          "key": "b",
+          "start": 173.29999995231628,
+          "frameTask": 176.79999995231628,
+          "nextFrameTaskMs": 3.5,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 180.10000002384186,
+          "frameTask": 190.29999995231628,
+          "nextFrameTaskMs": 10.199999928474426,
+          "eventTiming": null
+        },
+        {
+          "key": "d",
+          "start": 210.70000004768372,
+          "frameTask": 223.39999997615814,
+          "nextFrameTaskMs": 12.699999928474426,
+          "eventTiming": {
+            "start": 210.70000004768372,
+            "duration": 16,
+            "interactionId": 8680,
+            "processingStart": 210.79999995231628,
+            "processingEnd": 210.79999995231628
+          }
+        },
+        {
+          "key": "e",
+          "start": 242.79999995231628,
+          "frameTask": 257.7000000476837,
+          "nextFrameTaskMs": 14.900000095367432,
+          "eventTiming": {
+            "start": 242.79999995231628,
+            "duration": 16,
+            "interactionId": 8687,
+            "processingStart": 242.89999997615814,
+            "processingEnd": 243.10000002384186
+          }
+        },
+        {
+          "key": "f",
+          "start": 276.89999997615814,
+          "frameTask": 290.2000000476837,
+          "nextFrameTaskMs": 13.300000071525574,
+          "eventTiming": {
+            "start": 276.89999997615814,
+            "duration": 16,
+            "interactionId": 8694,
+            "processingStart": 277,
+            "processingEnd": 277
+          }
+        },
+        {
+          "key": "g",
+          "start": 310.39999997615814,
+          "frameTask": 324,
+          "nextFrameTaskMs": 13.600000023841858,
+          "eventTiming": {
+            "start": 310.39999997615814,
+            "duration": 16,
+            "interactionId": 8701,
+            "processingStart": 310.5,
+            "processingEnd": 310.60000002384186
+          }
+        },
+        {
+          "key": "h",
+          "start": 342.89999997615814,
+          "frameTask": 357.5,
+          "nextFrameTaskMs": 14.600000023841858,
+          "eventTiming": {
+            "start": 342.89999997615814,
+            "duration": 16,
+            "interactionId": 8708,
+            "processingStart": 343.10000002384186,
+            "processingEnd": 343.2000000476837
+          }
+        },
+        {
+          "key": "i",
+          "start": 375.2999999523163,
+          "frameTask": 390.39999997615814,
+          "nextFrameTaskMs": 15.100000023841858,
+          "eventTiming": {
+            "start": 375.2999999523163,
+            "duration": 16,
+            "interactionId": 8715,
+            "processingStart": 375.39999997615814,
+            "processingEnd": 375.5
+          }
+        },
+        {
+          "key": "j",
+          "start": 410.2999999523163,
+          "frameTask": 423.7999999523163,
+          "nextFrameTaskMs": 13.5,
+          "eventTiming": {
+            "start": 410.2999999523163,
+            "duration": 16,
+            "interactionId": 8722,
+            "processingStart": 410.39999997615814,
+            "processingEnd": 410.5
+          }
+        },
+        {
+          "key": "k",
+          "start": 444.39999997615814,
+          "frameTask": 456.7999999523163,
+          "nextFrameTaskMs": 12.399999976158142,
+          "eventTiming": {
+            "start": 444.39999997615814,
+            "duration": 16,
+            "interactionId": 8729,
+            "processingStart": 444.39999997615814,
+            "processingEnd": 444.5
+          }
+        }
+      ]
+    },
+    {
+      "size": 1000,
+      "index": 2,
+      "engine": "tiptap",
+      "samples": [
+        {
+          "key": "a",
+          "start": 148.89999997615814,
+          "frameTask": 161.39999997615814,
+          "nextFrameTaskMs": 12.5,
+          "eventTiming": {
+            "start": 148.89999997615814,
+            "duration": 16,
+            "interactionId": 2455,
+            "processingStart": 149,
+            "processingEnd": 149.10000002384186
+          }
+        },
+        {
+          "key": "b",
+          "start": 176.30000007152557,
+          "frameTask": 179.70000004768372,
+          "nextFrameTaskMs": 3.399999976158142,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 183,
+          "frameTask": 190,
+          "nextFrameTaskMs": 7,
+          "eventTiming": null
+        },
+        {
+          "key": "d",
+          "start": 208.30000007152557,
+          "frameTask": 223.20000004768372,
+          "nextFrameTaskMs": 14.899999976158142,
+          "eventTiming": {
+            "start": 208.30000007152557,
+            "duration": 16,
+            "interactionId": 2476,
+            "processingStart": 208.5,
+            "processingEnd": 208.60000002384186
+          }
+        },
+        {
+          "key": "e",
+          "start": 242,
+          "frameTask": 257,
+          "nextFrameTaskMs": 15,
+          "eventTiming": {
+            "start": 242,
+            "duration": 16,
+            "interactionId": 2483,
+            "processingStart": 242.10000002384186,
+            "processingEnd": 242.20000004768372
+          }
+        },
+        {
+          "key": "f",
+          "start": 275,
+          "frameTask": 289.5,
+          "nextFrameTaskMs": 14.5,
+          "eventTiming": {
+            "start": 275,
+            "duration": 16,
+            "interactionId": 2490,
+            "processingStart": 275.10000002384186,
+            "processingEnd": 275.10000002384186
+          }
+        },
+        {
+          "key": "g",
+          "start": 308.3000000715256,
+          "frameTask": 323.3000000715256,
+          "nextFrameTaskMs": 15,
+          "eventTiming": {
+            "start": 308.3000000715256,
+            "duration": 16,
+            "interactionId": 2497,
+            "processingStart": 308.5,
+            "processingEnd": 308.5
+          }
+        },
+        {
+          "key": "h",
+          "start": 341.7000000476837,
+          "frameTask": 356.2000000476837,
+          "nextFrameTaskMs": 14.5,
+          "eventTiming": {
+            "start": 341.7000000476837,
+            "duration": 16,
+            "interactionId": 2504,
+            "processingStart": 341.7000000476837,
+            "processingEnd": 341.8000000715256
+          }
+        },
+        {
+          "key": "i",
+          "start": 374.8000000715256,
+          "frameTask": 389.7000000476837,
+          "nextFrameTaskMs": 14.899999976158142,
+          "eventTiming": {
+            "start": 374.8000000715256,
+            "duration": 16,
+            "interactionId": 2511,
+            "processingStart": 375,
+            "processingEnd": 375.10000002384186
+          }
+        },
+        {
+          "key": "j",
+          "start": 408,
+          "frameTask": 423.2000000476837,
+          "nextFrameTaskMs": 15.200000047683716,
+          "eventTiming": {
+            "start": 408,
+            "duration": 16,
+            "interactionId": 2518,
+            "processingStart": 408.10000002384186,
+            "processingEnd": 408.3000000715256
+          }
+        },
+        {
+          "key": "k",
+          "start": 441.8000000715256,
+          "frameTask": 456.7000000476837,
+          "nextFrameTaskMs": 14.899999976158142,
+          "eventTiming": {
+            "start": 441.8000000715256,
+            "duration": 16,
+            "interactionId": 2525,
+            "processingStart": 441.89999997615814,
+            "processingEnd": 442
+          }
+        }
+      ]
+    },
+    {
+      "size": 1000,
+      "index": 3,
+      "engine": "fountain",
+      "samples": [
+        {
+          "key": "a",
+          "start": 149.10000002384186,
+          "frameTask": 161.10000002384186,
+          "nextFrameTaskMs": 12,
+          "eventTiming": {
+            "start": 149.10000002384186,
+            "duration": 16,
+            "interactionId": 1598,
+            "processingStart": 149.10000002384186,
+            "processingEnd": 149.30000007152557
+          }
+        },
+        {
+          "key": "b",
+          "start": 177.40000009536743,
+          "frameTask": 184.20000004768372,
+          "nextFrameTaskMs": 6.799999952316284,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 189,
+          "frameTask": 194.5,
+          "nextFrameTaskMs": 5.5,
+          "eventTiming": null
+        },
+        {
+          "key": "d",
+          "start": 198.80000007152557,
+          "frameTask": 207,
+          "nextFrameTaskMs": 8.199999928474426,
+          "eventTiming": null
+        },
+        {
+          "key": "e",
+          "start": 226.30000007152557,
+          "frameTask": 240.10000002384186,
+          "nextFrameTaskMs": 13.799999952316284,
+          "eventTiming": {
+            "start": 226.30000007152557,
+            "duration": 16,
+            "interactionId": 1626,
+            "processingStart": 226.40000009536743,
+            "processingEnd": 226.5
+          }
+        },
+        {
+          "key": "f",
+          "start": 259.7000000476837,
+          "frameTask": 273.2000000476837,
+          "nextFrameTaskMs": 13.5,
+          "eventTiming": {
+            "start": 259.7000000476837,
+            "duration": 16,
+            "interactionId": 1633,
+            "processingStart": 259.8000000715256,
+            "processingEnd": 260
+          }
+        },
+        {
+          "key": "g",
+          "start": 292.8000000715256,
+          "frameTask": 307.40000009536743,
+          "nextFrameTaskMs": 14.600000023841858,
+          "eventTiming": {
+            "start": 292.8000000715256,
+            "duration": 16,
+            "interactionId": 1640,
+            "processingStart": 293.3000000715256,
+            "processingEnd": 293.5
+          }
+        },
+        {
+          "key": "h",
+          "start": 327.5,
+          "frameTask": 340,
+          "nextFrameTaskMs": 12.5,
+          "eventTiming": {
+            "start": 327.5,
+            "duration": 16,
+            "interactionId": 1647,
+            "processingStart": 327.60000002384186,
+            "processingEnd": 327.8000000715256
+          }
+        },
+        {
+          "key": "i",
+          "start": 360.2000000476837,
+          "frameTask": 373.60000002384186,
+          "nextFrameTaskMs": 13.399999976158142,
+          "eventTiming": {
+            "start": 360.2000000476837,
+            "duration": 16,
+            "interactionId": 1654,
+            "processingStart": 360.40000009536743,
+            "processingEnd": 360.5
+          }
+        },
+        {
+          "key": "j",
+          "start": 396.40000009536743,
+          "frameTask": 407.3000000715256,
+          "nextFrameTaskMs": 10.899999976158142,
+          "eventTiming": null
+        },
+        {
+          "key": "k",
+          "start": 426.7000000476837,
+          "frameTask": 440.2000000476837,
+          "nextFrameTaskMs": 13.5,
+          "eventTiming": {
+            "start": 426.7000000476837,
+            "duration": 16,
+            "interactionId": 1668,
+            "processingStart": 426.8000000715256,
+            "processingEnd": 427
+          }
+        }
+      ]
+    },
+    {
+      "size": 5000,
+      "index": 0,
+      "engine": "fountain",
+      "samples": [
+        {
+          "key": "a",
+          "start": 273.60000002384186,
+          "frameTask": 303.2999999523163,
+          "nextFrameTaskMs": 29.699999928474426,
+          "eventTiming": {
+            "start": 273.60000002384186,
+            "duration": 40,
+            "interactionId": 9613,
+            "processingStart": 273.7000000476837,
+            "processingEnd": 273.7999999523163
+          }
+        },
+        {
+          "key": "b",
+          "start": 328.2999999523163,
+          "frameTask": 349.60000002384186,
+          "nextFrameTaskMs": 21.300000071525574,
+          "eventTiming": {
+            "start": 328.2999999523163,
+            "duration": 24,
+            "interactionId": 9620,
+            "processingStart": 328.39999997615814,
+            "processingEnd": 328.60000002384186
+          }
+        },
+        {
+          "key": "c",
+          "start": 359.5,
+          "frameTask": 379.60000002384186,
+          "nextFrameTaskMs": 20.100000023841858,
+          "eventTiming": {
+            "start": 359.5,
+            "duration": 24,
+            "interactionId": 9627,
+            "processingStart": 360,
+            "processingEnd": 360.10000002384186
+          }
+        },
+        {
+          "key": "d",
+          "start": 397.39999997615814,
+          "frameTask": 426.2999999523163,
+          "nextFrameTaskMs": 28.899999976158142,
+          "eventTiming": {
+            "start": 397.39999997615814,
+            "duration": 32,
+            "interactionId": 9634,
+            "processingStart": 398.39999997615814,
+            "processingEnd": 398.60000002384186
+          }
+        },
+        {
+          "key": "e",
+          "start": 435.2999999523163,
+          "frameTask": 460.89999997615814,
+          "nextFrameTaskMs": 25.600000023841858,
+          "eventTiming": {
+            "start": 435.2999999523163,
+            "duration": 24,
+            "interactionId": 9641,
+            "processingStart": 435.5,
+            "processingEnd": 435.7000000476837
+          }
+        },
+        {
+          "key": "f",
+          "start": 469,
+          "frameTask": 489.2000000476837,
+          "nextFrameTaskMs": 20.200000047683716,
+          "eventTiming": {
+            "start": 469,
+            "duration": 24,
+            "interactionId": 9648,
+            "processingStart": 469.10000002384186,
+            "processingEnd": 469.2000000476837
+          }
+        },
+        {
+          "key": "g",
+          "start": 498.7000000476837,
+          "frameTask": 519.1000000238419,
+          "nextFrameTaskMs": 20.399999976158142,
+          "eventTiming": {
+            "start": 498.7000000476837,
+            "duration": 24,
+            "interactionId": 9655,
+            "processingStart": 498.7999999523163,
+            "processingEnd": 499
+          }
+        },
+        {
+          "key": "h",
+          "start": 527.6000000238419,
+          "frameTask": 545.7999999523163,
+          "nextFrameTaskMs": 18.199999928474426,
+          "eventTiming": {
+            "start": 527.6000000238419,
+            "duration": 16,
+            "interactionId": 9662,
+            "processingStart": 527.7000000476837,
+            "processingEnd": 527.8999999761581
+          }
+        },
+        {
+          "key": "i",
+          "start": 553.8999999761581,
+          "frameTask": 572.3999999761581,
+          "nextFrameTaskMs": 18.5,
+          "eventTiming": {
+            "start": 553.8999999761581,
+            "duration": 16,
+            "interactionId": 9669,
+            "processingStart": 554.3999999761581,
+            "processingEnd": 554.6000000238419
+          }
+        },
+        {
+          "key": "j",
+          "start": 581.5,
+          "frameTask": 609.6000000238419,
+          "nextFrameTaskMs": 28.100000023841858,
+          "eventTiming": {
+            "start": 581.5,
+            "duration": 32,
+            "interactionId": 9676,
+            "processingStart": 582.3999999761581,
+            "processingEnd": 582.6000000238419
+          }
+        },
+        {
+          "key": "k",
+          "start": 623.2000000476837,
+          "frameTask": 643.2000000476837,
+          "nextFrameTaskMs": 20,
+          "eventTiming": {
+            "start": 623.2000000476837,
+            "duration": 24,
+            "interactionId": 9683,
+            "processingStart": 623.2999999523163,
+            "processingEnd": 623.5
+          }
+        }
+      ]
+    },
+    {
+      "size": 5000,
+      "index": 1,
+      "engine": "tiptap",
+      "samples": [
+        {
+          "key": "a",
+          "start": 215.69999992847443,
+          "frameTask": 232.5,
+          "nextFrameTaskMs": 16.800000071525574,
+          "eventTiming": {
+            "start": 215.69999992847443,
+            "duration": 24,
+            "interactionId": 2140,
+            "processingStart": 215.69999992847443,
+            "processingEnd": 215.69999992847443
+          }
+        },
+        {
+          "key": "b",
+          "start": 250.39999997615814,
+          "frameTask": 258.6999999284744,
+          "nextFrameTaskMs": 8.299999952316284,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 264.89999997615814,
+          "frameTask": 271.89999997615814,
+          "nextFrameTaskMs": 7,
+          "eventTiming": null
+        },
+        {
+          "key": "d",
+          "start": 278,
+          "frameTask": 287.39999997615814,
+          "nextFrameTaskMs": 9.399999976158142,
+          "eventTiming": null
+        },
+        {
+          "key": "e",
+          "start": 308.09999990463257,
+          "frameTask": 322.2999999523163,
+          "nextFrameTaskMs": 14.200000047683716,
+          "eventTiming": {
+            "start": 308.09999990463257,
+            "duration": 16,
+            "interactionId": 2168,
+            "processingStart": 308.1999999284744,
+            "processingEnd": 308.39999997615814
+          }
+        },
+        {
+          "key": "f",
+          "start": 342.1999999284744,
+          "frameTask": 355.89999997615814,
+          "nextFrameTaskMs": 13.700000047683716,
+          "eventTiming": {
+            "start": 342.1999999284744,
+            "duration": 16,
+            "interactionId": 2175,
+            "processingStart": 342.2999999523163,
+            "processingEnd": 342.5
+          }
+        },
+        {
+          "key": "g",
+          "start": 375.7999999523163,
+          "frameTask": 387.59999990463257,
+          "nextFrameTaskMs": 11.799999952316284,
+          "eventTiming": {
+            "start": 375.7999999523163,
+            "duration": 16,
+            "interactionId": 2182,
+            "processingStart": 375.89999997615814,
+            "processingEnd": 376.09999990463257
+          }
+        },
+        {
+          "key": "h",
+          "start": 408.59999990463257,
+          "frameTask": 420.6999999284744,
+          "nextFrameTaskMs": 12.100000023841858,
+          "eventTiming": {
+            "start": 408.59999990463257,
+            "duration": 16,
+            "interactionId": 2189,
+            "processingStart": 409.5,
+            "processingEnd": 409.6999999284744
+          }
+        },
+        {
+          "key": "i",
+          "start": 443.5,
+          "frameTask": 454.2999999523163,
+          "nextFrameTaskMs": 10.799999952316284,
+          "eventTiming": null
+        },
+        {
+          "key": "j",
+          "start": 477.09999990463257,
+          "frameTask": 487.5,
+          "nextFrameTaskMs": 10.400000095367432,
+          "eventTiming": null
+        },
+        {
+          "key": "k",
+          "start": 508,
+          "frameTask": 521.1999999284744,
+          "nextFrameTaskMs": 13.199999928474426,
+          "eventTiming": {
+            "start": 508,
+            "duration": 16,
+            "interactionId": 2210,
+            "processingStart": 508,
+            "processingEnd": 508
+          }
+        }
+      ]
+    },
+    {
+      "size": 5000,
+      "index": 2,
+      "engine": "tiptap",
+      "samples": [
+        {
+          "key": "a",
+          "start": 225.39999997615814,
+          "frameTask": 242.09999990463257,
+          "nextFrameTaskMs": 16.699999928474426,
+          "eventTiming": {
+            "start": 225.39999997615814,
+            "duration": 24,
+            "interactionId": 3587,
+            "processingStart": 225.39999997615814,
+            "processingEnd": 225.5
+          }
+        },
+        {
+          "key": "b",
+          "start": 258.6999999284744,
+          "frameTask": 268.09999990463257,
+          "nextFrameTaskMs": 9.399999976158142,
+          "eventTiming": null
+        },
+        {
+          "key": "c",
+          "start": 275.09999990463257,
+          "frameTask": 283,
+          "nextFrameTaskMs": 7.900000095367432,
+          "eventTiming": null
+        },
+        {
+          "key": "d",
+          "start": 303.09999990463257,
+          "frameTask": 315,
+          "nextFrameTaskMs": 11.900000095367432,
+          "eventTiming": {
+            "start": 303.09999990463257,
+            "duration": 16,
+            "interactionId": 3608,
+            "processingStart": 303.2999999523163,
+            "processingEnd": 303.39999997615814
+          }
+        },
+        {
+          "key": "e",
+          "start": 340.7999999523163,
+          "frameTask": 352.2999999523163,
+          "nextFrameTaskMs": 11.5,
+          "eventTiming": null
+        },
+        {
+          "key": "f",
+          "start": 357.39999997615814,
+          "frameTask": 365.2999999523163,
+          "nextFrameTaskMs": 7.899999976158142,
+          "eventTiming": null
+        },
+        {
+          "key": "g",
+          "start": 386.89999997615814,
+          "frameTask": 398.5,
+          "nextFrameTaskMs": 11.600000023841858,
+          "eventTiming": {
+            "start": 386.89999997615814,
+            "duration": 16,
+            "interactionId": 3629,
+            "processingStart": 387.7999999523163,
+            "processingEnd": 387.89999997615814
+          }
+        },
+        {
+          "key": "h",
+          "start": 420.5,
+          "frameTask": 432.7999999523163,
+          "nextFrameTaskMs": 12.299999952316284,
+          "eventTiming": {
+            "start": 420.5,
+            "duration": 16,
+            "interactionId": 3636,
+            "processingStart": 420.59999990463257,
+            "processingEnd": 420.6999999284744
+          }
+        },
+        {
+          "key": "i",
+          "start": 453.59999990463257,
+          "frameTask": 465.5,
+          "nextFrameTaskMs": 11.900000095367432,
+          "eventTiming": {
+            "start": 453.59999990463257,
+            "duration": 16,
+            "interactionId": 3643,
+            "processingStart": 454.6999999284744,
+            "processingEnd": 454.6999999284744
+          }
+        },
+        {
+          "key": "j",
+          "start": 485.1999999284744,
+          "frameTask": 498.09999990463257,
+          "nextFrameTaskMs": 12.899999976158142,
+          "eventTiming": {
+            "start": 485.1999999284744,
+            "duration": 16,
+            "interactionId": 3650,
+            "processingStart": 485.2999999523163,
+            "processingEnd": 485.39999997615814
+          }
+        },
+        {
+          "key": "k",
+          "start": 520.6999999284744,
+          "frameTask": 532.8999999761581,
+          "nextFrameTaskMs": 12.200000047683716,
+          "eventTiming": {
+            "start": 520.6999999284744,
+            "duration": 16,
+            "interactionId": 3657,
+            "processingStart": 520.8999999761581,
+            "processingEnd": 520.8999999761581
+          }
+        }
+      ]
+    },
+    {
+      "size": 5000,
+      "index": 3,
+      "engine": "fountain",
+      "samples": [
+        {
+          "key": "a",
+          "start": 226.69999992847443,
+          "frameTask": 254.89999997615814,
+          "nextFrameTaskMs": 28.200000047683716,
+          "eventTiming": {
+            "start": 226.69999992847443,
+            "duration": 32,
+            "interactionId": 6348,
+            "processingStart": 226.79999995231628,
+            "processingEnd": 226.89999997615814
+          }
+        },
+        {
+          "key": "b",
+          "start": 275.6999999284744,
+          "frameTask": 299.6999999284744,
+          "nextFrameTaskMs": 24,
+          "eventTiming": {
+            "start": 275.6999999284744,
+            "duration": 24,
+            "interactionId": 6355,
+            "processingStart": 275.7999999523163,
+            "processingEnd": 276
+          }
+        },
+        {
+          "key": "c",
+          "start": 309.5,
+          "frameTask": 330.60000002384186,
+          "nextFrameTaskMs": 21.100000023841858,
+          "eventTiming": {
+            "start": 309.5,
+            "duration": 24,
+            "interactionId": 6362,
+            "processingStart": 309.7999999523163,
+            "processingEnd": 310
+          }
+        },
+        {
+          "key": "d",
+          "start": 346.89999997615814,
+          "frameTask": 375.39999997615814,
+          "nextFrameTaskMs": 28.5,
+          "eventTiming": {
+            "start": 346.89999997615814,
+            "duration": 32,
+            "interactionId": 6369,
+            "processingStart": 350.2999999523163,
+            "processingEnd": 350.6999999284744
+          }
+        },
+        {
+          "key": "e",
+          "start": 384.39999997615814,
+          "frameTask": 407.10000002384186,
+          "nextFrameTaskMs": 22.700000047683716,
+          "eventTiming": {
+            "start": 384.39999997615814,
+            "duration": 24,
+            "interactionId": 6376,
+            "processingStart": 384.5,
+            "processingEnd": 384.60000002384186
+          }
+        },
+        {
+          "key": "f",
+          "start": 415.39999997615814,
+          "frameTask": 435.60000002384186,
+          "nextFrameTaskMs": 20.200000047683716,
+          "eventTiming": {
+            "start": 415.39999997615814,
+            "duration": 24,
+            "interactionId": 6383,
+            "processingStart": 415.60000002384186,
+            "processingEnd": 415.7999999523163
+          }
+        },
+        {
+          "key": "g",
+          "start": 442.1999999284744,
+          "frameTask": 461.5,
+          "nextFrameTaskMs": 19.300000071525574,
+          "eventTiming": {
+            "start": 442.1999999284744,
+            "duration": 16,
+            "interactionId": 6390,
+            "processingStart": 442.2999999523163,
+            "processingEnd": 442.39999997615814
+          }
+        },
+        {
+          "key": "h",
+          "start": 472.5,
+          "frameTask": 490.5,
+          "nextFrameTaskMs": 18,
+          "eventTiming": {
+            "start": 472.5,
+            "duration": 16,
+            "interactionId": 6397,
+            "processingStart": 472.6999999284744,
+            "processingEnd": 472.89999997615814
+          }
+        },
+        {
+          "key": "i",
+          "start": 499.2999999523163,
+          "frameTask": 519,
+          "nextFrameTaskMs": 19.700000047683716,
+          "eventTiming": {
+            "start": 499.2999999523163,
+            "duration": 24,
+            "interactionId": 6404,
+            "processingStart": 499.39999997615814,
+            "processingEnd": 499.5
+          }
+        },
+        {
+          "key": "j",
+          "start": 525.6999999284744,
+          "frameTask": 544.2999999523163,
+          "nextFrameTaskMs": 18.600000023841858,
+          "eventTiming": {
+            "start": 525.6999999284744,
+            "duration": 16,
+            "interactionId": 6411,
+            "processingStart": 525.7999999523163,
+            "processingEnd": 525.8999999761581
+          }
+        },
+        {
+          "key": "k",
+          "start": 552.2999999523163,
+          "frameTask": 570.1000000238419,
+          "nextFrameTaskMs": 17.800000071525574,
+          "eventTiming": {
+            "start": 552.2999999523163,
+            "duration": 16,
+            "interactionId": 6418,
+            "processingStart": 552.3999999761581,
+            "processingEnd": 552.5
+          }
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

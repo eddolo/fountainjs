@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Avoid rewriting unchanged DOM cursor paths during typing. Moved blocks and stale path prefixes are still repaired.
+
 ## 0.5.0-beta.1 — 2026-11-17
 
 - Require explicit interaction before loading third-party iframe content in an
