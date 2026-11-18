@@ -34,3 +34,10 @@ Use the parent at `8b5b43aa` and the runtime in this branch. Build each with `pn
 3. The six full reports are in [samples.zip](samples.zip). Extract them beside the replay runner, with the reference captures in `parent-a/captures`. Run `python verify-plain.py` from the extracted directory for the replay hashes, trial counts and medians. [Verification script](verify-plain.py)
 
 These runs exercise plain paragraphs in desktop Chromium. Large rich documents and physical mobile input require separate measurements.
+
+
+## Combined widget and collaboration build
+
+The first combined build with the widget edit repair exceeded the CommonJS budget by 0.2 KiB. Sharing mark serialization and style comparison, sharing the nonempty text-group boundary check, and using the existing group map key brought the combined build 36 bytes under the existing 1,440 KiB ceiling.
+
+The combined tree passed 7,044 unit tests, type checks, the headless and API checks, and the widget rejection, draft retention and focus journey in Chromium, Firefox and WebKit. A fresh 5,000-paragraph replay passed in 20 receiver contexts. The two-way WebSocket and third-session reopen journey passed at both sizes. In this repeat, median Fountain receiver apply was 2.0 ms at 100 paragraphs and 29.3 ms at 5,000. Tiptap measured 0.6 ms and 1.65 ms respectively. The variation across runs matters when interpreting the initial 26.05 ms result. [Combined run samples](integrated-samples.zip)
