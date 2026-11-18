@@ -30,6 +30,37 @@ Under **Answer rules**, choose **Add answer rule**. Select two single-line field
 
 Rules travel in the template JSON. The server checks them against the template revision captured by each invitation. Changing the author’s template applies the new rules to future invitations.
 
+## Check answers against application data
+
+Set `FOUNTAIN_TEMPLATE_VALIDATION` to the path of a server-side ES module. An embedded host can pass the same object as the `validation` option to `createWorkspace`. For example, an application that maintains a study directory can register this check.
+
+```js
+import { directory } from './application-services.mjs';
+
+export default {
+  getContext({ accountId, templateId }) {
+    return directory.openStudiesFor(accountId, templateId);
+  },
+  validators: {
+    assigned_instrument: {
+      label: 'Instrument assigned to study',
+      inputs: ['Study ID', 'Instrument ID'],
+      validate([study, instrument], studies) {
+        if (!studies.has(study)) return { input: 0, message: 'Choose an open study.' };
+        if (!studies.get(study).has(instrument))
+          return { input: 1, message: 'Choose an instrument assigned to this study.' };
+      },
+    },
+  },
+};
+```
+
+Under **Application checks**, choose the check, click **Add application check**, and select a field for each input. Templates store its registered name and the ordered field keys. Use a new name for a new meaning when existing invitations must keep the old policy.
+
+The server obtains context once per submission attempt, after ordinary document validation. The callback receives the response ID, template ID, invitation’s template revision, and the signed-in account ID in account mode. Validators may be asynchronous. Each receives its own copy of the selected answer values in input order. Single-line answers are strings, rich answers are Fountain JSON, and an unanswered optional input may be undefined. Returning null or undefined accepts the answer. Returning a message rejects it and focuses the input at the supplied zero-based index (default 0).
+
+Drafts can be saved while a check fails or its registration is unavailable. A missing registration or changed input count blocks new invitations and submission under that check. Authors can open an imported template and remove the unavailable check. Previously submitted documents stay readable.
+
 ## Use inline fields in a custom schema
 
 The download includes `inline-fields.mjs`. Compose its extension with your own nodes and marks. Any parent that accepts the inline group can contain a field, including a custom figure caption. The command inserts at the caret or replaces selected text in one parent. The field inherits the first text run's formatting.

@@ -427,3 +427,91 @@ test('answer rules retain incomplete drafts and validate exact text and calendar
   for (const bad of [null, {}, Array(65).fill(rule)])
     assert.throws(() => validateTemplate({ ...template, rules: bad }), InputError);
 });
+
+test('application checks use the issued field bindings and enforce the latest host data at submit', async (t) => {
+  const directory = await mkdtemp(join(tmpdir(), 'fountain-checks-'));
+  const database = join(directory, 'records.sqlite');
+  let server, base, contextCalls = 0, waitForLookup, lookupStarted;
+  const validation = {
+    getContext(info) {
+      assert.equal(info.templateRevision, 1);
+      assert.ok(info.responseId && info.templateId);
+      return { sample: 'Study ' + ++contextCalls };
+    },
+    validators: {
+      study: {
+        label: 'Open study', inputs: ['Identifier'],
+        validate([value], context) {
+          assert.equal(context.sample, 'Study ' + contextCalls);
+          if (value !== 'River') return { message: 'Choose an open study.' };
+        },
+      },
+      entry: {
+        label: 'Study log', inputs: ['Study', 'Notes'],
+        async validate([study, notes], context) {
+          assert.equal(context.sample, 'Study ' + contextCalls);
+          if (waitForLookup) { lookupStarted(); await waitForLookup; }
+          if (!notes?.content[0].content?.[0]?.text.includes(study))
+            return { input: 1, message: 'Name the study in the notes.' };
+          notes.content.length = 0; // A host may change its copy of the rich answer.
+        },
+      },
+    },
+  };
+  const start = async (config) => {
+    server = createWorkspace(database, directory, { validation: config });
+    await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+    base = 'http://127.0.0.1:' + server.address().port + '/api/';
+  };
+  const stop = () => new Promise((resolve) => server.close(resolve));
+  t.after(async () => {
+    if (server?.listening) await stop();
+    await rm(directory, { recursive: true, force: true });
+  });
+  async function send(path, method, key, data, status = 200) {
+    const response = await fetch(base + path, {
+      method,
+      headers: { 'Content-Type': 'application/json', ...(key ? { Authorization: 'Bearer ' + key } : {}) },
+      body: data === undefined ? undefined : JSON.stringify(data),
+    });
+    const result = await response.json();
+    assert.equal(response.status, status, result.error);
+    return result;
+  }
+  await start(validation);
+  const config = await send('workspace', 'GET');
+  assert.deepEqual(config.validators[1], { name: 'entry', label: 'Study log', inputs: ['Study', 'Notes'] });
+  const doc = initialTemplate();
+  doc.checks = [{ name: 'study', fields: ['study'] }, { name: 'entry', fields: ['study', 'findings'] }];
+  for (const fields of [[], ['missing'], ['study', 'study']])
+    assert.throws(() => validateTemplate({ ...doc, checks: [{ name: 'entry', fields }] }), InputError);
+  const owner = await send('templates', 'POST', null, doc);
+  const path = 'templates/' + owner.id;
+  const invite = () => send(path + '/invite', 'POST', owner.key, { revision: 1 });
+  const first = await invite(), second = await invite(), third = await invite();
+  const resource = (invitation) => 'responses/' + invitation.id;
+  const submit = (invitation, answers, expected = 200) =>
+    send(resource(invitation) + '/submit', 'POST', invitation.key, { revision: 1, answers }, expected);
+  const answers = { study: 'River', findings: documentOf('River station ready.') };
+  assert.equal((await submit(first, { ...answers, study: 'Closed' }, 422)).field, 'study');
+  assert.equal((await submit(first, { ...answers, findings: documentOf('No label') }, 422)).field, 'findings');
+  await submit(first, answers);
+  assert.equal(contextCalls, 3);
+  let resume;
+  waitForLookup = new Promise((resolve) => { resume = resolve; });
+  const started = new Promise((resolve) => { lookupStarted = resolve; });
+  const pending = submit(third, answers, 409);
+  try {
+    await started;
+    await send(resource(third), 'PUT', third.key, { revision: 1, answers: { study: 'New draft' } });
+  } finally { resume(); }
+  await pending;
+  assert.deepEqual((await send(resource(third), 'GET', third.key)).answers, { study: 'New draft' });
+  await stop();
+  await start();
+  await send(path + '/invite', 'POST', owner.key, { revision: 1 }, 422);
+  await submit(second, answers, 422);
+  await send(resource(second), 'PUT', second.key, { revision: 1, answers });
+  assert.deepEqual((await send(resource(first), 'GET', owner.key)).answers, answers);
+  assert.deepEqual((await send(path, 'GET', owner.key)).template.checks, doc.checks);
+});

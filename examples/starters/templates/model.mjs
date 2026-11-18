@@ -85,7 +85,7 @@ function rich(doc, acceptField) {
 }
 
 export function validateTemplate(template) {
-  shape(template, ['version', 'title', 'blocks', 'rules']);
+  shape(template, ['version', 'title', 'blocks', 'rules', 'checks']);
   check(template.version === 1, 'Unsupported template version.');
   label(template.title, 'title');
   check(
@@ -130,6 +130,16 @@ export function validateTemplate(template) {
     template.blocks.every((b) => b.type !== 'reference' || keys.has(b.key)),
     'Choose an existing field for every reference.',
   );
+  if (Object.hasOwn(template, 'checks')) {
+    check(Array.isArray(template.checks) && template.checks.length <= 64, 'Use up to 64 application checks.');
+    for (const binding of template.checks) {
+      shape(binding, ['name', 'fields']);
+      check(validFieldKey(binding.name), 'Use a valid application check name.');
+      check(Array.isArray(binding.fields) && binding.fields.length >= 1 && binding.fields.length <= 8 &&
+        binding.fields.every((key) => keys.has(key)) && new Set(binding.fields).size === binding.fields.length,
+        'Choose distinct existing fields for each application check.');
+    }
+  }
   if (Object.hasOwn(template, 'rules')) {
     check(Array.isArray(template.rules) && template.rules.length <= 64, 'Use up to 64 answer rules.');
     for (const rule of template.rules) {
