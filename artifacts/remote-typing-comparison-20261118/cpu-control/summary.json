@@ -1,0 +1,830 @@
+[
+  {
+    "file": "fountain-5000-0-reader.cpuprofile",
+    "self": [
+      {
+        "label": "src/yjs/retained-document.ts:578",
+        "ms": 206.8
+      },
+      {
+        "label": "src/yjs/retained-document.ts:500",
+        "ms": 169.5
+      },
+      {
+        "label": "(program)",
+        "ms": 150.9
+      },
+      {
+        "label": "src/core/schema/attributes.ts:4",
+        "ms": 146.1
+      },
+      {
+        "label": "src/yjs/retained-document.ts:555",
+        "ms": 136.8
+      },
+      {
+        "label": "src/view/selection-handler.ts:339",
+        "ms": 126.6
+      },
+      {
+        "label": "getAttribute",
+        "ms": 99.6
+      },
+      {
+        "label": "(garbage collector)",
+        "ms": 96.8
+      },
+      {
+        "label": "src/yjs/retained-document.ts:346",
+        "ms": 90.4
+      },
+      {
+        "label": "src/core/schema/node.ts:88",
+        "ms": 61.5
+      },
+      {
+        "label": "src/extensions/plugins/syntax-highlight.ts:197",
+        "ms": 53.4
+      },
+      {
+        "label": "src/yjs/retained-document.ts:38",
+        "ms": 46.2
+      },
+      {
+        "label": "(idle)",
+        "ms": 43.8
+      },
+      {
+        "label": "src/view/dom-renderer.ts:434",
+        "ms": 42.7
+      },
+      {
+        "label": "src/view/dom-renderer.ts:405",
+        "ms": 41.8
+      },
+      {
+        "label": "src/view/dom-renderer.ts:369",
+        "ms": 41.3
+      },
+      {
+        "label": "src/yjs/retained-document.ts:25",
+        "ms": 33.4
+      },
+      {
+        "label": "querySelectorAll",
+        "ms": 32.2
+      },
+      {
+        "label": "src/yjs/retained-document.ts:359",
+        "ms": 31.5
+      },
+      {
+        "label": "src/yjs/retained-text.ts:482",
+        "ms": 27.5
+      },
+      {
+        "label": "src/core/transaction/path.ts:23",
+        "ms": 25.8
+      },
+      {
+        "label": "src/view/dom-renderer.ts:367",
+        "ms": 24.7
+      },
+      {
+        "label": "src/core/schema/attributes.ts:25",
+        "ms": 23.9
+      },
+      {
+        "label": "src/yjs/retained-text.ts:352",
+        "ms": 23.6
+      },
+      {
+        "label": "src/yjs/retained-document.ts:589",
+        "ms": 19.7
+      }
+    ],
+    "inclusive": [
+      {
+        "label": "(root)",
+        "ms": 2029.5
+      },
+      {
+        "label": "../../peer.js:20",
+        "ms": 1705.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3397",
+        "ms": 1704.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1651",
+        "ms": 1704.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1745",
+        "ms": 1704.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1761",
+        "ms": 1704.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3245",
+        "ms": 1698.5
+      },
+      {
+        "label": "../../node_modules/.pnpm/lib0@0.2.120/node_modules/lib0/function.js:17",
+        "ms": 1695.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/lib0@0.2.120/node_modules/lib0/observable.js:80",
+        "ms": 1692.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/lib0@0.2.120/node_modules/lib0/observable.js:82",
+        "ms": 1691.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3298",
+        "ms": 1691.3
+      },
+      {
+        "label": "src/yjs/retained-adapter.ts:190",
+        "ms": 1689.2
+      },
+      {
+        "label": "src/yjs/retained-document.ts:426",
+        "ms": 1039.7
+      },
+      {
+        "label": "src/yjs/retained-adapter.ts:163",
+        "ms": 1039.7
+      },
+      {
+        "label": "src/yjs/retained-document.ts:491",
+        "ms": 1009.2
+      },
+      {
+        "label": "src/yjs/retained-document.ts:500",
+        "ms": 727.8
+      },
+      {
+        "label": "src/core/editor.ts:90",
+        "ms": 586.9
+      },
+      {
+        "label": "src/core/editor.ts:117",
+        "ms": 503.5
+      },
+      {
+        "label": "src/view/view.ts:287",
+        "ms": 473.6
+      },
+      {
+        "label": "src/yjs/retained-adapter.ts:184",
+        "ms": 456.7
+      },
+      {
+        "label": "src/extensions/collaboration-core.ts:247",
+        "ms": 456.6
+      },
+      {
+        "label": "src/extensions/collaboration-core.ts:367",
+        "ms": 456.6
+      },
+      {
+        "label": "src/extensions/collaboration-core.ts:224",
+        "ms": 416.5
+      },
+      {
+        "label": "src/view/view.ts:407",
+        "ms": 283.7
+      },
+      {
+        "label": "src/view/dom-renderer.ts:405",
+        "ms": 281
+      }
+    ]
+  },
+  {
+    "file": "fountain-5000-0-writer.cpuprofile",
+    "self": [
+      {
+        "label": "(program)",
+        "ms": 251.9
+      },
+      {
+        "label": "(idle)",
+        "ms": 168.2
+      },
+      {
+        "label": "src/yjs/retained-document.ts:500",
+        "ms": 158.5
+      },
+      {
+        "label": "src/core/schema/attributes.ts:4",
+        "ms": 139.2
+      },
+      {
+        "label": "src/yjs/retained-document.ts:555",
+        "ms": 113.6
+      },
+      {
+        "label": "removeAllRanges",
+        "ms": 111.7
+      },
+      {
+        "label": "addRange",
+        "ms": 109.7
+      },
+      {
+        "label": "src/yjs/retained-document.ts:457",
+        "ms": 95.7
+      },
+      {
+        "label": "src/yjs/retained-document.ts:346",
+        "ms": 76.4
+      },
+      {
+        "label": "(garbage collector)",
+        "ms": 63.6
+      },
+      {
+        "label": "getAttribute",
+        "ms": 59.5
+      },
+      {
+        "label": "src/yjs/retained-text.ts:482",
+        "ms": 55.8
+      },
+      {
+        "label": "src/core/schema/node.ts:88",
+        "ms": 51.7
+      },
+      {
+        "label": "src/view/dom-renderer.ts:405",
+        "ms": 45.2
+      },
+      {
+        "label": "src/yjs/retained-document.ts:441",
+        "ms": 38.1
+      },
+      {
+        "label": "src/yjs/retained-document.ts:359",
+        "ms": 28.3
+      },
+      {
+        "label": "src/core/schema/attributes.ts:25",
+        "ms": 27.9
+      },
+      {
+        "label": "src/yjs/retained-document.ts:38",
+        "ms": 27.8
+      },
+      {
+        "label": "src/view/dom-renderer.ts:434",
+        "ms": 26.3
+      },
+      {
+        "label": "src/extensions/plugins/syntax-highlight.ts:197",
+        "ms": 26.3
+      },
+      {
+        "label": "src/yjs/retained-document.ts:448",
+        "ms": 24.1
+      },
+      {
+        "label": "src/view/dom-renderer.ts:369",
+        "ms": 23.6
+      },
+      {
+        "label": "querySelectorAll",
+        "ms": 20.9
+      },
+      {
+        "label": "src/core/transaction/path.ts:23",
+        "ms": 19.8
+      },
+      {
+        "label": "src/view/dom-renderer.ts:367",
+        "ms": 19.7
+      }
+    ],
+    "inclusive": [
+      {
+        "label": "(root)",
+        "ms": 2126.5
+      },
+      {
+        "label": "src/view/input.ts:390",
+        "ms": 1371.2
+      },
+      {
+        "label": "src/view/input.ts:890",
+        "ms": 1369.1
+      },
+      {
+        "label": "src/core/editor.ts:126",
+        "ms": 1368.1
+      },
+      {
+        "label": "src/core/editor.ts:90",
+        "ms": 1313.8
+      },
+      {
+        "label": "src/core/editor.ts:117",
+        "ms": 1231.1
+      },
+      {
+        "label": "src/extensions/collaboration-core.ts:324",
+        "ms": 977.2
+      },
+      {
+        "label": "src/extensions/collaboration-core.ts:579",
+        "ms": 977.2
+      },
+      {
+        "label": "src/yjs/retained-adapter.ts:367",
+        "ms": 959.2
+      },
+      {
+        "label": "src/extensions/collaboration-core.ts:587",
+        "ms": 959.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3397",
+        "ms": 929.9
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:546",
+        "ms": 929.9
+      },
+      {
+        "label": "src/yjs/retained-adapter.ts:374",
+        "ms": 924.5
+      },
+      {
+        "label": "src/yjs/retained-document.ts:597",
+        "ms": 891.2
+      },
+      {
+        "label": "src/yjs/retained-document.ts:620",
+        "ms": 834
+      },
+      {
+        "label": "src/yjs/retained-document.ts:786",
+        "ms": 809.5
+      },
+      {
+        "label": "src/yjs/retained-document.ts:491",
+        "ms": 801.1
+      },
+      {
+        "label": "src/yjs/retained-document.ts:800",
+        "ms": 801.1
+      },
+      {
+        "label": "src/yjs/retained-document.ts:500",
+        "ms": 633.8
+      },
+      {
+        "label": "src/view/view.ts:349",
+        "ms": 259
+      },
+      {
+        "label": "src/view/selection-handler.ts:392",
+        "ms": 254.6
+      },
+      {
+        "label": "src/view/view.ts:287",
+        "ms": 253.6
+      },
+      {
+        "label": "(program)",
+        "ms": 251.9
+      },
+      {
+        "label": "src/view/selection-handler.ts:765",
+        "ms": 223.5
+      },
+      {
+        "label": "src/view/dom-renderer.ts:405",
+        "ms": 212.7
+      }
+    ]
+  },
+  {
+    "file": "tiptap-5000-1-reader.cpuprofile",
+    "self": [
+      {
+        "label": "(idle)",
+        "ms": 260.3
+      },
+      {
+        "label": "(program)",
+        "ms": 153.9
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5624",
+        "ms": 45.5
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:7852",
+        "ms": 11.6
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:689",
+        "ms": 10.3
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:603",
+        "ms": 3.7
+      },
+      {
+        "label": "../../peer.js:20",
+        "ms": 3.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1410",
+        "ms": 3
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-model@1.25.13/node_modules/prosemirror-model/dist/index.js:1655",
+        "ms": 2.8
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1497",
+        "ms": 2.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3144",
+        "ms": 2.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1496",
+        "ms": 2.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-state@1.4.4/node_modules/prosemirror-state/dist/index.js:793",
+        "ms": 2.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:4375",
+        "ms": 2.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/lib0@0.2.120/node_modules/lib0/encoding.js:39",
+        "ms": 2
+      },
+      {
+        "label": "(garbage collector)",
+        "ms": 2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1880",
+        "ms": 1.5
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:2811",
+        "ms": 1.4
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-model@1.25.13/node_modules/prosemirror-model/dist/index.js:330",
+        "ms": 1.4
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1506",
+        "ms": 1.2
+      },
+      {
+        "label": "decode",
+        "ms": 1.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:10059",
+        "ms": 1.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:4699",
+        "ms": 1.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1931",
+        "ms": 1.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:2363",
+        "ms": 1.1
+      }
+    ],
+    "inclusive": [
+      {
+        "label": "(root)",
+        "ms": 545.1
+      },
+      {
+        "label": "(idle)",
+        "ms": 260.3
+      },
+      {
+        "label": "(program)",
+        "ms": 153.9
+      },
+      {
+        "label": "../../peer.js:20",
+        "ms": 127.8
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3397",
+        "ms": 124.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1651",
+        "ms": 124.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1745",
+        "ms": 124.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1761",
+        "ms": 124.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3245",
+        "ms": 115.9
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:603",
+        "ms": 110.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/lib0@0.2.120/node_modules/lib0/mutex.js:31",
+        "ms": 110.1
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:592",
+        "ms": 110.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/lib0@0.2.120/node_modules/lib0/function.js:17",
+        "ms": 110.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1986",
+        "ms": 110.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3291",
+        "ms": 110.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5995",
+        "ms": 75.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/@tiptap+core@2.27.3_@tiptap+pm@2.27.3/node_modules/@tiptap/core/dist/index.js:4732",
+        "ms": 74.6
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5624",
+        "ms": 69.9
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5621",
+        "ms": 69.9
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1395",
+        "ms": 16.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1497",
+        "ms": 16.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1490",
+        "ms": 16.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:2095",
+        "ms": 15.9
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:7852",
+        "ms": 11.6
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:689",
+        "ms": 11.3
+      }
+    ]
+  },
+  {
+    "file": "tiptap-5000-1-writer.cpuprofile",
+    "self": [
+      {
+        "label": "(program)",
+        "ms": 382.8
+      },
+      {
+        "label": "(idle)",
+        "ms": 60.4
+      },
+      {
+        "label": "src/lib.js:54",
+        "ms": 45.7
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:1145",
+        "ms": 9.6
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-model@1.25.13/node_modules/prosemirror-model/dist/index.js:1194",
+        "ms": 8.4
+      },
+      {
+        "label": "(garbage collector)",
+        "ms": 6.6
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1389",
+        "ms": 4.8
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:996",
+        "ms": 3.9
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1880",
+        "ms": 3.9
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:286",
+        "ms": 3.3
+      },
+      {
+        "label": "../../peer.js:58",
+        "ms": 3.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:4752",
+        "ms": 3.2
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:935",
+        "ms": 2.9
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:1350",
+        "ms": 2.6
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:980",
+        "ms": 2.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:12",
+        "ms": 2.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:10026",
+        "ms": 2.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-state@1.4.4/node_modules/prosemirror-state/dist/index.js:793",
+        "ms": 2.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3245",
+        "ms": 2.1
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:9839",
+        "ms": 2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:2095",
+        "ms": 2
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:7852",
+        "ms": 1.4
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:976",
+        "ms": 1.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:1410",
+        "ms": 1.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-model@1.25.13/node_modules/prosemirror-model/dist/index.js:285",
+        "ms": 1.2
+      }
+    ],
+    "inclusive": [
+      {
+        "label": "(root)",
+        "ms": 595.3
+      },
+      {
+        "label": "(program)",
+        "ms": 382.8
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:4752",
+        "ms": 137.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:4871",
+        "ms": 135.9
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5564",
+        "ms": 123.5
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5182",
+        "ms": 122.5
+      },
+      {
+        "label": "../../node_modules/.pnpm/@tiptap+core@2.27.3_@tiptap+pm@2.27.3/node_modules/@tiptap/core/dist/index.js:4732",
+        "ms": 109.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5995",
+        "ms": 109.7
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5624",
+        "ms": 79.4
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5621",
+        "ms": 79.4
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:3397",
+        "ms": 63.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs:546",
+        "ms": 63.3
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:226",
+        "ms": 63.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/lib0@0.2.120/node_modules/lib0/mutex.js:31",
+        "ms": 63.3
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:198",
+        "ms": 63.3
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-view@1.42.9/node_modules/prosemirror-view/dist/index.js:5730",
+        "ms": 63.3
+      },
+      {
+        "label": "(idle)",
+        "ms": 60.4
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:286",
+        "ms": 58.3
+      },
+      {
+        "label": "src/lib.js:54",
+        "ms": 53
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:649",
+        "ms": 37.6
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:648",
+        "ms": 37.6
+      },
+      {
+        "label": "src/plugins/sync-plugin.js:227",
+        "ms": 37.6
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-state@1.4.4/node_modules/prosemirror-state/dist/index.js:793",
+        "ms": 30.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-state@1.4.4/node_modules/prosemirror-state/dist/index.js:771",
+        "ms": 30.2
+      },
+      {
+        "label": "../../node_modules/.pnpm/prosemirror-state@1.4.4/node_modules/prosemirror-state/dist/index.js:830",
+        "ms": 27.1
+      }
+    ]
+  }
+]

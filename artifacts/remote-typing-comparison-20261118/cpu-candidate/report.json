@@ -1,0 +1,25 @@
+{
+  "variant": "remote",
+  "date": "2026-11-18T13:48:15.202Z",
+  "browser": "151.0.7922.34",
+  "sizes": [
+    5000
+  ],
+  "results": [
+    {
+      "engine": "fountain",
+      "size": 5000,
+      "index": 0,
+      "burst": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
+      "converged": true
+    },
+    {
+      "engine": "tiptap",
+      "size": 5000,
+      "index": 1,
+      "burst": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
+      "converged": true
+    }
+  ],
+  "errors": []
+}

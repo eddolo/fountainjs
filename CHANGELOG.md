@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reuse verified collaboration lookup indexes after eligible remote text edits.
+
 - Avoid rewriting unchanged DOM cursor paths during typing. Moved blocks and stale path prefixes are still repaired.
 
 ## 0.5.0-beta.1 — 2026-11-17
