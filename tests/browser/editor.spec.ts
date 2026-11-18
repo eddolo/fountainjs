@@ -6727,7 +6727,7 @@ test('records native DOCX viewer disagreements without certifying math fidelity'
   await docxMathJourney(page, info);
 });
 
-test('checks actual DOCX retention beside an independent viewer without hiding its header omission', async ({ page }, info) => {
+test('checks actual DOCX retention and visible table headings beside an independent viewer', async ({ page }, info) => {
   await page.goto('/browser-tests.html');
   const summary = await page.evaluate(() => (globalThis as any).fountainBrowserTest.docxVisual.render());
   expect(summary).toMatchObject({ fidelity: 'bounded', fountainImages: 1, docxImages: 1, docxPages: 1 });
@@ -6773,12 +6773,11 @@ test('checks actual DOCX retention beside an independent viewer without hiding i
   const imageParagraph = xml.match(/<w:p(?:\s[^>]*)?>[\s\S]*?<\/w:p>/g)!.find(paragraph => paragraph.includes('<w:drawing>'))!;
   expect(imageParagraph).toContain('<w:spacing w:before="120" w:after="80"/>');
   expect(xml).toContain('Feature'); expect(xml).toContain('Result');
-  expect(xml.match(/urn:fountainjs:docx:table-header:col:v1/g)).toHaveLength(2);
+  expect(xml.match(/fh:scope="col"/g)).toHaveLength(2);
   expect(xml.match(/<w:shd w:val="clear" w:color="auto" w:fill="EDE9FE"\/>/g)).toHaveLength(2);
   expect(xml).toContain('<w:pStyle w:val="Caption"/>');
-  expect(summary.viewerIssues).toEqual([{ code: 'viewer-omits-table-cell-text',
-    sourceCellCount: 4, previewCellCount: 4, missing: ['Feature', 'Result'] }]);
-  expect(summary.viewerCells).toEqual(['', '', 'Embedded media', 'Visible']);
+  expect(summary.viewerIssues).toEqual([]);
+  expect(summary.viewerCells).toEqual(['Feature', 'Result', 'Embedded media', 'Visible']);
   for (const text of [
     'Visual export parity',
     'The same structured document is rendered on both sides.',
@@ -6792,9 +6791,9 @@ test('checks actual DOCX retention beside an independent viewer without hiding i
   const comparison = page.locator('#browser-docx-visual-comparison');
   for (const text of ['Feature', 'Result']) {
     expect(summary.fountainText).toContain(text);
-    expect(summary.docxText).not.toContain(text);
+    expect(summary.docxText).toContain(text);
   }
-  await expect(comparison.locator('[data-viewer-issues]')).toContainText('omitted table-cell content: Feature; Result');
+  await expect(comparison.locator('[data-viewer-issues]')).toContainText('No checked table-cell omission detected');
   await expect(comparison.locator('img')).toHaveCount(2);
   await expect(comparison.locator('[data-visual-fountain]').getByRole('img', { name: 'Purple FountainJS export card' })).toBeVisible();
   const imageWidths = await comparison.locator('img').evaluateAll((images) => images.map((image) => Math.round(image.getBoundingClientRect().width)));
@@ -6809,7 +6808,7 @@ test('checks actual DOCX retention beside an independent viewer without hiding i
   expect(pageGeometry.preview.left).toBeGreaterThanOrEqual(pageGeometry.host.left);
   expect(pageGeometry.preview.right).toBeLessThanOrEqual(pageGeometry.host.right);
   await comparison.scrollIntoViewIfNeeded();
-  await comparison.screenshot({ path: info.outputPath('actual-docx-and-preview-disagreement.png') });
+  await comparison.screenshot({ path: info.outputPath('actual-docx-and-editor.png') });
   await info.attach('untouched-export.docx', { body: Buffer.from(summary.bytes),
     contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
 

@@ -13,11 +13,15 @@ export function expandedXMLName(element: XMLElement, name = element.name, attrib
 
 /** Physical Word attributes are qualified; default namespaces do not apply. */
 export function qualifiedWordAttribute(element: XMLElement, local: string): string | undefined {
+  return qualifiedAttribute(element, local, 'http://schemas.openxmlformats.org/wordprocessingml/2006/main');
+}
+
+export function qualifiedAttribute(element: XMLElement, local: string, namespace: string): string | undefined {
   const matches = Object.entries(element.attrs).filter(([name]) => {
     const colon = name.indexOf(':');
     return colon > 0 && name.slice(colon + 1) === local && !name.startsWith('xmlns:')
-      && expandedXMLName(element, name, true) === `http://schemas.openxmlformats.org/wordprocessingml/2006/main|${local}`;
+      && expandedXMLName(element, name, true) === `${namespace}|${local}`;
   });
-  if (matches.length > 1) throw new Error(`Ambiguous Word attribute ${local}.`);
+  if (matches.length > 1) throw new Error(`Ambiguous qualified attribute ${local}.`);
   return matches[0]?.[1];
 }

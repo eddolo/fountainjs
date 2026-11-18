@@ -1,7 +1,7 @@
 import { readWordListLayout, WORD_LIST_MARKER_FORMATS } from './list-layout';
 import { isListLayout, listMarkerAffixes, type ListLayout } from '../core/list-layout';
 import { readWordNumbering as readNumbering, readWordNumberingReference, type WordNumberingLevel as NumberingLevel } from './numbering';
-import { expandedXMLName as expandedName, qualifiedWordAttribute as wordPageAttribute } from './xml-names';
+import { expandedXMLName as expandedName, qualifiedAttribute, qualifiedWordAttribute as wordPageAttribute } from './xml-names';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 
 import { Node as FountainNode, type Mark, type Schema } from '../core/schema';
@@ -990,6 +990,8 @@ function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: D
 
 const DEFINITION_TAG = 'urn:fountainjs:docx:definition:';
 const TABLE_HEADER_TAG = 'urn:fountainjs:docx:table-header:';
+const TABLE_HEADER_NS = TABLE_HEADER_TAG + 'v2';
+const CELL_SCOPES = ['col', 'row', 'colgroup', 'rowgroup'];
 type DefinitionRole = 'list' | 'term' | 'description';
 
 /** Only our versioned, behavior-free structural controls carry glossary roles.
@@ -1384,17 +1386,21 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
         column += colspan;
         continue;
       }
-      // Native repetition says nothing about semantic HTML cell roles. Only a
-      // strict, behavior-free Fountain control carries an independent scope.
+      // Older Fountain files put the complete cell inside a tagged content control.
       const visible = elements(cell).filter(item => expandedName(item) !== `${WORD_NS}|tcPr`);
       const control = visible.length === 1 ? structuralControl(visible[0]!) : undefined;
-      const scope = control && ['col', 'row', 'colgroup', 'rowgroup'].find(value => control.tag === `${TABLE_HEADER_TAG}${value}:v1`);
+      const legacyScope = control && CELL_SCOPES.find(value => control.tag === `${TABLE_HEADER_TAG}${value}:v1`);
+      const declaredScope = qualifiedAttribute(cell, 'scope', TABLE_HEADER_NS);
+      const scope = declaredScope === undefined ? legacyScope : CELL_SCOPES.find(value => value === declaredScope
+        && (!legacyScope || value === legacyScope));
+      if (declaredScope !== undefined && !scope) warn('invalid-table-header-scope',
+        'Invalid or conflicting header scope. The visible content is retained in an ordinary cell.');
       const cellPath = [...path, rowIndex, cellIndex];
       const regionText = names.map(name => readWordTableText(inherited?.regionalText.get(name), (code, message) => issues.push({ code, severity: 'warning', message, path: cellPath })));
       const tableText = { runs: [...baseText.runs, ...regionText.flatMap(text => text.runs)], paragraphs: [...baseText.paragraphs, ...regionText.flatMap(text => text.paragraphs)] };
       // Replace, never inherit, the containing table context: nested tables own
       // their own table styles, and body/footnote stories keep their own context.
-      const paragraphs = parseBlocks(scope ? control!.content : cell, schema, { ...media, tableText, definitionIndent: 0 }, numbering, issues, cellPath);
+      const paragraphs = parseBlocks(legacyScope ? control!.content : cell, schema, { ...media, tableText, definitionIndent: 0 }, numbering, issues, cellPath);
       const content = paragraphs.length ? paragraphs : [schema.node('paragraph')];
       const colwidth = readCellWidths(properties, grid, column, colspan, issues, [...path, rowIndex, cellIndex]);
       const cellType = scope && schema.nodes.table_header ? schema.nodes.table_header : schema.nodes.table_cell;
@@ -2430,13 +2436,14 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
         rowspan > 1 ? '<w:vMerge w:val="restart"/>' : '',
         paintedAppearance,
       ].join('');
-      let content = cell.content.map((block, blockIndex) => blockXML(block, context, [...path, rowIndex, sourceIndex - 1, blockIndex])).join('') || '<w:p/>';
+      const content = cell.content.map((block, blockIndex) => blockXML(block, context, [...path, rowIndex, sourceIndex - 1, blockIndex])).join('') || '<w:p/>';
+      let headerRole = '';
       if (cell.type.name === 'table_header') {
-        content = `<w:sdt><w:sdtPr><w:tag w:val="${TABLE_HEADER_TAG}${xmlEscape(cell.attrs.scope)}:v1"/><w:id w:val="${context.nextControlId++}"/></w:sdtPr><w:sdtContent>${content}</w:sdtContent></w:sdt>`;
+        headerRole = ` xmlns:fh="${TABLE_HEADER_NS}" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="fh" mc:PreserveAttributes="fh:scope" fh:scope="${xmlEscape(cell.attrs.scope)}"`;
         context.issues.push({ code: 'table-header-role-extension', severity: 'info',
-          message: 'Semantic cell scope uses a versioned behavior-free Fountain content control, separate from native row repetition. Retention after third-party saves is not certified.', path: [...path, rowIndex, sourceIndex - 1] });
+          message: 'Semantic header scope is stored on the Word cell. Third-party editors may discard the scope when saving.', path: [...path, rowIndex, sourceIndex - 1] });
       }
-      cells.push(`<w:tc><w:tcPr>${properties}</w:tcPr>${content}</w:tc>`);
+      cells.push(`<w:tc${headerRole}><w:tcPr>${properties}</w:tcPr>${content}</w:tc>`);
       for (let offset = 1; offset < rowspan; offset += 1) {
         if (rowIndex + offset >= node.content.length) {
           context.issues.push({ code: 'table-rowspan-clipped', severity: 'warning', message: 'A table rowspan extending beyond the final row was clipped.', path: [...path, rowIndex, sourceIndex - 1] });

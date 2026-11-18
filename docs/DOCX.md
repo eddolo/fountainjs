@@ -498,15 +498,16 @@ The source model is not mutated. HTML retains explicit intent using
 while HTML-table projection retains it. The contextual table menu exposes
 **Repeat row on pages**, separately from Make/unmake header row.
 
-Fountain `table_header` scopes (`col`, `row`, `colgroup`, `rowgroup`) use a separate
-strict, versioned, behavior-free Word content control around the cell's actual
-visible blocks: `urn:fountainjs:docx:table-header:<scope>:v1`. No hidden JSON,
-binding or locking behavior supplies content. Recognized controls restore the
-role; malformed/foreign controls keep readable content and explicit warnings.
-Export reports `table-header-role-extension`. Native Word editing/saving and
-retention of these role controls through third-party applications remain
-uncertified. This bridge does not resolve inherited/conditional table styles,
-native page layout or arbitrary multi-page behavior. The native repeat role is
+Fountain stores the semantic header scope (`col`, `row`, `colgroup` or
+`rowgroup`) in a namespaced attribute on the Word cell. Its paragraphs,
+links and other content remain native Word blocks. The independent DOCX
+preview displays the column headings alongside the data rows. The exporter
+marks the role attribute as ignorable and requests preservation when a
+consumer saves the file. Fountain also reads its older tagged content controls.
+Earlier Fountain readers can read the visible content of new exports as
+ordinary cells. Export reports `table-header-role-extension`. Retaining the
+role after editing and saving in desktop Word still needs verification.
+The native repeat role is
 documented by
 [Microsoft's TableHeader reference](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.tableheader?view=openxml-3.0.1).
 

@@ -26,6 +26,7 @@ try {
     image,
     schema.node('table', {}, [schema.node('table_row', {}, [
       schema.node('table_cell', { colspan: 1, rowspan: 1, colwidth: null, background: '' }, [schema.node('paragraph', {}, [schema.text('Portable')])]),
+      schema.node('table_header', { scope: 'row' }, [schema.node('paragraph', {}, [schema.text('Quantity')])]),
     ])]),
   ]);
   const generated = exportDOCX(source);
@@ -50,6 +51,10 @@ assert fountain.paragraphs[0].text == "Fountain interoperability"
 assert len(fountain.inline_shapes) == 1
 assert any(p.text == "Portable image caption" for p in fountain.paragraphs)
 assert fountain.tables[0].cell(0, 0).text == "Portable"
+header = fountain.tables[0].cell(0, 1)
+assert header.text == "Quantity"
+header.text = "Revised quantity"
+fountain.save(fountain_path)
 
 # Inspect the archive through an independent OOXML consumer, then save a visible
 # Word-text edit. This is structural interoperability, not native layout proof.
@@ -91,6 +96,11 @@ created.save(python_path)
   }
   if (!result || result.error) throw result?.error ?? new Error('Python was not found.');
   if (result.status !== 0) throw new Error(`python-docx interoperability failed:\n${result.stderr || result.stdout}`);
+  const editedTable = importDOCX(await readFile(fountainPath), schema).document.content.find(node => node.type.name === 'table');
+  const editedHeader = editedTable?.child(0).child(1);
+  if (editedHeader?.textContent !== 'Revised quantity' || editedHeader.type.name !== 'table_header' || editedHeader.attrs.scope !== 'row') {
+    throw new Error('Independent cell edit lost the header role or its revised text.');
+  }
   const reopenedGlossary = importDOCX(await readFile(glossaryPath), schema);
   if (reopenedGlossary.report.issues.length || reopenedGlossary.document.child(0).type.name !== 'definition_list'
     || reopenedGlossary.document.child(0).child(1).type.name !== 'definition_description'
@@ -110,7 +120,7 @@ created.save(python_path)
   if (!imported.document.textContent.includes('Strong from Python')) throw new Error('Independent DOCX text did not import.');
   const importedTable = imported.document.content.find(node => node.type.name === 'table');
   if (importedTable?.child(0).child(0).textContent !== 'Producer') throw new Error('Independent DOCX cell-control content did not import.');
-  console.log(`python-docx opened Fountain media and edited a typed glossary; Fountain retained glossary roles and independent body/cell controls with two explicit behavior-loss warnings (${imported.report.issues.length - controlIssues.length} additional style/interchange diagnostics retained).`);
+  console.log(`python-docx opened Fountain media and edited a table header and typed glossary; Fountain retained glossary roles and independent body/cell controls with two explicit behavior-loss warnings (${imported.report.issues.length - controlIssues.length} additional style/interchange diagnostics retained).`);
 } finally {
   await rm(folder, { recursive: true, force: true });
 }

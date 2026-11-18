@@ -41,11 +41,32 @@ describe('Word row repetition is independent of semantic cell roles', () => {
     ])])]);
     const output = exportDOCX(original);
     expect(xml(output.bytes)).toContain('<w:tblHeader w:val="false"/>');
-    expect(xml(output.bytes)).toContain(`urn:fountainjs:docx:table-header:${scope}:v1`);
+    expect(xml(output.bytes)).toContain(`fh:scope="${scope}"`);
+    expect(xml(output.bytes)).not.toContain('<w:sdt>');
     expect(output.report.issues).toContainEqual(expect.objectContaining({ code: 'table-header-role-extension', path: [0, 0, 0] }));
     const reopened = importDOCX(output.bytes, schema);
     expect(reopened.document.toJSON()).toEqual(withDOCXExportDefaults(original.toJSON()));
     expect(reopened.report.issues.some(issue => issue.code === 'content-control-unwrapped')).toBe(false);
+  });
+
+  it('opens a header written by the earlier tagged-control exporter', () => {
+    const input = xml(source([''])).replace('<w:p>', '<w:sdt><w:sdtPr><w:tag w:val="urn:fountainjs:docx:table-header:row:v1"/></w:sdtPr><w:sdtContent><w:p>')
+      .replace('</w:p>', '</w:p></w:sdtContent></w:sdt>');
+    const result = importDOCX(zipSync({ 'word/document.xml': strToU8(input) }), schema);
+    const cell = result.document.child(0).child(0).child(0);
+    expect([cell.type.name, cell.attrs.scope, cell.textContent]).toEqual(['table_header', 'row', 'Row 0']);
+  });
+
+  it.each([
+    ['urn:fountainjs:docx:table-header:v2', 'rowgroup', 'table_header'],
+    ['urn:other', 'rowgroup', 'table_cell'],
+    ['urn:fountainjs:docx:table-header:v2', 'unknown', 'table_cell'],
+  ])('reads cell scope by namespace and value: %s / %s', (ns, scope, role) => {
+    const input = xml(source([''])).replace('<w:tc>', `<w:tc xmlns:example="${ns}" example:scope="${scope}">`);
+    const result = importDOCX(zipSync({ 'word/document.xml': strToU8(input) }), schema);
+    const cell = result.document.child(0).child(0).child(0);
+    expect([cell.type.name, cell.textContent]).toEqual([role, 'Row 0']);
+    expect(result.report.issues.some(issue => issue.code === 'invalid-table-header-scope')).toBe(scope === 'unknown');
   });
 
   it.each([

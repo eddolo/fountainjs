@@ -1387,9 +1387,7 @@ const renderDOCXVisualComparison = async (numbering = false) => {
   docxVisualView = new EditorView(fountainMount, docxVisualEditor, { ariaLabel: 'Fountain export source' });
   const exported = exportDOCX(fixture, { page: 'letter', title: numbering ? 'Release procedure' : 'Visual export parity' });
   await renderIndependentDOCX(exported.bytes, docxMount, styleMount, { inWrapper: true, breakPages: true, useBase64URL: true });
-  // Keep the actual exported archive untouched. This third-party preview can
-  // omit cell content carried by a semantic content control; expose that
-  // disagreement rather than treating its incomplete text as export fidelity.
+  // Compare the untouched archive with the editor so viewer omissions remain visible.
   const sourceCells = [...fountainMount.querySelectorAll('td,th')].map(cell => cell.textContent?.trim() ?? '');
   const previewCells = [...docxMount.querySelectorAll('td,th')].map(cell => cell.textContent?.trim() ?? '');
   const missingCells = sourceCells.filter(text => text && !previewCells.includes(text));
