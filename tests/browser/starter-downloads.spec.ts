@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
 import { strFromU8, unzipSync } from 'fflate';
+import publishedStarter from '../../examples/starters/published-version.json';
 
 test('downloads complete standalone projects from the developer guide', async ({ page }, info) => {
   await page.goto('workflows.html');
@@ -29,7 +30,7 @@ test('downloads complete standalone projects from the developer guide', async ({
       expect(strFromU8(files[`${name}/${file}`])).toBe(await readFile(`examples/starters/${kind}/${file}`, 'utf8'));
     }
     const manifest = JSON.parse(strFromU8(files[`${name}/package.json`]));
-    expect(manifest.dependencies['fountainjs-editor']).toBe('0.5.0-beta.1');
+    expect(manifest.dependencies['fountainjs-editor']).toBe(publishedStarter.version);
   }
   await page.locator('#starters').screenshot({ path: info.outputPath('starter-downloads.png') });
   for (const { kind, demo, host } of [
