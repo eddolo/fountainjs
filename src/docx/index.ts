@@ -1,3 +1,5 @@
+import { xmlEscape, REL_NS, OFFICE_REL_NS, OFFICE_CONTENT_TYPE, relationshipXML, relationshipsXML } from './opc';
+import { wordChart, CHART_TYPE, WORKBOOK_TYPE } from './chart';
 import { readWordListLayout, WORD_LIST_MARKER_FORMATS } from './list-layout';
 import { isListLayout, listMarkerAffixes, type ListLayout } from '../core/list-layout';
 import { readWordNumbering as readNumbering, readWordNumberingReference, type WordNumberingLevel as NumberingLevel } from './numbering';
@@ -189,11 +191,6 @@ function localName(name: string): string {
   return name.includes(':') ? name.slice(name.lastIndexOf(':') + 1) : name;
 }
 
-function xmlEscape(value: unknown): string {
-  return String(value ?? '').replace(/[&<>"']/g, (character) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
-  })[character]!);
-}
 
 function elements(element: XMLElement, name?: string): XMLElement[] {
   return element.children.filter((child): child is XMLElement => typeof child !== 'string' && (!name || localName(child.name) === name));
@@ -428,6 +425,10 @@ function embeddedImageNode(
   path: readonly number[],
   hyperlink?: string,
 ): FountainNode | undefined {
+  if (descendants(element, 'chart').some(chart => expandedName(chart) === 'http://schemas.openxmlformats.org/drawingml/2006/chart|chart')) {
+    issues.push({ code: 'native-chart-not-imported', severity: 'warning', message: 'The native Word chart and its linked data were not imported. Any accompanying Word table remains editable.', path });
+    return undefined;
+  }
   const blip = descendants(element, 'blip')[0];
   const imageData = descendants(element, 'imagedata')[0];
   const relationshipId = attr(blip, 'embed') ?? attr(blip, 'link') ?? attr(imageData, 'id');
@@ -1476,8 +1477,6 @@ function requiredLimits(options: DOCXLimits): Required<DOCXLimits> {
 }
 
 const WORD_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
-const REL_NS = 'http://schemas.openxmlformats.org/package/2006/relationships';
-const OFFICE_REL_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
 function wordNoteId(value: string | undefined, allowNegative = false): string | undefined {
   if (!value || !/^-?\d{1,10}$/.test(value) || !allowNegative && value.startsWith('-')) return undefined;
   const id = Number(value);
@@ -1974,6 +1973,7 @@ interface ExportedMedia {
 }
 
 interface ExportContext {
+  readonly charts: Array<{ story: string; xml: string; workbook: Uint8Array }>;
   readonly paragraphBridge: ReturnType<typeof createParagraphBridge>;
   sourcePart: string;
   readonly footnotes: ReadonlyMap<string, { id: string; node: FountainNode; path: readonly number[] }>;
@@ -2505,10 +2505,19 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
   }
   switch (node.type.name) {
     case 'footnote_definition': case 'page_header': case 'page_footer': return '';
-    case 'bar_chart':
-      context.issues.push({ code: 'chart-exported-as-table', severity: 'warning', path,
-        message: 'The chart title and data are exported as editable Word content. The plot is omitted.' });
-      return node.content.map((child, index) => blockXML(child, context, [...path, index], level, quote, list, definition)).join('');
+    case 'bar_chart': {
+      const table = node.content.map((child, index) => blockXML(child, context, [...path, index], level, quote, list, definition)).join('');
+      const chart = wordChart(node, context.charts.length + 1, context.nextDrawingId);
+      if (typeof chart === 'string') {
+        context.issues.push({ code: 'chart-exported-as-table', severity: 'warning', path, message: chart + ' The editable table is retained.' });
+        return table;
+      }
+      context.nextDrawingId++;
+      context.charts.push({ story: context.sourcePart, xml: chart.xml, workbook: chart.workbook });
+      context.issues.push({ code: 'chart-workbook-projection', severity: 'warning', path,
+        message: 'Word stores the chart data in an embedded Excel workbook. The accompanying table preserves the source cells. Edits to one do not update the other.' });
+      return table + chart.drawing;
+    }
     case 'page_break':
       if (path.length > 1) context.issues.push({ code: 'nested-page-break-projection', severity: 'warning', message: 'The nested page break is written natively, but enclosing list/quote identity and table or story layout are not certified on reimport.', path });
       return `<w:p>${paragraphProperties(node, list, quote, definition)}<w:r><w:br w:type="page"/></w:r></w:p>`;
@@ -2609,7 +2618,6 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
 }
 
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
-const OFFICE_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.';
 function wordPartType(name: string, kind: string): string {
   return `<Override PartName="/word/${name}" ContentType="${OFFICE_CONTENT_TYPE}wordprocessingml.${kind}+xml"/>`;
 }
@@ -2620,13 +2628,7 @@ function contentTypes(media: readonly ExportedMedia[], overrides: readonly strin
   return `${XML_DECLARATION}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${defaults}${wordPartType('document.xml', 'document.main')}${wordPartType('styles.xml', 'styles')}${wordPartType('numbering.xml', 'numbering')}<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="${OFFICE_CONTENT_TYPE}extended-properties+xml"/>${overrides.join('')}</Types>`;
 }
 
-function relationshipXML(id: string, type: string, target: string, external = false): string {
-  return `<Relationship Id="${id}" Type="${type}" Target="${xmlEscape(target)}"${external ? ' TargetMode="External"' : ''}/>`;
-}
 
-function relationshipsXML(body: string): string {
-  return `<Relationships xmlns="${REL_NS}">${body}</Relationships>`;
-}
 
 const ROOT_RELS = XML_DECLARATION + relationshipsXML(
   relationshipXML('rId1', `${OFFICE_REL_NS}/officeDocument`, 'word/document.xml')
@@ -2692,7 +2694,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     issues.push({ code: 'footnote-definition-position-normalized', severity: 'info', message: 'DOCX stores notes separately from body blocks; reimport places definitions after the body rather than retaining their editor block positions.' });
   }
   const context: ExportContext = {
-    paragraphBridge: createParagraphBridge(), sourcePart: 'word/document.xml',
+    charts: [], paragraphBridge: createParagraphBridge(), sourcePart: 'word/document.xml',
     footnotes, hyperlinks: new Map(), mediaBySource: new Map(), media: [], issues, options, numbering: [], numberingDefinitions: [],
     maxMediaBytes: exportLimit(options.maxMediaBytes, DEFAULT_LIMITS.maxMediaBytes, 'maxMediaBytes'),
     maxMediaFiles: exportLimit(options.maxMediaFiles, DEFAULT_LIMITS.maxMediaFiles, 'maxMediaFiles'),
@@ -2735,10 +2737,12 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
   const documentXML = `${XML_DECLARATION}<w:document ${storyNamespaces}><w:body>${body}${section}</w:body></w:document>`;
   const resourceRels = [...context.hyperlinks].map(([id, target]) => relationshipXML(id, `${OFFICE_REL_NS}/hyperlink`, target, true)).join('')
     + context.media.map(item => relationshipXML(item.relationshipId, `${OFFICE_REL_NS}/image`, `media/${item.fileName}`)).join('');
+  const chartRels = (story: string) => context.charts.map((chart, i) => chart.story === story
+    ? relationshipXML('rIdChart' + (i + 1), OFFICE_REL_NS + '/chart', `charts/chart${i + 1}.xml`) : '').join('');
   const documentRels = [
     relationshipXML('rIdStyles', `${OFFICE_REL_NS}/styles`, 'styles.xml'),
     relationshipXML('rIdNumbering', `${OFFICE_REL_NS}/numbering`, 'numbering.xml'),
-    resourceRels,
+    resourceRels + chartRels('word/document.xml'),
   ];
   const overrides: string[] = [];
   const styles = ['<w:style w:type="paragraph" w:styleId="FountainDefinitionTerm"><w:name w:val="Fountain Definition Term"/><w:basedOn w:val="Normal"/><w:pPr><w:keepNext/></w:pPr><w:rPr><w:b/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="FountainExplicitQuote"><w:name w:val="Fountain Explicit Quote"/><w:basedOn w:val="Normal"/></w:style>'];
@@ -2746,6 +2750,15 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
   const core = `${XML_DECLARATION}<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xmlEscape(options.title)}</dc:title><dc:creator>${xmlEscape(options.creator ?? 'FountainJS')}</dc:creator><dc:description>${xmlEscape(options.description)}</dc:description><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`;
   const app = `${XML_DECLARATION}<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>FountainJS</Application></Properties>`;
   const parts: Record<string, Uint8Array> = {};
+  context.charts.forEach((chart, i) => {
+    const file = 'chart' + (i + 1);
+    const workbook = `embeddings/${file}.xlsx`;
+    parts[`word/charts/${file}.xml`] = strToU8(chart.xml);
+    parts[`word/charts/_rels/${file}.xml.rels`] = strToU8(relationshipsXML(relationshipXML('rIdData', OFFICE_REL_NS + '/package', '../' + workbook)));
+    parts['word/' + workbook] = chart.workbook;
+    overrides.push(`<Override PartName="/word/charts/${file}.xml" ContentType="${CHART_TYPE}"/>`,
+      `<Override PartName="/word/${workbook}" ContentType="${WORKBOOK_TYPE}"/>`);
+  });
   if (context.mathSources.length) {
     // Bookmarks bind each source to one projection, independent of model path.
     // Import must validate both the binding and complete equation before reuse.
@@ -2764,13 +2777,13 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     overrides.push(wordPartType('footnotes.xml', 'footnotes'));
     documentRels.push(relationshipXML('rIdFootnotes', `${OFFICE_REL_NS}/footnotes`, 'footnotes.xml'));
     parts['word/footnotes.xml'] = strToU8(`<w:footnotes ${storyNamespaces}><w:footnote w:type="separator" w:id="-1"><w:p><w:r><w:separator/></w:r></w:p></w:footnote><w:footnote w:type="continuationSeparator" w:id="0"><w:p><w:r><w:continuationSeparator/></w:r></w:p></w:footnote>${noteXML}</w:footnotes>`);
-    parts['word/_rels/footnotes.xml.rels'] = strToU8(relationshipsXML(resourceRels));
+    parts['word/_rels/footnotes.xml.rels'] = strToU8(relationshipsXML(resourceRels + chartRels('word/footnotes.xml')));
     styles.push('<w:style w:type="character" w:styleId="FootnoteReference"><w:name w:val="footnote reference"/><w:rPr><w:vertAlign w:val="superscript"/></w:rPr></w:style>');
   }
   for (const template of templateParts) {
     const tag = template.kind === 'header' ? 'hdr' : 'ftr';
     parts[`word/${template.name}`] = strToU8(`<w:${tag} ${storyNamespaces}>${template.xml}</w:${tag}>`);
-    parts[`word/_rels/${template.name}.rels`] = strToU8(relationshipsXML(resourceRels));
+    parts[`word/_rels/${template.name}.rels`] = strToU8(relationshipsXML(resourceRels + chartRels('word/' + template.name)));
     overrides.push(wordPartType(template.name, template.kind));
     documentRels.push(relationshipXML(template.id, `${OFFICE_REL_NS}/${template.kind}`, template.name));
   }

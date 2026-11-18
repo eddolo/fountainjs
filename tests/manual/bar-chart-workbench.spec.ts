@@ -31,7 +31,7 @@ test('edits chart data in the public editor and exports the same data and plot',
   await expect(imported.locator('[data-fountain-chart-plot]')).toContainText('Tuesday · -16');
   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('docx');
   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
-  await expect(workspace.getByText(/The chart title and data are exported as editable Word content/).first()).toBeVisible();
+  await expect(workspace.getByText(/Word stores the chart data in an embedded Excel workbook/).first()).toBeVisible();
   const pending = page.waitForEvent('download');
   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
   const file = info.outputPath('from-editor.docx');
@@ -39,6 +39,10 @@ test('edits chart data in the public editor and exports the same data and plot',
   const xml = strFromU8(unzipSync(await readFile(file))['word/document.xml']);
   expect(xml).toContain('Change in weekly orders');
   expect(xml).toContain('Tuesday');
+  const parts = unzipSync(await readFile(file));
+  expect(strFromU8(parts['word/charts/chart1.xml'])).toContain('<c:barChart>');
+  const workbook = unzipSync(parts['word/embeddings/chart1.xlsx']);
+  expect(strFromU8(workbook['xl/worksheets/sheet1.xml'])).toContain('<c r="B3"><v>-16</v></c>');
   await input.setInputFiles({ name: 'reopened.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', buffer: await readFile(file) });
   const reopened = page.getByRole('region', { name: 'Conversion workspace: reopened.docx', exact: true })
     .getByRole('textbox', { name: 'Imported document editor' });

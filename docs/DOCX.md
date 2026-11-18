@@ -1,5 +1,16 @@
 # Word DOCX interchange
 
+## Editable charts
+
+In the development build, exporting a supported bar, line or pie chart writes a native
+Office chart with an embedded Excel worksheet. The accompanying Word table keeps the
+author's cell text and formatting. In Word, use the chart's **Edit Data** command to
+change the plotted values. The accompanying table is a separate copy and edits to it
+do not update the chart. Invalid chart data exports as a table with a conversion notice.
+
+On reimport, Fountain reads that table and reports the native chart separately.
+Changes made only in the embedded workbook are outside the current import support.
+
 ## Source-owned quote appearance
 
 Unreleased: `blockquote.appearance: "explicit"` preserves a semantic quotation

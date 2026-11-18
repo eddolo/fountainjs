@@ -1,9 +1,11 @@
 import { expect, it } from 'vitest';
+import { unzipSync, strFromU8 } from 'fflate';
 import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
 import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertBarChart, setChartType, tableChartAction, toggleTableChart } from '../src/charts';
+import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
 const kit = composeExtensions([CoreExtension, HistoryExtension, BarChartExtension]);
@@ -22,7 +24,7 @@ it('keeps chart edits in native cells and reopens the exported data without dupl
   expect(html).toContain('left:60%;width:40%');
   expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(edited.toJSON());
   const word = exportDOCX(edited);
-  expect(word.report.issues).toContainEqual(expect.objectContaining({ code: 'chart-exported-as-table', path: [chartIndex] }));
+  expect(word.report.issues).toContainEqual(expect.objectContaining({ code: 'chart-workbook-projection', path: [chartIndex] }));
   const reopened = importDOCX(word.bytes, editor.state.schema).document;
   expect(reopened.child(chartIndex).textContent).toBe('Net change');
   const wordTable = reopened.child(chartIndex + 1);
@@ -200,5 +202,70 @@ it('explains unsuitable pie values and draws a single positive share as a whole 
   expect(svg).toThrow('nonnegative');
   editor.dispatch(editor.createTransaction().replaceText(path, 0, 2, '2'));
   expect(svg()).toContain('r="96" fill="#55409c"');
+  editor.destroy();
+});
+
+it.each(['bar', 'line', 'pie'] as const)('embeds a native %s chart with Excel data and XML-safe category text', kind => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Production & sales', [['=SUM(1,2)', 3], ['Low < High', 4]]);
+  setChartType(editor, kind);
+  const output = exportDOCX(editor.state.doc);
+  const parts = unzipSync(output.bytes);
+  const chart = strFromU8(parts['word/charts/chart1.xml']);
+  expect(chart).toContain('<c:' + kind + 'Chart>');
+  expect(chart).toContain('<c:f>Data!$B$2:$B$3</c:f>');
+  expect(chart).toContain('Low &lt; High');
+  if (kind === 'line') expect(chart).toContain('<c:smooth val="0"/></c:ser><c:smooth val="0"/>');
+  if (kind === 'bar') {
+    expect(chart).toContain('<c:catAx><c:axId val="1"/><c:scaling><c:orientation val="maxMin"/>');
+    expect(chart).toContain('<c:axPos val="l"/><c:tickLblPos val="low"/>');
+  }
+  expect(strFromU8(parts['word/charts/_rels/chart1.xml.rels'])).toContain('../embeddings/chart1.xlsx');
+  const sheet = strFromU8(unzipSync(parts['word/embeddings/chart1.xlsx'])['xl/worksheets/sheet1.xml']);
+  expect(sheet).toContain('>=SUM(1,2)</t>');
+  expect(sheet).not.toContain('<f>');
+  expect(sheet).toContain('<c r="B3"><v>4</v></c>');
+  const imported = importDOCX(output.bytes, editor.state.schema);
+  expect(imported.report.issues.some(issue => issue.code === 'native-chart-not-imported')).toBe(true);
+  editor.destroy();
+});
+
+it('links each chart to its own worksheet from the document, footnote or header that owns it', () => {
+  const kit = composeExtensions([CoreExtension, BarChartExtension, PagesExtension]);
+  const editor = createEditor({ schema: kit.schema });
+  const schema = editor.state.schema;
+  const charts = (['bar', 'line', 'pie'] as const).map((kind, i) => {
+    insertBarChart(editor, kind, [['Category ' + i, i + 1]]);
+    setChartType(editor, kind);
+    return selectedBarChart(editor)!;
+  });
+  const doc = schema.node('doc', {}, [
+    charts[0],
+    schema.node('paragraph', {}, [schema.node('footnote_reference', { id: '7' })]),
+    schema.node('footnote_definition', { id: '7' }, [charts[1]]),
+    schema.node('page_header', { variant: 'default' }, [charts[2]]),
+  ]);
+  const parts = unzipSync(exportDOCX(doc).bytes);
+  for (const [i, story] of ['document', 'footnotes', 'header1'].entries()) {
+    const number = i + 1;
+    const relationships = strFromU8(parts['word/_rels/' + story + '.xml.rels']);
+    expect(relationships.match(/Id="rIdChart\d+"/g)).toEqual(['Id="rIdChart' + number + '"']);
+    expect(relationships).toContain('Target="charts/chart' + number + '.xml"');
+    expect(strFromU8(parts['word/' + story + '.xml'])).toContain('r:id="rIdChart' + number + '"');
+    const workbook = 'chart' + number + '.xlsx';
+    expect(strFromU8(parts['word/charts/_rels/chart' + number + '.xml.rels'])).toContain('../embeddings/' + workbook);
+    const sheet = unzipSync(parts['word/embeddings/' + workbook]);
+    expect(strFromU8(sheet['xl/worksheets/sheet1.xml'])).toContain('Category ' + i);
+  }
+  editor.destroy();
+});
+
+it('retains the original table when the data cannot become an Excel numeric series', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Large', [['Peak', Number.MAX_VALUE]]);
+  const output = exportDOCX(editor.state.doc);
+  expect(output.report.issues.some(issue => issue.code === 'chart-exported-as-table')).toBe(true);
+  expect(unzipSync(output.bytes)['word/charts/chart1.xml']).toBeUndefined();
+  expect(importDOCX(output.bytes, editor.state.schema).document.textContent).toContain(String(Number.MAX_VALUE));
   editor.destroy();
 });
