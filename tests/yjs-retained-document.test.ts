@@ -1149,6 +1149,93 @@ it.each([false, true])('orders separate split families around unchanged siblings
   } finally { pair.destroy(); }
 });
 
+it('retains proven remote block paths while refreshing changed text anchors', () => {
+  const pair = peers(), { left, right } = pair;
+  const id = right.store.identity([1])!, heldPath = right.store.path(id);
+  const held = right.store.textAnchor([0, 0], 4, 1);
+  const remote = (transaction: Y.Transaction) => { if (!transaction.local) right.store.readAfterRemote(transaction); };
+  right.doc.on('afterTransaction', remote);
+  try {
+    for (const [from, to, text] of [[2, 2, '👩‍💻'], [2, 7, ''], [0, 1, 'S']] as const) {
+      const vector = Y.encodeStateVector(right.doc);
+      expect(left.editor.dispatch(left.editor.createTransaction().step(new ReplaceTextStep([0, 0], from, to, text)))).toBe(true);
+      left.apply();
+      Y.applyUpdate(right.doc, Y.encodeStateAsUpdate(left.doc, vector), 'transport');
+      const length = left.editor.state.doc.child(0).textContent.length;
+      expect(right.store.resolveTextAnchor(right.store.textAnchor([0, 0], length, 1))).toEqual({ path: [0, 0], offset: length });
+      expect(right.store.resolveTextAnchor(held)).toEqual({ path: [0, 0], offset: length - 1 });
+      expect(right.store.path(id)).toBe(heldPath);
+    }
+    expect(right.store.read().toJSON()).toEqual(left.editor.getJSON());
+  } finally { right.doc.off('afterTransaction', remote); pair.destroy(); }
+});
+
+it.each(['removed leaf', 'two lengths'] as const)('matches a full index rebuild after a remote text transaction with %s', kind => {
+  const pair = peers({ type: 'doc', content: [{ type: 'paragraph', content: [
+    { type: 'text', text: 'Alpha' }, { type: 'text', text: 'Beta', marks: [{ type: 'em' }] },
+  ] }] });
+  const { left, right } = pair;
+  const control = new RetainedDocumentStore(right.doc, 'candidate', right.editor.state.schema, factory('remote-control'));
+  let result: ModelNode | undefined;
+  const remote = (transaction: Y.Transaction) => { if (!transaction.local) result = right.store.readAfterRemote(transaction); };
+  right.doc.on('afterTransaction', remote);
+  try {
+    const field = left.store.nodes.project().root.content[0].content[0].id;
+    const runs = left.store.text.project(field).runs;
+    expect(runs.map(run => run.text)).toEqual(['Alpha', 'Beta']);
+    const vector = Y.encodeStateVector(right.doc);
+    left.doc.transact(() => {
+      if (kind === 'removed leaf') left.store.text.delete(field, 5, 9);
+      else {
+        left.store.text.insert(field, 5, 'X', runs[1].attributes);
+        left.store.text.insert(field, 0, 'X', runs[0].attributes);
+      }
+    });
+    Y.applyUpdate(right.doc, Y.encodeStateAsUpdate(left.doc, vector), 'transport');
+    const expected = control.read();
+    expect(result?.toJSON()).toEqual(expected.toJSON());
+    expect(expected.child(0).childCount).toBe(kind === 'removed leaf' ? 1 : 2);
+    if (kind === 'removed leaf') expect(() => right.store.textAnchor([0, 1], 0, 1)).toThrow();
+    for (let i = 0; i < expected.child(0).childCount; i++) {
+      const end = expected.child(0).child(i).nodeSize;
+      expect(right.store.resolveTextAnchor(right.store.textAnchor([0, i], end, -1))).toEqual({ path: [0, i], offset: end });
+    }
+  } finally { right.doc.off('afterTransaction', remote); control.destroy(); pair.destroy(); }
+});
+
+it('keeps remote binding publication coherent through a reentrant schema read', () => {
+  const writer = fixture(), doc = new Y.Doc(), kit = composeExtensions([CoreExtension]);
+  Y.applyUpdate(doc, Y.encodeStateAsUpdate(writer.doc));
+  let armed = false, reentries = 0, store: RetainedDocumentStore;
+  const schema = new Schema({ ...kit.schema, nodes: { ...kit.schema.nodes, text: { ...kit.schema.nodes.text,
+    validate: node => {
+      if (armed && node.text === 'AlXpha') { armed = false; reentries++; store.read(); }
+      return true;
+    },
+  } } });
+  store = new RetainedDocumentStore(doc, 'candidate', schema, factory('remote-reentry'));
+  store.read();
+  const held = store.textAnchor([0, 0], 4, 1), id = store.identity([1])!;
+  let result: ModelNode | undefined;
+  const remote = (transaction: Y.Transaction) => { if (!transaction.local) result = store.readAfterRemote(transaction); };
+  doc.on('afterTransaction', remote);
+  try {
+    armed = true;
+    for (const [offset, text] of [[2, 'X'], [3, 'Y']] as const) {
+      const vector = Y.encodeStateVector(doc);
+      expect(writer.editor.dispatch(writer.editor.createTransaction().insertText([0, 0], offset, text))).toBe(true);
+      writer.apply();
+      Y.applyUpdate(doc, Y.encodeStateAsUpdate(writer.doc, vector), 'transport');
+      const length = writer.editor.state.doc.child(0).textContent.length;
+      expect(result?.toJSON()).toEqual(writer.editor.getJSON());
+      expect(store.resolveTextAnchor(held)).toEqual({ path: [0, 0], offset: length - 1 });
+      expect(store.resolveTextAnchor(store.textAnchor([0, 0], length, 1))).toEqual({ path: [0, 0], offset: length });
+      expect(store.path(id)).toEqual([1]);
+    }
+    expect(reentries).toBe(1);
+  } finally { doc.off('afterTransaction', remote); store.destroy(); doc.destroy(); writer.destroy(); }
+});
+
 it.each(['text only', 'type observer', 'transaction observer', 'new style'] as const)('reads a remote text edit with %s', kind => {
   const pair = peers();
   const reader = kind === 'new style' ? pair.left : pair.right;

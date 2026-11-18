@@ -54,6 +54,7 @@ const sameOrdered = (left: unknown, right: unknown): boolean => {
   return true;
 };
 interface Binding { id: string; from: number; length: number; modelFrom: number; leaf: string }
+type TextIndexEdit = { path: readonly number[]; binding: Binding; after: Node } | 'remote';
 interface GroupState { id: string; parent: string; value: RetainedNodeProjection }
 interface Leaf { node: Node; path: number[]; at: number; leaf: string }
 interface Group { parent: string; leaves: Leaf[]; ids: string[]; field: string; pieces: Piece[]; empty: boolean; preserved?: boolean }
@@ -431,20 +432,21 @@ export class RetainedDocumentStore {
     const partitions = this.text.refreshRemotePartitions(transaction, previous.partitions);
     if (!partitions || !this.soleCleanup(transaction)) return this.read();
     const frame = { ...previous, partitions };
-    const result = this.normalizeFrame(frame, true);
+    const result = this.normalizeFrame(frame, true, 'remote');
     if (!this.soleCleanup(transaction)) return this.read();
     this.frame = frame;
     this.frameCurrent = true;
     return result;
   }
 
-  private reuseNativeIndexes(result: Fragment, edit: { path: readonly number[]; binding: Binding; after: Node },
+  private reuseTextIndexes(result: Fragment, edit: TextIndexEdit,
     previous: { model?: Node; nodes: Map<string, string>; identities: Map<string, readonly number[]>; paths: Map<string, Binding[]>;
       candidates: Map<string, { path: readonly number[]; bindings: readonly Binding[] } | null>;
       partitions: Map<string, { path: readonly number[]; binding: Binding }[]> }): boolean {
     if (this.model !== previous.model || this.nodePaths !== previous.nodes || this.identityPaths !== previous.identities
       || this.textPaths !== previous.paths || this.textCandidates !== previous.candidates || this.partitionPaths !== previous.partitions) return false;
-    let changed: { path: readonly number[]; bindings: Binding[]; key: string } | undefined;
+    let changed: { path: readonly number[]; before: Binding; bindings: Binding[]; key: string } | undefined;
+    let visited = 0;
     const childPath = (path: readonly number[] | undefined, parent: readonly number[] | undefined, index: number): boolean => {
       if (!path) return false;
       if (!parent) return path.length === 0;
@@ -455,6 +457,7 @@ export class RetainedDocumentStore {
     // Validation is complete. Certify topology/bindings without constructing
     // new coordinates or a second complete set of lookup maps.
     const visit = (fragment: Fragment, parent?: readonly number[], index = 0): boolean => {
+      visited++;
       if (fragment.id) {
         const path = previous.identities.get(fragment.id);
         if (!childPath(path, parent, index)) return false;
@@ -468,20 +471,24 @@ export class RetainedDocumentStore {
       if (!old || !childPath(old.path, parent, index)) return false;
       if (sameBindings(old.bindings, fragment.bindings)) return true;
       const before = old.bindings[0], next = fragment.bindings[0];
-      if (changed || old.bindings.length !== 1 || fragment.bindings.length !== 1 || before !== edit.binding
-        || old.path.length !== edit.path.length || old.path.some((part, at) => part !== edit.path[at])
+      if (changed || old.bindings.length !== 1 || fragment.bindings.length !== 1
         || before.id !== next.id || before.from !== next.from || before.modelFrom !== next.modelFrom || before.leaf !== next.leaf
-        || next.length !== getNodeAtPath(edit.after, edit.path).nodeSize) return false;
-      changed = { path: old.path, bindings: fragment.bindings, key };
+        || next.length !== fragment.node.nodeSize) return false;
+      if (edit !== 'remote' && (before !== edit.binding || old.path.length !== edit.path.length
+        || old.path.some((part, at) => part !== edit.path[at]) || next.length !== getNodeAtPath(edit.after, edit.path).nodeSize)) return false;
+      changed = { path: old.path, before, bindings: fragment.bindings, key };
       return true;
     };
-    if (!visit(result)) return false;
+    // Every visited identity/binding has its unique former coordinate. Equal
+    // counts also exclude dropped trailing nodes or text runs on remote edits.
+    if (!visit(result) || visited !== previous.nodes.size + previous.paths.size) return false;
     if (changed) {
-      const entries = previous.partitions.get(edit.binding.id), positions = entries?.filter(entry => entry.binding === edit.binding && entry.path === changed!.path);
+      const { before, path } = changed;
+      const entries = previous.partitions.get(before.id), positions = entries?.filter(entry => entry.binding === before && entry.path === path);
       if (positions?.length !== 1 || previous.paths.get(pathKey(changed.path)) !== previous.candidates.get(changed.key)?.bindings) return false;
       const paths = new Map(previous.paths).set(pathKey(changed.path), changed.bindings);
       const candidates = new Map(previous.candidates).set(changed.key, { path: changed.path, bindings: changed.bindings });
-      const partitions = new Map(previous.partitions).set(edit.binding.id,
+      const partitions = new Map(previous.partitions).set(before.id,
         entries!.map(entry => entry === positions[0] ? { path: entry.path, binding: changed!.bindings[0] } : entry));
       this.textPaths = paths; this.textCandidates = candidates; this.partitionPaths = partitions;
     }
@@ -489,11 +496,11 @@ export class RetainedDocumentStore {
   }
 
   private normalizeFrame({ projection, partitions, placements }: ProjectionFrame, validate: boolean,
-    nativeIndex?: { path: readonly number[]; binding: Binding; after: Node }): Node {
+    indexEdit?: TextIndexEdit): Node {
     // Candidates come only from this store's existing model/bindings. Shared
     // data was checked by acquisition or the guarded native-write proof.
     const previousModel = this.model, previousIdentities = this.identityPaths, previousTexts = this.textCandidates;
-    const indexes = nativeIndex ? { model: previousModel, nodes: this.nodePaths, identities: previousIdentities,
+    const indexes = indexEdit ? { model: previousModel, nodes: this.nodePaths, identities: previousIdentities,
       paths: this.textPaths, candidates: previousTexts, partitions: this.partitionPaths } : undefined;
     const used = new Set<Node>();
     const groupStates = new Map<string, GroupState>();
@@ -567,7 +574,8 @@ export class RetainedDocumentStore {
     };
     const result = visit(projection.root);
     if (validate) this.schema.validate(result.node);
-    if (indexes && nativeIndex && result.node.eq(nativeIndex.after) && this.reuseNativeIndexes(result, nativeIndex, indexes)) {
+    if (indexes && indexEdit && (indexEdit === 'remote' || result.node.eq(indexEdit.after))
+      && this.reuseTextIndexes(result, indexEdit, indexes)) {
       this.groups = groupStates; this.graph = projection.root; this.model = result.node;
       return result.node;
     }

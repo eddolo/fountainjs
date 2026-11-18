@@ -1,0 +1,1105 @@
+{
+  "variant": "remote",
+  "date": "2026-11-18T13:41:00.349Z",
+  "browser": "151.0.7922.34",
+  "sizes": [
+    100,
+    1000,
+    5000
+  ],
+  "results": [
+    {
+      "engine": "fountain",
+      "size": 100,
+      "index": 0,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 10.300048828125,
+          "peerDomMs": 14.80029296875,
+          "peerFrameTaskMs": 22.80029296875
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 12.400146484375,
+          "peerDomMs": 5.000244140625,
+          "peerFrameTaskMs": 11.80029296875
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 13.400146484375,
+          "peerDomMs": 4.600341796875,
+          "peerFrameTaskMs": 12.900390625
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 13.900146484375,
+          "peerDomMs": 5.30029296875,
+          "peerFrameTaskMs": 13.2001953125
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 13.900146484375,
+          "peerDomMs": 4.100341796875,
+          "peerFrameTaskMs": 13.2001953125
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 14.39990234375,
+          "peerDomMs": 3.900146484375,
+          "peerFrameTaskMs": 13.800048828125
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 14.89990234375,
+          "peerDomMs": 4.10009765625,
+          "peerFrameTaskMs": 14.400146484375
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 15,
+          "peerDomMs": 4.000244140625,
+          "peerFrameTaskMs": 14.400146484375
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 14.099853515625,
+          "peerDomMs": 4.400146484375,
+          "peerFrameTaskMs": 13.5
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 13.699951171875,
+          "peerDomMs": 4.400146484375,
+          "peerFrameTaskMs": 13.2001953125
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 14.199951171875,
+          "peerDomMs": 6.300048828125,
+          "peerFrameTaskMs": 13.60009765625
+        }
+      ],
+      "measuredUpdates": [
+        98,
+        98,
+        98,
+        98,
+        98,
+        98,
+        98,
+        98,
+        98,
+        98,
+        98
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 100,
+      "index": 1,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 10.10009765625,
+          "peerDomMs": 7,
+          "peerFrameTaskMs": 9.900146484375
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 14.89990234375,
+          "peerDomMs": 3.10009765625,
+          "peerFrameTaskMs": 14.89990234375
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 13.699951171875,
+          "peerDomMs": 2.900146484375,
+          "peerFrameTaskMs": 13.800048828125
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 13.400146484375,
+          "peerDomMs": 2.800048828125,
+          "peerFrameTaskMs": 13.400146484375
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 15.400146484375,
+          "peerDomMs": 2.7001953125,
+          "peerFrameTaskMs": 15.400146484375
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 14.2001953125,
+          "peerDomMs": 2.900146484375,
+          "peerFrameTaskMs": 14.10009765625
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 13.900146484375,
+          "peerDomMs": 2.400146484375,
+          "peerFrameTaskMs": 13.80029296875
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 15.5,
+          "peerDomMs": 2.300048828125,
+          "peerFrameTaskMs": 15.300048828125
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 14.5,
+          "peerDomMs": 2.400146484375,
+          "peerFrameTaskMs": 14.7001953125
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 13.300048828125,
+          "peerDomMs": 2.10009765625,
+          "peerFrameTaskMs": 13.400146484375
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 14.5,
+          "peerDomMs": 1.800048828125,
+          "peerFrameTaskMs": 14.500244140625
+        }
+      ],
+      "measuredUpdates": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 100,
+      "index": 2,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 9,
+          "peerDomMs": 5.699951171875,
+          "peerFrameTaskMs": 8.699951171875
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 14,
+          "peerDomMs": 3.10009765625,
+          "peerFrameTaskMs": 13.800048828125
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 15.39990234375,
+          "peerDomMs": 2.2001953125,
+          "peerFrameTaskMs": 15.2001953125
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 13.10009765625,
+          "peerDomMs": 3.500244140625,
+          "peerFrameTaskMs": 12.80029296875
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 13.199951171875,
+          "peerDomMs": 2.400146484375,
+          "peerFrameTaskMs": 13.10009765625
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 15.300048828125,
+          "peerDomMs": 2.30029296875,
+          "peerFrameTaskMs": 15.10009765625
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 14.60009765625,
+          "peerDomMs": 2.2001953125,
+          "peerFrameTaskMs": 14.300048828125
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 12.699951171875,
+          "peerDomMs": 2.400146484375,
+          "peerFrameTaskMs": 12.5
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 15,
+          "peerDomMs": 2.10009765625,
+          "peerFrameTaskMs": 14.900146484375
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 14.2998046875,
+          "peerDomMs": 2,
+          "peerFrameTaskMs": 14.10009765625
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 13.7998046875,
+          "peerDomMs": 2.400146484375,
+          "peerFrameTaskMs": 13.699951171875
+        }
+      ],
+      "measuredUpdates": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "fountain",
+      "size": 100,
+      "index": 3,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 10.39990234375,
+          "peerDomMs": 10.30029296875,
+          "peerFrameTaskMs": 11.30029296875
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 14.7998046875,
+          "peerDomMs": 4.60009765625,
+          "peerFrameTaskMs": 14.400146484375
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 13.400146484375,
+          "peerDomMs": 5.2001953125,
+          "peerFrameTaskMs": 13.100341796875
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 14.7998046875,
+          "peerDomMs": 4.300048828125,
+          "peerFrameTaskMs": 14.400146484375
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 13.89990234375,
+          "peerDomMs": 3.7001953125,
+          "peerFrameTaskMs": 13.60009765625
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 13,
+          "peerDomMs": 4.900146484375,
+          "peerFrameTaskMs": 12.60009765625
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 14.300048828125,
+          "peerDomMs": 3.500244140625,
+          "peerFrameTaskMs": 14.100341796875
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 13.800048828125,
+          "peerDomMs": 3.500244140625,
+          "peerFrameTaskMs": 13.30029296875
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 14,
+          "peerDomMs": 3.7001953125,
+          "peerFrameTaskMs": 13.7001953125
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 15.60009765625,
+          "peerDomMs": 3.30029296875,
+          "peerFrameTaskMs": 15.30029296875
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 15.60009765625,
+          "peerDomMs": 3.900390625,
+          "peerFrameTaskMs": 15.400390625
+        }
+      ],
+      "measuredUpdates": [
+        109,
+        109,
+        109,
+        109,
+        109,
+        109,
+        109,
+        109,
+        109,
+        109,
+        109
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "fountain",
+      "size": 1000,
+      "index": 0,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 17,
+          "peerDomMs": 26.800048828125,
+          "peerFrameTaskMs": 27.599853515625
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 13.60009765625,
+          "peerDomMs": 18,
+          "peerFrameTaskMs": 18.800048828125
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 14.599853515625,
+          "peerDomMs": 14.599853515625,
+          "peerFrameTaskMs": 15.5
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 15.10009765625,
+          "peerDomMs": 18.300048828125,
+          "peerFrameTaskMs": 19
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 8.900146484375,
+          "peerDomMs": 14.5,
+          "peerFrameTaskMs": 15.400146484375
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 14.2998046875,
+          "peerDomMs": 13.599853515625,
+          "peerFrameTaskMs": 14.7998046875
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 14.10009765625,
+          "peerDomMs": 12,
+          "peerFrameTaskMs": 13.699951171875
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 14.2001953125,
+          "peerDomMs": 14.800048828125,
+          "peerFrameTaskMs": 16
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 15.099853515625,
+          "peerDomMs": 13.5,
+          "peerFrameTaskMs": 15.099853515625
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 14.10009765625,
+          "peerDomMs": 10.5,
+          "peerFrameTaskMs": 13.800048828125
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 14,
+          "peerDomMs": 14.300048828125,
+          "peerFrameTaskMs": 15.300048828125
+        }
+      ],
+      "measuredUpdates": [
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 1000,
+      "index": 1,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 10.5,
+          "peerDomMs": 11.399658203125,
+          "peerFrameTaskMs": 13.2998046875
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 4.900146484375,
+          "peerDomMs": 5.5,
+          "peerFrameTaskMs": 13.39990234375
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 12.900146484375,
+          "peerDomMs": 4.499755859375,
+          "peerFrameTaskMs": 12.999755859375
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 14.199951171875,
+          "peerDomMs": 2.7998046875,
+          "peerFrameTaskMs": 14.099853515625
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 14.199951171875,
+          "peerDomMs": 2.89990234375,
+          "peerFrameTaskMs": 14.099853515625
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 14.599853515625,
+          "peerDomMs": 3.19970703125,
+          "peerFrameTaskMs": 14.399658203125
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 14.2001953125,
+          "peerDomMs": 3.099853515625,
+          "peerFrameTaskMs": 14
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 14.10009765625,
+          "peerDomMs": 2.599853515625,
+          "peerFrameTaskMs": 13.89990234375
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 14.10009765625,
+          "peerDomMs": 3.7998046875,
+          "peerFrameTaskMs": 14.099853515625
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 13.10009765625,
+          "peerDomMs": 2.89990234375,
+          "peerFrameTaskMs": 13.099853515625
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 13.300048828125,
+          "peerDomMs": 2.899658203125,
+          "peerFrameTaskMs": 13.499755859375
+        }
+      ],
+      "measuredUpdates": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 1000,
+      "index": 2,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 10.89990234375,
+          "peerDomMs": 10.39990234375,
+          "peerFrameTaskMs": 12.2998046875
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 4.5,
+          "peerDomMs": 5.300048828125,
+          "peerFrameTaskMs": 12.699951171875
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 15.300048828125,
+          "peerDomMs": 3.800048828125,
+          "peerFrameTaskMs": 15.39990234375
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 13.5,
+          "peerDomMs": 3.199951171875,
+          "peerFrameTaskMs": 13.699951171875
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 13.39990234375,
+          "peerDomMs": 3.199951171875,
+          "peerFrameTaskMs": 13.599853515625
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 13.5,
+          "peerDomMs": 3.39990234375,
+          "peerFrameTaskMs": 13.89990234375
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 15,
+          "peerDomMs": 3.099853515625,
+          "peerFrameTaskMs": 15.099853515625
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 15.5,
+          "peerDomMs": 2.7998046875,
+          "peerFrameTaskMs": 15.599853515625
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 13.599853515625,
+          "peerDomMs": 3.2998046875,
+          "peerFrameTaskMs": 13.7998046875
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 15.2001953125,
+          "peerDomMs": 2.800048828125,
+          "peerFrameTaskMs": 15.5
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 13.2001953125,
+          "peerDomMs": 3.10009765625,
+          "peerFrameTaskMs": 13.699951171875
+        }
+      ],
+      "measuredUpdates": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "fountain",
+      "size": 1000,
+      "index": 3,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 18.099853515625,
+          "peerDomMs": 26,
+          "peerFrameTaskMs": 27
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 11,
+          "peerDomMs": 16.699951171875,
+          "peerFrameTaskMs": 17.5
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 14.300048828125,
+          "peerDomMs": 14.800048828125,
+          "peerFrameTaskMs": 15.60009765625
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 11.60009765625,
+          "peerDomMs": 16.199951171875,
+          "peerFrameTaskMs": 17
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 9.10009765625,
+          "peerDomMs": 14.800048828125,
+          "peerFrameTaskMs": 15.500244140625
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 13.60009765625,
+          "peerDomMs": 13.60009765625,
+          "peerFrameTaskMs": 14.300048828125
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 14,
+          "peerDomMs": 11.7001953125,
+          "peerFrameTaskMs": 13.60009765625
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 14.10009765625,
+          "peerDomMs": 14.2001953125,
+          "peerFrameTaskMs": 15.10009765625
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 13.10009765625,
+          "peerDomMs": 17.300048828125,
+          "peerFrameTaskMs": 18.10009765625
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 8.300048828125,
+          "peerDomMs": 11.699951171875,
+          "peerFrameTaskMs": 12.39990234375
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 13.5,
+          "peerDomMs": 10.300048828125,
+          "peerFrameTaskMs": 13
+        }
+      ],
+      "measuredUpdates": [
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120,
+        120
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "fountain",
+      "size": 5000,
+      "index": 0,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 52.2998046875,
+          "peerDomMs": 69.5,
+          "peerFrameTaskMs": 71.39990234375
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 34.300048828125,
+          "peerDomMs": 52.400146484375,
+          "peerFrameTaskMs": 54.60009765625
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 31.60009765625,
+          "peerDomMs": 51.7001953125,
+          "peerFrameTaskMs": 53.900146484375
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 30.800048828125,
+          "peerDomMs": 48.000244140625,
+          "peerFrameTaskMs": 49.80029296875
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 30.300048828125,
+          "peerDomMs": 48.2001953125,
+          "peerFrameTaskMs": 50.2001953125
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 37.5,
+          "peerDomMs": 52.60009765625,
+          "peerFrameTaskMs": 54.699951171875
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 30.2001953125,
+          "peerDomMs": 47.000244140625,
+          "peerFrameTaskMs": 48.7001953125
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 29.300048828125,
+          "peerDomMs": 49.300048828125,
+          "peerFrameTaskMs": 51.10009765625
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 36,
+          "peerDomMs": 51.900146484375,
+          "peerFrameTaskMs": 53.900146484375
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 31.199951171875,
+          "peerDomMs": 46.2001953125,
+          "peerFrameTaskMs": 48.2001953125
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 26.89990234375,
+          "peerDomMs": 41.10009765625,
+          "peerFrameTaskMs": 45.10009765625
+        }
+      ],
+      "measuredUpdates": [
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 5000,
+      "index": 1,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 19.800048828125,
+          "peerDomMs": 21.10009765625,
+          "peerFrameTaskMs": 26.900146484375
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 13.5,
+          "peerDomMs": 13.300048828125,
+          "peerFrameTaskMs": 17.300048828125
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 9.10009765625,
+          "peerDomMs": 8.7001953125,
+          "peerFrameTaskMs": 12.60009765625
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 10.60009765625,
+          "peerDomMs": 10.500244140625,
+          "peerFrameTaskMs": 14.300048828125
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 8.39990234375,
+          "peerDomMs": 8.400146484375,
+          "peerFrameTaskMs": 12.900146484375
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 14,
+          "peerDomMs": 8.60009765625,
+          "peerFrameTaskMs": 14.60009765625
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 13.099853515625,
+          "peerDomMs": 8.599853515625,
+          "peerFrameTaskMs": 13.89990234375
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 12.5,
+          "peerDomMs": 9.099853515625,
+          "peerFrameTaskMs": 13.89990234375
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 13.400146484375,
+          "peerDomMs": 9.7001953125,
+          "peerFrameTaskMs": 14.5
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 13.300048828125,
+          "peerDomMs": 7.60009765625,
+          "peerFrameTaskMs": 14.10009765625
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 12.800048828125,
+          "peerDomMs": 9.400146484375,
+          "peerFrameTaskMs": 13.800048828125
+        }
+      ],
+      "measuredUpdates": [
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 5000,
+      "index": 2,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 22.800048828125,
+          "peerDomMs": 24.39990234375,
+          "peerFrameTaskMs": 28.69970703125
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 12,
+          "peerDomMs": 11.599853515625,
+          "peerFrameTaskMs": 15.099853515625
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 9,
+          "peerDomMs": 9.099853515625,
+          "peerFrameTaskMs": 13.699951171875
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 9.5,
+          "peerDomMs": 9.499755859375,
+          "peerFrameTaskMs": 12.19970703125
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 8.5,
+          "peerDomMs": 8.599853515625,
+          "peerFrameTaskMs": 15.19970703125
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 12.39990234375,
+          "peerDomMs": 9.19970703125,
+          "peerFrameTaskMs": 13.999755859375
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 12.599853515625,
+          "peerDomMs": 9.19970703125,
+          "peerFrameTaskMs": 13.499755859375
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 12.10009765625,
+          "peerDomMs": 10.699951171875,
+          "peerFrameTaskMs": 14.199951171875
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 13.099853515625,
+          "peerDomMs": 7.899658203125,
+          "peerFrameTaskMs": 14.19970703125
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 11.800048828125,
+          "peerDomMs": 7.2998046875,
+          "peerFrameTaskMs": 12.699951171875
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 11.800048828125,
+          "peerDomMs": 8,
+          "peerFrameTaskMs": 12.89990234375
+        }
+      ],
+      "measuredUpdates": [
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    },
+    {
+      "engine": "fountain",
+      "size": 5000,
+      "index": 3,
+      "samples": [
+        {
+          "key": "a",
+          "localFrameTaskMs": 47.900146484375,
+          "peerDomMs": 66.7998046875,
+          "peerFrameTaskMs": 69
+        },
+        {
+          "key": "b",
+          "localFrameTaskMs": 34.599853515625,
+          "peerDomMs": 56.099853515625,
+          "peerFrameTaskMs": 57.899658203125
+        },
+        {
+          "key": "c",
+          "localFrameTaskMs": 35,
+          "peerDomMs": 55.7998046875,
+          "peerFrameTaskMs": 57.89990234375
+        },
+        {
+          "key": "d",
+          "localFrameTaskMs": 30.39990234375,
+          "peerDomMs": 46.89990234375,
+          "peerFrameTaskMs": 48.699951171875
+        },
+        {
+          "key": "e",
+          "localFrameTaskMs": 32.60009765625,
+          "peerDomMs": 49.999755859375,
+          "peerFrameTaskMs": 51.89990234375
+        },
+        {
+          "key": "f",
+          "localFrameTaskMs": 33.60009765625,
+          "peerDomMs": 49,
+          "peerFrameTaskMs": 51.099853515625
+        },
+        {
+          "key": "g",
+          "localFrameTaskMs": 30,
+          "peerDomMs": 46.099853515625,
+          "peerFrameTaskMs": 47.7998046875
+        },
+        {
+          "key": "h",
+          "localFrameTaskMs": 30,
+          "peerDomMs": 43.19970703125,
+          "peerFrameTaskMs": 45.599853515625
+        },
+        {
+          "key": "i",
+          "localFrameTaskMs": 32.7998046875,
+          "peerDomMs": 46.599853515625,
+          "peerFrameTaskMs": 48.69970703125
+        },
+        {
+          "key": "j",
+          "localFrameTaskMs": 29.900146484375,
+          "peerDomMs": 43.800048828125,
+          "peerFrameTaskMs": 45.800048828125
+        },
+        {
+          "key": "k",
+          "localFrameTaskMs": 27,
+          "peerDomMs": 42.099853515625,
+          "peerFrameTaskMs": 44.2998046875
+        }
+      ],
+      "measuredUpdates": [
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124,
+        124
+      ],
+      "peersReopened": 3,
+      "visibility": [
+        "visible",
+        "visible"
+      ]
+    }
+  ],
+  "errors": []
+}
