@@ -1149,6 +1149,42 @@ it.each([false, true])('orders separate split families around unchanged siblings
   } finally { pair.destroy(); }
 });
 
+it('reuses an unchanged plain stream but still applies newly configured text validation on the receiver', () => {
+  const pair = peers({ type: 'doc', content: ['Alpha', 'Unchanged'].map(text => ({
+    type: 'paragraph', content: [{ type: 'text', text }],
+  })) });
+  const { left, right } = pair;
+  const receiver = right.store as unknown as { decode: (run: { text: string }) => unknown };
+  const decode = vi.spyOn(receiver, 'decode');
+  const spec = right.editor.state.schema.nodes.text.spec;
+  const validate = vi.fn((_node: ModelNode) => true);
+  let received: ModelNode | undefined;
+  const onRemote = (transaction: Y.Transaction) => {
+    if (!transaction.local) received = right.store.readAfterRemote(transaction);
+  };
+  const send = () => {
+    const vector = Y.encodeStateVector(right.doc);
+    left.editor.dispatch(left.editor.createTransaction().step(new ReplaceTextStep([0, 0], 0, 0, 'X')));
+    left.apply();
+    Y.applyUpdate(right.doc, Y.encodeStateAsUpdate(left.doc, vector), 'transport');
+  };
+  right.doc.on('afterTransaction', onRemote);
+  try {
+    send();
+    expect(decode.mock.calls.map(([run]) => run.text)).toEqual(['XAlpha']);
+    expect(received?.toJSON()).toEqual(left.editor.getJSON());
+    const anchor = right.store.textAnchor([1, 0], 4, 1);
+    Object.defineProperty(right.editor.state.schema.nodes.text, 'spec', { value: { ...spec, validate } });
+    send();
+    expect(validate.mock.calls.some(([node]) => node.text === 'Unchanged')).toBe(true);
+    expect(right.store.resolveTextAnchor(anchor)).toEqual({ path: [1, 0], offset: 4 });
+    expect(received?.toJSON()).toEqual(left.editor.getJSON());
+  } finally {
+    Object.defineProperty(right.editor.state.schema.nodes.text, 'spec', { value: spec });
+    decode.mockRestore(); right.doc.off('afterTransaction', onRemote); pair.destroy();
+  }
+});
+
 it('retains proven remote block paths while refreshing changed text anchors', () => {
   const pair = peers(), { left, right } = pair;
   const id = right.store.identity([1])!, heldPath = right.store.path(id);
