@@ -771,22 +771,34 @@ function App() {
                   <textarea rows={1} value={String(chart.attrs[axis + 'AxisTitle'] ?? '')}
                     onChange={event => setChartAxisTitle(editor, axis, event.target.value)} />
                 </label>)}
-                <form key={[editor.state.selection.path[0], chart.attrs.axisMin, chart.attrs.axisMax].join(':')}
+                <form key={[editor.state.selection.path[0], chart.attrs.axisMin, chart.attrs.axisMax, chart.attrs.axisInterval].join(':')}
                   onSubmit={event => {
                     event.preventDefault();
                     const form = event.currentTarget;
                     const minimum = form.elements.namedItem('minimum') as HTMLInputElement;
                     const maximum = form.elements.namedItem('maximum') as HTMLInputElement;
+                    const interval = form.elements.namedItem('interval') as HTMLInputElement;
+                    if (interval.value && interval.valueAsNumber <= 0) {
+                      interval.setCustomValidity('Tick interval must be positive.');
+                      interval.reportValidity();
+                      return;
+                    }
                     if (minimum.value && maximum.value && minimum.valueAsNumber >= maximum.valueAsNumber) {
                       maximum.setCustomValidity('Maximum must be greater than minimum.');
                       maximum.reportValidity();
                       return;
                     }
-                    setChartValueRange(editor, minimum.value ? minimum.valueAsNumber : null, maximum.value ? maximum.valueAsNumber : null);
-                  }} onInput={event => (event.currentTarget.elements.namedItem('maximum') as HTMLInputElement).setCustomValidity('')}>
+                    setChartValueRange(editor, minimum.value ? minimum.valueAsNumber : null, maximum.value ? maximum.valueAsNumber : null,
+                      interval.value ? interval.valueAsNumber : null);
+                  }} onInput={event => {
+                    for (const name of ['maximum', 'interval']) (event.currentTarget.elements.namedItem(name) as HTMLInputElement).setCustomValidity('');
+                  }}>
                   <label>Minimum <input type="number" step="any" name="minimum" placeholder="Automatic" defaultValue={String(chart.attrs.axisMin ?? '')} /></label>
                   <label>Maximum <input type="number" step="any" name="maximum" placeholder="Automatic" defaultValue={String(chart.attrs.axisMax ?? '')} /></label>
+                  <label>Tick interval <input type="number" step="any" name="interval" placeholder="Automatic" defaultValue={String(chart.attrs.axisInterval ?? '')} /></label>
                   <button type="submit">Apply range</button>
+                  {(chart.attrs.axisMin != null || chart.attrs.axisMax != null || chart.attrs.axisInterval != null) &&
+                    <button type="button" onClick={() => setChartValueRange(editor, null, null, null)}>Use automatic scale</button>}
                 </form>
               </details>}
               <select aria-label="Chart image format" value={chartFormat} onChange={event => {

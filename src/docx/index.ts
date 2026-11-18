@@ -2629,8 +2629,8 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
     case 'footnote_definition': case 'page_header': case 'page_footer': return '';
     case 'bar_chart': {
       const table = node.content.map((child, index) => blockXML(child, context, [...path, index], level, quote, list, definition)).join('');
-      if (node.attrs.kind === 'pie' && (node.attrs.axisMin != null || node.attrs.axisMax != null)) {
-        context.issues.push({ code: 'chart-axis-range-omitted', severity: 'warning', path, message: 'A Word pie chart has no numeric axis. Fountain JSON and HTML retain the saved range.' });
+      if (node.attrs.kind === 'pie' && (node.attrs.axisMin != null || node.attrs.axisMax != null || node.attrs.axisInterval != null)) {
+        context.issues.push({ code: 'chart-axis-range-omitted', severity: 'warning', path, message: 'A Word pie chart has no numeric axis. Fountain JSON and HTML retain the saved axis settings.' });
       }
       if (node.attrs.kind === 'pie' && (node.attrs.categoryAxisTitle || node.attrs.valueAxisTitle)) {
         context.issues.push({ code: 'chart-axis-titles-omitted', severity: 'warning', path, message: 'A Word pie chart has no axes. Fountain JSON and HTML retain the axis titles for switching back.' });

@@ -137,6 +137,7 @@ test('keeps positive and negative columns on opposite sides of zero through a Wo
   const plot = chart.locator('[data-fountain-chart-plot]');
   await expect(plot).toContainText('Tuesday · -4');
   await demo.getByText('Chart axes', { exact: true }).click();
+  await expect(plot.locator('[data-axis-tick="5"]')).toBeVisible();
   await demo.getByLabel('Category axis').fill('Delivery day');
   await demo.getByLabel('Value axis').fill('Net orders');
   await demo.getByLabel('Minimum', { exact: true }).fill('20');
@@ -146,11 +147,16 @@ test('keeps positive and negative columns on opposite sides of zero through a Wo
   expect(await demo.getByLabel('Maximum', { exact: true }).evaluate(input => (input as HTMLInputElement).validity.customError)).toBe(true);
   await demo.getByLabel('Minimum', { exact: true }).fill('-20');
   await demo.getByLabel('Maximum', { exact: true }).fill('20');
+  await demo.getByLabel('Tick interval').fill('10');
   await demo.getByRole('button', { name: 'Apply range' }).click();
   await expect(plot).toContainText('Value range: -20 to 20');
   await expect(plot.getByText('Delivery day', { exact: true })).toBeVisible();
   await expect(plot.getByText('Net orders', { exact: true })).toBeVisible();
   const graph = plot.getByRole('img').locator('div[dir="ltr"]').first();
+  const ticks = graph.locator('[data-axis-tick]');
+  await expect(ticks).toHaveText(['-20', '-10', '0', '10', '20']);
+  const tickBoxes = await ticks.evaluateAll(nodes => nodes.map(n => n.getBoundingClientRect().top));
+  expect(tickBoxes[0] - tickBoxes[1]).toBeCloseTo(tickBoxes[2] - tickBoxes[3], 0);
   const geometry = await graph.locator(':scope > span').evaluateAll(elements =>
     elements.map(element => {
       const { x, y, width, height, bottom } = element.getBoundingClientRect();
@@ -167,9 +173,29 @@ test('keeps positive and negative columns on opposite sides of zero through a Wo
   expect(tuesday.x).toBeGreaterThan(monday.x + monday.width);
   expect(monday.height / tuesday.height).toBeCloseTo(3, 1);
   await chart.screenshot({ path: info.outputPath('editor-columns.png') });
+  await demo.getByLabel('Chart image format').selectOption('svg');
+  const imageDownload = page.waitForEvent('download');
+  await demo.getByRole('button', { name: 'Download chart' }).click();
+  const svgFile = info.outputPath('axis-ticks.svg');
+  await (await imageDownload).saveAs(svgFile);
+  const svg = await readFile(svgFile, 'utf8');
+  expect([...svg.matchAll(/text-anchor="end">(-?\d+)<\/text>/g)].map(match => match[1]))
+    .toEqual(['-20', '-10', '0', '10', '20']);
+
 
   await demo.getByRole('button', { name: 'html', exact: true }).click();
   const html = await demo.locator('pre').filter({ hasText: 'data-fountain-chart-source' }).innerText();
+  await demo.getByRole('button', { name: 'Use automatic scale' }).click();
+  await expect(chart).not.toHaveAttribute('data-axis-min');
+  await expect(chart).not.toHaveAttribute('data-axis-max');
+  await expect(chart).not.toHaveAttribute('data-axis-interval');
+  await expect(graph.locator('[data-axis-tick="5"]')).toBeVisible();
+  const autoGeometry = await graph.locator(':scope > span').evaluateAll(markers => markers.map(marker => marker.getBoundingClientRect().height));
+  const autoBox = await graph.boundingBox();
+  expect(autoGeometry[1] / autoBox!.height).toBeCloseTo(12 / 16, 1);
+  expect(autoGeometry[2] / autoBox!.height).toBeCloseTo(4 / 16, 1);
+  await chart.screenshot({ path: info.outputPath('weekly-orders-auto.png') });
+
   await page.goto('conversion-lab.html');
   const input = page.getByLabel('Choose documents');
   await input.setInputFiles({ name: 'orders.html', mimeType: 'text/html', buffer: Buffer.from(html) });
@@ -189,6 +215,8 @@ test('keeps positive and negative columns on opposite sides of zero through a Wo
   await expect(restored).toHaveAttribute('data-value-axis-title', 'Net orders');
   await expect(restored).toHaveAttribute('data-axis-min', '-20');
   await expect(restored).toHaveAttribute('data-axis-max', '20');
+  await expect(restored).toHaveAttribute('data-axis-interval', '10');
+  await expect(restored.locator('[data-axis-tick]')).toHaveText(['-20', '-10', '0', '10', '20']);
 });
 
 test('changes a signed line chart to a pie, fixes the data, and reopens the saved chart', async ({ page }, info) => {
@@ -450,4 +478,33 @@ test('zooms a line chart without connecting the portions outside the visible ran
   await demo.getByRole('button', { name: 'Apply range' }).click();
   await expect(chart.locator('[data-fountain-chart-plot]')).not.toContainText('Value range:');
   await expect(chart.locator('td').getByText('-4', { exact: true })).toBeVisible();
+});
+
+test('reads a horizontal tick ruler on a phone and clears the interval without changing its bounds', async ({ page }, info) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.getByRole('button', { name: 'Bar chart', exact: true }).click();
+  await demo.getByText('Chart axes', { exact: true }).click();
+  await demo.getByLabel('Minimum', { exact: true }).fill('-20');
+  await demo.getByLabel('Maximum', { exact: true }).fill('20');
+  const interval = demo.getByLabel('Tick interval');
+  await interval.fill('0');
+  await demo.getByRole('button', { name: 'Apply range' }).click();
+  expect(await interval.evaluate(input => (input as HTMLInputElement).validity.customError)).toBe(true);
+  await interval.fill('10');
+  await demo.getByRole('button', { name: 'Apply range' }).click();
+  const chart = demo.locator('figure[data-fountain-chart="bar"]');
+  const ticks = chart.locator('[data-axis-tick] small');
+  await expect(ticks).toHaveText(['-20', '-10', '0', '10', '20']);
+  const boxes = await ticks.evaluateAll(nodes => nodes.map(n => {
+    const rect = n.getBoundingClientRect();
+    return { left: rect.left, right: rect.right };
+  }));
+  boxes.forEach((box, i) => { if (i) expect(box.left).toBeGreaterThan(boxes[i - 1].right); });
+  await chart.screenshot({ path: info.outputPath('phone-ticks.png') });
+  await interval.fill('');
+  await demo.getByRole('button', { name: 'Apply range' }).click();
+  await expect(ticks).toHaveCount(0);
+  await expect(chart).toHaveAttribute('data-axis-min', '-20');
 });

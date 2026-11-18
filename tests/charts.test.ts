@@ -185,7 +185,7 @@ it('changes chart type in place and retains it across HTML, JSON and undo', () =
     expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(doc.toJSON());
     expect(editor.state.schema.nodeFromJSON(doc.toJSON()).eq(doc)).toBe(true);
     const svg = exportBarChartSVG(selectedBarChart(editor)!);
-    expect(svg).toContain(kind === 'line' ? '<polyline' : kind === 'column' ? 'height="188" fill="#55409c"' : 'A96 96');
+    expect(svg).toContain(kind === 'line' ? '<polyline' : kind === 'column' ? 'fill="#55409c"' : 'A96 96');
     expect(svg).not.toMatch(/NaN|Infinity/);
   }
   expect(undo(editor)).toBe(true);
@@ -566,7 +566,10 @@ it('clips crossing line segments at their intersections without inventing points
   expect(svg.match(/<polyline/g)).toHaveLength(1);
   expect(svg).not.toContain('<circle');
   // The first segment enters one quarter and leaves one half of the way from A to B.
-  expect(svg).toMatch(/<polyline points="118,[\d.]+ 212,[\d.]+"/);
+  const segment = /<polyline points="([\d.]+),[\d.]+ ([\d.]+),[\d.]+"/.exec(svg)!;
+  const axis = /<path d="M([\d.]+) [\d.]+h([\d.]+)" stroke="#aaa"/.exec(svg)!;
+  expect((Number(segment[1]) - Number(axis[1])) / Number(axis[2])).toBeCloseTo(0.125, 4);
+  expect((Number(segment[2]) - Number(axis[1])) / Number(axis[2])).toBeCloseTo(0.25, 4);
   const html = HTMLExporter.export(editor.state.doc, { document: false });
   expect(html).toContain('left:12.5%;top:100%');
   setChartValueRange(editor, null, 0);
@@ -577,5 +580,65 @@ it('clips crossing line segments at their intersections without inventing points
   expect(svg).not.toMatch(/NaN|Infinity/);
   setChartType(editor, 'pie');
   expect(exportDOCX(editor.state.doc).report.issues.some(issue => issue.code === 'chart-axis-range-omitted')).toBe(true);
+  editor.destroy();
+});
+
+it('retains editable major tick intervals across HTML, SVG, native Word and history', () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  insertBarChart(editor, 'Sales', [['First', 1], ['Next', 3]]);
+  const selected = () => selectedBarChart(editor)!;
+  for (const interval of [0, -1, NaN, Infinity]) expect(setChartValueRange(editor, 0, 4, interval)).toBe(false);
+  setChartValueRange(editor, -0.3, 0.3, 0.1);
+  for (const kind of ['bar', 'column', 'line'] as const) {
+    setChartType(editor, kind);
+    const html = HTMLExporter.export(editor.state.doc, { document: false });
+    expect([...html.matchAll(/data-axis-tick="([^"]+)"/g)].map(match => match[1]))
+      .toEqual(['-0.3', '-0.2', '-0.1', '0', '0.1', '0.2', '0.3']);
+    expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(editor.getJSON());
+    expect(exportBarChartSVG(selected())).toContain('>-0.3</text>');
+  }
+  setChartValueRange(editor, 1, 4);
+  expect(selected().attrs.axisInterval).toBe(0.1);
+  const parts = unzipSync(exportDOCX(editor.state.doc).bytes);
+  const xml = strFromU8(parts['word/charts/chart1.xml']);
+  expect(xml.match(/<c:majorUnit val="0.1"\/>/g)).toHaveLength(1);
+  parts['word/charts/chart1.xml'] = strToU8(xml.replace('<c:majorUnit val="0.1"/>', '<c:majorUnit val="0.5"/>'));
+  expect(importDOCX(zipSync(parts), editor.state.schema).document.content.find(n => n.type.name === 'bar_chart')?.attrs.axisInterval).toBe(0.5);
+  setChartValueRange(editor, 1, 4, null);
+  expect(selected().attrs.axisInterval).toBeNull();
+  expect(undo(editor)).toBe(true);
+  expect(selected().attrs.axisInterval).toBe(0.1);
+  setChartType(editor, 'pie');
+  expect(exportBarChartSVG(selected())).not.toContain('>-0.3</text>');
+  editor.destroy();
+});
+
+it('bounds the number of tick marks for dense intervals and opposite finite extremes', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Values', [['A', 1]]);
+  for (const interval of [Number.MIN_VALUE, Number.MAX_VALUE]) {
+    setChartValueRange(editor, -Number.MAX_VALUE, Number.MAX_VALUE, interval);
+    const html = HTMLExporter.export(editor.state.doc, { document: false });
+    const ticks = [...html.matchAll(/data-axis-tick="([^"]+)"/g)].map(match => Number(match[1]));
+    expect(ticks.length).toBeGreaterThan(1);
+    expect(ticks.length).toBeLessThanOrEqual(25);
+    expect(ticks.every(Number.isFinite)).toBe(true);
+    expect(new Set(ticks).size).toBe(ticks.length);
+    expect(exportBarChartSVG(selectedBarChart(editor)!)).not.toMatch(/Infinity|NaN/);
+  }
+  editor.destroy();
+});
+
+it('shows horizontal gridlines on new column and line charts with automatic axes', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Change in weekly orders', [['Monday', 12], ['Tuesday', -4], ['Wednesday', 8]]);
+  for (const kind of ['column', 'line'] as const) {
+    setChartType(editor, kind);
+    expect(HTMLExporter.export(editor.state.doc, { document: false })).toContain('data-axis-tick="5"');
+    const chart = strFromU8(unzipSync(exportDOCX(editor.state.doc).bytes)['word/charts/chart1.xml']);
+    expect(chart.match(/<c:valAx>.*?<\/c:valAx>/)?.[0]).toContain('<c:majorGridlines>');
+    expect(chart).not.toContain('<c:majorUnit');
+    expect(exportBarChartSVG(selectedBarChart(editor)!)).toContain('stroke="#d4d0df"');
+  }
   editor.destroy();
 });

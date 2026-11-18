@@ -23,6 +23,49 @@ function fraction(value: number, from: number, to: number) {
   return Number.isFinite(to - from) ? (value - from) / (to - from) : (value / 2 - from / 2) / (to / 2 - from / 2);
 }
 
+function automaticInterval(low: number, high: number) {
+  const span = high - low;
+  const target = Number.isFinite(span) ? span / 4 : high / 4 - low / 4;
+  const unit = 10 ** Math.floor(Math.log10(target)) || Number.MIN_VALUE;
+  const factor = [1, 2, 2.5, 5, 10].find(step => step * unit >= target) ?? 10;
+  return Math.min(Number.MAX_VALUE, factor * unit);
+}
+
+function axisTicks(low: number, high: number, interval: number | null, automatic: boolean) {
+  if (interval == null && automatic) interval = automaticInterval(low, high);
+  const ticks: { position: number; label: string; showLabel: boolean }[] = [];
+  if (interval == null || !Number.isFinite(interval) || interval <= 0) return ticks;
+  // Keep dense feeds bounded. Each displayed mark is still a multiple of the
+  // requested interval from the lower bound, including at subnormal magnitudes.
+  const span = high - low;
+  const smallestSpacing = Number.isFinite(span) ? span / 24 : high / 24 - low / 24;
+  let spacing = interval;
+  while (spacing < smallestSpacing) spacing *= 2;
+  let start = low;
+  if (automatic) {
+    const remainder = low % spacing;
+    const first = remainder === 0 ? low : low + (remainder < 0 ? -remainder : spacing - remainder);
+    if (Number.isFinite(first) && first >= low && first <= high) start = first;
+  }
+  const distance = high - start;
+  const steps = Number.isFinite(distance) ? distance / spacing : high / spacing - start / spacing;
+  const last = Math.min(24, Math.floor(steps + 8 * Number.EPSILON * steps));
+  const labelStride = Math.max(1, Math.ceil(last / 4));
+  for (let i = 0; i <= last; i++) {
+    const offset = i * spacing;
+    let value = Number.isFinite(offset) ? start + offset : (start / 2 + i * (spacing / 2)) * 2;
+    if (i && Math.abs(steps - i) <= 8 * Number.EPSILON * steps) value = high;
+    else if (i && Math.abs(value) < Number.EPSILON * Math.abs(low)) value = 0;
+    if (!Number.isFinite(value) || value > high) continue;
+    const position = fraction(value, low, high) * 100;
+    if (ticks.length && position <= ticks[ticks.length - 1]!.position) continue;
+    const rounded = Number(value.toPrecision(15));
+    const label = String(Math.abs(rounded - value) < spacing / 16 ? rounded : value);
+    ticks.push({ position, label, showLabel: i % labelStride === 0 });
+  }
+  return ticks;
+}
+
 export function chartLayout(node: Node) {
   if (node.type.name !== 'bar_chart') return 'Select a chart to export.';
   const table = node.child(node.childCount - 1);
@@ -102,5 +145,5 @@ export function chartLayout(node: Node) {
   const horizontalTitle = kind === 'bar' ? valueTitle : categoryTitle;
   const verticalTitle = kind === 'bar' ? categoryTitle : valueTitle;
   const rangeLabel = fixed ? 'Value range: ' + low + ' to ' + high : '';
-  return { kind, rangeLabel, title, horizontalTitle, verticalTitle, zero, rows: series[0]!.rows, series };
+  return { kind, ticks: axisTicks(low, high, kind === 'pie' ? null : node.attrs.axisInterval as number | null, (kind === 'column' || kind === 'line') && node.attrs.axisInterval == null), rangeLabel, title, horizontalTitle, verticalTitle, zero, rows: series[0]!.rows, series };
 }

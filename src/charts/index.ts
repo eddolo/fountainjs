@@ -25,6 +25,8 @@ function plot(node: Node): DOMOutputSpec {
     role: 'img', style: 'display:flow-root', 'aria-label': [title || kind + ' chart', layout.verticalTitle, layout.horizontalTitle, layout.rangeLabel,
       'Values are in the accompanying table.'].filter(Boolean).join('. '),
   }, ...(layout.rangeLabel ? [['div', layout.rangeLabel] as DOMOutputSpec] : []), ...axisCaption(layout.verticalTitle, 'start'), ...children, ...axisCaption(layout.horizontalTitle, 'center')];
+  const { ticks } = layout;
+  const gutter = ticks.length ? Math.max(...ticks.filter(tick => tick.showLabel).map(tick => tick.label.length)) + 1 + 'ch' : '6px';
   if (kind !== 'bar') {
     const markers: DOMOutputSpec[] = [];
     let style: string;
@@ -32,7 +34,12 @@ function plot(node: Node): DOMOutputSpec {
       const stops = layout.rows.map(row => row.color + ' ' + percent(row.start) + ' ' + percent(row.end));
       style = 'width:min(100%,16em);aspect-ratio:1;border-radius:50%;margin:auto;background:conic-gradient(' + stops.join(',') + ')';
     } else {
-      style = 'position:relative;aspect-ratio:4;margin:12px 6px;background:#f5f3fa';
+      const aspect = ticks.length ? 2 : 4;
+      style = `position:relative;aspect-ratio:${aspect};margin:12px 6px 12px ${gutter};background:#f5f3fa`;
+      for (const tick of ticks) {
+        markers.push(['div', { 'data-axis-tick': tick.label, style: `position:absolute;top:${percent(100 - tick.position)};width:100%;border-top:1px solid #d4d0df` },
+          ...(tick.showLabel ? [['small', { style: 'position:absolute;right:100%;padding-right:3px;transform:translateY(-50%);white-space:nowrap' }, tick.label] as DOMOutputSpec] : [])]);
+      }
       markers.push(['span', { style: `position:absolute;top:${percent(100 - zero)};width:100%;border-top:1px solid #aaa` }]);
       const position = (point: { x: number; y: number }) => `position:absolute;left:${percent(point.x)};top:${percent(point.y)}`;
       for (const [j, item] of series.entries()) {
@@ -45,7 +52,7 @@ function plot(node: Node): DOMOutputSpec {
           if (row.visible) markers.push(['span', { style: `${position(row)};background:${item.color};border-radius:50%;width:6px;height:6px;transform:translate(-50%,-50%)` }]);
         });
         for (const segment of item.segments) {
-          const dx = segment.endX - segment.x, dy = (segment.endY - segment.y) / 4;
+          const dx = segment.endX - segment.x, dy = (segment.endY - segment.y) / aspect;
           markers.push(['span', { style: `${position(segment)};width:${percent(Math.hypot(dx, dy))};height:2px;background:${item.color};transform-origin:0 0;transform:rotate(${Math.atan2(dy, dx)}rad)` }]);
         }
       }
@@ -54,7 +61,7 @@ function plot(node: Node): DOMOutputSpec {
       return graphic([
         ...legend,
         ['div', { dir: 'ltr', style }, ...markers],
-        ['div', { dir: 'ltr', style: `display:grid;grid-template-columns:repeat(${layout.rows.length},minmax(0,1fr));margin:0 6px;text-align:center;overflow-wrap:anywhere` },
+        ['div', { dir: 'ltr', style: `display:grid;grid-template-columns:repeat(${layout.rows.length},minmax(0,1fr));margin:0 6px 0 ${gutter};text-align:center;overflow-wrap:anywhere` },
           ...layout.rows.map((_, i): DOMOutputSpec => ['span', { dir: 'auto' }, label(i)])],
       ]);
     }
@@ -76,7 +83,10 @@ function plot(node: Node): DOMOutputSpec {
       ];
     }),
   ]);
-  return graphic([...legend, ...rows]);
+  const ruler: DOMOutputSpec[] = ticks.length ? [['div', { dir: 'ltr', style: 'position:relative;height:1.8em;border-top:1px solid #aaa' },
+    ...ticks.map((tick): DOMOutputSpec => ['span', { 'data-axis-tick': tick.label, style: `position:absolute;left:${percent(tick.position)};height:4px;border-left:1px solid #777` },
+      ...(tick.showLabel ? [['small', { style: `display:block;padding-top:4px;transform:translateX(-${tick.position}%);white-space:nowrap` }, tick.label] as DOMOutputSpec] : [])])]] : [];
+  return graphic([...legend, ...rows, ...ruler]);
 }
 
 function csvURL(value: unknown): value is string {
@@ -94,7 +104,8 @@ const parseRules = chartTypes.map(kind => ({
       return raw?.trim() && Number.isFinite(Number(raw)) ? Number(raw) : null;
     };
     const source = element.getAttribute('data-fountain-csv-url');
-    return { kind, axisMin: bound('min'), axisMax: bound('max'), csvURL: csvURL(source) ? source : null, categoryAxisTitle: element.getAttribute('data-category-axis-title') ?? '',
+    const interval = bound('interval');
+    return { kind, axisInterval: interval !== null && interval > 0 ? interval : null, axisMin: bound('min'), axisMax: bound('max'), csvURL: csvURL(source) ? source : null, categoryAxisTitle: element.getAttribute('data-category-axis-title') ?? '',
       valueAxisTitle: element.getAttribute('data-value-axis-title') ?? '' };
   }, contentElement: '[data-fountain-chart-source]',
 }));
@@ -103,15 +114,20 @@ const axisTitle = { default: '', validate: (value: unknown) => typeof value === 
 
 const axisBound = { default: null, validate: (value: unknown) => value === null || Number.isFinite(value) };
 
+function validInterval(value: unknown) {
+  return value === null || (typeof value === 'number' && Number.isFinite(value) && value > 0);
+}
+
 const barChartNode: NodeSpec = {
   group: 'block',
-  attrs: { axisMin: axisBound, axisMax: axisBound, categoryAxisTitle: axisTitle, valueAxisTitle: axisTitle, kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: { default: null, validate: value => value === null || csvURL(value) } },
+  attrs: { axisInterval: { default: null, validate: validInterval }, axisMin: axisBound, axisMax: axisBound, categoryAxisTitle: axisTitle, valueAxisTitle: axisTitle, kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: { default: null, validate: value => value === null || csvURL(value) } },
   content: 'paragraph? table',
   selectable: true,
   parseHTML: parseRules,
   parseDOM: parseRules,
   markdown: 'html',
   toDOM: node => ['figure', { 'data-fountain-chart': node.attrs.kind, ...(node.attrs.csvURL ? { 'data-fountain-csv-url': node.attrs.csvURL } : {}), ...(node.attrs.categoryAxisTitle ? { 'data-category-axis-title': node.attrs.categoryAxisTitle } : {}),
+    ...(node.attrs.axisInterval != null ? { 'data-axis-interval': node.attrs.axisInterval } : {}),
     ...(node.attrs.axisMin != null ? { 'data-axis-min': node.attrs.axisMin } : {}), ...(node.attrs.axisMax != null ? { 'data-axis-max': node.attrs.axisMax } : {}),
     ...(node.attrs.valueAxisTitle ? { 'data-value-axis-title': node.attrs.valueAxisTitle } : {}), style: 'margin:1em 0' },
     ['div', { 'data-fountain-chart-source': 'true' }, 0],
@@ -331,13 +347,15 @@ export function setChartAxisTitle(editor: Editor, axis: 'category' | 'value', ti
 }
 
 /** Null lets the plot derive that end of the value axis from the table. */
-export function setChartValueRange(editor: Editor, min: number | null, max: number | null): boolean {
+export function setChartValueRange(editor: Editor, min: number | null, max: number | null, interval?: number | null): boolean {
   const target = chartTarget(editor);
   if (!editor.editable || target?.node.type.name !== 'bar_chart' || target.node.attrs.kind === 'pie' ||
       !axisBound.validate(min) || !axisBound.validate(max) || (min !== null && max !== null && min >= max)) return false;
   const attrs = target.node.attrs;
-  if (attrs.axisMin === min && attrs.axisMax === max) return false;
-  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...attrs, axisMin: min, axisMax: max }));
+  const axisInterval = interval === undefined ? attrs.axisInterval ?? null : interval;
+  if (!validInterval(axisInterval)) return false;
+  if (attrs.axisMin === min && attrs.axisMax === max && attrs.axisInterval === axisInterval) return false;
+  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...attrs, axisMin: min, axisMax: max, axisInterval }));
 }
 
 export const BarChartExtension = defineExtension({

@@ -14,7 +14,10 @@ function drawChart(node: Node) {
   const layout = chartLayout(node);
   if (typeof layout === 'string') throw new Error(layout);
   const title = layout.title || layout.kind[0].toUpperCase() + layout.kind.slice(1) + ' chart';
-  const width = 800, inset = 24, track = width - 2 * inset;
+  const width = 800, inset = 24;
+  const gutter = layout.kind === 'bar' || !layout.ticks.length ? 0
+    : 8 + 9 * Math.max(...layout.ticks.filter(tick => tick.showLabel).map(tick => tick.label.length));
+  const origin = inset + gutter, track = width - inset - origin;
   const drawing: string[] = [];
   let y = 12;
   function text(value: string, size: number, color = '#211d32', centered = false) {
@@ -44,17 +47,22 @@ function drawChart(node: Node) {
   y += 10;
   const x = (p: number) => Number((track * p / 100).toFixed(4));
   if (layout.kind === 'column' || layout.kind === 'line') {
-    const graphHeight = track / 4;
-    drawing.push(`<path d="M${inset} ${y + graphHeight * (1 - layout.zero / 100)}h${track}" stroke="#aaa"/>`);
+    const graphHeight = track / (layout.ticks.length ? 2 : 4);
+    for (const tick of layout.ticks) {
+      const tickY = y + graphHeight * (1 - tick.position / 100);
+      drawing.push(`<path d="M${origin} ${tickY}h${track}" stroke="#d4d0df"/>`);
+      if (tick.showLabel) drawing.push(`<text x="${origin - 6}" y="${tickY + 4}" font-size="13" text-anchor="end">${tick.label}</text>`);
+    }
+    drawing.push(`<path d="M${origin} ${y + graphHeight * (1 - layout.zero / 100)}h${track}" stroke="#aaa"/>`);
     for (const [j, item] of layout.series.entries()) {
       if (layout.kind === 'column') {
         item.rows.forEach((row, index) => {
           const bounds = columnBounds(index, layout.rows.length, row.y, layout.zero, j, layout.series.length);
-          drawing.push(`<rect x="${inset + x(bounds.left)}" y="${y + graphHeight * bounds.top / 100}" width="${x(bounds.width)}" height="${graphHeight * bounds.height / 100}" fill="${item.color}"/>`);
+          drawing.push(`<rect x="${origin + x(bounds.left)}" y="${y + graphHeight * bounds.top / 100}" width="${x(bounds.width)}" height="${graphHeight * bounds.height / 100}" fill="${item.color}"/>`);
         });
       } else {
         const paths: string[][] = [];
-        const point = (xPercent: number, yPercent: number) => [inset + x(xPercent), y + graphHeight * yPercent / 100].join(',');
+        const point = (xPercent: number, yPercent: number) => [origin + x(xPercent), y + graphHeight * yPercent / 100].join(',');
         for (const segment of item.segments) {
           const start = point(segment.x, segment.y), end = point(segment.endX, segment.endY);
           const path = paths.at(-1);
@@ -65,7 +73,7 @@ function drawChart(node: Node) {
           drawing.push(`<polyline points="${path.join(' ')}" fill="none" stroke="${item.color}" stroke-width="2"/>`);
         }
         for (const row of item.rows) {
-          if (row.visible) drawing.push(`<circle cx="${inset + x(row.x)}" cy="${y + graphHeight * row.y / 100}" r="3" fill="${item.color}"/>`);
+          if (row.visible) drawing.push(`<circle cx="${origin + x(row.x)}" cy="${y + graphHeight * row.y / 100}" r="3" fill="${item.color}"/>`);
         }
       }
     }
@@ -101,6 +109,18 @@ function drawChart(node: Node) {
       }
       y += 9;
     }
+  }
+  if (layout.kind === 'bar' && layout.ticks.length) {
+    drawing.push(`<path d="M${inset} ${y}h${track}" stroke="#aaa"/>`);
+    for (const tick of layout.ticks) {
+      const tickX = inset + x(tick.position);
+      drawing.push(`<path d="M${tickX} ${y}v4" stroke="#777"/>`);
+      if (tick.showLabel) {
+        const anchor = tick.position === 0 ? 'start' : tick.position > 90 ? 'end' : 'middle';
+        drawing.push(`<text x="${tickX}" y="${y + 18}" text-anchor="${anchor}" font-size="13">${tick.label}</text>`);
+      }
+    }
+    y += 24;
   }
   if (layout.kind === 'bar' && layout.horizontalTitle) text(layout.horizontalTitle, 17, '#211d32', true);
   const height = y + 12;

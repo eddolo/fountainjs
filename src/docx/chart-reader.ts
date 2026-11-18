@@ -87,16 +87,18 @@ export function readNativeChart(root: XMLElement, schema: Schema): Node | undefi
     cells.map(cell => schema.node(type, {}, [paragraph(cell)])));
   const table = schema.node('table', {}, [row('table_header', ['Category', ...series.map(item => item.name)]),
     ...categories!.map((label, i) => row('table_cell', [label, ...series.map(item => item.numbers[i]!)]))]);
-  const scaling = one(one(area, 'valAx'), 'scaling');
+  const valueAxis = one(area, 'valAx');
+  const scaling = one(valueAxis, 'scaling');
   // Logarithmic and reversed value scales need a different projection.
   if (one(scaling, 'logBase') || one(scaling, 'orientation')?.attrs.val === 'maxMin') return;
-  const bound = (name: string) => {
-    const raw = one(scaling, name)?.attrs.val;
+  const bound = (name: string, parent = scaling) => {
+    const raw = one(parent, name)?.attrs.val;
     return raw === undefined ? null : raw.trim() ? Number(raw) : NaN;
   };
-  const axisMin = bound('min'), axisMax = bound('max');
+  const axisMin = bound('min'), axisMax = bound('max'), axisInterval = bound('majorUnit', valueAxis);
+  if (axisInterval !== null && (!Number.isFinite(axisInterval) || axisInterval <= 0)) return;
   if ([axisMin, axisMax].some(value => value !== null && !Number.isFinite(value))) return;
-  const result = schema.node('bar_chart', { kind, axisMin, axisMax, categoryAxisTitle: chartTitle(one(area, 'catAx')),
+  const result = schema.node('bar_chart', { kind, axisMin, axisMax, axisInterval, categoryAxisTitle: chartTitle(one(area, 'catAx')),
     valueAxisTitle: chartTitle(one(area, 'valAx')) }, title ? [paragraph(title), table] : [table]);
   return typeof chartLayout(result) === 'string' ? undefined : result;
 }
