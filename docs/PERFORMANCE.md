@@ -1,5 +1,9 @@
 # Performance and memory contract
 
+## Native typing in fully mounted documents — 2026-11-18
+
+At 5,000 paragraphs the released build took 20.2–22.4 ms (median) from native keydown to a next-frame task. The path-reuse repair took 15.7–17.8 ms and Tiptap 2.27.3 took 10.9–11.8 ms on the same machine. The samples use local starter kits and exclude collaboration. [Matched inputs, raw results and reproduction](../artifacts/native-typing-comparison-20261118/README.md).
+
 ## Retained default adoption — 2026-11-10
 
 The new local `/yjs` default loads the retained implementation. In separate

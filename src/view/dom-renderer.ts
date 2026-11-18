@@ -365,13 +365,25 @@ export function renderDocument(root: HTMLElement, doc: Node, context: DOMRenderC
 
 
 function rebaseRenderedPath(element: HTMLElement, index: number): void {
-  const rebase = (target: HTMLElement, attribute: 'data-fountain-path' | 'data-fountain-text-path') => {
+  const prefix = String(index);
+  const rebase = (target: Element, attribute: 'data-fountain-path' | 'data-fountain-text-path') => {
     const path = target.getAttribute(attribute);
-    if (path) target.setAttribute(attribute, [index, ...path.split('.').slice(1)].join('.'));
+    if (!path || path === prefix || path.startsWith(prefix + '.')) return;
+    const separator = path.indexOf('.');
+    target.setAttribute(attribute, separator < 0 ? prefix : prefix + path.slice(separator));
   };
   rebase(element, 'data-fountain-path');
-  element.querySelectorAll<HTMLElement>('[data-fountain-path]').forEach((target) => rebase(target, 'data-fountain-path'));
-  element.querySelectorAll<HTMLElement>('[data-fountain-text-path]').forEach((target) => rebase(target, 'data-fountain-text-path'));
+  const first = element.firstElementChild;
+  if (!first) return;
+  // An ordinary single-run paragraph contains one span. Avoid two selector
+  // walks per reused paragraph while still checking both actual DOM paths.
+  if (!first.nextElementSibling && !first.firstElementChild) {
+    rebase(first, 'data-fountain-path');
+    rebase(first, 'data-fountain-text-path');
+    return;
+  }
+  element.querySelectorAll('[data-fountain-path]').forEach(target => rebase(target, 'data-fountain-path'));
+  element.querySelectorAll('[data-fountain-text-path]').forEach(target => rebase(target, 'data-fountain-text-path'));
 }
 
 const contextualDOMCache = new WeakMap<Node, boolean>();
