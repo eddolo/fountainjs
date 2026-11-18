@@ -87,7 +87,16 @@ export function readNativeChart(root: XMLElement, schema: Schema): Node | undefi
     cells.map(cell => schema.node(type, {}, [paragraph(cell)])));
   const table = schema.node('table', {}, [row('table_header', ['Category', ...series.map(item => item.name)]),
     ...categories!.map((label, i) => row('table_cell', [label, ...series.map(item => item.numbers[i]!)]))]);
-  const result = schema.node('bar_chart', { kind, categoryAxisTitle: chartTitle(one(area, 'catAx')),
+  const scaling = one(one(area, 'valAx'), 'scaling');
+  // Logarithmic and reversed value scales need a different projection.
+  if (one(scaling, 'logBase') || one(scaling, 'orientation')?.attrs.val === 'maxMin') return;
+  const bound = (name: string) => {
+    const raw = one(scaling, name)?.attrs.val;
+    return raw === undefined ? null : raw.trim() ? Number(raw) : NaN;
+  };
+  const axisMin = bound('min'), axisMax = bound('max');
+  if ([axisMin, axisMax].some(value => value !== null && !Number.isFinite(value))) return;
+  const result = schema.node('bar_chart', { kind, axisMin, axisMax, categoryAxisTitle: chartTitle(one(area, 'catAx')),
     valueAxisTitle: chartTitle(one(area, 'valAx')) }, title ? [paragraph(title), table] : [table]);
   return typeof chartLayout(result) === 'string' ? undefined : result;
 }

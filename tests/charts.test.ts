@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -337,12 +337,15 @@ it('keeps the table and reports unsupported native series, absent chart schema a
   insertBarChart(editor, 'Data', [['A', 2]]);
   const original = exportDOCX(editor.state.doc).bytes;
   const base = new Schema(composeExtensions([CoreExtension]).schema);
-  for (const change of ['external', 'second series', 'missing point', 'foreign cache', 'malformed XML', 'custom schema']) {
+  for (const change of ['external', 'second series', 'missing point', 'foreign cache', 'malformed XML', 'custom schema', 'log scale', 'reversed value scale', 'invalid range']) {
     const parts = unzipSync(original);
     const name = 'word/charts/chart1.xml', rel = 'word/_rels/document.xml.rels';
     let chart = strFromU8(parts[name]);
     if (change === 'external') parts[rel] = strToU8(strFromU8(parts[rel]).replace('Target="charts/chart1.xml"', 'TargetMode="External" Target="https://example.test/chart1.xml"'));
     if (change === 'second series') chart = chart.replace('</c:ser>', '</c:ser><c:ser/>');
+    if (change === 'log scale') chart = chart.replace('<c:valAx><c:axId val="2"/><c:scaling>', '<c:valAx><c:axId val="2"/><c:scaling><c:logBase val="10"/>');
+    if (change === 'reversed value scale') chart = chart.replace('<c:orientation val="minMax"/>', '<c:orientation val="maxMin"/>');
+    if (change === 'invalid range') chart = chart.replace('<c:orientation val="minMax"/>', '<c:orientation val="minMax"/><c:max val="1"/><c:min val="2"/>');
     if (change === 'missing point') chart = chart.replace('<c:numCache><c:formatCode>General</c:formatCode><c:ptCount val="1"/>', '<c:numCache><c:ptCount val="2"/>');
     if (change === 'malformed XML') chart = chart.slice(0, -12);
     if (change === 'foreign cache') chart = chart.replace('<c:numCache>', '<c:numCache xmlns:c="urn:foreign">');
@@ -506,5 +509,73 @@ it('keeps editable category and value axis titles through rotation, undo, HTML, 
   expect(exportDOCX(editor.state.doc).report.issues.some(issue => issue.code === 'chart-axis-titles-omitted')).toBe(true);
   setChartType(editor, 'column');
   expect(selected().attrs.categoryAxisTitle).toBe(category);
+  editor.destroy();
+});
+
+it('shares a fixed numeric range across series and restores automatic bounds with undo', () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  insertChart(editor, { title: 'Orders', kind: 'column', series: ['Base', 'Adjusted'], rows: [['A', 8, -5], ['B', 15, 4]] });
+  const before = editor.state.doc;
+  for (const [min, max] of [[10, 10], [12, 4], [NaN, 3], [-2, Infinity]]) {
+    expect(setChartValueRange(editor, min, max)).toBe(false);
+    expect(editor.state.doc).toBe(before);
+  }
+  expect(setChartValueRange(editor, -10, 10)).toBe(true);
+  const chart = selectedBarChart(editor)!;
+  const svg = exportBarChartSVG(chart);
+  expect(svg).toContain('Value range: -10 to 10');
+  expect(svg).toContain('Base 15');
+  const html = HTMLExporter.export(editor.state.doc, { document: false });
+  expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(editor.getJSON());
+  const bytes = exportDOCX(editor.state.doc).bytes;
+  const parts = unzipSync(bytes);
+  const xml = strFromU8(parts['word/charts/chart1.xml']);
+  expect(xml).toContain('<c:max val="10"/><c:min val="-10"/>');
+  expect(strFromU8(unzipSync(parts['word/embeddings/chart1.xlsx'])['xl/worksheets/sheet1.xml'])).toContain('<v>15</v>');
+  const reopen = (bytes: Uint8Array) => importDOCX(bytes, editor.state.schema).document.content.find(n => n.type.name === 'bar_chart');
+  expect(reopen(bytes)?.attrs).toMatchObject({ axisMin: -10, axisMax: 10 });
+  parts['word/charts/chart1.xml'] = strToU8(xml.replace('<c:max val="10"/><c:min val="-10"/>', '<c:min val="0"/>'));
+  expect(reopen(zipSync(parts))?.attrs).toMatchObject({ axisMin: 0, axisMax: null });
+  expect(setChartValueRange(editor, null, null)).toBe(true);
+  expect(exportBarChartSVG(selectedBarChart(editor)!)).not.toContain('Value range:');
+  expect(undo(editor)).toBe(true);
+  expect(selectedBarChart(editor)!.attrs).toMatchObject({ axisMin: -10, axisMax: 10 });
+  editor.destroy();
+});
+
+it('gives equal values the same bar length across documents with different data', () => {
+  for (const other of [1, 160]) {
+    const editor = createEditor({ schema: kit.schema });
+    insertBarChart(editor, 'Orders', [['Monday', 12], ['Tuesday', other]]);
+    setChartValueRange(editor, 0, 20);
+    const html = HTMLExporter.export(editor.state.doc, { document: false });
+    expect(html).toContain('left:0%;width:60%');
+    const reopened = ServerHTMLImporter.parse(html, editor.state.schema);
+    expect(reopened.content.find(node => node.type.name === 'bar_chart')?.attrs.axisMin).toBe(0);
+    setChartValueRange(editor, 10, 20);
+    expect(HTMLExporter.export(editor.state.doc, { document: false })).toContain('left:0%;width:20%');
+    editor.destroy();
+  }
+});
+
+it('clips crossing line segments at their intersections without inventing points on the axis', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertChart(editor, { title: 'Response', kind: 'line', series: ['Value'], rows: [['A', -10], ['B', 30], ['C', 25]] });
+  setChartValueRange(editor, 0, 10);
+  let svg = exportBarChartSVG(selectedBarChart(editor)!);
+  expect(svg.match(/<polyline/g)).toHaveLength(1);
+  expect(svg).not.toContain('<circle');
+  // The first segment enters one quarter and leaves one half of the way from A to B.
+  expect(svg).toMatch(/<polyline points="118,[\d.]+ 212,[\d.]+"/);
+  const html = HTMLExporter.export(editor.state.doc, { document: false });
+  expect(html).toContain('left:12.5%;top:100%');
+  setChartValueRange(editor, null, 0);
+  svg = exportBarChartSVG(selectedBarChart(editor)!);
+  expect(svg).toContain('Value range: -10 to 0');
+  setChartValueRange(editor, -Number.MAX_VALUE, Number.MAX_VALUE);
+  svg = exportBarChartSVG(selectedBarChart(editor)!);
+  expect(svg).not.toMatch(/NaN|Infinity/);
+  setChartType(editor, 'pie');
+  expect(exportDOCX(editor.state.doc).report.issues.some(issue => issue.code === 'chart-axis-range-omitted')).toBe(true);
   editor.destroy();
 });

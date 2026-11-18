@@ -136,9 +136,18 @@ test('keeps positive and negative columns on opposite sides of zero through a Wo
   const chart = demo.locator('figure[data-fountain-chart="column"]');
   const plot = chart.locator('[data-fountain-chart-plot]');
   await expect(plot).toContainText('Tuesday · -4');
-  await demo.getByText('Axis titles', { exact: true }).click();
+  await demo.getByText('Chart axes', { exact: true }).click();
   await demo.getByLabel('Category axis').fill('Delivery day');
   await demo.getByLabel('Value axis').fill('Net orders');
+  await demo.getByLabel('Minimum', { exact: true }).fill('20');
+  await demo.getByLabel('Maximum', { exact: true }).fill('10');
+  await demo.getByRole('button', { name: 'Apply range' }).click();
+  await expect(chart).not.toHaveAttribute('data-axis-min', '20');
+  expect(await demo.getByLabel('Maximum', { exact: true }).evaluate(input => (input as HTMLInputElement).validity.customError)).toBe(true);
+  await demo.getByLabel('Minimum', { exact: true }).fill('-20');
+  await demo.getByLabel('Maximum', { exact: true }).fill('20');
+  await demo.getByRole('button', { name: 'Apply range' }).click();
+  await expect(plot).toContainText('Value range: -20 to 20');
   await expect(plot.getByText('Delivery day', { exact: true })).toBeVisible();
   await expect(plot.getByText('Net orders', { exact: true })).toBeVisible();
   const graph = plot.getByRole('img').locator('div[dir="ltr"]').first();
@@ -148,6 +157,9 @@ test('keeps positive and negative columns on opposite sides of zero through a Wo
       return { x, y, width, height, bottom };
     }));
   const [axis, monday, tuesday, wednesday] = geometry;
+  const box = await graph.boundingBox();
+  expect((axis.y - box!.y) / box!.height).toBeCloseTo(0.5, 1);
+  expect(monday.height / box!.height).toBeCloseTo(0.3, 1);
   expect(geometry).toHaveLength(4);
   expect(monday.bottom).toBeCloseTo(axis.y, 0);
   expect(tuesday.y).toBeCloseTo(axis.y, 0);
@@ -175,6 +187,8 @@ test('keeps positive and negative columns on opposite sides of zero through a Wo
   const restored = reopened.locator('figure[data-fountain-chart="column"]');
   await expect(restored).toHaveAttribute('data-category-axis-title', 'Delivery day');
   await expect(restored).toHaveAttribute('data-value-axis-title', 'Net orders');
+  await expect(restored).toHaveAttribute('data-axis-min', '-20');
+  await expect(restored).toHaveAttribute('data-axis-max', '20');
 });
 
 test('changes a signed line chart to a pie, fixes the data, and reopens the saved chart', async ({ page }, info) => {
@@ -408,4 +422,32 @@ test('imports a CSV file and refreshes a linked chart from a real HTTP feed', as
   } finally {
     await new Promise<void>(resolve => { server.close(() => resolve()); server.closeAllConnections(); });
   }
+});
+
+test('zooms a line chart without connecting the portions outside the visible range', async ({ page }, info) => {
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.getByRole('button', { name: 'Bar chart', exact: true }).click();
+  await demo.getByRole('combobox', { name: 'Chart type' }).selectOption('line');
+  await demo.getByText('Chart axes', { exact: true }).click();
+  await demo.getByLabel('Minimum', { exact: true }).fill('0');
+  await demo.getByLabel('Maximum', { exact: true }).fill('6');
+  await demo.getByRole('button', { name: 'Apply range' }).click();
+  const chart = demo.locator('figure[data-fountain-chart="line"]');
+  await expect(chart.locator('[data-fountain-chart-plot]')).toContainText('Value range: 0 to 6');
+  await expect(chart.locator('td').getByText('-4', { exact: true })).toBeVisible();
+  await chart.screenshot({ path: info.outputPath('clipped-lines.png') });
+  await demo.getByLabel('Chart image format').selectOption('svg');
+  const downloaded = page.waitForEvent('download');
+  await demo.getByRole('button', { name: 'Download chart' }).click();
+  const file = info.outputPath('zoomed.svg');
+  await (await downloaded).saveAs(file);
+  const svg = await readFile(file, 'utf8');
+  expect(svg.match(/<polyline /g)).toHaveLength(2);
+  expect(svg).not.toContain('<circle');
+  await demo.getByLabel('Minimum', { exact: true }).fill('');
+  await demo.getByLabel('Maximum', { exact: true }).fill('');
+  await demo.getByRole('button', { name: 'Apply range' }).click();
+  await expect(chart.locator('[data-fountain-chart-plot]')).not.toContainText('Value range:');
+  await expect(chart.locator('td').getByText('-4', { exact: true })).toBeVisible();
 });

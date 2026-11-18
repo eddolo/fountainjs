@@ -82,7 +82,7 @@ import { FountainVersions } from 'fountainjs-editor/react/versions';
 import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity';
 import { downloadDocumentFile } from './math-document-files';
 import { ChartCSVControls } from './ChartCSVControls';
-import { ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartAxisTitle, setChartType, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
+import { ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartAxisTitle, setChartType, setChartValueRange, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import { SitePageLink } from './SitePageLink';
@@ -593,6 +593,7 @@ function App() {
 
   const document = state?.doc;
   const chartAction = tableChartAction(editor);
+  const chart = selectedChart(editor);
   const [chartFormat, setChartFormat] = useState<ChartImageFormat>('png');
   const [chartExportError, setChartExportError] = useState('');
   const downloadChart = async (owner: Document) => {
@@ -759,17 +760,34 @@ function App() {
             </div>
             <ChartCSVControls editor={editor} />
             {chartAction === 'unwrap' && <div className="quick-insert" role="group" aria-label="Chart export">
-              <label>Chart type <select value={String(selectedChart(editor)?.attrs.kind ?? 'bar')} onChange={event => {
+              <label>Chart type <select value={String(chart?.attrs.kind ?? 'bar')} onChange={event => {
                 setChartType(editor, event.target.value as ChartType);
                 setChartExportError('');
                 editorHandle.current?.focus();
               }}><option value="bar">Bar</option><option value="column">Column</option><option value="line">Line</option><option value="pie">Pie</option></select></label>
-              {selectedChart(editor)?.attrs.kind !== 'pie' && <details className="chart-axis-titles">
-                <summary>Axis titles</summary>
+              {chart && chart.attrs.kind !== 'pie' && <details className="chart-axis-titles">
+                <summary>Chart axes</summary>
                 {(['category', 'value'] as const).map(axis => <label key={axis}>{axis === 'category' ? 'Category axis' : 'Value axis'}
-                  <textarea rows={1} value={String(selectedChart(editor)?.attrs[axis + 'AxisTitle'] ?? '')}
+                  <textarea rows={1} value={String(chart.attrs[axis + 'AxisTitle'] ?? '')}
                     onChange={event => setChartAxisTitle(editor, axis, event.target.value)} />
                 </label>)}
+                <form key={[editor.state.selection.path[0], chart.attrs.axisMin, chart.attrs.axisMax].join(':')}
+                  onSubmit={event => {
+                    event.preventDefault();
+                    const form = event.currentTarget;
+                    const minimum = form.elements.namedItem('minimum') as HTMLInputElement;
+                    const maximum = form.elements.namedItem('maximum') as HTMLInputElement;
+                    if (minimum.value && maximum.value && minimum.valueAsNumber >= maximum.valueAsNumber) {
+                      maximum.setCustomValidity('Maximum must be greater than minimum.');
+                      maximum.reportValidity();
+                      return;
+                    }
+                    setChartValueRange(editor, minimum.value ? minimum.valueAsNumber : null, maximum.value ? maximum.valueAsNumber : null);
+                  }} onInput={event => (event.currentTarget.elements.namedItem('maximum') as HTMLInputElement).setCustomValidity('')}>
+                  <label>Minimum <input type="number" step="any" name="minimum" placeholder="Automatic" defaultValue={String(chart.attrs.axisMin ?? '')} /></label>
+                  <label>Maximum <input type="number" step="any" name="maximum" placeholder="Automatic" defaultValue={String(chart.attrs.axisMax ?? '')} /></label>
+                  <button type="submit">Apply range</button>
+                </form>
               </details>}
               <select aria-label="Chart image format" value={chartFormat} onChange={event => {
                 setChartFormat(event.target.value as ChartImageFormat);

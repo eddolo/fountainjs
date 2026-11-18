@@ -739,11 +739,10 @@ const limits = Object.freeze({
   // geometry and host scroll padding. Measured total: 1,461,248 bytes (+962).
   // Add 768 bytes of aggregate capacity; retain the failed measurement.
   // Every per-entry, ESM, CSS, performance and retention limit stays fixed.
-  // Footnote dependency closure, collision-safe model paste and clipboard-only
-  // text hooks add 3.1 KiB (measured total 1430.1 KiB). Allocate feature-level
-  // headroom rather than another sub-KiB allowance. No dependency is added;
-  // per-entry, ESM, CSS, latency and retained-memory limits stay unchanged.
-  'all CommonJS runtime code': 1440 * kibibyte,
+  // Editable multi-series charts, CSV refresh and native Word scales bring
+  // the combined CommonJS entries and shared chunks to 1441.6 KiB.
+  // The remaining allowance covers chart controls without changing entry budgets.
+  'all CommonJS runtime code': 1456 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

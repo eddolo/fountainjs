@@ -18,6 +18,11 @@ export function columnBounds(index: number, count: number, y: number, zero: numb
     top: Math.min(y, 100 - zero), height: Math.abs(y - (100 - zero)) };
 }
 
+// Inputs are finite; halving preserves a meaningful fraction when subtracting opposite extremes overflows.
+function fraction(value: number, from: number, to: number) {
+  return Number.isFinite(to - from) ? (value - from) / (to - from) : (value / 2 - from / 2) / (to / 2 - from / 2);
+}
+
 export function chartLayout(node: Node) {
   if (node.type.name !== 'bar_chart') return 'Select a chart to export.';
   const table = node.child(node.childCount - 1);
@@ -54,28 +59,48 @@ export function chartLayout(node: Node) {
   }
   if (!labels.length) return 'Add a data row below the column headings to draw the chart.';
   if (kind === 'pie' && (minimum < 0 || maximum === 0)) return 'Pie charts need nonnegative values and at least one positive value.';
-  // All series share the same zero and scale, including opposite finite extremes.
   const magnitude = Math.max(-minimum, maximum) || 1;
-  const span = maximum / magnitude - minimum / magnitude || 1;
-  const zero = -(minimum / magnitude) / span * 100;
+  const min = kind === 'pie' ? null : node.attrs.axisMin as number | null;
+  const max = kind === 'pie' ? null : node.attrs.axisMax as number | null;
+  const fixed = min != null || max != null;
+  let low = min ?? minimum, high = max ?? maximum;
+  if (low >= high) {
+    if (max == null) high = low + (Math.abs(low) || 1);
+    else if (min == null) low = high - (Math.abs(high) || 1);
+    if (!Number.isFinite(low) || !Number.isFinite(high) || low >= high) return 'Enter a minimum below the maximum for the value axis.';
+  }
+  const clamp = (value: number) => Math.min(high, Math.max(low, value));
+  const position = (value: number) => fraction(clamp(value), low, high) * 100;
+  const zero = position(0);
   const title = node.childCount === 2 ? node.child(0).textContent : '';
   const series = columns.map(({ name, values }, j) => {
     const sum = kind === 'pie' ? values.reduce((total, row) => total + row.value / magnitude, 0) : 1;
     let cumulative = 0;
     const rows = values.map(({ value, source }, i) => {
-      const width = Math.abs(value / magnitude) / span * 100;
-      const left = value < 0 ? Math.max(0, zero - width) : zero;
+      const endPosition = position(value);
+      const width = Math.abs(endPosition - zero);
+      const left = Math.min(endPosition, zero);
       const start = cumulative;
       if (kind === 'pie') cumulative += value / magnitude / sum * 100;
       const x = labels.length === 1 ? 50 : 100 * i / (labels.length - 1);
-      const y = 100 - (zero + value / magnitude / span * 100);
-      return { label: labels[i]!, source, width, left, x, y, start, end: cumulative, color: sliceColors[i % sliceColors.length]! };
+      const y = 100 - endPosition;
+      return { value, visible: value >= low && value <= high, label: labels[i]!, source, width, left, x, y, start, end: cumulative, color: sliceColors[i % sliceColors.length]! };
     });
-    return { name, rows, color: sliceColors[j % sliceColors.length]! };
+    const segments: { x: number; y: number; endX: number; endY: number }[] = [];
+    if (kind === 'line') {
+      for (let i = 1; i < rows.length; i++) {
+        const a = rows[i - 1]!, b = rows[i]!;
+        if (Math.min(a.value, b.value) > high || Math.max(a.value, b.value) < low) continue;
+        const cross = (v: number) => a.x + (b.x - a.x) * fraction(clamp(v), a.value, b.value);
+        segments.push({ x: a.visible ? a.x : cross(a.value), y: a.y, endX: b.visible ? b.x : cross(b.value), endY: b.y });
+      }
+    }
+    return { name, rows, segments, color: sliceColors[j % sliceColors.length]! };
   });
   const categoryTitle = kind === 'pie' ? '' : String(node.attrs.categoryAxisTitle ?? '');
   const valueTitle = kind === 'pie' ? '' : String(node.attrs.valueAxisTitle ?? '');
   const horizontalTitle = kind === 'bar' ? valueTitle : categoryTitle;
   const verticalTitle = kind === 'bar' ? categoryTitle : valueTitle;
-  return { kind, title, horizontalTitle, verticalTitle, zero, rows: series[0]!.rows, series };
+  const rangeLabel = fixed ? 'Value range: ' + low + ' to ' + high : '';
+  return { kind, rangeLabel, title, horizontalTitle, verticalTitle, zero, rows: series[0]!.rows, series };
 }

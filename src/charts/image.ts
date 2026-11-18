@@ -39,6 +39,7 @@ function drawChart(node: Node) {
   if (layout.series.length > 1) {
     for (const item of layout.series) text('■ ' + item.name, 16, item.color);
   }
+  if (layout.rangeLabel) text(layout.rangeLabel, 16);
   if (layout.verticalTitle) text(layout.verticalTitle, 17);
   y += 10;
   const x = (p: number) => Number((track * p / 100).toFixed(4));
@@ -52,9 +53,20 @@ function drawChart(node: Node) {
           drawing.push(`<rect x="${inset + x(bounds.left)}" y="${y + graphHeight * bounds.top / 100}" width="${x(bounds.width)}" height="${graphHeight * bounds.height / 100}" fill="${item.color}"/>`);
         });
       } else {
-        const points = item.rows.map(row => [inset + x(row.x), y + graphHeight * row.y / 100]);
-        drawing.push(`<polyline points="${points.map(point => point.join(',')).join(' ')}" fill="none" stroke="${item.color}" stroke-width="2"/>`);
-        for (const [cx, cy] of points) drawing.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="${item.color}"/>`);
+        const paths: string[][] = [];
+        const point = (xPercent: number, yPercent: number) => [inset + x(xPercent), y + graphHeight * yPercent / 100].join(',');
+        for (const segment of item.segments) {
+          const start = point(segment.x, segment.y), end = point(segment.endX, segment.endY);
+          const path = paths.at(-1);
+          if (path?.at(-1) === start) path.push(end);
+          else paths.push([start, end]);
+        }
+        for (const path of paths) {
+          drawing.push(`<polyline points="${path.join(' ')}" fill="none" stroke="${item.color}" stroke-width="2"/>`);
+        }
+        for (const row of item.rows) {
+          if (row.visible) drawing.push(`<circle cx="${inset + x(row.x)}" cy="${y + graphHeight * row.y / 100}" r="3" fill="${item.color}"/>`);
+        }
       }
     }
     y += graphHeight + 12;
