@@ -1,5 +1,5 @@
 import { createEditor, EditorView, toggleMark, createHistoryPlugin, undo, redo } from 'fountainjs-editor';
-import { schemaSpec, initialTemplate, documentOf, validateTemplate } from './model.mjs';
+import { schemaSpec, initialTemplate, documentOf, validateTemplate, comparisonLabels } from './model.mjs';
 import { insertTemplateField, resolveTemplateFields, validFieldKey } from './inline-fields.mjs';
 import './style.css';
 
@@ -152,7 +152,7 @@ async function request(path, method = 'GET', value) {
     body: value === undefined ? undefined : JSON.stringify(value),
   });
   const data = await res.json();
-  if (!res.ok) throw Object.assign(Error(data.error), { signInUrl: data.signInUrl });
+  if (!res.ok) throw Object.assign(Error(data.error), { signInUrl: data.signInUrl, field: data.field });
   return data;
 }
 function path() {
@@ -181,6 +181,17 @@ function makeURL(kind, result) {
 }
 function showError(error) {
   status.textContent = error.message;
+  if (validFieldKey(error.field)) {
+    const control = document.getElementById('answer-' + error.field);
+    if (control) {
+      for (const copy of root.querySelectorAll('[data-answer-key]')) {
+        if (copy.dataset.answerKey !== error.field) continue;
+        document.getElementById('error-' + copy.id).textContent = error.message;
+        copy.setAttribute('aria-invalid', 'true');
+      }
+      queueMicrotask(() => control.focus());
+    }
+  }
   if (error.signInUrl) status.append(' ', link('Sign in', error.signInUrl));
 }
 async function action(fn) {
@@ -260,6 +271,60 @@ function redraw() {
   if (route.kind === 'templates') author();
   else respondent();
 }
+function answerRulesEditor(template, fields) {
+  const panel = el('section', undefined, 'card');
+  const rows = el('div');
+  const choices = () => fields().filter((field) => field.kind === 'text');
+  let refreshers = [];
+  function fillSelect(select, candidates, value) {
+    select.replaceChildren(...candidates.map((field) => {
+      const option = el('option', field.label);
+      option.value = field.key;
+      return option;
+    }));
+    select.value = value;
+  }
+  function renderRows() {
+    rows.replaceChildren();
+    refreshers = [];
+    for (const rule of template.rules ?? []) {
+      const controls = row(rows);
+      const field = input(controls, 'Answer to check', rule.field, (key) => {
+        if (rule.other === key) rule.other = rule.field;
+        rule.field = key;
+        refresh();
+      }, []);
+      input(controls, 'Comparison', rule.operator, (value) => { rule.operator = value; }, Object.entries(comparisonLabels));
+      const other = input(controls, 'Compare with', rule.other, (key) => { rule.other = key; }, []);
+      function refresh() {
+        const candidates = choices();
+        fillSelect(field, candidates, rule.field);
+        fillSelect(other, candidates.filter((candidate) => candidate.key !== rule.field), rule.other);
+      }
+      refreshers.push(refresh);
+      refresh();
+      controls.append(button('Remove rule', () => {
+        template.rules.splice(template.rules.indexOf(rule), 1);
+        markDirty();
+        renderRows();
+        add.focus();
+      }));
+    }
+  }
+  const add = button('Add answer rule', () => {
+    const candidates = choices();
+    if (candidates.length < 2) throw Error('Add two single-line fields to compare answers.');
+    if ((template.rules?.length ?? 0) >= 64) throw Error('Use up to 64 answer rules.');
+    (template.rules ??= []).push({ field: candidates[1].key, other: candidates[0].key, operator: 'matches' });
+    markDirty();
+    renderRows();
+    rows.lastElementChild.querySelector('select').focus();
+  });
+  panel.append(el('h2', 'Answer rules'), rows, add);
+  renderRows();
+  return { panel, refreshFields: () => refreshers.forEach((refresh) => refresh()) };
+}
+
 function author() {
   const { template, revision, responses } = documentState;
   if (review) {
@@ -285,6 +350,8 @@ function author() {
   );
   input(root, 'Template title', template.title, (v) => (template.title = v));
   const fields = () => template.blocks.filter((b) => b.type === 'field');
+  const ruleEditor = answerRulesEditor(template, fields);
+  const usesRule = (key) => template.rules?.some((rule) => rule.field === key || rule.other === key);
   const usesInline = (key) =>
     template.blocks.some(
       (block) =>
@@ -307,7 +374,7 @@ function author() {
       rich(card, 'Instructions ' + (i + 1), b.document, (v) => (b.document = v), fields);
     if (b.type === 'field') {
       const r = row(card);
-      input(r, 'Field label', b.label, (v) => (b.label = v));
+      input(r, 'Field label', b.label, (v) => (b.label = v)).addEventListener('change', ruleEditor.refreshFields);
       const keyLabel = el('label', 'Field key'),
         keyInput = el('input');
       keyInput.value = b.key;
@@ -327,6 +394,11 @@ function author() {
         }
         const old = b.key;
         b.key = key;
+        for (const rule of template.rules ?? []) {
+          if (rule.field === old) rule.field = key;
+          if (rule.other === old) rule.other = key;
+        }
+        ruleEditor.refreshFields();
         for (const mirror of template.blocks)
           if (mirror.type === 'reference' && mirror.key === old) mirror.key = key;
         for (const select of root.querySelectorAll('select[data-reference]'))
@@ -343,7 +415,13 @@ function author() {
             status.textContent = 'Remove inline uses before changing this answer type.';
             return false;
           }
+          if (v !== 'text' && usesRule(b.key)) {
+            kind.value = b.kind;
+            status.textContent = 'Remove its answer rules before changing this answer type.';
+            return false;
+          }
           b.kind = v;
+          ruleEditor.refreshFields();
         },
         [
           ['text', 'Single line'],
@@ -394,6 +472,7 @@ function author() {
     }
     controls.append(
       button('Remove block', () => {
+        if (b.type === 'field' && usesRule(b.key)) throw Error('Remove its answer rules first.');
         if (b.type === 'field' && usesInline(b.key)) throw Error('Remove its inline uses first.');
         if (
           b.type === 'field' &&
@@ -419,6 +498,7 @@ function author() {
       add({ type: 'reference', key: fields()[0].key });
     }),
   );
+  root.append(ruleEditor.panel);
   const commands = row(root, 'row actions');
   commands.append(
     button(
@@ -562,6 +642,14 @@ function respondent() {
     for (const input of textInputs.get(key) ?? []) {
       if (input.value !== (answers[key] ?? '')) input.value = answers[key] ?? '';
     }
+    for (const invalid of root.querySelectorAll('[aria-invalid="true"]')) {
+      const invalidKey = invalid.dataset.answerKey;
+      if (invalidKey === key || template.rules?.some((rule) =>
+        (rule.field === invalidKey && rule.other === key) || (rule.other === invalidKey && rule.field === key))) {
+        invalid.removeAttribute('aria-invalid');
+        document.getElementById('error-' + invalid.id).textContent = '';
+      }
+    }
     for (const update of inlinePreviews.get(key) ?? []) update();
     for (const target of mirrors.get(key) ?? []) {
       const val = answers[key];
@@ -627,6 +715,24 @@ function respondent() {
       const control = input(card,label,answers[field.key] ?? '',set);
       if (!textInputs.has(field.key)) textInputs.set(field.key,[]);
       textInputs.get(field.key).push(control);
+      const suffix = peer ? 'repeat-' + template.blocks.indexOf(b) + '-' + field.key : field.key;
+      control.dataset.answerKey = field.key;
+      control.id = 'answer-' + suffix;
+      const notes = el('div');
+      notes.id = 'hint-' + suffix;
+      for (const rule of template.rules ?? []) {
+        if (rule.field === b.key) {
+          const other = fields.get(rule.other);
+          const hint = comparisonLabels[rule.operator] + ' “' + other.label + '”.';
+          notes.append(el('p', hint, 'small'));
+        }
+      }
+      if (template.rules?.some((rule) => rule.operator === 'onOrAfter' && (rule.field === b.key || rule.other === b.key)))
+        notes.append(el('p', 'Use YYYY-MM-DD.', 'small'));
+      const error = el('p', undefined, 'field-error');
+      error.id = 'error-' + control.id;
+      card.append(notes, error);
+      control.setAttribute('aria-describedby', [notes.childElementCount && notes.id, error.id].filter(Boolean).join(' '));
     }
   }
   const commands = row(root, 'row actions');

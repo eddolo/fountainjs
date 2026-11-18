@@ -293,6 +293,7 @@ export function createWorkspace(database, publicDir, { accounts, publicOrigin } 
       res.end(
         JSON.stringify({
           error: status === 500 ? 'Could not save or load the document.' : error.message,
+          ...(error instanceof InputError && error.field ? { field: error.field } : {}),
           ...(status === 401 && signInUrl ? { signInUrl } : {}),
         }),
       );

@@ -22,6 +22,14 @@ Open the local address printed in the terminal. The server binds to `127.0.0.1`.
 
 The template and final document have different file structures. The template envelope contains ordered protected prose, field definitions and references. The final document uses ordinary Fountain heading, paragraph and text nodes. Text fields allow one line up to 4,000 characters. Rich fields allow 128 paragraphs and 16,000 characters with bold and italic marks. The server validates submitted content before publication.
 
+## Compare answers before submission
+
+Under **Answer rules**, choose **Add answer rule**. Select two single-line fields and a comparison. For example, compare **Study end** with **Study start** using **Date on or after**. Respondents see the required date format beside each field. When a submission fails, the workspace focuses the answer that needs correction.
+
+**Must match** and **Must differ from** compare the exact text, including case and spaces. **Date on or after** accepts real calendar dates in YYYY-MM-DD format, including equal dates. An empty optional answer skips its own rule. Filling it in requires its comparison field. Respondents can save incomplete or inconsistent drafts and correct them later.
+
+Rules travel in the template JSON. The server checks them against the template revision captured by each invitation. Changing the author’s template applies the new rules to future invitations.
+
 ## Use inline fields in a custom schema
 
 The download includes `inline-fields.mjs`. Compose its extension with your own nodes and marks. Any parent that accepts the inline group can contain a field, including a custom figure caption. The command inserts at the caret or replaces selected text in one parent. The field inherits the first text run's formatting.
