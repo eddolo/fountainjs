@@ -113,3 +113,9 @@ After signing in, authors can reopen **Your templates**. A recipient opens **Ass
 `npm test` exercises the real HTTP and SQLite boundaries, including revision conflicts, two invitations, denied role changes, required rich text, variable reuse, and recovery after a database restart.
 
 The FountainJS repository runs the installed starter browser journey against Chromium, Firefox and WebKit as part of its starter audit.
+
+### Calculate elapsed days
+
+Add two single-line date fields. Choose **Add elapsed days**, label the result and select its start and end fields. Place the cursor in fixed instructions, select the calculation under **Field to insert**, then choose **Insert field**. You can insert the same result in several places.
+
+The result updates as the respondent types YYYY-MM-DD dates. Matching dates give zero and an earlier end date gives a negative count. Both optional dates may be empty. An incomplete or invalid pair can be saved as a draft and must be corrected before submission. Each invitation keeps its issued calculation. The server derives the result from the answers and the completed document stores ordinary formatted text.

@@ -515,3 +515,32 @@ test('application checks use the issued field bindings and enforce the latest ho
   assert.deepEqual((await send(resource(first), 'GET', owner.key)).answers, answers);
   assert.deepEqual((await send(path, 'GET', owner.key)).template.checks, doc.checks);
 });
+
+test('calculated calendar days resolve from the issued fields and cannot be supplied as answers', () => {
+  const template = initialTemplate();
+  template.blocks = [
+    { type: 'field', key: 'start', label: 'Start', kind: 'text', required: false },
+    { type: 'field', key: 'end', label: 'End', kind: 'text', required: false },
+    { type: 'prose', document: { type: 'doc', content: [{ type: 'paragraph', content: [
+      { type: 'template_field', attrs: { key: 'days' }, marks: [{ type: 'strong' }] },
+    ] }] } },
+  ];
+  const calculation = { operation: 'elapsedDays', key: 'days', label: 'Duration', start: 'start', end: 'end' };
+  template.calculations = [calculation];
+  for (const [start, end, expected] of [
+    ['2024-02-28', '2024-03-01', '2'], ['2026-03-08', '2026-03-09', '1'],
+    ['2026-03-09', '2026-03-08', '-1'], ['2026-11-18', '2026-11-18', '0'],
+  ]) {
+    const document = renderResponse(template, { start, end });
+    assert.deepEqual(document.content.at(-1).content, [{ type: 'text', marks: [{ type: 'strong' }], text: expected }]);
+  }
+  assert.doesNotThrow(() => renderResponse(template, {}));
+  for (const answers of [{ start: '2025-02-29', end: '2025-03-01' }, { start: '2026-11-18' }]) {
+    assert.doesNotThrow(() => validateAnswers(template, answers, false));
+    assert.throws(() => renderResponse(template, answers), error => error instanceof InputError && Boolean(error.field));
+  }
+  assert.throws(() => renderResponse(template, { days: '10' }), InputError);
+  for (const override of [{ operation: 'unknown' }, { key: 'start' }, { end: 'days' }, { start: 'end' }, { end: 'missing' }]) {
+    assert.throws(() => validateTemplate({ ...template, calculations: [{ ...calculation, ...override }] }), InputError);
+  }
+});
