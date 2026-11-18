@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { bundledFountainModules } from './starter-bundle-sources.mjs';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, readdirSync, writeFileSync } from 'node:fs';
@@ -70,7 +71,8 @@ if (mode === 'prepare') {
     for (const file of files) assert.equal(sha256(join(project, file)), sha256(join(source, file)), file);
     receipt.projects[name] = { path: project, installed, identicalDistributionFiles: distribution.length, unchangedStarterFiles: files };
     if (name !== 'node') {
-      const output = run(process.execPath, [pnpm, '--ignore-workspace', 'run', 'build'], project);
+      const output = run(process.execPath, [pnpm, '--ignore-workspace', 'run', 'build', '--sourcemap', 'hidden'], project);
+      receipt.projects[name].bundledFountainModules = bundledFountainModules(join(project, 'dist'), installed);
       writeFileSync(join(evidence, `${name}-build.log`), output);
       assert(existsSync(join(project, 'dist/index.html')));
       if (name === 'templates') writeFileSync(join(evidence,'templates-workflow.log'),

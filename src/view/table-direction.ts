@@ -13,6 +13,12 @@ const releaseIfEmpty = (editor: Editor, entry: Roots): void => {
   if (!entry.roots.size && !entry.listeners.size) mountedRoots.delete(editor);
 };
 
+/** A shared editor has one native selection even when several views render its document. */
+export function ownsViewSelection(editor: Editor, root: HTMLElement): boolean {
+  const entry = mountedRoots.get(editor);
+  return !entry || entry.roots.size < 2 || entry.lastFocused === root;
+}
+
 export function observeTableDirectionRoots(editor: Editor, listener: () => void): () => void {
   const entry = rootsFor(editor); entry.listeners.add(listener);
   return () => { entry.listeners.delete(listener); releaseIfEmpty(editor, entry); };

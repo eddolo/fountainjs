@@ -447,6 +447,25 @@ const view = new EditorView(mount, editor, {
   paste: { onReport: (report) => pasteReports.push(report) },
 });
 const commands = view.commandManager(browserKit.commands);
+if (browserFixture === 'shared-editor-views') {
+  const holder = document.createElement('section');
+  mount.after(holder);
+  const peer = new EditorView(holder, editor, { ariaLabel: 'Second view' });
+  const readDirection = document.createElement('button');
+  const result = document.createElement('output');
+  readDirection.textContent = 'Read presence selection';
+  result.setAttribute('aria-label', 'Presence selection');
+  readDirection.onmousedown = event => event.preventDefault();
+  readDirection.onclick = async () => {
+    const { viewSelection } = await import('../../../src/core/view-selection');
+    const selection = viewSelection(editor);
+    result.textContent = 'backward' in selection && selection.backward ? 'backward' : 'forward';
+  };
+  const close = document.createElement('button');
+  close.textContent = 'Close second view';
+  close.onclick = () => { peer.destroy(); close.disabled = true; };
+  holder.append(readDirection, result, close);
+}
 if (browserFixture === 'editability') {
   const controls = document.createElement('div');
   controls.setAttribute('aria-label', 'Interaction mode controls');
