@@ -11,6 +11,8 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+Select **Open sample Word report** to try the independent [cooling report](../tests/fixtures/native-docx/cooling-report.docx). Inspect its figures, equations and footnote, edit the text, then build a page preview or download an export. **Download untouched original** saves the same DOCX for comparison in a desktop editor. The sample loads from the site only when selected.
+
 **Download export** saves the generated file even if the lab cannot reopen it.
 For example, a DOCX can store a chart once and display it several times. Fountain
 JSON embeds the image at each location, so the JSON may exceed the lab’s 1 MiB

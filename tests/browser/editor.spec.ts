@@ -528,7 +528,7 @@ test('keeps keyboard focus and surviving drafts when removing files from the con
   await expect(files).toHaveCount(0);
   await expect(chooser).toBeFocused();
 
-  await page.getByRole('button', { name: 'Try a sample', exact: true }).press('Enter');
+  await page.getByRole('button', { name: 'Open sample Markdown', exact: true }).press('Enter');
   await expect(files.getByRole('button', { name: 'sample.md', exact: true })).toBeVisible();
   page.once('dialog', dialog => dialog.accept());
   await page.getByRole('button', { name: 'Clear session', exact: true }).press('Enter');

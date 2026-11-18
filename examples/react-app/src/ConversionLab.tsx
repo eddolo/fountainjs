@@ -26,6 +26,13 @@ const pageSettingFields = [
   ['marginRight', 'Right margin'], ['marginBottom', 'Bottom margin'], ['marginLeft', 'Left margin'],
   ['headerDistance', 'Header distance'], ['footerDistance', 'Footer distance'], ['gutter', 'Gutter'],
 ] as const;
+async function loadWordSample(): Promise<File[]> {
+  const response = await fetch(new URL('../../../tests/fixtures/native-docx/cooling-report.docx', import.meta.url)).catch(() => undefined);
+  if (!response?.ok) throw new Error('Could not load the sample Word report. Try again or choose a local file.');
+  return [new File([await response.blob()], 'cooling-report.docx', {
+    type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  })];
+}
 function download(data: BlobPart, name: string, type = 'application/octet-stream') {
   const url = URL.createObjectURL(new Blob([data], { type }));
   const link = document.createElement('a'); link.href = url; link.download = name; link.click();
@@ -298,13 +305,14 @@ export function ConversionLab() {
     setMessage('Local session cleared.');
   }
 
-  async function open(files: File[]) {
-    if (importing.current) return;
-    if (files.length + entries.length > 8) { setMessage('Keep up to 8 files in this lab. Remove files or clear the session first.'); return; }
-    if ([...entries.map(entry => entry.file), ...files].reduce((sum, file) => sum + file.size, 0) > 16 * 1024 * 1024) { setMessage('Session limit: 16 MiB total. Try fewer or smaller files.'); return; }
+  async function open(input: File[] | typeof loadWordSample) {
+    if (importing.current || (Array.isArray(input) && !input.length)) return;
     importing.current = true; setBusy(true); setMessage('Reading files locally…');
     const added: Entry[] = [];
     try {
+      const files = typeof input === 'function' ? await input() : input;
+      if (files.length + entries.length > 8) { setMessage('Keep up to 8 files in this lab. Remove files or clear the session first.'); return; }
+      if ([...entries.map(entry => entry.file), ...files].reduce((sum, file) => sum + file.size, 0) > 16 * 1024 * 1024) { setMessage('Session limit: 16 MiB total. Try fewer or smaller files.'); return; }
       const context = createLabContext({ preserveHTMLStructure, commonMarkText, retainBlockedAutolinks });
       const sourceReviewContext = commonMarkSourceReview ? createLabContext({ commonMarkSourceReview }) : context;
       for (const file of files) {
@@ -321,12 +329,17 @@ export function ConversionLab() {
       }
       setEntries(current => [...current, ...added]); setActive(added[0]?.id ?? active);
       setMessage(`${added.filter(entry => entry.result).length} imported; ${added.filter(entry => entry.error).length} could not be imported. No files were uploaded.`);
+    } catch (cause) {
+      setMessage(cause instanceof Error ? cause.message : String(cause));
     } finally { importing.current = false; setBusy(false); }
   }
   return <main className="conversion-lab">
     <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
     <div className="lab-shell"><nav className="lab-breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a><span> / </span><a href="./demos.html">Demos</a><span> / Conversion lab</span></nav><a href="./demos.html">← Back to demos</a><h1>Try your own documents.</h1><p className="lab-intro">Import, inspect, edit and reopen an export. A working conversion lab—not a guarantee of identical output.</p>
-    <section className="lab-drop" onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); void open(Array.from(event.dataTransfer.files)); }} aria-label="Local file import"><label>Drop files here, or choose files<input ref={fileChooser} aria-label="Choose documents" type="file" multiple disabled={busy} onChange={event => { void open(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label><p>Markdown · HTML · DOCX · Fountain JSON. Other formats, including PDF, TeX, ODT and EPUB, are not supported in this first lab.</p><div className="lab-actions"><button disabled={busy || entries.length >= 8} onClick={() => void open([new File(['# Conversion check\n\nA paragraph with **bold text**.\n\n- [ ] Verify the export\n- [x] Keep the original\n'], 'sample.md', { type: 'text/markdown' })])}>Try a sample</button><button disabled={busy || !entries.length} onClick={clearSession}>Clear session</button></div></section>
+    <section className="lab-drop" onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); void open(Array.from(event.dataTransfer.files)); }} aria-label="Local file import"><label>Drop files here, or choose files<input ref={fileChooser} aria-label="Choose documents" type="file" multiple disabled={busy} onChange={event => { void open(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label><p>Markdown · HTML · DOCX · Fountain JSON. Other formats, including PDF, TeX, ODT and EPUB, are not supported in this first lab.</p><div className="lab-actions"><button disabled={busy || entries.length >= 8} onClick={() => void open([new File(['# Conversion check\n\nA paragraph with **bold text**.\n\n- [ ] Verify the export\n- [x] Keep the original\n'], 'sample.md', { type: 'text/markdown' })])}>Open sample Markdown</button>
+      <button disabled={busy || entries.length >= 8} onClick={() => void open(loadWordSample)}>Open sample Word report</button><button disabled={busy || !entries.length} onClick={clearSession}>Clear session</button></div>
+      <p>The Word report includes a cooling plot, equations, a table and a footnote. Open it to edit a copy or download the original.</p>
+    </section>
     <fieldset className="lab-import-options" disabled={busy}>
       <legend>Options for the next files</legend>
       <label className="lab-checkbox"><input type="checkbox" checked={commonMarkSourceReview} onChange={event => setCommonMarkSourceReview(event.target.checked)} /> Use CommonMark source review for Markdown, HTML and Fountain JSON</label>
