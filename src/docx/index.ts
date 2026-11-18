@@ -1973,7 +1973,7 @@ interface ExportContext {
   readonly footnotes: ReadonlyMap<string, { id: string; node: FountainNode; path: readonly number[] }>;
   readonly numbering: string[];
   readonly numberingDefinitions: string[];
-  readonly hyperlinks: Map<string, string>;
+  readonly hyperlinkIdsByTarget: Map<string, string>;
   readonly mediaBySource: Map<string, ExportedMedia>;
   readonly media: ExportedMedia[];
   readonly issues: DOCXIssue[];
@@ -2084,9 +2084,10 @@ function wordHyperlinkId(href: string | undefined, context: ExportContext, path:
     context.issues.push({ code: 'unsafe-hyperlink-omitted', severity: 'warning', message: 'An unsafe hyperlink target was omitted from Word output while its content was preserved.', path });
     return;
   }
-  for (const [id, target] of context.hyperlinks) if (target === href) return id;
-  const id = `rId${context.hyperlinks.size + 1}`;
-  context.hyperlinks.set(id, href);
+  const existing = context.hyperlinkIdsByTarget.get(href);
+  if (existing !== undefined) return existing;
+  const id = `rId${context.hyperlinkIdsByTarget.size + 1}`;
+  context.hyperlinkIdsByTarget.set(href, id);
   return id;
 }
 
@@ -2682,7 +2683,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
   }
   const context: ExportContext = {
     paragraphBridge: createParagraphBridge(), sourcePart: 'word/document.xml',
-    footnotes, hyperlinks: new Map(), mediaBySource: new Map(), media: [], issues, options, numbering: [], numberingDefinitions: [],
+    footnotes, hyperlinkIdsByTarget: new Map(), mediaBySource: new Map(), media: [], issues, options, numbering: [], numberingDefinitions: [],
     maxMediaBytes: exportLimit(options.maxMediaBytes, DEFAULT_LIMITS.maxMediaBytes, 'maxMediaBytes'),
     maxMediaFiles: exportLimit(options.maxMediaFiles, DEFAULT_LIMITS.maxMediaFiles, 'maxMediaFiles'),
     mediaBytes: 0, nextDrawingId: 1, nextControlId: 1, mathSources: [], mathCharacters: 0,
@@ -2722,7 +2723,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
   const paragraphNamespaces = context.paragraphBridge.roles.length ? ` xmlns:w14="${WORD_PARAGRAPH_ID_NS}" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="w14"` : '';
   const storyNamespaces = `xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="${WORD_DRAWING_NS}" xmlns:a="${DRAWING_NS}" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}`;
   const documentXML = `${XML_DECLARATION}<w:document ${storyNamespaces}><w:body>${body}${section}</w:body></w:document>`;
-  const resourceRels = [...context.hyperlinks].map(([id, target]) => relationshipXML(id, `${OFFICE_REL_NS}/hyperlink`, target, true)).join('')
+  const resourceRels = [...context.hyperlinkIdsByTarget].map(([target, id]) => relationshipXML(id, `${OFFICE_REL_NS}/hyperlink`, target, true)).join('')
     + context.media.map(item => relationshipXML(item.relationshipId, `${OFFICE_REL_NS}/image`, `media/${item.fileName}`)).join('');
   const documentRels = [
     relationshipXML('rIdStyles', `${OFFICE_REL_NS}/styles`, 'styles.xml'),
