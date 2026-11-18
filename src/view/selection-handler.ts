@@ -15,6 +15,7 @@ import {
   type Transaction,
 } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
+import { ownsViewSelection } from './table-direction';
 import { registerViewSelection } from '../core/view-selection';
 
 function parsePath(element: HTMLElement): number[] {
@@ -79,6 +80,7 @@ export class SelectionHandler {
     private readonly shouldStopEvent?: (event: Event) => boolean,
   ) {
     this.#releaseViewSelection = registerViewSelection(editor, (selection, transaction) => {
+      if (!ownsViewSelection(editor, dom)) return undefined;
       const backward = transaction ? this.mappedBackwardSelection(transaction) : (this as SelectionHandler & DirectionState)._b;
       if (!backward?.eq(selection)) return selection;
       const doc = transaction?.doc ?? editor.state.doc;
@@ -394,7 +396,7 @@ export class SelectionHandler {
     // A mapped model selection is not a request to leave a native field.
     // Explicit view.focus() focuses the editing host before calling sync.
     const active = this.dom.ownerDocument.activeElement;
-    applyDOM = applyDOM && !active?.matches('input,textarea,select');
+    applyDOM = applyDOM && ownsViewSelection(this.editor, this.dom) && !active?.matches('input,textarea,select');
     this.clearSemanticSelectionMarkers();
     const domSelection = document.getSelection();
     if (!domSelection) return;
