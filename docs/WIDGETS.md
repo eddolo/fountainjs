@@ -171,6 +171,13 @@ protected-identity changes return `false` without modifying state. Transactions
 carry `WIDGET_TRANSACTION_META` so host analytics can distinguish `insert` and
 `update` actions without reading DOM events.
 
+A host can reject an otherwise valid edit through a plugin's `filterTransaction`.
+Use the boolean returned by `insertWidget`, `controller.set` or `controller.update`
+to decide when to show “Saved” or clear a draft. When a keyboard exit is
+rejected, the widget leaves the key's default behavior available and skips
+the focus handoff. Keep pending input across renderer updates until its saved
+attribute actually changes.
+
 The generic Yjs adapter needs no widget-specific transport. Every client must
 compose a compatible definition; widget attributes then synchronize like other
 portable node attributes, remote updates reach the mounted renderer's `update`

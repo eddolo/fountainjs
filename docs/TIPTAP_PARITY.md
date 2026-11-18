@@ -1,6 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-## Current programme status — 2026-11-17
+## Current programme status — 2026-11-18
+
+The ledger records 61 delivered capabilities out of 74, eight partial, three
+missing and two owned by host applications. The [0.5 beta qualification record](RELEASE_0_5_0_BETA_1.md#qualification-status)
+identifies the tested GitHub release and its browser coverage.
+[Local typing](https://github.com/eddolo/fountainjs/pull/27) and
+[remote update processing](https://github.com/eddolo/fountainjs/pull/28) have
+separate post-tag measurements against Tiptap. Each shows an improvement over
+the preceding Fountain revision and a remaining large-document latency gap.
 
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu
@@ -2758,7 +2766,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | SURFACE-01 | Plain DOM integration | Delivered | Add lifecycle stress and multi-editor tests. |
 | SURFACE-02 | React integration | Delivered | Add server-rendering guidance and concurrent React coverage. |
 | SURFACE-03 | Standards-based Web Component | Delivered | Public value/event/lifecycle and configurable schema/plugins remain available. Unreleased source adds opt-in native JSON FormData, required-content/custom-error validity, associated-label focus/naming, reset, fieldset disabling and state restoration. Real native ElementInternals and recorded public-workshop checks cover the bounded contract; full native-input, autofill and assistive-technology parity remain unclaimed. See [WEB_COMPONENT_FORMS.md](WEB_COMPONENT_FORMS.md). |
-| SURFACE-04 | Native Vue, Svelte, and Angular bindings | Partial | Optional `/vue` composables/component, `/svelte` lifecycle/store/action and `/angular` signals/partial-Ivy directive; real compiled framework demos with ownership, SSR and browser editing checks. [Vue](VUE.md), [Svelte](SVELTE.md), [Angular](ANGULAR.md) guides. All three base adapters ship in [0.4.0-beta.2](https://github.com/eddolo/fountainjs/releases/tag/v0.4.0-beta.2). The unreleased Angular 22 Forms entry adds portable JSON form values, touch and disabled state, and undo-safe resets. The unreleased Vue document field adds portable JSON `v-model`, blur and disabled state, and external resets. Equivalent optional framework UI suites, broader framework-version and form coverage, and further production evidence remain open. |
+| SURFACE-04 | Native Vue, Svelte, and Angular bindings | Partial | Optional `/vue` composables/component, `/svelte` lifecycle/store/action and `/angular` signals/partial-Ivy directive; real compiled framework demos with ownership, SSR and browser editing checks. [Vue](VUE.md), [Svelte](SVELTE.md), [Angular](ANGULAR.md) guides. All three base adapters ship in [0.4.0-beta.2](https://github.com/eddolo/fountainjs/releases/tag/v0.4.0-beta.2). The 0.5.0-beta.1 Angular 22 Forms entry adds portable JSON form values, touch and disabled state, and undo-safe resets. The 0.5.0-beta.1 Vue document field adds portable JSON `v-model`, blur and disabled state, and external resets. Equivalent optional framework UI suites, broader framework-version and form coverage, and further production evidence remain open. |
 | SURFACE-05 | Headless/server document processing | Delivered | `fountainjs-editor/core` exposes the model/schema, logical selections, transactions, editor state, commands, history, portable extension composition, generic collaboration, formats, migrations, stable IDs, and structured attributes behind a 50-module import gate. A real package consumer compiles with only `ES2023`, no ambient types, and `skipLibCheck: false`; packed ESM/CommonJS execute generic and Yjs collaboration with `document` and `window` absent; `html/server` supplies bounded HTML parsing. The complete 455-test package gate and 289-pass Chromium/Firefox/WebKit/mobile matrix are certified in [CI run `2c7ff4c`](https://github.com/eddolo/fountainjs/actions/runs/33979389234), with the corresponding [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33979389243). Native UI renderers remain explicitly outside this delivered server outcome. |
 | SURFACE-06 | Structured whiteboard editing surface | Missing | No first-party board renderer, shape selection, camera, drawing or board collaboration contract exists. Document block reordering is not a whiteboard. Keep this as an optional future surface with its own persistence, accessibility, history and collaboration tests. See the November 11 catalogue audit. |
 

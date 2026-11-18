@@ -9,10 +9,9 @@ FountainJS collaboration has two layers:
    relative cursor positions, and origin-aware undo. It has a `yjs` peer
    dependency and is not loaded by the root package.
 
-The unreleased local `/yjs` entry uses retained character and node identities.
-The published beta still uses the XML representation. Existing XML rooms need
-the explicit `/yjs/legacy` entry or an authority-backed migration; changing an
-import does not convert their bytes. The XML compatibility adapter retains its
+The default `/yjs` entry uses XML in 0.4.0-beta.2 and retained character and
+node identities in 0.5.0-beta.1. On 0.5, open existing XML rooms with
+`/yjs/legacy` or migrate them using the room authority. The XML compatibility adapter retains its
 known offline typing conflicts with structural and formatting edits.
 [Adoption contract](YJS_DEFAULT_ADOPTION.md).
 

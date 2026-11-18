@@ -1206,17 +1206,17 @@ The root package exposes a provider-independent collaboration boundary. The
 separate `fountainjs-editor/yjs` entry adds shared editing, relative remote
 selections, accessible carets, and local-origin undo/redo.
 
-**Unreleased local change:** `/yjs` now uses retained character and node
-identities. Existing XML rooms require `/yjs/legacy` or an explicit migration.
-The published beta still uses the XML adapter. Installing that beta does not
-provide this local change. See the [adoption and compatibility contract](docs/YJS_DEFAULT_ADOPTION.md).
+In 0.4.0-beta.2 the default Yjs adapter stores XML. In 0.5.0-beta.1,
+`fountainjs-editor/yjs` uses retained character and node identities. To keep
+editing an existing XML room on 0.5, select `fountainjs-editor/yjs/legacy`.
+To adopt retained storage, migrate the room explicitly. [Migration and recovery](docs/YJS_DEFAULT_ADOPTION.md).
 
 ```bash
 npm install fountainjs-editor yjs
 ```
 
 ```ts
-// Unreleased branch: open a room through the application's authority.
+// 0.5.0-beta.1 opens the room through the application's authority.
 import { CoreExtension, composeExtensions, createEditor } from 'fountainjs-editor'
 import { openYjsRoom } from 'fountainjs-editor/yjs/room'
 
