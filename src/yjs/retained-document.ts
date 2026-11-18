@@ -55,7 +55,7 @@ const sameOrdered = (left: unknown, right: unknown): boolean => {
 };
 interface Binding { id: string; from: number; length: number; modelFrom: number; leaf: string }
 type TextIndexEdit = { path: readonly number[]; binding: Binding; after: Node } | 'remote';
-interface GroupState { id: string; parent: string; value: RetainedNodeProjection }
+interface GroupState { parent: string; value: RetainedNodeProjection }
 interface Leaf { node: Node; path: number[]; at: number; leaf: string }
 interface Group { parent: string; leaves: Leaf[]; ids: string[]; field: string; pieces: Piece[]; empty: boolean; preserved?: boolean }
 interface Piece { original: string; from: number; to: number; at: number; group: Group; start?: unknown; end?: unknown; id?: string; leaf: Leaf }
@@ -75,6 +75,20 @@ const sameBindings = (left: readonly Binding[], right: readonly Binding[]): bool
   const other = right[index]!;
   return entry.id === other.id && entry.from === other.from && entry.length === other.length && entry.modelFrom === other.modelFrom && entry.leaf === other.leaf;
 });
+
+function serializeMarks(value: { readonly marks: readonly Mark[] }): MarkJSON[] {
+  return value.marks.map(mark => mark.toJSON());
+}
+
+function sameTextStyle(left: Pick<Node, 'attrs' | 'marks'>, right: Pick<Node, 'attrs' | 'marks'>): boolean {
+  return same(left.attrs, right.attrs) && same(serializeMarks(left), serializeMarks(right));
+}
+
+function hasNonemptyTextAt(node: Node, index: number): boolean {
+  if (index >= node.childCount) return false;
+  const child = node.child(index);
+  return child.isText && child.nodeSize > 0;
+}
 
 function format(node: Node, leaf: string): Record<string, string> {
   const result: Record<string, string> = { [LEAF]: leaf }, order: string[] = [], counts = new Map<string, number>();
@@ -138,7 +152,7 @@ export function validateRetainedDocument(document: Node, schema: Schema): void {
       return cached;
     }
     if (++nodes > 100_000 || depth > 100 || (characters += node.text?.length ?? 0) > 10_000_000) throw new RangeError('Retained document is too large.');
-    validateRetainedMetadata(node.attrs); validateRetainedMetadata(node.marks.map(mark => mark.toJSON()));
+    validateRetainedMetadata(node.attrs); validateRetainedMetadata(serializeMarks(node));
     if (node.type.name.length > 200 || Object.keys(node.attrs).length > 1_000 || Object.keys(node.attrs).some(name => name.length > 200)) throw new RangeError('Retained node metadata exceeds the candidate storage bounds.');
     assertRetainedWireString(node.type.name);
     if (typeof node.text === 'string') assertRetainedWireString(node.text);
@@ -308,7 +322,7 @@ export class RetainedDocumentStore {
     for (const name of new Set([...Object.keys(previous), ...Object.keys(after.attrs)])) {
       if (!same(previous[name], after.attrs[name])) this.nodes.setAttribute(id, name, after.attrs[name]);
     }
-    const marks = after.marks.map(mark => mark.toJSON());
+    const marks = serializeMarks(after);
     if (!same(before?.marks ?? [], marks)) this.nodes.setMarks(id, marks.length ? marks : undefined);
   }
 
@@ -323,12 +337,12 @@ export class RetainedDocumentStore {
           const child = node.child(index);
           const id = this.createId(), token = this.createId();
           if (!child.isText) {
-            result.push({ id, token, type: child.type.name, attrs: { ...child.attrs }, marks: child.marks.map(mark => mark.toJSON()), content: visit(child) });
+            result.push({ id, token, type: child.type.name, attrs: { ...child.attrs }, marks: serializeMarks(child), content: visit(child) });
             index++; continue;
           }
           const content: Node[] = [child]; index++;
-          if (child.nodeSize) while (index < node.childCount && node.child(index).isText && node.child(index).nodeSize) content.push(node.child(index++));
-          result.push({ id, token, type: 'text', attrs: { ...child.attrs }, marks: child.marks.map(mark => mark.toJSON()), textLayout: { field: id, empty: child.nodeSize === 0 }, content: [] });
+          if (child.nodeSize) while (hasNonemptyTextAt(node, index)) content.push(node.child(index++));
+          result.push({ id, token, type: 'text', attrs: { ...child.attrs }, marks: serializeMarks(child), textLayout: { field: id, empty: child.nodeSize === 0 }, content: [] });
           texts.push({ stream: this.createId(), id, runs: content.filter(text => text.nodeSize).map(text => ({ text: text.text!, attributes: format(text, this.createId()) })) });
         }
         return result;
@@ -504,21 +518,39 @@ export class RetainedDocumentStore {
       paths: this.textPaths, candidates: previousTexts, partitions: this.partitionPaths } : undefined;
     const used = new Set<Node>();
     const groupStates = new Map<string, GroupState>();
-    const visit = (raw: RetainedNodeProjection): Fragment => {
-      if (!Object.hasOwn(this.schema.nodes, raw.type)) throw new Error(`Unknown retained node type: ${raw.type}`);
-      const ordered = this.orderedChildren(raw, partitions, placements);
+    const previousPartitions = indexEdit === 'remote' ? this.frame?.partitions : undefined;
+    const projectChildren = (raw: RetainedNodeProjection, ordered: readonly RetainedNodeProjection[]): Fragment[] => {
+      const only = ordered.length === 1 ? ordered[0] : undefined;
+      if (previousPartitions && only?.type === 'text' && previousModel) {
+        const partition = partitions.get(only.id)!;
+        const entries = indexes!.partitions.get(only.id);
+        if (partition === previousPartitions.get(only.id) && partition.runs.length === 1 && entries?.length === 1) {
+          const { path, binding } = entries[0], run = partition.runs[0];
+          const type = this.schema.nodes.text;
+          // A complete, unformatted stream maps to exactly one previous leaf.
+          // Keep the ordinary node-reuse checks and all custom factory rules.
+          if (!type.spec.attrs && !type.spec.validate && run.text.length
+            && binding.from === 0 && binding.modelFrom === 0 && binding.length === run.text.length
+            && run.attributes?.[LEAF] === binding.leaf && run.attributes[ORDER] === '[]'
+            && Object.keys(run.attributes).length === 2) {
+            const candidate = getNodeAtPath(previousModel, path);
+            const node = this.projectionNode(type, EMPTY_ATTRS, [], run.text, [], used, candidate);
+            groupStates.set(only.id, { parent: raw.id, value: only });
+            return [{ node, leaf: binding.leaf, bindings: [binding] }];
+          }
+        }
+      }
       let occupiedFields: Set<string> | undefined;
       const children: (Fragment | TextFragment)[] = [];
       const append = (next: Fragment | TextFragment) => {
         const previous = children.at(-1);
         if (previous && 'text' in previous && 'text' in next && previous.leaf === next.leaf
-          && same(previous.attrs, next.attrs) && same(previous.marks.map(mark => mark.toJSON()), next.marks.map(mark => mark.toJSON()))) {
+          && sameTextStyle(previous, next)) {
           const length = previous.text.length;
           previous.text += next.text;
           previous.bindings.push(...next.bindings.map(binding => ({ ...binding, modelFrom: binding.modelFrom + length })));
         } else if (previous && 'node' in previous && 'node' in next && previous.leaf && previous.leaf === next.leaf
-          && previous.node.isText && next.node.isText && same(previous.node.attrs, next.node.attrs)
-          && same(previous.node.marks.map(mark => mark.toJSON()), next.node.marks.map(mark => mark.toJSON()))) {
+          && previous.node.isText && next.node.isText && sameTextStyle(previous.node, next.node)) {
           const length = previous.node.nodeSize;
           previous.node = previous.node.withText(previous.node.text! + next.node.text!);
           previous.bindings!.push(...next.bindings!.map(binding => ({ ...binding, modelFrom: binding.modelFrom + length })));
@@ -535,7 +567,7 @@ export class RetainedDocumentStore {
       };
       for (const child of ordered) {
         if (child.type !== 'text') { append(visit(child)); continue; }
-        groupStates.set(child.id, { id: child.id, parent: raw.id, value: child });
+        groupStates.set(child.id, { parent: raw.id, value: child });
         const partition = partitions.get(child.id)!;
         let offset = 0;
         for (const run of partition.runs) {
@@ -559,13 +591,18 @@ export class RetainedDocumentStore {
           }
         }
       }
-      const fragments: Fragment[] = children.map(child => {
+      return children.map(child => {
         if ('node' in child) return child;
         const previous = previousTexts.get(bindingKey(child.bindings, child.leaf));
         const candidate = previousModel && previous && sameBindings(previous.bindings, child.bindings)
           ? getNodeAtPath(previousModel, previous.path) : undefined;
         return { node: this.projectionNode(this.schema.nodes.text, child.attrs, [], child.text, child.marks, used, candidate), leaf: child.leaf, bindings: child.bindings };
       });
+    };
+    const visit = (raw: RetainedNodeProjection): Fragment => {
+      if (!Object.hasOwn(this.schema.nodes, raw.type)) throw new Error(`Unknown retained node type: ${raw.type}`);
+      const ordered = this.orderedChildren(raw, partitions, placements);
+      const fragments = projectChildren(raw, ordered);
       const type = this.schema.nodes[raw.type], marks = (raw.marks ?? []).map(mark => this.schema.markFromJSON(mark)), attrs = computeAttrs(type.spec.attrs, raw.attrs ?? {});
       const path = previousIdentities.get(raw.id);
       const candidate = previousModel && path ? getNodeAtPath(previousModel, path) : undefined;
@@ -680,7 +717,7 @@ export class RetainedDocumentStore {
           if (!node.child(index).isText) { sourceLayout(node.child(index), [...path, index++]); continue; }
           const group = pathKey([...path, index]), empty = !node.child(index).nodeSize;
           do { sourceGroups.set(pathKey([...path, index++]), group); }
-          while (!empty && index < node.childCount && node.child(index).isText && node.child(index).nodeSize > 0);
+          while (!empty && hasNonemptyTextAt(node, index));
         }
       };
       sourceLayout(change.before, []);
@@ -692,7 +729,7 @@ export class RetainedDocumentStore {
         for (const id of origins.get(source) ?? []) set.add(id);
         nextOrigins.set(target, set);
         const before = getNodeAtPath(change.before, retained.before.path), after = getNodeAtPath(change.after, retained.after.path);
-        if (!same(before.attrs, after.attrs) || !same(before.marks.map(mark => mark.toJSON()), after.marks.map(mark => mark.toJSON()))) {
+        if (!sameTextStyle(before, after)) {
           for (const id of set) reserveFormat(id, Object.keys(format(after, 'preflight')));
         }
       }
@@ -712,7 +749,7 @@ export class RetainedDocumentStore {
             const key = pathKey([...path, index++]); paths.push(key); groupKeys.set(key, groupKey);
             retained ||= !!nextOrigins.get(key)?.size;
             for (const id of nextOrigins.get(key) ?? (parents.get(parent) === parent ? origins.get(key) : undefined) ?? []) sourceIds.add(id);
-          } while (!empty && index < node.childCount && node.child(index).isText && node.child(index).nodeSize > 0);
+          } while (!empty && hasNonemptyTextAt(node, index));
           // A group with no retained source may allocate a new physical stream.
           // Carry a provisional origin through subsequent steps and splits so
           // earlier insertions and removed wire fields cannot escape bounds.
@@ -862,7 +899,7 @@ export class RetainedDocumentStore {
       const identity = objects.get(node);
       if (!id && identity && !usedNodes.has(identity)) { id = identity; nextNodes.set(key, id); usedNodes.add(id); }
       if (!id) {
-        id = this.nodes.create({ type: node.type.name, attrs: { ...node.attrs }, marks: node.marks.map(mark => mark.toJSON()) }, parent);
+        id = this.nodes.create({ type: node.type.name, attrs: { ...node.attrs }, marks: serializeMarks(node) }, parent);
         nextNodes.set(key, id); usedNodes.add(id);
       } else this.metadataFor(id, values.get(id), node);
       const children: (string | Group)[] = []; expected.set(id, children);
@@ -877,7 +914,7 @@ export class RetainedDocumentStore {
           const leaf = previous ?? this.createId(); usedLeaves.add(leaf);
           const entry = { node: text, path: textPath, at, leaf }; leaves.set(textKey, entry); group.leaves.push(entry);
           at += text.nodeSize; index++;
-        } while (!group.empty && index < node.childCount && node.child(index).isText && node.child(index).nodeSize > 0);
+        } while (!group.empty && hasNonemptyTextAt(node, index));
         // Reused parent identity alone is insufficient: an explicit replacement
         // can reuse objects while deleting/reinserting their characters. Require
         // full, offset-preserving provenance for every original text leaf too.
@@ -962,7 +999,7 @@ export class RetainedDocumentStore {
           to: this.text.project(binding.id).runs.reduce((sum, run) => sum + run.text.length, 0), group }]);
       } else {
         const first = group.leaves[0].node;
-        const id = this.nodes.create({ type: 'text', attrs: { ...first.attrs }, marks: first.marks.map(mark => mark.toJSON()) }, group.parent);
+        const id = this.nodes.create({ type: 'text', attrs: { ...first.attrs }, marks: serializeMarks(first) }, group.parent);
         this.text.create(this.createId(), id, []); group.ids.push(id); assigned.add(id);
       }
     }
@@ -1011,18 +1048,18 @@ export class RetainedDocumentStore {
     }
     // Keep an emptied stream reachable when its parent survives. Concurrent
     // unseen typing must remain visible instead of becoming detached text.
-    for (const state of this.groups.values()) if (!assigned.has(state.id) && usedNodes.has(state.parent)) {
+    for (const [id, state] of this.groups) if (!assigned.has(id) && usedNodes.has(state.parent)) {
       const group = groups.find(entry => entry.parent === state.parent);
-      if (group) { group.ids.push(state.id); this.nodes.setTextLayout(state.id, { field: group.field, empty: false }); }
+      if (group) { group.ids.push(id); this.nodes.setTextLayout(id, { field: group.field, empty: false }); }
       else {
-        expected.get(state.parent)!.push(state.id);
-        this.nodes.setTextLayout(state.id, { field: state.value.textLayout!.field, empty: false });
+        expected.get(state.parent)!.push(id);
+        this.nodes.setTextLayout(id, { field: state.value.textLayout!.field, empty: false });
       }
-      assigned.add(state.id);
+      assigned.add(id);
       // No retained target text still means the locally deleted characters
       // should be removed; remote insertions were never in this source range.
-      const length = this.text.project(state.id).runs.reduce((sum, run) => sum + run.text.length, 0);
-      if (length) this.text.delete(state.id, 0, length);
+      const length = this.text.project(id).runs.reduce((sum, run) => sum + run.text.length, 0);
+      if (length) this.text.delete(id, 0, length);
     }
     for (const [id] of values) if (id !== 'root' && !usedNodes.has(id) && !assigned.has(id)) this.nodes.remove(id);
     const orders = this.nodes.childrenOfMany([...expected.keys()]);

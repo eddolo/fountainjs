@@ -1,3 +1,4 @@
+import { caretRangeAtPoint } from './caret-range';
 import {
   deleteBackward,
   deleteForward,
@@ -1046,18 +1047,10 @@ export class InputManager {
   };
 
   private placeCaret(x: number, y: number): void {
-    const documentWithCaret = document as Document & {
-      caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node; offset: number } | null;
-      caretRangeFromPoint?: (x: number, y: number) => Range | null;
-    };
-    const position = documentWithCaret.caretPositionFromPoint?.(x, y);
-    const range = position ? document.createRange() : documentWithCaret.caretRangeFromPoint?.(x, y);
-    if (position && range) {
-      range.setStart(position.offsetNode, position.offset);
-      range.collapse(true);
-    }
+    const owner = this.dom.ownerDocument;
+    const range = caretRangeAtPoint(owner, x, y);
     if (!range) return;
-    const selection = document.getSelection();
+    const selection = owner.getSelection();
     selection?.removeAllRanges();
     selection?.addRange(range);
   }
