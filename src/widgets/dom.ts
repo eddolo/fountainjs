@@ -82,6 +82,22 @@ function widgetKey(event: KeyboardEvent): WidgetKeyName | null {
   return null;
 }
 
+// A caret-color override changes paint only. Rebuilding the widget for it
+// would discard a live control's draft and native focus.
+function isWidgetCaretStyleChange(root: HTMLElement, mutation: MutationRecord): boolean {
+  if (mutation.target !== root || mutation.type !== 'attributes' || mutation.attributeName !== 'style') return false;
+  const previous = mutation.oldValue ?? '';
+  const current = root.getAttribute('style') ?? '';
+  if (previous === current) return true;
+  const probe = root.ownerDocument.createElement('span').style;
+  probe.cssText = previous;
+  const previousCaret = probe.removeProperty('caret-color');
+  const previousRest = probe.cssText;
+  probe.cssText = current;
+  const currentCaret = probe.removeProperty('caret-color');
+  return Boolean(previousCaret || currentCaret) && previousRest === probe.cssText;
+}
+
 function disableInteractiveControls(root: HTMLElement): void {
   const controls = root.querySelectorAll<HTMLElement>('button, input, select, textarea, fieldset, optgroup');
   controls.forEach((control) => {
@@ -171,7 +187,8 @@ export function createDOMWidgetNodeView(
     ignoreMutation(mutation: MutationRecord): boolean {
       const context = this.context();
       if (options.ignoreMutation) return options.ignoreMutation(mutation, context);
-      return mutation.target === this.controls || this.controls.contains(mutation.target);
+      return mutation.target === this.controls || this.controls.contains(mutation.target)
+        || isWidgetCaretStyleChange(this.dom, mutation);
     }
 
     destroy(): void {

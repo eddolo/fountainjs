@@ -1,0 +1,1926 @@
+{
+  "variant": "fountain-remote-candidate",
+  "date": "2026-11-18T14:54:44.795Z",
+  "browser": "151.0.7922.34",
+  "warmupPerTrial": 3,
+  "word": "abcdefghijklmnopqrstuvwx",
+  "cases": [
+    {
+      "engine": "fountain",
+      "size": 5000,
+      "index": 0,
+      "seedHash": "9bd7e63b62f471fadd63533b065de4d0675da2d51828a844646b128c4483993f",
+      "wireHash": "4b273f31f0fd3469aeefea37aac2a4ec847a98e031c37e08fb7dc34a0477d6d6",
+      "jsonHash": "51f641ea27f5561c6eb0034013ffd52fcbac0fe0610c6a80118c0b0a9cf61e7e",
+      "wireBytes": [
+        121,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122
+      ],
+      "trials": [
+        {
+          "mode": "raw",
+          "seedApplyMs": 192.39999997615814,
+          "openMs": 0,
+          "samples": [
+            {
+              "applyMs": 0.6000000238418579
+            },
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.30000007152557373
+            },
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.3999999761581421
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            }
+          ]
+        },
+        {
+          "mode": "model",
+          "seedApplyMs": 195.29999995231628,
+          "openMs": 143.80000007152557,
+          "samples": [
+            {
+              "applyMs": 19.100000023841858
+            },
+            {
+              "applyMs": 22.200000047683716
+            },
+            {
+              "applyMs": 16
+            },
+            {
+              "applyMs": 16.699999928474426
+            },
+            {
+              "applyMs": 13.299999952316284
+            },
+            {
+              "applyMs": 16.799999952316284
+            },
+            {
+              "applyMs": 14.199999928474426
+            },
+            {
+              "applyMs": 17.200000047683716
+            },
+            {
+              "applyMs": 13
+            },
+            {
+              "applyMs": 14
+            },
+            {
+              "applyMs": 12.599999904632568
+            },
+            {
+              "applyMs": 13.599999904632568
+            },
+            {
+              "applyMs": 12.600000023841858
+            },
+            {
+              "applyMs": 17
+            },
+            {
+              "applyMs": 11.899999976158142
+            },
+            {
+              "applyMs": 14
+            },
+            {
+              "applyMs": 14.299999952316284
+            },
+            {
+              "applyMs": 15.200000047683716
+            },
+            {
+              "applyMs": 12.299999952316284
+            },
+            {
+              "applyMs": 14
+            },
+            {
+              "applyMs": 12.200000047683716
+            },
+            {
+              "applyMs": 13.699999928474426
+            },
+            {
+              "applyMs": 21
+            },
+            {
+              "applyMs": 22.399999976158142
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "seedApplyMs": 213.89999997615814,
+          "openMs": 192.90000009536743,
+          "samples": [
+            {
+              "applyMs": 40.40000009536743,
+              "viewSubscriberMs": 12.199999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 31.799999952316284,
+              "viewSubscriberMs": 8.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 52.799999952316284,
+              "viewSubscriberMs": 29.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 29.100000023841858,
+              "viewSubscriberMs": 9.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 26.300000071525574,
+              "viewSubscriberMs": 7.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 24.899999976158142,
+              "viewSubscriberMs": 8,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23,
+              "viewSubscriberMs": 6.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.100000023841858,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.200000047683716,
+              "viewSubscriberMs": 6.600000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 24.899999976158142,
+              "viewSubscriberMs": 6.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.199999928474426,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.100000023841858,
+              "viewSubscriberMs": 7.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.100000023841858,
+              "viewSubscriberMs": 6.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 29.699999928474426,
+              "viewSubscriberMs": 10,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.899999976158142,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.600000023841858,
+              "viewSubscriberMs": 6.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.700000047683716,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.399999976158142,
+              "viewSubscriberMs": 6.5000001192092896,
+              "notifications": 2
+            },
+            {
+              "applyMs": 30.800000071525574,
+              "viewSubscriberMs": 7.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.899999976158142,
+              "viewSubscriberMs": 7.199999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.5,
+              "viewSubscriberMs": 6.300000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.299999952316284,
+              "viewSubscriberMs": 6.600000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.5,
+              "viewSubscriberMs": 7.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.300000071525574,
+              "viewSubscriberMs": 6.800000071525574,
+              "notifications": 2
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "seedApplyMs": 167.10000002384186,
+          "openMs": 161.60000002384186,
+          "samples": [
+            {
+              "applyMs": 55.60000002384186,
+              "viewSubscriberMs": 24.00000011920929,
+              "notifications": 2
+            },
+            {
+              "applyMs": 26,
+              "viewSubscriberMs": 6.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.200000047683716,
+              "viewSubscriberMs": 7.600000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 30.899999976158142,
+              "viewSubscriberMs": 9.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.600000023841858,
+              "viewSubscriberMs": 6.599999904632568,
+              "notifications": 2
+            },
+            {
+              "applyMs": 27.100000023841858,
+              "viewSubscriberMs": 7.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.09999990463257,
+              "viewSubscriberMs": 7.600000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.399999976158142,
+              "viewSubscriberMs": 5.800000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.699999928474426,
+              "viewSubscriberMs": 6.800000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.700000047683716,
+              "viewSubscriberMs": 7.599999904632568,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.600000023841858,
+              "viewSubscriberMs": 5.699999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.399999976158142,
+              "viewSubscriberMs": 6.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.899999976158142,
+              "viewSubscriberMs": 6.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.700000047683716,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.899999976158142,
+              "viewSubscriberMs": 6.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.399999976158142,
+              "viewSubscriberMs": 6.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.5,
+              "viewSubscriberMs": 5.600000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.799999952316284,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.200000047683716,
+              "viewSubscriberMs": 6.900000095367432,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.800000071525574,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.600000023841858,
+              "viewSubscriberMs": 6.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.600000023841858,
+              "viewSubscriberMs": 6.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.200000047683716,
+              "viewSubscriberMs": 6.600000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.799999952316284,
+              "viewSubscriberMs": 6.200000047683716,
+              "notifications": 2
+            }
+          ]
+        },
+        {
+          "mode": "model",
+          "seedApplyMs": 171.89999997615814,
+          "openMs": 141.79999995231628,
+          "samples": [
+            {
+              "applyMs": 21.299999952316284
+            },
+            {
+              "applyMs": 25.700000047683716
+            },
+            {
+              "applyMs": 19.299999952316284
+            },
+            {
+              "applyMs": 18.200000047683716
+            },
+            {
+              "applyMs": 15.899999976158142
+            },
+            {
+              "applyMs": 20
+            },
+            {
+              "applyMs": 17.09999990463257
+            },
+            {
+              "applyMs": 15.899999976158142
+            },
+            {
+              "applyMs": 16.600000023841858
+            },
+            {
+              "applyMs": 15.700000047683716
+            },
+            {
+              "applyMs": 15.699999928474426
+            },
+            {
+              "applyMs": 15.099999904632568
+            },
+            {
+              "applyMs": 13.799999952316284
+            },
+            {
+              "applyMs": 14.799999952316284
+            },
+            {
+              "applyMs": 12.399999976158142
+            },
+            {
+              "applyMs": 13.399999976158142
+            },
+            {
+              "applyMs": 11.799999952316284
+            },
+            {
+              "applyMs": 13.599999904632568
+            },
+            {
+              "applyMs": 12.100000023841858
+            },
+            {
+              "applyMs": 13.799999952316284
+            },
+            {
+              "applyMs": 12.299999952316284
+            },
+            {
+              "applyMs": 13.699999928474426
+            },
+            {
+              "applyMs": 16.700000047683716
+            },
+            {
+              "applyMs": 29.299999952316284
+            }
+          ]
+        },
+        {
+          "mode": "raw",
+          "seedApplyMs": 167.5,
+          "openMs": 0,
+          "samples": [
+            {
+              "applyMs": 0.7000000476837158
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 5000,
+      "index": 0,
+      "seedHash": "9644655a688ec31ed16fa84c6a91f252987b3470e748211b358330ce74d83a0f",
+      "wireHash": "bf70a70ca6c6c48bc5680e1146e5d8a8310dce896f18fd832dc07fd358899c3a",
+      "jsonHash": "69eab8cca63fb4fda16f038f30c90b5589b334347bf4210912f9005ab6c32be2",
+      "wireBytes": [
+        20,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22
+      ],
+      "trials": [
+        {
+          "mode": "raw",
+          "seedApplyMs": 19.5,
+          "openMs": 0,
+          "samples": [
+            {
+              "applyMs": 0.3999999761581421
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "seedApplyMs": 18.5,
+          "openMs": 33.89999997615814,
+          "samples": [
+            {
+              "applyMs": 4.100000023841858
+            },
+            {
+              "applyMs": 2.299999952316284
+            },
+            {
+              "applyMs": 1.8000000715255737
+            },
+            {
+              "applyMs": 1.6999999284744263
+            },
+            {
+              "applyMs": 1.8000000715255737
+            },
+            {
+              "applyMs": 1.6999999284744263
+            },
+            {
+              "applyMs": 1.8000000715255737
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.600000023841858
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.2000000476837158
+            },
+            {
+              "applyMs": 1.3000000715255737
+            },
+            {
+              "applyMs": 1.5
+            },
+            {
+              "applyMs": 1.4000000953674316
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.600000023841858
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.2000000476837158
+            },
+            {
+              "applyMs": 1.2000000476837158
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.1999999284744263
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "seedApplyMs": 19.299999952316284,
+          "openMs": 32.200000047683716,
+          "samples": [
+            {
+              "applyMs": 3.600000023841858
+            },
+            {
+              "applyMs": 2.200000047683716
+            },
+            {
+              "applyMs": 2
+            },
+            {
+              "applyMs": 1.600000023841858
+            },
+            {
+              "applyMs": 1.6999999284744263
+            },
+            {
+              "applyMs": 1.4000000953674316
+            },
+            {
+              "applyMs": 1.6999999284744263
+            },
+            {
+              "applyMs": 1.2000000476837158
+            },
+            {
+              "applyMs": 1.4000000953674316
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.1999999284744263
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.2000000476837158
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.1999999284744263
+            },
+            {
+              "applyMs": 1.0999999046325684
+            },
+            {
+              "applyMs": 1.1999999284744263
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.2000000476837158
+            }
+          ]
+        },
+        {
+          "mode": "raw",
+          "seedApplyMs": 20.199999928474426,
+          "openMs": 0,
+          "samples": [
+            {
+              "applyMs": 0.3999999761581421
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "engine": "fountain",
+      "size": 5000,
+      "index": 4999,
+      "seedHash": "629ec12c1f0d54287e26bf658bb9ce2f24b484fbc4fe2eee317de4c576bbecc1",
+      "wireHash": "1257fe7a0ce97e59b45d86296c33d6814886ba21558e36aee994ea593cd70730",
+      "jsonHash": "556acf2c20a5f559880a24737f9084593a3c0d54ba3c78f5c498029f7194823b",
+      "wireBytes": [
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122
+      ],
+      "trials": [
+        {
+          "mode": "raw",
+          "seedApplyMs": 167.80000007152557,
+          "openMs": 0,
+          "samples": [
+            {
+              "applyMs": 0.5
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.3999999761581421
+            },
+            {
+              "applyMs": 0.09999990463256836
+            }
+          ]
+        },
+        {
+          "mode": "model",
+          "seedApplyMs": 183.39999997615814,
+          "openMs": 153.39999997615814,
+          "samples": [
+            {
+              "applyMs": 28.5
+            },
+            {
+              "applyMs": 19.700000047683716
+            },
+            {
+              "applyMs": 20.800000071525574
+            },
+            {
+              "applyMs": 21.700000047683716
+            },
+            {
+              "applyMs": 16.399999976158142
+            },
+            {
+              "applyMs": 18.100000023841858
+            },
+            {
+              "applyMs": 15.299999952316284
+            },
+            {
+              "applyMs": 14.399999976158142
+            },
+            {
+              "applyMs": 15.099999904632568
+            },
+            {
+              "applyMs": 14.200000047683716
+            },
+            {
+              "applyMs": 14.200000047683716
+            },
+            {
+              "applyMs": 13.400000095367432
+            },
+            {
+              "applyMs": 12.600000023841858
+            },
+            {
+              "applyMs": 13.299999952316284
+            },
+            {
+              "applyMs": 12.200000047683716
+            },
+            {
+              "applyMs": 13.799999952316284
+            },
+            {
+              "applyMs": 13.5
+            },
+            {
+              "applyMs": 14.400000095367432
+            },
+            {
+              "applyMs": 13.5
+            },
+            {
+              "applyMs": 13.199999928474426
+            },
+            {
+              "applyMs": 13.899999976158142
+            },
+            {
+              "applyMs": 13.799999952316284
+            },
+            {
+              "applyMs": 12.300000071525574
+            },
+            {
+              "applyMs": 13.200000047683716
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "seedApplyMs": 168,
+          "openMs": 153.69999992847443,
+          "samples": [
+            {
+              "applyMs": 44.200000047683716,
+              "viewSubscriberMs": 10.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 29.5,
+              "viewSubscriberMs": 8.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 26.59999990463257,
+              "viewSubscriberMs": 7.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.100000023841858,
+              "viewSubscriberMs": 6.4999998807907104,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.5,
+              "viewSubscriberMs": 6.599999904632568,
+              "notifications": 2
+            },
+            {
+              "applyMs": 28,
+              "viewSubscriberMs": 9.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.09999990463257,
+              "viewSubscriberMs": 6.9999998807907104,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.299999952316284,
+              "viewSubscriberMs": 6.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 24.899999976158142,
+              "viewSubscriberMs": 8.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.700000047683716,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.800000071525574,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.699999928474426,
+              "viewSubscriberMs": 6.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.59999990463257,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.600000023841858,
+              "viewSubscriberMs": 6.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.799999952316284,
+              "viewSubscriberMs": 6.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.600000023841858,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.299999952316284,
+              "viewSubscriberMs": 6.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.799999952316284,
+              "viewSubscriberMs": 7,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.300000071525574,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.100000023841858,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.40000009536743,
+              "viewSubscriberMs": 7.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.299999952316284,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.300000071525574,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.199999928474426,
+              "viewSubscriberMs": 8.300000071525574,
+              "notifications": 2
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "seedApplyMs": 178.90000009536743,
+          "openMs": 177.69999992847443,
+          "samples": [
+            {
+              "applyMs": 57.5,
+              "viewSubscriberMs": 14.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 33.5,
+              "viewSubscriberMs": 9.300000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 32.799999952316284,
+              "viewSubscriberMs": 7.900000095367432,
+              "notifications": 2
+            },
+            {
+              "applyMs": 31.199999928474426,
+              "viewSubscriberMs": 8.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 28.700000047683716,
+              "viewSubscriberMs": 7.400000095367432,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.90000009536743,
+              "viewSubscriberMs": 6.800000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 24.100000023841858,
+              "viewSubscriberMs": 6.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.700000047683716,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.200000047683716,
+              "viewSubscriberMs": 6.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.600000023841858,
+              "viewSubscriberMs": 6.600000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.5,
+              "viewSubscriberMs": 5.800000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.200000047683716,
+              "viewSubscriberMs": 6.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.600000023841858,
+              "viewSubscriberMs": 6.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.5,
+              "viewSubscriberMs": 5.600000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.799999952316284,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.799999952316284,
+              "viewSubscriberMs": 8.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23,
+              "viewSubscriberMs": 8.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.5,
+              "viewSubscriberMs": 6.099999904632568,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.5,
+              "viewSubscriberMs": 7.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.899999976158142,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.899999976158142,
+              "viewSubscriberMs": 6.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.800000071525574,
+              "viewSubscriberMs": 7.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19,
+              "viewSubscriberMs": 6.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.200000047683716,
+              "viewSubscriberMs": 6.0000001192092896,
+              "notifications": 2
+            }
+          ]
+        },
+        {
+          "mode": "model",
+          "seedApplyMs": 167.89999997615814,
+          "openMs": 124.30000007152557,
+          "samples": [
+            {
+              "applyMs": 25.799999952316284
+            },
+            {
+              "applyMs": 20.299999952316284
+            },
+            {
+              "applyMs": 23.799999952316284
+            },
+            {
+              "applyMs": 18.100000023841858
+            },
+            {
+              "applyMs": 17.5
+            },
+            {
+              "applyMs": 19
+            },
+            {
+              "applyMs": 16.100000023841858
+            },
+            {
+              "applyMs": 15.300000071525574
+            },
+            {
+              "applyMs": 14.5
+            },
+            {
+              "applyMs": 14.600000023841858
+            },
+            {
+              "applyMs": 14
+            },
+            {
+              "applyMs": 13.700000047683716
+            },
+            {
+              "applyMs": 12.799999952316284
+            },
+            {
+              "applyMs": 13.5
+            },
+            {
+              "applyMs": 12.899999976158142
+            },
+            {
+              "applyMs": 13.899999976158142
+            },
+            {
+              "applyMs": 13.100000023841858
+            },
+            {
+              "applyMs": 13.899999976158142
+            },
+            {
+              "applyMs": 12.200000047683716
+            },
+            {
+              "applyMs": 13.299999952316284
+            },
+            {
+              "applyMs": 14
+            },
+            {
+              "applyMs": 14.899999976158142
+            },
+            {
+              "applyMs": 12.700000047683716
+            },
+            {
+              "applyMs": 13.5
+            }
+          ]
+        },
+        {
+          "mode": "raw",
+          "seedApplyMs": 167.29999995231628,
+          "openMs": 0,
+          "samples": [
+            {
+              "applyMs": 0.5
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.30000007152557373
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.30000007152557373
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 5000,
+      "index": 4999,
+      "seedHash": "97a2d92e71bc49f7dfd38b26df22b851faebfc063ccc092884a7a09ffb9c66e6",
+      "wireHash": "fd919a5fdaaf12c60a5b20ee2a05f16c726beb18eaea16c23d0cd2f0a6c27ad3",
+      "jsonHash": "f0364d8409d1c20612be2a9f486da0b0f104ed12ecd032ba2eaa88e04fe5420d",
+      "wireBytes": [
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22
+      ],
+      "trials": [
+        {
+          "mode": "raw",
+          "seedApplyMs": 16.700000047683716,
+          "openMs": 0,
+          "samples": [
+            {
+              "applyMs": 0.3999999761581421
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.19999992847442627
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "seedApplyMs": 21.199999928474426,
+          "openMs": 32.5,
+          "samples": [
+            {
+              "applyMs": 3.399999976158142
+            },
+            {
+              "applyMs": 2.5999999046325684
+            },
+            {
+              "applyMs": 1.6999999284744263
+            },
+            {
+              "applyMs": 1.6999999284744263
+            },
+            {
+              "applyMs": 1.3000000715255737
+            },
+            {
+              "applyMs": 1.600000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 0.8000000715255737
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 0.6999999284744263
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 0.6999999284744263
+            },
+            {
+              "applyMs": 0.8000000715255737
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 0.8999999761581421
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "seedApplyMs": 20.5,
+          "openMs": 35.89999997615814,
+          "samples": [
+            {
+              "applyMs": 3.600000023841858
+            },
+            {
+              "applyMs": 2.399999976158142
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.5
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 0.9000000953674316
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.4000000953674316
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 0.9000000953674316
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 0.8000000715255737
+            },
+            {
+              "applyMs": 1.0999999046325684
+            },
+            {
+              "applyMs": 1.5
+            },
+            {
+              "applyMs": 1.2999999523162842
+            }
+          ]
+        },
+        {
+          "mode": "raw",
+          "seedApplyMs": 20.800000071525574,
+          "openMs": 0,
+          "samples": [
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.3999999761581421
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.30000007152557373
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.30000007152557373
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

@@ -8,6 +8,7 @@ import {
   HTMLImporter,
   HistoryExtension,
   NodeSelection,
+  Plugin,
   Schema,
   composeExtensions,
   createEditor,
@@ -130,6 +131,79 @@ describe('DOM widget adapter', () => {
     editor.destroy();
     expect(destroys).toBe(1);
     mount.remove();
+  });
+
+  it('leaves focus and the exit key with the control when the host rejects the move', async () => {
+    let allowExit = false;
+    let exits = 0;
+    const extension = createDOMWidgetExtension(statusWidget, ({ controls }) => {
+      controls.appendChild(document.createElement('input'));
+    }, { onExit: () => { exits += 1; } });
+    const kit = composeExtensions([CoreExtension, extension]);
+    const editor = createEditor({
+      schema: kit.schema,
+      plugins: [...kit.plugins, new Plugin({ filterTransaction: tr => !tr.selectionSet || allowExit })],
+      content,
+    });
+    const mount = document.body.appendChild(document.createElement('div'));
+    const view = new EditorView(mount, editor);
+    try {
+      const control = mount.querySelector('input')!;
+      control.focus();
+      const pressEnter = () => control.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter', bubbles: true, cancelable: true,
+      }));
+      const initial = editor.state.selection;
+      expect(pressEnter()).toBe(true);
+      await Promise.resolve();
+      expect(exits).toBe(0);
+      expect(editor.state.selection).toBe(initial);
+      expect(document.activeElement).toBe(control);
+
+      allowExit = true;
+      expect(pressEnter()).toBe(false);
+      await Promise.resolve();
+      expect(exits).toBe(1);
+      expect(editor.state.selection.path).toEqual([2, 0]);
+      expect(document.activeElement).toBe(view.dom);
+    } finally {
+      view.destroy();
+      editor.destroy();
+      mount.remove();
+    }
+  });
+
+  it('preserves drafts for caret paint while repairing other widget shell changes', async () => {
+    const extension = createDOMWidgetExtension(statusWidget, ({ controls }) => {
+      controls.appendChild(document.createElement('input'));
+    });
+    const kit = composeExtensions([CoreExtension, extension]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content });
+    const mount = document.body.appendChild(document.createElement('div'));
+    const view = new EditorView(mount, editor);
+    try {
+      const shell = mount.querySelector<HTMLElement>('[data-fountain-widget-view]')!;
+      const input = shell.querySelector('input')!;
+      input.value = 'Pending review';
+      input.focus();
+      shell.style.setProperty('caret-color', 'transparent', 'important');
+      await Promise.resolve();
+      shell.style.removeProperty('caret-color');
+      await Promise.resolve();
+      expect(mount.querySelector('input')).toBe(input);
+      expect(input.value).toBe('Pending review');
+      expect(document.activeElement).toBe(input);
+
+      // The same style edit can include a change to model-owned presentation.
+      shell.style.cssText = 'caret-color: transparent; display: none';
+      await Promise.resolve();
+      expect(mount.contains(shell)).toBe(false);
+      expect(mount.querySelector<HTMLElement>('[data-fountain-widget-view]')?.style.display).toBe('');
+    } finally {
+      view.destroy();
+      editor.destroy();
+      mount.remove();
+    }
   });
 
   it('enforces read-only controls and prevents document changes', () => {

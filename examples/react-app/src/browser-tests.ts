@@ -436,6 +436,10 @@ const mount = document.querySelector<HTMLElement>('#editor');
 const output = document.querySelector<HTMLOutputElement>('#document-json');
 if (!mount || !output) throw new Error('Browser contract fixture failed to mount.');
 
+if (browserFixture === 'widget-host-review') {
+  void import('./browser-widget-host-review').then(({ mountWidgetHostReview }) => mountWidgetHostReview(mount));
+}
+
 const pasteReports: ExternalPasteReport[] = [];
 const view = new EditorView(mount, editor, {
   ariaLabel: 'Browser contract editor',

@@ -4,11 +4,13 @@ import {
   HTMLExporter,
   HistoryExtension,
   NodeSelection,
+  Plugin,
   Schema,
   Selection,
   composeExtensions,
   createEditor,
   redo,
+  setNodeAttributes,
   undo,
 } from '../src';
 import {
@@ -196,6 +198,36 @@ describe('portable interactive widgets', () => {
     expect((block.state.selection as NodeSelection).nodePath).toEqual([1]);
     expect(undo(block)).toBe(true);
     expect(block.state.doc.content.map((node) => node.type.name)).toEqual(['paragraph']);
+  });
+
+  it('reports host rejection for widget insertion, editing and selection', () => {
+    const chip = defineWidget({ name: 'inline_field', inline: true });
+    const kit = composeExtensions([CoreExtension, createWidgetExtension(statusWidget), createWidgetExtension(chip)]);
+    const editor = createEditor({
+      schema: kit.schema,
+      plugins: [...kit.plugins, new Plugin({ filterTransaction: () => false })],
+      content: statusContent(),
+    });
+    const initial = editor.state;
+    const controller = createWidgetController(editor, statusWidget, () => [1]);
+
+    expect.soft(insertWidget(editor, statusWidget)).toBe(false);
+    expect.soft(insertWidget(editor, chip)).toBe(false);
+    expect.soft(controller.set('owner', 'Grace')).toBe(false);
+    expect.soft(setNodeAttributes(editor, [1], { owner: 'Grace' })).toBe(false);
+    expect.soft(controller.remove()).toBe(false);
+    expect.soft(controller.select()).toBe(false);
+    expect.soft(controller.exit('before')).toBe(false);
+    expect.soft(controller.exit('after')).toBe(false);
+    expect(editor.state).toBe(initial);
+
+    const isolated = createEditor({
+      schema: kit.schema,
+      plugins: editor.state.plugins,
+      content: { type: 'doc', content: [{ type: 'status_field' }] },
+    });
+    // With no neighboring text, exit attempts a node selection as its fallback.
+    expect(exitWidget(isolated, statusWidget, [0], 'after')).toBe(false);
   });
 
   it('round-trips widget state through JSON and remains inert in a read-only editor', () => {
