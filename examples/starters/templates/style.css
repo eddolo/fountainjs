@@ -191,6 +191,7 @@ select:focus-visible {
 .field-error {
   color: #922d28;
 }
-input[aria-invalid='true'] {
+input[aria-invalid='true'],
+.rich:has([contenteditable='true'][aria-invalid='true']) {
   border-color: #922d28;
 }
