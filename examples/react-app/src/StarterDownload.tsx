@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 import { useState } from 'react';
+import templateIgnore from '../../starters/templates/.gitignore?raw';
 
 const templates = import.meta.glob<string>(
   [
@@ -24,11 +25,8 @@ export function StarterDownload({ kind, label }: { kind: 'plain-dom' | 'react' |
       const files = Object.fromEntries(await Promise.all(Object.entries(templates)
         .filter(([path]) => path.startsWith(prefix))
         .map(async ([path, read]) => [`${folder}/${path.slice(prefix.length)}`, strToU8(await read())])));
-      // Production glob expansion skips dotfiles. Include the SQLite ignore rules explicitly.
-      if (kind === 'templates') {
-        const { default: ignore } = await import('../../starters/templates/.gitignore?raw');
-        files[`${folder}/.gitignore`] = strToU8(ignore);
-      }
+      // Inline the dotfile. Pages excludes a lazily emitted .gitignore_raw-*.js asset.
+      if (kind === 'templates') files[`${folder}/.gitignore`] = strToU8(templateIgnore);
       const zip = new Blob([Uint8Array.from(zipSync(files))], { type: 'application/zip' });
       const url = URL.createObjectURL(zip);
       const link = document.createElement('a');
