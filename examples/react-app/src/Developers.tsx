@@ -817,7 +817,7 @@ function Developers() {
             <p>The isolated <code>fountainjs-editor/details</code> entry adds semantic <code>details</code> and <code>details_summary</code> nodes without changing <code>StarterKit</code>. The editable summary supports inline marks; the body accepts any configured block, including nested disclosures. Native click or tap, Ctrl/Cmd+Enter, and public commands persist the open state in the portable document. Read-only readers can still open it locally without causing an edit.</p>
             <Code>{detailsExample}</Code>
             <h3 id="bar-charts">Editable bar charts</h3>
-            <p>In the development build, choose <b>Bar chart</b> in the <a href="./#playground">live editor</a>. Edit the title, category names or values directly in the table. Correcting a value redraws the plot. Undo restores both. HTML export carries the plot and table. Word export keeps an editable title and table and reports the omitted plot.</p>
+            <p>In the development build, choose <b>Bar chart</b> in the <a href="./#playground">live editor</a>. To plot an existing two-column table, select a cell and choose <b>Chart this table</b>. Choose <b>Keep as table</b> to return to the table. A chart title becomes an ordinary paragraph. Edit category names and values directly in the cells. Correcting a value redraws the plot. Undo restores both. HTML export carries the plot and table. Word export keeps an editable title and table and reports the omitted plot.</p>
             <Code>{`import { composeExtensions, createEditor, StarterKit } from 'fountainjs-editor'
 import { BarChartExtension, insertBarChart } from 'fountainjs-editor/charts'
 

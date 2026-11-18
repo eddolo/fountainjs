@@ -2,8 +2,8 @@ import { expect, it } from 'vitest';
 import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
-import { CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, insertBarChart } from '../src/charts';
+import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
+import { BarChartExtension, insertBarChart, tableChartAction, toggleTableChart } from '../src/charts';
 import { ServerHTMLImporter } from '../src/html/server';
 
 const kit = composeExtensions([CoreExtension, HistoryExtension, BarChartExtension]);
@@ -92,4 +92,57 @@ it('leaves read-only and filtered documents unchanged when insertion is refused'
     expect(editor.state.doc).toBe(before);
     editor.destroy();
   }
+});
+
+it('wraps an existing headerless table without copying its formatted cells and reverses the change', () => {
+  const schema = new Schema(kit.schema);
+  const paragraph = (text: string) => schema.node('paragraph', {}, [schema.text(text, [schema.mark('strong')])]);
+  const row = (category: string, value: string) => schema.node('table_row', {}, [
+    schema.node('table_header', {}, [paragraph(category)]), schema.node('table_cell', {}, [paragraph(value)]),
+  ]);
+  const table = schema.node('table', {}, [row('North', '-4'), row('South', '8')]);
+  const content = schema.node('doc', {}, [paragraph('Before'), table, paragraph('After')]);
+  for (const selection of [new NodeSelection(content, [1]), new CellSelection(content, [1, 1, 1], [1, 0, 0]),
+    Selection.cursor([1, 0, 0, 0, 0], 2), new RangeSelection(content,
+      textPointToPosition(content, [1, 1, 1, 0, 0], 1), textPointToPosition(content, [1, 0, 0, 0, 0], 1))]) {
+    const editor = createEditor({ schema: kit.schema, content: content.toJSON(), plugins: kit.plugins });
+    const original = editor.state.doc;
+    editor.dispatch(editor.createTransaction().setSelection(selection));
+    expect(tableChartAction(editor)).toBe('wrap');
+    expect(toggleTableChart(editor)).toBe(true);
+    const wrapped = editor.state.doc;
+    expect(wrapped.child(1).child(0)).toBe(original.child(1));
+    const html = HTMLExporter.export(wrapped, { document: false });
+    expect(html).toContain('North · -4');
+    expect(html).toContain('South · 8');
+    expect(ServerHTMLImporter.parse(html, schema).toJSON()).toEqual(wrapped.toJSON());
+    expect(tableChartAction(editor)).toBe('unwrap');
+    expect(toggleTableChart(editor)).toBe(true);
+    expect(editor.state.doc.eq(original)).toBe(true);
+    expect(editor.state.selection.eq(selection)).toBe(true);
+    expect(undo(editor)).toBe(true);
+    expect(editor.state.doc.eq(wrapped)).toBe(true);
+    expect(redo(editor)).toBe(true);
+    expect(editor.state.doc.eq(original)).toBe(true);
+    editor.destroy();
+  }
+  const editor = createEditor({ schema: kit.schema, content: content.toJSON() });
+  const range = nodeRangeAtPath(content, [1]);
+  editor.dispatch(editor.createTransaction().setSelection(new RangeSelection(content, range.from - 1, range.to)));
+  expect(tableChartAction(editor)).toBeNull();
+  expect(toggleTableChart(editor)).toBe(false);
+  editor.destroy();
+});
+
+it('keeps an authored chart title as a paragraph and selects the table when the whole chart is lifted', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Sales', [['North', 8]]);
+  const i = editor.state.selection.path[0];
+  const chart = editor.state.doc.child(i);
+  editor.dispatch(editor.createTransaction().setSelection(new NodeSelection(editor.state.doc, [i])));
+  expect(toggleTableChart(editor)).toBe(true);
+  expect(editor.state.doc.child(i)).toBe(chart.child(0));
+  expect(editor.state.doc.child(i + 1)).toBe(chart.child(1));
+  expect(editor.state.selection.eq(new NodeSelection(editor.state.doc, [i + 1]))).toBe(true);
+  editor.destroy();
 });

@@ -80,7 +80,7 @@ import { FountainTrackedChanges } from 'fountainjs-editor/react/tracked-changes'
 import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/versions';
 import { FountainVersions } from 'fountainjs-editor/react/versions';
 import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity';
-import { BarChartExtension, insertBarChart } from 'fountainjs-editor/charts';
+import { BarChartExtension, insertBarChart, tableChartAction, toggleTableChart } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import { SitePageLink } from './SitePageLink';
@@ -590,6 +590,7 @@ function App() {
   }, [conversationController]);
 
   const document = state?.doc;
+  const chartAction = tableChartAction(editor);
   const output = useMemo(() => {
     if (!document) return '';
     if (format === 'html') return HTMLExporter.export(document, { document: false });
@@ -729,6 +730,9 @@ function App() {
               <button onClick={() => addBlock('task')}>☑ Tasks</button>
               <button onClick={() => addBlock('table')}>▦ Table</button>
               <button onClick={() => addBlock('chart')}>Bar chart</button>
+              {chartAction && <button onMouseDown={event => event.preventDefault()} onClick={() => {
+                if (toggleTableChart(editor)) editorHandle.current?.focus();
+              }}>{chartAction === 'wrap' ? 'Chart this table' : 'Keep as table'}</button>}
               <button onClick={() => addBlock('details')}>▸ Details</button>
               <button onClick={() => setRuby(editor, 'reading')}>あ Ruby</button>
               <button onClick={() => addBlock('callout')}>✦ Callout</button>

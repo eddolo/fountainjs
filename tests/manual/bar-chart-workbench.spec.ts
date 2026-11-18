@@ -44,3 +44,30 @@ test('edits chart data in the public editor and exports the same data and plot',
     .getByRole('textbox', { name: 'Imported document editor' });
   await expect(reopened.getByRole('row').filter({ hasText: 'Tuesday' }).getByRole('cell').last()).toHaveText('-16');
 });
+
+test('plots an existing editable table, updates a value, and returns to the table', async ({ page }, info) => {
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.getByRole('button', { name: '▦ Table', exact: true }).click();
+  const table = demo.locator('[contenteditable=true] table').last();
+  const cells = table.locator('tr').filter({ has: page.locator('td') }).locator('td p');
+  for (const [index, value] of ['Apples', '12', 'Pears', '9'].entries()) {
+    await cells.nth(index).click();
+    await page.keyboard.press('Home');
+    await page.keyboard.press('Shift+End');
+    await page.keyboard.insertText(value);
+  }
+  await demo.getByRole('button', { name: 'Chart this table' }).click();
+  const plot = demo.locator('[data-fountain-chart-plot]');
+  await expect(plot).toContainText('Apples · 12');
+  await expect(plot).toContainText('Pears · 9');
+  await page.keyboard.press('End');
+  await page.keyboard.insertText('0');
+  await expect(plot).toContainText('Pears · 90');
+  await plot.screenshot({ path: info.outputPath('plotted-table.png') });
+  await demo.getByRole('button', { name: 'Keep as table' }).click();
+  await expect(plot).toHaveCount(0);
+  await expect(cells.last()).toHaveText('90');
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(plot).toContainText('Pears · 90');
+});
