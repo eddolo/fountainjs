@@ -1,7 +1,7 @@
 import { insertNode, nodeRangeAtPath, NodeSelection, type DOMOutputSpec, type Editor, type Node, type NodeSpec } from '../core';
 import { RestructureChildrenStep } from '../core/transaction/restructure-children-step';
 import { defineExtension } from '../extensions/extension';
-import { chartLayout, chartTypes, type ChartType } from './layout';
+import { chartLayout, columnBounds, chartTypes, type ChartType } from './layout';
 export type { ChartType } from './layout';
 export { exportChartSVG, exportChartImage, exportChartSVG as exportBarChartSVG, exportChartImage as exportBarChartImage, type ChartImageFormat } from './image';
 
@@ -27,6 +27,11 @@ function plot(node: Node): DOMOutputSpec {
       markers.push(['span', { style: `position:absolute;top:${percent(100 - zero)};width:100%;border-top:1px solid #aaa` }]);
       const position = (point: { x: number; y: number }) => `position:absolute;left:${percent(point.x)};top:${percent(point.y)}`;
       layout.rows.forEach((row, index) => {
+        if (kind === 'column') {
+          const bounds = columnBounds(index, layout.rows.length, row.y, zero);
+          markers.push(['span', { style: `position:absolute;left:${percent(bounds.left)};top:${percent(bounds.top)};width:${percent(bounds.width)};height:${percent(bounds.height)};background:#55409c` }]);
+          return;
+        }
         const previous = layout.rows[index - 1];
         if (previous) {
           const dx = row.x - previous.x, dy = (row.y - previous.y) / 4;
@@ -34,6 +39,13 @@ function plot(node: Node): DOMOutputSpec {
         }
         markers.push(['span', { style: `${position(row)};background:#55409c;border-radius:50%;width:6px;height:6px;transform:translate(-50%,-50%)` }]);
       });
+    }
+    if (kind === 'column' && layout.rows.length <= 6) {
+      return graphic([
+        ['div', { dir: 'ltr', style }, ...markers],
+        ['div', { dir: 'ltr', style: `display:grid;grid-template-columns:repeat(${layout.rows.length},minmax(0,1fr));margin:0 6px;text-align:center;overflow-wrap:anywhere` },
+          ...layout.rows.map((row): DOMOutputSpec => ['span', { dir: 'auto' }, row.label + ' · ' + row.source])],
+      ]);
     }
     return graphic([
       ['div', { dir: 'ltr', style }, ...markers],

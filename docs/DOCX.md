@@ -2,14 +2,14 @@
 
 ## Editable charts
 
-In the development build, exporting a supported bar, line or pie chart writes a native
+In the development build, exporting a supported bar, column, line or pie chart writes a native
 Office chart with an embedded Excel worksheet. The accompanying Word table keeps the
 author's cell text and formatting. In Word, use the chart's **Edit Data** command to
 change the plotted values. The accompanying table is a separate copy and edits to it
 do not update the chart. Invalid chart data exports as a table with a conversion notice.
 
-With the charts extension installed, Fountain reopens a single-series horizontal
-bar, line or pie chart from its saved category labels and numeric points. Fountain
+With the charts extension installed, Fountain reopens a single-series horizontal bar, vertical
+column, line or pie chart from its saved category labels and numeric points. Fountain
 groups its own matching caption, formatted table and plot into one editable chart.
 When the table and plot disagree, both remain editable independently. Ordinary
 Word tables outside that group remain separate.

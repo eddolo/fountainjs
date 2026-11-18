@@ -171,7 +171,7 @@ it('changes chart type in place and retains it across HTML, JSON and undo', () =
   const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
   insertBarChart(editor, 'Revenue', [['A', Number.MAX_VALUE], ['B', Number.MAX_VALUE], ['C', 0]]);
   const table = selectedBarChart(editor)!.child(1), selection = editor.state.selection;
-  for (const kind of ['line', 'pie'] as const) {
+  for (const kind of ['column', 'line', 'pie'] as const) {
     expect(setChartType(editor, kind)).toBe(true);
     expect(selectedBarChart(editor)!.child(1)).toBe(table);
     expect(editor.state.selection.eq(selection)).toBe(true);
@@ -180,7 +180,7 @@ it('changes chart type in place and retains it across HTML, JSON and undo', () =
     expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(doc.toJSON());
     expect(editor.state.schema.nodeFromJSON(doc.toJSON()).eq(doc)).toBe(true);
     const svg = exportBarChartSVG(selectedBarChart(editor)!);
-    expect(svg).toContain(kind === 'line' ? '<polyline' : 'A96 96');
+    expect(svg).toContain(kind === 'line' ? '<polyline' : kind === 'column' ? 'height="188" fill="#55409c"' : 'A96 96');
     expect(svg).not.toMatch(/NaN|Infinity/);
   }
   expect(undo(editor)).toBe(true);
@@ -206,17 +206,18 @@ it('explains unsuitable pie values and draws a single positive share as a whole 
   editor.destroy();
 });
 
-it.each(['bar', 'line', 'pie'] as const)('embeds a native %s chart with Excel data and XML-safe category text', kind => {
+it.each(['bar', 'column', 'line', 'pie'] as const)('embeds a native %s chart with Excel data and XML-safe category text', kind => {
   const editor = createEditor({ schema: kit.schema });
   insertBarChart(editor, 'Production & sales', [['=SUM(1,2)', 3], ['Low < High', 4]]);
   setChartType(editor, kind);
   const output = exportDOCX(editor.state.doc);
   const parts = unzipSync(output.bytes);
   const chart = strFromU8(parts['word/charts/chart1.xml']);
-  expect(chart).toContain('<c:' + kind + 'Chart>');
+  expect(chart).toContain('<c:' + (kind === 'column' ? 'bar' : kind) + 'Chart>');
   expect(chart).toContain('<c:f>Data!$B$2:$B$3</c:f>');
   expect(chart).toContain('Low &lt; High');
   if (kind === 'line') expect(chart).toContain('<c:smooth val="0"/></c:ser><c:smooth val="0"/>');
+  if (kind === 'column') expect(chart).toContain('<c:barDir val="col"/>');
   if (kind === 'bar') {
     expect(chart).toContain('<c:catAx><c:axId val="1"/><c:scaling><c:orientation val="maxMin"/>');
     expect(chart).toContain('<c:axPos val="l"/><c:tickLblPos val="low"/>');

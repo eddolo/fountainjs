@@ -41,10 +41,12 @@ export function readNativeChart(root: XMLElement, schema: Schema): Node | undefi
   const area = one(chart, 'plotArea');
   const plots = area?.children.filter((part): part is XMLElement => typeof part !== 'string' && /Chart$/.test(part.name));
   if (plots?.length !== 1) return;
-  const kind = (['bar', 'line', 'pie'] as const).find(kind => one(area, kind + 'Chart') === plots[0]);
-  if (!kind) return;
+  const family = (['bar', 'line', 'pie'] as const).find(kind => one(area, kind + 'Chart') === plots[0]);
+  if (!family) return;
   const plot = plots[0]!;
-  if (kind === 'bar' && one(plot, 'barDir')?.attrs.val !== 'bar') return;
+  const direction = one(plot, 'barDir')?.attrs.val;
+  if (family === 'bar' && direction !== 'bar' && direction !== 'col') return;
+  const kind = family === 'bar' && direction === 'col' ? 'column' : family;
   const grouping = one(plot, 'grouping')?.attrs.val;
   if (grouping && grouping !== 'standard' && grouping !== 'clustered') return;
   const series = one(plot, 'ser');

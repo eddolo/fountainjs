@@ -7,9 +7,15 @@ function cellText(cell: Node): string | null {
     ? paragraph.textContent.trim() : null;
 }
 
-export const chartTypes = ['bar', 'line', 'pie'] as const;
+export const chartTypes = ['bar', 'column', 'line', 'pie'] as const;
 export type ChartType = typeof chartTypes[number];
 export const sliceColors = ['#55409c', '#007768', '#b15115', '#326b9b', '#a13967', '#686c21'];
+
+/** Bounds in plot percentages. Each category occupies one equal-width band. */
+export function columnBounds(index: number, count: number, y: number, zero: number) {
+  return { left: (index + 0.15) * 100 / count, width: 70 / count,
+    top: Math.min(y, 100 - zero), height: Math.abs(y - (100 - zero)) };
+}
 
 export function chartLayout(node: Node) {
   if (node.type.name !== 'bar_chart') return 'Select a chart to export.';

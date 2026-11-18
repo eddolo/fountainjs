@@ -1,5 +1,5 @@
 import type { Node } from '../core/schema';
-import { chartLayout } from './layout';
+import { chartLayout, columnBounds } from './layout';
 
 export type ChartImageFormat = 'svg' | 'png' | 'jpeg' | 'webp';
 
@@ -38,12 +38,19 @@ function drawChart(node: Node) {
   text(title, 24);
   y += 10;
   const x = (p: number) => Number((track * p / 100).toFixed(4));
-  if (layout.kind === 'line') {
+  if (layout.kind === 'column' || layout.kind === 'line') {
     const graphHeight = track / 4;
-    const points = layout.rows.map(row => [inset + x(row.x), y + graphHeight * row.y / 100]);
-    drawing.push(`<path d="M${inset} ${y + graphHeight * (1 - layout.zero / 100)}h${track}" stroke="#aaa"/>`,
-      `<polyline points="${points.map(point => point.join(',')).join(' ')}" fill="none" stroke="#55409c" stroke-width="2"/>`);
-    for (const [cx, cy] of points) drawing.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="#55409c"/>`);
+    drawing.push(`<path d="M${inset} ${y + graphHeight * (1 - layout.zero / 100)}h${track}" stroke="#aaa"/>`);
+    if (layout.kind === 'column') {
+      layout.rows.forEach((row, index) => {
+        const bounds = columnBounds(index, layout.rows.length, row.y, layout.zero);
+        drawing.push(`<rect x="${inset + x(bounds.left)}" y="${y + graphHeight * bounds.top / 100}" width="${x(bounds.width)}" height="${graphHeight * bounds.height / 100}" fill="#55409c"/>`);
+      });
+    } else {
+      const points = layout.rows.map(row => [inset + x(row.x), y + graphHeight * row.y / 100]);
+      drawing.push(`<polyline points="${points.map(point => point.join(',')).join(' ')}" fill="none" stroke="#55409c" stroke-width="2"/>`);
+      for (const [cx, cy] of points) drawing.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="#55409c"/>`);
+    }
     y += graphHeight + 12;
   } else if (layout.kind === 'pie') {
     const radius = 96, cx = width / 2, cy = y + radius;
@@ -61,7 +68,7 @@ function drawChart(node: Node) {
   for (const [index, row] of layout.rows.entries()) {
     const label = row.label + ' · ' + row.source;
     if (layout.kind === 'pie') text('■ ' + label, 16, row.color);
-    else if (layout.kind === 'line') text((index + 1) + '. ' + label, 16);
+    else if (layout.kind !== 'bar') text((index + 1) + '. ' + label, 16);
     else {
       text(label, 16);
       y += 7;

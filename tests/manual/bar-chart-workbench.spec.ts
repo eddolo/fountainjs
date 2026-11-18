@@ -127,6 +127,47 @@ test('downloads chart images with the edited labels and signed bars', async ({ p
   }
 });
 
+test('keeps positive and negative columns on opposite sides of zero through a Word export', async ({ page }, info) => {
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.getByRole('button', { name: 'Bar chart', exact: true }).click();
+  await demo.getByRole('combobox', { name: 'Chart type' }).selectOption('column');
+  const chart = demo.locator('figure[data-fountain-chart="column"]');
+  const plot = chart.locator('[data-fountain-chart-plot]');
+  await expect(plot).toContainText('Tuesday · -4');
+  const graph = plot.getByRole('img').locator('div[dir="ltr"]').first();
+  const geometry = await graph.locator(':scope > span').evaluateAll(elements =>
+    elements.map(element => {
+      const { x, y, width, height, bottom } = element.getBoundingClientRect();
+      return { x, y, width, height, bottom };
+    }));
+  const [axis, monday, tuesday, wednesday] = geometry;
+  expect(geometry).toHaveLength(4);
+  expect(monday.bottom).toBeCloseTo(axis.y, 0);
+  expect(tuesday.y).toBeCloseTo(axis.y, 0);
+  expect(wednesday.bottom).toBeCloseTo(axis.y, 0);
+  expect(tuesday.x).toBeGreaterThan(monday.x + monday.width);
+  expect(monday.height / tuesday.height).toBeCloseTo(3, 1);
+  await chart.screenshot({ path: info.outputPath('editor-columns.png') });
+
+  await demo.getByRole('button', { name: 'html', exact: true }).click();
+  const html = await demo.locator('pre').filter({ hasText: 'data-fountain-chart-source' }).innerText();
+  await page.goto('conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles({ name: 'orders.html', mimeType: 'text/html', buffer: Buffer.from(html) });
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: orders.html', exact: true });
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  await workspace.getByRole('button', { name: 'Check round trip' }).click();
+  const download = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const wordFile = info.outputPath('orders.docx');
+  await (await download).saveAs(wordFile);
+  await input.setInputFiles(wordFile);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: orders.docx', exact: true });
+  await expect(reopened.getByRole('textbox', { name: 'Imported document editor' })
+    .locator('figure[data-fountain-chart="column"] [data-fountain-chart-plot]')).toContainText('Tuesday · -4');
+});
+
 test('changes a signed line chart to a pie, fixes the data, and reopens the saved chart', async ({ page }, info) => {
   await page.goto('index.html#playground');
   const demo = page.locator('#playground');

@@ -761,7 +761,7 @@ function App() {
                 setChartType(editor, event.target.value as ChartType);
                 setChartExportError('');
                 editorHandle.current?.focus();
-              }}><option value="bar">Bar</option><option value="line">Line</option><option value="pie">Pie</option></select></label>
+              }}><option value="bar">Bar</option><option value="column">Column</option><option value="line">Line</option><option value="pie">Pie</option></select></label>
               <select aria-label="Chart image format" value={chartFormat} onChange={event => {
                 setChartFormat(event.target.value as ChartImageFormat);
                 setChartExportError('');
