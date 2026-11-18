@@ -85,7 +85,7 @@ function rich(doc, acceptField) {
 }
 
 export function validateTemplate(template) {
-  shape(template, ['version', 'title', 'blocks', 'rules', 'checks']);
+  shape(template, ['version', 'title', 'blocks', 'rules', 'checks', 'calculations']);
   check(template.version === 1, 'Unsupported template version.');
   label(template.title, 'title');
   check(
@@ -121,9 +121,23 @@ export function validateTemplate(template) {
     keys.add(block.key);
     if (block.kind === 'text') textKeys.add(block.key);
   }
+  const calculated = new Set();
+  if (Object.hasOwn(template, 'calculations')) {
+    check(Array.isArray(template.calculations) && template.calculations.length <= 64, 'Use up to 64 calculated values.');
+    for (const calculation of template.calculations) {
+      shape(calculation, ['key', 'label', 'operation', 'start', 'end']);
+      check(validFieldKey(calculation.key) && !keys.has(calculation.key) && !calculated.has(calculation.key),
+        'Each calculated value needs a unique field key.');
+      label(calculation.label, 'calculation label');
+      check(calculation.operation === 'elapsedDays', 'Unknown calculation.');
+      check(textKeys.has(calculation.start) && textKeys.has(calculation.end) && calculation.start !== calculation.end,
+        'Choose two different single-line date fields for each calculation.');
+      calculated.add(calculation.key);
+    }
+  }
   check(
-    inline.every((key) => textKeys.has(key)),
-    'Inline fields require an existing single-line answer.',
+    inline.every((key) => textKeys.has(key) || calculated.has(key)),
+    'Inline fields require an existing single-line answer or calculated value.',
   );
   check(keys.size > 0, 'Add at least one field.');
   check(
@@ -163,6 +177,12 @@ function validDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || value.startsWith('0000')) return false;
   const timestamp = Date.parse(value + 'T00:00:00Z');
   return Number.isFinite(timestamp) && new Date(timestamp).toISOString().slice(0, 10) === value;
+}
+
+export function elapsedDays(calculation, answers) {
+  const start = answers[calculation.start], end = answers[calculation.end];
+  if (!validDate(start) || !validDate(end)) return '';
+  return String((Date.parse(end + 'T00:00:00Z') - Date.parse(start + 'T00:00:00Z')) / 86_400_000);
 }
 
 function answerError(field, message) {
@@ -219,6 +239,14 @@ export function validateAnswers(template, answers, submitting) {
     if (submitting && field.required && !text.trim())
       answerError(field.key, 'Complete the required field “' + field.label + '”.');
   }
+  if (submitting) {
+    for (const calculation of template.calculations ?? []) {
+      if (!answers[calculation.start] && !answers[calculation.end]) continue;
+      for (const key of [calculation.start, calculation.end]) {
+        if (!validDate(answers[key])) answerError(key, 'Enter a valid date in YYYY-MM-DD format to calculate “' + calculation.label + '”.');
+      }
+    }
+  }
   if (submitting && template.rules?.length) compareAnswers(template, answers, fields);
 }
 
@@ -226,11 +254,13 @@ export function renderResponse(template, answers) {
   validateTemplate(template);
   validateAnswers(template, answers, true);
   const heading = (text, level) => ({ ...paragraph(text), type: 'heading', attrs: { level } });
+  const values = { ...answers };
+  for (const calculation of template.calculations ?? []) values[calculation.key] = elapsedDays(calculation, answers);
   const content = [heading(template.title, 1)];
   let size = 0;
   for (const block of template.blocks) {
     if (block.type === 'prose') {
-      const resolved = resolveTemplateFields(block.document, (key) => answers[key] ?? '');
+      const resolved = resolveTemplateFields(block.document, (key) => values[key] ?? '');
       size += JSON.stringify(resolved.content).length;
       check(size <= 1_000_000, 'Completed document exceeds the output limit.');
       content.push(...resolved.content);

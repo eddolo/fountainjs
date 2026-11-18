@@ -318,3 +318,79 @@ test('a researcher saves an inconsistent draft, corrects its dates and submits u
     await context.close();
   }
 });
+
+test('publishes a calculated duration and keeps issued dates independent of later template edits', async ({ page, browser }, info) => {
+  await page.goto('http://127.0.0.1:4203/');
+  await page.getByRole('button', { name: 'Create template', exact: true }).click();
+  await page.getByLabel('Field label', { exact: true }).first().fill('Study start');
+  await page.getByRole('button', { name: 'Add field', exact: true }).click();
+  await page.getByLabel('Field label', { exact: true }).last().fill('Study end');
+  await page.getByRole('button', { name: 'Add elapsed days' }).click();
+  const calc = page.getByRole('heading', { name: 'Calculated values' }).locator('..');
+  await calc.getByLabel('Calculation label').fill('Study duration');
+  const endKey = page.getByLabel('Field key', { exact: true }).last();
+  await endKey.fill('end_date');
+  await endKey.press('Tab');
+  await expect(calc.getByLabel('End date field')).toHaveValue('end_date');
+  const instructions = page.getByRole('textbox', { name: 'Instructions 1' });
+  await instructions.fill('Duration (days): TBD.');
+  await instructions.press('End');
+  await instructions.press('ArrowLeft');
+  for (let i = 0; i < 3; i++) await instructions.press('Shift+ArrowLeft');
+  const select = page.getByRole('combobox', { name: 'Field to insert' });
+  await select.focus();
+  await select.selectOption({ label: 'Study duration' });
+  await page.getByRole('button', { name: 'Insert field', exact: true }).click();
+  await page.getByRole('button', { name: 'Save template', exact: true }).click();
+  await expect(page.getByRole('status')).toHaveText('Template saved.');
+  await page.getByRole('button', { name: 'Create respondent link' }).click();
+  const invitation = await page.getByRole('link', { name: 'Open response' }).getAttribute('href');
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', { name: 'Download template JSON' }).click(),
+  ]);
+  const saved = info.outputPath('duration-template.json');
+  await download.saveAs(saved);
+  expect(JSON.parse(await readFile(saved, 'utf8')).calculations).toEqual([{
+    key: 'days_1', label: 'Study duration', operation: 'elapsedDays', start: 'study', end: 'end_date',
+  }]);
+  await calc.getByLabel('End date field').selectOption('study');
+  await page.getByRole('button', { name: 'Save template', exact: true }).click();
+  await expect(page.getByRole('status')).toHaveText('Template saved.');
+  const context = await browser.newContext({ recordVideo: { dir: info.outputPath('respondent-video') } });
+  try {
+    const response = await context.newPage();
+    await response.goto(invitation!);
+    const preview = response.getByRole('textbox', { name: 'Fixed instructions' });
+    const start = response.getByRole('textbox', { name: 'Study start (required)' });
+    const end = response.getByRole('textbox', { name: 'Study end', exact: true });
+    await start.fill('2024-02-28');
+    await end.fill('2024-03-01');
+    await expect(preview).toHaveText('Duration (days): 2.');
+    await end.fill('2024-02-30');
+    await expect(preview).toContainText('Study duration');
+    await response.getByRole('textbox', { name: 'Findings (required)' }).fill('Measurements checked.');
+    await response.getByRole('button', { name: 'Save draft' }).click();
+    await expect(response.getByRole('status')).toHaveText('Draft saved.');
+    await response.reload();
+    await response.getByRole('button', { name: 'Submit response' }).click();
+    await expect(end).toBeFocused();
+    await expect(end).toHaveAttribute('aria-invalid', 'true');
+    await end.fill('2024-02-29');
+    await expect(preview).toHaveText('Duration (days): 1.');
+    await preview.screenshot({ path: info.outputPath('calculated-study-duration.png') });
+    await response.getByRole('button', { name: 'Submit response' }).click();
+    const completed = response.getByRole('textbox', { name: 'Completed document' });
+    await expect(completed).toContainText('Duration (days): 1.');
+    await response.reload();
+    await expect(completed).toContainText('Duration (days): 1.');
+  } finally {
+    await context.close();
+  }
+  await page.goto('http://127.0.0.1:4203/');
+  await page.getByLabel('Open template file').setInputFiles(saved);
+  await expect(calc.getByLabel('Calculation label')).toHaveValue('Study duration');
+  await expect(calc.getByLabel('Start date field')).toHaveValue('study');
+  await expect(calc.getByLabel('End date field')).toHaveValue('end_date');
+  await calc.screenshot({ path: info.outputPath('reopened-calculation.png') });
+});

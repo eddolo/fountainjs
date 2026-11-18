@@ -1,5 +1,5 @@
 import { createEditor, EditorView, toggleMark, createHistoryPlugin, undo, redo } from 'fountainjs-editor';
-import { schemaSpec, initialTemplate, documentOf, validateTemplate, comparisonLabels } from './model.mjs';
+import { schemaSpec, initialTemplate, documentOf, validateTemplate, comparisonLabels, elapsedDays } from './model.mjs';
 import { insertTemplateField, resolveTemplateFields, validFieldKey } from './inline-fields.mjs';
 import './style.css';
 
@@ -271,19 +271,19 @@ function redraw() {
   if (route.kind === 'templates') author();
   else respondent();
 }
+function fillSelect(select, candidates, value) {
+  select.replaceChildren(...candidates.map((field) => {
+    const option = el('option', field.label);
+    option.value = field.key;
+    return option;
+  }));
+  select.value = value;
+}
 function answerRulesEditor(template, fields) {
   const panel = el('section', undefined, 'card');
   const rows = el('div');
   const choices = () => fields().filter((field) => field.kind === 'text');
   let refreshers = [];
-  function fillSelect(select, candidates, value) {
-    select.replaceChildren(...candidates.map((field) => {
-      const option = el('option', field.label);
-      option.value = field.key;
-      return option;
-    }));
-    select.value = value;
-  }
   function renderRows() {
     rows.replaceChildren();
     refreshers = [];
@@ -389,6 +389,55 @@ function applicationChecksEditor(template, fields, catalogue) {
   return { panel, refreshFields: () => refreshers.forEach((refresh) => refresh()) };
 }
 
+function calculationsEditor(template, fields, usesInline) {
+  const panel = el('section', undefined, 'card');
+  const rows = el('div');
+  const choices = () => fields().filter(field => field.kind === 'text');
+  let refreshers = [];
+  function renderRows() {
+    rows.replaceChildren();
+    refreshers = [];
+    for (const item of template.calculations ?? []) {
+      const controls = row(rows);
+      input(controls, 'Calculation label', item.label, value => { item.label = value; });
+      const selects = {};
+      for (const [role, other, name] of [['start', 'end', 'Start date field'], ['end', 'start', 'End date field']]) {
+        selects[role] = input(controls, name, item[role], key => {
+          if (item[other] === key) item[other] = item[role];
+          item[role] = key;
+          refresh();
+        }, []);
+      }
+      function refresh() {
+        const candidates = choices();
+        fillSelect(selects.start, candidates, item.start);
+        fillSelect(selects.end, candidates, item.end);
+      }
+      refresh();
+      refreshers.push(refresh);
+      controls.append(button('Remove calculation', () => {
+        if (usesInline(item.key)) throw Error('Remove its inline uses first.');
+        template.calculations.splice(template.calculations.indexOf(item), 1);
+        markDirty();
+        renderRows();
+      }));
+    }
+  }
+  panel.append(el('h2', 'Calculated values'), rows, button('Add elapsed days', () => {
+    const candidates = choices();
+    if (candidates.length < 2) throw Error('Add two single-line date fields first.');
+    const items = template.calculations ??= [];
+    if (items.length >= 64) throw Error('Use up to 64 calculated values.');
+    let n = 1;
+    while ([...fields(), ...items].some(item => item.key === 'days_' + n)) n++;
+    items.push({ key: 'days_' + n, label: 'Elapsed days', operation: 'elapsedDays', start: candidates[0].key, end: candidates[1].key });
+    markDirty();
+    renderRows();
+  }), el('p', 'Use Insert field in fixed instructions to place the result. Dates use YYYY-MM-DD. Earlier end dates give a negative count.', 'small'));
+  renderRows();
+  return { panel, refreshFields: () => refreshers.forEach(refresh => refresh()) };
+}
+
 function author() {
   const { template, revision, responses } = documentState;
   if (review) {
@@ -419,6 +468,7 @@ function author() {
     ? applicationChecksEditor(template, fields, workspace.validators ?? []) : undefined;
   const refreshFieldChoices = () => {
     ruleEditor.refreshFields();
+    calculationsEditorView.refreshFields();
     checksEditor?.refreshFields();
   };
   const usesRule = (key) => template.rules?.some((rule) => rule.field === key || rule.other === key);
@@ -430,6 +480,9 @@ function author() {
           p.content?.some((run) => run.type === 'template_field' && run.attrs.key === key),
         ),
     );
+  const calculationsEditorView = calculationsEditor(template, fields, usesInline);
+  const usesDate = key => template.calculations?.some(item => item.start === key || item.end === key);
+  const inlineChoices = () => [...fields(), ...(template.calculations ?? []).map(item => ({ ...item, kind: 'text' }))];
   const add = (block) => {
     template.blocks.push(block);
     markDirty();
@@ -441,7 +494,7 @@ function author() {
       b.type === 'field' ? 'Response field' : b.type === 'prose' ? 'Fixed instructions' : 'Repeated answer',
     );
     if (b.type === 'prose')
-      rich(card, 'Instructions ' + (i + 1), b.document, (v) => (b.document = v), fields);
+      rich(card, 'Instructions ' + (i + 1), b.document, (v) => (b.document = v), inlineChoices);
     if (b.type === 'field') {
       const r = row(card);
       input(r, 'Field label', b.label, (v) => (b.label = v)).addEventListener('change', refreshFieldChoices);
@@ -457,13 +510,17 @@ function author() {
           status.textContent = 'Remove inline uses before changing this field key.';
           return;
         }
-        if (!validFieldKey(key) || fields().some((f) => f !== b && f.key === key)) {
+        if (!validFieldKey(key) || inlineChoices().some((f) => f !== b && f.key === key)) {
           keyInput.value = b.key;
           status.textContent = 'Choose a unique lowercase field key.';
           return;
         }
         const old = b.key;
         b.key = key;
+        for (const item of template.calculations ?? []) {
+          if (item.start === old) item.start = key;
+          if (item.end === old) item.end = key;
+        }
         for (const rule of template.rules ?? []) {
           if (rule.field === old) rule.field = key;
           if (rule.other === old) rule.other = key;
@@ -489,13 +546,18 @@ function author() {
             status.textContent = 'Remove inline uses before changing this answer type.';
             return false;
           }
+          if (v !== 'text' && usesDate(b.key)) {
+            kind.value = b.kind;
+            status.textContent = 'Remove its date calculations before changing this answer type.';
+            return false;
+          }
           if (v !== 'text' && usesRule(b.key)) {
             kind.value = b.kind;
             status.textContent = 'Remove its answer rules before changing this answer type.';
             return false;
           }
           b.kind = v;
-          ruleEditor.refreshFields();
+          refreshFieldChoices();
         },
         [
           ['text', 'Single line'],
@@ -548,6 +610,7 @@ function author() {
       button('Remove block', () => {
         if (b.type === 'field' && template.checks?.some((check) => check.fields.includes(b.key)))
           throw Error('Remove its application checks first.');
+        if (b.type === 'field' && usesDate(b.key)) throw Error('Remove its date calculations first.');
         if (b.type === 'field' && usesRule(b.key)) throw Error('Remove its answer rules first.');
         if (b.type === 'field' && usesInline(b.key)) throw Error('Remove its inline uses first.');
         if (
@@ -566,7 +629,7 @@ function author() {
     button('Add instructions', () => add({ type: 'prose', document: documentOf() })),
     button('Add field', () => {
       let n = 1;
-      while (fields().some((f) => f.key === 'field_' + n)) n++;
+      while (inlineChoices().some((f) => f.key === 'field_' + n)) n++;
       add({ type: 'field', key: 'field_' + n, label: 'New field', kind: 'text', required: false });
     }),
     button('Repeat an answer', () => {
@@ -574,7 +637,7 @@ function author() {
       add({ type: 'reference', key: fields()[0].key });
     }),
   );
-  root.append(ruleEditor.panel);
+  root.append(ruleEditor.panel, calculationsEditorView.panel);
   if (checksEditor) root.append(checksEditor.panel);
   const commands = row(root, 'row actions');
   commands.append(
@@ -713,6 +776,7 @@ function respondent() {
   }
   root.append(el('h1', template.title));
   const fields = new Map(template.blocks.filter((block) => block.type === 'field').map((field) => [field.key,field]));
+  const calculated = new Map((template.calculations ?? []).map(item => [item.key, item]));
   const richEditors = new Map(), textInputs = new Map(), mirrors = new Map(),
     inlinePreviews = new Map();
   function refresh(key) {
@@ -721,7 +785,8 @@ function respondent() {
     }
     for (const invalid of root.querySelectorAll('[aria-invalid="true"]')) {
       const invalidKey = invalid.dataset.answerKey;
-      if (invalidKey === key || template.checks?.some((check) => check.fields.includes(invalidKey) && check.fields.includes(key)) || template.rules?.some((rule) =>
+      if (invalidKey === key || template.calculations?.some(item =>
+          (item.start === key && item.end === invalidKey) || (item.end === key && item.start === invalidKey)) || template.checks?.some((check) => check.fields.includes(invalidKey) && check.fields.includes(key)) || template.rules?.some((rule) =>
         (rule.field === invalidKey && rule.other === key) || (rule.other === invalidKey && rule.field === key))) {
         invalid.removeAttribute('aria-invalid');
         document.getElementById('error-' + invalid.id).textContent = '';
@@ -753,6 +818,12 @@ function respondent() {
       const keys = new Set();
       const project = () =>
         resolveTemplateFields(b.document, (key) => {
+          const calculation = calculated.get(key);
+          if (calculation) {
+            keys.add(calculation.start);
+            keys.add(calculation.end);
+            return elapsedDays(calculation, answers) || '〈' + calculation.label + '〉';
+          }
           keys.add(key);
           return answers[key] || '{{' + key + '}}';
         });
@@ -807,7 +878,8 @@ function respondent() {
         notes.append(el('p', comparisonLabels[rule.operator] + ' “' + other.label + '”.', 'small'));
       }
     }
-    if (template.rules?.some((rule) => rule.operator === 'onOrAfter' && (rule.field === b.key || rule.other === b.key)))
+    if (template.calculations?.some(item => item.start === b.key || item.end === b.key) ||
+      template.rules?.some((rule) => rule.operator === 'onOrAfter' && (rule.field === b.key || rule.other === b.key)))
       notes.append(el('p', 'Use YYYY-MM-DD.', 'small'));
     const error = el('p', undefined, 'field-error');
     error.id = 'error-' + control.id;
