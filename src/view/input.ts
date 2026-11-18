@@ -529,15 +529,6 @@ export class InputManager {
       }
     }
     const text = event.clipboardData?.getData('text/plain');
-    if (this.editor.state.selection instanceof CellSelection && !clipboardHTML.trim() && !fountain
-      && !event.clipboardData?.types?.includes('text/html') && text !== undefined && pasteTableCells(this.editor, text)) {
-      event.preventDefault();
-      this.reportPaste(createExternalPasteReport(
-        clipboardHTML ? detectExternalPasteSource(clipboardHTML) : 'plain-text',
-        'inserted-table-grid', text, text,
-      ));
-      return;
-    }
     const files = Array.from(event.clipboardData?.files ?? [])
       .filter((file) => file.type.startsWith('image/') || Boolean(this.options.assetUpload || this.options.handleFiles));
     if (files.length) {
@@ -616,6 +607,21 @@ export class InputManager {
       message: 'The browser advertised rich clipboard HTML but did not deliver it; Fountain used the original plain-text representation.',
       lossy: true,
     })]);
+    // WebKit may offer bare TSV as text/html during beforeinput. Real markup
+    // keeps priority over its plain-text projection.
+    const plainGrid = text !== undefined && /[\t\r\n]/.test(text) && (!html.trim() ||
+      !/<[!/a-z?]/i.test(html) && html.replace(/\r\n?/g, '\n') === text.replace(/\r\n?/g, '\n'));
+    if (plainGrid) {
+      const { doc, selection } = this.editor.state;
+      const cell = selection instanceof Selection && selection.isCollapsed && text.includes('\t') && getActiveTableCell(this.editor);
+      if (selection instanceof CellSelection || cell && getNodeAtPath(doc, selection.path.slice(0, cell.cell.path.length + 1)).type.name === 'paragraph') {
+        event?.preventDefault();
+        if (this.editor.runCommandBatch(() => pasteTableCells(this.editor, text))) {
+          this.reportPaste(createExternalPasteReport('plain-text', 'inserted-table-grid', text, text, richIssues));
+        } else this.rejectPaste(event, 'plain-text', text, richIssues);
+        return;
+      }
+    }
     let richSource = fountain ? 'fountain' as const : html ? detectExternalPasteSource(html) : 'generic-html' as const;
     let normalizedHTML = html;
     if (html?.trim()) {

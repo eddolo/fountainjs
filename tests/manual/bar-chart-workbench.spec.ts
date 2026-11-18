@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { strFromU8, unzipSync } from 'fflate';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 test('edits chart data in the public editor and exports the same data and plot', async ({ page }, info) => {
   await page.goto('index.html#playground');
@@ -202,4 +202,47 @@ test('reopens the chart edited in LibreOffice and preserves its independently ed
   await expect(reopened.locator('table')).toHaveCount(2);
   await expect(tableValue(reopened.locator('table').first())).toHaveText('-16');
   await expect(reopened.locator('[data-fountain-chart-plot]')).toContainText('Tuesday · 32');
+});
+
+
+async function pasteSpreadsheetAtChartCaret(page: Page) {
+  const source = await page.context().newPage();
+  await source.setContent('<textarea aria-label="Spreadsheet values"></textarea>');
+  await source.getByRole('textbox').fill('"North"\t30\nSouth\t-12');
+  await source.keyboard.press('ControlOrMeta+a');
+  await source.keyboard.press('ControlOrMeta+c');
+  await page.bringToFront();
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.getByRole('button', { name: 'Bar chart', exact: true }).click();
+  const chart = demo.locator('figure[data-fountain-chart="bar"]');
+  const plot = chart.locator('[data-fountain-chart-plot]');
+  await chart.getByRole('row').nth(1).getByRole('cell').first().locator('p').click();
+  await page.keyboard.press('ControlOrMeta+v');
+  await expect(plot).toContainText('North · 30');
+  await expect(plot).toContainText('South · -12');
+  await expect(plot).toContainText('Wednesday · 8');
+  return { chart, plot, source };
+}
+
+test('pastes spreadsheet text at the chart caret and undoes the entire grid edit', async ({ page }, info) => {
+  const { chart, plot, source } = await pasteSpreadsheetAtChartCaret(page);
+  await chart.screenshot({ path: info.outputPath('pasted-spreadsheet-data.png') });
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(plot).toContainText('Monday · 12');
+  await expect(plot).toContainText('Tuesday · -4');
+  await source.close();
+});
+
+test('copies the selected chart grid to an independent text editor', async ({ page }) => {
+  const { source } = await pasteSpreadsheetAtChartCaret(page);
+  await page.keyboard.press('ControlOrMeta+c');
+  await source.bringToFront();
+  const external = source.getByRole('textbox');
+  await external.fill('');
+  await external.focus();
+  await source.keyboard.press('ControlOrMeta+v');
+  // The input quoted North. Plain North proves the new copy crossed the system clipboard.
+  await expect(external).toHaveValue('North\t30\nSouth\t-12');
+  await source.close();
 });

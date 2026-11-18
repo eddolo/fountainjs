@@ -387,21 +387,47 @@ export function repairTable(editor: Editor, requestedTablePath?: readonly number
 }
 
 function parseTabularText(text: string): readonly (readonly string[])[] | null {
-  const normalized = text.replace(/\r\n?/g, '\n');
-  if (!normalized.includes('\t') && !normalized.includes('\n')) return null;
-  const lines = normalized.endsWith('\n') ? normalized.slice(0, -1).split('\n') : normalized.split('\n');
-  const matrix = lines.map((line) => line.split('\t'));
-  const width = Math.max(0, ...matrix.map((row) => row.length));
-  if (!matrix.length || !width || matrix.length * width > MAX_PASTE_CELLS) return null;
-  return matrix.map((row) => Object.freeze(Array.from({ length: width }, (_, column) => row[column] ?? '')));
+  if (!/[\t\r\n]/.test(text)) return null;
+  // Spreadsheet text quotes fields containing separators and doubles embedded quotes.
+  const field = /(?:"((?:[^"]|"")*)"|([^\t\r\n]*))(\t|\r\n?|\n|$)/gy;
+  const rows: string[][] = [[]];
+  let width = 0;
+  while (true) {
+    const match = field.exec(text);
+    if (!match) return null;
+    const row = rows[rows.length - 1];
+    row.push(match[1] === undefined ? match[2] : match[1].replaceAll('""', '"'));
+    width = Math.max(width, row.length);
+    if (rows.length * width > MAX_PASTE_CELLS) return null;
+    if (!match[3]) break;
+    if (match[3] !== '\t') {
+      if (field.lastIndex === text.length) break;
+      rows.push([]);
+    }
+  }
+  return rows.map(row => Array.from({ length: width }, (_, column) => row[column] ?? ''));
 }
 
 export function pasteTableCells(editor: Editor, text: string | Node): boolean {
   if (typeof text !== 'string') return pasteRichTableCells(editor, text);
   if (!editor.editable) return false;
-  const context = selectionContext(editor);
   const matrix = parseTabularText(text);
-  if (!context || !matrix) return false;
+  if (!matrix) return false;
+  const context = selectionContext(editor);
+  if (!context) {
+    const { selection, schema } = editor.state;
+    if (!(selection instanceof Selection) || !selection.isCollapsed || !text.includes('\t')) return false;
+    const target = getActiveTableCell(editor);
+    if (!target || !target.map.valid || !schema.nodes.table_cell || !schema.nodes.paragraph) return false;
+    const rows = matrix.map((values, dy) => schema.node('table_row', {}, values.map((value, dx) => {
+      const existing = target.map.cellAt(target.cell.row + dy, target.cell.column + dx);
+      const paragraph = schema.node('paragraph', {}, [schema.text(value)]);
+      return existing ? existing.node.copy([paragraph]) : schema.node('table_cell', {}, [paragraph]);
+    })));
+    // An inferred text grid carries no merge information. Leave merged ownership intact.
+    if (rows.some(row => row.content.some(cell => Number(cell.attrs.rowspan) > 1 || Number(cell.attrs.colspan) > 1))) return false;
+    return pasteRichTableCells(editor, schema.node('table', {}, rows));
+  }
   const selected = context.selection;
   const pasteHeight = matrix.length;
   const pasteWidth = matrix[0]?.length ?? 0;
@@ -478,7 +504,8 @@ export function serializeTableSelection(doc: Node, selection: CellSelection): Se
         continue;
       }
       const isAnchor = cell.row === row && cell.column === column;
-      textCells.push(isAnchor ? cell.node.textContent.replace(/[\t\r\n]+/g, ' ') : '');
+      const value = isAnchor ? cell.node.textContent : '';
+      textCells.push(/["\t\r\n]/.test(value) ? '"' + value.replaceAll('"', '""') + '"' : value);
       if (isAnchor) htmlCells.push(HTMLExporter.export(cell.node, { document: false }));
     }
     textRows.push(textCells.join('\t'));

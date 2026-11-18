@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
 import { CellSelection, EditorState, Plugin, PluginKey, Schema, Selection, StarterKit, TableMap, createEditor,
-  extractTableSelection, insertDocument, insertTable, pasteTableCells, undo, redo, type SchemaSpec } from '../src';
+  extractTableSelection, insertDocument, insertTable, pasteTableCells, serializeTableSelection, undo, redo, type SchemaSpec } from '../src';
 import { textPointToPosition } from '../src/core/transaction/mapping';
 
 const schema = new Schema(StarterKit.schema);
@@ -136,5 +136,25 @@ it('honors transaction refusal for the established TSV path', () => {
     editor.dispatch(editor.createTransaction().setSelection(new CellSelection(editor.state.doc, [0, 0, 0], [0, 0, 1])));
     blocked = true; const before = editor.state;
     expect(pasteTableCells(editor, '1\t2')).toBe(false); expect(editor.state).toBe(before);
+  } finally { editor.destroy(); }
+});
+
+
+it('fills a grid from a text caret, grows its edges and preserves quoted spreadsheet fields and target cells', () => {
+  const header = schema.node('table_header', { background: '#fedcba', scope: 'col' }, [p('old')]);
+  const editor = editorFor(table([[header, cell('second')]]));
+  try {
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0, 0, 0, 0], 1)));
+    const before = editor.getJSON();
+    const tsv = '"North\tRegion"\t1\r\n"He said ""yes""\nagain"\t2\r\n';
+    expect(pasteTableCells(editor, tsv)).toBe(true);
+    const result = editor.state.doc.child(0);
+    expect(matrix(result)).toEqual([['North\tRegion', '1'], ['He said "yes"\nagain', '2']]);
+    expect(result.child(0).child(0).type.name).toBe('table_header');
+    expect(result.child(0).child(0).attrs).toEqual(header.attrs);
+    expect(serializeTableSelection(editor.state.doc, editor.state.selection as CellSelection)?.text)
+      .toBe('"North\tRegion"\t1\n"He said ""yes""\nagain"\t2');
+    expect(undo(editor)).toBe(true);
+    expect(editor.getJSON()).toEqual(before);
   } finally { editor.destroy(); }
 });
