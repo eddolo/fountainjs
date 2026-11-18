@@ -1,5 +1,6 @@
 import { readDelimitedRows } from '../core/delimited-text';
 import { insertNode, nodeRangeAtPath, NodeSelection, type DOMOutputSpec, type Editor, type Node, type NodeSpec, type Schema } from '../core';
+import { ReplaceTextRangeStep } from '../core/transaction/replace-text-range-step';
 import { RestructureChildrenStep } from '../core/transaction/restructure-children-step';
 import { defineExtension } from '../extensions/extension';
 import { chartLayout, chartNumber, columnBounds, chartTypes, type ChartType } from './layout';
@@ -150,9 +151,9 @@ export interface ChartData {
   readonly rows: readonly (readonly [string, ...number[]])[];
 }
 
-function chartTable(schema: Schema, cells: readonly (readonly (string | number)[])[]) {
+function chartTable(schema: Schema, cells: readonly (readonly (string | number)[])[], hasHeader = true) {
   return schema.node('table', {}, cells.map((row, i) => schema.node('table_row', {},
-    row.map(value => schema.node(i ? 'table_cell' : 'table_header', {},
+    row.map(value => schema.node(i === 0 && hasHeader ? 'table_header' : 'table_cell', {},
       [schema.node('paragraph', {}, [schema.text(String(value))])])))));
 }
 
@@ -282,7 +283,7 @@ export function insertChartFromCSV(editor: Editor, csv: string, options: CSVChar
 }
 
 // Match rows by category and columns by heading. Duplicate labels are paired in source order.
-function matchLabels(existing: readonly string[], incoming: readonly string[]): (number | undefined)[] {
+function matchLabels(existing: readonly string[], incoming: readonly string[], matchRenames: boolean): (number | undefined)[] {
   const positions = new Map<string, number[]>();
   for (let i = existing.length - 1; i >= 0; i--) {
     const label = existing[i]!;
@@ -290,14 +291,63 @@ function matchLabels(existing: readonly string[], incoming: readonly string[]): 
     if (bucket) bucket.push(i);
     else positions.set(label, [i]);
   }
-  return incoming.map(label => positions.get(label)?.pop());
+  const matches = incoming.map(label => positions.get(label)?.pop());
+  if (matchRenames && existing.length === incoming.length) {
+    const used = new Set(matches);
+    return matches.map((index, i) => index ?? (used.has(i) ? undefined : i));
+  }
+  return matches;
 }
 
-function refreshedTable(previous: Node, incoming: Node): Node {
-  const header = (table: Node) => table.child(0).content.slice(1).map(cell => cell.textContent);
-  const categories = (table: Node) => table.content.slice(1).map(row => row.child(0).textContent);
-  const columns = [0, ...matchLabels(header(previous), header(incoming)).map(i => i === undefined ? i : i + 1)];
-  const rows = [0, ...matchLabels(categories(previous), categories(incoming)).map(i => i === undefined ? i : i + 1)];
+function updateCellText(prior: Node, cell: Node, sourceEdit: boolean) {
+  const value = cell.textContent, paragraph = prior.child(0);
+  const old = prior.textContent;
+  if (old === value || (sourceEdit && old.replace(/\r\n?/g, '\n') === value)) return prior;
+  if (!paragraph.childCount) return prior.copy([paragraph.copy(cell.child(0).content)]);
+  if (paragraph.childCount === 1) return prior.copy([paragraph.copy([paragraph.child(0).withText(value)])]);
+  // Keep the existing marks on both sides of the changed text, as in a normal range edit.
+  let from = 0, tail = 0;
+  while (from < old.length && from < value.length && old[from] === value[from]) from++;
+  while (old.length - tail > from && value.length - tail > from && old[old.length - tail - 1] === value[value.length - tail - 1]) tail++;
+  // Move splice boundaries to whole Unicode scalar values.
+  if (from && /[\uD800-\uDBFF]/u.test(old[from - 1]!)) from--;
+  if (tail && /[\uDC00-\uDFFF]/u.test(old[old.length - tail]!)) tail--;
+  const point = (offset: number, right = false) => {
+    let i = 0;
+    while (i < paragraph.childCount - 1) {
+      const length = paragraph.child(i).nodeSize;
+      if (offset < length || (offset === length && !right)) break;
+      offset -= length;
+      i++;
+    }
+    return { i, offset };
+  };
+  const start = point(from, from < old.length - tail), end = point(old.length - tail);
+  const updated = new ReplaceTextRangeStep([start.i], start.offset, [end.i], end.offset, value.slice(from, value.length - tail)).apply(paragraph);
+  return prior.copy([updated]);
+}
+
+function simpleChartTable(chart: Node) {
+  if (chart.type.name !== 'bar_chart') throw new Error('Select an editable chart.');
+  const table = chart.child(chart.childCount - 1);
+  if (table.content.some(row => row.content.some(cell => Number(cell.attrs.colspan) > 1 || Number(cell.attrs.rowspan) > 1 ||
+    cell.childCount !== 1 || cell.child(0).type.name !== 'paragraph' || cell.child(0).content.some(child => !child.isText)))) {
+    throw new Error('Restore simple unmerged chart cells before editing the data as text.');
+  }
+  return table;
+}
+
+function refreshedTable(previous: Node, incoming: Node, sourceEdit = false): Node {
+  // Native textareas normalize CRLF and CR. Match untouched multiline labels
+  // after that projection so a change elsewhere cannot rewrite their contents.
+  const key = (node: Node) => sourceEdit ? node.textContent.replace(/\r\n?/g, '\n') : node.textContent;
+  const header = (table: Node) => table.child(0).content.slice(1).map(key);
+  const hasHeader = !sourceEdit || previous.child(0).content.every(cell => cell.type.name === 'table_header');
+  const offset = hasHeader ? 1 : 0;
+  const categories = (table: Node) => table.content.slice(offset).map(row => key(row.child(0)));
+  const columns = hasHeader ? [0, ...matchLabels(header(previous), header(incoming), sourceEdit).map(i => i === undefined ? i : i + 1)] :
+    incoming.child(0).content.map((_, i) => i);
+  const rows = [...(hasHeader ? [0] : []), ...matchLabels(categories(previous), categories(incoming), sourceEdit).map(i => i === undefined ? i : i + offset)];
   const merged = incoming.content.map((row, i) => {
     const index = rows[i];
     if (index === undefined) return row;
@@ -306,15 +356,52 @@ function refreshedTable(previous: Node, incoming: Node): Node {
       const col = columns[j];
       if (col === undefined || col >= old.childCount) return cell;
       const prior = old.child(col);
-      if (prior.type !== cell.type) return cell;
-      if (prior.textContent === cell.textContent) return prior;
-      const paragraph = prior.child(0);
-      const text = paragraph.childCount === 1 ? paragraph.child(0).withText(cell.textContent) : cell.child(0).content[0]!;
-      return prior.copy([paragraph.copy([text])]);
+      if (!sourceEdit && prior.type !== cell.type) return cell;
+      return updateCellText(prior, cell, sourceEdit);
     });
     return old.childCount === cells.length && cells.every((cell, j) => cell === old.child(j)) ? old : old.copy(cells);
   });
   return previous.childCount === merged.length && merged.every((row, i) => row === previous.child(i)) ? previous : previous.copy(merged);
+}
+
+/** Canonical editable chart source: a type line followed by CSV records in document order. */
+export function chartToText(chart: Node): string {
+  const table = simpleChartTable(chart);
+  const quote = (value: string) => /[",\r\n]/.test(value) ? '"' + value.replaceAll('"', '""') + '"' : value;
+  const rows = table.content.map(row => row.content.map(cell => quote(cell.textContent)).join(','));
+  return [chart.attrs.kind ?? 'bar', ...rows].join('\n');
+}
+
+/** Preview source edits against the actual chart, including its titles, formatting and scale. */
+export function previewChartText(chart: Node, source: string): Node {
+  const table = simpleChartTable(chart);
+  if (typeof source !== 'string' || source.length > 1_048_576) throw new Error('Use up to one million characters of chart data.');
+  const first = /^([^\r\n]+)(?:\r\n?|\n)/.exec(source);
+  const declared = chartTypes.find(value => value === first?.[1]?.trim().toLowerCase());
+  const kind = declared ?? chart.attrs.kind;
+  const csv = declared && first ? source.slice(first[0].length) : source;
+  const rows = readDelimitedRows(csv, 'csv');
+  if (!rows || rows[0]!.length < 2) throw new Error('Enter rectangular CSV rows with a category and at least one value column. Quote cells containing commas or newlines. Use up to 10,000 cells.');
+  const hasHeader = table.child(0).content.every(cell => cell.type.name === 'table_header');
+  const revised = refreshedTable(table, chartTable(chart.type.schema, rows, hasHeader), true);
+  let result = revised === table ? chart : chart.copy([...chart.content.slice(0, -1), revised]);
+  if (kind !== chart.attrs.kind) result = result.withAttrs({ ...result.attrs, kind });
+  checkPlot(result);
+  return result;
+}
+
+/** Apply to the selected chart. Supply the chart that was opened to reject stale edits. */
+export function updateChartFromText(editor: Editor, source: string, expected?: Node): boolean {
+  const target = chartTarget(editor);
+  if (editor.isDestroyed || !editor.editable || target?.node.type.name !== 'bar_chart' || (expected && target.node !== expected)) return false;
+  const chart = target.node;
+  const result = previewChartText(chart, source);
+  if (result === chart) return true;
+  const at = chart.childCount - 1;
+  const transaction = editor.createTransaction();
+  if (result.attrs.kind !== chart.attrs.kind) transaction.setNodeAttrs(target.path, result.attrs);
+  if (result.child(at) !== chart.child(at)) transaction.step(new RestructureChildrenStep(target.path, at, [chart.child(at)], [result.child(at)]));
+  return editor.dispatch(transaction);
 }
 
 const pendingRefresh = new WeakMap<Editor, object>();
@@ -332,12 +419,7 @@ export async function refreshChartFromCSV(editor: Editor, load: (url: string) =>
     const target = chartTarget(editor);
     if (target?.node !== original) return false;
     const at = original.childCount - 1;
-    const previous = original.child(at);
-    // Refresh replaces CSV values; complex authored cells require manual resolution.
-    if (previous.content.some(row => row.content.some(cell => Number(cell.attrs.colspan) > 1 || Number(cell.attrs.rowspan) > 1 ||
-      cell.childCount !== 1 || cell.child(0).type.name !== 'paragraph' || cell.child(0).content.some(child => !child.isText)))) {
-      throw new Error('Restore simple unmerged chart cells before refreshing CSV data.');
-    }
+    const previous = simpleChartTable(original);
     const table = refreshedTable(previous, csvTable(editor, csv));
     if (table === previous) return true;
     const candidate = original.copy([...original.content.slice(0, at), table]);
@@ -449,7 +531,7 @@ export function setChartValueRange(editor: Editor, min: number | null, max: numb
 export const BarChartExtension = defineExtension({
   name: 'bar-chart',
   nodes: { bar_chart: barChartNode },
-  commands: { insertChartFromText, insertChartFromCSV, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange },
+  commands: { updateChartFromText, insertChartFromText, insertChartFromCSV, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange },
 });
 
 export { BarChartExtension as ChartExtension, selectedBarChart as selectedChart };

@@ -1,9 +1,33 @@
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { insertNode, type Editor, type Node } from 'fountainjs-editor/core';
-import { chartFromText, exportChartSVG, type ChartType, type TextChartOptions } from 'fountainjs-editor/charts';
+import { chartFromText, chartToText, exportChartSVG, previewChartText, updateChartFromText, type ChartType, type TextChartOptions } from 'fountainjs-editor/charts';
+
+interface Preview { chart: Node; image?: string }
+
+function makePreview(chart: Node): Preview {
+  const table = chart.child(chart.childCount - 1);
+  const image = table.childCount <= 9 && table.child(0).childCount <= 5 && chart.textContent.length < 8192 ?
+    'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(exportChartSVG(chart)) : undefined;
+  return { chart, image };
+}
+
+function ChartPreview({ chart, image }: Preview) {
+  const table = chart.child(chart.childCount - 1);
+  const hasHeader = table.child(0).content.every(cell => cell.type.name === 'table_header');
+  const dataOffset = hasHeader ? 1 : 0;
+  return <>
+    <p>{table.childCount - dataOffset} {table.childCount - dataOffset === 1 ? 'category' : 'categories'} · {table.child(0).childCount - 1} series · {String(chart.attrs.kind)}</p>
+    {image ? <img src={image} alt={(chart.childCount > 1 ? chart.child(0).textContent : 'Chart') + ' preview'} /> : <>
+      <p>First {Math.min(table.childCount - dataOffset, 5)} rows</p>
+      <div className="chart-text-scroll"><table>{hasHeader && <thead><tr>{table.child(0).content.map((cell, j) =>
+        <th key={j} scope="col">{cell.textContent}</th>)}</tr></thead>}<tbody>{table.content.slice(dataOffset, dataOffset + 5).map((row, i) =>
+        <tr key={i}>{row.content.map((cell, j) => <td key={j}>{cell.textContent}</td>)}</tr>)}</tbody></table></div>
+    </>}
+  </>;
+}
 
 export function ChartTextControls({ editor, focusEditor }: { editor: Editor; focusEditor: () => void }) {
-  const [preview, setPreview] = useState<{ chart: Node; image?: string } | null>(null);
+  const [preview, setPreview] = useState<Preview | null>(null);
   const [message, setMessage] = useState('');
   const [draft, setDraft] = useState('');
 
@@ -18,10 +42,7 @@ export function ChartTextControls({ editor, focusEditor }: { editor: Editor; foc
         title: String(fields.get('title') || 'Chart'), kind: fields.get('kind') as ChartType,
         delimiter, header: header === 'auto' ? undefined : header === 'yes', decimalSeparator: fields.get('decimal') === ',' ? ',' : '.',
       });
-      const table = chart.child(1);
-      const image = table.childCount <= 9 && table.child(0).childCount <= 5 ?
-        'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(exportChartSVG(chart)) : undefined;
-      setPreview({ chart, image });
+      setPreview(makePreview(chart));
       setMessage('');
     } catch (error) {
       setPreview(null);
@@ -29,7 +50,6 @@ export function ChartTextControls({ editor, focusEditor }: { editor: Editor; foc
     }
   }
 
-  const table = preview?.chart.child(1);
   return <details className="chart-csv chart-text">
     <summary>Chart from text</summary>
     <form onSubmit={previewRows} onChange={() => { setPreview(null); setMessage(''); }}>
@@ -51,14 +71,8 @@ export function ChartTextControls({ editor, focusEditor }: { editor: Editor; foc
         </div>
       </details>
     </form>
-    {preview && table && <div className="chart-text-preview" aria-label="Chart preview" role="region">
-      <p>{table.childCount - 1} {table.childCount === 2 ? 'category' : 'categories'} · {table.child(0).childCount - 1} series · {String(preview.chart.attrs.kind)}</p>
-      {preview.image ? <img src={preview.image} alt={preview.chart.child(0).textContent + ' preview'} /> : <>
-        <p>First {Math.min(table.childCount - 1, 5)} rows</p>
-        <div className="chart-text-scroll"><table><thead><tr>{table.child(0).content.map((cell, j) =>
-          <th key={j} scope="col">{cell.textContent}</th>)}</tr></thead><tbody>{table.content.slice(1, 6).map((row, i) =>
-          <tr key={i}>{row.content.map((cell, j) => <td key={j}>{cell.textContent}</td>)}</tr>)}</tbody></table></div>
-      </>}
+    {preview && <div className="chart-text-preview" aria-label="Chart preview" role="region">
+      <ChartPreview {...preview} />
       <div className="quick-insert"><button type="button" onClick={() => {
         const previous = editor.state.doc;
         if (!editor.editable || !insertNode(editor, preview.chart) || editor.state.doc === previous) {
@@ -69,6 +83,71 @@ export function ChartTextControls({ editor, focusEditor }: { editor: Editor; foc
         setMessage('Chart inserted.');
         focusEditor();
       }}>Insert previewed chart</button></div>
+    </div>}
+    <output>{message}</output>
+  </details>;
+}
+
+export function EditChartSource({ editor, chart, focusEditor }: { editor: Editor; chart: Node | null; focusEditor: () => void }) {
+  const disclosure = useRef<HTMLDetailsElement>(null);
+  const [original, setOriginal] = useState<Node | null>(null);
+  const [draft, setDraft] = useState('');
+  const [preview, setPreview] = useState<Preview | null>(null);
+  const [message, setMessage] = useState('');
+  const stale = original !== null && chart !== original;
+
+  function openSelected() {
+    if (!chart) return;
+    try {
+      const text = chartToText(chart);
+      setDraft(text);
+      setOriginal(chart);
+      setPreview(null);
+      setMessage('');
+    } catch (error) { setMessage(error instanceof Error ? error.message : 'Could not open chart data.'); }
+  }
+
+  function finish() {
+    if (disclosure.current) disclosure.current.open = false;
+    setOriginal(null);
+    setPreview(null);
+    setDraft('');
+    setMessage('');
+    focusEditor();
+  }
+
+  if (!chart && !original) return null;
+  return <details className="chart-csv chart-text" ref={disclosure} onToggle={event => {
+    if (event.currentTarget.open && !original) openSelected();
+  }}>
+    <summary>Edit chart as text</summary>
+    {original && <form onSubmit={event => {
+      event.preventDefault();
+      if (stale) return;
+      try { setPreview(makePreview(previewChartText(original, draft))); setMessage(''); }
+      catch (error) { setMessage(error instanceof Error ? error.message : 'Could not preview chart changes.'); }
+    }}>
+      <label>Chart source<textarea rows={6} value={draft} onChange={event => {
+        setDraft(event.target.value);
+        setPreview(null);
+        setMessage('');
+      }} /></label>
+      <small>The first line sets the chart type. Edit the comma-separated cells below it.</small>
+      <div className="quick-insert">
+        <button type="submit" disabled={stale}>Preview changes</button>
+        <button type="button" onClick={finish}>Cancel edit</button>
+      </div>
+    </form>}
+    {stale && <div className="quick-insert">
+      <output>The selection or chart changed. Reselect the original chart or reopen the selected data.</output>
+      {chart && <button type="button" onClick={openSelected}>Reopen selected chart</button>}
+    </div>}
+    {preview && !stale && <div className="chart-text-preview" role="region" aria-label="Edited chart preview">
+      <ChartPreview {...preview} />
+      <div className="quick-insert"><button type="button" onClick={() => {
+        if (original && updateChartFromText(editor, draft, original)) finish();
+        else setMessage('The edit could not be applied to this chart.');
+      }}>Apply chart changes</button></div>
     </div>}
     <output>{message}</output>
   </details>;

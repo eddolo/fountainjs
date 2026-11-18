@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, chartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, chartFromText, chartToText, previewChartText, updateChartFromText, insertChartFromText, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -766,4 +766,104 @@ it('lets authors override header inference and refuses malformed or unplottable 
   expect(insertChartFromText(reader, 'A,3', { title: '' })).toBe(false);
   reader.destroy();
   editor.destroy();
+});
+
+it('reopens a chart as CSV and keeps format runs, table cells, source and axes through a bulk edit and undo', () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  const originalCSV = 'Region,Actual,Plan\n"South, Q1",012.30,5\nNorth,-4,8';
+  insertChartFromCSV(editor, originalCSV, { title: 'Orders', sourceURL: 'https://example.org/orders.csv' });
+  setChartAxisTitle(editor, 'value', 'Units');
+  setChartValueRange(editor, -10, 20, 5);
+  setChartTarget(editor, 8, 'Weekly goal');
+  const path = [editor.state.selection.path[0], 1, 1, 1, 0, 0];
+  editor.dispatch(editor.createTransaction().addMark(path, 4, 5, editor.state.schema.mark('strong')));
+  const original = selectedBarChart(editor)!;
+  expect(chartToText(original)).toBe('bar\n' + originalCSV);
+  expect(previewChartText(original, chartToText(original))).toBe(original);
+  const before = editor.state.doc;
+  const change = 'column\nRegion,Plan,Actual\nNorth,8,-7\n"South, Q1",5,012.40';
+  const preview = previewChartText(original, change);
+  expect(editor.state.doc).toBe(before);
+  expect(preview.attrs).toEqual({ ...original.attrs, kind: 'column' });
+  expect(preview.child(0)).toBe(original.child(0));
+  const data = preview.child(1);
+  expect(data.child(1).child(1)).toBe(original.child(1).child(2).child(2));
+  expect(data.child(2).child(2).child(0).content.map(run => [run.text, run.marks.map(mark => mark.type.name)]))
+    .toEqual([['012.', []], ['4', ['strong']], ['0', []]]);
+  expect(updateChartFromText(editor, change, original)).toBe(true);
+  expect(selectedBarChart(editor)!.eq(preview)).toBe(true);
+  expect(undo(editor)).toBe(true);
+  expect(editor.state.doc.eq(before)).toBe(true);
+  expect(redo(editor)).toBe(true);
+  expect(chartToText(selectedBarChart(editor)!)).toBe(change);
+  editor.destroy();
+});
+
+it('keeps headerless chart cell roles, quoted labels and renamed row formatting', () => {
+  const schema = new Schema(kit.schema);
+  const cell = (name: string, value: string) => schema.node(name, {}, [schema.node('paragraph', {}, [schema.text(value, [schema.mark('strong')])])]);
+  const row = (label: string, value: string) => schema.node('table_row', {}, [cell('table_header', label), cell('table_cell', value)]);
+  const chart = schema.node('bar_chart', {}, [schema.node('table', {}, [row('East\r\n"Q1"', '+003'), row('West', '-2')])]);
+  const source = chartToText(chart);
+  expect(source).toBe('bar\n"East\r\n""Q1""",+003\nWest,-2');
+  expect(previewChartText(chart, source)).toBe(chart);
+  const updated = previewChartText(chart, source.replace(/\r\n/g, '\n').replace('West,-2', 'South,-4'));
+  expect(updated.childCount).toBe(1);
+  expect(updated.child(0).child(0)).toBe(chart.child(0).child(0));
+  const renamed = updated.child(0).child(1).child(0);
+  expect(renamed.type.name).toBe('table_header');
+  expect(renamed.child(0).child(0).marks[0]!.type.name).toBe('strong');
+  expect(chartToText(updated)).toContain('South,-4');
+});
+
+it('rejects stale text drafts, filtered edits and invalid data without changing the selected document', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Orders', [['Monday', 12]]);
+  const original = selectedBarChart(editor)!;
+  const source = chartToText(original);
+  expect(() => updateChartFromText(editor, source.replace('12', 'TBD'), original)).toThrow('Enter a number');
+  expect(selectedBarChart(editor)).toBe(original);
+  setChartTarget(editor, 10);
+  const latest = editor.state.doc;
+  expect(updateChartFromText(editor, source.replace('12', '14'), original)).toBe(false);
+  expect(editor.state.doc).toBe(latest);
+  for (const config of [{ editable: false }, { plugins: [new Plugin({ filterTransaction: tr => !tr.docChanged })] }]) {
+    const other = createEditor({ schema: kit.schema, content: latest.toJSON(), ...config });
+    other.dispatch(other.createTransaction().setSelection(new NodeSelection(other.state.doc, [editor.state.selection.path[0]])));
+    const captured = other.state.doc;
+    expect(updateChartFromText(other, source.replace('12', '14'))).toBe(false);
+    expect(other.state.doc).toBe(captured);
+    other.destroy();
+  }
+  editor.destroy();
+});
+
+it('merges a bulk chart edit with a concurrent cell edit and rejects an already superseded draft', () => {
+  const a = new Y.Doc(), b = new Y.Doc();
+  function mount(room: Y.Doc, id: string) {
+    const setup = composeExtensions([CoreExtension, BarChartExtension, createYjsCollaborationExtension({
+      document: room, user: { id, name: id, color: '#5071a8' },
+    })]);
+    return createEditor({ schema: setup.schema, plugins: setup.plugins });
+  }
+  const left = mount(a, 'left');
+  insertChartFromCSV(left, 'Region,Actual,Plan\nNorth,5,9\nSouth,1,3', { title: 'Orders' });
+  Y.applyUpdate(b, Y.encodeStateAsUpdate(a));
+  const right = mount(b, 'right');
+  try {
+    const index = left.state.selection.path[0];
+    right.dispatch(right.createTransaction().setSelection(new NodeSelection(right.state.doc, [index])));
+    const draft = selectedBarChart(right)!;
+    const source = chartToText(selectedBarChart(left)!);
+    expect(updateChartFromText(left, source.replace(/^bar/, 'column').replace('North,5,9', 'North,7,9'))).toBe(true);
+    right.dispatch(right.createTransaction().replaceText([index, 1, 1, 2, 0, 0], 0, 1, '12'));
+    const fromLeft = Y.encodeStateAsUpdate(a, Y.encodeStateVector(b));
+    const fromRight = Y.encodeStateAsUpdate(b, Y.encodeStateVector(a));
+    Y.applyUpdate(a, fromRight);
+    Y.applyUpdate(b, fromLeft);
+    expect(left.getJSON()).toEqual(right.getJSON());
+    expect(chartToText(left.state.doc.child(index))).toContain('North,7,12');
+    expect(left.state.doc.child(index).attrs.kind).toBe('column');
+    expect(updateChartFromText(right, source, draft)).toBe(false);
+  } finally { left.destroy(); right.destroy(); a.destroy(); b.destroy(); }
 });

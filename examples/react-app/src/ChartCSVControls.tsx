@@ -75,6 +75,6 @@ export function ChartCSVControls({ editor }: { editor: Editor }) {
       <button type="button" disabled={!address.trim()} onClick={() => void run()}>Insert linked chart</button>
       {typeof source === 'string' && <><span>{source}</span><button type="button" onClick={() => void run(undefined, true)}>Refresh data</button></>}
     </div>
-    <output>{status}</output>
+    <output aria-label="CSV import status">{status}</output>
   </details>;
 }
