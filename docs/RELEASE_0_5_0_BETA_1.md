@@ -101,3 +101,11 @@ Its subject digest matched the downloaded tarball and its source identified
 and commit `b1161fd5`. [Public package](https://www.npmjs.com/package/fountainjs-editor/v/0.5.0-beta.1) ·
 [Registry attestation](https://registry.npmjs.org/-/npm/v1/attestations/fountainjs-editor@0.5.0-beta.1) ·
 [Consumer verification](../artifacts/npm-public-consumer-0.5.0-beta.1.json).
+
+
+The plain DOM, React and Node.js starter ZIPs downloaded from the live developer
+guide installed the published beta in fresh projects. Both frontend production
+builds accepted a new paragraph and reflected it in document JSON. The plain
+DOM starter also inserted a callout, undid it and restored it with redo. The
+Node starter produced validated JSON, HTML and a byte-identical Markdown round
+trip for its sample. [Developer guide](https://eddolo.github.io/fountainjs/developers.html#starters).

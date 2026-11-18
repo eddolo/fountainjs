@@ -16,5 +16,27 @@
     "path": ".github/workflows/release.yml"
   },
   "npmVerifiedAttestations": 1,
-  "subjectSha512": "22a6f876a848c15ea448178af0c2fc411771f5929aeced2bc0a801b6c6a9ddd71670a18534b81230f6c3b8125535ea1295250d820914b7c527458b73d9dd9217"
+  "subjectSha512": "22a6f876a848c15ea448178af0c2fc411771f5929aeced2bc0a801b6c6a9ddd71670a18534b81230f6c3b8125535ea1295250d820914b7c527458b73d9dd9217",
+  "frameworkEntries": [
+    "./svelte",
+    "./angular",
+    "./angular/forms"
+  ],
+  "browserStarters": [
+    {
+      "starter": "plain-dom",
+      "paragraphs": 2,
+      "errors": []
+    },
+    {
+      "starter": "react",
+      "paragraphs": 2,
+      "errors": []
+    }
+  ],
+  "nodeStarter": [
+    "validated-json",
+    "html",
+    "byte-identical-markdown"
+  ]
 }
