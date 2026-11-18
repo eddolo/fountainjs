@@ -126,3 +126,32 @@ exports.result = [run(originalValue()), run(new String(originalValue())), run("o
   runInNewContext(compacted.code, { exports });
   expect(exports.result).toEqual(['long-repeated-command-value', 'fallback', 'other']);
 });
+
+it('keeps private split-chunk exports live and preserves public declarations for Node', () => {
+  const original = `"use strict";
+Object.defineProperty(exports, 'first', { enumerable: true, get: function () { return binding; } });
+observe();
+let binding = 1;
+Object.defineProperty(exports, 'second', { enumerable: true, get: function () { return binding; } });
+Object.defineProperty(exports, 'third', { enumerable: true, get: function () { return binding; } });
+Object.defineProperty(exports, 'other', { configurable: true, get() { return this; } });
+exports.update = () => ++binding;`;
+  const transformed = compactCommonJsLiterals(original, true);
+  expect(transformed.code).toContain('function __fountainLiveExport');
+  expect(compactCommonJsLiterals(original)?.code ?? original).toContain("Object.defineProperty(exports, 'first'");
+  for (const code of [original, transformed.code]) {
+    const exports: Record<string, unknown> = {};
+    runInNewContext(code, { exports, observe: () => {
+      expect(Object.keys(exports)).toEqual(['first']);
+      expect(() => exports.first).toThrow(/before initialization/);
+    } });
+    expect(exports.first).toBe(1);
+    (exports.update as () => number)();
+    expect([exports.first, exports.second, exports.third]).toEqual([2, 2, 2]);
+    expect(exports.other).toBe(exports);
+    const descriptor = Object.getOwnPropertyDescriptor(exports, 'first')!;
+    expect(descriptor).toMatchObject({ enumerable: true, configurable: false, set: undefined });
+    expect(descriptor.get?.name).toBe('get');
+    expect(Object.hasOwn(descriptor.get!, 'prototype')).toBe(true);
+  }
+});

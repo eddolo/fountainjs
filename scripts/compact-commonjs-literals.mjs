@@ -56,8 +56,11 @@ function shareableUse(node, parent, moduleBindings, code) {
   }
 }
 
+// Match only the bundler's simple, top-level live-binding exports.
+const forwardingGetter = /^Object\.defineProperty\(exports,\s*('[\w$]+'|"[\w$]+"),\s*\{\s*enumerable:\s*true,\s*(get(?:\s*:\s*function)?\s*\(\)\s*\{\s*return\s+[\w$]+;?\s*\}),?\s*\}\);?$/u;
+
 /** Share repeated string values and member names within each CommonJS chunk. */
-export function compactCommonJsLiterals(code) {
+export function compactCommonJsLiterals(code, privateChunk = false) {
   const tree = parseAst(code);
   const moduleBindings = new Set(['exports', 'module', 'require', 'Object', 'Reflect']);
   for (const statement of tree.body) {
@@ -82,9 +85,24 @@ export function compactCommonJsLiterals(code) {
       else if (Array.isArray(child)) for (const item of child) if (item?.type) visit(item, node);
     }
   }
-  visit(tree);
-
   const edited = new MagicString(code);
+  const getters = new Map();
+  if (privateChunk) for (const statement of tree.body) {
+    if (statement.type !== 'ExpressionStatement') continue;
+    const match = forwardingGetter.exec(code.slice(statement.start, statement.end));
+    if (match) getters.set(statement, match);
+  }
+  if (getters.size >= 3) {
+    let helper = '__fountainLiveExport';
+    while (code.includes(helper)) helper += '$';
+    for (const statement of tree.body) {
+      const match = getters.get(statement);
+      if (match) edited.overwrite(statement.start, statement.end, `${helper}(${match[1]}, {${match[2]}});`);
+      else visit(statement, tree);
+    }
+    // Register getters in their original order, including in circular imports.
+    edited.append(`\nfunction ${helper}(key, descriptor) { descriptor.enumerable = true; Object.defineProperty(exports, key, descriptor); }\n`);
+  } else visit(tree);
   const bindings = [];
   let prefix = '__fountainLiteral$';
   while (code.includes(prefix)) prefix += '$';
@@ -97,10 +115,10 @@ export function compactCommonJsLiterals(code) {
     bindings.push(`${name}=${encoded}`);
     for (const use of uses) edited.overwrite(use.start, use.end, use.member ? `[${name}]` : ` ${name} `);
   }
-  if (!bindings.length) return;
+  if (!bindings.length && getters.size < 3) return;
   // Preserve any leading directives, including strict mode.
   const first = tree.body.find(statement => statement.type !== 'ExpressionStatement'
     || statement.expression.type !== 'Literal' || typeof statement.expression.value !== 'string');
-  edited.appendLeft(first.start, `const ${bindings.join(',')};\n`);
+  if (bindings.length) edited.appendLeft(first.start, `const ${bindings.join(',')};\n`);
   return { code: edited.toString(), map: edited.generateMap({ hires: true }) };
 }

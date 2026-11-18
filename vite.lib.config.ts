@@ -74,7 +74,7 @@ export default defineConfig({
         async handler(code, chunk, options) {
           if (options.format === 'cjs') {
             if (chunk.fileName === 'index.cjs') return deferCommonJsRootExports(code);
-            if (chunk.fileName !== 'emoji-data.cjs') return compactCommonJsLiterals(code);
+            if (chunk.fileName !== 'emoji-data.cjs') return compactCommonJsLiterals(code, !chunk.isEntry && !chunk.isDynamicEntry);
           }
           if (options.format !== 'es') return;
           const output = await minify({ [chunk.fileName]: code }, {
