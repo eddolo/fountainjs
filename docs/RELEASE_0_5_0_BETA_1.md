@@ -41,8 +41,8 @@ migration/rollback workflow with the application's own backend.
 Commit `b1161fd5` passed all five qualification jobs. The final matrix
 passed 51 display-backed clipboard cases and 1,131 headless cases, with
 18 skipped. The independent native DOCX job passed. The GitHub prerelease
-and deployed website use this commit. Check the npm version list above for
-the separate package publication.
+and published npm package use this commit. The website first deployed this
+revision and reports later development builds separately.
 [GitHub prerelease](https://github.com/eddolo/fountainjs/releases/tag/v0.5.0-beta.1) ·
 [CI](https://github.com/eddolo/fountainjs/actions/runs/44218762181) ·
 [Native DOCX](https://github.com/eddolo/fountainjs/actions/runs/44218762064).
@@ -87,4 +87,17 @@ open. Missing roadmap capabilities include editable charts/source-backed diagram
 authorable template fields and a structured whiteboard. Capability coverage is
 61/74 delivered; that percentage is not a production-readiness score.
 
-The [npm release workflow](https://github.com/eddolo/fountainjs/actions/runs/44310781735) tracks staging for this exact tag. npm publication requires separate maintainer approval.
+## npm publication
+
+On November 18, 2026, a clean install of `fountainjs-editor@latest` resolved to
+`0.5.0-beta.1`. The public tarball matched the registry and lockfile SHA-512.
+In Node 24.22.1, both ESM and CommonJS consumers created a document, applied a
+text transaction and validated the result without a browser or DOM shim.
+The installed Yjs adapter accepted a native Y.Doc and a local user identity.
+
+npm verified the registry signatures and the package's provenance attestation.
+Its subject digest matched the downloaded tarball and its source identified
+`refs/tags/v0.5.0-beta.1`, release workflow `.github/workflows/release.yml`,
+and commit `b1161fd5`. [Public package](https://www.npmjs.com/package/fountainjs-editor/v/0.5.0-beta.1) ·
+[Registry attestation](https://registry.npmjs.org/-/npm/v1/attestations/fountainjs-editor@0.5.0-beta.1) ·
+[Consumer verification](../artifacts/npm-public-consumer-0.5.0-beta.1.json).
