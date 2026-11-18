@@ -3,22 +3,24 @@ name: Playground
 on:
   push:
     branches: [master]
+  pull_request:
+    paths:
+      - '.github/workflows/pages.yml'
+      - 'playwright.pages.config.ts'
+      - 'tests/browser/starter-downloads.spec.ts'
+      - 'examples/starters/**'
+      - 'examples/react-app/src/StarterDownload.tsx'
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: ${{ github.event_name == 'pull_request' && format('pages-pr-{0}', github.event.pull_request.number) || 'pages' }}
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,12 +34,47 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm exec vite build --base /fountainjs/
+      - uses: actions/upload-pages-artifact@v4
+        id: archive
+        with:
+          path: examples/react-app/dist
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ steps.archive.outputs.artifact_id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/pages-upload
+      - name: Extract the uploaded Pages archive
+        run: |
+          mkdir -p "$RUNNER_TEMP/pages-preview/fountainjs"
+          tar -xf "$RUNNER_TEMP/pages-upload/artifact.tar" -C "$RUNNER_TEMP/pages-preview/fountainjs"
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Download starters from the archived site
+        env:
+          FOUNTAIN_PAGES_PREVIEW_ROOT: ${{ runner.temp }}/pages-preview
+        run: pnpm exec playwright test --config playwright.pages.config.ts
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: pages-download-diagnostics
+          path: artifacts/pages-downloads
+          if-no-files-found: ignore
+          retention-days: 7
+
+  deploy:
+    needs: verify
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/configure-pages@v5
         with:
           enablement: true
-      - uses: actions/upload-pages-artifact@v4
-        with:
-          path: examples/react-app/dist
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

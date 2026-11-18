@@ -3,6 +3,12 @@ import { expect, test } from '@playwright/test';
 import { strFromU8, unzipSync } from 'fflate';
 
 test('downloads complete standalone projects from the developer guide', async ({ page }, info) => {
+  const hiddenAssets = new Set<string>();
+  page.on('request', request => {
+    const path = new URL(request.url()).pathname;
+    if (path.includes('/assets/') && path.split('/').some(segment => segment.startsWith('.')))
+      hiddenAssets.add(path);
+  });
   await page.goto('workflows.html');
   await page.getByRole('link', { name: /Download the template workspace/ }).click();
   await expect(page).toHaveURL(/developers\.html#starter-templates$/);
@@ -12,6 +18,7 @@ test('downloads complete standalone projects from the developer guide', async ({
   for (const { kind, label, projectFiles } of [
     { kind: 'plain-dom', label: 'Download plain DOM starter', projectFiles: ['index.html', 'main.js'] },
     { kind: 'react', label: 'Download React starter', projectFiles: ['index.html', 'main.jsx'] },
+    { kind: 'vue', label: 'Download Vue starter', projectFiles: ['index.html', 'main.js', 'vite.vue.config.js', 'ReviewForm.vue'] },
     { kind: 'node', label: 'Download Node.js starter', projectFiles: ['convert.mjs', 'sample.md'] },
     { kind: 'templates', label: 'Download template workspace', projectFiles: ['.gitignore','index.html','main.js','inline-fields.mjs','model.mjs','server.mjs','style.css','workflow.test.mjs'] },
   ]) {
@@ -31,10 +38,12 @@ test('downloads complete standalone projects from the developer guide', async ({
     const manifest = JSON.parse(strFromU8(files[`${name}/package.json`]));
     expect(manifest.dependencies['fountainjs-editor']).toBe('0.5.0-beta.1');
   }
+  expect([...hiddenAssets], 'GitHub Pages omits dot-prefixed build assets').toEqual([]);
   await page.locator('#starters').screenshot({ path: info.outputPath('starter-downloads.png') });
   for (const { kind, demo, host } of [
     { kind: 'plain-dom', demo: 'plain-dom-notes', host: 'Plain DOM' },
     { kind: 'react', demo: 'react-article', host: 'React' },
+    { kind: 'vue', demo: 'vue-runbook', host: 'Vue' },
     { kind: 'node', demo: 'node-markdown', host: 'Node.js' },
   ]) {
     await page.goto(`demos/${demo}.html`);

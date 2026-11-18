@@ -5,6 +5,61 @@ import { Schema, StarterKit, MarkdownImporter, composeExtensions } from 'fountai
 import { exportDOCX } from 'fountainjs-editor/docx';
 import { PagesExtension } from 'fountainjs-editor/pages';
 
+export async function conversionLargeImageExportJourney(page: Page, info: TestInfo) {
+  // The DOCX stores the chart as a shared asset. Portable JSON embeds it at each use.
+  const fixture = unzipSync(await readFile('tests/fixtures/native-docx/cooling-report.docx'));
+  const plot = Buffer.from(fixture['word/media/image3.png']!);
+  const source = `data:image/png;base64,${plot.toString('base64')}`;
+  const schema = new Schema(StarterKit.schema);
+  const figures = Array.from({ length: 26 }, (_, index) => schema.node('paragraph', {}, [
+    schema.node('inline_image', { src: source, alt: `Cooling run ${index + 1}` }),
+  ]));
+  const archive = exportDOCX(schema.node('doc', {}, figures)).bytes;
+  await page.goto('/conversion-lab.html');
+  await page.getByLabel('Choose documents').setInputFiles({
+    name: 'cooling-runs.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    buffer: Buffer.from(archive),
+  });
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: cooling-runs.docx' });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  const lastPlot = editor.getByRole('img', { name: 'Cooling run 26', exact: true });
+  await expect.poll(() => lastPlot.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await workspace.getByLabel('Export format').selectOption('json');
+  const [file] = await Promise.all([
+    page.waitForEvent('download'),
+    workspace.getByRole('button', { name: 'Download export', exact: true }).click(),
+  ]);
+  expect(file.suggestedFilename()).toBe('cooling-runs.docx.converted.json');
+  const saved = info.outputPath('cooling-runs.json');
+  await file.saveAs(saved);
+  const bytes = await readFile(saved);
+  expect(bytes.byteLength).toBeGreaterThan(1024 * 1024);
+  const downloaded = schema.nodeFromJSON(JSON.parse(bytes.toString('utf8')));
+  const recovered: string[] = [];
+  downloaded.descendants(node => {
+    if (node.type.name === 'image_super' || node.type.name === 'inline_image') recovered.push(String(node.attrs.src));
+  });
+  expect(recovered.length).toBe(figures.length);
+  expect(recovered.every(value => value === source)).toBe(true);
+  const result = workspace.getByLabel('Round-trip result', { exact: true });
+  await expect(result).toContainText('Reopening failed');
+  await expect(result).toContainText('1 MiB');
+  await result.screenshot({ path: info.outputPath('large-image-export.png') });
+  const [report] = await Promise.all([
+    page.waitForEvent('download'),
+    workspace.getByRole('button', { name: 'Download diagnostic report' }).click(),
+  ]);
+  const reportPath = info.outputPath('round-trip-report.json');
+  await report.saveAs(reportPath);
+  const diagnostic = JSON.parse(await readFile(reportPath, 'utf8'));
+  expect(diagnostic.roundTrip).toMatchObject({ reopened: false, exactFountainJSONEquality: null, bytes: bytes.byteLength, stale: false });
+  await workspace.getByLabel('Export format').selectOption('docx');
+  await expect(result).toContainText('Outdated check');
+  await workspace.getByRole('button', { name: 'Check round trip' }).click();
+  await expect(result.getByRole('textbox', { name: 'Reopened export preview' })).toBeVisible();
+  await expect(result).not.toContainText('Reopening failed');
+}
+
 export async function conversionComplexPageFieldsJourney(page: Page, info: TestInfo) {
   const schema = new Schema(composeExtensions([...StarterKit.extensions, PagesExtension]).schema);
   const paragraph = (text: string, pageBreakBefore = false) => schema.node('paragraph', {

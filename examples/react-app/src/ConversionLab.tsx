@@ -9,6 +9,17 @@ import { ConversionPagePreview } from './ConversionPagePreview';
 import packageInfo from '../../../package.json';
 
 type Entry = { id: string; file: File; context: LabContext; format?: LabFormat; result?: ReturnType<typeof importLab>; error?: string; sourceText?: string };
+type RoundTripCheck = {
+  format: LabFormat;
+  revision: Node;
+  bytes: number;
+  issues: LabIssue[];
+  omitMarkdownCaretHosts: boolean;
+  renderHTMLMath: boolean;
+} & (
+  | { reopened: true; id: string; document: Node; equal: boolean }
+  | { reopened: false; reason: string }
+);
 const formats: LabFormat[] = ['json', 'markdown', 'html', 'docx'];
 const pageSettingFields = [
   ['width', 'Page width'], ['height', 'Page height'], ['marginTop', 'Top margin'],
@@ -108,7 +119,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const [format, setFormat] = useState<LabFormat>(entry.format!);
   const [omitCaretHosts, setOmitCaretHosts] = useState(entry.format === 'markdown' && entry.context.options.commonMarkSourceReview);
   const [renderMath, setRenderMath] = useState(true);
-  const [check, setCheck] = useState<{ id: string; document: Node; equal: boolean; issues: LabIssue[]; format: LabFormat; revision: Node; omitMarkdownCaretHosts: boolean; renderHTMLMath: boolean }>();
+  const [check, setCheck] = useState<RoundTripCheck>();
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [includeContent, setIncludeContent] = useState(false);
@@ -157,16 +168,30 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
     }
   }
   function convert(save: boolean) {
+    setError('');
+    let output: ReturnType<typeof exportLab>;
     try {
-      const output = exportLab(state.doc, format, entry.result?.source, entry.context, {
-        omitMarkdownCaretHosts, renderHTMLMath,
-        markdownBOM: entry.result?.markdownBOM,
+      output = exportLab(state.doc, format, entry.result?.source, entry.context, {
+        omitMarkdownCaretHosts, renderHTMLMath, markdownBOM: entry.result?.markdownBOM,
       });
-      const reopened = importLab(output.bytes, format, entry.context);
-      setCheck({ id: crypto.randomUUID(), document: reopened.document, equal: sameLabDocument(state.doc, reopened.document), issues: [...output.issues, ...reopened.issues], format, revision: state.doc, omitMarkdownCaretHosts, renderHTMLMath });
       if (save) download(new Uint8Array(output.bytes), `${entry.file.name}.converted.${output.extension}`, output.mime);
-      setError(''); setStatus(save ? 'Export downloaded and reopened below.' : 'Export generated in memory and reopened below. The editable draft was not replaced.');
-    } catch (cause) { setCheck(undefined); setError(cause instanceof Error ? cause.message : String(cause)); }
+    } catch (cause) {
+      setCheck(undefined);
+      setStatus('');
+      setError(cause instanceof Error ? cause.message : String(cause));
+      return;
+    }
+    const checked = { format, revision: state.doc, bytes: output.bytes.byteLength, omitMarkdownCaretHosts, renderHTMLMath };
+    const action = save ? 'Download requested.' : 'Export generated in memory.';
+    try {
+      const reopened = importLab(output.bytes, format, entry.context);
+      setCheck({ ...checked, reopened: true, id: crypto.randomUUID(), document: reopened.document,
+        equal: sameLabDocument(state.doc, reopened.document), issues: [...output.issues, ...reopened.issues] });
+      setStatus(save ? 'Export downloaded and reopened below.' : 'Export generated in memory and reopened below. The editable draft was not replaced.');
+    } catch (cause) {
+      setCheck({ ...checked, reopened: false, reason: cause instanceof Error ? cause.message : String(cause), issues: output.issues });
+      setStatus(`${action} Reopening failed.`);
+    }
   }
   function report() {
     const data = {
@@ -175,7 +200,9 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
       importedImages: { represented: images.length, embeddedRaster: images.filter(image => image.embedded).length },
       sourcePackage: packageParts ? { entries: packageParts.length, unrepresentedMedia, parts: includeContent ? packageParts : packageParts.map(({ path: _path, ...part }) => part) } : null,
       importIssues: labReportIssues(entry.result!.issues, includeContent), draftChanged: !sameLabDocument(entry.result!.document, state.doc),
-      roundTrip: check ? { format: check.format, renderHTMLMath: check.renderHTMLMath, stale: Boolean(stale), exactFountainJSONEquality: check.equal,
+      roundTrip: check ? { format: check.format, renderHTMLMath: check.renderHTMLMath, stale: Boolean(stale), reopened: check.reopened, bytes: check.bytes,
+        exactFountainJSONEquality: check.reopened ? check.equal : null,
+        ...(!check.reopened && includeContent ? { reason: check.reason } : {}),
         ...(check.omitMarkdownCaretHosts ? { omitMarkdownCaretHosts: true } : {}), issues: labReportIssues(check.issues, includeContent) } : null,
       fidelity: 'Original-format visual fidelity and exhaustive loss detection are unverified.',
       ...(includeContent ? { fileName: entry.file.name, note, importedDocument: entry.result!.document.toJSON(), editedDocument: state.doc.toJSON(), originalText: entry.sourceText } : {}),
@@ -221,7 +248,18 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
     <section className="lab-export"><h3>3. Export and reopen</h3><div className="lab-actions"><label>Export format<select value={format} onChange={event => setFormat(event.target.value as LabFormat)}>{formats.map(value => <option key={value} value={value}>{value.toUpperCase()}</option>)}</select></label><button onClick={() => convert(false)}>Check round trip</button><button className="lab-primary" onClick={() => convert(true)}>Download export</button></div><p>Compares the current draft with its generated export reimported through Fountain—not with Word or another independent renderer. JSON equality is stricter than visual similarity.</p>
       {format === 'html' && <label className="lab-checkbox"><input type="checkbox" checked={renderMath} onChange={event => setRenderMath(event.target.checked)} /> Render equations in the downloaded HTML (offline; original TeX is retained)</label>}
       {markdownHTML && <label className="lab-checkbox"><input type="checkbox" checked={omitCaretHosts} onChange={event => setOmitCaretHosts(event.target.checked)} /> Omit Markdown’s editor-only caret paragraphs in HTML</label>}
-      {check && <div className="lab-check" aria-label="Round-trip result"><strong>{stale ? 'Outdated check — run again after your changes.' : check.equal ? 'Exact Fountain document equality after reopening.' : 'The reopened Fountain document differs. Inspect the preview and report.'}</strong><p>This compares only the current Fountain draft, not the original file. Original import findings: {entry.result!.issues.length}. Missing original content is not restored by a successful round trip. Independent visual fidelity: not verified by this check.</p><IssueList issues={check.issues} /><Preview key={check.id} document={check.document} context={entry.context} /></div>}
+      {check && <div className="lab-check" aria-label="Round-trip result">
+        {stale && <strong>Outdated check — run again after your changes.</strong>}
+        {check.reopened ? <>
+          {!stale && <strong>{check.equal ? 'Exact Fountain document equality after reopening.' : 'The reopened Fountain document differs. Inspect the preview and report.'}</strong>}
+          <p>This compares only the current Fountain draft, not the original file. Original import findings: {entry.result!.issues.length}. Missing original content is not restored by a successful round trip. Independent visual fidelity: not verified by this check.</p>
+          <IssueList issues={check.issues} /><Preview key={check.id} document={check.document} context={entry.context} />
+        </> : <>
+          <p><strong>Reopening failed.</strong> {check.reason}</p>
+          <p>The generated {check.format.toUpperCase()} file is {check.bytes.toLocaleString()} bytes. You can download it and inspect it locally.</p>
+          <IssueList issues={check.issues} />
+        </>}
+      </div>}
     </section>
     <section className="lab-report"><h3>Found a problem?</h3><p>Download a diagnostic report for your own testing. Files are never attached or submitted automatically. Even report warnings may contain private snippets: review before sharing.</p><label className="lab-checkbox"><input type="checkbox" checked={includeContent} onChange={event => setIncludeContent(event.target.checked)} /> Include filename, document content and my note in the downloaded report</label><label>What went wrong?<textarea value={note} onChange={event => setNote(event.target.value)} placeholder="What you expected, and what happened instead" /></label><div className="lab-actions"><button onClick={report}>Download diagnostic report</button><a href="https://github.com/eddolo/fountainjs/issues/new" target="_blank" rel="noreferrer">Open a blank GitHub bug report ↗</a></div></section>
     {error && <p role="alert">{error}</p>}<p role="status">{status}</p>

@@ -68,3 +68,42 @@ test('edits and formats a document in the installed React starter', async ({ pag
   await info.attach('local-run-times', { body: JSON.stringify({ loadMs }), contentType: 'application/json' });
   await page.screenshot({ path: info.outputPath('react-starter.png'), fullPage: true });
 });
+
+test('saves and reopens a release review in the installed Vue form starter', async ({ page }, info) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('http://127.0.0.1:4205/');
+  const title = page.getByRole('textbox', { name: 'Release', exact: true });
+  const notes = page.getByRole('textbox', { name: 'Review notes' });
+  await title.fill('November release');
+  await notes.fill('Verify rollback');
+  await notes.press('End');
+  for (let index = 0; index < 8; index++) await notes.press('Shift+ArrowLeft');
+  await page.getByRole('button', { name: 'Bold' }).click();
+  await expect(notes.locator('strong')).toHaveText('rollback');
+  await expect(page.getByRole('button', { name: 'Bold' })).toHaveAttribute('aria-pressed', 'true');
+  await notes.press('ControlOrMeta+z');
+  await expect(notes.locator('strong')).toHaveCount(0);
+  await notes.press('ControlOrMeta+Shift+z');
+  await expect(notes.locator('strong')).toHaveText('rollback');
+  await expect(notes).toBeFocused();
+  await notes.press('ArrowRight');
+  await notes.press('Enter');
+  await page.keyboard.type('Second reviewer confirmed.');
+  await page.getByText('Document JSON', { exact: true }).click();
+  const live = JSON.parse(await page.locator('details pre').innerText());
+  expect(live.content).toHaveLength(2);
+  expect(live.content[0].content).toContainEqual(expect.objectContaining({
+    text: 'rollback', marks: [expect.objectContaining({ type: 'strong' })],
+  }));
+  await page.getByRole('button', { name: 'Save review' }).click();
+  await expect(page.getByRole('status')).toHaveText('Review saved in this browser.');
+  await page.reload();
+  await expect(page.getByRole('status')).toHaveText('Opened your saved review.');
+  await expect(title).toHaveValue('November release');
+  await expect(notes.locator('strong').first()).toHaveText('rollback');
+  await expect(notes.locator('p').last()).toHaveText('Second reviewer confirmed.');
+  await page.getByText('Document JSON', { exact: true }).click();
+  expect(JSON.parse(await page.locator('details pre').innerText())).toEqual(live);
+  await page.getByText('Document JSON', { exact: true }).click();
+  await page.screenshot({ path: info.outputPath('vue-saved-review.png'), fullPage: true });
+});
