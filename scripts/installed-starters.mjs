@@ -112,6 +112,26 @@ if (mode === 'prepare') {
     }
     save();
   }
+  if (manifest.version !== publishedStarterVersion) {
+    const require = createRequire(join(repository, 'package.json'));
+    const yjs = readJSON(require.resolve('yjs/package.json')).version;
+    const consumers = [];
+    for (const [name, dependency] of [['published', publishedStarterVersion], ['candidate', `file:${archive.replaceAll('\\', '/')}`]]) {
+      const project = join(root, 'room-' + name);
+      mkdirSync(project);
+      writeFileSync(join(project, 'pnpm-workspace.yaml'), 'packages: []\n');
+      writeFileSync(join(project, 'package.json'), JSON.stringify({ private: true, dependencies: { 'fountainjs-editor': dependency, yjs } }));
+      assert.equal(realpathSync(project), realpathSync(join(run(process.execPath, [pnpm, 'root', '-w'], project).trim(), '..')));
+      run(process.execPath, [pnpm, '--ignore-workspace', 'install', '--config.auto-install-peers=false'], project);
+      const installed = realpathSync(join(project, 'node_modules/fountainjs-editor'));
+      assert(inside(realpathSync(project), installed));
+      assert.equal(readJSON(join(installed, 'package.json')).version, name === 'published' ? publishedStarterVersion : manifest.version);
+      consumers.push(project);
+    }
+    const result = run(process.execPath, [join(repository, 'scripts/verify-retained-room-upgrade.mjs'), ...consumers], repository);
+    writeFileSync(join(evidence, 'retained-room-upgrade.log'), result);
+    receipt.roomUpgrade = { from: publishedStarterVersion, to: manifest.version, yjs };
+  }
   receipt.complete = true;
   save();
   console.log(`Installed candidate starters prepared; evidence: ${receiptPath}`);

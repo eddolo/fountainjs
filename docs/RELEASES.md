@@ -1,5 +1,11 @@
 # Release and API stability policy
 
+## Qualifying a retained-room upgrade
+
+During a version change, `pnpm audit:starters:prepare` installs the public starter version and the packed candidate in separate consumers with the same Yjs version. It runs their public collaboration adapters in separate Node processes. The older package creates a retained room. Both packages reopen it, make offline edits to different paragraphs and exchange incremental updates twice. The check compares the complete documents and Yjs state vectors, then exercises author undo/redo and reopens saved native room bytes in the other version.
+
+The prepare receipt records both versions and the Yjs version under `roomUpgrade`. To replay the workflow using two existing installations, run `node scripts/verify-retained-room-upgrade.mjs <published-consumer> <candidate-consumer>`. Each directory needs its own installed `fountainjs-editor` and `yjs`. Legacy XML room migration has a separate workflow.
+
 ## 0.5.0-beta.1 publication — 2026-11-18
 
 GitHub and npm published commit `b1161fd5`. A clean install resolved npm's

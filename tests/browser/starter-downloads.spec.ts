@@ -1,9 +1,9 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
 import { strFromU8, unzipSync } from 'fflate';
-import publishedStarter from '../../examples/starters/published-version.json';
 
 test('downloads complete standalone projects from the developer guide', async ({ page }, info) => {
+  const publishedStarter = JSON.parse(await readFile('examples/starters/published-version.json', 'utf8'));
   await page.goto('workflows.html');
   await page.getByRole('link', { name: /Download the template workspace/ }).click();
   await expect(page).toHaveURL(/developers\.html#starter-templates$/);
