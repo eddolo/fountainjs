@@ -325,6 +325,70 @@ function answerRulesEditor(template, fields) {
   return { panel, refreshFields: () => refreshers.forEach((refresh) => refresh()) };
 }
 
+function applicationChecksEditor(template, fields, catalogue) {
+  const panel = el('section', undefined, 'card'), rows = el('div');
+  panel.append(el('h2', 'Application checks'), rows);
+  const choice = el('select');
+  const label = el('label', 'Available check');
+  label.append(choice);
+  for (const { name, label } of catalogue) {
+    const option = el('option', label);
+    option.value = name;
+    choice.append(option);
+  }
+  let refreshers = [];
+  function render() {
+    rows.replaceChildren();
+    refreshers = [];
+    for (const check of template.checks ?? []) {
+      const spec = catalogue.find((item) => item.name === check.name);
+      const group = box(rows, spec?.label ?? check.name);
+      if (spec?.inputs.length === check.fields.length) {
+        const selects = spec.inputs.map((role, index) =>
+          input(group, role, check.fields[index], (key) => {
+            const previous = check.fields.indexOf(key);
+            if (previous >= 0) check.fields[previous] = check.fields[index];
+            check.fields[index] = key;
+            refresh();
+          }, []));
+        function refresh() {
+          const candidates = fields();
+          selects.forEach((select, index) => {
+            select.replaceChildren(...candidates.map((candidate) => {
+              const option = el('option', candidate.label);
+              option.value = candidate.key;
+              return option;
+            }));
+            select.value = check.fields[index];
+          });
+        }
+        refreshers.push(refresh);
+        refresh();
+      } else {
+        group.append(el('p', 'Unavailable for these fields: ' + check.fields.join(', ')));
+      }
+      group.append(button('Remove check', () => {
+        template.checks.splice(template.checks.indexOf(check), 1);
+        markDirty();
+        render();
+        if (catalogue.length) choice.focus();
+      }));
+    }
+  }
+  if (catalogue.length) panel.append(label, button('Add application check', () => {
+    const spec = catalogue.find((item) => item.name === choice.value);
+    const candidates = fields();
+    if (candidates.length < spec.inputs.length) throw Error('Add ' + spec.inputs.length + ' fields for this check.');
+    if ((template.checks?.length ?? 0) >= 64) throw Error('Use up to 64 application checks.');
+    (template.checks ??= []).push({ name: spec.name, fields: candidates.slice(0, spec.inputs.length).map((f) => f.key) });
+    markDirty();
+    render();
+    rows.lastElementChild.querySelector('select').focus();
+  }));
+  render();
+  return { panel, refreshFields: () => refreshers.forEach((refresh) => refresh()) };
+}
+
 function author() {
   const { template, revision, responses } = documentState;
   if (review) {
@@ -351,6 +415,12 @@ function author() {
   input(root, 'Template title', template.title, (v) => (template.title = v));
   const fields = () => template.blocks.filter((b) => b.type === 'field');
   const ruleEditor = answerRulesEditor(template, fields);
+  const checksEditor = workspace.validators?.length || template.checks?.length
+    ? applicationChecksEditor(template, fields, workspace.validators ?? []) : undefined;
+  const refreshFieldChoices = () => {
+    ruleEditor.refreshFields();
+    checksEditor?.refreshFields();
+  };
   const usesRule = (key) => template.rules?.some((rule) => rule.field === key || rule.other === key);
   const usesInline = (key) =>
     template.blocks.some(
@@ -374,7 +444,7 @@ function author() {
       rich(card, 'Instructions ' + (i + 1), b.document, (v) => (b.document = v), fields);
     if (b.type === 'field') {
       const r = row(card);
-      input(r, 'Field label', b.label, (v) => (b.label = v)).addEventListener('change', ruleEditor.refreshFields);
+      input(r, 'Field label', b.label, (v) => (b.label = v)).addEventListener('change', refreshFieldChoices);
       const keyLabel = el('label', 'Field key'),
         keyInput = el('input');
       keyInput.value = b.key;
@@ -398,7 +468,11 @@ function author() {
           if (rule.field === old) rule.field = key;
           if (rule.other === old) rule.other = key;
         }
-        ruleEditor.refreshFields();
+        for (const check of template.checks ?? []) {
+          const index = check.fields.indexOf(old);
+          if (index >= 0) check.fields[index] = key;
+        }
+        refreshFieldChoices();
         for (const mirror of template.blocks)
           if (mirror.type === 'reference' && mirror.key === old) mirror.key = key;
         for (const select of root.querySelectorAll('select[data-reference]'))
@@ -472,6 +546,8 @@ function author() {
     }
     controls.append(
       button('Remove block', () => {
+        if (b.type === 'field' && template.checks?.some((check) => check.fields.includes(b.key)))
+          throw Error('Remove its application checks first.');
         if (b.type === 'field' && usesRule(b.key)) throw Error('Remove its answer rules first.');
         if (b.type === 'field' && usesInline(b.key)) throw Error('Remove its inline uses first.');
         if (
@@ -499,6 +575,7 @@ function author() {
     }),
   );
   root.append(ruleEditor.panel);
+  if (checksEditor) root.append(checksEditor.panel);
   const commands = row(root, 'row actions');
   commands.append(
     button(
@@ -644,7 +721,7 @@ function respondent() {
     }
     for (const invalid of root.querySelectorAll('[aria-invalid="true"]')) {
       const invalidKey = invalid.dataset.answerKey;
-      if (invalidKey === key || template.rules?.some((rule) =>
+      if (invalidKey === key || template.checks?.some((check) => check.fields.includes(invalidKey) && check.fields.includes(key)) || template.rules?.some((rule) =>
         (rule.field === invalidKey && rule.other === key) || (rule.other === invalidKey && rule.field === key))) {
         invalid.removeAttribute('aria-invalid');
         document.getElementById('error-' + invalid.id).textContent = '';

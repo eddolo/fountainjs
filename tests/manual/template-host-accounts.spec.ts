@@ -69,7 +69,26 @@ test('a signed-in author assigns a template and reviews a response through host 
   });
   const auth = await listen(host),
     contexts: BrowserContext[] = [];
+  const studies = new Map([['River sample', 'North gauge']]);
   const app = createWorkspace(':memory:', join(project, 'dist'), {
+    validation: {
+      getContext({ accountId }: { accountId: string }) {
+        expect(accountId).toBe('researcher');
+        return studies;
+      },
+      validators: {
+        station: {
+          label: 'Report the assigned station',
+          inputs: ['Study identifier', 'Field report'],
+          async validate([study, report]: [string, { content: { content?: { text: string }[] }[] }], directory: Map<string, string>) {
+            const station = directory.get(study);
+            if (!station) return { input: 0, message: 'Choose a registered study.' };
+            if (!report.content.some((p) => p.content?.map((span) => span.text).join('').includes(station)))
+              return { input: 1, message: 'Include the assigned station: ' + station + '.' };
+          },
+        },
+      },
+    },
     accounts: {
       signInUrl: auth + '/login',
       authenticate(req: IncomingMessage) {
@@ -101,6 +120,12 @@ test('a signed-in author assigns a template and reviews a response through host 
     const author = await signIn('author');
     await author.getByRole('button', { name: 'Create template', exact: true }).click();
     await author.getByLabel('Template title').fill('Field survey');
+    await author.getByLabel('Available check').selectOption('station');
+    await author.getByRole('button', { name: 'Add application check' }).click();
+    await author.getByLabel('Study identifier').selectOption('findings');
+    await expect(author.getByLabel('Field report')).toHaveValue('study');
+    await author.getByLabel('Study identifier').selectOption('study');
+    await expect(author.getByLabel('Field report')).toHaveValue('findings');
     await author.getByRole('button', { name: 'Save template' }).click();
     await expect(author.getByRole('status')).toHaveText('Template saved.');
     const authorURL = author.url();
@@ -125,6 +150,12 @@ test('a signed-in author assigns a template and reviews a response through host 
     const returning = await signIn('researcher');
     await returning.getByRole('link', { name: 'Field survey' }).click();
     await expect(returning.getByLabel('Study title (required)', { exact: true })).toHaveValue('River sample');
+    await returning.getByRole('button', { name: 'Submit response' }).click();
+    const findings = returning.getByRole('textbox', { name: 'Findings (required)' });
+    await expect(findings).toBeFocused();
+    await expect(findings).toHaveAccessibleDescription('Include the assigned station: North gauge.');
+    await returning.screenshot({ path: info.outputPath('station-check.png') });
+    await findings.fill('North gauge. Water level stable.');
     await returning.getByRole('button', { name: 'Submit response' }).click();
     await expect(returning.getByRole('textbox', { name: 'Completed document' })).toContainText(
       'Water level stable.',

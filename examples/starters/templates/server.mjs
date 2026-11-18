@@ -6,6 +6,8 @@ import { resolve, extname } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { InputError, shape, validateTemplate, validateAnswers, renderResponse } from './model.mjs';
 
+import { validFieldKey } from './inline-fields.mjs';
+
 const digest = (key) => createHash('sha256').update(key).digest('hex');
 class RequestError extends Error {
   constructor(status, message) {
@@ -43,7 +45,49 @@ function accountKey(id) {
   return 'account:' + digest(id);
 }
 
-export function createWorkspace(database, publicDir, { accounts, publicOrigin } = {}) {
+function applicationChecks(validation = {}) {
+  const registry = new Map();
+  const catalogue = [];
+  if (validation.getContext !== undefined && typeof validation.getContext !== 'function')
+    throw new TypeError('Provide a function for validation.getContext.');
+  for (const [name, spec] of Object.entries(validation.validators ?? {})) {
+    if (!validFieldKey(name) || !spec || typeof spec.validate !== 'function' ||
+      typeof spec.label !== 'string' || !spec.label.trim() || !Array.isArray(spec.inputs) ||
+      spec.inputs.length < 1 || spec.inputs.length > 8 ||
+      !spec.inputs.every((label) => typeof label === 'string' && label.trim()))
+      throw new TypeError('Invalid application validator: ' + name);
+    const inputs = [...spec.inputs];
+    registry.set(name, { inputs, validate: spec.validate });
+    catalogue.push({ name, label: spec.label, inputs });
+  }
+  function resolveChecks(template) {
+    return (template.checks ?? []).map(({ name, fields }) => {
+      const spec = registry.get(name);
+      if (!spec || spec.inputs.length !== fields.length)
+        throw new InputError('Application check “' + name + '” is unavailable for these fields.');
+      return { fields, validate: spec.validate };
+    });
+  }
+  async function checkSubmission(template, answers, requestInfo) {
+    const bindings = resolveChecks(template);
+    if (!bindings.length) return;
+    const context = await validation.getContext?.(requestInfo);
+    for (const { fields, validate } of bindings) {
+      const values = fields.map((key) => structuredClone(answers[key]));
+      const issue = await validate(values, context);
+      if (issue == null) continue;
+      const index = issue.input ?? 0;
+      if (typeof issue.message !== 'string' || !issue.message.trim() ||
+        !Number.isInteger(index) || index < 0 || index >= fields.length)
+        throw new TypeError('A validator must return a message and an optional input index.');
+      throw Object.assign(new InputError(issue.message), { field: fields[index] });
+    }
+  }
+  return { catalogue, resolveChecks, checkSubmission };
+}
+
+export function createWorkspace(database, publicDir, { accounts, publicOrigin, validation } = {}) {
+  const checks = applicationChecks(validation);
   if (
     accounts !== undefined &&
     (!accounts ||
@@ -109,8 +153,9 @@ export function createWorkspace(database, publicDir, { accounts, publicOrigin } 
     if (accounts && req.method !== 'GET' && req.headers['x-fountain-workspace'] !== '1')
       throw new RequestError(403, 'Send the workspace request header.');
     if (path === '/api/workspace' && req.method === 'GET') {
-      if (!accounts) return { mode: 'links' };
-      return { mode: 'accounts', canCreate: identity.canCreateTemplates === true };
+      const config = accounts ? { mode: 'accounts', canCreate: identity.canCreateTemplates === true } : { mode: 'links' };
+      if (checks.catalogue.length) config.validators = checks.catalogue;
+      return config;
     }
     if (accounts && path === '/api/documents' && req.method === 'GET') {
       return {
@@ -178,6 +223,7 @@ export function createWorkspace(database, publicDir, { accounts, publicOrigin } 
         );
         if (data.revision !== row.revision) throw conflict();
         if (action) {
+          checks.resolveChecks(JSON.parse(row.document));
           const label = data.label ?? '';
           if (typeof label !== 'string' || label.length > 120)
             throw new InputError('Use an invitation label of up to 120 characters.');
@@ -245,8 +291,12 @@ export function createWorkspace(database, publicDir, { accounts, publicOrigin } 
         shape(data, ['revision', 'answers']);
         if (data.revision !== row.revision) throw conflict();
         const template = JSON.parse(row.template);
-        if (action) renderResponse(template, data.answers);
-        else validateAnswers(template, data.answers, false);
+        if (action) {
+          renderResponse(template, data.answers);
+          await checks.checkSubmission(template, data.answers, {
+            responseId: id, templateId: row.template_id, templateRevision: row.template_revision, accountId: identity?.id,
+          });
+        } else validateAnswers(template, data.answers, false);
         if (
           !db
             .prepare(
@@ -309,10 +359,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
   const accounts = adapterFile ? (await import(pathToFileURL(resolve(adapterFile)).href)).default : undefined;
   if (adapterFile && !accounts)
     throw new TypeError('The configured host account module must export an adapter.');
+  const validationFile = process.env.FOUNTAIN_TEMPLATE_VALIDATION;
+  const validation = validationFile ? (await import(pathToFileURL(resolve(validationFile)).href)).default : undefined;
+  if (validationFile && !validation?.validators) throw new TypeError('Export a validators registry from the validation module.');
   const server = createWorkspace(
     process.env.FOUNTAIN_TEMPLATE_DB ?? resolve(root, 'workspace.sqlite'),
     resolve(root, 'dist'),
-    { accounts, publicOrigin: process.env.FOUNTAIN_TEMPLATE_ORIGIN },
+    { accounts, validation, publicOrigin: process.env.FOUNTAIN_TEMPLATE_ORIGIN },
   );
   server.listen(Number(process.env.PORT ?? 4310), '127.0.0.1', () =>
     console.log(
