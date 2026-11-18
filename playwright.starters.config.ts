@@ -33,9 +33,9 @@ export default defineConfig({
       reuseExistingServer: false,
       timeout: 120_000,
     },
-    ...['plain-dom', 'react', 'templates'].map((kind) => ({
+    ...Object.entries({ 'plain-dom': 4201, react: 4202, templates: 4203, vue: 4205 }).map(([kind, port]) => ({
       command: `node scripts/installed-starters.mjs serve ${kind}`,
-      url: `http://127.0.0.1:${kind === 'plain-dom' ? 4201 : kind === 'react' ? 4202 : 4203}/`,
+      url: `http://127.0.0.1:${port}/`,
       reuseExistingServer: false,
       timeout: 30_000,
     })),

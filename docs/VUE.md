@@ -81,7 +81,9 @@ host. Use `options.ariaLabel` and `options.attributes` for the editable element.
 
 ## Bind a form field
 
-The unreleased `FountainDocumentField` component owns its editor and binds a
+Download the [Vue starter from the developer guide](https://eddolo.github.io/fountainjs/developers.html#starter-vue) for a complete single-file component with local save and reopen. Its pinned `fountainjs-editor@0.5.0-beta.1` includes `FountainDocumentField`.
+
+The component owns its editor and binds a
 `NodeJSON | null` model using the standard Vue `v-model` contract. Replace
 the model object when loading a different document. Use `null` to clear the
 field to the schema's default document. [Vue component models](https://vuejs.org/guide/components/v-model)

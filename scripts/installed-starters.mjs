@@ -49,7 +49,7 @@ if (mode === 'prepare') {
   const archive = join(root, `fountainjs-editor-${manifest.version}.tgz`);
   receipt.archive = { path: archive, sha256: sha256(archive) };
   cpSync(archive, join(evidence, 'candidate.tgz'));
-  for (const name of ['plain-dom', 'react', 'node', 'templates']) {
+  for (const name of ['plain-dom', 'react', 'vue', 'node', 'templates']) {
     const source = join(repository, 'examples/starters', name);
     const project = join(root, name);
     cpSync(source, project, { recursive: true });
@@ -114,7 +114,7 @@ if (mode === 'prepare') {
   receipt.complete = true;
   save();
   console.log(`Installed candidate starters prepared; evidence: ${receiptPath}`);
-} else if (mode === 'serve' && ['plain-dom', 'react', 'templates'].includes(kind)) {
+} else if (mode === 'serve' && ['plain-dom', 'react', 'vue', 'templates'].includes(kind)) {
   const receipt = readJSON(receiptPath);
   assert(receipt.complete, 'Run pnpm audit:starters:prepare before starting the preview servers.');
   const project = receipt.projects[kind].path;
@@ -126,10 +126,10 @@ if (mode === 'prepare') {
     const require = createRequire(join(project, 'package.json'));
     const { preview } = await import(pathToFileURL(require.resolve('vite')).href);
     const server = await preview({ root: project, configFile: false, preview: {
-      host: '127.0.0.1', port: kind === 'plain-dom' ? 4201 : 4202, strictPort: true, open: false,
+      host: '127.0.0.1', port: { 'plain-dom': 4201, react: 4202, vue: 4205 }[kind], strictPort: true, open: false,
     } });
     server.printUrls();
   }
 } else {
-  throw new Error('Usage: pnpm audit:starters:prepare, or node scripts/installed-starters.mjs serve plain-dom|react|templates');
+  throw new Error('Usage: pnpm audit:starters:prepare, or node scripts/installed-starters.mjs serve plain-dom|react|vue|templates');
 }

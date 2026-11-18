@@ -6,12 +6,13 @@ import templateIgnore from '../../starters/templates/.gitignore?raw';
 const templates = import.meta.glob<string>(
   [
     '../../starters/{plain-dom,react,node}/{package.json,index.html,main.js,main.jsx,convert.mjs,sample.md,README.md}',
+    '../../starters/vue/{package.json,index.html,main.js,ReviewForm.vue,vite.vue.config.js,README.md}',
     '../../starters/templates/{package.json,index.html,main.js,inline-fields.mjs,model.mjs,server.mjs,workflow.test.mjs,style.css,README.md}',
   ],
   { query: '?raw', import: 'default' },
 );
 
-export function StarterDownload({ kind, label }: { kind: 'plain-dom' | 'react' | 'node' | 'templates'; label: string }) {
+export function StarterDownload({ kind, label }: { kind: 'plain-dom' | 'react' | 'vue' | 'node' | 'templates'; label: string }) {
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState(false);
 

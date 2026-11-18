@@ -18,6 +18,7 @@ test('downloads complete standalone projects from the developer guide', async ({
   for (const { kind, label, projectFiles } of [
     { kind: 'plain-dom', label: 'Download plain DOM starter', projectFiles: ['index.html', 'main.js'] },
     { kind: 'react', label: 'Download React starter', projectFiles: ['index.html', 'main.jsx'] },
+    { kind: 'vue', label: 'Download Vue starter', projectFiles: ['index.html', 'main.js', 'vite.vue.config.js', 'ReviewForm.vue'] },
     { kind: 'node', label: 'Download Node.js starter', projectFiles: ['convert.mjs', 'sample.md'] },
     { kind: 'templates', label: 'Download template workspace', projectFiles: ['.gitignore','index.html','main.js','inline-fields.mjs','model.mjs','server.mjs','style.css','workflow.test.mjs'] },
   ]) {
@@ -42,6 +43,7 @@ test('downloads complete standalone projects from the developer guide', async ({
   for (const { kind, demo, host } of [
     { kind: 'plain-dom', demo: 'plain-dom-notes', host: 'Plain DOM' },
     { kind: 'react', demo: 'react-article', host: 'React' },
+    { kind: 'vue', demo: 'vue-runbook', host: 'Vue' },
     { kind: 'node', demo: 'node-markdown', host: 'Node.js' },
   ]) {
     await page.goto(`demos/${demo}.html`);
