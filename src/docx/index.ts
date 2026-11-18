@@ -2507,7 +2507,7 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
     case 'footnote_definition': case 'page_header': case 'page_footer': return '';
     case 'bar_chart':
       context.issues.push({ code: 'chart-exported-as-table', severity: 'warning', path,
-        message: 'The chart title and data are exported as editable Word content. The bar plot is omitted.' });
+        message: 'The chart title and data are exported as editable Word content. The plot is omitted.' });
       return node.content.map((child, index) => blockXML(child, context, [...path, index], level, quote, list, definition)).join('');
     case 'page_break':
       if (path.length > 1) context.issues.push({ code: 'nested-page-break-projection', severity: 'warning', message: 'The nested page break is written natively, but enclosing list/quote identity and table or story layout are not certified on reimport.', path });

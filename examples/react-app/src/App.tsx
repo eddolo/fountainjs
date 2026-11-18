@@ -81,7 +81,7 @@ import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/ve
 import { FountainVersions } from 'fountainjs-editor/react/versions';
 import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity';
 import { downloadDocumentFile } from './math-document-files';
-import { BarChartExtension, exportBarChartImage, insertBarChart, selectedBarChart, tableChartAction, toggleTableChart, type ChartImageFormat } from 'fountainjs-editor/charts';
+import { ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartType, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import { SitePageLink } from './SitePageLink';
@@ -345,7 +345,7 @@ const demoKit = composeExtensions([
   TableEditingExtension,
   TrailingEditableBlockExtension,
   ClipboardHistoryExtension,
-  BarChartExtension,
+  ChartExtension,
   DetailsExtension,
   RubyExtension,
   calloutExtension,
@@ -595,11 +595,11 @@ function App() {
   const [chartFormat, setChartFormat] = useState<ChartImageFormat>('png');
   const [chartExportError, setChartExportError] = useState('');
   const downloadChart = async (owner: Document) => {
-    const chart = selectedBarChart(editor);
+    const chart = selectedChart(editor);
     if (!chart) return;
     setChartExportError('');
     try {
-      const blob = await exportBarChartImage(chart, chartFormat, owner);
+      const blob = await exportChartImage(chart, chartFormat, owner);
       downloadDocumentFile(owner, 'chart.' + chartFormat, blob, blob.type);
     } catch (error) {
       setChartExportError(error instanceof Error ? error.message : 'Chart download failed.');
@@ -757,6 +757,11 @@ function App() {
               >{compactToolbar ? 'Show full toolbar' : 'Use compact toolbar'}</button>
             </div>
             {chartAction === 'unwrap' && <div className="quick-insert" role="group" aria-label="Chart export">
+              <label>Chart type <select value={String(selectedChart(editor)?.attrs.kind ?? 'bar')} onChange={event => {
+                setChartType(editor, event.target.value as ChartType);
+                setChartExportError('');
+                editorHandle.current?.focus();
+              }}><option value="bar">Bar</option><option value="line">Line</option><option value="pie">Pie</option></select></label>
               <select aria-label="Chart image format" value={chartFormat} onChange={event => {
                 setChartFormat(event.target.value as ChartImageFormat);
                 setChartExportError('');

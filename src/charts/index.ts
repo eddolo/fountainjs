@@ -1,18 +1,47 @@
 import { insertNode, nodeRangeAtPath, NodeSelection, type DOMOutputSpec, type Editor, type Node, type NodeSpec } from '../core';
 import { RestructureChildrenStep } from '../core/transaction/restructure-children-step';
 import { defineExtension } from '../extensions/extension';
-
-import { barChartLayout } from './layout';
-export { exportBarChartSVG, exportBarChartImage, type ChartImageFormat } from './image';
+import { chartLayout, chartTypes, type ChartType } from './layout';
+export type { ChartType } from './layout';
+export { exportChartSVG, exportChartImage, exportChartSVG as exportBarChartSVG, exportChartImage as exportBarChartImage, type ChartImageFormat } from './image';
 
 function percent(value: number): string {
   return Number(value.toFixed(5)) + '%';
 }
 
 function plot(node: Node): DOMOutputSpec {
-  const layout = barChartLayout(node);
+  const layout = chartLayout(node);
   if (typeof layout === 'string') return ['p', layout];
-  const { title, zero } = layout;
+  const { title, zero, kind } = layout;
+  const graphic = (children: DOMOutputSpec[]): DOMOutputSpec => ['div', {
+    role: 'img', style: 'display:flow-root', 'aria-label': (title || kind + ' chart') + '. Values are in the accompanying table.',
+  }, ...children];
+  if (kind !== 'bar') {
+    const markers: DOMOutputSpec[] = [];
+    let style: string;
+    if (kind === 'pie') {
+      const stops = layout.rows.map(row => row.color + ' ' + percent(row.start) + ' ' + percent(row.end));
+      style = 'width:min(100%,16em);aspect-ratio:1;border-radius:50%;margin:auto;background:conic-gradient(' + stops.join(',') + ')';
+    } else {
+      style = 'position:relative;aspect-ratio:4;margin:12px 6px;background:#f5f3fa';
+      markers.push(['span', { style: `position:absolute;top:${percent(100 - zero)};width:100%;border-top:1px solid #aaa` }]);
+      const position = (point: { x: number; y: number }) => `position:absolute;left:${percent(point.x)};top:${percent(point.y)}`;
+      layout.rows.forEach((row, index) => {
+        const previous = layout.rows[index - 1];
+        if (previous) {
+          const dx = row.x - previous.x, dy = (row.y - previous.y) / 4;
+          markers.push(['span', { style: `${position(previous)};width:${percent(Math.hypot(dx, dy))};height:2px;background:#55409c;transform-origin:0 0;transform:rotate(${Math.atan2(dy, dx)}rad)` }]);
+        }
+        markers.push(['span', { style: `${position(row)};background:#55409c;border-radius:50%;width:6px;height:6px;transform:translate(-50%,-50%)` }]);
+      });
+    }
+    return graphic([
+      ['div', { dir: 'ltr', style }, ...markers],
+      ...layout.rows.map((row, i): DOMOutputSpec => ['div',
+        ['span', { style: kind === 'pie' ? `color:${row.color}` : '' }, kind === 'pie' ? '■ ' : (i + 1) + '. '],
+        row.label + ' · ' + row.source]),
+    ]);
+  }
   const rows: DOMOutputSpec[] = layout.rows.map(({ label, source, width, left }) => {
     return ['div', { style: 'margin:.45em 0' },
       ['span', label + ' · ' + source],
@@ -22,19 +51,22 @@ function plot(node: Node): DOMOutputSpec {
       ],
     ];
   });
-  return ['div', { role: 'img', 'aria-label': (title ? 'Bar chart: ' + title : 'Bar chart') + '. Values are in the accompanying table.' }, ...rows];
+  return graphic(rows);
 }
 
-const parseRules = [{ tag: 'figure[data-fountain-chart="bar"]', contentElement: '[data-fountain-chart-source]' }];
+const parseRules = chartTypes.map(kind => ({
+  tag: `figure[data-fountain-chart="${kind}"]`, getAttrs: () => ({ kind }), contentElement: '[data-fountain-chart-source]',
+}));
 
 const barChartNode: NodeSpec = {
   group: 'block',
+  attrs: { kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) } },
   content: 'paragraph? table',
   selectable: true,
   parseHTML: parseRules,
   parseDOM: parseRules,
   markdown: 'html',
-  toDOM: node => ['figure', { 'data-fountain-chart': 'bar', style: 'margin:1em 0' },
+  toDOM: node => ['figure', { 'data-fountain-chart': node.attrs.kind, style: 'margin:1em 0' },
     ['div', { 'data-fountain-chart-source': 'true' }, 0],
     ['div', { contenteditable: 'false', 'data-fountain-chart-plot': 'true' }, plot(node)],
   ],
@@ -43,14 +75,13 @@ const barChartNode: NodeSpec = {
 /** Inserts editable title and data cells, with a bar plot derived from the same table. */
 export function insertBarChart(editor: Editor, title: string, values: readonly (readonly [string, number])[]): boolean {
   const { schema } = editor.state;
-  if (!editor.editable || !schema.nodes.bar_chart || !schema.nodes.table || !schema.nodes.table_row
-    || !schema.nodes.table_header || !schema.nodes.table_cell || !schema.nodes.paragraph || !schema.nodes.text) return false;
+  const required = ['bar_chart', 'table', 'table_row', 'table_header', 'table_cell', 'paragraph', 'text'];
+  if (!editor.editable || required.some(name => !schema.nodes[name])) return false;
   if (typeof title !== 'string' || !Array.isArray(values) || !values.every(pair => Array.isArray(pair) && pair.length === 2
     && typeof pair[0] === 'string' && Number.isFinite(pair[1]))) return false;
   const paragraph = (value: string) => schema.node('paragraph', {}, [schema.text(value)]);
-  const row = (type: string, label: string, value: string) => schema.node('table_row', {}, [
-    schema.node(type, {}, [paragraph(label)]), schema.node(type, {}, [paragraph(value)]),
-  ]);
+  const row = (type: string, ...cells: string[]) => schema.node('table_row', {},
+    cells.map(value => schema.node(type, {}, [paragraph(value)])));
   const table = schema.node('table', {}, [row('table_header', 'Category', 'Value'),
     ...values.map(([label, value]) => row('table_cell', label, String(value)))]);
   const chart = schema.node('bar_chart', {}, [paragraph(title), table]);
@@ -111,8 +142,16 @@ export function toggleTableChart(editor: Editor): boolean {
   } catch { return false; }
 }
 
+export function setChartType(editor: Editor, kind: ChartType): boolean {
+  const target = chartTarget(editor);
+  if (!editor.editable || target?.node.type.name !== 'bar_chart' || !chartTypes.includes(kind) || target.node.attrs.kind === kind) return false;
+  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...target.node.attrs, kind }));
+}
+
 export const BarChartExtension = defineExtension({
   name: 'bar-chart',
   nodes: { bar_chart: barChartNode },
-  commands: { insertBarChart, toggleTableChart },
+  commands: { insertBarChart, toggleTableChart, setChartType },
 });
+
+export { BarChartExtension as ChartExtension, selectedBarChart as selectedChart };

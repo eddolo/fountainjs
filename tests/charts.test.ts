@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertBarChart, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertBarChart, setChartType, tableChartAction, toggleTableChart } from '../src/charts';
 import { ServerHTMLImporter } from '../src/html/server';
 
 const kit = composeExtensions([CoreExtension, HistoryExtension, BarChartExtension]);
@@ -66,6 +66,7 @@ it('converges concurrent edits to separate chart cells without copying the deriv
   try {
     const index = left.state.selection.path[0];
     left.dispatch(left.createTransaction().replaceText([index, 1, 1, 1, 0, 0], 0, 1, '37'));
+    expect(setChartType(left, 'line')).toBe(true);
     right.dispatch(right.createTransaction().replaceText([index, 1, 2, 0, 0, 0], 0, 4, 'Control'));
     const leftUpdate = Y.encodeStateAsUpdate(leftRoom, Y.encodeStateVector(rightRoom));
     const rightUpdate = Y.encodeStateAsUpdate(rightRoom, Y.encodeStateVector(leftRoom));
@@ -73,6 +74,7 @@ it('converges concurrent edits to separate chart cells without copying the deriv
     Y.applyUpdate(rightRoom, leftUpdate);
     expect(right.getJSON()).toEqual(left.getJSON());
     const html = HTMLExporter.export(right.state.doc, { document: false });
+    expect(html).toContain('data-fountain-chart="line"');
     expect(html).toContain('Alpha · 37');
     expect(html).toContain('Control · 2');
     expect(JSON.stringify(right.getJSON())).not.toContain('data-fountain-chart-plot');
@@ -159,5 +161,44 @@ it('exports current data as a standalone SVG in Node and explains incomplete row
   const path = [editor.state.selection.path[0], 1, 1, 1, 0, 0];
   editor.dispatch(editor.createTransaction().replaceText(path, 0, 2, 'TBD'));
   expect(() => exportBarChartSVG(selectedBarChart(editor)!)).toThrow('Enter a number in row 2');
+  editor.destroy();
+});
+
+it('changes chart type in place and retains it across HTML, JSON and undo', () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  insertBarChart(editor, 'Revenue', [['A', Number.MAX_VALUE], ['B', Number.MAX_VALUE], ['C', 0]]);
+  const table = selectedBarChart(editor)!.child(1), selection = editor.state.selection;
+  for (const kind of ['line', 'pie'] as const) {
+    expect(setChartType(editor, kind)).toBe(true);
+    expect(selectedBarChart(editor)!.child(1)).toBe(table);
+    expect(editor.state.selection.eq(selection)).toBe(true);
+    const doc = editor.state.doc;
+    const html = HTMLExporter.export(doc, { document: false });
+    expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(doc.toJSON());
+    expect(editor.state.schema.nodeFromJSON(doc.toJSON()).eq(doc)).toBe(true);
+    const svg = exportBarChartSVG(selectedBarChart(editor)!);
+    expect(svg).toContain(kind === 'line' ? '<polyline' : 'A96 96');
+    expect(svg).not.toMatch(/NaN|Infinity/);
+  }
+  expect(undo(editor)).toBe(true);
+  expect(selectedBarChart(editor)!.attrs.kind).toBe('line');
+  expect(redo(editor)).toBe(true);
+  expect(selectedBarChart(editor)!.attrs.kind).toBe('pie');
+  const old = selectedBarChart(editor)!.toJSON();
+  expect(editor.state.schema.nodeFromJSON({ ...old, attrs: {} }).attrs.kind).toBe('bar');
+  editor.destroy();
+});
+
+it('explains unsuitable pie values and draws a single positive share as a whole circle', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Share', [['A', 0], ['B', 0]]);
+  setChartType(editor, 'pie');
+  const svg = () => exportBarChartSVG(selectedBarChart(editor)!);
+  expect(svg).toThrow('at least one positive value');
+  const path = [editor.state.selection.path[0], 1, 1, 1, 0, 0];
+  editor.dispatch(editor.createTransaction().replaceText(path, 0, 1, '-2'));
+  expect(svg).toThrow('nonnegative');
+  editor.dispatch(editor.createTransaction().replaceText(path, 0, 2, '2'));
+  expect(svg()).toContain('r="96" fill="#55409c"');
   editor.destroy();
 });
