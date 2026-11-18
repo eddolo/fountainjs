@@ -504,9 +504,28 @@ export class RetainedDocumentStore {
       paths: this.textPaths, candidates: previousTexts, partitions: this.partitionPaths } : undefined;
     const used = new Set<Node>();
     const groupStates = new Map<string, GroupState>();
-    const visit = (raw: RetainedNodeProjection): Fragment => {
-      if (!Object.hasOwn(this.schema.nodes, raw.type)) throw new Error(`Unknown retained node type: ${raw.type}`);
-      const ordered = this.orderedChildren(raw, partitions, placements);
+    const previousPartitions = indexEdit === 'remote' ? this.frame?.partitions : undefined;
+    const projectChildren = (raw: RetainedNodeProjection, ordered: readonly RetainedNodeProjection[]): Fragment[] => {
+      const only = ordered.length === 1 ? ordered[0] : undefined;
+      if (previousPartitions && only?.type === 'text' && previousModel) {
+        const partition = partitions.get(only.id)!;
+        const entries = indexes!.partitions.get(only.id);
+        if (partition === previousPartitions.get(only.id) && partition.runs.length === 1 && entries?.length === 1) {
+          const { path, binding } = entries[0], run = partition.runs[0];
+          const type = this.schema.nodes.text;
+          // A complete, unformatted stream maps to exactly one previous leaf.
+          // Keep the ordinary node-reuse checks and all custom factory rules.
+          if (!type.spec.attrs && !type.spec.validate && run.text.length
+            && binding.from === 0 && binding.modelFrom === 0 && binding.length === run.text.length
+            && run.attributes?.[LEAF] === binding.leaf && run.attributes[ORDER] === '[]'
+            && Object.keys(run.attributes).length === 2) {
+            const candidate = getNodeAtPath(previousModel, path);
+            const node = this.projectionNode(type, EMPTY_ATTRS, [], run.text, [], used, candidate);
+            groupStates.set(only.id, { id: only.id, parent: raw.id, value: only });
+            return [{ node, leaf: binding.leaf, bindings: [binding] }];
+          }
+        }
+      }
       let occupiedFields: Set<string> | undefined;
       const children: (Fragment | TextFragment)[] = [];
       const append = (next: Fragment | TextFragment) => {
@@ -559,13 +578,18 @@ export class RetainedDocumentStore {
           }
         }
       }
-      const fragments: Fragment[] = children.map(child => {
+      return children.map(child => {
         if ('node' in child) return child;
         const previous = previousTexts.get(bindingKey(child.bindings, child.leaf));
         const candidate = previousModel && previous && sameBindings(previous.bindings, child.bindings)
           ? getNodeAtPath(previousModel, previous.path) : undefined;
         return { node: this.projectionNode(this.schema.nodes.text, child.attrs, [], child.text, child.marks, used, candidate), leaf: child.leaf, bindings: child.bindings };
       });
+    };
+    const visit = (raw: RetainedNodeProjection): Fragment => {
+      if (!Object.hasOwn(this.schema.nodes, raw.type)) throw new Error(`Unknown retained node type: ${raw.type}`);
+      const ordered = this.orderedChildren(raw, partitions, placements);
+      const fragments = projectChildren(raw, ordered);
       const type = this.schema.nodes[raw.type], marks = (raw.marks ?? []).map(mark => this.schema.markFromJSON(mark)), attrs = computeAttrs(type.spec.attrs, raw.attrs ?? {});
       const path = previousIdentities.get(raw.id);
       const candidate = previousModel && path ? getNodeAtPath(previousModel, path) : undefined;
