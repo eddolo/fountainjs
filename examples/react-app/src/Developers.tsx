@@ -1,5 +1,6 @@
 import { SitePageLink } from './SitePageLink';
 import { StarterDownload } from './StarterDownload';
+import publishedStarter from '../../starters/published-version.json';
 
 const composeExample = `import {
   CoreExtension,
@@ -676,7 +677,7 @@ function Developers() {
           <section className="dev-section" id="starters">
             <p className="dev-label">00 · START HERE</p>
             <h2>Start with a working project.</h2>
-            <p>Download and extract a starter, then run <code>npm install</code> in its folder. Each project pins <code>fountainjs-editor@0.5.0-beta.1</code>. Check its availability in the <a href="https://www.npmjs.com/package/fountainjs-editor?activeTab=versions">npm version list</a>. Use Node.js 20.19+ or 22.12+ for the browser starters.</p>
+            <p>Download and extract a starter, then run <code>npm install</code> in its folder. Each project pins <code>fountainjs-editor@{publishedStarter.version}</code>. Check its availability in the <a href="https://www.npmjs.com/package/fountainjs-editor?activeTab=versions">npm version list</a>. Use Node.js 20.19+ or 22.12+ for the browser starters.</p>
             <div className="dev-starters">
               <article id="starter-plain-dom">
                 <h3>Plain JavaScript</h3>

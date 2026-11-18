@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 import { strFromU8, unzipSync } from 'fflate';
 
 test('downloads complete standalone projects from the developer guide', async ({ page }, info) => {
+  const publishedStarter = JSON.parse(await readFile('examples/starters/published-version.json', 'utf8'));
   const hiddenAssets = new Set<string>();
   page.on('request', request => {
     const path = new URL(request.url()).pathname;
@@ -36,7 +37,7 @@ test('downloads complete standalone projects from the developer guide', async ({
       expect(strFromU8(files[`${name}/${file}`])).toBe(await readFile(`examples/starters/${kind}/${file}`, 'utf8'));
     }
     const manifest = JSON.parse(strFromU8(files[`${name}/package.json`]));
-    expect(manifest.dependencies['fountainjs-editor']).toBe('0.5.0-beta.1');
+    expect(manifest.dependencies['fountainjs-editor']).toBe(publishedStarter.version);
   }
   expect([...hiddenAssets], 'GitHub Pages omits dot-prefixed build assets').toEqual([]);
   await page.locator('#starters').screenshot({ path: info.outputPath('starter-downloads.png') });

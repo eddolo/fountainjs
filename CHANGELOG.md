@@ -2,9 +2,18 @@
 
 ## Unreleased
 
-- Reuse verified collaboration lookup indexes after eligible remote text edits.
+## 0.5.0-beta.2 — Shared editor views and collaboration performance
 
-- Avoid rewriting unchanged DOM cursor paths during typing. Moved blocks and stale path prefixes are still repaired.
+- Keep the caret in the active editable view when two views share an editor.
+  Typing and formatting in a repeated rich-text field retain focus and share undo history.
+- Report rejected widget operations to their callers. Widget controls can restore their displayed
+  value when an application refuses a transaction.
+- Avoid rewriting unchanged DOM cursor paths while typing. Moving a block still updates its path.
+- Reuse eligible retained collaboration lookup indexes and plain-text partitions when applying
+  remote changes. The comparison records report separate measurements for processing updates
+  and for the full editing workflow on large documents.
+  [Typing measurements](https://github.com/eddolo/fountainjs/pull/27) ·
+  [Remote update measurements](https://github.com/eddolo/fountainjs/pull/32)
 
 ## 0.5.0-beta.1 — 2026-11-17
 
