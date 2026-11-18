@@ -73,5 +73,9 @@ export function chartLayout(node: Node) {
     });
     return { name, rows, color: sliceColors[j % sliceColors.length]! };
   });
-  return { kind, title, zero, rows: series[0]!.rows, series };
+  const categoryTitle = kind === 'pie' ? '' : String(node.attrs.categoryAxisTitle ?? '');
+  const valueTitle = kind === 'pie' ? '' : String(node.attrs.valueAxisTitle ?? '');
+  const horizontalTitle = kind === 'bar' ? valueTitle : categoryTitle;
+  const verticalTitle = kind === 'bar' ? categoryTitle : valueTitle;
+  return { kind, title, horizontalTitle, verticalTitle, zero, rows: series[0]!.rows, series };
 }

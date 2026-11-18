@@ -102,6 +102,8 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .quick-insert > span { margin-right: 3px; color: #888197; font: 11px DM Mono, monospace; text-transform: uppercase; }
 .quick-insert button { padding: 7px 10px; color: #5d586a; background: white; border: 1px solid #dcd8e4; border-radius: 7px; font-size: 11px; font-weight: 700; }
 .chart-csv { margin-bottom: 12px; font-size: 13px; }
+.chart-axis-titles label { display: grid; gap: 4px; margin-block: 6px; }
+.chart-axis-titles summary { cursor: pointer; font-size: 13px; }
 .chart-csv summary { width: fit-content; cursor: pointer; font-weight: 600; }
 .chart-csv .quick-insert { margin: 10px 0 4px; }
 .chart-csv label { display: grid; gap: 4px; max-width: 100%; }

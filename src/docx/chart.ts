@@ -75,11 +75,12 @@ export function wordChart(node: Node, index: number, drawingId: number) {
   }).join('');
   const chartElement = kind === 'column' ? 'bar' : kind;
   const options = chartElement === 'bar' ? `<c:barDir val="${kind === 'column' ? 'col' : 'bar'}"/><c:grouping val="clustered"/>` : kind === 'line' ? '<c:grouping val="standard"/>' : '<c:varyColors val="1"/>';
-  const axis = (type: 'cat' | 'val', id: number, pos: string) =>
-    `<c:${type}Ax><c:axId val="${id}"/><c:scaling><c:orientation val="${type === 'cat' && kind === 'bar' ? 'maxMin' : 'minMax'}"/></c:scaling><c:axPos val="${pos}"/><c:tickLblPos val="low"/><c:crossAx val="${3 - id}"/><c:crosses val="autoZero"/></c:${type}Ax>`;
-  const axes = kind === 'pie' ? '' : axis('cat', 1, kind === 'bar' ? 'l' : 'b') + axis('val', 2, kind === 'bar' ? 'b' : 'l');
-  const chartTitle = `<c:title><c:tx><c:rich><a:bodyPr/><a:lstStyle/><a:p><a:r><a:t>${xmlEscape(title)}</a:t></a:r></a:p></c:rich></c:tx></c:title>`;
-  const xml = `<c:chartSpace xmlns:c="${chartNS}" xmlns:a="${drawingNS}" xmlns:r="${OFFICE_REL_NS}"><c:chart>${chartTitle}<c:plotArea><c:layout/><c:${chartElement}Chart>${options}${data}${smooth}${axes ? '<c:axId val="1"/><c:axId val="2"/>' : ''}</c:${chartElement}Chart>${axes}</c:plotArea>${kind === 'pie' || series.length > 1 ? '<c:legend><c:legendPos val="b"/></c:legend>' : ''}<c:plotVisOnly val="1"/></c:chart><c:externalData r:id="rIdData"><c:autoUpdate val="0"/></c:externalData></c:chartSpace>`;
+  const chartTitle = (value: string) => '<c:title><c:tx><c:rich><a:bodyPr/><a:lstStyle/>' +
+    value.split(/\r\n?|\n/).map(line => '<a:p><a:r><a:t>' + xmlEscape(line) + '</a:t></a:r></a:p>').join('') + '</c:rich></c:tx></c:title>';
+  const axis = (type: 'cat' | 'val', id: number, pos: string, label: string) =>
+    `<c:${type}Ax><c:axId val="${id}"/><c:scaling><c:orientation val="${type === 'cat' && kind === 'bar' ? 'maxMin' : 'minMax'}"/></c:scaling><c:axPos val="${pos}"/>${label ? chartTitle(label) : ''}<c:tickLblPos val="low"/><c:crossAx val="${3 - id}"/><c:crosses val="autoZero"/></c:${type}Ax>`;
+  const axes = kind === 'pie' ? '' : axis('cat', 1, kind === 'bar' ? 'l' : 'b', String(node.attrs.categoryAxisTitle ?? '')) + axis('val', 2, kind === 'bar' ? 'b' : 'l', String(node.attrs.valueAxisTitle ?? ''));
+  const xml = `<c:chartSpace xmlns:c="${chartNS}" xmlns:a="${drawingNS}" xmlns:r="${OFFICE_REL_NS}"><c:chart>${chartTitle(title)}<c:plotArea><c:layout/><c:${chartElement}Chart>${options}${data}${smooth}${axes ? '<c:axId val="1"/><c:axId val="2"/>' : ''}</c:${chartElement}Chart>${axes}</c:plotArea>${kind === 'pie' || series.length > 1 ? '<c:legend><c:legendPos val="b"/></c:legend>' : ''}<c:plotVisOnly val="1"/></c:chart><c:externalData r:id="rIdData"><c:autoUpdate val="0"/></c:externalData></c:chartSpace>`;
   const drawing = `<w:p><w:r><w:drawing><wp:inline><wp:extent cx="5029200" cy="2834640"/><wp:docPr id="${drawingId}" name="Chart ${index}" descr="${xmlEscape(title)}"/><a:graphic><a:graphicData uri="${chartNS}"><c:chart xmlns:c="${chartNS}" r:id="rIdChart${index}"/></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>`;
   return { xml, drawing, workbook: workbook(series, category) };
 }

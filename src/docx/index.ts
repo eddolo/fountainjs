@@ -2629,6 +2629,9 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
     case 'footnote_definition': case 'page_header': case 'page_footer': return '';
     case 'bar_chart': {
       const table = node.content.map((child, index) => blockXML(child, context, [...path, index], level, quote, list, definition)).join('');
+      if (node.attrs.kind === 'pie' && (node.attrs.categoryAxisTitle || node.attrs.valueAxisTitle)) {
+        context.issues.push({ code: 'chart-axis-titles-omitted', severity: 'warning', path, message: 'A Word pie chart has no axes. Fountain JSON and HTML retain the axis titles for switching back.' });
+      }
       if (node.attrs.csvURL) context.issues.push({ code: 'chart-csv-link-omitted', severity: 'warning', path,
         message: 'The chart values are saved in the DOCX. Refreshing them from the original CSV address requires the Fountain document.' });
       const chart = wordChart(node, context.charts.length + 1, context.nextDrawingId);

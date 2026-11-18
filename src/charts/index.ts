@@ -18,9 +18,13 @@ function plot(node: Node): DOMOutputSpec {
   const legend: DOMOutputSpec[] = multiple ? [['div', { style: 'display:flex;gap:1em;flex-wrap:wrap' },
     ...series.map((item): DOMOutputSpec => ['span', ['span', { style: 'color:' + item.color }, '■ '], item.name])]] : [];
   const label = (index: number) => layout.rows[index]!.label + (multiple ? '' : ' · ' + layout.rows[index]!.source);
+  const axisCaption = (value: string, align: string): DOMOutputSpec[] => value ? [['div', {
+    dir: 'auto', style: 'font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere;text-align:' + align,
+  }, value]] : [];
   const graphic = (children: DOMOutputSpec[]): DOMOutputSpec => ['div', {
-    role: 'img', style: 'display:flow-root', 'aria-label': (title || kind + ' chart') + '. Values are in the accompanying table.',
-  }, ...children];
+    role: 'img', style: 'display:flow-root', 'aria-label': [title || kind + ' chart', layout.verticalTitle, layout.horizontalTitle,
+      'Values are in the accompanying table.'].filter(Boolean).join('. '),
+  }, ...axisCaption(layout.verticalTitle, 'start'), ...children, ...axisCaption(layout.horizontalTitle, 'center')];
   if (kind !== 'bar') {
     const markers: DOMOutputSpec[] = [];
     let style: string;
@@ -87,19 +91,23 @@ function csvURL(value: unknown): value is string {
 const parseRules = chartTypes.map(kind => ({
   tag: `figure[data-fountain-chart="${kind}"]`, getAttrs: (element: { getAttribute(name: string): string | null }) => {
     const source = element.getAttribute('data-fountain-csv-url');
-    return { kind, csvURL: csvURL(source) ? source : null };
+    return { kind, csvURL: csvURL(source) ? source : null, categoryAxisTitle: element.getAttribute('data-category-axis-title') ?? '',
+      valueAxisTitle: element.getAttribute('data-value-axis-title') ?? '' };
   }, contentElement: '[data-fountain-chart-source]',
 }));
 
+const axisTitle = { default: '', validate: (value: unknown) => typeof value === 'string' };
+
 const barChartNode: NodeSpec = {
   group: 'block',
-  attrs: { kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: { default: null, validate: value => value === null || csvURL(value) } },
+  attrs: { categoryAxisTitle: axisTitle, valueAxisTitle: axisTitle, kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: { default: null, validate: value => value === null || csvURL(value) } },
   content: 'paragraph? table',
   selectable: true,
   parseHTML: parseRules,
   parseDOM: parseRules,
   markdown: 'html',
-  toDOM: node => ['figure', { 'data-fountain-chart': node.attrs.kind, ...(node.attrs.csvURL ? { 'data-fountain-csv-url': node.attrs.csvURL } : {}), style: 'margin:1em 0' },
+  toDOM: node => ['figure', { 'data-fountain-chart': node.attrs.kind, ...(node.attrs.csvURL ? { 'data-fountain-csv-url': node.attrs.csvURL } : {}), ...(node.attrs.categoryAxisTitle ? { 'data-category-axis-title': node.attrs.categoryAxisTitle } : {}),
+    ...(node.attrs.valueAxisTitle ? { 'data-value-axis-title': node.attrs.valueAxisTitle } : {}), style: 'margin:1em 0' },
     ['div', { 'data-fountain-chart-source': 'true' }, 0],
     ['div', { contenteditable: 'false', 'data-fountain-chart-plot': 'true' }, plot(node)],
   ],
@@ -307,10 +315,19 @@ export function setChartType(editor: Editor, kind: ChartType): boolean {
   return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...target.node.attrs, kind }));
 }
 
+export function setChartAxisTitle(editor: Editor, axis: 'category' | 'value', title: string): boolean {
+  const target = chartTarget(editor);
+  if (!editor.editable || target?.node.type.name !== 'bar_chart' || target.node.attrs.kind === 'pie' ||
+      (axis !== 'category' && axis !== 'value') || typeof title !== 'string') return false;
+  const key = axis + 'AxisTitle';
+  if (target.node.attrs[key] === title) return false;
+  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...target.node.attrs, [key]: title }));
+}
+
 export const BarChartExtension = defineExtension({
   name: 'bar-chart',
   nodes: { bar_chart: barChartNode },
-  commands: { insertChartFromCSV, insertChart, insertBarChart, toggleTableChart, setChartType },
+  commands: { insertChartFromCSV, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle },
 });
 
 export { BarChartExtension as ChartExtension, selectedBarChart as selectedChart };

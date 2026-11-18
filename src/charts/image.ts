@@ -17,7 +17,7 @@ function drawChart(node: Node) {
   const width = 800, inset = 24, track = width - 2 * inset;
   const drawing: string[] = [];
   let y = 12;
-  function text(value: string, size: number, color = '#211d32') {
+  function text(value: string, size: number, color = '#211d32', centered = false) {
     // Budget one em per code point to leave room for wide glyphs as well as Latin text.
     const limit = Math.floor(track / size);
     for (const line of value.split(/\r\n|[\r\n]/u)) {
@@ -30,7 +30,7 @@ function drawChart(node: Node) {
           }
         }
         y += size + 5;
-        drawing.push(`<text x="${inset}" y="${y}" font-size="${size}" fill="${color}">${escapeText(chars.slice(start, end).join(''))}</text>`);
+        drawing.push(`<text x="${centered ? width / 2 : inset}"${centered ? ' text-anchor="middle"' : ''} y="${y}" font-size="${size}" fill="${color}">${escapeText(chars.slice(start, end).join(''))}</text>`);
         start = end + (end === chars.length || chars[end] === ' ' ? 1 : 0);
       }
     }
@@ -39,6 +39,7 @@ function drawChart(node: Node) {
   if (layout.series.length > 1) {
     for (const item of layout.series) text('■ ' + item.name, 16, item.color);
   }
+  if (layout.verticalTitle) text(layout.verticalTitle, 17);
   y += 10;
   const x = (p: number) => Number((track * p / 100).toFixed(4));
   if (layout.kind === 'column' || layout.kind === 'line') {
@@ -57,6 +58,7 @@ function drawChart(node: Node) {
       }
     }
     y += graphHeight + 12;
+    if (layout.horizontalTitle) text(layout.horizontalTitle, 17, '#211d32', true);
   } else if (layout.kind === 'pie') {
     const radius = 96, cx = width / 2, cy = y + radius;
     const point = (fraction: number) => {
@@ -88,6 +90,7 @@ function drawChart(node: Node) {
       y += 9;
     }
   }
+  if (layout.kind === 'bar' && layout.horizontalTitle) text(layout.horizontalTitle, 17, '#211d32', true);
   const height = y + 12;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="chart-title"><title id="chart-title">${escapeText(title)}</title><rect width="100%" height="100%" fill="white"/><g fill="#211d32" font-family="sans-serif">${drawing.join('')}</g></svg>`;
   return { svg, width, height };

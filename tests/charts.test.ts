@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -70,6 +70,9 @@ it('converges concurrent edits to separate chart cells without copying the deriv
     const index = left.state.selection.path[0];
     left.dispatch(left.createTransaction().replaceText([index, 1, 1, 1, 0, 0], 0, 1, '37'));
     expect(setChartType(left, 'line')).toBe(true);
+    expect(setChartAxisTitle(left, 'category', 'Test group')).toBe(true);
+    right.dispatch(right.createTransaction().setSelection(Selection.cursor([index, 0, 0], 0)));
+    expect(setChartAxisTitle(right, 'value', 'Responses')).toBe(true);
     right.dispatch(right.createTransaction().replaceText([index, 1, 2, 0, 0, 0], 0, 4, 'Control'));
     const leftUpdate = Y.encodeStateAsUpdate(leftRoom, Y.encodeStateVector(rightRoom));
     const rightUpdate = Y.encodeStateAsUpdate(rightRoom, Y.encodeStateVector(leftRoom));
@@ -78,6 +81,8 @@ it('converges concurrent edits to separate chart cells without copying the deriv
     expect(right.getJSON()).toEqual(left.getJSON());
     const html = HTMLExporter.export(right.state.doc, { document: false });
     expect(html).toContain('data-fountain-chart="line"');
+    expect(html).toContain('data-category-axis-title="Test group"');
+    expect(html).toContain('data-value-axis-title="Responses"');
     expect(html).toContain('Alpha · 37');
     expect(html).toContain('Control · 2');
     expect(JSON.stringify(right.getJSON())).not.toContain('data-fountain-chart-plot');
@@ -461,5 +466,45 @@ it('leaves charts intact on invalid data, superseded loads and rejected sources'
   finish(csv);
   expect(await changed).toBe(false);
   expect(selectedBarChart(editor)!.child(1).child(1).child(1).textContent).toBe('7');
+  editor.destroy();
+});
+
+it('keeps editable category and value axis titles through rotation, undo, HTML, SVG and native Word', () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  insertBarChart(editor, 'Weekly output', [['Monday', 12], ['Tuesday', 4]]);
+  const category = 'Production day', value = 'Units <planned> & shipped';
+  expect(setChartAxisTitle(editor, 'category', category)).toBe(true);
+  expect(setChartAxisTitle(editor, 'value', value)).toBe(true);
+  const selected = () => selectedBarChart(editor)!;
+  const snapshot = editor.getJSON();
+  expect(setChartAxisTitle(editor, 'value', value)).toBe(false);
+  expect(setChartAxisTitle(editor, 'value', '')).toBe(true);
+  expect(selected().attrs.valueAxisTitle).toBe('');
+  expect(undo(editor)).toBe(true);
+  expect(editor.getJSON()).toEqual(snapshot);
+  const escaped = 'Units &lt;planned&gt; &amp; shipped';
+  for (const kind of ['bar', 'column', 'line'] as const) {
+    setChartType(editor, kind);
+    const svg = exportBarChartSVG(selected());
+    expect(svg.indexOf(category) < svg.indexOf(escaped)).toBe(kind === 'bar');
+    expect(svg).toContain(escaped);
+    expect(svg).toContain(category);
+    const html = HTMLExporter.export(editor.state.doc, { document: false });
+    expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(editor.getJSON());
+    const parts = unzipSync(exportDOCX(editor.state.doc).bytes);
+    const xml = strFromU8(parts['word/charts/chart1.xml']);
+    expect(xml.match(/<c:catAx>.*?<\/c:catAx>/)?.[0]).toContain('<a:t>' + category + '</a:t>');
+    expect(xml.match(/<c:valAx>.*?<\/c:valAx>/)?.[0]).toContain(escaped);
+    parts['word/charts/chart1.xml'] = strToU8(xml.replace('<a:r><a:t>' + escaped + '</a:t></a:r>',
+      '<a:r><a:t>Units</a:t></a:r><a:br/><a:fld id="{C30231F7-4143-436F-8458-067B86DF71C7}"><a:t>sold</a:t></a:fld>'));
+    const changed = importDOCX(zipSync(parts), editor.state.schema).document.content.find(n => n.type.name === 'bar_chart')!;
+    expect(changed.attrs).toMatchObject({ kind, categoryAxisTitle: category, valueAxisTitle: 'Units\nsold' });
+  }
+  setChartType(editor, 'pie');
+  expect(exportBarChartSVG(selected())).not.toContain(category);
+  expect(setChartAxisTitle(editor, 'category', 'Hidden')).toBe(false);
+  expect(exportDOCX(editor.state.doc).report.issues.some(issue => issue.code === 'chart-axis-titles-omitted')).toBe(true);
+  setChartType(editor, 'column');
+  expect(selected().attrs.categoryAxisTitle).toBe(category);
   editor.destroy();
 });

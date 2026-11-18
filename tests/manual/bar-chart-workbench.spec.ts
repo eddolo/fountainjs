@@ -136,6 +136,11 @@ test('keeps positive and negative columns on opposite sides of zero through a Wo
   const chart = demo.locator('figure[data-fountain-chart="column"]');
   const plot = chart.locator('[data-fountain-chart-plot]');
   await expect(plot).toContainText('Tuesday · -4');
+  await demo.getByText('Axis titles', { exact: true }).click();
+  await demo.getByLabel('Category axis').fill('Delivery day');
+  await demo.getByLabel('Value axis').fill('Net orders');
+  await expect(plot.getByText('Delivery day', { exact: true })).toBeVisible();
+  await expect(plot.getByText('Net orders', { exact: true })).toBeVisible();
   const graph = plot.getByRole('img').locator('div[dir="ltr"]').first();
   const geometry = await graph.locator(':scope > span').evaluateAll(elements =>
     elements.map(element => {
@@ -167,6 +172,9 @@ test('keeps positive and negative columns on opposite sides of zero through a Wo
   const reopened = page.getByRole('region', { name: 'Conversion workspace: orders.docx', exact: true });
   await expect(reopened.getByRole('textbox', { name: 'Imported document editor' })
     .locator('figure[data-fountain-chart="column"] [data-fountain-chart-plot]')).toContainText('Tuesday · -4');
+  const restored = reopened.locator('figure[data-fountain-chart="column"]');
+  await expect(restored).toHaveAttribute('data-category-axis-title', 'Delivery day');
+  await expect(restored).toHaveAttribute('data-value-axis-title', 'Net orders');
 });
 
 test('changes a signed line chart to a pie, fixes the data, and reopens the saved chart', async ({ page }, info) => {

@@ -36,6 +36,17 @@ function values(cache?: XMLElement): string[] | undefined {
   return Array.from({ length: points.length }, (_, index) => values.get(index)!);
 }
 
+function chartTitle(parent?: XMLElement): string {
+  const titleTx = one(one(parent, 'title'), 'tx');
+  return children(one(titleTx, 'rich'), 'p', DRAWING_NS).map(p => p.children.map(part => {
+    if (typeof part === 'string') return '';
+    const type = expandedXMLName(part);
+    if (type === DRAWING_NS + '|br') return '\n';
+    return type === DRAWING_NS + '|r' || type === DRAWING_NS + '|fld' ? text(one(part, 't', DRAWING_NS)) ?? '' : '';
+  }).join('')).join('\n')
+    || values(one(one(titleTx, 'strRef'), 'strCache'))?.[0] || '';
+}
+
 export function readNativeChart(root: XMLElement, schema: Schema): Node | undefined {
   const chart = one(one(root, 'chartSpace'), 'chart');
   const area = one(chart, 'plotArea');
@@ -70,16 +81,14 @@ export function readNativeChart(root: XMLElement, schema: Schema): Node | undefi
     series.push({ name, numbers, order });
   }
   series.sort((a, b) => a.order - b.order);
-  const titleTx = one(one(chart, 'title'), 'tx');
-  const title = children(one(titleTx, 'rich'), 'p', DRAWING_NS).map(p =>
-    children(p, 'r', DRAWING_NS).map(run => text(one(run, 't', DRAWING_NS)) ?? '').join('')).join('\n')
-    || values(one(one(titleTx, 'strRef'), 'strCache'))?.[0];
+  const title = chartTitle(chart);
   const paragraph = (value: string) => schema.node('paragraph', {}, value ? [schema.text(value)] : []);
   const row = (type: string, cells: string[]) => schema.node('table_row', {},
     cells.map(cell => schema.node(type, {}, [paragraph(cell)])));
   const table = schema.node('table', {}, [row('table_header', ['Category', ...series.map(item => item.name)]),
     ...categories!.map((label, i) => row('table_cell', [label, ...series.map(item => item.numbers[i]!)]))]);
-  const result = schema.node('bar_chart', { kind }, title ? [paragraph(title), table] : [table]);
+  const result = schema.node('bar_chart', { kind, categoryAxisTitle: chartTitle(one(area, 'catAx')),
+    valueAxisTitle: chartTitle(one(area, 'valAx')) }, title ? [paragraph(title), table] : [table]);
   return typeof chartLayout(result) === 'string' ? undefined : result;
 }
 
