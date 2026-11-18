@@ -1,3 +1,4 @@
+import { caretRangeAtPoint } from './caret-range';
 import {
   AllSelection,
   CellSelection,
@@ -15,6 +16,7 @@ import {
   type Transaction,
 } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
+import { ownsViewSelection } from './table-direction';
 import { registerViewSelection } from '../core/view-selection';
 
 function parsePath(element: HTMLElement): number[] {
@@ -79,6 +81,7 @@ export class SelectionHandler {
     private readonly shouldStopEvent?: (event: Event) => boolean,
   ) {
     this.#releaseViewSelection = registerViewSelection(editor, (selection, transaction) => {
+      if (!ownsViewSelection(editor, dom)) return undefined;
       const backward = transaction ? this.mappedBackwardSelection(transaction) : (this as SelectionHandler & DirectionState)._b;
       if (!backward?.eq(selection)) return selection;
       const doc = transaction?.doc ?? editor.state.doc;
@@ -394,7 +397,7 @@ export class SelectionHandler {
     // A mapped model selection is not a request to leave a native field.
     // Explicit view.focus() focuses the editing host before calling sync.
     const active = this.dom.ownerDocument.activeElement;
-    applyDOM = applyDOM && !active?.matches('input,textarea,select');
+    applyDOM = applyDOM && ownsViewSelection(this.editor, this.dom) && !active?.matches('input,textarea,select');
     this.clearSemanticSelectionMarkers();
     const domSelection = document.getSelection();
     if (!domSelection) return;
@@ -668,14 +671,8 @@ export class SelectionHandler {
       // Chromium normalizes a native caret after a non-editable media shell
       // back into preceding text when Shift-click extends it. Keep the exact
       // model anchor and use the browser only to hit-test the new endpoint.
-      const owner = this.dom.ownerDocument;
-      const caret = owner.caretPositionFromPoint?.(event.clientX, event.clientY);
-      const hit = caret ? { node: caret.offsetNode, offset: caret.offset }
-        : (() => {
-          const range = owner.caretRangeFromPoint?.(event.clientX, event.clientY);
-          return range ? { node: range.startContainer, offset: range.startOffset } : null;
-        })();
-      const head = hit ? this.documentPosition(hit.node, hit.offset, 1, true) : null;
+      const hit = caretRangeAtPoint(this.dom.ownerDocument, event.clientX, event.clientY);
+      const head = hit ? this.documentPosition(hit.startContainer, hit.startOffset, 1, true) : null;
       if (head !== null) {
         const anchor = previous instanceof RangeSelection ? previous.anchor : previous.position;
         const selection = anchor === head ? selectionAtPosition(this.editor.state.doc, head)
