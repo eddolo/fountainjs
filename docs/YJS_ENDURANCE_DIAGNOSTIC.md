@@ -661,3 +661,7 @@ remain open.
 ## Two-browser remote text measurement — 2026-11-18
 
 Two independent editor sessions exchange real Yjs updates over loopback. In two opposite-order 5,000-paragraph comparisons, median receiver apply time moves from 32.4–32.7 ms to 30.1–31.7 ms. Tiptap 2.27.3 measures 1.5 ms in the same harness. The retained path now certifies unchanged topology and binding coordinates after complete validation. Richer updates keep the full fallback. Fresh-session reopening and both writing directions pass. [Reproduction, raw samples, profiler results and scope](../artifacts/remote-typing-comparison-20261118/README.md).
+
+## Receiver time and full-room startup, November 18
+
+Replaying the same captured updates through Yjs, the headless editor and a mounted editor isolates the cost of applying a remote text edit. At 5,000 plain paragraphs, the merged Fountain runtime spent approximately 13 ms in the headless configuration and 20 ms with its view attached. The pinned Tiptap comparison took about 1 ms mounted. First and last paragraph edits had similar costs. Fresh-room state size and startup were measured separately. The raw inputs, verification script and repeated trials are in the [receiver replay study](../artifacts/remote-typing-comparison-20261118/replay/README.md).

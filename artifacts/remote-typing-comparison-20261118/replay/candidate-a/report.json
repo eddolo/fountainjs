@@ -1,0 +1,1886 @@
+{
+  "variant": "fountain-replay-candidate",
+  "date": "2026-11-18T14:50:24.910Z",
+  "browser": "151.0.7922.34",
+  "warmupPerTrial": 3,
+  "word": "abcdefghijklmnopqrstuvwx",
+  "cases": [
+    {
+      "engine": "fountain",
+      "size": 5000,
+      "index": 0,
+      "seedHash": "9bd7e63b62f471fadd63533b065de4d0675da2d51828a844646b128c4483993f",
+      "wireHash": "4b273f31f0fd3469aeefea37aac2a4ec847a98e031c37e08fb7dc34a0477d6d6",
+      "jsonHash": "51f641ea27f5561c6eb0034013ffd52fcbac0fe0610c6a80118c0b0a9cf61e7e",
+      "wireBytes": [
+        121,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122
+      ],
+      "trials": [
+        {
+          "mode": "raw",
+          "samples": [
+            {
+              "applyMs": 0.5
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            }
+          ]
+        },
+        {
+          "mode": "model",
+          "samples": [
+            {
+              "applyMs": 18.399999976158142
+            },
+            {
+              "applyMs": 19.100000023841858
+            },
+            {
+              "applyMs": 16.200000047683716
+            },
+            {
+              "applyMs": 18.899999976158142
+            },
+            {
+              "applyMs": 15.299999952316284
+            },
+            {
+              "applyMs": 20.899999976158142
+            },
+            {
+              "applyMs": 13
+            },
+            {
+              "applyMs": 17.100000023841858
+            },
+            {
+              "applyMs": 12.700000047683716
+            },
+            {
+              "applyMs": 12.799999952316284
+            },
+            {
+              "applyMs": 12
+            },
+            {
+              "applyMs": 13.099999904632568
+            },
+            {
+              "applyMs": 12.600000023841858
+            },
+            {
+              "applyMs": 12.600000023841858
+            },
+            {
+              "applyMs": 12.100000023841858
+            },
+            {
+              "applyMs": 13.100000023841858
+            },
+            {
+              "applyMs": 12
+            },
+            {
+              "applyMs": 12.300000071525574
+            },
+            {
+              "applyMs": 12.399999976158142
+            },
+            {
+              "applyMs": 11.899999976158142
+            },
+            {
+              "applyMs": 12
+            },
+            {
+              "applyMs": 12.100000023841858
+            },
+            {
+              "applyMs": 35.60000002384186
+            },
+            {
+              "applyMs": 16.59999990463257
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "samples": [
+            {
+              "applyMs": 51.60000002384186,
+              "viewSubscriberMs": 10.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 28.100000023841858,
+              "viewSubscriberMs": 7.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 29.799999952316284,
+              "viewSubscriberMs": 6.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.199999928474426,
+              "viewSubscriberMs": 6.300000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22,
+              "viewSubscriberMs": 6.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.90000009536743,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.800000071525574,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.799999952316284,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.5,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.699999928474426,
+              "viewSubscriberMs": 6.599999904632568,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.299999952316284,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19,
+              "viewSubscriberMs": 5.699999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.700000047683716,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.899999976158142,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.200000047683716,
+              "viewSubscriberMs": 5.699999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.100000023841858,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.100000023841858,
+              "viewSubscriberMs": 5.800000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.899999976158142,
+              "viewSubscriberMs": 6.199999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.700000047683716,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.600000023841858,
+              "viewSubscriberMs": 5.9999998807907104,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.200000047683716,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.600000023841858,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "samples": [
+            {
+              "applyMs": 51.299999952316284,
+              "viewSubscriberMs": 26.59999990463257,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.700000047683716,
+              "viewSubscriberMs": 7.1000001430511475,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.5,
+              "viewSubscriberMs": 7.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.300000071525574,
+              "viewSubscriberMs": 7.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.699999928474426,
+              "viewSubscriberMs": 7.199999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.5,
+              "viewSubscriberMs": 6.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22,
+              "viewSubscriberMs": 7,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.899999976158142,
+              "viewSubscriberMs": 5.699999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.299999952316284,
+              "viewSubscriberMs": 6.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.800000071525574,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.699999928474426,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.300000071525574,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.399999976158142,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.299999952316284,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.700000047683716,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.600000023841858,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.700000047683716,
+              "viewSubscriberMs": 7.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.600000023841858,
+              "viewSubscriberMs": 5.599999904632568,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.299999952316284,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.600000023841858,
+              "viewSubscriberMs": 7.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.799999952316284,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20,
+              "viewSubscriberMs": 5.800000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.899999976158142,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            }
+          ]
+        },
+        {
+          "mode": "model",
+          "samples": [
+            {
+              "applyMs": 18.299999952316284
+            },
+            {
+              "applyMs": 19.199999928474426
+            },
+            {
+              "applyMs": 15.399999976158142
+            },
+            {
+              "applyMs": 15.399999976158142
+            },
+            {
+              "applyMs": 15.100000023841858
+            },
+            {
+              "applyMs": 18.899999976158142
+            },
+            {
+              "applyMs": 13
+            },
+            {
+              "applyMs": 15.699999928474426
+            },
+            {
+              "applyMs": 13
+            },
+            {
+              "applyMs": 13
+            },
+            {
+              "applyMs": 12.200000047683716
+            },
+            {
+              "applyMs": 12.5
+            },
+            {
+              "applyMs": 12.600000023841858
+            },
+            {
+              "applyMs": 12.200000047683716
+            },
+            {
+              "applyMs": 12.100000023841858
+            },
+            {
+              "applyMs": 11.899999976158142
+            },
+            {
+              "applyMs": 12
+            },
+            {
+              "applyMs": 12.100000023841858
+            },
+            {
+              "applyMs": 12.199999928474426
+            },
+            {
+              "applyMs": 12.200000047683716
+            },
+            {
+              "applyMs": 12
+            },
+            {
+              "applyMs": 12
+            },
+            {
+              "applyMs": 40.799999952316284
+            },
+            {
+              "applyMs": 13.800000071525574
+            }
+          ]
+        },
+        {
+          "mode": "raw",
+          "samples": [
+            {
+              "applyMs": 0.6000000238418579
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 5000,
+      "index": 0,
+      "seedHash": "9644655a688ec31ed16fa84c6a91f252987b3470e748211b358330ce74d83a0f",
+      "wireHash": "bf70a70ca6c6c48bc5680e1146e5d8a8310dce896f18fd832dc07fd358899c3a",
+      "jsonHash": "69eab8cca63fb4fda16f038f30c90b5589b334347bf4210912f9005ab6c32be2",
+      "wireBytes": [
+        20,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22
+      ],
+      "trials": [
+        {
+          "mode": "raw",
+          "samples": [
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "samples": [
+            {
+              "applyMs": 3.700000047683716
+            },
+            {
+              "applyMs": 2.100000023841858
+            },
+            {
+              "applyMs": 1.7999999523162842
+            },
+            {
+              "applyMs": 1.7000000476837158
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.899999976158142
+            },
+            {
+              "applyMs": 1.5
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.1999999284744263
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.4000000953674316
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.1999999284744263
+            },
+            {
+              "applyMs": 1.2000000476837158
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.1999999284744263
+            },
+            {
+              "applyMs": 1.2000000476837158
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.3000000715255737
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "samples": [
+            {
+              "applyMs": 3.600000023841858
+            },
+            {
+              "applyMs": 2.100000023841858
+            },
+            {
+              "applyMs": 1.7999999523162842
+            },
+            {
+              "applyMs": 1.600000023841858
+            },
+            {
+              "applyMs": 1.600000023841858
+            },
+            {
+              "applyMs": 1.8000000715255737
+            },
+            {
+              "applyMs": 1.600000023841858
+            },
+            {
+              "applyMs": 1.7000000476837158
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.3000000715255737
+            },
+            {
+              "applyMs": 1.3000000715255737
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.600000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.600000023841858
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1.1999999284744263
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.399999976158142
+            }
+          ]
+        },
+        {
+          "mode": "raw",
+          "samples": [
+            {
+              "applyMs": 0.3999999761581421
+            },
+            {
+              "applyMs": 0.30000007152557373
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "engine": "fountain",
+      "size": 5000,
+      "index": 4999,
+      "seedHash": "629ec12c1f0d54287e26bf658bb9ce2f24b484fbc4fe2eee317de4c576bbecc1",
+      "wireHash": "1257fe7a0ce97e59b45d86296c33d6814886ba21558e36aee994ea593cd70730",
+      "jsonHash": "556acf2c20a5f559880a24737f9084593a3c0d54ba3c78f5c498029f7194823b",
+      "wireBytes": [
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122,
+        122
+      ],
+      "trials": [
+        {
+          "mode": "raw",
+          "samples": [
+            {
+              "applyMs": 0.6000000238418579
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            }
+          ]
+        },
+        {
+          "mode": "model",
+          "samples": [
+            {
+              "applyMs": 24.700000047683716
+            },
+            {
+              "applyMs": 24
+            },
+            {
+              "applyMs": 19.299999952316284
+            },
+            {
+              "applyMs": 15.599999904632568
+            },
+            {
+              "applyMs": 18.600000023841858
+            },
+            {
+              "applyMs": 18.100000023841858
+            },
+            {
+              "applyMs": 15.199999928474426
+            },
+            {
+              "applyMs": 14.299999952316284
+            },
+            {
+              "applyMs": 17.799999952316284
+            },
+            {
+              "applyMs": 14.399999976158142
+            },
+            {
+              "applyMs": 17.09999990463257
+            },
+            {
+              "applyMs": 13.899999976158142
+            },
+            {
+              "applyMs": 14.100000023841858
+            },
+            {
+              "applyMs": 16.199999928474426
+            },
+            {
+              "applyMs": 12.399999976158142
+            },
+            {
+              "applyMs": 12.200000047683716
+            },
+            {
+              "applyMs": 12.300000071525574
+            },
+            {
+              "applyMs": 13.399999976158142
+            },
+            {
+              "applyMs": 12.5
+            },
+            {
+              "applyMs": 12.299999952316284
+            },
+            {
+              "applyMs": 14.899999976158142
+            },
+            {
+              "applyMs": 12.399999976158142
+            },
+            {
+              "applyMs": 12.299999952316284
+            },
+            {
+              "applyMs": 12.699999928474426
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "samples": [
+            {
+              "applyMs": 37.89999997615814,
+              "viewSubscriberMs": 16.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 41.89999997615814,
+              "viewSubscriberMs": 9.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 28.5,
+              "viewSubscriberMs": 7.099999904632568,
+              "notifications": 2
+            },
+            {
+              "applyMs": 26.700000047683716,
+              "viewSubscriberMs": 7,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.09999990463257,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 29.09999990463257,
+              "viewSubscriberMs": 6.900000095367432,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22,
+              "viewSubscriberMs": 6.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 24.5,
+              "viewSubscriberMs": 6.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.899999976158142,
+              "viewSubscriberMs": 8.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.699999928474426,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.300000071525574,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.299999952316284,
+              "viewSubscriberMs": 6.699999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.300000071525574,
+              "viewSubscriberMs": 6.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.59999990463257,
+              "viewSubscriberMs": 5.800000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19,
+              "viewSubscriberMs": 6.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.899999976158142,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.800000071525574,
+              "viewSubscriberMs": 5.800000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.199999928474426,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19,
+              "viewSubscriberMs": 6.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.199999928474426,
+              "viewSubscriberMs": 5.800000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.299999952316284,
+              "viewSubscriberMs": 5.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.5,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.399999976158142,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "samples": [
+            {
+              "applyMs": 31.199999928474426,
+              "viewSubscriberMs": 9.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 27.399999976158142,
+              "viewSubscriberMs": 7.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 26.399999976158142,
+              "viewSubscriberMs": 9,
+              "notifications": 2
+            },
+            {
+              "applyMs": 22.200000047683716,
+              "viewSubscriberMs": 6.100000023841858,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.699999928474426,
+              "viewSubscriberMs": 6.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.699999928474426,
+              "viewSubscriberMs": 7.699999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.600000023841858,
+              "viewSubscriberMs": 6.399999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 23.299999952316284,
+              "viewSubscriberMs": 6.400000095367432,
+              "notifications": 2
+            },
+            {
+              "applyMs": 26.40000009536743,
+              "viewSubscriberMs": 9.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.59999990463257,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.299999952316284,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20.300000071525574,
+              "viewSubscriberMs": 7.300000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 21.199999928474426,
+              "viewSubscriberMs": 7.799999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.5,
+              "viewSubscriberMs": 5.899999976158142,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.699999928474426,
+              "viewSubscriberMs": 7.199999928474426,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.399999976158142,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.700000047683716,
+              "viewSubscriberMs": 6.0000001192092896,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.90000009536743,
+              "viewSubscriberMs": 5.700000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20,
+              "viewSubscriberMs": 6.5,
+              "notifications": 2
+            },
+            {
+              "applyMs": 20,
+              "viewSubscriberMs": 6.299999952316284,
+              "notifications": 2
+            },
+            {
+              "applyMs": 25.200000047683716,
+              "viewSubscriberMs": 6.200000047683716,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.600000023841858,
+              "viewSubscriberMs": 6,
+              "notifications": 2
+            },
+            {
+              "applyMs": 19.800000071525574,
+              "viewSubscriberMs": 6.300000071525574,
+              "notifications": 2
+            },
+            {
+              "applyMs": 18.800000071525574,
+              "viewSubscriberMs": 6.399999976158142,
+              "notifications": 2
+            }
+          ]
+        },
+        {
+          "mode": "model",
+          "samples": [
+            {
+              "applyMs": 24.09999990463257
+            },
+            {
+              "applyMs": 22.5
+            },
+            {
+              "applyMs": 17.899999976158142
+            },
+            {
+              "applyMs": 14.399999976158142
+            },
+            {
+              "applyMs": 16.700000047683716
+            },
+            {
+              "applyMs": 16.5
+            },
+            {
+              "applyMs": 14.200000047683716
+            },
+            {
+              "applyMs": 12.899999976158142
+            },
+            {
+              "applyMs": 12.600000023841858
+            },
+            {
+              "applyMs": 12.300000071525574
+            },
+            {
+              "applyMs": 15.5
+            },
+            {
+              "applyMs": 12.299999952316284
+            },
+            {
+              "applyMs": 12.399999976158142
+            },
+            {
+              "applyMs": 12.200000047683716
+            },
+            {
+              "applyMs": 12.700000047683716
+            },
+            {
+              "applyMs": 12.300000071525574
+            },
+            {
+              "applyMs": 12.699999928474426
+            },
+            {
+              "applyMs": 13.200000047683716
+            },
+            {
+              "applyMs": 12.299999952316284
+            },
+            {
+              "applyMs": 12.199999928474426
+            },
+            {
+              "applyMs": 12
+            },
+            {
+              "applyMs": 12.100000023841858
+            },
+            {
+              "applyMs": 12.199999928474426
+            },
+            {
+              "applyMs": 12.299999952316284
+            }
+          ]
+        },
+        {
+          "mode": "raw",
+          "samples": [
+            {
+              "applyMs": 0.5
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "engine": "tiptap",
+      "size": 5000,
+      "index": 4999,
+      "seedHash": "97a2d92e71bc49f7dfd38b26df22b851faebfc063ccc092884a7a09ffb9c66e6",
+      "wireHash": "fd919a5fdaaf12c60a5b20ee2a05f16c726beb18eaea16c23d0cd2f0a6c27ad3",
+      "jsonHash": "f0364d8409d1c20612be2a9f486da0b0f104ed12ecd032ba2eaa88e04fe5420d",
+      "wireBytes": [
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22
+      ],
+      "trials": [
+        {
+          "mode": "raw",
+          "samples": [
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.20000004768371582
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "samples": [
+            {
+              "applyMs": 3.9000000953674316
+            },
+            {
+              "applyMs": 2
+            },
+            {
+              "applyMs": 1.2999999523162842
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.3000000715255737
+            },
+            {
+              "applyMs": 0.9000000953674316
+            },
+            {
+              "applyMs": 0.8000000715255737
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 0.7000000476837158
+            },
+            {
+              "applyMs": 0.7000000476837158
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 0.8000000715255737
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 0.6999999284744263
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 1
+            }
+          ]
+        },
+        {
+          "mode": "mounted",
+          "samples": [
+            {
+              "applyMs": 3.5
+            },
+            {
+              "applyMs": 1.8000000715255737
+            },
+            {
+              "applyMs": 1.3000000715255737
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 1
+            },
+            {
+              "applyMs": 1.4000000953674316
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 1.1999999284744263
+            },
+            {
+              "applyMs": 1.100000023841858
+            },
+            {
+              "applyMs": 1.399999976158142
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 0.8000000715255737
+            },
+            {
+              "applyMs": 0.8000000715255737
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 0.8000000715255737
+            },
+            {
+              "applyMs": 0.8999999761581421
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 0.7999999523162842
+            },
+            {
+              "applyMs": 0.7000000476837158
+            },
+            {
+              "applyMs": 0.9000000953674316
+            },
+            {
+              "applyMs": 0.8000000715255737
+            },
+            {
+              "applyMs": 0.8999999761581421
+            }
+          ]
+        },
+        {
+          "mode": "raw",
+          "samples": [
+            {
+              "applyMs": 0.2999999523162842
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0.19999992847442627
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.09999990463256836
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0.10000002384185791
+            },
+            {
+              "applyMs": 0
+            },
+            {
+              "applyMs": 0.10000002384185791
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
