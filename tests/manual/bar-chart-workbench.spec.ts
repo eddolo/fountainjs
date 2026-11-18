@@ -508,3 +508,42 @@ test('reads a horizontal tick ruler on a phone and clears the interval without c
   await expect(ticks).toHaveCount(0);
   await expect(chart).toHaveAttribute('data-axis-min', '-20');
 });
+
+test('compares weekly orders with a target and reopens the downloaded Word chart', async ({ page }, info) => {
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.getByRole('button', { name: 'Bar chart', exact: true }).click();
+  await demo.getByRole('combobox', { name: 'Chart type' }).selectOption('column');
+  const chart = demo.locator('figure[data-fountain-chart="column"]');
+  await demo.getByText('Target line', { exact: true }).click();
+  await demo.getByLabel('Target value').fill('8');
+  await demo.getByLabel('Target label').fill('Weekly goal');
+  await demo.getByRole('button', { name: 'Apply target' }).click();
+  await expect(chart.getByRole('img')).toHaveAccessibleName(/Weekly goal · 8/);
+  await expect(chart.locator('[data-chart-target-line]')).toBeVisible();
+  const marker = chart.locator('[data-chart-target-line]');
+  const fraction = await marker.evaluate(el => {
+    const graph = el.parentElement!.getBoundingClientRect();
+    return (el.getBoundingClientRect().top - graph.top) / graph.height;
+  });
+  expect(fraction).toBeCloseTo(0.25, 2);
+  await chart.screenshot({ path: info.outputPath('weekly-target.png') });
+  await demo.getByRole('button', { name: 'html', exact: true }).click();
+  const html = await demo.locator('pre').filter({ hasText: 'data-fountain-chart-source' }).innerText();
+  await demo.getByRole('button', { name: 'Remove target' }).click();
+  await expect(marker).toHaveCount(0);
+  await page.goto('conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles({ name: 'weekly.html', mimeType: 'text/html', buffer: Buffer.from(html) });
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: weekly.html', exact: true });
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  await workspace.getByRole('button', { name: 'Check round trip' }).click();
+  const download = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const file = info.outputPath('weekly-target.docx');
+  await (await download).saveAs(file);
+  await input.setInputFiles(file);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: weekly-target.docx', exact: true });
+  await expect(reopened.getByRole('textbox', { name: 'Imported document editor' }).locator('[data-chart-target-line]')).toBeVisible();
+  await expect(reopened.getByRole('textbox', { name: 'Imported document editor' }).locator('table')).toHaveCount(1);
+});

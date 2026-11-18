@@ -105,6 +105,11 @@ export function chartLayout(node: Node) {
   const magnitude = Math.max(-minimum, maximum) || 1;
   const min = kind === 'pie' ? null : node.attrs.axisMin as number | null;
   const max = kind === 'pie' ? null : node.attrs.axisMax as number | null;
+  const targetValue = kind === 'pie' ? null : node.attrs.targetValue as number | null;
+  if (targetValue != null) {
+    minimum = Math.min(minimum, targetValue);
+    maximum = Math.max(maximum, targetValue);
+  }
   const fixed = min != null || max != null;
   let low = min ?? minimum, high = max ?? maximum;
   if (low >= high) {
@@ -115,6 +120,10 @@ export function chartLayout(node: Node) {
   const clamp = (value: number) => Math.min(high, Math.max(low, value));
   const position = (value: number) => fraction(clamp(value), low, high) * 100;
   const zero = position(0);
+  const target = targetValue == null ? null : {
+    value: targetValue, position: position(targetValue), visible: targetValue >= low && targetValue <= high,
+    caption: (node.attrs.targetLabel || 'Target') + ' · ' + targetValue,
+  };
   const title = node.childCount === 2 ? node.child(0).textContent : '';
   const series = columns.map(({ name, values }, j) => {
     const sum = kind === 'pie' ? values.reduce((total, row) => total + row.value / magnitude, 0) : 1;
@@ -145,5 +154,5 @@ export function chartLayout(node: Node) {
   const horizontalTitle = kind === 'bar' ? valueTitle : categoryTitle;
   const verticalTitle = kind === 'bar' ? categoryTitle : valueTitle;
   const rangeLabel = fixed ? 'Value range: ' + low + ' to ' + high : '';
-  return { kind, ticks: axisTicks(low, high, kind === 'pie' ? null : node.attrs.axisInterval as number | null, (kind === 'column' || kind === 'line') && node.attrs.axisInterval == null), rangeLabel, title, horizontalTitle, verticalTitle, zero, rows: series[0]!.rows, series };
+  return { kind, target, ticks: axisTicks(low, high, kind === 'pie' ? null : node.attrs.axisInterval as number | null, (kind === 'column' || kind === 'line') && node.attrs.axisInterval == null), rangeLabel, title, horizontalTitle, verticalTitle, zero, rows: series[0]!.rows, series };
 }

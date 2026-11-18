@@ -12,10 +12,12 @@ omitted source link. The workbook contains the values saved at export time. Keep
 Fountain JSON or HTML to refresh the chart later. Invalid chart data exports as a table
 with a conversion notice.
 
+Column and line charts with a target export an additional dashed line series. Its values are editable in the embedded workbook. Fountain recognizes its own target when the saved chart contains one constant value across all categories. Horizontal bar charts show the target in the Word title and the export report describes the difference. A pie chart retains the target for switching back. Third-party editors may discard Fountain's target metadata.
+
 With the charts extension installed, Fountain reopens horizontal bars, vertical columns and
 lines with one or more named series on a shared category axis. Each series occupies its own
 numeric table column and worksheet column. Pie charts use one series. Stacked charts,
-mixed chart families and series with different category labels receive a conversion warning. Fountain
+mixed chart families beyond the Fountain target overlay, and series with different category labels receive a conversion warning. Fountain
 groups its own matching caption, formatted table and plot into one editable chart.
 When the table and plot disagree, both remain editable independently. Ordinary
 Word tables outside that group remain separate.

@@ -48,10 +48,18 @@ function chartTitle(parent?: XMLElement): string {
 }
 
 export function readNativeChart(root: XMLElement, schema: Schema): Node | undefined {
-  const chart = one(one(root, 'chartSpace'), 'chart');
+  const space = one(root, 'chartSpace');
+  const chart = one(space, 'chart');
+  const extension = children(one(space, 'extLst'), 'ext').find(ext => ext.attrs.uri === '{CE69F4BE-F8AD-4158-9ED4-6D3E0B80C163}');
+  const target = one(extension, 'target', 'urn:fountainjs:chart');
+  let targetValue = target?.attrs.value?.trim() ? Number(target.attrs.value) : null;
+  if (targetValue !== null && !Number.isFinite(targetValue)) targetValue = null;
+  let targetLabel = targetValue === null ? '' : text(target) ?? '';
   const area = one(chart, 'plotArea');
   const plots = area?.children.filter((part): part is XMLElement => typeof part !== 'string' && /Chart$/.test(part.name));
-  if (plots?.length !== 1) return;
+  const combo = targetValue !== null && plots?.length === 2 && plots[0] === one(area, 'barChart') &&
+    plots[1] === one(area, 'lineChart') && one(plots[0], 'barDir')?.attrs.val === 'col';
+  if (!plots?.length || (plots.length !== 1 && !combo)) return;
   const family = (['bar', 'line', 'pie'] as const).find(kind => one(area, kind + 'Chart') === plots[0]);
   if (!family) return;
   const plot = plots[0]!;
@@ -61,6 +69,15 @@ export function readNativeChart(root: XMLElement, schema: Schema): Node | undefi
   const grouping = one(plot, 'grouping')?.attrs.val;
   if (grouping && grouping !== 'standard' && grouping !== 'clustered') return;
   const seriesNodes = children(plot, 'ser');
+  const targetId = target?.attrs.series;
+  const hasTargetId = (item: XMLElement) => targetId !== undefined && one(item, 'idx')?.attrs.val === targetId;
+  if (combo) {
+    const extra = children(plots[1], 'ser');
+    if (extra.length !== 1 || !hasTargetId(extra[0]!)) return;
+    seriesNodes.push(extra[0]!);
+  }
+  const targetSeries = targetValue !== null && (kind === 'line' || combo) ? seriesNodes.find(hasTargetId) : undefined;
+  if ((kind === 'line' || kind === 'column') && !targetSeries) { targetValue = null; targetLabel = ''; }
   if (!seriesNodes.length || (kind === 'pie' && seriesNodes.length !== 1)) return;
   const series: { name: string; numbers: string[]; order: number }[] = [];
   const orders = new Set<number>();
@@ -78,10 +95,28 @@ export function readNativeChart(root: XMLElement, schema: Schema): Node | undefi
     const order = Number(one(item, 'order')?.attrs.val ?? index);
     if (!Number.isSafeInteger(order) || order < 0 || orders.has(order)) return;
     orders.add(order);
+    if (item === targetSeries) {
+      const first = Number(numbers[0]);
+      if (Number.isFinite(first) && numbers.every(value => value.trim() && Number(value) === first)) {
+        targetValue = first;
+        if (name !== (targetLabel || 'Target')) targetLabel = name;
+        continue;
+      }
+      // A changed target can become an ordinary line series. A mixed column/line
+      // plot with independently varying series requires combo-chart support.
+      if (combo) return;
+      targetValue = null;
+      targetLabel = '';
+    }
     series.push({ name, numbers, order });
   }
   series.sort((a, b) => a.order - b.order);
-  const title = chartTitle(chart);
+  let title = chartTitle(chart);
+  if (!series.length) return;
+  if (kind === 'bar' && targetValue !== null) {
+    const suffix = '\n' + (targetLabel || 'Target') + ' · ' + targetValue;
+    if (title.endsWith(suffix)) title = title.slice(0, -suffix.length);
+  }
   const paragraph = (value: string) => schema.node('paragraph', {}, value ? [schema.text(value)] : []);
   const row = (type: string, cells: string[]) => schema.node('table_row', {},
     cells.map(cell => schema.node(type, {}, [paragraph(cell)])));
@@ -98,7 +133,7 @@ export function readNativeChart(root: XMLElement, schema: Schema): Node | undefi
   const axisMin = bound('min'), axisMax = bound('max'), axisInterval = bound('majorUnit', valueAxis);
   if (axisInterval !== null && (!Number.isFinite(axisInterval) || axisInterval <= 0)) return;
   if ([axisMin, axisMax].some(value => value !== null && !Number.isFinite(value))) return;
-  const result = schema.node('bar_chart', { kind, axisMin, axisMax, axisInterval, categoryAxisTitle: chartTitle(one(area, 'catAx')),
+  const result = schema.node('bar_chart', { kind, targetValue, targetLabel, axisMin, axisMax, axisInterval, categoryAxisTitle: chartTitle(one(area, 'catAx')),
     valueAxisTitle: chartTitle(one(area, 'valAx')) }, title ? [paragraph(title), table] : [table]);
   return typeof chartLayout(result) === 'string' ? undefined : result;
 }

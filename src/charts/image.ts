@@ -42,6 +42,9 @@ function drawChart(node: Node) {
   if (layout.series.length > 1) {
     for (const item of layout.series) text('■ ' + item.name, 16, item.color);
   }
+  const target = layout.target;
+  if (target) text(target.caption + (target.visible ? '' : ' (outside axis range)'), 16, '#983f19');
+  const targetStroke = 'stroke="#983f19" stroke-width="2" stroke-dasharray="6 4"';
   if (layout.rangeLabel) text(layout.rangeLabel, 16);
   if (layout.verticalTitle) text(layout.verticalTitle, 17);
   y += 10;
@@ -77,6 +80,7 @@ function drawChart(node: Node) {
         }
       }
     }
+    if (target?.visible) drawing.push(`<path d="M${origin} ${y + graphHeight * (1 - target.position / 100)}h${track}" ${targetStroke}/>`);
     y += graphHeight + 12;
     if (layout.horizontalTitle) text(layout.horizontalTitle, 17, '#211d32', true);
   } else if (layout.kind === 'pie') {
@@ -105,6 +109,7 @@ function drawChart(node: Node) {
         drawing.push(`<rect x="${inset}" y="${y}" width="${track}" height="12" fill="#edeaf6"/>`,
           `<rect x="${inset + x(point.left)}" y="${y}" width="${x(point.width)}" height="12" fill="${item.color}"/>`,
           `<path d="M${inset + x(layout.zero)} ${y}v12" stroke="#564e62"/>`);
+        if (target?.visible) drawing.push(`<path d="M${inset + x(target.position)} ${y}v12" ${targetStroke}/>`);
         y += 14;
       }
       y += 9;

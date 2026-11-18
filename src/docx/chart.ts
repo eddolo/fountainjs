@@ -56,8 +56,12 @@ export function wordChart(node: Node, index: number, drawingId: number) {
   const header = table.child(0).content.every(cell => cell.type.name === 'table_header') ? table.child(0) : null;
   const category = header?.child(0).textContent || 'Category';
   const title = layout.title || (series.length === 1 ? series[0]!.name : 'Chart');
-  if (series.length >= 16384 || rows.length >= 1048576 || [category, title, ...series.map(item => item.name)].some(value => value.length > 32767)
-    || series.some(item => item.rows.some(row => row.label.length > 32767 || Math.abs(Number(row.source)) > 9.99999999999999e307
+  const target = layout.target;
+  const overlay = target !== null && (kind === 'column' || kind === 'line');
+  const targetName = String(node.attrs.targetLabel || 'Target');
+  const workbookSeries = overlay ? [...series, { name: targetName, color: '#983f19', rows: rows.map(row => ({ label: row.label, color: row.color, source: String(target.value) })) }] : series;
+  if (workbookSeries.length >= 16384 || rows.length >= 1048576 || [category, title, ...workbookSeries.map(item => item.name)].some(value => value.length > 32767)
+    || workbookSeries.some(item => item.rows.some(row => row.label.length > 32767 || Math.abs(Number(row.source)) > 9.99999999999999e307
       || (Number(row.source) !== 0 && Math.abs(Number(row.source)) < 2.2250738585072014e-308)))) {
     return 'The chart data exceeds the Excel worksheet limits.';
   }
@@ -66,13 +70,25 @@ export function wordChart(node: Node, index: number, drawingId: number) {
   const marker = kind === 'line' ? '<c:marker><c:symbol val="circle"/><c:size val="5"/></c:marker>' : '';
   // Some Office readers apply the series default even when the chart disables smoothing.
   const smooth = kind === 'line' ? '<c:smooth val="0"/>' : '';
-  const data = series.map((item, j) => {
+  const ids = '<c:axId val="1"/><c:axId val="2"/>';
+  const categoryRef = reference('str', '$A$2:$A$' + last, rows.map(row => row.label));
+  const seriesXML = workbookSeries.map((item, j) => {
     const column = '$' + excelColumn(j + 1);
+    const isTarget = j === series.length;
     const primary = color(item.color);
+    const line = isTarget ? '<a:ln w="19050">' + primary + '<a:prstDash val="dash"/></a:ln>' : '<a:ln>' + primary + '</a:ln>';
     const paint = kind === 'pie' ? rows.map((row, i) => `<c:dPt><c:idx val="${i}"/><c:spPr>${color(row.color)}</c:spPr></c:dPt>`).join('')
-      : `<c:spPr>${kind === 'line' ? '<a:ln>' + primary + '</a:ln>' : primary}</c:spPr>`;
-    return `<c:ser><c:idx val="${j}"/><c:order val="${j}"/><c:tx>${reference('str', column + '$1', [item.name])}</c:tx>${paint}${marker}<c:cat>${reference('str', '$A$2:$A$' + last, rows.map(row => row.label))}</c:cat><c:val>${reference('num', column + '$2:' + column + '$' + last, item.rows.map(row => String(Number(row.source))))}</c:val>${smooth}</c:ser>`;
-  }).join('');
+      : `<c:spPr>${kind === 'line' || isTarget ? line : primary}</c:spPr>`;
+    const symbol = isTarget ? '<c:marker><c:symbol val="' + (rows.length === 1 ? 'dash' : 'none') + '"/></c:marker>' : marker;
+    const values = reference('num', column + '$2:' + column + '$' + last, item.rows.map(row => String(Number(row.source))));
+    return `<c:ser><c:idx val="${j}"/><c:order val="${j}"/><c:tx>${reference('str', column + '$1', [item.name])}</c:tx>${paint}${symbol}<c:cat>${categoryRef}</c:cat><c:val>${values}</c:val>${isTarget ? '<c:smooth val="0"/>' : smooth}</c:ser>`;
+  });
+  const referenceSeries = overlay && kind === 'column' ? seriesXML.pop()! : '';
+  const data = seriesXML.join('');
+  const additionalPlot = kind === 'column' && overlay ? '<c:lineChart><c:grouping val="standard"/>' + referenceSeries + ids + '</c:lineChart>' : '';
+  const targetExtension = node.attrs.targetValue == null ? '' : '<c:extLst><c:ext uri="{CE69F4BE-F8AD-4158-9ED4-6D3E0B80C163}"><f:target xmlns:f="urn:fountainjs:chart" value="' +
+    xmlEscape(node.attrs.targetValue) + '"' + (overlay ? ' series="' + series.length + '"' : '') + '>' + xmlEscape(node.attrs.targetLabel ?? '') + '</f:target></c:ext></c:extLst>';
+  const displayTitle = kind === 'bar' && target ? title + '\n' + target.caption : title;
   const chartElement = kind === 'column' ? 'bar' : kind;
   const options = chartElement === 'bar' ? `<c:barDir val="${kind === 'column' ? 'col' : 'bar'}"/><c:grouping val="clustered"/>` : kind === 'line' ? '<c:grouping val="standard"/>' : '<c:varyColors val="1"/>';
   const chartTitle = (value: string) => '<c:title><c:tx><c:rich><a:bodyPr/><a:lstStyle/>' +
@@ -84,7 +100,7 @@ export function wordChart(node: Node, index: number, drawingId: number) {
   const axis = (type: 'cat' | 'val', id: number, pos: string, label: string) =>
     `<c:${type}Ax><c:axId val="${id}"/><c:scaling><c:orientation val="${type === 'cat' && kind === 'bar' ? 'maxMin' : 'minMax'}"/>${type === 'val' ? bounds : ''}</c:scaling><c:axPos val="${pos}"/>${type === 'val' ? gridlines : ''}${label ? chartTitle(label) : ''}<c:tickLblPos val="low"/><c:crossAx val="${3 - id}"/><c:crosses val="autoZero"/>${type === 'val' ? majorUnit : ''}</c:${type}Ax>`;
   const axes = kind === 'pie' ? '' : axis('cat', 1, kind === 'bar' ? 'l' : 'b', String(node.attrs.categoryAxisTitle ?? '')) + axis('val', 2, kind === 'bar' ? 'b' : 'l', String(node.attrs.valueAxisTitle ?? ''));
-  const xml = `<c:chartSpace xmlns:c="${chartNS}" xmlns:a="${drawingNS}" xmlns:r="${OFFICE_REL_NS}"><c:chart>${chartTitle(title)}<c:plotArea><c:layout/><c:${chartElement}Chart>${options}${data}${smooth}${axes ? '<c:axId val="1"/><c:axId val="2"/>' : ''}</c:${chartElement}Chart>${axes}</c:plotArea>${kind === 'pie' || series.length > 1 ? '<c:legend><c:legendPos val="b"/></c:legend>' : ''}<c:plotVisOnly val="1"/></c:chart><c:externalData r:id="rIdData"><c:autoUpdate val="0"/></c:externalData></c:chartSpace>`;
+  const xml = `<c:chartSpace xmlns:c="${chartNS}" xmlns:a="${drawingNS}" xmlns:r="${OFFICE_REL_NS}"><c:chart>${chartTitle(displayTitle)}<c:plotArea><c:layout/><c:${chartElement}Chart>${options}${data}${smooth}${axes ? ids : ''}</c:${chartElement}Chart>${additionalPlot}${axes}</c:plotArea>${kind === 'pie' || workbookSeries.length > 1 ? '<c:legend><c:legendPos val="b"/></c:legend>' : ''}<c:plotVisOnly val="1"/></c:chart><c:externalData r:id="rIdData"><c:autoUpdate val="0"/></c:externalData>${targetExtension}</c:chartSpace>`;
   const drawing = `<w:p><w:r><w:drawing><wp:inline><wp:extent cx="5029200" cy="2834640"/><wp:docPr id="${drawingId}" name="Chart ${index}" descr="${xmlEscape(title)}"/><a:graphic><a:graphicData uri="${chartNS}"><c:chart xmlns:c="${chartNS}" r:id="rIdChart${index}"/></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>`;
-  return { xml, drawing, workbook: workbook(series, category) };
+  return { xml, drawing, workbook: workbook(workbookSeries, category) };
 }

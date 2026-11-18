@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { CellSelection, NodeSelection, RangeSelection, Schema, Selection, nodeRangeAtPath, textPointToPosition, CoreExtension, HTMLExporter, HistoryExtension, Plugin, composeExtensions, createEditor, redo, undo } from '../src';
-import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
+import { BarChartExtension, exportBarChartSVG, selectedBarChart, insertChartFromCSV, refreshChartFromCSV, insertChart, insertBarChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart } from '../src/charts';
 import { PagesExtension } from '../src/pages';
 import { ServerHTMLImporter } from '../src/html/server';
 
@@ -640,5 +640,78 @@ it('shows horizontal gridlines on new column and line charts with automatic axes
     expect(chart).not.toContain('<c:majorUnit');
     expect(exportBarChartSVG(selectedBarChart(editor)!)).toContain('stroke="#d4d0df"');
   }
+  editor.destroy();
+});
+
+it('keeps a signed weekly target separate from source data through chart types, history, HTML, SVG and Word', () => {
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  insertBarChart(editor, 'Orders', [['Monday', 12], ['Tuesday', -4]]);
+  const chart = () => selectedBarChart(editor)!;
+  const table = chart().child(1);
+  expect(setChartTarget(editor, Infinity)).toBe(false);
+  expect(setChartTarget(editor, 20, ' Target <Q1> ')).toBe(true);
+  expect(undo(editor)).toBe(true);
+  expect(chart().attrs.targetValue).toBeNull();
+  expect(redo(editor)).toBe(true);
+  for (const kind of ['bar', 'column', 'line', 'pie'] as const) {
+    setChartType(editor, kind);
+    if (kind === 'pie') {
+      // Use positive values for the pie export.
+      const i = editor.state.selection.path[0];
+      editor.dispatch(editor.createTransaction().replaceText([i, 1, 2, 1, 0, 0], 0, 2, '4'));
+    } else expect(chart().child(1)).toBe(table);
+    const html = HTMLExporter.export(editor.state.doc, { document: false });
+    expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(editor.getJSON());
+    const svg = exportBarChartSVG(chart());
+    expect(svg.includes('stroke-dasharray')).toBe(kind !== 'pie');
+    const output = exportDOCX(editor.state.doc);
+    const reopened = importDOCX(output.bytes, editor.state.schema).document;
+    const restored = reopened.child(editor.state.selection.path[0]);
+    expect(restored.attrs).toEqual(chart().attrs);
+    expect(restored.childCount).toBe(2);
+    expect(restored.child(0).textContent).toBe('Orders');
+    const cellText = (row: typeof table) => row.content.map(cell => cell.textContent);
+    expect(restored.child(1).content.map(cellText)).toEqual(chart().child(1).content.map(cellText));
+    const xml = strFromU8(unzipSync(output.bytes)['word/charts/chart1.xml']!);
+    if (kind === 'column' || kind === 'line') {
+      expect(xml).toContain('<a:prstDash val="dash"/>');
+      expect(xml).toContain('Data!$C$2:$C$3');
+    }
+  }
+  setChartType(editor, 'column');
+  setChartValueRange(editor, -4, 12);
+  expect(exportBarChartSVG(chart())).toContain('outside axis range');
+  expect(exportBarChartSVG(chart())).not.toContain('stroke-dasharray');
+  expect(setChartTarget(editor, 0)).toBe(true);
+  expect(exportBarChartSVG(chart())).toContain('stroke-dasharray');
+  expect(setChartTarget(editor, null)).toBe(true);
+  expect(chart().attrs.targetLabel).toBe('');
+  expect(exportBarChartSVG(chart())).not.toContain('stroke-dasharray');
+  editor.destroy();
+});
+
+it('reads a changed Word target by series identity and honors its deletion', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Orders', [['Monday', 12], ['Tuesday', -4]]);
+  setChartType(editor, 'line');
+  setChartTarget(editor, 8, 'Weekly goal');
+  const parts = unzipSync(exportDOCX(editor.state.doc).bytes);
+  const file = 'word/charts/chart1.xml';
+  const original = strFromU8(parts[file]!);
+  const series = original.match(/<c:ser>[\s\S]*?<\/c:ser>/g)!;
+  const rewrite = (xml: string) => {
+    parts[file] = strToU8(xml);
+    return importDOCX(zipSync(parts), editor.state.schema).document.content.find(node => node.type.name === 'bar_chart')!;
+  };
+  const targetFirst = original.replace(series.join(''), series[1]! + series[0]!);
+  const renamed = rewrite(targetFirst.replaceAll('Weekly goal</c:v>', 'Stretch</c:v>').replaceAll('<c:v>8</c:v>', '<c:v>10</c:v>'));
+  expect(renamed.attrs).toMatchObject({ targetLabel: 'Stretch', targetValue: 10 });
+  expect(renamed.child(1).child(0).childCount).toBe(2);
+  const removed = rewrite(original.replace(series[1]!, ''));
+  expect(removed.attrs.targetValue).toBeNull();
+  expect(removed.child(1).child(1).child(1).textContent).toBe('12');
+  const varying = rewrite(original.replace(series[1]!, series[1]!.replace('<c:v>8</c:v>', '<c:v>7</c:v>')));
+  expect(varying.attrs.targetValue).toBeNull();
+  expect(varying.child(1).child(0).content.map(cell => cell.textContent)).toEqual(['Category', 'Value', 'Weekly goal']);
   editor.destroy();
 });

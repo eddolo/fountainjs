@@ -13,16 +13,20 @@ function percent(value: number): string {
 function plot(node: Node): DOMOutputSpec {
   const layout = chartLayout(node);
   if (typeof layout === 'string') return ['p', layout];
-  const { title, zero, kind, series } = layout;
+  const { title, zero, kind, series, target } = layout;
   const multiple = series.length > 1;
   const legend: DOMOutputSpec[] = multiple ? [['div', { style: 'display:flex;gap:1em;flex-wrap:wrap' },
     ...series.map((item): DOMOutputSpec => ['span', ['span', { style: 'color:' + item.color }, '■ '], item.name])]] : [];
+  const targetCaption = target ? target.caption + (target.visible ? '' : ' (outside axis range)') : '';
+  if (target) legend.push(['div', { style: 'color:#983f19;font-weight:600;overflow-wrap:anywhere' }, targetCaption]);
+  const targetLine = (vertical: boolean): DOMOutputSpec => ['span', { 'data-chart-target-line': '', style: 'position:absolute;pointer-events:none;' +
+    (vertical ? 'height:100%;left:' + percent(target!.position) + ';border-left' : 'width:100%;top:' + percent(100 - target!.position) + ';border-top') + ':2px dashed #983f19' }];
   const label = (index: number) => layout.rows[index]!.label + (multiple ? '' : ' · ' + layout.rows[index]!.source);
   const axisCaption = (value: string, align: string): DOMOutputSpec[] => value ? [['div', {
     dir: 'auto', style: 'font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere;text-align:' + align,
   }, value]] : [];
   const graphic = (children: DOMOutputSpec[]): DOMOutputSpec => ['div', {
-    role: 'img', style: 'display:flow-root', 'aria-label': [title || kind + ' chart', layout.verticalTitle, layout.horizontalTitle, layout.rangeLabel,
+    role: 'img', style: 'display:flow-root', 'aria-label': [title || kind + ' chart', layout.verticalTitle, layout.horizontalTitle, layout.rangeLabel, targetCaption,
       'Values are in the accompanying table.'].filter(Boolean).join('. '),
   }, ...(layout.rangeLabel ? [['div', layout.rangeLabel] as DOMOutputSpec] : []), ...axisCaption(layout.verticalTitle, 'start'), ...children, ...axisCaption(layout.horizontalTitle, 'center')];
   const { ticks } = layout;
@@ -57,6 +61,7 @@ function plot(node: Node): DOMOutputSpec {
         }
       }
     }
+    if (target?.visible) markers.push(targetLine(false));
     if (kind === 'column' && layout.rows.length <= 6) {
       return graphic([
         ...legend,
@@ -80,6 +85,7 @@ function plot(node: Node): DOMOutputSpec {
       return ['div', { dir: 'ltr', title: item.name + ' · ' + row.source, style: 'position:relative;height:.8em;background:#edeaf6' },
         ['span', { style: `position:absolute;left:${percent(row.left)};width:${percent(row.width)};height:100%;background:${item.color}` }],
         ['span', { style: `position:absolute;left:${percent(zero)};height:100%;border-left:1px solid #564e62` }],
+        ...(target?.visible ? [targetLine(true)] : []),
       ];
     }),
   ]);
@@ -105,7 +111,7 @@ const parseRules = chartTypes.map(kind => ({
     };
     const source = element.getAttribute('data-fountain-csv-url');
     const interval = bound('interval');
-    return { kind, axisInterval: interval !== null && interval > 0 ? interval : null, axisMin: bound('min'), axisMax: bound('max'), csvURL: csvURL(source) ? source : null, categoryAxisTitle: element.getAttribute('data-category-axis-title') ?? '',
+    return { kind, targetValue: bound('target'), targetLabel: element.getAttribute('data-target-label') ?? '', axisInterval: interval !== null && interval > 0 ? interval : null, axisMin: bound('min'), axisMax: bound('max'), csvURL: csvURL(source) ? source : null, categoryAxisTitle: element.getAttribute('data-category-axis-title') ?? '',
       valueAxisTitle: element.getAttribute('data-value-axis-title') ?? '' };
   }, contentElement: '[data-fountain-chart-source]',
 }));
@@ -120,13 +126,14 @@ function validInterval(value: unknown) {
 
 const barChartNode: NodeSpec = {
   group: 'block',
-  attrs: { axisInterval: { default: null, validate: validInterval }, axisMin: axisBound, axisMax: axisBound, categoryAxisTitle: axisTitle, valueAxisTitle: axisTitle, kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: { default: null, validate: value => value === null || csvURL(value) } },
+  attrs: { targetValue: axisBound, targetLabel: axisTitle, axisInterval: { default: null, validate: validInterval }, axisMin: axisBound, axisMax: axisBound, categoryAxisTitle: axisTitle, valueAxisTitle: axisTitle, kind: { default: 'bar', validate: value => chartTypes.includes(value as ChartType) }, csvURL: { default: null, validate: value => value === null || csvURL(value) } },
   content: 'paragraph? table',
   selectable: true,
   parseHTML: parseRules,
   parseDOM: parseRules,
   markdown: 'html',
   toDOM: node => ['figure', { 'data-fountain-chart': node.attrs.kind, ...(node.attrs.csvURL ? { 'data-fountain-csv-url': node.attrs.csvURL } : {}), ...(node.attrs.categoryAxisTitle ? { 'data-category-axis-title': node.attrs.categoryAxisTitle } : {}),
+    ...(node.attrs.targetValue != null ? { 'data-axis-target': node.attrs.targetValue } : {}), ...(node.attrs.targetLabel ? { 'data-target-label': node.attrs.targetLabel } : {}),
     ...(node.attrs.axisInterval != null ? { 'data-axis-interval': node.attrs.axisInterval } : {}),
     ...(node.attrs.axisMin != null ? { 'data-axis-min': node.attrs.axisMin } : {}), ...(node.attrs.axisMax != null ? { 'data-axis-max': node.attrs.axisMax } : {}),
     ...(node.attrs.valueAxisTitle ? { 'data-value-axis-title': node.attrs.valueAxisTitle } : {}), style: 'margin:1em 0' },
@@ -346,6 +353,17 @@ export function setChartAxisTitle(editor: Editor, axis: 'category' | 'value', ti
   return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...target.node.attrs, [key]: title }));
 }
 
+/** Draw a labeled target across the numeric axis. Pass null to remove it. */
+export function setChartTarget(editor: Editor, value: number | null, label = ''): boolean {
+  const target = chartTarget(editor);
+  if (!editor.editable || target?.node.type.name !== 'bar_chart' || target.node.attrs.kind === 'pie' ||
+      !axisBound.validate(value) || typeof label !== 'string') return false;
+  const attrs = target.node.attrs;
+  const targetLabel = value === null ? '' : label.trim();
+  if (attrs.targetValue === value && attrs.targetLabel === targetLabel) return false;
+  return editor.dispatch(editor.createTransaction().setNodeAttrs(target.path, { ...attrs, targetValue: value, targetLabel }));
+}
+
 /** Null lets the plot derive that end of the value axis from the table. */
 export function setChartValueRange(editor: Editor, min: number | null, max: number | null, interval?: number | null): boolean {
   const target = chartTarget(editor);
@@ -361,7 +379,7 @@ export function setChartValueRange(editor: Editor, min: number | null, max: numb
 export const BarChartExtension = defineExtension({
   name: 'bar-chart',
   nodes: { bar_chart: barChartNode },
-  commands: { insertChartFromCSV, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartValueRange },
+  commands: { insertChartFromCSV, insertChart, insertBarChart, toggleTableChart, setChartType, setChartAxisTitle, setChartTarget, setChartValueRange },
 });
 
 export { BarChartExtension as ChartExtension, selectedBarChart as selectedChart };

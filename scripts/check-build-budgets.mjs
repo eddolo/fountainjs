@@ -87,7 +87,7 @@ const limits = Object.freeze({
   // Approved theme-language capacity: +739 / 599 measured bytes.
   // Retain all independent semantic, CSS, runtime and heap gates.
   'dist/docx.js': 210.75 * kibibyte,
-  'dist/docx.cjs': 170.75 * kibibyte,
+  'dist/docx.cjs': 173 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.

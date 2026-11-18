@@ -82,7 +82,7 @@ import { FountainVersions } from 'fountainjs-editor/react/versions';
 import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity';
 import { downloadDocumentFile } from './math-document-files';
 import { ChartCSVControls } from './ChartCSVControls';
-import { ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartAxisTitle, setChartType, setChartValueRange, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
+import { ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartAxisTitle, setChartType, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import { SitePageLink } from './SitePageLink';
@@ -799,6 +799,22 @@ function App() {
                   <button type="submit">Apply range</button>
                   {(chart.attrs.axisMin != null || chart.attrs.axisMax != null || chart.attrs.axisInterval != null) &&
                     <button type="button" onClick={() => setChartValueRange(editor, null, null, null)}>Use automatic scale</button>}
+                </form>
+              </details>}
+              {chart && chart.attrs.kind !== 'pie' && <details className="chart-axis-titles">
+                <summary>Target line</summary>
+                <form key={JSON.stringify([editor.state.selection.path[0], chart.attrs.targetValue, chart.attrs.targetLabel])}
+                  onSubmit={event => {
+                    event.preventDefault();
+                    const fields = event.currentTarget.elements;
+                    const value = (fields.namedItem('targetValue') as HTMLInputElement).valueAsNumber;
+                    const label = (fields.namedItem('targetLabel') as HTMLInputElement).value;
+                    setChartTarget(editor, value, label);
+                  }}>
+                  <label>Target value <input name="targetValue" type="number" step="any" required defaultValue={String(chart.attrs.targetValue ?? '')} /></label>
+                  <label>Target label <input name="targetLabel" placeholder="Target" defaultValue={String(chart.attrs.targetLabel ?? '')} /></label>
+                  <button type="submit">Apply target</button>
+                  {chart.attrs.targetValue != null && <button type="button" onClick={() => setChartTarget(editor, null)}>Remove target</button>}
                 </form>
               </details>}
               <select aria-label="Chart image format" value={chartFormat} onChange={event => {
