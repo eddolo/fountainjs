@@ -28,5 +28,14 @@
     "installedCandidateChecksPassed": 13,
     "nodeChecksPassed": 4,
     "tests": "Compose an inline field into a nested host-defined caption. Verify independent position mapping, inherited emphasis, mixed-format replacements, undo/redo, empty captions, unknown fields and expansion limits. In three browsers author an inline field, fill and save a response, export ordinary text, and reopen the template with its original binding."
+  },
+  "hostAccounts": {
+    "publicPackage": "fountainjs-editor@0.5.0-beta.1",
+    "productionFilesComparedByteForByte": 10,
+    "installedCandidateChecksPassed": 16,
+    "publicPackageBrowserJourneysPassed": 9,
+    "nodeChecksPassed": 5,
+    "hostSessionEvidence": "A local HTTP host authenticates separate author, recipient and colleague accounts, sets an opaque HttpOnly session, and invalidates it at logout. Four browser contexts per engine cover reopened drafts, forwarding and author review. The providers are application-owned.",
+    "cli": "Loaded a configured ES module, offered its sign-in address and refused a module with no adapter export."
   }
 }

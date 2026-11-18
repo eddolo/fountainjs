@@ -55,6 +55,15 @@ p {
   padding: clamp(0.85rem, 3vw, 1.45rem);
   margin: 0.9rem 0;
 }
+main a {
+  color: #155949;
+}
+.assignment-detail {
+  display: block;
+  font-size: 0.875rem;
+  color: #475b50;
+  overflow-wrap: anywhere;
+}
 .row {
   display: flex;
   gap: 0.65rem;

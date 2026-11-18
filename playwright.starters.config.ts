@@ -4,7 +4,11 @@ import base from './playwright.config';
 export default defineConfig({
   ...base,
   testDir: './tests/manual',
-  testMatch: ['**/starter-projects.spec.ts', '**/template-workspace.spec.ts'],
+  testMatch: [
+    '**/starter-projects.spec.ts',
+    '**/template-workspace.spec.ts',
+    '**/template-host-accounts.spec.ts',
+  ],
   workers: 1,
   retries: 0,
   outputDir: './artifacts/installed-starters/browser',

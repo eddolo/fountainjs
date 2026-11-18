@@ -279,3 +279,99 @@ test('published revisions, protected prose, private rich drafts, bindings and du
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+test('host accounts control ownership, assignments, forwarding and account changes across restarts', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'fountain-account-')),
+    db = join(dir, 'records.sqlite');
+  const sessions = new Map([
+    ['owner-session', { id: 'tenant-A:owner', canCreateTemplates: true }],
+    ['worker-session', { id: 'tenant-A:worker' }],
+    ['other-session', { id: 'tenant-B:worker', canCreateTemplates: true }],
+  ]);
+  const accounts = {
+    authenticate: (req) => sessions.get(req.headers.cookie?.split('sid=')[1]),
+    resolveRecipient: (author, handle) =>
+      author === 'tenant-A:owner' && handle === 'worker' ? 'tenant-A:worker' : null,
+  };
+  let server, base;
+  const start = async (options) => {
+    server = createWorkspace(db, dir, options);
+    await new Promise((r) => server.listen(0, '127.0.0.1', r));
+    base = 'http://127.0.0.1:' + server.address().port;
+  };
+  const stop = () => new Promise((r) => server.close(r));
+  async function call(path, method, session, data, expected = 200, extra = {}) {
+    const res = await fetch(base + '/api/' + path, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Fountain-Workspace': '1',
+        ...(session ? { Cookie: 'sid=' + session } : {}),
+        ...extra,
+      },
+      body: data === undefined ? undefined : JSON.stringify(data),
+    });
+    const result = await res.json();
+    assert.equal(res.status, expected, result.error);
+    return result;
+  }
+  const owner = 'owner-session',
+    worker = 'worker-session',
+    other = 'other-session';
+  try {
+    await start();
+    const legacy = await call('templates', 'POST', null, initialTemplate());
+    await stop();
+    await start({ accounts });
+    await call('workspace', 'GET', null, undefined, 401);
+    await call('templates/' + legacy.id, 'GET', owner, undefined, 404, {
+      Authorization: 'Bearer ' + legacy.key,
+    });
+    await call('templates', 'POST', worker, initialTemplate(), 403);
+    await call('templates', 'POST', owner, initialTemplate(), 403, { 'X-Fountain-Workspace': '' });
+    await call('templates', 'POST', owner, initialTemplate(), 403, { Origin: 'https://other.example' });
+    const doc = await call('templates', 'POST', owner, initialTemplate());
+    assert.deepEqual(Object.keys(doc), ['id']);
+    const path = 'templates/' + doc.id;
+    await call(path + '/invite', 'POST', owner, { revision: 1, recipient: 'unavailable' }, 422);
+    const assignment = await call(path + '/invite', 'POST', owner, { revision: 1, recipient: 'worker' });
+    assert.equal(assignment.key, undefined);
+    const response = 'responses/' + assignment.id;
+    const mine = await call('documents', 'GET', worker);
+    assert.deepEqual(mine.templates, []);
+    assert.equal(mine.responses[0].id, assignment.id);
+    assert.deepEqual(await call('documents', 'GET', other), { templates: [], responses: [] });
+    await call(path, 'GET', worker, undefined, 404);
+    await call(response, 'GET', other, undefined, 404);
+    await call(response, 'GET', owner, undefined, 404);
+    const answers = { study: 'Signed in', findings: documentOf('Reviewed') };
+    await call(response, 'PUT', worker, { revision: 1, answers });
+    sessions.delete(worker);
+    await call(response, 'GET', worker, undefined, 401);
+    sessions.set('new-session', { id: 'tenant-A:worker' });
+    await stop();
+    await start({ accounts });
+    assert.deepEqual((await call(response, 'GET', 'new-session')).answers, answers);
+    await call(response + '/submit', 'POST', 'new-session', { revision: 2, answers });
+    assert.equal((await call(response, 'GET', owner)).document.type, 'doc');
+    await call(response + '/revoke', 'POST', other, undefined, 404);
+    await call(response + '/revoke', 'POST', owner);
+    await call(response, 'GET', 'new-session', undefined, 404);
+    assert.deepEqual((await call('documents', 'GET', 'new-session')).responses, []);
+    assert.equal((await call(response, 'GET', owner)).submitted, true);
+    await stop();
+    await start();
+    await call(path, 'GET', null, undefined, 404, { Authorization: 'Bearer ' + legacy.key });
+    assert.equal(
+      (
+        await call('templates/' + legacy.id, 'GET', null, undefined, 200, {
+          Authorization: 'Bearer ' + legacy.key,
+        })
+      ).revision,
+      1,
+    );
+  } finally {
+    if (server?.listening) await stop();
+    await rm(dir, { recursive: true, force: true });
+  }
+});

@@ -8,6 +8,7 @@ const root = document.querySelector('#workspace'),
 let views = [],
   dirty = false,
   documentState,
+  workspace,
   route,
   invitation,
   review,
@@ -141,8 +142,9 @@ function rich(parent, label, content, onUpdate, fields) {
   return editor;
 }
 async function request(path, method = 'GET', value) {
-  const headers = {};
-  if (route?.key) headers.Authorization = 'Bearer ' + route.key;
+  const headers = { 'X-Fountain-Workspace': '1' };
+  if (route?.key && workspace?.mode === 'links' && path !== 'workspace')
+    headers.Authorization = 'Bearer ' + route.key;
   if (value !== undefined) headers['Content-Type'] = 'application/json';
   const res = await fetch('/api/' + path, {
     method,
@@ -150,7 +152,7 @@ async function request(path, method = 'GET', value) {
     body: value === undefined ? undefined : JSON.stringify(value),
   });
   const data = await res.json();
-  if (!res.ok) throw Error(data.error);
+  if (!res.ok) throw Object.assign(Error(data.error), { signInUrl: data.signInUrl });
   return data;
 }
 function path() {
@@ -170,7 +172,16 @@ async function createTemplate(template) {
   location.assign(makeURL('templates', saved));
 }
 function makeURL(kind, result) {
-  return location.origin + location.pathname + '#' + [kind, result.id, result.key].join('/');
+  return (
+    location.origin +
+    location.pathname +
+    '#' +
+    [kind, result.id, ...(result.key ? [result.key] : [])].join('/')
+  );
+}
+function showError(error) {
+  status.textContent = error.message;
+  if (error.signInUrl) status.append(' ', link('Sign in', error.signInUrl));
 }
 async function action(fn) {
   if (busy) return;
@@ -179,7 +190,7 @@ async function action(fn) {
   try {
     await fn();
   } catch (e) {
-    status.textContent = e.message;
+    showError(e);
   } finally {
     root.inert = false;
     busy = false;
@@ -190,8 +201,32 @@ function redraw() {
   views = [];
   root.replaceChildren();
   if (!route) {
+    root.append(el('h1', 'Document templates'));
+    if (workspace.mode === 'accounts') {
+      for (const [heading, kind, entries] of [
+        ['Your templates', 'templates', workspace.templates],
+        ['Assigned responses', 'responses', workspace.responses],
+      ]) {
+        if (kind === 'templates' && !workspace.canCreate && !entries.length) continue;
+        const section = box(root, heading);
+        if (!entries.length) section.append(el('p', 'None yet.'));
+        for (const entry of entries) {
+          const item = el('p');
+          item.append(link(entry.title + (entry.submitted ? ' · Submitted' : ''), makeURL(kind, entry)));
+          if (kind === 'responses')
+            item.append(
+              el(
+                'span',
+                (entry.label ? entry.label + ' · ' : '') + 'Template revision ' + entry.templateRevision,
+                'assignment-detail',
+              ),
+            );
+          section.append(item);
+        }
+      }
+      if (!workspace.canCreate) return;
+    }
     root.append(
-      el('h1', 'Document templates'),
       el(
         'p',
         'Build a template with fixed instructions and fields. Each respondent gets a separate link to complete their copy.',
@@ -221,6 +256,7 @@ function redraw() {
     box(root, 'Start from a saved template').append(importLabel);
     return;
   }
+  if (workspace.mode === 'accounts') root.append(link('My documents', location.pathname));
   if (route.kind === 'templates') author();
   else respondent();
 }
@@ -241,7 +277,9 @@ function author() {
     el('h1', 'Edit template'),
     el(
       'p',
-      'Bookmark this page to reopen the author workspace. Anyone with its link can edit this template.',
+      workspace.mode === 'accounts'
+        ? 'Your account owns this template.'
+        : 'Bookmark this page to reopen the author workspace. Anyone with its link can edit this template.',
       'small',
     ),
   );
@@ -396,6 +434,13 @@ function author() {
     }),
   );
   const links = box(root, 'Respondent invitations');
+  const recipient = el('input');
+  if (workspace.mode === 'accounts') {
+    recipient.maxLength = 256;
+    const recipientLabel = el('label', 'Recipient account');
+    recipientLabel.append(recipient);
+    links.append(recipientLabel);
+  }
   const label = el('label', 'Invitation label (optional)');
   const name = el('input');
   name.maxLength = 120;
@@ -406,11 +451,12 @@ function author() {
       action(async () => {
         if (dirty) throw Error('Save the template before inviting a respondent.');
         const label = name.value.trim();
-        const result = await request(path() + '/invite', 'POST', { revision, label });
+        const assignment = workspace.mode === 'accounts' ? { recipient: recipient.value.trim() } : {};
+        const result = await request(path() + '/invite', 'POST', { revision, label, ...assignment });
         invitation = { id: result.id, url: makeURL('responses', result) };
         documentState.invitations.unshift({
           id: result.id,
-          label,
+          label: label || assignment.recipient || '',
           templateRevision: revision,
           revoked: false,
         });
@@ -426,7 +472,12 @@ function author() {
     openLink.target = '_blank';
     openLink.rel = 'noopener';
     share.append(
-      el('p', 'This link opens one response to the saved template. Give each respondent a separate link.'),
+      el(
+        'p',
+        workspace.mode === 'accounts'
+          ? 'The assigned recipient can open this link after signing in.'
+          : 'This link opens one response to the saved template. Give each respondent a separate link.',
+      ),
       openLink,
     );
     const field = el('input');
@@ -593,12 +644,14 @@ async function open() {
   invitation = undefined;
   status.textContent = '';
   try {
+    workspace = await request('workspace');
+    if (!route && workspace.mode === 'accounts') Object.assign(workspace, await request('documents'));
     if (route) {
       if (
-        parts.length !== 3 ||
+        parts.length !== (workspace.mode === 'accounts' ? 2 : 3) ||
         !['templates', 'responses'].includes(route.kind) ||
         !/^[-a-f0-9]{36}$/.test(route.id) ||
-        !/^[-\w]{43}$/.test(route.key)
+        (workspace.mode === 'links' && !/^[-\w]{43}$/.test(route.key))
       )
         throw Error('Invalid workspace link.');
       documentState = await request(path());
@@ -608,7 +661,7 @@ async function open() {
     for (const dispose of views) dispose();
     views = [];
     root.replaceChildren();
-    status.textContent = e.message;
+    showError(e);
   }
 }
 window.addEventListener('hashchange', () => location.reload());

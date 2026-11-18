@@ -36,7 +36,36 @@ async function body(req) {
   }
 }
 
-export function createWorkspace(database, publicDir) {
+function accountKey(id) {
+  if (typeof id !== 'string' || !id.trim() || id.length > 512)
+    throw new TypeError('Expected a stable host account ID.');
+  // Keep assigned accounts distinct from the hashes of legacy private links.
+  return 'account:' + digest(id);
+}
+
+export function createWorkspace(database, publicDir, { accounts, publicOrigin } = {}) {
+  if (
+    accounts !== undefined &&
+    (!accounts ||
+      typeof accounts.authenticate !== 'function' ||
+      typeof accounts.resolveRecipient !== 'function')
+  )
+    throw new TypeError('Provide both host account callbacks.');
+  if (
+    publicOrigin !== undefined &&
+    (!accounts || new URL(publicOrigin).origin !== publicOrigin || !publicOrigin.startsWith('https://'))
+  )
+    throw new TypeError('A public origin requires HTTPS and a host account adapter.');
+
+  let signInUrl;
+  if (accounts?.signInUrl !== undefined) {
+    const address = new URL(accounts.signInUrl);
+    const loopback =
+      address.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(address.hostname);
+    if ((!loopback && address.protocol !== 'https:') || address.username || address.password)
+      throw new TypeError('Use an HTTPS sign-in URL or a local loopback address.');
+    signInUrl = address.href;
+  }
   const db = new DatabaseSync(database);
   db.exec(`PRAGMA foreign_keys=ON;
     CREATE TABLE IF NOT EXISTS templates(id TEXT PRIMARY KEY, owner TEXT NOT NULL, revision INTEGER NOT NULL, document TEXT NOT NULL);
@@ -61,6 +90,10 @@ export function createWorkspace(database, publicDir) {
     db.close();
     throw error;
   }
+  if (accounts)
+    db.exec(
+      'CREATE INDEX IF NOT EXISTS templates_by_owner ON templates(owner); CREATE INDEX IF NOT EXISTS responses_by_account ON responses(respondent,revoked)',
+    );
   const snapshot = (row) => ({
     revision: row.revision,
     templateRevision: row.template_revision,
@@ -69,6 +102,30 @@ export function createWorkspace(database, publicDir) {
     submitted: !!row.submitted,
   });
   async function api(req, path) {
+    const identity = accounts ? await accounts.authenticate(req) : undefined;
+    if (accounts && !identity)
+      throw new RequestError(401, 'Sign in to the host application and reopen this page.');
+    const actor = accounts ? accountKey(identity.id) : undefined;
+    if (accounts && req.method !== 'GET' && req.headers['x-fountain-workspace'] !== '1')
+      throw new RequestError(403, 'Send the workspace request header.');
+    if (path === '/api/workspace' && req.method === 'GET') {
+      if (!accounts) return { mode: 'links' };
+      return { mode: 'accounts', canCreate: identity.canCreateTemplates === true };
+    }
+    if (accounts && path === '/api/documents' && req.method === 'GET') {
+      return {
+        templates: db
+          .prepare(
+            "SELECT id,json_extract(document,'$.title') AS title FROM templates WHERE owner=? ORDER BY rowid DESC",
+          )
+          .all(actor),
+        responses: db
+          .prepare(
+            "SELECT id,json_extract(template,'$.title') AS title,label,template_revision AS templateRevision,submitted FROM responses WHERE respondent=? AND revoked=0 ORDER BY rowid DESC",
+          )
+          .all(actor),
+      };
+    }
     const match = /^\/api\/(templates|responses)(?:\/([0-9a-f-]{36})(?:\/(invite|submit|revoke))?)?$/.exec(
       path,
     );
@@ -76,15 +133,21 @@ export function createWorkspace(database, publicDir) {
     const [, type, id, action] = match;
     const method = req.method;
     if (!id && type === 'templates' && method === 'POST') {
+      if (accounts && identity.canCreateTemplates !== true)
+        throw new RequestError(403, 'This account cannot create templates.');
       const template = validateTemplate(await body(req)),
-        id = randomUUID(),
-        key = randomBytes(32).toString('base64url');
-      db.prepare('INSERT INTO templates VALUES(?,?,1,?)').run(id, digest(key), JSON.stringify(template));
+        id = randomUUID();
+      const key = accounts ? undefined : randomBytes(32).toString('base64url');
+      db.prepare('INSERT INTO templates(id,owner,revision,document) VALUES(?,?,1,?)').run(
+        id,
+        actor ?? digest(key),
+        JSON.stringify(template),
+      );
       return { id, key };
     }
     const key = req.headers.authorization?.match(/^Bearer ([\w-]{43})$/)?.[1];
-    if (!key || !id) throw absent();
-    const credential = digest(key);
+    if ((!actor && !key) || !id) throw absent();
+    const credential = actor ?? digest(key);
     if (type === 'templates') {
       const row = db
         .prepare('SELECT revision,document FROM templates WHERE id=? AND owner=?')
@@ -105,19 +168,42 @@ export function createWorkspace(database, publicDir) {
       }
       if ((method === 'PUT' && !action) || (method === 'POST' && action === 'invite')) {
         const data = await body(req);
-        shape(data, action ? ['revision', 'label'] : ['revision', 'template']);
+        shape(
+          data,
+          action
+            ? accounts
+              ? ['revision', 'label', 'recipient']
+              : ['revision', 'label']
+            : ['revision', 'template'],
+        );
         if (data.revision !== row.revision) throw conflict();
         if (action) {
           const label = data.label ?? '';
           if (typeof label !== 'string' || label.length > 120)
             throw new InputError('Use an invitation label of up to 120 characters.');
-          const responseId = randomUUID(),
+          let key, respondent;
+          if (accounts) {
+            if (typeof data.recipient !== 'string' || !data.recipient.trim() || data.recipient.length > 256)
+              throw new InputError('Enter a recipient account.');
+            const recipient = await accounts.resolveRecipient(identity.id, data.recipient.trim());
+            if (!recipient) throw new InputError('Choose a recipient available to this account.');
+            respondent = accountKey(recipient);
+          } else {
             key = randomBytes(32).toString('base64url');
+            respondent = digest(key);
+          }
+          const responseId = randomUUID();
           const result = db
             .prepare(
               "INSERT INTO responses(id,template_id,respondent,template_revision,template,revision,answers,label) SELECT ?,id,?,revision,document,1,'{}',? FROM templates WHERE id=? AND revision=?",
             )
-            .run(responseId, digest(key), label.trim(), id, data.revision);
+            .run(
+              responseId,
+              respondent,
+              label.trim() || (accounts ? data.recipient.trim() : ''),
+              id,
+              data.revision,
+            );
           if (!result.changes) throw conflict();
           return { id: responseId, key, templateRevision: data.revision };
         }
@@ -178,11 +264,11 @@ export function createWorkspace(database, publicDir) {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Referrer-Policy', 'no-referrer');
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    const host = '127.0.0.1:' + server.address().port;
+    const origin = new URL(publicOrigin ?? 'http://127.0.0.1:' + server.address().port);
     try {
-      if (req.headers.host !== host || (req.headers.origin && req.headers.origin !== 'http://' + host))
-        throw new RequestError(403, 'Open the workspace on its local address.');
-      const path = new URL(req.url, 'http://' + host).pathname;
+      if (req.headers.host !== origin.host || (req.headers.origin && req.headers.origin !== origin.origin))
+        throw new RequestError(403, 'Open the workspace on its configured origin.');
+      const path = new URL(req.url, origin).pathname;
       if (path.startsWith('/api/')) {
         const data = await api(req, path);
         res.setHeader('Content-Type', 'application/json');
@@ -205,7 +291,10 @@ export function createWorkspace(database, publicDir) {
       if (status === 500) console.error(error);
       res.writeHead(status, { 'Content-Type': 'application/json' });
       res.end(
-        JSON.stringify({ error: status === 500 ? 'Could not save or load the document.' : error.message }),
+        JSON.stringify({
+          error: status === 500 ? 'Could not save or load the document.' : error.message,
+          ...(status === 401 && signInUrl ? { signInUrl } : {}),
+        }),
       );
     }
   });
@@ -215,11 +304,19 @@ export function createWorkspace(database, publicDir) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const root = fileURLToPath(new URL('.', import.meta.url));
+  const adapterFile = process.env.FOUNTAIN_TEMPLATE_ACCOUNTS;
+  const accounts = adapterFile ? (await import(pathToFileURL(resolve(adapterFile)).href)).default : undefined;
+  if (adapterFile && !accounts)
+    throw new TypeError('The configured host account module must export an adapter.');
   const server = createWorkspace(
     process.env.FOUNTAIN_TEMPLATE_DB ?? resolve(root, 'workspace.sqlite'),
     resolve(root, 'dist'),
+    { accounts, publicOrigin: process.env.FOUNTAIN_TEMPLATE_ORIGIN },
   );
   server.listen(Number(process.env.PORT ?? 4310), '127.0.0.1', () =>
-    console.log('Template workspace at http://127.0.0.1:' + server.address().port),
+    console.log(
+      'Template workspace at ' +
+        (process.env.FOUNTAIN_TEMPLATE_ORIGIN ?? 'http://127.0.0.1:' + server.address().port),
+    ),
   );
 }

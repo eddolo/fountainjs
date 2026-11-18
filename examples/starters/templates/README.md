@@ -41,9 +41,33 @@ The resolver takes ordinary Fountain JSON and returns a document with text in pl
 
 ## Access and persistence
 
-A fragment in the author or respondent URL holds a random capability. Possession grants the corresponding access. The client sends it as an Authorization header on same-origin API calls. SQLite stores its digest. Keep author links private and share each respondent link only with its intended holder. The server accepts changes only to the role's own resource. It constructs completed documents from the invitation's stored template and validated answers. Submitted responses are read-only.
+In private-link mode, a fragment in the author or respondent URL holds a random capability. Possession grants the corresponding access. The client sends it as an Authorization header on same-origin API calls. SQLite stores its digest. Keep author links private and share each respondent link only with its intended holder. The server accepts changes only to the role's own resource. It constructs completed documents from the invitation's stored template and validated answers. Submitted responses are read-only.
 
-The local host can create templates. Authors can label and revoke individual links under **Respondent invitations**, including after reopening their workspace. Revocation prevents subsequent reads, saves and submissions through that link. A submitted document remains available to the author. Content already displayed or downloaded can remain with the recipient. For a multi-user deployment, integrate your application's authenticated sessions, invitation delivery, storage policy and HTTPS origin. The starter's loopback URLs and checks are specific to local use.
+Anyone who can reach the private-link workspace on the local machine can create templates. Authors can label and revoke individual links under **Respondent invitations**, including after reopening their workspace. Revocation prevents subsequent reads, saves and submissions through that link. A submitted document remains available to the author. Content already displayed or downloaded can remain with the recipient.
+
+## Connect your application's accounts
+
+The default workspace uses private links. To run with accounts, set `FOUNTAIN_TEMPLATE_ACCOUNTS` to the path of a server-side ES module with the following default export. These example service calls belong to the host application.
+
+```js
+import { sessions, directory } from './application-services.mjs';
+
+export default {
+  signInUrl: 'https://app.example.com/login',
+  async authenticate(request) {
+    const user = await sessions.verify(request);
+    return user && { id: user.subject, canCreateTemplates: user.permissions.includes('author') };
+  },
+  async resolveRecipient(authorId, handle) {
+    const member = await directory.findInvitableMember(authorId, handle);
+    return member?.subject;
+  },
+};
+```
+
+Use stable subjects unique across your tenants and identity providers. The server consults the host session on every API request. The directory callback controls which accounts the author can invite. The optional sign-in URL takes a signed-out visitor to the host login page. If a reverse proxy serves the workspace over HTTPS, set `FOUNTAIN_TEMPLATE_ORIGIN` to its exact origin, preserve the Host header, and route same-origin requests to the loopback listener. The host owns session management and invitation delivery.
+
+After signing in, authors can reopen **Your templates**. A recipient opens **Assigned responses**, fills the form and submits it. The document address contains only a record ID. Forwarding that address grants no access. Saved private-link documents and account-owned documents can coexist in the database. Each is available through its original access mode. An application can also pass `{ accounts, publicOrigin }` as the third argument to `createWorkspace` when embedding the server.
 
 ## Verify the workflow
 
