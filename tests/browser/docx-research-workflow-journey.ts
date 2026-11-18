@@ -14,9 +14,26 @@ export async function docxResearchWorkflowJourney(page: Page, info: TestInfo) {
   await mkdir(root, { recursive: true });
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/conversion-lab.html');
-  await page.getByLabel('Choose documents').setInputFiles(resolve('tests/fixtures/native-docx/cooling-report.docx'));
-  const workspace = page.getByRole('region', { name: 'Conversion workspace: cooling-report.docx', exact: true });
+  const sampleRequests: string[] = [];
+  page.on('request', request => {
+    if (/\/cooling-report[^/]*\.docx$/u.test(new URL(request.url()).pathname)) sampleRequests.push(request.url());
+  });
+  await page.goto('conversion-lab.html');
+  const sample = page.getByRole('button', { name: 'Open sample Word report' });
+  await expect(sample).toBeVisible();
+  expect(sampleRequests).toHaveLength(0);
+  await page.getByRole('region', { name: 'Local file import' }).screenshot({ path: resolve(root, 'sample-chooser.png') });
+  await page.route('**/cooling-report*.docx*', route => route.fulfill({ status: 503, body: '' }), { times: 1 });
+  await sample.click();
+  await expect(page.getByRole('status').filter({ hasText: 'Could not load the sample Word report' })).toBeVisible();
+  await sample.click();
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: cooling-report.docx' });
+  const [originalDownload] = await Promise.all([
+    page.waitForEvent('download'),
+    workspace.getByRole('button', { name: 'Download untouched original' }).click(),
+  ]);
+  expect(originalDownload.suggestedFilename()).toBe('cooling-report.docx');
+  expect(await readFile((await originalDownload.path())!)).toEqual(await readFile('tests/fixtures/native-docx/cooling-report.docx'));
   const editor = workspace.getByRole('textbox', { name: 'Imported document editor', exact: true });
   const items = editor.locator('ol > li');
   const paragraphs = editor.locator('ol > li > p');

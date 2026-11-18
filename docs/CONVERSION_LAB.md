@@ -11,6 +11,8 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+Select **Open sample Word report** to try the independent [cooling report](../tests/fixtures/native-docx/cooling-report.docx). Inspect its figures, equations and footnote, edit the text, then build a page preview or download an export. **Download untouched original** saves the same DOCX for comparison in a desktop editor. The sample loads from the site only when selected.
+
 ### Standalone HTML equations
 
 The local candidate’s HTML export offers **Render equations in the downloaded
