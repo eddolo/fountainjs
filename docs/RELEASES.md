@@ -1,5 +1,15 @@
 # Release and API stability policy
 
+## 0.5.0-beta.1 GitHub prerelease — 2026-11-18
+
+PR #25 merged at `b1161fd5`. GitHub published the beta prerelease, and the
+website deployed the same clean revision. All 20 public HTML entries reported
+that source and served their initial script modules. Upgrade guidance uses
+exact package versions because npm publication follows its own staged workflow.
+[GitHub release](https://github.com/eddolo/fountainjs/releases/tag/v0.5.0-beta.1) ·
+[Website identity](https://eddolo.github.io/fountainjs/build-info.json) ·
+[npm workflow](https://github.com/eddolo/fountainjs/actions/runs/44310781735).
+
 ## Candidate qualification and restored GitHub access — 2026-11-17
 
 The candidate is pushed to [draft PR #25](https://github.com/eddolo/fountainjs/pull/25).

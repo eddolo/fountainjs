@@ -1,6 +1,12 @@
 # FountainJS roadmap
 
-Updated 2026-11-17.
+Updated 2026-11-18.
+
+The [0.5.0-beta.1 GitHub prerelease](https://github.com/eddolo/fountainjs/releases/tag/v0.5.0-beta.1)
+and [live site build](https://eddolo.github.io/fountainjs/build-info.json) were published
+from `b1161fd5`. The [release workflow](https://github.com/eddolo/fountainjs/actions/runs/44310781735)
+passed and staged the package on npm. The [npm version list](https://www.npmjs.com/package/fountainjs-editor?activeTab=versions)
+shows which versions maintainers have approved for installation.
 
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu
@@ -932,15 +938,13 @@ framework bindings, and optional document modules. The immediate goal is a
 reliable beta that developers can install, integrate, and evaluate through
 complete editing, review, and conversion workflows.
 
-## Next beta
+## 0.5 beta scope
 
-The local candidate version is **0.5.0-beta.1**, not yet published. The next minor version accounts for the
-change to the default Yjs storage adapter. Existing XML rooms require the legacy
-entry or an explicit migration. The [adoption guide](YJS_DEFAULT_ADOPTION.md)
-explains both routes.
+Version 0.5 changes the default Yjs storage adapter. Applications with existing
+XML rooms can keep using `fountainjs-editor/yjs/legacy` or migrate those rooms.
+The [adoption guide](YJS_DEFAULT_ADOPTION.md) explains both routes.
 
-The candidate includes the existing local engine, format, framework, and UI work.
-Its scope is fixed around the following outcomes.
+The beta covers these editing and integration workflows.
 
 | Outcome | Acceptance evidence |
 | --- | --- |
@@ -955,7 +959,10 @@ remain available for later releases.
 
 ## Release gates
 
-The beta remains pending until the candidate has the following evidence.
+For 0.5.0-beta.1, the [qualification record](RELEASE_0_5_0_BETA_1.md#qualification-status)
+covers the tagged source, hosted test matrix and independent DOCX check.
+The following gates also apply to future candidates. The last gate includes
+a clean installation from the public registry after npm approval.
 
 1. A complete `pnpm check` run for the exact runtime revision, including all
    source tests and existing latency, memory, and code-size limits.
@@ -1182,7 +1189,7 @@ depends on the evidence above; the new outcomes do not expand this beta.
 | --- | --- |
 | Collaboration | Current release validation, sustained storage/history growth, realistic input responsiveness, and production adoption. |
 | Formats and layout | Deeper DOCX/Word fidelity; clearer adoption of the distinct Markdown profiles, broader GFM coverage and exact model reopening; gradual ODT/EPUB support with independent fixtures. |
-| Browser behavior | Complete cross-browser coverage for the current candidate and diagnosis of intermittent failures. |
+| Browser behavior | Extend native interaction coverage and investigate intermittent failures. The tagged beta completed its hosted browser matrix with 18 skips. |
 | Mobile and IME | Physical iOS/Android keyboards, composition, autocorrect, selection, and clipboard evidence. |
 | Accessibility | Additional menu and custom-renderer states plus assistive-technology testing. |
 | RTL and localization | Remaining shared automatic-direction cases, inline isolation, broader host CSS and bidi behavior, and locale packages. |
@@ -1190,11 +1197,15 @@ depends on the evidence above; the new outcomes do not expand this beta.
 | Onboarding | Stronger end-to-end examples, practical customization recipes, and independent developer integration evidence. |
 | Host infrastructure | Tested self-host references and example storage, authorization, REST, webhook, and notification contracts. |
 
-After the beta, measure browser input-to-paint latency and long-running
-collaboration under representative workloads. Compare the same document and
-operations with ProseMirror plus Tiptap. Current retained-Yjs measurements are
-transaction bursts and in-memory exchanges. The
-[diagnostic](YJS_ENDURANCE_DIAGNOSTIC.md) documents their workload and limits.
+Two follow-up reviews measure actual keyboard input on matched 100-, 1,000- and
+5,000-paragraph documents. [Local typing](https://github.com/eddolo/fountainjs/pull/27)
+measures keydown to a task after the next animation frame.
+[Collaborative typing](https://github.com/eddolo/fountainjs/pull/28) adds a second
+browser context and loopback WebSocket delivery, and measures the time the
+receiver spends applying an update. Fountain still trails the pinned Tiptap
+stack on the 5,000-paragraph workload. Physical presentation latency, remote
+network conditions and long-running collaboration remain open.
+The [endurance diagnostic](YJS_ENDURANCE_DIAGNOSTIC.md) covers storage and history growth.
 
 Markdown's default profile has 563/652 CommonMark fixture matches; the ordinary
 complete-file profile has 635/652, with 17 documented policy differences. An
