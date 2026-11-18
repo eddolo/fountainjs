@@ -398,7 +398,7 @@ function calculationsEditor(template, fields, usesInline) {
     rows.replaceChildren();
     refreshers = [];
     for (const item of template.calculations ?? []) {
-      const controls = row(rows);
+      const controls = row(rows, 'row calculation-fields');
       input(controls, 'Calculation label', item.label, value => { item.label = value; });
       const selects = {};
       for (const [role, other, name] of [['start', 'end', 'Start date field'], ['end', 'start', 'End date field']]) {

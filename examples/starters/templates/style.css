@@ -70,6 +70,9 @@ main a {
   flex-wrap: wrap;
   align-items: center;
 }
+.calculation-fields {
+  margin-bottom: 0.75rem;
+}
 .invitation-entry {
   margin-top: 0.75rem;
   border-top: 1px solid #dae2dc;
