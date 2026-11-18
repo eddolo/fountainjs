@@ -17,7 +17,13 @@ Word tables outside that group remain separate.
 A DOCX can contain different values in the plot cache and the embedded spreadsheet.
 Import uses the values that the office application saved for display. It reports
 the limits on workbook-only edits, formulas and native styling. Unsupported or
-incomplete series receive a warning. Keep the original DOCX for its workbook.
+incomplete series receive a warning.
+
+The Conversion Lab offers the original embedded XLSX in its source panel. Hosts can
+request the same bytes with `includeChartWorkbooks: true` and read `chartWorkbooks`
+on the import result. Each entry identifies its chart and workbook package paths.
+Downloads preserve the worksheet as received, even after editing the plot.
+Export builds a new worksheet from the current chart data.
 
 ## Source-owned quote appearance
 

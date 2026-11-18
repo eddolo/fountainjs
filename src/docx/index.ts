@@ -61,7 +61,16 @@ export interface DOCXReport {
   readonly issues: readonly DOCXIssue[];
 }
 
+export interface DOCXChartWorkbook {
+  /** Paths in the original DOCX. Multiple charts can share a workbook. */
+  readonly chartPart: string;
+  readonly workbookPart: string;
+  readonly bytes: Uint8Array;
+}
+
 export interface DOCXImportResult {
+  /** Original embedded XLSX packages, available when requested at import. */
+  readonly chartWorkbooks?: readonly DOCXChartWorkbook[];
   readonly document: FountainNode;
   readonly report: DOCXReport;
   /** Intake inventory, not a semantic coverage or original-byte retention claim. */
@@ -103,6 +112,8 @@ export interface DOCXExportImage {
 }
 
 export interface DOCXImportOptions extends DOCXLimits {
+  /** Collect local chart workbooks as opaque source files, separately from the editable document. */
+  readonly includeChartWorkbooks?: boolean;
   /** Maps trusted embedded bytes to an application URL. Defaults to a bounded raster data URL. */
   readonly createImageSource?: (image: DOCXEmbeddedImage) => string | undefined;
   /** Opt in to untrusted Fountain TeX metadata only when its uniquely bound
@@ -1692,7 +1703,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
       return true;
     } }));
   };
-  const readImagePart = (path: string) => {
+  const readBinaryPart = (path: string) => {
     const size = entrySizes.get(path);
     if (size === undefined || path === '__proto__') return undefined;
     if (!selectedParts.has(path)) readExtraParts([path], true);
@@ -1809,22 +1820,71 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   }
   const importedParts = new Set<string>();
   const chartParts = new Map<string, FountainNode | undefined>();
+  const chartWorkbooks: DOCXChartWorkbook[] = [];
+  const workbookParts = new Set<string>();
+  let contentTypes: XMLElement | undefined;
+  function workbookXML(part: string, rootName: string) {
+    try { return child(parse(part), rootName); }
+    catch (error) {
+      if (error instanceof RangeError) throw error;
+      return undefined;
+    }
+  }
+  function collectChartWorkbook(chartPart: string, chartXML: XMLElement) {
+    const [space] = elements(chartXML);
+    if (!space || expandedName(space) !== CHART_NS + '|chartSpace') return;
+    const sources = elements(space).filter(item => expandedName(item) === CHART_NS + '|externalData');
+    if (!sources.length) return;
+    const id = sources.length === 1 && qualifiedAttribute(sources[0]!, 'id', OFFICE_REL_NS);
+    const split = chartPart.lastIndexOf('/') + 1;
+    const relPart = chartPart.slice(0, split) + '_rels/' + chartPart.slice(split) + '.rels';
+    readExtraParts([relPart]);
+    const relRoot = workbookXML(relPart, 'Relationships');
+    const matches = id && relRoot && expandedName(relRoot) === REL_NS + '|Relationships'
+      ? elements(relRoot).filter(item => expandedName(item) === REL_NS + '|Relationship' && item.attrs.Id === id) : [];
+    const rel = matches.length === 1 && matches[0]!.attrs;
+    const target = rel && rel.Type === OFFICE_REL_NS + '/package' && [undefined, 'Internal'].includes(rel.TargetMode)
+      && packagePartPath(chartPart, rel.Target ?? '');
+    if (target && /\.xlsx$/i.test(target) && entrySizes.has(target)) {
+      readExtraParts(['[Content_Types].xml']);
+      contentTypes ??= workbookXML('[Content_Types].xml', 'Types');
+      const ns = 'http://schemas.openxmlformats.org/package/2006/content-types|';
+      if (contentTypes && expandedName(contentTypes) === ns + 'Types') {
+        const declarations = elements(contentTypes);
+        const overrides = declarations.filter(item => expandedName(item) === ns + 'Override' && item.attrs.PartName === '/' + target);
+        const types = overrides.length ? overrides : declarations.filter(item => expandedName(item) === ns + 'Default' && item.attrs.Extension?.toLowerCase() === 'xlsx');
+        if (types.length === 1 && types[0]!.attrs.ContentType === WORKBOOK_TYPE) {
+          const data = readBinaryPart(target);
+          if (data && data[0] === 0x50 && data[1] === 0x4b && data[2] === 3 && data[3] === 4) {
+            chartWorkbooks.push({ chartPart, workbookPart: target, bytes: data });
+            workbookParts.add(target);
+            return;
+          }
+        }
+      }
+    }
+    issues.push({ code: 'chart-workbook-unavailable', severity: 'warning', sourcePart: chartPart,
+      message: 'The chart source could not be recovered as a local XLSX workbook. Keep the original document.' });
+  }
+  const supportsCharts = ['bar_chart', 'paragraph', 'text', 'table', 'table_row', 'table_cell', 'table_header'].every(name => schema.nodes[name]);
   let chartRows = 0;
   const readChartPart = (path: string) => {
-    if (!['bar_chart', 'paragraph', 'text', 'table', 'table_row', 'table_cell', 'table_header'].every(name => schema.nodes[name])
+    if ((!supportsCharts && !options.includeChartWorkbooks)
         || !entrySizes.has(path) || path === '__proto__' || (entrySizes.get(path) ?? 0) > limits.maxDocumentXmlBytes) return;
     if (!chartParts.has(path)) {
       readExtraParts([path]);
+      let root: XMLElement | undefined;
       let chart: FountainNode | undefined;
       try {
-        const root = parse(path);
-        chart = root && readNativeChart(root, schema);
+        root = parse(path);
+        chart = supportsCharts && root ? readNativeChart(root, schema) : undefined;
         if (chart) schema.validate(chart);
       } catch (error) {
         if (error instanceof RangeError) throw error;
         // An invalid optional chart or an incompatible schema leaves the rest of the story readable.
         chart = undefined;
       }
+      if (options.includeChartWorkbooks && root) collectChartWorkbook(path, root);
       chartParts.set(path, chart);
     }
     const chart = chartParts.get(path);
@@ -1834,7 +1894,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     }
     return chart;
   };
-  const media: ImportMediaContext = { readChartPart, readImagePart, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles, paragraphBridge, hiddenFieldContent: hiddenComplexFieldContent(body) };
+  const media: ImportMediaContext = { readChartPart, readImagePart: readBinaryPart, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles, paragraphBridge, hiddenFieldContent: hiddenComplexFieldContent(body) };
   const blocks = parseBlocks(body, schema, media, numbering, issues, []);
   const importedStories = new Set<string>();
   const sections = descendants(body, 'sectPr').filter(item => expandedName(item) === `${WORD_NS}|sectPr`);
@@ -1947,7 +2007,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   }
   for (const part of omittedStories) issues.push({ code: 'unrepresented-story-part', severity: 'warning', message: 'This packaged header, footer, note or comment part was not imported. Its text, assets, references and behaviour remain only in the original file.', sourcePart: part });
   const packageParts = Object.freeze(entries.map(([path, declaredBytes]): DOCXPackagePart => {
-    const handling = importedParts.has(path) ? 'imported-image' : mediaParts.has(path) ? 'unrepresented-media' : selectedParts.has(path) ? 'adapter-input' : 'not-interpreted';
+    const handling = workbookParts.has(path) ? 'adapter-input' : importedParts.has(path) ? 'imported-image' : mediaParts.has(path) ? 'unrepresented-media' : selectedParts.has(path) ? 'adapter-input' : 'not-interpreted';
     if (handling === 'unrepresented-media') issues.push({ code: 'unrepresented-media-part', severity: 'warning', message: 'This packaged media file has no imported image node. It may belong to omitted content, be unsupported or be unused; it is not available in the converted document.', sourcePart: path });
     return Object.freeze({ path, declaredBytes, handling });
   }));
@@ -1959,7 +2019,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
         : 'The host node does not declare the paragraph-flow text-carrier contract. Spacing intent is retained without claiming a live gap projection.' });
   }, paragraphBridge?.identities));
   schema.validate(document);
-  return Object.freeze({ document, report: report(issues), packageParts });
+  return Object.freeze({ document, report: report(issues), packageParts, ...(options.includeChartWorkbooks ? { chartWorkbooks: Object.freeze(chartWorkbooks) } : {}) });
 }
 
 const PAGE_SIZE_KEYS = { width: 'w', height: 'h' } as const;

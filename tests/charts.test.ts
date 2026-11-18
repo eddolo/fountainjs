@@ -292,6 +292,40 @@ it('keeps independently edited companion content and plotted data through two DO
   editor.destroy();
 });
 
+it('recovers the original workbook independently of the chart schema and plotted values', () => {
+  const editor = createEditor({ schema: kit.schema });
+  insertBarChart(editor, 'Change', [['Tuesday', -16]]);
+  const parts = unzipSync(exportDOCX(editor.state.doc).bytes);
+  const chartPart = 'word/charts/chart1.xml', workbookPart = 'word/embeddings/chart1.xlsx';
+  parts[chartPart] = strToU8(strFromU8(parts[chartPart]).replace('<c:v>-16</c:v>', '<c:v>24</c:v>'));
+  const source = zipSync(parts);
+  expect(importDOCX(source, editor.state.schema).chartWorkbooks).toBeUndefined();
+  for (const schema of [editor.state.schema, new Schema(composeExtensions([CoreExtension]).schema)]) {
+    const result = importDOCX(source, schema, { includeChartWorkbooks: true });
+    expect(result.chartWorkbooks).toEqual([{ chartPart, workbookPart, bytes: parts[workbookPart] }]);
+    expect(result.packageParts.find(part => part.path === workbookPart)?.handling).toBe('adapter-input');
+  }
+  const relPart = 'word/charts/_rels/chart1.xml.rels';
+  const rel = strFromU8(parts[relPart]);
+  const typesPart = '[Content_Types].xml';
+  const types = strFromU8(parts[typesPart]);
+  for (const [part, content] of [
+    [relPart, rel.replace('Target=', 'TargetMode="External" Target=')],
+    [relPart, rel.replace('</Relationships>', '<Relationship Id="rIdData" Target="other"/></Relationships>')],
+    [relPart, rel.replace('/package"', '/image"')],
+    [typesPart, types.replace('spreadsheetml.sheet"', 'other"')],
+    [workbookPart, 'invalid'],
+  ] as const) {
+    const broken = zipSync({ ...parts, [part]: strToU8(content) });
+    const result = importDOCX(broken, editor.state.schema, { includeChartWorkbooks: true });
+    expect(result.chartWorkbooks, part).toHaveLength(0);
+    expect(result.report.issues.some(issue => issue.code === 'chart-workbook-unavailable')).toBe(true);
+    expect(result.document.content.some(node => node.type.name === 'bar_chart')).toBe(true);
+  }
+  expect(() => importDOCX(source, editor.state.schema, { includeChartWorkbooks: true, maxMediaBytes: 1 })).toThrow(/media exceeds/);
+  editor.destroy();
+});
+
 it('keeps the table and reports unsupported native series, absent chart schema and external targets', () => {
   const editor = createEditor({ schema: kit.schema });
   insertBarChart(editor, 'Data', [['A', 2]]);

@@ -190,6 +190,14 @@ test('reopens the chart edited in LibreOffice and preserves its independently ed
   await page.keyboard.press('Shift+End');
   await page.keyboard.insertText('32');
   await expect(plot).toContainText('Tuesday · 32');
+  const workbookDownload = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download chart1.xlsx', exact: true }).click();
+  const originalWorkbook = info.outputPath('original-chart1.xlsx');
+  await (await workbookDownload).saveAs(originalWorkbook);
+  const recovered = await readFile(originalWorkbook);
+  const original = unzipSync(await readFile('tests/fixtures/native-docx/' + name));
+  expect(recovered.equals(Buffer.from(original['word/embeddings/chart1.xlsx']))).toBe(true);
+  expect(strFromU8(unzipSync(recovered)['xl/worksheets/sheet1.xml'])).toContain('<v>-16</v>');
   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('docx');
   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
   const pending = page.waitForEvent('download');

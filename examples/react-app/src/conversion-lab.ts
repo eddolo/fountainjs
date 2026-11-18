@@ -5,7 +5,7 @@ import { PagesExtension } from 'fountainjs-editor/pages';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
 import { createHTMLSourceEmptyBodyExtension, createHTMLSourceEOFExtension, createInertHTMLAnchorExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import { createHTMLSourceMarkdownAdapter } from 'fountainjs-editor/html/source';
-import { exportDOCX, importDOCX, type DOCXPackagePart } from 'fountainjs-editor/docx';
+import { exportDOCX, importDOCX, type DOCXChartWorkbook, type DOCXPackagePart } from 'fountainjs-editor/docx';
 import { compileTeXForDOCX } from './mathjax-docx';
 import { renderLabHTMLMath } from './conversion-html-math';
 
@@ -88,13 +88,13 @@ function boundedJSON(text: string) {
   return value;
 }
 export function importLab(bytes: Uint8Array, format: LabFormat, context: LabContext = defaultLabContext): {
-  document: Node; issues: LabIssue[]; source?: MarkdownSourceSnapshot; markdownBOM?: boolean; packageParts?: readonly DOCXPackagePart[];
+  document: Node; issues: LabIssue[]; source?: MarkdownSourceSnapshot; markdownBOM?: boolean; packageParts?: readonly DOCXPackagePart[]; chartWorkbooks?: readonly DOCXChartWorkbook[];
 } {
   const labSchema = context.schema;
   if (bytes.byteLength > (format === 'docx' ? 4 : 1) * 1024 * 1024) throw new Error('Lab limit: 1 MiB per text/JSON file; 4 MiB per DOCX.');
   if (format === 'docx') {
-    const result = importDOCX(bytes, labSchema, { maxArchiveBytes: 4 * 1024 * 1024, maxExpandedBytes: 24 * 1024 * 1024 });
-    return { document: result.document, issues: result.report.issues.map(issue => ({ code: issue.code, message: issue.message, path: issue.path, sourcePart: issue.sourcePart })), packageParts: result.packageParts };
+    const result = importDOCX(bytes, labSchema, { includeChartWorkbooks: true, maxArchiveBytes: 4 * 1024 * 1024, maxExpandedBytes: 24 * 1024 * 1024 });
+    return { document: result.document, issues: result.report.issues.map(issue => ({ code: issue.code, message: issue.message, path: issue.path, sourcePart: issue.sourcePart })), packageParts: result.packageParts, chartWorkbooks: result.chartWorkbooks };
   }
   const text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
   if (format === 'html') {
