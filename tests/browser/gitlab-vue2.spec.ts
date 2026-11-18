@@ -8,7 +8,9 @@ for (const source of ['paste', 'drop'] as const) {
     const editor = page.getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true });
     await editor.click();
     await page.keyboard.press('Home');
-    for (let index = 0; index < 4; index++) await page.keyboard.press('ArrowRight');
+    if (source === 'paste') {
+      for (let index = 0; index < 4; index++) await page.keyboard.press('ArrowRight');
+    }
     await editor.evaluate((element, mode) => {
       const transfer = new DataTransfer();
       transfer.items.add(new File(['Report contents'], 'report.txt', { type: 'text/plain' }));
@@ -19,9 +21,14 @@ for (const source of ['paste', 'drop'] as const) {
         element.dispatchEvent(event);
       }
       else {
-        const selection = getSelection()!;
-        const range = selection.getRangeAt(0);
-        const bounds = range.getBoundingClientRect();
+        // Leave the real caret at Home. Drop just before "2" so inserting
+        // at the old caret would visibly put the attachment in the wrong place.
+        const text = element.querySelector('[data-fountain-text-path]')?.firstChild;
+        if (!(text instanceof Text)) throw new Error('Expected the issue paragraph text.');
+        const target = element.ownerDocument.createRange();
+        target.setStart(text, 4);
+        target.collapse(true);
+        const bounds = target.getBoundingClientRect();
         element.dispatchEvent(new DragEvent('drop', { dataTransfer: transfer, bubbles: true, cancelable: true,
           clientX: bounds.left, clientY: bounds.top + bounds.height / 2 }));
       }

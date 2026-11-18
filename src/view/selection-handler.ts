@@ -1,3 +1,4 @@
+import { caretRangeAtPoint } from './caret-range';
 import {
   AllSelection,
   CellSelection,
@@ -670,14 +671,8 @@ export class SelectionHandler {
       // Chromium normalizes a native caret after a non-editable media shell
       // back into preceding text when Shift-click extends it. Keep the exact
       // model anchor and use the browser only to hit-test the new endpoint.
-      const owner = this.dom.ownerDocument;
-      const caret = owner.caretPositionFromPoint?.(event.clientX, event.clientY);
-      const hit = caret ? { node: caret.offsetNode, offset: caret.offset }
-        : (() => {
-          const range = owner.caretRangeFromPoint?.(event.clientX, event.clientY);
-          return range ? { node: range.startContainer, offset: range.startOffset } : null;
-        })();
-      const head = hit ? this.documentPosition(hit.node, hit.offset, 1, true) : null;
+      const hit = caretRangeAtPoint(this.dom.ownerDocument, event.clientX, event.clientY);
+      const head = hit ? this.documentPosition(hit.startContainer, hit.startOffset, 1, true) : null;
       if (head !== null) {
         const anchor = previous instanceof RangeSelection ? previous.anchor : previous.position;
         const selection = anchor === head ? selectionAtPosition(this.editor.state.doc, head)
