@@ -58,6 +58,23 @@ it('checks inclusive source ranges, atomic overlap refusal and a distinct adjace
  expect(score()).toMatchObject({decision:false,afterCommit:false,afterNotes:false});
  expect(batchReviewChecks({...input,secondLine:4},fixture,{}).labels.decision).toBe('GitLab accepts the batch request');
 });
+it('distinguishes an open confirmation from fresh Reporter controls and verifies the same reviewer returns', () => {
+ const seed='a'.repeat(40), fixture={username:'reviewer',appendLine:'end\n'};
+ const input={source:'a\nb\n',range:{start:1},secondLine:2,reviewerRoleChange:true};
+ const actor={id:14,username:fixture.username};
+ const role=(accessLevel:number)=>({...actor,accessLevel});
+ const control={header:true,canApply:false,canAdd:false,queued:false};
+ const reader={confirmEnabled:false,canApplyBatch:false,notes:[{...control},{...control}]};
+ const before={head:seed,fileCommit:seed,source:input.source,notes:[]};
+ const roles={actor,initial:role(30),lowered:role(20),restored:role(30),cleanup:role(10),
+   open:{confirmEnabled:true,canApplyBatch:true},sampleMs:3100,fresh:reader,saved:structuredClone(before),requestsBeforeConfirmation:[] as string[]};
+ const score=()=>batchReviewChecks(input,fixture,{setup:{seedCommit:seed},batch:{before,roles}}).values;
+ expect(score()).toMatchObject({reviewerIdentity:true,reviewerLive:false,reviewerFresh:true,reviewerNoWrite:true});
+ roles.fresh.notes[1]!.canApply=true;
+ roles.restored.id++;
+ roles.requestsBeforeConfirmation.push('/api/v4/suggestions/batch_apply');
+ expect(score()).toMatchObject({reviewerIdentity:false,reviewerFresh:false,reviewerNoWrite:false});
+});
 it('requires the live reason on the changed note and rejects a hidden submission', () => {
  const reason="Can't apply as this line was changed in a more recent version.";
  const instruction='Remove this suggestion from the batch to continue the review.';

@@ -22,6 +22,8 @@ export async function prepareGitLabAuditMember({request,project,fixture}) {
    try{
     const signIn=async()=>{await actor.getByLabel('Username or primary email').fill(fixture.username);await actor.getByLabel('Password',{exact:true}).fill(password);await actor.getByRole('button',{name:'Sign in',exact:true}).click();await actor.waitForURL(url=>!url.pathname.includes('sign_in'));};
     await actor.goto(origin+'/users/sign_in');await signIn();
+    // The dashboard can paint before GitLab redirects a freshly reset account to its password form.
+    await actor.goto(origin+'/'+project.path_with_namespace);
     result.signInDestination=new URL(actor.url()).pathname;
     if(await actor.getByRole('button',{name:'Update password',exact:true}).isVisible()){
      const nextPassword='Fj!'+randomBytes(24).toString('base64url')+'9aZ';

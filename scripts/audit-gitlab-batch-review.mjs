@@ -1,5 +1,6 @@
 import {expect} from '@playwright/test';
 import {join} from 'node:path';
+import {refreshReviewerRole,withBatchReviewer} from './audit-gitlab-reviewer-handoff.mjs';
 
 async function readAppliedBadge(reader) {
   const badge = reader.getByTestId('applied-badge');
@@ -58,6 +59,12 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
     return other?.id;
   }).toBeTruthy();
   const noteIds = [note.id, other.id];
+  const review = (viewer,setRole) => applyBatch({page:viewer,setRole,request,project,fixture,input,mr,base,seed,branch,fileURL,output,stage,noteIds,batch});
+  if (input.reviewerRoleChange) return withBatchReviewer({page,request,project,fixture,result,output},review);
+  return review(page);
+}
+
+async function applyBatch({page,setRole,request,project,fixture,input,mr,base,seed,branch,fileURL,output,stage,noteIds,batch}) {
   const readers = noteIds.map(id => page.locator('#note_'+id));
   const adds = readers.map(reader => reader.getByRole('button',{name:'Add suggestion to batch',exact:true}));
   const removes = readers.map(reader => reader.getByRole('button',{name:'Remove from batch',exact:true}));
@@ -83,7 +90,7 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
       notes:notes.map(n=>({id:n.id,body:n.body,suggestions:n.suggestions,...(primary ? {position:n.position} : {})}))};
   };
   const queue = async () => Promise.all(removes.map(button=>button.isVisible()));
-  await page.goto(mr.web_url+'#note_'+note.id);
+  await page.goto(mr.web_url+'#note_'+noteIds[0]);
   await expect(readers[1].getByText(fixture.secondMarker,{exact:true})).toBeVisible();
   batch.before = await snapshot();
   await stage('queue-and-remove');
@@ -100,6 +107,7 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
   await apply.click();
   const message = page.getByTestId('commit-message-field').filter({visible:true});
   const confirm = page.getByTestId('commit-with-custom-message-button').filter({visible:true});
+  if (setRole) await refreshReviewerRole({page,readers,adds,removes,apply,message,confirm,setRole,batch,snapshot,output,stage});
   if (input.secondFilePath) {
     const requests = [];
     const observe = req => {

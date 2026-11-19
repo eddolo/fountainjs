@@ -1,0 +1,31 @@
+{
+  "formatVersion": 1,
+  "workflow": "batch-review",
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "title": "Hand off a queued review",
+  "marker": "Document the operation.",
+  "appendLine": "// reviewed\n",
+  "secondMarker": "Publish the result.",
+  "secondReplacement": "publish();",
+  "commitMessage": "Apply reviewed operations after handoff",
+  "sourceObservationDelayMs": 500,
+  "cases": [
+    {
+      "id": "developer-reporter-developer",
+      "scope": "batch-review",
+      "reviewerRoleChange": true,
+      "filePath": "handoff.js",
+      "source": "start();\nread();\nwrite();\nend();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "secondLine": 3,
+      "handoffDelayMs": 1000,
+      "expectedSource": "start();\nread();\n// reviewed\npublish();\nend();\n"
+    }
+  ]
+}

@@ -41,6 +41,19 @@ if (reports[0].fixture.workflow === 'batch-review' && result.environment.matched
   }
   table.push('');
 }
+if (reports[0].suite==='reviewer-handoff' && result.environment.matched) {
+  table.push('## Queued reviewer handoff','','| Editor | Open confirmation after role change | Enabled Apply or Add after reload | Apply request before restoration | Status after explicit confirmation |',
+    '| --- | --- | --- | --- | --- |');
+  for (const report of reports) {
+    const batch=report.observations[0]?.batch, roles=batch?.roles;
+    if (!roles?.open || !roles.fresh || !roles.requestsBeforeConfirmation) continue;
+    const fresh=roles.fresh;
+    const enabled=fresh.canApplyBatch || fresh.confirmEnabled || fresh.notes.some(note=>note.canApply || note.canAdd);
+    table.push('| '+[report.side,(roles.open.confirmEnabled?'Enabled':'Unavailable')+' at '+roles.sampleMs+' ms',
+      enabled?'Yes':'No',roles.requestsBeforeConfirmation.length,batch.response?.status ?? 'Unverified'].join(' | ')+' |');
+  }
+  table.push('', 'The same local reviewer held Developer, then Reporter, then Developer access. The open-tab observation is a timed sample. The browser reloaded the merge request before the Reporter controls were scored.','');
+}
 if (['stale-reviews','relocated-reviews'].includes(reports[0].suite)) {
   table.push('## Apply after the source commit', '', '| Workflow | Stock GitLab | Fountain |', '| --- | --- | --- |');
   for (const input of reports[0].fixture.cases) {

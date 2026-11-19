@@ -51,6 +51,14 @@ export function batchReviewChecks(input, fixture, item) {
     recoveryCommit:'Only the selected proposal creates a direct child of the seed commit',
     recoveryNotes:'Both notes retain their original proposals and only the chosen one is marked Applied',
   });
+  if (input.reviewerRoleChange) Object.assign(labels,{
+    reviewerIdentity:'The dedicated reviewer moves from Developer to Reporter and back in the same session, then returns to Guest at cleanup',
+    reviewerQueued:'The reviewer has both proposals queued and can confirm before the role change',
+    reviewerLive:'The open confirmation no longer offers to commit at the three-second role-change observation',
+    reviewerFresh:'After reload the Reporter can read both suggestions and has no enabled apply or queue controls',
+    reviewerNoWrite:'The role transition sends no suggestion write and preserves the seed, file and both original notes',
+    reviewerRestored:'After Developer access returns both suggestions can be queued again or are still queued',
+  });
   const multi = Boolean(input.secondFilePath);
   const paths = [input.filePath,input.secondFilePath,input.untouchedFilePath];
   if (multi) {
@@ -62,6 +70,22 @@ export function batchReviewChecks(input, fixture, item) {
   }
   const b = item?.batch, values = {};
   if (!b?.before || !commit(item.setup?.seedCommit)) return {labels, values};
+  if (input.reviewerRoleChange && b.roles) {
+    const roles = b.roles;
+    const actor = roles.actor;
+    const memberships = [['initial',30],['lowered',20],['restored',30],['cleanup',10]];
+    if (actor && memberships.every(([phase])=>roles[phase]))
+      values.reviewerIdentity = positive(actor.id) && actor.username===fixture.username &&
+        memberships.every(([phase,level])=>roles[phase].id===actor.id &&
+          roles[phase].username===actor.username && roles[phase].accessLevel===level);
+    const pair = (state,check) => state?.notes?.length===2 && state.notes.every(note=>note.header===true && check(note));
+    if (roles.queued) values.reviewerQueued = roles.queued.confirmEnabled===true && pair(roles.queued,n=>n.queued===true);
+    if (roles.open) values.reviewerLive = roles.sampleMs>=3000 && roles.open.confirmEnabled===false && roles.open.canApplyBatch===false;
+    if (roles.fresh) values.reviewerFresh = roles.fresh.confirmEnabled===false && roles.fresh.canApplyBatch===false &&
+      pair(roles.fresh,n=>n.canApply===false && n.canAdd===false);
+    if (roles.saved && Array.isArray(roles.requestsBeforeConfirmation)) values.reviewerNoWrite = same(roles.requestsBeforeConfirmation,[]) && same(roles.saved,b.before) && b.before.head===item.setup.seedCommit;
+    if (roles.returned) values.reviewerRestored = pair(roles.returned,n=>n.canAdd===true || n.queued===true);
+  }
   const lines = input.source.split('\n');
   const offsets = [input.range.start, secondStart];
   const ends = [end,input.secondLine];
