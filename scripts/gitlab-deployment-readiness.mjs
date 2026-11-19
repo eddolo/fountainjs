@@ -2,8 +2,11 @@
 export function loggerStartupFailure(state, logs) {
  if (state.Status!=='exited' || state.Running!==false || state.ExitCode!==1 || state.OOMKilled || state.Dead) return;
  const failures = logs.split('\n').filter(line=>line.includes('FATAL: Mixlib::'));
- const match = failures.at(-1)?.match(/FATAL: Mixlib::ShellOut::ShellCommandFailed: (?:redis_service\[redis\] \([^)]*\) had an error: Mixlib::ShellOut::ShellCommandFailed: )?runit_service\[([a-z0-9_-]+)\].*ruby_block\[restart_log_service\]/u);
- if (match && logs.includes('STDOUT: timeout: down: /opt/gitlab/service/'+match[1]+'/log:')) return match[1];
+ const match = failures.at(-1)?.match(/FATAL: Mixlib::ShellOut::ShellCommandFailed: (?:redis_service\[redis\] \([^)]*\) had an error: Mixlib::ShellOut::ShellCommandFailed: )?runit_service\[([a-z0-9_-]+)\].*ruby_block\[(restart_log_service|reload_log_service)\]/u);
+ if (!match) return;
+ const [,service,action] = match;
+ if (action==='restart_log_service' && logs.includes('STDOUT: timeout: down: /opt/gitlab/service/'+service+'/log:')) return service;
+ if (action==='reload_log_service' && logs.includes('STDOUT: kill: down: /opt/gitlab/service/'+service+'/log: 0s, normally up, want up')) return service;
 }
 
 export async function waitForGitLabDeployment({readState,probe,retryLoggerExit,observe=()=>{},now=Date.now,wait=ms=>new Promise(resolve=>setTimeout(resolve,ms)),timeoutMs=300000}){
