@@ -52,6 +52,8 @@ const mediaMenuPath = 'app/assets/javascripts/content_editor/components/bubble_m
 const taskUtilsPath = 'app/assets/javascripts/issues/show/utils.js';
 const taskBodyPath = 'app/assets/javascripts/issues/show/fountain_task_body_extractor.js';
 const taskUtilsHash = '548b3dbacbbe72bc77c75f3fcce77984364df7d9fc0422b00ca0f80d06f29575';
+const noteComponentPath = 'app/assets/javascripts/notes/components/noteable_note.vue';
+const noteComponentHash = '1d489cd1644b3544a7544a707ec194c8eb8a6623f651b9ea958c6fa607f978cf';
 const reviewActionsPath = 'app/assets/javascripts/notes/store/legacy_notes/actions.js';
 const reviewActionsHash = 'a28c9e56677a80683e9a0e9b67eff533e04f6711b9ab3f3422588f38342262a1';
 const reviewHelperPath = 'app/assets/javascripts/notes/store/legacy_notes/fountain_applied_suggestion.js';
@@ -72,6 +74,8 @@ try {
 if (previous && previous.source !== source)
   throw new Error('The retained install belongs to a different checkout.');
 if (previous) {
+  const generation = previous.formatVersion;
+  if (generation !== undefined && (!Number.isInteger(generation) || generation < 2 || generation > 18)) throw new Error('Unknown retained install format.');
   const allowed = new Set([
     hostPath,
     rendererPath,
@@ -81,46 +85,47 @@ if (previous) {
     'app/assets/javascripts/content_editor/services/fountain_runtime.js',
     'app/assets/javascripts/content_editor/services/fountain_runtime.css',
   ]);
-  if ([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) {
+  if (generation >= 2) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_link_menu.stories.js');
-  } else if (previous.formatVersion !== undefined) throw new Error('Unknown retained install format.');
-  if ([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) {
+  }
+  if (generation >= 3) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_code_menu.stories.js');
   }
-  if ([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) {
+  if (generation >= 4) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_alert_menu.stories.js');
   }
-  if ([5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) {
+  if (generation >= 5) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_media_menu.stories.js');
   }
-  if ([6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) {
+  if (generation >= 6) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_reference_menu.stories.js');
   }
-  if ([7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) {
+  if (generation >= 7) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_diagram_preview.vue');
     allowed.add(sandboxPath);
   }
-  if ([8, 9, 10, 11, 12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) allowed.add(diagramReaderPath);
+  if (generation >= 8) allowed.add(diagramReaderPath);
   if (previous.formatVersion === 9) { allowed.add(gfmPath); allowed.add(readerImagesPath); }
-  if ([10, 11, 12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) { allowed.add(lazyLoaderPath); allowed.add(readerImagesPath); }
-  if ([11, 12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) {
+  if (generation >= 10) { allowed.add(lazyLoaderPath); allowed.add(readerImagesPath); }
+  if (generation >= 11) {
     allowed.add(codeMenuPath); allowed.add(mediaMenuPath);
     allowed.add('app/assets/javascripts/content_editor/components/fountain_context_surface.vue');
   }
-  if ([12, 13, 14, 15, 16, 17].includes(previous.formatVersion)) {
+  if (generation >= 12) {
     allowed.add('app/assets/javascripts/content_editor/components/fountain_quick_action_menu.vue');
     allowed.add('app/assets/javascripts/content_editor/components/fountain_quick_action_menu.stories.js');
   }
-  if ([13, 14, 15, 16, 17].includes(previous.formatVersion)) allowed.add('app/assets/javascripts/content_editor/services/fountain_autocomplete.js');
-  if ([14, 15, 16, 17].includes(previous.formatVersion)) { allowed.add(taskUtilsPath); allowed.add(taskBodyPath); }
-  if ([15, 16, 17].includes(previous.formatVersion)) allowed.add(detailPath);
-  if ([16,17].includes(previous.formatVersion)) allowed.add(descriptionPath);
-  if (previous.formatVersion===17) { allowed.add(reviewActionsPath); allowed.add(reviewHelperPath); }
+  if (generation >= 13) allowed.add('app/assets/javascripts/content_editor/services/fountain_autocomplete.js');
+  if (generation >= 14) { allowed.add(taskUtilsPath); allowed.add(taskBodyPath); }
+  if (generation >= 15) allowed.add(detailPath);
+  if (generation >= 16) allowed.add(descriptionPath);
+  if (generation >= 17) { allowed.add(reviewActionsPath); allowed.add(reviewHelperPath); }
+  if (generation >= 18) allowed.add(noteComponentPath);
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
 }
@@ -182,6 +187,11 @@ if (restore) {
     preparedDescription = await readFile(resolve(output, 'prepared-work-item-description.vue'));
     if (hash(preparedDescription) !== descriptionHash) throw new Error('Retained description baseline source has changed.');
   }
+  if (previous.files[noteComponentPath]) {
+    const originalNote = await readFile(resolve(output, 'prepared-noteable-note.vue'));
+    if (hash(originalNote) !== noteComponentHash) throw new Error('Retained note component differs from the pinned source.');
+    await writeFile(resolve(source, noteComponentPath), originalNote);
+  }
   if (previous.files[reviewActionsPath]) {
     const originalActions = await readFile(resolve(output,'prepared-review-actions.js'));
     if (hash(originalActions)!==reviewActionsHash) throw new Error('Retained review actions differ from the pinned source.');
@@ -199,7 +209,7 @@ if (restore) {
   if (preparedLazyLoader) await writeFile(resolve(source, lazyLoaderPath), preparedLazyLoader);
   for (const [path, value] of preparedMenus) await writeFile(resolve(source, path), value);
   for (const path of Object.keys(previous.files))
-    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath].includes(path)) await unlink(resolve(source, path));
+    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, noteComponentPath].includes(path)) await unlink(resolve(source, path));
   await writeFile(
     resolve(output, 'install.json'),
     JSON.stringify({ ...previous, restored: true }, null, 2) + '\n',
@@ -270,6 +280,24 @@ const currentDescription = await readFile(resolve(source, descriptionPath));
 if (hash(currentDescription) !== descriptionHash && (!previous || previous.files[descriptionPath] !== hash(currentDescription)))
   throw new Error('Description baseline input has unrecognized edits; refusing to overwrite it.');
 const files = new Map();
+const originalNote = execFileSync('git', ['-C', source, 'show', pin.commit + ':' + noteComponentPath], {encoding: 'utf8'});
+const noteTarget = resolve(source, noteComponentPath);
+if (await realpath(noteTarget) !== noteTarget || hash(originalNote) !== noteComponentHash)
+  throw new Error('Unrecognized note component.');
+const installedNote = hash(await readFile(noteTarget));
+if (installedNote !== noteComponentHash && installedNote !== previous?.files[noteComponentPath])
+  throw new Error('The note component has unrecognized local edits.');
+const alertCall = "createAlert({\n        message: updateNoteErrorMessage(e),\n        parent: this.$el,\n      });";
+if (originalNote.split(alertCall).length !== 2) throw new Error('Cannot locate the note update alert.');
+files.set(noteComponentPath, originalNote.replace(alertCall, `const alert = ${alertCall}
+      // A long draft can leave the validation message above the scrollport.
+      this.$nextTick(() => {
+        const element = alert?.$el;
+        if (!element?.isConnected || !this.isEditing) return;
+        const box = element.getBoundingClientRect();
+        if (!element.contains(document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)))
+          element.scrollIntoView({block: 'center', behavior: 'instant'});
+      });`));
 const originalReviewActions = execFileSync('git',['-C',source,'show',pin.commit+':'+reviewActionsPath],{encoding:'utf8'});
 if (hash(originalReviewActions)!==reviewActionsHash || await realpath(resolve(source,reviewActionsPath))!==resolve(source,reviewActionsPath))
   throw new Error('Unrecognized review action source.');
@@ -450,7 +478,7 @@ for (const [path] of files) {
   const parent = await realpath(resolve(target, '..'));
   if (parent !== resolve(target, '..'))
     throw new Error('Refusing a symlinked installation parent.');
-  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath].includes(path)) {
+  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, noteComponentPath].includes(path)) {
     if ((await realpath(target)) !== target) throw new Error('Refusing a symlinked host input.');
     continue;
   }
@@ -470,6 +498,7 @@ await writeFile(resolve(output, 'prepared-mermaid-sandbox.js'), originalSandbox)
 await writeFile(resolve(output, 'prepared-mermaid-reader.js'), originalDiagramReader);
 await writeFile(resolve(output, 'prepared-render-gfm.js'), originalGFM);
 await writeFile(resolve(output, 'prepared-lazy-loader.js'), originalLazyLoader);
+await writeFile(resolve(output, 'prepared-noteable-note.vue'), originalNote);
 await writeFile(resolve(output,'prepared-review-actions.js'),originalReviewActions);
 await writeFile(resolve(output, 'prepared-work-item-detail.vue'), originalDetail);
 await writeFile(resolve(output, 'prepared-work-item-description.vue'), originalDescription);
@@ -482,7 +511,7 @@ await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 17,
+      formatVersion: 18,
       source,
       revision: pin.commit,
       scope:

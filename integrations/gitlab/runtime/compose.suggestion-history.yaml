@@ -1,0 +1,11 @@
+services:
+  baseline:
+    volumes:
+      - type: bind
+        source: ${FOUNTAIN_GITLAB_HISTORY_DIR:?Set the prepared suggestion-history directory}/app/services/notes/update_service.rb
+        target: /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb
+        read_only: true
+      - type: bind
+        source: ${FOUNTAIN_GITLAB_HISTORY_DIR:?Set the prepared suggestion-history directory}/app/services/suggestions/create_service.rb
+        target: /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb
+        read_only: true

@@ -1,0 +1,37 @@
+{
+  "formatVersion": 1,
+  "workflow": "applied-suggestion-history",
+  "title": "Review history after a prose edit",
+  "marker": "Review history check",
+  "appendLine": "// change approved in review\n",
+  "proseSuffix": " — confirmed",
+  "sourceObservationDelayMs": 1500,
+  "comparisonProposal": "return anotherValue;",
+  "changedProposal": "return revisedValue;",
+  "outdatedSuffix": " following the branch update",
+  "cases": [
+    {
+      "id": "applied-with-neighbors",
+      "scope": "full-review",
+      "historyControls": true,
+      "filePath": "review-history.js",
+      "source": "const original = true;\nkeep();\nlast();\n",
+      "range": {
+        "start": 1,
+        "end": 1
+      },
+      "handoffDelayMs": 1500
+    },
+    {
+      "id": "outdated-neighbor",
+      "scope": "full-review",
+      "historyControls": true,
+      "outdatedHistory": true,
+      "filePath": "stale-review-history.js",
+      "source": "const original = true;\nkeep();\nlast();\n",
+      "remoteSource": "const targetHasChanged = true;\nkeep();\nlast();\n",
+      "range": { "start": 1, "end": 1 },
+      "handoffDelayMs": 1500
+    }
+  ]
+}

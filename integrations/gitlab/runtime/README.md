@@ -19,6 +19,37 @@ connect to an existing GitLab account or installation. Metrics are disabled and
 service concurrency is reduced for this small local test environment; these
 settings are not performance or deployment recommendations.
 
+### Reproduce suggestion history across comment edits
+
+Use the [pinned local GitLab environment](./upstream.json) and prepare the native frontend as described below. From the FountainJS checkout in Linux, prepare the two GitLab services from the pinned Git objects. The command prints an error if the checkout is at a different revision or an existing output differs. The patch digest identifies the output directory under `artifacts/gitlab-suggestion-history/`.
+
+```sh
+node scripts/prepare-gitlab-suggestion-history.mjs /absolute/gitlab-source
+run=review-history-local
+for editor in original fountain; do
+  node scripts/run-gitlab-compatibility.mjs --suite review-history --editor "$editor" --run-id "$run" --suggestion-history || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison-1"
+```
+
+Choose an unused run ID. Both editors receive the same read-only Ruby service mounts. The runner records the image, database volumes, service hashes, frontend build, browser, and actual GitLab responses. A source or range change creates a fresh suggestion. Reordering distinct proposals preserves their IDs and application state. When a duplicate makes the applied occurrence ambiguous, the server rejects the edit and the author can correct the draft.
+
+To restore the packaged services, run the stock editor without `--suggestion-history` using a fresh run ID. Compose recreates the container on the existing data volumes. The pinned patch adds no migrations. Previously lost identities cannot be reconstructed. With the stock services restored, future edits follow GitLab's packaged suggestion-recreation logic.
+
+To check the actual records after rollback, use the previous run ID and attempt. The stock reader reopens each saved note from both repaired deployments, checks the badge against the persisted flags, and compares the note body, repository file, branch head, eligibility and suggestion IDs with the original evidence. It then creates fresh review notes against the packaged services as a negative control.
+
+```sh
+control=review-history-local-stock
+node scripts/run-gitlab-compatibility.mjs --suite review-history --editor original --run-id "$control" --history-rollback-from "$run:1"
+node scripts/run-gitlab-compatibility.mjs --suite review-history --editor fountain --run-id "$control"
+dir="artifacts/gitlab-compatibility/$control"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison-1"
+```
+
+
+When the verified original and replacement have different attempts, pass `--history-rollback-from run-id:original-attempt,fountain-attempt`. The verifier loads both raw reports and checks their build identities and the full comparison environment before reading either writer's records.
+
 ### Reproduce concurrent review submissions
 
 Use the paired [comparison commands](../COMPATIBILITY_SUITE_PLAN.md#reproduce-an-issue-or-merge-request-comparison)

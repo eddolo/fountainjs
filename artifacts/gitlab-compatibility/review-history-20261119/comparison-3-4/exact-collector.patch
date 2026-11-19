@@ -1,0 +1,64 @@
+--- a/scripts/run-gitlab-compatibility.mjs
++++ b/scripts/run-gitlab-compatibility.mjs
+@@ -63,9 +63,9 @@
+ const rollbackFrom = process.argv.includes('--history-rollback-from') ? value('--history-rollback-from') : undefined;
+ let previousHistory;
+ if (rollbackFrom !== undefined) {
+-  const parts = /^([a-z0-9][a-z0-9-]{0,60}):([1-9][0-9]?)(?:,([1-9][0-9]?))?$/u.exec(rollbackFrom);
++  const parts = /^([a-z0-9][a-z0-9-]{0,60}):([1-9][0-9]?)$/u.exec(rollbackFrom);
+   if (!parts || suite !== 'review-history' || historyProfile || side !== 'original') throw new Error('Use --history-rollback-from run-id:attempt on the stock review-history deployment.');
+-  previousHistory = {directory: resolve(root, 'artifacts/gitlab-compatibility', parts[1]), attempts: {original: Number(parts[2]), fountain: Number(parts[3] ?? parts[2])}};
++  previousHistory = {directory: resolve(root, 'artifacts/gitlab-compatibility', parts[1]), attempt: Number(parts[2])};
+ }
+ const historyDestinations = new Map();
+ let historyReceipt;
+@@ -187,11 +187,7 @@
+  if(identityError)throw new Error('Build identity preflight failed: '+identityError);
+  console.log(describeBuild(report));
+  page.on('pageerror',error=>report.errors.push(error.message));
+- if (previousHistory) await verifySuggestionHistoryRollback({previous:previousHistory,report,page,project,request,output:out,readCommits: noteId => {
+-   if (!Number.isSafeInteger(noteId) || noteId < 1) throw new Error('Invalid saved note ID.');
+-   const query = "SELECT json_agg(json_build_object('id', id, 'commit', commit_id) ORDER BY relative_order) FROM suggestions WHERE note_id = " + noteId;
+-   return JSON.parse(docker('exec',containerName,'gitlab-psql','-d','gitlabhq_production','-XAt','-v','ON_ERROR_STOP=1','-c',query));
+- }});
++ if (previousHistory) await verifySuggestionHistoryRollback({previous:previousHistory,report,page,project,request,output:out});
+  report.observations=await (suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:['grid','merged-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
+  report.collectionComplete=report.observations.every(item=>item.status==='observed');
+  if(restartRequested && report.collectionComplete) await verifyGitLabRestart({report,project,docker,deployment,waitUntilReady,identify,page,request,output:out});
+--- a/scripts/verify-gitlab-suggestion-history-rollback.mjs
++++ b/scripts/verify-gitlab-suggestion-history-rollback.mjs
+@@ -5,13 +5,13 @@
+ import { compareGitLabCompatibility } from '../integrations/gitlab/testing/compatibility.mjs';
+
+ // Read records created by both repaired deployments using the packaged GitLab UI and API.
+-export async function verifySuggestionHistoryRollback({ previous, report, page, project, request, output, readCommits }) {
++export async function verifySuggestionHistoryRollback({ previous, report, page, project, request, output }) {
+   const writers = await Promise.all(['original','fountain'].map(async side =>
+-    JSON.parse(await readFile(join(previous.directory, side + '-' + previous.attempts[side], 'report.json'), 'utf8'))));
++    JSON.parse(await readFile(join(previous.directory, side + '-' + previous.attempt, 'report.json'), 'utf8'))));
+   const match = compareGitLabCompatibility(...writers);
+   if (!match.environment.matched || !match.comparisonComplete || report.side !== 'original' || buildIdentityError(report) ||
+       report.deployment.suggestionHistory || report.deployment.assetMount.length) throw new Error('Expected a matched repaired pair and verified packaged stock reader.');
+-  const evidence = report.suggestionHistoryRollback = { passed: false, runId: writers[0].runId, attempts: previous.attempts, records: [] };
++  const evidence = report.suggestionHistoryRollback = { passed: false, runId: writers[0].runId, attempt: previous.attempt, records: [] };
+   for (const writer of writers) {
+     const receipt = writer.deployment.suggestionHistory;
+     expect(writer.suite).toBe('review-history');
+@@ -36,8 +36,6 @@
+       expect(note.body).toBe(saved.body);
+       const suggestions = note.suggestions.map(({ id, applied, appliable, from_content, to_content }) => ({ id, applied, appliable, from_content, to_content }));
+       expect(suggestions).toEqual(saved.suggestions);
+-      const appliedCommits = readCommits(id);
+-      expect(appliedCommits).toEqual(suggestions.map(s => ({id: s.id, commit: s.applied ? observation.appliedCommit.id : null})));
+       expect(file.content).toBe(saved.file);
+       expect(head.commit.id).toBe(saved.head);
+       await page.goto('http://127.0.0.1:5080/' + project.path_with_namespace + '/-/merge_requests/' + iid + '#note_' + id);
+@@ -47,7 +45,7 @@
+       await expect(reader.getByTestId('applied-badge')).toHaveCount(badges);
+       await reader.screenshot({path: join(output, 'rollback-' + writer.side + '-' + input.id + '.png'), animations: 'disabled'});
+       evidence.records.push({writer: writer.side, editorBuild: writer.buildIdentity.expected, case: input.id, iid, note: id,
+-        suggestions, appliedCommits, badges, head: head.commit.id, bodyAndFileVerified: true});
++        suggestions, badges, head: head.commit.id, bodyAndFileVerified: true});
+     }
+   }
+   evidence.passed = true;

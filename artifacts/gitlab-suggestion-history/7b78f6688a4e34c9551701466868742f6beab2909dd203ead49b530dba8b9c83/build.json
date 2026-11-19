@@ -1,0 +1,14 @@
+{
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "patchSHA256": "7b78f6688a4e34c9551701466868742f6beab2909dd203ead49b530dba8b9c83",
+  "files": {
+    "app/services/notes/update_service.rb": {
+      "original": "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2",
+      "patched": "ad98665cdc995cfad0f4b23055a5df4941301e0ba07d96df9d5d9005eda23c29"
+    },
+    "app/services/suggestions/create_service.rb": {
+      "original": "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a",
+      "patched": "01528651ea20de69b85b9c889ce3571e35bc56cdca928097de06207ec86ef663"
+    }
+  }
+}

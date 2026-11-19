@@ -1,16 +1,16 @@
 {
   "status": "passed",
-  "formatVersion": 17,
-  "files": 34,
+  "formatVersion": 18,
+  "files": 35,
   "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
-  "integrationSHA256": "7beb38a9871875f1acaeed346e4f9e76e4c7dcaf56fab3d6b81ef81db2be6cee",
+  "integrationSHA256": "73591945dd7543c420a8355582bca2708101c7172994caf7fa7dad5096cfe3ff",
   "runtimeSHA256": "56c83cc9e181a0a958cf32e86cec3980fa5ca5f59b62d374e0a2a7a60f93a379",
   "checks": [
-    "Guarded 34-file source rollback succeeds",
-    "12 originals restored byte-for-byte",
+    "Guarded 35-file source rollback succeeds",
+    "13 originals restored byte-for-byte",
     "22 verified additions are removed",
     "Exact current source generation is reinstalled",
-    "All 34 source digests match"
+    "All 35 source digests match"
   ],
   "scope": "Source rollback with application stopped; compiled deployment rollback remains separate acceptance work"
 }

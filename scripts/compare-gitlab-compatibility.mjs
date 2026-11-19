@@ -21,6 +21,10 @@ const browserDescription=report=>report.browser?.engine
   : report.browser?.version??'unverified';
 const table=['# Matched GitLab editor comparison','','**Original** — '+describeBuild(reports[0]),'','**Replacement** — '+describeBuild(reports[1]),'','Browser on stock / replacement: '+reports.map(browserDescription).join(' / '),'',`Environment matched: ${result.environment.matched}. Comparison complete: ${result.comparisonComplete}.`,
 `Regression gate: ${result.regressionGate.passed?'passed':'failed/incomplete'}. Absolute feature acceptance: ${result.featureAcceptance.passed?'passed':'not achieved'}.`,'',
+...(reports[0].suite === 'review-history' ? ['Collection attempts for this run: stock ' + reports[0].attempt + ', replacement ' + reports[1].attempt + '.', ''] : []),
+...(reports[0].suggestionHistoryRollback?.passed ? ['The restored packaged GitLab services reopened ' + reports[0].suggestionHistoryRollback.records.length + ' notes from the repaired deployment. Their saved suggestion identities, Applied flags, eligibility, file bytes and branch heads matched.', ''] : []),
+...(reports.some(report => report.deployment?.suggestionHistory) ? ['GitLab server profile on stock and replacement: ' + reports.map(report =>
+  report.deployment?.suggestionHistory ? 'suggestion-history repair `' + report.deployment.suggestionHistory.patchSHA256 + '`' : 'packaged services').join(' / ') + '. The raw reports identify each loaded Ruby service.', ''] : []),
 ...(rollback?[result.frontendRollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
 '| Case | Invariant | Classification |','| --- | --- | --- |',...result.rows.map(row=>`| ${row.case} | ${row.label} | ${row.classification??row.status} |`),'',
 'Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.',''];

@@ -1,0 +1,13 @@
+yarn run v1.22.22
+$ yarn check-dependencies
+$ scripts/frontend/check_dependencies.sh
+$ jest --config jest.config.js --runInBand spec/frontend/notes/components/noteable_note_spec.js spec/frontend/rapid_diffs/app/discussions/noteable_note_spec.js
+PASS spec/frontend/notes/components/noteable_note_spec.js
+PASS spec/frontend/rapid_diffs/app/discussions/noteable_note_spec.js
+
+Test Suites: 2 passed, 2 total
+Tests:       111 passed, 111 total
+Snapshots:   0 total
+Time:        9.688 s
+Ran all test suites matching /spec\/frontend\/notes\/components\/noteable_note_spec.js|spec\/frontend\/rapid_diffs\/app\/discussions\/noteable_note_spec.js/i.
+Done in 11.28s.

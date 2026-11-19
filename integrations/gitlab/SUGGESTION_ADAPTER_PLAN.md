@@ -1,20 +1,17 @@
 # Native GitLab inline suggestion acceptance
 
-Status: raw-source/multiline and posted-review source workflows are verified.
-The deletion-effect safeguard is verified, but overall review acceptance remains
-failed on stock server Applied-metadata retention. Default guard callers still
-reject active configuration; full review/product acceptance remains open.
+The pinned integration verifies multiline source, editing posted proposals, and the deletion-effect safeguard. The optional history deployment preserves application records through the tested edits. Packaged GitLab recreates those records on save. Broader GitLab review acceptance remains open.
 Pinned target: GitLab CE 19.5.3, source
 `0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf`.
 
 Matched empty/newline deletion now has [original-editor UI evidence](COMPATIBILITY_DELETION_RESULTS.md):
 explicit effect explanation, whitespace consent and source reopening improve;
 application semantics match. The host still cannot apply meaningful blank-line
-replacement, and the earlier shared Applied-history failure remains open.
+replacement, and its packaged suggestion services still lose Applied history.
 
 Matched [posted source/range review](COMPATIBILITY_REVIEW_RESULTS.md) now verifies
 21 parity invariants including undo/redo and exact save/reopen/application. Wider
-range/concurrency and the separate Applied-history failure remain open.
+review batches and additional concurrency cases remain open.
 
 ## Existing evidence
 
@@ -148,10 +145,9 @@ Pinned server evidence:
   conditions. Do not confuse that computed field with persisted application
   history or assert that its value is stable through restart.
 
-The host owns application history. Do not invent Applied metadata from Fountain
-undo state or mark a proposal applied merely because source text matches. A future
-host adapter/repair needs explicit identity/history rules and real controls for
-changed, duplicated, reordered and outdated proposals. This remains open.
+GitLab owns application history. The optional [suggestion-history profile](runtime/README.md#reproduce-suggestion-history-across-comment-edits) reconciles rows inside the note update transaction. It retains an existing row when the diff anchor and rendered proposal text and range identify the same proposal. An edited proposal gets a new unapplied record. A duplicate that makes an applied occurrence ambiguous rejects the save, including the body change. The editor leaves the author's draft available for correction.
+
+Both the original editor and Fountain use the same Ruby services in this comparison. In the [first complete comparison](../../artifacts/gitlab-compatibility/review-history-20261119/comparison-3/report.md), both retained the original application across prose edits, reordering and a later change to the target branch. The candidate's validation message appeared above the visible part of the draft. The stable IDs and Applied state come from the server. Stock GitLab still recreates these rows. The rebuilt integration brings an obscured validation message into view while leaving the draft editable. [Final matched results](../../artifacts/gitlab-compatibility/review-history-20261119/comparison-reloaded/report.md).
 
 [Current scoped receipt](../../artifacts/suggestion-effects-integration-20261116.json).
 [First matched results](COMPATIBILITY_RESULTS.md) now classify actual original/
@@ -179,7 +175,7 @@ no classification is inferred for workflows not yet run on both editors.
    browser, focus and accessibility coverage open beyond the tested profile.
 5. Posted replacement, empty deletion, confirmed whitespace-deletion and
    applied-note prose editing now retain exact source through actual UI/APIs.
-   Overall applied-history acceptance remains failed as above. Meaningful blank
+   The packaged server still loses applied history as described above. Meaningful blank
    replacement is a retained host limitation, not a claimed supported file effect.
    Outdated proposals and additional multiline/context variants remain.
 6. Single application now verifies the exact file, new commit and branch head,

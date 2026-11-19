@@ -10,6 +10,40 @@ it.each([
 ])('classifies only matched observed outcomes %j / %j / %j', (expected,original,fountain,classification)=>{
  expect(classifyInvariant(expected,original,fountain)).toBe(classification);
 });
+it('scores applied history from the reloaded record when the first body read still has the previous ID', () => {
+ const pair = reports();
+ const input = {id: 'handoff', scope: 'full-review', range: {start: 1, end: 1}, source: 'first\n', historyControls: true};
+ const applied = {id: 8, applied: true, to_content: 'replacement\n'};
+ for (const report of pair) {
+   Object.assign(report.fixture, {cases: [input]});
+   Object.assign(report.observations[0]!, {input, appliedNote: {suggestions: [applied]}, afterProseNote: {suggestions: [applied]},
+     history: {phases: {}, initial: {suggestions: [report.side === 'original' ? {...applied, id: 9, applied: false} : applied]}}});
+ }
+ const rows = compareGitLabCompatibility(...pair).rows;
+ for (const key of ['stableSuggestionId', 'appliedFlag'])
+   expect(rows.find((row: any) => row.invariant === key).classification).toBe('improvement');
+});
+it('checks a widened proposal against the already-applied file and the identity of its neighbor', () => {
+ const pair = reports();
+ const input = {id: 'handoff', scope: 'full-review', range: {start: 1, end: 1}, source: 'first\nsecond\n', historyControls: true};
+ const pending = {id: 10, applied: false, from_content: 'first\n', to_content: 'changed\n'};
+ const neighbor = {id: 11, applied: false, from_content: 'first\n', to_content: 'another\n'};
+ for (const report of pair) {
+   Object.assign(report.fixture, {cases: [input], comparisonProposal: 'another', changedProposal: 'changed'});
+   Object.assign(report.observations[0]!, {input, history: {phases: {
+     change: {saved: {suggestions: [pending, neighbor]}},
+     range: {saved: {suggestions: [{...pending}, {...neighbor, id: 12, from_content: 'first\n// review\n'}]}},
+   }}});
+ }
+ const classifyRange = () => compareGitLabCompatibility(...pair).rows.find((row: any) => row.invariant === 'historyRange').classification;
+ expect(classifyRange()).toBe('parity');
+ const records = (pair[1]!.observations[0] as any).history.phases.range.saved.suggestions;
+ records[1].from_content = 'first\nsecond\n';
+ expect(classifyRange()).toBe('regression');
+ records[1].from_content = 'first\n// review\n';
+ records[0].id = 15;
+ expect(classifyRange()).toBe('regression');
+});
 it('reads exact code source without trimming whitespace or private-use characters',()=>{
  expect(suggestionBlock('```suggestion:-2+0\nA\\n\uE000\u200b  \n\n```')).toEqual({params:'-2+0',source:'A\\n\uE000\u200b  \n\n'});
  expect(suggestionBlock('')).toEqual({source:'',params:null,emptyDocument:true});
@@ -48,6 +82,27 @@ function reports(){
  return [{...sideReport('original'),observations:[{...structuredClone(observation),editorProof:{native:false,className:'tiptap ProseMirror'}}]},
  {...sideReport('fountain'),observations:[{...structuredClone(observation),prefillDOM:'exact\n',editorProof:{native:true,className:'fountain-editor'}}]}];
 }
+it('requires the loaded suggestion services to match the declared backend on each editor', () => {
+ const pair = reports();
+ const files = {
+   'app/services/notes/update_service.rb': '8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2',
+   'app/services/suggestions/create_service.rb': '62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a',
+ };
+ for (const report of pair) {
+   Object.assign(report, {suite: 'review-history'});
+   report.backend.serverSources = Object.entries(files).map(([file, hash]) => hash + '  /opt/gitlab/embedded/service/gitlab-rails/' + file);
+ }
+ expect(compareGitLabCompatibility(...pair).environment.matched).toBe(true);
+ for (const report of pair) Object.assign(report.deployment, {suggestionHistory: {
+   revision: report.buildIdentity.expected.gitlabCommit, patchSHA256: '3'.repeat(64),
+   files: Object.fromEntries(Object.entries(files).map(([file, original]) => [file, {original, patched: '4'.repeat(64)}])),
+ }});
+ expect(compareGitLabCompatibility(...pair).environment.matched).toBe(false);
+ for (const report of pair) report.backend.serverSources = report.backend.serverSources.map(line => '4'.repeat(64) + line.slice(64));
+ expect(compareGitLabCompatibility(...pair).environment.matched).toBe(true);
+ (pair[0]!.deployment as any).suggestionHistory.files = {};
+ expect(compareGitLabCompatibility(...pair).environment.matched).toBe(false);
+});
 it('refuses to classify a mismatched backend, candidate instrument, input or browser as parity',()=>{
  for(const mutate of [
   (report:any)=>{report.deployment.backendEnvironmentHash='different';},

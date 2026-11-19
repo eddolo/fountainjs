@@ -1,0 +1,112 @@
+--- a/app/services/notes/update_service.rb
++++ b/app/services/notes/update_service.rb
+@@ -32,7 +32,22 @@
+       end
+ 
+       update_note(note, only_commands)
+-      note.save
++      if !only_commands && !note.for_personal_snippet? && note.supports_suggestion?
++        begin
++          Note.transaction(requires_new: true) do
++            previous = Note.lock.find(note.id)
++            next unless note.save
++
++            update_suggestions(note, previous)
++          end
++        rescue AmbiguousSuggestionHistory
++          note.errors.add(:note, _('This edit would make identical applied suggestions ambiguous. Keep their order or put the new suggestion in a separate comment.'))
++          return note
++        end
++        return note if note.errors.any?
++      else
++        note.save
++      end
+ 
+       unless only_commands || note.for_personal_snippet?
+         note.create_new_cross_references!(current_user)
+@@ -40,8 +55,6 @@
+         update_todos(note, old_mentioned_users)
+ 
+         notify_added_mentions(note, old_mentioned_users)
+-
+-        update_suggestions(note)
+ 
+         execute_note_webhook(note)
+       end
+@@ -109,16 +122,52 @@
+       Notes::DestroyService.new(project, current_user).execute(note, old_note_body: old_note_body)
+     end
+ 
+-    def update_suggestions(note)
+-      return unless note.supports_suggestion?
+-
+-      Suggestion.transaction do
+-        note.suggestions.delete_all
+-        Suggestions::CreateService.new(note).execute
+-      end
+-
+-      # We need to refresh the previous suggestions call cache
+-      # in order to get the new records.
++    class AmbiguousSuggestionHistory < StandardError; end
++
++    # Use the same rendered suggestion nodes as SuggestionsParser. Retain the
++    # source text before blank? normalization so distinct whitespace proposals
++    # cannot acquire one another's Applied flag.
++    def suggestion_keys(body)
++      html = Banzai.render(body, project: nil, no_original_data: true, suggestions_filter_enabled: true)
++      Nokogiri::HTML5(html).xpath(Gitlab::Diff::SuggestionsParser::XPATH).map do |node|
++        [node.text, node['data-lang-params']]
++      end
++    end
++
++    def update_suggestions(note, previous)
++      records = note.suggestions.reorder(:relative_order).lock.to_a
++      Suggestions::CreateService.new(note).execute do |rows|
++        next rows if records.empty?
++
++        old_keys = suggestion_keys(previous.note)
++        new_keys = suggestion_keys(note.note)
++        same_anchor = previous.position.to_h == note.position.to_h
++        ordered = records.map(&:relative_order) == (0...old_keys.size).to_a
++        retained = {}
++        if same_anchor && ordered && new_keys.size == rows.size
++          old_indexes = old_keys.each_index.group_by { |i| old_keys[i] }
++          new_indexes = new_keys.each_index.group_by { |i| new_keys[i] }
++          new_indexes.each do |key, destinations|
++            origins = old_indexes.fetch(key, [])
++            if origins == destinations || (origins.one? && destinations.one?)
++              origins.zip(destinations).each { |from, to| retained[to] = records.fetch(from) }
++            elsif origins.any? { |i| records.fetch(i).applied? }
++              raise AmbiguousSuggestionHistory
++            end
++          end
++        end
++
++        removed = records.map(&:id) - retained.values.map(&:id)
++        note.suggestions.where(id: removed).delete_all unless removed.empty?
++        moved = retained.reject { |order, record| order == record.relative_order }
++        if moved.any?
++          # The unique index on (note_id, relative_order) also applies during
++          # a swap. All negative slots are free for a valid ordered snapshot.
++          note.suggestions.where(id: moved.values.map(&:id)).update_all('relative_order = -1 - relative_order')
++          moved.each { |order, record| record.update_column(:relative_order, order) }
++        end
++        rows.reject { |row| retained.key?(row.fetch(:relative_order)) }
++      end
+       note.suggestions.reset
+     end
+ 
+--- a/app/services/suggestions/create_service.rb
++++ b/app/services/suggestions/create_service.rb
+@@ -31,6 +31,11 @@
+         )
+       end
+ 
++      if block_given?
++        rows = yield(rows)
++        return if rows.empty?
++      end
++
+       rows.in_groups_of(100, false) do |rows|
+         ApplicationRecord.legacy_bulk_insert('suggestions', rows) # rubocop:disable Gitlab/BulkInsert
+       end

@@ -40,7 +40,7 @@ function verifiedEditor(report,item){
   if(!item?.editorProof)return false;
   return report.side==='original'?item.editorProof.native===false&&/\bProseMirror\b/u.test(item.editorProof.className):item.editorProof.native===true&&/\bfountain-editor\b/u.test(item.editorProof.className);
 }
-function observedValues(report,item,input,fixture){
+function observedValues(report,item,input,fixture,expectedAppliedFile){
   if(!verifiedEditor(report,item))return {};
   const raw=item.prefillDOM;
   // Native source owns one final line terminator; remove exactly that terminator,
@@ -74,15 +74,82 @@ function observedValues(report,item,input,fixture){
   if(Array.isArray(item.appliedCommit?.parent_ids)&&item.setup?.seedCommit)result.singleApplyCommit=equal(item.appliedCommit.parent_ids,[item.setup.seedCommit]);
   if(typeof item.saved?.body==='string'&&typeof item.afterProseNote?.body==='string')result.proseOnlyBody=item.afterProseNote.body===item.saved.body+fixture.proseSuffix;
   if(item.appliedFile&&item.afterProseFile&&item.appliedCommit?.id&&item.afterProseHead)result.noProseFileChange=decoded(item.appliedFile)===decoded(item.afterProseFile)&&item.appliedFile.last_commit_id===item.afterProseFile.last_commit_id&&item.afterProseHead===item.appliedCommit.id;
-  const before=item.appliedNote?.suggestions,after=item.afterProseNote?.suggestions;
+  const before=item.appliedNote?.suggestions;
+  // Stock GitLab can expose the new body before it has recreated the suggestion
+  // rows. The history workflow reads them again after the reader reloads.
+  const after=input.historyControls ? item.history?.initial?.suggestions : item.afterProseNote?.suggestions;
   if(before?.length===1&&after?.length===1&&before[0].applied===true&&before[0].to_content===after[0].to_content){
     result.appliedFlag=after[0].applied;result.stableSuggestionId=before[0].id===after[0].id;
   }
+  if (input.historyControls && item.history) {
+    const { initial, phases, finalBadges } = item.history;
+    const applied = item.appliedNote?.suggestions?.[0];
+    const next = fixture.comparisonProposal + '\n', changed = fixture.changedProposal + '\n';
+    const records = phase => phases[phase]?.saved?.suggestions;
+    const valid = list => Array.isArray(list) && list.every(record => Number.isSafeInteger(record.id) && record.id > 0)
+      && new Set(list.map(record => record.id)).size === list.length;
+    const stored = list => list.map(({ id, applied, from_content, to_content }) => ({ id, applied, from_content, to_content }));
+    const added = records('add'), reordered = records('reorder'), updated = records('change'), ranged = records('range');
+    if (applied?.applied && valid(added)) result.historyAdd = added.length === 2 && added[0].id !== applied.id && !added[0].applied
+      && added[0].to_content === next && added[1].id === applied.id && added[1].applied && added[1].to_content === applied.to_content;
+    if (valid(added) && valid(reordered)) result.historyReorder = equal(stored(reordered), stored([...added].reverse())) && reordered[0]?.id === applied?.id;
+    if (phases.duplicate?.saved && phases.reorder?.saved) {
+      result.historyRefusal = phases.duplicate.status === 422 && phases.duplicate.serverMessage === true
+        && phases.duplicate.saved.body === phases.reorder.saved.body && valid(records('duplicate')) && valid(reordered)
+        && equal(stored(records('duplicate')), stored(reordered));
+      result.historyDraft = typeof phases.duplicate.draft === 'string' && phases.duplicate.draft === phases.duplicate.submitted;
+      result.historyExplanation = phases.duplicate.visibleError === true;
+      result.historyExplanationOnscreen = phases.duplicate.errorInitiallyOnscreen === true;
+    }
+    if (valid(added) && valid(updated)) result.historyChange = updated.length === 2 && updated[0].to_content === changed
+      && updated[1].id === added[0]?.id && updated[1].to_content === next && updated.every(record => record.applied === false)
+      && !added.some(record => record.id === updated[0].id);
+    if (valid(updated) && valid(ranged)) result.historyRange = ranged.length === 2 && equal(stored(ranged.slice(0, 1)), stored(updated.slice(0, 1)))
+      && ranged[1].to_content === next && ranged[1].from_content === expectedAppliedFile.split('\n').slice(input.range.end - 1, input.range.end + 1).join('\n')+'\n'
+      && !updated.some(record => record.id === ranged[1].id) && ranged[1].applied === false;
+    if (['add','reorder','duplicate','change','range'].every(phase => phases[phase]?.saved)) {
+      result.historyFile = initial?.head === item.appliedCommit?.id && initial?.file === item.appliedFile?.content
+        && Object.values(phases).every(phase => phase.saved.head === initial.head && phase.saved.file === initial.file);
+    }
+    if (input.outdatedHistory && item.history.outdatedBefore && phases.outdated?.saved) {
+      const prior = item.history.outdatedBefore, after = phases.outdated.saved, commit = item.history.competingCommit;
+      if (valid(prior.suggestions) && valid(after.suggestions) && valid(added)) {
+        result.outdatedIdentity = prior.suggestions.length === 2 && equal(stored(prior.suggestions), stored(added))
+          && equal(stored(after.suggestions), stored(prior.suggestions)) && after.suggestions[1]?.applied === true
+          && after.suggestions[1].id === applied?.id && after.suggestions[0]?.applied === false;
+        result.outdatedEligibility = prior.suggestions[0]?.appliable === false && after.suggestions[0]?.appliable === false;
+      }
+      result.outdatedProse = after.body === prior.body + fixture.outdatedSuffix;
+      result.outdatedFile = commit?.id === prior.head && equal(commit.parents,[item.appliedCommit.id])
+        && after.head === prior.head && after.file === prior.file && Buffer.from(prior.file,'base64').toString('utf8') === input.remoteSource;
+    }
+    result.historyInitialBadge = item.afterProseAppliedBadge;
+    result.historyFinalBadges = finalBadges;
+  }
   return result;
+}
+const suggestionServices = {
+  'app/services/notes/update_service.rb': '8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2',
+  'app/services/suggestions/create_service.rb': '62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a',
+};
+function suggestionServicesMatch(report) {
+  const receipt = report.deployment?.suggestionHistory;
+  if (!receipt && report.suite !== 'review-history') return true;
+  if (receipt && (receipt.revision !== report.buildIdentity?.expected?.gitlabCommit ||
+      !/^[a-f0-9]{64}$/u.test(receipt.patchSHA256) ||
+      !equal(Object.keys(receipt.files ?? {}).sort(), Object.keys(suggestionServices).sort()))) return false;
+  return Object.entries(suggestionServices).every(([file, original]) => {
+    const entry = receipt?.files[file];
+    if (receipt && (entry?.original !== original || entry.patched === original || !/^[a-f0-9]{64}$/u.test(entry.patched))) return false;
+    const suffix = '  /opt/gitlab/embedded/service/gitlab-rails/' + file;
+    const observed = report.backend?.serverSources?.filter(line => typeof line === 'string' && line.endsWith(suffix));
+    return equal(observed, [(entry?.patched ?? original) + suffix]);
+  });
 }
 export function compareGitLabCompatibility(original,fountain){
   const mismatches=[];
   for (const report of [original, fountain]) {
+    if (!suggestionServicesMatch(report)) mismatches.push(report.side + ' suggestion service sources');
     const error = buildIdentityError(report);
     if (error) mismatches.push(report?.side + ' build identity: ' + error);
   }
@@ -106,6 +173,8 @@ export function compareGitLabCompatibility(original,fountain){
   check('expected GitLab source revision', original?.buildIdentity?.expected?.gitlabCommit, fountain?.buildIdentity?.expected?.gitlabCommit);
   for(const key of ['runId','fixtureHash','fixture','harnessHashes','browser'])check(key,original?.[key],fountain?.[key]);
   for(const key of ['image','imageId','backendMounts','backendEnvironmentHash','cpus','memory'])check('deployment.'+key,original?.deployment?.[key],fountain?.deployment?.[key]);
+  if (original?.deployment?.suggestionHistory || fountain?.deployment?.suggestionHistory)
+    check('deployment.suggestionHistory', original?.deployment?.suggestionHistory, fountain?.deployment?.suggestionHistory);
   if (original?.deployment?.footnoteFilter || fountain?.deployment?.footnoteFilter) check('deployment.footnoteFilter',original?.deployment?.footnoteFilter,fountain?.deployment?.footnoteFilter);
   if (original?.deployment?.puma || fountain?.deployment?.puma) check('deployment.puma',original?.deployment?.puma,fountain?.deployment?.puma);
   for(const key of ['version','project','actor','serverSources'])check('backend.'+key,original?.backend?.[key],fountain?.backend?.[key]);
@@ -613,9 +682,9 @@ export function compareGitLabCompatibility(original,fountain){
       add('appendClipboardUnchanged','Append clipboard still contains the original copied payload',true,unchanged(provenLeft),unchanged(provenRight));
       continue;
     }
-    const left=observedValues(original,a,input,fixture),right=observedValues(fountain,b,input,fixture);
     const lines=input.source.split('\n'),selected=lines.slice(input.range.start-1,input.range.end).join('\n'),source=selected+'\n',replacement=source+fixture.appendLine;
     const prefix=lines.slice(0,input.range.start-1),expectedFile=(prefix.length?prefix.join('\n')+'\n':'')+replacement+lines.slice(input.range.end).join('\n');
+    const left=observedValues(original,a,input,fixture,expectedFile),right=observedValues(fountain,b,input,fixture,expectedFile);
     const deletion=input.scope==='deletion';
     // A nonempty fenced line must end before the closing fence. The rich input
     // still has its own exact character check below, independent of Markdown.
@@ -656,6 +725,25 @@ export function compareGitLabCompatibility(original,fountain){
       ['appliedSource','Applied repository file contents',expectedFile],['singleApplyCommit','Application creates one child of the seed commit',true],
       ['proseOnlyBody','Prose editing changes only the intended comment suffix',true],['noProseFileChange','Prose editing retains repository content and head',true],
       ['appliedFlag','Prose editing retains Applied flag',true],['stableSuggestionId','Prose editing retains unchanged suggestion identity',true]);
+    if (input.historyControls) specs.push(
+      ['historyInitialBadge','Reloaded prose edit displays the original Applied badge',true],
+      ['historyAdd','Adding a neighbor retains the applied record and gives the new proposal a fresh ID',true]);
+    if (input.historyControls && !input.outdatedHistory) specs.push(
+      ['historyReorder','Swapping distinct proposals preserves both IDs, contents and Applied flags',true],
+      ['historyRefusal','Ambiguous duplication is explained by the server and preserves the prior saved note',true],
+      ['historyDraft','Refused duplication leaves the submitted draft in the source field',true],
+      ['historyExplanation','GitLab renders the reason for refusing the ambiguous duplicate',true],
+      ['historyExplanationOnscreen','The refusal reason is on screen without scrolling after Save',true],
+      ['historyChange','Changed source gets a fresh unapplied ID while its neighbor keeps its identity',true],
+      ['historyRange','Changed target range gets its own fresh identity and the correct two source lines',true],
+      ['historyFile','No review-note edit changes the applied file or its commit',true],
+      ['historyFinalBadges','Reload after replacing the applied proposal has no Applied badges',0]);
+    if (input.outdatedHistory) specs.push(
+      ['outdatedIdentity','Prose editing retains the original IDs and stored contents of both the applied and outdated proposals',true],
+      ['outdatedEligibility','The outdated pending proposal remains ineligible after the prose edit',true],
+      ['outdatedProse','The saved note changes only by the intended prose suffix',true],
+      ['outdatedFile','The competing commit and file remain exact after the subsequent note edit',true],
+      ['historyFinalBadges','The applied proposal still has its badge after the stale review reloads',1]);
     for(const [key,label,expected] of specs)rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
   }
   const matched=mismatches.length===0;

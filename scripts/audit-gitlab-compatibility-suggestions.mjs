@@ -1,6 +1,7 @@
 import {expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import {inspectSuggestionHistory} from './audit-gitlab-suggestion-history.mjs';
 import {concurrentReview} from './audit-gitlab-concurrent-review.mjs';
 
 /** Both drivers operate real UI; neither receives an editor model/command API. */
@@ -341,7 +342,14 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
         await reopenForm.getByRole('button',{name:'Cancel',exact:true}).click();await expect(reopenForm).toBeHidden();
         result.actions.push('Reload the saved proposal; reopen rich editing and inspect exact source; cancel without rewriting it.');
       }
-      await stage('apply');await savedNote.getByTestId('apply-suggestion-dropdown').getByRole('button',{name:'Apply suggestion',exact:true}).click();
+      await stage('apply');
+      if (input.historyControls) {
+        // These cases exercise edits to the posted thread in the MR overview.
+        // Use the same reader for the initial application and the subsequent edits.
+        await page.goto(mr.web_url + '#note_' + note.id);
+        await expect(savedNote.getByText(fixture.marker, { exact: true })).toBeVisible();
+      }
+      await savedNote.getByTestId('apply-suggestion-dropdown').getByRole('button',{name:'Apply suggestion',exact:true}).click();
       await page.getByTestId('commit-message-field').fill('Apply paired editor suggestion');
       await page.getByTestId('commit-with-custom-message-button').click();
       await expect.poll(async()=>{result.appliedFile=await request(fileURL);return result.appliedFile.last_commit_id!==seed.id;},{timeout:30000}).toBe(true);
@@ -369,6 +377,7 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       await page.goto(mr.web_url+'#note_'+note.id);await expect(page.getByText(fixture.marker+fixture.proseSuffix,{exact:true})).toBeVisible({timeout:30000});
       result.afterProseAppliedBadge=await page.getByTestId('applied-badge').isVisible();
       await page.screenshot({path:join(output,input.id+'-after-prose.png'),fullPage:true,animations:'disabled',caret:'initial'});
+      if (input.historyControls) await inspectSuggestionHistory({page,ui,request,input,fixture,result,mr,base,note,branch,project,fileURL,output,stage});
       result.status='observed';await stage('complete');
     } catch(error) {
       result.error=String(error);await page.screenshot({path:join(output,input.id+'-failure.png'),fullPage:true,animations:'disabled'}).catch(()=>{});
