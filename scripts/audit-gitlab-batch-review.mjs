@@ -12,7 +12,16 @@ async function readAppliedBadge(reader) {
 export async function batchReview({page,ui,openLineForm,request,project,fixture,result,input,mr,base,note,seed,branch,fileURL,output,stage}) {
   const batch = result.batch = {};
   await stage('write-second-review');
-  const form = await openLineForm(page, mr, {start: input.secondLine, end: input.secondLine}, input.secondFilePath);
+  let form;
+  if (!input.secondFilePath && input.secondLine===(input.range.end ?? input.range.start)) {
+    await page.goto(mr.web_url+'/diffs#note_'+note.id);
+    const thread = page.locator('tr[data-discussion-row]').filter({has:page.locator('#note_'+note.id)});
+    await thread.getByRole('button',{name:'Start another thread',exact:true}).click();
+    form = page.locator('form.common-note-form').filter({visible:true});
+    await expect(form).toHaveCount(1);
+  } else {
+    form = await openLineForm(page, mr, {start:input.secondLine,end:input.secondLine},input.secondFilePath);
+  }
   const surface = await ui.rich(form);
   await ui.insert(form);
   const secondSource = input.source.split('\n')[input.secondLine - 1];
@@ -35,6 +44,10 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
   const source = await ui.source(form);
   const expectedCarrier = ['```suggestion:-0+0', fixture.secondReplacement, '```'].join('\n');
   await expect(source).toHaveValue(expectedCarrier);
+  if (input.secondStart !== undefined) {
+    // A reviewer can extend the replacement upwards while checking its Markdown.
+    await source.fill(expectedCarrier.replace(':-0+0',':-'+(input.secondLine-input.secondStart)+'+0'));
+  }
   batch.secondCarrier = await source.inputValue();
   const secondBody = batch.secondCarrier+'\n\n'+fixture.secondMarker;
   await source.fill(secondBody);
@@ -173,21 +186,23 @@ async function recoverQueuedReview({page,readers,removes,fixture,input,batch,sna
   await stage('recover-unchanged-target');
   // Preserve the failed queue in this tab. Only the reviewer can remove an item.
   recovery.queuedAfterRefusal = await Promise.all(removes.map(button=>button.isVisible()));
-  await removes[1].click();
-  await expect(removes[1]).toBeHidden();
+  const keep = input.keepReview ?? 0;
+  const remove = 1 - keep;
+  await removes[remove].click();
+  await expect(removes[remove]).toBeHidden();
   recovery.remaining = await Promise.all(removes.map(button=>button.isVisible()));
   if (input.waitForLiveUpdate) recovery.removedText = await readers[1].innerText();
   recovery.before = await snapshot();
-  await readers[0].getByRole('button',{name:'Apply suggestion',exact:true}).click();
+  await readers[keep].getByRole('button',{name:'Apply suggestion',exact:true}).click();
   await page.getByTestId('commit-message-field').filter({visible:true}).fill(fixture.recoveryMessage);
   const confirm = page.getByTestId('commit-with-custom-message-button').filter({visible:true});
-  const id = batch.before.notes[0].suggestions[0].id;
+  const id = batch.before.notes[keep].suggestions[0].id;
   const [response] = await Promise.all([
     page.waitForResponse(res=>res.request().method()==='PUT' && new URL(res.url()).pathname==='/api/v4/suggestions/'+id+'/apply'),
     confirm.click(),
   ]);
   recovery.response = {status:response.status(), path:new URL(response.url()).pathname, request:response.request().postDataJSON()};
-  if (response.ok()) await expect(readers[0].getByTestId('applied-badge')).toBeVisible();
+  if (response.ok()) await expect(readers[keep].getByTestId('applied-badge')).toBeVisible();
   recovery.after = await snapshot();
   recovery.badges = [];
   for (const [index, marker] of [fixture.marker,fixture.secondMarker].entries()) {

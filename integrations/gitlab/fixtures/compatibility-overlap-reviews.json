@@ -1,0 +1,56 @@
+{
+  "workflow": "batch-review",
+  "title": "Review overlapping changes in the same file",
+  "marker": "Document the reviewed operation.",
+  "appendLine": "// reviewed\n",
+  "sourceObservationDelayMs": 500,
+  "secondMarker": "Replace the selected operation.",
+  "secondReplacement": "publish();",
+  "recoveryMessage": "Apply the selected alternative",
+  "commitMessage": "Apply both reviewed operations",
+  "cases": [
+    {
+      "id": "same-line",
+      "scope": "batch-review",
+      "filePath": "operations.js",
+      "source": "start();\nread();\ncheck();\nwrite();\nend();\n",
+      "handoffDelayMs": 1000,
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "secondLine": 2,
+      "recoverUnchanged": true,
+      "recoveredSource": "start();\nread();\n// reviewed\ncheck();\nwrite();\nend();\n"
+    },
+    {
+      "id": "shared-endpoint",
+      "scope": "batch-review",
+      "filePath": "operations.js",
+      "source": "start();\nread();\ncheck();\nwrite();\nend();\n",
+      "handoffDelayMs": 1000,
+      "range": {
+        "start": 2,
+        "end": 3
+      },
+      "secondStart": 3,
+      "secondLine": 4,
+      "recoverUnchanged": true,
+      "keepReview": 1,
+      "recoveredSource": "start();\nread();\npublish();\nend();\n"
+    },
+    {
+      "id": "adjacent-ranges",
+      "scope": "batch-review",
+      "filePath": "operations.js",
+      "source": "start();\nread();\ncheck();\nwrite();\nend();\n",
+      "handoffDelayMs": 1000,
+      "range": {
+        "start": 2,
+        "end": 3
+      },
+      "secondLine": 4,
+      "expectedSource": "start();\nread();\ncheck();\n// reviewed\npublish();\nend();\n"
+    }
+  ]
+}

@@ -39,6 +39,25 @@ it('rejects a partial batch write even when the server refuses the batch and the
  item.batch.response.request.ids=[21,21];
  expect(score()).toMatchObject({submitted:false,decision:true,afterCommit:true,afterNotes:false,afterSource:false});
 });
+it('checks inclusive source ranges, atomic overlap refusal and a distinct adjacent control', () => {
+ const seed='a'.repeat(40);
+ const fixture={appendLine:'end\n',secondReplacement:'replacement',marker:'one',secondMarker:'two',commitMessage:'both'};
+ const input={source:'a\nb\nc\nd\n',range:{start:2,end:3},secondLine:3};
+ const notes=[['b\nc\n','b\nc\nend\n','-1+0','one'],['c\n','replacement\n','-0+0','two']].map(([from,to,offset,marker],i)=>({
+   id:10+i,body:'```suggestion:'+offset+'\n'+to+'```\n\n'+marker,
+   suggestions:[{id:20+i,from_line:2+i,to_line:3,from_content:from,to_content:to,applied:false,appliable:true}],
+ }));
+ const before={head:seed,fileCommit:seed,source:input.source,parents:['b'.repeat(40)],notes};
+ const batch={before,beforeSubmit:structuredClone(before),after:structuredClone(before),reloaded:structuredClone(before),
+   response:{status:400,body:{message:'Suggestions are not applicable as their lines cannot overlap.'},request:{ids:[20,21],commit_message:'both'}}};
+ const score=()=>batchReviewChecks(input,fixture,{setup:{seedCommit:seed},batch}).values;
+ expect(score()).toMatchObject({authored:true,decision:true,submitted:true,afterSource:true,afterCommit:true,afterNotes:true});
+ batch.after.head='c'.repeat(40);
+ batch.after.notes[0]!.suggestions[0]!.to_line=2;
+ batch.response.body.message='A file has been changed.';
+ expect(score()).toMatchObject({decision:false,afterCommit:false,afterNotes:false});
+ expect(batchReviewChecks({...input,secondLine:4},fixture,{}).labels.decision).toBe('GitLab accepts the batch request');
+});
 it('requires the live reason on the changed note and rejects a hidden submission', () => {
  const reason="Can't apply as this line was changed in a more recent version.";
  const instruction='Remove this suggestion from the batch to continue the review.';
