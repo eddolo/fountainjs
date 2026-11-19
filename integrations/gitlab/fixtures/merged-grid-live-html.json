@@ -1,0 +1,15 @@
+{
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "fixtures": [
+    {
+      "name": "colspan",
+      "source": "## Cell grid review\n\n<table><tr><th><p>S1</p></th><th><p>S2</p></th><th><p>Keep</p></th></tr><tr><td colspan=\"2\"><p>A <strong>bold</strong></p></td><td><p>Untouched one</p></td></tr><tr><td><p>C</p></td><td><p>D</p></td><td><p>Untouched two</p></td></tr></table>\n\nBetween tables.\n\n| T1 | T2 |\n| --- | --- |\n| Old one | Old two |\n\nEnd of table fixture.",
+      "body": "<h2 data-sourcepos=\"1:1-1:19\" dir=\"auto\">Cell grid review</h2>&#x000A;<table dir=\"auto\"><tbody><tr><th><p>S1</p></th><th><p>S2</p></th><th><p>Keep</p></th></tr><tr><td colspan=\"2\"><p>A <strong>bold</strong></p></td><td><p>Untouched one</p></td></tr><tr><td><p>C</p></td><td><p>D</p></td><td><p>Untouched two</p></td></tr></tbody></table>&#x000A;<p data-sourcepos=\"5:1-5:15\" dir=\"auto\">Between tables.</p>&#x000A;<table data-sourcepos=\"7:1-9:21\" dir=\"auto\">&#x000A;<thead>&#x000A;<tr data-sourcepos=\"7:1-7:11\">&#x000A;<th data-sourcepos=\"7:2-7:5\">T1</th>&#x000A;<th data-sourcepos=\"7:7-7:10\">T2</th>&#x000A;</tr>&#x000A;</thead>&#x000A;<tbody>&#x000A;<tr data-sourcepos=\"9:1-9:21\">&#x000A;<td data-sourcepos=\"9:2-9:10\">Old one</td>&#x000A;<td data-sourcepos=\"9:12-9:20\">Old two</td>&#x000A;</tr>&#x000A;</tbody>&#x000A;</table>&#x000A;<p data-sourcepos=\"11:1-11:21\" dir=\"auto\">End of table fixture.</p>"
+    },
+    {
+      "name": "rowspan",
+      "source": "## Cell grid review\n\n<table><tr><th><p>S1</p></th><th><p>S2</p></th><th><p>Keep</p></th></tr><tr><td rowspan=\"2\"><p>A <strong>bold</strong></p></td><td><p><a href=\"https://example.com/grid\">B link</a></p></td><td><p>Untouched one</p></td></tr><tr><td><p>D</p></td><td><p>Untouched two</p></td></tr></table>\n\nBetween tables.\n\n| T1 | T2 |\n| --- | --- |\n| Old one | Old two |\n\nEnd of table fixture.",
+      "body": "<h2 data-sourcepos=\"1:1-1:19\" dir=\"auto\">Cell grid review</h2>&#x000A;<table dir=\"auto\"><tbody><tr><th><p>S1</p></th><th><p>S2</p></th><th><p>Keep</p></th></tr><tr><td rowspan=\"2\"><p>A <strong>bold</strong></p></td><td><p><a href=\"https://example.com/grid\" rel=\"nofollow noreferrer noopener\" target=\"_blank\">B link</a></p></td><td><p>Untouched one</p></td></tr><tr><td><p>D</p></td><td><p>Untouched two</p></td></tr></tbody></table>&#x000A;<p data-sourcepos=\"5:1-5:15\" dir=\"auto\">Between tables.</p>&#x000A;<table data-sourcepos=\"7:1-9:21\" dir=\"auto\">&#x000A;<thead>&#x000A;<tr data-sourcepos=\"7:1-7:11\">&#x000A;<th data-sourcepos=\"7:2-7:5\">T1</th>&#x000A;<th data-sourcepos=\"7:7-7:10\">T2</th>&#x000A;</tr>&#x000A;</thead>&#x000A;<tbody>&#x000A;<tr data-sourcepos=\"9:1-9:21\">&#x000A;<td data-sourcepos=\"9:2-9:10\">Old one</td>&#x000A;<td data-sourcepos=\"9:12-9:20\">Old two</td>&#x000A;</tr>&#x000A;</tbody>&#x000A;</table>&#x000A;<p data-sourcepos=\"11:1-11:21\" dir=\"auto\">End of table fixture.</p>"
+    }
+  ]
+}

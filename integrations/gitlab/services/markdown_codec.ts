@@ -44,6 +44,30 @@ function labelForeground(value: unknown): string {
   return (luminance + 0.05) / 0.05 >= 1.05 / (luminance + 0.05) ? '#000' : '#fff';
 }
 
+// GitLab renders HTML tables with real row/column spans. Keep the pipe writer
+// for ordinary grids and its loss diagnostics for unverified cell content.
+function serializeMergedGitLabTable(table: Node, tokenPrefix: string): string | undefined {
+  if (!table.content.some(row => row.content.some(cell =>
+    Number(cell.attrs.rowspan) > 1 || Number(cell.attrs.colspan) > 1))) return undefined;
+  let supported = true;
+  table.descendants(node => {
+    const name = node.type.name;
+    const cell = name === 'table_header' || name === 'table_cell';
+    if (!['table', 'table_row', 'table_header', 'table_cell', 'paragraph', 'text'].includes(name)
+      || (node !== table && name === 'table') || node.text?.includes(tokenPrefix)
+      || Object.entries(node.attrs).some(([key, value]) => value !== node.type.spec.attrs?.[key]?.default
+        && !(cell && (key === 'rowspan' || key === 'colspan')))) supported = false;
+    for (const mark of node.marks) {
+      if (!['strong', 'em', 'code', 'link'].includes(mark.type.name)
+        || Object.entries(mark.attrs).some(([key, value]) => value !== mark.type.spec.attrs?.[key]?.default
+          && !(mark.type.name === 'link' && (key === 'href' || key === 'title'
+            || (key === 'htmlHref' && value === mark.attrs.href))))) supported = false;
+    }
+    return supported;
+  });
+  return supported ? MarkdownExporter.export(table, { tableFormat: 'html' }) : undefined;
+}
+
 /** GitLab-owned source attributes remain distinct from navigable display URLs. */
 export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaLabels?: Readonly<Record<GitLabPlayableKind, string>>): SchemaSpec {
   if (!base.nodes.inline_image || !base.marks?.link) throw new TypeError('The GitLab schema requires inline images and links.');
@@ -435,6 +459,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const projected = project(doc, []), paths = new WeakMap<Node, readonly number[]>();
     projected.descendants((node, path) => { paths.set(node, path); });
     const blockSerializers = {
+      table: (node: Node) => serializeMergedGitLabTable(node, prefix),
       gitlab_code_suggestion: serializeGitLabSuggestionNode,
       direction_scope: (node: Node): string | undefined => {
         // GitLab strips Fountain data attributes and bare checkbox inputs. A

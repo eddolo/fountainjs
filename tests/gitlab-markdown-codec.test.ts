@@ -2,6 +2,7 @@ import { expect, it, vi } from 'vitest';
 import { Schema, type Node } from 'fountainjs-editor';
 import { GitLabMarkdownCodec, GitLabMarkdownConversionError, createGitLabSchemaSpec } from '../integrations/gitlab/services/markdown_codec';
 import data from '../integrations/gitlab/fixtures/service-html.json';
+import mergedPreviews from '../integrations/gitlab/fixtures/merged-grid-live-html.json';
 import emojiPreviews from '../integrations/gitlab/fixtures/clipboard-unicode-live-html.json';
 
 async function convert(markdown: string, body: string) {
@@ -13,6 +14,28 @@ async function convert(markdown: string, body: string) {
 }
 const append = (document: Node): Node => document.copy([...document.content,
   document.type.schema.node('paragraph', {}, [document.type.schema.text('Added.')])]);
+
+it.each(mergedPreviews.fixtures)('keeps $name through canonical GitLab Save while ordinary tables stay in Markdown',async ({name,source,body})=>{
+  const {codec,document}=await convert(source,body);
+  expect(codec.serialize({doc:document})).toBe(source);
+  const output=codec.serializeWithReport({doc:append(document)});
+  expect(output.issues).toEqual([]);
+  expect(output.markdown).toContain(name+'="2"');
+  expect(output.markdown).toContain('<strong>bold</strong>');
+  expect(output.markdown).toContain('| T1 | T2 |');
+  expect(output.markdown).toContain('Added.');
+});
+
+it('reports stored column widths in a merged table instead of losing them during Save', async () => {
+  const sample = mergedPreviews.fixtures[0]!;
+  const { codec, document } = await convert(sample.source, sample.body);
+  const table = document.child(1), row = table.child(1), merged = row.child(0);
+  const resized = merged.type.create({ ...merged.attrs, colwidth: [100, 120] }, merged.content);
+  const updated = table.copy([table.child(0), row.copy([resized, ...row.content.slice(1)]), ...table.content.slice(2)]);
+  const doc = document.copy([document.child(0), updated, ...document.content.slice(2)]);
+  expect(codec.serializeWithReport({ doc }).issues).toContainEqual(expect.objectContaining({ code: 'attribute:table_cell' }));
+  expect(() => codec.serialize({ doc })).toThrow(GitLabMarkdownConversionError);
+});
 
 it.each(emojiPreviews.fixtures)('opens the project preview for $name and preserves its exact unedited source',async ({source,body})=>{
   const {codec,document}=await convert(source,body);
