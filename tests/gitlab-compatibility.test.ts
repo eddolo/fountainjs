@@ -298,6 +298,24 @@ it('checks each timed rollback record independently of its reported pass flag', 
  records[1]!.gesture.clickAt = 150;
  expect(passed()).toBe(false);
  records[1]!.gesture.clickAt = 25;
+ const firstEdit = 'Release now. First Markdown save.';
+ const richEdit = firstEdit + ' Checked after rollback.';
+ Object.assign(original.observations[0]!,{iid:1});
+ Object.assign(fountain.observations[0]!,{iid:2});
+ Object.assign((original as any).rollback,{formatVersion:2,candidateBuild:(fountain as any).buildIdentity.expected});
+ expect(passed()).toBe(false);
+ for (const record of records) {
+   const firstMarkdownGesture = {trustedKey:true,trustedClick:true,key:'.',button:'Save changes',sourceValue:firstEdit,keyAt:3,clickAt:15};
+   Object.assign(record,{firstMarkdownGesture, firstMarkdownAfterReload:firstEdit, firstMarkdownNotes:['**Reviewed**'],quickSaveAfterReload:richEdit});
+   record.gesture.paragraphs = [richEdit];
+ }
+ expect(passed()).toBe(true);
+ Object.assign(records[0]!,{firstMarkdownAfterReload:firstEdit.slice(0,-1)});
+ expect(passed()).toBe(false);
+ Object.assign(records[0]!,{firstMarkdownAfterReload:firstEdit});
+ records[0]!.iid = 2;
+ expect(passed()).toBe(false);
+ records[0]!.iid = 1;
  records[0]!.writer = 'fountain';
  expect(passed()).toBe(false);
 });

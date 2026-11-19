@@ -13,7 +13,7 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     throw new Error('Rollback requires the matching successful candidate run on the same persistent GitLab volumes.');
   }
   const records = [];
-  const result = {candidateBuild: candidate.buildIdentity.expected, records, passed: false};
+  const result = {formatVersion: 2, candidateBuild: candidate.buildIdentity.expected, records, passed: false};
   report.rollback = result;
   const subjects = report.fixture.cases.flatMap(input => [candidate, report].map(writer => ({input, writer})));
   for (const {input, writer} of subjects) {
@@ -41,21 +41,40 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     await expect(activity.locator('strong,b').filter({hasText: input.comment}).first()).toBeVisible();
     await page.getByTestId('work-item-edit-form-button').click();
     const form = page.getByTestId('work-item-description-wrapper');
+    const source = form.locator('textarea[data-testid="markdown-editor-form-field"]');
+    const plain = form.getByRole('button', {name:'Switch to plain text editing', exact:true});
+    const save = form.getByRole('button', {name:'Save changes', exact:true});
+    await source.or(plain).first().waitFor({timeout:30000});
+    if (!await source.isVisible()) await plain.click();
+    await expect(source).toHaveValue(description);
+    const firstEdit = description + ' First Markdown save.';
+    await source.focus();
+    await page.keyboard.press('Control+End');
+    await page.keyboard.insertText(' First Markdown save');
+    evidence.firstMarkdownGesture = await recordGitLabSave({page, editor:source, button:save, key:'.', pace:'immediate'});
+    await expect(source).toBeHidden({timeout:30000});
+    await page.reload();
+    evidence.firstMarkdownAfterReload = (await request(api)).description;
+    await expect(reader).toHaveText(evidence.firstMarkdownAfterReload);
+    evidence.firstMarkdownNotes = await notes();
+    evidence.firstMarkdownPassed = matchesSaveGesture(evidence.firstMarkdownGesture,'.',firstEdit,'immediate','markdown') &&
+      evidence.firstMarkdownAfterReload === firstEdit && JSON.stringify(evidence.firstMarkdownNotes) === JSON.stringify(expectedNotes);
+    await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-first-markdown-save.png', animations:'disabled'});
+    await page.getByTestId('work-item-edit-form-button').click();
     const stock = form.locator('.ProseMirror[contenteditable="true"]');
     const toggle = form.getByRole('button', {name: 'Switch to rich text editing', exact: true});
     await stock.or(toggle).first().waitFor({ timeout: 30000 });
     if (!await stock.isVisible()) await toggle.click();
-    await expect(stock).toHaveText(description);
+    await expect(stock).toHaveText(evidence.firstMarkdownAfterReload);
     await stock.locator('p').click();
     await page.keyboard.press('End');
     const suffix = ' Checked after rollback.';
-    const prefix = description + suffix.slice(0,-1);
+    const prefix = evidence.firstMarkdownAfterReload + suffix.slice(0,-1);
     await page.keyboard.insertText(suffix.slice(0,-1));
     await expect(stock).toHaveText(prefix);
-    const save = form.getByRole('button', { name: 'Save changes', exact: true });
     await expect(save).toBeEnabled();
     evidence.gesture = await recordGitLabSave({page,editor:stock,button:save,key:'.',pace:'immediate'});
-    evidence.quickSaveMeasured = matchesSaveGesture(evidence.gesture,'.',description + suffix,'immediate');
+    evidence.quickSaveMeasured = matchesSaveGesture(evidence.gesture,'.',evidence.firstMarkdownAfterReload + suffix,'immediate');
     evidence.typed = evidence.gesture.paragraphs?.join('\n');
     await expect(stock).toBeHidden({timeout: 30000});
     evidence.afterSubmit = (await request(api)).description;
@@ -63,13 +82,10 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     await page.reload();
     await expect(reader).toHaveText(evidence.afterSubmit);
     evidence.quickSaveAfterReload = (await request(api)).description;
-    evidence.quickSavePassed = evidence.quickSaveMeasured && evidence.quickSaveAfterReload === description + suffix;
+    evidence.quickSavePassed = evidence.quickSaveMeasured && evidence.quickSaveAfterReload === evidence.firstMarkdownAfterReload + suffix;
     // Preserve a rapid-save failure and separately exercise an author inspecting
     // Markdown before saving. Both controls use the same stock editor deployment.
     await page.getByTestId('work-item-edit-form-button').click();
-    // GitLab reuses the test ID on a container in rich mode.
-    const source = form.locator('textarea[data-testid="markdown-editor-form-field"]');
-    const plain = form.getByRole('button', {name:'Switch to plain text editing', exact:true});
     await source.or(plain).first().waitFor({timeout:30000});
     if (!await source.isVisible()) await plain.click();
     await expect(source).toHaveValue(evidence.quickSaveAfterReload);
@@ -88,6 +104,6 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-after-rollback.png', animations: 'disabled'});
     Object.assign(evidence, {reviewedSaveAfterReload: saved, notes: savedNotes});
   }
-  result.passed = records.every(record => record.quickSavePassed);
+  result.passed = records.every(record => record.firstMarkdownPassed && record.quickSavePassed);
   return result;
 }

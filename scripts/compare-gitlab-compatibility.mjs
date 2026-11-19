@@ -139,14 +139,20 @@ if (reports.some(report => report.restartRequested)) {
   table.push('', 'The restart checks compare each saved description and formatted comment in the API and a fresh browser session. The input reports contain the volume records and the browser build identity after restart.', '');
 }
 if (rollback?.records?.length) {
-  table.push('## Saved issues after frontend rollback', '',
-    '| Authored in | Issue | Final key to click | Immediate rich-text Save | Reviewed Markdown Save and retained comment |',
-    '| --- | --- | ---: | --- | --- |');
+  table.push('## Saved issues after frontend rollback', '');
+  if (rollback.formatVersion === 2) {
+    table.push('Immediate Markdown Save as the first edit after rollback: ' +
+      (result.frontendRollback.firstMarkdownSavePassed ? 'passed on all paired issues.' : 'not verified on every paired issue.'), '');
+  }
+  table.push('| Authored in | Issue | First Markdown Save (key to click) | Rich-text key to click | Immediate rich-text Save | Reviewed Markdown Save and retained comment |',
+    '| --- | --- | --- | ---: | --- | --- |');
   for (const record of rollback.records) {
     const timing = record.gesture?.clickAt - record.gesture?.keyAt;
     const quick = record.baselineFailure ? 'Pre-existing content mismatch; record left untouched' : record.quickSaveMeasured !== true ? 'Timing unverified' : record.quickSavePassed === undefined ? 'Unverified' : record.quickSavePassed ? 'Passed' : 'Lost edit';
+    const firstTime = record.firstMarkdownGesture?.clickAt - record.firstMarkdownGesture?.keyAt;
+    const first = Number.isFinite(firstTime) ? (record.firstMarkdownPassed ? 'Passed' : 'Failed') + ' (' + firstTime.toFixed(1) + ' ms)' : 'Unmeasured';
     const reviewed = record.reviewedSaveAfterReload !== undefined && Array.isArray(record.notes) ? 'Passed' : 'Unverified';
-    table.push('| ' + (record.writer ?? 'Unverified') + ' | #' + record.iid + ' | ' + (Number.isFinite(timing) ? timing.toFixed(1)+' ms' : 'Unmeasured') + ' | ' + quick + ' | ' + reviewed + ' |');
+    table.push('| ' + (record.writer ?? 'Unverified') + ' | #' + record.iid + ' | ' + first + ' | ' + (Number.isFinite(timing) ? timing.toFixed(1)+' ms' : 'Unmeasured') + ' | ' + quick + ' | ' + reviewed + ' |');
   }
   table.push('');
 }

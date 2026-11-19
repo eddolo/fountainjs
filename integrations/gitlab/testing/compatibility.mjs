@@ -763,11 +763,29 @@ export function compareGitLabCompatibility(original,fountain){
   const incomplete=rows.filter(row=>row.classification===null).length;
   const rollback = original.rollback;
   const requiresRollback = Boolean(original.rollbackRequested || rollback);
-  const rollbackVerified = rollback?.passed === true && Array.isArray(rollback.records) &&
+  const firstEditsVerified = rollback?.formatVersion === 2 && matched &&
+    equal(rollback.candidateBuild, fountain.buildIdentity?.expected) &&
+    Array.isArray(rollback.records) && rollback.records.length === fixture.cases.length * 2 &&
+    new Set(rollback.records.map(record => record.iid)).size === rollback.records.length &&
+    fixture.cases.every(input => [original,fountain].every(writer => {
+      const record = rollback.records.find(entry => entry.case === input.id && entry.writer === writer.side);
+      const issue = writer.observations.find(entry => entry.id === input.id);
+      const before = input.description + input.suffix;
+      const expected = before + ' First Markdown save.';
+      const expectedNotes = ['**' + input.comment + '**'];
+      return Number.isSafeInteger(record?.iid) && record.iid > 0 && record.iid === issue?.iid &&
+        record.before === before && equal(record.beforeNotes,expectedNotes) && !record.baselineFailure &&
+        matchesSaveGesture(record.firstMarkdownGesture,'.',expected,'immediate','markdown') &&
+        record.firstMarkdownAfterReload === expected && equal(record.firstMarkdownNotes,expectedNotes);
+    }));
+  const rollbackVerified = (rollback?.formatVersion !== 2 || firstEditsVerified) && rollback?.passed === true && Array.isArray(rollback.records) &&
     rollback.records.length === fixture.cases.length * 2 && fixture.cases.every(input =>
       ['original','fountain'].every(writer => {
         const record = rollback.records.find(entry => entry.case === input.id && entry.writer === writer);
-        const expected = input.description + input.suffix + ' Checked after rollback.';
+        const initial = input.description + input.suffix;
+        const firstMarkdown = initial + ' First Markdown save.';
+        const checksFirstEdit = rollback.formatVersion === 2;
+        const expected = (checksFirstEdit ? firstMarkdown : initial) + ' Checked after rollback.';
         return record?.quickSaveMeasured === true && record.quickSavePassed === true && !record.baselineFailure &&
           record.before === input.description + input.suffix &&
           (record.beforeNotes === undefined || equal(record.beforeNotes,['**' + input.comment + '**'])) &&
@@ -776,7 +794,7 @@ export function compareGitLabCompatibility(original,fountain){
           equal(record.notes,['**' + input.comment + '**']);
       }));
   const comparisonComplete = matched&&incomplete===0&&original.collectionComplete===true&&fountain.collectionComplete===true&&original.errors?.length===0&&fountain.errors?.length===0;
-  return {formatVersion:2,...(requiresRollback ? {frontendRollback:{passed:rollbackVerified,issueIds:(rollback?.records??[]).filter(record=>record.writer==='fountain').map(record=>record.iid)}} : {}),scope:'Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.',
+  return {formatVersion:2,...(requiresRollback ? {frontendRollback:{passed:rollbackVerified,...(rollback?.formatVersion === 2 ? {firstMarkdownSavePassed:firstEditsVerified} : {}),issueIds:(rollback?.records??[]).filter(record=>record.writer==='fountain').map(record=>record.iid)}} : {}),scope:'Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.',
     buildIdentities:{original:original.buildIdentity??null,fountain:fountain.buildIdentity??null},
     environment:{matched,mismatches},runs:{original:{runId:original.runId,attempt:original.attempt},fountain:{runId:fountain.runId,attempt:fountain.attempt}},
     rows,summary:{...counts,incomplete,total:rows.length},

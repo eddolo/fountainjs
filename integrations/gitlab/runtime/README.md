@@ -366,6 +366,8 @@ records. Switching to Markdown immediately after typing in rich text also needs
 care: verify the final edit in the Markdown field before saving.
 [Rollback results](../../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md).
 
+For the **first edit after returning to packaged GitLab 19.5.3**, open the issue description and select **Switch to plain text editing** before typing if the rich editor is open. Type in the Markdown field and choose **Save changes**. The [Chromium 151 first-edit comparison](../../../artifacts/gitlab-compatibility/rollback-first-edit-20261119/comparison/report.md) verified the final character after reload on issues #576–579, including two created with Fountain build `269741c1`. All four immediate clicks landed 7.0–9.7 ms after the last key. The GitLab API retained all four descriptions and formatted comments. The subsequent immediate rich-text Save on the same issues lost the period on two issues and the whole newly typed phrase on two. The previously saved Markdown edit survived each attempt. Packaged rollback remains unsuitable for an unconditional rich-text Save guarantee.
+
 To repeat the independent-draft comparison on Firefox, add `--browser firefox` to both composers commands and use a fresh run ID. The [Firefox 153 result](../../../artifacts/gitlab-compatibility/composer-firefox-20261119/comparison-1/report.md) exercised both save orders and reloaded both saved records. It used the same local GitLab and Fountain builds as the linked Chromium review-feedback comparison.
 
 For the desktop WebKit profile, add `--browser webkit` to both collection

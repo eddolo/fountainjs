@@ -23,7 +23,8 @@ export async function recordGitLabSave({page,editor,button,key,pace}) {
       receipt.button = event.target.closest('button')?.textContent.trim();
       receipt.trustedClick = event.isTrusted;
       receipt.clickAt = event.timeStamp;
-      receipt.paragraphs = [...el.querySelectorAll('p')].map(p => p.textContent);
+      if (el instanceof HTMLTextAreaElement) receipt.sourceValue = el.value;
+      else receipt.paragraphs = [...el.querySelectorAll('p')].map(p => p.textContent);
     }, {capture: true, once: true});
   });
   await page.keyboard.press(key);
@@ -33,9 +34,10 @@ export async function recordGitLabSave({page,editor,button,key,pace}) {
   return page.evaluate(() => window.__quickSaveReceipt);
 }
 
-export function matchesSaveGesture(gesture,key,expected,pace) {
+export function matchesSaveGesture(gesture,key,expected,pace,surface = 'rich') {
   if (gesture?.trustedKey !== true || gesture.trustedClick !== true || gesture.key !== key ||
-      gesture.button !== 'Save changes' || gesture.paragraphs?.length !== 1 || gesture.paragraphs[0] !== expected ||
+      gesture.button !== 'Save changes' ||
+      (surface === 'markdown' ? gesture.sourceValue !== expected : gesture.paragraphs?.length !== 1 || gesture.paragraphs[0] !== expected) ||
       !Number.isFinite(gesture.keyAt) || !Number.isFinite(gesture.clickAt)) return false;
   const elapsed = gesture.clickAt - gesture.keyAt;
   return pace === 'immediate' ? elapsed >= 0 && elapsed < 100 : pace === 'reviewed' && elapsed >= 500;
