@@ -169,6 +169,38 @@ it('requires a real attempt on the posted suggestion before crediting stale-sour
  expect(row().status).toBe('missing-evidence');
 });
 
+it('separates safe refusal from correct relocation and checks the resulting commit', () => {
+ const pair = reports();
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-relocated-reviews.json', import.meta.url),'utf8'));
+ const input = fixture.cases[0]; fixture.cases = [input];
+ const seed = 'a'.repeat(40), competing = 'b'.repeat(40), head = 'c'.repeat(40);
+ for (const report of pair) {
+   report.fixture = fixture;
+   const state = {source:input.expectedAppliedSource,head,fileCommit:head,parents:[competing],sameNote:true,sameSuggestion:true,applied:true};
+   Object.assign(report.observations[0]!,{id:input.id,input,status:'observed',readyToApply:true,
+     confirmationOffered:true,applyResponse:{path:'/api/v4/suggestions/8/apply',status:200},
+     saved:{body:'```suggestion:-0+0\nold();\nreviewed();\n```\n\n'+fixture.marker,suggestions:[{id:8,appliable:true}]},
+     beforeApplyHead:seed,setup:{seedCommit:seed},beforeApplyFile:{content:Buffer.from(input.source).toString('base64')},
+     competingCommit:competing,verifiedCompetingSource:input.remoteSource,afterDecision:{...state},afterReload:{...state}});
+ }
+ const row = (key:string) => compareGitLabCompatibility(...pair).rows.find((r:any)=>r.invariant===key)?.classification;
+ expect(row('appliedAtNewLocation')).toBe('parity');
+ const item = pair[1].observations[0] as any;
+ delete item.afterReload.parents;
+ expect(row('appliedAtNewLocation')).toBeNull();
+ item.afterReload.parents = [seed];
+ expect(row('appliedAtNewLocation')).toBe('regression');
+ expect(row('afterReload.head')).toBe('regression');
+ item.applyResponse.status = 400;
+ const refused = {source:input.remoteSource,head:competing,fileCommit:competing,sameNote:true,sameSuggestion:true,applied:false};
+ item.afterDecision = {...refused}; item.afterReload = {...refused};
+ expect(row('appliedAtNewLocation')).toBe('regression');
+ expect(row('afterReload.source')).toBe('parity');
+ expect(row('afterReload.head')).toBe('parity');
+ item.afterReload.source = input.source;
+ expect(row('afterReload.source')).toBe('regression');
+});
+
 it('requires a disconnected mutation for the exact draft before scoring reconnect behavior', () => {
  const pair = reports();
  const input = {id:'retry',scope:'reconnect',description:'Release.',suffix:' Ship.'};

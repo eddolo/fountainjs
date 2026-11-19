@@ -1,0 +1,38 @@
+{
+  "formatVersion": 1,
+  "workflow": "relocated-posted-merge-request-suggestion",
+  "title": "Apply a review after its target moves",
+  "marker": "Review the proposed change",
+  "appendLine": "reviewed();\n",
+  "sourceObservationDelayMs": 1500,
+  "cases": [
+    {
+      "id": "refresh-after-insertion",
+      "scope": "relocated-review",
+      "filePath": "review-target.js",
+      "source": "before();\nold();\nkeep();\nend();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "handoffDelayMs": 1500,
+      "remoteSource": "inserted();\nbefore();\nold();\nkeep();\nend();\n",
+      "expectedAppliedSource": "inserted();\nbefore();\nold();\nreviewed();\nkeep();\nend();\n",
+      "refresh": true
+    },
+    {
+      "id": "live-after-moving-target",
+      "scope": "relocated-review",
+      "filePath": "review-target.js",
+      "source": "before();\nold();\nkeep();\nend();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "handoffDelayMs": 1500,
+      "remoteSource": "before();\nkeep();\nend();\nold();\n",
+      "expectedAppliedSource": "before();\nkeep();\nend();\nold();\nreviewed();\n",
+      "refresh": false
+    }
+  ]
+}

@@ -165,6 +165,9 @@ async function staleReview({page,request,input,fixture,result,project,branch,see
   const id = result.saved.suggestions[0].id;
   const eligibility = async () => (await request(base+'/notes/'+note.id)).suggestions.find(suggestion => suggestion.id === id);
   if (input.waitForOutdated) await expect.poll(async () => (await eligibility())?.appliable,{timeout:60000}).toBe(false);
+  if (input.scope === 'relocated-review' && input.refresh) {
+    await expect.poll(async () => (await request(base)).diff_refs?.head_sha,{timeout:60000}).toBe(other.id);
+  }
   if (input.refresh) {
     await page.goto(mr.web_url+'#note_'+note.id);
     await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
@@ -202,11 +205,12 @@ async function staleReview({page,request,input,fixture,result,project,branch,see
   await savedNote.screenshot({path:join(output,input.id+'-decision.png'),animations:'disabled'});
   const read = async()=>({
     file:await request(fileURL),
-    head:(await request('/api/v4/projects/'+project.id+'/repository/branches/'+encodeURIComponent(branch))).commit.id,
+    head:(await request('/api/v4/projects/'+project.id+'/repository/branches/'+encodeURIComponent(branch))).commit,
     note:await request(base+'/notes/'+note.id),
   });
   const snapshot = item => ({source:Buffer.from(item.file.content,'base64').toString('utf8'),
-    sameHead:item.head===other.id && item.file.last_commit_id===other.id, sameNote:item.note.body===note.body,
+    head:item.head.id, parents:item.head.parent_ids, fileCommit:item.file.last_commit_id,
+    sameHead:item.head.id===other.id && item.file.last_commit_id===other.id, sameNote:item.note.body===note.body,
     applied:item.note.suggestions[0]?.applied, sameSuggestion:item.note.suggestions[0]?.id===result.saved.suggestions[0].id});
   result.afterDecision=snapshot(await read());
   await page.goto(mr.web_url+'#note_'+note.id);
@@ -289,7 +293,7 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       result.beforeApplyHead=(await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(branch)}`)).commit.id;
       await page.reload();const savedNote=page.locator('#note_'+note.id);await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
       await page.screenshot({path:join(output,input.id+'-posted.png'),fullPage:true,animations:'disabled',caret:'initial'});
-      if(input.scope==='stale-review') {
+      if(input.scope==='stale-review' || input.scope==='relocated-review') {
         await staleReview({page,request,input,fixture,result,project,branch,seed,note,savedNote,mr,base,fileURL,output,stage});
         result.status='observed';await stage('complete');continue;
       }

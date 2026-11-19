@@ -98,7 +98,7 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
-    if(input.scope==='stale-review') {
+    if(input.scope==='stale-review' || input.scope==='relocated-review') {
       const originalBody = '```suggestion:-0+0\n' + input.source.split('\n')[input.range.start-1] + '\n' + fixture.appendLine + '```\n\n'+fixture.marker;
       const disabled = item => item.confirmationOffered===false && !item.applyResponse &&
         item.blockedAtControl?.buttonDisabled===true && item.blockedAtControl.confirmationHidden===true &&
@@ -114,6 +114,41 @@ export function compareGitLabCompatibility(original,fountain){
         item.verifiedCompetingSource===input.remoteSource;
       const paired = valid(original,a) && valid(fountain,b);
       const refused = item => disabled(item) || [400,409,422].includes(item.applyResponse.status);
+      if (input.scope === 'relocated-review') {
+        const accepted = item => item.applyResponse?.status >= 200 && item.applyResponse.status < 300;
+        const rowsFor = item => {
+          const applied = accepted(item);
+          const rows = {};
+          for (const phase of ['afterDecision','afterReload']) {
+            const state = item[phase];
+            if (!state || typeof state.source !== 'string' || !/^[a-f0-9]{40}$/u.test(state.head) ||
+                !/^[a-f0-9]{40}$/u.test(state.fileCommit) || (applied && !Array.isArray(state.parents)) ||
+                [state.sameNote,state.sameSuggestion,state.applied].some(value => typeof value !== 'boolean')) continue;
+            rows[phase+'.source'] = state.source === (applied ? input.expectedAppliedSource : input.remoteSource);
+            rows[phase+'.head'] = applied
+              ? /^[a-f0-9]{40}$/u.test(state.head) && state.head !== item.competingCommit &&
+                equal(state.parents,[item.competingCommit]) && state.fileCommit === state.head
+              : refused(item) && state.head === item.competingCommit && state.fileCommit === state.head;
+            rows[phase+'.review'] = state.sameNote === true && state.sameSuggestion === true && state.applied === applied;
+          }
+          if (item.afterDecision?.head && item.afterReload?.head) rows.stableCommit = item.afterDecision.head === item.afterReload.head;
+          if (rows.stableCommit !== undefined && rows['afterDecision.source'] !== undefined && rows['afterReload.source'] !== undefined) {
+            rows.appliedAtNewLocation = applied && rows.stableCommit &&
+              ['afterDecision','afterReload'].every(phase => rows[phase+'.source'] && rows[phase+'.head'] && rows[phase+'.review']);
+          }
+          return rows;
+        };
+        const left = paired ? rowsFor(a) : {}, right = paired ? rowsFor(b) : {};
+        const labels = {appliedAtNewLocation:'Apply succeeds on the relocated target',stableCommit:'Branch commit survives reload'};
+        for (const [phase,when] of [['afterDecision','after Apply'],['afterReload','after reload']]) {
+          labels[phase+'.source'] = 'Exact whole file, including the relocated line ('+when+')';
+          labels[phase+'.head'] = 'Branch and file commit match the observed decision ('+when+')';
+          labels[phase+'.review'] = 'Original note and suggestion identity retain the correct Applied state ('+when+')';
+        }
+        for (const [invariant,label] of Object.entries(labels)) rows.push({case:input.id,invariant,label,expected:true,
+          original:left[invariant],fountain:right[invariant],classification:null});
+        continue;
+      }
       rows.push({case:input.id,invariant:'applyRefused',label:'GitLab prevents applying the stale suggestion',expected:true,
         original:paired?refused(a):undefined,fountain:paired?refused(b):undefined,classification:null});
       const explained = item => [...(item.alertText??[]),item.tooltip??''].some(text=>/line was changed in a more recent version/i.test(text));

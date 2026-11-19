@@ -8,7 +8,7 @@
 | Concurrent issue editing | The returning Developer can inspect both drafts and explicitly discard or overwrite. [18 matched checks](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-2/report.md) | Simultaneous submissions and late writes after conflict disclosure. |
 | Immediate Save and rollback | The active Fountain build retains the last edit. Stock can reopen the same issues and discussions and save from Markdown. [Immediate Save](../../artifacts/gitlab-compatibility/immediate-save-20261119/comparison-1/report.md) · [Rollback](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) | Stock rapid rich-text Save lost the final edit in both Chromium and WebKit. [Timed WebKit rollback](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) Ruby overlays and existing rendered-content caches need separate rollback evidence. |
 | Merge-request reviews | Three posted suggestions were expanded symmetrically, shrunk to the anchor, or extended on one side. The file and commit were verified after undo, redo, save, reload and application. [63 matched checks](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-2/report.md) | Simultaneous reviews and the Applied-history loss on prose-only edits. |
-| Stale review targets | Both editors protected changed and deleted targets, including a deletion with an identical line elsewhere. The newer file, branch head, note and suggestion ID survived reload. [48 matched checks and Apply outcomes](../../artifacts/gitlab-compatibility/deleted-target-20261119/comparison-2/report.md) | Two live discussions only identified a file change. Relocated targets still require a matched run. |
+| Stale review targets | Both editors protected changed and deleted targets, including a deletion with an identical line elsewhere. The newer file, branch head, note and suggestion ID survived reload. [48 matched checks and Apply outcomes](../../artifacts/gitlab-compatibility/deleted-target-20261119/comparison-2/report.md) | Two live discussions only identified a file change. Both editors applied a suggestion after an insertion shifted its line, but refused a live review when the line itself moved to the end of the file. [16 relocation checks](../../artifacts/gitlab-compatibility/relocated-target-20261119/comparison-1/report.md). |
 
 On this GitLab revision, `app/services/notes/update_service.rb` calls
 `note.suggestions.delete_all` and recreates the records in `update_suggestions`.
@@ -92,12 +92,12 @@ must be identical on both sides or the result is not a matched editor comparison
 Declare asset selection as an intentional frontend difference; server features,
 permissions and policy must not change between sides. Start with the stock server.
 
-### Reproduce the issue Save comparisons
+### Reproduce an issue or merge-request comparison
 
 Use the pinned Linux deployment from the [runtime guide](runtime/README.md#reproduce-the-frontend-deployment-and-rollback).
 Run from the Fountain checkout with the test container stopped. Choose
 `quick-save` for click timing, `reconnect` for a single author retrying, or
-`offline-conflict` for two authors editing the same description.
+`offline-conflict` for two authors editing the same description. Use `composers` for independent descriptions and comments, `stale-reviews` for changed and deleted targets, and `relocated-reviews` for intact lines shifted or moved within a file.
 
 ```sh
 suite=quick-save
@@ -174,7 +174,7 @@ one substep does not establish that Fountain is globally better than Tiptap.
    save, reopen and apply. Compare exact source and resulting file/commit.
 2. Posted suggestion editing: change source/range, undo/redo, save/reopen, then
    apply. One symmetric expansion is now matched through both actual UIs, with
-   no early source commit. The November 19 follow-ups above add shrinking, asymmetric extension and a changed-line conflict. The later deletion run above covers removed targets. Relocated targets and concurrent applications remain.
+   no early source commit. The November 19 follow-ups above add shrinking, asymmetric extension and a changed-line conflict. The later deletion run above covers removed targets. The relocation run above covers an insertion and an explicit line move. Concurrent applications remain.
 3. Empty and whitespace source: separately compare preserved Markdown, intended
    file effect, warnings/confirmation and actual application. Stock GitLab's
    whitespace-only source becomes deletion. The matched empty/one-newline UI
@@ -217,7 +217,7 @@ handoff discovery is retained; predefined immediate and settled profiles run
 identically on both sides. The comparator refuses environment/input/instrument
 mismatches, missing editor proof and unobserved outcomes.
 
-Next: extend matched workflows to relocated source ranges and simultaneous reviews,
+Next: extend matched workflows to simultaneous reviews,
 wider deletion ranges/whitespace inputs, clipboard wrapped-line/Unicode/merged-cell/ownership
 workflows plus rapid-input profiles, tables/tasks/media and then roles/concurrency,
 additional browsers/mobile and matched restart. Keep the shared Applied-history

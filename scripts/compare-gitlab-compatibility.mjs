@@ -24,10 +24,10 @@ const table=['# Matched GitLab editor comparison','','**Original** — '+describ
 ...(rollback?[result.frontendRollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
 '| Case | Invariant | Classification |','| --- | --- | --- |',...result.rows.map(row=>`| ${row.case} | ${row.label} | ${row.classification??row.status} |`),'',
 'Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.',''];
-if (reports[0].suite === 'stale-reviews') {
+if (['stale-reviews','relocated-reviews'].includes(reports[0].suite)) {
   table.push('## Apply after the source commit', '', '| Workflow | Stock GitLab | Fountain |', '| --- | --- | --- |');
   for (const input of reports[0].fixture.cases) {
-    const row = result.rows.find(entry => entry.case === input.id && entry.invariant === 'applyRefused');
+    const row = result.rows.find(entry => entry.case === input.id && ['applyRefused','appliedAtNewLocation'].includes(entry.invariant));
     const decisions = reports.map((report,index) => {
       const item = report.observations?.find(entry => entry.id === input.id);
       if (!result.environment.matched || row?.[index === 0 ? 'original' : 'fountain'] === undefined) return 'Unverified';

@@ -100,6 +100,14 @@ and suggestion ID survived reload. Across all four cases, 46 checks reached
 parity and two live discussions gave only a generic file-change message.
 [Changed and deleted targets, pinned builds and outcomes](../../artifacts/gitlab-compatibility/deleted-target-20261119/comparison-2/report.md).
 
+When an insertion shifted the reviewed line, both editors applied the posted
+suggestion at the new position after refresh. The whole file matched, the new
+commit had the competing commit as its sole parent, and the same suggestion
+remained Applied after reload. When the line itself moved to the end while
+the discussion was open, both received HTTP 400 and preserved the moved file
+and unapplied review. Automatic relocation in that live case remains open.
+[Relocated review results](../../artifacts/gitlab-compatibility/relocated-target-20261119/comparison-1/report.md).
+
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu
 cleanup and context/host-option revalidation. The recorded matched pair passes
