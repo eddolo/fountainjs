@@ -98,7 +98,7 @@ if (rollback?.records?.length) {
     '| --- | --- | ---: | --- | --- |');
   for (const record of rollback.records) {
     const timing = record.gesture?.clickAt - record.gesture?.keyAt;
-    const quick = record.quickSaveMeasured !== true ? 'Timing unverified' : record.quickSavePassed === undefined ? 'Unverified' : record.quickSavePassed ? 'Passed' : 'Lost edit';
+    const quick = record.baselineFailure ? 'Pre-existing content mismatch; record left untouched' : record.quickSaveMeasured !== true ? 'Timing unverified' : record.quickSavePassed === undefined ? 'Unverified' : record.quickSavePassed ? 'Passed' : 'Lost edit';
     const reviewed = record.reviewedSaveAfterReload !== undefined && Array.isArray(record.notes) ? 'Passed' : 'Unverified';
     table.push('| ' + (record.writer ?? 'Unverified') + ' | #' + record.iid + ' | ' + (Number.isFinite(timing) ? timing.toFixed(1)+' ms' : 'Unmeasured') + ' | ' + quick + ' | ' + reviewed + ' |');
   }

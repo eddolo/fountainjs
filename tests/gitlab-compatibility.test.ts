@@ -55,6 +55,7 @@ it('refuses to classify a mismatched backend, candidate instrument, input or bro
   (report:any)=>{report.backend.project.defaultHead='different';},
   (report:any)=>{report.browser.version='different';},
   (report:any)=>{report.harnessHashes.driver='different';},
+  (report:any)=>{report.buildProbeIssue={iid:7,descriptionSHA256:'different'};},
   (report:any)=>{report.deployment.footnoteFilter='different-renderer';},
   (report:any)=>{report.observations[0].input.source='different\n';},
  ]){
@@ -102,12 +103,15 @@ it('checks each timed rollback record independently of its reported pass flag', 
  original.observations[0]!.input = input; fountain.observations[0]!.input = input;
  const text = 'Release now. Checked after rollback.';
  const records = ['original','fountain'].map(writer => ({writer,case:input.id,iid:writer==='original'?1:2,
-   quickSavePassed:true,quickSaveMeasured:true,quickSaveAfterReload:text,
+   before:'Release now.',beforeNotes:['**Reviewed**'],quickSavePassed:true,quickSaveMeasured:true,quickSaveAfterReload:text,
    reviewedSaveAfterReload:'Release now. Verified in Markdown.',notes:['**Reviewed**'],
    gesture:{trustedKey:true,trustedClick:true,key:'.',button:'Save changes',paragraphs:[text],keyAt:0,clickAt:25}}));
  Object.assign(original,{rollbackRequested:true,rollback:{passed:true,records}});
  const passed = () => compareGitLabCompatibility(original,fountain).frontendRollback.passed;
  expect(passed()).toBe(true);
+ records[0]!.before='_Release now._';
+ expect(passed()).toBe(false);
+ records[0]!.before='Release now.';
  records[1]!.gesture.clickAt = 150;
  expect(passed()).toBe(false);
  records[1]!.gesture.clickAt = 25;

@@ -28,8 +28,12 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     const expectedNotes = ['**' + input.comment + '**'];
     expect(issue.title).toBe(input.title + ' ' + candidate.runId + '-a' + candidate.attempt);
     evidence.before = issue.description;
-    expect(issue.description).toBe(description);
-    expect(await notes()).toEqual(expectedNotes);
+    evidence.beforeNotes = await notes();
+    if (issue.description !== description || JSON.stringify(evidence.beforeNotes) !== JSON.stringify(expectedNotes)) {
+      evidence.baselineFailure = 'Saved content differs from the expected rollback fixture';
+      evidence.writerPersisted = item.facts.afterSave;
+      continue;
+    }
     await page.goto(issue.web_url);
     const reader = page.locator('.js-work-item-description');
     const activity = page.getByTestId('detail-layout-activity');

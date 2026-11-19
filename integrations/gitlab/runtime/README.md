@@ -314,6 +314,10 @@ visible at click time. An earlier unmeasured pass cannot certify rapid Save.
 
 WebKit 26.5 also passed all 44 independent-editor checks on Fountain revision `7756a29f`. After removing its compiled frontend, stock GitLab reopened issues #522–525 on the same volumes. All four retained their comments and a new Markdown edit after reload. Saving 9–14 ms after the last rich-text keystroke lost that edit on all four. The strict rollback acceptance remains open. Attempt one stopped before stock reached its sign-in page; attempt two completed both browser journeys. [Builds, matched results and rollback timings](../../../artifacts/gitlab-compatibility/unicode-composer-rollback-20261119/comparison-2/report.md).
 
+On issue #540 the stock editor visibly undid italic formatting but immediately switching to Markdown restored the underscores. The stock API already held the italic description before the rollback check started. A rollback run must distinguish this pre-existing source mismatch from a change during redeployment. The runner records the writer's persisted content, leaves the mismatched record untouched, and exercises the remaining independent controls. [First attempt and raw reports](../../../artifacts/gitlab-compatibility/emoji-composer-rollback-20261119/comparison-1/report.md).
+
+The completed Chromium 151 rerun on Fountain revision `2cb51f61` verified all 44 matched isolation checks. After rollback stock reopened both candidate issues (#542 and #543) and both controls (#544 and #545). Each retained its original comment and a reviewed Markdown edit. Each lost the last rich-text edit at a measured 3.7–5.5 ms from key to click. [Exact build identities and four-record results](../../../artifacts/gitlab-compatibility/emoji-composer-rollback-20261119/comparison-2/report.md).
+
 ### Reproduce rollback with the footnote renderer
 
 Prepare the pinned filter once, then start with the isolated service stopped. These runs use the same database and a fresh issue with repeated footnote references.

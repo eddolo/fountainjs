@@ -649,7 +649,9 @@ export function compareGitLabCompatibility(original,fountain){
       ['original','fountain'].every(writer => {
         const record = rollback.records.find(entry => entry.case === input.id && entry.writer === writer);
         const expected = input.description + input.suffix + ' Checked after rollback.';
-        return record?.quickSaveMeasured === true && record.quickSavePassed === true &&
+        return record?.quickSaveMeasured === true && record.quickSavePassed === true && !record.baselineFailure &&
+          record.before === input.description + input.suffix &&
+          (record.beforeNotes === undefined || equal(record.beforeNotes,['**' + input.comment + '**'])) &&
           matchesSaveGesture(record.gesture,'.',expected,'immediate') && record.quickSaveAfterReload === expected &&
           record.reviewedSaveAfterReload === input.description + input.suffix + ' Verified in Markdown.' &&
           equal(record.notes,['**' + input.comment + '**']);

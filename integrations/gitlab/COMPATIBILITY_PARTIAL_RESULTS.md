@@ -1,5 +1,15 @@
 # Matched GitLab directed partial-selection results
 
+## Wrapped text and GitLab emoji, November 19
+
+Three Chromium 151 workflows on GitLab CE 19.5.3 passed 150 matched checks. They covered dragging forward and backward across a wrapped release note, plus opening the same passage with GitLab's emoji shortcode. The copied text contained a decomposed accent, a skin-tone emoji joined with U+200D, bold and a link. Actual pointer selections crossed three visual lines in stock and four in Fountain. Both retained the exact selected characters, formatting and link through external rich paste, cut, undo, internal paste, redo, Save and reload. The external target was a separate browser editable field. The native and stock builds both identified themselves on private audit issue #528. [Matched report with build identities](../../artifacts/gitlab-compatibility/wrapped-clipboard-20261119/comparison-4/report.md) · [Backward selection](../../artifacts/gitlab-compatibility/wrapped-clipboard-20261119/fountain-4/pointer-backward-selected.png) · [Reopened result](../../artifacts/gitlab-compatibility/wrapped-clipboard-20261119/fountain-4/pointer-forward-reopened.png).
+
+The [earlier Fountain run](../../artifacts/gitlab-compatibility/wrapped-clipboard-20261119/comparison-3/report.md) stopped at rich-editor startup for all three documents. The adapter now unwraps the verified textual GitLab emoji without splitting the surrounding formatting. On the shortcode input, GitLab stored both occurrences as shortcodes. Fountain retained the original shortcode and saved the newly pasted character as Unicode. The visible documents reopened equivalently. Custom image emoji, bidirectional text, IME composition and touch selection need separate coverage.
+
+To reproduce, run `scripts/run-gitlab-compatibility.mjs --suite wrapped` with a fresh shared `--run-id` for `--editor original` and `--editor fountain`, then compare the two reports using the [runtime guide](runtime/README.md#reproduce-the-frontend-deployment-and-rollback).
+
+## Short single-line selections, November 17
+
 Collected 2026-11-17 as `partial-ready-20261117`. Stock original and Fountain
 frontends ran against matching pinned GitLab CE 19.5.3 image/server sources,
 backend configuration/volumes, Chromium build, actor, project/default head,
