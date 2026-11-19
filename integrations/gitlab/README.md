@@ -83,6 +83,15 @@ without measuring the interval. The rollback check now requires trusted input,
 the expected visible text at click time and a measured interval under 100 ms.
 [WebKit rollback, exact builds and issue IDs](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md).
 
+Two stale-review cases change an actual branch after a suggestion is posted.
+Both editors sent the Apply request. GitLab refused it in all four trials and
+kept the newer source, branch head, original note and unapplied suggestion ID
+through reload. The refreshed review named the changed line. The live discussion
+said only that a file had changed. This gives 21 parity checks and one shared
+feedback limitation. An initial run that only closed the live dropdown lacked
+proof of an Apply attempt and received no score for that case.
+[Stale review results](../../artifacts/gitlab-compatibility/stale-review-20261119/comparison-2/report.md).
+
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu
 cleanup and context/host-option revalidation. The recorded matched pair passes

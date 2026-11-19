@@ -132,6 +132,31 @@ it('does not claim complete or feature acceptance when browser errors remain une
  expect(result.comparisonComplete).toBe(false);expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
 });
 
+it('requires a real attempt on the posted suggestion before crediting stale-source protection', () => {
+ const pair = reports();
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-stale-reviews.json', import.meta.url),'utf8'));
+ const input = fixture.cases[1]; fixture.cases = [input];
+ for (const report of pair) {
+   report.fixture = fixture;
+   Object.assign(report.observations[0]!,{id:input.id,input,status:'observed',readyToApply:true,
+     confirmationOffered:true,applyResponse:{path:'/api/v4/suggestions/8/apply',status:400},
+     saved:{body:'```suggestion:-0+0\nold();\nreviewed();\n```\n\n'+fixture.marker,suggestions:[{id:8,appliable:true}]},
+     beforeApplyHead:'a'.repeat(40),setup:{seedCommit:'a'.repeat(40)},
+     beforeApplyFile:{content:Buffer.from(input.source).toString('base64')},competingCommit:'b'.repeat(40),
+     verifiedCompetingSource:input.remoteSource,afterReload:{source:input.remoteSource}});
+ }
+ const row = () => compareGitLabCompatibility(...pair).rows.find((r:any)=>r.invariant==='afterReload.source');
+ expect(row().classification).toBe('parity');
+ const item = pair[1].observations[0] as any;
+ item.afterReload.source = input.source;
+ expect(row().classification).toBe('regression');
+ item.confirmationOffered = false;
+ expect(row().status).toBe('missing-evidence');
+ item.confirmationOffered = true;
+ item.applyResponse.path = '/api/v4/suggestions/9/apply';
+ expect(row().status).toBe('missing-evidence');
+});
+
 it('requires a disconnected mutation for the exact draft before scoring reconnect behavior', () => {
  const pair = reports();
  const input = {id:'retry',scope:'reconnect',description:'Release.',suffix:' Ship.'};

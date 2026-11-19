@@ -98,6 +98,27 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='stale-review') {
+      const originalBody = '```suggestion:-0+0\n' + input.source.split('\n')[input.range.start-1] + '\n' + fixture.appendLine + '```\n\n'+fixture.marker;
+      const valid = (report,item) => verifiedEditor(report,item) && item.status==='observed' &&
+        item.readyToApply===true && item.confirmationOffered===true && item.saved?.suggestions?.[0]?.appliable===true &&
+        item.applyResponse?.path==='/api/v4/suggestions/'+item.saved.suggestions[0].id+'/apply' && item.beforeApplyHead===item.setup?.seedCommit &&
+        decoded(item.beforeApplyFile)===input.source && item.saved?.body===originalBody &&
+        item.competingCommit!==item.beforeApplyHead && /^[a-f0-9]{40}$/u.test(item.competingCommit) &&
+        item.verifiedCompetingSource===input.remoteSource;
+      const paired = valid(original,a) && valid(fountain,b);
+      const explained = item => item.alertText?.some(text=>/line was changed in a more recent version/i.test(text));
+      rows.push({case:input.id,invariant:'staleReason',label:'Alert identifies the reviewed line as having changed',expected:true,
+        original:paired?explained(a):undefined,fountain:paired?explained(b):undefined,classification:null});
+      for (const phase of ['afterDecision','afterReload']) {
+        for(const [key,expected] of Object.entries({source:input.remoteSource,sameHead:true,sameNote:true,applied:false,sameSuggestion:true})) {
+          const labels = {source:'Newer source remains exact',sameHead:'No extra source commit',sameNote:'Posted review remains exact',applied:'Outdated review stays unapplied',sameSuggestion:'Suggestion identity survives'};
+          rows.push({case:input.id,invariant:phase+'.'+key,label:labels[key]+' ('+(phase==='afterReload'?'after reload':'after review')+')',expected,
+            original:paired?a[phase]?.[key]:undefined,fountain:paired?b[phase]?.[key]:undefined,classification:null});
+        }
+      }
+      continue;
+    }
     if (input.scope === 'offline-conflict') {
       const local = input.markdown.replace('Shared record.','Shared record.' + input.localSuffix);
       const remote = input.markdown.replace('Shared record.','Shared record.' + input.remoteSuffix);

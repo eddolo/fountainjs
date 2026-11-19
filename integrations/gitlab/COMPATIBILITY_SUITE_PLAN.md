@@ -7,7 +7,8 @@
 | Issue description and discussion | Both save orders, isolated formatting and undo histories, independent saved records. 44 matched checks on each engine. [Chromium](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-4/report.md) · [WebKit](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) | Other host surfaces and devices. |
 | Concurrent issue editing | The returning Developer can inspect both drafts and explicitly discard or overwrite. [18 matched checks](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-2/report.md) | Simultaneous submissions and late writes after conflict disclosure. |
 | Immediate Save and rollback | The active Fountain build retains the last edit. Stock can reopen the same issues and discussions and save from Markdown. [Immediate Save](../../artifacts/gitlab-compatibility/immediate-save-20261119/comparison-1/report.md) · [Rollback](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) | Stock rapid rich-text Save lost the final edit in both Chromium and WebKit. [Timed WebKit rollback](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) Ruby overlays and existing rendered-content caches need separate rollback evidence. |
-| Merge-request reviews | Three posted suggestions were expanded symmetrically, shrunk to the anchor, or extended on one side. The file and commit were verified after undo, redo, save, reload and application. [63 matched checks](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-2/report.md) | Stale targets, simultaneous reviews, and the Applied-history loss on prose-only edits. |
+| Merge-request reviews | Three posted suggestions were expanded symmetrically, shrunk to the anchor, or extended on one side. The file and commit were verified after undo, redo, save, reload and application. [63 matched checks](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-2/report.md) | Simultaneous reviews and the Applied-history loss on prose-only edits. |
+| Stale review targets | Both editors refused the actual Apply request after another commit changed the reviewed line. The newer file and branch head, original note and suggestion ID survived reload. [22 matched checks](../../artifacts/gitlab-compatibility/stale-review-20261119/comparison-2/report.md) | The live discussion only reports a changed file. Refreshing the review yields a line-specific explanation. Moved and deleted targets remain open. |
 
 On this GitLab revision, `app/services/notes/update_service.rb` calls
 `note.suggestions.delete_all` and recreates the records in `update_suggestions`.
@@ -173,7 +174,7 @@ one substep does not establish that Fountain is globally better than Tiptap.
    save, reopen and apply. Compare exact source and resulting file/commit.
 2. Posted suggestion editing: change source/range, undo/redo, save/reopen, then
    apply. One symmetric expansion is now matched through both actual UIs, with
-   no early source commit. The November 19 follow-up above adds shrinking and asymmetric extension. Stale and concurrent ranges remain.
+   no early source commit. The November 19 follow-ups above add shrinking, asymmetric extension and a changed-line conflict. Moved/deleted targets and concurrent applications remain.
 3. Empty and whitespace source: separately compare preserved Markdown, intended
    file effect, warnings/confirmation and actual application. Stock GitLab's
    whitespace-only source becomes deletion. The matched empty/one-newline UI
@@ -216,7 +217,7 @@ handoff discovery is retained; predefined immediate and settled profiles run
 identically on both sides. The comparator refuses environment/input/instrument
 mismatches, missing editor proof and unobserved outcomes.
 
-Next: extend matched workflows to stale source ranges and simultaneous reviews,
+Next: extend matched workflows to moved/deleted source ranges and simultaneous reviews,
 wider deletion ranges/whitespace inputs, clipboard wrapped-line/Unicode/merged-cell/ownership
 workflows plus rapid-input profiles, tables/tasks/media and then roles/concurrency,
 additional browsers/mobile and matched restart. Keep the shared Applied-history

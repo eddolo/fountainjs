@@ -142,6 +142,68 @@ async function editPostedReview({side,page,form,surface,input,fixture,output}) {
   await form.screenshot({path:join(output,input.id+'-after-redo.png'),animations:'disabled',caret:'initial'});
   return result;
 }
+// A separate real GitLab commit changes the line the open suggestion targets.
+async function staleReview({page,request,input,fixture,result,project,branch,seed,note,savedNote,mr,base,fileURL,output,stage}) {
+  const apply = savedNote.getByTestId('apply-suggestion-dropdown').getByRole('button',{name:'Apply suggestion',exact:true});
+  await expect(apply).toBeEnabled();
+  await apply.click();
+  const message = page.getByTestId('commit-message-field');
+  const confirm = page.getByTestId('commit-with-custom-message-button');
+  await message.fill('Apply the posted review');
+  await expect(confirm).toBeEnabled();
+  result.readyToApply = true;
+  await stage('commit-newer-target');
+  const other = await request('/api/v4/projects/'+project.id+'/repository/commits',{branch,
+    commit_message:'Revise the target while the review is open',
+    actions:[{action:'update',file_path:input.filePath,content:input.remoteSource,last_commit_id:seed.id}]});
+  const file = await request(fileURL);
+  expect(other.parent_ids).toEqual([seed.id]);
+  expect(file.last_commit_id).toBe(other.id);
+  expect(Buffer.from(file.content,'base64').toString('utf8')).toBe(input.remoteSource);
+  result.competingCommit = other.id;
+  result.verifiedCompetingSource = input.remoteSource;
+  if (input.refresh) {
+    await page.goto(mr.web_url+'#note_'+note.id);
+    await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
+  }
+  await stage('review-stale-target');
+  // GitLab can rerender the live discussion and close an already-open dropdown.
+  // A closed menu alone does not prove that a stale submission was rejected.
+  result.reopenedMenu = !await confirm.isVisible();
+  if (result.reopenedMenu) {
+    await expect(apply).toBeEnabled();
+    await apply.click();
+  }
+  await expect(confirm).toBeVisible();
+  await expect(confirm).toBeEnabled();
+  result.confirmationOffered = true;
+  if (result.confirmationOffered) {
+    const [reply] = await Promise.all([
+      page.waitForResponse(res => res.request().method()!=='GET' && /suggestions.*apply|apply.*suggestion/i.test(res.url()),{timeout:15000}),
+      confirm.click(),
+    ]);
+    result.applyResponse = {status:reply.status(),path:new URL(reply.url()).pathname};
+    await expect.poll(async()=>await savedNote.getByRole('alert').first().isVisible() ||
+      await savedNote.getByTestId('applied-badge').isVisible() || !await confirm.isVisible(),{timeout:15000}).toBe(true);
+  }
+  result.alertText = await savedNote.getByRole('alert').allTextContents();
+  result.visibleReview = await savedNote.innerText();
+  await savedNote.screenshot({path:join(output,input.id+'-decision.png'),animations:'disabled'});
+  const read = async()=>({
+    file:await request(fileURL),
+    head:(await request('/api/v4/projects/'+project.id+'/repository/branches/'+encodeURIComponent(branch))).commit.id,
+    note:await request(base+'/notes/'+note.id),
+  });
+  const snapshot = item => ({source:Buffer.from(item.file.content,'base64').toString('utf8'),
+    sameHead:item.head===other.id && item.file.last_commit_id===other.id, sameNote:item.note.body===note.body,
+    applied:item.note.suggestions[0]?.applied, sameSuggestion:item.note.suggestions[0]?.id===result.saved.suggestions[0].id});
+  result.afterDecision=snapshot(await read());
+  await page.goto(mr.web_url+'#note_'+note.id);
+  await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
+  result.afterReload=snapshot(await read());
+  await savedNote.screenshot({path:join(output,input.id+'-reload.png'),animations:'disabled'});
+}
+
 async function openLineForm(page, mr, range) {
   await page.goto(mr.web_url+'/diffs');
   const rowAt=line=>page.locator('tr[data-hunk-lines]').filter({has:page.locator(`[data-position="new"] [data-line-number="${line}"]`)}).first();
@@ -216,6 +278,10 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       result.beforeApplyHead=(await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(branch)}`)).commit.id;
       await page.reload();const savedNote=page.locator('#note_'+note.id);await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
       await page.screenshot({path:join(output,input.id+'-posted.png'),fullPage:true,animations:'disabled',caret:'initial'});
+      if(input.scope==='stale-review') {
+        await staleReview({page,request,input,fixture,result,project,branch,seed,note,savedNote,mr,base,fileURL,output,stage});
+        result.status='observed';await stage('complete');continue;
+      }
       if(input.scope==='review'){
         await stage('edit-posted-review');await savedNote.getByRole('button',{name:'Edit comment',exact:true}).click();
         const reviewForm=savedNote.locator('form.common-note-form');surface=await ui.rich(reviewForm);await expect(surface.code).toHaveCount(1);
