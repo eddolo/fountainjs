@@ -1,33 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions" targetNamespace="https://fountainjs.org/examples">
-  <bpmn:process id="Editorial" name="Editorial review" isExecutable="false">
-    <bpmn:startEvent id="Start" />
-    <bpmn:userTask id="Review" name="Review draft" />
-    <bpmn:exclusiveGateway id="Decision" />
-    <bpmn:task id="Publish" name="Publish" />
-    <bpmn:task id="Revise" name="Request revisions" />
-    <bpmn:endEvent id="Done" />
-    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="Review" />
-    <bpmn:sequenceFlow id="F2" sourceRef="Review" targetRef="Decision" />
-    <bpmn:sequenceFlow id="F3" sourceRef="Decision" targetRef="Publish" />
-    <bpmn:sequenceFlow id="F4" sourceRef="Decision" targetRef="Revise" />
-    <bpmn:sequenceFlow id="F5" sourceRef="Publish" targetRef="Done" />
-    <bpmn:sequenceFlow id="F6" sourceRef="Revise" targetRef="Done" />
-  </bpmn:process>
-  <bpmndi:BPMNDiagram id="Diagram">
-    <bpmndi:BPMNPlane id="Plane" bpmnElement="Editorial">
-      <bpmndi:BPMNShape id="Start_shape" bpmnElement="Start"><dc:Bounds x="30" y="95" width="36" height="36" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Review_shape" bpmnElement="Review"><dc:Bounds x="110" y="70" width="108" height="76" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Decision_shape" bpmnElement="Decision"><dc:Bounds x="270" y="83" width="50" height="50" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Publish_shape" bpmnElement="Publish"><dc:Bounds x="385" y="15" width="105" height="64" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Revise_shape" bpmnElement="Revise"><dc:Bounds x="385" y="139" width="105" height="64" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Done_shape" bpmnElement="Done"><dc:Bounds x="555" y="91" width="36" height="36" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="F1_edge" bpmnElement="F1"><di:waypoint x="66" y="113" /><di:waypoint x="110" y="113" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F2_edge" bpmnElement="F2"><di:waypoint x="218" y="108" /><di:waypoint x="270" y="108" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F3_edge" bpmnElement="F3"><di:waypoint x="295" y="83" /><di:waypoint x="295" y="47" /><di:waypoint x="385" y="47" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F4_edge" bpmnElement="F4"><di:waypoint x="295" y="133" /><di:waypoint x="295" y="171" /><di:waypoint x="385" y="171" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F5_edge" bpmnElement="F5"><di:waypoint x="490" y="47" /><di:waypoint x="573" y="47" /><di:waypoint x="573" y="91" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F6_edge" bpmnElement="F6"><di:waypoint x="490" y="171" /><di:waypoint x="573" y="171" /><di:waypoint x="573" y="127" /></bpmndi:BPMNEdge>
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
-</bpmn:definitions>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bdi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions" targetNamespace="https://fountainjs.org/examples">
+  <process id="Editorial" name="Editorial review" isExecutable="false">
+    <startEvent id="Start" />
+    <userTask id="Review" name="Review draft" />
+    <exclusiveGateway id="Decision" />
+    <task id="Publish" name="Publish" />
+    <task id="Revise" name="Request revisions" />
+    <endEvent id="Done" />
+    <sequenceFlow id="F1" sourceRef="Start" targetRef="Review" />
+    <sequenceFlow id="F2" sourceRef="Review" targetRef="Decision" />
+    <sequenceFlow id="F3" sourceRef="Decision" targetRef="Publish" />
+    <sequenceFlow id="F4" sourceRef="Decision" targetRef="Revise" />
+    <sequenceFlow id="F5" sourceRef="Publish" targetRef="Done" />
+    <sequenceFlow id="F6" sourceRef="Revise" targetRef="Done" />
+  </process>
+  <process id="Publication" name="Publication handoff" isExecutable="false">
+    <startEvent id="Approved" />
+    <sendTask id="Notify" name="Notify subscribers" />
+    <endEvent id="Sent" />
+    <sequenceFlow id="H1" sourceRef="Approved" targetRef="Notify" />
+    <sequenceFlow id="H2" sourceRef="Notify" targetRef="Sent" />
+  </process>
+  <bdi:BPMNDiagram id="Diagram">
+    <bdi:BPMNPlane id="Plane" bpmnElement="Editorial">
+      <bdi:BPMNShape id="Start_shape" bpmnElement="Start"><dc:Bounds x="30" y="95" width="36" height="36" /></bdi:BPMNShape>
+      <bdi:BPMNShape id="Review_shape" bpmnElement="Review"><dc:Bounds x="110" y="70" width="108" height="76" /></bdi:BPMNShape>
+      <bdi:BPMNShape id="Decision_shape" bpmnElement="Decision"><dc:Bounds x="270" y="83" width="50" height="50" /></bdi:BPMNShape>
+      <bdi:BPMNShape id="Publish_shape" bpmnElement="Publish"><dc:Bounds x="385" y="15" width="105" height="64" /></bdi:BPMNShape>
+      <bdi:BPMNShape id="Revise_shape" bpmnElement="Revise"><dc:Bounds x="385" y="139" width="105" height="64" /></bdi:BPMNShape>
+      <bdi:BPMNShape id="Done_shape" bpmnElement="Done"><dc:Bounds x="555" y="91" width="36" height="36" /></bdi:BPMNShape>
+      <bdi:BPMNEdge id="F1_edge" bpmnElement="F1"><di:waypoint x="66" y="113" /><di:waypoint x="110" y="113" /></bdi:BPMNEdge>
+      <bdi:BPMNEdge id="F2_edge" bpmnElement="F2"><di:waypoint x="218" y="108" /><di:waypoint x="270" y="108" /></bdi:BPMNEdge>
+      <bdi:BPMNEdge id="F3_edge" bpmnElement="F3"><di:waypoint x="295" y="83" /><di:waypoint x="295" y="47" /><di:waypoint x="385" y="47" /></bdi:BPMNEdge>
+      <bdi:BPMNEdge id="F4_edge" bpmnElement="F4"><di:waypoint x="295" y="133" /><di:waypoint x="295" y="171" /><di:waypoint x="385" y="171" /></bdi:BPMNEdge>
+      <bdi:BPMNEdge id="F5_edge" bpmnElement="F5"><di:waypoint x="490" y="47" /><di:waypoint x="573" y="47" /><di:waypoint x="573" y="91" /></bdi:BPMNEdge>
+      <bdi:BPMNEdge id="F6_edge" bpmnElement="F6"><di:waypoint x="490" y="171" /><di:waypoint x="573" y="171" /><di:waypoint x="573" y="127" /></bdi:BPMNEdge>
+    </bdi:BPMNPlane>
+  </bdi:BPMNDiagram>
+  <bdi:BPMNDiagram id="Handoff">
+    <bdi:BPMNPlane id="HandoffPlane" bpmnElement="Publication">
+      <bdi:BPMNShape id="Approved_shape" bpmnElement="Approved"><dc:Bounds x="30" y="60" width="36" height="36" /></bdi:BPMNShape>
+      <bdi:BPMNShape id="Notify_shape" bpmnElement="Notify"><dc:Bounds x="125" y="43" width="120" height="70" /></bdi:BPMNShape>
+      <bdi:BPMNShape id="Sent_shape" bpmnElement="Sent"><dc:Bounds x="310" y="60" width="36" height="36" /></bdi:BPMNShape>
+      <bdi:BPMNEdge id="H1_edge" bpmnElement="H1"><di:waypoint x="66" y="78" /><di:waypoint x="125" y="78" /></bdi:BPMNEdge>
+      <bdi:BPMNEdge id="H2_edge" bpmnElement="H2"><di:waypoint x="245" y="78" /><di:waypoint x="310" y="78" /></bdi:BPMNEdge>
+    </bdi:BPMNPlane>
+  </bdi:BPMNDiagram>
+</definitions>

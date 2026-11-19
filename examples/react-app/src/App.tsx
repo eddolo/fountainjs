@@ -542,6 +542,7 @@ function App() {
     plugins: demoKit.plugins,
   });
   const state = useFountainState(editor);
+  const [processInsertRefused, setProcessInsertRefused] = useState(false);
   const [pasteNotice, setPasteNotice] = useState('');
   const pasteOptions = useMemo(() => ({
     onReport: (report: ExternalPasteReport) => setPasteNotice(report.outcome === 'rejected'
@@ -627,7 +628,7 @@ function App() {
 
   const addBlock = (kind: 'quote' | 'task' | 'table' | 'details' | 'callout' | 'chart' | 'mermaid' | 'bpmn') => {
     if (kind === 'callout') demoKit.commands.insertCallout?.(editor);
-    else if (kind === 'bpmn') BpmnPreviewExtension.commands.insertBpmn(editor, editorialReview);
+    else if (kind === 'bpmn') setProcessInsertRefused(!BpmnPreviewExtension.commands.insertBpmn(editor, editorialReview));
     else if (kind === 'mermaid') {
       MermaidPreviewExtension.commands.insertMermaid(editor, 'flowchart TD\n  draft[Draft] --> review[Review]\n  review --> publish[Publish]');
     } else if (kind === 'chart') insertBarChart(editor, 'Change in weekly orders', [['Monday', 12], ['Tuesday', -4], ['Wednesday', 8]]);
@@ -770,6 +771,10 @@ function App() {
                 onClick={() => setCompactToolbar((current) => !current)}
               >{compactToolbar ? 'Show full toolbar' : 'Use compact toolbar'}</button>
             </div>
+            {processInsertRefused && <div role="alert" className="studio__paste-notice">
+              <p>The process didn’t fit at this selection. This playground allows 5,000 characters. You can also open a process file in the <a href="conversion-lab.html">Conversion Lab</a>.</p>
+              <button type="button" onClick={() => setProcessInsertRefused(false)}>Dismiss process notice</button>
+            </div>}
             <ChartTextControls editor={editor} focusEditor={() => editorHandle.current?.focus()} />
             <ChartCSVControls editor={editor} />
             <EditChartSource editor={editor} chart={chart} focusEditor={() => editorHandle.current?.focus()} />

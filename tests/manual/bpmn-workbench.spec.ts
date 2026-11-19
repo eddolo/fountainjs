@@ -13,6 +13,47 @@ async function checkProcess(surface: Locator, reviewLabel: string) {
   await expect(frame.locator('a.bjs-powered-by')).toBeVisible();
 }
 
+test('switches BPMN drawings, recovers from an unusable first drawing and preserves the whole file', async ({ page }, info) => {
+  const example = await readFile('examples/react-app/src/editorial-review.bpmn', 'utf8');
+  const source = example.replace('<bdi:BPMNDiagram id="Diagram">', '<bdi:BPMNDiagram id="Incomplete" />\n  <bdi:BPMNDiagram id="Diagram">');
+  const bytes = Buffer.from('\uFEFF' + source.replace(/\r?\n/g, '\r\n'));
+  await page.goto('conversion-lab.html');
+  const chooser = page.getByLabel('Choose documents');
+  await chooser.setInputFiles({ name: 'workflows.bpmn', mimeType: 'application/xml', buffer: bytes });
+  const editor = page.getByRole('textbox', { name: 'Imported document editor' });
+  await editor.locator(frameSelector).scrollIntoViewIfNeeded();
+  const frame = editor.frameLocator(frameSelector);
+  const menu = frame.getByRole('combobox', { name: 'Diagram', exact: true });
+  await expect(frame.getByRole('alert')).toContainText('BPMN preview unavailable.');
+  await menu.selectOption({ label: '2. Editorial review' });
+  await checkProcess(editor, 'Review draft');
+  await expect(frame.getByRole('alert')).toHaveCount(0);
+  await menu.focus();
+  await menu.press('End');
+  await menu.press('Enter');
+  await expect(menu).toBeFocused();
+  await expect(frame.locator('[data-element-id="Notify"]')).toContainText(/Notify\s*subscribers/);
+  await expect(frame.locator('[data-element-id="Decision"]')).toHaveCount(0);
+  await expect(frame.locator('.djs-connection')).toHaveCount(2);
+  await editor.locator(frameSelector).screenshot({ path: info.outputPath('publication-handoff.png') });
+  await menu.selectOption({ label: '1. Incomplete' });
+  await expect(frame.getByRole('alert')).toContainText('BPMN preview unavailable.');
+  await expect(frame.locator('[data-element-id="Notify"]')).toHaveCount(0);
+  await menu.selectOption({ label: '2. Editorial review' });
+  await checkProcess(editor, 'Review draft');
+  await page.getByLabel('Export format').selectOption('bpmn');
+  const pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download export' }).click();
+  const exported = info.outputPath('workflows.bpmn');
+  await (await pending).saveAs(exported);
+  expect(await readFile(exported)).toEqual(bytes);
+  const reader = page.getByLabel('Reopened export preview', { exact: true });
+  await reader.locator(frameSelector).scrollIntoViewIfNeeded();
+  const reopened = reader.frameLocator(frameSelector);
+  await reopened.getByRole('combobox', { name: 'Diagram' }).selectOption({ label: '3. Publication handoff' });
+  await expect(reopened.locator('[data-element-id="Notify"]')).toContainText(/Notify\s*subscribers/);
+});
+
 test('keeps the downloadable BPMN source available after a viewer error', async ({ page }, info) => {
   const input = Buffer.from('\uFEFF<?xml version="1.0" encoding="UTF-8"?>\r\n<unfinished>\r\n');
   await page.goto('conversion-lab.html');
@@ -60,6 +101,10 @@ test('edits a BPMN process and reopens the downloaded source with both outcomes'
   await checkProcess(demo, 'Review draft');
   await page.keyboard.press('ControlOrMeta+Shift+z');
   await checkProcess(demo, 'Review copy');
+  await demo.getByRole('button', { name: 'BPMN process', exact: true }).click();
+  await expect(demo.getByRole('alert')).toContainText('This playground allows 5,000 characters');
+  await demo.getByRole('button', { name: 'Dismiss process notice' }).click();
+  await expect(demo.locator(frameSelector)).toHaveCount(1);
   await demo.locator(frameSelector).screenshot({ path: info.outputPath('editorial-process.png') });
   const pending = page.waitForEvent('download');
   await demo.getByRole('button', { name: 'Download BPMN source' }).click();
