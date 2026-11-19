@@ -56,6 +56,19 @@ edit could be saved. Those trials could not establish the conflict precondition
 and received no conflict score.
 [First attempt](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-1/report.md).
 
+Merge-request review now has 63 matched Chromium checks across three ranges:
+line 2 expanded to 1–3, lines 2–3 narrowed to 3, and line 2 extended to 2–4.
+The first run found that the replacement-text dialog refused an edit when a
+posted suggestion covered two lines and the host supplied its anchor line.
+Fountain now retains the stored range for a text-only edit. Extending beyond
+the known lines still requires the original file. All three proposals survived
+undo, redo, Save and reopen, and each Apply created one commit changing exactly
+the intended lines. The repaired build was compared with the same stock run
+after checking the unchanged fixture, harness and backend. Reinstall restored
+all 32 owned files to their recorded bytes.
+[Repaired comparison](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-2/report.md) ·
+[Earlier failure](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-1/report.md).
+
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu
 cleanup and context/host-option revalidation. The recorded matched pair passes
