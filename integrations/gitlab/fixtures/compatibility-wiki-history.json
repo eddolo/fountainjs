@@ -8,6 +8,15 @@
       "paragraph": "Status: pending.",
       "addition": " Confirmed in staging.",
       "restoreMessage": "Restore original deployment checklist"
+    },
+    {
+      "id": "metadata-history",
+      "scope": "wiki-history",
+      "title": "Handoff record",
+      "source": "---\r\nowner: 'Mina'  # on call\r\ncategory: ops\n---\n# Handoff checklist\r\n\r\nOwner: **Release team**.\n\nStatus: résumé pending.\r\n",
+      "paragraph": "Status: résumé pending.",
+      "addition": " Checked by QA.",
+      "restoreMessage": "Restore original handoff metadata"
     }
   ]
 }

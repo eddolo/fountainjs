@@ -133,13 +133,14 @@ const suggestionServices = {
   'app/services/notes/update_service.rb': '8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2',
   'app/services/suggestions/create_service.rb': '62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a',
 };
-function suggestionServicesMatch(report) {
-  const receipt = report.deployment?.suggestionHistory;
-  if (!receipt && report.suite !== 'review-history') return true;
+const wikiController = {
+  'app/controllers/concerns/wiki_actions.rb': '9238c854298dea8d7997442fa9f93dba048e6f02799e4711047b430e0b831c8c',
+};
+function serviceSourcesMatch(report, receipt, services) {
   if (receipt && (receipt.revision !== report.buildIdentity?.expected?.gitlabCommit ||
       !/^[a-f0-9]{64}$/u.test(receipt.patchSHA256) ||
-      !equal(Object.keys(receipt.files ?? {}).sort(), Object.keys(suggestionServices).sort()))) return false;
-  return Object.entries(suggestionServices).every(([file, original]) => {
+      !equal(Object.keys(receipt.files ?? {}).sort(), Object.keys(services).sort()))) return false;
+  return Object.entries(services).every(([file, original]) => {
     const entry = receipt?.files[file];
     if (receipt && (entry?.original !== original || entry.patched === original || !/^[a-f0-9]{64}$/u.test(entry.patched))) return false;
     const suffix = '  /opt/gitlab/embedded/service/gitlab-rails/' + file;
@@ -150,7 +151,11 @@ function suggestionServicesMatch(report) {
 export function compareGitLabCompatibility(original,fountain){
   const mismatches=[];
   for (const report of [original, fountain]) {
-    if (!suggestionServicesMatch(report)) mismatches.push(report.side + ' suggestion service sources');
+    if ((report.deployment?.suggestionHistory || report.suite === 'review-history') &&
+        !serviceSourcesMatch(report, report.deployment?.suggestionHistory, suggestionServices))
+      mismatches.push(report.side + ' suggestion service sources');
+    if (report.deployment?.wikiRestore && !serviceSourcesMatch(report, report.deployment.wikiRestore, wikiController))
+      mismatches.push(report.side + ' wiki restore controller source');
     const error = buildIdentityError(report);
     if (error) mismatches.push(report?.side + ' build identity: ' + error);
   }
@@ -174,6 +179,8 @@ export function compareGitLabCompatibility(original,fountain){
   check('expected GitLab source revision', original?.buildIdentity?.expected?.gitlabCommit, fountain?.buildIdentity?.expected?.gitlabCommit);
   for(const key of ['runId','fixtureHash','fixture','harnessHashes','browser'])check(key,original?.[key],fountain?.[key]);
   for(const key of ['image','imageId','backendMounts','backendEnvironmentHash','cpus','memory'])check('deployment.'+key,original?.deployment?.[key],fountain?.deployment?.[key]);
+  if (original?.deployment?.wikiRestore || fountain?.deployment?.wikiRestore)
+    check('deployment.wikiRestore', original?.deployment?.wikiRestore, fountain?.deployment?.wikiRestore);
   if (original?.deployment?.suggestionHistory || fountain?.deployment?.suggestionHistory)
     check('deployment.suggestionHistory', original?.deployment?.suggestionHistory, fountain?.deployment?.suggestionHistory);
   if (original?.deployment?.footnoteFilter || fountain?.deployment?.footnoteFilter) check('deployment.footnoteFilter',original?.deployment?.footnoteFilter,fountain?.deployment?.footnoteFilter);
@@ -425,6 +432,9 @@ export function compareGitLabCompatibility(original,fountain){
         const before = item.before ?? [], after = item.after ?? [], revisions = item.revisions ?? [];
         return {
           ...item,
+          restoredSource: report.side === 'fountain' && report.deployment?.wikiRestore &&
+            !item.submissions?.requests?.some(entry => entry.stage === 'restore' && entry.restoreVersion &&
+              entry.restoreVersion === before.find(row => row.version === 'v1')?.sha) ? undefined : item.restoredSource,
           historyBefore: before.map(row => row.version),
           historyAfter: after.map(row => row.version),
           retainedHistory: after.length === 3 && before.length === 2 &&

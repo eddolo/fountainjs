@@ -55,6 +55,8 @@ const taskUtilsHash = '548b3dbacbbe72bc77c75f3fcce77984364df7d9fc0422b00ca0f80d0
 const noteComponentPath = 'app/assets/javascripts/notes/components/noteable_note.vue';
 const noteComponentHash = '1d489cd1644b3544a7544a707ec194c8eb8a6623f651b9ea958c6fa607f978cf';
 const reviewHeaderPath = 'app/assets/javascripts/vue_shared/components/markdown/suggestion_diff_header.vue';
+const wikiRestorePath = 'app/assets/javascripts/wikis/components/restore_version_modal.vue';
+const wikiRestoreHash = 'dcc586b1b8e94fdc66551860f61361917dd8c24ae608a2e8e1295990fe9cda74';
 const applyControlPath = 'app/assets/javascripts/vue_shared/components/markdown/apply_suggestion.vue';
 const branchAccessPath = 'app/assets/javascripts/vue_shared/components/markdown/fountain_review_branch_access.js';
 const reviewHeaderHash = '0f176b2ed251a36162e2642b1be7882c8b30f31efc528bb1882fb9691e92ca1a';
@@ -79,7 +81,7 @@ if (previous && previous.source !== source)
   throw new Error('The retained install belongs to a different checkout.');
 if (previous) {
   const generation = previous.formatVersion;
-  if (generation !== undefined && (!Number.isInteger(generation) || generation < 2 || generation > 20)) throw new Error('Unknown retained install format.');
+  if (generation !== undefined && (!Number.isInteger(generation) || generation < 2 || generation > 21)) throw new Error('Unknown retained install format.');
   const allowed = new Set([
     hostPath,
     rendererPath,
@@ -130,11 +132,14 @@ if (previous) {
   if (generation >= 16) allowed.add(descriptionPath);
   if (generation >= 17) { allowed.add(reviewActionsPath); allowed.add(reviewHelperPath); }
   if (generation >= 18) allowed.add(noteComponentPath);
+  if (generation >= 21) allowed.add(wikiRestorePath);
   if (generation >= 19) allowed.add(reviewHeaderPath);
   if (generation >= 20) { allowed.add(applyControlPath); allowed.add(branchAccessPath); }
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
 }
+const originalWikiRestore = execFileSync('git', ['-C', source, 'show', pin.commit + ':' + wikiRestorePath], { encoding: 'utf8' });
+if (hash(originalWikiRestore) !== wikiRestoreHash) throw new Error('Unexpected pinned wiki restore form.');
 const originalApply = execFileSync('git',['-C',source,'show',pin.commit+':'+applyControlPath],{encoding:'utf8'});
 const applyHash = '99dd11bbbe680358d961f9c7cb8181f419bf5f22d585ac0a8ded9c1755710a00';
 if (hash(originalApply)!==applyHash) throw new Error('Unexpected pinned GitLab Apply control.');
@@ -203,6 +208,7 @@ if (restore) {
     if (hash(originalNote) !== noteComponentHash) throw new Error('Retained note component differs from the pinned source.');
     await writeFile(resolve(source, noteComponentPath), originalNote);
   }
+  if (previous.files[wikiRestorePath]) await writeFile(resolve(source, wikiRestorePath), originalWikiRestore);
   if (previous.files[applyControlPath]) await writeFile(resolve(source,applyControlPath),originalApply);
   if (previous.files[reviewHeaderPath]) await writeFile(resolve(source,reviewHeaderPath),originalHeader);
   if (previous.files[reviewActionsPath]) {
@@ -222,7 +228,7 @@ if (restore) {
   if (preparedLazyLoader) await writeFile(resolve(source, lazyLoaderPath), preparedLazyLoader);
   for (const [path, value] of preparedMenus) await writeFile(resolve(source, path), value);
   for (const path of Object.keys(previous.files))
-    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, applyControlPath, noteComponentPath].includes(path)) await unlink(resolve(source, path));
+    if (![wikiRestorePath, hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, applyControlPath, noteComponentPath].includes(path)) await unlink(resolve(source, path));
   await writeFile(
     resolve(output, 'install.json'),
     JSON.stringify({ ...previous, restored: true }, null, 2) + '\n',
@@ -311,6 +317,14 @@ files.set(noteComponentPath, originalNote.replace(alertCall, `const alert = ${al
         if (!element.contains(document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)))
           element.scrollIntoView({block: 'center', behavior: 'instant'});
       });`));
+const wikiTarget = resolve(source, wikiRestorePath);
+const wikiDigest = hash(await readFile(wikiTarget));
+if (await realpath(wikiTarget) !== wikiTarget || (wikiDigest !== wikiRestoreHash && wikiDigest !== previous?.files[wikiRestorePath]))
+  throw new Error('Refusing to replace an unrecognized wiki restore form.');
+const versionInput = '      <input type="hidden" name="wiki[last_commit_sha]"';
+files.set(wikiRestorePath, originalWikiRestore
+  .replace('      restoredFrom,', "      restoredFrom,\n      restoreVersion: getParameterByName('version_id'),")
+  .replace(versionInput, '      <input v-if="restoreVersion" type="hidden" name="wiki_restore_version" :value="restoreVersion" />\n' + versionInput));
 const headerTarget = resolve(source,reviewHeaderPath);
 const currentHeaderHash = hash(await readFile(headerTarget));
 if (await realpath(headerTarget)!==headerTarget || (currentHeaderHash!==reviewHeaderHash && currentHeaderHash!==previous?.files[reviewHeaderPath]))
@@ -540,7 +554,7 @@ for (const [path] of files) {
   const parent = await realpath(resolve(target, '..'));
   if (parent !== resolve(target, '..'))
     throw new Error('Refusing a symlinked installation parent.');
-  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, applyControlPath, noteComponentPath].includes(path)) {
+  if ([wikiRestorePath, hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, applyControlPath, noteComponentPath].includes(path)) {
     if ((await realpath(target)) !== target) throw new Error('Refusing a symlinked host input.');
     continue;
   }
@@ -573,7 +587,7 @@ await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 20,
+      formatVersion: 21,
       source,
       revision: pin.commit,
       scope:

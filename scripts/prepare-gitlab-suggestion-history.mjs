@@ -10,17 +10,18 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const source = await realpath(process.argv[2]), pin = JSON.parse(await readFile(join(root, 'integrations/gitlab/runtime/upstream.json')));
 const git = (...args) => execFileSync('git', ['-C', source, ...args]);
 if (git('rev-parse', 'HEAD').toString().trim() !== pin.commit) throw new Error('GitLab checkout differs from the pinned revision.');
-const files = ['app/services/notes/update_service.rb', 'app/services/suggestions/create_service.rb'];
+const profile = process.argv.includes('--wiki-restore') ? 'wiki-restore' : 'suggestion-history';
+const files = profile === 'wiki-restore' ? ['app/controllers/concerns/wiki_actions.rb'] : ['app/services/notes/update_service.rb', 'app/services/suggestions/create_service.rb'];
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
-const patch = join(root, 'integrations/gitlab/patches/gitlab-19.5.3-suggestion-history.patch');
+const patch = join(root, 'integrations/gitlab/patches/gitlab-19.5.3-' + profile + '.patch');
 const patchSHA256 = hash(await readFile(patch));
-const output = resolve(root, 'artifacts/gitlab-suggestion-history', patchSHA256);
+const output = resolve(root, 'artifacts/gitlab-' + profile, patchSHA256);
 async function saveArtifact(path, content) {
   try { await writeFile(path, content, { flag: 'wx' }); } catch (error) {
     if (error.code !== 'EEXIST' || !(await readFile(path)).equals(Buffer.from(content))) throw error;
   }
 }
-const stage = await mkdtemp(join(tmpdir(), 'gitlab-suggestion-history-'));
+const stage = await mkdtemp(join(tmpdir(), 'gitlab-' + profile + '-'));
 try {
   const receipt = { revision: pin.commit, patchSHA256, files: {} };
   for (const file of files) {
@@ -38,7 +39,7 @@ try {
   }
   await saveArtifact(join(output, 'LICENSE'), git('show', pin.commit + ':LICENSE'));
   await saveArtifact(join(output, 'build.json'), JSON.stringify(receipt, null, 2) + '\n');
-  console.log('Prepared and identified both GitLab suggestion services.');
+  console.log('Prepared GitLab ' + profile + ' at ' + patchSHA256);
 } finally {
   await rm(stage, { recursive: true, force: true });
 }

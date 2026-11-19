@@ -1,0 +1,42 @@
+--- a/app/controllers/concerns/wiki_actions.rb
++++ b/app/controllers/concerns/wiki_actions.rb
+@@ -236,10 +236,18 @@
+   def update
+     return render('shared/wikis/empty') unless can?(current_user, :create_wiki, container)
+ 
++    attributes = wiki_params
++    if params.key?(:wiki_restore_version)
++      historical_page = wiki_restore_page(params[:wiki_restore_version])
++      return head :unprocessable_entity unless historical_page
++
++      attributes[:content] = historical_page.raw_content
++    end
++
+     response = WikiPages::UpdateService.new(
+       container: container,
+       current_user: current_user,
+-      params: wiki_params
++      params: attributes
+     ).execute(page)
+     @page = response.payload[:page]
+ 
+@@ -411,6 +419,19 @@
+   end
+   # rubocop:enable Gitlab/ModuleWithInstanceVariables
+ 
++  # The history reader can follow a page across a rename. Use its lookup
++  # policy and restore the Git source before HTML form encoding changed it.
++  def wiki_restore_page(revision)
++    return unless page && revision.is_a?(String) && revision.match?(/\A[0-9a-f]{40}\z/)
++
++    slug = id_param
++    if Feature.enabled?(:wiki_page_history_follow_renames, container)
++      slug = Wikis::PageHistory.new(page).slug_at(revision) || slug
++    end
++
++    wiki.find_page(slug, revision, load_content: true)
++  end
++
+   def wiki_params
+     params.require(:wiki).permit(:title, :content, :format, :message, :last_commit_sha)
+   end

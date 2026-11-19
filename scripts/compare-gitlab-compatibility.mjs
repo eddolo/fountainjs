@@ -157,6 +157,10 @@ if (rollback?.records?.length) {
   table.push('');
 }
 if (reports[0].suite === 'wiki-history' && result.environment.matched) {
+  if (reports[0].deployment?.wikiRestore) {
+    table.push('Both deployments used the same wiki controller patch `' + reports[0].deployment.wikiRestore.patchSHA256 +
+      '`. The stock frontend submits the content field. The repaired frontend also submits the selected Git revision.', '');
+  }
   function lineEndings(source) {
     if (typeof source !== 'string') return 'Unrecorded';
     const breaks = source.match(/\r\n|\r|\n/g) ?? [];
@@ -165,15 +169,15 @@ if (reports[0].suite === 'wiki-history' && result.environment.matched) {
     const terminal = source.match(/(\r\n|\r|\n)$/)?.[0];
     return (kinds.join(' + ') || 'No breaks') + ' (' + (terminal ? 'final ' + names[terminal] : 'no final newline') + ')';
   }
-  table.push('## Wiki Markdown line endings', '', '| Editor | Action | Form before encoding | Submitted request | Stored revision |',
-    '| --- | --- | --- | --- | --- |');
+  table.push('## Wiki Markdown line endings', '', '| Case | Editor | Action | Form before encoding | Submitted request | Stored revision |',
+    '| --- | --- | --- | --- | --- | --- |');
   for (const report of reports) {
     for (const item of report.observations) {
       for (const action of ['edit', 'restore']) {
         const field = item.submissions?.fields.findLast(entry => entry.form === action)?.values.at(-1);
         const posted = item.submissions?.requests.find(entry => entry.stage === action)?.values.at(-1);
         const stored = action === 'edit' ? item.editedSource : item.restoredSource;
-        table.push('| ' + [report.side, action, ...[field, posted, stored].map(lineEndings)].join(' | ') + ' |');
+        table.push('| ' + [item.id, report.side, action, ...[field, posted, stored].map(lineEndings)].join(' | ') + ' |');
       }
     }
   }

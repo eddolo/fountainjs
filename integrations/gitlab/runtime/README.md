@@ -34,6 +34,24 @@ node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report
 
 The comparison checks the reader after reload, rich-text reopening, cancelling a restore, the new commit message and content retrieved by each of the three revision IDs. For source fidelity, compare the fixture, the wiki content field immediately before form encoding, the decoded navigation request, and GitLab’s response for that revision. The raw reports retain the generated wiki text at each boundary.
 
+#### Restore exact revision bytes
+
+Install and compile the generation 21 native frontend using the deployment instructions below. Prepare the wiki controller from the same pinned GitLab source, then run both editors against it.
+
+```sh
+node scripts/prepare-gitlab-suggestion-history.mjs /absolute/gitlab-source --wiki-restore
+run="wiki-restore-$(date +%s)"
+for editor in original fountain; do
+  node scripts/run-gitlab-compatibility.mjs --suite wiki-history --editor "$editor" --run-id "$run" --wiki-restore || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison-1"
+```
+
+The restore modal sends the selected revision ID alongside the normal form fields. On this profile GitLab reads the historical page’s raw content from its wiki repository and passes it to the existing update service with the supplied commit message and optimistic lock. Older frontends continue using the submitted content field. The two fixtures exercise ordinary Markdown and a page with YAML comments, Unicode and mixed line endings. The comparator checks the live controller hash and the revision selected by the Fountain frontend.
+
+To roll back both components locally, use a fresh run ID and run the stock editor without `--wiki-restore`. Compose removes the frontend and wiki controller mounts and reuses the data volumes. The controller patch has no migration.
+
 ### Reproduce suggestion history across comment edits
 
 Use the [pinned local GitLab environment](./upstream.json) and prepare the native frontend as described below. From the FountainJS checkout in Linux, prepare the two GitLab services from the pinned Git objects. The command prints an error if the checkout is at a different revision or an existing output differs. The patch digest identifies the output directory under `artifacts/gitlab-suggestion-history/`.

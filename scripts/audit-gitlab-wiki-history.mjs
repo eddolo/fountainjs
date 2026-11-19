@@ -2,7 +2,14 @@ import { expect } from '@playwright/test';
 import { join } from 'node:path';
 
 export async function runWikiHistory({ side, runId, page, request, project, fixture, output }) {
-  const [input] = fixture.cases;
+  const observations = [];
+  for (const input of fixture.cases) {
+    observations.push(await checkWikiPage({ side, runId, page, request, project, input, output }));
+  }
+  return observations;
+}
+
+async function checkWikiPage({ side, runId, page, request, project, input, output }) {
   const item = { id: input.id, input, status: 'incomplete', stage: 'seed' };
   // Wiki slugs are unique. Each build gets its own page with the same starting source.
   const title = input.title + '-' + side + '-' + runId;
@@ -32,7 +39,7 @@ export async function runWikiHistory({ side, runId, page, request, project, fixt
     const target = new URL(navigation.url());
     if (target.origin !== new URL(url).origin || target.pathname !== new URL(url).pathname) return;
     const data = new URLSearchParams(navigation.postData() ?? '');
-    if (data.has('wiki[content]')) item.submissions.requests.push({stage:item.stage, values:data.getAll('wiki[content]')});
+    if (data.has('wiki[content]')) item.submissions.requests.push({stage:item.stage, values:data.getAll('wiki[content]'), restoreVersion:data.get('wiki_restore_version')});
   });
   tab.on('pageerror', e => item.pageErrors.push(e.message));
   const reader = tab.getByTestId('wiki-page-content');
@@ -107,20 +114,20 @@ export async function runWikiHistory({ side, runId, page, request, project, fixt
     item.restoredSource = await read();
     item.restoredReader = await reader.locator('p').last().innerText();
     item.restoredOwner = await reader.locator('strong').allTextContents();
-    await tab.screenshot({path:join(output,'restored-wiki.png')});
+    await tab.screenshot({path:join(output, input.id + '-restored.png')});
     item.after = await openHistory();
     item.revisions = [];
     for (const row of item.after) {
       if (!/^[a-f0-9]{40}$/.test(row.sha)) throw new Error('Missing wiki revision SHA in history link for ' + row.version);
       item.revisions.push({sha:row.sha, source:await read(row.sha)});
     }
-    await tab.screenshot({path:join(output,'wiki-history.png')});
+    await tab.screenshot({path:join(output, input.id + '-history.png')});
     item.status = 'observed';
   } catch (error) {
     item.failure = String(error);
-    await tab.screenshot({path:join(output,'interrupted.png')}).catch(() => {});
+    await tab.screenshot({path:join(output, input.id + '-interrupted.png')}).catch(() => {});
   } finally {
     await actor.close();
   }
-  return [item];
+  return item;
 }

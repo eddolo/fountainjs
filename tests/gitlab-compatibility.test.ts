@@ -243,6 +243,20 @@ it('checks historical wiki source and retained revision identities independently
  expect(compare().rows.filter((row:any)=>row.classification==='regression').map((row:any)=>row.invariant)).toEqual(['retainedHistory','revisionSources']);
  expect(compare().featureAcceptance.passed).toBe(false);
 });
+it('requires the mounted wiki controller to match its receipt on both deployments', () => {
+ const [original, fountain] = reports() as any[];
+ const path = 'app/controllers/concerns/wiki_actions.rb';
+ const stock = '9238c854298dea8d7997442fa9f93dba048e6f02799e4711047b430e0b831c8c';
+ const patched = '1'.repeat(64);
+ for (const report of [original, fountain]) {
+   report.deployment.wikiRestore = {revision:report.buildIdentity.expected.gitlabCommit,
+     patchSHA256:'2'.repeat(64), files:{[path]:{original:stock,patched}}};
+   report.backend.serverSources = [patched + '  /opt/gitlab/embedded/service/gitlab-rails/' + path];
+ }
+ expect(compareGitLabCompatibility(original,fountain).environment.matched).toBe(true);
+ for (const report of [original,fountain]) report.backend.serverSources = [];
+ expect(compareGitLabCompatibility(original,fountain).environment.matched).toBe(false);
+});
 it('requires the loaded suggestion services to match the declared backend on each editor', () => {
  const pair = reports();
  const files = {

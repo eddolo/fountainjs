@@ -86,21 +86,25 @@ if (rollbackFrom !== undefined) {
   if (!parts || suite !== 'review-history' || historyProfile || side !== 'original') throw new Error('Use --history-rollback-from run-id:attempt on the stock review-history deployment.');
   previousHistory = {directory: resolve(root, 'artifacts/gitlab-compatibility', parts[1]), attempts: {original: Number(parts[2]), fountain: Number(parts[3] ?? parts[2])}};
 }
+const wikiRestore = process.argv.includes('--wiki-restore');
+if (wikiRestore && suite !== 'wiki-history') throw new Error('Use --wiki-restore with wiki-history.');
+const serverProfile = wikiRestore ? 'wiki-restore' : 'suggestion-history';
+const serviceFiles = wikiRestore ? ['app/controllers/concerns/wiki_actions.rb'] : ['app/services/notes/update_service.rb','app/services/suggestions/create_service.rb'];
 const historyDestinations = new Map();
 let historyReceipt;
-if (historyProfile) {
-  if (!['review-history','suggestions'].includes(suite)) throw new Error('Use the suggestion-history backend with a review workflow.');
-  const patchSHA256 = hash(await readFile(resolve(root, 'integrations/gitlab/patches/gitlab-19.5.3-suggestion-history.patch')));
-  const directory = resolve(root, 'artifacts/gitlab-suggestion-history', patchSHA256);
+if (historyProfile || wikiRestore) {
+  if (historyProfile && !['review-history','suggestions'].includes(suite)) throw new Error('Use the suggestion-history backend with a review workflow.');
+  const patchSHA256 = hash(await readFile(resolve(root, 'integrations/gitlab/patches/gitlab-19.5.3-' + serverProfile + '.patch')));
+  const directory = resolve(root, 'artifacts/gitlab-' + serverProfile, patchSHA256);
   historyReceipt = JSON.parse(await readFile(resolve(directory, 'build.json')));
   if (historyReceipt.revision !== pin.commit || historyReceipt.patchSHA256 !== patchSHA256) throw new Error('Prepare the pinned history overlay again.');
-  for (const file of ['app/services/notes/update_service.rb','app/services/suggestions/create_service.rb']) {
+  for (const file of serviceFiles) {
     const source = resolve(directory, file), destination = '/opt/gitlab/embedded/service/gitlab-rails/' + file;
     if (hash(await readFile(source)) !== historyReceipt.files[file]?.patched) throw new Error('Stale suggestion-history service: ' + file);
     historyDestinations.set(destination, source);
   }
-  env.FOUNTAIN_GITLAB_HISTORY_DIR = directory;
-  compose.push('-f', resolve(root,'integrations/gitlab/runtime/compose.suggestion-history.yaml'));
+  env[wikiRestore ? 'FOUNTAIN_GITLAB_WIKI_DIR' : 'FOUNTAIN_GITLAB_HISTORY_DIR'] = directory;
+  compose.push('-f', resolve(root,'integrations/gitlab/runtime/compose.' + serverProfile + '.yaml'));
 }
 const checkFootnotes = process.argv.includes('--footnote-cache');
 if (checkFootnotes && (suite !== 'composers' || (side === 'original' && !process.argv.includes('--verify-rollback'))))
@@ -199,12 +203,13 @@ try{
  const branch=await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(project.default_branch)}`);
  report.backend={version,project:{id:project.id,path:project.path_with_namespace,visibility:project.visibility,defaultBranch:project.default_branch,defaultHead:branch.commit.id,permissions:project.permissions},actor:'root'};
  const serverPaths=['app/services/notes/update_service.rb','app/services/suggestions/create_service.rb','lib/gitlab/diff/suggestion.rb'];
+ if (suite === 'wiki-history') serverPaths.push('app/controllers/concerns/wiki_actions.rb');
  report.backend.serverSources=docker('exec',containerName,'sha256sum',...serverPaths.map(path=>'/opt/gitlab/embedded/service/gitlab-rails/'+path)).trim().split('\n');
- if (historyProfile) {
+ if (historyProfile || wikiRestore) {
    for (const [file, digests] of Object.entries(historyReceipt.files)) {
      if (!report.backend.serverSources.includes(digests.patched+'  /opt/gitlab/embedded/service/gitlab-rails/'+file)) throw new Error('Live GitLab suggestion service digest mismatch.');
    }
-   report.deployment.suggestionHistory = historyReceipt;
+   report.deployment[wikiRestore ? 'wikiRestore' : 'suggestionHistory'] = historyReceipt;
  }
  const identify = async () => {
  const manifests=docker('exec',containerName,'find',assetTarget,'-maxdepth','1','-name','manifest*.json').trim().split('\n').filter(Boolean);
