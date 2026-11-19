@@ -39,6 +39,32 @@ it('rejects a partial batch write even when the server refuses the batch and the
  item.batch.response.request.ids=[21,21];
  expect(score()).toMatchObject({submitted:false,decision:true,afterCommit:true,afterNotes:false,afterSource:false});
 });
+it('rejects swapped equal-line review targets and writes to an identical untouched copy', () => {
+ const paths=['live/config.js','backup/config.js','untouched/config.js'];
+ const input={source:'same\n',expectedSource:'same\nfirst\n',expectedSecondSource:'second\n',range:{start:1},secondLine:1,
+   filePath:paths[0],secondFilePath:paths[1],untouchedFilePath:paths[2]};
+ const seed='a'.repeat(40), head='b'.repeat(40);
+ const notes=paths.slice(0,2).map((path,i)=>({id:i+1,position:{old_path:path,new_path:path,new_line:1},suggestions:[]}));
+ const snapshot=(changed:string[], sources:string[], commits:string[])=>({
+   head,notes:structuredClone(notes),files:Object.fromEntries(paths.map((p,i)=>[p,{source:sources[i],commit:commits[i]}])),
+   changedPaths:changed.map(p=>({from:p,to:p})),
+ });
+ const before=snapshot(paths,paths.map(()=>input.source),paths.map(()=>seed));
+ const after=snapshot(paths.slice(0,2),[input.expectedSource,input.expectedSecondSource,input.source],[head,head,seed]);
+ const dismissed={queue:[true,true],requests:[] as string[],state:structuredClone(before)};
+ const item={setup:{seedCommit:seed},batch:{before,beforeSubmit:structuredClone(before),dismissed,after,reloaded:structuredClone(after)}};
+ const score=()=>batchReviewChecks(input,{},item).values;
+ expect(score()).toMatchObject({positions:true,seedFiles:true,fileWrites:true,dismissed:true});
+ dismissed.requests.push('/api/v4/suggestions/batch_apply');
+ expect(score().dismissed).toBe(false);
+ item.batch.reloaded.notes.reverse();
+ expect(score().positions).toBe(false);
+ after.files[paths[2]!]!.commit=head;
+ expect(score().fileWrites).toBe(false);
+ after.files[paths[2]!]!.commit=seed;
+ after.changedPaths.push({from:paths[2]!,to:paths[2]!});
+ expect(score().fileWrites).toBe(false);
+});
 it.each([
  [true,true,true,'parity'],[true,false,true,'improvement'],[true,true,false,'regression'],[true,false,false,'shared-limitation'],
  ['exact','changed-a','changed-b',null],[true,undefined,true,null],[true,true,undefined,null],

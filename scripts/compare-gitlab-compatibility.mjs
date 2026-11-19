@@ -28,7 +28,7 @@ const table=['# Matched GitLab editor comparison','','**Original** — '+describ
 ...(rollback?[result.frontendRollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
 '| Case | Invariant | Classification |','| --- | --- | --- |',...result.rows.map(row=>`| ${row.case} | ${row.label} | ${row.classification??row.status} |`),'',
 'Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.',''];
-if (reports[0].suite === 'batch-reviews' && result.environment.matched) {
+if (reports[0].fixture.workflow === 'batch-review' && result.environment.matched) {
   table.push('## Batch submissions', '', '| Editor | Workflow | HTTP | Branch before batch | Branch after batch | Single recovery commit |',
     '| --- | --- | ---: | --- | --- | --- |');
   for (const report of reports) for (const item of report.observations) {

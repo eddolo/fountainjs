@@ -5,7 +5,7 @@ const positive = value => Number.isSafeInteger(value) && value > 0;
 export function batchReviewChecks(input, fixture, item) {
   const stale = typeof input.competingSource === 'string';
   const labels = {
-    authored:'Both posted review notes contain the exact intended replacements at their distinct source lines',
+    authored:'Both posted review notes contain the exact intended replacements at their intended file locations',
     firstOnly:'Queueing the first suggestion selects only its own review',
     both:'Both eligible suggestions can be queued together',
     removed:'Removing the first suggestion keeps the second in the batch',
@@ -32,6 +32,15 @@ export function batchReviewChecks(input, fixture, item) {
     recoveryNotes: 'Only the surviving suggestion receives Applied and both original suggestion IDs survive reload',
     recoveryBadges: 'The freshly loaded readers show Applied only on the surviving review',
   });
+  const multi = Boolean(input.secondFilePath);
+  const paths = [input.filePath,input.secondFilePath,input.untouchedFilePath];
+  if (multi) {
+    labels.dismissed = 'Dismissing the confirmation keeps the queue and saved state intact and sends no apply request';
+    labels.positions = 'Both saved notes identify the intended full path and line before and after confirmation and reload';
+    labels.seedFiles = 'All three matching files share the seed commit and queueing preserves their contents';
+    labels.fileWrites = 'File contents, last commits and commit diff paths identify every changed and untouched file';
+    if (input.recoverUnchanged) labels.recoveryWrites = 'Recovery changes only the surviving path and preserves the competing file and untouched copy';
+  }
   const b = item?.batch, values = {};
   if (!b?.before || !commit(item.setup?.seedCommit)) return {labels, values};
   const lines = input.source.split('\n');
@@ -64,8 +73,8 @@ export function batchReviewChecks(input, fixture, item) {
   for (const phase of ['after','reloaded']) {
     const state=b[phase];
     if (!state) continue;
-    values[phase+'Source'] = state.source === (stale ? input.competingSource : input.expectedSource);
-    values[phase+'Commit'] = commit(state.head) && state.fileCommit===state.head && same(state.parents,[item.setup.seedCommit]) &&
+    values[phase+'Source'] = state.source === (stale ? (multi ? input.source : input.competingSource) : input.expectedSource);
+    values[phase+'Commit'] = commit(state.head) && state.fileCommit===(stale && multi ? item.setup.seedCommit : state.head) && same(state.parents,[item.setup.seedCommit]) &&
       (stale ? state.head===b.competingCommit?.id && same(b.competingCommit.parents,[item.setup.seedCommit]) :
        state.head!==item.setup.seedCommit && state.message===fixture.commitMessage);
     values[phase+'Notes'] = values.authored && state.notes?.length===2 && state.notes.every((n,i)=>{
@@ -73,6 +82,27 @@ export function batchReviewChecks(input, fixture, item) {
       return n.id===notes[i].id && n.body===bodies[i] && n.suggestions.length===1 && s?.id===ids[i] && s.from_content===originals[i] &&
         s.to_content===edits[i] && s.from_line===offsets[i] && s.to_line===offsets[i] && s.applied===!stale;
     });
+  }
+  if (multi) {
+    if (b.dismissed) values.dismissed = same(b.dismissed.queue,[true,true]) && same(b.dismissed.requests,[]) && same(b.dismissed.state,b.beforeSubmit);
+    const seed = item.setup.seedCommit;
+    function matches(state, sources, commits, changed) {
+      if (!state?.files || Object.keys(state.files).length !== paths.length) return false;
+      return paths.every((path,i)=>state.files[path]?.source===sources[i] && state.files[path]?.commit===commits[i]) &&
+        Array.isArray(state.changedPaths) && same(state.changedPaths.map(p=>p.to).sort(),[...changed].sort()) &&
+        state.changedPaths.every(p=>p.from===p.to);
+    }
+    const phases = [b.before,b.beforeSubmit,b.after,b.reloaded];
+    if (b.recovery) phases.push(b.recovery.before,b.recovery.after,b.recovery.reloaded);
+    if (phases.every(Boolean)) values.positions = phases.every(state=>state.notes?.length===2 && state.notes.every((n,i)=>
+      n.id===notes[i].id && n.position?.old_path===paths[i] && n.position?.new_path===paths[i] && n.position?.new_line===offsets[i]));
+    if (b.beforeSubmit) values.seedFiles = [b.before,b.beforeSubmit].every(state=>matches(state,
+      paths.map(()=>input.source),paths.map(()=>seed),paths));
+    if (b.after && b.reloaded) values.fileWrites = [b.after,b.reloaded].every(state=>matches(state,
+      [stale ? input.source : input.expectedSource,stale ? input.competingSource : input.expectedSecondSource,input.source],
+      [stale ? seed : state.head,state.head,seed],stale ? [paths[1]] : paths.slice(0,2)));
+    if (b.recovery?.after && b.recovery.reloaded) values.recoveryWrites = [b.recovery.after,b.recovery.reloaded].every(state=>matches(state,
+      [input.recoveredSource,input.competingSource,input.source],[state.head,b.competingCommit?.id,seed],[paths[0]]));
   }
   if (b.recovery) {
     const r = b.recovery;

@@ -237,9 +237,15 @@ async function staleReview({page,request,input,fixture,result,project,branch,see
   await savedNote.screenshot({path:join(output,input.id+'-reload.png'),animations:'disabled'});
 }
 
-async function openLineForm(page, mr, range) {
+async function openLineForm(page, mr, range, filePath) {
   await page.goto(mr.web_url+'/diffs');
-  const rowAt=line=>page.locator('tr[data-hunk-lines]').filter({has:page.locator(`[data-position="new"] [data-line-number="${line}"]`)}).first();
+  let file = page;
+  if (filePath) {
+    const newPath = '"new_path":'+JSON.stringify(filePath);
+    file = page.locator('diff-file[data-file-data*='+JSON.stringify(newPath)+']');
+    await expect(file).toHaveCount(1,{timeout:60000});
+  }
+  const rowAt=line=>file.locator('tr[data-hunk-lines]').filter({has:page.locator(`[data-position="new"] [data-line-number="${line}"]`)}).first();
   const row=rowAt(range.start),toggle=page.locator('[data-new-discussion-toggle]');
   await expect(row).toBeVisible({timeout:60000});
   await expect(async()=>{await page.mouse.move(10,10);await row.locator(`[data-line-number="${range.start}"]`).first().hover();await expect(toggle).toBeVisible({timeout:1000});})
@@ -254,7 +260,7 @@ async function openLineForm(page, mr, range) {
     await page.mouse.move(to.x+Math.min(40,to.width/2),to.y+to.height/2,{steps:12});
     await page.mouse.move(to.x+Math.min(40,to.width/2)+1,to.y+to.height/2);await page.mouse.up();
   }
-  const form=page.locator('form.common-note-form').first();await expect(form).toBeVisible();return form;
+  const form=file.locator('form.common-note-form').first();await expect(form).toBeVisible();return form;
 }
 export async function runRecordedGitLabBatch(options) {
   const context = await options.page.context().browser().newContext({
@@ -286,14 +292,14 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       await stage('setup');
       const branch=`fountain-compat-${runId}-${side}-${input.id}`;
       const seed=await request(`/api/v4/projects/${project.id}/repository/commits`,{branch,start_branch:project.default_branch,
-        commit_message:'Seed paired editor compatibility fixture',actions:[{action:'create',file_path:input.filePath,content:input.source}]});
+        commit_message:'Seed paired editor compatibility fixture',actions:[input.filePath,input.secondFilePath,input.untouchedFilePath].filter(Boolean).map(file_path=>({action:'create',file_path,content:input.source}))});
       const mr=await request(`/api/v4/projects/${project.id}/merge_requests`,{source_branch:branch,target_branch:project.default_branch,
         title:fixture.title+' '+input.id,description:'Matched editor compatibility workflow; isolated fixture.'});
       const base=`/api/v4/projects/${project.id}/merge_requests/${mr.iid}`;
       const fileURL=`/api/v4/projects/${project.id}/repository/files/${encodeURIComponent(input.filePath)}?ref=${encodeURIComponent(branch)}`;
       const file=await request(fileURL);expect(Buffer.from(file.content,'base64').toString('utf8')).toBe(input.source);
       result.setup={branch,seedCommit:seed.id,source:file.content,mergeRequest:{iid:mr.iid,url:mr.web_url}};
-      const form=await openLineForm(page,mr,input.range);let surface=await ui.rich(form);
+      const form=await openLineForm(page,mr,input.range,input.secondFilePath ? input.filePath : undefined);let surface=await ui.rich(form);
       result.editorProof={className:await surface.editor.getAttribute('class'),native:(await form.locator('[data-fountain-integration="native"]').count())>0};
       await stage('insert');await ui.insert(form);await expect(surface.code).toHaveCount(1);
       await expect(surface.code).toBeVisible();result.prefillDOM=await surface.code.textContent();

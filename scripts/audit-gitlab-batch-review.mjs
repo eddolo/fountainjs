@@ -1,10 +1,18 @@
 import {expect} from '@playwright/test';
 import {join} from 'node:path';
 
+async function readAppliedBadge(reader) {
+  const badge = reader.getByTestId('applied-badge');
+  const apply = reader.getByTestId('apply-suggestion-dropdown');
+  // The prose and raw suggestion source paint before GitLab mounts the interactive reader.
+  await expect(badge.or(apply).first()).toBeVisible({timeout:15000});
+  return badge.isVisible();
+}
+
 export async function batchReview({page,ui,openLineForm,request,project,fixture,result,input,mr,base,note,seed,branch,fileURL,output,stage}) {
   const batch = result.batch = {};
   await stage('write-second-review');
-  const form = await openLineForm(page, mr, {start: input.secondLine, end: input.secondLine});
+  const form = await openLineForm(page, mr, {start: input.secondLine, end: input.secondLine}, input.secondFilePath);
   const surface = await ui.rich(form);
   await ui.insert(form);
   const secondSource = input.source.split('\n')[input.secondLine - 1];
@@ -43,10 +51,23 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
   const headURL = '/api/v4/projects/'+project.id+'/repository/branches/'+encodeURIComponent(branch);
   const snapshot = async () => {
     const head = (await request(headURL)).commit;
-    const file = await request(fileURL);
+    const files = {};
+    let changedPaths;
+    if (input.secondFilePath) {
+      const repository = '/api/v4/projects/'+project.id+'/repository';
+      for (const path of [input.filePath,input.secondFilePath,input.untouchedFilePath]) {
+        const file = await request(repository+'/files/'+encodeURIComponent(path)+'?ref='+head.id);
+        files[file.file_path] = {source:Buffer.from(file.content,'base64').toString('utf8'),commit:file.last_commit_id};
+      }
+      const diff = await request(repository+'/commits/'+head.id+'/diff');
+      changedPaths = diff.map(entry=>({from:entry.old_path,to:entry.new_path})).sort((a,b)=>a.to.localeCompare(b.to));
+    }
+    const primary = files[input.filePath];
+    const file = primary ? null : await request(fileURL);
     const notes = await Promise.all(noteIds.map(id => request(base+'/notes/'+id)));
-    return {head:head.id,parents:head.parent_ids,message:head.title,fileCommit:file.last_commit_id,
-      source:Buffer.from(file.content,'base64').toString('utf8'), notes:notes.map(n=>({id:n.id,body:n.body,suggestions:n.suggestions}))};
+    return {head:head.id,parents:head.parent_ids,message:head.title,fileCommit:primary?.commit ?? file.last_commit_id,
+      source:primary?.source ?? Buffer.from(file.content,'base64').toString('utf8'), ...(primary ? {files,changedPaths} : {}),
+      notes:notes.map(n=>({id:n.id,body:n.body,suggestions:n.suggestions,...(primary ? {position:n.position} : {})}))};
   };
   const queue = async () => Promise.all(removes.map(button=>button.isVisible()));
   await page.goto(mr.web_url+'#note_'+note.id);
@@ -66,17 +87,33 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
   await apply.click();
   const message = page.getByTestId('commit-message-field').filter({visible:true});
   const confirm = page.getByTestId('commit-with-custom-message-button').filter({visible:true});
+  if (input.secondFilePath) {
+    const requests = [];
+    const observe = req => {
+      if (req.method()==='PUT' && /^\/api\/v4\/suggestions\/(?:batch_apply|\d+\/apply)$/u.test(new URL(req.url()).pathname))
+        requests.push(new URL(req.url()).pathname);
+    };
+    page.on('request', observe);
+    try {
+      await message.fill('Dismiss this pending review');
+      await message.press('Escape');
+      await expect(message).toBeHidden();
+      batch.dismissed = {queue:await queue(),state:await snapshot(),requests};
+    } finally { page.off('request',observe); }
+    await apply.click();
+  }
   await message.fill(fixture.commitMessage);
   await expect(confirm).toBeEnabled();
   await page.screenshot({path:join(output,input.id+'-before-confirmation.png'),animations:'disabled'});
   if (input.competingSource) {
     await stage('change-queued-target');
     const commit = await request('/api/v4/projects/'+project.id+'/repository/commits',{branch,
-      commit_message:'Change the second target during review',actions:[{action:'update',file_path:input.filePath,content:input.competingSource,last_commit_id:seed.id}]});
+      commit_message:'Change the second target during review',actions:[{action:'update',file_path:input.secondFilePath ?? input.filePath,content:input.competingSource,last_commit_id:seed.id}]});
     batch.competingCommit = {id:commit.id,parents:commit.parent_ids};
     expect(commit.parent_ids).toEqual([seed.id]);
     await expect.poll(async () => (await request(base)).diff_refs?.head_sha, {timeout:60000}).toBe(commit.id);
-    expect((await snapshot()).source).toBe(input.competingSource);
+    const remote = await snapshot();
+    expect(input.secondFilePath ? remote.files[input.secondFilePath].source : remote.source).toBe(input.competingSource);
   }
   await stage('confirm-batch');
   if (await confirm.isVisible() && await confirm.isEnabled()) {
@@ -106,7 +143,7 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
       await readerPage.reload();
       const reader = readerPage.locator('#note_'+noteIds[i]);
       await expect(reader.getByText(marker,{exact:true})).toBeVisible();
-      batch.reloadedBadges.push(await reader.getByTestId('applied-badge').isVisible());
+      batch.reloadedBadges.push(await readAppliedBadge(reader));
       await reader.screenshot({path:join(output,input.id+'-reloaded-'+(i+1)+'.png'),animations:'disabled'});
     }
     batch.reloaded = await snapshot();
@@ -139,7 +176,8 @@ async function recoverQueuedReview({page,readers,removes,fixture,input,batch,sna
   for (const [index, marker] of [fixture.marker,fixture.secondMarker].entries()) {
     await page.goto(mr.web_url+'#note_'+noteIds[index]); await page.reload();
     await expect(readers[index].getByText(marker,{exact:true})).toBeVisible();
-    recovery.badges.push(await readers[index].getByTestId('applied-badge').isVisible());
+    recovery.badges.push(await readAppliedBadge(readers[index]));
+    await readers[index].screenshot({path:join(output,input.id+'-recovered-'+(index+1)+'.png'),animations:'disabled'});
   }
   recovery.reloaded = await snapshot();
   await page.screenshot({path:join(output,input.id+'-recovered.png'),animations:'disabled'});

@@ -1,0 +1,35 @@
+--- a/scripts/audit-gitlab-batch-review.mjs
++++ b/scripts/audit-gitlab-batch-review.mjs
+@@ -1,13 +1,5 @@
+ import {expect} from '@playwright/test';
+ import {join} from 'node:path';
+-
+-async function readAppliedBadge(reader) {
+-  const badge = reader.getByTestId('applied-badge');
+-  const apply = reader.getByTestId('apply-suggestion-dropdown');
+-  // The prose and raw suggestion source paint before GitLab mounts the interactive reader.
+-  await expect(badge.or(apply).first()).toBeVisible({timeout:15000});
+-  return badge.isVisible();
+-}
+
+ export async function batchReview({page,ui,openLineForm,request,project,fixture,result,input,mr,base,note,seed,branch,fileURL,output,stage}) {
+   const batch = result.batch = {};
+@@ -143,7 +135,7 @@
+       await readerPage.reload();
+       const reader = readerPage.locator('#note_'+noteIds[i]);
+       await expect(reader.getByText(marker,{exact:true})).toBeVisible();
+-      batch.reloadedBadges.push(await readAppliedBadge(reader));
++      batch.reloadedBadges.push(await reader.getByTestId('applied-badge').isVisible());
+       await reader.screenshot({path:join(output,input.id+'-reloaded-'+(i+1)+'.png'),animations:'disabled'});
+     }
+     batch.reloaded = await snapshot();
+@@ -176,8 +168,7 @@
+   for (const [index, marker] of [fixture.marker,fixture.secondMarker].entries()) {
+     await page.goto(mr.web_url+'#note_'+noteIds[index]); await page.reload();
+     await expect(readers[index].getByText(marker,{exact:true})).toBeVisible();
+-    recovery.badges.push(await readAppliedBadge(readers[index]));
+-    await readers[index].screenshot({path:join(output,input.id+'-recovered-'+(index+1)+'.png'),animations:'disabled'});
++    recovery.badges.push(await readers[index].getByTestId('applied-badge').isVisible());
+   }
+   recovery.reloaded = await snapshot();
+   await page.screenshot({path:join(output,input.id+'-recovered.png'),animations:'disabled'});
