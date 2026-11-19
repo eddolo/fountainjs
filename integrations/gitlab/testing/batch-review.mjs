@@ -3,6 +3,7 @@ const commit = value => typeof value === 'string' && /^[a-f0-9]{40}$/u.test(valu
 const positive = value => Number.isSafeInteger(value) && value > 0;
 
 export function batchReviewChecks(input, fixture, item) {
+  const live = input.waitForLiveUpdate === true;
   const stale = typeof input.competingSource === 'string';
   const labels = {
     authored:'Both posted review notes contain the exact intended replacements at their intended file locations',
@@ -11,9 +12,9 @@ export function batchReviewChecks(input, fixture, item) {
     removed:'Removing the first suggestion keeps the second in the batch',
     requeued:'Re-adding the first suggestion restores the two-item batch',
     untouched:'Queue operations preserve both saved suggestions, the file and the seed commit',
-    submitted:'The confirmation submits exactly the two queued suggestion IDs and the chosen message',
-    decision:stale?'GitLab refuses the stale batch with a client-visible response':'GitLab accepts the batch request',
-    feedback:stale?'The reviewer sees a reason why the queued batch cannot apply':'The reviewer sees both Applied badges before reload',
+    submitted:live?'The live refresh sends no apply request and keeps both proposals queued':'The confirmation submits exactly the two queued suggestion IDs and the chosen message',
+    decision:live?'The changed suggestion disables Apply and closes its pending confirmation':stale?'GitLab refuses the stale batch with a client-visible response':'GitLab accepts the batch request',
+    feedback:live?'The changed note visibly explains the outdated line and how to continue the review':stale?'The reviewer sees a reason why the queued batch cannot apply':'The reviewer sees both Applied badges before reload',
     reader:'Both reloaded badges match the persisted application state',
     stable:'The branch head and file contents remain stable after reload',
   };
@@ -23,6 +24,7 @@ export function batchReviewChecks(input, fixture, item) {
     labels[phase+'Commit'] = (stale?'Only the competing commit exists ':'One batch commit directly follows the seed with the chosen message ')+when;
     labels[phase+'Notes'] = 'Both original note and suggestion IDs retain their source and correct Applied flags '+when;
   }
+  if (live) labels.promptScoped = 'The removal instruction stays off the valid note and disappears when the stale suggestion leaves the queue';
   if (input.recoverUnchanged) Object.assign(labels, {
     recoveryQueue: 'The refused batch stays intact until the reviewer removes the changed target',
     recoveryBefore: 'Removing the outdated proposal leaves the saved branch, both notes and their eligibility unchanged',
@@ -61,12 +63,21 @@ export function batchReviewChecks(input, fixture, item) {
   if (b.beforeSubmit) values.untouched = b.before.head===item.setup.seedCommit && b.before.fileCommit===item.setup.seedCommit &&
     b.before.source===input.source && same(b.beforeSubmit,b.before);
   const request = b.response?.request;
-  if (b.response || b.confirmUnavailable) {
+  if (live && b.liveUpdate) {
+    const update = b.liveUpdate;
+    const nextAction = 'Remove this suggestion from the batch to continue the review.';
+    values.submitted = same(update.requests,[]) && same(update.queue,[true,true]) && !b.response;
+    values.decision = update.disabled===true && update.confirmVisible===false && b.confirmUnavailable===true;
+    values.feedback = update.text.includes("Can't apply as this line was changed in a more recent version.") &&
+      update.text.includes(nextAction) && same(b.visibleBadges,[false,false]);
+    if (typeof b.recovery?.removedText==='string') values.promptScoped =
+      update.text.includes(nextAction) && !update.otherText.includes(nextAction) && !b.recovery.removedText.includes(nextAction);
+  } else if (!live && (b.response || b.confirmUnavailable)) {
     values.submitted = values.authored && request?.commit_message===fixture.commitMessage && Array.isArray(request.ids) &&
       same([...request.ids].sort((a,b)=>a-b),[...ids].sort((a,b)=>a-b));
     values.decision = stale ? b.response?.status >= 400 && b.response?.status < 500 : b.response?.status >= 200 && b.response?.status < 300;
   }
-  if (Array.isArray(b.visibleBadges)) values.feedback = stale ? same(b.visibleBadges,[false,false]) &&
+  if (!live && Array.isArray(b.visibleBadges)) values.feedback = stale ? same(b.visibleBadges,[false,false]) &&
     b.alerts.some(text=>/outdated|changed|cannot be applied|can.t be applied|failed to apply|conflict/i.test(text)) : same(b.visibleBadges,[true,true]);
   if (b.reloadedBadges) values.reader = same(b.reloadedBadges,[!stale,!stale]);
   if (b.reloaded && b.after) values.stable = b.after.head===b.reloaded.head && b.after.source===b.reloaded.source;

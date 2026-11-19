@@ -1,5 +1,5 @@
 {
-  "formatVersion": 18,
+  "formatVersion": 19,
   "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source",
   "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
   "scope": "Native browser integration in progress; full toolbar/providers/dialect acceptance remains open",
@@ -68,10 +68,11 @@
       "dist/pages.js": "bb4951f8e2cf7a89dd7b20149599e58f5aa82b3535e1ea300b5b368b2232c71c"
     }
   },
-  "integrationSHA256": "73591945dd7543c420a8355582bca2708101c7172994caf7fa7dad5096cfe3ff",
+  "integrationSHA256": "0a0376b4cb2aa448d143de7b324dad74be7d62abeeb91ece0e6a01b3d0d095ba",
   "preparedComponentSHA256": "cdd3091a8a8cddccbd9b48c231edb38197f73a26fd8e35d9932b90d3579d6bad",
   "files": {
     "app/assets/javascripts/notes/components/noteable_note.vue": "3bf3ccb82beda120fcad98a8d46472e3bc64687daba93c9c64470e9897dfd185",
+    "app/assets/javascripts/vue_shared/components/markdown/suggestion_diff_header.vue": "e6c48c2b4ba1c600d0ba185d915b15bcd71d1084a7d40dd756158b970ae1487a",
     "app/assets/javascripts/notes/store/legacy_notes/actions.js": "b487935f7ca6f878855673ad14d81825d0fb34b0a709472f5ab6ed5295a6e4ca",
     "app/assets/javascripts/notes/store/legacy_notes/fountain_applied_suggestion.js": "c471e25fb6338808a6b8e27a962d31cf17911c570c837ef575d8566187316c10",
     "app/assets/javascripts/work_items/components/work_item_description.vue": "53415207c1bd99e44458e20e94365b4a4e4496cd5c597bdf280c7506ecedeb43",
@@ -86,7 +87,7 @@
     "app/assets/javascripts/behaviors/markdown/fountain_reader_images.js": "9b36b527c5e271ab97ec41b066446b2441afdb78ca79bc89a2fe34a06ba7b125",
     "babel.config.js": "7cc8ec862fb6e42c7e26b3fb29410094b4f49f602f2ed02e6ec6132ac32a20a4",
     "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "4cf746744c45a254d836155e4e72f72bd1b2de4c71ec0f047fd0f37cae7d96ff",
-    "app/assets/javascripts/content_editor/components/content_editor.vue": "14c55e4b93f6831179d182300fc497c30e73f9edd25b40fd99cf31c2ebec839a",
+    "app/assets/javascripts/content_editor/components/content_editor.vue": "a291a177dadeac96db33f8bc85f7fd8a78732560c2a1a73a341fdfc3841d6db0",
     "app/assets/javascripts/content_editor/components/fountain_editor_surface.vue": "8d7ba82b94d6d6d4e1ebdeb707dd40a15e9f577814af7705d03d5ab61eff66f7",
     "app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue": "394b611d206cd6f7a773f1e0d802f8e3108bd28e24bfaa5055a107a5c4b7c902",
     "app/assets/javascripts/content_editor/components/fountain_context_surface.vue": "de2db5ca69413aea387a36b0952d0bb6ab8ac15de4e17fc192daae02ecfca95b",

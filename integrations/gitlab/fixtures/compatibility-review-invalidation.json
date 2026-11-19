@@ -1,0 +1,33 @@
+{
+  "workflow": "batch-review",
+  "title": "Review a queued suggestion after a live file update",
+  "marker": "Annotate the active configuration.",
+  "appendLine": "// reviewed first value\n",
+  "sourceObservationDelayMs": 500,
+  "secondMarker": "Update the backup configuration.",
+  "secondReplacement": "const value = 42;",
+  "recoveryMessage": "Apply only the active configuration review",
+  "commitMessage": "Review both client configurations",
+  "cases": [
+    {
+      "id": "live-target-update",
+      "scope": "batch-review",
+      "filePath": "clients/active/config.js",
+      "secondFilePath": "clients/backup/config.js",
+      "untouchedFilePath": "clients/standby/config.js",
+      "source": "const value = 1;\nkeep();\n",
+      "expectedSource": "const value = 1;\n// reviewed first value\nkeep();\n",
+      "expectedSecondSource": "const value = 42;\nkeep();\n",
+      "range": {
+        "start": 1,
+        "end": 1
+      },
+      "secondLine": 1,
+      "handoffDelayMs": 1000,
+      "competingSource": "const value = 99;\nkeep();\n",
+      "recoverUnchanged": true,
+      "recoveredSource": "const value = 1;\n// reviewed first value\nkeep();\n",
+      "waitForLiveUpdate": true
+    }
+  ]
+}

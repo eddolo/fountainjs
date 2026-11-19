@@ -105,6 +105,12 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
   await message.fill(fixture.commitMessage);
   await expect(confirm).toBeEnabled();
   await page.screenshot({path:join(output,input.id+'-before-confirmation.png'),animations:'disabled'});
+  const pendingWrites = [];
+  const watchApply = req => {
+    const path = new URL(req.url()).pathname;
+    if (req.method()==='PUT' && /^\/api\/v4\/suggestions\/(?:batch_apply|\d+\/apply)$/u.test(path)) pendingWrites.push(path);
+  };
+  if (input.waitForLiveUpdate) page.on('request',watchApply);
   if (input.competingSource) {
     await stage('change-queued-target');
     const commit = await request('/api/v4/projects/'+project.id+'/repository/commits',{branch,
@@ -116,7 +122,17 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
     expect(input.secondFilePath ? remote.files[input.secondFilePath].source : remote.source).toBe(input.competingSource);
   }
   await stage('confirm-batch');
-  if (await confirm.isVisible() && await confirm.isEnabled()) {
+  if (input.waitForLiveUpdate) {
+    try {
+      // Let GitLab deliver its own discussion refresh to the open confirmation.
+      await expect(apply).toBeDisabled({timeout:120000});
+      await expect(confirm).toBeHidden();
+      batch.liveUpdate = {disabled:await apply.isDisabled(),confirmVisible:await confirm.isVisible(),
+        requests:[...pendingWrites],queue:await queue(),text:await readers[1].innerText(),otherText:await readers[0].innerText()};
+      batch.confirmUnavailable = true;
+      await readers[1].screenshot({path:join(output,input.id+'-outdated.png'),animations:'disabled'});
+    } finally { page.off('request',watchApply); }
+  } else if (await confirm.isVisible() && await confirm.isEnabled()) {
     const [reply] = await Promise.all([
       page.waitForResponse(res => res.request().method()==='PUT' && new URL(res.url()).pathname==='/api/v4/suggestions/batch_apply'),
       confirm.click(),
@@ -160,6 +176,7 @@ async function recoverQueuedReview({page,readers,removes,fixture,input,batch,sna
   await removes[1].click();
   await expect(removes[1]).toBeHidden();
   recovery.remaining = await Promise.all(removes.map(button=>button.isVisible()));
+  if (input.waitForLiveUpdate) recovery.removedText = await readers[1].innerText();
   recovery.before = await snapshot();
   await readers[0].getByRole('button',{name:'Apply suggestion',exact:true}).click();
   await page.getByTestId('commit-message-field').filter({visible:true}).fill(fixture.recoveryMessage);

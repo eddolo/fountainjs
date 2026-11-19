@@ -34,7 +34,8 @@ if (reports[0].fixture.workflow === 'batch-review' && result.environment.matched
   for (const report of reports) for (const item of report.observations) {
     const batch = item.batch;
     const sha = value => /^[a-f0-9]{40}$/u.test(value ?? '') ? '`' + value.slice(0,12) + '`' : 'Unverified';
-    table.push('| ' + [report.side, item.id, batch?.response?.status ?? 'Unverified',
+    const http = batch?.liveUpdate?.requests?.length === 0 ? 'No apply request' : batch?.response?.status ?? 'Unverified';
+    table.push('| ' + [report.side, item.id, http,
       sha(batch?.competingCommit?.id ?? item.setup?.seedCommit), sha(batch?.reloaded?.head),
       item.input.recoverUnchanged ? sha(batch?.recovery?.reloaded?.head) : 'Outside this case'].join(' | ') + ' |');
   }

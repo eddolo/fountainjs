@@ -39,6 +39,21 @@ it('rejects a partial batch write even when the server refuses the batch and the
  item.batch.response.request.ids=[21,21];
  expect(score()).toMatchObject({submitted:false,decision:true,afterCommit:true,afterNotes:false,afterSource:false});
 });
+it('requires the live reason on the changed note and rejects a hidden submission', () => {
+ const reason="Can't apply as this line was changed in a more recent version.";
+ const instruction='Remove this suggestion from the batch to continue the review.';
+ const input={waitForLiveUpdate:true,source:'value',range:{start:1},secondLine:1};
+ const update={disabled:true,confirmVisible:false,queue:[true,true],requests:[] as string[],text:reason+' '+instruction,otherText:''};
+ const recovery={removedText:'',queuedAfterRefusal:[true,true],remaining:[true,false]};
+ const item={setup:{seedCommit:'a'.repeat(40)},batch:{before:{notes:[]},confirmUnavailable:true,liveUpdate:update,visibleBadges:[false,false],recovery}};
+ const score=()=>batchReviewChecks(input,{},item).values;
+ expect(score()).toMatchObject({decision:true,submitted:true,feedback:true,promptScoped:true});
+ update.requests.push('/api/v4/suggestions/batch_apply');
+ recovery.removedText=instruction;
+ expect(score()).toMatchObject({submitted:false,promptScoped:false});
+ update.text=instruction;
+ expect(score().feedback).toBe(false);
+});
 it('rejects swapped equal-line review targets and writes to an identical untouched copy', () => {
  const paths=['live/config.js','backup/config.js','untouched/config.js'];
  const input={source:'same\n',expectedSource:'same\nfirst\n',expectedSecondSource:'second\n',range:{start:1},secondLine:1,

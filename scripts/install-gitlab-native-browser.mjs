@@ -54,6 +54,8 @@ const taskBodyPath = 'app/assets/javascripts/issues/show/fountain_task_body_extr
 const taskUtilsHash = '548b3dbacbbe72bc77c75f3fcce77984364df7d9fc0422b00ca0f80d06f29575';
 const noteComponentPath = 'app/assets/javascripts/notes/components/noteable_note.vue';
 const noteComponentHash = '1d489cd1644b3544a7544a707ec194c8eb8a6623f651b9ea958c6fa607f978cf';
+const reviewHeaderPath = 'app/assets/javascripts/vue_shared/components/markdown/suggestion_diff_header.vue';
+const reviewHeaderHash = '0f176b2ed251a36162e2642b1be7882c8b30f31efc528bb1882fb9691e92ca1a';
 const reviewActionsPath = 'app/assets/javascripts/notes/store/legacy_notes/actions.js';
 const reviewActionsHash = 'a28c9e56677a80683e9a0e9b67eff533e04f6711b9ab3f3422588f38342262a1';
 const reviewHelperPath = 'app/assets/javascripts/notes/store/legacy_notes/fountain_applied_suggestion.js';
@@ -75,7 +77,7 @@ if (previous && previous.source !== source)
   throw new Error('The retained install belongs to a different checkout.');
 if (previous) {
   const generation = previous.formatVersion;
-  if (generation !== undefined && (!Number.isInteger(generation) || generation < 2 || generation > 18)) throw new Error('Unknown retained install format.');
+  if (generation !== undefined && (!Number.isInteger(generation) || generation < 2 || generation > 19)) throw new Error('Unknown retained install format.');
   const allowed = new Set([
     hostPath,
     rendererPath,
@@ -126,9 +128,12 @@ if (previous) {
   if (generation >= 16) allowed.add(descriptionPath);
   if (generation >= 17) { allowed.add(reviewActionsPath); allowed.add(reviewHelperPath); }
   if (generation >= 18) allowed.add(noteComponentPath);
+  if (generation >= 19) allowed.add(reviewHeaderPath);
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
 }
+const originalHeader = execFileSync('git',['-C',source,'show',pin.commit+':'+reviewHeaderPath],{encoding:'utf8'});
+if (hash(originalHeader)!==reviewHeaderHash) throw new Error('Unexpected pinned GitLab suggestion header.');
 if (restore) {
   if (!previous || previous.restored) throw new Error('No active retained install to restore.');
   for (const [path, digest] of Object.entries(previous.files)) {
@@ -192,6 +197,7 @@ if (restore) {
     if (hash(originalNote) !== noteComponentHash) throw new Error('Retained note component differs from the pinned source.');
     await writeFile(resolve(source, noteComponentPath), originalNote);
   }
+  if (previous.files[reviewHeaderPath]) await writeFile(resolve(source,reviewHeaderPath),originalHeader);
   if (previous.files[reviewActionsPath]) {
     const originalActions = await readFile(resolve(output,'prepared-review-actions.js'));
     if (hash(originalActions)!==reviewActionsHash) throw new Error('Retained review actions differ from the pinned source.');
@@ -209,7 +215,7 @@ if (restore) {
   if (preparedLazyLoader) await writeFile(resolve(source, lazyLoaderPath), preparedLazyLoader);
   for (const [path, value] of preparedMenus) await writeFile(resolve(source, path), value);
   for (const path of Object.keys(previous.files))
-    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, noteComponentPath].includes(path)) await unlink(resolve(source, path));
+    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, noteComponentPath].includes(path)) await unlink(resolve(source, path));
   await writeFile(
     resolve(output, 'install.json'),
     JSON.stringify({ ...previous, restored: true }, null, 2) + '\n',
@@ -298,6 +304,21 @@ files.set(noteComponentPath, originalNote.replace(alertCall, `const alert = ${al
         if (!element.contains(document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)))
           element.scrollIntoView({block: 'center', behavior: 'instant'});
       });`));
+const headerTarget = resolve(source,reviewHeaderPath);
+const currentHeaderHash = hash(await readFile(headerTarget));
+if (await realpath(headerTarget)!==headerTarget || (currentHeaderHash!==reviewHeaderHash && currentHeaderHash!==previous?.files[reviewHeaderPath]))
+  throw new Error('Refusing to replace an unrecognized GitLab suggestion header.');
+const headerEnd = '    </div>\n  </div>\n</template>';
+if (originalHeader.split(headerEnd).length!==2) throw new Error('Cannot locate the pinned review controls.');
+files.set(reviewHeaderPath, originalHeader.replace(headerEnd, `      <p
+        v-if="isBatched && !canApply && inapplicableReason"
+        role="status"
+        class="gl-mb-0 gl-basis-full gl-text-subtle"
+      >
+        {{ inapplicableReason }}
+        {{ __('Remove this suggestion from the batch to continue the review.') }}
+      </p>
+` + headerEnd));
 const originalReviewActions = execFileSync('git',['-C',source,'show',pin.commit+':'+reviewActionsPath],{encoding:'utf8'});
 if (hash(originalReviewActions)!==reviewActionsHash || await realpath(resolve(source,reviewActionsPath))!==resolve(source,reviewActionsPath))
   throw new Error('Unrecognized review action source.');
@@ -478,7 +499,7 @@ for (const [path] of files) {
   const parent = await realpath(resolve(target, '..'));
   if (parent !== resolve(target, '..'))
     throw new Error('Refusing a symlinked installation parent.');
-  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, noteComponentPath].includes(path)) {
+  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, noteComponentPath].includes(path)) {
     if ((await realpath(target)) !== target) throw new Error('Refusing a symlinked host input.');
     continue;
   }
@@ -511,7 +532,7 @@ await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 18,
+      formatVersion: 19,
       source,
       revision: pin.commit,
       scope:
