@@ -1,6 +1,20 @@
 // One permission observation serves every suggestion on the same merge request.
 const reviews = new WeakMap();
 
+// A branch can keep the same commit while its reviewer gains or loses write access.
+export async function readReviewAccess(url) {
+  const response = await fetch(url, {
+    cache: 'no-store',
+    mode: 'same-origin',
+    credentials: 'same-origin',
+    signal: AbortSignal.timeout(5000),
+  });
+  if (!response.ok) {
+    throw Object.assign(new Error('Could not read GitLab review access.'), { status: response.status });
+  }
+  return response.json();
+}
+
 export function reviewBranchAccess(mr, observable, read) {
   if (
     !mr ||
@@ -44,7 +58,7 @@ export function reviewBranchAccess(mr, observable, read) {
       state.restricted = !record.can_push;
       return true;
     } catch (error) {
-      if ([401, 403, 404].includes(error.response?.status)) state.restricted = true;
+      if ([401, 403, 404].includes(error.status)) state.restricted = true;
       return false;
     }
   }

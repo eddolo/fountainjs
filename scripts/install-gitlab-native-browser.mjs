@@ -330,10 +330,10 @@ files.set(applyControlPath, originalApply
   .replace('@shown="focusCommitMessageInput"','@shown="focusCommitMessageInput"\n    @hidden="stopCheckingAccess"')
   .replace('data-testid="commit-with-custom-message-button"','data-testid="commit-with-custom-message-button"\n        :disabled="disabled"'));
 const accessHeader = originalHeader
-  .replace('<script>',"<script>\nimport Vue from 'vue';\nimport Api from '~/api';\nimport axios from '~/lib/utils/axios_utils';\nimport { reviewBranchAccess } from './fountain_review_branch_access';")
+  .replace('<script>',"<script>\nimport Vue from 'vue';\nimport Api from '~/api';\nimport { readReviewAccess, reviewBranchAccess } from './fountain_review_branch_access';")
   .replace('      isApplyingSingle: false,',`      isApplyingSingle: false,
       branchAccess: reviewBranchAccess(window.gl?.mrWidgetData, Vue.observable,
-        path => axios.get(Api.buildUrl(path), {timeout:5000}).then(({data}) => data)),`)
+        path => readReviewAccess(Api.buildUrl(path))),`)
   .replace('return this.isApplying || !this.canApply;', 'return this.isApplying || !this.canApply || this.branchAccess?.state.restricted;')
   .replace('if (this.batchSuggestionsCount > 1) {','if (this.isDisableButton) return;\n      if (this.batchSuggestionsCount > 1) {')
   .replace(':disabled="isDisableButton"\n        :default-commit-message', ':disabled="isDisableButton"\n        :branch-access="branchAccess"\n        :default-commit-message');

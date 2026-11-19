@@ -1,6 +1,6 @@
 import {afterEach,expect,it,vi} from 'vitest';
 // @ts-expect-error Private GitLab adapter has no published type declarations.
-import {reviewBranchAccess} from '../integrations/gitlab/services/review_branch_access.js';
+import {readReviewAccess,reviewBranchAccess} from '../integrations/gitlab/services/review_branch_access.js';
 
 const mr=()=>({id:98,iid:7,target_project_full_path:'group/target'});
 const identity=<T>(value:T)=>value;
@@ -21,6 +21,26 @@ it('shares the actual fork branch check, keeps a denial through transient errors
   expect(access.state.restricted).toBe(true);
   await access.refresh();
   expect(access.state).toMatchObject({restricted:false,checking:false});
+});
+
+it('reads current access for an unchanged branch and keeps a denial until an authorized read succeeds', async()=>{
+  const fetcher = vi.fn<typeof fetch>()
+    .mockResolvedValueOnce(Response.json(details))
+    .mockResolvedValueOnce(new Response(null,{status:403}))
+    .mockResolvedValueOnce(new Response(null,{status:503}))
+    .mockResolvedValueOnce(Response.json({name:details.source_branch,can_push:true}));
+  vi.stubGlobal('fetch',fetcher);
+  const access = reviewBranchAccess(mr(),identity,readReviewAccess);
+  await access.refresh();
+  expect(access.state.restricted).toBe(true);
+  await access.recheck();
+  expect(access.state.restricted).toBe(true);
+  await access.recheck();
+  expect(access.state.restricted).toBe(false);
+  for (const [url,options] of fetcher.mock.calls.slice(1)) {
+    expect(url).toBe('/api/:version/projects/42/repository/branches/review%2Ffork');
+    expect(options).toMatchObject({cache:'no-store',mode:'same-origin',credentials:'same-origin'});
+  }
 });
 
 it('starts a fresh manual check when an earlier check is still reading the former role',async()=>{
