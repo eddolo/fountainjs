@@ -14,7 +14,7 @@ export async function withBatchReviewer({page,observeContext,request,project,fix
     const context = await browser.newContext({...options,storageState:await login.storageState(),recordVideo:{dir:output}});
     let video;
     try {
-      observeContext(context,'Reviewer');
+      await observeContext(context,'Reviewer');
       const reviewer = await context.newPage();
       video = reviewer.video();
       const who = await reviewer.request.get('http://127.0.0.1:5080/api/v4/user');

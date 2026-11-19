@@ -3,7 +3,7 @@
   "formatVersion": 20,
   "files": 38,
   "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
-  "integrationSHA256": "70f013d3f947ff2edaf263c9f691caae58ea85772415ea610dd1b420827387b6",
+  "integrationSHA256": "5c650f15291979a5e84d99825927112efaf9b7aa90eb6ac66ba868d250213422",
   "runtimeSHA256": "56c83cc9e181a0a958cf32e86cec3980fa5ca5f59b62d374e0a2a7a60f93a379",
   "checks": [
     "Guarded 38-file source rollback succeeds",

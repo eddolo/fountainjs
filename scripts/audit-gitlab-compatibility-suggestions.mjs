@@ -271,7 +271,20 @@ export async function runRecordedGitLabBatch(options) {
   let stage = 'setup';
   const events = [];
   const started = performance.now();
-  const observeContext = (context, actor) => {
+  const observeContext = async (context, actor) => {
+    const marker = 'fountain-review-browser:';
+    await context.addInitScript(prefix=>{
+      if (window !== window.top) return;
+      const note = (type,error) => console.debug(prefix + JSON.stringify({
+        type, document:performance.timeOrigin,
+        exception:error?.name, message:error?.message,
+        frames:error?.stack?.match(/\/assets\/webpack\/[\w./-]+\.js:\d+:\d+/gu)?.slice(0,5),
+      }));
+      window.addEventListener('pageshow',()=>note('pageshow'));
+      window.addEventListener('pagehide',()=>note('pagehide'));
+      window.addEventListener('error',event=>note('window-error',event.error));
+      window.addEventListener('unhandledrejection',event=>note('unhandled-rejection',event.reason));
+    },marker);
     let count = 0;
     context.on('page', tab => {
       const label = actor + '-' + ++count;
@@ -282,24 +295,43 @@ export async function runRecordedGitLabBatch(options) {
             (url.pathname === '/api/graphql' || url.pathname.endsWith('/notes'))) return url.pathname;
         return null;
       };
+      tab.on('console',entry=>{
+        if (entry.type()==='debug' && entry.text().startsWith(marker)) {
+          const {type,...fields}=JSON.parse(entry.text().slice(marker.length));
+          record(type,fields);
+        }
+      });
+      const ids = new WeakMap();
+      let nextRequest = 0;
+      tab.on('request',request=>{
+        const path = endpoint(request);
+        if (!path) return;
+        const id = ++nextRequest;
+        ids.set(request,id);
+        let operation;
+        if (path==='/api/graphql' && request.method()==='POST') {
+          try { operation=request.postDataJSON()?.operationName; } catch {}
+        }
+        record('request',{id,method:request.method(),path,operation});
+      });
       tab.on('framenavigated',frame=>{
         if (frame === tab.mainFrame()) record('navigation',{path:new URL(frame.url()).pathname});
       });
       tab.on('requestfailed',request=>{
         const path = endpoint(request);
-        if (path) record('requestfailed',{method:request.method(),path,reason:request.failure()?.errorText});
+        if (path) record('requestfailed',{id:ids.get(request),method:request.method(),path,reason:request.failure()?.errorText});
       });
       tab.on('response',response=>{
         const path = endpoint(response.request());
-        if (path) record('response',{method:response.request().method(),path,status:response.status()});
+        if (path) record('response',{id:ids.get(response.request()),method:response.request().method(),path,status:response.status()});
       });
       tab.on('pageerror',error=>{
-        record('pageerror',{message:error.message});
+        record('pageerror',{name:error.name,message:error.message,frames:error.stack?.match(/\/assets\/webpack\/[\w./-]+\.js:\d+:\d+/gu)?.slice(0,5)});
         options.onPageError(label + ' at ' + stage + ': ' + error.message);
       });
     });
   };
-  observeContext(context,'Author');
+  await observeContext(context,'Author');
   const page = await context.newPage();
   const video = page.video();
   try {

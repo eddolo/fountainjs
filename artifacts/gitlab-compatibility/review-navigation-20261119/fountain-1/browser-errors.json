@@ -1,0 +1,3862 @@
+[
+  {
+    "ms": 1205,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "pagehide",
+    "document": 1795124572422
+  },
+  {
+    "ms": 1206,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219/diffs"
+  },
+  {
+    "ms": 1688,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 1,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getAsyncSuperSidebarData"
+  },
+  {
+    "ms": 2337,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219/diffs"
+  },
+  {
+    "ms": 2375,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 2,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestId"
+  },
+  {
+    "ms": 2390,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 3,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTodos"
+  },
+  {
+    "ms": 2397,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 4,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestSubscribed"
+  },
+  {
+    "ms": 2552,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 1,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 2938,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 2,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 2939,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 3,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 2939,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 4,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 3094,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 5,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrAssignees"
+  },
+  {
+    "ms": 3102,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 6,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestReviewers"
+  },
+  {
+    "ms": 3112,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 7,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestLabels"
+  },
+  {
+    "ms": 3126,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 8,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestMilestone"
+  },
+  {
+    "ms": 3140,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 9,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrParticipants"
+  },
+  {
+    "ms": 3148,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 10,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTimeTracking"
+  },
+  {
+    "ms": 3162,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 11,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestRelatedWorkItems"
+  },
+  {
+    "ms": 3171,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 12,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "reviewDrawer"
+  },
+  {
+    "ms": 3402,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 13,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestStack"
+  },
+  {
+    "ms": 3444,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "requestfailed",
+    "id": 6,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 3444,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "requestfailed",
+    "id": 5,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 3444,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "requestfailed",
+    "id": 11,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 3444,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "requestfailed",
+    "id": 12,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 3444,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "requestfailed",
+    "id": 13,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 3444,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "requestfailed",
+    "id": 7,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 3444,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "requestfailed",
+    "id": 8,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 3444,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "requestfailed",
+    "id": 9,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 3454,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "requestfailed",
+    "id": 10,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 3454,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "unhandled-rejection",
+    "document": 1795124573089,
+    "exception": "Error",
+    "message": "Network Error",
+    "frames": [
+      "/assets/webpack/framework.f13ea082.chunk.js:1:69648",
+      "/assets/webpack/framework.f13ea082.chunk.js:1:64675"
+    ]
+  },
+  {
+    "ms": 3454,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "pageerror",
+    "name": "Unhandled Promise Rejection",
+    "message": "Error: Network Error",
+    "frames": [
+      "/assets/webpack/70077.4606933d.chunk.js:28:35206"
+    ]
+  },
+  {
+    "ms": 4071,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219/diffs"
+  },
+  {
+    "ms": 4339,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 14,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getAsyncSuperSidebarData"
+  },
+  {
+    "ms": 4785,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219/diffs"
+  },
+  {
+    "ms": 4804,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 15,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestId"
+  },
+  {
+    "ms": 4817,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 16,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTodos"
+  },
+  {
+    "ms": 4822,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 17,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestSubscribed"
+  },
+  {
+    "ms": 4922,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 14,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 5033,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 16,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 5054,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 18,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrAssignees"
+  },
+  {
+    "ms": 5058,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 19,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestReviewers"
+  },
+  {
+    "ms": 5066,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 20,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestLabels"
+  },
+  {
+    "ms": 5079,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 21,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestMilestone"
+  },
+  {
+    "ms": 5092,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 22,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrParticipants"
+  },
+  {
+    "ms": 5098,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 23,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTimeTracking"
+  },
+  {
+    "ms": 5105,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 24,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestRelatedWorkItems"
+  },
+  {
+    "ms": 5111,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 25,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "reviewDrawer"
+  },
+  {
+    "ms": 5128,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 15,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 5128,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 17,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 5208,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 26,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestStack"
+  },
+  {
+    "ms": 5502,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 27,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 5594,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 28,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMergeRequestState"
+  },
+  {
+    "ms": 5688,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 19,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 5702,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "request",
+    "id": 29,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "addReviewerPermissions"
+  },
+  {
+    "ms": 5705,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 18,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 5725,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 20,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 5829,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 21,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 6026,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 22,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 6029,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 24,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 6070,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 23,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 6096,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "pageshow",
+    "document": 1795124575762
+  },
+  {
+    "ms": 6105,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 25,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 6256,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 26,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 6311,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 28,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 6336,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 29,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 6365,
+    "tab": "Author-1",
+    "stage": "setup",
+    "type": "response",
+    "id": 27,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  },
+  {
+    "ms": 9617,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 30,
+    "method": "POST",
+    "path": "/root/fountain-product-integration/notes"
+  },
+  {
+    "ms": 10448,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 30,
+    "method": "POST",
+    "path": "/root/fountain-product-integration/notes",
+    "status": 200
+  },
+  {
+    "ms": 10936,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 31,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 10941,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "requestfailed",
+    "id": 31,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 11430,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "pagehide",
+    "document": 1795124575762
+  },
+  {
+    "ms": 11438,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219/diffs"
+  },
+  {
+    "ms": 11720,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 32,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getAsyncSuperSidebarData"
+  },
+  {
+    "ms": 12167,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219/diffs"
+  },
+  {
+    "ms": 12195,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 33,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestId"
+  },
+  {
+    "ms": 12208,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 34,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTodos"
+  },
+  {
+    "ms": 12217,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 35,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestSubscribed"
+  },
+  {
+    "ms": 12316,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 32,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 12488,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 36,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrAssignees"
+  },
+  {
+    "ms": 12505,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 37,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestReviewers"
+  },
+  {
+    "ms": 12528,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 38,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestLabels"
+  },
+  {
+    "ms": 12554,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 39,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestMilestone"
+  },
+  {
+    "ms": 12584,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 40,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrParticipants"
+  },
+  {
+    "ms": 12604,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 41,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTimeTracking"
+  },
+  {
+    "ms": 12618,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 42,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestRelatedWorkItems"
+  },
+  {
+    "ms": 12642,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 43,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "reviewDrawer"
+  },
+  {
+    "ms": 12662,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 33,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 12664,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 34,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 12704,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 35,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 12742,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 44,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestStack"
+  },
+  {
+    "ms": 12814,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "pageshow",
+    "document": 1795124583253
+  },
+  {
+    "ms": 13168,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 45,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMergeRequestState"
+  },
+  {
+    "ms": 13244,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 37,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 13250,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 46,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "addReviewerPermissions"
+  },
+  {
+    "ms": 13285,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 36,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 13393,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 38,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 13443,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "request",
+    "id": 47,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 13454,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 39,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 13573,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 40,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 13587,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 41,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 13620,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 42,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 13683,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 43,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 13736,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 44,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 13767,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 45,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 14080,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 46,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 14081,
+    "tab": "Author-1",
+    "stage": "post",
+    "type": "response",
+    "id": 47,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  },
+  {
+    "ms": 14493,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "pagehide",
+    "document": 1795124583253
+  },
+  {
+    "ms": 14502,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219/diffs"
+  },
+  {
+    "ms": 14715,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 48,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getAsyncSuperSidebarData"
+  },
+  {
+    "ms": 15220,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219/diffs"
+  },
+  {
+    "ms": 15254,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 49,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestId"
+  },
+  {
+    "ms": 15273,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 50,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTodos"
+  },
+  {
+    "ms": 15281,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 51,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestSubscribed"
+  },
+  {
+    "ms": 15378,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 48,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 15598,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 52,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrAssignees"
+  },
+  {
+    "ms": 15614,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 53,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestReviewers"
+  },
+  {
+    "ms": 15628,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 54,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestLabels"
+  },
+  {
+    "ms": 15670,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 55,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestMilestone"
+  },
+  {
+    "ms": 15700,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 56,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrParticipants"
+  },
+  {
+    "ms": 15732,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 57,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTimeTracking"
+  },
+  {
+    "ms": 15748,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 58,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestRelatedWorkItems"
+  },
+  {
+    "ms": 15758,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 59,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "reviewDrawer"
+  },
+  {
+    "ms": 15801,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 50,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 15801,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 49,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 15802,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 51,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 15980,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 60,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestStack"
+  },
+  {
+    "ms": 16066,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "pageshow",
+    "document": 1795124586554
+  },
+  {
+    "ms": 16474,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 61,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMergeRequestState"
+  },
+  {
+    "ms": 16756,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 53,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 16757,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 52,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 16782,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 62,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "addReviewerPermissions"
+  },
+  {
+    "ms": 16810,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 63,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 16895,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 54,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 16922,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 55,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 17139,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 57,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 17169,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 56,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 17212,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 58,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 17242,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 59,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 17333,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 61,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 17401,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 60,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 17492,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 62,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 17616,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 63,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  },
+  {
+    "ms": 21129,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 64,
+    "method": "POST",
+    "path": "/root/fountain-product-integration/notes"
+  },
+  {
+    "ms": 21679,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 64,
+    "method": "POST",
+    "path": "/root/fountain-product-integration/notes",
+    "status": 200
+  },
+  {
+    "ms": 22101,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 65,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 22270,
+    "tab": "Author-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 65,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  },
+  {
+    "ms": 30193,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "pagehide",
+    "document": 1795124602241
+  },
+  {
+    "ms": 30195,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 30785,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 1,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getAsyncSuperSidebarData"
+  },
+  {
+    "ms": 31623,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 31697,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 2,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestId"
+  },
+  {
+    "ms": 31725,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 3,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "snakeCaseNote"
+  },
+  {
+    "ms": 31830,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 4,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTodos"
+  },
+  {
+    "ms": 31844,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 5,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestSubscribed"
+  },
+  {
+    "ms": 32008,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 1,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 32605,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 2,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 32606,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 3,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 32606,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 4,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 32607,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 5,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 32632,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 6,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMergeRequestState"
+  },
+  {
+    "ms": 32663,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 7,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getState"
+  },
+  {
+    "ms": 32663,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 8,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeChecks"
+  },
+  {
+    "ms": 32778,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 9,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrAssignees"
+  },
+  {
+    "ms": 32794,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 10,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestReviewers"
+  },
+  {
+    "ms": 32808,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 11,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestLabels"
+  },
+  {
+    "ms": 32836,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 12,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestMilestone"
+  },
+  {
+    "ms": 32865,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 13,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrParticipants"
+  },
+  {
+    "ms": 32877,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 14,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTimeTracking"
+  },
+  {
+    "ms": 32893,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 15,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestRelatedWorkItems"
+  },
+  {
+    "ms": 32903,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 16,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "reviewDrawer"
+  },
+  {
+    "ms": 33213,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 6,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 33940,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 17,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestStack"
+  },
+  {
+    "ms": 34077,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 7,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34078,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 8,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34078,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 10,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34085,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "pageshow",
+    "document": 1795124602303
+  },
+  {
+    "ms": 34090,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 11,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34093,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 9,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34093,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 12,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34146,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 18,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "approvedBy"
+  },
+  {
+    "ms": 34160,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 19,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeWidget"
+  },
+  {
+    "ms": 34275,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 20,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "addReviewerPermissions"
+  },
+  {
+    "ms": 34454,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 13,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34474,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 21,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "securityReportsDownloadPaths"
+  },
+  {
+    "ms": 34514,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 15,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34518,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "request",
+    "id": 22,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 34587,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 14,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34616,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 16,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34826,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 17,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 34969,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 18,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 35178,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 21,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 35192,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 20,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 35246,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 19,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 35307,
+    "tab": "Reviewer-1",
+    "stage": "write-second-review",
+    "type": "response",
+    "id": 22,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  },
+  {
+    "ms": 40706,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "pagehide",
+    "document": 1795124612791
+  },
+  {
+    "ms": 40707,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 41271,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 1,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getAsyncSuperSidebarData"
+  },
+  {
+    "ms": 41836,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 41892,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 2,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestId"
+  },
+  {
+    "ms": 41903,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 3,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "snakeCaseNote"
+  },
+  {
+    "ms": 41966,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 4,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTodos"
+  },
+  {
+    "ms": 41976,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 5,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestSubscribed"
+  },
+  {
+    "ms": 42144,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 1,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 42184,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 2,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 42184,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 6,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMergeRequestState"
+  },
+  {
+    "ms": 42188,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 7,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getState"
+  },
+  {
+    "ms": 42193,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 8,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeChecks"
+  },
+  {
+    "ms": 42700,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 3,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 42709,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 4,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 42710,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 5,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 42710,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 6,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 42792,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 7,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 42837,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 9,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrAssignees"
+  },
+  {
+    "ms": 42862,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 10,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestReviewers"
+  },
+  {
+    "ms": 42865,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 11,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestLabels"
+  },
+  {
+    "ms": 42877,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 12,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestMilestone"
+  },
+  {
+    "ms": 42892,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 13,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrParticipants"
+  },
+  {
+    "ms": 42894,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 14,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTimeTracking"
+  },
+  {
+    "ms": 42909,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 15,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestRelatedWorkItems"
+  },
+  {
+    "ms": 42920,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 16,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "reviewDrawer"
+  },
+  {
+    "ms": 42959,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 8,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43540,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 17,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestStack"
+  },
+  {
+    "ms": 43643,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 10,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43644,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 11,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43644,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 12,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43645,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 9,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43657,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "pageshow",
+    "document": 1795124612822
+  },
+  {
+    "ms": 43666,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 13,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43666,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 14,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43666,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 15,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43666,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 16,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43666,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 17,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 43687,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 18,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "approvedBy"
+  },
+  {
+    "ms": 43702,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 19,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeWidget"
+  },
+  {
+    "ms": 43839,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 20,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "securityReportsDownloadPaths"
+  },
+  {
+    "ms": 43957,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 21,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 44062,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 18,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 44083,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 20,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 44120,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 19,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 44139,
+    "tab": "Reviewer-1",
+    "stage": "reviewer-becomes-reporter",
+    "type": "request",
+    "id": 23,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getState"
+  },
+  {
+    "ms": 44237,
+    "tab": "Reviewer-2",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 21,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  },
+  {
+    "ms": 44409,
+    "tab": "Reviewer-1",
+    "stage": "reviewer-becomes-reporter",
+    "type": "response",
+    "id": 23,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 48319,
+    "tab": "Author-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 66,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 48328,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 24,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 49217,
+    "tab": "Author-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 66,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  },
+  {
+    "ms": 49644,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 24,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  },
+  {
+    "ms": 49940,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 25,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "workInProgress"
+  },
+  {
+    "ms": 50328,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 25,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 50557,
+    "tab": "Author-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 67,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 50559,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "pageerror",
+    "name": "XMLHttpRequest cannot load http",
+    "message": "/127.0.0.1:5080/root/fountain-product-integration/noteable/merge_request/2831/notes due to access control checks.",
+    "frames": [
+      "/assets/webpack/framework.f13ea082.chunk.js:1:65779",
+      "/assets/webpack/framework.f13ea082.chunk.js:1:63656",
+      "/assets/webpack/framework.f13ea082.chunk.js:1:70174"
+    ]
+  },
+  {
+    "ms": 50901,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "pagehide",
+    "document": 1795124602303
+  },
+  {
+    "ms": 50913,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 51119,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 26,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getAsyncSuperSidebarData"
+  },
+  {
+    "ms": 51230,
+    "tab": "Author-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 67,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  },
+  {
+    "ms": 51552,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 51585,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 27,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestId"
+  },
+  {
+    "ms": 51594,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 28,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "snakeCaseNote"
+  },
+  {
+    "ms": 51654,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 29,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTodos"
+  },
+  {
+    "ms": 51661,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 30,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestSubscribed"
+  },
+  {
+    "ms": 51719,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 26,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 51720,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 31,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMergeRequestState"
+  },
+  {
+    "ms": 51730,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 32,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getState"
+  },
+  {
+    "ms": 51731,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 33,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeChecks"
+  },
+  {
+    "ms": 51888,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 34,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrAssignees"
+  },
+  {
+    "ms": 51894,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 35,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestReviewers"
+  },
+  {
+    "ms": 51908,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 36,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestLabels"
+  },
+  {
+    "ms": 51935,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 37,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestMilestone"
+  },
+  {
+    "ms": 51970,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 38,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrParticipants"
+  },
+  {
+    "ms": 51982,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 39,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTimeTracking"
+  },
+  {
+    "ms": 51994,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 40,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestRelatedWorkItems"
+  },
+  {
+    "ms": 52004,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 41,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "reviewDrawer"
+  },
+  {
+    "ms": 52057,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 27,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 52282,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 28,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 52802,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 42,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestStack"
+  },
+  {
+    "ms": 52965,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 29,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 52965,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 30,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 52966,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 31,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 52989,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 32,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53053,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 43,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "approvedBy"
+  },
+  {
+    "ms": 53055,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 44,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeWidget"
+  },
+  {
+    "ms": 53098,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 45,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "securityReportsDownloadPaths"
+  },
+  {
+    "ms": 53191,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 33,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53232,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 46,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 53377,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 36,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53400,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 35,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53406,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 47,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "addReviewerPermissions"
+  },
+  {
+    "ms": 53450,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 34,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53462,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 37,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53671,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 39,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53701,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 41,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53707,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 38,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53727,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 40,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53952,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 42,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 53966,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 43,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 54190,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 45,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 54327,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "pageshow",
+    "document": 1795124622781
+  },
+  {
+    "ms": 54336,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "requestfailed",
+    "id": 44,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 54336,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "requestfailed",
+    "id": 46,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 54336,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "requestfailed",
+    "id": 47,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 54714,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "pagehide",
+    "document": 1795124622781
+  },
+  {
+    "ms": 54723,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 54920,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 48,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getAsyncSuperSidebarData"
+  },
+  {
+    "ms": 55273,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 55297,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 49,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestId"
+  },
+  {
+    "ms": 55306,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 50,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "snakeCaseNote"
+  },
+  {
+    "ms": 55366,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 51,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTodos"
+  },
+  {
+    "ms": 55398,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 52,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestSubscribed"
+  },
+  {
+    "ms": 55449,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 48,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 55449,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 53,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMergeRequestState"
+  },
+  {
+    "ms": 55453,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 54,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getState"
+  },
+  {
+    "ms": 55456,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 55,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeChecks"
+  },
+  {
+    "ms": 55556,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 50,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 55556,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 56,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrAssignees"
+  },
+  {
+    "ms": 55563,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 57,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestReviewers"
+  },
+  {
+    "ms": 55568,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 58,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestLabels"
+  },
+  {
+    "ms": 55589,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 59,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestMilestone"
+  },
+  {
+    "ms": 55594,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 60,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrParticipants"
+  },
+  {
+    "ms": 55600,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 61,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTimeTracking"
+  },
+  {
+    "ms": 55610,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 62,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestRelatedWorkItems"
+  },
+  {
+    "ms": 55617,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 63,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "reviewDrawer"
+  },
+  {
+    "ms": 55646,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 49,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 55647,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 51,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56166,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 64,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestStack"
+  },
+  {
+    "ms": 56282,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "pageshow",
+    "document": 1795124626651
+  },
+  {
+    "ms": 56282,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 52,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56282,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 53,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56283,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 55,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56346,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 54,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56402,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 65,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "approvedBy"
+  },
+  {
+    "ms": 56411,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 66,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeWidget"
+  },
+  {
+    "ms": 56442,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 67,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "securityReportsDownloadPaths"
+  },
+  {
+    "ms": 56823,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 57,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56832,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 58,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56832,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 56,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56842,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 59,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56842,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 61,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56842,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 62,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 56842,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 68,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 56843,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 69,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "addReviewerPermissions"
+  },
+  {
+    "ms": 56905,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 63,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 57013,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 60,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 57069,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 57088,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "requestfailed",
+    "id": 65,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 57088,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "requestfailed",
+    "id": 64,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 57097,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "requestfailed",
+    "id": 66,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 57097,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "requestfailed",
+    "id": 68,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 57097,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "requestfailed",
+    "id": 67,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 57097,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "requestfailed",
+    "id": 69,
+    "method": "POST",
+    "path": "/api/graphql",
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 57141,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "pageerror",
+    "name": "XMLHttpRequest cannot load http",
+    "message": "/127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/219/discussions/9dc4e2e76856c76931ff69c3ae466b32003ea405 due to access control checks.",
+    "frames": [
+      "/assets/webpack/framework.f13ea082.chunk.js:1:65779",
+      "/assets/webpack/framework.f13ea082.chunk.js:1:63656",
+      "/assets/webpack/framework.f13ea082.chunk.js:1:70174"
+    ]
+  },
+  {
+    "ms": 57588,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "pagehide",
+    "document": 1795124626651
+  },
+  {
+    "ms": 57595,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 57809,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 70,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getAsyncSuperSidebarData"
+  },
+  {
+    "ms": 58194,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "navigation",
+    "path": "/root/fountain-product-integration/-/merge_requests/219"
+  },
+  {
+    "ms": 58225,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 71,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestId"
+  },
+  {
+    "ms": 58234,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 72,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "snakeCaseNote"
+  },
+  {
+    "ms": 58291,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 73,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTodos"
+  },
+  {
+    "ms": 58299,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 74,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestSubscribed"
+  },
+  {
+    "ms": 58388,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 70,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 58394,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 75,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMergeRequestState"
+  },
+  {
+    "ms": 58396,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 76,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getState"
+  },
+  {
+    "ms": 58401,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 77,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeChecks"
+  },
+  {
+    "ms": 58506,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 71,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 58536,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 78,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrAssignees"
+  },
+  {
+    "ms": 58545,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 79,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestReviewers"
+  },
+  {
+    "ms": 58557,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 80,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestLabels"
+  },
+  {
+    "ms": 58577,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 81,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestMilestone"
+  },
+  {
+    "ms": 58587,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 82,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "getMrParticipants"
+  },
+  {
+    "ms": 58601,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 83,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestTimeTracking"
+  },
+  {
+    "ms": 58610,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 84,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestRelatedWorkItems"
+  },
+  {
+    "ms": 58631,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 85,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "reviewDrawer"
+  },
+  {
+    "ms": 58659,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 73,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 58803,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 72,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 58811,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 74,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 59190,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 86,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeRequestStack"
+  },
+  {
+    "ms": 59283,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 75,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 59287,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "pageshow",
+    "document": 1795124629412
+  },
+  {
+    "ms": 59288,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 76,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 59293,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 77,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 59317,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 87,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "approvedBy"
+  },
+  {
+    "ms": 59325,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 88,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "mergeWidget"
+  },
+  {
+    "ms": 59369,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 89,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "securityReportsDownloadPaths"
+  },
+  {
+    "ms": 59821,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 79,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 59821,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 80,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 59822,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 78,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 59823,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 81,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 59833,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 90,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes"
+  },
+  {
+    "ms": 59836,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "request",
+    "id": 91,
+    "method": "POST",
+    "path": "/api/graphql",
+    "operation": "addReviewerPermissions"
+  },
+  {
+    "ms": 59952,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 83,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 59965,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 82,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 60027,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 84,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 60154,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 85,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 60241,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 86,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 60398,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 87,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 60406,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 89,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 60481,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 88,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 60625,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 91,
+    "method": "POST",
+    "path": "/api/graphql",
+    "status": 200
+  },
+  {
+    "ms": 60636,
+    "tab": "Reviewer-1",
+    "stage": "confirm-batch",
+    "type": "response",
+    "id": 90,
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/2831/notes",
+    "status": 200
+  }
+]

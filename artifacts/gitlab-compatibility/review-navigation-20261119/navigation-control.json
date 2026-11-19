@@ -1,0 +1,62 @@
+{
+  "browser": "webkit",
+  "version": "26.5",
+  "platform": "linux",
+  "cases": [
+    {
+      "action": "stay",
+      "events": [
+        "read started",
+        "read loaded"
+      ],
+      "pageErrors": [],
+      "serverRequests": [
+        "/",
+        "/notes"
+      ]
+    },
+    {
+      "action": "leave",
+      "events": [
+        "beforeunload",
+        "read started",
+        "read failed",
+        "pagehide"
+      ],
+      "pageErrors": [
+        "XMLHttpRequest cannot load http: /127.0.0.1:44079/notes due to access control checks."
+      ],
+      "serverRequests": [
+        "/",
+        "/destination"
+      ]
+    },
+    {
+      "action": "cancel",
+      "events": [
+        "beforeunload",
+        "read started",
+        "read loaded"
+      ],
+      "pageErrors": [],
+      "serverRequests": [
+        "/",
+        "/notes"
+      ]
+    },
+    {
+      "action": "no-content",
+      "events": [
+        "beforeunload",
+        "read started",
+        "read loaded"
+      ],
+      "pageErrors": [],
+      "serverRequests": [
+        "/",
+        "/destination",
+        "/notes"
+      ]
+    }
+  ]
+}
