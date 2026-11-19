@@ -28,7 +28,7 @@ it.each(mergedPreviews.fixtures)('keeps $name through canonical GitLab Save whil
 
 it('retains the author’s Markdown spelling on an unchanged paragraph when an adjacent block is inserted', async () => {
   const source = '# Review schedule\r\n\r\nOwner: __Release team__.\r\n\r\nStatus: pending.';
-  const html = '<h1>Review schedule</h1><p>Owner: <strong>Release team</strong>.</p><p>Status: pending.</p>';
+  const html = '<h1 dir="auto">Review schedule</h1><p dir="auto">Owner: <strong>Release team</strong>.</p><p dir="auto">Status: pending.</p>';
   const { schema, codec, document } = await convert(source, html, true);
   const text = (value: string) => schema.node('paragraph', {}, [schema.text(value)]);
   const changed = document.copy([document.child(0), document.child(1), text('Schedule the review.'), text('Status: pending. Assigned.')]);

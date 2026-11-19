@@ -219,9 +219,19 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   return serialize(fragment);
 }
 
+function markdownAttributes(node: Node) {
+  const attrs = { ...node.attrs };
+  if (attrs.dir === 'auto') {
+    delete attrs.dir; // GitLab's reader adds automatic direction to ordinary Markdown.
+    if (attrs.align === 'start' && !attrs.alignExplicit) delete attrs.align;
+  }
+  return attrs;
+}
+
 /** Explicit GitLab conversion boundary; known unhandled expansions remain errors. */
 export class GitLabMarkdownCodec implements SerializedContentCodec {
   private readonly emojiSpellings = new WeakMap<Node, ReadonlyMap<string,string>>();
+  private readonly wikiBlockSources = new WeakMap<MarkdownSourceSnapshot, MarkdownSourceSnapshot>();
   private readonly sources = new WeakMap<Node, MarkdownSourceSnapshot>();
   constructor(private readonly options: {
     renderMarkdown(markdown: string, options?: { signal: AbortSignal }): Promise<GitLabRenderResponse>;
@@ -248,13 +258,15 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
       const document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
       schema.validate(document);
-      let source = MarkdownSourceSnapshot.capture(markdown, document);
+      const source = MarkdownSourceSnapshot.capture(markdown, document);
       if (this.options.preserveWikiSource && document.content.every(block => ['heading', 'paragraph'].includes(block.type.name))) {
         // GitLab owns the dialect. Reuse the core's block map only when parsing
         // the same source produces the complete tree returned by GitLab.
         try {
           const parsed = MarkdownSourceSnapshot.parse(markdown, schema);
-          if (parsed.document.eq(document)) source = parsed.source;
+          const prose = document.copy(document.content.map(block => block.attrs.dir === 'auto'
+            ? block.type.create(markdownAttributes(block), block.content, undefined, block.marks) : block));
+          if (parsed.document.eq(prose)) this.wikiBlockSources.set(source, parsed.source);
         } catch {
           // A wiki extension may accept syntax outside the local parser.
           // Its server-rendered tree still has the original source snapshot.
@@ -425,11 +437,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         tokens.set(token, original);
         return project(doc.type.schema.text(token, node.marks), path);
       }
-      const attrs = { ...node.attrs };
-      if (attrs.dir === 'auto') {
-        delete attrs.dir; // GitLab adds automatic direction while rendering ordinary Markdown.
-        if (attrs.align === 'start' && !attrs.alignExplicit) delete attrs.align;
-      }
+      const attrs = markdownAttributes(node);
       const marks = node.marks.map(mark => mark.type.name === 'link' && typeof mark.attrs.gitlabCanonicalSrc === 'string'
         ? mark.type.create({ ...mark.attrs, href: mark.attrs.gitlabCanonicalSrc, gitlabCanonicalSrc: undefined, htmlHref: undefined }) : mark);
       let text = node.text;
@@ -488,10 +496,10 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     };
     const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, blockSerializers });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
-    if (!canonical && !issues.length && !tokens.size && sources.size === 1 && projected.eq(doc)) {
-      const source = sources.values().next().value!;
-      if (source.blocks.length && doc.content.every(block => ['heading', 'paragraph'].includes(block.type.name))) {
-        const retained = MarkdownExporter.exportWithSource(doc, source, { omitTrailingCaret: true });
+    if (!canonical && !issues.length && !tokens.size && sources.size === 1) {
+      const source = this.wikiBlockSources.get(sources.values().next().value!);
+      if (source?.blocks.length && projected.content.every(block => ['heading', 'paragraph'].includes(block.type.name))) {
+        const retained = MarkdownExporter.exportWithSource(projected, source, { omitTrailingCaret: true });
         if (!retained.losses.length && ['blocks', 'mapped-blocks'].includes(retained.preservation))
           return { markdown: retained.markdown, preservation: 'blocks', issues };
       }
