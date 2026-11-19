@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
 
 test('draws editable Mermaid source, recovers from a syntax error and reopens Markdown', async ({ page }, info) => {
@@ -178,6 +179,80 @@ test('draws a Mermaid diagram from the chart shortcut and restores the source on
   await expect(image).toBeVisible();
 });
 
+test('downloads edited Mermaid images and compares reopened pixels with the preview', async ({ page }, info) => {
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.getByRole('button', { name: 'Mermaid diagram' }).click();
+  const code = demo.getByRole('region', { name: 'mermaid code' }).locator('code');
+  await code.click({ position: { x: 3, y: 4 } });
+  await page.keyboard.press('Home');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' --> done[Completed]');
+  const preview = demo.getByRole('figure', { name: 'Diagram preview' });
+  await preview.scrollIntoViewIfNeeded();
+  const image = preview.getByRole('img');
+  await expect.poll(async () => decodeURIComponent((await image.getAttribute('src')) ?? ''), { timeout: 22000 }).toContain('Completed');
+  const controls = preview.getByRole('group', { name: 'Diagram export' });
+  const selector = controls.getByLabel('Diagram image format');
+  const download = controls.getByRole('button', { name: 'Download diagram' });
+  for (const format of ['png', 'svg', 'jpeg', 'webp']) {
+    await selector.selectOption(format);
+    if (format === 'webp' && !await page.evaluate(() => document.createElement('canvas').toDataURL('image/webp').startsWith('data:image/webp'))) {
+      await download.click();
+      await expect(controls.getByRole('status')).toContainText('cannot export WEBP');
+      continue;
+    }
+    const pending = page.waitForEvent('download');
+    await download.focus();
+    await page.keyboard.press('Enter');
+    const file = await pending;
+    expect(file.suggestedFilename()).toBe('diagram.' + format);
+    const path = info.outputPath(file.suggestedFilename());
+    await file.saveAs(path);
+    const type = format === 'svg' ? 'image/svg+xml' : 'image/' + format;
+    const data = 'data:' + type + ';base64,' + (await readFile(path)).toString('base64');
+    const diff = await image.evaluate(async (element, uri) => {
+      const original = element as HTMLImageElement;
+      const reopened = new Image();
+      reopened.src = uri;
+      await reopened.decode();
+      const draw = (img: HTMLImageElement) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d')!;
+        if (uri.startsWith('data:image/jpeg;')) {
+          ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        ctx.drawImage(img, 0, 0);
+        return ctx;
+      };
+      let reference = draw(original);
+      if (uri.startsWith('data:image/png;')) {
+        // Include the browser's PNG color-profile conversion in the reference.
+        const nativePNG = new Image();
+        nativePNG.src = reference.canvas.toDataURL('image/png');
+        await nativePNG.decode();
+        reference = draw(nativePNG);
+      }
+      const pixels = (ctx: CanvasRenderingContext2D) => ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
+      const a = pixels(reference), b = pixels(draw(reopened));
+      let difference = 0, ink = 0;
+      for (let i = 0; i < a.length; i += 4) {
+        if (a[i + 3] > 200 && a[i] < 150) ink++;
+        for (let c = 0; c < 4; c++) difference += Math.abs(a[i + c] - b[i + c]);
+      }
+      return { sizeMatches: original.naturalWidth === reopened.naturalWidth && original.naturalHeight === reopened.naturalHeight,
+        ink, meanError: difference / a.length };
+    }, data);
+    expect(diff.sizeMatches).toBe(true);
+    expect(diff.ink).toBeGreaterThan(100);
+    expect(diff.meanError).toBeLessThan(format === 'png' || format === 'svg' ? 0.01 : 4);
+  }
+  await preview.screenshot({ path: info.outputPath('diagram-preview.png') });
+});
+
 test('reads two diagrams from one Markdown file with their own titles and labels', async ({ page }, info) => {
   const file = [
     '# Incident review', '',
@@ -197,6 +272,16 @@ test('reads two diagrams from one Markdown file with their own titles and labels
     await expect(image).toBeVisible({ timeout: 22000 });
     expect(decodeURIComponent((await image.getAttribute('src'))!)).toContain(label);
     await expect.poll(() => image.evaluate(el => (el as HTMLImageElement).naturalHeight)).toBeGreaterThan(0);
+    await figure.getByLabel('Diagram image format').selectOption('svg');
+    const pending = page.waitForEvent('download');
+    await figure.getByRole('button', { name: 'Download diagram' }).click();
+    const path = info.outputPath('reader-' + index + '.svg');
+    await (await pending).saveAs(path);
+    const saved = await page.evaluate(xml => {
+      const svg = new DOMParser().parseFromString(xml, 'image/svg+xml');
+      return { title: svg.querySelector('title')?.textContent, src: svg.querySelector('image')?.getAttribute('href') };
+    }, await readFile(path, 'utf8'));
+    expect(saved).toEqual({ title, src: await image.getAttribute('src') });
     if (index === 0) await figure.screenshot({ path: info.outputPath('sequence-reader.png') });
   }
 });

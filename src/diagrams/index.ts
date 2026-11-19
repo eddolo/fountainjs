@@ -1,9 +1,16 @@
 import { Decoration, insertNode, nodeRangeAtPath, Plugin, type Editor, type Node } from '../core';
+import type { GlobalConstructorInstance } from '../core/platform';
 import { defineExtension } from '../extensions/extension';
 import { MermaidLayout, type Preview } from './layout';
 
+export { exportMermaidImage, type DiagramImageFormat } from './image';
+
 /** URL of a trusted, host-supplied classic Mermaid browser build. */
-export interface MermaidOptions { scriptURL: string }
+export interface MermaidOptions {
+  scriptURL: string;
+  /** Optional host controls for a successfully rendered preview. */
+  renderControls?: (image: GlobalConstructorInstance<'HTMLImageElement', never>) => GlobalConstructorInstance<'HTMLElement', never>;
+}
 
 /** Insert editable Mermaid source as a regular fenced code block in one transaction. */
 export function insertMermaid(editor: Editor, source: string): boolean {
@@ -15,7 +22,7 @@ export function insertMermaid(editor: Editor, source: string): boolean {
 type PreviewElement = HTMLElement & { draw: () => Promise<void> };
 const tag = 'fountain-mermaid-preview';
 
-function previewWidget(render: (owner: Document) => Promise<Preview>): HTMLElement {
+function previewWidget(render: (owner: Document) => Promise<Preview>, controls: MermaidOptions['renderControls']): HTMLElement {
   // Register on first DOM use so importing and composing the extension also works on a server.
   if (!customElements.get(tag)) {
     customElements.define(tag, class extends HTMLElement {
@@ -51,6 +58,7 @@ function previewWidget(render: (owner: Document) => Promise<Preview>): HTMLEleme
       image.alt = result.title || 'Mermaid diagram';
       image.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(result.svg);
       preview.replaceChildren(image);
+      if (controls) preview.append(controls(image));
     } catch (error) {
       if (preview.isConnected) preview.textContent = 'Diagram preview unavailable. ' + (error instanceof Error ? error.message : String(error));
     }
@@ -59,7 +67,7 @@ function previewWidget(render: (owner: Document) => Promise<Preview>): HTMLEleme
 }
 
 /** Add lazy source-backed diagram previews to editing and read-only views. */
-export function createMermaidExtension({ scriptURL }: MermaidOptions) {
+export function createMermaidExtension({ scriptURL, renderControls }: MermaidOptions) {
   if (!scriptURL?.trim()) throw new TypeError('Supply the URL of the Mermaid browser script.');
   const layouts = new Map<Document, MermaidLayout>();
   let editors = 0;
@@ -76,7 +84,7 @@ export function createMermaidExtension({ scriptURL }: MermaidOptions) {
           }
           return layout.render(node);
         };
-        result.push(Decoration.widget(nodeRangeAtPath(doc, path).to, () => previewWidget(render),
+        result.push(Decoration.widget(nodeRangeAtPath(doc, path).to, () => previewWidget(render, renderControls),
           { key: 'mermaid-preview:' + node.textContent }));
       }
       return false;

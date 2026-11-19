@@ -1,7 +1,8 @@
+import { encodeBitmap, type BitmapFormat } from '../view/encode-bitmap';
 import type { Node } from '../core/schema';
 import { chartLayout, columnBounds } from './layout';
 
-export type ChartImageFormat = 'svg' | 'png' | 'jpeg' | 'webp';
+export type ChartImageFormat = 'svg' | BitmapFormat;
 
 function escapeText(value: string): string {
   if (/[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/u.test(value)) {
@@ -140,7 +141,7 @@ export function exportChartSVG(node: Node): string {
 
 /** Encodes the same drawing in the requested browser image format. */
 export async function exportChartImage(node: Node, format: ChartImageFormat, owner: Document): Promise<Blob> {
-  const { svg, width, height } = drawChart(node);
+  const { svg, height } = drawChart(node);
   const source = new Blob([svg], { type: 'image/svg+xml' });
   if (format === 'svg') return source;
   if (format !== 'png' && format !== 'jpeg' && format !== 'webp') throw new Error('Unknown chart image format.');
@@ -150,16 +151,6 @@ export async function exportChartImage(node: Node, format: ChartImageFormat, own
   try {
     image.src = url;
     await image.decode();
-    const canvas = owner.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const context = canvas.getContext('2d');
-    if (!context) throw new Error('This browser could not draw the chart.');
-    context.drawImage(image, 0, 0);
-    const mime = 'image/' + format;
-    return await new Promise<Blob>((resolve, reject) => canvas.toBlob(blob => {
-      if (blob?.type === mime) resolve(blob);
-      else reject(new Error(`This browser cannot export ${format.toUpperCase()}. Choose PNG or SVG.`));
-    }, mime));
+    return await encodeBitmap(image, format);
   } finally { URL.revokeObjectURL(url); }
 }

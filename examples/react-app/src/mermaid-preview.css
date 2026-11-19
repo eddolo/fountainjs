@@ -1,0 +1,2 @@
+.diagram-download { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: .75rem 0 0; }
+@media print { .diagram-download { display: none; } }
