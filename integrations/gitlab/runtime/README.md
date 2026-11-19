@@ -271,13 +271,21 @@ node scripts/compare-gitlab-compatibility.mjs \
 The comparison names the two verified builds. The stock input report also
 records the candidate issue IDs, their contents after rollback, and the native
 build that created them. This procedure covers the frontend-only profile.
-On the verified stock build, an immediate rich-text Save lost the final change
+In the Chromium rollback run, an immediate rich-text Save on stock lost the final change
 on both rolled-back issues and stock-authored controls. If editors resume work
 after this frontend rollback, open the description in Markdown mode, make the
 edit there, save, reload and check the final text. That route passed on all four
 records. Switching to Markdown immediately after typing in rich text also needs
 care: verify the final edit in the Markdown field before saving.
 [Rollback results](../../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md).
+
+For the desktop WebKit profile, add `--browser webkit` to both collection
+commands above and choose a fresh run ID. On WebKit 26.5 (Linux), stock reopened
+all four records and retained their comments and reviewed Markdown edits.
+All four lost the final rich-text edit at a measured 7–11 ms. The rollback
+comparison requires a trusted key and click under 100 ms with the intended text
+visible at click time. An earlier unmeasured pass cannot certify rapid Save.
+[Measured WebKit rollback](../../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md).
 
 Deployments with additional Ruby filters or document-cache changes require
 their own rollback and persisted-content checks.

@@ -69,6 +69,20 @@ all 32 owned files to their recorded bytes.
 [Repaired comparison](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-2/report.md) ·
 [Earlier failure](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-1/report.md).
 
+Desktop WebKit 26.5 on Linux passed the same 44 independence checks on the
+repaired Fountain build and stock GitLab. A timed comparison reproduced the
+stock Save loss on a final character and Backspace at 21–22 ms. Fountain kept
+both edits at 24–36 ms. Both retained them in the half-second controls.
+[Timed WebKit comparison](../../artifacts/gitlab-compatibility/quick-webkit-20261119/comparison-2/report.md).
+
+The stock frontend reopened the data after rollback. At 7–11 ms between the
+final key and clicking Save, it lost the edit on both Fountain-authored records
+and both stock controls. Markdown Save and the existing bold comment survived
+on every record. The earlier rollback run passed at ordinary interaction speed
+without measuring the interval. The rollback check now requires trusted input,
+the expected visible text at click time and a measured interval under 100 ms.
+[WebKit rollback, exact builds and issue IDs](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md).
+
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu
 cleanup and context/host-option revalidation. The recorded matched pair passes

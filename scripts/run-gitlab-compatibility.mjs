@@ -5,7 +5,7 @@ import {resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {verifyGitLabRollback} from './verify-gitlab-editor-rollback.mjs';
 import {buildIdentityError, describeBuild, observeEditorBuild} from '../integrations/gitlab/testing/build-identity.mjs';
-import {chromium,expect} from '@playwright/test';
+import {chromium,webkit,expect} from '@playwright/test';
 import {readGitLabAuditCredential} from './gitlab-audit-credentials.mjs';
 import {waitForGitLabDeployment} from './gitlab-deployment-readiness.mjs';
 import {runGitLabAccessCompatibility} from './audit-gitlab-compatibility-access.mjs';
@@ -25,9 +25,12 @@ import {runGitLabSuggestionCompatibility} from './audit-gitlab-compatibility-sug
 if(process.platform!=='linux')throw new Error('Run beside the isolated Linux Docker engine.');
 const value=flag=>process.argv[process.argv.indexOf(flag)+1];
 const suite=process.argv.includes('--suite')?value('--suite'):'suggestions';
+const browserName=process.argv.includes('--browser')?value('--browser'):'chromium';
+if(!['chromium','webkit'].includes(browserName))throw new Error('Use --browser chromium or webkit.');
+const browserType=browserName==='webkit'?webkit:chromium;
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
 if(!['suggestions','deletions','reviews','clipboard','partial','crossblock','paint','grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','quick-save','reconnect','offline-conflict'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--verify-rollback] [--suite suggestions|deletions|reviews|clipboard|partial|crossblock|paint|grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict]');
+ throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--verify-rollback] [--browser chromium|webkit] [--suite suggestions|deletions|reviews|clipboard|partial|crossblock|paint|grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict]');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -65,7 +68,7 @@ if(process.argv.includes('--verify-rollback')){
 let browser,started=false,authenticated=false;
 const report={formatVersion:2,buildIdentity:{side,expected:expectedBuild,observed:null},runId,attempt,side,scope:'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
  suite,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
- harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs','scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
+ harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','integrations/gitlab/testing/save-gesture.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs','scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
  started=true;execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
  const deployment=JSON.parse(docker('inspect',containerName))[0];
@@ -80,10 +83,10 @@ try{
  assetSelector:deployment.Config.Env.find(item=>item.startsWith('ENABLE_RSPACK='))??'packaged-default',cpus:deployment.HostConfig.NanoCpus,memory:deployment.HostConfig.Memory};
  const credential=readGitLabAuditCredential(args=>docker('exec','-i',containerName,...args));
  if(!credential)throw new Error('No isolated task credential.');
- browser=await chromium.launch();const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezoneId:'UTC'});
+ browser=await browserType.launch();const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezoneId:'UTC'});
  const permissions=['clipboard','partial','crossblock','grid'].includes(suite)?['clipboard-read','clipboard-write']:[];
  if(permissions.length)await context.grantPermissions(permissions,{origin:'http://127.0.0.1:5080'});
- const page=await context.newPage();report.browser={version:browser.version(),viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezone:'UTC',platform:process.platform,arch:process.arch,permissions};
+ const page=await context.newPage();report.browser={engine:browser.browserType().name(),version:browser.version(),viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezone:'UTC',platform:process.platform,arch:process.arch,permissions};
  report.startup=[];
  await waitForGitLabDeployment({readState:()=>JSON.parse(docker('inspect','--format','{{json .State}}',containerName)),
   probe:async()=>(await page.request.get('http://127.0.0.1:5080/users/sign_in',{timeout:5000})).status(),

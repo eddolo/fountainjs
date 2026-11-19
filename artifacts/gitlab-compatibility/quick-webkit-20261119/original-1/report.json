@@ -1,0 +1,638 @@
+{
+  "formatVersion": 2,
+  "buildIdentity": {
+    "side": "original",
+    "expected": {
+      "gitlabVersion": "19.5.3",
+      "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615"
+    },
+    "observed": {
+      "editor": "ProseMirror",
+      "integrationSHA256": null,
+      "runtimeSHA256": null,
+      "manifestSHA256": "8198a3fa9feab7a59f708cc2ff97dc0256501d391b843dc575a08234cbc61504",
+      "scripts": [
+        {
+          "path": "/assets/webpack/0dcf7166.fee24f6c.chunk.js",
+          "browserSHA256": "60628f5a436d0dca5e2f020f363e80dc8be815367061b4a17da8b97334f99b2e",
+          "deployedSHA256": "60628f5a436d0dca5e2f020f363e80dc8be815367061b4a17da8b97334f99b2e"
+        },
+        {
+          "path": "/assets/webpack/50d780ac.dc829e6f.chunk.js",
+          "browserSHA256": "4084592a280262ce2221cff3c7571da90f5ec91a3fe7e5c9f00ffa0607955e38",
+          "deployedSHA256": "4084592a280262ce2221cff3c7571da90f5ec91a3fe7e5c9f00ffa0607955e38"
+        },
+        {
+          "path": "/assets/webpack/6b30d853.22266848.chunk.js",
+          "browserSHA256": "4d6fcad270b71f586bb4744c6cac73cd0e054cee405aafed9bf942483d37ea00",
+          "deployedSHA256": "4d6fcad270b71f586bb4744c6cac73cd0e054cee405aafed9bf942483d37ea00"
+        },
+        {
+          "path": "/assets/webpack/8632254b.bbb48efe.chunk.js",
+          "browserSHA256": "174e8ee2737b0054549b8eb4708cb86bdc7bdd822299cdecbfea79dfead62787",
+          "deployedSHA256": "174e8ee2737b0054549b8eb4708cb86bdc7bdd822299cdecbfea79dfead62787"
+        },
+        {
+          "path": "/assets/webpack/8fcdb888.3328a406.chunk.js",
+          "browserSHA256": "c54120af43a5d32d9c6df52bdd8eae6b6596cdefcb2ec12e56fdce4255d1784d",
+          "deployedSHA256": "c54120af43a5d32d9c6df52bdd8eae6b6596cdefcb2ec12e56fdce4255d1784d"
+        },
+        {
+          "path": "/assets/webpack/af66d122.d929aab6.chunk.js",
+          "browserSHA256": "31b8757f37d2a4b1093f8c745f1d143ad8fd928f8bb2c552bff86d731cf0eebb",
+          "deployedSHA256": "31b8757f37d2a4b1093f8c745f1d143ad8fd928f8bb2c552bff86d731cf0eebb"
+        },
+        {
+          "path": "/assets/webpack/cec769ff.82e507cf.chunk.js",
+          "browserSHA256": "429b75f7b02eae2a935674ea5b627173c74cfa927c1fe014b976c59955c4a971",
+          "deployedSHA256": "429b75f7b02eae2a935674ea5b627173c74cfa927c1fe014b976c59955c4a971"
+        },
+        {
+          "path": "/assets/webpack/commons-graphql_explorer-pages.admin.application_settings.service_accounts-pages.admin.applications--b635524d.b3338b4b.chunk.js",
+          "browserSHA256": "b5ddfc03cb01c31f151176c33f7b53f2fded871d5107d0657dc114d3606242a2",
+          "deployedSHA256": "b5ddfc03cb01c31f151176c33f7b53f2fded871d5107d0657dc114d3606242a2"
+        },
+        {
+          "path": "/assets/webpack/commons-initGFMInput-pages.admin.organizations.settings.general-pages.admin.organizations.settings.g-9b13c352.4bfbb026.chunk.js",
+          "browserSHA256": "0d3b2e34bc1be84d687b597d85879a0eb636491ca314dd0752047e4f9a698cd2",
+          "deployedSHA256": "0d3b2e34bc1be84d687b597d85879a0eb636491ca314dd0752047e4f9a698cd2"
+        },
+        {
+          "path": "/assets/webpack/commons-initGFMInput-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.-bffa2291.801ef5c8.chunk.js",
+          "browserSHA256": "a3a3f53f2e9a3eb5f769d33b8bea04c5b48240e11c89443985b09bae9cc07ef6",
+          "deployedSHA256": "a3a3f53f2e9a3eb5f769d33b8bea04c5b48240e11c89443985b09bae9cc07ef6"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.abuse_reports-pages.admin.abuse_reports.show-pages.admin.groups.index-pages.admi-315b2517.e590656f.chunk.js",
+          "browserSHA256": "bfeceb581cb9548fa238c98be3359f85418821e003cf81f01e1977fbc3f5a1e4",
+          "deployedSHA256": "bfeceb581cb9548fa238c98be3359f85418821e003cf81f01e1977fbc3f5a1e4"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.issues.vue3-pages.dash-5ffc317d.0bcd8c23.chunk.js",
+          "browserSHA256": "934cb817bd1e8709dfc0041c94306da516a0bc2e2b3462e9495e2b0cced8a023",
+          "deployedSHA256": "934cb817bd1e8709dfc0041c94306da516a0bc2e2b3462e9495e2b0cced8a023"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.issues.vue3-pages.dash-f8003152.f196957a.chunk.js",
+          "browserSHA256": "eccd8bf8465106ba4b1d6b85e1c390a2ff11134cf5c887d709862b76bb3a15fe",
+          "deployedSHA256": "eccd8bf8465106ba4b1d6b85e1c390a2ff11134cf5c887d709862b76bb3a15fe"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.work_items-pages.group-b344e337.050faeee.chunk.js",
+          "browserSHA256": "80ac611196e70abce4fddcbc475864d346da5892bed36478c77fd44b57bd5586",
+          "deployedSHA256": "80ac611196e70abce4fddcbc475864d346da5892bed36478c77fd44b57bd5586"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.application_settings.service_accounts-pages.explore.analytics_dashboards-pages.e-306889d5.8b0f4475.chunk.js",
+          "browserSHA256": "85d6894177f53cdd03ae236b0127d180269cc65adc6a75bf234fcfda6e5ba689",
+          "deployedSHA256": "85d6894177f53cdd03ae236b0127d180269cc65adc6a75bf234fcfda6e5ba689"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.deploy_keys.index-pages.admin.deploy_keys.index.vue3-pages.admin.groups.index-pa-95f4ca76.204c76b4.chunk.js",
+          "browserSHA256": "ac2c2fa6162be75fba132cebdfa9e39e95e0900ba0685bf07ba1593bda409b29",
+          "deployedSHA256": "ac2c2fa6162be75fba132cebdfa9e39e95e0900ba0685bf07ba1593bda409b29"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.organizations.settings.general.vue3-p-12d52578.7bbbd3a2.chunk.js",
+          "browserSHA256": "1f0a66c98fde56a7c02443fdb9921e7d4d750b140d93d6351b1755f06dd3a625",
+          "deployedSHA256": "1f0a66c98fde56a7c02443fdb9921e7d4d750b140d93d6351b1755f06dd3a625"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.organizations.settings.general.vue3-p-94e849a5.56f93b0b.chunk.js",
+          "browserSHA256": "91ae5407df49b9599fb403684a20d8dde0135ab6066b40d19cabb676ea8bd524",
+          "deployedSHA256": "91ae5407df49b9599fb403684a20d8dde0135ab6066b40d19cabb676ea8bd524"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.topics.new-pa-b83f65ef.593ef6a6.chunk.js",
+          "browserSHA256": "d24ac522e166c3f9df0614fd91483a3030e8c25ea965aacf10aa94f94a919ee8",
+          "deployedSHA256": "d24ac522e166c3f9df0614fd91483a3030e8c25ea965aacf10aa94f94a919ee8"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.topics.new-pa-bb1f65b9.47fc7bae.chunk.js",
+          "browserSHA256": "d502802b4550459e837e7fb577d055b90e4414aa9e298a60ce888fcd500023c0",
+          "deployedSHA256": "d502802b4550459e837e7fb577d055b90e4414aa9e298a60ce888fcd500023c0"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.dashboard.home-pages.projects.snippets.show-pages.projects.snippets.show.vue3-pages.ro-3e3d840b.db458a62.chunk.js",
+          "browserSHA256": "57a24656dafc75786382be6707fcd709b69a216fd02565a7decb07e837b59edc",
+          "deployedSHA256": "57a24656dafc75786382be6707fcd709b69a216fd02565a7decb07e837b59edc"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.dashboard.home-pages.registrations.new-pages.root-pages.root.vue3-pages.sessions.new-p-a41aff06.d68c093a.chunk.js",
+          "browserSHA256": "731b4181e37659838b30f40d15555cbefb525cc4aa0e1ae6f11992596c787b38",
+          "deployedSHA256": "731b4181e37659838b30f40d15555cbefb525cc4aa0e1ae6f11992596c787b38"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.groups.merge_requests-pages.groups.merge_requests.vue3-pages.groups.milestones.edit-pa-23d8bf6c.33b0825c.chunk.js",
+          "browserSHA256": "c7befe99471a7fb2c86942f49308b8f0add4550eaa127127ff473effe494d4dd",
+          "deployedSHA256": "c7befe99471a7fb2c86942f49308b8f0add4550eaa127127ff473effe494d4dd"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.groups.saved_views.show-pages.groups.saved_views.show.vue3-pages.groups.work_items-pag-550486f6.9218719f.chunk.js",
+          "browserSHA256": "0b7eb7bf45c54c9c5dd7defe6b8465c2eedce5c2934f10d4c0ee0dbe1e70a444",
+          "deployedSHA256": "0b7eb7bf45c54c9c5dd7defe6b8465c2eedce5c2934f10d4c0ee0dbe1e70a444"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.groups.saved_views.show-pages.groups.work_items-pages.groups.work_items.show-pages.pro-164ac21d.01932e06.chunk.js",
+          "browserSHA256": "9dba0710087f076a9035418972a71a469f8900de5253f67215084b6708183404",
+          "deployedSHA256": "9dba0710087f076a9035418972a71a469f8900de5253f67215084b6708183404"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.projects-pages.projects.activity-pages.projects.activity.vue3-pages.projects.alert_man-376eb50e.11611bcc.chunk.js",
+          "browserSHA256": "2819b4a6ef6d68bd326631d8c74cbbf1e1b4e59f2df3ab971cda8d12ae9c9274",
+          "deployedSHA256": "2819b4a6ef6d68bd326631d8c74cbbf1e1b4e59f2df3ab971cda8d12ae9c9274"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.search.show-pages.search.show.vue3-super_sidebar-super_sidebar.vue3.e1ab1d65.chunk.js",
+          "browserSHA256": "864e2f2561a6fdaf57425542f4d61a50e4fe597581f19734c15842fc319a97b8",
+          "deployedSHA256": "864e2f2561a6fdaf57425542f4d61a50e4fe597581f19734c15842fc319a97b8"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.search.show-super_sidebar.e41625fd.chunk.js",
+          "browserSHA256": "8eca9d8639d079b1c53d9fc6d7d9d18960aa1f80fd207fdfaca52637b2a7553f",
+          "deployedSHA256": "8eca9d8639d079b1c53d9fc6d7d9d18960aa1f80fd207fdfaca52637b2a7553f"
+        },
+        {
+          "path": "/assets/webpack/commons-super_sidebar-super_sidebar.vue3.e38d27a4.chunk.js",
+          "browserSHA256": "0c183f0c046747b3f2534b7a2ab28a94d35b2fe6740d9a1cbd481121b9f4a056",
+          "deployedSHA256": "0c183f0c046747b3f2534b7a2ab28a94d35b2fe6740d9a1cbd481121b9f4a056"
+        },
+        {
+          "path": "/assets/webpack/content_editor.49fdd8e0.chunk.js",
+          "browserSHA256": "1b59e1d51b37085c09ce0ca7b06e9bc2c2fd48f1884fe58575dc96535879943c",
+          "deployedSHA256": "1b59e1d51b37085c09ce0ca7b06e9bc2c2fd48f1884fe58575dc96535879943c"
+        },
+        {
+          "path": "/assets/webpack/f9f13fd0.2f09c304.chunk.js",
+          "browserSHA256": "a9d8a7fd29f87a408eec57f2a7424cbc7ce8229b2144a1df62489aa943bba65f",
+          "deployedSHA256": "a9d8a7fd29f87a408eec57f2a7424cbc7ce8229b2144a1df62489aa943bba65f"
+        },
+        {
+          "path": "/assets/webpack/global_search_modal.f7aa2163.chunk.js",
+          "browserSHA256": "dc6ae1e96e187f3e84fc110d11ad9edea9ee7e3b1b3dccb7277cf2c6b7c4f98f",
+          "deployedSHA256": "dc6ae1e96e187f3e84fc110d11ad9edea9ee7e3b1b3dccb7277cf2c6b7c4f98f"
+        },
+        {
+          "path": "/assets/webpack/hello.0063a1cb.chunk.js",
+          "browserSHA256": "f9f0adcbf9ac1ee0735624524c7340829e5779adc065f62f49097d0ed399d9e5",
+          "deployedSHA256": "f9f0adcbf9ac1ee0735624524c7340829e5779adc065f62f49097d0ed399d9e5"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersModal.227c3a5f.chunk.js",
+          "browserSHA256": "175bc6bb388a517703fba123ced915039244f7fe8107385295c362075bd56940",
+          "deployedSHA256": "175bc6bb388a517703fba123ced915039244f7fe8107385295c362075bd56940"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersTrigger.d59e549b.chunk.js",
+          "browserSHA256": "56331f0b6477b521f7871717dac9d8755f55c5c656b2de0db5345f4abb3b1915",
+          "deployedSHA256": "56331f0b6477b521f7871717dac9d8755f55c5c656b2de0db5345f4abb3b1915"
+        },
+        {
+          "path": "/assets/webpack/main.02b8bf31.chunk.js",
+          "browserSHA256": "65ec37e9bcbc79a60c68df12e1572a6a7628a9e1b2d48ce7ec159dc3b36d9da4",
+          "deployedSHA256": "65ec37e9bcbc79a60c68df12e1572a6a7628a9e1b2d48ce7ec159dc3b36d9da4"
+        },
+        {
+          "path": "/assets/webpack/pages.projects.work_items.aa84d846.chunk.js",
+          "browserSHA256": "25c5e5b4729ddf97c64b30d1873c3d2539bd2dd9576bb576ed359d61d127a010",
+          "deployedSHA256": "25c5e5b4729ddf97c64b30d1873c3d2539bd2dd9576bb576ed359d61d127a010"
+        },
+        {
+          "path": "/assets/webpack/prosemirror.04be8805.chunk.js",
+          "browserSHA256": "2759329fffd876e0752b362b93230f0aca48bf90090609428a37ee56e896a267",
+          "deployedSHA256": "2759329fffd876e0752b362b93230f0aca48bf90090609428a37ee56e896a267"
+        },
+        {
+          "path": "/assets/webpack/runtime.ea79027a.bundle.js",
+          "browserSHA256": "87500039b7aa4577224bdaefefb08825e878d72daa46274858992e9179e4a7d4",
+          "deployedSHA256": "87500039b7aa4577224bdaefefb08825e878d72daa46274858992e9179e4a7d4"
+        },
+        {
+          "path": "/assets/webpack/shortcutsBundle.45faa6aa.chunk.js",
+          "browserSHA256": "dd60126d0563e7efdf1656b92af46b0eee111b850c29ab3f38470f9c906a4712",
+          "deployedSHA256": "dd60126d0563e7efdf1656b92af46b0eee111b850c29ab3f38470f9c906a4712"
+        },
+        {
+          "path": "/assets/webpack/super_sidebar.ff1bc863.chunk.js",
+          "browserSHA256": "3d1d62fd9a55fdfaacd8bfc9c32fbb376e1716e7b65edb9ef5da2a5738f15e0c",
+          "deployedSHA256": "3d1d62fd9a55fdfaacd8bfc9c32fbb376e1716e7b65edb9ef5da2a5738f15e0c"
+        },
+        {
+          "path": "/assets/webpack/tracker.1eb446cb.chunk.js",
+          "browserSHA256": "f5d412f20f2dc1e36ac9208908410dcbb97c6a88114cbc3d5377a593b3fb7a68",
+          "deployedSHA256": "f5d412f20f2dc1e36ac9208908410dcbb97c6a88114cbc3d5377a593b3fb7a68"
+        }
+      ]
+    }
+  },
+  "runId": "quick-webkit-20261119",
+  "attempt": 1,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "quick-save",
+  "rollbackRequested": false,
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-quick-save.json",
+  "fixtureHash": "8e9389d253f04ca077e43e3297e71908aeac2d2c544b194b4ec5f84666754a04",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "save-an-issue-description-after-the-last-keystroke",
+    "cases": [
+      {
+        "id": "append-immediately",
+        "scope": "quick-save",
+        "description": "Finalize release notes",
+        "key": ".",
+        "expected": "Finalize release notes.",
+        "pace": "immediate"
+      },
+      {
+        "id": "delete-immediately",
+        "scope": "quick-save",
+        "description": "Finalize release notes!",
+        "key": "Backspace",
+        "expected": "Finalize release notes",
+        "pace": "immediate"
+      },
+      {
+        "id": "append-after-review",
+        "scope": "quick-save",
+        "description": "Finalize release notes",
+        "key": ".",
+        "expected": "Finalize release notes.",
+        "pace": "reviewed"
+      },
+      {
+        "id": "delete-after-review",
+        "scope": "quick-save",
+        "description": "Finalize release notes!",
+        "key": "Backspace",
+        "expected": "Finalize release notes",
+        "pace": "reviewed"
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "append-immediately",
+      "input": {
+        "id": "append-immediately",
+        "scope": "quick-save",
+        "description": "Finalize release notes",
+        "key": ".",
+        "expected": "Finalize release notes.",
+        "pace": "immediate"
+      },
+      "status": "observed",
+      "pageErrors": [
+        "/127.0.0.1:5080/api/v4/users/1 due to access control checks.",
+        "/127.0.0.1:5080/api/v4/users/1/status due to access control checks.",
+        "Error: Network Error"
+      ],
+      "iid": 468,
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "gesture": {
+        "key": ".",
+        "trustedKey": true,
+        "keyAt": 5148,
+        "button": "Save changes",
+        "trustedClick": true,
+        "clickAt": 5360,
+        "paragraphs": [
+          "Finalize release notes."
+        ]
+      },
+      "afterSubmit": "Finalize release notes.",
+      "afterReload": "Finalize release notes.",
+      "reader": "Finalize release notes.",
+      "reopened": [
+        "Finalize release notes."
+      ]
+    },
+    {
+      "id": "delete-immediately",
+      "input": {
+        "id": "delete-immediately",
+        "scope": "quick-save",
+        "description": "Finalize release notes!",
+        "key": "Backspace",
+        "expected": "Finalize release notes",
+        "pace": "immediate"
+      },
+      "status": "observed",
+      "pageErrors": [],
+      "iid": 469,
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "gesture": {
+        "key": "Backspace",
+        "trustedKey": true,
+        "keyAt": 4876,
+        "button": "Save changes",
+        "trustedClick": true,
+        "clickAt": 5073,
+        "paragraphs": [
+          "Finalize release notes"
+        ]
+      },
+      "afterSubmit": "Finalize release notes",
+      "afterReload": "Finalize release notes",
+      "reader": "Finalize release notes",
+      "reopened": [
+        "Finalize release notes"
+      ]
+    },
+    {
+      "id": "append-after-review",
+      "input": {
+        "id": "append-after-review",
+        "scope": "quick-save",
+        "description": "Finalize release notes",
+        "key": ".",
+        "expected": "Finalize release notes.",
+        "pace": "reviewed"
+      },
+      "status": "observed",
+      "pageErrors": [
+        "Error: Network Error"
+      ],
+      "iid": 470,
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "gesture": {
+        "key": ".",
+        "trustedKey": true,
+        "keyAt": 5019,
+        "button": "Save changes",
+        "trustedClick": true,
+        "clickAt": 5594,
+        "paragraphs": [
+          "Finalize release notes."
+        ]
+      },
+      "afterSubmit": "Finalize release notes.",
+      "afterReload": "Finalize release notes.",
+      "reader": "Finalize release notes.",
+      "reopened": [
+        "Finalize release notes."
+      ]
+    },
+    {
+      "id": "delete-after-review",
+      "input": {
+        "id": "delete-after-review",
+        "scope": "quick-save",
+        "description": "Finalize release notes!",
+        "key": "Backspace",
+        "expected": "Finalize release notes",
+        "pace": "reviewed"
+      },
+      "status": "observed",
+      "pageErrors": [],
+      "iid": 471,
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      },
+      "gesture": {
+        "key": "Backspace",
+        "trustedKey": true,
+        "keyAt": 4519,
+        "button": "Save changes",
+        "trustedClick": true,
+        "clickAt": 5095,
+        "paragraphs": [
+          "Finalize release notes"
+        ]
+      },
+      "afterSubmit": "Finalize release notes",
+      "afterReload": "Finalize release notes",
+      "reader": "Finalize release notes",
+      "reopened": [
+        "Finalize release notes"
+      ]
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "5be0de6bf001c2493e43623d33021af03516330b33fca6f4e36f2d7eac45582f",
+    "scripts/verify-gitlab-editor-rollback.mjs": "277cf4a4eae9d49673ca866afafaf7bd5f6e3027a85671f35c0b1b4782aa65f9",
+    "integrations/gitlab/testing/build-identity.mjs": "6857e15eccbd2b296f13504d9d1ee6595fde7ac7cedaa560544af05abd3e9a8e",
+    "scripts/audit-gitlab-compatibility-composers.mjs": "f1be806429248a2321d5ca47e9e5da416e56051f757efba5634250e703655615",
+    "scripts/audit-gitlab-compatibility-quick-save.mjs": "dc49e0935609c8e2fde7d0c0b7c9eb999e52aafa81e082b896fd08c8c14707e1",
+    "scripts/audit-gitlab-compatibility-reconnect.mjs": "e1512849ede5922fb8c641d4ab5a894687350a0b98ba26df832a706e8a760784",
+    "scripts/audit-gitlab-compatibility-access.mjs": "1403c71603a5906d926a38e7f3820be0cdb7459f5e16f0862050ea0927801d17",
+    "scripts/audit-gitlab-offline-conflict.mjs": "26a0b197362548e559e4b058ab1aaabc41b2cca0f1a926d4237e6009e5dace5a",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "277024a259238694df0f0f1e52d667ee9316a0dad8955258702163cec76950a6",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "58919ed5c1e2da5b8150af97710b415e144cffde9ab42b432b26ff74065fb0ed",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "c31222766259f281ee92a9f9c07f6702b0a5cd2792e5f1b5f26c2fe6226e4fdf",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "8729a9e6b38d0b4c39838af7f4eef59bb4a94790381bcbb5fec26070fb5aa0b7",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "c84c64884a3063a56b1e32df26384a11bbc0571b0aebf4f7b84eca9bb5ea1c3f"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "dee6b0c59482d87b5da25e63e7c3ea41441b9db7fadab89be0c33ee57f0a5da2",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "engine": "webkit",
+    "version": "26.5",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 16,
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "exitCode": 0
+    }
+  ],
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "008e6f1d990965db5abffb6739a39f06c463de8e681c761315e84f836db4b802  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.json",
+    "36ebdd7dddd055eb892ff6ef5538947e463db218d3051c33cd04d304101030b9  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": true
+}

@@ -1,3 +1,4 @@
+import { matchesSaveGesture } from './save-gesture.mjs';
 import { buildIdentityError } from './build-identity.mjs';
 
 /** Pure interpretation of collected observations; never runs editor actions. */
@@ -142,12 +143,8 @@ export function compareGitLabCompatibility(original,fountain){
     }
     if (input.scope === 'quick-save') {
       function controlled(report, item) {
-        const gesture = item?.gesture;
-        if (!verifiedEditor(report,item) || item.status !== 'observed' || gesture?.trustedKey !== true || gesture.trustedClick !== true ||
-            gesture.key !== input.key || gesture.button !== 'Save changes' || !equal(gesture.paragraphs,[input.expected])) return {};
-        if (!Number.isFinite(gesture.clickAt) || !Number.isFinite(gesture.keyAt)) return {};
-        const elapsed = gesture.clickAt - gesture.keyAt;
-        if (elapsed < 0 || (input.pace === 'immediate' ? elapsed >= 100 : elapsed < 500)) return {};
+        if (!verifiedEditor(report,item) || item.status !== 'observed' ||
+            !matchesSaveGesture(item.gesture,input.key,input.expected,input.pace)) return {};
         return item;
       }
       const left = controlled(original,a), right = controlled(fountain,b);
@@ -452,11 +449,23 @@ export function compareGitLabCompatibility(original,fountain){
   }
   const counts=Object.fromEntries(['parity','improvement','regression','shared-limitation'].map(key=>[key,rows.filter(row=>row.classification===key).length]));
   const incomplete=rows.filter(row=>row.classification===null).length;
-  return {formatVersion:2,scope:'Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.',
+  const rollback = original.rollback;
+  const requiresRollback = Boolean(original.rollbackRequested || rollback);
+  const rollbackVerified = rollback?.passed === true && Array.isArray(rollback.records) &&
+    rollback.records.length === fixture.cases.length * 2 && fixture.cases.every(input =>
+      ['original','fountain'].every(writer => {
+        const record = rollback.records.find(entry => entry.case === input.id && entry.writer === writer);
+        const expected = input.description + input.suffix + ' Checked after rollback.';
+        return record?.quickSaveMeasured === true && record.quickSavePassed === true &&
+          matchesSaveGesture(record.gesture,'.',expected,'immediate') && record.quickSaveAfterReload === expected &&
+          record.reviewedSaveAfterReload === input.description + input.suffix + ' Verified in Markdown.' &&
+          equal(record.notes,['**' + input.comment + '**']);
+      }));
+  return {formatVersion:2,...(requiresRollback ? {frontendRollback:{passed:rollbackVerified,issueIds:(rollback?.records??[]).filter(record=>record.writer==='fountain').map(record=>record.iid)}} : {}),scope:'Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.',
     buildIdentities:{original:original.buildIdentity??null,fountain:fountain.buildIdentity??null},
     environment:{matched,mismatches},runs:{original:{runId:original.runId,attempt:original.attempt},fountain:{runId:fountain.runId,attempt:fountain.attempt}},
     rows,summary:{...counts,incomplete,total:rows.length},
     comparisonComplete:matched&&incomplete===0&&original.collectionComplete===true&&fountain.collectionComplete===true&&original.errors?.length===0&&fountain.errors?.length===0,
     regressionGate:{passed:matched&&incomplete===0&&counts.regression===0&&original.collectionComplete===true&&fountain.collectionComplete===true&&original.errors?.length===0&&fountain.errors?.length===0},
-    featureAcceptance:{passed:matched&&(!original.rollbackRequested||original.rollback?.passed===true)&&(!original.rollback||original.rollback.passed===true)&&fountain.collectionComplete===true&&fountain.errors?.length===0&&rows.every(row=>row.fountain!==undefined&&equal(row.fountain,row.expected)),reason:'Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes.'}};
+    featureAcceptance:{passed:matched&&(!requiresRollback||rollbackVerified)&&fountain.collectionComplete===true&&fountain.errors?.length===0&&rows.every(row=>row.fountain!==undefined&&equal(row.fountain,row.expected)),reason:'Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes.'}};
 }

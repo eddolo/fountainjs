@@ -4,10 +4,16 @@
 
 | Area | Verified on the pinned local deployment | Still open |
 | --- | --- | --- |
-| Issue description and discussion | Both save orders, isolated formatting and undo histories, independent saved records. [44 matched checks](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-4/report.md) | Other host surfaces and devices. |
+| Issue description and discussion | Both save orders, isolated formatting and undo histories, independent saved records. 44 matched checks on each engine. [Chromium](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-4/report.md) · [WebKit](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) | Other host surfaces and devices. |
 | Concurrent issue editing | The returning Developer can inspect both drafts and explicitly discard or overwrite. [18 matched checks](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-2/report.md) | Simultaneous submissions and late writes after conflict disclosure. |
-| Immediate Save and rollback | The active Fountain build retains the last edit. Stock can reopen the same issues and discussions and save from Markdown. [Immediate Save](../../artifacts/gitlab-compatibility/immediate-save-20261119/comparison-1/report.md) · [Rollback](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) | Stock immediate rich-text Save loses the final edit. Ruby overlays and existing rendered-content caches need separate rollback evidence. |
+| Immediate Save and rollback | The active Fountain build retains the last edit. Stock can reopen the same issues and discussions and save from Markdown. [Immediate Save](../../artifacts/gitlab-compatibility/immediate-save-20261119/comparison-1/report.md) · [Rollback](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) | Stock rapid rich-text Save lost the final edit in both Chromium and WebKit. [Timed WebKit rollback](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) Ruby overlays and existing rendered-content caches need separate rollback evidence. |
 | Merge-request reviews | Three posted suggestions were expanded symmetrically, shrunk to the anchor, or extended on one side. The file and commit were verified after undo, redo, save, reload and application. [63 matched checks](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-2/report.md) | Stale targets, simultaneous reviews, and the Applied-history loss on prose-only edits. |
+
+On this GitLab revision, `app/services/notes/update_service.rb` calls
+`note.suggestions.delete_all` and recreates the records in `update_suggestions`.
+A prose-only edit can therefore clear the Applied flag and replace the suggestion
+ID on both editors. Preserving that ID across the ordinary Save requires a change
+to the GitLab persistence path. [Matched observations](COMPATIBILITY_RESULTS.md).
 
 The local deployment uses GitLab CE 19.5.3. Browser and mobile coverage, additional roles, hosted deployment and the outstanding workflows below remain part of flagship acceptance.
 

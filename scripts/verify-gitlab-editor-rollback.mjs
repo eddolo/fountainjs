@@ -1,3 +1,4 @@
+import { recordGitLabSave, matchesSaveGesture } from '../integrations/gitlab/testing/save-gesture.mjs';
 import { expect } from '@playwright/test';
 import { buildIdentityError } from '../integrations/gitlab/testing/build-identity.mjs';
 
@@ -44,19 +45,21 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     await stock.locator('p').click();
     await page.keyboard.press('End');
     const suffix = ' Checked after rollback.';
-    await page.keyboard.insertText(suffix);
-    evidence.typed = await stock.innerText();
-    await expect(stock).toHaveText(description + suffix);
-    const save = form.getByRole('button', {name: 'Save changes', exact: true});
+    const prefix = description + suffix.slice(0,-1);
+    await page.keyboard.insertText(suffix.slice(0,-1));
+    await expect(stock).toHaveText(prefix);
+    const save = form.getByRole('button', { name: 'Save changes', exact: true });
     await expect(save).toBeEnabled();
-    await save.click();
+    evidence.gesture = await recordGitLabSave({page,editor:stock,button:save,key:'.',pace:'immediate'});
+    evidence.quickSaveMeasured = matchesSaveGesture(evidence.gesture,'.',description + suffix,'immediate');
+    evidence.typed = evidence.gesture.paragraphs?.join('\n');
     await expect(stock).toBeHidden({timeout: 30000});
     evidence.afterSubmit = (await request(api)).description;
     evidence.readerAfterSubmit = await reader.innerText();
     await page.reload();
     await expect(reader).toHaveText(evidence.afterSubmit);
     evidence.quickSaveAfterReload = (await request(api)).description;
-    evidence.quickSavePassed = evidence.quickSaveAfterReload === description + suffix;
+    evidence.quickSavePassed = evidence.quickSaveMeasured && evidence.quickSaveAfterReload === description + suffix;
     // Preserve a rapid-save failure and separately exercise an author inspecting
     // Markdown before saving. Both controls use the same stock editor deployment.
     await page.getByTestId('work-item-edit-form-button').click();

@@ -92,8 +92,28 @@ it.each([undefined, {passed: false}, {passed: true}])('requires the requested de
  Object.assign(original, {rollbackRequested: true, rollback});
  const result = compareGitLabCompatibility(original, fountain);
  expect(result.summary.parity).toBe(result.summary.total);
- expect(result.featureAcceptance.passed).toBe(rollback?.passed === true);
+ expect(result.featureAcceptance.passed).toBe(false);
 });
+it('checks each timed rollback record independently of its reported pass flag', () => {
+ const [original,fountain] = reports();
+ const input = {...original.fixture.cases[0]!,description:'Release',suffix:' now.',comment:'Reviewed'};
+ original.fixture.cases[0] = input; fountain.fixture.cases[0] = input;
+ original.observations[0]!.input = input; fountain.observations[0]!.input = input;
+ const text = 'Release now. Checked after rollback.';
+ const records = ['original','fountain'].map(writer => ({writer,case:input.id,iid:writer==='original'?1:2,
+   quickSavePassed:true,quickSaveMeasured:true,quickSaveAfterReload:text,
+   reviewedSaveAfterReload:'Release now. Verified in Markdown.',notes:['**Reviewed**'],
+   gesture:{trustedKey:true,trustedClick:true,key:'.',button:'Save changes',paragraphs:[text],keyAt:0,clickAt:25}}));
+ Object.assign(original,{rollbackRequested:true,rollback:{passed:true,records}});
+ const passed = () => compareGitLabCompatibility(original,fountain).frontendRollback.passed;
+ expect(passed()).toBe(true);
+ records[1]!.gesture.clickAt = 150;
+ expect(passed()).toBe(false);
+ records[1]!.gesture.clickAt = 25;
+ records[0]!.writer = 'fountain';
+ expect(passed()).toBe(false);
+});
+
 it('does not convert a shared limitation into absolute feature acceptance',()=>{
  const [original,fountain]=reports();original.observations[0]!.sourceAtFirstVisible='';fountain.observations[0]!.sourceAtFirstVisible='';
  const result=compareGitLabCompatibility(original,fountain);

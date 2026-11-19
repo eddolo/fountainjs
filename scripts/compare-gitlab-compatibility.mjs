@@ -12,13 +12,16 @@ for(const path of [...Object.values(paths),out]){const rel=relative(allowed,path
 const bytes=await Promise.all(Object.values(paths).map(path=>readFile(path)));
 const reports=bytes.map(value=>JSON.parse(value));const result=compareGitLabCompatibility(...reports);
 result.inputs=Object.fromEntries(Object.keys(paths).map((side,index)=>[side,{path:relative(root,paths[side]).replaceAll('\\','/'),sha256:createHash('sha256').update(bytes[index]).digest('hex')}]));
-result.comparatorHashes={};for(const path of ['scripts/compare-gitlab-compatibility.mjs','integrations/gitlab/testing/compatibility.mjs','integrations/gitlab/testing/build-identity.mjs'])result.comparatorHashes[path]=createHash('sha256').update(await readFile(resolve(root,path))).digest('hex');
+result.comparatorHashes={};for(const path of ['scripts/compare-gitlab-compatibility.mjs','integrations/gitlab/testing/compatibility.mjs','integrations/gitlab/testing/build-identity.mjs','integrations/gitlab/testing/save-gesture.mjs'])result.comparatorHashes[path]=createHash('sha256').update(await readFile(resolve(root,path))).digest('hex');
 await mkdir(dirname(out),{recursive:true});await mkdir(out);
 const rollback=reports[0].rollback??(reports[0].rollbackRequested?{passed:false,records:[]}:undefined);
-if(rollback)result.frontendRollback={passed:rollback.passed===true,issueIds:(rollback.records??[]).filter(record=>record.writer==='fountain').map(record=>record.iid)};
-const table=['# Matched GitLab editor comparison','','**Original** — '+describeBuild(reports[0]),'','**Replacement** — '+describeBuild(reports[1]),'',`Environment matched: ${result.environment.matched}. Comparison complete: ${result.comparisonComplete}.`,
+
+const browserDescription=report=>report.browser?.engine
+  ? report.browser.engine+' '+report.browser.version+' ('+report.browser.platform+')'
+  : report.browser?.version??'unverified';
+const table=['# Matched GitLab editor comparison','','**Original** — '+describeBuild(reports[0]),'','**Replacement** — '+describeBuild(reports[1]),'','Browser on stock / replacement: '+reports.map(browserDescription).join(' / '),'',`Environment matched: ${result.environment.matched}. Comparison complete: ${result.comparisonComplete}.`,
 `Regression gate: ${result.regressionGate.passed?'passed':'failed/incomplete'}. Absolute feature acceptance: ${result.featureAcceptance.passed?'passed':'not achieved'}.`,'',
-...(rollback?[rollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
+...(rollback?[result.frontendRollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
 '| Case | Invariant | Classification |','| --- | --- | --- |',...result.rows.map(row=>`| ${row.case} | ${row.label} | ${row.classification??row.status} |`),'',
 'Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.',''];
 if (reports[0].suite === 'quick-save') {
@@ -38,12 +41,13 @@ if (reports[0].suite === 'quick-save') {
 }
 if (rollback?.records?.length) {
   table.push('## Saved issues after frontend rollback', '',
-    '| Authored in | Issue | Immediate rich-text Save | Reviewed Markdown Save and retained comment |',
-    '| --- | --- | --- | --- |');
+    '| Authored in | Issue | Final key to click | Immediate rich-text Save | Reviewed Markdown Save and retained comment |',
+    '| --- | --- | ---: | --- | --- |');
   for (const record of rollback.records) {
-    const quick = record.quickSavePassed === undefined ? 'Unverified' : record.quickSavePassed ? 'Passed' : 'Lost edit';
+    const timing = record.gesture?.clickAt - record.gesture?.keyAt;
+    const quick = record.quickSaveMeasured !== true ? 'Timing unverified' : record.quickSavePassed === undefined ? 'Unverified' : record.quickSavePassed ? 'Passed' : 'Lost edit';
     const reviewed = record.reviewedSaveAfterReload !== undefined && Array.isArray(record.notes) ? 'Passed' : 'Unverified';
-    table.push('| ' + (record.writer ?? 'Unverified') + ' | #' + record.iid + ' | ' + quick + ' | ' + reviewed + ' |');
+    table.push('| ' + (record.writer ?? 'Unverified') + ' | #' + record.iid + ' | ' + (Number.isFinite(timing) ? timing.toFixed(1)+' ms' : 'Unmeasured') + ' | ' + quick + ' | ' + reviewed + ' |');
   }
   table.push('');
 }

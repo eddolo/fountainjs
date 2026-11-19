@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { join } from 'node:path';
+import { recordGitLabSave } from '../integrations/gitlab/testing/save-gesture.mjs';
 
 export async function runGitLabQuickSaveCompatibility(options) {
   const results = [];
@@ -41,28 +42,8 @@ async function runCase({ page, project, request, side, runId, output, onProgress
     await save.scrollIntoViewIfNeeded();
     await paragraph.click();
     await actor.keyboard.press('End');
-    // Observe trusted input and the pre-submit DOM without delaying the click.
-    await editor.evaluate(el => {
-      const receipt = {};
-      window.__quickSaveReceipt = receipt;
-      el.addEventListener('keydown', event => {
-        receipt.key = event.key;
-        receipt.trustedKey = event.isTrusted;
-        receipt.keyAt = event.timeStamp;
-      }, {capture: true, once: true});
-      el.closest('[data-testid="work-item-description-wrapper"]').addEventListener('click', event => {
-        receipt.button = event.target.closest('button')?.textContent.trim();
-        receipt.trustedClick = event.isTrusted;
-        receipt.clickAt = event.timeStamp;
-        receipt.paragraphs = [...el.querySelectorAll('p')].map(p => p.textContent);
-      }, {capture: true, once: true});
-    });
-    onProgress({side, case: input.id, stage: 'type-and-save'});
-    await actor.keyboard.press(input.key);
-    // The half-second pause is an intentional control for the immediate click.
-    if (input.pace === 'reviewed') await actor.waitForTimeout(500);
-    await save.click();
-    result.gesture = await actor.evaluate(() => window.__quickSaveReceipt);
+    onProgress({side, case: input.id, stage:'type-and-save'});
+    result.gesture = await recordGitLabSave({page:actor,editor,button:save,key:input.key,pace:input.pace});
     await expect(editor).toBeHidden({timeout: 30000});
     result.afterSubmit = (await request(api)).description;
     await actor.reload();
