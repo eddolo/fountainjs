@@ -161,6 +161,20 @@ if (reports[0].suite === 'wiki-history' && result.environment.matched) {
     table.push('Both deployments used the same wiki controller patch `' + reports[0].deployment.wikiRestore.patchSHA256 +
       '`. The stock frontend submits the content field. The repaired frontend also submits the selected Git revision.', '');
   }
+  table.push('## Stored wiki revisions', '', '| Case | Editor | Revision | Git commit | Matches expected source |',
+    '| --- | --- | --- | --- | --- |');
+  for (const report of reports) {
+    for (const item of report.observations) {
+      for (const [version, invariant] of [['v2','editedSource'], ['v3','restoredSource']]) {
+        const sha = item.after?.find(entry => entry.version === version)?.sha;
+        const check = result.rows.find(row => row.case === item.id && row.invariant === invariant);
+        const actual = check?.[report.side];
+        const outcome = typeof actual === 'string' ? (actual === check.expected ? 'Exact' : 'Different') : 'Unverified';
+        table.push('| ' + [item.id, report.side, version, sha ? '`' + sha + '`' : 'Unverified', outcome].join(' | ') + ' |');
+      }
+    }
+  }
+  table.push('');
   function lineEndings(source) {
     if (typeof source !== 'string') return 'Unrecorded';
     const breaks = source.match(/\r\n|\r|\n/g) ?? [];

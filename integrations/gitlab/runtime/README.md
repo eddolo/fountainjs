@@ -36,7 +36,7 @@ The comparison checks the reader after reload, rich-text reopening, cancelling a
 
 #### Restore exact revision bytes
 
-Install and compile the generation 21 native frontend using the deployment instructions below. Prepare the wiki controller from the same pinned GitLab source, then run both editors against it.
+Install and compile the generation 22 native frontend using the deployment instructions below. Prepare the wiki controller from the same pinned GitLab source, then run both editors against it.
 
 ```sh
 node scripts/prepare-gitlab-suggestion-history.mjs /absolute/gitlab-source --wiki-restore
@@ -48,7 +48,7 @@ dir="artifacts/gitlab-compatibility/$run"
 node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison-1"
 ```
 
-The restore modal sends the selected revision ID alongside the normal form fields. On this profile GitLab reads the historical page’s raw content from its wiki repository and passes it to the existing update service with the supplied commit message and optimistic lock. Older frontends continue using the submitted content field. The two fixtures exercise ordinary Markdown and a page with YAML comments, Unicode and mixed line endings. The comparator checks the live controller hash and the revision selected by the Fountain frontend.
+The restore modal sends the selected revision ID alongside the normal form fields. On this profile GitLab reads the historical page’s raw content from its wiki repository and passes it to the existing update service with the supplied commit message and optimistic lock. Older frontends continue using the submitted content field. Generation 22 also tags ordinary rich-text edits on existing Markdown wiki pages. The controller reuses the original YAML header when its parsed values match and retains surviving line endings and the file terminator. The wiki codec can preserve unchanged prose blocks when its local parse matches GitLab’s rendered document. The three fixtures cover LF, mixed endings, CRLF without a final newline, YAML comments, Unicode, and an inserted paragraph next to a source-formatted bold span. Source mode, templates and collaborative editing follow their existing save paths. The comparator checks the live controller hash and the revision selected by the Fountain frontend.
 
 To roll back both components locally, use a fresh run ID and run the stock editor without `--wiki-restore`. Compose removes the frontend and wiki controller mounts and reuses the data volumes. The controller patch has no migration. To verify retained records after rollback, supply the repaired run ID and collection attempts. The stock reader checks each history row, the three revision sources and the current page on the same volumes, then creates fresh stock controls.
 
@@ -57,7 +57,7 @@ node scripts/run-gitlab-compatibility.mjs --suite wiki-history --editor original
   --run-id "wiki-stock-$(date +%s)" --history-rollback-from "$run:1,1"
 ```
 
-The [two-page Chromium comparison](../../../artifacts/gitlab-compatibility/wiki-revision-restore-20261119/comparison/report.md) used stock attempt 1 and Fountain attempt 2 from `wiki-revision-restore-20261119`. The exact collector is in commit `fe1f2587`. After removing both overlays, [packaged GitLab verified all four pages and twelve stored revisions](../../../artifacts/gitlab-compatibility/wiki-restored-pages-stock-20261119/original-1/report.json).
+The [three-page Chromium comparison](../../../artifacts/gitlab-compatibility/wiki-rich-save-20261119/comparison-3/report.md) tested Fountain `0f3db5f6bfe550275fd0ff440c78d47d5cbab7eb`. The 48 checks include five improvements in exact Markdown retention. The run used `--history-rollback-from wiki-rich-save-20261119:1,3`. After both overlays were removed, [packaged GitLab reopened all six pages and verified all 18 revision contents by ID](../../../artifacts/gitlab-compatibility/wiki-rich-save-stock-20261119/original-1/report.json). The [earlier two-page comparison](../../../artifacts/gitlab-compatibility/wiki-revision-restore-20261119/comparison/report.md) records the rich-text Save failures that prompted these changes.
 
 ### Reproduce suggestion history across comment edits
 
