@@ -50,7 +50,10 @@ export function readGitLabSuggestionSource(pre: Element, source: string): GitLab
   const rendered = readGitLabCodeRendering(pre, true);
   // GitLab's presentation omits the final source terminator. Read it from the
   // fence rather than guessing, and never strip actual U+200B or other code.
-  if (rendered === undefined || rendered !== (body.endsWith('\n') ? body.slice(0, -1) : body)) return refuse();
+  const literal = body.endsWith('\n') ? body.slice(0, -1) : body;
+  // The pinned project preview displays NBSP and ideographic space as ASCII
+  // spaces. Verify that exact projection, then return the original fence body.
+  if (rendered !== literal && rendered !== literal.replace(/[\u00a0\u3000]/gu, ' ')) return refuse();
   return Object.freeze({ text: body, params, fence: header[1], startLine, endLine });
 }
 

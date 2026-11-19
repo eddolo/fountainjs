@@ -27,12 +27,21 @@ async function editDeletion({side,page,form,surface,input,output}) {
   if(side==='original') {
     // Browser fill selects the enclosing contenteditable, including NodeView
     // decorations. Select the actual source line with real keys instead.
-    await surface.code.click();await page.keyboard.press('Home');await page.keyboard.press('Shift+End');
+    const targetLines = input.source.split('\n').slice(input.range.start-1,input.range.end);
+    await surface.code.click({position:{x:2,y:2}});
+    await page.keyboard.press('Home');
+    for (let line=1;line<targetLines.length;line++) await page.keyboard.press('Shift+ArrowDown');
+    await page.keyboard.press('Shift+End');
     result.selectedSource=await page.evaluate(()=>window.getSelection()?.toString());
-    expect(result.selectedSource).toBe(input.source.split('\n')[input.range.start-1]);
-    await page.keyboard.press('Backspace');
-    for(const character of input.replacement){
-      if(character==='\n')await page.keyboard.press('Enter');else await page.keyboard.insertText(character);
+    expect(result.selectedSource).toBe(targetLines.join('\n'));
+    if (input.replacement && !input.replacement.includes('\n')) {
+      // Replace the verified selection in one text operation, as in the source field.
+      await page.keyboard.insertText(input.replacement);
+    } else {
+      await page.keyboard.press('Backspace');
+      for(const character of input.replacement){
+        if(character==='\n')await page.keyboard.press('Enter');else await page.keyboard.insertText(character);
+      }
     }
     await new Promise(resolve=>setTimeout(resolve,input.handoffDelayMs));
     const block=surface.editor.locator('pre.content-editor-code-block');

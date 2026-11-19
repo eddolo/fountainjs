@@ -28,6 +28,30 @@
       "replacement": "\n",
       "handoffDelayMs": 1500,
       "scope": "deletion"
+    },
+    {
+      "id": "middle-two-lines",
+      "filePath": "paired-multiline-deletion.js",
+      "source": "first();\nremoveOne();\nremoveTwo();\nlast();\n",
+      "range": {
+        "start": 2,
+        "end": 3
+      },
+      "replacement": "",
+      "handoffDelayMs": 1500,
+      "scope": "deletion"
+    },
+    {
+      "id": "unicode-whitespace",
+      "filePath": "paired-unicode-deletion.js",
+      "source": "first();\nremove();\nlast();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "replacement": "\u00a0\t\u3000",
+      "handoffDelayMs": 1500,
+      "scope": "deletion"
     }
   ],
   "editingDelayMs": 1500

@@ -44,6 +44,17 @@ it.each([
   const value = fixture('single');
   expect(() => readGitLabSuggestionSource(pres(change(value.body))[0], value.source)).toThrow();
 });
+it('retains the original whitespace and rejects any further changes in the GitLab preview', () => {
+  const value = fixture('mixed-whitespace');
+  const validate = (html: string) => readGitLabSuggestionSource(pres(html)[0]!, value.source);
+  expect(validate(value.body).text).toBe('\u00a0\t\u3000\n');
+  for (const changed of ['   ', '\t ', ' \t\u200b', ' \tX']) {
+    const html = value.body.replace(' \t </span>', changed + '</span>');
+    expect(html).not.toBe(value.body);
+    expect(() => validate(html)).toThrow('GITLAB_SUGGESTION_SOURCE_AMBIGUOUS');
+  }
+});
+
 it('keeps an empty replacement distinct from a literal blank replacement', () => {
   expect(serializeGitLabSuggestionSource({ text: '', params: '-0+0', fence: '```' })).toBe('```suggestion:-0+0\n```');
   expect(serializeGitLabSuggestionSource({ text: '\n', params: '-0+0', fence: '```' })).toBe('```suggestion:-0+0\n\n```');
