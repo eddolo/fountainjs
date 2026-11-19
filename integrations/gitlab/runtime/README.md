@@ -70,8 +70,7 @@ repair; setting only its `description_html` to nil made the next read regenerate
 working forward/backlinks without changing Markdown, title or `updated_at`.
 `scripts/audit-gitlab-footnote-cache.mjs` records that specific stale-record
 witness; it is not a general-purpose migration command, and its stale-cache
-precondition no longer holds after the successful refresh. Production batching,
-load and rollback remain deployment acceptance work.
+precondition no longer holds after the successful refresh. The local [rollback check](#reproduce-rollback-with-the-footnote-renderer) covers one freshly created issue. Production batching and load remain open.
 
 The native source installer records the frontend files owned by each installation. Its restore operation
 does not remove the separate server Compose mount: recreate with the base
@@ -309,8 +308,20 @@ comparison requires a trusted key and click under 100 ms with the intended text
 visible at click time. An earlier unmeasured pass cannot certify rapid Save.
 [Measured WebKit rollback](../../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md).
 
-Deployments with additional Ruby filters or document-cache changes require
-their own rollback and persisted-content checks.
+### Reproduce rollback with the footnote renderer
+
+Prepare the pinned filter once, then start with the isolated service stopped. These runs use the same database and a fresh issue with repeated footnote references.
+
+```sh
+node scripts/prepare-gitlab-footnote-server.mjs /absolute/gitlab-source
+run_id=footnote-rollback-$(date -u +%Y%m%d-%H%M%S)
+node scripts/run-gitlab-compatibility.mjs --suite composers --run-id "$run_id" --editor fountain --footnote-cache &&
+node scripts/run-gitlab-compatibility.mjs --suite composers --run-id "$run_id" --editor original --footnote-cache --verify-rollback
+```
+
+Each side writes its verified editor build, deployed Ruby digest and `footnoteCache` observations to its run report. The first run uses the compiled Fountain frontend and read-only footnote repair. The second removes both mounts, reads the same issue using the packaged frontend and filter, then checks the effect of regenerating only that issue's derived HTML. It compares the regenerated links with a newly created stock issue and checks the original issue's Markdown, title and update timestamp. The ordinary frontend rollback checks still run. Different server filters disqualify this pair from editor parity scoring.
+
+On the pinned deployment, issue #494 retained all three working references in its cached HTML after the rollback. Regenerating that issue's cache produced one broken reference, exactly as on stock control #497. All three backlinks survived. The issue's Markdown, title and update timestamp stayed identical. The fresh four-record rollback again retained discussions and Markdown saves, while stock immediate rich-text Save lost the final edit. [Fountain deployment receipt](../../../artifacts/gitlab-compatibility/footnote-deployment-rollback-20261119/fountain-1/report.json) · [Stock rollback receipt](../../../artifacts/gitlab-compatibility/footnote-deployment-rollback-20261119/original-1/report.json) · [Frontend-only matched comparison](../../../artifacts/gitlab-compatibility/confirmed-review-rollback-20261119/comparison-1/report.md).
 
 With the application stopped, `node scripts/check-gitlab-native-install.mjs /absolute/gitlab-source`
 separately restores the prepared source files, checks their bytes, reinstalls the

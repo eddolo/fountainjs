@@ -55,6 +55,7 @@ it('refuses to classify a mismatched backend, candidate instrument, input or bro
   (report:any)=>{report.backend.project.defaultHead='different';},
   (report:any)=>{report.browser.version='different';},
   (report:any)=>{report.harnessHashes.driver='different';},
+  (report:any)=>{report.deployment.footnoteFilter='different-renderer';},
   (report:any)=>{report.observations[0].input.source='different\n';},
  ]){
   const [original,fountain]=reports();mutate(fountain);

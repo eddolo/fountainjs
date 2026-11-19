@@ -91,6 +91,7 @@ export function compareGitLabCompatibility(original,fountain){
   check('expected GitLab source revision', original?.buildIdentity?.expected?.gitlabCommit, fountain?.buildIdentity?.expected?.gitlabCommit);
   for(const key of ['runId','fixtureHash','fixture','harnessHashes','browser'])check(key,original?.[key],fountain?.[key]);
   for(const key of ['image','imageId','backendMounts','backendEnvironmentHash','cpus','memory'])check('deployment.'+key,original?.deployment?.[key],fountain?.deployment?.[key]);
+  if (original?.deployment?.footnoteFilter || fountain?.deployment?.footnoteFilter) check('deployment.footnoteFilter',original?.deployment?.footnoteFilter,fountain?.deployment?.footnoteFilter);
   if (original?.deployment?.puma || fountain?.deployment?.puma) check('deployment.puma',original?.deployment?.puma,fountain?.deployment?.puma);
   for(const key of ['version','project','actor','serverSources'])check('backend.'+key,original?.backend?.[key],fountain?.backend?.[key]);
   const fixture=original?.fixture,rows=[];
