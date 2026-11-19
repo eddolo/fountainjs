@@ -1,4 +1,4 @@
-import {execFileSync} from 'node:child_process';
+import {execFileSync,spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
@@ -10,7 +10,7 @@ import {verifyGitLabRollback} from './verify-gitlab-editor-rollback.mjs';
 import {buildIdentityError, describeBuild, observeEditorBuild} from '../integrations/gitlab/testing/build-identity.mjs';
 import {chromium,firefox,webkit,expect} from '@playwright/test';
 import {readGitLabAuditCredential} from './gitlab-audit-credentials.mjs';
-import {waitForGitLabDeployment} from './gitlab-deployment-readiness.mjs';
+import {loggerStartupFailure,waitForGitLabDeployment} from './gitlab-deployment-readiness.mjs';
 import {runGitLabAccessCompatibility} from './audit-gitlab-compatibility-access.mjs';
 import {runGitLabReconnectCompatibility} from './audit-gitlab-compatibility-reconnect.mjs';
 import {runGitLabQuickSaveCompatibility} from './audit-gitlab-compatibility-quick-save.mjs';
@@ -136,10 +136,24 @@ try{
  if(permissions.length)await context.grantPermissions(permissions,{origin:'http://127.0.0.1:5080'});
  const page=await context.newPage();report.browser={engine:browser.browserType().name(),version:browser.version(),viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezone:'UTC',platform:process.platform,arch:process.arch,permissions};
  report.startup=[];
- const waitUntilReady = observations => waitForGitLabDeployment({readState:()=>JSON.parse(docker('inspect','--format','{{json .State}}',containerName)),
+ const waitUntilReady = (observations,retryLoggerExit) => waitForGitLabDeployment({retryLoggerExit,readState:()=>JSON.parse(docker('inspect','--format','{{json .State}}',containerName)),
   probe:async()=>(await page.request.get('http://127.0.0.1:5080/users/sign_in',{timeout:5000})).status(),
   observe:state=>observations.push(state)});
- await waitUntilReady(report.startup);
+ await waitUntilReady(report.startup, state => {
+   // Check the pinned container again by ID. A service restart during an acceptance case uses the ordinary read-only gate.
+   const current = JSON.parse(docker('inspect',deployment.Id))[0];
+   if (current.State.StartedAt!==state.StartedAt || current.State.FinishedAt!==state.FinishedAt) return false;
+   const logs = spawnSync('docker',['logs','--since',state.StartedAt,'--tail','350',deployment.Id],
+     {encoding:'utf8',timeout:10000,maxBuffer:1024*1024});
+   if (logs.status!==0) return false;
+   const service = loggerStartupFailure(current.State, logs.stdout+'\n'+logs.stderr);
+   if (!service) return false;
+   const retry = {service,containerId:deployment.Id,startedAt:state.StartedAt,exitedAt:state.FinishedAt,exitCode:state.ExitCode};
+   report.startupRetry = retry;
+   console.log(JSON.stringify({kind:'gitlab-logger-cold-start-retry',...retry}));
+   docker('start',deployment.Id);
+   return true;
+ });
  if (filter) {
    const digest = docker('exec',containerName,'sha256sum',filter.destination).split(/\s/u)[0];
    expect(digest).toBe(side==='fountain'?filter.patched:filter.original);
