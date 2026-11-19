@@ -95,6 +95,7 @@ export class GitLabContentEditor {
   constructor(options: GitLabContentEditorOptions) {
     const supported = new Set([
       'renderMarkdown',
+      'preserveWikiSource',
       'describeLabels',
       'onIssue',
       'maxCacheEntries',
@@ -115,6 +116,8 @@ export class GitLabContentEditor {
     for (const key of Object.keys(options)) {
       if (!supported.has(key)) throw new TypeError(`UNSUPPORTED_GITLAB_NATIVE_OPTION:${key}`);
     }
+    if (options.preserveWikiSource !== undefined && typeof options.preserveWikiSource !== 'boolean')
+      throw new TypeError('EXPECTED_GITLAB_WIKI_SOURCE_FLAG');
     if (options.uploadAttachment !== undefined && typeof options.uploadAttachment !== 'function')
       throw new TypeError('EXPECTED_GITLAB_UPLOAD_HANDLER');
     if (options.describeMedia !== undefined && typeof options.describeMedia !== 'function')

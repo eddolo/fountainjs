@@ -177,6 +177,18 @@ it('reports unsupported exports without breaking the model and recovers through 
   expect(service.status).toBe('ready');
 });
 
+it.each([false, true])('mounts the production editor with the wiki source option set to %s', async preserveWikiSource => {
+  const options = {renderMarkdown: async () => ({body:'<p>Ready</p>'}), describeLabels: () => '', preserveWikiSource};
+  const service = new GitLabContentEditor(options);
+  try {
+    await service.setSerializedContent('Ready');
+    expect(service.getSerializedContent()).toBe('Ready');
+  } finally {
+    service.dispose();
+  }
+  expect(() => new GitLabContentEditor({...options, preserveWikiSource: 'yes'} as never)).toThrow('EXPECTED_GITLAB_WIKI_SOURCE_FLAG');
+});
+
 it('rejects unsupported legacy provider/options instead of silently ignoring them', () => {
   expect(
     () =>
