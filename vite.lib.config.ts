@@ -116,6 +116,7 @@ export default defineConfig({
         versions: fileURLToPath(new URL('./src/versions/index.ts', import.meta.url)),
         'react-versions': fileURLToPath(new URL('./src/react/versions.ts', import.meta.url)),
         'react-integrity': fileURLToPath(new URL('./src/react/integrity.ts', import.meta.url)),
+        diagrams: fileURLToPath(new URL('./src/diagrams/index.ts', import.meta.url)),
         charts: fileURLToPath(new URL('./src/charts/index.ts', import.meta.url)),
         details: fileURLToPath(new URL('./src/details/index.ts', import.meta.url)),
         ruby: fileURLToPath(new URL('./src/ruby/index.ts', import.meta.url)),

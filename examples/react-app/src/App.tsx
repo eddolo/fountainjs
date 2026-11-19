@@ -625,8 +625,7 @@ function App() {
   const addBlock = (kind: 'quote' | 'task' | 'table' | 'details' | 'callout' | 'chart' | 'mermaid') => {
     if (kind === 'callout') demoKit.commands.insertCallout?.(editor);
     else if (kind === 'mermaid') {
-      const { schema } = editor.state;
-      demoInsertNode(editor, schema.node('code_block', { language: 'mermaid' }, [schema.text('flowchart TD\n  draft[Draft] --> review[Review]\n  review --> publish[Publish]')]));
+      MermaidPreviewExtension.commands.insertMermaid(editor, 'flowchart TD\n  draft[Draft] --> review[Review]\n  review --> publish[Publish]');
     } else if (kind === 'chart') insertBarChart(editor, 'Change in weekly orders', [['Monday', 12], ['Tuesday', -4], ['Wednesday', 8]]);
     else if (kind === 'details') insertDetails(editor, { summary: 'Click to edit this summary', open: true });
     else if (kind === 'quote') demoKit.commands.insertQuote?.(editor, 'A thought worth keeping…');

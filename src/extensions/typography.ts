@@ -3,7 +3,7 @@ import { defineExtension, type FountainExtension } from './extension';
 import {
   inputRulesPlugin,
   textInputRule,
-  type InputRule,
+  InputRule,
   type InputRulesState,
 } from './plugins/input-rules';
 
@@ -101,11 +101,21 @@ function addRule(
 ): void {
   const value = configured(options, name, fallback);
   if (value === false) return;
-  rules.push(textInputRule({
+  const rule = textInputRule({
     name,
     find,
     replace: typeof replace === 'string' ? replace.replace('$value', value) : (match) => replace(match, value),
-  }));
+  });
+  rules.push(new InputRule(find, context => {
+    const { state, range } = context;
+    let node = state.doc;
+    for (const index of range.path) {
+      node = node.child(index);
+      if (node.type.spec.code) return false;
+    }
+    if (node.marks.some(mark => mark.type.name === 'code') || state.storedMarks.some(mark => mark.type.name === 'code')) return false;
+    return rule.handler(context);
+  }, name));
 }
 
 /** Returns the independently configurable rule list used by TypographyExtension. */

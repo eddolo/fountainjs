@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Smart typography preserves literal punctuation inside code blocks and inline code, including Mermaid arrows typed character by character.
+
+- Block insertion at a text cursor now reports when the application rejects the edit.
+
+- Add `fountainjs-editor/diagrams` for editable Mermaid code blocks and read-only previews. Applications supply a Mermaid browser script URL. The diagram source survives Markdown export and reopening.
+
 - Markdown typing shortcuts now preserve literal markers in code and existing text after the caret in prose.
 
 - Paste tab-separated spreadsheet rows at a table or chart cell. The grid grows to fit, extends column headers across new columns, and Undo restores the original cells. Quoted tabs, line breaks and quotes survive plain-text grid copying.

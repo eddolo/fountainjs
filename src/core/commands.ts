@@ -660,8 +660,7 @@ export function insertNode(editor: Editor, node: Node): boolean {
   const transaction = editor.state.createTransaction().replace(index, index, inserted);
   if (relativeTextPath) transaction.setSelection(Selection.cursor([index, ...relativeTextPath], 0));
   else if (needsTrailingTextBlock) transaction.setSelection(Selection.cursor([index + 1, 0], 0));
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 export function selectText(editor: Editor, path: readonly number[], from: number, to = from): boolean {

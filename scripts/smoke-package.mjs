@@ -89,6 +89,21 @@ const reactTrackedChangesNames = ['FountainTrackedChanges'];
 const versionsNames = ['InMemoryVersionProvider', 'VersionController', 'compareVersionDocuments', 'versionContentFingerprint'];
 const reactVersionsNames = ['FountainVersions'];
 const reactIntegrityNames = ['FountainIntegrityInspector'];
+function checkDiagramSource(core, diagrams) {
+  const extension = diagrams.createMermaidExtension({ scriptURL: '/assets/mermaid.min.js' });
+  const kit = core.composeExtensions([core.CoreExtension, extension]);
+  const editor = core.createEditor({ schema: kit.schema, plugins: kit.plugins });
+  const source = 'flowchart TD\n  draft[Draft] --> review[Review]';
+  if (!diagrams.insertMermaid(editor, source) || !core.MarkdownExporter.export(editor.state.doc).includes('```mermaid\n' + source + '\n```')) {
+    throw new Error('Diagram source did not survive insertion and Markdown export in Node.');
+  }
+  editor.destroy();
+  const guarded = core.createEditor({ schema: kit.schema, plugins: [...kit.plugins, new core.Plugin({ filterTransaction: tr => !tr.docChanged })] });
+  const before = guarded.state;
+  if (diagrams.insertMermaid(guarded, source) || guarded.state !== before) throw new Error('Rejected diagram insertion reported success or changed state.');
+  guarded.destroy();
+}
+
 const chartNames = ['ChartExtension', 'exportChartSVG', 'exportChartImage', 'selectedChart', 'setChartType', 'BarChartExtension', 'insertBarChart', 'selectedBarChart', 'exportBarChartSVG', 'exportBarChartImage', 'tableChartAction', 'toggleTableChart'];
 const detailsNames = ['DetailsExtension', 'insertDetails', 'wrapInDetails', 'unwrapDetails', 'toggleDetailsOpen'];
 const rubyNames = ['RubyExtension', 'createRubyExtension', 'setRuby', 'updateRuby', 'unsetRuby', 'toggleRuby'];
@@ -296,6 +311,7 @@ assertExports(await import('fountainjs-editor/versions'), versionsNames, 'ESM ve
 assertExports(await import('fountainjs-editor/react/versions'), reactVersionsNames, 'ESM React versions entry');
 assertExports(await import('fountainjs-editor/react/integrity'), reactIntegrityNames, 'ESM React integrity entry');
 assertExports(await import('fountainjs-editor/details'), detailsNames, 'ESM details entry');
+checkDiagramSource(esmCore, await import('fountainjs-editor/diagrams'));
 assertExports(await import('fountainjs-editor/charts'), chartNames, 'ESM charts entry');
 assertExports(await import('fountainjs-editor/ruby'), rubyNames, 'ESM ruby entry');
 assertExports(await import('fountainjs-editor/text-style'), textStyleNames, 'ESM text style entry');
@@ -492,6 +508,7 @@ assertExports(require('fountainjs-editor/versions'), versionsNames, 'CommonJS ve
 assertExports(require('fountainjs-editor/react/versions'), reactVersionsNames, 'CommonJS React versions entry');
 assertExports(require('fountainjs-editor/react/integrity'), reactIntegrityNames, 'CommonJS React integrity entry');
 assertExports(require('fountainjs-editor/details'), detailsNames, 'CommonJS details entry');
+checkDiagramSource(cjsCore, require('fountainjs-editor/diagrams'));
 assertExports(require('fountainjs-editor/charts'), chartNames, 'CommonJS charts entry');
 assertExports(require('fountainjs-editor/ruby'), rubyNames, 'CommonJS ruby entry');
 assertExports(require('fountainjs-editor/text-style'), textStyleNames, 'CommonJS text style entry');

@@ -52,6 +52,30 @@ test('draws editable Mermaid source, recovers from a syntax error and reopens Ma
   await expect(reader).toHaveAttribute('contenteditable', 'false');
 });
 
+test('types a Mermaid fence and draws a diagram without leaving the document', async ({ page }, info) => {
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.locator('[contenteditable=true] p').filter({ hasText: 'Integrity sample:' }).click();
+  await page.keyboard.press('ControlOrMeta+End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('```mermaid ');
+  const source = demo.getByRole('region', { name: 'mermaid code' }).locator('code');
+  await expect(source).toHaveCount(1);
+  await page.keyboard.type('flowchart TD');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('  Report --> Triage');
+  await expect(source).toHaveJSProperty('textContent', 'flowchart TD\n  Report --> Triage');
+  const diagram = demo.getByRole('figure', { name: 'Diagram preview' });
+  await diagram.scrollIntoViewIfNeeded();
+  const image = diagram.getByRole('img');
+  await expect(image).toBeVisible({ timeout: 22000 });
+  const svg = decodeURIComponent((await image.getAttribute('src'))!);
+  expect(svg).toContain('Report');
+  expect(svg).toContain('Triage');
+  await expect.poll(() => image.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await diagram.screenshot({ path: info.outputPath('typed-diagram.png') });
+});
+
 test('reads two diagrams from one Markdown file with their own titles and labels', async ({ page }, info) => {
   const file = [
     '# Incident review', '',

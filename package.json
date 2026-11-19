@@ -83,6 +83,9 @@
       "react/integrity": [
         "dist/react/integrity.d.ts"
       ],
+      "diagrams": [
+        "dist/diagrams/index.d.ts"
+      ],
       "charts": [
         "dist/charts/index.d.ts"
       ],
@@ -395,6 +398,16 @@
       "require": {
         "types": "./dist/react/integrity.d.cts",
         "default": "./dist/react-integrity.cjs"
+      }
+    },
+    "./diagrams": {
+      "import": {
+        "types": "./dist/diagrams/index.d.ts",
+        "default": "./dist/diagrams.js"
+      },
+      "require": {
+        "types": "./dist/diagrams/index.d.cts",
+        "default": "./dist/diagrams.cjs"
       }
     },
     "./charts": {

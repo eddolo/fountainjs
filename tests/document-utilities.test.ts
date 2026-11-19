@@ -242,6 +242,27 @@ describe('configurable typography input rules', () => {
     expect(transform(source, input)).toBe(expected);
   });
 
+  it('preserves punctuation in a nested source block, inline code and newly toggled code marks', () => {
+    const kit = kitWith(TypographyExtension);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: { type: 'doc', content: [
+      { type: 'blockquote', content: [{ type: 'code_block', attrs: { language: 'mermaid' }, content: [{ type: 'text', text: '-' }] }] },
+      { type: 'paragraph', content: [{ type: 'text', text: '-', marks: [{ type: 'code' }] }] },
+      { type: 'paragraph', content: [{ type: 'text', text: '-' }] },
+    ] } });
+    const input = TypographyExtension.plugins![0].spec.props!.handleTextInput!;
+    for (const path of [[0, 0, 0], [1, 0]]) {
+      selectText(editor, path, 1);
+      expect(input(editor, 1, 1, '-')).toBe(false);
+    }
+    selectText(editor, [2, 0], 1);
+    editor.dispatch(editor.createTransaction().setStoredMarks([editor.state.schema.mark('code')]));
+    expect(input(editor, 1, 1, '-')).toBe(false);
+    editor.dispatch(editor.createTransaction().setStoredMarks([]));
+    expect(input(editor, 1, 1, '-')).toBe(true);
+    expect(editor.state.doc.child(2).textContent).toBe('—');
+    editor.destroy();
+  });
+
   it('allows individual disabling, output overrides, RTL quotes, and literal undo', () => {
     const configured = createTypographyExtension({ emDash: false, oneHalf: '1 / 2', rtl: true });
     expect(transform('1/', '2', configured)).toBe('1 / 2');
