@@ -145,15 +145,27 @@ it('requires a real attempt on the posted suggestion before crediting stale-sour
      beforeApplyFile:{content:Buffer.from(input.source).toString('base64')},competingCommit:'b'.repeat(40),
      verifiedCompetingSource:input.remoteSource,afterReload:{source:input.remoteSource}});
  }
- const row = () => compareGitLabCompatibility(...pair).rows.find((r:any)=>r.invariant==='afterReload.source');
+ const row = (key = 'afterReload.source') => compareGitLabCompatibility(...pair).rows.find((r:any)=>r.invariant===key);
  expect(row().classification).toBe('parity');
  const item = pair[1].observations[0] as any;
+ expect(row('applyRefused').classification).toBe('parity');
+ for (const status of [200,403,500]) {
+   item.applyResponse.status = status;
+   expect(row('applyRefused').classification).toBe('regression');
+ }
+ item.applyResponse.status = 400;
  item.afterReload.source = input.source;
  expect(row().classification).toBe('regression');
  item.confirmationOffered = false;
  expect(row().status).toBe('missing-evidence');
  item.confirmationOffered = true;
  item.applyResponse.path = '/api/v4/suggestions/9/apply';
+ expect(row().status).toBe('missing-evidence');
+ item.confirmationOffered = false;
+ delete item.applyResponse;
+ item.blockedAtControl = {id:8,appliable:false,buttonDisabled:true,confirmationHidden:true};
+ expect(row('applyRefused').classification).toBe('parity');
+ item.blockedAtControl.id = 9;
  expect(row().status).toBe('missing-evidence');
 });
 

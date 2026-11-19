@@ -1,0 +1,1040 @@
+{
+  "formatVersion": 2,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "buildIdentities": {
+    "original": {
+      "side": "original",
+      "expected": {
+        "gitlabVersion": "19.5.3",
+        "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+        "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615"
+      },
+      "observed": {
+        "editor": "ProseMirror",
+        "integrationSHA256": null,
+        "runtimeSHA256": null,
+        "manifestSHA256": "8198a3fa9feab7a59f708cc2ff97dc0256501d391b843dc575a08234cbc61504",
+        "scripts": [
+          {
+            "path": "/assets/webpack/0dcf7166.fee24f6c.chunk.js",
+            "browserSHA256": "60628f5a436d0dca5e2f020f363e80dc8be815367061b4a17da8b97334f99b2e",
+            "deployedSHA256": "60628f5a436d0dca5e2f020f363e80dc8be815367061b4a17da8b97334f99b2e"
+          },
+          {
+            "path": "/assets/webpack/50d780ac.dc829e6f.chunk.js",
+            "browserSHA256": "4084592a280262ce2221cff3c7571da90f5ec91a3fe7e5c9f00ffa0607955e38",
+            "deployedSHA256": "4084592a280262ce2221cff3c7571da90f5ec91a3fe7e5c9f00ffa0607955e38"
+          },
+          {
+            "path": "/assets/webpack/6b30d853.22266848.chunk.js",
+            "browserSHA256": "4d6fcad270b71f586bb4744c6cac73cd0e054cee405aafed9bf942483d37ea00",
+            "deployedSHA256": "4d6fcad270b71f586bb4744c6cac73cd0e054cee405aafed9bf942483d37ea00"
+          },
+          {
+            "path": "/assets/webpack/8632254b.bbb48efe.chunk.js",
+            "browserSHA256": "174e8ee2737b0054549b8eb4708cb86bdc7bdd822299cdecbfea79dfead62787",
+            "deployedSHA256": "174e8ee2737b0054549b8eb4708cb86bdc7bdd822299cdecbfea79dfead62787"
+          },
+          {
+            "path": "/assets/webpack/8fcdb888.3328a406.chunk.js",
+            "browserSHA256": "c54120af43a5d32d9c6df52bdd8eae6b6596cdefcb2ec12e56fdce4255d1784d",
+            "deployedSHA256": "c54120af43a5d32d9c6df52bdd8eae6b6596cdefcb2ec12e56fdce4255d1784d"
+          },
+          {
+            "path": "/assets/webpack/af66d122.d929aab6.chunk.js",
+            "browserSHA256": "31b8757f37d2a4b1093f8c745f1d143ad8fd928f8bb2c552bff86d731cf0eebb",
+            "deployedSHA256": "31b8757f37d2a4b1093f8c745f1d143ad8fd928f8bb2c552bff86d731cf0eebb"
+          },
+          {
+            "path": "/assets/webpack/cec769ff.82e507cf.chunk.js",
+            "browserSHA256": "429b75f7b02eae2a935674ea5b627173c74cfa927c1fe014b976c59955c4a971",
+            "deployedSHA256": "429b75f7b02eae2a935674ea5b627173c74cfa927c1fe014b976c59955c4a971"
+          },
+          {
+            "path": "/assets/webpack/commons-graphql_explorer-pages.admin.application_settings.service_accounts-pages.admin.applications--b635524d.b3338b4b.chunk.js",
+            "browserSHA256": "b5ddfc03cb01c31f151176c33f7b53f2fded871d5107d0657dc114d3606242a2",
+            "deployedSHA256": "b5ddfc03cb01c31f151176c33f7b53f2fded871d5107d0657dc114d3606242a2"
+          },
+          {
+            "path": "/assets/webpack/commons-initGFMInput-pages.admin.organizations.settings.general-pages.admin.organizations.settings.g-9b13c352.4bfbb026.chunk.js",
+            "browserSHA256": "0d3b2e34bc1be84d687b597d85879a0eb636491ca314dd0752047e4f9a698cd2",
+            "deployedSHA256": "0d3b2e34bc1be84d687b597d85879a0eb636491ca314dd0752047e4f9a698cd2"
+          },
+          {
+            "path": "/assets/webpack/commons-initGFMInput-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.-bffa2291.801ef5c8.chunk.js",
+            "browserSHA256": "a3a3f53f2e9a3eb5f769d33b8bea04c5b48240e11c89443985b09bae9cc07ef6",
+            "deployedSHA256": "a3a3f53f2e9a3eb5f769d33b8bea04c5b48240e11c89443985b09bae9cc07ef6"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.abuse_reports-pages.admin.abuse_reports.show-pages.admin.groups.index-pages.admi-315b2517.e590656f.chunk.js",
+            "browserSHA256": "bfeceb581cb9548fa238c98be3359f85418821e003cf81f01e1977fbc3f5a1e4",
+            "deployedSHA256": "bfeceb581cb9548fa238c98be3359f85418821e003cf81f01e1977fbc3f5a1e4"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.issues.vue3-pages.dash-5ffc317d.0bcd8c23.chunk.js",
+            "browserSHA256": "934cb817bd1e8709dfc0041c94306da516a0bc2e2b3462e9495e2b0cced8a023",
+            "deployedSHA256": "934cb817bd1e8709dfc0041c94306da516a0bc2e2b3462e9495e2b0cced8a023"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.issues.vue3-pages.dash-f8003152.f196957a.chunk.js",
+            "browserSHA256": "eccd8bf8465106ba4b1d6b85e1c390a2ff11134cf5c887d709862b76bb3a15fe",
+            "deployedSHA256": "eccd8bf8465106ba4b1d6b85e1c390a2ff11134cf5c887d709862b76bb3a15fe"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.work_items-pages.group-b344e337.050faeee.chunk.js",
+            "browserSHA256": "80ac611196e70abce4fddcbc475864d346da5892bed36478c77fd44b57bd5586",
+            "deployedSHA256": "80ac611196e70abce4fddcbc475864d346da5892bed36478c77fd44b57bd5586"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.application_settings.service_accounts-pages.explore.analytics_dashboards-pages.e-306889d5.8b0f4475.chunk.js",
+            "browserSHA256": "85d6894177f53cdd03ae236b0127d180269cc65adc6a75bf234fcfda6e5ba689",
+            "deployedSHA256": "85d6894177f53cdd03ae236b0127d180269cc65adc6a75bf234fcfda6e5ba689"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.deploy_keys.index-pages.admin.deploy_keys.index.vue3-pages.admin.groups.index-pa-95f4ca76.204c76b4.chunk.js",
+            "browserSHA256": "ac2c2fa6162be75fba132cebdfa9e39e95e0900ba0685bf07ba1593bda409b29",
+            "deployedSHA256": "ac2c2fa6162be75fba132cebdfa9e39e95e0900ba0685bf07ba1593bda409b29"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.organizations.settings.general.vue3-p-12d52578.7bbbd3a2.chunk.js",
+            "browserSHA256": "1f0a66c98fde56a7c02443fdb9921e7d4d750b140d93d6351b1755f06dd3a625",
+            "deployedSHA256": "1f0a66c98fde56a7c02443fdb9921e7d4d750b140d93d6351b1755f06dd3a625"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.organizations.settings.general.vue3-p-94e849a5.56f93b0b.chunk.js",
+            "browserSHA256": "91ae5407df49b9599fb403684a20d8dde0135ab6066b40d19cabb676ea8bd524",
+            "deployedSHA256": "91ae5407df49b9599fb403684a20d8dde0135ab6066b40d19cabb676ea8bd524"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.topics.new-pa-b83f65ef.593ef6a6.chunk.js",
+            "browserSHA256": "d24ac522e166c3f9df0614fd91483a3030e8c25ea965aacf10aa94f94a919ee8",
+            "deployedSHA256": "d24ac522e166c3f9df0614fd91483a3030e8c25ea965aacf10aa94f94a919ee8"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.topics.new-pa-bb1f65b9.47fc7bae.chunk.js",
+            "browserSHA256": "d502802b4550459e837e7fb577d055b90e4414aa9e298a60ce888fcd500023c0",
+            "deployedSHA256": "d502802b4550459e837e7fb577d055b90e4414aa9e298a60ce888fcd500023c0"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.dashboard.home-pages.projects.snippets.show-pages.projects.snippets.show.vue3-pages.ro-3e3d840b.db458a62.chunk.js",
+            "browserSHA256": "57a24656dafc75786382be6707fcd709b69a216fd02565a7decb07e837b59edc",
+            "deployedSHA256": "57a24656dafc75786382be6707fcd709b69a216fd02565a7decb07e837b59edc"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.dashboard.home-pages.registrations.new-pages.root-pages.root.vue3-pages.sessions.new-p-a41aff06.d68c093a.chunk.js",
+            "browserSHA256": "731b4181e37659838b30f40d15555cbefb525cc4aa0e1ae6f11992596c787b38",
+            "deployedSHA256": "731b4181e37659838b30f40d15555cbefb525cc4aa0e1ae6f11992596c787b38"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.groups.merge_requests-pages.groups.merge_requests.vue3-pages.groups.milestones.edit-pa-23d8bf6c.33b0825c.chunk.js",
+            "browserSHA256": "c7befe99471a7fb2c86942f49308b8f0add4550eaa127127ff473effe494d4dd",
+            "deployedSHA256": "c7befe99471a7fb2c86942f49308b8f0add4550eaa127127ff473effe494d4dd"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.groups.saved_views.show-pages.groups.saved_views.show.vue3-pages.groups.work_items-pag-550486f6.9218719f.chunk.js",
+            "browserSHA256": "0b7eb7bf45c54c9c5dd7defe6b8465c2eedce5c2934f10d4c0ee0dbe1e70a444",
+            "deployedSHA256": "0b7eb7bf45c54c9c5dd7defe6b8465c2eedce5c2934f10d4c0ee0dbe1e70a444"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.groups.saved_views.show-pages.groups.work_items-pages.groups.work_items.show-pages.pro-164ac21d.01932e06.chunk.js",
+            "browserSHA256": "9dba0710087f076a9035418972a71a469f8900de5253f67215084b6708183404",
+            "deployedSHA256": "9dba0710087f076a9035418972a71a469f8900de5253f67215084b6708183404"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.projects-pages.projects.activity-pages.projects.activity.vue3-pages.projects.alert_man-376eb50e.11611bcc.chunk.js",
+            "browserSHA256": "2819b4a6ef6d68bd326631d8c74cbbf1e1b4e59f2df3ab971cda8d12ae9c9274",
+            "deployedSHA256": "2819b4a6ef6d68bd326631d8c74cbbf1e1b4e59f2df3ab971cda8d12ae9c9274"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.search.show-pages.search.show.vue3-super_sidebar-super_sidebar.vue3.e1ab1d65.chunk.js",
+            "browserSHA256": "864e2f2561a6fdaf57425542f4d61a50e4fe597581f19734c15842fc319a97b8",
+            "deployedSHA256": "864e2f2561a6fdaf57425542f4d61a50e4fe597581f19734c15842fc319a97b8"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.search.show-super_sidebar.e41625fd.chunk.js",
+            "browserSHA256": "8eca9d8639d079b1c53d9fc6d7d9d18960aa1f80fd207fdfaca52637b2a7553f",
+            "deployedSHA256": "8eca9d8639d079b1c53d9fc6d7d9d18960aa1f80fd207fdfaca52637b2a7553f"
+          },
+          {
+            "path": "/assets/webpack/commons-super_sidebar-super_sidebar.vue3.e38d27a4.chunk.js",
+            "browserSHA256": "0c183f0c046747b3f2534b7a2ab28a94d35b2fe6740d9a1cbd481121b9f4a056",
+            "deployedSHA256": "0c183f0c046747b3f2534b7a2ab28a94d35b2fe6740d9a1cbd481121b9f4a056"
+          },
+          {
+            "path": "/assets/webpack/content_editor.49fdd8e0.chunk.js",
+            "browserSHA256": "1b59e1d51b37085c09ce0ca7b06e9bc2c2fd48f1884fe58575dc96535879943c",
+            "deployedSHA256": "1b59e1d51b37085c09ce0ca7b06e9bc2c2fd48f1884fe58575dc96535879943c"
+          },
+          {
+            "path": "/assets/webpack/f9f13fd0.2f09c304.chunk.js",
+            "browserSHA256": "a9d8a7fd29f87a408eec57f2a7424cbc7ce8229b2144a1df62489aa943bba65f",
+            "deployedSHA256": "a9d8a7fd29f87a408eec57f2a7424cbc7ce8229b2144a1df62489aa943bba65f"
+          },
+          {
+            "path": "/assets/webpack/global_search_modal.f7aa2163.chunk.js",
+            "browserSHA256": "dc6ae1e96e187f3e84fc110d11ad9edea9ee7e3b1b3dccb7277cf2c6b7c4f98f",
+            "deployedSHA256": "dc6ae1e96e187f3e84fc110d11ad9edea9ee7e3b1b3dccb7277cf2c6b7c4f98f"
+          },
+          {
+            "path": "/assets/webpack/hello.0063a1cb.chunk.js",
+            "browserSHA256": "f9f0adcbf9ac1ee0735624524c7340829e5779adc065f62f49097d0ed399d9e5",
+            "deployedSHA256": "f9f0adcbf9ac1ee0735624524c7340829e5779adc065f62f49097d0ed399d9e5"
+          },
+          {
+            "path": "/assets/webpack/initInviteMembersModal.227c3a5f.chunk.js",
+            "browserSHA256": "175bc6bb388a517703fba123ced915039244f7fe8107385295c362075bd56940",
+            "deployedSHA256": "175bc6bb388a517703fba123ced915039244f7fe8107385295c362075bd56940"
+          },
+          {
+            "path": "/assets/webpack/initInviteMembersTrigger.d59e549b.chunk.js",
+            "browserSHA256": "56331f0b6477b521f7871717dac9d8755f55c5c656b2de0db5345f4abb3b1915",
+            "deployedSHA256": "56331f0b6477b521f7871717dac9d8755f55c5c656b2de0db5345f4abb3b1915"
+          },
+          {
+            "path": "/assets/webpack/main.02b8bf31.chunk.js",
+            "browserSHA256": "65ec37e9bcbc79a60c68df12e1572a6a7628a9e1b2d48ce7ec159dc3b36d9da4",
+            "deployedSHA256": "65ec37e9bcbc79a60c68df12e1572a6a7628a9e1b2d48ce7ec159dc3b36d9da4"
+          },
+          {
+            "path": "/assets/webpack/pages.projects.work_items.aa84d846.chunk.js",
+            "browserSHA256": "25c5e5b4729ddf97c64b30d1873c3d2539bd2dd9576bb576ed359d61d127a010",
+            "deployedSHA256": "25c5e5b4729ddf97c64b30d1873c3d2539bd2dd9576bb576ed359d61d127a010"
+          },
+          {
+            "path": "/assets/webpack/prosemirror.04be8805.chunk.js",
+            "browserSHA256": "2759329fffd876e0752b362b93230f0aca48bf90090609428a37ee56e896a267",
+            "deployedSHA256": "2759329fffd876e0752b362b93230f0aca48bf90090609428a37ee56e896a267"
+          },
+          {
+            "path": "/assets/webpack/runtime.ea79027a.bundle.js",
+            "browserSHA256": "87500039b7aa4577224bdaefefb08825e878d72daa46274858992e9179e4a7d4",
+            "deployedSHA256": "87500039b7aa4577224bdaefefb08825e878d72daa46274858992e9179e4a7d4"
+          },
+          {
+            "path": "/assets/webpack/shortcutsBundle.45faa6aa.chunk.js",
+            "browserSHA256": "dd60126d0563e7efdf1656b92af46b0eee111b850c29ab3f38470f9c906a4712",
+            "deployedSHA256": "dd60126d0563e7efdf1656b92af46b0eee111b850c29ab3f38470f9c906a4712"
+          },
+          {
+            "path": "/assets/webpack/super_sidebar.ff1bc863.chunk.js",
+            "browserSHA256": "3d1d62fd9a55fdfaacd8bfc9c32fbb376e1716e7b65edb9ef5da2a5738f15e0c",
+            "deployedSHA256": "3d1d62fd9a55fdfaacd8bfc9c32fbb376e1716e7b65edb9ef5da2a5738f15e0c"
+          },
+          {
+            "path": "/assets/webpack/tracker.1eb446cb.chunk.js",
+            "browserSHA256": "f5d412f20f2dc1e36ac9208908410dcbb97c6a88114cbc3d5377a593b3fb7a68",
+            "deployedSHA256": "f5d412f20f2dc1e36ac9208908410dcbb97c6a88114cbc3d5377a593b3fb7a68"
+          }
+        ]
+      }
+    },
+    "fountain": {
+      "side": "fountain",
+      "expected": {
+        "gitlabVersion": "19.5.3",
+        "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+        "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+        "packageVersion": "0.5.0-beta.2",
+        "fountainRevision": "80ae30149c8fed68f6f89802cd8f2e22e53ddbd0",
+        "runtimeSHA256": "755d58d35b0ac7e3a6c56286a8089261b3334662e96357925ca1dba0cd2c78f5",
+        "integrationSHA256": "0b53fdc6fd29fdf59cf5052af158e91e563f4ffbc5916ca9f80ed856b60cee5e"
+      },
+      "observed": {
+        "editor": "FountainJS",
+        "integrationSHA256": "0b53fdc6fd29fdf59cf5052af158e91e563f4ffbc5916ca9f80ed856b60cee5e",
+        "runtimeSHA256": "755d58d35b0ac7e3a6c56286a8089261b3334662e96357925ca1dba0cd2c78f5",
+        "manifestSHA256": "fc37d34e2dc194c306057cac6498b6e7ed024d659009e741356f332a24ceebd3",
+        "scripts": [
+          {
+            "path": "/assets/webpack/10845.653e9015.chunk.js",
+            "browserSHA256": "037471e3bf3408848dbc488004c06251d6f6818ac7e763bcba7200c8ac08ccde",
+            "deployedSHA256": "037471e3bf3408848dbc488004c06251d6f6818ac7e763bcba7200c8ac08ccde"
+          },
+          {
+            "path": "/assets/webpack/11477.eb4e3c00.chunk.js",
+            "browserSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93",
+            "deployedSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93"
+          },
+          {
+            "path": "/assets/webpack/21220.42642502.chunk.js",
+            "browserSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8",
+            "deployedSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8"
+          },
+          {
+            "path": "/assets/webpack/26937.37f8dec7.chunk.js",
+            "browserSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6",
+            "deployedSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6"
+          },
+          {
+            "path": "/assets/webpack/31126.768e9d21.chunk.js",
+            "browserSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a",
+            "deployedSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a"
+          },
+          {
+            "path": "/assets/webpack/31580.e3bf8fed.chunk.js",
+            "browserSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293",
+            "deployedSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293"
+          },
+          {
+            "path": "/assets/webpack/33480.ce7ca688.chunk.js",
+            "browserSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566",
+            "deployedSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566"
+          },
+          {
+            "path": "/assets/webpack/33816.10488c93.chunk.js",
+            "browserSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14",
+            "deployedSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14"
+          },
+          {
+            "path": "/assets/webpack/33975.2a6859ce.chunk.js",
+            "browserSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b",
+            "deployedSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b"
+          },
+          {
+            "path": "/assets/webpack/34221.35146945.chunk.js",
+            "browserSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75",
+            "deployedSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75"
+          },
+          {
+            "path": "/assets/webpack/36950.473152a8.chunk.js",
+            "browserSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345",
+            "deployedSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345"
+          },
+          {
+            "path": "/assets/webpack/42297.fdce27a8.chunk.js",
+            "browserSHA256": "14d2a9783419ba21ca56b86bb603d891440f24b1a4154fee1512ce5956977599",
+            "deployedSHA256": "14d2a9783419ba21ca56b86bb603d891440f24b1a4154fee1512ce5956977599"
+          },
+          {
+            "path": "/assets/webpack/44540.1b3fb37a.chunk.js",
+            "browserSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457",
+            "deployedSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457"
+          },
+          {
+            "path": "/assets/webpack/48082.f4fb9454.chunk.js",
+            "browserSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea",
+            "deployedSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea"
+          },
+          {
+            "path": "/assets/webpack/52199.2635e6eb.chunk.js",
+            "browserSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4",
+            "deployedSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4"
+          },
+          {
+            "path": "/assets/webpack/54908.851e751e.chunk.js",
+            "browserSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278",
+            "deployedSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278"
+          },
+          {
+            "path": "/assets/webpack/56524.a3f2adcc.chunk.js",
+            "browserSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649",
+            "deployedSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649"
+          },
+          {
+            "path": "/assets/webpack/57920.15510cdf.chunk.js",
+            "browserSHA256": "ee6b1163a29837ffcf506979e61a75c5b3183f90e9e2831d5a9610361dab9cea",
+            "deployedSHA256": "ee6b1163a29837ffcf506979e61a75c5b3183f90e9e2831d5a9610361dab9cea"
+          },
+          {
+            "path": "/assets/webpack/58279.be153399.chunk.js",
+            "browserSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179",
+            "deployedSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179"
+          },
+          {
+            "path": "/assets/webpack/6368.b30463b3.chunk.js",
+            "browserSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e",
+            "deployedSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e"
+          },
+          {
+            "path": "/assets/webpack/65338.66de7a5c.chunk.js",
+            "browserSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60",
+            "deployedSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60"
+          },
+          {
+            "path": "/assets/webpack/65492.7ba55601.chunk.js",
+            "browserSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364",
+            "deployedSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364"
+          },
+          {
+            "path": "/assets/webpack/6620.52ee50e6.chunk.js",
+            "browserSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820",
+            "deployedSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820"
+          },
+          {
+            "path": "/assets/webpack/66210.d86969b9.chunk.js",
+            "browserSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26",
+            "deployedSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26"
+          },
+          {
+            "path": "/assets/webpack/67.0fe3d755.chunk.js",
+            "browserSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780",
+            "deployedSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780"
+          },
+          {
+            "path": "/assets/webpack/67755.57034e16.chunk.js",
+            "browserSHA256": "50284e6eaa3407a441df52b6509999ad36c8ef572045bf4c9032e604b8fc58f7",
+            "deployedSHA256": "50284e6eaa3407a441df52b6509999ad36c8ef572045bf4c9032e604b8fc58f7"
+          },
+          {
+            "path": "/assets/webpack/68541.222d9bcd.chunk.js",
+            "browserSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece",
+            "deployedSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece"
+          },
+          {
+            "path": "/assets/webpack/69513.9df26555.chunk.js",
+            "browserSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f",
+            "deployedSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f"
+          },
+          {
+            "path": "/assets/webpack/70682.dbea24fb.chunk.js",
+            "browserSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92",
+            "deployedSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92"
+          },
+          {
+            "path": "/assets/webpack/71642.4e382863.chunk.js",
+            "browserSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4",
+            "deployedSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4"
+          },
+          {
+            "path": "/assets/webpack/72007.15fb7bcd.chunk.js",
+            "browserSHA256": "f08cd11b57c4d38ff4ce89fc1384368c752cd5a9d611d5c9373ab0c8a5e62e49",
+            "deployedSHA256": "f08cd11b57c4d38ff4ce89fc1384368c752cd5a9d611d5c9373ab0c8a5e62e49"
+          },
+          {
+            "path": "/assets/webpack/77804.af4827ca.chunk.js",
+            "browserSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1",
+            "deployedSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1"
+          },
+          {
+            "path": "/assets/webpack/79164.07015d7a.chunk.js",
+            "browserSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448",
+            "deployedSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448"
+          },
+          {
+            "path": "/assets/webpack/81231.39e842ae.chunk.js",
+            "browserSHA256": "1c5d6953b92a91c1cf57b4baa4eac2c473d6467dd9545ea02b42ec82cc1dd82d",
+            "deployedSHA256": "1c5d6953b92a91c1cf57b4baa4eac2c473d6467dd9545ea02b42ec82cc1dd82d"
+          },
+          {
+            "path": "/assets/webpack/90212.0f7599c8.chunk.js",
+            "browserSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8",
+            "deployedSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8"
+          },
+          {
+            "path": "/assets/webpack/92505.e2029695.chunk.js",
+            "browserSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18",
+            "deployedSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18"
+          },
+          {
+            "path": "/assets/webpack/92967.221472e2.chunk.js",
+            "browserSHA256": "79823de536403fc0d8177bce02a57e173c9475c9b8092e1bd3de67415e86e730",
+            "deployedSHA256": "79823de536403fc0d8177bce02a57e173c9475c9b8092e1bd3de67415e86e730"
+          },
+          {
+            "path": "/assets/webpack/96998.7e4df3c7.chunk.js",
+            "browserSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a",
+            "deployedSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a"
+          },
+          {
+            "path": "/assets/webpack/content_editor.7164f81a.chunk.js",
+            "browserSHA256": "7e5f9d6d3243012730a4b595dffc90a30af9569163f1a706c130604b4e1e1eff",
+            "deployedSHA256": "7e5f9d6d3243012730a4b595dffc90a30af9569163f1a706c130604b4e1e1eff"
+          },
+          {
+            "path": "/assets/webpack/framework.f13ea082.chunk.js",
+            "browserSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9",
+            "deployedSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9"
+          },
+          {
+            "path": "/assets/webpack/gitlab_ui.d82b8e33.chunk.js",
+            "browserSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886",
+            "deployedSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886"
+          },
+          {
+            "path": "/assets/webpack/global_search_modal.276667de.chunk.js",
+            "browserSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42",
+            "deployedSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42"
+          },
+          {
+            "path": "/assets/webpack/hello.61f24ffa.chunk.js",
+            "browserSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab",
+            "deployedSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab"
+          },
+          {
+            "path": "/assets/webpack/initInviteMembersModal.ed948cf8.chunk.js",
+            "browserSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb",
+            "deployedSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb"
+          },
+          {
+            "path": "/assets/webpack/initInviteMembersTrigger.cc208be6.chunk.js",
+            "browserSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122",
+            "deployedSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122"
+          },
+          {
+            "path": "/assets/webpack/main.fb78dad5.chunk.js",
+            "browserSHA256": "db3fbd2f4532d2054194d913aac7ef43adfeaeb91d3fb2f2cb0bc7bf6c1c3bdf",
+            "deployedSHA256": "db3fbd2f4532d2054194d913aac7ef43adfeaeb91d3fb2f2cb0bc7bf6c1c3bdf"
+          },
+          {
+            "path": "/assets/webpack/pages.projects.work_items.5b1bae85.chunk.js",
+            "browserSHA256": "e75a207e59eefda2af154c7d481f6fa990fbd786575c420f197f2e8620164097",
+            "deployedSHA256": "e75a207e59eefda2af154c7d481f6fa990fbd786575c420f197f2e8620164097"
+          },
+          {
+            "path": "/assets/webpack/prosemirror.d913db02.chunk.js",
+            "browserSHA256": "8973ac8a70588ee372a258693d7b8097c76618bfdabda0dd1b5dcc53a08d732b",
+            "deployedSHA256": "8973ac8a70588ee372a258693d7b8097c76618bfdabda0dd1b5dcc53a08d732b"
+          },
+          {
+            "path": "/assets/webpack/runtime.9b78f6fb.bundle.js",
+            "browserSHA256": "8d2efbe7062db2eb4f62bf0ada9880859d7e6680437769d426fab7cfe18bff1f",
+            "deployedSHA256": "8d2efbe7062db2eb4f62bf0ada9880859d7e6680437769d426fab7cfe18bff1f"
+          },
+          {
+            "path": "/assets/webpack/shortcutsBundle.be2e00cb.chunk.js",
+            "browserSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb",
+            "deployedSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb"
+          },
+          {
+            "path": "/assets/webpack/super_sidebar.eda8a491.chunk.js",
+            "browserSHA256": "377f63732d167f3f1ef4c7606a2ffe0357c7d0316901f527b671799797629145",
+            "deployedSHA256": "377f63732d167f3f1ef4c7606a2ffe0357c7d0316901f527b671799797629145"
+          },
+          {
+            "path": "/assets/webpack/tracker.e8a6b670.chunk.js",
+            "browserSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858",
+            "deployedSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858"
+          }
+        ]
+      }
+    }
+  },
+  "environment": {
+    "matched": true,
+    "mismatches": []
+  },
+  "runs": {
+    "original": {
+      "runId": "deleted-target-20261119",
+      "attempt": 2
+    },
+    "fountain": {
+      "runId": "deleted-target-20261119",
+      "attempt": 2
+    }
+  },
+  "rows": [
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "applyRefused",
+      "label": "GitLab prevents applying the stale suggestion",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "staleReason",
+      "label": "Feedback identifies the reviewed line as having changed",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.source",
+      "label": "Newer source remains exact (after review)",
+      "expected": "before();\nnewer();\nkeep();\n",
+      "original": "before();\nnewer();\nkeep();\n",
+      "fountain": "before();\nnewer();\nkeep();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.sameHead",
+      "label": "No extra source commit (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.sameNote",
+      "label": "Posted review remains exact (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.applied",
+      "label": "Outdated review stays unapplied (after review)",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.sameSuggestion",
+      "label": "Suggestion identity survives (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.source",
+      "label": "Newer source remains exact (after reload)",
+      "expected": "before();\nnewer();\nkeep();\n",
+      "original": "before();\nnewer();\nkeep();\n",
+      "fountain": "before();\nnewer();\nkeep();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.sameHead",
+      "label": "No extra source commit (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.sameNote",
+      "label": "Posted review remains exact (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.applied",
+      "label": "Outdated review stays unapplied (after reload)",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.sameSuggestion",
+      "label": "Suggestion identity survives (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "applyRefused",
+      "label": "GitLab prevents applying the stale suggestion",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "staleReason",
+      "label": "Feedback identifies the reviewed line as having changed",
+      "expected": true,
+      "original": false,
+      "fountain": false,
+      "classification": "shared-limitation",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.source",
+      "label": "Newer source remains exact (after review)",
+      "expected": "before();\nnewer();\nkeep();\n",
+      "original": "before();\nnewer();\nkeep();\n",
+      "fountain": "before();\nnewer();\nkeep();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.sameHead",
+      "label": "No extra source commit (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.sameNote",
+      "label": "Posted review remains exact (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.applied",
+      "label": "Outdated review stays unapplied (after review)",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.sameSuggestion",
+      "label": "Suggestion identity survives (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.source",
+      "label": "Newer source remains exact (after reload)",
+      "expected": "before();\nnewer();\nkeep();\n",
+      "original": "before();\nnewer();\nkeep();\n",
+      "fountain": "before();\nnewer();\nkeep();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.sameHead",
+      "label": "No extra source commit (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.sameNote",
+      "label": "Posted review remains exact (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.applied",
+      "label": "Outdated review stays unapplied (after reload)",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.sameSuggestion",
+      "label": "Suggestion identity survives (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "applyRefused",
+      "label": "GitLab prevents applying the stale suggestion",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "staleReason",
+      "label": "Feedback identifies the reviewed line as having changed",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.source",
+      "label": "Newer source remains exact (after review)",
+      "expected": "before();\nkeep();\n",
+      "original": "before();\nkeep();\n",
+      "fountain": "before();\nkeep();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.sameHead",
+      "label": "No extra source commit (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.sameNote",
+      "label": "Posted review remains exact (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.applied",
+      "label": "Outdated review stays unapplied (after review)",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.sameSuggestion",
+      "label": "Suggestion identity survives (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.source",
+      "label": "Newer source remains exact (after reload)",
+      "expected": "before();\nkeep();\n",
+      "original": "before();\nkeep();\n",
+      "fountain": "before();\nkeep();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.sameHead",
+      "label": "No extra source commit (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.sameNote",
+      "label": "Posted review remains exact (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.applied",
+      "label": "Outdated review stays unapplied (after reload)",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.sameSuggestion",
+      "label": "Suggestion identity survives (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "applyRefused",
+      "label": "GitLab prevents applying the stale suggestion",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "staleReason",
+      "label": "Feedback identifies the reviewed line as having changed",
+      "expected": true,
+      "original": false,
+      "fountain": false,
+      "classification": "shared-limitation",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.source",
+      "label": "Newer source remains exact (after review)",
+      "expected": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+      "original": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+      "fountain": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.sameHead",
+      "label": "No extra source commit (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.sameNote",
+      "label": "Posted review remains exact (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.applied",
+      "label": "Outdated review stays unapplied (after review)",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.sameSuggestion",
+      "label": "Suggestion identity survives (after review)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.source",
+      "label": "Newer source remains exact (after reload)",
+      "expected": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+      "original": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+      "fountain": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.sameHead",
+      "label": "No extra source commit (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.sameNote",
+      "label": "Posted review remains exact (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.applied",
+      "label": "Outdated review stays unapplied (after reload)",
+      "expected": false,
+      "original": false,
+      "fountain": false,
+      "classification": "parity",
+      "status": "paired"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.sameSuggestion",
+      "label": "Suggestion identity survives (after reload)",
+      "expected": true,
+      "original": true,
+      "fountain": true,
+      "classification": "parity",
+      "status": "paired"
+    }
+  ],
+  "summary": {
+    "parity": 46,
+    "improvement": 0,
+    "regression": 0,
+    "shared-limitation": 2,
+    "incomplete": 0,
+    "total": 48
+  },
+  "comparisonComplete": true,
+  "regressionGate": {
+    "passed": true
+  },
+  "featureAcceptance": {
+    "passed": false,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/deleted-target-20261119/original-2/report.json",
+      "sha256": "e3b29ba68bcf5886e0a8063b068fe612ce185021e435b771034c01f29770d2af"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/deleted-target-20261119/fountain-2/report.json",
+      "sha256": "748c7c462f7b1ea71b04262e4519d3668e099694846dd90f7b5a6740f08f5f0a"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "2547faaf3943309ada9b377904d6c44806bf415bbacba61645d04023d56e2e0f",
+    "integrations/gitlab/testing/compatibility.mjs": "ed026b211a2bb0d322dfb5a3cd7f87881d267ceae684ebffa31a539d88d57582",
+    "integrations/gitlab/testing/build-identity.mjs": "6857e15eccbd2b296f13504d9d1ee6595fde7ac7cedaa560544af05abd3e9a8e",
+    "integrations/gitlab/testing/save-gesture.mjs": "24fcc38481cb01e8134443237356a80f7f40e9fd77105ff615052880dbac96a2"
+  }
+}

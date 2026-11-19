@@ -162,6 +162,9 @@ async function staleReview({page,request,input,fixture,result,project,branch,see
   expect(Buffer.from(file.content,'base64').toString('utf8')).toBe(input.remoteSource);
   result.competingCommit = other.id;
   result.verifiedCompetingSource = input.remoteSource;
+  const id = result.saved.suggestions[0].id;
+  const eligibility = async () => (await request(base+'/notes/'+note.id)).suggestions.find(suggestion => suggestion.id === id);
+  if (input.waitForOutdated) await expect.poll(async () => (await eligibility())?.appliable,{timeout:60000}).toBe(false);
   if (input.refresh) {
     await page.goto(mr.web_url+'#note_'+note.id);
     await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
@@ -169,17 +172,25 @@ async function staleReview({page,request,input,fixture,result,project,branch,see
   await stage('review-stale-target');
   // GitLab can rerender the live discussion and close an already-open dropdown.
   // A closed menu alone does not prove that a stale submission was rejected.
-  result.reopenedMenu = !await confirm.isVisible();
-  if (result.reopenedMenu) {
-    await expect(apply).toBeEnabled();
-    await apply.click();
-  }
-  await expect(confirm).toBeVisible();
-  await expect(confirm).toBeEnabled();
-  result.confirmationOffered = true;
-  if (result.confirmationOffered) {
+  await expect(apply).toBeVisible();
+  if (!await confirm.isVisible() && await apply.isDisabled()) {
+    const suggestion = await eligibility();
+    expect(suggestion?.appliable).toBe(false);
+    await expect(apply).toBeDisabled();
+    await expect(confirm).toBeHidden();
+    result.confirmationOffered = false;
+    result.blockedAtControl = {id:suggestion.id,appliable:suggestion.appliable,buttonDisabled:true,confirmationHidden:true};
+    await savedNote.getByTestId('apply-suggestion-dropdown').hover();
+    const tooltip = page.getByRole('tooltip').filter({hasText:/suggestion|line|changed/i}).first();
+    try { await tooltip.waitFor({timeout:2000}); } catch (error) { if (error.name !== 'TimeoutError') throw error; }
+    result.tooltip = await tooltip.isVisible() ? await tooltip.innerText() : '';
+  } else {
+    result.reopenedMenu = !await confirm.isVisible();
+    if (result.reopenedMenu) await apply.click();
+    await expect(confirm).toBeEnabled();
+    result.confirmationOffered = true;
     const [reply] = await Promise.all([
-      page.waitForResponse(res => res.request().method()!=='GET' && /suggestions.*apply|apply.*suggestion/i.test(res.url()),{timeout:15000}),
+      page.waitForResponse(res => res.request().method()!=='GET' && new URL(res.url()).pathname === '/api/v4/suggestions/'+id+'/apply',{timeout:15000}),
       confirm.click(),
     ]);
     result.applyResponse = {status:reply.status(),path:new URL(reply.url()).pathname};

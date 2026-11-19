@@ -92,6 +92,14 @@ feedback limitation. An initial run that only closed the live dropdown lacked
 proof of an Apply attempt and received no score for that case.
 [Stale review results](../../artifacts/gitlab-compatibility/stale-review-20261119/comparison-2/report.md).
 
+The expanded suite also deletes the target line. After refresh, both editors
+disabled Apply and explained why. GitLab's API confirmed the same suggestion
+was inapplicable. With a live discussion and an identical line elsewhere, both
+submitted Apply and GitLab returned HTTP 400. The other line, branch head, note
+and suggestion ID survived reload. Across all four cases, 46 checks reached
+parity and two live discussions gave only a generic file-change message.
+[Changed and deleted targets, pinned builds and outcomes](../../artifacts/gitlab-compatibility/deleted-target-20261119/comparison-2/report.md).
+
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu
 cleanup and context/host-option revalidation. The recorded matched pair passes

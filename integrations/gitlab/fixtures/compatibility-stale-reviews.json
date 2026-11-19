@@ -6,7 +6,58 @@
   "appendLine": "reviewed();\n",
   "sourceObservationDelayMs": 1500,
   "cases": [
-    {"id":"refresh-after-source-edit","scope":"stale-review","filePath":"review-target.js","source":"before();\nold();\nkeep();\n","range":{"start":2,"end":2},"handoffDelayMs":1500,"remoteSource":"before();\nnewer();\nkeep();\n","refresh":true},
-    {"id":"confirm-after-source-edit","scope":"stale-review","filePath":"review-target.js","source":"before();\nold();\nkeep();\n","range":{"start":2,"end":2},"handoffDelayMs":1500,"remoteSource":"before();\nnewer();\nkeep();\n","refresh":false}
+    {
+      "id": "refresh-after-source-edit",
+      "scope": "stale-review",
+      "filePath": "review-target.js",
+      "source": "before();\nold();\nkeep();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "handoffDelayMs": 1500,
+      "remoteSource": "before();\nnewer();\nkeep();\n",
+      "refresh": true
+    },
+    {
+      "id": "confirm-after-source-edit",
+      "scope": "stale-review",
+      "filePath": "review-target.js",
+      "source": "before();\nold();\nkeep();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "handoffDelayMs": 1500,
+      "remoteSource": "before();\nnewer();\nkeep();\n",
+      "refresh": false
+    },
+    {
+      "id": "refresh-after-target-deletion",
+      "waitForOutdated": true,
+      "scope": "stale-review",
+      "filePath": "review-target.js",
+      "source": "before();\nold();\nkeep();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "handoffDelayMs": 1500,
+      "remoteSource": "before();\nkeep();\n",
+      "refresh": true
+    },
+    {
+      "id": "live-after-deleting-one-of-two",
+      "scope": "stale-review",
+      "filePath": "review-target.js",
+      "source": "before();\nold();\nkeep();\nuntouched();\nold();\nend();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "handoffDelayMs": 1500,
+      "remoteSource": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+      "refresh": false
+    }
   ]
 }
