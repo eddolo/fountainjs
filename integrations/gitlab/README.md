@@ -38,9 +38,23 @@ server from a separate online session. Both editors retained the draft and
 saved it after reconnecting, including when the author reloaded the page before
 retrying. Fountain displayed a failed-Save alert explaining that the draft was
 kept. Stock GitLab left the edit form open without that warning. Both trials
-used a single author. A second author changing the issue while the first author
-is offline remains an open conflict-recovery case.
+used a single author.
 [Offline Save and retry comparison](../../artifacts/gitlab-compatibility/reconnect-save-20261119/comparison-1/report.md).
+
+The two-author follow-up passed 18 matched checks. A Developer's rich-text Save
+failed offline. The issue author edited the same paragraph in Markdown and
+saved it from another session. Both editors showed the Developer their draft and
+the author's exact newer text on reconnect. Discard kept the author's edit.
+Explicit overwrite saved the Developer's draft. The API and reloaded reader
+agreed in all four trials. The conflict was hidden before reconnect and visible
+before an ordinary retry could be clicked. A simultaneous Save remains untested.
+[Comparison and build identities](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-2/report.md).
+
+The first pair switched the online author immediately from rich text to Markdown.
+Both stock trials lost the new suffix during that switch, before the competing
+edit could be saved. Those trials could not establish the conflict precondition
+and received no conflict score.
+[First attempt](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-1/report.md).
 
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu

@@ -1,0 +1,33 @@
+{
+  "formatVersion": 1,
+  "workflow": "two-author-offline-conflict",
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "settlingMs": 450,
+  "cases": [
+    {
+      "id": "reconnect-discard",
+      "scope": "offline-conflict",
+      "kind": "offline-conflict",
+      "title": "Review changed issue while reconnecting",
+      "markdown": "## Access review\n\nShared record.\n\nEnd marker.",
+      "initialAccessLevel": 30,
+      "localSuffix": " Reviewed offline.",
+      "remoteSuffix": " Updated by author.",
+      "resolution": "discard"
+    },
+    {
+      "id": "reconnect-overwrite",
+      "scope": "offline-conflict",
+      "kind": "offline-conflict",
+      "title": "Review changed issue while reconnecting",
+      "markdown": "## Access review\n\nShared record.\n\nEnd marker.",
+      "initialAccessLevel": 30,
+      "localSuffix": " Reviewed offline.",
+      "remoteSuffix": " Updated by author.",
+      "resolution": "overwrite"
+    }
+  ]
+}

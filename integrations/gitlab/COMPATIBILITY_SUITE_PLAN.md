@@ -76,7 +76,8 @@ permissions and policy must not change between sides. Start with the stock serve
 
 Use the pinned Linux deployment from the [runtime guide](runtime/README.md#reproduce-the-frontend-deployment-and-rollback).
 Run from the Fountain checkout with the test container stopped. Choose
-`quick-save` for click timing or `reconnect` for loss of connectivity.
+`quick-save` for click timing, `reconnect` for a single author retrying, or
+`offline-conflict` for two authors editing the same description.
 
 ```sh
 suite=quick-save
@@ -92,7 +93,11 @@ node scripts/compare-gitlab-compatibility.mjs \
 The quick-save suite records trusted keydown and click events and inspects the
 paragraph at click time. The reconnect suite requires the actual description
 mutation to fail with the browser offline. Both suites read back the saved
-issue from GitLab and reopen it in the browser.
+issue from GitLab and reopen it in the browser. The two-author fixture keeps a
+Developer’s rich draft open after a failed offline Save. The issue author edits
+in Markdown in another session and saves. The API must return that exact text
+while the Developer browser is still offline. Each resolution has a fresh issue,
+a recording after sign-in and an independent read of the final saved description.
 
 ## Equivalent data and actions
 

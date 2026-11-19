@@ -2,6 +2,7 @@ import {expect} from '@playwright/test';
 import {randomBytes} from 'node:crypto';
 import {writeFile} from 'node:fs/promises';
 import {join,relative} from 'node:path';
+import {exerciseOfflineConflict} from './audit-gitlab-offline-conflict.mjs';
 import {conflictGraph} from './audit-gitlab-compatibility-conflicts.mjs';
 
 const origin='http://127.0.0.1:5080';
@@ -47,7 +48,7 @@ export async function runGitLabAccessCompatibility({side,runId,page,request,proj
     result.authenticatedDestination=new URL(actor.url()).pathname;
     authenticated=true;
    }catch{throw new Error('Task-member sign-in or required password update failed; credentialed details omitted.');}
-   if(input.revocationMode==='remove-membership'){
+   if(input.revocationMode==='remove-membership'||input.kind==='offline-conflict'){
     // Authentication is completed without recording. Reuse its live session in
     // memory, then record only the task document workflow.
     const storageState=await actorContext.storageState();await actorContext.close();
@@ -80,7 +81,9 @@ export async function runGitLabAccessCompatibility({side,runId,page,request,proj
     return value;
    };
    const append=async(text,suffix)=>{await editor.getByText(text,{exact:true}).click();await actor.keyboard.press('End');await pause();await expect.poll(()=>actor.evaluate(()=>{const s=window.getSelection();return {collapsed:s?.isCollapsed,text:s?.anchorNode?.textContent,offset:s?.anchorOffset};})).toEqual({collapsed:true,text,offset:text.length});await actor.keyboard.insertText(suffix);await pause();await expect(editor.getByText(text+suffix,{exact:true})).toBeVisible();};
-   if(input.kind==='guest'){
+   if(input.kind==='offline-conflict'){
+    await exerciseOfflineConflict({actor,author:page,side,input,result,issue,readSaved:async()=>(await request(api)).description,open,append,editor,wrapper,stage,shot});
+   }else if(input.kind==='guest'){
     await stage('guest-readonly');result.editControlAbsent=await actor.getByTestId('work-item-edit-form-button').count()===0;result.editableRootsAbsent=await wrapper.locator('[contenteditable="true"]').count()===0;await shot('reader');
     const denied=await actorFetch(api,{description:input.markdown+'\nUnauthorized write probe.'},'PUT');result.denialStatus=denied.status();result.writeDenied=[403,404].includes(denied.status());result.afterDenied=await request(api);result.serverUnchanged=result.afterDenied.description===input.markdown;
     await actor.reload();await expect(reader.getByText('End marker.',{exact:true})).toBeVisible({timeout:30000});result.graphs.reloaded=await reader.evaluate(conflictGraph);await shot('reloaded');

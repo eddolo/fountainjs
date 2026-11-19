@@ -132,6 +132,34 @@ it('requires a disconnected mutation for the exact draft before scoring reconnec
  expect(row().status).toBe('missing-evidence');
 });
 
+it('requires independent authorized authors and detects an ordinary retry overwriting a newer save', () => {
+ const pair = reports();
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-offline-conflict.json',import.meta.url),'utf8'));
+ const input = fixture.cases[1];
+ const local = input.markdown.replace('Shared record.', 'Shared record.' + input.localSuffix);
+ const remote = input.markdown.replace('Shared record.', 'Shared record.' + input.remoteSuffix);
+ for (const report of pair) {
+   const item = report.observations[0]!;
+   Object.assign(report.fixture, {...fixture,cases:[input]});
+   Object.assign(item, {id:input.id,input,status:'observed',remoteEditorProof:item.editorProof,
+     actor:{id:8,username:fixture.username,isAdmin:false},onlineAuthorId:1,setup:{authorId:1},
+     permissionBefore:true,membership:{id:8,accessLevel:30},cleanupMembership:{id:8,accessLevel:10},
+     wasOffline:true,stillOffline:true,whileDisconnected:remote,
+     failedWrites:[{description:local,error:'net::ERR_INTERNET_DISCONNECTED'}],
+     beforeDecision:remote,explicitDecision:true});
+ }
+ const stock = pair[0].observations[0] as any;
+ const row = () => compareGitLabCompatibility(...pair).rows.find((item: any) => item.invariant === 'beforeDecision');
+ expect(row().classification).toBe('parity');
+ stock.beforeDecision = local;
+ expect(row().classification).toBe('improvement');
+ stock.onlineAuthorId = stock.actor.id;
+ expect(row().status).toBe('missing-evidence');
+ stock.onlineAuthorId = 1;
+ stock.failedWrites[0].description = remote;
+ expect(row().status).toBe('missing-evidence');
+});
+
 it('requires measured trusted Save gestures and the intended visible edit on both sides', () => {
  const pair = reports();
  const input = {id:'rapid', scope:'quick-save', pace:'immediate', key:'.',expected:'Edited.'};

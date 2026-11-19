@@ -97,6 +97,31 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if (input.scope === 'offline-conflict') {
+      const local = input.markdown.replace('Shared record.','Shared record.' + input.localSuffix);
+      const remote = input.markdown.replace('Shared record.','Shared record.' + input.remoteSuffix);
+      const finalSuffix = input.resolution === 'overwrite' ? input.localSuffix : input.remoteSuffix;
+      const valid = (report,item) => verifiedEditor(report,item) && verifiedEditor(report,{editorProof:item.remoteEditorProof}) &&
+        item.status === 'observed' && item.permissionBefore === true && item.membership?.accessLevel === 30 &&
+        item.cleanupMembership?.accessLevel === 10 && item.cleanupMembership.id === item.actor?.id && item.membership.id === item.actor?.id &&
+        item.actor.username === fixture.username && item.actor.isAdmin === false && Number.isInteger(item.onlineAuthorId) &&
+        item.onlineAuthorId === item.setup?.authorId && item.onlineAuthorId !== item.actor.id && item.wasOffline === true &&
+        item.stillOffline === true && item.whileDisconnected === remote && item.failedWrites?.some(f=>f.description===local && f.error==='net::ERR_INTERNET_DISCONNECTED');
+      const paired = valid(original,a) && valid(fountain,b);
+      if(paired)check(input.id+'.actor',a.actor,b.actor);
+      for(const [key,label,expected] of [
+        ['afterFailedSave','Offline Save leaves the server baseline intact',input.markdown],
+        ['beforeDecision','Second author’s saved version survives until explicit resolution',remote],
+        ['conflictShown','Returning author sees a conflict',true],
+        ['draftShown','Returning author can still see their own draft',true],
+        ['currentVersion','Conflict disclosure contains the other author’s exact Markdown',remote],
+        ['explicitDecision','Author explicitly resolves the conflict',true],
+        ['afterDecision','Resolution persists the chosen Markdown',input.resolution==='overwrite'?local:remote],
+        ['reader','Reload shows the chosen version',['Shared record.'+finalSuffix,'End marker.']],
+        ['actorErrors','Browser exceptions',[]],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:paired?a[key]:undefined,fountain:paired?b[key]:undefined,classification:null});
+      continue;
+    }
     if (input.scope === 'reconnect') {
       const edited = input.description + input.suffix;
       const valid = (report,item) => verifiedEditor(report,item) && item.status === 'observed' && item.offline === true &&
