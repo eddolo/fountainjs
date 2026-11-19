@@ -1,3 +1,5 @@
+import { buildIdentityError } from './build-identity.mjs';
+
 /** Pure interpretation of collected observations; never runs editor actions. */
 const canonical=value=>JSON.stringify(value,(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.keys(item).sort().map(key=>[key,item[key]])):item);
 const equal=(left,right)=>canonical(left)===canonical(right);
@@ -79,8 +81,13 @@ function observedValues(report,item,input,fixture){
 }
 export function compareGitLabCompatibility(original,fountain){
   const mismatches=[];
+  for (const report of [original, fountain]) {
+    const error = buildIdentityError(report);
+    if (error) mismatches.push(report?.side + ' build identity: ' + error);
+  }
   const check=(name,a,b)=>{if(a===undefined||b===undefined||!equal(a,b))mismatches.push(name);};
   if(original?.side!=='original'||fountain?.side!=='fountain')mismatches.push('editor-side');
+  check('expected GitLab source revision', original?.buildIdentity?.expected?.gitlabCommit, fountain?.buildIdentity?.expected?.gitlabCommit);
   for(const key of ['runId','fixtureHash','fixture','harnessHashes','browser'])check(key,original?.[key],fountain?.[key]);
   for(const key of ['image','imageId','backendMounts','backendEnvironmentHash','cpus','memory'])check('deployment.'+key,original?.deployment?.[key],fountain?.deployment?.[key]);
   for(const key of ['version','project','actor','serverSources'])check('backend.'+key,original?.backend?.[key],fountain?.backend?.[key]);
@@ -90,6 +97,42 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if(input.scope==='composers'){
+      function facts(report, item) {
+        if (!verifiedEditor(report, item) || !verifiedEditor(report, { editorProof: item?.commentEditorProof })) return {};
+        return { ...item.facts, pageErrors: item.status === 'observed' ? item.pageErrors ?? [] : undefined };
+      }
+      const left = facts(original, a), right = facts(fountain, b);
+      const edited=input.description+input.suffix, notes=['**'+input.comment+'**'];
+      const commentFirst=input.firstSave==='comment';
+      const expected={boldComment:[input.comment],plainDescription:[],commentUndo:[''],descriptionAfterCommentUndo:[edited],
+        commentRedo:[input.comment],descriptionUndo:[input.description],commentAfterDescriptionUndo:[input.comment],descriptionRedo:[edited],
+        italicDescription:[edited],commentAfterDescriptionFormat:{bold:[input.comment],italic:[]},
+        descriptionAfterFormatUndo:{paragraphs:[edited],italic:[]},descriptionSource:edited,otherRichStillOpen:true,commentAfterModeSwitch:[input.comment],
+        initialServer:{description:input.description,notes:[]},
+        afterFirstSave:commentFirst?{description:input.description,notes}:{description:edited,notes:[]},
+        pendingDraft:[commentFirst?edited:input.comment],commentCleared:[''],afterSave:{description:edited,notes},
+        reopenedDescription:edited,reopenedComment:[input.comment],pageErrors:[]};
+      const labels = {
+        boldComment: 'Bold applies to the comment', plainDescription: 'Description stays plain',
+        commentUndo: 'Undo clears the comment text', descriptionAfterCommentUndo: 'Comment undo preserves the description draft',
+        descriptionUndo: 'Undo in the description restores its original paragraph', commentAfterDescriptionUndo: 'The formatted comment survives description undo',
+        descriptionRedo: 'Redo restores the description edit', italicDescription: 'The description toolbar italicizes its selection',
+        commentAfterDescriptionFormat: 'The description toolbar leaves the comment bold and upright',
+        descriptionAfterFormatUndo: 'Undo removes just the description formatting',
+        commentRedo: 'Redo restores the comment text', descriptionSource: 'Source mode shows the edited description',
+        otherRichStillOpen: 'The comment editor stays open in rich mode', commentAfterModeSwitch: 'Switching description modes preserves the comment draft',
+        initialServer: 'Both drafts stay local before saving', afterFirstSave: 'Only the submitted record reaches GitLab',
+        pendingDraft: 'The other editor retains its draft', commentCleared: 'Posting clears the comment composer',
+        afterSave: 'GitLab stores both records independently', reopenedDescription: 'Reload shows the saved description',
+        reopenedComment: 'Reload shows the bold comment', pageErrors: 'The completed workflow raises no browser exceptions',
+      };
+      for (const [key, value] of Object.entries(expected)) {
+        rows.push({ case: input.id, invariant: key, label: labels[key], expected: value,
+          original: left[key], fountain: right[key], classification: null });
+      }
+      continue;
+    }
     if(input.scope==='access'){
       const valid=item=>item?.actor?.username===fixture.username&&item.actor.isAdmin===false&&Number.isInteger(item.actor.id)&&Number.isInteger(item.setup?.authorId)&&item.actor.id!==item.setup.authorId&&item.membership?.id===item.actor.id;
       const left=valid(a)?a:undefined,right=valid(b)?b:undefined;
@@ -345,10 +388,11 @@ export function compareGitLabCompatibility(original,fountain){
   }
   const counts=Object.fromEntries(['parity','improvement','regression','shared-limitation'].map(key=>[key,rows.filter(row=>row.classification===key).length]));
   const incomplete=rows.filter(row=>row.classification===null).length;
-  return {formatVersion:1,scope:'Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.',
+  return {formatVersion:2,scope:'Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.',
+    buildIdentities:{original:original.buildIdentity??null,fountain:fountain.buildIdentity??null},
     environment:{matched,mismatches},runs:{original:{runId:original.runId,attempt:original.attempt},fountain:{runId:fountain.runId,attempt:fountain.attempt}},
     rows,summary:{...counts,incomplete,total:rows.length},
     comparisonComplete:matched&&incomplete===0&&original.collectionComplete===true&&fountain.collectionComplete===true&&original.errors?.length===0&&fountain.errors?.length===0,
     regressionGate:{passed:matched&&incomplete===0&&counts.regression===0&&original.collectionComplete===true&&fountain.collectionComplete===true&&original.errors?.length===0&&fountain.errors?.length===0},
-    featureAcceptance:{passed:matched&&fountain.collectionComplete===true&&fountain.errors?.length===0&&rows.every(row=>row.fountain!==undefined&&equal(row.fountain,row.expected)),reason:'Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes.'}};
+    featureAcceptance:{passed:matched&&(!original.rollbackRequested||original.rollback?.passed===true)&&(!original.rollback||original.rollback.passed===true)&&fountain.collectionComplete===true&&fountain.errors?.length===0&&rows.every(row=>row.fountain!==undefined&&equal(row.fountain,row.expected)),reason:'Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes.'}};
 }

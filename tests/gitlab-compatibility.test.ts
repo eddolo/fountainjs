@@ -1,3 +1,4 @@
+import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {expect,it} from 'vitest';
 // These are tests of interpretation policy, not real application evidence.
@@ -15,19 +16,42 @@ it('reads exact code source without trimming whitespace or private-use character
  expect(suggestionBlock('not a supported suggestion carrier')).toBeUndefined();
  expect(suggestionBlock('```suggestion\nx\n```\n```suggestion\ny\n```')).toBeUndefined();
 });
+function testBuild(side: 'original' | 'fountain') {
+ const native = side === 'fountain';
+ const digest = '1'.repeat(64);
+ const gitlabCommit = 'a'.repeat(40);
+ const image = 'gitlab/gitlab-ce:test@sha256:' + digest;
+ const frontendManifests = [digest + '  /public/assets/webpack/manifest.json'];
+ const manifestSHA256 = createHash('sha256').update(frontendManifests[0]!).digest('hex');
+ return {
+   frontendManifests, side,
+   buildIdentity: { side, expected: { gitlabVersion: '19.5.3', gitlabCommit, image,
+     ...(native ? {packageVersion: '0.5.0-test', fountainRevision: 'b'.repeat(40), runtimeSHA256: digest, integrationSHA256: digest} : {}) },
+     observed: {editor: native ? 'FountainJS' : 'ProseMirror', runtimeSHA256: native ? digest : null,
+       integrationSHA256: native ? digest : null, manifestSHA256,
+       scripts: [{path: '/assets/webpack/editor.js', browserSHA256: digest, deployedSHA256: digest}]} },
+   assetMount: native ? [{readOnly: true}] : [],
+ };
+}
 function reports(){
  const input={id:'handoff',scope:'handoff',range:{start:1,end:1},source:'exact\n'};
  const base={runId:'policy-test',fixtureHash:'fixture',harnessHashes:{driver:'driver'},browser:{version:'test'},
   fixture:{cases:[input],appendLine:'// review\n',proseSuffix:' confirmed'},
-  deployment:{image:'pinned',imageId:'digest',backendMounts:['data'],backendEnvironmentHash:'same',cpus:2,memory:4},
-  backend:{version:'pinned',project:{id:1,defaultHead:'seed'},actor:'root',serverSources:['source']},collectionComplete:true,errors:[]};
+  deployment:{image:testBuild('original').buildIdentity.expected.image,imageId:'digest',backendMounts:['data'],backendEnvironmentHash:'same',cpus:2,memory:4},
+  backend:{version:{version:'19.5.3',revision:'a'.repeat(11)},project:{id:1,defaultHead:'seed'},actor:'root',serverSources:['source']},collectionComplete:true,errors:[]};
  const observation={id:'handoff',input,prefillDOM:'exact',sourceAtFirstVisible:'```suggestion:-0+0\nexact\n```',sourceModeBeforeEdit:'```suggestion:-0+0\nexact\n```'};
- return [{...structuredClone(base),side:'original',observations:[{...structuredClone(observation),editorProof:{native:false,className:'tiptap ProseMirror'}}]},
- {...structuredClone(base),side:'fountain',observations:[{...structuredClone(observation),prefillDOM:'exact\n',editorProof:{native:true,className:'fountain-editor'}}]}];
+ const sideReport = (side: 'original' | 'fountain') => {
+   const {assetMount, ...identity} = testBuild(side);
+   const copy = structuredClone(base);
+   return {...copy, ...identity, deployment: {...copy.deployment, assetMount}};
+ };
+ return [{...sideReport('original'),observations:[{...structuredClone(observation),editorProof:{native:false,className:'tiptap ProseMirror'}}]},
+ {...sideReport('fountain'),observations:[{...structuredClone(observation),prefillDOM:'exact\n',editorProof:{native:true,className:'fountain-editor'}}]}];
 }
 it('refuses to classify a mismatched backend, candidate instrument, input or browser as parity',()=>{
  for(const mutate of [
   (report:any)=>{report.deployment.backendEnvironmentHash='different';},
+  (report:any)=>{report.buildIdentity.expected.gitlabCommit='a'.repeat(39)+'b';},
   (report:any)=>{report.backend.project.defaultHead='different';},
   (report:any)=>{report.browser.version='different';},
   (report:any)=>{report.harnessHashes.driver='different';},
@@ -39,10 +63,36 @@ it('refuses to classify a mismatched backend, candidate instrument, input or bro
   expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
  }
 });
+it.each(['missing original', 'missing candidate', 'stale runtime', 'stale host', 'different script', 'empty scripts', 'stock mount', 'changed manifest'])(
+ 'withholds every matched outcome for invalid build evidence: %s', reason => {
+  const [original, fountain] = reports();
+  const stock = original as any, candidate = fountain as any;
+  switch (reason) {
+   case 'missing original': delete stock.buildIdentity; break;
+   case 'missing candidate': delete candidate.buildIdentity; break;
+   case 'stale runtime': candidate.buildIdentity.observed.runtimeSHA256 = '2'.repeat(64); break;
+   case 'stale host': candidate.buildIdentity.observed.integrationSHA256 = '2'.repeat(64); break;
+   case 'different script': stock.buildIdentity.observed.scripts[0].browserSHA256 = '2'.repeat(64); break;
+   case 'empty scripts': candidate.buildIdentity.observed.scripts = []; break;
+   case 'stock mount': stock.deployment.assetMount = [{readOnly: true}]; break;
+   case 'changed manifest': stock.frontendManifests = []; break;
+  }
+  const result = compareGitLabCompatibility(original, fountain);
+  expect(result.rows.every((row: any) => row.classification === null)).toBe(true);
+  expect(result.environment.matched).toBe(false);
+  expect(result.comparisonComplete || result.featureAcceptance.passed || result.regressionGate.passed).toBe(false);
+ });
 it('keeps missing observations and unproven editor identity out of completed comparisons',()=>{
  const [original,fountain]=reports();delete (fountain.observations[0] as any).editorProof;
  const result=compareGitLabCompatibility(original,fountain);
  expect(result.summary.incomplete).toBe(4);expect(result.comparisonComplete).toBe(false);expect(result.regressionGate.passed).toBe(false);
+});
+it.each([undefined, {passed: false}, {passed: true}])('requires the requested deployment rollback to pass independently of workflow parity', rollback => {
+ const [original, fountain] = reports();
+ Object.assign(original, {rollbackRequested: true, rollback});
+ const result = compareGitLabCompatibility(original, fountain);
+ expect(result.summary.parity).toBe(result.summary.total);
+ expect(result.featureAcceptance.passed).toBe(rollback?.passed === true);
 });
 it('does not convert a shared limitation into absolute feature acceptance',()=>{
  const [original,fountain]=reports();original.observations[0]!.sourceAtFirstVisible='';fountain.observations[0]!.sourceAtFirstVisible='';
@@ -60,6 +110,24 @@ it('does not claim complete or feature acceptance when browser errors remain une
  const [original,fountain]=reports();(fountain.errors as any[]).push('unexplained browser failure');
  const result=compareGitLabCompatibility(original,fountain);
  expect(result.comparisonComplete).toBe(false);expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
+});
+
+it('requires proof of both editor instances and distinguishes a leaked discussion draft from parity', () => {
+ const [original, fountain] = reports();
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-composers.json', import.meta.url), 'utf8'));
+ const input = fixture.cases[0];
+ for (const report of [original, fountain]) {
+   report.fixture = fixture;
+   Object.assign(report.observations[0]!, { id: input.id, input, status: 'observed',
+     commentEditorProof: report.observations[0]!.editorProof,
+     facts: { initialServer: { description: input.description, notes: [] } } });
+ }
+ const row = () => compareGitLabCompatibility(original, fountain).rows.find((item: { invariant: string }) => item.invariant === 'initialServer');
+ expect(row().classification).toBe('parity');
+ (fountain.observations[0] as any).facts.initialServer.notes.push(input.comment);
+ expect(row().classification).toBe('regression');
+ delete (fountain.observations[0] as any).commentEditorProof;
+ expect(row().status).toBe('missing-evidence');
 });
 
 function deletionReports(replacement:string){

@@ -1,0 +1,24 @@
+{
+  "formatVersion": 1,
+  "workflow": "issue-description-and-discussion-in-one-page",
+  "cases": [
+    {
+      "id": "description-and-comment",
+      "scope": "composers",
+      "title": "Independent editor drafts",
+      "description": "Draft release notes.",
+      "suffix": " Include migration steps.",
+      "comment": "Reviewed by the release team.",
+      "firstSave": "comment"
+    },
+    {
+      "id": "description-before-comment",
+      "scope": "composers",
+      "title": "Save description with pending discussion",
+      "description": "Draft release notes.",
+      "suffix": " Include migration steps.",
+      "comment": "Reviewed by the release team.",
+      "firstSave": "description"
+    }
+  ]
+}

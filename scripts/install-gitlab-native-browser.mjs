@@ -392,6 +392,17 @@ for (const [path, bytes] of files) {
     }),
   );
 }
+// Identify the runtime and the GitLab host edits independently. Hash the prepared
+// inputs before stamping them so the identifier never hashes its own bytes.
+if (!manifest.packageVersion) throw new Error('Rebuild the runtime to record its package version.');
+const runtimePath = 'app/assets/javascripts/content_editor/services/fountain_runtime.js';
+const preparedFiles = [...files].map(([path, bytes]) => [path, hash(bytes)]).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0);
+const integrationSHA256 = hash(JSON.stringify([pin.commit, manifest.packageVersion, manifest.parentRevision, preparedFiles]));
+const marker = 'data-fountain-integration="native"';
+const host = files.get(hostPath);
+if (host.split(marker).length !== 2) throw new Error('Cannot stamp the native editor mount.');
+files.set(hostPath, host.replace(marker, marker + '\n    data-fountain-build="' + integrationSHA256 + '"'));
+files.set(runtimePath, Buffer.concat([bundle, Buffer.from('\nglobalThis.__fountainGitLabRuntimeSHA256 = ' + JSON.stringify(manifest.sha256) + ';\n')]));
 for (const [path] of files) {
   const target = resolve(source, path);
   const location = relative(source, target);
@@ -437,6 +448,7 @@ await writeFile(
       scope:
         'Native browser integration in progress; full toolbar/providers/dialect acceptance remains open',
       nativeRuntime: manifest,
+      integrationSHA256,
       preparedComponentSHA256: preparedHash,
       files: Object.fromEntries([...files].map(([path, bytes]) => [path, hash(bytes)])),
     },

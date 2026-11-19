@@ -3,10 +3,13 @@ import {createHash} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {verifyGitLabRollback} from './verify-gitlab-editor-rollback.mjs';
+import {buildIdentityError, describeBuild, observeEditorBuild} from '../integrations/gitlab/testing/build-identity.mjs';
 import {chromium,expect} from '@playwright/test';
 import {readGitLabAuditCredential} from './gitlab-audit-credentials.mjs';
 import {waitForGitLabDeployment} from './gitlab-deployment-readiness.mjs';
 import {runGitLabAccessCompatibility} from './audit-gitlab-compatibility-access.mjs';
+import {runGitLabComposerCompatibility} from './audit-gitlab-compatibility-composers.mjs';
 import {runGitLabConflictCompatibility} from './audit-gitlab-compatibility-conflicts.mjs';
 import {runGitLabTaskConversionCompatibility} from './audit-gitlab-compatibility-task-conversion.mjs';
 import {runGitLabTaskMenuCompatibility} from './audit-gitlab-compatibility-task-menu.mjs';
@@ -21,8 +24,8 @@ if(process.platform!=='linux')throw new Error('Run beside the isolated Linux Doc
 const value=flag=>process.argv[process.argv.indexOf(flag)+1];
 const suite=process.argv.includes('--suite')?value('--suite'):'suggestions';
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
-if(!['suggestions','deletions','reviews','clipboard','partial','crossblock','paint','grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--suite suggestions|deletions|reviews|clipboard|partial|crossblock|paint|grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal]');
+if(!['suggestions','deletions','reviews','clipboard','partial','crossblock','paint','grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
+ throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--verify-rollback] [--suite suggestions|deletions|reviews|clipboard|partial|crossblock|paint|grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers]');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -30,10 +33,14 @@ const fixturePath=`integrations/gitlab/fixtures/compatibility-${suite}.json`;
 const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
 const pin=JSON.parse(await readFile(resolve(root,'integrations/gitlab/runtime/upstream.json')));
 const compose=['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')],env={...process.env};
+const expectedBuild={gitlabVersion:pin.version,gitlabCommit:pin.commit,image:pin.image};
 if(side==='fountain'){
  const install=JSON.parse(await readFile(resolve(root,'artifacts/gitlab-native-browser-install/install.json')));
  const build=JSON.parse(await readFile(resolve(root,'artifacts/gitlab-native-runtime/build.json')));
  if(install.restored||install.revision!==pin.commit)throw new Error('No matching installed native candidate.');
+ if(install.nativeRuntime.sha256!==build.sha256||install.nativeRuntime.parentRevision!==build.parentRevision||
+    install.nativeRuntime.packageVersion!==build.packageVersion||!install.integrationSHA256)throw new Error('Reinstall the exact Fountain build before comparing.');
+ Object.assign(expectedBuild,{packageVersion:build.packageVersion,fountainRevision:build.parentRevision,runtimeSHA256:build.sha256,integrationSHA256:install.integrationSHA256});
  for(const [path,expected] of Object.entries(build.inputs))if(hash(await readFile(resolve(root,path)))!==expected)throw new Error('Stale native runtime input: '+path);
  for(const [path,expected] of Object.entries(install.files))if(hash(await readFile(resolve(install.source,path)))!==expected)throw new Error('Changed installed native source: '+path);
  env.FOUNTAIN_GITLAB_FRONTEND_ASSETS=resolve(install.source,'public/assets/webpack');
@@ -44,10 +51,19 @@ const containerName='fountain-gitlab-integration-baseline-1';
 const prior=JSON.parse(docker('inspect',containerName))[0];
 if(prior.State.Running||prior.Config.Labels['com.docker.compose.project']!=='fountain-gitlab-integration'||prior.Config.Image!==pin.image)
  throw new Error('Stop the known isolated task deployment before switching editor modes.');
+let rollbackCandidate;
+if(process.argv.includes('--verify-rollback')){
+ if(side!=='original'||suite!=='composers')throw new Error('Rollback verification requires the stock composers run after its matching native run.');
+ rollbackCandidate=JSON.parse(await readFile(resolve(out,'..','fountain-'+attempt,'report.json')));
+ const previousMount=prior.Mounts.find(m=>m.Destination==='/opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack');
+ if(buildIdentityError(rollbackCandidate)||!rollbackCandidate.collectionComplete||!previousMount||
+    previousMount.RW||previousMount.Source!==rollbackCandidate.deployment.assetMount[0].source)
+   throw new Error('Rollback requires the previously verified, stopped Fountain deployment.');
+}
 let browser,started=false,authenticated=false;
-const report={formatVersion:1,runId,attempt,side,scope:'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
- suite,fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
- harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs','scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
+const report={formatVersion:2,buildIdentity:{side,expected:expectedBuild,observed:null},runId,attempt,side,scope:'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
+ suite,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
+ harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs','scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
  started=true;execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
  const deployment=JSON.parse(docker('inspect',containerName))[0];
@@ -89,11 +105,23 @@ try{
  report.backend.serverSources=docker('exec',containerName,'sha256sum',...serverPaths.map(path=>'/opt/gitlab/embedded/service/gitlab-rails/'+path)).trim().split('\n');
  const manifests=docker('exec',containerName,'find',assetTarget,'-maxdepth','1','-name','manifest*.json').trim().split('\n').filter(Boolean);
  report.frontendManifests=manifests.length?docker('exec',containerName,'sha256sum',...manifests).trim().split('\n'):[];
+ report.buildIdentity=await observeEditorBuild({page,project,request,expected:expectedBuild,report,readDeployedScripts:paths=>{
+  const prefix='/opt/gitlab/embedded/service/gitlab-rails/public';
+  if(!paths.length)return new Map();
+  return new Map(docker('exec',containerName,'sha256sum','--',...paths.map(path=>prefix+path)).trim().split('\n').map(line=>[line.slice(66+prefix.length),line.slice(0,64)]));
+ }});
+ const identityError=buildIdentityError(report);
+ if(identityError)throw new Error('Build identity preflight failed: '+identityError);
+ console.log(describeBuild(report));
  page.on('pageerror',error=>report.errors.push(error.message));
- report.observations=await (['access','access-removal'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:suite==='grid'?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
+ report.observations=await (suite==='composers'?runGitLabComposerCompatibility:['access','access-removal'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:suite==='grid'?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
  report.collectionComplete=report.observations.every(item=>item.status==='observed');
- if(!report.collectionComplete||report.errors.length)process.exitCode=1;
-}catch(error){report.failure=authenticated?String(error):'Deployment/authentication preflight failed; no credentialed details recorded.';process.exitCode=1;}
+ if(rollbackCandidate && report.collectionComplete) {
+  report.rollback=await verifyGitLabRollback({candidate:rollbackCandidate,report,page,project,request,output:out});
+  console.log(JSON.stringify({kind:'compiled-frontend-rollback',passed:report.rollback.passed,records:report.rollback.records.length}));
+ }
+ if(!report.collectionComplete||report.errors.length||(rollbackCandidate&&!report.rollback?.passed))process.exitCode=1;
+}catch(error){report.collectionComplete=false;report.failure=authenticated?String(error):'Deployment/authentication preflight failed; no credentialed details recorded.';process.exitCode=1;}
 finally{
  await browser?.close();
  if(started)execFileSync('docker',[...compose,'stop','baseline'],{env,stdio:'inherit',timeout:120000});

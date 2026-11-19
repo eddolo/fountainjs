@@ -11,29 +11,41 @@ if (execFileSync('docker', ['inspect', '--format', '{{.State.Running}}', 'founta
   throw new Error('Stop the isolated task application before exercising source rollback.');
 const manifest = new URL('artifacts/gitlab-native-browser-install/install.json', root);
 const before = JSON.parse(await readFile(manifest));
-const files = ({ 4: 13, 5: 15, 6: 17, 7: 19, 8: 20, 9: 22, 10: 22, 11: 25, 12: 27, 13: 28 })[before.formatVersion];
+const files = ({ 4: 13, 5: 15, 6: 17, 7: 19, 8: 20, 9: 22, 10: 22, 11: 25, 12: 27, 13: 28, 14: 30, 15: 31, 16: 32 })[before.formatVersion];
 if (before.source !== source || before.restored || !files || Object.keys(before.files).length !== files)
   throw new Error('Unexpected source install generation.');
 const install = restore => execFileSync(process.execPath,
   [fileURLToPath(new URL('scripts/install-gitlab-native-browser.mjs', root)), source, ...(restore ? ['--restore'] : [])], { stdio: 'inherit' });
-const prepared = ['app/assets/javascripts/content_editor/components/content_editor.vue',
-  'app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue', 'babel.config.js',
-  ...(before.formatVersion >= 7 ? ['app/assets/javascripts/lib/mermaid_sandbox.js'] : []),
-  ...(before.formatVersion >= 8 ? ['app/assets/javascripts/behaviors/markdown/render_sandboxed_mermaid.js'] : []),
-  ...(before.formatVersion === 9 ? ['app/assets/javascripts/behaviors/markdown/render_gfm.js'] : []),
-  ...(before.formatVersion >= 10 ? ['app/assets/javascripts/lazy_loader.js'] : []),
-  ...(before.formatVersion >= 11 ? ['app/assets/javascripts/content_editor/components/bubble_menus/code_block_bubble_menu.vue',
-    'app/assets/javascripts/content_editor/components/bubble_menus/media_bubble_menu.vue'] : [])];
+const backup = name => new URL('artifacts/gitlab-native-browser-install/prepared-' + name, root);
+const originals = new Map([
+  ['app/assets/javascripts/content_editor/components/content_editor.vue', backup('content-editor.vue')],
+  ['app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue', backup('markdown-editor.vue')],
+  ['babel.config.js', backup('babel.config.js')],
+  ['app/assets/javascripts/lib/mermaid_sandbox.js', backup('mermaid-sandbox.js')],
+  ['app/assets/javascripts/behaviors/markdown/render_sandboxed_mermaid.js', backup('mermaid-reader.js')],
+  ['app/assets/javascripts/behaviors/markdown/render_gfm.js', backup('render-gfm.js')],
+  ['app/assets/javascripts/lazy_loader.js', backup('lazy-loader.js')],
+  ['app/assets/javascripts/content_editor/components/bubble_menus/code_block_bubble_menu.vue', backup('code-block-bubble-menu.vue')],
+  ['app/assets/javascripts/content_editor/components/bubble_menus/media_bubble_menu.vue', backup('media-bubble-menu.vue')],
+  ['app/assets/javascripts/issues/show/utils.js', new URL('integrations/gitlab/fixtures/task-conversion-upstream.js', root)],
+  ['app/assets/javascripts/work_items/components/work_item_detail.vue', backup('work-item-detail.vue')],
+  ['app/assets/javascripts/work_items/components/work_item_description.vue', backup('work-item-description.vue')],
+].filter(([path]) => Object.hasOwn(before.files, path)));
 let restored = false;
 try {
   install(true); restored = true;
   if (!JSON.parse(await readFile(manifest)).restored) throw new Error('Missing restore receipt.');
-  for (const path of Object.keys(before.files).filter(path => !prepared.includes(path))) {
+  for (const [path, reference] of originals) {
+    if (!(await readFile(source + '/' + path)).equals(await readFile(reference))) throw new Error('Restored source differs: ' + path);
+  }
+  for (const path of Object.keys(before.files).filter(path => !originals.has(path))) {
     try { await access(`${source}/${path}`); throw new Error(`Owned addition remains after source rollback: ${path}`); }
     catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
 } finally { if (restored) install(false); }
 const after = JSON.parse(await readFile(manifest));
+if (after.integrationSHA256 !== before.integrationSHA256 || after.nativeRuntime.sha256 !== before.nativeRuntime.sha256)
+  throw new Error('Reinstall changed the editor build identity.');
 for (const [path, digest] of Object.entries(before.files))
   if (after.files[path] !== digest || createHash('sha256').update(await readFile(`${source}/${path}`)).digest('hex') !== digest)
     throw new Error(`Reinstalled source differs: ${path}`);
@@ -50,9 +62,12 @@ const quickActions = process.argv.includes('--quick-actions') || quickActionCont
 const refined = process.argv.includes('--context-ui') || quickActions;
 const contextual = process.argv.includes('--context-menus') || refined;
 const profile = suggestionEffects ? 'suggestion-effects' : suggestionTransport ? 'suggestion-transport' : suggestions ? 'suggestion' : footnoteSource ? 'footnote-source' : autocomplete ? 'autocomplete' : quickActionControls ? 'quick-action-controls' : quickActions ? 'quick-actions' : refined ? 'context-ui' : contextual ? 'context-menus' : frontmatter ? 'frontmatter' : reader ? 'diagram-reader' : authoring ? 'diagram-authoring' : process.argv.includes('--diagrams') ? 'diagram' : process.argv.includes('--reference-contexts') ? 'reference-context' : process.argv.includes('--references') ? 'reference' : process.argv.includes('--media-files') ? 'media-files' : before.formatVersion === 5 ? 'media' : 'alert';
-await writeFile(new URL(`artifacts/gitlab-native-${profile}-install-roundtrip-${suggestions ? '20261116' : quickActions ? '20261114' : authoring || reader || frontmatter || contextual ? '20261113' : '20261112'}.json`, root), JSON.stringify({
+const receipt = before.formatVersion >= 14 ? 'artifacts/gitlab-native-browser-install/roundtrip.json' :
+  `artifacts/gitlab-native-${profile}-install-roundtrip-${suggestions ? '20261116' : quickActions ? '20261114' : authoring || reader || frontmatter || contextual ? '20261113' : '20261112'}.json`;
+await writeFile(new URL(receipt, root), JSON.stringify({
   status: 'passed', formatVersion: before.formatVersion, files, revision: after.revision,
-  checks: [`Guarded ${files}-file source rollback succeeds`, `${files - prepared.length} verified additions are removed`,
+  integrationSHA256: after.integrationSHA256, runtimeSHA256: after.nativeRuntime.sha256,
+  checks: [`Guarded ${files}-file source rollback succeeds`, `${originals.size} originals restored byte-for-byte`, `${files - originals.size} verified additions are removed`,
     'Exact current source generation is reinstalled', `All ${files} source digests match`],
   scope: 'Source rollback with application stopped; compiled deployment rollback remains separate acceptance work',
 }, null, 2) + '\n');

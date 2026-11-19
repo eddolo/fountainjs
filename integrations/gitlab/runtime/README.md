@@ -242,8 +242,41 @@ After preparing the matching source and installing its locked dependencies:
 node scripts/build-gitlab-native-runtime.mjs
 node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source
 cd /absolute/gitlab-source
-NODE_ENV=production corepack yarn rspack
+corepack yarn rspack-prod
 ```
+
+### Reproduce the frontend deployment and rollback
+
+From the Fountain checkout, use the pinned local Linux deployment and prepared
+frontend described above. Start with its baseline container stopped. Pick a fresh
+run ID. The first command mounts the compiled Fountain assets read-only and creates
+two issues through the native editor workflow. The second recreates the service
+from the stock image using the existing data volumes. Stock GitLab must open the
+same issues, retain their bold discussion comments, then edit, save and reload
+each description. The stock run also tests newly stock-authored controls. It
+records immediate rich-text Save and reviewed Markdown Save separately. Both
+deployments stop when finished. Run the comparison after the stock command even
+if a check failed, so the failed outcome appears in the report.
+
+```sh
+run_id=gitlab-rollback-$(date -u +%Y%m%d-%H%M%S)
+node scripts/run-gitlab-compatibility.mjs --suite composers --run-id "$run_id" --editor fountain &&
+node scripts/run-gitlab-compatibility.mjs --suite composers --run-id "$run_id" --editor original --verify-rollback
+node scripts/compare-gitlab-compatibility.mjs \
+  --original "artifacts/gitlab-compatibility/$run_id/original-1/report.json" \
+  --fountain "artifacts/gitlab-compatibility/$run_id/fountain-1/report.json" \
+  --output "artifacts/gitlab-compatibility/$run_id/comparison"
+```
+
+The comparison names the two verified builds. The stock input report also
+records the candidate issue IDs, their contents after rollback, and the native
+build that created them. This procedure covers the frontend-only profile.
+Deployments with additional Ruby filters or document-cache changes require
+their own rollback and persisted-content checks.
+
+With the application stopped, `node scripts/check-gitlab-native-install.mjs /absolute/gitlab-source`
+separately restores the prepared source files, checks their bytes, reinstalls the
+native candidate and checks every installed file and both build fingerprints.
 
 For upstream host tests, apply
 `integrations/gitlab/patches/gitlab-19.5.3-native-host-tests.patch` after the

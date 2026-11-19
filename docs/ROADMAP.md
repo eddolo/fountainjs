@@ -1,6 +1,11 @@
 # FountainJS roadmap
 
-Updated 2026-11-18.
+Updated 2026-11-19.
+
+**Current priority: finish the GitLab flagship integration.** Follow its
+[application acceptance checklist](../integrations/gitlab/README.md#remaining-full-application-acceptance).
+Keep unrelated chart and diagram expansion queued. When an application workflow
+exposes an engine defect, fix it and return to that workflow for verification.
 
 FountainJS 0.5.0-beta.1 is available on GitHub and npm from commit `b1161fd5`.
 On November 18 the public `latest` tag installed this version. A clean Node

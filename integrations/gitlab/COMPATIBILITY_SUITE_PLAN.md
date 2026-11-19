@@ -49,7 +49,22 @@ Inspect actual container image digest, server mounts, application version and
 active editable DOM root for each run. The `fountainReplacementInstalled` field
 in the upstream pin describes the baseline manifest; it is not live editor proof.
 Require the original editable root for the baseline and the native Fountain root
-for the candidate within the tested form. Record frontend manifest/build hashes.
+for the candidate within the tested form.
+
+Every matched suite must verify editor build identity before exercising its
+fixture. The preflight opens the real issue editor in an isolated browser context.
+It checks the GitLab version and pinned image, records the deployed frontend
+manifests, and compares the browser's JavaScript response digests against the
+deployed asset files. For Fountain, the installed host component and its loaded
+runtime each supply their own build fingerprint. The runtime build record names
+the package version and source revision. The host fingerprint also covers the
+prepared integration files, including the runtime and CSS.
+
+Both input reports carry the expected and observed identity. The comparison
+checks those receipts again and prints the identities above its results. A
+missing identity, a mismatched digest, or an unexpected editor disqualifies
+the entire pair. Older reports remain historical evidence. Rerun their workflows
+before making a comparison claim under the current gate.
 
 Switch deployments only after the task application has stopped. Preserve its
 backend volumes and never touch unrelated containers. A server repair overlay

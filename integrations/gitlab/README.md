@@ -1,5 +1,29 @@
 # GitLab application integration
 
+**Active acceptance work, November 19.** In GitLab CE 19.5.3 an issue description
+and its discussion composer can stay open together. The stock and Fountain
+runs passed all 44 checks across both save orders. The comment toolbar applied
+bold, the description toolbar applied italic, and undo and redo acted on the
+intended editor. Switching the description to Markdown preserved the comment.
+The API and reloaded issue confirmed independent persisted records. This run
+used desktop Chromium, one administrator and a local backend.
+[Comparison and exact editor builds](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-4/report.md).
+
+The source restore/reinstall verified all 32 files of this integration build.
+The compiled-frontend rollback retained issue descriptions and bold comments on
+the same database volumes. Stock GitLab saved and reopened changes made in
+Markdown on both Fountain-authored issues and both stock-authored controls.
+Immediate rich-text Save lost the last edit on all four. This behavior also
+affects records created entirely in stock GitLab. The rollback gate remains red.
+A diagnostic run selected the rich-mode wrapper when locating the Markdown
+textarea. The final control run used the textarea itself and completed all four
+records. The next GitLab case is immediate rich-text Save on the active Fountain
+frontend against the same stock action. Wider role, device, workflow, cache,
+and deployment acceptance remains open.
+[Controlled rollback and build identities](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) ·
+[Source restore and reinstall](../../artifacts/gitlab-native-browser-install/roundtrip.json) ·
+[Deployment instructions](runtime/README.md#reproduce-the-frontend-deployment-and-rollback).
+
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu
 cleanup and context/host-option revalidation. The recorded matched pair passes

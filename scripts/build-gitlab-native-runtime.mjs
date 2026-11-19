@@ -89,6 +89,7 @@ await writeFile(
     {
       scope:
         'Native Fountain/GitLab integration runtime; not a deployed or complete GitLab replacement',
+      packageVersion: JSON.parse(await readFile(new URL('package.json', root), 'utf8')).version,
       entry: 'integrations/gitlab/runtime/browser.ts',
       target: 'es2018',
       bytes: bytes.length,
