@@ -156,6 +156,29 @@ if (rollback?.records?.length) {
   }
   table.push('');
 }
+if (reports[0].suite === 'wiki-history' && result.environment.matched) {
+  function lineEndings(source) {
+    if (typeof source !== 'string') return 'Unrecorded';
+    const breaks = source.match(/\r\n|\r|\n/g) ?? [];
+    const names = { '\r\n': 'CRLF', '\r': 'CR', '\n': 'LF' };
+    const kinds = [...new Set(breaks.map(value => names[value]))];
+    const terminal = source.match(/(\r\n|\r|\n)$/)?.[0];
+    return (kinds.join(' + ') || 'No breaks') + ' (' + (terminal ? 'final ' + names[terminal] : 'no final newline') + ')';
+  }
+  table.push('## Wiki Markdown line endings', '', '| Editor | Action | Form before encoding | Submitted request | Stored revision |',
+    '| --- | --- | --- | --- | --- |');
+  for (const report of reports) {
+    for (const item of report.observations) {
+      for (const action of ['edit', 'restore']) {
+        const field = item.submissions?.fields.findLast(entry => entry.form === action)?.values.at(-1);
+        const posted = item.submissions?.requests.find(entry => entry.stage === action)?.values.at(-1);
+        const stored = action === 'edit' ? item.editedSource : item.restoredSource;
+        table.push('| ' + [report.side, action, ...[field, posted, stored].map(lineEndings)].join(' | ') + ' |');
+      }
+    }
+  }
+  table.push('');
+}
 await writeFile(resolve(out,'report.json'),JSON.stringify(result,null,2)+'\n');
 await writeFile(resolve(out,'report.md'),table.join('\n'));
 console.log(JSON.stringify({output:out,environmentMatched:result.environment.matched,summary:result.summary,comparisonComplete:result.comparisonComplete,regressionGate:result.regressionGate,featureAcceptance:result.featureAcceptance}));

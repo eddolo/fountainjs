@@ -221,6 +221,28 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  expected.rspackManifestSHA256 = '3'.repeat(64);
  expect(buildIdentityError(prepared)).toBeTruthy();
 });
+it('checks historical wiki source and retained revision identities independently of current reader text', () => {
+ const [original, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-wiki-history.json',import.meta.url),'utf8'));
+ const c = fixture.cases[0];
+ const edited = c.source.replace(c.paragraph,c.paragraph + c.addition);
+ const before = [{version:'v2',sha:'2'.repeat(40),message:'Edit'},{version:'v1',sha:'1'.repeat(40),message:'Create'}];
+ const after = [{version:'v3',sha:'3'.repeat(40),message:c.restoreMessage},...before];
+ for (const report of [original,fountain]) {
+   report.fixture = fixture;
+   Object.assign(report.observations[0], {id:c.id,input:c,status:'observed',pageErrors:[],initialSource:c.source,
+     typed:c.paragraph+c.addition,editedReader:c.paragraph+c.addition,reopened:c.paragraph+c.addition,
+     editedSource:edited,oldReader:c.paragraph,afterCancelSource:edited,restoredSource:c.source,restoredReader:c.paragraph,
+     restoredOwner:['Release team'],before:structuredClone(before),after:structuredClone(after),
+     revisions:after.map((row,index)=>({sha:row.sha,source:index===1?edited:c.source}))});
+ }
+ const compare = () => compareGitLabCompatibility(original,fountain);
+ expect(compare().summary.parity).toBe(16);
+ fountain.observations[0].revisions[1].source=c.source;
+ fountain.observations[0].before[0].sha=before[1]!.sha;
+ expect(compare().rows.filter((row:any)=>row.classification==='regression').map((row:any)=>row.invariant)).toEqual(['retainedHistory','revisionSources']);
+ expect(compare().featureAcceptance.passed).toBe(false);
+});
 it('requires the loaded suggestion services to match the declared backend on each editor', () => {
  const pair = reports();
  const files = {

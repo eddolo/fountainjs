@@ -1,0 +1,13 @@
+{
+  "cases": [
+    {
+      "id": "runbook-history",
+      "scope": "wiki-history",
+      "title": "Release runbook",
+      "source": "# Deployment checklist\n\nOwner: **Release team**.\n\nStatus: pending.\n",
+      "paragraph": "Status: pending.",
+      "addition": " Confirmed in staging.",
+      "restoreMessage": "Restore original deployment checklist"
+    }
+  ]
+}

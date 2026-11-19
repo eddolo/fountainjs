@@ -19,6 +19,21 @@ connect to an existing GitLab account or installation. Metrics are disabled and
 service concurrency is reduced for this small local test environment; these
 settings are not performance or deployment recommendations.
 
+### Reproduce wiki Save and version restore
+
+Prepare the pinned frontend using [the local deployment instructions](#reproduce-the-frontend-deployment-and-rollback). From the FountainJS checkout in Linux, use a fresh run ID. Each side creates its own wiki page from the same Markdown fixture. The collector records the build that mounted the editor, then uses GitLab’s Edit, Save, Page history and Restore controls.
+
+```sh
+run="wiki-history-$(date +%s)"
+for editor in original fountain; do
+  node scripts/run-gitlab-compatibility.mjs --suite wiki-history --editor "$editor" --run-id "$run" || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison-1"
+```
+
+The comparison checks the reader after reload, rich-text reopening, cancelling a restore, the new commit message and content retrieved by each of the three revision IDs. For source fidelity, compare the fixture, the wiki content field immediately before form encoding, the decoded navigation request, and GitLab’s response for that revision. The raw reports retain the generated wiki text at each boundary.
+
 ### Reproduce suggestion history across comment edits
 
 Use the [pinned local GitLab environment](./upstream.json) and prepare the native frontend as described below. From the FountainJS checkout in Linux, prepare the two GitLab services from the pinned Git objects. The command prints an error if the checkout is at a different revision or an existing output differs. The patch digest identifies the output directory under `artifacts/gitlab-suggestion-history/`.

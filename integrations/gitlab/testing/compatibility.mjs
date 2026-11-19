@@ -417,6 +417,46 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:paired?a[key]:undefined,fountain:paired?b[key]:undefined,classification:null});
       continue;
     }
+    if (input.scope === 'wiki-history') {
+      const editedText = input.paragraph + input.addition;
+      const editedSource = input.source.replace(input.paragraph,editedText);
+      const evidence = (report,item) => {
+        if (!verifiedEditor(report,item) || item.status !== 'observed') return {};
+        const before = item.before ?? [], after = item.after ?? [], revisions = item.revisions ?? [];
+        return {
+          ...item,
+          historyBefore: before.map(row => row.version),
+          historyAfter: after.map(row => row.version),
+          retainedHistory: after.length === 3 && before.length === 2 &&
+            after.every(row => /^[a-f0-9]{40}$/.test(row.sha)) && new Set(after.map(row => row.sha)).size === 3 &&
+            equal(after.slice(1),before),
+          restoreMessage: after[0]?.message,
+          cancelPreserved: typeof item.editedSource === 'string' && item.afterCancelSource === item.editedSource,
+          revisionSources: revisions.length === 3 && equal(after.map(row => row.sha),revisions.map(rev => rev.sha)) &&
+            equal(revisions.map(rev => rev.source),[item.restoredSource,item.editedSource,input.source]),
+        };
+      };
+      const left = evidence(original,a), right = evidence(fountain,b);
+      for (const [key,label,expected] of [
+        ['initialSource','The seed wiki source matches the fixture byte for byte',input.source],
+        ['typed','The author sees the edited paragraph before Save',editedText],
+        ['editedReader','The reader shows the edit after reload',editedText],
+        ['reopened','The rich editor reopens with the saved paragraph',editedText],
+        ['editedSource','Persisted Markdown preserves the exact edit and untouched source',editedSource],
+        ['historyBefore','History shows the edit and the seed as two revisions',['v2','v1']],
+        ['oldReader','Viewing v1 shows the original paragraph',input.paragraph],
+        ['cancelPreserved','Dismissing Restore keeps the edited source byte for byte',true],
+        ['restoredSource','Restoring v1 recovers the original source byte for byte',input.source],
+        ['restoredReader','The restored reader shows the original paragraph',input.paragraph],
+        ['restoredOwner','The restored owner name retains its formatting',['Release team']],
+        ['historyAfter','Restore adds a third revision',['v3','v2','v1']],
+        ['retainedHistory','Restore keeps the two prior revision IDs and messages intact',true],
+        ['restoreMessage','The newest revision records the supplied restore message',input.restoreMessage],
+        ['revisionSources','Each of the three version IDs returns the exact bytes saved at that revision',true],
+        ['pageErrors','No wiki browser exceptions',[]],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'quick-save') {
       function controlled(report, item) {
         if (!verifiedEditor(report,item) || item.status !== 'observed' ||
