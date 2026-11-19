@@ -5,10 +5,10 @@ import data from '../integrations/gitlab/fixtures/service-html.json';
 import mergedPreviews from '../integrations/gitlab/fixtures/merged-grid-live-html.json';
 import emojiPreviews from '../integrations/gitlab/fixtures/clipboard-unicode-live-html.json';
 
-async function convert(markdown: string, body: string) {
+async function convert(markdown: string, body: string, preserveWikiSource = false) {
   const schema = new Schema(createGitLabSchemaSpec());
   const render = vi.fn(async () => ({ body }));
-  const codec = new GitLabMarkdownCodec({ renderMarkdown: render });
+  const codec = new GitLabMarkdownCodec({ renderMarkdown: render, preserveWikiSource });
   const { document } = await codec.deserialize({ schema, markdown, signal: new AbortController().signal });
   return { schema, codec, document, render };
 }
@@ -24,6 +24,17 @@ it.each(mergedPreviews.fixtures)('keeps $name through canonical GitLab Save whil
   expect(output.markdown).toContain('<strong>bold</strong>');
   expect(output.markdown).toContain('| T1 | T2 |');
   expect(output.markdown).toContain('Added.');
+});
+
+it('retains the author’s Markdown spelling on an unchanged paragraph when an adjacent block is inserted', async () => {
+  const source = '# Review schedule\r\n\r\nOwner: __Release team__.\r\n\r\nStatus: pending.';
+  const html = '<h1>Review schedule</h1><p>Owner: <strong>Release team</strong>.</p><p>Status: pending.</p>';
+  const { schema, codec, document } = await convert(source, html, true);
+  const text = (value: string) => schema.node('paragraph', {}, [schema.text(value)]);
+  const changed = document.copy([document.child(0), document.child(1), text('Schedule the review.'), text('Status: pending. Assigned.')]);
+  expect(codec.serializeWithReport({doc:changed, canonical:true}).markdown).toContain('**Release team**');
+  expect(codec.serialize({doc:changed}).replaceAll('\r\n','\n')).toBe(
+    '# Review schedule\n\nOwner: __Release team__.\n\nSchedule the review.\n\nStatus: pending. Assigned.');
 });
 
 it('reports stored column widths in a merged table instead of losing them during Save', async () => {
@@ -44,6 +55,14 @@ it.each(emojiPreviews.fixtures)('opens the project preview for $name and preserv
   const edited=codec.serializeWithReport({doc:append(document)});
   expect(edited.issues).toEqual([]);
   expect(edited.markdown).toBe(source+'\n\nAdded.');
+});
+
+it('preserves GitLab-specific spelling when the local wiki parser would read a different tree', async () => {
+  const sample = emojiPreviews.fixtures.find(item => item.name === 'stock-emoji-shortcode')!;
+  const {codec,document} = await convert(sample.source, sample.body, true);
+  const edited = codec.serializeWithReport({doc:append(document)});
+  expect(edited.preservation).toBe('canonical');
+  expect(edited.markdown).toBe(sample.source + '\n\nAdded.');
 });
 
 it('keeps new literal emoji distinct from an existing GitLab shortcode',async()=>{

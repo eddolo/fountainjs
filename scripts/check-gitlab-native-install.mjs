@@ -11,7 +11,7 @@ if (execFileSync('docker', ['inspect', '--format', '{{.State.Running}}', 'founta
   throw new Error('Stop the isolated task application before exercising source rollback.');
 const manifest = new URL('artifacts/gitlab-native-browser-install/install.json', root);
 const before = JSON.parse(await readFile(manifest));
-const files = ({ 4: 13, 5: 15, 6: 17, 7: 19, 8: 20, 9: 22, 10: 22, 11: 25, 12: 27, 13: 28, 14: 30, 15: 31, 16: 32, 17: 34, 18: 35, 19: 36, 20: 38, 21: 39 })[before.formatVersion];
+const files = ({ 4: 13, 5: 15, 6: 17, 7: 19, 8: 20, 9: 22, 10: 22, 11: 25, 12: 27, 13: 28, 14: 30, 15: 31, 16: 32, 17: 34, 18: 35, 19: 36, 20: 38, 21: 39, 22: 40 })[before.formatVersion];
 if (before.source !== source || before.restored || !files || Object.keys(before.files).length !== files)
   throw new Error('Unexpected source install generation.');
 const install = restore => execFileSync(process.execPath,
@@ -39,6 +39,9 @@ if (before.files[applyControlPath]) originals.set(applyControlPath,
   execFileSync('git',['-C',source,'show',before.revision+':'+applyControlPath]));
 if (before.files[reviewHeaderPath]) originals.set(reviewHeaderPath,
   execFileSync('git',['-C',source,'show',before.revision+':'+reviewHeaderPath]));
+const wikiFormPath = 'app/assets/javascripts/wikis/components/wiki_form.vue';
+if (before.files[wikiFormPath]) originals.set(wikiFormPath,
+  execFileSync('git', ['-C', source, 'show', before.revision + ':' + wikiFormPath]));
 const wikiRestorePath = 'app/assets/javascripts/wikis/components/restore_version_modal.vue';
 if (before.files[wikiRestorePath]) originals.set(wikiRestorePath,
   execFileSync('git', ['-C', source, 'show', before.revision + ':' + wikiRestorePath]));

@@ -426,7 +426,8 @@ export function compareGitLabCompatibility(original,fountain){
     }
     if (input.scope === 'wiki-history') {
       const editedText = input.paragraph + input.addition;
-      const editedSource = input.source.replace(input.paragraph,editedText);
+      const replacement = input.insertBefore ? input.insertBefore + input.separator + editedText : editedText;
+      const editedSource = input.source.replace(input.paragraph,replacement);
       const evidence = (report,item) => {
         if (!verifiedEditor(report,item) || item.status !== 'observed') return {};
         const before = item.before ?? [], after = item.after ?? [], revisions = item.revisions ?? [];

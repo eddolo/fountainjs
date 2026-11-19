@@ -39,6 +39,7 @@ import { namespaceGitLabFootnotes } from './footnote_labels';
 
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
+  preserveWikiSource?: boolean;
   editable?: boolean;
   extensions?: readonly FountainExtension[];
   renderMath?: MathDocumentRenderer;

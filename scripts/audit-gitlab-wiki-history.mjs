@@ -39,7 +39,7 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     const target = new URL(navigation.url());
     if (target.origin !== new URL(url).origin || target.pathname !== new URL(url).pathname) return;
     const data = new URLSearchParams(navigation.postData() ?? '');
-    if (data.has('wiki[content]')) item.submissions.requests.push({stage:item.stage, values:data.getAll('wiki[content]'), restoreVersion:data.get('wiki_restore_version')});
+    if (data.has('wiki[content]')) item.submissions.requests.push({stage:item.stage, values:data.getAll('wiki[content]'), restoreVersion:data.get('wiki_restore_version'), richSource:data.get('wiki_rich_source')});
   });
   tab.on('pageerror', e => item.pageErrors.push(e.message));
   const reader = tab.getByTestId('wiki-page-content');
@@ -74,6 +74,11 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     item.mountedContent = await form.locator('input[type=hidden][name="wiki[content]"]').last().inputValue();
     const paragraph = surface.locator('p').filter({ hasText: input.paragraph });
     await paragraph.click();
+    if (input.insertBefore) {
+      await tab.keyboard.press('Home');
+      await tab.keyboard.insertText(input.insertBefore);
+      await tab.keyboard.press('Enter');
+    }
     await tab.keyboard.press('End');
     await tab.keyboard.insertText(input.addition);
     item.typed = await paragraph.innerText();

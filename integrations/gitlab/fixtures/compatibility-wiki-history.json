@@ -17,6 +17,17 @@
       "paragraph": "Status: résumé pending.",
       "addition": " Checked by QA.",
       "restoreMessage": "Restore original handoff metadata"
+    },
+    {
+      "id": "handover-paragraph",
+      "scope": "wiki-history",
+      "title": "Review schedule",
+      "source": "# Review schedule\r\n\r\nOwner: __Release team__.\r\n\r\nStatus: pending.",
+      "paragraph": "Status: pending.",
+      "addition": " Assigned.",
+      "insertBefore": "Schedule the review.",
+      "separator": "\r\n\r\n",
+      "restoreMessage": "Restore the review schedule"
     }
   ]
 }

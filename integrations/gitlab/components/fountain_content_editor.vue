@@ -28,6 +28,7 @@ import FountainReferenceMenu from './fountain_reference_menu.vue';
 import FountainQuickActionMenu from './fountain_quick_action_menu.vue';
 
 export default {
+  inject: { fountainWikiSource: { default: false } },
   name: 'FountainContentEditor',
   components: {
     GlAlert,
@@ -150,6 +151,7 @@ export default {
       this.validateHostConfiguration();
       this.contentEditor = markRaw(
         new GitLabContentEditor({
+          preserveWikiSource: this.fountainWikiSource,
           renderMarkdown: (markdown, options) =>
             this.renderMarkdown(markdown, { ...options, noHeaderAnchors: true }),
           describeLabels: this.describeLabels,

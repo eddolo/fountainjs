@@ -1,6 +1,6 @@
 --- a/app/controllers/concerns/wiki_actions.rb
 +++ b/app/controllers/concerns/wiki_actions.rb
-@@ -236,10 +236,18 @@
+@@ -236,10 +236,21 @@
    def update
      return render('shared/wikis/empty') unless can?(current_user, :create_wiki, container)
  
@@ -10,6 +10,9 @@
 +      return head :unprocessable_entity unless historical_page
 +
 +      attributes[:content] = historical_page.raw_content
++    elsif params[:wiki_rich_source] == '1' && page&.format.to_s == 'markdown' &&
++        [nil, 'markdown'].include?(attributes[:format]) && attributes[:content].is_a?(String)
++      attributes[:content] = wiki_rich_source(attributes[:content])
 +    end
 +
      response = WikiPages::UpdateService.new(
@@ -20,7 +23,7 @@
      ).execute(page)
      @page = response.payload[:page]
  
-@@ -411,6 +419,19 @@
+@@ -411,6 +422,65 @@
    end
    # rubocop:enable Gitlab/ModuleWithInstanceVariables
  
@@ -35,6 +38,52 @@
 +    end
 +
 +    wiki.find_page(slug, revision, load_content: true)
++  end
++
++  # The visual form displays the parsed body and rebuilds metadata from a hash.
++  # Reuse the exact authored header when its parsed values did not change.
++  def wiki_rich_source(submitted)
++    parsed = Gitlab::WikiPages::FrontMatterParser.new(submitted).parse
++    header = if parsed.front_matter.eql?(page.front_matter)
++               page.raw_content.to_s.delete_suffix(page.content.to_s)
++             else
++               submitted.delete_suffix(parsed.content)
++             end
++
++    header + wiki_rich_body(page.content.to_s, parsed.content)
++  end
++
++  def wiki_rich_body(original, submitted)
++    return submitted if submitted.empty?
++
++    body = submitted.gsub(/\r\n?/, "\n")
++    endings = original.scan(/\r\n|[\r\n]/)
++    return body if endings.empty?
++
++    # The rich editor emits Markdown without a file terminator after typing.
++    # Keep the file's EOF convention independently of internal paragraph gaps.
++    body += "\n" if original.end_with?("\r", "\n") && !body.end_with?("\n")
++    return body.gsub("\n", endings.first) if endings.all? { |ending| ending == endings.first }
++
++    # Keep each surviving line boundary, including mixed LF/CRLF files.
++    # A newly inserted boundary follows the convention adjacent to that edit.
++    cursor = 0
++    output = +""
++    DiffMatchPatch.new.diff_main(original.gsub(/\r\n?/, "\n"), body).each do |operation, text|
++      case operation
++      when :equal
++        retained = text.gsub("\n") do
++          cursor += 1
++          endings.fetch(cursor - 1)
++        end
++        output << retained
++      when :delete
++        cursor += text.count("\n")
++      when :insert
++        output << text.gsub("\n", endings[cursor] || endings.last)
++      end
++    end
++    output
 +  end
 +
    def wiki_params

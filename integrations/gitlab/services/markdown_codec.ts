@@ -226,6 +226,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
   constructor(private readonly options: {
     renderMarkdown(markdown: string, options?: { signal: AbortSignal }): Promise<GitLabRenderResponse>;
     html?: ServerHTMLImporterOptions;
+    preserveWikiSource?: boolean;
   }) {}
 
   async deserialize({ schema, markdown, signal }: { schema: Schema; markdown: string; signal: AbortSignal }): Promise<{ document: Node }> {
@@ -247,7 +248,18 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
       const document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
       schema.validate(document);
-      const source = MarkdownSourceSnapshot.capture(markdown, document);
+      let source = MarkdownSourceSnapshot.capture(markdown, document);
+      if (this.options.preserveWikiSource && document.content.every(block => ['heading', 'paragraph'].includes(block.type.name))) {
+        // GitLab owns the dialect. Reuse the core's block map only when parsing
+        // the same source produces the complete tree returned by GitLab.
+        try {
+          const parsed = MarkdownSourceSnapshot.parse(markdown, schema);
+          if (parsed.document.eq(document)) source = parsed.source;
+        } catch {
+          // A wiki extension may accept syntax outside the local parser.
+          // Its server-rendered tree still has the original source snapshot.
+        }
+      }
       document.descendants(node => {
         this.sources.set(node, source);
         if (emojiNames.size && node.isText && /\p{Extended_Pictographic}/u.test(node.text ?? '')) this.emojiSpellings.set(node,emojiNames);
@@ -262,7 +274,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     }
   }
 
-  serializeWithReport({ doc, canonical = false }: { doc: Node; canonical?: boolean }): { markdown: string; preservation: 'exact' | 'canonical'; issues: readonly GitLabMarkdownIssue[] } {
+  serializeWithReport({ doc, canonical = false }: { doc: Node; canonical?: boolean }): { markdown: string; preservation: 'exact' | 'canonical' | 'blocks'; issues: readonly GitLabMarkdownIssue[] } {
     const sources = new Set<MarkdownSourceSnapshot>();
     doc.descendants(node => { const source = this.sources.get(node); if (source) sources.add(source); });
     if (!canonical && sources.size === 1) {
@@ -476,6 +488,14 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     };
     const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, blockSerializers });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
+    if (!canonical && !issues.length && !tokens.size && sources.size === 1 && projected.eq(doc)) {
+      const source = sources.values().next().value!;
+      if (source.blocks.length && doc.content.every(block => ['heading', 'paragraph'].includes(block.type.name))) {
+        const retained = MarkdownExporter.exportWithSource(doc, source, { omitTrailingCaret: true });
+        if (!retained.losses.length && ['blocks', 'mapped-blocks'].includes(retained.preservation))
+          return { markdown: retained.markdown, preservation: 'blocks', issues };
+      }
+    }
     let markdown = exported.markdown;
     for (const [token, original] of tokens) markdown = markdown.replaceAll(token, () => original);
     return { markdown, preservation: 'canonical', issues };
