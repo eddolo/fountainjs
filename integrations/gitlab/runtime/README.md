@@ -50,7 +50,14 @@ node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report
 
 The restore modal sends the selected revision ID alongside the normal form fields. On this profile GitLab reads the historical page’s raw content from its wiki repository and passes it to the existing update service with the supplied commit message and optimistic lock. Older frontends continue using the submitted content field. The two fixtures exercise ordinary Markdown and a page with YAML comments, Unicode and mixed line endings. The comparator checks the live controller hash and the revision selected by the Fountain frontend.
 
-To roll back both components locally, use a fresh run ID and run the stock editor without `--wiki-restore`. Compose removes the frontend and wiki controller mounts and reuses the data volumes. The controller patch has no migration.
+To roll back both components locally, use a fresh run ID and run the stock editor without `--wiki-restore`. Compose removes the frontend and wiki controller mounts and reuses the data volumes. The controller patch has no migration. To verify retained records after rollback, supply the repaired run ID and collection attempts. The stock reader checks each history row, the three revision sources and the current page on the same volumes, then creates fresh stock controls.
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite wiki-history --editor original \
+  --run-id "wiki-stock-$(date +%s)" --history-rollback-from "$run:1,1"
+```
+
+The [two-page Chromium comparison](../../../artifacts/gitlab-compatibility/wiki-revision-restore-20261119/comparison/report.md) used stock attempt 1 and Fountain attempt 2 from `wiki-revision-restore-20261119`. The exact collector is in commit `fe1f2587`. After removing both overlays, [packaged GitLab verified all four pages and twelve stored revisions](../../../artifacts/gitlab-compatibility/wiki-restored-pages-stock-20261119/original-1/report.json).
 
 ### Reproduce suggestion history across comment edits
 
