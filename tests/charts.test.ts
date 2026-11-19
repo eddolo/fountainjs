@@ -967,6 +967,31 @@ it('only opens inline chart input in an empty paragraph and restores the source 
   editor.destroy();
 });
 
+it('confirms diagrams in place, preserves exact source on undo, and keeps numeric chart headers unambiguous', () => {
+  const schema = new Schema(kit.schema);
+  for (const [text, explicit, language] of [
+    ['%% review\r\nflowchart LR\r\n  A --> B', false, 'mermaid'],
+    ['sequenceDiagram\n  Ada->>Grace: Ready?', false, 'mermaid'],
+    ['sequenceDiagram\n12\n8', false, 'chart'],
+    ['---\ntitle: Review\n---\nflowchart LR\n  A --> B', true, 'mermaid'],
+  ] as const) {
+    const draft = schema.node('code_block', { language: 'chart-data', lineNumbers: true }, [schema.text(text)]);
+    const editor = createEditor({ schema: kit.schema, plugins: [...kit.plugins, chartInputPlugin], content: schema.node('doc', {}, [draft]).toJSON() });
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 3)));
+    const before = editor.state.doc;
+    expect(drawChartInput(editor, explicit ? 'mermaid' : 'auto')).toBe(true);
+    const result = editor.state.doc.child(0);
+    if (language === 'mermaid') {
+      expect(result.attrs).toEqual({ ...draft.attrs, language });
+      expect(result.textContent).toBe(text);
+      expect(editor.state.selection.from).toBe(3);
+    } else expect(result.type.name).toBe('bar_chart');
+    expect(undo(editor)).toBe(true);
+    expect(editor.state.doc.eq(before)).toBe(true);
+    editor.destroy();
+  }
+});
+
 it('imports JSON row matrices, records and explicit columns with the same editable table', async () => {
   const url = 'https://example.org/orders';
   const headers = ['Day', 'Plan', 'Actual'];

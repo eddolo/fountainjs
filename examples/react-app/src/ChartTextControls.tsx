@@ -52,12 +52,13 @@ export function ChartTextControls({ editor, focusEditor }: { editor: Editor; foc
 
   return <>
     {isChartInput(editor) && <div className="quick-insert">
-      <button type="button" onClick={() => { drawChartInput(editor); focusEditor(); }}>Draw chart from these rows</button>
+      <button type="button" onClick={() => { drawChartInput(editor); focusEditor(); }}>Draw chart or diagram</button>
+      <button type="button" onClick={() => { drawChartInput(editor, 'mermaid'); focusEditor(); }}>Use as Mermaid diagram</button>
     </div>}
     {chartInputStatus.get(editor.state) && <p role="alert">{chartInputStatus.get(editor.state)}</p>}
     <details className="chart-csv chart-text">
     <summary>Chart from text</summary>
-    <p>To draw a chart in the document, type <code>:::</code> in an empty paragraph. Enter the rows, then press Enter on an empty final line.</p>
+    <p>Type <code>:::</code> in an empty paragraph. Enter chart rows or Mermaid source, then press Enter on an empty final line to draw it.</p>
     <form onSubmit={previewRows} onChange={() => { setPreview(null); setMessage(''); }}>
       <label>Chart rows
         <textarea rows={5} value={draft} onChange={event => setDraft(event.target.value)}

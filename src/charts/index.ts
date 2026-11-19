@@ -1,5 +1,5 @@
 import { readDelimitedRows } from '../core/delimited-text';
-import { insertNode, insertText, nodeRangeAtPath, NodeSelection, Selection, Plugin, PluginKey, type DOMOutputSpec, type Editor, type Node, type NodeSpec, type Schema } from '../core';
+import { insertNode, insertText, setNodeAttributes, nodeRangeAtPath, NodeSelection, Selection, Plugin, PluginKey, type DOMOutputSpec, type Editor, type Node, type NodeSpec, type Schema } from '../core';
 import { ReplaceTextRangeStep } from '../core/transaction/replace-text-range-step';
 import { RestructureChildrenStep } from '../core/transaction/restructure-children-step';
 import { defineExtension } from '../extensions/extension';
@@ -699,13 +699,20 @@ export function isChartInput(editor: Editor): boolean {
   return !!chartDraft(editor);
 }
 
-/** Draw the selected chart-data code block. Invalid rows remain editable. */
-export function drawChartInput(editor: Editor): boolean {
+// Match a complete diagram declaration, so a category such as "flowchart | Orders" stays a table.
+const mermaidHeader = /^(?:[ \t]*(?:%%[^\r\n]*)?[\r\n])*[ \t]*(?:(?:flowchart|graph)[ \t]+(?:TD|TB|LR|RL|BT)|sequenceDiagram|classDiagram(?:-v2)?|stateDiagram(?:-v2)?|erDiagram|mindmap|gantt|journey|timeline)[ \t]*;?[ \t]*(?:[\r\n]|$)/;
+
+/** Confirm a chart-data draft. Use 'mermaid' to interpret the exact source as a diagram. */
+export function drawChartInput(editor: Editor, format: 'auto' | 'mermaid' = 'auto'): boolean {
   const input = chartDraft(editor);
   if (!input || !supportsCharts(editor)) return false;
+  const asMermaid = () => setNodeAttributes(editor, input.path, { language: 'mermaid' });
+  if (format === 'mermaid') return asMermaid();
   let chart: Node;
   try { chart = chartFromText(editor.state.schema, input.block.textContent, { title: '' }); }
   catch (error) {
+    // Existing valid chart rows take priority, including single-column numeric series.
+    if (mermaidHeader.test(input.block.textContent)) return asMermaid();
     editor.dispatch(editor.createTransaction().setMeta('force', true).setMeta('chartInputError', error instanceof Error ? error.message : 'Check the chart rows.').setMeta('addToHistory', false));
     return false;
   }

@@ -812,7 +812,7 @@ test('draws weekly orders from an inline draft and undoes back to the exact rows
   await chart.screenshot({ path: info.outputPath('inline-orders.png') });
   await page.keyboard.press('ControlOrMeta+z');
   await expect(draft).toHaveJSProperty('textContent', pasted.replace('bad', '-4') + '\n');
-  await demo.getByRole('button', { name: 'Draw chart from these rows' }).click();
+  await demo.getByRole('button', { name: 'Draw chart or diagram' }).click();
   await expect(chart).toBeVisible();
   await expect(paragraph).toHaveCount(1);
 });

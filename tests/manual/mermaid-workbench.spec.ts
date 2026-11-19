@@ -147,6 +147,37 @@ test('copies multiline Mermaid source to an external field and back into the sam
   await expect.poll(() => code.evaluate(el => el.textContent!.replace(/\r\n/g, '\n'))).toBe(expected + '\n' + expected);
 });
 
+test('draws a Mermaid diagram from the chart shortcut and restores the source on undo', async ({ page }, info) => {
+  await page.goto('index.html#playground');
+  const demo = page.locator('#playground');
+  await demo.locator('[contenteditable=true] p').filter({ hasText: 'Integrity sample:' }).click();
+  await page.keyboard.press('ControlOrMeta+End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type(':::');
+  const draft = demo.locator('pre[data-language="chart-data"] code');
+  const source = 'flowchart LR\n  Review --> Publish';
+  await page.keyboard.type('flowchart LR');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('  Review --> Publish');
+  await expect(draft).toHaveJSProperty('textContent', source);
+  await page.keyboard.press('ControlOrMeta+Enter');
+  const code = demo.getByRole('region', { name: 'mermaid code' }).locator('code');
+  await expect(code).toHaveJSProperty('textContent', source);
+  const preview = demo.getByRole('figure', { name: 'Diagram preview' });
+  await preview.scrollIntoViewIfNeeded();
+  const image = preview.getByRole('img');
+  await expect(image).toBeVisible({ timeout: 22000 });
+  expect(decodeURIComponent((await image.getAttribute('src'))!)).toContain('Publish');
+  await preview.screenshot({ path: info.outputPath('quick-input-flowchart.png') });
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(draft).toHaveJSProperty('textContent', source);
+  await expect(preview).toHaveCount(0);
+  await demo.getByRole('button', { name: 'Use as Mermaid diagram' }).click();
+  await expect(code).toHaveJSProperty('textContent', source);
+  await preview.scrollIntoViewIfNeeded();
+  await expect(image).toBeVisible();
+});
+
 test('reads two diagrams from one Markdown file with their own titles and labels', async ({ page }, info) => {
   const file = [
     '# Incident review', '',
