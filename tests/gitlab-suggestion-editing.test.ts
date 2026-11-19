@@ -118,6 +118,22 @@ it('shrinks within captured lines without fetching and keeps replacement text un
   expect(editor.state.doc.child(1).attrs.params).toBe('-0+0'); expect(editor.state.doc.child(1).textContent).toBe('proposal();\n');
   expect(undo(editor)).toBe(true); expect(editor.state.doc.child(1).attrs.params).toBe('-1+0');
 });
+it('edits a posted multiline replacement when the host supplies only its anchor line', async () => {
+  const { editor, editing, host, options } = setup();
+  host.lines = ['original B'];
+  host.lineRange = { start: 3, end: 3 };
+  const before = editor.state.doc.toJSON();
+  const session = editing.begin();
+  await expect(session.applyChange('draft\n', 1, 3)).rejects.toThrow('SOURCE_REQUIRED');
+  expect(await session.applyChange('draft\n', 2, 3)).toBe(true);
+  const proposal = editor.state.doc.child(1);
+  expect(proposal.textContent).toBe('draft\n');
+  expect(proposal.attrs.params).toBe('-1+0');
+  expect(options.loadSource).not.toHaveBeenCalled();
+  expect(undo(editor)).toBe(true);
+  expect(editor.state.doc.toJSON()).toEqual(before);
+});
+
 it('checks actual file lines before expanding a range and rechecks fresh source when applying', async () => {
   const { editor, editing, options } = setup(), session = editing.begin();
   await expect(session.applyRange(1, 4)).rejects.toThrow('SOURCE_REQUIRED');

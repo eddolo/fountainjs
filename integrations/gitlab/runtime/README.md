@@ -51,7 +51,7 @@ witness; it is not a general-purpose migration command, and its stale-cache
 precondition no longer holds after the successful refresh. Production batching,
 load and rollback remain deployment acceptance work.
 
-The native source installer still owns 28 frontend files. Its restore operation
+The native source installer records the frontend files owned by each installation. Its restore operation
 does not remove the separate server Compose mount: recreate with the base
 Compose profile to remove overlays, and rebuild restored frontend source before
 serving it. Neither a source round trip nor the immutable original image proves
@@ -434,8 +434,7 @@ files and removes only verified installer-owned files. Rebuild before serving
 that restored frontend, or recreate with the original base Compose profile.
 With the task application stopped, `node scripts/check-gitlab-native-install.mjs
 /absolute/gitlab-source` exercises the guarded source restore/reinstall and checks
-every digest. This is source rollback evidence; compiled deployment rollback still
-needs a separate exercise.
+every digest. For the compiled deployment, use the [frontend rollback procedure](#reproduce-the-frontend-deployment-and-rollback) and check the recorded stock Save limitation.
 
 ## Footnote round-trip and prose-boundary profile
 

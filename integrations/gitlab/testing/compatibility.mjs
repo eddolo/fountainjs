@@ -418,13 +418,13 @@ export function compareGitLabCompatibility(original,fountain){
       const applied=(remaining?remaining+'\n':'')+input.replacement+lines.slice(range.end).join('\n');
       specs.push(['savedSource','Initial posted proposal retains original source',source],['savedRange','Initial posted proposal retains target offsets',`-${input.range.end-input.range.start}+0`],
         ['reviewInitial','Posted proposal reopens with exact source and range',{source,range:input.range}],
-        ['reviewBeforeRange','Editing source retains the original target range',before],['reviewAfterRange','Expanding the range retains edited source',after],
-        ['reviewUndo','Undoing range adjustment restores prior range and preserves edited source',before],['reviewRedo','Redoing range adjustment restores expanded range and edited source',after],
+        ['reviewBeforeRange','Editing source retains the original target range',before],['reviewAfterRange','Changing the range retains edited source',after],
+        ['reviewUndo','Undoing range adjustment restores prior range and preserves edited source',before],['reviewRedo','Redoing range adjustment restores the selected range and edited source',after],
         ['reviewDraftSource','Source-mode handoff retains reviewed source',input.replacement],['reviewDraftRange','Source-mode handoff retains reviewed offsets',params],
         ['reviewSavedBody','Saving review changes only the intended source and range','```suggestion:'+params+'\n'+input.replacement+'```\n\n'+fixture.marker],
         ['reviewReopenedSource','Reloading reviewed rich proposal retains source',input.replacement],['reviewReopenedRange','Reloading reviewed rich proposal retains offsets',params],
         ['beforeApplySource','Posted review does not write repository contents',input.source],['noEarlyCommit','Posted review does not create a source commit',true],
-        ['appliedSource','Applying reviewed proposal changes exactly the expanded target',applied],['singleApplyCommit','Application creates one child of the seed commit',true],
+        ['appliedSource','Applying reviewed proposal changes exactly the reviewed target',applied],['singleApplyCommit','Application creates one child of the seed commit',true],
         ['appliedFlagAtCommit','Reviewed application has Applied metadata immediately after commit',true]);
     }
     if(deletion){

@@ -85,9 +85,22 @@ async function editPostedReview({side,page,form,surface,input,fixture,output}) {
   };
   await pause(input.handoffDelayMs);const result={initial:await snapshot(),undoSteps:[],redoSteps:[]};
   if(side==='original'){
-    await surface.code.click();await page.keyboard.press('Home');await page.keyboard.press('Shift+End');
+    await surface.code.scrollIntoViewIfNeeded();
+    const first = await surface.code.evaluate(code => {
+      const text = document.createTreeWalker(code, NodeFilter.SHOW_TEXT).nextNode();
+      if (!text?.length) throw new Error('Missing source text in the posted suggestion.');
+      const range = document.createRange();
+      range.setStart(text,0);
+      range.setEnd(text,1);
+      const box = range.getBoundingClientRect();
+      return {x:box.left + box.width / 2,y:box.top + box.height / 2};
+    });
+    await page.mouse.click(first.x,first.y);
+    await page.keyboard.press('Home');
+    for (let line = input.range.start; line < input.range.end; line++) await page.keyboard.press('Shift+ArrowDown');
+    await page.keyboard.press('Shift+End');
     result.selectedSource=await page.evaluate(()=>window.getSelection()?.toString());
-    expect(result.selectedSource).toBe(input.source.split('\n')[input.range.start-1]);
+    expect(result.selectedSource).toBe(input.source.split('\n').slice(input.range.start-1,input.range.end).join('\n'));
     await page.keyboard.press('Backspace');
     const lines=input.replacement.slice(0,-1).split('\n');
     for(let index=0;index<lines.length;index++){if(index)await page.keyboard.press('Enter');await page.keyboard.insertText(lines[index]);}
@@ -97,9 +110,15 @@ async function editPostedReview({side,page,form,surface,input,fixture,output}) {
   }
   await pause(fixture.historyBoundaryDelayMs);result.beforeRange=await snapshot();
   if(side==='original'){
-    await surface.editor.getByRole('button',{name:'Decrement suggestion line start',exact:true}).click();
-    await pause(fixture.historyBoundaryDelayMs);
-    await surface.editor.getByRole('button',{name:'Increment suggestion line end',exact:true}).click();
+    for (const edge of ['start','end']) {
+      const delta = input.editedRange[edge] - input.range[edge];
+      const verb = delta > 0 ? 'Increment' : 'Decrement';
+      const button = surface.editor.getByRole('button',{name:verb + ' suggestion line ' + edge,exact:true});
+      for (let step = 0; step < Math.abs(delta); step++) {
+        await button.click();
+        await pause(fixture.historyBoundaryDelayMs);
+      }
+    }
   }else{
     const dialog=await open();await dialog.getByRole('button',{name:'Load original file',exact:true}).click();
     await expect(dialog.getByRole('region',{name:'Original file lines',exact:true})).toContainText('keep();');
@@ -207,7 +226,7 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
         await reviewForm.getByRole('button',{name:'Save comment',exact:true}).click();
         await expect.poll(async()=>{result.review.saved=await request(`${base}/notes/${note.id}`);return result.review.saved.body!==result.saved.body;},{timeout:30000}).toBe(true);
         result.beforeApplyFile=await request(fileURL);result.beforeApplyHead=(await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(branch)}`)).commit.id;
-        result.actions.push('Edit posted source and expand its file range through real rich controls; undo the range adjustment and redo it; save normally.');
+        result.actions.push('Edit posted source and adjust its file range through real rich controls; undo the range adjustment and redo it; save normally.');
         await page.reload();await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
       }
       if(['deletion','review'].includes(input.scope)){

@@ -21,6 +21,38 @@
       },
       "replacement": "const token = \"\\n\";\nconst tag = \"\";\n",
       "handoffDelayMs": 1500
+    },
+    {
+      "id": "posted-range-shrink",
+      "scope": "review",
+      "filePath": "paired-review.js",
+      "source": "before();\nold();\nafter();\nkeep();\n",
+      "range": {
+        "start": 2,
+        "end": 3
+      },
+      "editedRange": {
+        "start": 3,
+        "end": 3
+      },
+      "replacement": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "handoffDelayMs": 1500
+    },
+    {
+      "id": "posted-range-asymmetric",
+      "scope": "review",
+      "filePath": "paired-review.js",
+      "source": "before();\nold();\nafter();\nkeep();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "editedRange": {
+        "start": 2,
+        "end": 4
+      },
+      "replacement": "const token = \"\\n\";\nconst tag = \"\";\n",
+      "handoffDelayMs": 1500
     }
   ]
 }

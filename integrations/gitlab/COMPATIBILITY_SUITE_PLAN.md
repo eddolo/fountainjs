@@ -1,6 +1,19 @@
 # GitLab paired compatibility and regression suite
 
-Status: first matched original-editor/Fountain source-handoff and application/
+## Current acceptance boundaries
+
+| Area | Verified on the pinned local deployment | Still open |
+| --- | --- | --- |
+| Issue description and discussion | Both save orders, isolated formatting and undo histories, independent saved records. [44 matched checks](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-4/report.md) | Other host surfaces and devices. |
+| Concurrent issue editing | The returning Developer can inspect both drafts and explicitly discard or overwrite. [18 matched checks](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-2/report.md) | Simultaneous submissions and late writes after conflict disclosure. |
+| Immediate Save and rollback | The active Fountain build retains the last edit. Stock can reopen the same issues and discussions and save from Markdown. [Immediate Save](../../artifacts/gitlab-compatibility/immediate-save-20261119/comparison-1/report.md) · [Rollback](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) | Stock immediate rich-text Save loses the final edit. Ruby overlays and existing rendered-content caches need separate rollback evidence. |
+| Merge-request reviews | The initial matched pair covered expanding a posted suggestion symmetrically, undo/redo, reload and application. | Shrinking, asymmetric and stale targets, simultaneous reviews, and the Applied-history loss on prose-only edits. |
+
+The local deployment uses GitLab CE 19.5.3. Browser and mobile coverage, additional roles, hosted deployment and the outstanding workflows below remain part of flagship acceptance.
+
+## Earlier matched runs
+
+The first matched original-editor/Fountain source-handoff and application/
 prose-edit runs completed 2026-11-16. Four scenarios yield 20 parity, 12 improvement,
 zero regression and four shared-limitation outcomes across 36 invariants. Absolute
 feature acceptance remains false. [Results and reproduction](COMPATIBILITY_RESULTS.md).

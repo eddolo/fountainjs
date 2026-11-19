@@ -245,6 +245,9 @@ export class GitLabSuggestionEditingSession {
   private async rangeParams(start: number, end: number): Promise<string> {
     this.ready(); const anchor = this.captured.lineRange.end;
     if (!positive(start) || !positive(end) || start > anchor || end < anchor) return fail('RANGE_INVALID');
+    // A reopened note can describe more lines than the host's single diff anchor.
+    // Editing its text keeps the stored offsets. A loaded file still needs revalidation.
+    if (!this.lines && start === this.initial.range.start && end === this.initial.range.end) return this.initial.params;
     const within = start >= this.captured.lineRange.start && end <= anchor;
     if (!within && !this.lines) return fail('SOURCE_REQUIRED');
     if (this.lines) {
