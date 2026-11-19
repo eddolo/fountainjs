@@ -388,7 +388,13 @@ The completed Chromium 151 rerun on Fountain revision `2cb51f61` verified all 44
 
 This alternate deployment returns issue authors to GitLab’s Tiptap editor with the current-document save patch and a fix for a document reload during Save. It uses the packaged backend and the same database and uploads. The packaged frontend remains the original control for comparisons.
 
-On Chromium 151, switching from Fountain `269741c1` to prepared Tiptap tree `075b931b` retained the first rich-text edit on all four issues (#584–587). Each author typed a phrase ending in a period and clicked Save 5.4–7.5 ms after the last key. The reader and API both returned the complete phrase after reload. The existing bold comments and a subsequent Markdown save survived. The browser recorded zero page errors. This evidence covers issue descriptions on the pinned local deployment. [Fountain build and records](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/fountain-2/report.json) · [Prepared build, timings and saved values](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/prepared-2/report.json) · [Reloaded issue and comment](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/prepared-2/fountain-description-and-comment-first-rich-save.png).
+On the pinned GitLab CE 19.5.3 deployment, each browser used Fountain `269741c1` and prepared Tiptap tree `075b931b`. The first rich-text Save retained the entire phrase, including its final period, on two Fountain-authored issues and two controls per browser. After reload, the reader and API agreed. All formatted discussion comments and subsequent Markdown saves survived. These runs recorded zero page errors.
+
+| Desktop browser on Linux | Issue numbers | Final key to Save | Run records and visual check |
+| --- | --- | --- | --- |
+| Chromium 151 | 584–587 | 5.4–7.5 ms | [Fountain](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/fountain-2/report.json) · [Prepared Tiptap](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/prepared-2/report.json) · [Reloaded issue](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/prepared-2/fountain-description-and-comment-first-rich-save.png) |
+| WebKit 26.5 | 588–591 | 8–13 ms | [Fountain](../../../artifacts/gitlab-compatibility/tiptap-rollback-webkit-20261119/fountain-1/report.json) · [Prepared Tiptap](../../../artifacts/gitlab-compatibility/tiptap-rollback-webkit-20261119/prepared-1/report.json) · [Reloaded issue](../../../artifacts/gitlab-compatibility/tiptap-rollback-webkit-20261119/prepared-1/fountain-description-and-comment-first-rich-save.png) |
+| Firefox 153 | 592–595 | 18–35 ms | [Fountain](../../../artifacts/gitlab-compatibility/tiptap-rollback-firefox-20261119/fountain-1/report.json) · [Prepared Tiptap](../../../artifacts/gitlab-compatibility/tiptap-rollback-firefox-20261119/prepared-1/report.json) · [Reloaded issue](../../../artifacts/gitlab-compatibility/tiptap-rollback-firefox-20261119/prepared-1/fountain-description-and-comment-first-rich-save.png) |
 
 The [first fallback attempt](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/prepared-1/report.json) used the current-document patch alone. Its form stayed open after an immediate Save. The new regression test reproduced an extra Markdown render when the current source came back through Vue. The repair recognizes the source and immutable ProseMirror document that produced it. External replacements still load. Both upstream component suites passed (130 tests).
 
@@ -408,9 +414,10 @@ git -C "$fallback" apply --index "$fountain_repo/integrations/gitlab/patches/git
 The dependency directory must resolve inside the fallback checkout. The verified local build copied the already installed pinned dependencies into its own `node_modules` directory. Symlinking the entire directory from the Fountain checkout caused Rspack to misclassify modules and fail compilation.
 
 ```sh
-run_id=prepared-rich-$(date -u +%Y%m%d-%H%M%S)
-node scripts/run-gitlab-compatibility.mjs --suite composers --run-id "$run_id" --editor fountain &&
-node scripts/run-gitlab-compatibility.mjs --suite composers --run-id "$run_id" --editor prepared \
+browser=chromium   # chromium, firefox or webkit
+run_id=prepared-rich-$browser-$(date -u +%Y%m%d-%H%M%S)
+node scripts/run-gitlab-compatibility.mjs --suite composers --browser "$browser" --run-id "$run_id" --editor fountain &&
+node scripts/run-gitlab-compatibility.mjs --suite composers --browser "$browser" --run-id "$run_id" --editor prepared \
   --verify-rollback --prepared-source "$fallback"
 ```
 
