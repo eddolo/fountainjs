@@ -8,9 +8,9 @@
     "packageVersion": "0.5.0-beta.2",
     "entry": "integrations/gitlab/runtime/browser.ts",
     "target": "es2018",
-    "bytes": 1745722,
-    "sha256": "18cb22b436e24cfeec24534d02439d8341d8bcbcdc7d0a8dee9ed3d60d386c3a",
-    "parentRevision": "2cb51f61e53a3da07746cc89f81f645c4f4679ff",
+    "bytes": 1747546,
+    "sha256": "56c83cc9e181a0a958cf32e86cec3980fa5ca5f59b62d374e0a2a7a60f93a379",
+    "parentRevision": "7c85ae01fca1d715da1bc8fca7356057a0b2feb9",
     "inputs": {
       "integrations/gitlab/runtime/browser.ts": "9395e8c23d92ccfd3cb062d0e6cd0ecececf635cbaf74dba1219281e28c2da39",
       "integrations/gitlab/services/content_editor.ts": "f0072efec90161ac0262233693f76b3011935f50946127dc282ee377e54d95e7",
@@ -38,7 +38,7 @@
       "integrations/gitlab/services/media_editing.ts": "b70d305dd935237edf8a7c8b644541d23e5ea745d960d4b17628033909f3af88",
       "integrations/gitlab/services/host_configuration.ts": "40d222362a275bc5fc51c896e2a5d8e291ceca12b578d59eb959f92e39095a1a",
       "integrations/gitlab/services/serialized_content.ts": "b9ee3beb17fb2abcecfbf27fa9f31985152e191ba85f9faf165662eaf7e58aa7",
-      "integrations/gitlab/services/markdown_codec.ts": "7152ced9ad203ea4f6cca327b705d5b94d145f2c477cb2ab2fc04ed312245a0e",
+      "integrations/gitlab/services/markdown_codec.ts": "5881339043efb99152ba756ea4ec5bf767f633ebd9a379de4f8b6fb3a9f36d43",
       "integrations/gitlab/services/task_rendering.ts": "2e0f977d8d5b9ca3faf181d96d496113ee9dce9dd05ae26a0a9f88420b0a9001",
       "integrations/gitlab/services/task_state.ts": "b51a6a94e52d4c96a5c710c33196a025fc4675093ca80ae252f23a958f3c9360",
       "integrations/gitlab/services/footnote_source.ts": "ae724e02065ac198f1f7f3364b82871b57c159ce60f494cdde41faea9fc29595",
@@ -68,7 +68,7 @@
       "dist/pages.js": "bb4951f8e2cf7a89dd7b20149599e58f5aa82b3535e1ea300b5b368b2232c71c"
     }
   },
-  "integrationSHA256": "d2394d5a033f4f0c153cdb7b81ac204951f61a3002ce4df45556880315944071",
+  "integrationSHA256": "7beb38a9871875f1acaeed346e4f9e76e4c7dcaf56fab3d6b81ef81db2be6cee",
   "preparedComponentSHA256": "cdd3091a8a8cddccbd9b48c231edb38197f73a26fd8e35d9932b90d3579d6bad",
   "files": {
     "app/assets/javascripts/notes/store/legacy_notes/actions.js": "b487935f7ca6f878855673ad14d81825d0fb34b0a709472f5ab6ed5295a6e4ca",
@@ -85,7 +85,7 @@
     "app/assets/javascripts/behaviors/markdown/fountain_reader_images.js": "9b36b527c5e271ab97ec41b066446b2441afdb78ca79bc89a2fe34a06ba7b125",
     "babel.config.js": "7cc8ec862fb6e42c7e26b3fb29410094b4f49f602f2ed02e6ec6132ac32a20a4",
     "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "4cf746744c45a254d836155e4e72f72bd1b2de4c71ec0f047fd0f37cae7d96ff",
-    "app/assets/javascripts/content_editor/components/content_editor.vue": "1083c0fd0a94df7ea6ebe7dcd60d513b7a0c0d934a670d2d3b474a4fa92e7092",
+    "app/assets/javascripts/content_editor/components/content_editor.vue": "e7de524813eabb29c2cfa34d8546d67c7f971d903d4a45957212fc7814c06052",
     "app/assets/javascripts/content_editor/components/fountain_editor_surface.vue": "8d7ba82b94d6d6d4e1ebdeb707dd40a15e9f577814af7705d03d5ab61eff66f7",
     "app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue": "394b611d206cd6f7a773f1e0d802f8e3108bd28e24bfaa5055a107a5c4b7c902",
     "app/assets/javascripts/content_editor/components/fountain_context_surface.vue": "de2db5ca69413aea387a36b0952d0bb6ab8ac15de4e17fc192daae02ecfca95b",
@@ -102,7 +102,7 @@
     "app/assets/javascripts/content_editor/components/fountain_reference_menu.stories.js": "413153d4013334b0a188a280b7b01e3b83b918af2113f5e6db1b466bc596bd29",
     "app/assets/javascripts/content_editor/components/fountain_quick_action_menu.vue": "839db63f70bf293139c62f0586282eb0047395610a5a01f9eb37b303f119d99e",
     "app/assets/javascripts/content_editor/components/fountain_quick_action_menu.stories.js": "4c3c0b0c7a982874280d1ca85578d45bfb889584c4c607f6da97ff7af96355a3",
-    "app/assets/javascripts/content_editor/services/fountain_runtime.js": "601bcfa0f25e82e8458cf0547ce98bc2c741a3e88013779b9e805d85a5b84a9f",
+    "app/assets/javascripts/content_editor/services/fountain_runtime.js": "c8df18b11063a928d770a32ba8d044c416b1dee5f8a77f4787dbb7e2572c0c99",
     "app/assets/javascripts/content_editor/services/fountain_autocomplete.js": "d43875339749f6507b287e363dcd60f0e0979b7d73711458036fc05c9b9db9cb",
     "app/assets/javascripts/content_editor/services/fountain_runtime.css": "a934b2bce4759132bd9016fadf5756c5c97c52a617de36a73ca83dd63b0c9246"
   }

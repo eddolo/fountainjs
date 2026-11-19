@@ -81,10 +81,19 @@ then compare the two report files with `scripts/compare-gitlab-compatibility.mjs
 Run sequentially against the stopped isolated application. Never overwrite a
 failed attempt or reuse a semantic-only result as visual acceptance.
 
+## Merged-cell clipboard and Save
+
+Chromium 151 compared Fountain `7c85ae01` with the packaged editor on GitLab CE 19.5.3. Both editors copied horizontal and vertical two-cell spans, pasted rich tables into an external editable surface, cut and restored the source, and pasted into a smaller table. Undo, redo and reopening the saved issue retained the geometry, bold text and link. The neighboring unselected cell retained its appearance.
+
+All 42 checks completed. The 34 parity checks include the reopened geometry. The eight improvements measure one plain-text difference at four observation points across two fixtures. Fountain retained the empty TSV slot covered by a merged cell. Stock omitted its tab, shifting the position of following cells in the vertical-merge case.
+
+The initial Fountain run stopped before Save when a table screenshot missed full visibility by a fraction of a pixel. A separate codec test using real GitLab preview HTML reproduced a conversion failure after editing another paragraph. The repair emits GitLab-supported HTML for merged text tables and retains pipe Markdown for ordinary tables. Stored column widths still produce a conversion issue. The final browser runs centered each table before applying the original full-visibility check on both builds.
+
+[Matched results and builds](../../artifacts/gitlab-compatibility/merged-grid-20261119/comparison-2/report.md) · [Initial incomplete run](../../artifacts/gitlab-compatibility/merged-grid-20261119/comparison-1/report.md) · [GitLab preview samples](fixtures/merged-grid-live-html.json). Reproduce with the paired runner, a fresh run ID and `--suite merged-grid`.
+
 ## Remaining scope
 
-These fixtures use unmerged ASCII body cells. Header-source transfer, merged
-cells/rowspans, Unicode/IME, nested content, ownership rules, rapid input, other
+Header-source transfer, complex overlapping spans, Unicode/IME, nested content, ownership rules, rapid input, other
 external applications, permissions/concurrency, physical mobile devices and
 matched restart remain separate requirements. The earlier shared Applied-history
 failure and blank-line suggestion limitation remain open. No overall roadmap
