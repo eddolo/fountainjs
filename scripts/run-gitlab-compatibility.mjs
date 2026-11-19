@@ -4,6 +4,7 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {prepareFootnoteDeployment, verifyFootnoteMount, probeFootnoteCache} from './verify-gitlab-footnote-rollback.mjs';
+import {verifyGitLabRestart} from './verify-gitlab-restart.mjs';
 import {verifyGitLabRollback} from './verify-gitlab-editor-rollback.mjs';
 import {buildIdentityError, describeBuild, observeEditorBuild} from '../integrations/gitlab/testing/build-identity.mjs';
 import {chromium,firefox,webkit,expect} from '@playwright/test';
@@ -32,7 +33,7 @@ if (!Object.hasOwn(browsers,browserName)) throw new Error('Use --browser chromiu
 const browserType = browsers[browserName];
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
 if(!['suggestions','deletions','reviews','stale-reviews','relocated-reviews','concurrent-reviews','clipboard','partial','crossblock','wrapped','paint','grid','merged-grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','quick-save','reconnect','offline-conflict','concurrent-issues'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--verify-rollback] [--browser chromium|firefox|webkit] [--suite suggestions|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict|concurrent-issues]');
+ throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--verify-rollback] [--verify-restart] [--browser chromium|firefox|webkit] [--suite suggestions|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict|concurrent-issues]');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -55,6 +56,8 @@ if(side==='fountain'){
  env.FOUNTAIN_GITLAB_FRONTEND_ASSETS=resolve(install.source,'public/assets/webpack');
  compose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
 }
+const restartRequested = process.argv.includes('--verify-restart');
+if (restartRequested && suite !== 'composers') throw new Error('Restart verification requires saved composer records.');
 const checkFootnotes = process.argv.includes('--footnote-cache');
 if (checkFootnotes && (suite !== 'composers' || (side === 'original' && !process.argv.includes('--verify-rollback'))))
  throw new Error('Use --footnote-cache for the Fountain composers deployment followed by original --verify-rollback.');
@@ -81,8 +84,8 @@ if(process.argv.includes('--verify-rollback')){
 }
 let browser,started=false,authenticated=false;
 const report={formatVersion:2,buildIdentity:{side,expected:expectedBuild,observed:null},runId,attempt,side,scope:'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
- suite,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
- harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','scripts/verify-gitlab-footnote-rollback.mjs','integrations/gitlab/testing/save-gesture.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-simultaneous-issues.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-concurrent-review.mjs','scripts/gitlab-audit-member.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs','scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
+ suite,restartRequested,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
+ harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','scripts/verify-gitlab-restart.mjs','scripts/verify-gitlab-footnote-rollback.mjs','integrations/gitlab/testing/save-gesture.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-simultaneous-issues.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-concurrent-review.mjs','scripts/gitlab-audit-member.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs','scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
  started=true;execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
  const deployment=JSON.parse(docker('inspect',containerName))[0];
@@ -103,9 +106,10 @@ try{
  if(permissions.length)await context.grantPermissions(permissions,{origin:'http://127.0.0.1:5080'});
  const page=await context.newPage();report.browser={engine:browser.browserType().name(),version:browser.version(),viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezone:'UTC',platform:process.platform,arch:process.arch,permissions};
  report.startup=[];
- await waitForGitLabDeployment({readState:()=>JSON.parse(docker('inspect','--format','{{json .State}}',containerName)),
+ const waitUntilReady = observations => waitForGitLabDeployment({readState:()=>JSON.parse(docker('inspect','--format','{{json .State}}',containerName)),
   probe:async()=>(await page.request.get('http://127.0.0.1:5080/users/sign_in',{timeout:5000})).status(),
-  observe:state=>report.startup.push(state)});
+  observe:state=>observations.push(state)});
+ await waitUntilReady(report.startup);
  if (filter) {
    const digest = docker('exec',containerName,'sha256sum',filter.destination).split(/\s/u)[0];
    expect(digest).toBe(side==='fountain'?filter.patched:filter.original);
@@ -133,19 +137,23 @@ try{
  report.backend={version,project:{id:project.id,path:project.path_with_namespace,visibility:project.visibility,defaultBranch:project.default_branch,defaultHead:branch.commit.id,permissions:project.permissions},actor:'root'};
  const serverPaths=['app/services/notes/update_service.rb','app/services/suggestions/create_service.rb','lib/gitlab/diff/suggestion.rb'];
  report.backend.serverSources=docker('exec',containerName,'sha256sum',...serverPaths.map(path=>'/opt/gitlab/embedded/service/gitlab-rails/'+path)).trim().split('\n');
+ const identify = async () => {
  const manifests=docker('exec',containerName,'find',assetTarget,'-maxdepth','1','-name','manifest*.json').trim().split('\n').filter(Boolean);
  report.frontendManifests=manifests.length?docker('exec',containerName,'sha256sum',...manifests).trim().split('\n'):[];
- report.buildIdentity=await observeEditorBuild({page,project,request,expected:expectedBuild,report,readDeployedScripts:paths=>{
+ return observeEditorBuild({page,project,request,expected:expectedBuild,report,readDeployedScripts:paths=>{
   const prefix='/opt/gitlab/embedded/service/gitlab-rails/public';
   if(!paths.length)return new Map();
   return new Map(docker('exec',containerName,'sha256sum','--',...paths.map(path=>prefix+path)).trim().split('\n').map(line=>[line.slice(66+prefix.length),line.slice(0,64)]));
  }});
+ };
+ report.buildIdentity = await identify();
  const identityError=buildIdentityError(report);
  if(identityError)throw new Error('Build identity preflight failed: '+identityError);
  console.log(describeBuild(report));
  page.on('pageerror',error=>report.errors.push(error.message));
  report.observations=await (suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:['grid','merged-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
  report.collectionComplete=report.observations.every(item=>item.status==='observed');
+ if(restartRequested && report.collectionComplete) await verifyGitLabRestart({report,project,docker,deployment,waitUntilReady,identify,page,request,output:out});
  if(filter && report.collectionComplete) await probeFootnoteCache({report,candidate:rollbackCandidate,page,project,request,output:out,container:containerName});
  if(rollbackCandidate && report.collectionComplete) {
   report.rollback=await verifyGitLabRollback({candidate:rollbackCandidate,report,page,project,request,output:out});

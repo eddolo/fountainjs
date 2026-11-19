@@ -88,6 +88,20 @@ export function compareGitLabCompatibility(original,fountain){
   }
   const check=(name,a,b)=>{if(a===undefined||b===undefined||!equal(a,b))mismatches.push(name);};
   if(original?.side!=='original'||fountain?.side!=='fountain')mismatches.push('editor-side');
+  if (original.restartRequested || fountain.restartRequested) {
+    check('restart requested', original.restartRequested, fountain.restartRequested);
+    for (const report of [original, fountain]) {
+      const evidence = report.restart;
+      if (!evidence || !/^[a-f0-9]{64}$/u.test(evidence.containerId)
+        || !(Date.parse(evidence.after) > Date.parse(evidence.before))
+        || !Array.isArray(evidence.mounts) || !Array.isArray(report.deployment?.backendMounts) || !report.deployment.backendMounts.every(volume =>
+          evidence.mounts.some(mount => mount.Type === 'volume' && mount.Name === volume.name && mount.Destination === volume.destination))
+        || !evidence.buildIdentity || buildIdentityError({ ...report, buildIdentity: evidence.buildIdentity })
+        || !equal(evidence.buildIdentity.expected, report.buildIdentity?.expected)
+        || evidence.buildIdentity.observed.manifestSHA256 !== report.buildIdentity?.observed?.manifestSHA256)
+        mismatches.push(report.side + ' restart or post-restart build identity');
+    }
+  }
   if(original?.buildProbeIssue || fountain?.buildProbeIssue)check('build control issue',original?.buildProbeIssue,fountain?.buildProbeIssue);
   check('expected GitLab source revision', original?.buildIdentity?.expected?.gitlabCommit, fountain?.buildIdentity?.expected?.gitlabCommit);
   for(const key of ['runId','fixtureHash','fixture','harnessHashes','browser'])check(key,original?.[key],fountain?.[key]);
@@ -350,6 +364,15 @@ export function compareGitLabCompatibility(original,fountain){
       }
       const left = facts(original, a), right = facts(fountain, b);
       const edited=input.description+input.suffix, notes=['**'+input.comment+'**'];
+      if (original.restartRequested || fountain.restartRequested) {
+        const recovered = (report, observation) => {
+          const record = report.restart?.records?.find(entry => entry.id === input.id && entry.iid === observation?.iid);
+          if (record) return { description: record.description, notes: record.notes, readerDescription: record.readerDescription, readerBold: record.readerBold };
+        };
+        rows.push({ case: input.id, invariant: 'afterRestart', label: 'Same saved description and bold comment in the API and a fresh browser after GitLab restarts',
+          expected: { description: edited, notes, readerDescription: edited, readerBold: [input.comment] },
+          original: recovered(original, a), fountain: recovered(fountain, b), classification: null });
+      }
       const commentFirst=input.firstSave==='comment';
       const expected={boldComment:[input.comment],plainDescription:[],commentUndo:[''],descriptionAfterCommentUndo:[edited],
         commentRedo:[input.comment],descriptionUndo:[input.description],commentAfterDescriptionUndo:[input.comment],descriptionRedo:[edited],

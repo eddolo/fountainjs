@@ -92,6 +92,17 @@ if (reports[0].suite === 'quick-save') {
   }
   table.push('', 'Immediate clicks must arrive within 100 ms of the final keydown. The review controls wait at least 500 ms. Both sides must show the intended paragraph at click time.', '');
 }
+if (reports.some(report => report.restartRequested)) {
+  table.push('## GitLab service restart', '', '| Editor | Container | Started before (UTC) | Started after (UTC) | Issues read after restart |',
+    '| --- | --- | --- | --- | --- |');
+  for (const report of reports) {
+    const restart = report.restart;
+    const issues = restart?.records?.map(record => '#' + record.iid).join(', ');
+    table.push('| ' + report.side + ' | ' + (restart?.containerId?.slice(0, 12) || 'Unverified') + ' | ' +
+      (restart?.before || 'Unverified') + ' | ' + (restart?.after || 'Unverified') + ' | ' + (issues || 'Unverified') + ' |');
+  }
+  table.push('', 'The restart checks compare each saved description and formatted comment in the API and a fresh browser session. The input reports contain the volume records and the browser build identity after restart.', '');
+}
 if (rollback?.records?.length) {
   table.push('## Saved issues after frontend rollback', '',
     '| Authored in | Issue | Final key to click | Immediate rich-text Save | Reviewed Markdown Save and retained comment |',

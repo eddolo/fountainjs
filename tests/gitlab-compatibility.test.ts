@@ -393,6 +393,35 @@ it('requires proof of both editor instances and distinguishes a leaked discussio
  expect(row().status).toBe('missing-evidence');
 });
 
+it('requires a fresh process start, the same deployed build, and the exact saved issue after restart', () => {
+  const pair = reports();
+  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-composers.json', import.meta.url), 'utf8'));
+  const input = fixture.cases[0];
+  const description = input.description + input.suffix;
+  for (const report of pair) {
+    report.fixture = fixture;
+    Object.assign(report.observations[0]!, { iid: 7, id: input.id, input, status: 'observed',
+      commentEditorProof: report.observations[0]!.editorProof, facts: {} });
+    Object.assign(report.deployment, { backendMounts: [{ name: 'test-data', destination: '/data' }] });
+    Object.assign(report, { restartRequested: true, restart: { before: '2026-11-19T12:00:00Z', after: '2026-11-19T12:05:00Z',
+      containerId: 'd'.repeat(64), buildIdentity: structuredClone(report.buildIdentity),
+      mounts: [{ Type: 'volume', Name: 'test-data', Destination: '/data' }],
+      records: [{ iid: 7, id: input.id, description, notes: ['**' + input.comment + '**'], readerDescription: description, readerBold: [input.comment] }] } });
+  }
+  const row = () => compareGitLabCompatibility(...pair).rows.find((r: { invariant: string }) => r.invariant === 'afterRestart');
+  expect(row().classification).toBe('parity');
+  const evidence = (pair[1] as any).restart;
+  evidence.records[0].description = 'lost edit';
+  expect(row().classification).toBe('regression');
+  evidence.records[0].iid = 8;
+  expect(row().status).toBe('missing-evidence');
+  evidence.after = evidence.before;
+  expect(compareGitLabCompatibility(...pair).environment.matched).toBe(false);
+  evidence.after = '2026-11-19T12:05:00Z';
+  evidence.buildIdentity.observed.runtimeSHA256 = '0'.repeat(64);
+  expect(compareGitLabCompatibility(...pair).environment.matched).toBe(false);
+});
+
 function deletionReports(replacement:string){
  const pair=reports();
  for(const report of pair){

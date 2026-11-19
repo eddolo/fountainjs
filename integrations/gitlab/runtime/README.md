@@ -291,6 +291,10 @@ node scripts/compare-gitlab-compatibility.mjs \
   --output "artifacts/gitlab-compatibility/$run_id/comparison"
 ```
 
+To verify persistence across a restart of each editor deployment, add `--verify-restart` to **both** composer commands. The runner restarts only the inspected test container, waits for health and HTTP readiness, and verifies the editor build in a fresh browser context. The host image, container ID and mounts must stay the same. The original and replacement then reopen their own two saved issues from a new browser session and read the descriptions and discussion notes from the GitLab API. Use `--verify-rollback` independently when the stock deployment also needs to edit the candidate’s records.
+
+The pinned local restart comparison passed 46 checks on Chromium 151. Stock issues #564 and #565 and Fountain issues #562 and #563 retained both independently saved records, in both save orders. Each deployed build was identified again after the restart. The first attempt detected that Docker returned the same mounts in a different array order and stopped before reading the issues. The runner now compares all mount properties by destination. A later stock cold start exited before sign-in when Omnibus timed out starting the Gitaly logger. The final comparison reuses the completed Fountain attempt after verifying the identical workflow, fixture and browser. [Completed restart comparison](../../../artifacts/gitlab-compatibility/composer-restart-20261119/comparison-3/report.md) · [First attempt](../../../artifacts/gitlab-compatibility/composer-restart-20261119/comparison-1/report.md) · [Failed stock startup](../../../artifacts/gitlab-compatibility/composer-restart-20261119/original-2/report.json).
+
 The comparison names the two verified builds. The stock input report also
 records the candidate issue IDs, their contents after rollback, and the native
 build that created them. This procedure covers the frontend-only profile.

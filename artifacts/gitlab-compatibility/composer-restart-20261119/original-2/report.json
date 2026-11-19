@@ -1,0 +1,210 @@
+{
+  "formatVersion": 2,
+  "buildIdentity": {
+    "side": "original",
+    "expected": {
+      "gitlabVersion": "19.5.3",
+      "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615"
+    },
+    "observed": null
+  },
+  "runId": "composer-restart-20261119",
+  "attempt": 2,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "composers",
+  "restartRequested": true,
+  "rollbackRequested": false,
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-composers.json",
+  "fixtureHash": "0a2ba68a07183f2dd13045ba15855e71c8452336e210a5b50181e66788887c62",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "issue-description-and-discussion-in-one-page",
+    "cases": [
+      {
+        "id": "description-and-comment",
+        "scope": "composers",
+        "title": "Independent editor drafts",
+        "description": "Draft release notes.",
+        "suffix": " Include migration steps.",
+        "comment": "Reviewed by the release team.",
+        "firstSave": "comment"
+      },
+      {
+        "id": "description-before-comment",
+        "scope": "composers",
+        "title": "Save description with pending discussion",
+        "description": "Draft release notes.",
+        "suffix": " Include migration steps.",
+        "comment": "Reviewed by the release team.",
+        "firstSave": "description"
+      }
+    ]
+  },
+  "observations": [],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "82c9dd696e060244c61aee05b2043f634dc4887dde9cd1f8c26afd2d6c0a5f00",
+    "scripts/verify-gitlab-editor-rollback.mjs": "33db8245fc20b9753e4a086737fcc5d1606cb532a090eaa4423d051cdd6ffb3e",
+    "scripts/verify-gitlab-restart.mjs": "f88570ad3eb433605bd7339f2d078b2bd942c492d18a0558ef32e6a9edcf06c2",
+    "scripts/verify-gitlab-footnote-rollback.mjs": "497c68aab32d9e67dce5a34344cd50924771eb5be828a1d9c47e3c481efb5b32",
+    "integrations/gitlab/testing/save-gesture.mjs": "24fcc38481cb01e8134443237356a80f7f40e9fd77105ff615052880dbac96a2",
+    "integrations/gitlab/testing/build-identity.mjs": "5ec0bd783bd671a3b41ad6cb9003c9d50708d290afbd023277216978d3a650b8",
+    "scripts/audit-gitlab-compatibility-composers.mjs": "f1be806429248a2321d5ca47e9e5da416e56051f757efba5634250e703655615",
+    "scripts/audit-gitlab-compatibility-quick-save.mjs": "8cb17709efdb43d9df60a522d2fb90c3e2e0f60f1bfb7483ae6565d70169d8fc",
+    "scripts/audit-gitlab-compatibility-reconnect.mjs": "e1512849ede5922fb8c641d4ab5a894687350a0b98ba26df832a706e8a760784",
+    "scripts/audit-gitlab-compatibility-access.mjs": "2eba7a5f34e75944f56cb8789c0fb4eb861493249f3a5acba43bb5d3de06c592",
+    "scripts/audit-gitlab-offline-conflict.mjs": "3a959a11c5e9b91d38f48a1e0eb7cf2c294f563ee79f56bdbd5495239196acdf",
+    "scripts/audit-gitlab-simultaneous-issues.mjs": "6bb7d74d0bb0008de9a00c6db4864400de2c6155ef15c9f9620f5b9506c4a69d",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "277024a259238694df0f0f1e52d667ee9316a0dad8955258702163cec76950a6",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "6f0220c0478c46e85b9e07f5f2622d29a89591c6c68305389f589eac70da53c8",
+    "scripts/audit-gitlab-concurrent-review.mjs": "8ecc2e2f91c05a00b5a55f60dffc5044245390d0b4b4de1cf6d3826aec3780e2",
+    "scripts/gitlab-audit-member.mjs": "fdc9be83e5504ab3d26e7c99e50c1a8a149c59d62a58992391fe4b857c892a96",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "26a16006b2a6dcad81afa41a2905c6229d4a03a12c746887066d9d9e0afac6b3",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "b476d9a583adf969ae7ea6907b84b0ab1499fa0ec6497273eeb997a2e18dacec",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "c84c64884a3063a56b1e32df26384a11bbc0571b0aebf4f7b84eca9bb5ea1c3f"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "bbf9d40a1bb19c6a29c51fa8a118b830aff9d2d8fc5dcf537dc7911f25686239",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "engine": "chromium",
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": false,
+      "status": "exited",
+      "health": "unhealthy",
+      "exitCode": 1
+    }
+  ],
+  "collectionComplete": false,
+  "failure": "Deployment/authentication preflight failed; no credentialed details recorded."
+}
