@@ -1173,9 +1173,12 @@ product, physical-device or hosted-release approval.
 The three flagship showcases must meet the [professional reference-product
 requirements](PROFESSIONAL_REFERENCE_PRODUCTS.md). The existing limited issue
 and task workflow labs do not satisfy that requirement. GitLab integration has
-a pinned, reproducible upstream contract inventory and a tested real Vue 2
-surface component. The complete Markdown/host/service adapters and real
-application verification remain outstanding.
+recorded real-service coverage for issue discussions, merge-request descriptions
+and wiki pages, including saving and reopening after restart. The [paired
+membership-removal audit](../integrations/gitlab/COMPATIBILITY_MODE_RETENTION_RESULTS.md)
+also verifies draft recovery against stock GitLab 19.5.3. Broader workflow, role,
+browser and device coverage and a clean deployment rollback are still required.
+Outline and Directus remain candidates for the other two flagship slots.
 
 ## Remaining parity work
 

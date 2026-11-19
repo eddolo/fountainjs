@@ -54,6 +54,105 @@ test('switches BPMN drawings, recovers from an unusable first drawing and preser
   await expect(reopened.locator('[data-element-id="Notify"]')).toContainText(/Notify\s*subscribers/);
 });
 
+test('moves a task on the BPMN canvas and saves the graphical edit through undo and export', async ({ page }, info) => {
+  const original = '\uFEFF' + (await readFile('examples/react-app/src/editorial-review.bpmn', 'utf8')).replace(/\r?\n/g, '\r\n');
+  await page.goto('conversion-lab.html');
+  await page.getByLabel('Choose documents').setInputFiles({ name: 'review.bpmn', mimeType: 'application/xml', buffer: Buffer.from(original) });
+  const editor = page.getByRole('textbox', { name: 'Imported document editor' });
+  const code = editor.locator('pre[data-language="bpmn"] code');
+  const launch = page.getByRole('button', { name: 'Edit diagram on canvas' });
+  const dialog = page.getByRole('dialog', { name: 'Edit BPMN diagram' });
+  const frame = dialog.frameLocator('iframe');
+  const apply = dialog.getByRole('button', { name: 'Apply diagram changes' });
+  const review = frame.locator('.djs-shape[data-element-id="Review"]');
+  async function moveTask() {
+    await expect(apply).toBeEnabled();
+    const box = (await review.boundingBox())!;
+    const x = box.x + box.width / 2, y = box.y + box.height / 2;
+    const before = await review.getAttribute('transform');
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + 4, y + 5, { steps: 3 });
+    await page.mouse.move(x + 65, y + 75, { steps: 12 });
+    await page.mouse.up();
+    await expect(review).not.toHaveAttribute('transform', before!);
+  }
+  await launch.click();
+  await moveTask();
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(code).toHaveJSProperty('textContent', original);
+  await launch.click();
+  await expect(apply).toBeEnabled();
+  await apply.click();
+  await expect(dialog).toHaveCount(0);
+  await expect(code).toHaveJSProperty('textContent', original);
+  await launch.click();
+  await moveTask();
+  // Route a revision back to review instead of finishing the workflow.
+  const route = frame.locator('.djs-connection[data-element-id="F6"] .djs-visual > path');
+  const point = await route.evaluate(element => {
+    const path = element as SVGPathElement;
+    const p = path.getPointAtLength(path.getTotalLength() / 2).matrixTransform(path.getScreenCTM()!);
+    return { x: p.x, y: p.y };
+  });
+  const iframe = dialog.locator('iframe');
+  const offset = await iframe.evaluate(el => ({ x: el.getBoundingClientRect().x + el.clientLeft, y: el.getBoundingClientRect().y + el.clientTop }));
+  await page.mouse.click(offset.x + point.x, offset.y + point.y);
+  const handle = frame.locator('.djs-bendpoints[data-element-id="F6"] .djs-bendpoint:not(.floating) circle.djs-hit').last();
+  const end = (await handle.boundingBox())!;
+  const target = (await review.boundingBox())!;
+  await page.mouse.move(end.x + end.width / 2, end.y + end.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(target.x + target.width / 2, target.y + target.height / 2, { steps: 20 });
+  await page.mouse.up();
+  await dialog.screenshot({ path: info.outputPath('editing-process.png') });
+  await apply.click();
+  await expect(dialog).toHaveCount(0);
+  const revised = (await code.textContent())!;
+  expect(revised.startsWith('\uFEFF')).toBe(true);
+  expect(revised).toContain('\r\n');
+  const geometry = (xml: string) => page.evaluate(source => {
+    const doc = new DOMParser().parseFromString(source, 'application/xml');
+    const bounds = doc.querySelector('[bpmnElement="Review"] > [width]')!;
+    return { x: Number(bounds.getAttribute('x')), y: Number(bounds.getAttribute('y')),
+      revisionTarget: doc.querySelector('[id="F6"]')?.getAttribute('targetRef'),
+      drawings: doc.getElementsByTagNameNS('*', 'BPMNDiagram').length, flows: doc.getElementsByTagNameNS('*', 'sequenceFlow').length };
+  }, xml);
+  const before = await geometry(original), after = await geometry(revised);
+  expect(after.x).toBeGreaterThan(before.x);
+  expect(after.y).toBeGreaterThan(before.y);
+  expect(before.revisionTarget).toBe('Done');
+  expect(after.revisionTarget).toBe('Review');
+  expect(after.drawings).toBe(2);
+  expect(after.flows).toBe(8);
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(code).toHaveJSProperty('textContent', original);
+  await page.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(code).toHaveJSProperty('textContent', revised);
+  const pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download export' }).click();
+  const file = info.outputPath('moved-process.bpmn');
+  await (await pending).saveAs(file);
+  expect(await readFile(file, 'utf8')).toBe(revised);
+  const reader = page.getByLabel('Reopened export preview', { exact: true });
+  await checkProcess(reader, 'Review draft');
+  await expect(reader.frameLocator(frameSelector).locator('.djs-shape[data-element-id="Review"]'))
+    .toHaveAttribute('transform', new RegExp(after.x + '[ ,]+' + after.y));
+});
+
+test('retains XML metadata when the BPMN modeler cannot serialize it', async ({ page }) => {
+  const xml = (await readFile('examples/react-app/src/editorial-review.bpmn', 'utf8'))
+    .replace('<process id="Editorial"', '<!-- signed off by the editor -->\n  <process id="Editorial"');
+  await page.goto('conversion-lab.html');
+  await page.getByLabel('Choose documents').setInputFiles({ name: 'annotated.bpmn', mimeType: 'application/xml', buffer: Buffer.from(xml) });
+  await page.getByRole('button', { name: 'Edit diagram on canvas' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Edit BPMN diagram' });
+  await expect(dialog.getByRole('status')).toContainText('XML comments');
+  await expect(dialog.getByRole('button', { name: 'Apply diagram changes' })).toBeDisabled();
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(page.getByRole('textbox', { name: 'Imported document editor' }).locator('pre code')).toHaveJSProperty('textContent', xml);
+});
+
 test('keeps the downloadable BPMN source available after a viewer error', async ({ page }, info) => {
   const input = Buffer.from('\uFEFF<?xml version="1.0" encoding="UTF-8"?>\r\n<unfinished>\r\n');
   await page.goto('conversion-lab.html');

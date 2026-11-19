@@ -3,6 +3,7 @@ import type { GlobalConstructorInstance } from '../core/platform';
 import { defineExtension } from '../extensions/extension';
 import { MermaidLayout, type Preview } from './layout';
 
+export { openBpmnModeler } from './bpmn-modeler';
 export { createBpmnExtension, exportBpmnSource, insertBpmn, type BpmnOptions } from './bpmn';
 export { exportMermaidImage, type DiagramImageFormat } from './image';
 

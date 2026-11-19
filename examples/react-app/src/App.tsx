@@ -86,6 +86,7 @@ import { ChartCSVControls } from './ChartCSVControls';
 import { chartInputPlugin, ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartAxisTitle, setChartType, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
+import { BpmnCanvasButton } from './BpmnCanvasButton';
 import { BpmnPreviewExtension } from './bpmn-preview';
 import editorialReview from './editorial-review.bpmn?raw';
 import { MermaidPreviewExtension } from './mermaid-preview';
@@ -759,6 +760,7 @@ function App() {
               <button onClick={() => addBlock('chart')}>Bar chart</button>
               <button onMouseDown={event => event.preventDefault()} onClick={() => addBlock('mermaid')}>Mermaid diagram</button>
               <button onMouseDown={event => event.preventDefault()} onClick={() => addBlock('bpmn')}>BPMN process</button>
+              <BpmnCanvasButton editor={editor} />
               {chartAction && <button onMouseDown={event => event.preventDefault()} onClick={() => {
                 if (toggleTableChart(editor)) editorHandle.current?.focus();
               }}>{chartAction === 'wrap' ? 'Chart this table' : 'Keep as table'}</button>}
