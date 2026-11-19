@@ -114,6 +114,22 @@ describe('native rich clipboard event handoff', () => {
     const { editor, event, reports } = setup(); event('paste'); event('paste', '', 'Latest paste', false);
     vi.runOnlyPendingTimers(); expect(editor.getText()).toBe('Latest paste'); expect(reports).toHaveLength(1);
   });
+  for (const refuse of [false, true]) it(`handles Fountain clipboard text in a code selection with a transaction veto of ${refuse}`, () => {
+    const { editor, view, reports } = setup([new Plugin({ filterTransaction: tr => !refuse || !tr.doc.textContent.includes('replacement') })]);
+    const code = editor.state.schema.nodes.code_block.create({ language: 'python' }, [editor.state.schema.text('prefix draft suffix')]);
+    editor.dispatch(editor.createTransaction().replace(0, 1, [code]).setSelection(Selection.range([0, 0], 7, [0, 0], 12)));
+    const text = 'replacement\r\n    print("→")';
+    const data: Record<string, string> = { 'text/plain': text, 'text/html': '<h2>Styled</h2>',
+      'application/x-fountainjs+json': JSON.stringify({ version: 1, document: { type: 'doc', content: [p('Styled')] } }) };
+    const paste = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(paste, 'clipboardData', { value: { files: [], types: Object.keys(data), getData: (type: string) => data[type] ?? '' } });
+    view.dom.dispatchEvent(paste);
+    expect(paste.defaultPrevented).toBe(true);
+    expect(reports.map(report => report.outcome)).toEqual([refuse ? 'rejected' : 'inserted-plain-text']);
+    expect(editor.state.doc.childCount).toBe(1);
+    expect(editor.state.doc.child(0).attrs.language).toBe('python');
+    expect(editor.state.doc.child(0).textContent).toBe(refuse ? code.textContent : 'prefix ' + text + ' suffix');
+  });
   it('can use an exact Fountain payload released only at the later event', () => {
     const { editor, event, view, reports } = setup(); event('paste');
     const code = { type: 'code_block', attrs: { language: 'python', dir: 'rtl', lineNumbers: false }, content: [{ type: 'text', text: 'print(1)' }] };

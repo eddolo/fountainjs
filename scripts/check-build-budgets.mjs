@@ -742,7 +742,8 @@ const limits = Object.freeze({
   // Editable multi-series charts, CSV refresh and native Word scales bring
   // the combined CommonJS entries and shared chunks to 1441.6 KiB.
   // The remaining allowance covers chart controls without changing entry budgets.
-  'all CommonJS runtime code': 1456 * kibibyte,
+  // Include the optional diagram adapter in the aggregate runtime allowance.
+  'all CommonJS runtime code': 1462 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

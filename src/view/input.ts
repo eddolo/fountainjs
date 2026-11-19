@@ -424,11 +424,13 @@ export class InputManager {
       if (!event.cancelable) return;
       event.preventDefault();
       if (!this.pendingPasteIsCurrent(pendingPaste)) return;
+      const text = pendingPaste.text || event.dataTransfer?.getData('text/plain');
+      if (this.pasteCodeSource(event, text)) return;
       const fountain = event.dataTransfer?.getData(FOUNTAIN_CLIPBOARD_MIME) ?? '';
       const fallback = this.insertFountainClipboard(event, fountain);
       if (fallback === true) return;
       const html = event.dataTransfer?.getData('text/html') ?? '';
-      this.insertRichClipboard(event, pendingPaste.text ?? event.dataTransfer?.getData('text/plain'), html,
+      this.insertRichClipboard(event, text, html,
         fountain, fallback, !html.trim());
       return;
     }
@@ -513,6 +515,8 @@ export class InputManager {
     const codeRegion = this.focusedCodeRegion(event);
     if (codeRegion) this.enterCodeRegion(codeRegion);
     this.selections.capture();
+    const text = event.clipboardData?.getData('text/plain');
+    if (!event.clipboardData?.files?.length && this.pasteCodeSource(event, text)) return;
     const fountain = event.clipboardData?.getData(FOUNTAIN_CLIPBOARD_MIME) ?? '';
     const fountainFallback = this.insertFountainClipboard(event, fountain);
     if (fountainFallback === true) return;
@@ -528,7 +532,6 @@ export class InputManager {
         }
       }
     }
-    const text = event.clipboardData?.getData('text/plain');
     const files = Array.from(event.clipboardData?.files ?? [])
       .filter((file) => file.type.startsWith('image/') || Boolean(this.options.assetUpload || this.options.handleFiles));
     if (files.length) {
@@ -542,6 +545,21 @@ export class InputManager {
     }
     this.insertRichClipboard(event, text, clipboardHTML, fountain, fountainFallback);
   };
+
+  private pasteCodeSource(event: Event, text: string | undefined): boolean {
+    const { doc, selection } = this.editor.state;
+    if (!text || selection.kind !== 'text') return false;
+    const parent = selection.path.slice(0, -1);
+    if (comparePaths(parent, selection.endPath.slice(0, -1)) !== 0) return false;
+    const block = getNodeAtPath(doc, parent);
+    if (!block.isBlock || !block.type.spec.code) return false;
+    // Rich editors put styling or a whole code block on the clipboard alongside the source.
+    event.preventDefault();
+    if (this.editor.runCommandBatch(() => insertText(this.editor, text))) {
+      this.reportPaste(createExternalPasteReport('plain-text', 'inserted-plain-text', text, text));
+    } else this.rejectPaste(event, 'plain-text', text);
+    return true;
+  }
 
   private insertFountainClipboard(event: Event, fountain: string): true | ExternalPasteIssue | null {
     if (fountain && fountain.length <= MAX_FOUNTAIN_CLIPBOARD_CHARACTERS) {
