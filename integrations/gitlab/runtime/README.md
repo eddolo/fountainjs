@@ -72,6 +72,27 @@ The GitLab suggestion reader rebuilds its controls when the discussion refreshes
 
 In generation 20, an open suggestion confirmation checks GitLab's source-branch write permission. The integration resolves the source project and branch from the merge request, including a fork's project ID. It shares the result across the page's suggestion controls. While the confirmation is visible it normally checks again two seconds after the previous read. It skips background tabs and stops when the menu closes or the widget detaches. GitLab still makes its ordinary authorization decision at submission. A reviewer can choose **Check access again** after a role change and submit the original queue and message. The matched Chromium run scored 23 parity checks and two improvements. To reproduce it, run the `reviewer-handoff` suite on both builds. [Matched report](../../../artifacts/gitlab-compatibility/reviewer-access-refresh-20261119/comparison-4-5/report.md) · [Source rollback for all 38 installed files](../../../artifacts/gitlab-compatibility/reviewer-access-refresh-20261119/source-rollback.json).
 
+To repeat the queued-review comparison, use the pinned deployment below and a fresh run ID per browser. Run both editors in sequence. A signed-in reviewer queues two proposals, loses and regains write access, confirms the batch and checks the saved file after reload.
+
+```sh
+engine=webkit
+run_id="reviewer-$engine-$(date +%Y%m%d%H%M%S)"
+for editor in original fountain
+do
+  node scripts/run-gitlab-compatibility.mjs --suite reviewer-handoff \
+    --run-id "$run_id" --editor "$editor" --browser "$engine" --attempt 1
+done
+reports="artifacts/gitlab-compatibility/$run_id"
+node scripts/compare-gitlab-compatibility.mjs --original "$reports/original-1/report.json" \
+  --fountain "$reports/fountain-1/report.json" --output "$reports/comparison"
+```
+
+Use `engine=firefox` for the Firefox comparison. Each report identifies the editor, runtime, integration and GitLab build. A browser error keeps acceptance open even when the file and commit match. On build `433488dc`, source rollback restored 15 originals, removed 23 additions and reproduced all 38 file hashes on reinstall. [Source rollback receipt](../../../artifacts/gitlab-compatibility/reviewer-webkit-20261119/source-rollback.json).
+
+In the [WebKit handoff on build 433488dc](../../../artifacts/gitlab-compatibility/reviewer-webkit-20261119/comparison-6/report.md), the branch endpoint returned HTTP 200 with write permission allowed, denied and allowed again as the reviewer changed roles. Both suggestions remained queued. One confirmed commit contained the original message and exact edited file. On the [preceding build](../../../artifacts/gitlab-compatibility/reviewer-webkit-20261119/fountain-3/report.json), rechecking returned HTTP 304 after access was restored and Apply stayed disabled.
+
+The functional checks completed, but the WebKit comparison recorded three page errors on stock and five on Fountain. The traces show canceled requests during navigation, including notes and GraphQL. A separate same-origin test in the same browser canceled pending Fetch and XMLHttpRequest reads during navigation without emitting a page error. Cancellation alone does not account for the errors in GitLab. [Stock trace](../../../artifacts/gitlab-compatibility/reviewer-webkit-20261119/original-6/browser-errors.json) · [Fountain trace](../../../artifacts/gitlab-compatibility/reviewer-webkit-20261119/fountain-6/browser-errors.json).
+
 The current Fountain integration reads the saved suggestion after an Apply conflict. When that exact suggestion is already applied, the reviewer sees Applied and the Apply control disappears. If the competing Git update arrives before Rails records the result, the integration can make up to three additional read-only status checks. Stock GitLab still required a reload in the matched run. [Current build and live reviewer outcomes](../../../artifacts/gitlab-compatibility/review-feedback-20261119/comparison-3/report.md).
 
 The [stale-target comparison](../../../artifacts/gitlab-compatibility/review-feedback-stale-20261119/comparison-3/report.md) covers the other outcome. Both editors refused all four changed or deleted targets and preserved the file, branch head and review identity. The collector waits for a visible decision before taking a screenshot. Two live discussions still gave only a generic file-change warning. The report pairs the completed stock run (attempt 2) with Fountain attempt 3 after an intervening GitLab startup failure.

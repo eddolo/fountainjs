@@ -268,21 +268,55 @@ export async function runRecordedGitLabBatch(options) {
     viewport: options.page.viewportSize(), deviceScaleFactor: 1, locale: 'en-US', timezoneId: 'UTC',
     recordVideo: {dir:options.output},
   });
+  let stage = 'setup';
+  const events = [];
+  const started = performance.now();
+  const observeContext = (context, actor) => {
+    let count = 0;
+    context.on('page', tab => {
+      const label = actor + '-' + ++count;
+      const record = (type, fields) => events.push({ms:Math.round(performance.now()-started),tab:label,stage,type,...fields});
+      const endpoint = request => {
+        const url = new URL(request.url());
+        if (url.origin === 'http://127.0.0.1:5080' &&
+            (url.pathname === '/api/graphql' || url.pathname.endsWith('/notes'))) return url.pathname;
+        return null;
+      };
+      tab.on('framenavigated',frame=>{
+        if (frame === tab.mainFrame()) record('navigation',{path:new URL(frame.url()).pathname});
+      });
+      tab.on('requestfailed',request=>{
+        const path = endpoint(request);
+        if (path) record('requestfailed',{method:request.method(),path,reason:request.failure()?.errorText});
+      });
+      tab.on('response',response=>{
+        const path = endpoint(response.request());
+        if (path) record('response',{method:response.request().method(),path,status:response.status()});
+      });
+      tab.on('pageerror',error=>{
+        record('pageerror',{message:error.message});
+        options.onPageError(label + ' at ' + stage + ': ' + error.message);
+      });
+    });
+  };
+  observeContext(context,'Author');
   const page = await context.newPage();
   const video = page.video();
-  const errors = [];
-  page.on('pageerror',error=>errors.push(error.message));
   try {
-    const result = await runGitLabSuggestionCompatibility({...options,page});
-    if (errors.length) throw new Error('Recorded batch page errors: '+errors.join(', '));
-    return result;
+    return await runGitLabSuggestionCompatibility({...options,page,observeContext,onProgress(detail) {
+      stage = detail.stage;
+      options.onProgress(detail);
+    }});
   } finally {
     await context.close();
     await video.saveAs(join(options.output, 'batch-review.webm'));
     await video.delete();
+    if (events.some(event=>event.type==='pageerror')) {
+      await writeFile(join(options.output,'browser-errors.json'),JSON.stringify(events,null,2)+'\n');
+    }
   }
 }
-export async function runGitLabSuggestionCompatibility({side,runId,page,request,project,fixture,output,onProgress}) {
+export async function runGitLabSuggestionCompatibility({side,runId,page,request,project,fixture,output,onProgress,observeContext}) {
   const ui=driver(side,page),observations=[];
   for(const input of fixture.cases) {
     const result={id:input.id,status:'incomplete',stage:'setup',input,actions:[]};observations.push(result);
@@ -338,7 +372,7 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       await page.reload();const savedNote=page.locator('#note_'+note.id);await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
       await page.screenshot({path:join(output,input.id+'-posted.png'),fullPage:true,animations:'disabled',caret:'initial'});
       if(input.scope==='batch-review') {
-        await batchReview({page,ui,openLineForm,request,project,fixture,result,input,mr,base,note,seed,branch,fileURL,output,stage});
+        await batchReview({page,observeContext,ui,openLineForm,request,project,fixture,result,input,mr,base,note,seed,branch,fileURL,output,stage});
         result.status='observed';await stage('complete');continue;
       }
       if(input.scope==='concurrent-review') {

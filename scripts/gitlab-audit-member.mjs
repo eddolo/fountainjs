@@ -18,22 +18,50 @@ export async function prepareGitLabAuditMember({request,project,fixture}) {
   const member=present?await request(`/api/v4/projects/${project.id}/members/${account.id}`,{access_level:level},'PUT'):await request(`/api/v4/projects/${project.id}/members`,{user_id:account.id,access_level:level});
   expect(member.access_level).toBe(level);return {id:member.id,username:member.username,accessLevel:member.access_level};
  };
- const signInMember=async(actor,result)=>{
-   try{
-    const signIn=async()=>{await actor.getByLabel('Username or primary email').fill(fixture.username);await actor.getByLabel('Password',{exact:true}).fill(password);await actor.getByRole('button',{name:'Sign in',exact:true}).click();await actor.waitForURL(url=>!url.pathname.includes('sign_in'));};
-    await actor.goto(origin+'/users/sign_in');await signIn();
-    // The dashboard can paint before GitLab redirects a freshly reset account to its password form.
-    await actor.goto(origin+'/'+project.path_with_namespace);
-    result.signInDestination=new URL(actor.url()).pathname;
-    if(await actor.getByRole('button',{name:'Update password',exact:true}).isVisible()){
-     const nextPassword='Fj!'+randomBytes(24).toString('base64url')+'9aZ';
-     await actor.getByLabel('Current password',{exact:true}).fill(password);await actor.getByLabel('New password',{exact:true}).fill(nextPassword);await actor.getByLabel('Confirm password',{exact:true}).fill(nextPassword);await actor.getByRole('button',{name:'Update password',exact:true}).click();
-     await expect(actor.getByRole('button',{name:'Update password',exact:true})).toBeHidden({timeout:30000});password=nextPassword;result.passwordUpdateCompleted=true;
-     if(await actor.getByLabel('Username or primary email').isVisible())await signIn();
+ const signInMember = async (actor, result) => {
+  const projectURL = origin + '/' + project.path_with_namespace;
+  const signInPath = '/users/sign_in';
+  const resetPath = '/-/user_settings/password/new';
+  const path = () => new URL(actor.url()).pathname;
+  const signIn = async () => {
+   await actor.getByLabel('Username or primary email').fill(fixture.username);
+   await actor.getByLabel('Password', {exact:true}).fill(password);
+   await actor.getByRole('button', {name:'Sign in',exact:true}).click();
+   await actor.waitForURL(url => url.origin === origin && url.pathname !== signInPath);
+  };
+
+  try {
+   await actor.goto(origin + signInPath);
+   await signIn();
+   await actor.goto(projectURL);
+   result.signInDestination = path();
+
+   if (path() === resetPath) {
+    const nextPassword = 'Fj!' + randomBytes(24).toString('base64url') + '9aZ';
+    await actor.getByLabel('Current password', {exact:true}).fill(password);
+    await actor.getByLabel('New password', {exact:true}).fill(nextPassword);
+    await actor.getByLabel('Confirm password', {exact:true}).fill(nextPassword);
+    await actor.getByRole('button', {name:'Update password',exact:true}).click();
+    await actor.waitForURL(url => url.origin === origin && url.pathname !== resetPath);
+    password = nextPassword;
+    result.passwordUpdateCompleted = true;
+
+    // Follow the private project redirect before deciding whether the new password is needed.
+    await actor.goto(projectURL);
+    if (path() === signInPath) {
+     await signIn();
+     await actor.goto(projectURL);
     }
-    if(await actor.getByRole('button',{name:'Update password',exact:true}).isVisible()||await actor.getByLabel('Username or primary email').isVisible())throw new Error('Task sign-in did not complete.');
-    result.authenticatedDestination=new URL(actor.url()).pathname;
-   }catch{throw new Error('Task-member sign-in or required password update failed; credentialed details omitted.');}
+   }
+   result.authenticatedDestination = path();
+  } catch {
+   throw new Error('Task-member sign-in or required password update failed; credentialed details omitted.');
+  }
+
+  const identity = await actor.request.get(origin + '/api/v4/user');
+  if (identity.status() !== 200) throw new Error('Task-member identity check returned HTTP ' + identity.status() + '.');
+  const {id, username} = await identity.json();
+  expect({id,username}).toEqual({id:account.id,username:fixture.username});
  };
  return {account,setRole,signInMember};
 }

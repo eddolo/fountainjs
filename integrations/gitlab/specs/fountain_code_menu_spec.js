@@ -306,10 +306,10 @@ describe('FountainCodeMenu', () => {
     const firstLine = getByRole(suggestionDialog(), 'spinbutton', { name: 'First file line' });
     document.activeElement.blur();
     wrapper.vm.focusSourceOnShow();
-    expect(source).toHaveFocus();
+    expect(document.activeElement).toBe(source);
     firstLine.focus();
     wrapper.vm.focusSourceOnShow();
-    expect(firstLine).toHaveFocus();
+    expect(document.activeElement).toBe(firstLine);
   });
   it('exposes suggestion actions instead of a code-language editor', async () => {
     await createSuggestion();

@@ -10,7 +10,7 @@ async function readAppliedBadge(reader) {
   return badge.isVisible();
 }
 
-export async function batchReview({page,ui,openLineForm,request,project,fixture,result,input,mr,base,note,seed,branch,fileURL,output,stage}) {
+export async function batchReview({page,observeContext,ui,openLineForm,request,project,fixture,result,input,mr,base,note,seed,branch,fileURL,output,stage}) {
   const batch = result.batch = {};
   await stage('write-second-review');
   let form;
@@ -31,7 +31,11 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
   if (result.editorProof.native) {
     await page.getByRole('button',{name:'Edit suggestion',exact:true}).click();
     const dialog = page.getByRole('dialog',{name:'Suggested replacement',exact:true});
-    await dialog.getByRole('textbox',{name:'Replacement source',exact:true}).fill(fixture.secondReplacement);
+    const replacement = dialog.getByRole('textbox',{name:'Replacement source',exact:true});
+    await replacement.fill(fixture.secondReplacement);
+    await expect(replacement).toHaveValue(fixture.secondReplacement);
+    await expect(dialog.getByRole('spinbutton',{name:'First file line'})).toHaveValue(String(input.secondLine));
+    await expect(dialog.getByRole('spinbutton',{name:'Last file line'})).toHaveValue(String(input.secondLine));
     await dialog.getByRole('button',{name:'Apply suggestion',exact:true}).click();
     await expect(dialog).toBeHidden();
   } else {
@@ -60,7 +64,7 @@ export async function batchReview({page,ui,openLineForm,request,project,fixture,
   }).toBeTruthy();
   const noteIds = [note.id, other.id];
   const review = (viewer,setRole) => applyBatch({page:viewer,setRole,request,project,fixture,input,mr,base,seed,branch,fileURL,output,stage,noteIds,batch});
-  if (input.reviewerRoleChange) return withBatchReviewer({page,request,project,fixture,result,output},review);
+  if (input.reviewerRoleChange) return withBatchReviewer({page,observeContext,request,project,fixture,result,output},review);
   return review(page);
 }
 

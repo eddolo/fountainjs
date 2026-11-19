@@ -2,7 +2,7 @@ import {expect} from '@playwright/test';
 import {join} from 'node:path';
 import {prepareGitLabAuditMember} from './gitlab-audit-member.mjs';
 
-export async function withBatchReviewer({page,request,project,fixture,result,output}, review) {
+export async function withBatchReviewer({page,observeContext,request,project,fixture,result,output}, review) {
   const member = await prepareGitLabAuditMember({request,project,fixture});
   const browser = page.context().browser();
   const options = {viewport:page.viewportSize(),locale:'en-US',timezoneId:'UTC'};
@@ -14,6 +14,7 @@ export async function withBatchReviewer({page,request,project,fixture,result,out
     const context = await browser.newContext({...options,storageState:await login.storageState(),recordVideo:{dir:output}});
     let video;
     try {
+      observeContext(context,'Reviewer');
       const reviewer = await context.newPage();
       video = reviewer.video();
       const who = await reviewer.request.get('http://127.0.0.1:5080/api/v4/user');

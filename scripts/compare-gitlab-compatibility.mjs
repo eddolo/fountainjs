@@ -21,6 +21,11 @@ const browserDescription=report=>report.browser?.engine
   : report.browser?.version??'unverified';
 const table=['# Matched GitLab editor comparison','','**Original** — '+describeBuild(reports[0]),'','**Replacement** — '+describeBuild(reports[1]),'','Browser on stock / replacement: '+reports.map(browserDescription).join(' / '),'',`Environment matched: ${result.environment.matched}. Comparison complete: ${result.comparisonComplete}.`,
 `Regression gate: ${result.regressionGate.passed?'passed':'failed/incomplete'}. Absolute feature acceptance: ${result.featureAcceptance.passed?'passed':'not achieved'}.`,'',
+...reports.flatMap(report => {
+  if (!report.errors?.length) return [];
+  const path = relative(out, paths[report.side]).replaceAll('\\','/');
+  return [report.side + ' recorded ' + report.errors.length + ' browser error(s). See the errors in its [run report](' + path + ').',''];
+}),
 ...(reports[0].suite === 'review-history' ? ['Collection attempts for this run: stock ' + reports[0].attempt + ', replacement ' + reports[1].attempt + '.', ''] : []),
 ...(reports[0].suggestionHistoryRollback?.passed ? ['The restored packaged GitLab services reopened ' + reports[0].suggestionHistoryRollback.records.length + ' notes from the repaired deployment. Their saved suggestion identities, Applied flags, eligibility, file bytes and branch heads matched.', ''] : []),
 ...(reports.some(report => report.deployment?.suggestionHistory) ? ['GitLab server profile on stock and replacement: ' + reports.map(report =>
