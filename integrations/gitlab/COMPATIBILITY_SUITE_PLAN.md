@@ -7,7 +7,8 @@
 | Issue description and discussion | Both save orders, isolated formatting and undo histories, independent saved records. 44 matched checks on each engine. [Chromium](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-4/report.md) · [WebKit](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) | Other host surfaces and devices. |
 | Concurrent issue editing | The returning Developer can inspect both drafts and explicitly discard or overwrite. [18 matched checks](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-2/report.md) | Simultaneous submissions and late writes after conflict disclosure. |
 | Immediate Save and rollback | The active Fountain build retains the last edit. Stock can reopen the same issues and discussions and save from Markdown. [Immediate Save](../../artifacts/gitlab-compatibility/immediate-save-20261119/comparison-1/report.md) · [Rollback](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) | Stock rapid rich-text Save lost the final edit in both Chromium and WebKit. [Timed WebKit rollback](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) Ruby overlays and existing rendered-content caches need separate rollback evidence. |
-| Merge-request reviews | Three posted suggestions were expanded symmetrically, shrunk to the anchor, or extended on one side. The file and commit were verified after undo, redo, save, reload and application. [63 matched checks](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-2/report.md) | Simultaneous reviews and the Applied-history loss on prose-only edits. |
+| Merge-request reviews | Three posted suggestions were expanded symmetrically, shrunk to the anchor, or extended on one side. The file and commit were verified after undo, redo, save, reload and application. [63 matched checks](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-2/report.md) | Applied history is lost on prose-only edits. |
+| Simultaneous review confirmations | On the four-thread profile, two distinct reviewers confirmed one suggestion. Both editors produced one direct commit with the successful reviewer’s message, the exact file and the same Applied note after reload. [12 matched checks](../../artifacts/gitlab-compatibility/two-reviewers-20261119/comparison-3/report.md) | The second reviewer sees a Git reference error and a stale Apply control until reload. On the earlier [two-thread profile](../../artifacts/gitlab-compatibility/two-reviewers-20261119/comparison-2/report.md), both requests timed out and neither committed. |
 | Stale review targets | Both editors protected changed and deleted targets, including a deletion with an identical line elsewhere. The newer file, branch head, note and suggestion ID survived reload. [48 matched checks and Apply outcomes](../../artifacts/gitlab-compatibility/deleted-target-20261119/comparison-2/report.md) | Two live discussions only identified a file change. Both editors applied a suggestion after an insertion shifted its line, but refused a live review when the line itself moved to the end of the file. [16 relocation checks](../../artifacts/gitlab-compatibility/relocated-target-20261119/comparison-1/report.md). |
 
 On this GitLab revision, `app/services/notes/update_service.rb` calls
@@ -97,7 +98,7 @@ permissions and policy must not change between sides. Start with the stock serve
 Use the pinned Linux deployment from the [runtime guide](runtime/README.md#reproduce-the-frontend-deployment-and-rollback).
 Run from the Fountain checkout with the test container stopped. Choose
 `quick-save` for click timing, `reconnect` for a single author retrying, or
-`offline-conflict` for two authors editing the same description. Use `composers` for independent descriptions and comments, `stale-reviews` for changed and deleted targets, and `relocated-reviews` for intact lines shifted or moved within a file.
+`offline-conflict` for two authors editing the same description. Use `composers` for independent descriptions and comments, `stale-reviews` for changed and deleted targets, and `relocated-reviews` for intact lines shifted or moved within a file. Select `concurrent-reviews` to have the fixture owner and a project Developer independently confirm the same posted suggestion.
 
 ```sh
 suite=quick-save
@@ -118,6 +119,12 @@ Developer’s rich draft open after a failed offline Save. The issue author edit
 in Markdown in another session and saves. The API must return that exact text
 while the Developer browser is still offline. Each resolution has a fresh issue,
 a recording after sign-in and an independent read of the final saved description.
+
+The concurrent review fixture opens two signed-in browser sessions and gives each reviewer
+a distinct commit message. It checks that both confirmed the same suggestion and that the
+two browser request intervals overlapped. After both responses, and again after both
+reviewers reload, it compares the complete file, commit parent, commit message, note ID
+and Applied state. A run missing either response cannot establish the concurrency result.
 
 ## Equivalent data and actions
 
@@ -174,7 +181,7 @@ one substep does not establish that Fountain is globally better than Tiptap.
    save, reopen and apply. Compare exact source and resulting file/commit.
 2. Posted suggestion editing: change source/range, undo/redo, save/reopen, then
    apply. One symmetric expansion is now matched through both actual UIs, with
-   no early source commit. The November 19 follow-ups above add shrinking, asymmetric extension and a changed-line conflict. The later deletion run above covers removed targets. The relocation run above covers an insertion and an explicit line move. Concurrent applications remain.
+   no early source commit. The November 19 follow-ups above add shrinking, asymmetric extension and a changed-line conflict. The later deletion run above covers removed targets. The relocation run above covers an insertion and an explicit line move. The simultaneous confirmation run above covers two reviewers acting on the same suggestion.
 3. Empty and whitespace source: separately compare preserved Markdown, intended
    file effect, warnings/confirmation and actual application. Stock GitLab's
    whitespace-only source becomes deletion. The matched empty/one-newline UI
@@ -217,7 +224,7 @@ handoff discovery is retained; predefined immediate and settled profiles run
 identically on both sides. The comparator refuses environment/input/instrument
 mismatches, missing editor proof and unobserved outcomes.
 
-Next: extend matched workflows to simultaneous reviews,
+Next: reconcile the second reviewer’s feedback against the persisted suggestion and extend matched workflows to simultaneous issue saves,
 wider deletion ranges/whitespace inputs, clipboard wrapped-line/Unicode/merged-cell/ownership
 workflows plus rapid-input profiles, tables/tasks/media and then roles/concurrency,
 additional browsers/mobile and matched restart. Keep the shared Applied-history

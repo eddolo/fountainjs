@@ -19,6 +19,28 @@ connect to an existing GitLab account or installation. Metrics are disabled and
 service concurrency is reduced for this small local test environment; these
 settings are not performance or deployment recommendations.
 
+### Reproduce concurrent review submissions
+
+Use the paired [comparison commands](../COMPATIBILITY_SUITE_PLAN.md#reproduce-an-issue-or-merge-request-comparison)
+with `suite=concurrent-reviews`. Both deployments must use the same thread setting.
+To reproduce the earlier two-thread run, export `FOUNTAIN_GITLAB_PUMA_THREADS=2`
+before running either side. Use a fresh run ID for each profile. The runner checks
+the generated Puma configuration once GitLab is healthy. To return to the default
+profile, unset the variable before the next run.
+
+On the two-thread profile, both reviewers received “4:Deadline Exceeded.” on both
+editors. The branch stayed at the seed commit and the original suggestion remained
+unapplied after reload. The first collector stopped listening after 30 seconds.
+The longer observation captured the actual responses and saved state.
+[Two-thread results](../../../artifacts/gitlab-compatibility/two-reviewers-20261119/comparison-2/report.md).
+
+The local default now permits four Puma threads with the same CPU and memory limits.
+In the four-thread comparison, each editor produced one commit, one applied
+suggestion and the expected file. The losing reviewer saw a Git reference error
+and an Apply control until reload. Reopen the discussion to see the Applied badge.
+This verifies this pair of simultaneous requests on the pinned local deployment.
+[Four-thread results and build identities](../../../artifacts/gitlab-compatibility/two-reviewers-20261119/comparison-3/report.md).
+
 ### Native footnote server repair
 
 Native browser profiles now declare a separate read-only Ruby filter mount from

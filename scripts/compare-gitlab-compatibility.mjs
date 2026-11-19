@@ -38,6 +38,29 @@ if (['stale-reviews','relocated-reviews'].includes(reports[0].suite)) {
   }
   table.push('');
 }
+if (reports[0].suite === 'concurrent-reviews') {
+  table.push('## Two confirmations on the same suggestion','');
+  if (result.environment.matched && reports[0].deployment?.puma) {
+    const {minThreads,maxThreads,workers} = reports[0].deployment.puma;
+    table.push('Generated Puma configuration on both deployments: '+workers+' cluster workers, '+minThreads+' to '+maxThreads+' request threads.','');
+  }
+  table.push('| Editor | Reviewer | Apply response | Visible feedback |',
+    '| --- | --- | --- | --- |');
+  for (const report of reports) {
+    for (const item of report.observations ?? []) {
+      if (!result.environment.matched || result.rows.find(row=>row.case===item.id && row.invariant==='singleSuccess')?.[report.side]===undefined) {
+        table.push('| '+report.side+' | Unverified | — | — |');
+        continue;
+      }
+      for (const s of item.submissions) {
+        const name=item.reviewers.find(r=>r.id===s.actor).username;
+        const feedback=[s.badge?'Applied':'',s.alert].filter(Boolean).join(' / ').replaceAll('|','\\|').replace(/\s+/gu,' ');
+        table.push('| '+report.side+' | '+name+' | HTTP '+s.status+' | '+feedback+' |');
+      }
+    }
+  }
+  table.push('','The browser request intervals must overlap. The saved branch, complete file and suggestion are checked independently after submission and reload.','');
+}
 if (reports[0].suite === 'quick-save') {
   table.push('## Final key to Save click', '',
     '| Workflow | Stock GitLab | Fountain | Persisted Markdown after reload |',

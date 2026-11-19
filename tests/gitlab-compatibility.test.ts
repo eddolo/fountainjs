@@ -169,6 +169,45 @@ it('requires a real attempt on the posted suggestion before crediting stale-sour
  expect(row().status).toBe('missing-evidence');
 });
 
+it('requires overlapping confirmed requests from distinct reviewers and a single durable edit', () => {
+ const pair = reports();
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-concurrent-reviews.json',import.meta.url),'utf8'));
+ const input=fixture.cases[0], seed='a'.repeat(40), head='b'.repeat(40);
+ const body='```suggestion:-0+0\nold();\nreviewed();\n```\n\n'+fixture.marker;
+ for (const report of pair) {
+   report.fixture = fixture;
+   const state = {source:input.expectedSource,fileCommit:head,head,parents:[seed],message:'Reviewer A',noteId:5,body,suggestions:[{id:8,applied:true}]};
+   Object.assign(report.observations[0]!,{id:input.id,input,status:'observed',
+     saved:{id:5,body,suggestions:[{id:8,appliable:true,applied:false}]},beforeApplyHead:seed,setup:{seedCommit:seed},
+     beforeApplyFile:{content:Buffer.from(input.source).toString('base64')},membership:{id:2,accessLevel:30},cleanupMembership:{id:2,accessLevel:10},
+     reviewers:[{id:1,username:'root',message:'Reviewer A'},{id:2,username:fixture.username,message:'Reviewer B'}],
+     submissions:[{actor:1,path:'/api/v4/suggestions/8/apply',status:200,requestStart:1,responseEnd:51,start:100,end:150,badge:true},
+       {actor:2,path:'/api/v4/suggestions/8/apply',status:409,requestStart:1,responseEnd:51,start:115,end:165,alert:'Already applied'}],
+     reloadedReviewers:[{actor:1,badge:true,canApply:false},{actor:2,badge:true,canApply:false}],
+     afterDecision:{...state},afterReload:{...state}});
+ }
+ const row=(key:string)=>compareGitLabCompatibility(...pair).rows.find((r:any)=>r.invariant===key);
+ expect(row('singleSuccess').classification).toBe('parity');
+ Object.assign(pair[0].deployment,{puma:{workers:0,minThreads:2,maxThreads:4}});
+ expect(row('singleSuccess').classification).toBeNull();
+ Object.assign(pair[1].deployment,{puma:{workers:0,minThreads:2,maxThreads:2}});
+ expect(row('singleSuccess').classification).toBeNull();
+ Object.assign(pair[1].deployment,{puma:{workers:0,minThreads:2,maxThreads:4}});
+ const item=pair[1].observations[0] as any;
+ item.submissions[1].start=150;item.submissions[1].end=200;
+ expect(row('singleSuccess').status).toBe('missing-evidence');
+ item.submissions[1].start=115;item.submissions[1].end=165;
+ item.submissions[1].actor=1;
+ expect(row('singleSuccess').status).toBe('missing-evidence');
+ item.submissions[1].actor=2;item.submissions[1].status=500;
+ expect(row('singleSuccess').classification).toBe('regression');
+ item.submissions[1].status=409;item.afterReload.source+=fixture.appendLine;
+ expect(row('afterReload.source').classification).toBe('regression');
+ item.afterReload.parents=[head];item.afterReload.suggestions[0].id=9;
+ expect(row('afterReload.commit').classification).toBe('regression');
+ expect(row('afterReload.review').classification).toBe('regression');
+});
+
 it('separates safe refusal from correct relocation and checks the resulting commit', () => {
  const pair = reports();
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-relocated-reviews.json', import.meta.url),'utf8'));

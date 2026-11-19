@@ -1,6 +1,7 @@
 import {expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import {concurrentReview} from './audit-gitlab-concurrent-review.mjs';
 
 /** Both drivers operate real UI; neither receives an editor model/command API. */
 function driver(side, page) {
@@ -293,6 +294,10 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       result.beforeApplyHead=(await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(branch)}`)).commit.id;
       await page.reload();const savedNote=page.locator('#note_'+note.id);await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
       await page.screenshot({path:join(output,input.id+'-posted.png'),fullPage:true,animations:'disabled',caret:'initial'});
+      if(input.scope==='concurrent-review') {
+        await concurrentReview({page,request,project,fixture,result,input,mr,base,note,branch,fileURL,output,stage});
+        result.status='observed';await stage('complete');continue;
+      }
       if(input.scope==='stale-review' || input.scope==='relocated-review') {
         await staleReview({page,request,input,fixture,result,project,branch,seed,note,savedNote,mr,base,fileURL,output,stage});
         result.status='observed';await stage('complete');continue;

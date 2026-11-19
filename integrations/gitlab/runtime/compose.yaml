@@ -13,12 +13,13 @@ services:
     ports:
       - "127.0.0.1:5080:5080"
     environment:
+      FOUNTAIN_GITLAB_PUMA_THREADS: "${FOUNTAIN_GITLAB_PUMA_THREADS:-4}"
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://127.0.0.1:5080'
         letsencrypt['enable'] = false
         puma['worker_processes'] = 0
         puma['min_threads'] = 2
-        puma['max_threads'] = 2
+        puma['max_threads'] = Integer(ENV.fetch('FOUNTAIN_GITLAB_PUMA_THREADS'))
         sidekiq['concurrency'] = 3
         postgresql['shared_buffers'] = '128MB'
         prometheus_monitoring['enable'] = false

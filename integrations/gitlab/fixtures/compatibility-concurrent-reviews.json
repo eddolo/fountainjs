@@ -1,0 +1,26 @@
+{
+  "formatVersion": 1,
+  "workflow": "two-reviewers-apply-one-posted-suggestion",
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "title": "Two reviewers approve one change",
+  "marker": "Ready for both reviewers",
+  "appendLine": "reviewed();\n",
+  "sourceObservationDelayMs": 1500,
+  "cases": [
+    {
+      "id": "two-reviewers-apply",
+      "scope": "concurrent-review",
+      "filePath": "review-target.js",
+      "source": "before();\nold();\nkeep();\n",
+      "expectedSource": "before();\nold();\nreviewed();\nkeep();\n",
+      "range": {
+        "start": 2,
+        "end": 2
+      },
+      "handoffDelayMs": 1500
+    }
+  ]
+}

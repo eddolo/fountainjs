@@ -91,6 +91,7 @@ export function compareGitLabCompatibility(original,fountain){
   check('expected GitLab source revision', original?.buildIdentity?.expected?.gitlabCommit, fountain?.buildIdentity?.expected?.gitlabCommit);
   for(const key of ['runId','fixtureHash','fixture','harnessHashes','browser'])check(key,original?.[key],fountain?.[key]);
   for(const key of ['image','imageId','backendMounts','backendEnvironmentHash','cpus','memory'])check('deployment.'+key,original?.deployment?.[key],fountain?.deployment?.[key]);
+  if (original?.deployment?.puma || fountain?.deployment?.puma) check('deployment.puma',original?.deployment?.puma,fountain?.deployment?.puma);
   for(const key of ['version','project','actor','serverSources'])check('backend.'+key,original?.backend?.[key],fountain?.backend?.[key]);
   const fixture=original?.fixture,rows=[];
   if(!Array.isArray(fixture?.cases)||fixture.cases.length===0||fixture.cases.length>100)throw new Error('Invalid comparison fixture');
@@ -98,6 +99,67 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if (input.scope === 'concurrent-review') {
+      const body = '```suggestion:-0+0\n'+input.source.split('\n')[input.range.start-1]+'\n'+fixture.appendLine+'```\n\n'+fixture.marker;
+      const assess = (report,item) => {
+        if (!verifiedEditor(report,item) || item.status!=='observed') return {};
+        const {reviewers,submissions,saved,setup,membership,cleanupMembership} = item;
+        if (reviewers?.length!==2 || submissions?.length!==2 || saved?.suggestions?.length!==1) return {};
+        const suggestion = saved.suggestions[0];
+        if (!Number.isSafeInteger(suggestion.id) || suggestion.id<=0 || suggestion.appliable!==true || suggestion.applied!==false ||
+            !Number.isSafeInteger(saved.id) || saved.body!==body ||
+            !/^[a-f0-9]{40}$/u.test(setup?.seedCommit) || item.beforeApplyHead!==setup.seedCommit ||
+            decoded(item.beforeApplyFile)!==input.source || reviewers[0].username!=='root' ||
+            reviewers[1].username!==fixture.username || reviewers[0].id===reviewers[1].id ||
+            membership?.id!==reviewers[1].id || membership.accessLevel!==30 ||
+            cleanupMembership?.id!==membership.id || cleanupMembership.accessLevel!==10 ||
+            !submissions.every((s,i)=>Number.isSafeInteger(reviewers[i].id) && s.actor===reviewers[i].id &&
+              s.path==='/api/v4/suggestions/'+suggestion.id+'/apply' && Number.isInteger(s.status) &&
+              Number.isFinite(s.start) && Number.isFinite(s.end) && Number.isFinite(s.requestStart) && s.requestStart>=0 &&
+              Number.isFinite(s.responseEnd) &&
+              s.responseEnd>s.requestStart && s.end>s.start)) return {};
+        if (Math.min(...submissions.map(s=>s.end)) <= Math.max(...submissions.map(s=>s.start))) return {};
+        const winners = submissions.filter(s=>s.status>=200 && s.status<300);
+        const winner = reviewers.find(r=>r.id===winners[0]?.actor);
+        const loser = submissions.find(s=>[400,409,422].includes(s.status));
+        const outcome = {
+          singleSuccess:winners.length===1 && !!loser,
+          reviewerFeedback:winners.length===1 && winners[0].badge===true && !!loser &&
+            (loser.badge===true || /(?:already|previously|successfully) applied|applied by another/i.test(loser.alert??'')),
+        };
+        for (const phase of ['afterDecision','afterReload']) {
+          const state=item[phase];
+          if (!state) continue;
+          outcome[phase+'.source']=state.source;
+          outcome[phase+'.commit']=Array.isArray(state.parents) && equal(state.parents,[setup.seedCommit]) &&
+            /^[a-f0-9]{40}$/u.test(state.head) && state.head!==setup.seedCommit && state.fileCommit===state.head;
+          outcome[phase+'.credit']=winners.length===1 && state.message===winner.message;
+          outcome[phase+'.review']=state.noteId===saved.id && state.body===saved.body &&
+            equal(state.suggestions,[{id:suggestion.id,applied:true}]);
+        }
+        if (item.afterDecision?.head && item.afterReload?.head) outcome.stableHead=item.afterDecision.head===item.afterReload.head;
+        if (item.reloadedReviewers?.length===2) outcome.bothReaders=item.reloadedReviewers.every((r,i)=>
+          r.actor===reviewers[i].id && r.badge===true && r.canApply===false);
+        return outcome;
+      };
+      const left=assess(original,a),right=assess(fountain,b);
+      if (left.singleSuccess!==undefined && right.singleSuccess!==undefined) check(input.id+'.reviewers',a.reviewers,b.reviewers);
+      const expectations=[
+        ['singleSuccess','One confirmation succeeds and the competing request is refused',true],
+        ['reviewerFeedback','Both reviewers see that the suggestion was applied',true],
+        ['stableHead','Branch head survives both reviewers reloading',true],
+        ['bothReaders','Both reviewers reopen the Applied note without another Apply action',true],
+      ];
+      for (const [phase,when] of [['afterDecision','after both confirmations'],['afterReload','after both reloads']]) {
+        expectations.push([phase+'.source','Complete file contains the change exactly once ('+when+')',input.expectedSource],
+          [phase+'.commit','One direct commit on the seed branch ('+when+')',true],
+          [phase+'.credit','Commit carries the successful reviewer’s message ('+when+')',true],
+          [phase+'.review','Same note and suggestion retain Applied status ('+when+')',true]);
+      }
+      for (const [invariant,label,expected] of expectations) rows.push({case:input.id,invariant,label,expected,
+        original:left[invariant],fountain:right[invariant],classification:null});
+      continue;
+    }
     if(input.scope==='stale-review' || input.scope==='relocated-review') {
       const originalBody = '```suggestion:-0+0\n' + input.source.split('\n')[input.range.start-1] + '\n' + fixture.appendLine + '```\n\n'+fixture.marker;
       const disabled = item => item.confirmationOffered===false && !item.applyResponse &&
