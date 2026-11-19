@@ -750,6 +750,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "bpmn-js": "18.33.0",
     "commonmark": "0.31.2",
     "commonmark-spec": "0.31.2",
     "css-select": "7.0.0",

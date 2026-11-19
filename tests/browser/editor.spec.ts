@@ -9,6 +9,7 @@ import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
 import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
 import '../manual/bar-chart-workbench.spec';
 import '../manual/mermaid-workbench.spec';
+import '../manual/bpmn-workbench.spec';
 import '../manual/document-boundary-range-real.spec';
 import '../manual/document-range-formatting-real.spec';
 import '../manual/structural-wrapping-real.spec';

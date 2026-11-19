@@ -91,7 +91,8 @@ const reactVersionsNames = ['FountainVersions'];
 const reactIntegrityNames = ['FountainIntegrityInspector'];
 function checkDiagramSource(core, diagrams) {
   const extension = diagrams.createMermaidExtension({ scriptURL: '/assets/mermaid.min.js' });
-  const kit = core.composeExtensions([core.CoreExtension, extension]);
+  const bpmn = diagrams.createBpmnExtension({ scriptURL: '/assets/bpmn-viewer.js' });
+  const kit = core.composeExtensions([core.CoreExtension, extension, bpmn]);
   const editor = core.createEditor({ schema: kit.schema, plugins: kit.plugins });
   const source = 'flowchart TD\n  draft[Draft] --> review[Review]';
   if (!diagrams.insertMermaid(editor, source) || !core.MarkdownExporter.export(editor.state.doc).includes('```mermaid\n' + source + '\n```')) {
@@ -100,7 +101,14 @@ function checkDiagramSource(core, diagrams) {
   editor.destroy();
   const guarded = core.createEditor({ schema: kit.schema, plugins: [...kit.plugins, new core.Plugin({ filterTransaction: tr => !tr.docChanged })] });
   const before = guarded.state;
-  if (diagrams.insertMermaid(guarded, source) || guarded.state !== before) throw new Error('Rejected diagram insertion reported success or changed state.');
+  const xml = '<?xml version="1.0"?>\r\n<!-- révision -->';
+  const process = core.createEditor({ schema: kit.schema, plugins: kit.plugins });
+  core.selectAll(process);
+  if (!diagrams.insertBpmn(process, xml) || diagrams.exportBpmnSource(process.state.doc) !== xml) {
+    throw new Error('BPMN source changed during a headless edit and export.');
+  }
+  process.destroy();
+  if (diagrams.insertBpmn(guarded, xml) || diagrams.insertMermaid(guarded, source) || guarded.state !== before) throw new Error('Rejected diagram insertion reported success or changed state.');
   guarded.destroy();
 }
 

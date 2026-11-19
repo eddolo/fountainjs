@@ -86,6 +86,8 @@ import { ChartCSVControls } from './ChartCSVControls';
 import { chartInputPlugin, ChartExtension, exportChartImage, insertBarChart, selectedChart, setChartAxisTitle, setChartType, setChartTarget, setChartValueRange, tableChartAction, toggleTableChart, type ChartImageFormat, type ChartType } from 'fountainjs-editor/charts';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
+import { BpmnPreviewExtension } from './bpmn-preview';
+import editorialReview from './editorial-review.bpmn?raw';
 import { MermaidPreviewExtension } from './mermaid-preview';
 import { SitePageLink } from './SitePageLink';
 import 'fountainjs-editor/styles.css';
@@ -332,6 +334,7 @@ const slashCommandExtension = createSlashCommandExtension({
 const demoKit = composeExtensions([
   CoreExtension,
   MermaidPreviewExtension,
+  BpmnPreviewExtension,
   defineExtension({ name: 'chart-input', plugins: [chartInputPlugin] }),
   InvisibleCharacterExtension,
   StableNodeIdsExtension,
@@ -622,8 +625,9 @@ function App() {
   const words = characterCount.words(editor);
   const blocks = state?.doc.childCount ?? 0;
 
-  const addBlock = (kind: 'quote' | 'task' | 'table' | 'details' | 'callout' | 'chart' | 'mermaid') => {
+  const addBlock = (kind: 'quote' | 'task' | 'table' | 'details' | 'callout' | 'chart' | 'mermaid' | 'bpmn') => {
     if (kind === 'callout') demoKit.commands.insertCallout?.(editor);
+    else if (kind === 'bpmn') BpmnPreviewExtension.commands.insertBpmn(editor, editorialReview);
     else if (kind === 'mermaid') {
       MermaidPreviewExtension.commands.insertMermaid(editor, 'flowchart TD\n  draft[Draft] --> review[Review]\n  review --> publish[Publish]');
     } else if (kind === 'chart') insertBarChart(editor, 'Change in weekly orders', [['Monday', 12], ['Tuesday', -4], ['Wednesday', 8]]);
@@ -753,6 +757,7 @@ function App() {
               <button onClick={() => addBlock('table')}>▦ Table</button>
               <button onClick={() => addBlock('chart')}>Bar chart</button>
               <button onMouseDown={event => event.preventDefault()} onClick={() => addBlock('mermaid')}>Mermaid diagram</button>
+              <button onMouseDown={event => event.preventDefault()} onClick={() => addBlock('bpmn')}>BPMN process</button>
               {chartAction && <button onMouseDown={event => event.preventDefault()} onClick={() => {
                 if (toggleTableChart(editor)) editorHandle.current?.focus();
               }}>{chartAction === 'wrap' ? 'Chart this table' : 'Keep as table'}</button>}

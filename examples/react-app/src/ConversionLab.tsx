@@ -4,6 +4,7 @@ import type { DOCXPackagePart } from 'fountainjs-editor/docx';
 import { FountainComposer, FountainEditor, useFountain, useFountainState, type FountainEditorHandle } from 'fountainjs-editor/react';
 import { computeFootnoteNumbering, inspectFootnotes, insertFootnote, selectFootnoteDefinition, reconnectFootnote, removeFootnote, inspectPageTemplates, selectPageTemplate, insertPageBreak, setDocumentPageSettings } from 'fountainjs-editor/pages';
 import { createLabContext, detectLabFormat, exportLab, importLab, labImages, labReportIssues, sameLabDocument, type LabContext, type LabFormat, type LabIssue } from './conversion-lab';
+import { bpmnPlugin } from './bpmn-preview';
 import { diagramPlugin } from './mermaid-preview';
 import { SitePageLink } from './SitePageLink';
 import { ConversionPagePreview } from './ConversionPagePreview';
@@ -21,7 +22,7 @@ type RoundTripCheck = {
   | { reopened: true; id: string; document: Node; equal: boolean }
   | { reopened: false; reason: string }
 );
-const formats: LabFormat[] = ['json', 'markdown', 'html', 'docx'];
+const formats: LabFormat[] = ['json', 'markdown', 'html', 'docx', 'bpmn'];
 const pageSettingFields = [
   ['width', 'Page width'], ['height', 'Page height'], ['marginTop', 'Top margin'],
   ['marginRight', 'Right margin'], ['marginBottom', 'Bottom margin'], ['marginLeft', 'Left margin'],
@@ -33,7 +34,7 @@ function download(data: BlobPart, name: string, type = 'application/octet-stream
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 function Preview({ document, context }: { document: Node; context: LabContext }) {
-  const editor = useFountain({ schema: context.kit.schema, content: document.toJSON(), plugins: [diagramPlugin], editable: false });
+  const editor = useFountain({ schema: context.kit.schema, content: document.toJSON(), plugins: [diagramPlugin, bpmnPlugin], editable: false });
   return <FountainEditor editor={editor} ariaLabel="Reopened export preview" />;
 }
 function IssueList({ issues }: { issues: readonly LabIssue[] }) {
@@ -105,7 +106,7 @@ function SourceImageRecovery({ file, parts, editor }: { file: File; parts: reado
 }
 function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const [initialState] = useState(() => EditorState.create({ schema: entry.context.schema,
-    doc: entry.result!.document, plugins: [...entry.context.kit.plugins, diagramPlugin] }));
+    doc: entry.result!.document, plugins: [...entry.context.kit.plugins, diagramPlugin, bpmnPlugin] }));
   const editor = useFountain({ schema: entry.context.kit.schema, state: initialState });
   const surface = useRef<FountainEditorHandle>(null);
   const insertFootnoteButton = useRef<HTMLButtonElement>(null);
@@ -335,7 +336,7 @@ export function ConversionLab() {
   return <main className="conversion-lab">
     <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
     <div className="lab-shell"><nav className="lab-breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a><span> / </span><a href="./demos.html">Demos</a><span> / Conversion lab</span></nav><a href="./demos.html">← Back to demos</a><h1>Try your own documents.</h1><p className="lab-intro">Import, inspect, edit and reopen an export. A working conversion lab—not a guarantee of identical output.</p>
-    <section className="lab-drop" onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); void open(Array.from(event.dataTransfer.files)); }} aria-label="Local file import"><label>Drop files here, or choose files<input ref={fileChooser} aria-label="Choose documents" type="file" multiple disabled={busy} onChange={event => { void open(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label><p>Markdown · HTML · DOCX · Fountain JSON. Other formats, including PDF, TeX, ODT and EPUB, are not supported in this first lab.</p><div className="lab-actions"><button disabled={busy || entries.length >= 8} onClick={() => void open([new File(['# Conversion check\n\nA paragraph with **bold text**.\n\n- [ ] Verify the export\n- [x] Keep the original\n'], 'sample.md', { type: 'text/markdown' })])}>Try a sample</button><button disabled={busy || !entries.length} onClick={clearSession}>Clear session</button></div></section>
+    <section className="lab-drop" onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); void open(Array.from(event.dataTransfer.files)); }} aria-label="Local file import"><label>Drop files here, or choose files<input ref={fileChooser} aria-label="Choose documents" type="file" multiple disabled={busy} onChange={event => { void open(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label><p>Markdown · HTML · DOCX · BPMN · Fountain JSON. Other formats, including PDF, TeX, ODT and EPUB, are not supported in this first lab.</p><div className="lab-actions"><button disabled={busy || entries.length >= 8} onClick={() => void open([new File(['# Conversion check\n\nA paragraph with **bold text**.\n\n- [ ] Verify the export\n- [x] Keep the original\n'], 'sample.md', { type: 'text/markdown' })])}>Try a sample</button><button disabled={busy || !entries.length} onClick={clearSession}>Clear session</button></div></section>
     <fieldset className="lab-import-options" disabled={busy}>
       <legend>Options for the next files</legend>
       <label className="lab-checkbox"><input type="checkbox" checked={commonMarkSourceReview} onChange={event => setCommonMarkSourceReview(event.target.checked)} /> Use CommonMark source review for Markdown, HTML and Fountain JSON</label>

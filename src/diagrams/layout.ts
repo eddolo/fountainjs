@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 import type { Node } from '../core';
+import { diagramFrame } from './frame';
 import bootstrap from './mermaid-frame.js?raw';
 
 export type Preview = { svg: string; title?: string } | { error: string };
@@ -12,25 +13,11 @@ export class MermaidLayout {
   private readonly pending = new Set<(result: Preview) => void>();
 
   constructor(owner: Document, scriptURL: string) {
-    const url = new URL(scriptURL, owner.baseURI);
-    if (!['https:', 'http:'].includes(url.protocol)) throw new TypeError('Serve the Mermaid script over HTTP or HTTPS.');
-    const frame = owner.createElement('iframe');
-    frame.title = 'Mermaid layout';
+    const frame = diagramFrame(owner, scriptURL, bootstrap, 'Mermaid layout');
     frame.tabIndex = -1;
     frame.setAttribute('aria-hidden', 'true');
-    frame.setAttribute('sandbox', 'allow-scripts');
     frame.style.cssText = 'position:fixed;left:-10000px;top:0;width:800px;height:600px;border:0;pointer-events:none';
-    const nonce = Array.from(crypto.getRandomValues(new Uint32Array(4)), n => n.toString(16).padStart(8, '0')).join('');
-    const policy = "default-src 'none'; script-src 'nonce-" + nonce + "'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'";
-    const library = owner.createElement('script');
-    library.setAttribute('nonce', nonce);
-    library.src = url.href;
-    const bridge = owner.createElement('script');
-    bridge.setAttribute('nonce', nonce);
-    bridge.textContent = bootstrap;
     this.ready = new Promise(resolve => { frame.onload = () => resolve(); });
-    // Only trusted installation settings enter this HTML. Source travels over a private port.
-    frame.srcdoc = '<!doctype html><meta http-equiv="Content-Security-Policy" content="' + policy + '"><body>' + library.outerHTML + bridge.outerHTML;
     this.frame = frame;
     owner.body.append(frame);
   }

@@ -8,6 +8,16 @@ import { createEditor, EditorState, HTMLExporter, Schema, StarterKit } from 'fou
 import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 const bytes = (text: string) => new TextEncoder().encode(text);
 describe('public conversion lab adapters', () => {
+  it('preserves UTF-8 BPMN XML byte for byte and refuses to discard accompanying prose', () => {
+    const original = bytes('\uFEFF<?xml version="1.0" encoding="UTF-8"?>\r\n<!-- révision -->\r\n');
+    expect(detectLabFormat('editorial.BPMN')).toBe('bpmn');
+    const doc = importLab(original, 'bpmn').document;
+    expect(exportLab(doc, 'bpmn').bytes).toEqual(original);
+    const mixed = labSchema.node('doc', {}, [...doc.content, labSchema.node('paragraph')]);
+    expect(() => exportLab(mixed, 'bpmn')).toThrow('one BPMN source block');
+    expect(() => importLab(bytes('<?xml version="1.0" encoding="UTF-16"?>'), 'bpmn')).toThrow('UTF-8');
+  });
+
   it('exports offline inline/display MathML and reopens the exact original equation data', () => {
     const doc = labSchema.node('doc', {}, [
       labSchema.node('paragraph', {}, [labSchema.text('Before '), labSchema.node('inline_math', { latex: 'x^{2}', ariaLabel: 'x squared' }), labSchema.text(' after.')]),

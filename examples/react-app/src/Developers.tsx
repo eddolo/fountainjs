@@ -1,3 +1,4 @@
+import bpmnLicenseURL from 'bpmn-js/LICENSE?url&no-inline';
 import { SitePageLink } from './SitePageLink';
 import { StarterDownload } from './StarterDownload';
 import publishedStarter from '../../starters/published-version.json';
@@ -830,6 +831,9 @@ const diagrams = createMermaidExtension({ scriptURL: '/assets/mermaid.min.js' })
 const kit = composeExtensions([CoreExtension, diagrams]);
 const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
 insertMermaid(editor, 'flowchart TD\\n  draft[Draft] --> review[Review]');`}</Code>
+            <h3 id="bpmn-diagrams">BPMN processes</h3>
+            <p>Choose <strong>BPMN process</strong> in the playground to insert an editorial review workflow. Edit a task name in the XML to update the drawing. Choose <strong>Download BPMN source</strong> to save it, or open a UTF-8 .bpmn file directly in the Conversion Lab. The preview shows the first diagram in the file.</p>
+            <p>Register <code>createBpmnExtension(&#123; scriptURL, styleText &#125;)</code> from <code>fountainjs-editor/diagrams</code>. Supply a locally hosted bpmn-js viewer script and its viewer styles. <a href={bpmnLicenseURL}>bpmn-js license</a></p>
             <h3 id="bar-charts">Editable charts</h3>
             <p>In the development build, choose <b>Bar chart</b> in the <a href="./#playground">live editor</a>. To plot an existing table of categories and values, select a cell and choose <b>Chart this table</b>. Choose <b>Keep as table</b> to return to the table. A chart title becomes an ordinary paragraph. Edit category names and values directly in the cells, or paste tab-separated spreadsheet rows into the first destination cell. Correcting a value redraws the plot. Undo restores both. Use <b>Chart type</b> to switch between bar, column, line and pie.</p>
             <p>Open <b>Chart axes</b> to label categories and values. Enter a minimum and maximum to compare charts on the same scale. Horizontal bars show a numbered ruler beneath the bars. Column and line charts show horizontal gridlines automatically. A blank bound is automatic. Enter a positive <b>Tick interval</b> to set the distance between marks. For a range of −20 to 20, an interval of 10 labels −20, −10, 0, 10 and 20. Choose <b>Apply range</b> to update the plot. Choose <b>Use automatic scale</b> to clear both bounds and the tick interval. Values outside the visible range stay in the editable table. These titles follow their respective axes when the orientation changes. Images and Word charts include them. Pie charts hide both.</p>

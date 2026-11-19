@@ -1,3 +1,4 @@
+import { exportBpmnSource } from 'fountainjs-editor/diagrams';
 import { BarChartExtension } from 'fountainjs-editor/charts';
 import katex from 'katex';
 import { HTMLAnchorExtension, HTMLCommentExtension, HTMLContainerExtension, HTMLFlowExtension, HTMLExporter, MarkdownExporter, MarkdownImporter, Schema, StarterKit, composeExtensions, createKaTeXRenderer, createMathExtension, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
@@ -9,7 +10,7 @@ import { exportDOCX, importDOCX, type DOCXChartWorkbook, type DOCXPackagePart } 
 import { compileTeXForDOCX } from './mathjax-docx';
 import { renderLabHTMLMath } from './conversion-html-math';
 
-export type LabFormat = 'markdown' | 'html' | 'docx' | 'json';
+export type LabFormat = 'markdown' | 'html' | 'docx' | 'json' | 'bpmn';
 export type LabIssue = { code: string; message: string; type?: string; path?: readonly number[]; sourcePart?: string };
 /** Source package paths follow the same explicit opt-in for every report section.
  * Warning messages may still contain source fragments; this is not anonymization.
@@ -74,8 +75,9 @@ export function detectLabFormat(name: string): LabFormat {
   if (extension === 'md' || extension === 'markdown') return 'markdown';
   if (extension === 'html' || extension === 'htm') return 'html';
   if (extension === 'docx') return 'docx';
+  if (extension === 'bpmn') return 'bpmn';
   if (extension === 'json') return 'json';
-  throw new Error('Not supported in this lab yet. Choose Markdown, HTML, DOCX or Fountain document JSON.');
+  throw new Error('Not supported in this lab yet. Choose Markdown, HTML, DOCX, BPMN or Fountain document JSON.');
 }
 function boundedJSON(text: string) {
   const value = JSON.parse(text);
@@ -96,7 +98,11 @@ export function importLab(bytes: Uint8Array, format: LabFormat, context: LabCont
     const result = importDOCX(bytes, labSchema, { includeChartWorkbooks: true, maxArchiveBytes: 4 * 1024 * 1024, maxExpandedBytes: 24 * 1024 * 1024 });
     return { document: result.document, issues: result.report.issues.map(issue => ({ code: issue.code, message: issue.message, path: issue.path, sourcePart: issue.sourcePart })), packageParts: result.packageParts, chartWorkbooks: result.chartWorkbooks };
   }
-  const text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: format === 'bpmn' }).decode(bytes);
+  if (format === 'bpmn') {
+    if (text.includes('\0') || /^\uFEFF?<\?xml\b[^?]*\bencoding\s*=\s*["'](?!utf-8["'])/i.test(text)) throw new Error('Use UTF-8 encoded BPMN XML in this lab.');
+    return { document: labSchema.topNodeType.create({}, [labSchema.node('code_block', { language: 'bpmn' }, [labSchema.text(text)])]), issues: [] };
+  }
   if (format === 'html') {
     const result = ServerHTMLImporter.parseWithReport(text, labSchema);
     return { document: result.document, issues: [...result.issues] };
@@ -152,6 +158,7 @@ export function exportLab(
   // Keep live import/editing provenance when this file owns the schema. A JSON
   // copy would turn an automatic caret paragraph into an authored empty block.
   // Explicit foreign-schema callers still need normal portable reconstruction.
+  if (format === 'bpmn') return { bytes: new TextEncoder().encode(exportBpmnSource(document)), extension: 'bpmn', mime: 'application/xml', issues: [] };
   if (document.type.schema !== context.schema) document = context.schema.nodeFromJSON(document.toJSON());
   if (format === 'docx') {
     const result = exportDOCX(document, {
