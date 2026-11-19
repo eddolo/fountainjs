@@ -1,0 +1,20 @@
+{
+  "formatVersion": 1,
+  "workflow": "recover-an-issue-description-after-a-failed-offline-save",
+  "cases": [
+    {
+      "id": "retry-in-place",
+      "scope": "reconnect",
+      "description": "Release window confirmed.",
+      "suffix": " Notify support before rollout.",
+      "reloadBeforeRetry": false
+    },
+    {
+      "id": "reload-then-retry",
+      "scope": "reconnect",
+      "description": "Release window confirmed.",
+      "suffix": " Notify support before rollout.",
+      "reloadBeforeRetry": true
+    }
+  ]
+}

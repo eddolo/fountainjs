@@ -21,6 +21,21 @@ const table=['# Matched GitLab editor comparison','','**Original** — '+describ
 ...(rollback?[rollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
 '| Case | Invariant | Classification |','| --- | --- | --- |',...result.rows.map(row=>`| ${row.case} | ${row.label} | ${row.classification??row.status} |`),'',
 'Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.',''];
+if (reports[0].suite === 'quick-save') {
+  table.push('## Final key to Save click', '',
+    '| Workflow | Stock GitLab | Fountain | Persisted Markdown after reload |',
+    '| --- | ---: | ---: | --- |');
+  for (const input of reports[0].fixture.cases) {
+    const timings = reports.map(report => {
+      const gesture = report.observations.find(item => item.id === input.id)?.gesture;
+      return Number.isFinite(gesture?.clickAt) && Number.isFinite(gesture?.keyAt)
+        ? (gesture.clickAt - gesture.keyAt).toFixed(1) + ' ms' : 'Unverified';
+    });
+    const saved = result.rows.find(row => row.case === input.id && row.invariant === 'afterReload');
+    table.push('| ' + input.id + ' | ' + timings.join(' | ') + ' | ' + (saved.classification ?? saved.status) + ' |');
+  }
+  table.push('', 'Immediate clicks must arrive within 100 ms of the final keydown. The review controls wait at least 500 ms. Both sides must show the intended paragraph at click time.', '');
+}
 if (rollback?.records?.length) {
   table.push('## Saved issues after frontend rollback', '',
     '| Authored in | Issue | Immediate rich-text Save | Reviewed Markdown Save and retained comment |',

@@ -72,6 +72,28 @@ must be identical on both sides or the result is not a matched editor comparison
 Declare asset selection as an intentional frontend difference; server features,
 permissions and policy must not change between sides. Start with the stock server.
 
+### Reproduce the issue Save comparisons
+
+Use the pinned Linux deployment from the [runtime guide](runtime/README.md#reproduce-the-frontend-deployment-and-rollback).
+Run from the Fountain checkout with the test container stopped. Choose
+`quick-save` for click timing or `reconnect` for loss of connectivity.
+
+```sh
+suite=quick-save
+run_id="$suite-$(date -u +%Y%m%d-%H%M%S)"
+node scripts/run-gitlab-compatibility.mjs --suite "$suite" --run-id "$run_id" --editor fountain
+node scripts/run-gitlab-compatibility.mjs --suite "$suite" --run-id "$run_id" --editor original
+node scripts/compare-gitlab-compatibility.mjs \
+  --original "artifacts/gitlab-compatibility/$run_id/original-1/report.json" \
+  --fountain "artifacts/gitlab-compatibility/$run_id/fountain-1/report.json" \
+  --output "artifacts/gitlab-compatibility/$run_id/comparison"
+```
+
+The quick-save suite records trusted keydown and click events and inspects the
+paragraph at click time. The reconnect suite requires the actual description
+mutation to fail with the browser offline. Both suites read back the saved
+issue from GitLab and reopen it in the browser.
+
 ## Equivalent data and actions
 
 Use one versioned fixture declaration per workflow. Include original Markdown,

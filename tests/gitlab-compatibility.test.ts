@@ -112,6 +112,49 @@ it('does not claim complete or feature acceptance when browser errors remain une
  expect(result.comparisonComplete).toBe(false);expect(result.regressionGate.passed).toBe(false);expect(result.featureAcceptance.passed).toBe(false);
 });
 
+it('requires a disconnected mutation for the exact draft before scoring reconnect behavior', () => {
+ const pair = reports();
+ const input = {id:'retry',scope:'reconnect',description:'Release.',suffix:' Ship.'};
+ for (const report of pair) {
+   Object.assign(report.fixture, {cases:[input]});
+   Object.assign(report.observations[0]!, {id:input.id,input,status:'observed',offline:true,
+     failures:[{description:'Release. Ship.',error:'net::ERR_INTERNET_DISCONNECTED'}],
+     serverWhileOffline:'Release.',recoveredDraft:['Release. Ship.']});
+ }
+ const row = () => compareGitLabCompatibility(...pair).rows.find((item: any) => item.invariant === 'recoveredDraft');
+ expect(row().classification).toBe('parity');
+ const stock = pair[0]!.observations[0] as any;
+ stock.recoveredDraft = ['Release.'];
+ expect(row().classification).toBe('improvement');
+ stock.failures[0].error = 'net::ERR_ABORTED';
+ expect(row().status).toBe('missing-evidence');
+ stock.failures[0] = {description:'Different draft',error:'net::ERR_INTERNET_DISCONNECTED'};
+ expect(row().status).toBe('missing-evidence');
+});
+
+it('requires measured trusted Save gestures and the intended visible edit on both sides', () => {
+ const pair = reports();
+ const input = {id:'rapid', scope:'quick-save', pace:'immediate', key:'.',expected:'Edited.'};
+ for (const report of pair) {
+   Object.assign(report.fixture, {cases:[input]});
+   Object.assign(report.observations[0]!, {id:input.id, input, status:'observed',
+     gesture:{key:'.', button:'Save changes', trustedKey:true, trustedClick:true, keyAt:10, clickAt:54, paragraphs:['Edited.']},
+     afterSubmit:'Edited.', afterReload:'Edited.', reader:'Edited.', reopened:['Edited.'], pageErrors:[]});
+ }
+ const check = () => compareGitLabCompatibility(...pair);
+ expect(check().summary.parity).toBe(5);
+ const stock = pair[0]!.observations[0] as any;
+ stock.afterReload = 'Edited';
+ expect(check().summary.improvement).toBe(1);
+ for (const patch of [{clickAt:110},{trustedClick:false},{paragraphs:['Edited']}]) {
+   const valid = stock.gesture;
+   stock.gesture = {...valid,...patch};
+   expect(check().summary.incomplete).toBe(5);
+   expect(check().featureAcceptance.passed).toBe(false);
+   stock.gesture = valid;
+ }
+});
+
 it('requires proof of both editor instances and distinguishes a leaked discussion draft from parity', () => {
  const [original, fountain] = reports();
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-composers.json', import.meta.url), 'utf8'));

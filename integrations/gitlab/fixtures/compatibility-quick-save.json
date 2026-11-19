@@ -1,0 +1,38 @@
+{
+  "formatVersion": 1,
+  "workflow": "save-an-issue-description-after-the-last-keystroke",
+  "cases": [
+    {
+      "id": "append-immediately",
+      "scope": "quick-save",
+      "description": "Finalize release notes",
+      "key": ".",
+      "expected": "Finalize release notes.",
+      "pace": "immediate"
+    },
+    {
+      "id": "delete-immediately",
+      "scope": "quick-save",
+      "description": "Finalize release notes!",
+      "key": "Backspace",
+      "expected": "Finalize release notes",
+      "pace": "immediate"
+    },
+    {
+      "id": "append-after-review",
+      "scope": "quick-save",
+      "description": "Finalize release notes",
+      "key": ".",
+      "expected": "Finalize release notes.",
+      "pace": "reviewed"
+    },
+    {
+      "id": "delete-after-review",
+      "scope": "quick-save",
+      "description": "Finalize release notes!",
+      "key": "Backspace",
+      "expected": "Finalize release notes",
+      "pace": "reviewed"
+    }
+  ]
+}

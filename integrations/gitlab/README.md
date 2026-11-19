@@ -17,12 +17,30 @@ Immediate rich-text Save lost the last edit on all four. This behavior also
 affects records created entirely in stock GitLab. The rollback gate remains red.
 A diagnostic run selected the rich-mode wrapper when locating the Markdown
 textarea. The final control run used the textarea itself and completed all four
-records. The next GitLab case is immediate rich-text Save on the active Fountain
-frontend against the same stock action. Wider role, device, workflow, cache,
-and deployment acceptance remains open.
+records. Wider role, device, workflow, cache and deployment acceptance remains open.
 [Controlled rollback and build identities](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) ·
 [Source restore and reinstall](../../artifacts/gitlab-native-browser-install/roundtrip.json) ·
 [Deployment instructions](runtime/README.md#reproduce-the-frontend-deployment-and-rollback).
+
+On the active Fountain frontend, immediate rich-text Save retained both the
+last character typed and a final Backspace. Stock GitLab lost both edits despite
+showing the correct text when Save was clicked. The measured intervals were
+49–56 ms across the four immediate trials. Both editors retained both edits in
+the 552–566 ms controls. Each result was checked in the issue API, reloaded
+reader and reopened rich editor. The eight improvement rows measure two edits
+at four observation points. These desktop Chromium results leave the stock
+rollback limitation open.
+[Builds, timings and saved outcomes](../../artifacts/gitlab-compatibility/immediate-save-20261119/comparison-1/report.md).
+
+Two more workflows disconnect the browser while the author edits an issue.
+Each records a failed GitLab mutation containing the exact draft and checks the
+server from a separate online session. Both editors retained the draft and
+saved it after reconnecting, including when the author reloaded the page before
+retrying. Fountain displayed a failed-Save alert explaining that the draft was
+kept. Stock GitLab left the edit form open without that warning. Both trials
+used a single author. A second author changing the issue while the first author
+is offline remains an open conflict-recovery case.
+[Offline Save and retry comparison](../../artifacts/gitlab-compatibility/reconnect-save-20261119/comparison-1/report.md).
 
 Native mode retention (2026-11-17): the real GitLab integration keeps the same
 owned model/history across unchanged source mode, with hidden view/listener/menu

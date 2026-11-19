@@ -97,6 +97,45 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if (input.scope === 'reconnect') {
+      const edited = input.description + input.suffix;
+      const valid = (report,item) => verifiedEditor(report,item) && item.status === 'observed' && item.offline === true &&
+        item.failures?.some(failure => failure.description === edited && failure.error === 'net::ERR_INTERNET_DISCONNECTED');
+      const paired = valid(original,a) && valid(fountain,b);
+      for (const [key,label,expected] of [
+        ['serverWhileOffline','Failed Save leaves the persisted description intact',input.description],
+        ['saveWarning','Editor explains the failed Save',true],
+        ['draftAfterFailure','Editor keeps the drafted paragraph after failure',[edited]],
+        ['serverBeforeRetry','Reconnection leaves the saved description unchanged before retry',input.description],
+        ['recoveredDraft','Retry uses the original draft without retyping',[edited]],
+        ['afterRetry','GitLab stores the retried edit',edited],
+        ['afterReload','Reload retains the edit on the server',edited],
+        ['reader','Reopened issue shows the recovered text',edited],
+        ['pageErrors','Browser exceptions',[]],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:paired?a[key]:undefined,fountain:paired?b[key]:undefined,classification:null});
+      continue;
+    }
+    if (input.scope === 'quick-save') {
+      function controlled(report, item) {
+        const gesture = item?.gesture;
+        if (!verifiedEditor(report,item) || item.status !== 'observed' || gesture?.trustedKey !== true || gesture.trustedClick !== true ||
+            gesture.key !== input.key || gesture.button !== 'Save changes' || !equal(gesture.paragraphs,[input.expected])) return {};
+        if (!Number.isFinite(gesture.clickAt) || !Number.isFinite(gesture.keyAt)) return {};
+        const elapsed = gesture.clickAt - gesture.keyAt;
+        if (elapsed < 0 || (input.pace === 'immediate' ? elapsed >= 100 : elapsed < 500)) return {};
+        return item;
+      }
+      const left = controlled(original,a), right = controlled(fountain,b);
+      const paired = left.status === 'observed' && right.status === 'observed';
+      for (const [key,label,expected] of [
+        ['afterSubmit','Saved Markdown immediately after submit',input.expected],
+        ['afterReload','Saved Markdown after reload',input.expected],
+        ['reader','Text shown in the reloaded issue',input.expected],
+        ['reopened','Paragraphs in the reopened editor',[input.expected]],
+        ['pageErrors','Browser exceptions',[]],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:paired ? left[key] : undefined,fountain:paired ? right[key] : undefined,classification:null});
+      continue;
+    }
     if(input.scope==='composers'){
       function facts(report, item) {
         if (!verifiedEditor(report, item) || !verifiedEditor(report, { editorProof: item?.commentEditorProof })) return {};
