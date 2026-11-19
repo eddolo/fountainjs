@@ -1,0 +1,42 @@
+{
+  "workflow": "batch-review",
+  "title": "Apply related review suggestions together",
+  "marker": "Keep the initial value explicit.",
+  "appendLine": "// reviewed first value\n",
+  "sourceObservationDelayMs": 500,
+  "secondMarker": "Keep the final value explicit.",
+  "secondReplacement": "const finalValue = 42;",
+  "recoveryMessage": "Apply the unchanged review after inspecting the refusal",
+  "commitMessage": "Apply both reviewed values together",
+  "cases": [
+    {
+      "id": "two-proposals",
+      "scope": "batch-review",
+      "filePath": "values.js",
+      "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+      "expectedSource": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 42;\n",
+      "range": {
+        "start": 1,
+        "end": 1
+      },
+      "secondLine": 3,
+      "handoffDelayMs": 1000
+    },
+    {
+      "id": "changed-target",
+      "recoverUnchanged": true,
+      "recoveredSource": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 99;\n",
+      "scope": "batch-review",
+      "filePath": "values.js",
+      "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+      "expectedSource": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 42;\n",
+      "range": {
+        "start": 1,
+        "end": 1
+      },
+      "secondLine": 3,
+      "handoffDelayMs": 1000,
+      "competingSource": "const firstValue = 1;\nkeep();\nconst finalValue = 99;\n"
+    }
+  ]
+}

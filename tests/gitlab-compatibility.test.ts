@@ -4,6 +4,41 @@ import {expect,it} from 'vitest';
 // These are tests of interpretation policy, not real application evidence.
 // @ts-expect-error Private JS audit helper intentionally has no published type entry.
 import {classifyInvariant,compareGitLabCompatibility,suggestionBlock,clipboardParagraphs,conversionDescription} from '../integrations/gitlab/testing/compatibility.mjs';
+// @ts-expect-error Private integration comparator has no published declarations.
+import {batchReviewChecks} from '../integrations/gitlab/testing/batch-review.mjs';
+it('rejects a partial batch write even when the server refuses the batch and the original branch head is reported', () => {
+ const input = {source:'a\nb\nc\n',range:{start:1},secondLine:3,competingSource:'a\nb\nnew\n'};
+ const fixture = {appendLine:'extra\n',secondReplacement:'replacement',marker:'first',secondMarker:'second',commitMessage:'batch'};
+ const seed = 'a'.repeat(40), head = 'b'.repeat(40);
+ const notes = ['a','c'].map((text,index) => {
+   const replacement = index ? 'replacement\n' : 'a\nextra\n';
+   const suggestion = {id:index+20,from_line:index*2+1,to_line:index*2+1,from_content:text+'\n',to_content:replacement,applied:false,appliable:true};
+   return {id:index+10,body:'```suggestion:-0+0\n'+replacement+'```\n\n'+(index?'second':'first'),suggestions:[suggestion]};
+ });
+ const before = {head:seed,fileCommit:seed,source:input.source,notes};
+ const after = {head,fileCommit:head,parents:[seed],source:input.competingSource,notes:structuredClone(notes)};
+ const item = {setup:{seedCommit:seed},batch:{before,beforeSubmit:structuredClone(before),competingCommit:{id:head,parents:[seed]},
+   response:{status:400,request:{ids:[21,20],commit_message:'batch'}},after,reloaded:structuredClone(after)}};
+ const score = () => batchReviewChecks(input,fixture,item).values;
+ const validHead='c'.repeat(40), recoveredSource='a\nextra\nb\nnew\n';
+ const eligibleBefore=structuredClone(after);
+ eligibleBefore.notes[1]!.suggestions[0]!.appliable=false;
+ const recovered={...structuredClone(eligibleBefore),head:validHead,fileCommit:validHead,parents:[head],message:'apply remaining',source:recoveredSource};
+ recovered.notes[0]!.suggestions[0]!.applied=true;
+ const recovery={queuedAfterRefusal:[true,true],remaining:[true,false],before:eligibleBefore,after:recovered,reloaded:structuredClone(recovered),
+   response:{status:200,path:'/api/v4/suggestions/20/apply',request:{commit_message:'apply remaining'}},badges:[true,false]};
+ const recoveryScore = () => batchReviewChecks({...input,recoverUnchanged:true,recoveredSource},{...fixture,recoveryMessage:'apply remaining'},
+   {...item,batch:{...item.batch,reloaded:eligibleBefore,recovery}}).values;
+ expect(recoveryScore()).toMatchObject({recoveryQueue:true,recoveryBefore:true,recoveryRequest:true,recoveryFile:true,recoveryCommit:true,recoveryNotes:true,recoveryBadges:true});
+ recovery.reloaded.notes[1]!.suggestions[0]!.applied=true;
+ recovery.reloaded.parents=[seed];
+ expect(recoveryScore()).toMatchObject({recoveryNotes:false,recoveryCommit:false});
+ expect(score()).toMatchObject({authored:true,untouched:true,submitted:true,decision:true,afterCommit:true,afterNotes:true,afterSource:true});
+ after.notes[0]!.suggestions[0]!.applied=true;
+ after.source='a\nextra\nb\nnew\n';
+ item.batch.response.request.ids=[21,21];
+ expect(score()).toMatchObject({submitted:false,decision:true,afterCommit:true,afterNotes:false,afterSource:false});
+});
 it.each([
  [true,true,true,'parity'],[true,false,true,'improvement'],[true,true,false,'regression'],[true,false,false,'shared-limitation'],
  ['exact','changed-a','changed-b',null],[true,undefined,true,null],[true,true,undefined,null],
@@ -139,6 +174,15 @@ it.each(['missing original', 'missing candidate', 'stale runtime', 'stale host',
   expect(result.environment.matched).toBe(false);
   expect(result.comparisonComplete || result.featureAcceptance.passed || result.regressionGate.passed).toBe(false);
  });
+it('withholds paired feature acceptance when only the replacement completed the workflow', () => {
+ const [original, fountain] = reports();
+ (original as any).observations = [];
+ (original as any).collectionComplete = false;
+ const result = compareGitLabCompatibility(original, fountain);
+ expect(result.environment.matched).toBe(true);
+ expect(result.comparisonComplete).toBe(false);
+ expect(result.featureAcceptance.passed).toBe(false);
+});
 it('keeps missing observations and unproven editor identity out of completed comparisons',()=>{
  const [original,fountain]=reports();delete (fountain.observations[0] as any).editorProof;
  const result=compareGitLabCompatibility(original,fountain);

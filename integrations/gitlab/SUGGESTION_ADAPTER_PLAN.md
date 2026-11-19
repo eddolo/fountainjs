@@ -179,8 +179,7 @@ no classification is inferred for workflows not yet run on both editors.
    replacement is a retained host limitation, not a claimed supported file effect.
    Outdated proposals and additional multiline/context variants remain.
 6. Single application now verifies the exact file, new commit and branch head,
-   plus cold-restart retention. Still cover review batches, revoked roles, changed
-   branches/files, overlapping proposals and cancellation. Rapid Diffs collapsed
+   plus cold-restart retention. The [matched batch workflow](../../artifacts/gitlab-compatibility/review-batch-20261119/comparison-3/report.md) verifies two proposals on distinct lines, an atomic refusal after a competing edit, and applying only the surviving proposal after the reviewer removes the outdated one. Revoked roles, overlapping ranges, multiple files and cancellation remain open. Rapid Diffs collapsed
    the applied thread and the gutter probe did not reopen it; preserve that
    retained UI issue. MR overview Applied display works before and after restart.
 7. Current scoped local/native/upstream/source/restart checks pass. Broader

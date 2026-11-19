@@ -12,7 +12,7 @@ for(const path of [...Object.values(paths),out]){const rel=relative(allowed,path
 const bytes=await Promise.all(Object.values(paths).map(path=>readFile(path)));
 const reports=bytes.map(value=>JSON.parse(value));const result=compareGitLabCompatibility(...reports);
 result.inputs=Object.fromEntries(Object.keys(paths).map((side,index)=>[side,{path:relative(root,paths[side]).replaceAll('\\','/'),sha256:createHash('sha256').update(bytes[index]).digest('hex')}]));
-result.comparatorHashes={};for(const path of ['scripts/compare-gitlab-compatibility.mjs','integrations/gitlab/testing/compatibility.mjs','integrations/gitlab/testing/build-identity.mjs','integrations/gitlab/testing/save-gesture.mjs'])result.comparatorHashes[path]=createHash('sha256').update(await readFile(resolve(root,path))).digest('hex');
+result.comparatorHashes={};for(const path of ['scripts/compare-gitlab-compatibility.mjs','integrations/gitlab/testing/compatibility.mjs','integrations/gitlab/testing/batch-review.mjs','integrations/gitlab/testing/build-identity.mjs','integrations/gitlab/testing/save-gesture.mjs'])result.comparatorHashes[path]=createHash('sha256').update(await readFile(resolve(root,path))).digest('hex');
 await mkdir(dirname(out),{recursive:true});await mkdir(out);
 const rollback=reports[0].rollback??(reports[0].rollbackRequested?{passed:false,records:[]}:undefined);
 
@@ -28,6 +28,18 @@ const table=['# Matched GitLab editor comparison','','**Original** — '+describ
 ...(rollback?[result.frontendRollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
 '| Case | Invariant | Classification |','| --- | --- | --- |',...result.rows.map(row=>`| ${row.case} | ${row.label} | ${row.classification??row.status} |`),'',
 'Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.',''];
+if (reports[0].suite === 'batch-reviews' && result.environment.matched) {
+  table.push('## Batch submissions', '', '| Editor | Workflow | HTTP | Branch before batch | Branch after batch | Single recovery commit |',
+    '| --- | --- | ---: | --- | --- | --- |');
+  for (const report of reports) for (const item of report.observations) {
+    const batch = item.batch;
+    const sha = value => /^[a-f0-9]{40}$/u.test(value ?? '') ? '`' + value.slice(0,12) + '`' : 'Unverified';
+    table.push('| ' + [report.side, item.id, batch?.response?.status ?? 'Unverified',
+      sha(batch?.competingCommit?.id ?? item.setup?.seedCommit), sha(batch?.reloaded?.head),
+      item.input.recoverUnchanged ? sha(batch?.recovery?.reloaded?.head) : 'Outside this case'].join(' | ') + ' |');
+  }
+  table.push('');
+}
 if (['stale-reviews','relocated-reviews'].includes(reports[0].suite)) {
   table.push('## Apply after the source commit', '', '| Workflow | Stock GitLab | Fountain |', '| --- | --- | --- |');
   for (const input of reports[0].fixture.cases) {

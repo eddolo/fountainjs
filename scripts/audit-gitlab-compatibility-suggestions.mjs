@@ -2,6 +2,7 @@ import {expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {inspectSuggestionHistory} from './audit-gitlab-suggestion-history.mjs';
+import {batchReview} from './audit-gitlab-batch-review.mjs';
 import {concurrentReview} from './audit-gitlab-concurrent-review.mjs';
 
 /** Both drivers operate real UI; neither receives an editor model/command API. */
@@ -255,6 +256,26 @@ async function openLineForm(page, mr, range) {
   }
   const form=page.locator('form.common-note-form').first();await expect(form).toBeVisible();return form;
 }
+export async function runRecordedGitLabBatch(options) {
+  const context = await options.page.context().browser().newContext({
+    storageState: await options.page.context().storageState(),
+    viewport: options.page.viewportSize(), deviceScaleFactor: 1, locale: 'en-US', timezoneId: 'UTC',
+    recordVideo: {dir:options.output},
+  });
+  const page = await context.newPage();
+  const video = page.video();
+  const errors = [];
+  page.on('pageerror',error=>errors.push(error.message));
+  try {
+    const result = await runGitLabSuggestionCompatibility({...options,page});
+    if (errors.length) throw new Error('Recorded batch page errors: '+errors.join(', '));
+    return result;
+  } finally {
+    await context.close();
+    await video.saveAs(join(options.output, 'batch-review.webm'));
+    await video.delete();
+  }
+}
 export async function runGitLabSuggestionCompatibility({side,runId,page,request,project,fixture,output,onProgress}) {
   const ui=driver(side,page),observations=[];
   for(const input of fixture.cases) {
@@ -310,6 +331,10 @@ export async function runGitLabSuggestionCompatibility({side,runId,page,request,
       result.beforeApplyHead=(await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(branch)}`)).commit.id;
       await page.reload();const savedNote=page.locator('#note_'+note.id);await expect(savedNote.getByText(fixture.marker,{exact:true})).toBeVisible({timeout:30000});
       await page.screenshot({path:join(output,input.id+'-posted.png'),fullPage:true,animations:'disabled',caret:'initial'});
+      if(input.scope==='batch-review') {
+        await batchReview({page,ui,openLineForm,request,project,fixture,result,input,mr,base,note,seed,branch,fileURL,output,stage});
+        result.status='observed';await stage('complete');continue;
+      }
       if(input.scope==='concurrent-review') {
         await concurrentReview({page,request,project,fixture,result,input,mr,base,note,branch,fileURL,output,stage});
         result.status='observed';await stage('complete');continue;

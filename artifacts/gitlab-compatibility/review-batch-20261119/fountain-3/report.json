@@ -1,0 +1,1395 @@
+{
+  "formatVersion": 2,
+  "buildIdentity": {
+    "side": "fountain",
+    "expected": {
+      "gitlabVersion": "19.5.3",
+      "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+      "packageVersion": "0.5.0-beta.2",
+      "fountainRevision": "7c85ae01fca1d715da1bc8fca7356057a0b2feb9",
+      "runtimeSHA256": "56c83cc9e181a0a958cf32e86cec3980fa5ca5f59b62d374e0a2a7a60f93a379",
+      "integrationSHA256": "73591945dd7543c420a8355582bca2708101c7172994caf7fa7dad5096cfe3ff"
+    },
+    "observed": {
+      "editor": "FountainJS",
+      "integrationSHA256": "73591945dd7543c420a8355582bca2708101c7172994caf7fa7dad5096cfe3ff",
+      "runtimeSHA256": "56c83cc9e181a0a958cf32e86cec3980fa5ca5f59b62d374e0a2a7a60f93a379",
+      "manifestSHA256": "e0b4994ea4996203a07c7e7296621e523a17cbe9535b86e9b6937956bb18dca3",
+      "scripts": [
+        {
+          "path": "/assets/webpack/10845.653e9015.chunk.js",
+          "browserSHA256": "037471e3bf3408848dbc488004c06251d6f6818ac7e763bcba7200c8ac08ccde",
+          "deployedSHA256": "037471e3bf3408848dbc488004c06251d6f6818ac7e763bcba7200c8ac08ccde"
+        },
+        {
+          "path": "/assets/webpack/11477.eb4e3c00.chunk.js",
+          "browserSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93",
+          "deployedSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93"
+        },
+        {
+          "path": "/assets/webpack/21220.42642502.chunk.js",
+          "browserSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8",
+          "deployedSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8"
+        },
+        {
+          "path": "/assets/webpack/26937.37f8dec7.chunk.js",
+          "browserSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6",
+          "deployedSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6"
+        },
+        {
+          "path": "/assets/webpack/31126.768e9d21.chunk.js",
+          "browserSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a",
+          "deployedSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a"
+        },
+        {
+          "path": "/assets/webpack/31580.e3bf8fed.chunk.js",
+          "browserSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293",
+          "deployedSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293"
+        },
+        {
+          "path": "/assets/webpack/33480.ce7ca688.chunk.js",
+          "browserSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566",
+          "deployedSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566"
+        },
+        {
+          "path": "/assets/webpack/33816.10488c93.chunk.js",
+          "browserSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14",
+          "deployedSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14"
+        },
+        {
+          "path": "/assets/webpack/33975.2a6859ce.chunk.js",
+          "browserSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b",
+          "deployedSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b"
+        },
+        {
+          "path": "/assets/webpack/34221.35146945.chunk.js",
+          "browserSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75",
+          "deployedSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75"
+        },
+        {
+          "path": "/assets/webpack/36950.473152a8.chunk.js",
+          "browserSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345",
+          "deployedSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345"
+        },
+        {
+          "path": "/assets/webpack/42297.4b60c1f1.chunk.js",
+          "browserSHA256": "fa1e975bbf341684d815ee1ee2075fae76e6be58bde8cdb21dc9800881e7018d",
+          "deployedSHA256": "fa1e975bbf341684d815ee1ee2075fae76e6be58bde8cdb21dc9800881e7018d"
+        },
+        {
+          "path": "/assets/webpack/44540.1b3fb37a.chunk.js",
+          "browserSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457",
+          "deployedSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457"
+        },
+        {
+          "path": "/assets/webpack/48082.f4fb9454.chunk.js",
+          "browserSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea",
+          "deployedSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea"
+        },
+        {
+          "path": "/assets/webpack/52199.2635e6eb.chunk.js",
+          "browserSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4",
+          "deployedSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4"
+        },
+        {
+          "path": "/assets/webpack/54908.851e751e.chunk.js",
+          "browserSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278",
+          "deployedSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278"
+        },
+        {
+          "path": "/assets/webpack/56524.a3f2adcc.chunk.js",
+          "browserSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649",
+          "deployedSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649"
+        },
+        {
+          "path": "/assets/webpack/57920.15510cdf.chunk.js",
+          "browserSHA256": "ee6b1163a29837ffcf506979e61a75c5b3183f90e9e2831d5a9610361dab9cea",
+          "deployedSHA256": "ee6b1163a29837ffcf506979e61a75c5b3183f90e9e2831d5a9610361dab9cea"
+        },
+        {
+          "path": "/assets/webpack/58279.be153399.chunk.js",
+          "browserSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179",
+          "deployedSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179"
+        },
+        {
+          "path": "/assets/webpack/6368.b30463b3.chunk.js",
+          "browserSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e",
+          "deployedSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e"
+        },
+        {
+          "path": "/assets/webpack/65338.66de7a5c.chunk.js",
+          "browserSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60",
+          "deployedSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60"
+        },
+        {
+          "path": "/assets/webpack/65492.7ba55601.chunk.js",
+          "browserSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364",
+          "deployedSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364"
+        },
+        {
+          "path": "/assets/webpack/6620.52ee50e6.chunk.js",
+          "browserSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820",
+          "deployedSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820"
+        },
+        {
+          "path": "/assets/webpack/66210.d86969b9.chunk.js",
+          "browserSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26",
+          "deployedSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26"
+        },
+        {
+          "path": "/assets/webpack/67.0fe3d755.chunk.js",
+          "browserSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780",
+          "deployedSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780"
+        },
+        {
+          "path": "/assets/webpack/67755.57034e16.chunk.js",
+          "browserSHA256": "50284e6eaa3407a441df52b6509999ad36c8ef572045bf4c9032e604b8fc58f7",
+          "deployedSHA256": "50284e6eaa3407a441df52b6509999ad36c8ef572045bf4c9032e604b8fc58f7"
+        },
+        {
+          "path": "/assets/webpack/68541.222d9bcd.chunk.js",
+          "browserSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece",
+          "deployedSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece"
+        },
+        {
+          "path": "/assets/webpack/69513.9df26555.chunk.js",
+          "browserSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f",
+          "deployedSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f"
+        },
+        {
+          "path": "/assets/webpack/70682.dbea24fb.chunk.js",
+          "browserSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92",
+          "deployedSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92"
+        },
+        {
+          "path": "/assets/webpack/71642.4e382863.chunk.js",
+          "browserSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4",
+          "deployedSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4"
+        },
+        {
+          "path": "/assets/webpack/72007.15fb7bcd.chunk.js",
+          "browserSHA256": "f08cd11b57c4d38ff4ce89fc1384368c752cd5a9d611d5c9373ab0c8a5e62e49",
+          "deployedSHA256": "f08cd11b57c4d38ff4ce89fc1384368c752cd5a9d611d5c9373ab0c8a5e62e49"
+        },
+        {
+          "path": "/assets/webpack/77804.af4827ca.chunk.js",
+          "browserSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1",
+          "deployedSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1"
+        },
+        {
+          "path": "/assets/webpack/79164.07015d7a.chunk.js",
+          "browserSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448",
+          "deployedSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448"
+        },
+        {
+          "path": "/assets/webpack/81231.39e842ae.chunk.js",
+          "browserSHA256": "1c5d6953b92a91c1cf57b4baa4eac2c473d6467dd9545ea02b42ec82cc1dd82d",
+          "deployedSHA256": "1c5d6953b92a91c1cf57b4baa4eac2c473d6467dd9545ea02b42ec82cc1dd82d"
+        },
+        {
+          "path": "/assets/webpack/90212.0f7599c8.chunk.js",
+          "browserSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8",
+          "deployedSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8"
+        },
+        {
+          "path": "/assets/webpack/92505.e2029695.chunk.js",
+          "browserSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18",
+          "deployedSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18"
+        },
+        {
+          "path": "/assets/webpack/92967.221472e2.chunk.js",
+          "browserSHA256": "79823de536403fc0d8177bce02a57e173c9475c9b8092e1bd3de67415e86e730",
+          "deployedSHA256": "79823de536403fc0d8177bce02a57e173c9475c9b8092e1bd3de67415e86e730"
+        },
+        {
+          "path": "/assets/webpack/96998.7e4df3c7.chunk.js",
+          "browserSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a",
+          "deployedSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a"
+        },
+        {
+          "path": "/assets/webpack/content_editor.d206b0a2.chunk.js",
+          "browserSHA256": "8140acb04db0bf25f821a18a5f17049311f53fd672df24baaba8eb0f2b778611",
+          "deployedSHA256": "8140acb04db0bf25f821a18a5f17049311f53fd672df24baaba8eb0f2b778611"
+        },
+        {
+          "path": "/assets/webpack/framework.f13ea082.chunk.js",
+          "browserSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9",
+          "deployedSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9"
+        },
+        {
+          "path": "/assets/webpack/gitlab_ui.d82b8e33.chunk.js",
+          "browserSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886",
+          "deployedSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886"
+        },
+        {
+          "path": "/assets/webpack/global_search_modal.276667de.chunk.js",
+          "browserSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42",
+          "deployedSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42"
+        },
+        {
+          "path": "/assets/webpack/hello.61f24ffa.chunk.js",
+          "browserSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab",
+          "deployedSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersModal.ed948cf8.chunk.js",
+          "browserSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb",
+          "deployedSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersTrigger.cc208be6.chunk.js",
+          "browserSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122",
+          "deployedSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122"
+        },
+        {
+          "path": "/assets/webpack/main.fb78dad5.chunk.js",
+          "browserSHA256": "db3fbd2f4532d2054194d913aac7ef43adfeaeb91d3fb2f2cb0bc7bf6c1c3bdf",
+          "deployedSHA256": "db3fbd2f4532d2054194d913aac7ef43adfeaeb91d3fb2f2cb0bc7bf6c1c3bdf"
+        },
+        {
+          "path": "/assets/webpack/pages.projects.work_items.5b1bae85.chunk.js",
+          "browserSHA256": "e75a207e59eefda2af154c7d481f6fa990fbd786575c420f197f2e8620164097",
+          "deployedSHA256": "e75a207e59eefda2af154c7d481f6fa990fbd786575c420f197f2e8620164097"
+        },
+        {
+          "path": "/assets/webpack/prosemirror.d913db02.chunk.js",
+          "browserSHA256": "8973ac8a70588ee372a258693d7b8097c76618bfdabda0dd1b5dcc53a08d732b",
+          "deployedSHA256": "8973ac8a70588ee372a258693d7b8097c76618bfdabda0dd1b5dcc53a08d732b"
+        },
+        {
+          "path": "/assets/webpack/runtime.666226f1.bundle.js",
+          "browserSHA256": "6525b764646e603d89afdf671a916af583c1d8c7328a2ab951e691f62d58729d",
+          "deployedSHA256": "6525b764646e603d89afdf671a916af583c1d8c7328a2ab951e691f62d58729d"
+        },
+        {
+          "path": "/assets/webpack/shortcutsBundle.be2e00cb.chunk.js",
+          "browserSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb",
+          "deployedSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb"
+        },
+        {
+          "path": "/assets/webpack/super_sidebar.eda8a491.chunk.js",
+          "browserSHA256": "377f63732d167f3f1ef4c7606a2ffe0357c7d0316901f527b671799797629145",
+          "deployedSHA256": "377f63732d167f3f1ef4c7606a2ffe0357c7d0316901f527b671799797629145"
+        },
+        {
+          "path": "/assets/webpack/tracker.e8a6b670.chunk.js",
+          "browserSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858",
+          "deployedSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858"
+        }
+      ]
+    }
+  },
+  "runId": "review-batch-20261119",
+  "attempt": 3,
+  "side": "fountain",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "batch-reviews",
+  "restartRequested": false,
+  "rollbackRequested": false,
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-batch-reviews.json",
+  "fixtureHash": "ed22b1df6020dffffdccd2cc0655c73528090d585d477248359659b1f0cb85f9",
+  "fixture": {
+    "workflow": "batch-review",
+    "title": "Apply related review suggestions together",
+    "marker": "Keep the initial value explicit.",
+    "appendLine": "// reviewed first value\n",
+    "sourceObservationDelayMs": 500,
+    "secondMarker": "Keep the final value explicit.",
+    "secondReplacement": "const finalValue = 42;",
+    "recoveryMessage": "Apply the unchanged review after inspecting the refusal",
+    "commitMessage": "Apply both reviewed values together",
+    "cases": [
+      {
+        "id": "two-proposals",
+        "scope": "batch-review",
+        "filePath": "values.js",
+        "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+        "expectedSource": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 42;\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "secondLine": 3,
+        "handoffDelayMs": 1000
+      },
+      {
+        "id": "changed-target",
+        "recoverUnchanged": true,
+        "recoveredSource": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 99;\n",
+        "scope": "batch-review",
+        "filePath": "values.js",
+        "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+        "expectedSource": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 42;\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "secondLine": 3,
+        "handoffDelayMs": 1000,
+        "competingSource": "const firstValue = 1;\nkeep();\nconst finalValue = 99;\n"
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "two-proposals",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "two-proposals",
+        "scope": "batch-review",
+        "filePath": "values.js",
+        "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+        "expectedSource": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 42;\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "secondLine": 3,
+        "handoffDelayMs": 1000
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Switch to source; append review line without rewriting the captured replacement; add prose marker."
+      ],
+      "setup": {
+        "branch": "fountain-compat-review-batch-20261119-a3-fountain-two-proposals",
+        "seedCommit": "722ce14b8dcb649e7391c6bbb47b3364a76995d7",
+        "source": "Y29uc3QgZmlyc3RWYWx1ZSA9IDE7CmtlZXAoKTsKY29uc3QgZmluYWxWYWx1ZSA9IDM7Cg==",
+        "mergeRequest": {
+          "iid": 166,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/166"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "const firstValue = 1;\n",
+      "handoffTiming": {
+        "declaredDelayMs": 1000,
+        "observedVisibleToSwitchMs": 1001.4133199999924
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\nconst firstValue = 1;\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\nconst firstValue = 1;\n```",
+      "saved": {
+        "id": 5939,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-19T17:50:57.286Z",
+        "updated_at": "2026-11-19T17:50:57.286Z",
+        "system": false,
+        "noteable_id": 1764,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "722ce14b8dcb649e7391c6bbb47b3364a76995d7",
+          "old_path": "values.js",
+          "new_path": "values.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 1730,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": true,
+            "applied": false,
+            "from_content": "const firstValue = 1;\n",
+            "to_content": "const firstValue = 1;\n// reviewed first value\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 166,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "values.js",
+        "file_path": "values.js",
+        "size": 52,
+        "encoding": "base64",
+        "content_sha256": "f4386f513e23aefdef46fdc8bd596918e7d5836b59432e888bff0b9535d76814",
+        "ref": "fountain-compat-review-batch-20261119-a3-fountain-two-proposals",
+        "blob_id": "6545f78c0d1668a4245fd62fa3e840e72a12606a",
+        "commit_id": "722ce14b8dcb649e7391c6bbb47b3364a76995d7",
+        "last_commit_id": "722ce14b8dcb649e7391c6bbb47b3364a76995d7",
+        "execute_filemode": false,
+        "content": "Y29uc3QgZmlyc3RWYWx1ZSA9IDE7CmtlZXAoKTsKY29uc3QgZmluYWxWYWx1ZSA9IDM7Cg=="
+      },
+      "beforeApplyHead": "722ce14b8dcb649e7391c6bbb47b3364a76995d7",
+      "batch": {
+        "secondCarrier": "```suggestion:-0+0\nconst finalValue = 42;\n```",
+        "before": {
+          "head": "722ce14b8dcb649e7391c6bbb47b3364a76995d7",
+          "parents": [
+            "15aeca7199b19518372fcb918a96eae93fd7e915"
+          ],
+          "message": "Seed paired editor compatibility fixture",
+          "fileCommit": "722ce14b8dcb649e7391c6bbb47b3364a76995d7",
+          "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+          "notes": [
+            {
+              "id": 5939,
+              "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+              "suggestions": [
+                {
+                  "id": 1730,
+                  "from_line": 1,
+                  "to_line": 1,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const firstValue = 1;\n",
+                  "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                }
+              ]
+            },
+            {
+              "id": 5940,
+              "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+              "suggestions": [
+                {
+                  "id": 1731,
+                  "from_line": 3,
+                  "to_line": 3,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const finalValue = 3;\n",
+                  "to_content": "const finalValue = 42;\n"
+                }
+              ]
+            }
+          ]
+        },
+        "firstOnly": [
+          true,
+          false
+        ],
+        "both": [
+          true,
+          true
+        ],
+        "secondOnly": [
+          false,
+          true
+        ],
+        "requeued": [
+          true,
+          true
+        ],
+        "beforeSubmit": {
+          "head": "722ce14b8dcb649e7391c6bbb47b3364a76995d7",
+          "parents": [
+            "15aeca7199b19518372fcb918a96eae93fd7e915"
+          ],
+          "message": "Seed paired editor compatibility fixture",
+          "fileCommit": "722ce14b8dcb649e7391c6bbb47b3364a76995d7",
+          "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+          "notes": [
+            {
+              "id": 5939,
+              "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+              "suggestions": [
+                {
+                  "id": 1730,
+                  "from_line": 1,
+                  "to_line": 1,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const firstValue = 1;\n",
+                  "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                }
+              ]
+            },
+            {
+              "id": 5940,
+              "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+              "suggestions": [
+                {
+                  "id": 1731,
+                  "from_line": 3,
+                  "to_line": 3,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const finalValue = 3;\n",
+                  "to_content": "const finalValue = 42;\n"
+                }
+              ]
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "request": {
+            "ids": [
+              1731,
+              1730
+            ],
+            "commit_message": "Apply both reviewed values together"
+          },
+          "body": [
+            {
+              "id": 1730,
+              "from_line": 1,
+              "to_line": 1,
+              "appliable": true,
+              "applied": false,
+              "from_content": "const firstValue = 1;\n",
+              "to_content": "const firstValue = 1;\n// reviewed first value\n"
+            },
+            {
+              "id": 1731,
+              "from_line": 3,
+              "to_line": 3,
+              "appliable": true,
+              "applied": false,
+              "from_content": "const finalValue = 3;\n",
+              "to_content": "const finalValue = 42;\n"
+            }
+          ]
+        },
+        "after": {
+          "head": "dae280bb78995ec9741879236c25cba1ee473cc8",
+          "parents": [
+            "722ce14b8dcb649e7391c6bbb47b3364a76995d7"
+          ],
+          "message": "Apply both reviewed values together",
+          "fileCommit": "dae280bb78995ec9741879236c25cba1ee473cc8",
+          "source": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 42;\n",
+          "notes": [
+            {
+              "id": 5939,
+              "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+              "suggestions": [
+                {
+                  "id": 1730,
+                  "from_line": 1,
+                  "to_line": 1,
+                  "appliable": false,
+                  "applied": true,
+                  "from_content": "const firstValue = 1;\n",
+                  "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                }
+              ]
+            },
+            {
+              "id": 5940,
+              "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+              "suggestions": [
+                {
+                  "id": 1731,
+                  "from_line": 3,
+                  "to_line": 3,
+                  "appliable": false,
+                  "applied": true,
+                  "from_content": "const finalValue = 3;\n",
+                  "to_content": "const finalValue = 42;\n"
+                }
+              ]
+            }
+          ]
+        },
+        "alerts": [
+          "  \n    This integration is unfinished. Some reference and command contexts, saved replies and specialized menus are still unavailable. Use source editing for those workflows.\n    "
+        ],
+        "visibleBadges": [
+          true,
+          true
+        ],
+        "reloadedBadges": [
+          true,
+          true
+        ],
+        "reloaded": {
+          "head": "dae280bb78995ec9741879236c25cba1ee473cc8",
+          "parents": [
+            "722ce14b8dcb649e7391c6bbb47b3364a76995d7"
+          ],
+          "message": "Apply both reviewed values together",
+          "fileCommit": "dae280bb78995ec9741879236c25cba1ee473cc8",
+          "source": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 42;\n",
+          "notes": [
+            {
+              "id": 5939,
+              "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+              "suggestions": [
+                {
+                  "id": 1730,
+                  "from_line": 1,
+                  "to_line": 1,
+                  "appliable": false,
+                  "applied": true,
+                  "from_content": "const firstValue = 1;\n",
+                  "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                }
+              ]
+            },
+            {
+              "id": 5940,
+              "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+              "suggestions": [
+                {
+                  "id": 1731,
+                  "from_line": 3,
+                  "to_line": 3,
+                  "appliable": false,
+                  "applied": true,
+                  "from_content": "const finalValue = 3;\n",
+                  "to_content": "const finalValue = 42;\n"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "changed-target",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "changed-target",
+        "recoverUnchanged": true,
+        "recoveredSource": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 99;\n",
+        "scope": "batch-review",
+        "filePath": "values.js",
+        "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+        "expectedSource": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 42;\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "secondLine": 3,
+        "handoffDelayMs": 1000,
+        "competingSource": "const firstValue = 1;\nkeep();\nconst finalValue = 99;\n"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Switch to source; append review line without rewriting the captured replacement; add prose marker."
+      ],
+      "setup": {
+        "branch": "fountain-compat-review-batch-20261119-a3-fountain-changed-target",
+        "seedCommit": "f6ca94cc17950310560a610ae3e1a2f25846b280",
+        "source": "Y29uc3QgZmlyc3RWYWx1ZSA9IDE7CmtlZXAoKTsKY29uc3QgZmluYWxWYWx1ZSA9IDM7Cg==",
+        "mergeRequest": {
+          "iid": 167,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/167"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "const firstValue = 1;\n",
+      "handoffTiming": {
+        "declaredDelayMs": 1000,
+        "observedVisibleToSwitchMs": 1000.5818639999925
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\nconst firstValue = 1;\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\nconst firstValue = 1;\n```",
+      "saved": {
+        "id": 5945,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-19T17:51:37.012Z",
+        "updated_at": "2026-11-19T17:51:37.012Z",
+        "system": false,
+        "noteable_id": 1765,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "f6ca94cc17950310560a610ae3e1a2f25846b280",
+          "old_path": "values.js",
+          "new_path": "values.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 1732,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": true,
+            "applied": false,
+            "from_content": "const firstValue = 1;\n",
+            "to_content": "const firstValue = 1;\n// reviewed first value\n"
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 167,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "values.js",
+        "file_path": "values.js",
+        "size": 52,
+        "encoding": "base64",
+        "content_sha256": "f4386f513e23aefdef46fdc8bd596918e7d5836b59432e888bff0b9535d76814",
+        "ref": "fountain-compat-review-batch-20261119-a3-fountain-changed-target",
+        "blob_id": "6545f78c0d1668a4245fd62fa3e840e72a12606a",
+        "commit_id": "f6ca94cc17950310560a610ae3e1a2f25846b280",
+        "last_commit_id": "f6ca94cc17950310560a610ae3e1a2f25846b280",
+        "execute_filemode": false,
+        "content": "Y29uc3QgZmlyc3RWYWx1ZSA9IDE7CmtlZXAoKTsKY29uc3QgZmluYWxWYWx1ZSA9IDM7Cg=="
+      },
+      "beforeApplyHead": "f6ca94cc17950310560a610ae3e1a2f25846b280",
+      "batch": {
+        "secondCarrier": "```suggestion:-0+0\nconst finalValue = 42;\n```",
+        "before": {
+          "head": "f6ca94cc17950310560a610ae3e1a2f25846b280",
+          "parents": [
+            "15aeca7199b19518372fcb918a96eae93fd7e915"
+          ],
+          "message": "Seed paired editor compatibility fixture",
+          "fileCommit": "f6ca94cc17950310560a610ae3e1a2f25846b280",
+          "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+          "notes": [
+            {
+              "id": 5945,
+              "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+              "suggestions": [
+                {
+                  "id": 1732,
+                  "from_line": 1,
+                  "to_line": 1,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const firstValue = 1;\n",
+                  "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                }
+              ]
+            },
+            {
+              "id": 5946,
+              "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+              "suggestions": [
+                {
+                  "id": 1733,
+                  "from_line": 3,
+                  "to_line": 3,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const finalValue = 3;\n",
+                  "to_content": "const finalValue = 42;\n"
+                }
+              ]
+            }
+          ]
+        },
+        "firstOnly": [
+          true,
+          false
+        ],
+        "both": [
+          true,
+          true
+        ],
+        "secondOnly": [
+          false,
+          true
+        ],
+        "requeued": [
+          true,
+          true
+        ],
+        "beforeSubmit": {
+          "head": "f6ca94cc17950310560a610ae3e1a2f25846b280",
+          "parents": [
+            "15aeca7199b19518372fcb918a96eae93fd7e915"
+          ],
+          "message": "Seed paired editor compatibility fixture",
+          "fileCommit": "f6ca94cc17950310560a610ae3e1a2f25846b280",
+          "source": "const firstValue = 1;\nkeep();\nconst finalValue = 3;\n",
+          "notes": [
+            {
+              "id": 5945,
+              "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+              "suggestions": [
+                {
+                  "id": 1732,
+                  "from_line": 1,
+                  "to_line": 1,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const firstValue = 1;\n",
+                  "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                }
+              ]
+            },
+            {
+              "id": 5946,
+              "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+              "suggestions": [
+                {
+                  "id": 1733,
+                  "from_line": 3,
+                  "to_line": 3,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const finalValue = 3;\n",
+                  "to_content": "const finalValue = 42;\n"
+                }
+              ]
+            }
+          ]
+        },
+        "competingCommit": {
+          "id": "b8da1317fe9b02f15a0bec0cb218c278b34460b1",
+          "parents": [
+            "f6ca94cc17950310560a610ae3e1a2f25846b280"
+          ]
+        },
+        "response": {
+          "status": 400,
+          "request": {
+            "ids": [
+              1733,
+              1732
+            ],
+            "commit_message": "Apply both reviewed values together"
+          },
+          "body": {
+            "message": "Can't apply as this line was changed in a more recent version."
+          }
+        },
+        "after": {
+          "head": "b8da1317fe9b02f15a0bec0cb218c278b34460b1",
+          "parents": [
+            "f6ca94cc17950310560a610ae3e1a2f25846b280"
+          ],
+          "message": "Change the second target during review",
+          "fileCommit": "b8da1317fe9b02f15a0bec0cb218c278b34460b1",
+          "source": "const firstValue = 1;\nkeep();\nconst finalValue = 99;\n",
+          "notes": [
+            {
+              "id": 5945,
+              "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+              "suggestions": [
+                {
+                  "id": 1732,
+                  "from_line": 1,
+                  "to_line": 1,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const firstValue = 1;\n",
+                  "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                }
+              ]
+            },
+            {
+              "id": 5946,
+              "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+              "suggestions": [
+                {
+                  "id": 1733,
+                  "from_line": 3,
+                  "to_line": 3,
+                  "appliable": false,
+                  "applied": false,
+                  "from_content": "const finalValue = 3;\n",
+                  "to_content": "const finalValue = 42;\n"
+                }
+              ]
+            }
+          ]
+        },
+        "alerts": [
+          "  Can't apply as this line was changed in a more recent version.     ",
+          "  \n    This integration is unfinished. Some reference and command contexts, saved replies and specialized menus are still unavailable. Use source editing for those workflows.\n    "
+        ],
+        "visibleBadges": [
+          false,
+          false
+        ],
+        "reloadedBadges": [
+          false,
+          false
+        ],
+        "reloaded": {
+          "head": "b8da1317fe9b02f15a0bec0cb218c278b34460b1",
+          "parents": [
+            "f6ca94cc17950310560a610ae3e1a2f25846b280"
+          ],
+          "message": "Change the second target during review",
+          "fileCommit": "b8da1317fe9b02f15a0bec0cb218c278b34460b1",
+          "source": "const firstValue = 1;\nkeep();\nconst finalValue = 99;\n",
+          "notes": [
+            {
+              "id": 5945,
+              "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+              "suggestions": [
+                {
+                  "id": 1732,
+                  "from_line": 1,
+                  "to_line": 1,
+                  "appliable": true,
+                  "applied": false,
+                  "from_content": "const firstValue = 1;\n",
+                  "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                }
+              ]
+            },
+            {
+              "id": 5946,
+              "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+              "suggestions": [
+                {
+                  "id": 1733,
+                  "from_line": 3,
+                  "to_line": 3,
+                  "appliable": false,
+                  "applied": false,
+                  "from_content": "const finalValue = 3;\n",
+                  "to_content": "const finalValue = 42;\n"
+                }
+              ]
+            }
+          ]
+        },
+        "recovery": {
+          "queuedAfterRefusal": [
+            true,
+            true
+          ],
+          "remaining": [
+            true,
+            false
+          ],
+          "before": {
+            "head": "b8da1317fe9b02f15a0bec0cb218c278b34460b1",
+            "parents": [
+              "f6ca94cc17950310560a610ae3e1a2f25846b280"
+            ],
+            "message": "Change the second target during review",
+            "fileCommit": "b8da1317fe9b02f15a0bec0cb218c278b34460b1",
+            "source": "const firstValue = 1;\nkeep();\nconst finalValue = 99;\n",
+            "notes": [
+              {
+                "id": 5945,
+                "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+                "suggestions": [
+                  {
+                    "id": 1732,
+                    "from_line": 1,
+                    "to_line": 1,
+                    "appliable": true,
+                    "applied": false,
+                    "from_content": "const firstValue = 1;\n",
+                    "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                  }
+                ]
+              },
+              {
+                "id": 5946,
+                "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+                "suggestions": [
+                  {
+                    "id": 1733,
+                    "from_line": 3,
+                    "to_line": 3,
+                    "appliable": false,
+                    "applied": false,
+                    "from_content": "const finalValue = 3;\n",
+                    "to_content": "const finalValue = 42;\n"
+                  }
+                ]
+              }
+            ]
+          },
+          "response": {
+            "status": 200,
+            "path": "/api/v4/suggestions/1732/apply",
+            "request": {
+              "commit_message": "Apply the unchanged review after inspecting the refusal"
+            }
+          },
+          "after": {
+            "head": "856e7888b55c5f6ebf3503697ac210ee0f36b0b9",
+            "parents": [
+              "b8da1317fe9b02f15a0bec0cb218c278b34460b1"
+            ],
+            "message": "Apply the unchanged review after inspecting the refusal",
+            "fileCommit": "856e7888b55c5f6ebf3503697ac210ee0f36b0b9",
+            "source": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 99;\n",
+            "notes": [
+              {
+                "id": 5945,
+                "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+                "suggestions": [
+                  {
+                    "id": 1732,
+                    "from_line": 1,
+                    "to_line": 1,
+                    "appliable": false,
+                    "applied": true,
+                    "from_content": "const firstValue = 1;\n",
+                    "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                  }
+                ]
+              },
+              {
+                "id": 5946,
+                "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+                "suggestions": [
+                  {
+                    "id": 1733,
+                    "from_line": 3,
+                    "to_line": 3,
+                    "appliable": false,
+                    "applied": false,
+                    "from_content": "const finalValue = 3;\n",
+                    "to_content": "const finalValue = 42;\n"
+                  }
+                ]
+              }
+            ]
+          },
+          "badges": [
+            true,
+            false
+          ],
+          "reloaded": {
+            "head": "856e7888b55c5f6ebf3503697ac210ee0f36b0b9",
+            "parents": [
+              "b8da1317fe9b02f15a0bec0cb218c278b34460b1"
+            ],
+            "message": "Apply the unchanged review after inspecting the refusal",
+            "fileCommit": "856e7888b55c5f6ebf3503697ac210ee0f36b0b9",
+            "source": "const firstValue = 1;\n// reviewed first value\nkeep();\nconst finalValue = 99;\n",
+            "notes": [
+              {
+                "id": 5945,
+                "body": "```suggestion:-0+0\nconst firstValue = 1;\n// reviewed first value\n```\n\nKeep the initial value explicit.",
+                "suggestions": [
+                  {
+                    "id": 1732,
+                    "from_line": 1,
+                    "to_line": 1,
+                    "appliable": false,
+                    "applied": true,
+                    "from_content": "const firstValue = 1;\n",
+                    "to_content": "const firstValue = 1;\n// reviewed first value\n"
+                  }
+                ]
+              },
+              {
+                "id": 5946,
+                "body": "```suggestion:-0+0\nconst finalValue = 42;\n```\n\nKeep the final value explicit.",
+                "suggestions": [
+                  {
+                    "id": 1733,
+                    "from_line": 3,
+                    "to_line": 3,
+                    "appliable": false,
+                    "applied": false,
+                    "from_content": "const finalValue = 3;\n",
+                    "to_content": "const finalValue = 42;\n"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "45bc61361da4d7637103234ffbb6ef6fffaa4f7de2d5b7bd11d3cb11f0a09594",
+    "scripts/verify-gitlab-editor-rollback.mjs": "33db8245fc20b9753e4a086737fcc5d1606cb532a090eaa4423d051cdd6ffb3e",
+    "scripts/verify-gitlab-suggestion-history-rollback.mjs": "fb66e652a3b5af60c238555927014c162c7f9f1480609674217aa8a54c47a373",
+    "scripts/verify-gitlab-restart.mjs": "f88570ad3eb433605bd7339f2d078b2bd942c492d18a0558ef32e6a9edcf06c2",
+    "scripts/verify-gitlab-footnote-rollback.mjs": "497c68aab32d9e67dce5a34344cd50924771eb5be828a1d9c47e3c481efb5b32",
+    "integrations/gitlab/testing/save-gesture.mjs": "24fcc38481cb01e8134443237356a80f7f40e9fd77105ff615052880dbac96a2",
+    "integrations/gitlab/testing/build-identity.mjs": "5ec0bd783bd671a3b41ad6cb9003c9d50708d290afbd023277216978d3a650b8",
+    "scripts/audit-gitlab-compatibility-composers.mjs": "f1be806429248a2321d5ca47e9e5da416e56051f757efba5634250e703655615",
+    "scripts/audit-gitlab-compatibility-quick-save.mjs": "8cb17709efdb43d9df60a522d2fb90c3e2e0f60f1bfb7483ae6565d70169d8fc",
+    "scripts/audit-gitlab-compatibility-reconnect.mjs": "e1512849ede5922fb8c641d4ab5a894687350a0b98ba26df832a706e8a760784",
+    "scripts/audit-gitlab-compatibility-access.mjs": "2eba7a5f34e75944f56cb8789c0fb4eb861493249f3a5acba43bb5d3de06c592",
+    "scripts/audit-gitlab-offline-conflict.mjs": "3a959a11c5e9b91d38f48a1e0eb7cf2c294f563ee79f56bdbd5495239196acdf",
+    "scripts/audit-gitlab-simultaneous-issues.mjs": "6bb7d74d0bb0008de9a00c6db4864400de2c6155ef15c9f9620f5b9506c4a69d",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "277024a259238694df0f0f1e52d667ee9316a0dad8955258702163cec76950a6",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "052e015bd5790c837116a09a824e240020e1c97b67234a5fd827be4e72f99b66",
+    "scripts/audit-gitlab-concurrent-review.mjs": "8ecc2e2f91c05a00b5a55f60dffc5044245390d0b4b4de1cf6d3826aec3780e2",
+    "scripts/audit-gitlab-batch-review.mjs": "33cac683317a6a79cbf88baefb86c77e01ec6944086e40d17d4eb133a3021451",
+    "scripts/audit-gitlab-suggestion-history.mjs": "558fb85acd3aea288e81cd39b90983cc4272b0a2fa1a59d1e6bd3f26511fcc0e",
+    "scripts/gitlab-audit-member.mjs": "fdc9be83e5504ab3d26e7c99e50c1a8a149c59d62a58992391fe4b857c892a96",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "26a16006b2a6dcad81afa41a2905c6229d4a03a12c746887066d9d9e0afac6b3",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "b476d9a583adf969ae7ea6907b84b0ab1499fa0ec6497273eeb997a2e18dacec",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "c84c64884a3063a56b1e32df26384a11bbc0571b0aebf4f7b84eca9bb5ea1c3f"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [
+      {
+        "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+        "readOnly": true
+      }
+    ],
+    "backendEnvironmentHash": "bbf9d40a1bb19c6a29c51fa8a118b830aff9d2d8fc5dcf537dc7911f25686239",
+    "assetSelector": "ENABLE_RSPACK=true",
+    "cpus": 2000000000,
+    "memory": 4294967296,
+    "puma": {
+      "minThreads": 2,
+      "maxThreads": 4,
+      "workers": 0
+    }
+  },
+  "browser": {
+    "engine": "chromium",
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "exitCode": 0
+    }
+  ],
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "12b3492fce9a710ac1f68e959cfea4d3372ea9b764680251803b502058fe4cac  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "buildProbeIssue": {
+    "iid": 528,
+    "descriptionSHA256": "5b3653ca1b1b87c589da22d2b2b8f459b77ab7bfbb04d01f7d6cc2597825a3eb"
+  },
+  "collectionComplete": true
+}

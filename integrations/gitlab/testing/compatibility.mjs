@@ -1,4 +1,5 @@
 import { matchesSaveGesture } from './save-gesture.mjs';
+import { batchReviewChecks } from './batch-review.mjs';
 import { buildIdentityError } from './build-identity.mjs';
 
 /** Pure interpretation of collected observations; never runs editor actions. */
@@ -184,6 +185,13 @@ export function compareGitLabCompatibility(original,fountain){
     const a=original.observations?.find(item=>item.id===input.id),b=fountain.observations?.find(item=>item.id===input.id);
     if(a&&!equal(a.input,input))mismatches.push(input.id+':original-input');
     if(b&&!equal(b.input,input))mismatches.push(input.id+':fountain-input');
+    if (input.scope === 'batch-review') {
+      const left = batchReviewChecks(input, fixture, verifiedEditor(original,a) ? a : undefined);
+      const right = batchReviewChecks(input, fixture, verifiedEditor(fountain,b) ? b : undefined);
+      for (const [key,label] of Object.entries(left.labels))
+        rows.push({case:input.id,invariant:key,label,expected:true,original:left.values[key],fountain:right.values[key],classification:null});
+      continue;
+    }
     if (input.scope === 'concurrent-review') {
       const body = '```suggestion:-0+0\n'+input.source.split('\n')[input.range.start-1]+'\n'+fixture.appendLine+'```\n\n'+fixture.marker;
       const assess = (report,item) => {
@@ -767,11 +775,12 @@ export function compareGitLabCompatibility(original,fountain){
           record.reviewedSaveAfterReload === input.description + input.suffix + ' Verified in Markdown.' &&
           equal(record.notes,['**' + input.comment + '**']);
       }));
+  const comparisonComplete = matched&&incomplete===0&&original.collectionComplete===true&&fountain.collectionComplete===true&&original.errors?.length===0&&fountain.errors?.length===0;
   return {formatVersion:2,...(requiresRollback ? {frontendRollback:{passed:rollbackVerified,issueIds:(rollback?.records??[]).filter(record=>record.writer==='fountain').map(record=>record.iid)}} : {}),scope:'Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.',
     buildIdentities:{original:original.buildIdentity??null,fountain:fountain.buildIdentity??null},
     environment:{matched,mismatches},runs:{original:{runId:original.runId,attempt:original.attempt},fountain:{runId:fountain.runId,attempt:fountain.attempt}},
     rows,summary:{...counts,incomplete,total:rows.length},
-    comparisonComplete:matched&&incomplete===0&&original.collectionComplete===true&&fountain.collectionComplete===true&&original.errors?.length===0&&fountain.errors?.length===0,
-    regressionGate:{passed:matched&&incomplete===0&&counts.regression===0&&original.collectionComplete===true&&fountain.collectionComplete===true&&original.errors?.length===0&&fountain.errors?.length===0},
-    featureAcceptance:{passed:matched&&(!requiresRollback||rollbackVerified)&&fountain.collectionComplete===true&&fountain.errors?.length===0&&rows.every(row=>row.fountain!==undefined&&equal(row.fountain,row.expected)),reason:'Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes.'}};
+    comparisonComplete,
+    regressionGate:{passed:comparisonComplete&&counts.regression===0},
+    featureAcceptance:{passed:comparisonComplete&&(!requiresRollback||rollbackVerified)&&rows.every(row=>row.fountain!==undefined&&equal(row.fountain,row.expected)),reason:'Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes.'}};
 }
