@@ -13,6 +13,8 @@ services:
     ports:
       - "127.0.0.1:5080:5080"
     environment:
+      # Omnibus restarts runit loggers while bringing up the pinned container.
+      SVWAIT: "30"
       FOUNTAIN_GITLAB_PUMA_THREADS: "${FOUNTAIN_GITLAB_PUMA_THREADS:-4}"
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://127.0.0.1:5080'

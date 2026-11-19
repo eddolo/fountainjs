@@ -4,8 +4,8 @@
 
 | Area | Verified on the pinned local deployment | Still open |
 | --- | --- | --- |
-| Issue description and discussion | Both save orders, isolated formatting and undo histories, independent saved records. 44 matched checks on each browser. [Current Chromium build](../../artifacts/gitlab-compatibility/confirmed-review-rollback-20261119/comparison-1/report.md) · [WebKit](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) | Other host surfaces and devices. |
-| Concurrent issue editing | The returning Developer can inspect both drafts and explicitly discard or overwrite. [18 matched checks](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-2/report.md) | Simultaneous submissions and late writes after conflict disclosure. |
+| Issue description and discussion | Both save orders, isolated formatting and undo histories, independent saved records. 44 matched checks on each browser. [Current Chromium build](../../artifacts/gitlab-compatibility/confirmed-review-rollback-20261119/comparison-1/report.md) · [Firefox 153](../../artifacts/gitlab-compatibility/composer-firefox-20261119/comparison-1/report.md) · [WebKit on the earlier build](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) | Other host surfaces and devices. |
+| Concurrent issue editing | The returning Developer can inspect both drafts and explicitly discard or overwrite. [18 matched checks](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-2/report.md). When another change arrived, the open disclosure updated. Both builds retained the losing draft during overlapping saves. [31 further checks](../../artifacts/gitlab-compatibility/issue-races-20261119/comparison-5/report.md). | GitLab returned HTTP 500 on the competing issue update in both builds. |
 | Immediate Save and rollback | The active Fountain build retains the last edit. Stock can reopen the same issues and discussions and save from Markdown. [Immediate Save](../../artifacts/gitlab-compatibility/immediate-save-20261119/comparison-1/report.md) · [Rollback](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) | Stock rapid rich-text Save lost the final edit in both Chromium and WebKit. [Timed WebKit rollback](../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md) Removing the Ruby footnote overlay retained the working cached rendering of issue #494. Regenerating its HTML restored the stock repeated-reference defect. [Reproduction and both build receipts](runtime/README.md#reproduce-rollback-with-the-footnote-renderer). Deployment at production scale remains open. |
 | Merge-request reviews | Three posted suggestions were expanded symmetrically, shrunk to the anchor, or extended on one side. The file and commit were verified after undo, redo, save, reload and application. [63 matched checks](../../artifacts/gitlab-compatibility/review-ranges-20261119/comparison-2/report.md) | Applied history is lost on prose-only edits. |
 | Simultaneous review confirmations | On the four-thread profile, two distinct reviewers confirmed one suggestion. Both editors produced one direct commit with the successful reviewer’s message, the exact file and the same Applied note after reload. Fountain also verified the saved suggestion and showed Applied to the second reviewer before reload. [13 matched checks](../../artifacts/gitlab-compatibility/review-feedback-20261119/comparison-3/report.md) | Stock still shows a Git reference error and a stale Apply control until reload. On the earlier [two-thread profile](../../artifacts/gitlab-compatibility/two-reviewers-20261119/comparison-2/report.md), both requests timed out and neither committed. |
@@ -120,6 +120,8 @@ in Markdown in another session and saves. The API must return that exact text
 while the Developer browser is still offline. Each resolution has a fresh issue,
 a recording after sign-in and an independent read of the final saved description.
 
+Use `suite=concurrent-issues` for writes after an open conflict and for overlapping issue submissions. In the first two cases, the issue author reopens the saved issue, checks its first edit, and makes a second Markdown save while the Developer is reading the conflict. The collector checks the persisted second edit before recording the disclosure and the explicit discard or overwrite. The third case uses two rich-text drafts and two ordinary Save clicks. Both actual browser request intervals must overlap. The comparator checks each response, the persisted description, the other author's visible draft and warning, and an independent reader.
+
 The concurrent review fixture opens two signed-in browser sessions and gives each reviewer
 a distinct commit message. It checks that both confirmed the same suggestion and that the
 two browser request intervals overlapped. After both responses, and again after both
@@ -224,8 +226,7 @@ handoff discovery is retained; predefined immediate and settled profiles run
 identically on both sides. The comparator refuses environment/input/instrument
 mismatches, missing editor proof and unobserved outcomes.
 
-Next: extend matched workflows to simultaneous issue saves,
-wider deletion ranges/whitespace inputs, clipboard wrapped-line/Unicode/merged-cell/ownership
+Next: extend matched workflows to wider deletion ranges/whitespace inputs, clipboard wrapped-line/Unicode/merged-cell/ownership
 workflows plus rapid-input profiles, tables/tasks/media and then roles/concurrency,
 additional browsers/mobile and matched restart. Keep the shared Applied-history
 failure open. Add repeated profiles before making frequency/performance claims.

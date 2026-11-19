@@ -276,7 +276,9 @@ from the stock image using the existing data volumes. Stock GitLab must open the
 same issues, retain their bold discussion comments, then edit, save and reload
 each description. The stock run also tests newly stock-authored controls. It
 records immediate rich-text Save and reviewed Markdown Save separately. Both
-deployments stop when finished. Run the comparison after the stock command even
+deployments stop when finished. On this local profile, Omnibus occasionally timed out restarting a service logger during a cold start (observed for Redis, Workhorse and Puma). The local Compose profile now gives the supervisor 30 seconds to finish those service transitions. The browser still waits for GitLab readiness and a successful sign-in page. [Supervisor timeout reference](https://smarden.org/runit/sv.8). The runner records the failed startup separately. If the task container has exited, rerun that side with a fresh `--attempt` on the existing volumes. For paired rollback, use the same attempt number for both sides, starting again with Fountain. [Example preflight failure](../../../artifacts/gitlab-compatibility/review-feedback-stale-20261119/fountain-2/report.json).
+
+Run the comparison after the stock command even
 if a check failed, so the failed outcome appears in the report.
 
 ```sh
@@ -299,6 +301,8 @@ edit there, save, reload and check the final text. That route passed on all four
 records. Switching to Markdown immediately after typing in rich text also needs
 care: verify the final edit in the Markdown field before saving.
 [Rollback results](../../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md).
+
+To repeat the independent-draft comparison on Firefox, add `--browser firefox` to both composers commands and use a fresh run ID. The [Firefox 153 result](../../../artifacts/gitlab-compatibility/composer-firefox-20261119/comparison-1/report.md) exercised both save orders and reloaded both saved records. It used the same local GitLab and Fountain builds as the current Chromium comparison.
 
 For the desktop WebKit profile, add `--browser webkit` to both collection
 commands above and choose a fresh run ID. On WebKit 26.5 (Linux), stock reopened

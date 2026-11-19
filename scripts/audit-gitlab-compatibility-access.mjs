@@ -21,7 +21,7 @@ export async function runGitLabAccessCompatibility({side,runId,page,request,proj
    const api=`/api/v4/projects/${project.id}/issues/${issue.iid}`;result.setup={iid:issue.iid,url:issue.web_url,description:issue.description,authorId:issue.author.id};
    actorContext=await page.context().browser().newContext({viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezoneId:'UTC'});actor=await actorContext.newPage();
    await signInMember(actor,result);authenticated=true;
-   if(input.revocationMode==='remove-membership'||input.kind==='offline-conflict'){
+   if(input.revocationMode==='remove-membership'||['offline-conflict','simultaneous-issue'].includes(input.kind)){
     // Authentication is completed without recording. Reuse its live session in
     // memory, then record only the task document workflow.
     const storageState=await actorContext.storageState();await actorContext.close();
@@ -54,8 +54,8 @@ export async function runGitLabAccessCompatibility({side,runId,page,request,proj
     return value;
    };
    const append=async(text,suffix)=>{await editor.getByText(text,{exact:true}).click();await actor.keyboard.press('End');await pause();await expect.poll(()=>actor.evaluate(()=>{const s=window.getSelection();return {collapsed:s?.isCollapsed,text:s?.anchorNode?.textContent,offset:s?.anchorOffset};})).toEqual({collapsed:true,text,offset:text.length});await actor.keyboard.insertText(suffix);await pause();await expect(editor.getByText(text+suffix,{exact:true})).toBeVisible();};
-   if(input.kind==='offline-conflict'){
-    await exerciseOfflineConflict({actor,author:page,side,input,result,issue,readSaved:async()=>(await request(api)).description,open,append,editor,wrapper,stage,shot});
+   if(['offline-conflict','simultaneous-issue'].includes(input.kind)){
+    await exerciseOfflineConflict({actor,author:page,side,input,result,issue,readSaved:async()=>(await request(api)).description,open,append,editor,wrapper,stage,shot,output});
    }else if(input.kind==='guest'){
     await stage('guest-readonly');result.editControlAbsent=await actor.getByTestId('work-item-edit-form-button').count()===0;result.editableRootsAbsent=await wrapper.locator('[contenteditable="true"]').count()===0;await shot('reader');
     const denied=await actorFetch(api,{description:input.markdown+'\nUnauthorized write probe.'},'PUT');result.denialStatus=denied.status();result.writeDenied=[403,404].includes(denied.status());result.afterDenied=await request(api);result.serverUnchanged=result.afterDenied.description===input.markdown;

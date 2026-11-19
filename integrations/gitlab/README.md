@@ -6,21 +6,18 @@ runs passed all 44 checks across both save orders. The comment toolbar applied
 bold, the description toolbar applied italic, and undo and redo acted on the
 intended editor. Switching the description to Markdown preserved the comment.
 The API and reloaded issue confirmed independent persisted records. This run
-used desktop Chromium, one administrator and a local backend.
-[Comparison and exact editor builds](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-4/report.md).
+used one administrator and a local backend. The current build also passed all 44 checks on Firefox 153. [Chromium comparison](../../artifacts/gitlab-compatibility/confirmed-review-rollback-20261119/comparison-1/report.md) · [Firefox comparison](../../artifacts/gitlab-compatibility/composer-firefox-20261119/comparison-1/report.md).
 
 Two reviewers clicked Apply on one suggestion from separate sessions. Both stock GitLab and Fountain saved one commit. Fountain’s second reviewer immediately saw the Applied badge once GitLab confirmed the saved suggestion. Stock still showed a reference error and an Apply button until reload. The two improvement checks cover the message and controls for this one interaction. [Matched live screens and persisted results](../../artifacts/gitlab-compatibility/review-feedback-20261119/comparison-3/report.md).
 
 The review-feedback build restored 12 original files byte-for-byte, removed 22 integration files, and reproduced all 34 file hashes on reinstall.
-The earlier compiled-frontend rollback retained issue descriptions and bold comments on
+The compiled-frontend rollback for this build retained issue descriptions and bold comments on
 the same database volumes. Stock GitLab saved and reopened changes made in
 Markdown on both Fountain-authored issues and both stock-authored controls.
 Immediate rich-text Save lost the last edit on all four. This behavior also
 affects records created entirely in stock GitLab. The rollback gate remains red.
-A diagnostic run selected the rich-mode wrapper when locating the Markdown
-textarea. The final control run used the textarea itself and completed all four
-records. Wider role, device, workflow, cache and deployment acceptance remains open.
-[Controlled rollback and build identities](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md) ·
+Removing the optional Ruby footnote repair also preserved the fixture's Markdown and cached links. Regenerating its HTML under stock GitLab reproduced the same broken repeated reference as a fresh stock issue. Wider role, device, workflow and production deployment acceptance remains open.
+[Cache rollback procedure and receipts](runtime/README.md#reproduce-rollback-with-the-footnote-renderer) · [Controlled rollback and build identities](../../artifacts/gitlab-compatibility/confirmed-review-rollback-20261119/comparison-1/report.md) ·
 [Source restore and reinstall](../../artifacts/gitlab-native-browser-install/roundtrip.json) ·
 [Deployment instructions](runtime/README.md#reproduce-the-frontend-deployment-and-rollback).
 
@@ -49,8 +46,10 @@ saved it from another session. Both editors showed the Developer their draft and
 the author's exact newer text on reconnect. Discard kept the author's edit.
 Explicit overwrite saved the Developer's draft. The API and reloaded reader
 agreed in all four trials. The conflict was hidden before reconnect and visible
-before an ordinary retry could be clicked. A simultaneous Save remains untested.
+before an ordinary retry could be clicked.
 [Comparison and build identities](../../artifacts/gitlab-compatibility/offline-conflict-20261119/comparison-2/report.md).
+
+The [concurrent issue comparison](../../artifacts/gitlab-compatibility/issue-races-20261119/comparison-5/report.md) adds 30 parity checks and one shared limitation. The open disclosure updated to show the issue author's second saved change. Discard kept that version and explicit overwrite saved the Developer's original draft. With two overlapping rich-text Saves, GitLab acknowledged one, persisted its full description, and kept the other person's draft and conflict controls visible. The competing request returned HTTP 500 on each build. The pinned server's logs for earlier overlapping calls identified `ActiveRecord::StaleObjectError` in `IssuableBaseService#transaction_update`. The earlier runs preserve the [reopened-field observation](../../artifacts/gitlab-compatibility/issue-races-20261119/comparison-2/report.md) and [immediate stock Save failing to establish the incoming edit](../../artifacts/gitlab-compatibility/issue-races-20261119/comparison-4/report.md).
 
 The first pair switched the online author immediately from rich text to Markdown.
 Both stock trials lost the new suffix during that switch, before the competing

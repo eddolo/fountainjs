@@ -1,6 +1,7 @@
+import {submitIssueDrafts} from './audit-gitlab-simultaneous-issues.mjs';
 import {expect} from '@playwright/test';
 
-export async function exerciseOfflineConflict({actor, author, side, input, result, issue, readSaved, open, append, editor, wrapper, stage, shot}) {
+export async function exerciseOfflineConflict({actor, author, side, input, result, issue, readSaved, open, append, editor, wrapper, stage, shot, output}) {
   const draft = input.markdown.replace('Shared record.', 'Shared record.' + input.localSuffix);
   const remote = input.markdown.replace('Shared record.', 'Shared record.' + input.remoteSuffix);
   const selector = side === 'original' ? '.ProseMirror[contenteditable="true"]' : '.fountain-editor[contenteditable="true"]';
@@ -22,6 +23,7 @@ export async function exerciseOfflineConflict({actor, author, side, input, resul
   if (!await authorEditor.isVisible()) await toggle.click();
   await expect(authorEditor.getByText('End marker.',{exact:true})).toBeVisible();
   result.remoteEditorProof = await proof(authorEditor);
+  if (input.kind==='simultaneous-issue') return submitIssueDrafts({actor,author,editor,authorEditor,wrapper,authorForm,input,result,readSaved,append,output,stage,issue});
   const failures = [];
   actor.on('requestfailed',req=>{
     if(new URL(req.url()).pathname!=='/api/graphql'||req.method()!=='POST')return;
@@ -71,6 +73,36 @@ export async function exerciseOfflineConflict({actor, author, side, input, resul
     result.currentVersion = await conflict.getByTestId('conflicted-description').inputValue();
   }
   await shot('decision');
+  if (input.lateSuffix) {
+    // The same online author makes a second, complete save while the developer
+    // is already reading the first conflict. Observe the UI before resolving it.
+    expect(result.currentVersion).toBe(remote);
+    await stage('author-saves-after-conflict-disclosure');
+    await author.getByTestId('work-item-edit-form-button').click();
+    const previousText = 'Shared record.' + input.remoteSuffix;
+    const paragraph = authorEditor.getByText(previousText,{exact:true});
+    await expect.poll(async()=>await paragraph.isVisible() || (await toggle.isVisible() && await source.isVisible()),{timeout:30000}).toBe(true);
+    if (!await paragraph.isVisible()) await toggle.click();
+    await expect(paragraph).toBeVisible({timeout:30000});
+    await authorForm.getByRole('button',{name:'Switch to plain text editing',exact:true}).click();
+    await expect(source).toHaveValue(remote);
+    const latest = remote.replace(previousText, previousText + input.lateSuffix);
+    await source.fill(latest);
+    await expect(source).toHaveValue(latest);
+    await authorForm.getByRole('button',{name:'Save changes',exact:true}).click();
+    await expect.poll(readSaved,{timeout:30000}).toBe(latest);
+    result.lateServerVersion = await readSaved();
+    const disclosure = conflict.getByTestId('conflicted-description');
+    // A stale disclosure is a measured outcome even when the update never arrives.
+    const deadline = Date.now() + 10000;
+    while (Date.now() < deadline && await disclosure.evaluateAll(fields => fields[0]?.value) !== latest)
+      await new Promise(resolve => setTimeout(resolve, 200));
+    result.lateDisclosure = await disclosure.isVisible() ? await disclosure.inputValue() : null;
+    result.draftAfterLateSave = await editor.getByText('Shared record.'+input.localSuffix,{exact:true}).isVisible();
+    result.serverBeforeLateDecision = await readSaved();
+    if (await disclosure.isVisible()) await disclosure.evaluate(node=>node.scrollIntoView({block:'center'}));
+    await shot('late-decision');
+  }
   result.explicitDecision = false;
   if(input.resolution==='overwrite' && result.conflictShown){
     await conflict.getByRole('button',{name:'Save and overwrite',exact:true}).click();

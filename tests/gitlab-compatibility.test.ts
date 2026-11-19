@@ -306,6 +306,46 @@ it('requires independent authorized authors and detects an ordinary retry overwr
  stock.onlineAuthorId = 1;
  stock.failedWrites[0].description = remote;
  expect(row().status).toBe('missing-evidence');
+ stock.failedWrites[0].description = local;
+ const latest = remote.replace('Shared record.'+input.remoteSuffix,'Shared record.'+input.remoteSuffix+' Later.');
+ Object.assign(input,{lateSuffix:' Later.'});
+ for (const report of pair) Object.assign(report.observations[0]!,{currentVersion:remote,lateServerVersion:latest,lateDisclosure:latest});
+ const disclosure = () => compareGitLabCompatibility(...pair).rows.find((item:any)=>item.invariant==='lateDisclosure');
+ expect(disclosure().classification).toBe('parity');
+ stock.lateDisclosure = remote;
+ expect(disclosure().classification).toBe('improvement');
+ stock.lateServerVersion = remote;
+ expect(disclosure().status).toBe('missing-evidence');
+});
+
+it('requires overlapping real issue writes before scoring draft retention', () => {
+ const pair=reports();
+ const fixture=JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-concurrent-issues.json',import.meta.url),'utf8'));
+ const input=fixture.cases.find((entry:any)=>entry.kind==='simultaneous-issue');
+ const sources=[input.localSuffix,input.remoteSuffix].map(s=>input.markdown.replace('Shared record.','Shared record.'+s));
+ for (const report of pair) {
+   Object.assign(report.fixture,{...fixture,cases:[input]});
+   const item=report.observations[0]!;
+   Object.assign(item,{id:input.id,input,status:'observed',remoteEditorProof:item.editorProof,
+     actor:{id:8,username:fixture.username,isAdmin:false},membership:{id:8,accessLevel:30},cleanupMembership:{id:8,accessLevel:10},
+     setup:{authorId:1},onlineAuthorId:1,permissionBefore:true,baselineBeforeSaves:input.markdown,
+     issueGid:'gid://gitlab/WorkItem/7',persisted:sources[0],afterReload:sources[0],reader:['Shared record.'+input.localSuffix,'End marker.'],
+     submissions:[8,1].map((actor,i)=>({actor,description:sources[i],status:200,mutationReturned:true,
+       start:100+i,end:110+i,requestStart:2,responseEnd:12,updateId:i===0?'gid://gitlab/WorkItem/7':null,errors:i===0?[]:['Conflict']})),
+     decisions:[{actor:8,draftVisible:false,warnings:[]},{actor:1,draftVisible:true,warnings:['Conflict']}]});
+ }
+ const result=()=>compareGitLabCompatibility(...pair);
+ expect(result().summary.parity).toBe(7);
+ const stock=pair[0].observations[0] as any;
+ stock.submissions[1].status=500;
+ expect(result().summary.improvement).toBe(1);
+ stock.submissions[1].status=200;
+ stock.submissions[1].updateId=stock.issueGid;
+ stock.submissions[1].errors=[];
+ stock.decisions[1].draftVisible=false;
+ expect(result().summary.improvement).toBe(2);
+ stock.submissions[1].start=stock.submissions[0].end;
+ expect(result().summary.incomplete).toBe(7);
 });
 
 it('requires measured trusted Save gestures and the intended visible edit on both sides', () => {

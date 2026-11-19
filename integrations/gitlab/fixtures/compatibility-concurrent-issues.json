@@ -1,0 +1,45 @@
+{
+  "formatVersion": 1,
+  "workflow": "two-author-issue-save-conflicts",
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "settlingMs": 450,
+  "cases": [
+    {
+      "id": "late-write-discard",
+      "scope": "offline-conflict",
+      "kind": "offline-conflict",
+      "title": "Second author saves again during conflict review",
+      "markdown": "## Access review\n\nShared record.\n\nEnd marker.",
+      "initialAccessLevel": 30,
+      "localSuffix": " Reviewed offline.",
+      "remoteSuffix": " Updated by author.",
+      "resolution": "discard",
+      "lateSuffix": " Follow-up verified."
+    },
+    {
+      "id": "late-write-overwrite",
+      "scope": "offline-conflict",
+      "kind": "offline-conflict",
+      "title": "Second author saves again during conflict review",
+      "markdown": "## Access review\n\nShared record.\n\nEnd marker.",
+      "initialAccessLevel": 30,
+      "localSuffix": " Reviewed offline.",
+      "remoteSuffix": " Updated by author.",
+      "resolution": "overwrite",
+      "lateSuffix": " Follow-up verified."
+    },
+    {
+      "id": "overlapping-issue-saves",
+      "scope": "simultaneous-issue",
+      "kind": "simultaneous-issue",
+      "title": "Independent authors save the same issue",
+      "markdown": "## Access review\n\nShared record.\n\nEnd marker.",
+      "initialAccessLevel": 30,
+      "localSuffix": " Saved by the Developer.",
+      "remoteSuffix": " Saved by the author."
+    }
+  ]
+}

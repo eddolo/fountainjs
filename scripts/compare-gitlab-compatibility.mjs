@@ -38,6 +38,22 @@ if (['stale-reviews','relocated-reviews'].includes(reports[0].suite)) {
   }
   table.push('');
 }
+if (reports[0].suite === 'concurrent-issues') {
+  table.push('## Overlapping issue saves', '', '| Editor | Responses (Developer / author) | Overlap | Persisted draft | Other draft visible | Conflict warning |', '| --- | --- | ---: | --- | --- | --- |');
+  for (const report of reports) {
+    const item = report.observations?.find(o=>o.input?.kind==='simultaneous-issue');
+    const scored = result.rows.find(row=>row.case===item?.id && row.invariant==='oneAcknowledged');
+    if (!result.environment.matched || !scored?.classification) continue;
+    const calls = item.submissions;
+    const overlap = Math.min(...calls.map(c=>c.end))-Math.max(...calls.map(c=>c.start));
+    const saved = calls.findIndex(c=>c.description===item.persisted);
+    const other = saved===-1?undefined:item.decisions[1-saved];
+    table.push('| '+report.side+' | '+calls.map(c=>c.status).join(' / ')+' | '+overlap.toFixed(1)+' ms | '+
+      (['Developer','Issue author'][saved]??'Neither')+' | '+(other?.draftVisible?'Yes':'No')+' | '+
+      (other?.warnings.some(w=>/conflict|someone edited the description/i.test(w))?'Yes':'No')+' |');
+  }
+  table.push('', 'The request intervals come from the two browser network responses. A single overlap measures this interleaving only.', '');
+}
 if (reports[0].suite === 'concurrent-reviews') {
   table.push('## Two confirmations on the same suggestion','');
   if (result.environment.matched && reports[0].deployment?.puma) {

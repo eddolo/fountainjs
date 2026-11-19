@@ -1,0 +1,611 @@
+{
+  "formatVersion": 2,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "buildIdentities": {
+    "original": {
+      "side": "original",
+      "expected": {
+        "gitlabVersion": "19.5.3",
+        "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+        "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615"
+      },
+      "observed": null
+    },
+    "fountain": {
+      "side": "fountain",
+      "expected": {
+        "gitlabVersion": "19.5.3",
+        "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+        "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+        "packageVersion": "0.5.0-beta.2",
+        "fountainRevision": "80ae30149c8fed68f6f89802cd8f2e22e53ddbd0",
+        "runtimeSHA256": "755d58d35b0ac7e3a6c56286a8089261b3334662e96357925ca1dba0cd2c78f5",
+        "integrationSHA256": "908158c5319f5eb8388633ee75d534f405f638f47e3785be00b2d6e6302583c3"
+      },
+      "observed": {
+        "editor": "FountainJS",
+        "integrationSHA256": "908158c5319f5eb8388633ee75d534f405f638f47e3785be00b2d6e6302583c3",
+        "runtimeSHA256": "755d58d35b0ac7e3a6c56286a8089261b3334662e96357925ca1dba0cd2c78f5",
+        "manifestSHA256": "00ca36fae735a224a76fd6d25aa4b9cb8a11b86e769c00c91c3255d822664283",
+        "scripts": [
+          {
+            "path": "/assets/webpack/10845.653e9015.chunk.js",
+            "browserSHA256": "037471e3bf3408848dbc488004c06251d6f6818ac7e763bcba7200c8ac08ccde",
+            "deployedSHA256": "037471e3bf3408848dbc488004c06251d6f6818ac7e763bcba7200c8ac08ccde"
+          },
+          {
+            "path": "/assets/webpack/11477.eb4e3c00.chunk.js",
+            "browserSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93",
+            "deployedSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93"
+          },
+          {
+            "path": "/assets/webpack/21220.42642502.chunk.js",
+            "browserSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8",
+            "deployedSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8"
+          },
+          {
+            "path": "/assets/webpack/26937.37f8dec7.chunk.js",
+            "browserSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6",
+            "deployedSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6"
+          },
+          {
+            "path": "/assets/webpack/31126.768e9d21.chunk.js",
+            "browserSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a",
+            "deployedSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a"
+          },
+          {
+            "path": "/assets/webpack/31580.e3bf8fed.chunk.js",
+            "browserSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293",
+            "deployedSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293"
+          },
+          {
+            "path": "/assets/webpack/33480.ce7ca688.chunk.js",
+            "browserSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566",
+            "deployedSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566"
+          },
+          {
+            "path": "/assets/webpack/33816.10488c93.chunk.js",
+            "browserSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14",
+            "deployedSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14"
+          },
+          {
+            "path": "/assets/webpack/33975.2a6859ce.chunk.js",
+            "browserSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b",
+            "deployedSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b"
+          },
+          {
+            "path": "/assets/webpack/34221.35146945.chunk.js",
+            "browserSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75",
+            "deployedSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75"
+          },
+          {
+            "path": "/assets/webpack/36950.473152a8.chunk.js",
+            "browserSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345",
+            "deployedSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345"
+          },
+          {
+            "path": "/assets/webpack/42297.d98d8353.chunk.js",
+            "browserSHA256": "fc7e2bc5517f1d4e3ce13466a28c21ef873682d56c52ae3e37d201e223780ab0",
+            "deployedSHA256": "fc7e2bc5517f1d4e3ce13466a28c21ef873682d56c52ae3e37d201e223780ab0"
+          },
+          {
+            "path": "/assets/webpack/44540.1b3fb37a.chunk.js",
+            "browserSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457",
+            "deployedSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457"
+          },
+          {
+            "path": "/assets/webpack/48082.f4fb9454.chunk.js",
+            "browserSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea",
+            "deployedSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea"
+          },
+          {
+            "path": "/assets/webpack/52199.2635e6eb.chunk.js",
+            "browserSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4",
+            "deployedSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4"
+          },
+          {
+            "path": "/assets/webpack/54908.851e751e.chunk.js",
+            "browserSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278",
+            "deployedSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278"
+          },
+          {
+            "path": "/assets/webpack/56524.a3f2adcc.chunk.js",
+            "browserSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649",
+            "deployedSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649"
+          },
+          {
+            "path": "/assets/webpack/57920.15510cdf.chunk.js",
+            "browserSHA256": "ee6b1163a29837ffcf506979e61a75c5b3183f90e9e2831d5a9610361dab9cea",
+            "deployedSHA256": "ee6b1163a29837ffcf506979e61a75c5b3183f90e9e2831d5a9610361dab9cea"
+          },
+          {
+            "path": "/assets/webpack/58279.be153399.chunk.js",
+            "browserSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179",
+            "deployedSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179"
+          },
+          {
+            "path": "/assets/webpack/6368.b30463b3.chunk.js",
+            "browserSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e",
+            "deployedSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e"
+          },
+          {
+            "path": "/assets/webpack/65338.66de7a5c.chunk.js",
+            "browserSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60",
+            "deployedSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60"
+          },
+          {
+            "path": "/assets/webpack/65492.7ba55601.chunk.js",
+            "browserSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364",
+            "deployedSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364"
+          },
+          {
+            "path": "/assets/webpack/6620.52ee50e6.chunk.js",
+            "browserSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820",
+            "deployedSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820"
+          },
+          {
+            "path": "/assets/webpack/66210.d86969b9.chunk.js",
+            "browserSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26",
+            "deployedSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26"
+          },
+          {
+            "path": "/assets/webpack/67.0fe3d755.chunk.js",
+            "browserSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780",
+            "deployedSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780"
+          },
+          {
+            "path": "/assets/webpack/67755.57034e16.chunk.js",
+            "browserSHA256": "50284e6eaa3407a441df52b6509999ad36c8ef572045bf4c9032e604b8fc58f7",
+            "deployedSHA256": "50284e6eaa3407a441df52b6509999ad36c8ef572045bf4c9032e604b8fc58f7"
+          },
+          {
+            "path": "/assets/webpack/68541.222d9bcd.chunk.js",
+            "browserSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece",
+            "deployedSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece"
+          },
+          {
+            "path": "/assets/webpack/69513.9df26555.chunk.js",
+            "browserSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f",
+            "deployedSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f"
+          },
+          {
+            "path": "/assets/webpack/70682.dbea24fb.chunk.js",
+            "browserSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92",
+            "deployedSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92"
+          },
+          {
+            "path": "/assets/webpack/71642.4e382863.chunk.js",
+            "browserSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4",
+            "deployedSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4"
+          },
+          {
+            "path": "/assets/webpack/72007.15fb7bcd.chunk.js",
+            "browserSHA256": "f08cd11b57c4d38ff4ce89fc1384368c752cd5a9d611d5c9373ab0c8a5e62e49",
+            "deployedSHA256": "f08cd11b57c4d38ff4ce89fc1384368c752cd5a9d611d5c9373ab0c8a5e62e49"
+          },
+          {
+            "path": "/assets/webpack/77804.af4827ca.chunk.js",
+            "browserSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1",
+            "deployedSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1"
+          },
+          {
+            "path": "/assets/webpack/79164.07015d7a.chunk.js",
+            "browserSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448",
+            "deployedSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448"
+          },
+          {
+            "path": "/assets/webpack/81231.39e842ae.chunk.js",
+            "browserSHA256": "1c5d6953b92a91c1cf57b4baa4eac2c473d6467dd9545ea02b42ec82cc1dd82d",
+            "deployedSHA256": "1c5d6953b92a91c1cf57b4baa4eac2c473d6467dd9545ea02b42ec82cc1dd82d"
+          },
+          {
+            "path": "/assets/webpack/90212.0f7599c8.chunk.js",
+            "browserSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8",
+            "deployedSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8"
+          },
+          {
+            "path": "/assets/webpack/92505.e2029695.chunk.js",
+            "browserSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18",
+            "deployedSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18"
+          },
+          {
+            "path": "/assets/webpack/92967.221472e2.chunk.js",
+            "browserSHA256": "79823de536403fc0d8177bce02a57e173c9475c9b8092e1bd3de67415e86e730",
+            "deployedSHA256": "79823de536403fc0d8177bce02a57e173c9475c9b8092e1bd3de67415e86e730"
+          },
+          {
+            "path": "/assets/webpack/96998.7e4df3c7.chunk.js",
+            "browserSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a",
+            "deployedSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a"
+          },
+          {
+            "path": "/assets/webpack/content_editor.acc6b1ef.chunk.js",
+            "browserSHA256": "8d66cde01846d95f62e58a247e911dab27b342d70c33ee705deb616316634b37",
+            "deployedSHA256": "8d66cde01846d95f62e58a247e911dab27b342d70c33ee705deb616316634b37"
+          },
+          {
+            "path": "/assets/webpack/framework.f13ea082.chunk.js",
+            "browserSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9",
+            "deployedSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9"
+          },
+          {
+            "path": "/assets/webpack/gitlab_ui.d82b8e33.chunk.js",
+            "browserSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886",
+            "deployedSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886"
+          },
+          {
+            "path": "/assets/webpack/global_search_modal.276667de.chunk.js",
+            "browserSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42",
+            "deployedSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42"
+          },
+          {
+            "path": "/assets/webpack/hello.61f24ffa.chunk.js",
+            "browserSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab",
+            "deployedSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab"
+          },
+          {
+            "path": "/assets/webpack/initInviteMembersModal.ed948cf8.chunk.js",
+            "browserSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb",
+            "deployedSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb"
+          },
+          {
+            "path": "/assets/webpack/initInviteMembersTrigger.cc208be6.chunk.js",
+            "browserSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122",
+            "deployedSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122"
+          },
+          {
+            "path": "/assets/webpack/main.fb78dad5.chunk.js",
+            "browserSHA256": "db3fbd2f4532d2054194d913aac7ef43adfeaeb91d3fb2f2cb0bc7bf6c1c3bdf",
+            "deployedSHA256": "db3fbd2f4532d2054194d913aac7ef43adfeaeb91d3fb2f2cb0bc7bf6c1c3bdf"
+          },
+          {
+            "path": "/assets/webpack/pages.projects.work_items.5b1bae85.chunk.js",
+            "browserSHA256": "e75a207e59eefda2af154c7d481f6fa990fbd786575c420f197f2e8620164097",
+            "deployedSHA256": "e75a207e59eefda2af154c7d481f6fa990fbd786575c420f197f2e8620164097"
+          },
+          {
+            "path": "/assets/webpack/prosemirror.d913db02.chunk.js",
+            "browserSHA256": "8973ac8a70588ee372a258693d7b8097c76618bfdabda0dd1b5dcc53a08d732b",
+            "deployedSHA256": "8973ac8a70588ee372a258693d7b8097c76618bfdabda0dd1b5dcc53a08d732b"
+          },
+          {
+            "path": "/assets/webpack/runtime.05493e16.bundle.js",
+            "browserSHA256": "6290607da7704515f2fc5dc612563eef683eeaf5f07e2cc819335dcc8a1c0274",
+            "deployedSHA256": "6290607da7704515f2fc5dc612563eef683eeaf5f07e2cc819335dcc8a1c0274"
+          },
+          {
+            "path": "/assets/webpack/shortcutsBundle.be2e00cb.chunk.js",
+            "browserSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb",
+            "deployedSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb"
+          },
+          {
+            "path": "/assets/webpack/super_sidebar.eda8a491.chunk.js",
+            "browserSHA256": "377f63732d167f3f1ef4c7606a2ffe0357c7d0316901f527b671799797629145",
+            "deployedSHA256": "377f63732d167f3f1ef4c7606a2ffe0357c7d0316901f527b671799797629145"
+          },
+          {
+            "path": "/assets/webpack/tracker.e8a6b670.chunk.js",
+            "browserSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858",
+            "deployedSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858"
+          }
+        ]
+      }
+    }
+  },
+  "environment": {
+    "matched": false,
+    "mismatches": [
+      "original build identity: missing expected or observed build",
+      "deployment.puma",
+      "backend.version",
+      "backend.project",
+      "backend.actor",
+      "backend.serverSources"
+    ]
+  },
+  "runs": {
+    "original": {
+      "runId": "issue-races-20261119",
+      "attempt": 3
+    },
+    "fountain": {
+      "runId": "issue-races-20261119",
+      "attempt": 3
+    }
+  },
+  "rows": [
+    {
+      "case": "late-write-discard",
+      "invariant": "lateDisclosure",
+      "label": "Open disclosure shows the newer saved version before resolution",
+      "expected": "## Access review\n\nShared record. Updated by author. Follow-up verified.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "draftAfterLateSave",
+      "label": "Author retains their own draft through the later write",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "serverBeforeLateDecision",
+      "label": "Newest server edit survives until the author chooses",
+      "expected": "## Access review\n\nShared record. Updated by author. Follow-up verified.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "afterFailedSave",
+      "label": "Offline Save leaves the server baseline intact",
+      "expected": "## Access review\n\nShared record.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "beforeDecision",
+      "label": "Second author’s saved version survives until explicit resolution",
+      "expected": "## Access review\n\nShared record. Updated by author.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "conflictShown",
+      "label": "Returning author sees a conflict",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "draftShown",
+      "label": "Returning author can still see their own draft",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "currentVersion",
+      "label": "Conflict disclosure contains the other author’s exact Markdown",
+      "expected": "## Access review\n\nShared record. Updated by author.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "explicitDecision",
+      "label": "Author explicitly resolves the conflict",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "afterDecision",
+      "label": "Resolution persists the chosen Markdown",
+      "expected": "## Access review\n\nShared record. Updated by author. Follow-up verified.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "reader",
+      "label": "Reload shows the chosen version",
+      "expected": [
+        "Shared record. Updated by author. Follow-up verified.",
+        "End marker."
+      ],
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-discard",
+      "invariant": "actorErrors",
+      "label": "Browser exceptions",
+      "expected": [],
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "lateDisclosure",
+      "label": "Open disclosure shows the newer saved version before resolution",
+      "expected": "## Access review\n\nShared record. Updated by author. Follow-up verified.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "draftAfterLateSave",
+      "label": "Author retains their own draft through the later write",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "serverBeforeLateDecision",
+      "label": "Newest server edit survives until the author chooses",
+      "expected": "## Access review\n\nShared record. Updated by author. Follow-up verified.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "afterFailedSave",
+      "label": "Offline Save leaves the server baseline intact",
+      "expected": "## Access review\n\nShared record.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "beforeDecision",
+      "label": "Second author’s saved version survives until explicit resolution",
+      "expected": "## Access review\n\nShared record. Updated by author.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "conflictShown",
+      "label": "Returning author sees a conflict",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "draftShown",
+      "label": "Returning author can still see their own draft",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "currentVersion",
+      "label": "Conflict disclosure contains the other author’s exact Markdown",
+      "expected": "## Access review\n\nShared record. Updated by author.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "explicitDecision",
+      "label": "Author explicitly resolves the conflict",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "afterDecision",
+      "label": "Resolution persists the chosen Markdown",
+      "expected": "## Access review\n\nShared record. Reviewed offline.\n\nEnd marker.",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "reader",
+      "label": "Reload shows the chosen version",
+      "expected": [
+        "Shared record. Reviewed offline.",
+        "End marker."
+      ],
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "late-write-overwrite",
+      "invariant": "actorErrors",
+      "label": "Browser exceptions",
+      "expected": [],
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "overlapping-issue-saves",
+      "invariant": "cleanResponse",
+      "label": "Both ordinary Save requests finish without a server error",
+      "expected": true,
+      "fountain": false,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "overlapping-issue-saves",
+      "invariant": "oneAcknowledged",
+      "label": "Only one competing replacement is acknowledged as saved",
+      "expected": true,
+      "fountain": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "overlapping-issue-saves",
+      "invariant": "savedAcknowledged",
+      "label": "GitLab persists the exact draft of an acknowledged author",
+      "expected": true,
+      "fountain": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "overlapping-issue-saves",
+      "invariant": "retained",
+      "label": "The other author can still see their unsaved draft",
+      "expected": true,
+      "fountain": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "overlapping-issue-saves",
+      "invariant": "explained",
+      "label": "The other author sees a warning about the competing update",
+      "expected": true,
+      "fountain": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "overlapping-issue-saves",
+      "invariant": "reloaded",
+      "label": "The stored issue remains exact after an independent reload",
+      "expected": true,
+      "fountain": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "overlapping-issue-saves",
+      "invariant": "reader",
+      "label": "An independent reader sees the same saved description",
+      "expected": true,
+      "fountain": true,
+      "classification": null,
+      "status": "missing-evidence"
+    }
+  ],
+  "summary": {
+    "parity": 0,
+    "improvement": 0,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 31,
+    "total": 31
+  },
+  "comparisonComplete": false,
+  "regressionGate": {
+    "passed": false
+  },
+  "featureAcceptance": {
+    "passed": false,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/issue-races-20261119/original-3/report.json",
+      "sha256": "3aea4a59333fc562887da0d62926325b0c939c00cf5c42ee83c2aa1fea7e5df2"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/issue-races-20261119/fountain-3/report.json",
+      "sha256": "814b9176f45a3635bf5f6ea42a03b50e71bd86d81a81af7d28e6d93f389ec506"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "4a45276a2055f74eeac2e9bb888caf984cd2719c3bab9406062638861b106995",
+    "integrations/gitlab/testing/compatibility.mjs": "9ef30b7a834167f6306201d9b8569df57f891f52822bc56767d5a6fc89000056",
+    "integrations/gitlab/testing/build-identity.mjs": "6857e15eccbd2b296f13504d9d1ee6595fde7ac7cedaa560544af05abd3e9a8e",
+    "integrations/gitlab/testing/save-gesture.mjs": "24fcc38481cb01e8134443237356a80f7f40e9fd77105ff615052880dbac96a2"
+  }
+}

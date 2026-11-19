@@ -237,18 +237,63 @@ export function compareGitLabCompatibility(original,fountain){
       }
       continue;
     }
+    if (input.scope === 'simultaneous-issue') {
+      const expectedSources = [input.localSuffix,input.remoteSuffix].map(s=>input.markdown.replace('Shared record.','Shared record.'+s));
+      const outcome = (report,item) => {
+        const calls = item?.submissions;
+        if (!verifiedEditor(report,item) || !verifiedEditor(report,{editorProof:item.remoteEditorProof}) ||
+          item.status!=='observed' || item.actor?.username!==fixture.username || item.actor.isAdmin!==false ||
+          item.actor.id===item.onlineAuthorId || item.onlineAuthorId!==item.setup?.authorId || !item.permissionBefore ||
+          item.membership?.accessLevel!==30 || item.membership.id!==item.actor.id || item.cleanupMembership?.accessLevel!==10 ||
+          item.cleanupMembership.id!==item.actor.id || item.baselineBeforeSaves!==input.markdown ||
+          !Array.isArray(calls) || calls.length!==2 || item.decisions?.length!==2 ||
+          !calls.every((c,i)=>c.actor===[item.actor.id,item.onlineAuthorId][i] && c.description===expectedSources[i] &&
+            Number.isInteger(c.status) && c.status>=200 && c.status<=599 && Array.isArray(c.errors) && (c.mutationReturned || c.errors.length>0) &&
+            c.requestStart>=0 && c.responseEnd>=c.requestStart && Number.isFinite(c.start) && c.end>c.start &&
+            item.decisions[i].actor===c.actor && Array.isArray(item.decisions[i].warnings)) ||
+          Math.max(...calls.map(c=>c.start))>=Math.min(...calls.map(c=>c.end))) return {};
+        const winners = calls.filter(c=>c.updateId===item.issueGid && c.errors.length===0);
+        const saved = calls.findIndex(c=>c.description===item.persisted);
+        const other = saved===-1 ? null : item.decisions[1-saved];
+        const expectedReader = ['Shared record.'+[input.localSuffix,input.remoteSuffix][saved],'End marker.'];
+        return {cleanResponse:calls.every(c=>c.status<500), oneAcknowledged:winners.length===1, savedAcknowledged:winners.some(c=>c.description===item.persisted),
+          retained:other?.draftVisible===true, explained:other?.warnings.some(w=>/conflict|someone edited the description/i.test(w))===true,
+          reloaded:item.afterReload===item.persisted && saved!==-1, reader:saved!==-1 && equal(item.reader,expectedReader)};
+      };
+      const stock=outcome(original,a), native=outcome(fountain,b);
+      if(Object.keys(stock).length && Object.keys(native).length) check(input.id+'.actor',a.actor,b.actor);
+      for (const [key,label] of [
+        ['cleanResponse','Both ordinary Save requests finish without a server error'],
+        ['oneAcknowledged','Only one competing replacement is acknowledged as saved'],
+        ['savedAcknowledged','GitLab persists the exact draft of an acknowledged author'],
+        ['retained','The other author can still see their unsaved draft'],
+        ['explained','The other author sees a warning about the competing update'],
+        ['reloaded','The stored issue remains exact after an independent reload'],
+        ['reader','An independent reader sees the same saved description'],
+      ]) rows.push({case:input.id,invariant:key,label,expected:true,original:stock[key],fountain:native[key],classification:null});
+      continue;
+    }
     if (input.scope === 'offline-conflict') {
       const local = input.markdown.replace('Shared record.','Shared record.' + input.localSuffix);
       const remote = input.markdown.replace('Shared record.','Shared record.' + input.remoteSuffix);
-      const finalSuffix = input.resolution === 'overwrite' ? input.localSuffix : input.remoteSuffix;
+      const latest = input.lateSuffix ? remote.replace('Shared record.'+input.remoteSuffix,'Shared record.'+input.remoteSuffix+input.lateSuffix) : remote;
+      const finalSuffix = input.resolution === 'overwrite' ? input.localSuffix : input.remoteSuffix + (input.lateSuffix ?? '');
       const valid = (report,item) => verifiedEditor(report,item) && verifiedEditor(report,{editorProof:item.remoteEditorProof}) &&
         item.status === 'observed' && item.permissionBefore === true && item.membership?.accessLevel === 30 &&
         item.cleanupMembership?.accessLevel === 10 && item.cleanupMembership.id === item.actor?.id && item.membership.id === item.actor?.id &&
         item.actor.username === fixture.username && item.actor.isAdmin === false && Number.isInteger(item.onlineAuthorId) &&
         item.onlineAuthorId === item.setup?.authorId && item.onlineAuthorId !== item.actor.id && item.wasOffline === true &&
-        item.stillOffline === true && item.whileDisconnected === remote && item.failedWrites?.some(f=>f.description===local && f.error==='net::ERR_INTERNET_DISCONNECTED');
+        item.stillOffline === true && item.whileDisconnected === remote &&
+        (!input.lateSuffix || (item.currentVersion === remote && item.lateServerVersion === latest)) && item.failedWrites?.some(f=>f.description===local && f.error==='net::ERR_INTERNET_DISCONNECTED');
       const paired = valid(original,a) && valid(fountain,b);
       if(paired)check(input.id+'.actor',a.actor,b.actor);
+      if (input.lateSuffix) {
+        for (const [key,label,expected] of [
+          ['lateDisclosure','Open disclosure shows the newer saved version before resolution',latest],
+          ['draftAfterLateSave','Author retains their own draft through the later write',true],
+          ['serverBeforeLateDecision','Newest server edit survives until the author chooses',latest],
+        ]) rows.push({case:input.id,invariant:key,label,expected,original:paired?a[key]:undefined,fountain:paired?b[key]:undefined,classification:null});
+      }
       for(const [key,label,expected] of [
         ['afterFailedSave','Offline Save leaves the server baseline intact',input.markdown],
         ['beforeDecision','Second author’s saved version survives until explicit resolution',remote],
@@ -256,7 +301,7 @@ export function compareGitLabCompatibility(original,fountain){
         ['draftShown','Returning author can still see their own draft',true],
         ['currentVersion','Conflict disclosure contains the other author’s exact Markdown',remote],
         ['explicitDecision','Author explicitly resolves the conflict',true],
-        ['afterDecision','Resolution persists the chosen Markdown',input.resolution==='overwrite'?local:remote],
+        ['afterDecision','Resolution persists the chosen Markdown',input.resolution==='overwrite'?local:latest],
         ['reader','Reload shows the chosen version',['Shared record.'+finalSuffix,'End marker.']],
         ['actorErrors','Browser exceptions',[]],
       ]) rows.push({case:input.id,invariant:key,label,expected,original:paired?a[key]:undefined,fountain:paired?b[key]:undefined,classification:null});
