@@ -300,6 +300,17 @@ describe('FountainCodeMenu', () => {
   async function editSuggestion(readOnly = false) {
     fireEvent.click(button(readOnly ? 'View suggestion source' : 'Edit suggestion')); await settle();
   }
+  it('focuses the replacement source and preserves an earlier choice of range field', async () => {
+    await createSuggestion(); await editSuggestion();
+    const source = replacementField();
+    const firstLine = getByRole(suggestionDialog(), 'spinbutton', { name: 'First file line' });
+    document.activeElement.blur();
+    wrapper.vm.focusSourceOnShow();
+    expect(source).toHaveFocus();
+    firstLine.focus();
+    wrapper.vm.focusSourceOnShow();
+    expect(firstLine).toHaveFocus();
+  });
   it('exposes suggestion actions instead of a code-language editor', async () => {
     await createSuggestion();
     expect(queryByRole(wrapper.element, 'combobox', { name: 'Code language' })).toBeNull();

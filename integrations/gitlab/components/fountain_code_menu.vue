@@ -201,6 +201,15 @@ export default {
       } catch (error) { if (!this.disposed && this.dialogOpen && this.sourceSession === session) this.sourceError = error.message; }
       finally { if (!this.disposed) this.sourceApplying = false; }
     },
+    focusSourceOnShow() {
+      const source = this.$refs.sourceField?.$el;
+      const dialog = source?.closest('[role="dialog"]');
+      if (!dialog) return;
+      // A user can reach a field while the opening transition is still running.
+      const active = source.ownerDocument.activeElement;
+      if (dialog.contains(active) && active.tabIndex >= 0) return;
+      source.focus();
+    },
     hideSource(event) {
       if (event?.defaultPrevented) return;
       this.sourceSession?.close(); this.sourceSession = null; this.sourceComposing = false;
@@ -254,7 +263,7 @@ export default {
     </gl-button>
     <gl-button v-if="isFrontmatter" class="gl-mt-3" size="small" @click="openSource">{{ disabled ? s__('ContentEditor|View frontmatter source') : s__('ContentEditor|Edit frontmatter source') }}</gl-button>
     <fountain-diagram-preview v-if="isDiagram && showPreview" :content-editor="contentEditor" :source="menuContext.text" :language="menuContext.language" />
-    <gl-modal v-model="dialogOpen" :modal-id="modalId" size="lg" :title="sourceTitle" :action-primary="sourceAction" :action-cancel="sourceCancel" :return-focus="focusTarget" :no-close-on-esc="sourceComposing" :no-close-on-backdrop="hasUnappliedSource" @primary="applySource" @hide="hideSource" @hidden="hiddenSource">
+    <gl-modal v-model="dialogOpen" :modal-id="modalId" size="lg" :title="sourceTitle" :action-primary="sourceAction" :action-cancel="sourceCancel" :return-focus="focusTarget" no-focus-on-show @shown="focusSourceOnShow" :no-close-on-esc="sourceComposing" :no-close-on-backdrop="hasUnappliedSource" @primary="applySource" @hide="hideSource" @hidden="hiddenSource">
       <template v-if="dialogOpen && dialogContext">
         <template v-if="sourceIsSuggestion">
           <p>{{ s__('ContentEditor|Edit the proposed replacement here or directly in the document. Applying changes the comment; GitLab applies it to the repository separately.') }}</p>
@@ -275,7 +284,7 @@ export default {
         <gl-alert v-if="sourceMessage" variant="danger" :dismissible="false">{{ sourceMessage }}</gl-alert>
         <div :class="{ 'fountain-diagram-authoring': !sourceIsFrontmatter && !sourceIsSuggestion }">
           <gl-form-group :label="sourceLabel" :label-for="`${modalId}-source`">
-            <gl-form-textarea :id="`${modalId}-source`" v-model="sourceDraft" :readonly="disabled" :rows="14" wrap="off" spellcheck="false" class="fountain-diagram-source" @input="sourceCopyState = null" @compositionstart="sourceComposing = true" @compositionend="sourceComposing = false" @keydown="onSourceKeydown" />
+            <gl-form-textarea ref="sourceField" :id="`${modalId}-source`" v-model="sourceDraft" :readonly="disabled" :rows="14" wrap="off" spellcheck="false" class="fountain-diagram-source" @input="sourceCopyState = null" @compositionstart="sourceComposing = true" @compositionend="sourceComposing = false" @keydown="onSourceKeydown" />
           </gl-form-group>
           <div v-if="!sourceIsFrontmatter && !sourceIsSuggestion" class="fountain-diagram-draft-preview">
             <h3 class="gl-heading-4">{{ s__('ContentEditor|Draft preview') }}</h3>
