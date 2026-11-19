@@ -11,7 +11,7 @@ if (execFileSync('docker', ['inspect', '--format', '{{.State.Running}}', 'founta
   throw new Error('Stop the isolated task application before exercising source rollback.');
 const manifest = new URL('artifacts/gitlab-native-browser-install/install.json', root);
 const before = JSON.parse(await readFile(manifest));
-const files = ({ 4: 13, 5: 15, 6: 17, 7: 19, 8: 20, 9: 22, 10: 22, 11: 25, 12: 27, 13: 28, 14: 30, 15: 31, 16: 32, 17: 34, 18: 35, 19: 36 })[before.formatVersion];
+const files = ({ 4: 13, 5: 15, 6: 17, 7: 19, 8: 20, 9: 22, 10: 22, 11: 25, 12: 27, 13: 28, 14: 30, 15: 31, 16: 32, 17: 34, 18: 35, 19: 36, 20: 38 })[before.formatVersion];
 if (before.source !== source || before.restored || !files || Object.keys(before.files).length !== files)
   throw new Error('Unexpected source install generation.');
 const install = restore => execFileSync(process.execPath,
@@ -34,6 +34,9 @@ const originals = new Map([
   ['app/assets/javascripts/work_items/components/work_item_description.vue', backup('work-item-description.vue')],
 ].filter(([path]) => Object.hasOwn(before.files, path)));
 const reviewHeaderPath = 'app/assets/javascripts/vue_shared/components/markdown/suggestion_diff_header.vue';
+const applyControlPath = 'app/assets/javascripts/vue_shared/components/markdown/apply_suggestion.vue';
+if (before.files[applyControlPath]) originals.set(applyControlPath,
+  execFileSync('git',['-C',source,'show',before.revision+':'+applyControlPath]));
 if (before.files[reviewHeaderPath]) originals.set(reviewHeaderPath,
   execFileSync('git',['-C',source,'show',before.revision+':'+reviewHeaderPath]));
 let restored = false;

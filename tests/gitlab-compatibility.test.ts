@@ -59,7 +59,7 @@ it('checks inclusive source ranges, atomic overlap refusal and a distinct adjace
  expect(batchReviewChecks({...input,secondLine:4},fixture,{}).labels.decision).toBe('GitLab accepts the batch request');
 });
 it('distinguishes an open confirmation from fresh Reporter controls and verifies the same reviewer returns', () => {
- const seed='a'.repeat(40), fixture={username:'reviewer',appendLine:'end\n'};
+ const seed='a'.repeat(40), fixture={username:'reviewer',appendLine:'end\n',commitMessage:'Keep this review message across the handoff'};
  const input={source:'a\nb\n',range:{start:1},secondLine:2,reviewerRoleChange:true};
  const actor={id:14,username:fixture.username};
  const role=(accessLevel:number)=>({...actor,accessLevel});
@@ -70,6 +70,13 @@ it('distinguishes an open confirmation from fresh Reporter controls and verifies
    open:{confirmEnabled:true,canApplyBatch:true},sampleMs:3100,fresh:reader,saved:structuredClone(before),requestsBeforeConfirmation:[] as string[]};
  const score=()=>batchReviewChecks(input,fixture,{setup:{seedCommit:seed},batch:{before,roles}}).values;
  expect(score()).toMatchObject({reviewerIdentity:true,reviewerLive:false,reviewerFresh:true,reviewerNoWrite:true});
+ const message='Keep this review message across the handoff';
+ const retained={...roles,accessNotice:true,draftBefore:message,draftAfter:message,
+   returned:{confirmEnabled:true,notes:[{header:true,queued:true},{header:true,queued:true}]}};
+ const retention=()=>batchReviewChecks(input,fixture,{setup:{seedCommit:seed},batch:{before,roles:retained}}).values;
+ expect(retention()).toMatchObject({reviewerNotice:true,reviewerDraft:true});
+ retained.draftAfter=''; retained.accessNotice=false;
+ expect(retention()).toMatchObject({reviewerNotice:false,reviewerDraft:false});
  roles.fresh.notes[1]!.canApply=true;
  roles.restored.id++;
  roles.requestsBeforeConfirmation.push('/api/v4/suggestions/batch_apply');

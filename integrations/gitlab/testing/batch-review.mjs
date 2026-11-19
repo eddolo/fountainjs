@@ -55,6 +55,8 @@ export function batchReviewChecks(input, fixture, item) {
     reviewerIdentity:'The dedicated reviewer moves from Developer to Reporter and back in the same session, then returns to Guest at cleanup',
     reviewerQueued:'The reviewer has both proposals queued and can confirm before the role change',
     reviewerLive:'The open confirmation no longer offers to commit at the three-second role-change observation',
+    reviewerNotice:'The affected suggestion explains that source-branch write access is unavailable',
+    reviewerDraft:'The original tab retains both queued proposals and the typed commit message after access returns',
     reviewerFresh:'After reload the Reporter can read both suggestions and has no enabled apply or queue controls',
     reviewerNoWrite:'The role transition sends no suggestion write and preserves the seed, file and both original notes',
     reviewerRestored:'After Developer access returns both suggestions can be queued again or are still queued',
@@ -81,6 +83,10 @@ export function batchReviewChecks(input, fixture, item) {
     const pair = (state,check) => state?.notes?.length===2 && state.notes.every(note=>note.header===true && check(note));
     if (roles.queued) values.reviewerQueued = roles.queued.confirmEnabled===true && pair(roles.queued,n=>n.queued===true);
     if (roles.open) values.reviewerLive = roles.sampleMs>=3000 && roles.open.confirmEnabled===false && roles.open.canApplyBatch===false;
+    if (typeof roles.accessNotice==='boolean') values.reviewerNotice = roles.accessNotice;
+    if (roles.returned && typeof roles.draftAfter==='string') values.reviewerDraft =
+      typeof fixture.commitMessage==='string' && roles.draftBefore===fixture.commitMessage && roles.draftAfter===roles.draftBefore &&
+      roles.returned.confirmEnabled===true && pair(roles.returned,n=>n.queued===true);
     if (roles.fresh) values.reviewerFresh = roles.fresh.confirmEnabled===false && roles.fresh.canApplyBatch===false &&
       pair(roles.fresh,n=>n.canApply===false && n.canAdd===false);
     if (roles.saved && Array.isArray(roles.requestsBeforeConfirmation)) values.reviewerNoWrite = same(roles.requestsBeforeConfirmation,[]) && same(roles.saved,b.before) && b.before.head===item.setup.seedCommit;

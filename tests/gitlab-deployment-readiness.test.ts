@@ -16,6 +16,9 @@ it('identifies only a matching failed logger restart on an exited container',()=
  const state={Status:'exited',Running:false,ExitCode:1,OOMKilled:false,Dead:false};
  const logs="FATAL: Mixlib::ShellOut::ShellCommandFailed: runit_service[gitaly] had an error: ruby_block[restart_log_service] failed\nSTDOUT: timeout: down: /opt/gitlab/service/gitaly/log: 0s, normally up, want up";
  expect(loggerStartupFailure(state,logs)).toBe('gitaly');
+ const redis=logs.replaceAll('gitaly','redis').replace('runit_service[redis]',
+   'redis_service[redis] (redis::enable line 19) had an error: Mixlib::ShellOut::ShellCommandFailed: runit_service[redis]');
+ expect(loggerStartupFailure(state,redis)).toBe('redis');
  expect(loggerStartupFailure({...state,OOMKilled:true},logs)).toBeUndefined();
  expect(loggerStartupFailure(state,logs.replace('service/gitaly/log','service/redis/log'))).toBeUndefined();
  expect(loggerStartupFailure(state,logs+'\nFATAL: Mixlib::ShellOut::ShellCommandFailed: migrate database')).toBeUndefined();

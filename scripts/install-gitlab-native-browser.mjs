@@ -55,6 +55,8 @@ const taskUtilsHash = '548b3dbacbbe72bc77c75f3fcce77984364df7d9fc0422b00ca0f80d0
 const noteComponentPath = 'app/assets/javascripts/notes/components/noteable_note.vue';
 const noteComponentHash = '1d489cd1644b3544a7544a707ec194c8eb8a6623f651b9ea958c6fa607f978cf';
 const reviewHeaderPath = 'app/assets/javascripts/vue_shared/components/markdown/suggestion_diff_header.vue';
+const applyControlPath = 'app/assets/javascripts/vue_shared/components/markdown/apply_suggestion.vue';
+const branchAccessPath = 'app/assets/javascripts/vue_shared/components/markdown/fountain_review_branch_access.js';
 const reviewHeaderHash = '0f176b2ed251a36162e2642b1be7882c8b30f31efc528bb1882fb9691e92ca1a';
 const reviewActionsPath = 'app/assets/javascripts/notes/store/legacy_notes/actions.js';
 const reviewActionsHash = 'a28c9e56677a80683e9a0e9b67eff533e04f6711b9ab3f3422588f38342262a1';
@@ -77,7 +79,7 @@ if (previous && previous.source !== source)
   throw new Error('The retained install belongs to a different checkout.');
 if (previous) {
   const generation = previous.formatVersion;
-  if (generation !== undefined && (!Number.isInteger(generation) || generation < 2 || generation > 19)) throw new Error('Unknown retained install format.');
+  if (generation !== undefined && (!Number.isInteger(generation) || generation < 2 || generation > 20)) throw new Error('Unknown retained install format.');
   const allowed = new Set([
     hostPath,
     rendererPath,
@@ -129,9 +131,13 @@ if (previous) {
   if (generation >= 17) { allowed.add(reviewActionsPath); allowed.add(reviewHelperPath); }
   if (generation >= 18) allowed.add(noteComponentPath);
   if (generation >= 19) allowed.add(reviewHeaderPath);
+  if (generation >= 20) { allowed.add(applyControlPath); allowed.add(branchAccessPath); }
   if (Object.keys(previous.files).length !== allowed.size) throw new Error('Incomplete retained install manifest.');
   if (Object.keys(previous.files).some(path => !allowed.has(path))) throw new Error('Unrecognized path in retained install.');
 }
+const originalApply = execFileSync('git',['-C',source,'show',pin.commit+':'+applyControlPath],{encoding:'utf8'});
+const applyHash = '99dd11bbbe680358d961f9c7cb8181f419bf5f22d585ac0a8ded9c1755710a00';
+if (hash(originalApply)!==applyHash) throw new Error('Unexpected pinned GitLab Apply control.');
 const originalHeader = execFileSync('git',['-C',source,'show',pin.commit+':'+reviewHeaderPath],{encoding:'utf8'});
 if (hash(originalHeader)!==reviewHeaderHash) throw new Error('Unexpected pinned GitLab suggestion header.');
 if (restore) {
@@ -197,6 +203,7 @@ if (restore) {
     if (hash(originalNote) !== noteComponentHash) throw new Error('Retained note component differs from the pinned source.');
     await writeFile(resolve(source, noteComponentPath), originalNote);
   }
+  if (previous.files[applyControlPath]) await writeFile(resolve(source,applyControlPath),originalApply);
   if (previous.files[reviewHeaderPath]) await writeFile(resolve(source,reviewHeaderPath),originalHeader);
   if (previous.files[reviewActionsPath]) {
     const originalActions = await readFile(resolve(output,'prepared-review-actions.js'));
@@ -215,7 +222,7 @@ if (restore) {
   if (preparedLazyLoader) await writeFile(resolve(source, lazyLoaderPath), preparedLazyLoader);
   for (const [path, value] of preparedMenus) await writeFile(resolve(source, path), value);
   for (const path of Object.keys(previous.files))
-    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, noteComponentPath].includes(path)) await unlink(resolve(source, path));
+    if (![hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, gfmPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, applyControlPath, noteComponentPath].includes(path)) await unlink(resolve(source, path));
   await writeFile(
     resolve(output, 'install.json'),
     JSON.stringify({ ...previous, restored: true }, null, 2) + '\n',
@@ -310,8 +317,38 @@ if (await realpath(headerTarget)!==headerTarget || (currentHeaderHash!==reviewHe
   throw new Error('Refusing to replace an unrecognized GitLab suggestion header.');
 const headerEnd = '    </div>\n  </div>\n</template>';
 if (originalHeader.split(headerEnd).length!==2) throw new Error('Cannot locate the pinned review controls.');
-files.set(reviewHeaderPath, originalHeader.replace(headerEnd, `      <p
-        v-if="isBatched && !canApply && inapplicableReason"
+const applyTarget = resolve(source,applyControlPath);
+const currentApply = hash(await readFile(applyTarget));
+if (await realpath(applyTarget)!==applyTarget || (currentApply!==applyHash && currentApply!==previous?.files[applyControlPath]))
+  throw new Error('Refusing to replace an unrecognized Apply control.');
+files.set(branchAccessPath,await readFile(resolve(root,'integrations/gitlab/services/review_branch_access.js'),'utf8'));
+files.set(applyControlPath, originalApply
+  .replace('  props: {', '  props: {\n    branchAccess: {type:Object,default:null},')
+  .replace('  methods: {', '  beforeDestroy() { this.stopCheckingAccess(); },\n  methods: {\n    stopCheckingAccess() { this.stopAccessWatch?.(); this.stopAccessWatch = null; },')
+  .replace("      this.$emit('apply', this.message);","      if (!this.disabled) this.$emit('apply', this.message);")
+  .replace('      this.$refs.commitMessage.$el.focus();', '      this.$refs.commitMessage.$el.focus();\n      this.stopCheckingAccess();\n      this.stopAccessWatch = this.branchAccess?.watch(() => this.$el.isConnected);')
+  .replace('@shown="focusCommitMessageInput"','@shown="focusCommitMessageInput"\n    @hidden="stopCheckingAccess"')
+  .replace('data-testid="commit-with-custom-message-button"','data-testid="commit-with-custom-message-button"\n        :disabled="disabled"'));
+const accessHeader = originalHeader
+  .replace('<script>',"<script>\nimport Vue from 'vue';\nimport Api from '~/api';\nimport axios from '~/lib/utils/axios_utils';\nimport { reviewBranchAccess } from './fountain_review_branch_access';")
+  .replace('      isApplyingSingle: false,',`      isApplyingSingle: false,
+      branchAccess: reviewBranchAccess(window.gl?.mrWidgetData, Vue.observable,
+        path => axios.get(Api.buildUrl(path), {timeout:5000}).then(({data}) => data)),`)
+  .replace('return this.isApplying || !this.canApply;', 'return this.isApplying || !this.canApply || this.branchAccess?.state.restricted;')
+  .replace('if (this.batchSuggestionsCount > 1) {','if (this.isDisableButton) return;\n      if (this.batchSuggestionsCount > 1) {')
+  .replace(':disabled="isDisableButton"\n        :default-commit-message', ':disabled="isDisableButton"\n        :branch-access="branchAccess"\n        :default-commit-message');
+files.set(reviewHeaderPath, accessHeader.replace(headerEnd, `      <p
+        v-if="showApplySuggestion && branchAccess && branchAccess.state.restricted"
+        role="status"
+        class="gl-mb-0 gl-basis-full gl-text-subtle"
+      >
+        {{ __('Write access to the source branch is unavailable.') }}
+        <gl-button size="small" :loading="branchAccess.state.checking" @click="branchAccess.recheck()">
+          {{ __('Check access again') }}
+        </gl-button>
+      </p>
+      <p
+        v-else-if="isBatched && !canApply && inapplicableReason"
         role="status"
         class="gl-mb-0 gl-basis-full gl-text-subtle"
       >
@@ -499,7 +536,7 @@ for (const [path] of files) {
   const parent = await realpath(resolve(target, '..'));
   if (parent !== resolve(target, '..'))
     throw new Error('Refusing a symlinked installation parent.');
-  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, noteComponentPath].includes(path)) {
+  if ([hostPath, rendererPath, babelPath, sandboxPath, diagramReaderPath, lazyLoaderPath, codeMenuPath, mediaMenuPath, taskUtilsPath, detailPath, descriptionPath, reviewActionsPath, reviewHeaderPath, applyControlPath, noteComponentPath].includes(path)) {
     if ((await realpath(target)) !== target) throw new Error('Refusing a symlinked host input.');
     continue;
   }
@@ -532,7 +569,7 @@ await writeFile(
   resolve(output, 'install.json'),
   JSON.stringify(
     {
-      formatVersion: 19,
+      formatVersion: 20,
       source,
       revision: pin.commit,
       scope:

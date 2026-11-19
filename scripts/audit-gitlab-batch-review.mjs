@@ -107,7 +107,7 @@ async function applyBatch({page,setRole,request,project,fixture,input,mr,base,se
   await apply.click();
   const message = page.getByTestId('commit-message-field').filter({visible:true});
   const confirm = page.getByTestId('commit-with-custom-message-button').filter({visible:true});
-  if (setRole) await refreshReviewerRole({page,readers,adds,removes,apply,message,confirm,setRole,batch,snapshot,output,stage});
+  if (setRole) await refreshReviewerRole({page,fixture,readers,adds,removes,apply,message,confirm,setRole,batch,snapshot,output,stage});
   if (input.secondFilePath) {
     const requests = [];
     const observe = req => {
@@ -123,7 +123,7 @@ async function applyBatch({page,setRole,request,project,fixture,input,mr,base,se
     } finally { page.off('request',observe); }
     await apply.click();
   }
-  await message.fill(fixture.commitMessage);
+  if (!input.reviewerRoleChange) await message.fill(fixture.commitMessage);
   await expect(confirm).toBeEnabled();
   await page.screenshot({path:join(output,input.id+'-before-confirmation.png'),animations:'disabled'});
   const pendingWrites = [];

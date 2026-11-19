@@ -52,7 +52,7 @@ if (reports[0].suite==='reviewer-handoff' && result.environment.matched) {
     table.push('| '+[report.side,(roles.open.confirmEnabled?'Enabled':'Unavailable')+' at '+roles.sampleMs+' ms',
       enabled?'Yes':'No',roles.requestsBeforeConfirmation.length,batch.response?.status ?? 'Unverified'].join(' | ')+' |');
   }
-  table.push('', 'The same local reviewer held Developer, then Reporter, then Developer access. The open-tab observation is a timed sample. The browser reloaded the merge request before the Reporter controls were scored.','');
+  table.push('', 'The same local reviewer held Developer, then Reporter, then Developer access. The open-tab observation is a timed sample. The fresh Reporter controls were scored on a newly loaded merge request.','');
 }
 if (['stale-reviews','relocated-reviews'].includes(reports[0].suite)) {
   table.push('## Apply after the source commit', '', '| Workflow | Stock GitLab | Fountain |', '| --- | --- | --- |');
