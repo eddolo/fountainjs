@@ -384,6 +384,45 @@ On issue #540 the stock editor visibly undid italic formatting but immediately s
 
 The completed Chromium 151 rerun on Fountain revision `2cb51f61` verified all 44 matched isolation checks. After rollback stock reopened both candidate issues (#542 and #543) and both controls (#544 and #545). Each retained its original comment and a reviewed Markdown edit. Each lost the last rich-text edit at a measured 3.7–5.5 ms from key to click. [Exact build identities and four-record results](../../../artifacts/gitlab-compatibility/emoji-composer-rollback-20261119/comparison-2/report.md).
 
+### Reproduce the prepared Tiptap rich-text rollback
+
+This alternate deployment returns issue authors to GitLab’s Tiptap editor with the current-document save patch and a fix for a document reload during Save. It uses the packaged backend and the same database and uploads. The packaged frontend remains the original control for comparisons.
+
+On Chromium 151, switching from Fountain `269741c1` to prepared Tiptap tree `075b931b` retained the first rich-text edit on all four issues (#584–587). Each author typed a phrase ending in a period and clicked Save 5.4–7.5 ms after the last key. The reader and API both returned the complete phrase after reload. The existing bold comments and a subsequent Markdown save survived. The browser recorded zero page errors. This evidence covers issue descriptions on the pinned local deployment. [Fountain build and records](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/fountain-2/report.json) · [Prepared build, timings and saved values](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/prepared-2/report.json) · [Reloaded issue and comment](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/prepared-2/fountain-description-and-comment-first-rich-save.png).
+
+The [first fallback attempt](../../../artifacts/gitlab-compatibility/prepared-rich-rollback-20261119/prepared-1/report.json) used the current-document patch alone. Its form stayed open after an immediate Save. The new regression test reproduced an extra Markdown render when the current source came back through Vue. The repair recognizes the source and immutable ProseMirror document that produced it. External replacements still load. Both upstream component suites passed (130 tests).
+
+Start with the pinned GitLab source checkout, the installed Fountain candidate, Docker and the Linux toolchain used for the native build. Set `gitlab_source` to the pinned GitLab checkout and `fallback` to a new absolute directory outside that checkout. From the FountainJS repository:
+
+```sh
+fountain_repo=$(pwd)
+git -C "$gitlab_source" worktree add --detach "$fallback" 0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf
+git -C "$fallback" apply --index "$fountain_repo/integrations/gitlab/patches/gitlab-19.5.3-current-document.patch"
+git -C "$fallback" apply --index "$fountain_repo/integrations/gitlab/patches/gitlab-19.5.3-tiptap-save-echo.patch"
+(
+  cd "$fallback" || exit 1
+  corepack yarn install --frozen-lockfile && FOSS_ONLY=1 corepack yarn rspack-prod
+)
+```
+
+The dependency directory must resolve inside the fallback checkout. The verified local build copied the already installed pinned dependencies into its own `node_modules` directory. Symlinking the entire directory from the Fountain checkout caused Rspack to misclassify modules and fail compilation.
+
+```sh
+run_id=prepared-rich-$(date -u +%Y%m%d-%H%M%S)
+node scripts/run-gitlab-compatibility.mjs --suite composers --run-id "$run_id" --editor fountain &&
+node scripts/run-gitlab-compatibility.mjs --suite composers --run-id "$run_id" --editor prepared \
+  --verify-rollback --prepared-source "$fallback"
+```
+
+For an interactive local deployment after verification, use the same Compose project and volumes:
+
+```sh
+export FOUNTAIN_GITLAB_FRONTEND_ASSETS="$fallback/public/assets/webpack"
+docker compose -f integrations/gitlab/runtime/compose.yaml -f integrations/gitlab/runtime/compose.frontend.yaml up -d baseline
+```
+
+The second audit run mounts the separate build read-only. It verifies the staged Git tree, Rspack manifest and script bytes loaded by the browser, identifies ProseMirror on the page, and checks that Fountain’s runtime marker is absent. Its first edit after the switch uses the rich editor and clicks Save immediately after the final key. It reopens both Fountain-authored records and the fallback’s own controls. The receipt is `artifacts/gitlab-compatibility/<run_id>/prepared-1/report.json`. To return to the packaged frontend, recreate the service using only the base Compose file. The packaged rich-text Save limitation remains applicable there.
+
 ### Reproduce rollback with the footnote renderer
 
 Prepare the pinned filter once, then start with the isolated service stopped. These runs use the same database and a fresh issue with repeated footnote references.

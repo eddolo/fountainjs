@@ -201,6 +201,26 @@ function reports(){
  return [{...sideReport('original'),observations:[{...structuredClone(observation),editorProof:{native:false,className:'tiptap ProseMirror'}}]},
  {...sideReport('fountain'),observations:[{...structuredClone(observation),prefillDOM:'exact\n',editorProof:{native:true,className:'fountain-editor'}}]}];
 }
+it('identifies the prepared Tiptap rollback build separately from packaged GitLab', async () => {
+ // @ts-expect-error Private JS audit helper intentionally has no published type entry.
+ const {buildIdentityError, preparedRollbackTree} = await import('../integrations/gitlab/testing/build-identity.mjs');
+ const [prepared, fountain] = reports() as any[];
+ prepared.side = prepared.buildIdentity.side = 'prepared';
+ const digest = '2'.repeat(64);
+ prepared.frontendManifests = [digest + '  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json'];
+ prepared.deployment.assetMount = [{readOnly:true}];
+ const {expected, observed} = prepared.buildIdentity;
+ Object.assign(expected,{sourceTree:preparedRollbackTree,rspackManifestSHA256:digest});
+ observed.manifestSHA256 = createHash('sha256').update(prepared.frontendManifests[0]).digest('hex');
+ expect(buildIdentityError(prepared)).toBeTruthy();
+ observed.scripts[0].preparedHandoff = true;
+ expect(buildIdentityError(prepared)).toBeTruthy();
+ observed.scripts[0].preparedSaveEcho = true;
+ expect(buildIdentityError(prepared)).toBeNull();
+ expect(compareGitLabCompatibility(prepared,fountain).environment.matched).toBe(false);
+ expected.rspackManifestSHA256 = '3'.repeat(64);
+ expect(buildIdentityError(prepared)).toBeTruthy();
+});
 it('requires the loaded suggestion services to match the declared backend on each editor', () => {
  const pair = reports();
  const files = {

@@ -1,6 +1,8 @@
 import { createHash } from 'node:crypto';
 
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+// GitLab CE 19.5.3 with the current-document and Tiptap save-echo patches staged.
+export const preparedRollbackTree = '075b931b09e4a1b2123bda61cc8f17a2d84c119c';
 const digest = value => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
 const revision = value => typeof value === 'string' && /^[a-f0-9]{40}$/u.test(value);
 const assetPath = /^\/assets\/webpack\/(?:[\w.-]+\/)*[\w.-]+\.js$/u;
@@ -25,6 +27,14 @@ export function buildIdentityError(report) {
   if (id.side === 'original') {
     if (mounts?.length !== 0 || observed.editor !== 'ProseMirror' || observed.runtimeSHA256 !== null || observed.integrationSHA256 !== null)
       return 'stock editor or asset mount mismatch';
+  } else if (id.side === 'prepared') {
+    if (mounts?.length !== 1 || mounts[0].readOnly !== true || observed.editor !== 'ProseMirror' ||
+        observed.runtimeSHA256 !== null || observed.integrationSHA256 !== null ||
+        expected.sourceTree !== preparedRollbackTree || !digest(expected.rspackManifestSHA256) ||
+        !report.frontendManifests.includes(expected.rspackManifestSHA256 + '  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json') ||
+        !observed.scripts.some(script => script.preparedHandoff === true) ||
+        !observed.scripts.some(script => script.preparedSaveEcho === true))
+      return 'prepared Tiptap rollback build or handoff script mismatch';
   } else if (id.side === 'fountain') {
     if (mounts?.length !== 1 || mounts[0]?.readOnly !== true || observed.editor !== 'FountainJS' ||
         !expected.packageVersion || !revision(expected.fountainRevision) ||
@@ -70,7 +80,13 @@ export async function observeEditorBuild({ page, project, request, expected, rep
     const entries = [...scripts].sort(([a], [b]) => a.localeCompare(b));
     const deployed = readDeployedScripts(entries.map(([path]) => path));
     for (const [path, response] of entries) {
-      observed.scripts.push({ path, browserSHA256: sha256(await response.body()), deployedSHA256: deployed.get(path) });
+      const bytes = await response.body();
+      const script = { path, browserSHA256: sha256(bytes), deployedSHA256: deployed.get(path) };
+      if (report.side === 'prepared' && bytes.includes('MARKDOWN_SUBMISSION_NOT_READY') && bytes.includes('EXPECTED_CURRENT_MARKDOWN'))
+        script.preparedHandoff = true;
+      if (report.side === 'prepared' && bytes.includes('.handoff=Object.freeze({markdown:') && bytes.includes('this.contentEditor.tiptapEditor.state.doc'))
+        script.preparedSaveEcho = true;
+      observed.scripts.push(script);
     }
     return { side: report.side, expected, observed };
   } finally {
@@ -83,6 +99,8 @@ export function describeBuild(report) {
   if (error) return 'Unverified (' + error + ')';
   const { expected, observed } = report.buildIdentity;
   const host = 'GitLab CE ' + expected.gitlabVersion + ' @ ' + expected.gitlabCommit;
+  if (report.side === 'prepared') return host + ' · prepared Tiptap/ProseMirror · source tree ' +
+    expected.sourceTree + ' · Rspack manifest ' + expected.rspackManifestSHA256;
   return report.side === 'original' ? host + ' · stock Tiptap/ProseMirror · frontend manifest ' + observed.manifestSHA256 :
     host + ' · FountainJS ' + expected.packageVersion + ' @ ' + expected.fountainRevision +
     ' · runtime ' + observed.runtimeSHA256 + ' · integration ' + observed.integrationSHA256;

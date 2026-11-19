@@ -1,13 +1,13 @@
 import {execFileSync,spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
-import {resolve,join} from 'node:path';
+import {resolve,join,isAbsolute} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {prepareFootnoteDeployment, verifyFootnoteMount, probeFootnoteCache} from './verify-gitlab-footnote-rollback.mjs';
 import {verifyGitLabRestart} from './verify-gitlab-restart.mjs';
 import {verifySuggestionHistoryRollback} from './verify-gitlab-suggestion-history-rollback.mjs';
 import {verifyGitLabRollback} from './verify-gitlab-editor-rollback.mjs';
-import {buildIdentityError, describeBuild, observeEditorBuild} from '../integrations/gitlab/testing/build-identity.mjs';
+import {buildIdentityError, describeBuild, observeEditorBuild, preparedRollbackTree} from '../integrations/gitlab/testing/build-identity.mjs';
 import {chromium,firefox,webkit,expect} from '@playwright/test';
 import {readGitLabAuditCredential} from './gitlab-audit-credentials.mjs';
 import {loggerStartupFailure,waitForGitLabDeployment} from './gitlab-deployment-readiness.mjs';
@@ -33,8 +33,13 @@ const browsers = {chromium, firefox, webkit};
 if (!Object.hasOwn(browsers,browserName)) throw new Error('Use --browser chromium, firefox or webkit.');
 const browserType = browsers[browserName];
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
-if(!['suggestions','review-history','batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff','deletions','reviews','stale-reviews','relocated-reviews','concurrent-reviews','clipboard','partial','crossblock','wrapped','paint','grid','merged-grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','quick-save','reconnect','offline-conflict','concurrent-issues'].includes(suite)||!['original','fountain'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain --run-id safe-id [--attempt 1..99] [--verify-rollback] [--verify-restart] [--browser chromium|firefox|webkit] [--suite suggestions|review-history|batch-reviews|multi-file-reviews|review-invalidation|overlap-reviews|reviewer-handoff|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict|concurrent-issues]');
+if(!['suggestions','review-history','batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff','deletions','reviews','stale-reviews','relocated-reviews','concurrent-reviews','clipboard','partial','crossblock','wrapped','paint','grid','merged-grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','quick-save','reconnect','offline-conflict','concurrent-issues'].includes(suite)||!['original','fountain','prepared'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
+ throw new Error('Usage: --editor original|fountain|prepared --run-id safe-id [--attempt 1..99] [--verify-rollback] [--verify-restart] [--browser chromium|firefox|webkit] [--suite suggestions|review-history|batch-reviews|multi-file-reviews|review-invalidation|overlap-reviews|reviewer-handoff|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict|concurrent-issues]');
+const preparedRollback = side === 'prepared';
+if (preparedRollback && (suite !== 'composers' || !process.argv.includes('--verify-rollback') ||
+    !process.argv.includes('--prepared-source') || !isAbsolute(value('--prepared-source')) ||
+    ['--footnote-cache','--suggestion-history','--verify-restart'].some(flag => process.argv.includes(flag))))
+  throw new Error('The prepared Tiptap build requires --suite composers --verify-rollback --prepared-source /absolute/gitlab-checkout.');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -55,6 +60,19 @@ if(side==='fountain'){
  for(const [path,expected] of Object.entries(build.inputs))if(hash(await readFile(resolve(root,path)))!==expected)throw new Error('Stale native runtime input: '+path);
  for(const [path,expected] of Object.entries(install.files))if(hash(await readFile(resolve(install.source,path)))!==expected)throw new Error('Changed installed native source: '+path);
  env.FOUNTAIN_GITLAB_FRONTEND_ASSETS=resolve(install.source,'public/assets/webpack');
+ compose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
+}
+if (preparedRollback) {
+ const source = resolve(value('--prepared-source'));
+ const git = (...args) => execFileSync('git',['-C',source,...args],{encoding:'utf8'}).trim();
+ const sourceTree = git('write-tree');
+ if (source !== git('rev-parse','--show-toplevel') || git('rev-parse','HEAD') !== pin.commit ||
+     sourceTree !== preparedRollbackTree || git('diff','--name-only') || git('ls-files','--others','--exclude-standard'))
+   throw new Error('The prepared rollback requires the pinned GitLab checkout with both staged rollback patches.');
+ const assets = resolve(source,'public/assets/webpack');
+ expectedBuild.sourceTree = sourceTree;
+ expectedBuild.rspackManifestSHA256 = hash(await readFile(resolve(assets,'manifest.rspack.json')));
+ env.FOUNTAIN_GITLAB_FRONTEND_ASSETS = assets;
  compose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
 }
 const restartRequested = process.argv.includes('--verify-restart');
@@ -94,7 +112,7 @@ if(prior.State.Running||prior.Config.Labels['com.docker.compose.project']!=='fou
  throw new Error('Stop the known isolated task deployment before switching editor modes.');
 let rollbackCandidate;
 if(process.argv.includes('--verify-rollback')){
- if(side!=='original'||suite!=='composers')throw new Error('Rollback verification requires the stock composers run after its matching native run.');
+ if((side!=='original'&&!preparedRollback)||suite!=='composers')throw new Error('Rollback verification requires the stock composers run after its matching native run.');
  rollbackCandidate=JSON.parse(await readFile(resolve(out,'..','fountain-'+attempt,'report.json')));
  if (Boolean(rollbackCandidate.footnoteCache) !== checkFootnotes) throw new Error('Use the same cache rollback profile as the candidate.');
  if (filter) {
@@ -108,7 +126,7 @@ if(process.argv.includes('--verify-rollback')){
    throw new Error('Rollback requires the previously verified, stopped Fountain deployment.');
 }
 let browser,started=false,authenticated=false;
-const report={formatVersion:2,buildIdentity:{side,expected:expectedBuild,observed:null},runId,attempt,side,scope:'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
+const report={formatVersion:2,buildIdentity:{side,expected:expectedBuild,observed:null},runId,attempt,side,scope:preparedRollback?'Opt-in prepared Tiptap rollback deployment.':'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
  suite,restartRequested,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
  harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','scripts/verify-gitlab-suggestion-history-rollback.mjs','scripts/verify-gitlab-restart.mjs','scripts/verify-gitlab-footnote-rollback.mjs','integrations/gitlab/testing/save-gesture.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-simultaneous-issues.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-concurrent-review.mjs','scripts/audit-gitlab-batch-review.mjs','scripts/audit-gitlab-reviewer-handoff.mjs','scripts/audit-gitlab-suggestion-history.mjs','scripts/gitlab-audit-member.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs','scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
@@ -117,7 +135,7 @@ try{
  if(deployment.Config.Image!==pin.image||deployment.Config.Labels['com.docker.compose.project']!=='fountain-gitlab-integration')throw new Error('Wrong live deployment');
  const assetTarget='/opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack';
  const assets=deployment.Mounts.filter(mount=>mount.Destination===assetTarget);
- if(side==='original'?assets.length!==0:assets.length!==1||assets[0].RW)throw new Error('Wrong editor asset mount');
+ if(side==='original'?assets.length!==0:assets.length!==1||assets[0].RW||assets[0].Source!==env.FOUNTAIN_GITLAB_FRONTEND_ASSETS)throw new Error('Wrong editor asset mount');
  if (filter) verifyFootnoteMount(deployment.Mounts,filter,side==='fountain');
  for (const [destination, source] of historyDestinations) {
    const mounts = deployment.Mounts.filter(m => m.Destination === destination);
@@ -214,7 +232,7 @@ try{
   report.rollback=await verifyGitLabRollback({candidate:rollbackCandidate,report,page,project,request,output:out});
   console.log(JSON.stringify({kind:'compiled-frontend-rollback',passed:report.rollback.passed,records:report.rollback.records.length}));
  }
- if(!report.collectionComplete||report.errors.length||(rollbackCandidate&&!report.rollback?.passed))process.exitCode=1;
+ if(!report.collectionComplete||report.errors.length||report.observations.some(item => item.pageErrors?.length)||(rollbackCandidate&&!report.rollback?.passed))process.exitCode=1;
 }catch(error){report.collectionComplete=false;report.failure=authenticated?String(error):'Deployment/authentication preflight failed; no credentialed details recorded.';process.exitCode=1;}
 finally{
  await browser?.close();

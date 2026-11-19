@@ -6,14 +6,17 @@ import { buildIdentityError } from '../integrations/gitlab/testing/build-identit
 export async function verifyGitLabRollback({ candidate, report, page, project, request, output }) {
   if (candidate.side !== 'fountain' || buildIdentityError(candidate) || buildIdentityError(report) ||
       candidate.runId !== report.runId || candidate.attempt !== report.attempt ||
-      candidate.suite !== 'composers' || candidate.fixtureHash !== report.fixtureHash ||
-      !candidate.collectionComplete || candidate.errors?.length !== 0 ||
+      !['original','prepared'].includes(report.side) || candidate.suite !== 'composers' || report.suite !== candidate.suite ||
+      JSON.stringify(candidate.browser) !== JSON.stringify(report.browser) ||
+      JSON.stringify(candidate.harnessHashes) !== JSON.stringify(report.harnessHashes) || candidate.fixtureHash !== report.fixtureHash ||
+      !candidate.collectionComplete || candidate.errors?.length !== 0 || candidate.observations.some(item => item.pageErrors?.length) ||
       candidate.backend.project.id !== project.id || candidate.deployment.imageId !== report.deployment.imageId ||
       JSON.stringify(candidate.deployment.backendMounts) !== JSON.stringify(report.deployment.backendMounts)) {
     throw new Error('Rollback requires the matching successful candidate run on the same persistent GitLab volumes.');
   }
   const records = [];
-  const result = {formatVersion: 2, candidateBuild: candidate.buildIdentity.expected, records, passed: false};
+  const richFirst = report.side === 'prepared';
+  const result = {formatVersion: 2, firstEditMode: richFirst ? 'rich' : 'markdown', candidateBuild: candidate.buildIdentity.expected, records, passed: false};
   report.rollback = result;
   const subjects = report.fixture.cases.flatMap(input => [candidate, report].map(writer => ({input, writer})));
   for (const {input, writer} of subjects) {
@@ -44,45 +47,61 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     const source = form.locator('textarea[data-testid="markdown-editor-form-field"]');
     const plain = form.getByRole('button', {name:'Switch to plain text editing', exact:true});
     const save = form.getByRole('button', {name:'Save changes', exact:true});
-    await source.or(plain).first().waitFor({timeout:30000});
-    if (!await source.isVisible()) await plain.click();
-    await expect(source).toHaveValue(description);
-    const firstEdit = description + ' First Markdown save.';
-    await source.focus();
-    await page.keyboard.press('Control+End');
-    await page.keyboard.insertText(' First Markdown save');
-    evidence.firstMarkdownGesture = await recordGitLabSave({page, editor:source, button:save, key:'.', pace:'immediate'});
-    await expect(source).toBeHidden({timeout:30000});
-    await page.reload();
-    evidence.firstMarkdownAfterReload = (await request(api)).description;
-    await expect(reader).toHaveText(evidence.firstMarkdownAfterReload);
-    evidence.firstMarkdownNotes = await notes();
-    evidence.firstMarkdownPassed = matchesSaveGesture(evidence.firstMarkdownGesture,'.',firstEdit,'immediate','markdown') &&
-      evidence.firstMarkdownAfterReload === firstEdit && JSON.stringify(evidence.firstMarkdownNotes) === JSON.stringify(expectedNotes);
-    await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-first-markdown-save.png', animations:'disabled'});
-    await page.getByTestId('work-item-edit-form-button').click();
+    let richBaseline = description;
+    if (!richFirst) {
+      await source.or(plain).first().waitFor({timeout:30000});
+      if (!await source.isVisible()) await plain.click();
+      await expect(source).toHaveValue(description);
+      const firstEdit = description + ' First Markdown save.';
+      await source.focus();
+      await page.keyboard.press('Control+End');
+      await page.keyboard.insertText(' First Markdown save');
+      evidence.firstMarkdownGesture = await recordGitLabSave({page, editor:source, button:save, key:'.', pace:'immediate'});
+      await expect(source).toBeHidden({timeout:30000});
+      await page.reload();
+      evidence.firstMarkdownAfterReload = (await request(api)).description;
+      await expect(reader).toHaveText(evidence.firstMarkdownAfterReload);
+      evidence.firstMarkdownNotes = await notes();
+      evidence.firstMarkdownPassed = matchesSaveGesture(evidence.firstMarkdownGesture,'.',firstEdit,'immediate','markdown') &&
+        evidence.firstMarkdownAfterReload === firstEdit && JSON.stringify(evidence.firstMarkdownNotes) === JSON.stringify(expectedNotes);
+      await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-first-markdown-save.png', animations:'disabled'});
+      await page.getByTestId('work-item-edit-form-button').click();
+      richBaseline = evidence.firstMarkdownAfterReload;
+    }
     const stock = form.locator('.ProseMirror[contenteditable="true"]');
     const toggle = form.getByRole('button', {name: 'Switch to rich text editing', exact: true});
     await stock.or(toggle).first().waitFor({ timeout: 30000 });
     if (!await stock.isVisible()) await toggle.click();
-    await expect(stock).toHaveText(evidence.firstMarkdownAfterReload);
+    await expect(stock).toHaveText(richBaseline);
     await stock.locator('p').click();
     await page.keyboard.press('End');
     const suffix = ' Checked after rollback.';
-    const prefix = evidence.firstMarkdownAfterReload + suffix.slice(0,-1);
+    const prefix = richBaseline + suffix.slice(0,-1);
     await page.keyboard.insertText(suffix.slice(0,-1));
     await expect(stock).toHaveText(prefix);
     await expect(save).toBeEnabled();
     evidence.gesture = await recordGitLabSave({page,editor:stock,button:save,key:'.',pace:'immediate'});
-    evidence.quickSaveMeasured = matchesSaveGesture(evidence.gesture,'.',evidence.firstMarkdownAfterReload + suffix,'immediate');
+    evidence.quickSaveMeasured = matchesSaveGesture(evidence.gesture,'.',richBaseline + suffix,'immediate');
     evidence.typed = evidence.gesture.paragraphs?.join('\n');
-    await expect(stock).toBeHidden({timeout: 30000});
+    try {
+      await expect(stock).toBeHidden({timeout: 30000});
+    } catch (error) {
+      evidence.openDraft = await stock.innerText();
+      evidence.formAlerts = await form.getByRole('alert').allTextContents();
+      evidence.persistedAfterRefusal = (await request(api)).description;
+      await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-save-still-open.png'});
+      throw error;
+    }
     evidence.afterSubmit = (await request(api)).description;
     evidence.readerAfterSubmit = await reader.innerText();
     await page.reload();
     await expect(reader).toHaveText(evidence.afterSubmit);
     evidence.quickSaveAfterReload = (await request(api)).description;
-    evidence.quickSavePassed = evidence.quickSaveMeasured && evidence.quickSaveAfterReload === evidence.firstMarkdownAfterReload + suffix;
+    evidence.quickSavePassed = evidence.quickSaveMeasured && evidence.quickSaveAfterReload === richBaseline + suffix;
+    if (richFirst) {
+      await expect(activity.locator('strong,b').filter({hasText: input.comment}).first()).toBeVisible();
+      await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-first-rich-save.png', animations:'disabled'});
+    }
     // Preserve a rapid-save failure and separately exercise an author inspecting
     // Markdown before saving. Both controls use the same stock editor deployment.
     await page.getByTestId('work-item-edit-form-button').click();
@@ -104,6 +123,6 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-after-rollback.png', animations: 'disabled'});
     Object.assign(evidence, {reviewedSaveAfterReload: saved, notes: savedNotes});
   }
-  result.passed = records.every(record => record.firstMarkdownPassed && record.quickSavePassed);
+  result.passed = records.every(record => record.quickSavePassed && (richFirst || record.firstMarkdownPassed));
   return result;
 }

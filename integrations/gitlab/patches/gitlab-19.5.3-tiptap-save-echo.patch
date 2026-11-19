@@ -1,0 +1,81 @@
+diff --git a/app/assets/javascripts/content_editor/components/content_editor.vue b/app/assets/javascripts/content_editor/components/content_editor.vue
+index 264d24e27..5b69d006a 100644
+--- a/app/assets/javascripts/content_editor/components/content_editor.vue
++++ b/app/assets/javascripts/content_editor/components/content_editor.vue
+@@ -164,6 +164,7 @@ export default {
+       focused: false,
+       isLoading: false,
+       latestMarkdown: null,
++      handoff: null,
+     };
+   },
+   computed: {
+@@ -195,6 +196,15 @@ export default {
+       if (this.collaborationProvider) return;
+ 
+       // A replacement while editing (a template, a saved reply) stays undoable; the load does not.
++      const handoff = this.handoff;
++      this.handoff = null;
++      if (
++        handoff?.markdown === markdown &&
++        handoff.doc === this.contentEditor.tiptapEditor.state.doc
++      ) {
++        this.latestMarkdown = markdown;
++        return;
++      }
+       if (markdown !== this.latestMarkdown) {
+         this.setSerializedContent(markdown, { addToHistory: true });
+       }
+@@ -290,7 +300,10 @@ export default {
+       ) {
+         throw new Error('MARKDOWN_SERIALIZATION_NOT_READY');
+       }
+-      return this.contentEditor.getSerializedContent();
++      const markdown = this.contentEditor.getSerializedContent();
++      // Save can publish this source before the debounced change observer fires.
++      this.handoff = Object.freeze({ markdown, doc: this.contentEditor.tiptapEditor.state.doc });
++      return markdown;
+     },
+     editorSelector() {
+       return this.contentEditor?.tiptapEditor?.view?.dom?.closest('.js-editor');
+@@ -383,6 +396,7 @@ export default {
+       this.isLoading = false;
+     },
+     notifyChange() {
++      this.handoff = null;
+       this.latestMarkdown = this.contentEditor.getSerializedContent();
+ 
+       this.$emit('change', {
+diff --git a/spec/frontend/content_editor/components/content_editor_spec.js b/spec/frontend/content_editor/components/content_editor_spec.js
+index f173eb8ae..724bd9cf5 100644
+--- a/spec/frontend/content_editor/components/content_editor_spec.js
++++ b/spec/frontend/content_editor/components/content_editor_spec.js
+@@ -81,6 +81,28 @@ describe('ContentEditor', () => {
+       expect(wrapper.vm.getSerializedContentForHandoff()).toBe('Latest edit');
+     });
+ 
++    it('keeps the rich editor ready when Save echoes the current document before the observer fires', async () => {
++      const editor = findEditorContent().props('editor');
++      editor.commands.setContent('<p>Latest edit</p>', false);
++      const current = wrapper.vm.getSerializedContentForHandoff();
++      renderMarkdown.mockClear();
++      await wrapper.setProps({ markdown: current });
++      expect(renderMarkdown).not.toHaveBeenCalled();
++      expect(wrapper.vm.getSerializedContentForHandoff()).toBe('Latest edit');
++    });
++
++    it('still loads an external replacement after a handoff read', async () => {
++      const editor = findEditorContent().props('editor');
++      editor.commands.setContent('<p>Exported</p>', false);
++      const previous = wrapper.vm.getSerializedContentForHandoff();
++      editor.commands.setContent('<p>Later local edit</p>', false);
++      renderMarkdown.mockResolvedValueOnce({ body: '<p>Exported</p>' });
++      await wrapper.setProps({ markdown: previous });
++      await waitForPromises();
++      expect(renderMarkdown).toHaveBeenCalledWith('Exported');
++      expect(wrapper.vm.getSerializedContentForHandoff()).toBe('Exported');
++    });
++
+     it('refuses a handoff while a document is loading', async () => {
+       let finishRendering;
+       renderMarkdown.mockImplementationOnce(

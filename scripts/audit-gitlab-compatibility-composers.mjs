@@ -33,7 +33,7 @@ async function runCase({ side, runId, page, project, request, output, onProgress
     await actor.goto(issue.web_url);
     const descForm = actor.getByTestId('work-item-description-wrapper');
     const activity = actor.getByTestId('detail-layout-activity');
-    const selector = side === 'original' ? '.ProseMirror[contenteditable="true"]' : '.fountain-editor[contenteditable="true"]';
+    const selector = side !== 'fountain' ? '.ProseMirror[contenteditable="true"]' : '.fountain-editor[contenteditable="true"]';
     const desc = descForm.locator(selector);
     const comment = activity.locator(selector);
     const richToggle = form => form.getByRole('button', { name: 'Switch to rich text editing', exact: true });
