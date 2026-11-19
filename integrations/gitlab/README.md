@@ -9,8 +9,10 @@ The API and reloaded issue confirmed independent persisted records. This run
 used desktop Chromium, one administrator and a local backend.
 [Comparison and exact editor builds](../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-4/report.md).
 
-The source restore/reinstall verified all 32 files of this integration build.
-The compiled-frontend rollback retained issue descriptions and bold comments on
+Two reviewers clicked Apply on one suggestion from separate sessions. Both stock GitLab and Fountain saved one commit. Fountain’s second reviewer immediately saw the Applied badge once GitLab confirmed the saved suggestion. Stock still showed a reference error and an Apply button until reload. The two improvement checks cover the message and controls for this one interaction. [Matched live screens and persisted results](../../artifacts/gitlab-compatibility/review-feedback-20261119/comparison-3/report.md).
+
+The review-feedback build restored 12 original files byte-for-byte, removed 22 integration files, and reproduced all 34 file hashes on reinstall.
+The earlier compiled-frontend rollback retained issue descriptions and bold comments on
 the same database volumes. Stock GitLab saved and reopened changes made in
 Markdown on both Fountain-authored issues and both stock-authored controls.
 Immediate rich-text Save lost the last edit on all four. This behavior also

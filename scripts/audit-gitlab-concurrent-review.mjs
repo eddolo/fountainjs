@@ -34,6 +34,13 @@ export async function concurrentReview({page,request,project,fixture,result,inpu
     result.reviewers = participants;
     await stage('both-reviewers-ready');
     async function submit(view,index) {
+      const noteReads = [];
+      view.on('response', reply => {
+        if (reply.request().method()==='GET' && new URL(reply.url()).pathname===base+'/notes/'+note.id) {
+          noteReads.push(reply.json().then(record=>({status:reply.status(),noteId:record.id,
+            suggestion:record.suggestions?.find(s=>s.id===suggestion.id)?.applied})).catch(()=>({status:reply.status()})));
+        }
+      });
       const [response] = await Promise.all([
         view.waitForResponse(r=>r.request().method()==='PUT' && new URL(r.url()).pathname===applyPath,{timeout:120000}),
         view.getByTestId('commit-with-custom-message-button').click(),
@@ -49,7 +56,9 @@ export async function concurrentReview({page,request,project,fixture,result,inpu
       return {actor:participants[index].id,path:applyPath,status:response.status(),
         start:timing.startTime+timing.requestStart,end:timing.startTime+timing.responseEnd,
         requestStart:timing.requestStart,responseEnd:timing.responseEnd,
-        alert:await alert.isVisible()?await alert.innerText():'',badge:await badge.isVisible()};
+        alert:await alert.isVisible()?await alert.innerText():'',badge:await badge.isVisible(),
+        applyVisible:await reviews[index].getByRole('button',{name:'Apply suggestion',exact:true}).isVisible(),
+        noteReads:await Promise.all(noteReads)};
     }
     // Each signed-in reviewer clicks the actual confirmation once.
     const attempts = await Promise.allSettled(viewers.map(submit));

@@ -11,13 +11,14 @@ if (execFileSync('docker', ['inspect', '--format', '{{.State.Running}}', 'founta
   throw new Error('Stop the isolated task application before exercising source rollback.');
 const manifest = new URL('artifacts/gitlab-native-browser-install/install.json', root);
 const before = JSON.parse(await readFile(manifest));
-const files = ({ 4: 13, 5: 15, 6: 17, 7: 19, 8: 20, 9: 22, 10: 22, 11: 25, 12: 27, 13: 28, 14: 30, 15: 31, 16: 32 })[before.formatVersion];
+const files = ({ 4: 13, 5: 15, 6: 17, 7: 19, 8: 20, 9: 22, 10: 22, 11: 25, 12: 27, 13: 28, 14: 30, 15: 31, 16: 32, 17: 34 })[before.formatVersion];
 if (before.source !== source || before.restored || !files || Object.keys(before.files).length !== files)
   throw new Error('Unexpected source install generation.');
 const install = restore => execFileSync(process.execPath,
   [fileURLToPath(new URL('scripts/install-gitlab-native-browser.mjs', root)), source, ...(restore ? ['--restore'] : [])], { stdio: 'inherit' });
 const backup = name => new URL('artifacts/gitlab-native-browser-install/prepared-' + name, root);
 const originals = new Map([
+  ['app/assets/javascripts/notes/store/legacy_notes/actions.js', backup('review-actions.js')],
   ['app/assets/javascripts/content_editor/components/content_editor.vue', backup('content-editor.vue')],
   ['app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue', backup('markdown-editor.vue')],
   ['babel.config.js', backup('babel.config.js')],

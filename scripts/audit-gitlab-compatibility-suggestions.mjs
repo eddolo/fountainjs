@@ -184,6 +184,7 @@ async function staleReview({page,request,input,fixture,result,project,branch,see
     await expect(confirm).toBeHidden();
     result.confirmationOffered = false;
     result.blockedAtControl = {id:suggestion.id,appliable:suggestion.appliable,buttonDisabled:true,confirmationHidden:true};
+    await savedNote.evaluate(node=>node.scrollIntoView({block:'center'}));
     await savedNote.getByTestId('apply-suggestion-dropdown').hover();
     const tooltip = page.getByRole('tooltip').filter({hasText:/suggestion|line|changed/i}).first();
     try { await tooltip.waitFor({timeout:2000}); } catch (error) { if (error.name !== 'TimeoutError') throw error; }
@@ -198,11 +199,16 @@ async function staleReview({page,request,input,fixture,result,project,branch,see
       confirm.click(),
     ]);
     result.applyResponse = {status:reply.status(),path:new URL(reply.url()).pathname};
-    await expect.poll(async()=>await savedNote.getByRole('alert').first().isVisible() ||
-      await savedNote.getByTestId('applied-badge').isVisible() || !await confirm.isVisible(),{timeout:15000}).toBe(true);
+    const alert = savedNote.getByRole('alert').first();
+    const badge = savedNote.getByTestId('applied-badge');
+    // The confirmation closes before the server decision appears in the note.
+    try { await alert.or(badge).first().waitFor({state:'visible',timeout:15000}); }
+    catch (error) { if (error.name !== 'TimeoutError') throw error; }
   }
-  result.alertText = await savedNote.getByRole('alert').allTextContents();
+  result.appliedBadgeVisible = await savedNote.getByTestId('applied-badge').isVisible();
+  result.alertText = await savedNote.getByRole('alert').filter({visible:true}).allTextContents();
   result.visibleReview = await savedNote.innerText();
+  if (!result.blockedAtControl) await savedNote.evaluate(node=>node.scrollIntoView({block:'center'}));
   await savedNote.screenshot({path:join(output,input.id+'-decision.png'),animations:'disabled'});
   const read = async()=>({
     file:await request(fileURL),

@@ -1,0 +1,247 @@
+{
+  "formatVersion": 2,
+  "buildIdentity": {
+    "side": "fountain",
+    "expected": {
+      "gitlabVersion": "19.5.3",
+      "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+      "packageVersion": "0.5.0-beta.2",
+      "fountainRevision": "80ae30149c8fed68f6f89802cd8f2e22e53ddbd0",
+      "runtimeSHA256": "755d58d35b0ac7e3a6c56286a8089261b3334662e96357925ca1dba0cd2c78f5",
+      "integrationSHA256": "908158c5319f5eb8388633ee75d534f405f638f47e3785be00b2d6e6302583c3"
+    },
+    "observed": null
+  },
+  "runId": "review-feedback-stale-20261119",
+  "attempt": 2,
+  "side": "fountain",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "stale-reviews",
+  "rollbackRequested": false,
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-stale-reviews.json",
+  "fixtureHash": "b3c603c629995cbbb082bde91132fc73fd14ac75f4d72e2b6243402c3b745f01",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "stale-posted-merge-request-suggestion",
+    "title": "Review a suggestion after a competing source commit",
+    "marker": "Review the proposed change",
+    "appendLine": "reviewed();\n",
+    "sourceObservationDelayMs": 1500,
+    "cases": [
+      {
+        "id": "refresh-after-source-edit",
+        "scope": "stale-review",
+        "filePath": "review-target.js",
+        "source": "before();\nold();\nkeep();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        },
+        "handoffDelayMs": 1500,
+        "remoteSource": "before();\nnewer();\nkeep();\n",
+        "refresh": true
+      },
+      {
+        "id": "confirm-after-source-edit",
+        "scope": "stale-review",
+        "filePath": "review-target.js",
+        "source": "before();\nold();\nkeep();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        },
+        "handoffDelayMs": 1500,
+        "remoteSource": "before();\nnewer();\nkeep();\n",
+        "refresh": false
+      },
+      {
+        "id": "refresh-after-target-deletion",
+        "waitForOutdated": true,
+        "scope": "stale-review",
+        "filePath": "review-target.js",
+        "source": "before();\nold();\nkeep();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        },
+        "handoffDelayMs": 1500,
+        "remoteSource": "before();\nkeep();\n",
+        "refresh": true
+      },
+      {
+        "id": "live-after-deleting-one-of-two",
+        "scope": "stale-review",
+        "filePath": "review-target.js",
+        "source": "before();\nold();\nkeep();\nuntouched();\nold();\nend();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        },
+        "handoffDelayMs": 1500,
+        "remoteSource": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+        "refresh": false
+      }
+    ]
+  },
+  "observations": [],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "4f0626fc72a010d526dff0b5ee2692a9a4ce8f7b97eb88dbc2c71917473b3602",
+    "scripts/verify-gitlab-editor-rollback.mjs": "5f26dc8ec5a23a50581be4d7ebbdafcfa1c1144b4c56ffda6d6c5704b5773408",
+    "integrations/gitlab/testing/save-gesture.mjs": "24fcc38481cb01e8134443237356a80f7f40e9fd77105ff615052880dbac96a2",
+    "integrations/gitlab/testing/build-identity.mjs": "6857e15eccbd2b296f13504d9d1ee6595fde7ac7cedaa560544af05abd3e9a8e",
+    "scripts/audit-gitlab-compatibility-composers.mjs": "f1be806429248a2321d5ca47e9e5da416e56051f757efba5634250e703655615",
+    "scripts/audit-gitlab-compatibility-quick-save.mjs": "8cb17709efdb43d9df60a522d2fb90c3e2e0f60f1bfb7483ae6565d70169d8fc",
+    "scripts/audit-gitlab-compatibility-reconnect.mjs": "e1512849ede5922fb8c641d4ab5a894687350a0b98ba26df832a706e8a760784",
+    "scripts/audit-gitlab-compatibility-access.mjs": "112e6d355ee665ea74aedc355086c52223fdff9b48ef5f529bf1c38a2d4bc1b3",
+    "scripts/audit-gitlab-offline-conflict.mjs": "26a0b197362548e559e4b058ab1aaabc41b2cca0f1a926d4237e6009e5dace5a",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "277024a259238694df0f0f1e52d667ee9316a0dad8955258702163cec76950a6",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "2596071d9e93ebb20e0acf426d7f3684adb262def4ebe3fc88aa2851e57a6007",
+    "scripts/audit-gitlab-concurrent-review.mjs": "8ecc2e2f91c05a00b5a55f60dffc5044245390d0b4b4de1cf6d3826aec3780e2",
+    "scripts/gitlab-audit-member.mjs": "fdc9be83e5504ab3d26e7c99e50c1a8a149c59d62a58992391fe4b857c892a96",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "c31222766259f281ee92a9f9c07f6702b0a5cd2792e5f1b5f26c2fe6226e4fdf",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "8729a9e6b38d0b4c39838af7f4eef59bb4a94790381bcbb5fec26070fb5aa0b7",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "c84c64884a3063a56b1e32df26384a11bbc0571b0aebf4f7b84eca9bb5ea1c3f"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [
+      {
+        "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+        "readOnly": true
+      }
+    ],
+    "backendEnvironmentHash": "b5b0a9bb5ae04cc224da9a1c35c5be34f77690d216d2357a0d55210ee2714c14",
+    "assetSelector": "ENABLE_RSPACK=true",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "engine": "chromium",
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": false,
+      "status": "exited",
+      "health": "unhealthy",
+      "exitCode": 1
+    }
+  ],
+  "collectionComplete": false,
+  "failure": "Deployment/authentication preflight failed; no credentialed details recorded."
+}

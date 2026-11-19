@@ -35,11 +35,11 @@ The longer observation captured the actual responses and saved state.
 [Two-thread results](../../../artifacts/gitlab-compatibility/two-reviewers-20261119/comparison-2/report.md).
 
 The local default now permits four Puma threads with the same CPU and memory limits.
-In the four-thread comparison, each editor produced one commit, one applied
-suggestion and the expected file. The losing reviewer saw a Git reference error
-and an Apply control until reload. Reopen the discussion to see the Applied badge.
-This verifies this pair of simultaneous requests on the pinned local deployment.
-[Four-thread results and build identities](../../../artifacts/gitlab-compatibility/two-reviewers-20261119/comparison-3/report.md).
+In the earlier four-thread comparison, both editors produced one commit and the expected file. Both showed the losing reviewer a Git reference error until reload. [Earlier build and outcomes](../../../artifacts/gitlab-compatibility/two-reviewers-20261119/comparison-3/report.md).
+
+The current Fountain integration reads the saved suggestion after an Apply conflict. When that exact suggestion is already applied, the reviewer sees Applied and the Apply control disappears. If the competing Git update arrives before Rails records the result, the integration can make up to three additional read-only status checks. Stock GitLab still required a reload in the matched run. [Current build and live reviewer outcomes](../../../artifacts/gitlab-compatibility/review-feedback-20261119/comparison-3/report.md).
+
+The [stale-target comparison](../../../artifacts/gitlab-compatibility/review-feedback-stale-20261119/comparison-3/report.md) covers the other outcome. Both editors refused all four changed or deleted targets and preserved the file, branch head and review identity. The collector waits for a visible decision before taking a screenshot. Two live discussions still gave only a generic file-change warning. The report pairs the completed stock run (attempt 2) with Fountain attempt 3 after an intervening GitLab startup failure.
 
 ### Native footnote server repair
 

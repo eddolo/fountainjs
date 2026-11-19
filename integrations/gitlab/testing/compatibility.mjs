@@ -127,6 +127,9 @@ export function compareGitLabCompatibility(original,fountain){
           reviewerFeedback:winners.length===1 && winners[0].badge===true && !!loser &&
             (loser.badge===true || /(?:already|previously|successfully) applied|applied by another/i.test(loser.alert??'')),
         };
+        if (submissions.every(s=>typeof s.applyVisible==='boolean' && typeof s.badge==='boolean' && typeof s.alert==='string')) {
+          outcome.liveControls=submissions.every(s=>s.badge && s.alert==='' && !s.applyVisible);
+        }
         for (const phase of ['afterDecision','afterReload']) {
           const state=item[phase];
           if (!state) continue;
@@ -147,6 +150,7 @@ export function compareGitLabCompatibility(original,fountain){
       const expectations=[
         ['singleSuccess','One confirmation succeeds and the competing request is refused',true],
         ['reviewerFeedback','Both reviewers see that the suggestion was applied',true],
+        ['liveControls','Both live notes show Applied with no error or stale Apply control',true],
         ['stableHead','Branch head survives both reviewers reloading',true],
         ['bothReaders','Both reviewers reopen the Applied note without another Apply action',true],
       ];
@@ -213,6 +217,13 @@ export function compareGitLabCompatibility(original,fountain){
       }
       rows.push({case:input.id,invariant:'applyRefused',label:'GitLab prevents applying the stale suggestion',expected:true,
         original:paired?refused(a):undefined,fountain:paired?refused(b):undefined,classification:null});
+      const visibleRefusal = item => {
+        if (typeof item.appliedBadgeVisible!=='boolean' || !Array.isArray(item.alertText)) return undefined;
+        const message = disabled(item) ? item.tooltip : item.alertText.join(' ');
+        return refused(item) && !item.appliedBadgeVisible && typeof message==='string' && message.trim().length>0;
+      };
+      rows.push({case:input.id,invariant:'visibleRefusal',label:'Reviewer sees a refusal with no Applied badge',expected:true,
+        original:paired?visibleRefusal(a):undefined,fountain:paired?visibleRefusal(b):undefined,classification:null});
       const explained = item => [...(item.alertText??[]),item.tooltip??''].some(text=>/line was changed in a more recent version/i.test(text));
       rows.push({case:input.id,invariant:'staleReason',label:'Feedback identifies the reviewed line as having changed',expected:true,
         original:paired?explained(a):undefined,fountain:paired?explained(b):undefined,classification:null});

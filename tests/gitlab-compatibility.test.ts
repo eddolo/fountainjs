@@ -149,6 +149,13 @@ it('requires a real attempt on the posted suggestion before crediting stale-sour
  expect(row().classification).toBe('parity');
  const item = pair[1].observations[0] as any;
  expect(row('applyRefused').classification).toBe('parity');
+ expect(row('visibleRefusal').status).toBe('missing-evidence');
+ for (const report of pair) Object.assign(report.observations[0]!,{appliedBadgeVisible:false,alertText:['A file has been changed.']});
+ expect(row('visibleRefusal').classification).toBe('parity');
+ item.appliedBadgeVisible=true;
+ expect(row('visibleRefusal').classification).toBe('regression');
+ item.appliedBadgeVisible=false;item.alertText=[];
+ expect(row('visibleRefusal').classification).toBe('regression');
  for (const status of [200,403,500]) {
    item.applyResponse.status = status;
    expect(row('applyRefused').classification).toBe('regression');
@@ -188,6 +195,18 @@ it('requires overlapping confirmed requests from distinct reviewers and a single
  }
  const row=(key:string)=>compareGitLabCompatibility(...pair).rows.find((r:any)=>r.invariant===key);
  expect(row('singleSuccess').classification).toBe('parity');
+ expect(row('liveControls').status).toBe('missing-evidence');
+ for (const report of pair) {
+   const item=report.observations[0] as any;
+   Object.assign(item.submissions[0],{applyVisible:false,alert:''});
+   Object.assign(item.submissions[1],{applyVisible:true,badge:false});
+ }
+ expect(row('liveControls').classification).toBe('shared-limitation');
+ const competing=(pair[1].observations[0] as any).submissions[1];
+ Object.assign(competing,{badge:true,applyVisible:false});
+ expect(row('liveControls').classification).toBe('shared-limitation');
+ competing.alert='';
+ expect(row('liveControls').classification).toBe('improvement');
  Object.assign(pair[0].deployment,{puma:{workers:0,minThreads:2,maxThreads:4}});
  expect(row('singleSuccess').classification).toBeNull();
  Object.assign(pair[1].deployment,{puma:{workers:0,minThreads:2,maxThreads:2}});

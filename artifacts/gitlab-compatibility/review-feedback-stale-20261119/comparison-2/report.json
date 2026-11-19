@@ -1,0 +1,716 @@
+{
+  "formatVersion": 2,
+  "scope": "Per-invariant original GitLab 19.5.3 editor versus this Fountain integration candidate; not a general Tiptap benchmark.",
+  "buildIdentities": {
+    "original": {
+      "side": "original",
+      "expected": {
+        "gitlabVersion": "19.5.3",
+        "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+        "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615"
+      },
+      "observed": {
+        "editor": "ProseMirror",
+        "integrationSHA256": null,
+        "runtimeSHA256": null,
+        "manifestSHA256": "8198a3fa9feab7a59f708cc2ff97dc0256501d391b843dc575a08234cbc61504",
+        "scripts": [
+          {
+            "path": "/assets/webpack/0dcf7166.fee24f6c.chunk.js",
+            "browserSHA256": "60628f5a436d0dca5e2f020f363e80dc8be815367061b4a17da8b97334f99b2e",
+            "deployedSHA256": "60628f5a436d0dca5e2f020f363e80dc8be815367061b4a17da8b97334f99b2e"
+          },
+          {
+            "path": "/assets/webpack/50d780ac.dc829e6f.chunk.js",
+            "browserSHA256": "4084592a280262ce2221cff3c7571da90f5ec91a3fe7e5c9f00ffa0607955e38",
+            "deployedSHA256": "4084592a280262ce2221cff3c7571da90f5ec91a3fe7e5c9f00ffa0607955e38"
+          },
+          {
+            "path": "/assets/webpack/6b30d853.22266848.chunk.js",
+            "browserSHA256": "4d6fcad270b71f586bb4744c6cac73cd0e054cee405aafed9bf942483d37ea00",
+            "deployedSHA256": "4d6fcad270b71f586bb4744c6cac73cd0e054cee405aafed9bf942483d37ea00"
+          },
+          {
+            "path": "/assets/webpack/8632254b.bbb48efe.chunk.js",
+            "browserSHA256": "174e8ee2737b0054549b8eb4708cb86bdc7bdd822299cdecbfea79dfead62787",
+            "deployedSHA256": "174e8ee2737b0054549b8eb4708cb86bdc7bdd822299cdecbfea79dfead62787"
+          },
+          {
+            "path": "/assets/webpack/8fcdb888.3328a406.chunk.js",
+            "browserSHA256": "c54120af43a5d32d9c6df52bdd8eae6b6596cdefcb2ec12e56fdce4255d1784d",
+            "deployedSHA256": "c54120af43a5d32d9c6df52bdd8eae6b6596cdefcb2ec12e56fdce4255d1784d"
+          },
+          {
+            "path": "/assets/webpack/af66d122.d929aab6.chunk.js",
+            "browserSHA256": "31b8757f37d2a4b1093f8c745f1d143ad8fd928f8bb2c552bff86d731cf0eebb",
+            "deployedSHA256": "31b8757f37d2a4b1093f8c745f1d143ad8fd928f8bb2c552bff86d731cf0eebb"
+          },
+          {
+            "path": "/assets/webpack/cec769ff.82e507cf.chunk.js",
+            "browserSHA256": "429b75f7b02eae2a935674ea5b627173c74cfa927c1fe014b976c59955c4a971",
+            "deployedSHA256": "429b75f7b02eae2a935674ea5b627173c74cfa927c1fe014b976c59955c4a971"
+          },
+          {
+            "path": "/assets/webpack/commons-graphql_explorer-pages.admin.application_settings.service_accounts-pages.admin.applications--b635524d.b3338b4b.chunk.js",
+            "browserSHA256": "b5ddfc03cb01c31f151176c33f7b53f2fded871d5107d0657dc114d3606242a2",
+            "deployedSHA256": "b5ddfc03cb01c31f151176c33f7b53f2fded871d5107d0657dc114d3606242a2"
+          },
+          {
+            "path": "/assets/webpack/commons-initGFMInput-pages.admin.organizations.settings.general-pages.admin.organizations.settings.g-9b13c352.4bfbb026.chunk.js",
+            "browserSHA256": "0d3b2e34bc1be84d687b597d85879a0eb636491ca314dd0752047e4f9a698cd2",
+            "deployedSHA256": "0d3b2e34bc1be84d687b597d85879a0eb636491ca314dd0752047e4f9a698cd2"
+          },
+          {
+            "path": "/assets/webpack/commons-initGFMInput-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.-bffa2291.801ef5c8.chunk.js",
+            "browserSHA256": "a3a3f53f2e9a3eb5f769d33b8bea04c5b48240e11c89443985b09bae9cc07ef6",
+            "deployedSHA256": "a3a3f53f2e9a3eb5f769d33b8bea04c5b48240e11c89443985b09bae9cc07ef6"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.abuse_reports-pages.admin.abuse_reports.show-pages.admin.groups.index-pages.admi-315b2517.e590656f.chunk.js",
+            "browserSHA256": "bfeceb581cb9548fa238c98be3359f85418821e003cf81f01e1977fbc3f5a1e4",
+            "deployedSHA256": "bfeceb581cb9548fa238c98be3359f85418821e003cf81f01e1977fbc3f5a1e4"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.issues.vue3-pages.dash-5ffc317d.0bcd8c23.chunk.js",
+            "browserSHA256": "934cb817bd1e8709dfc0041c94306da516a0bc2e2b3462e9495e2b0cced8a023",
+            "deployedSHA256": "934cb817bd1e8709dfc0041c94306da516a0bc2e2b3462e9495e2b0cced8a023"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.issues.vue3-pages.dash-f8003152.f196957a.chunk.js",
+            "browserSHA256": "eccd8bf8465106ba4b1d6b85e1c390a2ff11134cf5c887d709862b76bb3a15fe",
+            "deployedSHA256": "eccd8bf8465106ba4b1d6b85e1c390a2ff11134cf5c887d709862b76bb3a15fe"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.work_items-pages.group-b344e337.050faeee.chunk.js",
+            "browserSHA256": "80ac611196e70abce4fddcbc475864d346da5892bed36478c77fd44b57bd5586",
+            "deployedSHA256": "80ac611196e70abce4fddcbc475864d346da5892bed36478c77fd44b57bd5586"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.application_settings.service_accounts-pages.explore.analytics_dashboards-pages.e-306889d5.8b0f4475.chunk.js",
+            "browserSHA256": "85d6894177f53cdd03ae236b0127d180269cc65adc6a75bf234fcfda6e5ba689",
+            "deployedSHA256": "85d6894177f53cdd03ae236b0127d180269cc65adc6a75bf234fcfda6e5ba689"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.deploy_keys.index-pages.admin.deploy_keys.index.vue3-pages.admin.groups.index-pa-95f4ca76.204c76b4.chunk.js",
+            "browserSHA256": "ac2c2fa6162be75fba132cebdfa9e39e95e0900ba0685bf07ba1593bda409b29",
+            "deployedSHA256": "ac2c2fa6162be75fba132cebdfa9e39e95e0900ba0685bf07ba1593bda409b29"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.organizations.settings.general.vue3-p-12d52578.7bbbd3a2.chunk.js",
+            "browserSHA256": "1f0a66c98fde56a7c02443fdb9921e7d4d750b140d93d6351b1755f06dd3a625",
+            "deployedSHA256": "1f0a66c98fde56a7c02443fdb9921e7d4d750b140d93d6351b1755f06dd3a625"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.organizations.settings.general.vue3-p-94e849a5.56f93b0b.chunk.js",
+            "browserSHA256": "91ae5407df49b9599fb403684a20d8dde0135ab6066b40d19cabb676ea8bd524",
+            "deployedSHA256": "91ae5407df49b9599fb403684a20d8dde0135ab6066b40d19cabb676ea8bd524"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.topics.new-pa-b83f65ef.593ef6a6.chunk.js",
+            "browserSHA256": "d24ac522e166c3f9df0614fd91483a3030e8c25ea965aacf10aa94f94a919ee8",
+            "deployedSHA256": "d24ac522e166c3f9df0614fd91483a3030e8c25ea965aacf10aa94f94a919ee8"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.topics.new-pa-bb1f65b9.47fc7bae.chunk.js",
+            "browserSHA256": "d502802b4550459e837e7fb577d055b90e4414aa9e298a60ce888fcd500023c0",
+            "deployedSHA256": "d502802b4550459e837e7fb577d055b90e4414aa9e298a60ce888fcd500023c0"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.dashboard.home-pages.projects.snippets.show-pages.projects.snippets.show.vue3-pages.ro-3e3d840b.db458a62.chunk.js",
+            "browserSHA256": "57a24656dafc75786382be6707fcd709b69a216fd02565a7decb07e837b59edc",
+            "deployedSHA256": "57a24656dafc75786382be6707fcd709b69a216fd02565a7decb07e837b59edc"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.dashboard.home-pages.registrations.new-pages.root-pages.root.vue3-pages.sessions.new-p-a41aff06.d68c093a.chunk.js",
+            "browserSHA256": "731b4181e37659838b30f40d15555cbefb525cc4aa0e1ae6f11992596c787b38",
+            "deployedSHA256": "731b4181e37659838b30f40d15555cbefb525cc4aa0e1ae6f11992596c787b38"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.groups.merge_requests-pages.groups.merge_requests.vue3-pages.groups.milestones.edit-pa-23d8bf6c.33b0825c.chunk.js",
+            "browserSHA256": "c7befe99471a7fb2c86942f49308b8f0add4550eaa127127ff473effe494d4dd",
+            "deployedSHA256": "c7befe99471a7fb2c86942f49308b8f0add4550eaa127127ff473effe494d4dd"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.groups.saved_views.show-pages.groups.saved_views.show.vue3-pages.groups.work_items-pag-550486f6.9218719f.chunk.js",
+            "browserSHA256": "0b7eb7bf45c54c9c5dd7defe6b8465c2eedce5c2934f10d4c0ee0dbe1e70a444",
+            "deployedSHA256": "0b7eb7bf45c54c9c5dd7defe6b8465c2eedce5c2934f10d4c0ee0dbe1e70a444"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.groups.saved_views.show-pages.groups.work_items-pages.groups.work_items.show-pages.pro-164ac21d.01932e06.chunk.js",
+            "browserSHA256": "9dba0710087f076a9035418972a71a469f8900de5253f67215084b6708183404",
+            "deployedSHA256": "9dba0710087f076a9035418972a71a469f8900de5253f67215084b6708183404"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.projects-pages.projects.activity-pages.projects.activity.vue3-pages.projects.alert_man-376eb50e.11611bcc.chunk.js",
+            "browserSHA256": "2819b4a6ef6d68bd326631d8c74cbbf1e1b4e59f2df3ab971cda8d12ae9c9274",
+            "deployedSHA256": "2819b4a6ef6d68bd326631d8c74cbbf1e1b4e59f2df3ab971cda8d12ae9c9274"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.search.show-pages.search.show.vue3-super_sidebar-super_sidebar.vue3.e1ab1d65.chunk.js",
+            "browserSHA256": "864e2f2561a6fdaf57425542f4d61a50e4fe597581f19734c15842fc319a97b8",
+            "deployedSHA256": "864e2f2561a6fdaf57425542f4d61a50e4fe597581f19734c15842fc319a97b8"
+          },
+          {
+            "path": "/assets/webpack/commons-pages.search.show-super_sidebar.e41625fd.chunk.js",
+            "browserSHA256": "8eca9d8639d079b1c53d9fc6d7d9d18960aa1f80fd207fdfaca52637b2a7553f",
+            "deployedSHA256": "8eca9d8639d079b1c53d9fc6d7d9d18960aa1f80fd207fdfaca52637b2a7553f"
+          },
+          {
+            "path": "/assets/webpack/commons-super_sidebar-super_sidebar.vue3.e38d27a4.chunk.js",
+            "browserSHA256": "0c183f0c046747b3f2534b7a2ab28a94d35b2fe6740d9a1cbd481121b9f4a056",
+            "deployedSHA256": "0c183f0c046747b3f2534b7a2ab28a94d35b2fe6740d9a1cbd481121b9f4a056"
+          },
+          {
+            "path": "/assets/webpack/content_editor.49fdd8e0.chunk.js",
+            "browserSHA256": "1b59e1d51b37085c09ce0ca7b06e9bc2c2fd48f1884fe58575dc96535879943c",
+            "deployedSHA256": "1b59e1d51b37085c09ce0ca7b06e9bc2c2fd48f1884fe58575dc96535879943c"
+          },
+          {
+            "path": "/assets/webpack/f9f13fd0.2f09c304.chunk.js",
+            "browserSHA256": "a9d8a7fd29f87a408eec57f2a7424cbc7ce8229b2144a1df62489aa943bba65f",
+            "deployedSHA256": "a9d8a7fd29f87a408eec57f2a7424cbc7ce8229b2144a1df62489aa943bba65f"
+          },
+          {
+            "path": "/assets/webpack/global_search_modal.f7aa2163.chunk.js",
+            "browserSHA256": "dc6ae1e96e187f3e84fc110d11ad9edea9ee7e3b1b3dccb7277cf2c6b7c4f98f",
+            "deployedSHA256": "dc6ae1e96e187f3e84fc110d11ad9edea9ee7e3b1b3dccb7277cf2c6b7c4f98f"
+          },
+          {
+            "path": "/assets/webpack/hello.0063a1cb.chunk.js",
+            "browserSHA256": "f9f0adcbf9ac1ee0735624524c7340829e5779adc065f62f49097d0ed399d9e5",
+            "deployedSHA256": "f9f0adcbf9ac1ee0735624524c7340829e5779adc065f62f49097d0ed399d9e5"
+          },
+          {
+            "path": "/assets/webpack/initInviteMembersModal.227c3a5f.chunk.js",
+            "browserSHA256": "175bc6bb388a517703fba123ced915039244f7fe8107385295c362075bd56940",
+            "deployedSHA256": "175bc6bb388a517703fba123ced915039244f7fe8107385295c362075bd56940"
+          },
+          {
+            "path": "/assets/webpack/initInviteMembersTrigger.d59e549b.chunk.js",
+            "browserSHA256": "56331f0b6477b521f7871717dac9d8755f55c5c656b2de0db5345f4abb3b1915",
+            "deployedSHA256": "56331f0b6477b521f7871717dac9d8755f55c5c656b2de0db5345f4abb3b1915"
+          },
+          {
+            "path": "/assets/webpack/main.02b8bf31.chunk.js",
+            "browserSHA256": "65ec37e9bcbc79a60c68df12e1572a6a7628a9e1b2d48ce7ec159dc3b36d9da4",
+            "deployedSHA256": "65ec37e9bcbc79a60c68df12e1572a6a7628a9e1b2d48ce7ec159dc3b36d9da4"
+          },
+          {
+            "path": "/assets/webpack/pages.projects.work_items.aa84d846.chunk.js",
+            "browserSHA256": "25c5e5b4729ddf97c64b30d1873c3d2539bd2dd9576bb576ed359d61d127a010",
+            "deployedSHA256": "25c5e5b4729ddf97c64b30d1873c3d2539bd2dd9576bb576ed359d61d127a010"
+          },
+          {
+            "path": "/assets/webpack/prosemirror.04be8805.chunk.js",
+            "browserSHA256": "2759329fffd876e0752b362b93230f0aca48bf90090609428a37ee56e896a267",
+            "deployedSHA256": "2759329fffd876e0752b362b93230f0aca48bf90090609428a37ee56e896a267"
+          },
+          {
+            "path": "/assets/webpack/runtime.ea79027a.bundle.js",
+            "browserSHA256": "87500039b7aa4577224bdaefefb08825e878d72daa46274858992e9179e4a7d4",
+            "deployedSHA256": "87500039b7aa4577224bdaefefb08825e878d72daa46274858992e9179e4a7d4"
+          },
+          {
+            "path": "/assets/webpack/shortcutsBundle.45faa6aa.chunk.js",
+            "browserSHA256": "dd60126d0563e7efdf1656b92af46b0eee111b850c29ab3f38470f9c906a4712",
+            "deployedSHA256": "dd60126d0563e7efdf1656b92af46b0eee111b850c29ab3f38470f9c906a4712"
+          },
+          {
+            "path": "/assets/webpack/super_sidebar.ff1bc863.chunk.js",
+            "browserSHA256": "3d1d62fd9a55fdfaacd8bfc9c32fbb376e1716e7b65edb9ef5da2a5738f15e0c",
+            "deployedSHA256": "3d1d62fd9a55fdfaacd8bfc9c32fbb376e1716e7b65edb9ef5da2a5738f15e0c"
+          },
+          {
+            "path": "/assets/webpack/tracker.1eb446cb.chunk.js",
+            "browserSHA256": "f5d412f20f2dc1e36ac9208908410dcbb97c6a88114cbc3d5377a593b3fb7a68",
+            "deployedSHA256": "f5d412f20f2dc1e36ac9208908410dcbb97c6a88114cbc3d5377a593b3fb7a68"
+          }
+        ]
+      }
+    },
+    "fountain": {
+      "side": "fountain",
+      "expected": {
+        "gitlabVersion": "19.5.3",
+        "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+        "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+        "packageVersion": "0.5.0-beta.2",
+        "fountainRevision": "80ae30149c8fed68f6f89802cd8f2e22e53ddbd0",
+        "runtimeSHA256": "755d58d35b0ac7e3a6c56286a8089261b3334662e96357925ca1dba0cd2c78f5",
+        "integrationSHA256": "908158c5319f5eb8388633ee75d534f405f638f47e3785be00b2d6e6302583c3"
+      },
+      "observed": null
+    }
+  },
+  "environment": {
+    "matched": false,
+    "mismatches": [
+      "fountain build identity: missing expected or observed build",
+      "deployment.puma",
+      "backend.version",
+      "backend.project",
+      "backend.actor",
+      "backend.serverSources"
+    ]
+  },
+  "runs": {
+    "original": {
+      "runId": "review-feedback-stale-20261119",
+      "attempt": 2
+    },
+    "fountain": {
+      "runId": "review-feedback-stale-20261119",
+      "attempt": 2
+    }
+  },
+  "rows": [
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "applyRefused",
+      "label": "GitLab prevents applying the stale suggestion",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "visibleRefusal",
+      "label": "Reviewer sees a refusal with no Applied badge",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "staleReason",
+      "label": "Feedback identifies the reviewed line as having changed",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.source",
+      "label": "Newer source remains exact (after review)",
+      "expected": "before();\nnewer();\nkeep();\n",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.sameHead",
+      "label": "No extra source commit (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.sameNote",
+      "label": "Posted review remains exact (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.applied",
+      "label": "Outdated review stays unapplied (after review)",
+      "expected": false,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterDecision.sameSuggestion",
+      "label": "Suggestion identity survives (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.source",
+      "label": "Newer source remains exact (after reload)",
+      "expected": "before();\nnewer();\nkeep();\n",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.sameHead",
+      "label": "No extra source commit (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.sameNote",
+      "label": "Posted review remains exact (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.applied",
+      "label": "Outdated review stays unapplied (after reload)",
+      "expected": false,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-source-edit",
+      "invariant": "afterReload.sameSuggestion",
+      "label": "Suggestion identity survives (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "applyRefused",
+      "label": "GitLab prevents applying the stale suggestion",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "visibleRefusal",
+      "label": "Reviewer sees a refusal with no Applied badge",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "staleReason",
+      "label": "Feedback identifies the reviewed line as having changed",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.source",
+      "label": "Newer source remains exact (after review)",
+      "expected": "before();\nnewer();\nkeep();\n",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.sameHead",
+      "label": "No extra source commit (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.sameNote",
+      "label": "Posted review remains exact (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.applied",
+      "label": "Outdated review stays unapplied (after review)",
+      "expected": false,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterDecision.sameSuggestion",
+      "label": "Suggestion identity survives (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.source",
+      "label": "Newer source remains exact (after reload)",
+      "expected": "before();\nnewer();\nkeep();\n",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.sameHead",
+      "label": "No extra source commit (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.sameNote",
+      "label": "Posted review remains exact (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.applied",
+      "label": "Outdated review stays unapplied (after reload)",
+      "expected": false,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "confirm-after-source-edit",
+      "invariant": "afterReload.sameSuggestion",
+      "label": "Suggestion identity survives (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "applyRefused",
+      "label": "GitLab prevents applying the stale suggestion",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "visibleRefusal",
+      "label": "Reviewer sees a refusal with no Applied badge",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "staleReason",
+      "label": "Feedback identifies the reviewed line as having changed",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.source",
+      "label": "Newer source remains exact (after review)",
+      "expected": "before();\nkeep();\n",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.sameHead",
+      "label": "No extra source commit (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.sameNote",
+      "label": "Posted review remains exact (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.applied",
+      "label": "Outdated review stays unapplied (after review)",
+      "expected": false,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterDecision.sameSuggestion",
+      "label": "Suggestion identity survives (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.source",
+      "label": "Newer source remains exact (after reload)",
+      "expected": "before();\nkeep();\n",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.sameHead",
+      "label": "No extra source commit (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.sameNote",
+      "label": "Posted review remains exact (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.applied",
+      "label": "Outdated review stays unapplied (after reload)",
+      "expected": false,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "refresh-after-target-deletion",
+      "invariant": "afterReload.sameSuggestion",
+      "label": "Suggestion identity survives (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "applyRefused",
+      "label": "GitLab prevents applying the stale suggestion",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "visibleRefusal",
+      "label": "Reviewer sees a refusal with no Applied badge",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "staleReason",
+      "label": "Feedback identifies the reviewed line as having changed",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.source",
+      "label": "Newer source remains exact (after review)",
+      "expected": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.sameHead",
+      "label": "No extra source commit (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.sameNote",
+      "label": "Posted review remains exact (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.applied",
+      "label": "Outdated review stays unapplied (after review)",
+      "expected": false,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterDecision.sameSuggestion",
+      "label": "Suggestion identity survives (after review)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.source",
+      "label": "Newer source remains exact (after reload)",
+      "expected": "before();\nkeep();\nuntouched();\nold();\nend();\n",
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.sameHead",
+      "label": "No extra source commit (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.sameNote",
+      "label": "Posted review remains exact (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.applied",
+      "label": "Outdated review stays unapplied (after reload)",
+      "expected": false,
+      "classification": null,
+      "status": "missing-evidence"
+    },
+    {
+      "case": "live-after-deleting-one-of-two",
+      "invariant": "afterReload.sameSuggestion",
+      "label": "Suggestion identity survives (after reload)",
+      "expected": true,
+      "classification": null,
+      "status": "missing-evidence"
+    }
+  ],
+  "summary": {
+    "parity": 0,
+    "improvement": 0,
+    "regression": 0,
+    "shared-limitation": 0,
+    "incomplete": 52,
+    "total": 52
+  },
+  "comparisonComplete": false,
+  "regressionGate": {
+    "passed": false
+  },
+  "featureAcceptance": {
+    "passed": false,
+    "reason": "Shared limitations remain unmet feature requirements; comparison classifications never turn them into passes."
+  },
+  "inputs": {
+    "original": {
+      "path": "artifacts/gitlab-compatibility/review-feedback-stale-20261119/original-2/report.json",
+      "sha256": "25f070945ae290c3b518257ee312b4b6bc63a603a6f2cafad199e2a457948a42"
+    },
+    "fountain": {
+      "path": "artifacts/gitlab-compatibility/review-feedback-stale-20261119/fountain-2/report.json",
+      "sha256": "d34e46a06d3e580379d39f3415f366b28bc12f7713a3e20eec8c8ff45546ea06"
+    }
+  },
+  "comparatorHashes": {
+    "scripts/compare-gitlab-compatibility.mjs": "83e057670ce48f2cfd7afdf99b33fe711f0e8e1bfa7a8e5d54953c79eb3793cc",
+    "integrations/gitlab/testing/compatibility.mjs": "1ea8edf0282803ab548f4a1633a10fd23208b29b5db6285f6bac7b7818c3ca92",
+    "integrations/gitlab/testing/build-identity.mjs": "6857e15eccbd2b296f13504d9d1ee6595fde7ac7cedaa560544af05abd3e9a8e",
+    "integrations/gitlab/testing/save-gesture.mjs": "24fcc38481cb01e8134443237356a80f7f40e9fd77105ff615052880dbac96a2"
+  }
+}
