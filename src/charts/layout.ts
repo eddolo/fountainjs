@@ -158,5 +158,7 @@ export function chartLayout(node: Node) {
   const horizontalTitle = kind === 'bar' ? valueTitle : categoryTitle;
   const verticalTitle = kind === 'bar' ? categoryTitle : valueTitle;
   const rangeLabel = fixed ? 'Value range: ' + low + ' to ' + high : '';
-  return { kind, target, ticks: axisTicks(low, high, kind === 'pie' ? null : node.attrs.axisInterval as number | null, (kind === 'column' || kind === 'line') && node.attrs.axisInterval == null), rangeLabel, title, horizontalTitle, verticalTitle, zero, rows: series[0]!.rows, series };
+  const interval = node.attrs.axisInterval as number | null;
+  const ticks = kind === 'pie' ? [] : axisTicks(low, high, interval, interval == null);
+  return { kind, target, ticks, rangeLabel, title, horizontalTitle, verticalTitle, zero, rows: series[0]!.rows, series };
 }

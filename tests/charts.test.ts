@@ -632,6 +632,9 @@ it('bounds the number of tick marks for dense intervals and opposite finite extr
 it('shows horizontal gridlines on new column and line charts with automatic axes', () => {
   const editor = createEditor({ schema: kit.schema });
   insertBarChart(editor, 'Change in weekly orders', [['Monday', 12], ['Tuesday', -4], ['Wednesday', 8]]);
+  const bars = selectedBarChart(editor)!;
+  expect(exportBarChartSVG(bars)).toContain('>5</text>');
+  expect(bars.attrs.axisInterval).toBeNull();
   for (const kind of ['column', 'line'] as const) {
     setChartType(editor, kind);
     expect(HTMLExporter.export(editor.state.doc, { document: false })).toContain('data-axis-tick="5"');

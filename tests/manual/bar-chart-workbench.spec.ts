@@ -549,14 +549,16 @@ test('reads a horizontal tick ruler on a phone and clears the interval without c
   await demo.getByText('Chart axes', { exact: true }).click();
   await demo.getByLabel('Minimum', { exact: true }).fill('-20');
   await demo.getByLabel('Maximum', { exact: true }).fill('20');
+  const chart = demo.locator('figure[data-fountain-chart="bar"]');
+  const ticks = chart.locator('[data-axis-tick] small');
+  await expect(ticks).toHaveText(['0', '5', '10']);
+  await chart.screenshot({ path: info.outputPath('phone-automatic-ruler.png') });
   const interval = demo.getByLabel('Tick interval');
   await interval.fill('0');
   await demo.getByRole('button', { name: 'Apply range' }).click();
   expect(await interval.evaluate(input => (input as HTMLInputElement).validity.customError)).toBe(true);
   await interval.fill('10');
   await demo.getByRole('button', { name: 'Apply range' }).click();
-  const chart = demo.locator('figure[data-fountain-chart="bar"]');
-  const ticks = chart.locator('[data-axis-tick] small');
   await expect(ticks).toHaveText(['-20', '-10', '0', '10', '20']);
   const boxes = await ticks.evaluateAll(nodes => nodes.map(n => {
     const rect = n.getBoundingClientRect();
@@ -566,8 +568,11 @@ test('reads a horizontal tick ruler on a phone and clears the interval without c
   await chart.screenshot({ path: info.outputPath('phone-ticks.png') });
   await interval.fill('');
   await demo.getByRole('button', { name: 'Apply range' }).click();
-  await expect(ticks).toHaveCount(0);
+  await expect(chart).not.toHaveAttribute('data-axis-interval');
   await expect(chart).toHaveAttribute('data-axis-min', '-20');
+  await expect(ticks).toHaveText(['-20', '-10', '0', '10', '20']);
+  await demo.getByRole('button', { name: 'Use automatic scale' }).click();
+  await expect(ticks).toHaveText(['0', '5', '10']);
 });
 
 test('compares weekly orders with a target and reopens the downloaded Word chart', async ({ page }, info) => {
