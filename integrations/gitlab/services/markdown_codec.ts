@@ -124,7 +124,7 @@ const setAttr = (element: RawElement, name: string, value: string): void => {
   if (existing) existing.value = value;
   else element.attrs.push({ name, value });
 };
-function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema): string {
+function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>): string {
   const maxBytes = options.maxInputBytes ?? 1_048_576;
   if (new TextEncoder().encode(html).length > maxBytes) throw new Error('GitLab rendering exceeds the configured HTML byte limit.');
   const fragment = parseFragment(html), elements: RawElement[] = [], stack: [RawNode, number][] = [[fragment, 0]];
@@ -146,8 +146,34 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   const issues: GitLabMarkdownIssue[] = [
     ...tasks.issues, ...suggestions.issues.map(issue => ({ stage: 'import' as const, ...issue })), ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues, ...frontmatter.issues].map(issue => ({ stage: 'import' as const, ...issue })),
   ];
+  const emojiChecks = new Set<string>();
+  const emojiText = new Map<RawNode, DefaultTreeAdapterMap['textNode']>();
+  const emojiParents = new Set<DefaultTreeAdapterMap['parentNode']>();
   for (const element of elements) {
     if (math.handled.has(element) || alerts.handled.has(element) || media.handled.has(element) || diagrams.handled.has(element) || frontmatter.handled.has(element)) continue;
+    if (element.tagName === 'gl-emoji') {
+      const name = attr(element, 'data-name'), child = element.childNodes[0];
+      const glyph = child && 'value' in child ? child.value : '';
+      if (name && /^[-+a-z0-9_]{1,128}$/u.test(name) && element.childNodes.length === 1 && glyph.length <= 64
+        && /^[\p{Extended_Pictographic}\p{Emoji_Modifier}\u200D\uFE0F]+$/u.test(glyph)
+        && element.attrs.every(a=>['title','data-name','data-unicode-version'].includes(a.name))) {
+        const parent = element.parentNode;
+        if (parent && 'childNodes' in parent && 'value' in child && child.nodeName === '#text') {
+          // Unwrap as text so neighboring content keeps the same formatting run.
+          emojiText.set(element, child);
+          emojiParents.add(parent);
+          child.parentNode = parent;
+          const spelling = glyph + ':' + name + ':';
+          if (!emojiChecks.has(spelling)) {
+            emojiChecks.add(spelling);
+            if (source.includes(':' + name + ':') && !source.includes(glyph)) {
+              const previous = emojiNames.get(glyph);
+              emojiNames.set(glyph, previous === undefined || previous === name ? name : '');
+            }
+          }
+        }
+      }
+    }
     const classes = (attr(element, 'class') ?? '').split(/\s+/u);
     if (attr(element, 'dir') === 'auto' && (attr(element, 'align')
       || /(?:^|;)\s*text-align\s*:/iu.test(attr(element, 'style') ?? ''))) {
@@ -165,11 +191,13 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
     }
   }
   if (issues.length) throw new GitLabMarkdownConversionError(issues);
+  for (const parent of emojiParents) parent.childNodes = parent.childNodes.map(child => emojiText.get(child) ?? child);
   return serialize(fragment);
 }
 
 /** Explicit GitLab conversion boundary; known unhandled expansions remain errors. */
 export class GitLabMarkdownCodec implements SerializedContentCodec {
+  private readonly emojiSpellings = new WeakMap<Node, ReadonlyMap<string,string>>();
   private readonly sources = new WeakMap<Node, MarkdownSourceSnapshot>();
   constructor(private readonly options: {
     renderMarkdown(markdown: string, options?: { signal: AbortSignal }): Promise<GitLabRenderResponse>;
@@ -190,12 +218,16 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         { stage: 'import', code: 'footnote-source', message: 'The complete footnote source/render relationship could not be retained. Original Markdown is retained.' },
         ...footnotes.issues.map(code => ({ stage: 'import' as const, code, message: 'A footnote projection requires its explicit source-aware adapter.' })),
       ]);
-      const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema), schema);
+      const emojiNames = new Map<string,string>();
+      const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema, emojiNames), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
       const document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
       schema.validate(document);
       const source = MarkdownSourceSnapshot.capture(markdown, document);
-      document.descendants(node => { this.sources.set(node, source); });
+      document.descendants(node => {
+        this.sources.set(node, source);
+        if (emojiNames.size && node.isText && /\p{Extended_Pictographic}/u.test(node.text ?? '')) this.emojiSpellings.set(node,emojiNames);
+      });
       return { document };
     } catch (error) {
       if (error instanceof GitLabMarkdownConversionError) throw new GitLabMarkdownConversionError(error.issues, markdown);
@@ -365,6 +397,19 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       const marks = node.marks.map(mark => mark.type.name === 'link' && typeof mark.attrs.gitlabCanonicalSrc === 'string'
         ? mark.type.create({ ...mark.attrs, href: mark.attrs.gitlabCanonicalSrc, gitlabCanonicalSrc: undefined, htmlHref: undefined }) : mark);
       let text = node.text;
+      const originalEmoji = this.emojiSpellings.get(node);
+      if (originalEmoji && text && typeof Intl.Segmenter === 'function') {
+        // Retain spellings on existing text. Newly typed or pasted characters
+        // have no source provenance and serialize as ordinary Unicode.
+        const segments = new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text);
+        text = Array.from(segments, ({ segment }) => {
+          const name = originalEmoji.get(segment);
+          if (!name) return segment;
+          const token = prefix + tokens.size + 'END';
+          tokens.set(token, ':' + name + ':');
+          return token;
+        }).join('');
+      }
       const retainedMarks = marks.filter(mark => {
         const tag = ({ highlight: 'mark', underline: 'u', subscript: 'sub', superscript: 'sup' } as Record<string, string>)[mark.type.name];
         if (!tag) return true;

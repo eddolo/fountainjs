@@ -1,15 +1,16 @@
 import { expect, it } from 'vitest';
 import { Selection, insertText } from 'fountainjs-editor';
 import { inspectFootnotes } from 'fountainjs-editor/pages';
+import emojiPreviews from '../integrations/gitlab/fixtures/clipboard-unicode-live-html.json';
 import captures from '../integrations/gitlab/fixtures/footnote-roundtrip-live-html.json';
 import { GitLabContentEditor } from '../integrations/gitlab/services/content_editor';
 import { footnoteRoundtripProjection } from '../scripts/capture-gitlab-footnote-roundtrip.mjs';
 
 // Expected unsupported inputs are explicit, not copied from diagnostic outcomes.
-const refused = new Set(['duplicate', 'raw-html', 'emoji-prefix', 'escaped-opening-label', 'entity-label',
-  'crlf-unicode', 'cr-unicode', 'comment-candidate-and-unused', 'body-backref-lookalike',
+const refused = new Set(['duplicate', 'raw-html', 'escaped-opening-label', 'entity-label',
+  'cr-unicode', 'comment-candidate-and-unused', 'body-backref-lookalike',
   'ascii-entity-label', 'decoded-bracket-entity', 'bom-unused']);
-const responses = new Map(captures.renders.map(item => [item.source, item.body]));
+const responses = new Map([...captures.renders,...emojiPreviews.footnotes.flatMap(item=>item.renders)].map(item => [item.source, item.body]));
 const create = () => new GitLabContentEditor({ describeLabels: () => '', renderMarkdown: async source => {
   const body = responses.get(source);
   if (body === undefined) throw new Error('No actual Rails response for this exact source.');
@@ -35,7 +36,7 @@ function edit(bridge: GitLabContentEditor, action: Action, text: string) {
 it('covers the complete declared corpus rather than silently skipping captured failures', () => {
   expect(captures.fixtures).toHaveLength(65);
   expect(new Set(captures.fixtures.map(item => item.name)).size).toBe(65);
-  expect(captures.fixtures.filter(item => refused.has(item.name))).toHaveLength(12);
+  expect(captures.fixtures.filter(item => refused.has(item.name))).toHaveLength(10);
   expect(captures.overlay.readOnly).toBe(true);
 });
 
@@ -54,16 +55,18 @@ it.each(captures.fixtures)('re-renders and reopens the declared $name source wit
     for (const reference of initialNotes.references)
       expect(initialNotes.definitions.filter(note => note.id === reference.id)).toHaveLength(1);
     if (initialNotes.definitions.length) expect(first.editor.state.doc.content.at(-1)!.type.name).toBe('footnote_definition');
-    edit(first, item.action!, 'First round-trip edit.');
+    const emoji=emojiPreviews.footnotes.find(current=>current.name===item.name);
+    const firstText={kind:'insert-text',path:[0,0]};
+    edit(first, emoji ? firstText : item.action!, 'First round-trip edit.');
     const source = first.getSerializedContent();
-    expect(source).toBe(item.canonical);
+    expect(source).toBe(emoji?.canonical ?? item.canonical);
     const expected = footnoteRoundtripProjection(first.editor.state.doc);
     await second.setSerializedContent(source);
     expect(footnoteRoundtripProjection(second.editor.state.doc)).toEqual(expected);
     expect(second.getSerializedContent()).toBe(source);
-    edit(second, item.secondAction!, 'Second round-trip edit.');
+    edit(second, emoji ? firstText : item.secondAction!, 'Second round-trip edit.');
     const secondSource = second.getSerializedContent();
-    expect(secondSource).toBe(item.secondCanonical);
+    expect(secondSource).toBe(emoji?.secondCanonical ?? item.secondCanonical);
     const secondExpected = footnoteRoundtripProjection(second.editor.state.doc);
     await third.setSerializedContent(secondSource);
     expect(footnoteRoundtripProjection(third.editor.state.doc)).toEqual(secondExpected);

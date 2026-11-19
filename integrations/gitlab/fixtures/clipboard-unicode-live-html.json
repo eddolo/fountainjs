@@ -1,0 +1,55 @@
+{
+  "revision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "fixtures": [
+    {
+      "name": "pointer-forward",
+      "source": "## Release verification\n\nBefore publishing, check **café and 👩🏽‍💻** alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in [the review log](https://example.com/reference) before sign-off.\n\nPaste here.",
+      "body": "<h2 data-sourcepos=\"1:1-1:23\" dir=\"auto\">Release verification</h2>&#x000A;<p data-sourcepos=\"3:1-3:331\" dir=\"auto\">Before publishing, check <strong data-sourcepos=\"3:26-3:55\">café and <gl-emoji title=\"woman technologist: medium skin tone\" data-name=\"woman_technologist_medium_skin_tone\" data-unicode-version=\"9.0\">👩🏽‍💻</gl-emoji></strong> alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in <a data-sourcepos=\"3:268-3:314\" href=\"https://example.com/reference\" rel=\"nofollow noreferrer noopener\" target=\"_blank\">the review log</a> before sign-off.</p>&#x000A;<p data-sourcepos=\"5:1-5:11\" dir=\"auto\">Paste here.</p>"
+    },
+    {
+      "name": "stock-emoji-shortcode",
+      "source": "## Release verification\n\nBefore publishing, check **café and :woman_technologist_medium_skin_tone:** alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in [the review log](https://example.com/reference) before sign-off.\n\nPaste here.",
+      "body": "<h2 data-sourcepos=\"1:1-1:23\" dir=\"auto\">Release verification</h2>&#x000A;<p data-sourcepos=\"3:1-3:353\" dir=\"auto\">Before publishing, check <strong data-sourcepos=\"3:26-3:77\">café and <gl-emoji title=\"woman technologist: medium skin tone\" data-name=\"woman_technologist_medium_skin_tone\" data-unicode-version=\"9.0\">👩🏽‍💻</gl-emoji></strong> alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in <a data-sourcepos=\"3:290-3:336\" href=\"https://example.com/reference\" rel=\"nofollow noreferrer noopener\" target=\"_blank\">the review log</a> before sign-off.</p>&#x000A;<p data-sourcepos=\"5:1-5:11\" dir=\"auto\">Paste here.</p>"
+    }
+  ],
+  "footnotes": [
+    {
+      "name": "emoji-prefix",
+      "canonical": "First round-trip edit. 🧑‍🔬 é Before[^数学].\n\n[^数学]: Research.",
+      "secondCanonical": "Second round-trip edit. First round-trip edit. 🧑‍🔬 é Before[^数学].\n\n[^数学]: Research.",
+      "renders": [
+        {
+          "source": "🧑‍🔬 é Before[^数学].\n\n[^数学]: Research.",
+          "body": "<p data-sourcepos=\"1:1-1:31\" dir=\"auto\"><gl-emoji title=\"scientist\" data-name=\"scientist\" data-unicode-version=\"12.1\">🧑‍🔬</gl-emoji> é Before<sup data-sourcepos=\"1:22-1:30\" class=\"footnote-ref\"><a href=\"#fn-%E6%95%B0%E5%AD%A6-961\" id=\"fnref-%E6%95%B0%E5%AD%A6-961\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:20\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:20\" id=\"fn-%E6%95%B0%E5%AD%A6-961\">&#x000A;<p data-sourcepos=\"3:12-3:20\">Research. <a href=\"#fnref-%E6%95%B0%E5%AD%A6-961\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>"
+        },
+        {
+          "source": "First round-trip edit. 🧑‍🔬 é Before[^数学].\n\n[^数学]: Research.",
+          "body": "<p data-sourcepos=\"1:1-1:54\" dir=\"auto\">First round-trip edit. <gl-emoji title=\"scientist\" data-name=\"scientist\" data-unicode-version=\"12.1\">🧑‍🔬</gl-emoji> é Before<sup data-sourcepos=\"1:45-1:53\" class=\"footnote-ref\"><a href=\"#fn-%E6%95%B0%E5%AD%A6-1359\" id=\"fnref-%E6%95%B0%E5%AD%A6-1359\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:20\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:20\" id=\"fn-%E6%95%B0%E5%AD%A6-1359\">&#x000A;<p data-sourcepos=\"3:12-3:20\">Research. <a href=\"#fnref-%E6%95%B0%E5%AD%A6-1359\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>"
+        },
+        {
+          "source": "Second round-trip edit. First round-trip edit. 🧑‍🔬 é Before[^数学].\n\n[^数学]: Research.",
+          "body": "<p data-sourcepos=\"1:1-1:78\" dir=\"auto\">Second round-trip edit. First round-trip edit. <gl-emoji title=\"scientist\" data-name=\"scientist\" data-unicode-version=\"12.1\">🧑‍🔬</gl-emoji> é Before<sup data-sourcepos=\"1:69-1:77\" class=\"footnote-ref\"><a href=\"#fn-%E6%95%B0%E5%AD%A6-441\" id=\"fnref-%E6%95%B0%E5%AD%A6-441\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:20\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:20\" id=\"fn-%E6%95%B0%E5%AD%A6-441\">&#x000A;<p data-sourcepos=\"3:12-3:20\">Research. <a href=\"#fnref-%E6%95%B0%E5%AD%A6-441\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>"
+        }
+      ]
+    },
+    {
+      "name": "crlf-unicode",
+      "canonical": "First round-trip edit. 🧑‍🔬 Before[^é].\n\n[^é]: Body.",
+      "secondCanonical": "Second round-trip edit. First round-trip edit. 🧑‍🔬 Before[^é].\n\n[^é]: Body.",
+      "renders": [
+        {
+          "source": "🧑‍🔬 Before[^é].\r\n\r\n[^é]: Body.",
+          "body": "<p data-sourcepos=\"1:1-1:24\" dir=\"auto\"><gl-emoji title=\"scientist\" data-name=\"scientist\" data-unicode-version=\"12.1\">🧑‍🔬</gl-emoji> Before<sup data-sourcepos=\"1:19-1:23\" class=\"footnote-ref\"><a href=\"#fn-%C3%A9-9106\" id=\"fnref-%C3%A9-9106\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:12\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:12\" id=\"fn-%C3%A9-9106\">&#x000A;<p data-sourcepos=\"3:8-3:12\">Body. <a href=\"#fnref-%C3%A9-9106\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>"
+        },
+        {
+          "source": "First round-trip edit. 🧑‍🔬 Before[^é].\n\n[^é]: Body.",
+          "body": "<p data-sourcepos=\"1:1-1:47\" dir=\"auto\">First round-trip edit. <gl-emoji title=\"scientist\" data-name=\"scientist\" data-unicode-version=\"12.1\">🧑‍🔬</gl-emoji> Before<sup data-sourcepos=\"1:42-1:46\" class=\"footnote-ref\"><a href=\"#fn-%C3%A9-4276\" id=\"fnref-%C3%A9-4276\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:12\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:12\" id=\"fn-%C3%A9-4276\">&#x000A;<p data-sourcepos=\"3:8-3:12\">Body. <a href=\"#fnref-%C3%A9-4276\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>"
+        },
+        {
+          "source": "Second round-trip edit. First round-trip edit. 🧑‍🔬 Before[^é].\n\n[^é]: Body.",
+          "body": "<p data-sourcepos=\"1:1-1:71\" dir=\"auto\">Second round-trip edit. First round-trip edit. <gl-emoji title=\"scientist\" data-name=\"scientist\" data-unicode-version=\"12.1\">🧑‍🔬</gl-emoji> Before<sup data-sourcepos=\"1:66-1:70\" class=\"footnote-ref\"><a href=\"#fn-%C3%A9-2317\" id=\"fnref-%C3%A9-2317\" data-footnote-ref=\"\">1</a></sup>.</p>&#x000A;<section data-sourcepos=\"3:1-3:12\" data-footnotes=\"\" class=\"footnotes\">&#x000A;<ol>&#x000A;<li data-sourcepos=\"3:1-3:12\" id=\"fn-%C3%A9-2317\">&#x000A;<p data-sourcepos=\"3:8-3:12\">Body. <a href=\"#fnref-%C3%A9-2317\" data-footnote-backref=\"\" data-footnote-backref-idx=\"1\" aria-label=\"Back to reference 1\" title=\"Back to reference 1\" class=\"footnote-backref\">↩</a></p>&#x000A;</li>&#x000A;</ol>&#x000A;</section>"
+        }
+      ]
+    }
+  ]
+}

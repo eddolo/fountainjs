@@ -1,0 +1,326 @@
+{
+  "formatVersion": 1,
+  "workflow": "soft-wrapped-rich-selection",
+  "settlingMs": 700,
+  "keyActionDelayMs": 20,
+  "cases": [
+    {
+      "id": "pointer-forward",
+      "title": "Wrapped release note",
+      "scope": "partial",
+      "direction": "forward",
+      "method": "pointer",
+      "requireWrappedSelection": true,
+      "verifySaveAccess": true,
+      "markdown": "## Release verification\n\nBefore publishing, check **café and 👩🏽‍💻** alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in [the review log](https://example.com/reference) before sign-off.\n\nPaste here.",
+      "sourceText": "Before publishing, check café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log before sign-off.",
+      "start": 25,
+      "end": 268,
+      "selectedText": "café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Release verification"
+          }
+        ],
+        "prose": [
+          "Before publishing, check café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log before sign-off.",
+          "Paste here."
+        ],
+        "bold": [
+          "café and 👩🏽‍💻"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Release verification"
+          }
+        ],
+        "prose": [
+          "Before publishing, check  before sign-off.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Release verification"
+          }
+        ],
+        "prose": [
+          "Before publishing, check café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log before sign-off.",
+          "Paste here.",
+          "café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log"
+        ],
+        "bold": [
+          "café and 👩🏽‍💻",
+          "café and 👩🏽‍💻"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "text": "café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log",
+        "bold": [
+          "café and 👩🏽‍💻"
+        ],
+        "links": [
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pointer-backward",
+      "title": "Wrapped release note",
+      "scope": "partial",
+      "direction": "backward",
+      "method": "pointer",
+      "requireWrappedSelection": true,
+      "verifySaveAccess": true,
+      "markdown": "## Release verification\n\nBefore publishing, check **café and 👩🏽‍💻** alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in [the review log](https://example.com/reference) before sign-off.\n\nPaste here.",
+      "sourceText": "Before publishing, check café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log before sign-off.",
+      "start": 25,
+      "end": 268,
+      "selectedText": "café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Release verification"
+          }
+        ],
+        "prose": [
+          "Before publishing, check café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log before sign-off.",
+          "Paste here."
+        ],
+        "bold": [
+          "café and 👩🏽‍💻"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Release verification"
+          }
+        ],
+        "prose": [
+          "Before publishing, check  before sign-off.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Release verification"
+          }
+        ],
+        "prose": [
+          "Before publishing, check café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log before sign-off.",
+          "Paste here.",
+          "café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log"
+        ],
+        "bold": [
+          "café and 👩🏽‍💻",
+          "café and 👩🏽‍💻"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "text": "café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log",
+        "bold": [
+          "café and 👩🏽‍💻"
+        ],
+        "links": [
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          }
+        ]
+      }
+    },
+    {
+      "id": "stock-emoji-shortcode",
+      "title": "Wrapped release note",
+      "scope": "partial",
+      "direction": "forward",
+      "method": "pointer",
+      "requireWrappedSelection": true,
+      "verifySaveAccess": true,
+      "markdown": "## Release verification\n\nBefore publishing, check **café and :woman_technologist_medium_skin_tone:** alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in [the review log](https://example.com/reference) before sign-off.\n\nPaste here.",
+      "sourceText": "Before publishing, check café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log before sign-off.",
+      "start": 25,
+      "end": 268,
+      "selectedText": "café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log",
+      "initialGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Release verification"
+          }
+        ],
+        "prose": [
+          "Before publishing, check café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log before sign-off.",
+          "Paste here."
+        ],
+        "bold": [
+          "café and 👩🏽‍💻"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "cutGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Release verification"
+          }
+        ],
+        "prose": [
+          "Before publishing, check  before sign-off.",
+          "Paste here."
+        ],
+        "bold": [],
+        "italic": [],
+        "links": [],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "pastedGraph": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "Release verification"
+          }
+        ],
+        "prose": [
+          "Before publishing, check café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log before sign-off.",
+          "Paste here.",
+          "café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log"
+        ],
+        "bold": [
+          "café and 👩🏽‍💻",
+          "café and 👩🏽‍💻"
+        ],
+        "italic": [],
+        "links": [
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          },
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          }
+        ],
+        "inlineCode": [],
+        "quotes": [],
+        "tables": [],
+        "tasks": [],
+        "code": []
+      },
+      "fragment": {
+        "text": "café and 👩🏽‍💻 alongside the release notes for each supported client. Confirm that contributors can select this whole passage even when their browser wraps the description onto several visual lines. Record the exact result in the review log",
+        "bold": [
+          "café and 👩🏽‍💻"
+        ],
+        "links": [
+          {
+            "text": "the review log",
+            "href": "https://example.com/reference"
+          }
+        ]
+      }
+    }
+  ]
+}

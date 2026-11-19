@@ -394,7 +394,8 @@ function deletionReports(replacement:string){
  for(const report of pair){
   const input:any=report.fixture.cases[0];input.scope='deletion';input.replacement=replacement;
   const item:any=report.observations[0];item.input=structuredClone(input);
-  item.sourceAtFirstVisible='```suggestion:-0+0\n'+replacement+'```';item.sourceModeBeforeEdit=item.sourceAtFirstVisible;
+  const fencedBody=replacement && !replacement.endsWith('\n') ? replacement+'\n' : replacement;
+  item.sourceAtFirstVisible='```suggestion:-0+0\n'+fencedBody+'```';item.sourceModeBeforeEdit=item.sourceAtFirstVisible;
   item.saved={body:item.sourceAtFirstVisible};item.reopenedSource=item.sourceAtFirstVisible;
   item.deletion={richSource:replacement,explicitDeletionExplanation:true,confirmationPresent:replacement.length>0,blockedBeforeConsent:replacement.length>0,confirmed:replacement.length>0};
   item.setup={seedCommit:'seed'};item.beforeApplyFile={content:Buffer.from(input.source).toString('base64')};item.beforeApplyHead='seed';
@@ -402,7 +403,7 @@ function deletionReports(replacement:string){
  }
  return pair;
 }
-it.each(['','\n'])('checks real deletion semantics separately from exact proposal source %j',(replacement)=>{
+it.each(['','\n','\u00a0\t\u3000','\u00a0\t\u3000\n\n'])('checks real deletion semantics separately from exact proposal source %j',(replacement)=>{
  const [original,fountain]=deletionReports(replacement);
  const result=compareGitLabCompatibility(original,fountain);
  expect(result.summary).toEqual({parity:15,improvement:0,regression:0,'shared-limitation':0,incomplete:0,total:15});
@@ -498,6 +499,18 @@ it('verifies directed partial selection, clipboard, marks and history separately
 it('does not treat forward selection as equivalent evidence for a backward workflow',()=>{
  const [original,fountain]=partialReports();(fountain.observations[0] as any).copySelection={...(fountain.observations[0] as any).copySelection,direction:'forward'};
  const result=compareGitLabCompatibility(original,fountain);expect(result.rows.find((row:any)=>row.invariant==='copySelection').classification).toBe('regression');expect(result.regressionGate.passed).toBe(false);
+});
+it('requires measured line separation for a soft-wrapped selection',()=>{
+ const [original,fountain]=partialReports();
+ for(const report of [original,fountain]){
+  (report.fixture.cases[0] as any).requireWrappedSelection=true;
+  const item:any=report.observations[0];item.input=structuredClone(report.fixture.cases[0]);
+  item.copySelection={...item.copySelection,wrap:{startY:100,endY:140,lineHeight:20}};
+ }
+ (fountain.observations[0] as any).copySelection.wrap.endY=102;
+ const scored=compareGitLabCompatibility(original,fountain);
+ expect(scored.rows.find((row:any)=>row.invariant==='copySelection.wrapped').classification).toBe('regression');
+ expect(scored.rows.find((row:any)=>row.invariant==='cutSelection.wrapped').status).toBe('missing-evidence');
 });
 it('detects partial-paste mark loss even when text and saved content match',()=>{
  const [original,fountain]=partialReports();(fountain.observations[0] as any).pasted.bold=['bold'];

@@ -2,6 +2,7 @@ import { expect, it, vi } from 'vitest';
 import { Schema, type Node } from 'fountainjs-editor';
 import { GitLabMarkdownCodec, GitLabMarkdownConversionError, createGitLabSchemaSpec } from '../integrations/gitlab/services/markdown_codec';
 import data from '../integrations/gitlab/fixtures/service-html.json';
+import emojiPreviews from '../integrations/gitlab/fixtures/clipboard-unicode-live-html.json';
 
 async function convert(markdown: string, body: string) {
   const schema = new Schema(createGitLabSchemaSpec());
@@ -12,6 +13,27 @@ async function convert(markdown: string, body: string) {
 }
 const append = (document: Node): Node => document.copy([...document.content,
   document.type.schema.node('paragraph', {}, [document.type.schema.text('Added.')])]);
+
+it.each(emojiPreviews.fixtures)('opens the project preview for $name and preserves its exact unedited source',async ({source,body})=>{
+  const {codec,document}=await convert(source,body);
+  expect(document.textContent).toContain('cafe\u0301 and 👩🏽‍💻');
+  expect(codec.serialize({doc:document})).toBe(source);
+  const edited=codec.serializeWithReport({doc:append(document)});
+  expect(edited.issues).toEqual([]);
+  expect(edited.markdown).toBe(source+'\n\nAdded.');
+});
+
+it('keeps new literal emoji distinct from an existing GitLab shortcode',async()=>{
+  const sample=emojiPreviews.fixtures.find(item=>item.name==='stock-emoji-shortcode')!;
+  const {codec,document,schema}=await convert(sample.source,sample.body);
+  const updated=document.copy([...document.content,schema.node('paragraph',{},[schema.text('New 👩🏽‍💻')])]);
+  expect(codec.serialize({doc:updated})).toBe(sample.source+'\n\nNew 👩🏽‍💻');
+});
+it('retains source for an unfamiliar nested GitLab emoji renderer',async()=>{
+  const sample=emojiPreviews.fixtures[0]!;
+  await expect(convert(sample.source,sample.body.replace('👩🏽‍💻</gl-emoji>','<b>label</b></gl-emoji>')))
+    .rejects.toMatchObject({originalMarkdown:sample.source});
+});
 
 it('preserves exact source while displaying resolved references and retains original tokens after another edit', async () => {
   const source = 'See #1 and !1 by @root with ~bug in b51c8ef20575\r\n';

@@ -1,5 +1,13 @@
 # Matched GitLab deletion suggestion results
 
+## November 19 follow-up
+
+Four merge requests per editor exercised an empty replacement, a newline, deletion of two middle lines, and a replacement containing U+00A0, a tab and U+3000. Both backends retained the exact posted Markdown and applied each deletion in one commit. The two-line case left both neighboring lines intact. Fountain reopened the three original characters in rich editing. Stock GitLab reopened them as space, tab, space. Fountain required consent before proposing either whitespace-only deletion. GitLab still removes the target lines on Apply, even if the author intended a blank line. [52 parity and eight improvements on Chromium 151](../../artifacts/gitlab-compatibility/range-whitespace-20261119/comparison-3/report.md).
+
+[Attempt one](../../artifacts/gitlab-compatibility/range-whitespace-20261119/comparison-1/report.md) exposed Fountain rejecting the saved Unicode proposal on reopen and stock losing its suggestion block after clearing it before insertion. Attempt two used a single browser text insertion over the verified selected range. Its [first scoring](../../artifacts/gitlab-compatibility/range-whitespace-20261119/comparison-2/report.md) expected a closing Markdown fence on the same line as nonempty text. The corrected comparison used the same immutable browser receipts, checked the rich-input characters independently, and required the newline preceding the closing fence.
+
+## November 16 baseline
+
 Run: 2026-11-16, `deletion-keyboard-20261116`. Same pinned GitLab CE 19.5.3
 backend/image, Chromium build, project/default head, actor, fixture and collector
 hashes on both sides. The native frontend is the declared difference. No server

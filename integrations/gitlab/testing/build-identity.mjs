@@ -36,8 +36,13 @@ export function buildIdentityError(report) {
 }
 
 export async function observeEditorBuild({ page, project, request, expected, report, readDeployedScripts }) {
-  const [issue] = await request('/api/v4/projects/' + project.id + '/issues?per_page=1&state=opened');
-  if (!issue) throw new Error('Build verification needs an open issue in the audit project.');
+  const path = '/api/v4/projects/' + project.id + '/issues';
+  const title = 'Fountain compatibility build identity control';
+  const description = 'Open this issue to identify the installed rich-text editor.';
+  const matches = await request(path + '?state=opened&in=title&search=' + encodeURIComponent(title));
+  const issue = matches.find(item => item.title === title && item.description === description) ?? await request(path, {title,description});
+  if (issue.title !== title || issue.description !== description || !Number.isSafeInteger(issue.iid)) throw new Error('Invalid build control issue.');
+  report.buildProbeIssue = {iid:issue.iid, descriptionSHA256:sha256(description)};
   const context = await page.context().browser().newContext({ storageState: await page.context().storageState() });
   try {
     const probe = await context.newPage();

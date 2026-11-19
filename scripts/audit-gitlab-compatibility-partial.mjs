@@ -49,7 +49,17 @@ async function selectFragment({page,editor,input,fixture}){
   await page.mouse.move(from.x,from.y);await page.mouse.down();await page.mouse.move(to.x,to.y,{steps:20});await page.mouse.up();
  }
  await new Promise(resolve=>setTimeout(resolve,fixture.settlingMs));
- const state=await editor.evaluate(selectionState);return {...state,...(input.requireCaretReady?{caretReady:true}:{})};
+ const state=await editor.evaluate(selectionState);
+ if(input.requireWrappedSelection){
+  state.wrap=await paragraph.evaluate(root=>{
+   const selection=window.getSelection();
+   if(!selection?.rangeCount || !root.contains(selection.anchorNode) || !root.contains(selection.focusNode))return null;
+   const range=selection.getRangeAt(0),start=range.cloneRange(),end=range.cloneRange();
+   start.collapse(true);end.collapse(false);
+   return {startY:start.getBoundingClientRect().y,endY:end.getBoundingClientRect().y,lineHeight:parseFloat(getComputedStyle(root).lineHeight)};
+  });
+ }
+ return {...state,...(input.requireCaretReady?{caretReady:true}:{})};
 }
 export async function runGitLabPartialClipboardCompatibility({side,runId,page,request,project,fixture,output,onProgress}){
  const observations=[],pause=()=>new Promise(resolve=>setTimeout(resolve,fixture.settlingMs));
@@ -91,7 +101,7 @@ export async function runGitLabPartialClipboardCompatibility({side,runId,page,re
    await stage('save-reopen');const submit=page.getByRole('button',{name:'Save changes',exact:true});await submit.scrollIntoViewIfNeeded();if(input.verifySaveAccess)result.saveButtonReachable=await submit.evaluate(node=>{const box=node.getBoundingClientRect(),hit=document.elementFromPoint(box.x+box.width/2,box.y+box.height/2);return hit===node||node.contains(hit);});await submit.click();await expect.poll(async()=>{result.saved=await request(api);return result.saved.description!==input.markdown;},{timeout:30000}).toBe(true);
    await page.reload();await page.getByTestId('work-item-edit-form-button').click();const again=host.getByRole('button',{name:'Switch to rich text editing',exact:true});if(await again.isVisible())await again.click();await expect(editor).toBeVisible();await ready('reopened');await pause();result.reopened=await graph();await shot('reopened');
    result.status='observed';await stage('complete');
-  }catch(error){result.error=String(error);await page.screenshot({path:join(output,input.id+'-failure.png'),fullPage:true,caret:'initial',animations:'disabled'}).catch(()=>{});onProgress({side,case:input.id,stage:'incomplete',error:result.error});}
+  }catch(error){result.error=String(error);result.editorErrors=await page.getByTestId('work-item-description-wrapper').getByTestId('content-editor-error').allTextContents().catch(()=>[]);await page.screenshot({path:join(output,input.id+'-failure.png'),fullPage:true,caret:'initial',animations:'disabled'}).catch(()=>{});onProgress({side,case:input.id,stage:'incomplete',error:result.error});}
   finally{await external?.close();await save();}
  }
  return observations;

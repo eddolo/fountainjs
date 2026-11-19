@@ -302,7 +302,7 @@ records. Switching to Markdown immediately after typing in rich text also needs
 care: verify the final edit in the Markdown field before saving.
 [Rollback results](../../../artifacts/gitlab-compatibility/dual-composer-20261119/comparison-8/report.md).
 
-To repeat the independent-draft comparison on Firefox, add `--browser firefox` to both composers commands and use a fresh run ID. The [Firefox 153 result](../../../artifacts/gitlab-compatibility/composer-firefox-20261119/comparison-1/report.md) exercised both save orders and reloaded both saved records. It used the same local GitLab and Fountain builds as the current Chromium comparison.
+To repeat the independent-draft comparison on Firefox, add `--browser firefox` to both composers commands and use a fresh run ID. The [Firefox 153 result](../../../artifacts/gitlab-compatibility/composer-firefox-20261119/comparison-1/report.md) exercised both save orders and reloaded both saved records. It used the same local GitLab and Fountain builds as the linked Chromium review-feedback comparison.
 
 For the desktop WebKit profile, add `--browser webkit` to both collection
 commands above and choose a fresh run ID. On WebKit 26.5 (Linux), stock reopened
@@ -311,6 +311,8 @@ All four lost the final rich-text edit at a measured 7–11 ms. The rollback
 comparison requires a trusted key and click under 100 ms with the intended text
 visible at click time. An earlier unmeasured pass cannot certify rapid Save.
 [Measured WebKit rollback](../../../artifacts/gitlab-compatibility/composer-webkit-20261119/comparison-2/report.md).
+
+WebKit 26.5 also passed all 44 independent-editor checks on Fountain revision `7756a29f`. After removing its compiled frontend, stock GitLab reopened issues #522–525 on the same volumes. All four retained their comments and a new Markdown edit after reload. Saving 9–14 ms after the last rich-text keystroke lost that edit on all four. The strict rollback acceptance remains open. Attempt one stopped before stock reached its sign-in page; attempt two completed both browser journeys. [Builds, matched results and rollback timings](../../../artifacts/gitlab-compatibility/unicode-composer-rollback-20261119/comparison-2/report.md).
 
 ### Reproduce rollback with the footnote renderer
 

@@ -18,6 +18,7 @@ const root = new URL('../', import.meta.url), base = 'http://127.0.0.1:5080';
 const suggestionReview = process.argv.includes('--suggestion-review');
 const suggestionReviewVerify = process.argv.includes('--suggestion-review-verify');
 const suggestions = process.argv.includes('--suggestions');
+const clipboardUnicode = process.argv.includes('--clipboard-unicode');
 const suggestionTransportAuthoring = process.argv.includes('--suggestion-transport-authoring');
 const suggestionTransportVerify = process.argv.includes('--suggestion-transport-verify');
 const suggestionTransport = process.argv.includes('--suggestion-transport');
@@ -41,7 +42,7 @@ const footnotes = process.argv.includes('--footnotes') || footnoteProbe;
 const catalogue = quickActionCommands || autocomplete;
 const referenceContexts = process.argv.includes('--reference-context');
 const references = process.argv.includes('--references') || referenceContexts;
-if ([suggestions, suggestionContexts, tasks, media, diagrams, references, frontmatter, quickActions, quickActionCommands, autocomplete, footnotes].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
+if ([clipboardUnicode, suggestions, suggestionContexts, tasks, media, diagrams, references, frontmatter, quickActions, quickActionCommands, autocomplete, footnotes].filter(Boolean).length > 1) throw new Error('Choose one fixture profile.');
 const pin = JSON.parse(await readFile(new URL('integrations/gitlab/runtime/upstream.json', root)));
 const composeFile = fileURLToPath(new URL('integrations/gitlab/runtime/compose.yaml', root));
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -160,18 +161,36 @@ try {
     console.log(JSON.stringify({ kind: 'autocomplete', captured: Object.fromEntries(Object.entries(results)
       .map(([kind, result]) => [kind, { status: result.status, count: Array.isArray(result.data) ? result.data.length : null }])) }));
   }
-  if (suggestions || tasks || footnoteRenaming || footnoteServer || footnoteRoundtrip) {
+  if (clipboardUnicode || suggestions || tasks || footnoteRenaming || footnoteServer || footnoteRoundtrip) {
     const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
     if (preview.origin !== base) throw new Error('Nonlocal footnote preview');
     preview.searchParams.set('no_header_anchors', 'true');
     const renderMarkdown = source => request(preview.href, { text: source });
-    if (suggestions) await captureGitLabSuggestionRendering({ root, pin, version, renderMarkdown });
+    if (clipboardUnicode) {
+      const fixture = JSON.parse(await readFile(new URL('integrations/gitlab/fixtures/compatibility-wrapped.json',root)));
+      const fixtures = [];
+      for (const input of fixture.cases.filter(item=>item.direction==='forward')) {
+        const {body}=await renderMarkdown(input.markdown);
+        if(typeof body!=='string')throw new Error('Missing GitLab project preview.');
+        fixtures.push({name:input.id,source:input.markdown,body});
+      }
+      const previous=JSON.parse(await readFile(new URL('integrations/gitlab/fixtures/footnote-roundtrip-live-html.json',root)));
+      const footnotes=[];
+      for(const item of previous.fixtures.filter(entry=>['emoji-prefix','crlf-unicode'].includes(entry.name))){
+        const canonical='First round-trip edit. '+item.source.replaceAll('\r\n','\n');
+        const secondCanonical='Second round-trip edit. '+canonical;
+        const renders=[];
+        for(const source of [item.source,canonical,secondCanonical])renders.push({source,body:(await renderMarkdown(source)).body});
+        footnotes.push({name:item.name,canonical,secondCanonical,renders});
+      }
+      await writeFile(new URL('integrations/gitlab/fixtures/clipboard-unicode-live-html.json',root),JSON.stringify({revision:pin.commit,fixtures,footnotes},null,2)+'\n');
+    } else if (suggestions) await captureGitLabSuggestionRendering({ root, pin, version, renderMarkdown });
     else if (tasks) await captureGitLabTaskRendering({ root, pin, version, renderMarkdown });
     else if (footnoteRoundtrip) await captureGitLabFootnoteRoundtrip({ root, pin, version, renderMarkdown, overlay: footnoteServerOverlay });
     else if (footnoteServer) await captureGitLabFootnoteServer({ root, pin, version, renderMarkdown, overlay: footnoteServerOverlay });
     else await captureGitLabFootnoteRenaming({ root, pin, version, renderMarkdown });
   }
-  if (!suggestionContexts && !suggestions && !tasks && !catalogue && !footnoteRenaming && !footnoteServer && !footnoteRoundtrip) {
+  if (!clipboardUnicode && !suggestionContexts && !suggestions && !tasks && !catalogue && !footnoteRenaming && !footnoteServer && !footnoteRoundtrip) {
   const preview = new URL(paths.data.namespace.markdownPaths.markdownPreviewPath, base);
   if (preview.origin !== base) throw new Error('Nonlocal preview');
   preview.searchParams.set('no_header_anchors', 'true');

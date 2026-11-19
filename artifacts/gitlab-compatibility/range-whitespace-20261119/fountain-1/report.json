@@ -1,0 +1,1521 @@
+{
+  "formatVersion": 2,
+  "buildIdentity": {
+    "side": "fountain",
+    "expected": {
+      "gitlabVersion": "19.5.3",
+      "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+      "packageVersion": "0.5.0-beta.2",
+      "fountainRevision": "80ae30149c8fed68f6f89802cd8f2e22e53ddbd0",
+      "runtimeSHA256": "755d58d35b0ac7e3a6c56286a8089261b3334662e96357925ca1dba0cd2c78f5",
+      "integrationSHA256": "908158c5319f5eb8388633ee75d534f405f638f47e3785be00b2d6e6302583c3"
+    },
+    "observed": {
+      "editor": "FountainJS",
+      "integrationSHA256": "908158c5319f5eb8388633ee75d534f405f638f47e3785be00b2d6e6302583c3",
+      "runtimeSHA256": "755d58d35b0ac7e3a6c56286a8089261b3334662e96357925ca1dba0cd2c78f5",
+      "manifestSHA256": "00ca36fae735a224a76fd6d25aa4b9cb8a11b86e769c00c91c3255d822664283",
+      "scripts": [
+        {
+          "path": "/assets/webpack/10845.653e9015.chunk.js",
+          "browserSHA256": "037471e3bf3408848dbc488004c06251d6f6818ac7e763bcba7200c8ac08ccde",
+          "deployedSHA256": "037471e3bf3408848dbc488004c06251d6f6818ac7e763bcba7200c8ac08ccde"
+        },
+        {
+          "path": "/assets/webpack/11477.eb4e3c00.chunk.js",
+          "browserSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93",
+          "deployedSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93"
+        },
+        {
+          "path": "/assets/webpack/21220.42642502.chunk.js",
+          "browserSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8",
+          "deployedSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8"
+        },
+        {
+          "path": "/assets/webpack/26937.37f8dec7.chunk.js",
+          "browserSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6",
+          "deployedSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6"
+        },
+        {
+          "path": "/assets/webpack/31126.768e9d21.chunk.js",
+          "browserSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a",
+          "deployedSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a"
+        },
+        {
+          "path": "/assets/webpack/31580.e3bf8fed.chunk.js",
+          "browserSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293",
+          "deployedSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293"
+        },
+        {
+          "path": "/assets/webpack/33480.ce7ca688.chunk.js",
+          "browserSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566",
+          "deployedSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566"
+        },
+        {
+          "path": "/assets/webpack/33816.10488c93.chunk.js",
+          "browserSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14",
+          "deployedSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14"
+        },
+        {
+          "path": "/assets/webpack/33975.2a6859ce.chunk.js",
+          "browserSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b",
+          "deployedSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b"
+        },
+        {
+          "path": "/assets/webpack/34221.35146945.chunk.js",
+          "browserSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75",
+          "deployedSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75"
+        },
+        {
+          "path": "/assets/webpack/36950.473152a8.chunk.js",
+          "browserSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345",
+          "deployedSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345"
+        },
+        {
+          "path": "/assets/webpack/42297.d98d8353.chunk.js",
+          "browserSHA256": "fc7e2bc5517f1d4e3ce13466a28c21ef873682d56c52ae3e37d201e223780ab0",
+          "deployedSHA256": "fc7e2bc5517f1d4e3ce13466a28c21ef873682d56c52ae3e37d201e223780ab0"
+        },
+        {
+          "path": "/assets/webpack/44540.1b3fb37a.chunk.js",
+          "browserSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457",
+          "deployedSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457"
+        },
+        {
+          "path": "/assets/webpack/48082.f4fb9454.chunk.js",
+          "browserSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea",
+          "deployedSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea"
+        },
+        {
+          "path": "/assets/webpack/52199.2635e6eb.chunk.js",
+          "browserSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4",
+          "deployedSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4"
+        },
+        {
+          "path": "/assets/webpack/54908.851e751e.chunk.js",
+          "browserSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278",
+          "deployedSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278"
+        },
+        {
+          "path": "/assets/webpack/56524.a3f2adcc.chunk.js",
+          "browserSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649",
+          "deployedSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649"
+        },
+        {
+          "path": "/assets/webpack/57920.15510cdf.chunk.js",
+          "browserSHA256": "ee6b1163a29837ffcf506979e61a75c5b3183f90e9e2831d5a9610361dab9cea",
+          "deployedSHA256": "ee6b1163a29837ffcf506979e61a75c5b3183f90e9e2831d5a9610361dab9cea"
+        },
+        {
+          "path": "/assets/webpack/58279.be153399.chunk.js",
+          "browserSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179",
+          "deployedSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179"
+        },
+        {
+          "path": "/assets/webpack/6368.b30463b3.chunk.js",
+          "browserSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e",
+          "deployedSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e"
+        },
+        {
+          "path": "/assets/webpack/65338.66de7a5c.chunk.js",
+          "browserSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60",
+          "deployedSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60"
+        },
+        {
+          "path": "/assets/webpack/65492.7ba55601.chunk.js",
+          "browserSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364",
+          "deployedSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364"
+        },
+        {
+          "path": "/assets/webpack/6620.52ee50e6.chunk.js",
+          "browserSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820",
+          "deployedSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820"
+        },
+        {
+          "path": "/assets/webpack/66210.d86969b9.chunk.js",
+          "browserSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26",
+          "deployedSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26"
+        },
+        {
+          "path": "/assets/webpack/67.0fe3d755.chunk.js",
+          "browserSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780",
+          "deployedSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780"
+        },
+        {
+          "path": "/assets/webpack/67755.57034e16.chunk.js",
+          "browserSHA256": "50284e6eaa3407a441df52b6509999ad36c8ef572045bf4c9032e604b8fc58f7",
+          "deployedSHA256": "50284e6eaa3407a441df52b6509999ad36c8ef572045bf4c9032e604b8fc58f7"
+        },
+        {
+          "path": "/assets/webpack/68541.222d9bcd.chunk.js",
+          "browserSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece",
+          "deployedSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece"
+        },
+        {
+          "path": "/assets/webpack/69513.9df26555.chunk.js",
+          "browserSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f",
+          "deployedSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f"
+        },
+        {
+          "path": "/assets/webpack/70682.dbea24fb.chunk.js",
+          "browserSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92",
+          "deployedSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92"
+        },
+        {
+          "path": "/assets/webpack/71642.4e382863.chunk.js",
+          "browserSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4",
+          "deployedSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4"
+        },
+        {
+          "path": "/assets/webpack/72007.15fb7bcd.chunk.js",
+          "browserSHA256": "f08cd11b57c4d38ff4ce89fc1384368c752cd5a9d611d5c9373ab0c8a5e62e49",
+          "deployedSHA256": "f08cd11b57c4d38ff4ce89fc1384368c752cd5a9d611d5c9373ab0c8a5e62e49"
+        },
+        {
+          "path": "/assets/webpack/77804.af4827ca.chunk.js",
+          "browserSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1",
+          "deployedSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1"
+        },
+        {
+          "path": "/assets/webpack/79164.07015d7a.chunk.js",
+          "browserSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448",
+          "deployedSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448"
+        },
+        {
+          "path": "/assets/webpack/81231.39e842ae.chunk.js",
+          "browserSHA256": "1c5d6953b92a91c1cf57b4baa4eac2c473d6467dd9545ea02b42ec82cc1dd82d",
+          "deployedSHA256": "1c5d6953b92a91c1cf57b4baa4eac2c473d6467dd9545ea02b42ec82cc1dd82d"
+        },
+        {
+          "path": "/assets/webpack/90212.0f7599c8.chunk.js",
+          "browserSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8",
+          "deployedSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8"
+        },
+        {
+          "path": "/assets/webpack/92505.e2029695.chunk.js",
+          "browserSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18",
+          "deployedSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18"
+        },
+        {
+          "path": "/assets/webpack/92967.221472e2.chunk.js",
+          "browserSHA256": "79823de536403fc0d8177bce02a57e173c9475c9b8092e1bd3de67415e86e730",
+          "deployedSHA256": "79823de536403fc0d8177bce02a57e173c9475c9b8092e1bd3de67415e86e730"
+        },
+        {
+          "path": "/assets/webpack/96998.7e4df3c7.chunk.js",
+          "browserSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a",
+          "deployedSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a"
+        },
+        {
+          "path": "/assets/webpack/content_editor.acc6b1ef.chunk.js",
+          "browserSHA256": "8d66cde01846d95f62e58a247e911dab27b342d70c33ee705deb616316634b37",
+          "deployedSHA256": "8d66cde01846d95f62e58a247e911dab27b342d70c33ee705deb616316634b37"
+        },
+        {
+          "path": "/assets/webpack/framework.f13ea082.chunk.js",
+          "browserSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9",
+          "deployedSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9"
+        },
+        {
+          "path": "/assets/webpack/gitlab_ui.d82b8e33.chunk.js",
+          "browserSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886",
+          "deployedSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886"
+        },
+        {
+          "path": "/assets/webpack/global_search_modal.276667de.chunk.js",
+          "browserSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42",
+          "deployedSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42"
+        },
+        {
+          "path": "/assets/webpack/hello.61f24ffa.chunk.js",
+          "browserSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab",
+          "deployedSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersModal.ed948cf8.chunk.js",
+          "browserSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb",
+          "deployedSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersTrigger.cc208be6.chunk.js",
+          "browserSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122",
+          "deployedSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122"
+        },
+        {
+          "path": "/assets/webpack/main.fb78dad5.chunk.js",
+          "browserSHA256": "db3fbd2f4532d2054194d913aac7ef43adfeaeb91d3fb2f2cb0bc7bf6c1c3bdf",
+          "deployedSHA256": "db3fbd2f4532d2054194d913aac7ef43adfeaeb91d3fb2f2cb0bc7bf6c1c3bdf"
+        },
+        {
+          "path": "/assets/webpack/pages.projects.work_items.5b1bae85.chunk.js",
+          "browserSHA256": "e75a207e59eefda2af154c7d481f6fa990fbd786575c420f197f2e8620164097",
+          "deployedSHA256": "e75a207e59eefda2af154c7d481f6fa990fbd786575c420f197f2e8620164097"
+        },
+        {
+          "path": "/assets/webpack/prosemirror.d913db02.chunk.js",
+          "browserSHA256": "8973ac8a70588ee372a258693d7b8097c76618bfdabda0dd1b5dcc53a08d732b",
+          "deployedSHA256": "8973ac8a70588ee372a258693d7b8097c76618bfdabda0dd1b5dcc53a08d732b"
+        },
+        {
+          "path": "/assets/webpack/runtime.05493e16.bundle.js",
+          "browserSHA256": "6290607da7704515f2fc5dc612563eef683eeaf5f07e2cc819335dcc8a1c0274",
+          "deployedSHA256": "6290607da7704515f2fc5dc612563eef683eeaf5f07e2cc819335dcc8a1c0274"
+        },
+        {
+          "path": "/assets/webpack/shortcutsBundle.be2e00cb.chunk.js",
+          "browserSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb",
+          "deployedSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb"
+        },
+        {
+          "path": "/assets/webpack/super_sidebar.eda8a491.chunk.js",
+          "browserSHA256": "377f63732d167f3f1ef4c7606a2ffe0357c7d0316901f527b671799797629145",
+          "deployedSHA256": "377f63732d167f3f1ef4c7606a2ffe0357c7d0316901f527b671799797629145"
+        },
+        {
+          "path": "/assets/webpack/tracker.e8a6b670.chunk.js",
+          "browserSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858",
+          "deployedSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858"
+        }
+      ]
+    }
+  },
+  "runId": "range-whitespace-20261119",
+  "attempt": 1,
+  "side": "fountain",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "deletions",
+  "rollbackRequested": false,
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-deletions.json",
+  "fixtureHash": "8130ad24432f804207c8d1ad5a9cc9d8dd1de0a83703ab6d05711b1371619b7d",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "suggestion-deletion-effects",
+    "title": "Paired deletion compatibility",
+    "marker": "Compatibility deletion review",
+    "sourceObservationDelayMs": 1500,
+    "cases": [
+      {
+        "id": "empty-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      {
+        "id": "whitespace-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "\n",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      {
+        "id": "middle-two-lines",
+        "filePath": "paired-multiline-deletion.js",
+        "source": "first();\nremoveOne();\nremoveTwo();\nlast();\n",
+        "range": {
+          "start": 2,
+          "end": 3
+        },
+        "replacement": "",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      {
+        "id": "unicode-whitespace",
+        "filePath": "paired-unicode-deletion.js",
+        "source": "first();\nremove();\nlast();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        },
+        "replacement": " \t　",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      }
+    ],
+    "editingDelayMs": 1500
+  },
+  "observations": [
+    {
+      "id": "empty-deletion",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "empty-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Edit the replacement through the actual rich editor controls; observe deletion explanation and confirmation before accepting.",
+        "Switch to source; retain the exact captured deletion proposal and add only a prose marker.",
+        "Reload the saved proposal; reopen rich editing and inspect exact source; cancel without rewriting it.",
+        "Normal GitLab Apply suggestion creates a real source commit."
+      ],
+      "setup": {
+        "branch": "fountain-compat-range-whitespace-20261119-a1-fountain-empty-deletion",
+        "seedCommit": "27187703db44dbaf7ca77f049bc6e83d579a2316",
+        "source": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo=",
+        "mergeRequest": {
+          "iid": 130,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/130"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "old();\n",
+      "deletion": {
+        "replacement": "",
+        "confirmationPresent": false,
+        "blockedBeforeConsent": false,
+        "visibleExplanation": "An empty replacement proposes deleting the target file lines. GitLab applies the deletion only after you save this comment and choose Apply suggestion.",
+        "explicitDeletionExplanation": true,
+        "actionLabel": "Apply deletion",
+        "richSource": "",
+        "effect": "deletion"
+      },
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1500.3854359999968
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\n```",
+      "saved": {
+        "id": 4975,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-19T15:04:55.978Z",
+        "updated_at": "2026-11-19T15:04:55.978Z",
+        "system": false,
+        "noteable_id": 1265,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "27187703db44dbaf7ca77f049bc6e83d579a2316",
+          "old_path": "paired-deletion.js",
+          "new_path": "paired-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 1231,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": true,
+            "applied": false,
+            "from_content": "old();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 130,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-deletion.js",
+        "file_path": "paired-deletion.js",
+        "size": 23,
+        "encoding": "base64",
+        "content_sha256": "a2a6db4c1c8cdf3e7e2082afb68e22a3d6609207deb9bbd80c23c228a50949f0",
+        "ref": "fountain-compat-range-whitespace-20261119-a1-fountain-empty-deletion",
+        "blob_id": "e57a323a219bdeba9b4b6780e2f82fb41d9ac21e",
+        "commit_id": "27187703db44dbaf7ca77f049bc6e83d579a2316",
+        "last_commit_id": "27187703db44dbaf7ca77f049bc6e83d579a2316",
+        "execute_filemode": false,
+        "content": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo="
+      },
+      "beforeApplyHead": "27187703db44dbaf7ca77f049bc6e83d579a2316",
+      "reopenedDOM": "",
+      "reopenedSource": "```suggestion:-0+0\n```\n\nCompatibility deletion review",
+      "appliedFile": {
+        "file_name": "paired-deletion.js",
+        "file_path": "paired-deletion.js",
+        "size": 16,
+        "encoding": "base64",
+        "content_sha256": "c3575e03d640f105a387858276234dd0c89bde68b5addd21e739ed86c2c26778",
+        "ref": "fountain-compat-range-whitespace-20261119-a1-fountain-empty-deletion",
+        "blob_id": "027848952d1fe871052b8e4150659591462c8f78",
+        "commit_id": "34304b4ea73772cadd189590e8570537555d29c0",
+        "last_commit_id": "34304b4ea73772cadd189590e8570537555d29c0",
+        "execute_filemode": false,
+        "content": "a2VlcCgpOwpsYXN0KCk7Cg=="
+      },
+      "appliedCommit": {
+        "id": "34304b4ea73772cadd189590e8570537555d29c0",
+        "short_id": "34304b4e",
+        "created_at": "2026-11-19T15:05:02.000+00:00",
+        "parent_ids": [
+          "27187703db44dbaf7ca77f049bc6e83d579a2316"
+        ],
+        "title": "Apply paired editor suggestion",
+        "message": "Apply paired editor suggestion",
+        "author_name": "Administrator",
+        "author_email": "gitlab_admin_5c5720@example.com",
+        "authored_date": "2026-11-19T15:05:02.000+00:00",
+        "committer_name": "Administrator",
+        "committer_email": "gitlab_admin_5c5720@example.com",
+        "committed_date": "2026-11-19T15:05:02.000+00:00",
+        "trailers": {},
+        "extended_trailers": {},
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/commit/34304b4ea73772cadd189590e8570537555d29c0",
+        "stats": {
+          "additions": 0,
+          "deletions": 1,
+          "total": 1
+        },
+        "status": null,
+        "project_id": 1,
+        "last_pipeline": null
+      },
+      "appliedNote": {
+        "id": 4975,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-19T15:04:55.978Z",
+        "updated_at": "2026-11-19T15:05:02.888Z",
+        "system": false,
+        "noteable_id": 1265,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "27187703db44dbaf7ca77f049bc6e83d579a2316",
+          "old_path": "paired-deletion.js",
+          "new_path": "paired-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-19T15:05:02.888Z",
+        "suggestions": [
+          {
+            "id": 1231,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": false,
+            "applied": true,
+            "from_content": "old();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 130,
+        "commands_changes": {}
+      }
+    },
+    {
+      "id": "whitespace-deletion",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "whitespace-deletion",
+        "filePath": "paired-deletion.js",
+        "source": "old();\nkeep();\nlast();\n",
+        "range": {
+          "start": 1,
+          "end": 1
+        },
+        "replacement": "\n",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Edit the replacement through the actual rich editor controls; observe deletion explanation and confirmation before accepting.",
+        "Switch to source; retain the exact captured deletion proposal and add only a prose marker.",
+        "Reload the saved proposal; reopen rich editing and inspect exact source; cancel without rewriting it.",
+        "Normal GitLab Apply suggestion creates a real source commit."
+      ],
+      "setup": {
+        "branch": "fountain-compat-range-whitespace-20261119-a1-fountain-whitespace-deletion",
+        "seedCommit": "e91efc4ebad83a06ee5688cd9011085073274116",
+        "source": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo=",
+        "mergeRequest": {
+          "iid": 131,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/131"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "old();\n",
+      "deletion": {
+        "replacement": "\n",
+        "confirmationPresent": true,
+        "blockedBeforeConsent": true,
+        "visibleExplanation": "GitLab applies a whitespace-only suggestion as a deletion, not as blank lines. Your exact source is retained. Continuing proposes deleting the target file lines.",
+        "explicitDeletionExplanation": true,
+        "actionLabel": "Apply deletion",
+        "confirmed": true,
+        "richSource": "\n",
+        "effect": "deletion"
+      },
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1500.4498350000067
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\n\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\n\n```",
+      "saved": {
+        "id": 4979,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\n\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-19T15:05:16.546Z",
+        "updated_at": "2026-11-19T15:05:16.546Z",
+        "system": false,
+        "noteable_id": 1266,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "e91efc4ebad83a06ee5688cd9011085073274116",
+          "old_path": "paired-deletion.js",
+          "new_path": "paired-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 1232,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": true,
+            "applied": false,
+            "from_content": "old();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 131,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-deletion.js",
+        "file_path": "paired-deletion.js",
+        "size": 23,
+        "encoding": "base64",
+        "content_sha256": "a2a6db4c1c8cdf3e7e2082afb68e22a3d6609207deb9bbd80c23c228a50949f0",
+        "ref": "fountain-compat-range-whitespace-20261119-a1-fountain-whitespace-deletion",
+        "blob_id": "e57a323a219bdeba9b4b6780e2f82fb41d9ac21e",
+        "commit_id": "e91efc4ebad83a06ee5688cd9011085073274116",
+        "last_commit_id": "e91efc4ebad83a06ee5688cd9011085073274116",
+        "execute_filemode": false,
+        "content": "b2xkKCk7CmtlZXAoKTsKbGFzdCgpOwo="
+      },
+      "beforeApplyHead": "e91efc4ebad83a06ee5688cd9011085073274116",
+      "reopenedDOM": "\n",
+      "reopenedSource": "```suggestion:-0+0\n\n```\n\nCompatibility deletion review",
+      "appliedFile": {
+        "file_name": "paired-deletion.js",
+        "file_path": "paired-deletion.js",
+        "size": 16,
+        "encoding": "base64",
+        "content_sha256": "c3575e03d640f105a387858276234dd0c89bde68b5addd21e739ed86c2c26778",
+        "ref": "fountain-compat-range-whitespace-20261119-a1-fountain-whitespace-deletion",
+        "blob_id": "027848952d1fe871052b8e4150659591462c8f78",
+        "commit_id": "9c5b7af53253dce89a4848d4b32bf279ed35c755",
+        "last_commit_id": "9c5b7af53253dce89a4848d4b32bf279ed35c755",
+        "execute_filemode": false,
+        "content": "a2VlcCgpOwpsYXN0KCk7Cg=="
+      },
+      "appliedCommit": {
+        "id": "9c5b7af53253dce89a4848d4b32bf279ed35c755",
+        "short_id": "9c5b7af5",
+        "created_at": "2026-11-19T15:05:22.000+00:00",
+        "parent_ids": [
+          "e91efc4ebad83a06ee5688cd9011085073274116"
+        ],
+        "title": "Apply paired editor suggestion",
+        "message": "Apply paired editor suggestion",
+        "author_name": "Administrator",
+        "author_email": "gitlab_admin_5c5720@example.com",
+        "authored_date": "2026-11-19T15:05:22.000+00:00",
+        "committer_name": "Administrator",
+        "committer_email": "gitlab_admin_5c5720@example.com",
+        "committed_date": "2026-11-19T15:05:22.000+00:00",
+        "trailers": {},
+        "extended_trailers": {},
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/commit/9c5b7af53253dce89a4848d4b32bf279ed35c755",
+        "stats": {
+          "additions": 0,
+          "deletions": 1,
+          "total": 1
+        },
+        "status": null,
+        "project_id": 1,
+        "last_pipeline": null
+      },
+      "appliedNote": {
+        "id": 4979,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\n\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-19T15:05:16.546Z",
+        "updated_at": "2026-11-19T15:05:23.078Z",
+        "system": false,
+        "noteable_id": 1266,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "e91efc4ebad83a06ee5688cd9011085073274116",
+          "old_path": "paired-deletion.js",
+          "new_path": "paired-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 1,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 1,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-19T15:05:23.078Z",
+        "suggestions": [
+          {
+            "id": 1232,
+            "from_line": 1,
+            "to_line": 1,
+            "appliable": false,
+            "applied": true,
+            "from_content": "old();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 131,
+        "commands_changes": {}
+      }
+    },
+    {
+      "id": "middle-two-lines",
+      "status": "observed",
+      "stage": "complete",
+      "input": {
+        "id": "middle-two-lines",
+        "filePath": "paired-multiline-deletion.js",
+        "source": "first();\nremoveOne();\nremoveTwo();\nlast();\n",
+        "range": {
+          "start": 2,
+          "end": 3
+        },
+        "replacement": "",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Edit the replacement through the actual rich editor controls; observe deletion explanation and confirmation before accepting.",
+        "Switch to source; retain the exact captured deletion proposal and add only a prose marker.",
+        "Reload the saved proposal; reopen rich editing and inspect exact source; cancel without rewriting it.",
+        "Normal GitLab Apply suggestion creates a real source commit."
+      ],
+      "setup": {
+        "branch": "fountain-compat-range-whitespace-20261119-a1-fountain-middle-two-lines",
+        "seedCommit": "9e61057da23a254a5e381996b53367c2968303dc",
+        "source": "Zmlyc3QoKTsKcmVtb3ZlT25lKCk7CnJlbW92ZVR3bygpOwpsYXN0KCk7Cg==",
+        "mergeRequest": {
+          "iid": 132,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/132"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "removeOne();\nremoveTwo();\n",
+      "deletion": {
+        "replacement": "",
+        "confirmationPresent": false,
+        "blockedBeforeConsent": false,
+        "visibleExplanation": "An empty replacement proposes deleting the target file lines. GitLab applies the deletion only after you save this comment and choose Apply suggestion.",
+        "explicitDeletionExplanation": true,
+        "actionLabel": "Apply deletion",
+        "richSource": "",
+        "effect": "deletion"
+      },
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1501.7757989999955
+      },
+      "sourceAtFirstVisible": "```suggestion:-1+0\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-1+0\n```",
+      "saved": {
+        "id": 4983,
+        "type": "DiffNote",
+        "body": "```suggestion:-1+0\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-19T15:05:35.695Z",
+        "updated_at": "2026-11-19T15:05:35.695Z",
+        "system": false,
+        "noteable_id": 1267,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "9e61057da23a254a5e381996b53367c2968303dc",
+          "old_path": "paired-multiline-deletion.js",
+          "new_path": "paired-multiline-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 3,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 2,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 3,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 1233,
+            "from_line": 2,
+            "to_line": 3,
+            "appliable": true,
+            "applied": false,
+            "from_content": "removeOne();\nremoveTwo();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 132,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-multiline-deletion.js",
+        "file_path": "paired-multiline-deletion.js",
+        "size": 43,
+        "encoding": "base64",
+        "content_sha256": "e85945653e11a4398ca8576b33863d31cd2603f57f74f78a26eaf692b5264916",
+        "ref": "fountain-compat-range-whitespace-20261119-a1-fountain-middle-two-lines",
+        "blob_id": "5150f5c8f9c427b01087b51ccf5985f8547466de",
+        "commit_id": "9e61057da23a254a5e381996b53367c2968303dc",
+        "last_commit_id": "9e61057da23a254a5e381996b53367c2968303dc",
+        "execute_filemode": false,
+        "content": "Zmlyc3QoKTsKcmVtb3ZlT25lKCk7CnJlbW92ZVR3bygpOwpsYXN0KCk7Cg=="
+      },
+      "beforeApplyHead": "9e61057da23a254a5e381996b53367c2968303dc",
+      "reopenedDOM": "",
+      "reopenedSource": "```suggestion:-1+0\n```\n\nCompatibility deletion review",
+      "appliedFile": {
+        "file_name": "paired-multiline-deletion.js",
+        "file_path": "paired-multiline-deletion.js",
+        "size": 17,
+        "encoding": "base64",
+        "content_sha256": "aecadd9bc52b485b1b04ad1e5114edf9707842f08d92ecff1228c728d9d52230",
+        "ref": "fountain-compat-range-whitespace-20261119-a1-fountain-middle-two-lines",
+        "blob_id": "c396867b313e68a0a05986bfbf5fba3f5c9bd2b1",
+        "commit_id": "2ce900e9c14dd67a307f4a153472056a9a049af2",
+        "last_commit_id": "2ce900e9c14dd67a307f4a153472056a9a049af2",
+        "execute_filemode": false,
+        "content": "Zmlyc3QoKTsKbGFzdCgpOwo="
+      },
+      "appliedCommit": {
+        "id": "2ce900e9c14dd67a307f4a153472056a9a049af2",
+        "short_id": "2ce900e9",
+        "created_at": "2026-11-19T15:05:42.000+00:00",
+        "parent_ids": [
+          "9e61057da23a254a5e381996b53367c2968303dc"
+        ],
+        "title": "Apply paired editor suggestion",
+        "message": "Apply paired editor suggestion",
+        "author_name": "Administrator",
+        "author_email": "gitlab_admin_5c5720@example.com",
+        "authored_date": "2026-11-19T15:05:42.000+00:00",
+        "committer_name": "Administrator",
+        "committer_email": "gitlab_admin_5c5720@example.com",
+        "committed_date": "2026-11-19T15:05:42.000+00:00",
+        "trailers": {},
+        "extended_trailers": {},
+        "web_url": "http://127.0.0.1:5080/root/fountain-product-integration/-/commit/2ce900e9c14dd67a307f4a153472056a9a049af2",
+        "stats": {
+          "additions": 0,
+          "deletions": 2,
+          "total": 2
+        },
+        "status": null,
+        "project_id": 1,
+        "last_pipeline": null
+      },
+      "appliedNote": {
+        "id": 4983,
+        "type": "DiffNote",
+        "body": "```suggestion:-1+0\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-19T15:05:35.695Z",
+        "updated_at": "2026-11-19T15:05:42.512Z",
+        "system": false,
+        "noteable_id": 1267,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "9e61057da23a254a5e381996b53367c2968303dc",
+          "old_path": "paired-multiline-deletion.js",
+          "new_path": "paired-multiline-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 3,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 2,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 3,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": true,
+        "resolved_by": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "resolved_at": "2026-11-19T15:05:42.512Z",
+        "suggestions": [
+          {
+            "id": 1233,
+            "from_line": 2,
+            "to_line": 3,
+            "appliable": false,
+            "applied": true,
+            "from_content": "removeOne();\nremoveTwo();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 132,
+        "commands_changes": {}
+      }
+    },
+    {
+      "id": "unicode-whitespace",
+      "status": "incomplete",
+      "stage": "post",
+      "input": {
+        "id": "unicode-whitespace",
+        "filePath": "paired-unicode-deletion.js",
+        "source": "first();\nremove();\nlast();\n",
+        "range": {
+          "start": 2,
+          "end": 2
+        },
+        "replacement": " \t　",
+        "handoffDelayMs": 1500,
+        "scope": "deletion"
+      },
+      "actions": [
+        "Rich editor: Insert suggestion from actual selected diff lines.",
+        "Edit the replacement through the actual rich editor controls; observe deletion explanation and confirmation before accepting.",
+        "Switch to source; retain the exact captured deletion proposal and add only a prose marker."
+      ],
+      "setup": {
+        "branch": "fountain-compat-range-whitespace-20261119-a1-fountain-unicode-whitespace",
+        "seedCommit": "3d7f54f763ee314b3fd610228e5d569fc9cceb94",
+        "source": "Zmlyc3QoKTsKcmVtb3ZlKCk7Cmxhc3QoKTsK",
+        "mergeRequest": {
+          "iid": 133,
+          "url": "http://127.0.0.1:5080/root/fountain-product-integration/-/merge_requests/133"
+        }
+      },
+      "editorProof": {
+        "className": "fountain-editor rte-text-box",
+        "native": true
+      },
+      "prefillDOM": "remove();\n",
+      "deletion": {
+        "replacement": " \t　",
+        "confirmationPresent": true,
+        "blockedBeforeConsent": true,
+        "visibleExplanation": "GitLab applies a whitespace-only suggestion as a deletion, not as blank lines. Your exact source is retained. Continuing proposes deleting the target file lines.",
+        "explicitDeletionExplanation": true,
+        "actionLabel": "Apply deletion",
+        "confirmed": true,
+        "richSource": " \t　",
+        "effect": "deletion"
+      },
+      "handoffTiming": {
+        "declaredDelayMs": 1500,
+        "observedVisibleToSwitchMs": 1501.8723739999987
+      },
+      "sourceAtFirstVisible": "```suggestion:-0+0\n \t　\n```",
+      "sourceInitiallyEnabled": true,
+      "sourceModeBeforeEdit": "```suggestion:-0+0\n \t　\n```",
+      "saved": {
+        "id": 4987,
+        "type": "DiffNote",
+        "body": "```suggestion:-0+0\n \t　\n```\n\nCompatibility deletion review",
+        "author": {
+          "id": 1,
+          "username": "root",
+          "public_email": null,
+          "name": "Administrator",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://www.gravatar.com/avatar/af9536bd5af2ee6d72f6dda65b4f4e32509f3c11b0922a164e8d5f3911ed0a76?s=80&d=identicon",
+          "web_url": "http://127.0.0.1:5080/root"
+        },
+        "created_at": "2026-11-19T15:05:56.911Z",
+        "updated_at": "2026-11-19T15:05:56.911Z",
+        "system": false,
+        "noteable_id": 1268,
+        "noteable_type": "MergeRequest",
+        "project_id": 1,
+        "commit_id": null,
+        "position": {
+          "base_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "start_sha": "15aeca7199b19518372fcb918a96eae93fd7e915",
+          "head_sha": "3d7f54f763ee314b3fd610228e5d569fc9cceb94",
+          "old_path": "paired-unicode-deletion.js",
+          "new_path": "paired-unicode-deletion.js",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 2,
+          "line_range": {
+            "start": {
+              "old_line": null,
+              "new_line": 2,
+              "type": "new"
+            },
+            "end": {
+              "old_line": null,
+              "new_line": 2,
+              "type": "new"
+            }
+          }
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null,
+        "resolved_at": null,
+        "suggestions": [
+          {
+            "id": 1234,
+            "from_line": 2,
+            "to_line": 2,
+            "appliable": true,
+            "applied": false,
+            "from_content": "remove();\n",
+            "to_content": ""
+          }
+        ],
+        "confidential": false,
+        "internal": false,
+        "imported": false,
+        "imported_from": "none",
+        "noteable_iid": 133,
+        "commands_changes": {}
+      },
+      "beforeApplyFile": {
+        "file_name": "paired-unicode-deletion.js",
+        "file_path": "paired-unicode-deletion.js",
+        "size": 27,
+        "encoding": "base64",
+        "content_sha256": "56251d0f6b6f8575b33bb6d6a90a36697d6f4630c5659d322d5cbe2babe649c1",
+        "ref": "fountain-compat-range-whitespace-20261119-a1-fountain-unicode-whitespace",
+        "blob_id": "d9193154075e436360995970dd861e5bba131fd4",
+        "commit_id": "3d7f54f763ee314b3fd610228e5d569fc9cceb94",
+        "last_commit_id": "3d7f54f763ee314b3fd610228e5d569fc9cceb94",
+        "execute_filemode": false,
+        "content": "Zmlyc3QoKTsKcmVtb3ZlKCk7Cmxhc3QoKTsK"
+      },
+      "beforeApplyHead": "3d7f54f763ee314b3fd610228e5d569fc9cceb94",
+      "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#note_4987').locator('form.common-note-form').locator('.fountain-editor[contenteditable=\"true\"]')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for locator('#note_4987').locator('form.common-note-form').locator('.fountain-editor[contenteditable=\"true\"]')\n"
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "5224180c94cbcb251dfadf634c3cc107cb6beb444272112f56153aaf2bbd7cf4",
+    "scripts/verify-gitlab-editor-rollback.mjs": "5f26dc8ec5a23a50581be4d7ebbdafcfa1c1144b4c56ffda6d6c5704b5773408",
+    "scripts/verify-gitlab-footnote-rollback.mjs": "497c68aab32d9e67dce5a34344cd50924771eb5be828a1d9c47e3c481efb5b32",
+    "integrations/gitlab/testing/save-gesture.mjs": "24fcc38481cb01e8134443237356a80f7f40e9fd77105ff615052880dbac96a2",
+    "integrations/gitlab/testing/build-identity.mjs": "6857e15eccbd2b296f13504d9d1ee6595fde7ac7cedaa560544af05abd3e9a8e",
+    "scripts/audit-gitlab-compatibility-composers.mjs": "f1be806429248a2321d5ca47e9e5da416e56051f757efba5634250e703655615",
+    "scripts/audit-gitlab-compatibility-quick-save.mjs": "8cb17709efdb43d9df60a522d2fb90c3e2e0f60f1bfb7483ae6565d70169d8fc",
+    "scripts/audit-gitlab-compatibility-reconnect.mjs": "e1512849ede5922fb8c641d4ab5a894687350a0b98ba26df832a706e8a760784",
+    "scripts/audit-gitlab-compatibility-access.mjs": "2eba7a5f34e75944f56cb8789c0fb4eb861493249f3a5acba43bb5d3de06c592",
+    "scripts/audit-gitlab-offline-conflict.mjs": "3a959a11c5e9b91d38f48a1e0eb7cf2c294f563ee79f56bdbd5495239196acdf",
+    "scripts/audit-gitlab-simultaneous-issues.mjs": "6bb7d74d0bb0008de9a00c6db4864400de2c6155ef15c9f9620f5b9506c4a69d",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "277024a259238694df0f0f1e52d667ee9316a0dad8955258702163cec76950a6",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "d83e34db573db534d6db1e023dccf3f301db325431a6862a01023bd39d61927c",
+    "scripts/audit-gitlab-concurrent-review.mjs": "8ecc2e2f91c05a00b5a55f60dffc5044245390d0b4b4de1cf6d3826aec3780e2",
+    "scripts/gitlab-audit-member.mjs": "fdc9be83e5504ab3d26e7c99e50c1a8a149c59d62a58992391fe4b857c892a96",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "c31222766259f281ee92a9f9c07f6702b0a5cd2792e5f1b5f26c2fe6226e4fdf",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "8729a9e6b38d0b4c39838af7f4eef59bb4a94790381bcbb5fec26070fb5aa0b7",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "af3aca6af589b7449209ad7a8ef89653359015bc92c23da69c2b3ccff6ee6b00",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "c84c64884a3063a56b1e32df26384a11bbc0571b0aebf4f7b84eca9bb5ea1c3f"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [
+      {
+        "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+        "readOnly": true
+      }
+    ],
+    "backendEnvironmentHash": "bbf9d40a1bb19c6a29c51fa8a118b830aff9d2d8fc5dcf537dc7911f25686239",
+    "assetSelector": "ENABLE_RSPACK=true",
+    "cpus": 2000000000,
+    "memory": 4294967296,
+    "puma": {
+      "minThreads": 2,
+      "maxThreads": 4,
+      "workers": 0
+    }
+  },
+  "browser": {
+    "engine": "chromium",
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 16,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 17,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 18,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 19,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 20,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 21,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 22,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 23,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 24,
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "exitCode": 0
+    }
+  ],
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "57ded580cd9dc0b7c2492f81608e29f0e82b49a56c52c6c5d8f29547125c0492  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "collectionComplete": false
+}

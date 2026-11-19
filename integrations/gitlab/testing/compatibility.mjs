@@ -88,6 +88,7 @@ export function compareGitLabCompatibility(original,fountain){
   }
   const check=(name,a,b)=>{if(a===undefined||b===undefined||!equal(a,b))mismatches.push(name);};
   if(original?.side!=='original'||fountain?.side!=='fountain')mismatches.push('editor-side');
+  if(original?.buildProbeIssue || fountain?.buildProbeIssue)check('build control issue',original?.buildProbeIssue,fountain?.buildProbeIssue);
   check('expected GitLab source revision', original?.buildIdentity?.expected?.gitlabCommit, fountain?.buildIdentity?.expected?.gitlabCommit);
   for(const key of ['runId','fixtureHash','fixture','harnessHashes','browser'])check(key,original?.[key],fountain?.[key]);
   for(const key of ['image','imageId','backendMounts','backendEnvironmentHash','cpus','memory'])check('deployment.'+key,original?.deployment?.[key],fountain?.deployment?.[key]);
@@ -545,6 +546,10 @@ export function compareGitLabCompatibility(original,fountain){
       }
       const selected=item=>item?{text:item.text,direction:item.direction,inside:item.inside,activeInside:item.activeInside,collapsed:item.collapsed}:undefined;
       for(const phase of ['copySelection','cutSelection'])add(phase,'Actual '+phase+' retains intended text and direction',{text:input.selectedText,direction:input.direction,inside:true,activeInside:true,collapsed:false},selected(left?.[phase]),selected(right?.[phase]));
+      if(input.requireWrappedSelection){
+        const wrapped=state=>state?.wrap ? state.wrap.lineHeight>0 && state.wrap.endY-state.wrap.startY>=state.wrap.lineHeight*0.9 : undefined;
+        for(const phase of ['copySelection','cutSelection'])add(phase+'.wrapped','Selection spans separate visual lines of one paragraph',true,wrapped(left?.[phase]),wrapped(right?.[phase]));
+      }
       if(input.requireCaretReady)for(const phase of ['copySelection','cutSelection'])add(phase+'.caretReady','Keyboard '+phase+' begins at a verified focused paragraph boundary',true,left?.[phase]?.caretReady,right?.[phase]?.caretReady);
       for(const [key,value]of Object.entries(input.fragment))add('externalFragment.'+key,'External selected fragment: '+key,value,left?.externalFragment?.[key],right?.externalFragment?.[key]);
       const plain=value=>input.clipboardParagraphs?clipboardParagraphs(value):value,expectedPlain=input.clipboardParagraphs??input.selectedText;
@@ -588,7 +593,11 @@ export function compareGitLabCompatibility(original,fountain){
     const left=observedValues(original,a,input,fixture),right=observedValues(fountain,b,input,fixture);
     const lines=input.source.split('\n'),selected=lines.slice(input.range.start-1,input.range.end).join('\n'),source=selected+'\n',replacement=source+fixture.appendLine;
     const prefix=lines.slice(0,input.range.start-1),expectedFile=(prefix.length?prefix.join('\n')+'\n':'')+replacement+lines.slice(input.range.end).join('\n');
-    const deletion=input.scope==='deletion',editedSource=deletion?input.replacement:source;
+    const deletion=input.scope==='deletion';
+    // A nonempty fenced line must end before the closing fence. The rich input
+    // still has its own exact character check below, independent of Markdown.
+    const editedSource=deletion && input.replacement && !input.replacement.endsWith('\n')
+      ? input.replacement+'\n' : deletion ? input.replacement : source;
     const specs=[['prefill','Selected source characters',selected],['firstSource','Source at first visible Markdown field',editedSource],
       ['settledSource','Source after declared observation window',editedSource],['range','Selected target offsets',`-${input.range.end-input.range.start}+0`]];
     const review=input.scope==='review';
@@ -613,8 +622,8 @@ export function compareGitLabCompatibility(original,fountain){
       specs.push(['richReplacement','Rich editing preserves exact empty or whitespace replacement',input.replacement],
         ['deletionExplanation','Rich editing explicitly explains the deletion effect in words',true],
         ['consent',input.replacement.length?'Nonempty whitespace deletion requires affirmative intent before acceptance':'Empty deletion needs no extra whitespace consent',input.replacement.length?{present:true,blocked:true,confirmed:true}:{present:false,blocked:false}],
-        ['savedSource','Saved deletion source',input.replacement],['savedRange','Saved target offsets',`-${input.range.end-input.range.start}+0`],
-        ['reopenedSource','Reloaded rich proposal retains exact deletion source',input.replacement],
+        ['savedSource','Saved deletion source',editedSource],['savedRange','Saved target offsets',`-${input.range.end-input.range.start}+0`],
+        ['reopenedSource','Reloaded rich proposal retains exact deletion source',editedSource],
         ['beforeApplySource','Draft does not write repository contents',input.source],['noEarlyCommit','Draft does not create a source commit',true],
         ['appliedSource','Deletion removes only the intended file lines',remaining],['singleApplyCommit','Application creates one child of the seed commit',true],
         ['appliedFlagAtCommit','Successful deletion has Applied metadata immediately after commit',true]);
