@@ -384,7 +384,11 @@ const reviewAction = originalReviewActions.slice(reviewStart,reviewEnd)
       }`)
   .replace('err.response.data?.message','err.response?.data?.message');
 files.set(reviewActionsPath,"import { reconcileAppliedSuggestion } from './fountain_applied_suggestion';\n"+
-  originalReviewActions.slice(0,reviewStart)+reviewAction+originalReviewActions.slice(reviewEnd));
+  (originalReviewActions.slice(0,reviewStart)+reviewAction+originalReviewActions.slice(reviewEnd))
+    .replace('this.fetchNotesPromise = new Promise((resolve, reject) => {', 'const completion = new Promise((resolve, reject) => {')
+    .replace('    rejectFetchNotes = reject;\n  });', '    rejectFetchNotes = reject;\n  });\n  this.fetchNotesPromise = completion;')
+    // Propagate the same rejection through the iterator even when nobody awaits the shared promise.
+    .replace('    rejectFetchNotes(e);\n    throw e;', '    rejectFetchNotes(e);\n    await completion;'));
 files.set(reviewHelperPath,await readFile(resolve(root,'integrations/gitlab/services/reconcile_applied_suggestion.js'),'utf8'));
 files.set(descriptionPath, prepareGitLabSaveBaseline(originalDescription));
 files.set(detailPath, prepareGitLabSaveAuthority(originalDetail));
