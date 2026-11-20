@@ -61,6 +61,21 @@ it('proves a duplicate-label probe cannot reinterpret an existing reference', ()
   const after = inspectGitLabFootnoteProjection(item.probe!.source, item.probeBody!, { probe: item.probe });
   expect(verifyGitLabFootnoteProbeReferences(before, after, item.probe!)).toContain('footnote-probe-reference-target');
 });
+it('preserves every footnote label and body when one reference and twelve definitions are exported after a prose edit', async () => {
+  const { document, codec, schema } = await load('simple');
+  const first = document.content.find(node => node.type.name === 'footnote_definition')!;
+  const extras = Array.from({ length: 11 }, (_, index) => {
+    const label = 'appendix-' + (index + 1);
+    const body = schema.node('paragraph', {}, [schema.text('Evidence for ' + label)]);
+    return first.type.create({ ...first.attrs, id: label, gitlabFootnoteLabel: label }, [body]);
+  });
+  const changed = append(document.copy([...document.content, ...extras]));
+  const result = codec.serializeWithReport({ doc: changed });
+  expect(result.issues).toEqual([]);
+  expect(result.markdown.split('\n').filter(line => /^\[\^.+\]: /u.test(line))).toEqual(
+    ['[^alpha]: Definition **bold**.', ...extras.map(node => '[^' + node.attrs.gitlabFootnoteLabel + ']: ' + node.textContent)],
+  );
+});
 it('follows a changed definition label instead of exporting a dangling old alias', async () => {
   const { document, codec } = await load('case');
   const renamed = document.copy(document.content.map(node => node.type.name === 'footnote_definition'

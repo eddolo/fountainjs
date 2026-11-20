@@ -318,9 +318,9 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       noteDefinitions.set(id, node); noteLabels.add(String(label));
     });
     const noteToken = (label: string) => {
-      let index = tokens.size, token: string;
-      do { token = `FOUNTAINNOTELABEL${index++}`; } while (encoded.includes(token) || tokens.has(token));
-      tokens.set(token, label); return token;
+      const token = `${prefix}${tokens.size}END`;
+      tokens.set(token, label);
+      return token;
     };
     const project = (node: Node, path: number[]): Node => {
       if (node.type.name === 'footnote_reference') {
@@ -508,8 +508,9 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
           return { markdown: retained.markdown, preservation: 'blocks', issues };
       }
     }
-    let markdown = exported.markdown;
-    for (const [token, original] of tokens) markdown = markdown.replaceAll(token, () => original);
+    // Expand complete markers once, including double-digit footnote indexes.
+    const markdown = tokens.size ? exported.markdown.replace(new RegExp(`${prefix}[0-9]+END`, 'gu'),
+      token => tokens.get(token) ?? token) : exported.markdown;
     return { markdown, preservation: 'canonical', issues };
   }
   serialize(input: { doc: Node }): string {
