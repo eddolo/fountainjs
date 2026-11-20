@@ -599,6 +599,14 @@ export function compareGitLabCompatibility(original,fountain){
       const reader = {paragraphs: [plain], bold: [input.bold]};
       for (const [key, label, expected] of [
         ...(input.authorAccess ? [['savedAuthor', 'GitLab identifies the signed-in Developer as author after creation and after reopening', true]] : []),
+        ...(input.pendingReview ? [
+          ['pendingReview', 'The Developer can recover the same private draft and read it in the review drawer',
+            {sameDraft:true, source:input.pendingReview, preview:input.pendingReview, publishedBefore:0}],
+          ['submittedReview', 'Submitting the review publishes one comment and clears the pending draft',
+            {posted:1, sameAuthor:true, remainingDrafts:0, reader:input.pendingReview}],
+        ] : []),
+        ...(input.discussionControl ? [['discussionAfterReload', 'The existing review comment survives navigation in the reader and the notes API',
+          {idMatches:true, reader:input.discussionControl, saved:input.discussionControl}]] : []),
         ['branchSelection', 'The create form uses the selected source and target branches', true],
         ['submission', 'GitLab creates the open request with the intended branches, head and title', true],
         ['createdSource', 'The saved description retains its Markdown', markdown],

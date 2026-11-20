@@ -1,7 +1,8 @@
 import { expect } from '@playwright/test';
 import { join } from 'node:path';
+import { writeFile } from 'node:fs/promises';
 import { editorProof, observePage, openRich } from './gitlab-audit-editor.mjs';
-
+import { observeMergeRequestNavigation } from '../integrations/gitlab/testing/observe-mr-navigation.mjs';
 import { prepareGitLabAuditMember } from './gitlab-audit-member.mjs';
 
 export async function runGitLabMergeRequestCreation(options) {
@@ -53,8 +54,12 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
     await expect(reader).toBeVisible({timeout:30000});
     return { paragraphs: await reader.locator('p').allTextContents(), bold: await reader.locator('strong,b').allTextContents() };
   };
+  let navigation;
   try {
     await observePage(actor, result);
+    if (input.discussionControl && context.browser().browserType().name() === 'webkit') {
+      navigation = await observeMergeRequestNavigation(actor, result, new URL(list).origin);
+    }
     if (membership) {
       const identity = await actor.request.get(new URL('/api/v4/user', list).href);
       expect(identity.status()).toBe(200);
@@ -74,11 +79,13 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
     result.setup = { branch, sha: commit.id, target: project.default_branch };
     expect(await mergeRequests()).toHaveLength(0);
     await actor.goto(list);
+    stage('open-new-request');
     await actor.getByRole('link', { name: 'New merge request', exact:true }).click();
     await actor.getByRole('button', { name:'Select source branch', exact:true }).click();
     const picker = actor.locator('[data-qa-compare-side="source"]');
     await picker.locator('input:not([type="hidden"]):visible').fill(branch);
     await actor.getByRole('option', {name:branch, exact:true}).click();
+    stage('compare-branches');
     await actor.getByTestId('compare-branches-button').click();
     const create = actor.getByTestId('issuable-create-button');
     await expect(create).toBeVisible({timeout:30000});
@@ -98,6 +105,7 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
     await expect(editor.locator('strong,b')).toHaveText(input.bold);
     await editor.screenshot({path:join(output,'create-description.png')});
     const post = actor.waitForResponse(response => response.request().method() === 'POST' && response.url() === list);
+    stage('create-request');
     const [response] = await Promise.all([post, create.click()]);
     result.createStatus = response.status();
     await expect(actor).toHaveURL(url => url.href.startsWith(list + '/') && /^\d+$/.test(url.pathname.split('/').pop()), {timeout:30000});
@@ -110,7 +118,24 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
     facts.createdSource = created.description;
     facts.reader = await read();
     await reader.screenshot({path:join(output,'created-reader.png')});
-    stage('reopen-edit-and-save');
+    // A separate existing note makes a missing or stale discussion visible after navigation.
+    let controlNote, pendingReview;
+    if (input.discussionControl) {
+      controlNote = await request(api + '/merge_requests/' + iid + '/notes', {body:input.discussionControl});
+      result.controlNoteId = controlNote.id;
+      if (input.pendingReview) {
+        const draftURL = new URL(api + '/merge_requests/' + iid + '/draft_notes', list).href;
+        const csrf = await actor.locator('meta[name="csrf-token"]').getAttribute('content');
+        const response = await actor.request.post(draftURL, {headers:{'X-CSRF-Token':csrf}, data:{note:input.pendingReview}});
+        expect(response.status()).toBe(201);
+        const draft = await response.json();
+        expect(draft.note).toBe(input.pendingReview);
+        expect(draft.author_id).toBe(membership.id);
+        pendingReview = {url:draftURL, id:draft.id};
+        result.pendingReviewId = draft.id;
+      }
+    }
+    stage('open-edit-form');
     const editLink = actor.getByRole('link', {name:'Edit merge request', exact:true});
     await expect(editLink).toBeVisible({timeout:30000});
     expect(new URL(await editLink.getAttribute('href'), actor.url()).href).toBe(created.web_url + '/edit');
@@ -132,10 +157,50 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
       bold: [...root.querySelectorAll('strong,b')].map(node => node.textContent),
     }));
     expect(result.beforeSave).toEqual({paragraphs: [input.prefix + input.bold + '.', input.followup], bold: [input.bold]});
+    stage('save-description');
     await form.getByRole('button', {name:'Save changes', exact:true}).click();
     await expect(actor).toHaveURL(created.web_url, {timeout:30000});
+    stage('reload-reader');
     await actor.reload();
     facts.finalReader = await read();
+    if (controlNote) {
+      const note = actor.locator('#note_' + controlNote.id).getByText(input.discussionControl, {exact:true});
+      await expect(note).toBeVisible({timeout:30000});
+      const savedNote = await request(api + '/merge_requests/' + iid + '/notes/' + controlNote.id);
+      facts.discussionAfterReload = {idMatches:savedNote.id === controlNote.id, saved:savedNote.body, reader:await note.innerText()};
+      await note.screenshot({path:join(output,'reloaded-discussion.png')});
+      if (pendingReview) {
+        stage('recover-pending-review');
+        const readDrafts = async () => {
+          const response = await actor.request.get(pendingReview.url);
+          expect(response.status()).toBe(200);
+          return response.json();
+        };
+        const savedDrafts = await readDrafts();
+        await actor.getByRole('button', {name:/Your review/i}).click();
+        const preview = actor.getByTestId('review-preview-item-content');
+        await expect(preview).toBeVisible({timeout:30000});
+        const notesPath = api + '/merge_requests/' + iid + '/notes';
+        const published = async () => (await request(notesPath)).filter(note => !note.system && note.body === input.pendingReview);
+        facts.pendingReview = {
+          sameDraft:savedDrafts.length === 1 && savedDrafts[0].id === pendingReview.id && savedDrafts[0].author_id === membership.id,
+          source:savedDrafts[0]?.note, preview:await preview.innerText(), publishedBefore:(await published()).length,
+        };
+        await preview.screenshot({path:join(output,'pending-review.png')});
+        const reviewForm = actor.getByTestId('submit-gl-form');
+        await expect(reviewForm.getByRole('radio', {name:/^Comment\b/i})).toBeChecked();
+        await reviewForm.getByRole('button', {name:'Submit review',exact:true}).click();
+        await expect.poll(async () => (await published()).length, {timeout:30000}).toBe(1);
+        const [posted] = await published();
+        await actor.reload();
+        const publicNote = actor.locator('#note_' + posted.id).getByText(input.pendingReview, {exact:true});
+        await expect(publicNote).toBeVisible({timeout:30000});
+        const copies = await published();
+        facts.submittedReview = {posted:copies.length, sameAuthor:copies[0]?.author.id === membership.id,
+          remainingDrafts:(await readDrafts()).length, reader:await publicNote.innerText()};
+        await publicNote.screenshot({path:join(output,'posted-review.png')});
+      }
+    }
     const updated = await request(api + '/merge_requests/' + iid);
     facts.updatedSource = updated.description;
     if (membership) facts.savedAuthor = [created.author, updated.author].map(author => ({id:author.id, username:author.username}));
@@ -148,7 +213,10 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
     result.failure = String(error);
     await actor.screenshot({path:join(output,'interrupted.png'),timeout:5000}).catch(() => {});
   } finally {
+    if (navigation) result.traceEndStage = result.stage;
+    result.stage = result.status === 'observed' ? 'finished' : result.stage;
     await context.close();
+    if (navigation) await writeFile(join(output, 'navigation.json'), JSON.stringify(navigation, null, 2) + '\n');
   }
   return [result];
 }

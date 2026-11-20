@@ -231,7 +231,7 @@ it.each(['mr-create', 'mr-create-member'])('checks the writer, reader and saved 
  const [original, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL(`../integrations/gitlab/fixtures/compatibility-${suite}.json`, import.meta.url), 'utf8'));
  const input = fixture.cases[0];
- const expectedChecks = input.authorAccess ? 11 : 10;
+ const expectedChecks = input.authorAccess ? 14 : 10;
  const text = input.prefix + input.bold + '.';
  const markdown = input.prefix + '**' + input.bold + '**.';
  for (const report of [original, fountain]) {
@@ -247,9 +247,18 @@ it.each(['mr-create', 'mr-create-member'])('checks the writer, reader and saved 
  if (input.authorAccess) {
    for (const report of [original, fountain]) {
      const item = report.observations[0];
+     item.facts.pendingReview = {sameDraft:true, source:input.pendingReview, preview:input.pendingReview, publishedBefore:0};
+     item.facts.submittedReview = {posted:1, sameAuthor:true, remainingDrafts:0, reader:input.pendingReview};
+     item.facts.discussionAfterReload = {idMatches:true, saved:input.discussionControl, reader:input.discussionControl};
      item.writer = {id:52, username:fixture.username, accessLevel:input.authorAccess};
      item.facts.savedAuthor = [0, 1].map(() => ({id:52, username:fixture.username}));
    }
+   fountain.observations[0].facts.submittedReview.posted = 2;
+   expect(compare().rows.find((row:any) => row.invariant === 'submittedReview').classification).toBe('regression');
+   fountain.observations[0].facts.submittedReview.posted = 1;
+   fountain.observations[0].facts.discussionAfterReload.reader = '';
+   expect(compare().rows.find((row:any) => row.invariant === 'discussionAfterReload').classification).toBe('regression');
+   fountain.observations[0].facts.discussionAfterReload.reader = input.discussionControl;
    fountain.observations[0].writer.accessLevel = 50;
    expect(compare().summary.incomplete).toBe(expectedChecks);
    fountain.observations[0].writer.accessLevel = input.authorAccess;
