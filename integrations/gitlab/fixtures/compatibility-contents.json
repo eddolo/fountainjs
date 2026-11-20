@@ -1,0 +1,14 @@
+{
+  "formatVersion": 1,
+  "workflow": "edit-an-issue-with-generated-contents",
+  "cases": [
+    {
+      "id": "outline",
+      "scope": "contents",
+      "title": "Runbook contents",
+      "markdown": "# Runbook\n\n[tOc]\n\n## Handoff\n\nRead the incident notes.",
+      "heading": "Handoff",
+      "suffix": " checklist"
+    }
+  ]
+}

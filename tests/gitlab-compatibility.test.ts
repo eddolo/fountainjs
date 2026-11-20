@@ -221,6 +221,27 @@ it('compares native Writer content and version independently of a browser paste'
  stock.observations[0].writer.version = 'LibreOffice 25.2.0';
  expect(compareGitLabCompatibility(stock,fountain).environment.mismatches).toContain('native Writer version');
 });
+it('grades contents semantics separately from exact directive spelling and rich reopen identity', () => {
+ const [stock, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-contents.json', import.meta.url), 'utf8'));
+ const input = fixture.cases[0];
+ for (const report of [stock, fountain]) {
+   report.suite = input.scope;
+   report.fixture = fixture;
+   const item = report.observations[0];
+   Object.assign(item, {id:input.id,input,outlineBefore:'Runbook Handoff',outlineAfter:'Runbook Handoff checklist',
+     saved:report === stock ? '[[_TOC_]]' : '[tOc]',readerLinks:['Runbook','Handoff checklist'],
+     reopened:'Runbook Handoff checklist',reopenedEditorProof:item.editorProof});
+ }
+ const result = (key:string) => compareGitLabCompatibility(stock,fountain).rows.find((row:any) => row.invariant === key)?.classification;
+ expect(result('savedDirective')).toBe('parity');
+ expect(result('originalSpelling')).toBe('improvement');
+ fountain.observations[0].saved = 'A literal example of [tOc].';
+ expect(result('savedDirective')).toBe('regression');
+ expect(result('originalSpelling')).toBe('shared-limitation');
+ fountain.observations[0].reopenedEditorProof = stock.observations[0].editorProof;
+ expect(result('reopened')).toBe(null);
+});
 it('checks table size, cell content and editor identity across Save', () => {
  const [stock,fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-table-authoring.json',import.meta.url),'utf8'));

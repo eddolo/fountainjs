@@ -907,6 +907,30 @@ export function compareGitLabCompatibility(original,fountain){
       add('saveButtonReachable','Save remains directly reachable after task editing',true,left?.saveButtonReachable,right?.saveButtonReachable);
       continue;
     }
+    if (input.scope === 'contents') {
+      const revised = input.heading + input.suffix;
+      const observe = (report, item) => {
+        if (!verifiedEditor(report, item)) return {};
+        return {
+          originalHeading: item.outlineBefore?.includes(input.heading),
+          changedHeading: item.outlineAfter?.includes(revised),
+          savedDirective: typeof item.saved === 'string' ? /^\s*(?:\[toc\]|\[\[_toc_\]\])\s*$/imu.test(item.saved) : undefined,
+          originalSpelling: typeof item.saved === 'string' ? /^\[tOc\]$/mu.test(item.saved) : undefined,
+          reader: item.readerLinks,
+          reopened: verifiedEditor(report, {editorProof:item.reopenedEditorProof}) ? item.reopened?.includes(revised) : undefined,
+        };
+      };
+      const left = observe(original, a), right = observe(fountain, b);
+      for (const [key,expected,label] of [
+        ['originalHeading',true,'The rich outline contains the original heading'],
+        ['changedHeading',true,'The rich outline reflects the heading edit'],
+        ['savedDirective',true,'The saved issue retains an active contents directive'],
+        ['originalSpelling',true,'The saved directive retains the author’s spelling'],
+        ['reader',['Runbook',revised],'The reloaded reader links to both headings'],
+        ['reopened',true,'The rich editor reopens with the updated outline'],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'table-authoring') {
       const cell = (tag,text = '',span = 1) => ({tag,text,span,rows:1});
       const header = input.columns.map(label => cell('TH',label));
