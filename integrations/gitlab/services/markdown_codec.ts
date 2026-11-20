@@ -44,11 +44,11 @@ function labelForeground(value: unknown): string {
   return (luminance + 0.05) / 0.05 >= 1.05 / (luminance + 0.05) ? '#000' : '#fff';
 }
 
-// GitLab renders HTML tables with real row/column spans. Keep the pipe writer
-// for ordinary grids and its loss diagnostics for unverified cell content.
-function serializeMergedGitLabTable(table: Node, tokenPrefix: string): string | undefined {
-  if (!table.content.some(row => row.content.some(cell =>
-    Number(cell.attrs.rowspan) > 1 || Number(cell.attrs.colspan) > 1))) return undefined;
+// Pipe tables cannot retain spans, multiple paragraphs in a cell, or mixed header roles.
+function serializeGitLabHTMLTable(table: Node, tokenPrefix: string): string | undefined {
+  if (!table.content.some((row, index) => row.content.some(cell =>
+    Number(cell.attrs.rowspan) > 1 || Number(cell.attrs.colspan) > 1 || cell.childCount > 1
+    || cell.type.name !== (index === 0 ? 'table_header' : 'table_cell')))) return undefined;
   let supported = true;
   table.descendants(node => {
     const name = node.type.name;
@@ -479,7 +479,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const projected = project(doc, []), paths = new WeakMap<Node, readonly number[]>();
     projected.descendants((node, path) => { paths.set(node, path); });
     const blockSerializers = {
-      table: (node: Node) => serializeMergedGitLabTable(node, prefix),
+      table: (node: Node) => serializeGitLabHTMLTable(node, prefix),
       gitlab_code_suggestion: serializeGitLabSuggestionNode,
       direction_scope: (node: Node): string | undefined => {
         // GitLab strips Fountain data attributes and bare checkbox inputs. A

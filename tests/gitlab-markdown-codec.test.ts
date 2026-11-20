@@ -37,6 +37,20 @@ it('retains the author’s Markdown spelling on an unchanged paragraph when an a
     '# Review schedule\n\nOwner: __Release team__.\n\nSchedule the review.\n\nStatus: pending. Assigned.');
 });
 
+it('saves the separate paragraphs left in a header after a merge and split', async () => {
+  const { schema, codec, document } = await convert('Title', '<p>Title</p>');
+  const paragraph = (value: string) => schema.node('paragraph', {}, value ? [schema.text(value)] : []);
+  const table = schema.node('table', {}, [schema.node('table_row', {}, [
+    schema.node('table_header', {}, [paragraph('Work'), paragraph('Owner')]),
+    schema.node('table_header', {}, [paragraph('')]),
+  ])]);
+  const doc = document.copy([...document.content, table]);
+  const markdown = codec.serialize({ doc });
+  expect(markdown).toContain('<table');
+  const restored = await convert(markdown, markdown.slice(markdown.indexOf('<table')));
+  expect(restored.document.child(0).toJSON()).toEqual(table.toJSON());
+});
+
 it('reports stored column widths in a merged table instead of losing them during Save', async () => {
   const sample = mergedPreviews.fixtures[0]!;
   const { codec, document } = await convert(sample.source, sample.body);
