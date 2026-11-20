@@ -35,8 +35,8 @@ const browsers = {chromium, firefox, webkit};
 if (!Object.hasOwn(browsers,browserName)) throw new Error('Use --browser chromium, firefox or webkit.');
 const browserType = browsers[browserName];
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
-if(!['suggestions','review-history','batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff','deletions','reviews','stale-reviews','relocated-reviews','concurrent-reviews','clipboard','partial','crossblock','wrapped','paint','grid','merged-grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','quick-save','reconnect','offline-conflict','concurrent-issues','wiki-history'].includes(suite)||!['original','fountain','prepared'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain|prepared --run-id safe-id [--attempt 1..99] [--verify-rollback] [--verify-restart] [--browser chromium|firefox|webkit] [--suite suggestions|review-history|batch-reviews|multi-file-reviews|review-invalidation|overlap-reviews|reviewer-handoff|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict|concurrent-issues|wiki-history]');
+if(!['suggestions','review-history','batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff','deletions','reviews','stale-reviews','relocated-reviews','concurrent-reviews','clipboard','partial','crossblock','wrapped','paint','grid','merged-grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','quick-save','reconnect','offline-conflict','concurrent-issues','wiki-history','wiki-restore-conflict'].includes(suite)||!['original','fountain','prepared'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
+ throw new Error('Usage: --editor original|fountain|prepared --run-id safe-id [--attempt 1..99] [--verify-rollback] [--verify-restart] [--browser chromium|firefox|webkit] [--suite suggestions|review-history|batch-reviews|multi-file-reviews|review-invalidation|overlap-reviews|reviewer-handoff|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict|concurrent-issues|wiki-history|wiki-restore-conflict]');
 const preparedRollback = side === 'prepared';
 if (preparedRollback && (suite !== 'composers' || !process.argv.includes('--verify-rollback') ||
     !process.argv.includes('--prepared-source') || !isAbsolute(value('--prepared-source')) ||
@@ -84,11 +84,12 @@ const rollbackFrom = process.argv.includes('--history-rollback-from') ? value('-
 let previousHistory;
 if (rollbackFrom !== undefined) {
   const parts = /^([a-z0-9][a-z0-9-]{0,60}):([1-9][0-9]?)(?:,([1-9][0-9]?))?$/u.exec(rollbackFrom);
-  if (!parts || !['review-history','wiki-history'].includes(suite) || historyProfile || process.argv.includes('--wiki-restore') || side !== 'original') throw new Error('Use --history-rollback-from run-id:attempt on a packaged stock history deployment.');
+  if (!parts || !['review-history','wiki-history','wiki-restore-conflict'].includes(suite) || historyProfile || process.argv.includes('--wiki-restore') || side !== 'original') throw new Error('Use --history-rollback-from run-id:attempt on a packaged stock history deployment.');
   previousHistory = {directory: resolve(root, 'artifacts/gitlab-compatibility', parts[1]), attempts: {original: Number(parts[2]), fountain: Number(parts[3] ?? parts[2])}};
 }
 const wikiRestore = process.argv.includes('--wiki-restore');
-if (wikiRestore && suite !== 'wiki-history') throw new Error('Use --wiki-restore with wiki-history.');
+const wikiSuite = ['wiki-history', 'wiki-restore-conflict'].includes(suite);
+if (wikiRestore && !wikiSuite) throw new Error('Use --wiki-restore with a wiki suite.');
 const serverProfile = wikiRestore ? 'wiki-restore' : 'suggestion-history';
 const serviceFiles = wikiRestore ? ['app/controllers/concerns/wiki_actions.rb'] : ['app/services/notes/update_service.rb','app/services/suggestions/create_service.rb'];
 const historyDestinations = new Map();
@@ -204,7 +205,7 @@ try{
  const branch=await request(`/api/v4/projects/${project.id}/repository/branches/${encodeURIComponent(project.default_branch)}`);
  report.backend={version,project:{id:project.id,path:project.path_with_namespace,visibility:project.visibility,defaultBranch:project.default_branch,defaultHead:branch.commit.id,permissions:project.permissions},actor:'root'};
  const serverPaths=['app/services/notes/update_service.rb','app/services/suggestions/create_service.rb','lib/gitlab/diff/suggestion.rb'];
- if (suite === 'wiki-history') serverPaths.push('app/controllers/concerns/wiki_actions.rb');
+ if (wikiSuite) serverPaths.push('app/controllers/concerns/wiki_actions.rb');
  report.backend.serverSources=docker('exec',containerName,'sha256sum',...serverPaths.map(path=>'/opt/gitlab/embedded/service/gitlab-rails/'+path)).trim().split('\n');
  if (historyProfile || wikiRestore) {
    for (const [file, digests] of Object.entries(historyReceipt.files)) {
@@ -226,13 +227,13 @@ try{
  if(identityError)throw new Error('Build identity preflight failed: '+identityError);
  console.log(describeBuild(report));
  page.on('pageerror',error=>report.errors.push(error.message));
- if (previousHistory && suite === 'wiki-history') await verifyWikiRollback({previous:previousHistory,report,page,project,request,output:out});
+ if (previousHistory && wikiSuite) await verifyWikiRollback({previous:previousHistory,report,page,project,request,output:out});
  if (previousHistory && suite === 'review-history') await verifySuggestionHistoryRollback({previous:previousHistory,report,page,project,request,output:out,readCommits: noteId => {
    if (!Number.isSafeInteger(noteId) || noteId < 1) throw new Error('Invalid saved note ID.');
    const query = "SELECT json_agg(json_build_object('id', id, 'commit', commit_id) ORDER BY relative_order) FROM suggestions WHERE note_id = " + noteId;
    return JSON.parse(docker('exec',containerName,'gitlab-psql','-d','gitlabhq_production','-XAt','-v','ON_ERROR_STOP=1','-c',query));
  }});
- report.observations=await (['batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff'].includes(suite)?runRecordedGitLabBatch:suite==='wiki-history'?runWikiHistory:suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:['grid','merged-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onPageError:error=>report.errors.push(error),onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
+ report.observations=await (['batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff'].includes(suite)?runRecordedGitLabBatch:wikiSuite?runWikiHistory:suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:['grid','merged-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onPageError:error=>report.errors.push(error),onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
  report.collectionComplete=report.observations.every(item=>item.status==='observed');
  if(restartRequested && report.collectionComplete) await verifyGitLabRestart({report,project,docker,deployment,waitUntilReady,identify,page,request,output:out});
  if(filter && report.collectionComplete) await probeFootnoteCache({report,candidate:rollbackCandidate,page,project,request,output:out,container:containerName});

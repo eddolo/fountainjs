@@ -243,6 +243,37 @@ it('checks historical wiki source and retained revision identities independently
  expect(compare().rows.filter((row:any)=>row.classification==='regression').map((row:any)=>row.invariant)).toEqual(['retainedHistory','revisionSources']);
  expect(compare().featureAcceptance.passed).toBe(false);
 });
+it('evaluates the stale restore notice, intervening revision and intentional retry independently', () => {
+  const [original, fountain] = reports() as any[];
+  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-wiki-restore-conflict.json', import.meta.url), 'utf8'));
+  const input = fixture.cases[0];
+  const paragraph = input.paragraph + input.addition + input.competingEdit;
+  const edited = input.source.replace(input.paragraph, input.paragraph + input.addition);
+  const latest = input.source.replace(input.paragraph, paragraph);
+  const history = [input.restoreMessage, input.writerMessage, 'Edit', 'Seed'].map((message, index) =>
+    ({version:'v' + (4 - index), sha:String(4 - index).repeat(40), message}));
+  for (const report of [original, fountain]) {
+    report.fixture = fixture;
+    Object.assign(report.observations[0], {
+      id:input.id, input, status:'observed', openLock:history[2]!.sha, retryLock:history[1]!.sha,
+      before:history.slice(2), afterStaleHistory:history.slice(1), after:history, pageErrors:[],
+      editedSource:edited, writerSource:latest, writerReader:paragraph, latestReader:paragraph, afterStale:latest,
+      noticeText:'Someone edited the page the same time you did.', noticeVisible:true,
+      noticeLinksToCurrentPage:true, reviewedFromNotice:paragraph,
+      restoredSource:input.source, restoredReader:input.paragraph,
+      revisions:history.map(({sha}, i) => ({sha, source:[input.source, latest, edited, input.source][i]})),
+    });
+  }
+  const compare = () => compareGitLabCompatibility(original, fountain);
+  expect(compare().featureAcceptance.passed).toBe(true);
+  Object.assign(fountain.observations[0], {
+    noticeText:'Review %{wikiLinkStart}the page%{wikiLinkEnd}.', reviewedFromNotice:input.paragraph,
+    afterStale:input.source, retryLock:history[2]!.sha,
+  });
+  expect(compare().rows.filter((row:any) => row.classification === 'regression').map((row:any) => row.invariant))
+    .toEqual(['readableNotice','reviewedFromNotice','afterStale','retriedAtV3']);
+  expect(compare().featureAcceptance.passed).toBe(false);
+});
 it('requires the mounted wiki controller to match its receipt on both deployments', () => {
  const [original, fountain] = reports() as any[];
  const path = 'app/controllers/concerns/wiki_actions.rb';

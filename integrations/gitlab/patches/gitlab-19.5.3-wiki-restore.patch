@@ -1,6 +1,15 @@
 --- a/app/controllers/concerns/wiki_actions.rb
 +++ b/app/controllers/concerns/wiki_actions.rb
-@@ -236,10 +236,21 @@
+@@ -141,6 +141,8 @@
+   # rubocop:disable Gitlab/ModuleWithInstanceVariables
+   def show
+     if page
++      @error = flash[:wiki_edit_error]
++      flash.delete(:wiki_edit_error) if @error
+       set_encoding_error unless valid_encoding?
+ 
+       # Assign vars expected by MarkupHelper
+@@ -236,17 +238,29 @@
    def update
      return render('shared/wikis/empty') unless can?(current_user, :create_wiki, container)
  
@@ -23,7 +32,16 @@
      ).execute(page)
      @page = response.payload[:page]
  
-@@ -411,6 +422,65 @@
+     if response.success?
+       handle_action_success :updated, @page
+     else
+-      flash[:error] = response.message
++      # WikiAlert renders translated page links against the current wiki URL.
++      flash[:wiki_edit_error] = response.message
+       redirect_to wiki_page_path(wiki, @page, action: :show, edit: 'true')
+     end
+   end
+@@ -411,6 +425,65 @@
    end
    # rubocop:enable Gitlab/ModuleWithInstanceVariables
  

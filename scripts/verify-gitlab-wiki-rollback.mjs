@@ -18,7 +18,7 @@ export async function verifyWikiRollback({ previous, report, page, project, requ
   const result = report.wikiRollback = {passed:false, runId:writers[0].runId, attempts:previous.attempts, records:[]};
   const controller = 'app/controllers/concerns/wiki_actions.rb';
   for (const writer of writers) {
-    expect(writer.suite).toBe('wiki-history');
+    expect(writer.suite).toBe(report.suite);
     expect(writer.fixtureHash).toBe(report.fixtureHash);
     expect(writer.deployment.backendMounts).toEqual(report.deployment.backendMounts);
     expect(writer.deployment.imageId).toBe(report.deployment.imageId);

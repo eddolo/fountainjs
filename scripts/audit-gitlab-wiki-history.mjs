@@ -45,13 +45,27 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
   const reader = tab.getByTestId('wiki-page-content');
   const edit = tab.getByTestId('wiki-edit-button');
   const form = tab.locator('form.wiki-form');
-  const surface = form.locator(side === 'original' ? '.ProseMirror[contenteditable=true]' : '.fountain-editor[contenteditable=true]');
-  async function openEditor() {
-    await edit.click();
-    const toggle = form.getByRole('button', { name: 'Switch to rich text editing', exact: true });
-    await surface.or(toggle).first().waitFor();
-    if (!await surface.isVisible()) await toggle.click();
-    await expect(surface).toBeVisible();
+  const surfaceSelector = side === 'original' ? '.ProseMirror[contenteditable=true]' : '.fountain-editor[contenteditable=true]';
+  const surface = form.locator(surfaceSelector);
+  async function openEditor(target = tab) {
+    await target.getByTestId('wiki-edit-button').click();
+    const editor = target.locator('form.wiki-form').locator(surfaceSelector);
+    const toggle = target.locator('form.wiki-form').getByRole('button', { name: 'Switch to rich text editing', exact: true });
+    await editor.or(toggle).first().waitFor();
+    if (!await editor.isVisible()) await toggle.click();
+    await expect(editor).toBeVisible();
+    return editor;
+  }
+  async function saveEdit(target, message) {
+    await target.getByTestId('wiki-submit-button').click();
+    const confirm = target.getByTestId('wiki-confirm-message');
+    const content = target.getByTestId('wiki-page-content');
+    await expect(content.or(confirm).first()).toBeVisible();
+    if (await confirm.isVisible()) {
+      await target.getByTestId('wiki-message-textbox').fill(message);
+      await confirm.click();
+    }
+    await expect(content).toBeVisible();
   }
   async function openHistory() {
     const history = tab.getByTestId('page-history-button');
@@ -82,14 +96,7 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     await tab.keyboard.press('End');
     await tab.keyboard.insertText(input.addition);
     item.typed = await paragraph.innerText();
-    await form.getByTestId('wiki-submit-button').click();
-    const confirm = tab.getByTestId('wiki-confirm-message');
-    await expect(reader.or(confirm).first()).toBeVisible();
-    if (await confirm.isVisible()) {
-      await tab.getByTestId('wiki-message-textbox').fill('Verify deployment checklist');
-      await confirm.click();
-    }
-    await expect(reader).toBeVisible();
+    await saveEdit(tab, 'Verify deployment checklist');
     await tab.reload();
     await expect(reader.locator('p').last()).toBeVisible();
     item.editedSource = await read();
@@ -111,6 +118,54 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     item.afterCancelSource = await read();
     item.stage = 'restore';
     await restore.click();
+    if (input.scope === 'wiki-restore-conflict') {
+      item.stage = 'stale restore';
+      item.openLock = await modal.locator('[name="wiki[last_commit_sha]"]').inputValue();
+      const writer = await actor.newPage();
+      writer.on('pageerror', error => item.pageErrors.push(error.message));
+      await writer.goto(url);
+      const other = await openEditor(writer);
+      const line = other.locator('p').filter({ hasText: input.paragraph });
+      await line.click();
+      await writer.keyboard.press('End');
+      await writer.keyboard.insertText(input.competingEdit);
+      await saveEdit(writer, input.writerMessage);
+      item.writerSource = await read();
+      item.writerReader = await writer.getByTestId('wiki-page-content').locator('p').last().innerText();
+      await writer.close();
+      await modal.getByRole('textbox').fill(input.restoreMessage);
+      await Promise.all([
+        tab.waitForNavigation({waitUntil:'domcontentloaded'}),
+        modal.getByRole('button', {name:'Restore',exact:true}).click(),
+      ]);
+      const notice = tab.getByText(/Someone edited the page the same time you did/i).first();
+      await expect(notice.or(edit).or(form).first()).toBeVisible();
+      item.noticeVisible = await notice.isVisible();
+      if (item.noticeVisible) item.noticeText = await notice.innerText();
+      const latestLink = tab.getByRole('link', {name:/^the page\b/i});
+      item.noticeLinksToCurrentPage = false;
+      item.reviewedFromNotice = null;
+      if (await latestLink.isVisible()) {
+        const [latestPage] = await Promise.all([tab.waitForEvent('popup'), latestLink.click()]);
+        try {
+          await latestPage.getByTestId('wiki-page-content').waitFor();
+          item.noticeDestination = latestPage.url();
+          item.noticeLinksToCurrentPage = latestPage.url() === url;
+          item.reviewedFromNotice = await latestPage.getByTestId('wiki-page-content').locator('p').last().innerText();
+        } finally {
+          await latestPage.close();
+        }
+      }
+      await tab.screenshot({path:join(output, input.id + '-stale.png')});
+      item.afterStale = await read();
+      await tab.goto(url);
+      item.latestReader = await reader.locator('p').last().innerText();
+      item.afterStaleHistory = await openHistory();
+      await tab.getByTestId('wiki-history-table').getByRole('link',{name:'v1',exact:true}).click();
+      await restore.click();
+      item.retryLock = await modal.locator('[name="wiki[last_commit_sha]"]').inputValue();
+      item.stage = 'restore';
+    }
     await modal.getByRole('textbox').fill(input.restoreMessage);
     await modal.getByRole('button', {name:'Restore',exact:true}).click();
     await expect(edit).toBeVisible({timeout:30000});

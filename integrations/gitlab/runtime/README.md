@@ -59,6 +59,28 @@ node scripts/run-gitlab-compatibility.mjs --suite wiki-history --editor original
 
 The [three-page Chromium comparison](../../../artifacts/gitlab-compatibility/wiki-rich-save-20261119/comparison-3/report.md) tested Fountain `0f3db5f6bfe550275fd0ff440c78d47d5cbab7eb`. The 48 checks include five improvements in exact Markdown retention. The run used `--history-rollback-from wiki-rich-save-20261119:1,3`. After both overlays were removed, [packaged GitLab reopened all six pages and verified all 18 revision contents by ID](../../../artifacts/gitlab-compatibility/wiki-rich-save-stock-20261119/original-1/report.json). The [earlier two-page comparison](../../../artifacts/gitlab-compatibility/wiki-revision-restore-20261119/comparison/report.md) records the rich-text Save failures that prompted these changes.
 
+#### Reproduce a wiki restore with an intervening edit
+
+Use the same prepared controller and compiled editor as above. On the same test account, the first tab opens Restore for v1 at v2. A second tab edits the latest page and saves v3. The first tab submits its still-open dialog, checks the notice and current page, opens history again, and deliberately retries the v1 restore. The comparison checks both shown text and all four revision sources by ID.
+
+```sh
+run="wiki-stale-$(date +%s)"
+for editor in original fountain; do
+  node scripts/run-gitlab-compatibility.mjs --suite wiki-restore-conflict --wiki-restore --editor "$editor" --run-id "$run" || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
+```
+
+In the [initial comparison](../../../artifacts/gitlab-compatibility/wiki-stale-restore-20261119/comparison/report.md), both editors retained v3 but displayed the literal translation tokens around “the page.” The optional controller now sends update errors to the wiki application’s existing alert on the redirected page. Its translated link opens the current reader. [Matched click-through and revision receipts](../../../artifacts/gitlab-compatibility/wiki-stale-restore-20261119/comparison-4/report.md)
+
+After removing the controller and frontend overlays, packaged GitLab reopened both pages and returned all eight revision contents by ID. Its fresh control again displayed the translation placeholders. Reproduce against the same data volumes with the writer run and attempt numbers below. [Stock rollback and fresh control](../../../artifacts/gitlab-compatibility/wiki-stale-stock-20261119/original-1/report.json)
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite wiki-restore-conflict --editor original \
+  --run-id "wiki-stale-stock-$(date +%s)" --history-rollback-from wiki-stale-restore-20261119:4,4
+```
+
 ### Reproduce suggestion history across comment edits
 
 Use the [pinned local GitLab environment](./upstream.json) and prepare the native frontend as described below. From the FountainJS checkout in Linux, prepare the two GitLab services from the pinned Git objects. The command prints an error if the checkout is at a different revision or an existing output differs. The patch digest identifies the output directory under `artifacts/gitlab-suggestion-history/`.

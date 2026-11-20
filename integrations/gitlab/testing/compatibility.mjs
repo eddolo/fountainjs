@@ -424,6 +424,48 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:paired?a[key]:undefined,fountain:paired?b[key]:undefined,classification:null});
       continue;
     }
+    if (input.scope === 'wiki-restore-conflict') {
+      const edited = input.source.replace(input.paragraph, input.paragraph + input.addition);
+      const latest = input.source.replace(input.paragraph, input.paragraph + input.addition + input.competingEdit);
+      const observe = (report, item) => {
+        if (!verifiedEditor(report, item) || item.status !== 'observed') return {};
+        const {before:prior, afterStaleHistory:stale, after:final, revisions:sources} = item;
+        if (![prior, stale, final, sources].every(Array.isArray)) return {};
+        return {
+          ...item,
+          readableNotice: typeof item.noticeText === 'string' && !/%\{[^}]+\}/.test(item.noticeText),
+          openedAtV2: /^[a-f0-9]{40}$/.test(item.openLock) && item.openLock === prior[0]?.sha && prior[0].version === 'v2',
+          staleHistory: equal(prior.map(row => row.version), ['v2', 'v1']) && stale.length === 3 && stale[0].version === 'v3' && stale[0].message === input.writerMessage && equal(stale.slice(1), prior),
+          retriedAtV3: item.retryLock === stale[0]?.sha && item.retryLock !== item.openLock,
+          finalHistory: final.length === 4 && final[0].version === 'v4' && final[0].message === input.restoreMessage && equal(final.slice(1), stale),
+          sourceByRevision: sources.map(rev => rev.source),
+          revisionIDs: equal(sources.map(rev => rev.sha), final.map(row => row.sha)) &&
+            new Set(sources.map(rev => rev.sha)).size === 4,
+        };
+      };
+      const left = observe(original, a), right = observe(fountain, b);
+      for (const [key, label, expected] of [
+        ['openedAtV2', 'The first tab opens Restore with the v2 revision', true],
+        ['editedSource', 'The first edit is stored as v2', edited],
+        ['writerReader', 'The second tab sees its own saved change', input.paragraph + input.addition + input.competingEdit],
+        ['writerSource', 'The second tab saves the expected source', latest],
+        ['noticeVisible', 'The author sees the concurrent edit notice after confirming the stale restore', true],
+        ['readableNotice', 'The warning renders its full message without translation placeholders', true],
+        ['noticeLinksToCurrentPage', 'The warning opens the current wiki page', true],
+        ['reviewedFromNotice', 'Following the warning shows the competing writer’s saved paragraph', input.paragraph + input.addition + input.competingEdit],
+        ['afterStale', 'The stale restore leaves the newer source intact', latest],
+        ['latestReader', 'The current page shows the newer edit before retry', input.paragraph + input.addition + input.competingEdit],
+        ['staleHistory', 'The rejected restore adds no revision and earlier entries retain their IDs and messages', true],
+        ['retriedAtV3', 'A fresh Restore uses the competing writer’s current revision', true],
+        ['restoredSource', 'Explicit retry restores the v1 source byte for byte', input.source],
+        ['restoredReader', 'The restored page shows the original paragraph', input.paragraph],
+        ['finalHistory', 'Explicit retry adds one v4 and retains the preceding three entries', true],
+        ['revisionIDs', 'Each history row points to its own retrieved revision', true],
+        ['sourceByRevision', 'All four historical revision sources remain retrievable', [input.source, latest, edited, input.source]],
+        ['pageErrors', 'Neither author tab reports browser exceptions', []],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'wiki-history') {
       const editedText = input.paragraph + input.addition;
       const replacement = input.insertBefore ? input.insertBefore + input.separator + editedText : editedText;

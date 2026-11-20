@@ -156,6 +156,19 @@ if (rollback?.records?.length) {
   }
   table.push('');
 }
+if (reports[0].suite === 'wiki-restore-conflict' && result.environment.matched) {
+  const controller = reports[0].deployment?.wikiRestore;
+  if (controller) table.push('Both deployments used wiki controller patch `' + controller.patchSHA256 + '`.', '');
+  table.push('## Wiki restore history', '', '| Editor | Revision | Git commit | Commit message |', '| --- | --- | --- | --- |');
+  for (const report of reports) {
+    for (const item of report.observations) {
+      for (const row of item.after ?? []) {
+        table.push('| ' + [report.side, row.version, '`' + row.sha + '`', row.message.replaceAll('|', '\\|')].join(' | ') + ' |');
+      }
+    }
+  }
+  table.push('');
+}
 if (reports[0].suite === 'wiki-history' && result.environment.matched) {
   if (reports[0].deployment?.wikiRestore) {
     table.push('Both deployments used the same wiki controller patch `' + reports[0].deployment.wikiRestore.patchSHA256 +

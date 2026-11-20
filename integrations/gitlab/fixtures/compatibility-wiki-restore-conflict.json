@@ -1,0 +1,15 @@
+{
+  "cases": [
+    {
+      "id": "stale-restore",
+      "scope": "wiki-restore-conflict",
+      "title": "Operations handoff",
+      "source": "# Operations handoff\r\n\r\nOwner: **Release team**.\r\n\r\nStatus: pending.",
+      "paragraph": "Status: pending.",
+      "addition": " Reviewed.",
+      "competingEdit": " Approved for Monday.",
+      "writerMessage": "Record Monday approval",
+      "restoreMessage": "Restore original handoff after checking latest draft"
+    }
+  ]
+}
