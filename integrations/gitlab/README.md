@@ -1370,7 +1370,7 @@ starter extensions, math, source-aware GitLab codec, assets/references, history,
 load supersession, explicit failed-source recovery and current-value reads.
 Unloaded/pending/failed replacements cannot submit cached content. Host callback
 failures are isolated from later editor subscribers and remain observable.
-Unsupported options and legacy extensions/providers fail explicitly.
+Unsupported options and legacy extensions/providers fail explicitly. In pinned GitLab CE 19.5.3, a search of the shipped frontend found `serializerConfig` in the content editor component, factory and Markdown serializer. Its upstream factory test supplies a custom Tiptap `label` node and a serializer that calls `state.write` and `state.closeBlock`. This external extension contract remains open for migrating customized installations. The matched issue, discussion and wiki workflows use the default serializer configuration.
 
 The self-contained real-service audit discovers the preview endpoint through
 GitLab GraphQL, uploads its own PNG, imports real renderer HTML into Fountain

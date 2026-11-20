@@ -1,0 +1,14 @@
+{
+  "formatVersion": 1,
+  "workflow": "edit-an-issue-with-retained-footnote-definitions",
+  "cases": [
+    {
+      "id": "reference-and-appendix",
+      "scope": "footnote-labels",
+      "title": "Release evidence",
+      "intro": "Review the release evidence",
+      "edit": "Archived: ",
+      "source": "Review the release evidence[^audit].\n\n[^audit]: **Approved** by Engineering.\n\n[^appendix-1]: Evidence for appendix 1.\n\n[^appendix-2]: Evidence for appendix 2.\n\n[^appendix-3]: Evidence for appendix 3.\n\n[^appendix-4]: Evidence for appendix 4.\n\n[^appendix-5]: Evidence for appendix 5.\n\n[^appendix-6]: Evidence for appendix 6.\n\n[^appendix-7]: Evidence for appendix 7.\n\n[^appendix-8]: Evidence for appendix 8.\n\n[^appendix-9]: Evidence for appendix 9.\n\n[^appendix-10]: Evidence for appendix 10.\n\n[^appendix-11]: Evidence for appendix 11."
+    }
+  ]
+}

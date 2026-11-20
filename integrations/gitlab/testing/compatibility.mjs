@@ -907,6 +907,33 @@ export function compareGitLabCompatibility(original,fountain){
       add('saveButtonReachable','Save remains directly reachable after task editing',true,left?.saveButtonReachable,right?.saveButtonReachable);
       continue;
     }
+    if (input.scope === 'footnote-labels') {
+      const definitions = markdown => markdown?.split('\n').filter(line => /^\[\^.+\]: /u.test(line));
+      const expectedDefinitions = definitions(input.source);
+      const observe = (report, item) => {
+        if (!verifiedEditor(report, item)) return {};
+        return {
+          seed: item.initial,
+          edited: item.edited?.includes(input.edit + input.intro),
+          savedDefinitions: definitions(item.saved),
+          savedSource: item.saved,
+          reader: item.reader?.includes(input.edit + input.intro),
+          referenceResolves: item.referenceResolves,
+          sourceOnReopen: verifiedEditor(report, {editorProof:item.reopenedEditorProof}) ? item.sourceOnReopen : undefined,
+        };
+      };
+      const left = observe(original, a), right = observe(fountain, b);
+      for (const [key, expected, label] of [
+        ['seed', input.source, 'The issue starts with the exact source including eleven unused definitions'],
+        ['edited', true, 'An author edits ordinary prose in the verified rich editor'],
+        ['savedDefinitions', expectedDefinitions, 'Every saved footnote retains its label, order, body and emphasis'],
+        ['savedSource', input.edit + input.source, 'Only the intended prose changes in the saved issue'],
+        ['reader', true, 'The reloaded GitLab reader displays the prose edit'],
+        ['referenceResolves', true, 'The reader’s footnote link resolves to the intended definition'],
+        ['sourceOnReopen', input.edit + input.source, 'The reopened rich editor hands all twelve definitions back to source editing'],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'linked-image') {
       check('linked image source',a?.asset,b?.asset);
       check('linked image bytes',a?.assetSHA256,b?.assetSHA256);

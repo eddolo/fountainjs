@@ -11,6 +11,10 @@
 
 Stock rapid rich-text Save lost the last edit in reproduced cases. Data loss remains a release concern. Use the separately verified prepared Tiptap rollback for immediate rich-text Save on the tested deployment. [Rollback builds and instructions](runtime/README.md#reproduce-the-prepared-tiptap-rich-text-rollback)
 
+## Saving an issue with uncited footnotes
+
+On the pinned Chromium deployment, an author edited the opening paragraph of an issue containing one cited footnote and eleven uncited definitions. Fountain `c568c035` retained the exact edited Markdown in GitLab’s API and when switching a reopened rich editor to plain text. The stock reader also displayed the cited footnote correctly, but rich Save discarded the other eleven definitions. This is a data-loss constraint for rollback. The [seven matched checks](../../artifacts/gitlab-compatibility/footnote-labels-20261120/verified/report.md) cover four parity results and three consequences of preserving the definitions. [Stock reopened editor](../../artifacts/gitlab-compatibility/footnote-labels-20261120/original-2/reopened-editor.png) · [Fountain reopened editor](../../artifacts/gitlab-compatibility/footnote-labels-20261120/fountain-1/reopened-editor.png).
+
 ## Editing a linked image in an issue
 
 On GitLab CE 19.5.3 in Chromium 151, stock and Fountain `be866ad5` passed all eight checks. An author opened the image properties, changed its description, undid and redid the edit, saved the issue, then reopened it. GitLab's saved Markdown kept the image address, its separate link to the project’s issues, and both surrounding paragraphs. Both readers loaded the same image bytes. The pinned GitLab reader supplied a source span and omitted the image’s canonical-address attribute. The rewritten repository-relative case has separate codec coverage. [Matched build identities and eight results](../../artifacts/gitlab-compatibility/linked-image-20261120/verified/report.md) · [Stock reader](../../artifacts/gitlab-compatibility/linked-image-20261120/original-1/saved-figure.png) · [Fountain reader](../../artifacts/gitlab-compatibility/linked-image-20261120/fountain-1/saved-figure.png).
