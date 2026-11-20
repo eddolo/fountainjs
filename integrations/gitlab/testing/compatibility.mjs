@@ -907,6 +907,32 @@ export function compareGitLabCompatibility(original,fountain){
       add('saveButtonReachable','Save remains directly reachable after task editing',true,left?.saveButtonReachable,right?.saveButtonReachable);
       continue;
     }
+    if (input.scope === 'writer-import') {
+      check('Writer import version',a?.writer?.version,b?.writer?.version);
+      if ([original,fountain].some(report => report.suite !== 'writer-import' || report.browser?.engine !== 'chromium') ||
+          !/^LibreOffice \d+\./.test(a?.writer?.version ?? '')) mismatches.push('native Writer import profile');
+      const source = {count:1,rows:{A1:'Release owner',A2:'Runbook',B2:'Ready'},boldOwner:true,runbookURL:'https://example.com/runbook'};
+      const observe = (report,item) => {
+        if (!verifiedEditor(report,item) || !equal(item.writer?.source,source) || item.writer.headerRows !== 1 ||
+            !item.clipboard?.html || !/<th\b/i.test(item.clipboard.html) || !item.clipboard.html.includes(source.runbookURL)) return {};
+        const saved = item.savedMarkdown;
+        const savedCleanly = typeof saved === 'string' && saved.includes('<table') && ['Release','owner','Runbook','Ready',source.runbookURL].every(value => saved.includes(value))
+          ? !/(?:\n|&#(?:10|x0*a);)\t{4}/iu.test(saved) : undefined;
+        return {...item,savedCleanly,reopened:verifiedEditor(report,{editorProof:item.reopenedEditorProof}) ? item.reopened : undefined};
+      };
+      const left = observe(original,a), right = observe(fountain,b);
+      for (const [key,expected,label] of [
+        ['initial',[],'The destination begins without a table'],
+        ['pasted',[input.expected],'The native Writer paste retains table geometry, cell roles, text, emphasis and link'],
+        ['undo',[],'Undo removes the pasted table'],
+        ['redo',[input.expected],'Redo restores the formatted table'],
+        ['savedCleanly',true,'Stored issue content retains the Writer text without its HTML indentation'],
+        ['reader',[input.expected],'The saved GitLab reader renders the formatted table'],
+        ['reopened',[input.expected],'The reopened rich editor retains the formatted table'],
+        ['blockOrder',['Release handoff',input.paragraph,'TABLE'],'The saved table follows the existing heading and paragraph'],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if(input.scope==='grid'){
       const left=verifiedEditor(original,a)?a:undefined,right=verifiedEditor(fountain,b)?b:undefined;
       const add=(key,label,expected,x,y)=>rows.push({case:input.id,invariant:key,label,expected,original:x,fountain:y,classification:null});

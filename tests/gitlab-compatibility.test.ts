@@ -221,6 +221,37 @@ it('compares native Writer content and version independently of a browser paste'
  stock.observations[0].writer.version = 'LibreOffice 25.2.0';
  expect(compareGitLabCompatibility(stock,fountain).environment.mismatches).toContain('native Writer version');
 });
+it('requires the native Writer source and reopened editor for an inbound paste claim', () => {
+ const [stock,fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-writer-import.json',import.meta.url),'utf8'));
+ const input = fixture.cases[0];
+ for (const report of [stock,fountain]) {
+   report.suite = 'writer-import';
+   report.browser.engine = 'chromium';
+   report.fixture = fixture;
+   const item = report.observations[0];
+   Object.assign(item,{id:input.id,input,reopenedEditorProof:item.editorProof,writer:{version:'LibreOffice 24.2.7.2',headerRows:1,
+     source:{count:1,rows:{A1:'Release owner',A2:'Runbook',B2:'Ready'},boldOwner:true,runbookURL:'https://example.com/runbook'}},
+     clipboard:{html:'<table><tr><th>Title</th></tr><tr><td><a href="https://example.com/runbook">Runbook</a></td></tr></table>'},
+     savedMarkdown:'<table><tr><th>Release <b>owner</b></th></tr><tr><td><a href="https://example.com/runbook">Runbook</a></td><td>Ready</td></tr></table>',
+     initial:[],pasted:[input.expected],undo:[],redo:[input.expected],reader:[input.expected],reopened:[input.expected],
+     blockOrder:['Release handoff',input.paragraph,'TABLE']});
+ }
+ const compare = () => compareGitLabCompatibility(stock,fountain);
+ expect(compare().summary.parity).toBe(8);
+ const item = fountain.observations[0];
+ const clean = item.savedMarkdown;
+ item.savedMarkdown = clean.replace('Release','&#10;\t\t\t\tRelease');
+ expect(compare().summary.regression).toBe(1);
+ item.savedMarkdown = clean;
+ item.reopenedEditorProof = stock.observations[0].editorProof;
+ expect(compare().summary.incomplete).toBe(1);
+ item.reopenedEditorProof = item.editorProof;
+ item.reopened = [];
+ expect(compare().summary.regression).toBe(1);
+ item.writer.source.boldOwner = false;
+ expect(compare().summary.incomplete).toBe(8);
+});
 it('identifies the prepared Tiptap rollback build separately from packaged GitLab', async () => {
  // @ts-expect-error Private JS audit helper intentionally has no published type entry.
  const {buildIdentityError, preparedRollbackTree} = await import('../integrations/gitlab/testing/build-identity.mjs');

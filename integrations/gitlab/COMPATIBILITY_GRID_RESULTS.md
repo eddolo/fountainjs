@@ -114,6 +114,16 @@ dir="artifacts/gitlab-compatibility/$run"
 node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
 ```
 
+## Paste from LibreOffice Writer into a GitLab issue
+
+Writer 24.2.7.2 authored a table with a two-column header, bold text and a hyperlink. On an isolated X11 display, Chromium 151 pasted the native clipboard into issues #663 and #664. Each editor then undid and redid the paste, saved the issue and reopened it. The collector compared the text of each cell with Writer’s own document model, including leading and trailing whitespace. It also checked the issue API and GitLab reader. [Original ODT](../../artifacts/gitlab-compatibility/writer-import-20261120/fountain-2/writer-source.odt) · [Writer window](../../artifacts/gitlab-compatibility/writer-import-20261120/fountain-2/writer-source.png) · [Reopened Fountain issue](../../artifacts/gitlab-compatibility/writer-import-20261120/fountain-2/writer-import-reopened.png)
+
+Fountain build `44219116` saved Writer’s HTML formatting indentation as a newline and four tabs inside each cell. A standalone clipboard regression reproduces this outside GitLab. Build `56b722e7` removes the Writer-generated prefix while retaining intentional content. The original report’s cell collector trimmed whitespace, but its stored issue Markdown records the defect. [Before repair](../../artifacts/gitlab-compatibility/writer-import-20261120/fountain-1/report.json) · [Repaired issue](../../artifacts/gitlab-compatibility/writer-import-20261120/fountain-2/report.json)
+
+All eight Fountain checks passed. Five matched stock. Three observed the same difference at paste, redo and rich reopen. Stock’s editable cell paragraphs ended in an extra space at each stage. Both saved issues displayed the correct text in the reader. These checks cover a native Writer table on the pinned Linux Chromium and GitLab CE 19.5.3 builds. [Matched report and build identities](../../artifacts/gitlab-compatibility/writer-import-20261120/verified/report.md) · [Stock issue](../../artifacts/gitlab-compatibility/writer-import-20261120/original-2/report.json)
+
+To repeat this direction, use the runner and comparison commands above with `--suite writer-import` in place of `--suite header-grid --writer-paste`.
+
 ## Remaining scope
 
 Complex overlapping spans, Unicode/IME, nested content, ownership rules, rapid input, other

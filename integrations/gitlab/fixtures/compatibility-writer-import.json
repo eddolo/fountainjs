@@ -1,0 +1,50 @@
+{
+  "formatVersion": 1,
+  "workflow": "native-writer-table-into-issue",
+  "cases": [
+    {
+      "id": "writer-table",
+      "scope": "writer-import",
+      "title": "Release ownership from Writer",
+      "markdown": "## Release handoff\n\nDeployment decision.",
+      "paragraph": "Deployment decision.",
+      "expected": [
+        [
+          {
+            "tag": "TH",
+            "colspan": 2,
+            "rowspan": 1,
+            "text": "Release owner",
+            "bold": [
+              "owner"
+            ],
+            "links": []
+          }
+        ],
+        [
+          {
+            "tag": "TD",
+            "colspan": 1,
+            "rowspan": 1,
+            "text": "Runbook",
+            "bold": [],
+            "links": [
+              {
+                "text": "Runbook",
+                "href": "https://example.com/runbook"
+              }
+            ]
+          },
+          {
+            "tag": "TD",
+            "colspan": 1,
+            "rowspan": 1,
+            "text": "Ready",
+            "bold": [],
+            "links": []
+          }
+        ]
+      ]
+    }
+  ]
+}

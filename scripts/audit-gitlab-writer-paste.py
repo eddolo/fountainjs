@@ -2,6 +2,7 @@
 import json
 import os
 import re
+import select
 import subprocess
 import sys
 import tempfile
@@ -93,7 +94,44 @@ def capture_reopened_page(display, destination, has_text):
     raise RuntimeError("The reopened Writer page did not finish painting on the private display")
 
 
-def paste_into_writer(directory):
+def copy_from_writer(doc, dispatch, directory, display, version):
+    table = doc.createInstance("com.sun.star.text.TextTable")
+    table.initialize(2, 2)
+    doc.Text.insertTextContent(doc.Text.Start, table, False)
+    selection = table.createCursorByCellName("A1")
+    selection.gotoCellByName("B1", True)
+    if not selection.mergeRange():
+        raise RuntimeError("Writer failed to merge its first row")
+    table.RepeatHeadline = True
+    table.HeaderRowCount = 1
+    header = table.getCellByName("A1")
+    header.String = "Release owner"
+    bold = header.createTextCursor()
+    bold.gotoEnd(False)
+    bold.goLeft(5, True)
+    bold.CharWeight = 150
+    link = table.getCellByName("A2")
+    link.String = "Runbook"
+    linked_text = link.createTextCursor()
+    linked_text.gotoEnd(True)
+    linked_text.HyperLinkURL = "https://example.com/runbook"
+    table.getCellByName("B2").String = "Ready"
+    doc.storeAsURL((directory / "writer-source.odt").as_uri(), (property_value("FilterName", "writer8"),))
+    source = table_content(doc)
+    capture_reopened_page(display, directory / "writer-source.png", True)
+    doc.CurrentController.select(header.createTextCursor())
+    frame = doc.CurrentController.Frame
+    dispatch.executeDispatch(frame, ".uno:SelectTable", "", 0, ())
+    dispatch.executeDispatch(frame, ".uno:Copy", "", 0, ())
+    print(json.dumps({"version": version, "source": source, "headerRows": table.HeaderRowCount}), flush=True)
+    # X11 serves delayed clipboard formats from the process that owns the selection.
+    if not select.select([sys.stdin], [], [], 75)[0]:
+        raise RuntimeError("Browser did not finish its paste from Writer")
+    sys.stdin.readline()
+    doc.close(True)
+
+
+def run_writer(directory, copy_source=False):
     display = private_display()
     version = subprocess.check_output(["soffice", "--version"], text=True).strip()
     with tempfile.TemporaryDirectory(prefix="fountain-writer-") as profile:
@@ -110,6 +148,8 @@ def paste_into_writer(directory):
             doc = desktop.loadComponentFromURL("private:factory/swriter", "_blank", 0, ())
             frame = doc.CurrentController.Frame
             frame.ContainerWindow.toFront()
+            if copy_source:
+                return copy_from_writer(doc, dispatch, directory, display, version)
             dispatch.executeDispatch(frame, ".uno:Paste", "", 0, ())
             pasted = table_content(doc)
             url = (directory / "writer-paste.odt").as_uri()
@@ -143,4 +183,6 @@ def paste_into_writer(directory):
 
 
 if __name__ == "__main__":
-    print(json.dumps(paste_into_writer(Path(sys.argv[1]).resolve())))
+    receipt = run_writer(Path(sys.argv[1]).resolve(), "--copy" in sys.argv[2:])
+    if receipt is not None:
+        print(json.dumps(receipt))
