@@ -533,7 +533,17 @@ The completed Chromium 151 rerun on Fountain revision `2cb51f61` verified all 44
 
 This alternate deployment returns issue authors to GitLab’s Tiptap editor. The patches read the current document at Save, recognize its return through Vue, and return focus to the editor when an author activates a formatting button. It uses the packaged backend and the same database and uploads. The packaged frontend remains the original control for comparisons.
 
-On the pinned GitLab CE 19.5.3 deployment, each browser used Fountain `269741c1` and prepared Tiptap tree `075b931b`. The first rich-text Save retained the entire phrase, including its final period, on two Fountain-authored issues and two controls per browser. After reload, the reader and API agreed. All formatted discussion comments and subsequent Markdown saves survived. These runs recorded zero page errors.
+**Current rollback verification, November 20.** On GitLab CE 19.5.3, all three browsers used Fountain `44219116` and prepared Tiptap tree `307cccf7` (Rspack manifest `eced0228`). Each browser reopened two Fountain-authored issues and two fallback-authored controls on the same local volumes. A period typed immediately before Save persisted. Backspace removed that period on the next edit. A subsequent Markdown save and the original bold discussion comment survived reload on all 12 records. The comment held focus during the Bold click in both save orders on each browser.
+
+| Linux desktop browser | Issue numbers | Final period to Save | Backspace to Save | Build identities and evidence |
+| --- | --- | --- | --- | --- |
+| Chromium 151 | #647–650 | 3.1–5.5 ms | 3.7–9.6 ms | [Fountain](../../../artifacts/gitlab-compatibility/toolbar-focus-chromium-20261120/fountain-1/report.json) · [Fallback](../../../artifacts/gitlab-compatibility/toolbar-focus-chromium-20261120/prepared-1/report.json) · [Reopened issue](../../../artifacts/gitlab-compatibility/toolbar-focus-chromium-20261120/prepared-1/fountain-description-before-comment-after-rollback.png) |
+| Firefox 153 | #643–646 | 16–33 ms | 15–29 ms | [Fountain](../../../artifacts/gitlab-compatibility/toolbar-focus-firefox-20261120/fountain-4/report.json) · [Fallback](../../../artifacts/gitlab-compatibility/toolbar-focus-firefox-20261120/prepared-4/report.json) · [Reopened issue](../../../artifacts/gitlab-compatibility/toolbar-focus-firefox-20261120/prepared-4/fountain-description-before-comment-after-rollback.png) |
+| WebKit 26.5 | #651–654 | 10–13 ms | 9–29 ms | [Fountain](../../../artifacts/gitlab-compatibility/toolbar-focus-webkit-20261120/fountain-1/report.json) · [Fallback](../../../artifacts/gitlab-compatibility/toolbar-focus-webkit-20261120/prepared-1/report.json) · [Reopened issue](../../../artifacts/gitlab-compatibility/toolbar-focus-webkit-20261120/prepared-1/fountain-description-before-comment-after-rollback.png) |
+
+The WebKit deployment needed one automatic retry after the Puma logger exited during initial startup. All sessions passed build identification before editing. These checks cover an administrator on the pinned local deployment. The earlier Firefox wrong-character deletion and intermittent failure to open the Markdown edit form are documented below.
+
+In the earlier two-patch deployment, each browser used Fountain `269741c1` and prepared Tiptap tree `075b931b`. The first rich-text Save retained the entire phrase, including its final period, on two Fountain-authored issues and two controls per browser. After reload, the reader and API agreed. All formatted discussion comments and subsequent Markdown saves survived. These runs recorded zero page errors.
 
 | Desktop browser on Linux | Issue numbers | Final key to Save | Run records and visual check |
 | --- | --- | --- | --- |
