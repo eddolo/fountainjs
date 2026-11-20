@@ -227,6 +227,11 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  expected.rspackManifestSHA256 = '3'.repeat(64);
  expect(buildIdentityError(prepared)).toBeTruthy();
 });
+it('keeps deployment handovers out of matched parity counts', () => {
+ const [original, fountain] = reports() as any[];
+ original.suite = fountain.suite = 'mr-review-handover';
+ expect(() => compareGitLabCompatibility(original, fountain)).toThrow('sequential deployment test');
+});
 it.each(['mr-create', 'mr-create-member'])('checks the writer, reader and saved source for %s', suite => {
  const [original, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL(`../integrations/gitlab/fixtures/compatibility-${suite}.json`, import.meta.url), 'utf8'));

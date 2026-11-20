@@ -1,0 +1,25 @@
+{
+  "formatVersion": 1,
+  "workflow": "handover-a-saved-merge-request-and-private-review",
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "handover-merge-request",
+      "scope": "mr-review-handover",
+      "authorAccess": 30,
+      "title": "Hand over the release checklist",
+      "commitMessage": "Record the release handover",
+      "filePath": "review/release-handover.md",
+      "fileContent": "Record the release handover.\n",
+      "prefix": "Verify the ",
+      "bold": "release checklist",
+      "followup": "The smoke test passed.",
+      "discussionControl": "Release coordinator checked the schedule.",
+      "reviewText": "Confirm the release owner.",
+      "afterRollback": "Reviewed after the editor switch."
+    }
+  ]
+}

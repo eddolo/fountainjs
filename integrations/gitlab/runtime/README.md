@@ -39,6 +39,18 @@ Set `suite=mr-create-member` to run as the fixture’s project Developer, or set
 
 The Developer fixture seeds one existing public comment and one pending review through authenticated APIs. The browser reopens the draft in **Your review**, submits it as a comment and reloads. The reader and APIs verify the author, the published text and the empty draft queue. On WebKit, `navigation.json` records document lifecycle events, request paths, responses, cancellations and indexes into the adjacent build report’s page errors. Browser event timestamps are measured when the observer receives them.
 
+### Reproduce a private review across editor rollback
+
+Run the two commands in order from the prepared Linux checkout. The first creates a real merge request, edits its description and leaves a bold comment pending through Fountain’s rich editor. The second switches to the packaged frontend on the same GitLab volumes. It signs in as the same project Developer, opens the saved description in stock rich text, saves a follow-up through Markdown and submits the pending review. The stock report carries the SHA-256 and build identity of the Fountain report used for the handover.
+
+```sh
+run="mr-handover-$(date +%s)"
+node scripts/run-gitlab-compatibility.mjs --suite mr-review-handover --editor fountain --run-id "$run" &&
+  node scripts/run-gitlab-compatibility.mjs --suite mr-review-handover --editor original --run-id "$run"
+```
+
+Inspect `observations[0].pending` in the Fountain report and `observations[0].handover` in the stock report. The recorded IDs connect the original private draft, unchanged public discussion and published comment. These are two stages of one deployment test.
+
 ### Reproduce issue-board editing
 
 From the prepared Linux checkout, run the same issue-board workflow on both deployments. Each run creates a new issue through the board’s **Create issue** form, edits its description in the drawer, follows the issue reference to the full page, and posts a formatted comment. The browser returns through **Issue boards**, reloads the board and reopens the card. The report checks both editor builds, the issue number and the Markdown in GitLab’s issue and notes APIs. It records visible card numbers on creation, when the drawer is ready, and after reload. It measures the short-description editor and checks the center of Save for obstruction at 1280 and 390 CSS pixels. The narrow run scrolls Save into view and opens and closes the Fountain limits disclosure with the keyboard. These measurements use a desktop browser with a resized viewport.

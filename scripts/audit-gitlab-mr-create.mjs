@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { join } from 'node:path';
 import { writeFile } from 'node:fs/promises';
+import { leavePendingReview, finishPendingReview } from './verify-gitlab-mr-handover.mjs';
 import { editorProof, observePage, openRich } from './gitlab-audit-editor.mjs';
 import { observeMergeRequestNavigation } from '../integrations/gitlab/testing/observe-mr-navigation.mjs';
 import { prepareGitLabAuditMember } from './gitlab-audit-member.mjs';
@@ -34,7 +35,7 @@ export async function runGitLabMergeRequestCreation(options) {
   }
 }
 
-async function createMergeRequest({ page, project, request, fixture, runId, side, output, onProgress }, membership) {
+async function createMergeRequest({ page, project, request, fixture, runId, side, output, onProgress, mrHandoverFrom }, membership) {
   const [input] = fixture.cases;
   const result = { id: input.id, input, status: 'incomplete', facts: {}, pageErrors: [] };
   const { facts } = result;
@@ -70,6 +71,12 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
       const current = await request(api + '/members/all/' + user.id);
       expect(current.access_level).toBe(input.authorAccess);
       result.writer = {id:user.id, username:user.username, accessLevel:current.access_level};
+    }
+    if (mrHandoverFrom) {
+      stage('finish-fountain-review-on-stock');
+      await finishPendingReview({actor, request, project, input, result, candidate:mrHandoverFrom, output});
+      result.status = 'observed';
+      return [result];
     }
     stage('select-source-branch');
     const commit = await request(api + '/repository/commits', {
@@ -208,6 +215,10 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
     facts.singleRecord = matches.length === 1 && matches[0].iid === iid;
     facts.headPreserved = updated.sha === commit.id && updated.state === 'opened' && updated.title === input.title;
     await reader.screenshot({path:join(output,'updated-reader.png')});
+    if (input.scope === 'mr-review-handover') {
+      stage('leave-fountain-review-pending');
+      await leavePendingReview({actor, request, project, input, result, output});
+    }
     result.status = 'observed';
   } catch (error) {
     result.failure = String(error);

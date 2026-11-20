@@ -5,7 +5,7 @@ Updated 2026-11-19.
 **Current priority: finish the GitLab flagship integration.** Follow its
 [application acceptance checklist](../integrations/gitlab/README.md#remaining-full-application-acceptance).
 Keep unrelated chart and diagram expansion queued. When an application workflow
-exposes an engine defect, fix it and return to that workflow for verification.
+exposes an engine defect, fix it, add coverage at the engine or public editor surface, and return to the application workflow for verification. Use the strongest behavior Fountain can deliver as its own product target. Keep host-specific constraints in the adapter and its compatibility report.
 
 FountainJS 0.5.0-beta.1 is available on GitHub and npm from commit `b1161fd5`.
 On November 18 the public `latest` tag installed this version. A clean Node
