@@ -139,6 +139,11 @@ export default {
   <div ref="mount" data-fountain-root="gitlab" v-bind="$attrs"></div>
 </template>
 <style>
+/* Match the host's short issue editor while allowing long descriptions to grow. */
+.work-item-detail-panel [data-fountain-integration='native']:not(.immersive) .fountain-editor.rte-text-box {
+  min-height: 140px;
+  padding: 0.75rem 1rem;
+}
 /* Keep the native token palette paired with its background under host CSS. */
 [data-fountain-root='gitlab'] .fountain-editor pre.fjs-highlight--dark {
   background: #151823;

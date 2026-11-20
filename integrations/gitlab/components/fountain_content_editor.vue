@@ -502,13 +502,6 @@ export default {
     data-fountain-integration="native"
     :data-fountain-error="failureCode"
   >
-    <gl-alert v-if="adapterGaps && !fatal" variant="warning" :dismissible="false">
-      {{
-        s__(
-          'ContentEditor|This integration is unfinished. Some reference and command contexts and specialized menus are still unavailable. Use source editing for those workflows.',
-        )
-      }}
-    </gl-alert>
     <gl-alert v-if="failure" data-testid="content-editor-error" variant="danger" :dismissible="false">
       {{ failureMessage }}
       <gl-button v-if="hasRecovery" size="small" @click="retryLoad">{{
@@ -627,20 +620,31 @@ export default {
       />
     </div>
     <div
-      v-if="!immersive"
+      v-if="!immersive || (adapterGaps && !fatal)"
       data-testid="content-editor-footer"
-      class="gl-border-t gl-flex gl-items-center gl-justify-between gl-p-2"
+      class="gl-border-t gl-flex gl-flex-wrap gl-items-center gl-justify-between gl-gap-2 gl-p-2"
     >
       <editor-mode-switcher
-        v-if="!hideModeSwitcher"
+        v-if="!immersive && !hideModeSwitcher"
         size="small"
         value="richText"
         @switch="handleEditorModeChanged"
       />
-      <slot name="toolbar"></slot>
-      <gl-button :href="markdownDocsPath" target="_blank" category="tertiary" size="small">{{
+      <slot v-if="!immersive" name="toolbar"></slot>
+      <details v-if="adapterGaps && !fatal" class="fountain-gitlab-editing-limits gl-text-sm">
+        <summary>{{ s__('ContentEditor|Rich-text editing limits') }}</summary>
+        <p class="gl-mb-0 gl-mt-2">{{
+          s__('ContentEditor|Use plain text editing for unsupported references, quick actions, and specialized menus.')
+        }}</p>
+      </details>
+      <gl-button v-if="!immersive" :href="markdownDocsPath" target="_blank" category="tertiary" size="small">{{
         s__('ContentEditor|Markdown help')
       }}</gl-button>
     </div>
   </div>
 </template>
+<style scoped>
+.fountain-gitlab-editing-limits[open] {
+  flex-basis: 100%;
+}
+</style>
