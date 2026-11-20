@@ -366,18 +366,20 @@ it('checks historical wiki source and retained revision identities independently
  expect(compare().rows.filter((row:any)=>row.classification==='regression').map((row:any)=>row.invariant)).toEqual(['retainedHistory','revisionSources']);
  expect(compare().featureAcceptance.passed).toBe(false);
 });
-it('evaluates the stale restore notice, intervening revision and intentional retry independently', () => {
+it.each(['wiki-restore-conflict','wiki-restore-authors'])('evaluates the stale restore, intervening author and intentional retry for %s', suite => {
   const [original, fountain] = reports() as any[];
-  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-wiki-restore-conflict.json', import.meta.url), 'utf8'));
+  const fixture = JSON.parse(readFileSync(new URL(`../integrations/gitlab/fixtures/compatibility-${suite}.json`, import.meta.url), 'utf8'));
   const input = fixture.cases[0];
   const paragraph = input.paragraph + input.addition + input.competingEdit;
   const edited = input.source.replace(input.paragraph, input.paragraph + input.addition);
   const latest = input.source.replace(input.paragraph, paragraph);
   const history = [input.restoreMessage, input.writerMessage, 'Edit', 'Seed'].map((message, index) =>
-    ({version:'v' + (4 - index), sha:String(4 - index).repeat(40), message}));
+    ({version:'v' + (4 - index), sha:String(4 - index).repeat(40), message, author:index === 1 && input.writerAccess ? fixture.accountName : 'Administrator'}));
   for (const report of [original, fountain]) {
     report.fixture = fixture;
     Object.assign(report.observations[0], {
+      writerEditorProof:report.observations[0].editorProof, fixtureMembership:{before:10,after:10},
+      authors:{owner:{id:1,username:'root',name:'Administrator'},writer:{id:3,username:fixture.username,name:fixture.accountName,access:30}},
       id:input.id, input, status:'observed', openLock:history[2]!.sha, retryLock:history[1]!.sha,
       before:history.slice(2), afterStaleHistory:history.slice(1), after:history, pageErrors:[],
       editedSource:edited, writerSource:latest, writerReader:paragraph, latestReader:paragraph, afterStale:latest,
@@ -389,6 +391,22 @@ it('evaluates the stale restore notice, intervening revision and intentional ret
   }
   const compare = () => compareGitLabCompatibility(original, fountain);
   expect(compare().featureAcceptance.passed).toBe(true);
+  if (input.writerAccess) {
+    const item = fountain.observations[0];
+    expect(compare().summary.parity).toBe(19);
+    item.writerEditorProof = original.observations[0].editorProof;
+    expect(compare().summary.incomplete).toBe(19);
+    item.writerEditorProof = item.editorProof;
+    item.authors.writer.id = item.authors.owner.id;
+    expect(compare().summary.incomplete).toBe(19);
+    item.authors.writer.id = 3;
+    item.fixtureMembership.after = 30;
+    expect(compare().summary.incomplete).toBe(19);
+    item.fixtureMembership.after = 10;
+    item.after = item.after.map((row:any, index:number) => index === 1 ? {...row,author:'Administrator'} : row);
+    expect(compare().rows.find((row:any) => row.invariant === 'revisionAuthors').classification).toBe('regression');
+    item.after = history;
+  }
   Object.assign(fountain.observations[0], {
     noticeText:'Review %{wikiLinkStart}the page%{wikiLinkEnd}.', reviewedFromNotice:input.paragraph,
     afterStale:input.source, retryLock:history[2]!.sha,

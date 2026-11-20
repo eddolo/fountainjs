@@ -167,6 +167,8 @@ dir="artifacts/gitlab-compatibility/$run"
 node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
 ```
 
+To exercise the same race with two people, use `--suite wiki-restore-authors` on both sides of the command above. The first author opens Restore. A project Developer in a separate signed-in session then saves the competing revision through the rich editor. The report checks both editor roots, the two account identities, the names GitLab displays beside all four revisions, and the project member’s access before and after the test.
+
 In the [initial comparison](../../../artifacts/gitlab-compatibility/wiki-stale-restore-20261119/comparison/report.md), both editors retained v3 but displayed the literal translation tokens around “the page.” The optional controller now sends update errors to the wiki application’s existing alert on the redirected page. Its translated link opens the current reader. [Matched click-through and revision receipts](../../../artifacts/gitlab-compatibility/wiki-stale-restore-20261119/comparison-4/report.md)
 
 After removing the controller and frontend overlays, packaged GitLab reopened both pages and returned all eight revision contents by ID. Its fresh control again displayed the translation placeholders. Reproduce against the same data volumes with the writer run and attempt numbers below. [Stock rollback and fresh control](../../../artifacts/gitlab-compatibility/wiki-stale-stock-20261119/original-1/report.json)

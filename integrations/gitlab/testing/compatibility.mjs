@@ -478,11 +478,22 @@ export function compareGitLabCompatibility(original,fountain){
       const latest = input.source.replace(input.paragraph, input.paragraph + input.addition + input.competingEdit);
       const observe = (report, item) => {
         if (!verifiedEditor(report, item) || item.status !== 'observed') return {};
+        const {owner, writer} = item.authors ?? {};
+        if (input.writerAccess && (
+          !verifiedEditor(report,{editorProof:item.writerEditorProof}) ||
+          owner?.username !== 'root' || !Number.isSafeInteger(owner.id) || owner.id <= 0 || !owner.name ||
+          writer?.username !== fixture.username || !Number.isSafeInteger(writer.id) || writer.id <= 0 ||
+          writer.id === owner.id || writer.name === owner.name || writer.name !== fixture.accountName ||
+          writer.access !== input.writerAccess || !item.fixtureMembership ||
+          item.fixtureMembership.before === undefined || item.fixtureMembership.before !== item.fixtureMembership.after
+        )) return {};
         const {before:prior, afterStaleHistory:stale, after:final, revisions:sources} = item;
         if (![prior, stale, final, sources].every(Array.isArray)) return {};
         return {
           ...item,
           readableNotice: typeof item.noticeText === 'string' && !/%\{[^}]+\}/.test(item.noticeText),
+          revisionAuthors:input.writerAccess && Array.isArray(final) && final.every(row => typeof row.author === 'string')
+            ? equal(final.map(row => row.author),[owner.name,writer.name,owner.name,owner.name]) : undefined,
           openedAtV2: /^[a-f0-9]{40}$/.test(item.openLock) && item.openLock === prior[0]?.sha && prior[0].version === 'v2',
           staleHistory: equal(prior.map(row => row.version), ['v2', 'v1']) && stale.length === 3 && stale[0].version === 'v3' && stale[0].message === input.writerMessage && equal(stale.slice(1), prior),
           retriedAtV3: item.retryLock === stale[0]?.sha && item.retryLock !== item.openLock,
@@ -494,6 +505,7 @@ export function compareGitLabCompatibility(original,fountain){
       };
       const left = observe(original, a), right = observe(fountain, b);
       for (const [key, label, expected] of [
+        ...(input.writerAccess ? [['revisionAuthors','The final wiki history credits the Developer with the competing edit and the original author with the restore',true]] : []),
         ['openedAtV2', 'The first tab opens Restore with the v2 revision', true],
         ['editedSource', 'The first edit is stored as v2', edited],
         ['writerReader', 'The second tab sees its own saved change', input.paragraph + input.addition + input.competingEdit],

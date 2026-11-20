@@ -1,10 +1,16 @@
 import { expect } from '@playwright/test';
 import { join } from 'node:path';
+import {prepareGitLabAuditMember} from './gitlab-audit-member.mjs';
+import {editorProof, observePage} from './gitlab-audit-editor.mjs';
 import {observeWikiRename, observeWikiRenameProfile} from './audit-gitlab-wiki-rename.mjs';
 
 export async function runWikiHistory({ side, runId, page, request, project, fixture, output }) {
   const observations = [];
   for (const input of fixture.cases) {
+    if (input.writerAccess) {
+      observations.push(await checkWithSecondAuthor({side,runId,page,request,project,fixture,input,output}));
+      continue;
+    }
     const collect = () => checkWikiPage({ side, runId, page, request, project, input, output });
     observations.push(input.scope === 'wiki-rename'
       ? await observeWikiRenameProfile({input, request, project}, collect) : await collect());
@@ -12,7 +18,53 @@ export async function runWikiHistory({ side, runId, page, request, project, fixt
   return observations;
 }
 
-async function checkWikiPage({ side, runId, page, request, project, input, output }) {
+async function checkWithSecondAuthor(options) {
+  const {page, request, project, fixture, input} = options;
+  const member = await prepareGitLabAuditMember(options);
+  const path = '/api/v4/projects/' + project.id + '/members';
+  const membership = async () => (await request(path + '?query=' + encodeURIComponent(fixture.username))).find(entry => entry.id === member.account.id);
+  const before = await membership();
+  // Sign in on a separate browser context before collecting document evidence.
+  const context = await page.context().browser().newContext();
+  let item, changed = false;
+  try {
+    if (before?.access_level !== input.writerAccess) {
+      await member.setRole(input.writerAccess);
+      changed = true;
+    }
+    const writer = await context.newPage();
+    await member.signInMember(writer,{});
+    const session = await writer.request.get(new URL('/api/v4/user',project.web_url).href);
+    expect(session.status()).toBe(200);
+    const identity = await session.json();
+    const owner = await request('/api/v4/user');
+    const active = await membership();
+    expect(active.access_level).toBe(input.writerAccess);
+    expect(identity.id).toBe(member.account.id);
+    expect(identity.name).toBe(fixture.accountName);
+    expect(identity.is_admin).not.toBe(true);
+    expect(owner.username).toBe('root');
+    expect(owner.id).not.toBe(identity.id);
+    item = await checkWikiPage({...options, competingWriter:writer});
+    item.authors = {owner:{id:owner.id, name:owner.name, username:owner.username},
+      writer:{id:identity.id, name:identity.name, username:identity.username, access:active.access_level}};
+  } finally {
+    try {
+      if (changed) {
+        if (before) await member.setRole(before.access_level);
+        else await request(path + '/' + member.account.id,{},'DELETE');
+      }
+      const after = await membership();
+      expect(after?.access_level).toBe(before?.access_level);
+      if (item) item.fixtureMembership = {before:before?.access_level ?? null,after:after?.access_level ?? null};
+    } finally {
+      await context.close();
+    }
+  }
+  return item;
+}
+
+async function checkWikiPage({ side, runId, page, request, project, input, output, competingWriter }) {
   const item = { id: input.id, input, status: 'incomplete', stage: 'seed' };
   // Wiki slugs are unique. Each build gets its own page with the same starting source.
   const title = [input.title, ...(input.scope === 'wiki-rename' ? [input.id] : []), side, runId].join('-');
@@ -44,7 +96,7 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     const data = new URLSearchParams(navigation.postData() ?? '');
     if (data.has('wiki[content]')) item.submissions.requests.push({stage:item.stage, values:data.getAll('wiki[content]'), restoreVersion:data.get('wiki_restore_version'), richSource:data.get('wiki_rich_source')});
   });
-  tab.on('pageerror', e => item.pageErrors.push(e.message));
+  await observePage(tab,item);
   const reader = tab.getByTestId('wiki-page-content');
   const edit = tab.getByTestId('wiki-edit-button');
   const form = tab.locator('form.wiki-form');
@@ -78,7 +130,7 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     await expect(table.locator('tbody tr').first()).toBeVisible();
     return table.locator('tbody tr').evaluateAll(rows => rows.map(row => {
       const link = row.cells[0].querySelector('a');
-      return { version: link.textContent.trim(), sha: new URL(link.href).searchParams.get('version_id'), message: row.cells[2].innerText.trim() };
+      return { version: link.textContent.trim(), author:row.cells[1].innerText.trim(), sha: new URL(link.href).searchParams.get('version_id'), message: row.cells[2].innerText.trim() };
     }));
   }
   try {
@@ -139,10 +191,11 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     if (input.scope === 'wiki-restore-conflict') {
       item.stage = 'stale restore';
       item.openLock = await modal.locator('[name="wiki[last_commit_sha]"]').inputValue();
-      const writer = await actor.newPage();
-      writer.on('pageerror', error => item.pageErrors.push(error.message));
+      const writer = competingWriter ?? await actor.newPage();
+      await observePage(writer,item);
       await writer.goto(url);
       const other = await openEditor(writer);
+      if (competingWriter) item.writerEditorProof = await editorProof(other);
       const line = other.locator('p').filter({ hasText: input.paragraph });
       await line.click();
       await writer.keyboard.press('End');
@@ -150,6 +203,7 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
       await saveEdit(writer, input.writerMessage);
       item.writerSource = await read();
       item.writerReader = await writer.getByTestId('wiki-page-content').locator('p').last().innerText();
+      if (competingWriter) await writer.getByTestId('wiki-page-content').screenshot({path:join(output,input.id + '-writer.png')});
       await writer.close();
       await modal.getByRole('textbox').fill(input.restoreMessage);
       await Promise.all([
