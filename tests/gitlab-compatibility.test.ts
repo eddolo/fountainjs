@@ -221,6 +221,27 @@ it('compares native Writer content and version independently of a browser paste'
  stock.observations[0].writer.version = 'LibreOffice 25.2.0';
  expect(compareGitLabCompatibility(stock,fountain).environment.mismatches).toContain('native Writer version');
 });
+it('checks table size, cell content and editor identity across Save', () => {
+ const [stock,fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-table-authoring.json',import.meta.url),'utf8'));
+ const input = fixture.cases[0];
+ const row = (tag:string, entries:string[]) => entries.map(text => ({tag,text,span:1,rows:1}));
+ const filled = [[row('TH',input.columns),row('TD',input.body)]];
+ const split = [[row('TH',['Work Owner','','Date']),row('TD',input.body)]];
+ for (const report of [stock,fountain]) {
+   report.fixture = fixture;
+   report.suite = 'table-authoring';
+   const item = report.observations[0];
+   Object.assign(item,{id:input.id,input,status:'observed',filled,reopened:split,reopenedEditorProof:item.editorProof});
+ }
+ const classify = (key:string) => compareGitLabCompatibility(stock,fountain).rows.find((entry:any) => entry.invariant === key)?.classification;
+ expect(classify('filled')).toBe('parity');
+ expect(classify('reopened')).toBe('parity');
+ fountain.observations[0].reopened = filled;
+ expect(classify('reopened')).toBe('regression');
+ fountain.observations[0].reopenedEditorProof = stock.observations[0].editorProof;
+ expect(classify('reopened')).toBe(null);
+});
 it('requires the native Writer source and reopened editor for an inbound paste claim', () => {
  const [stock,fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-writer-import.json',import.meta.url),'utf8'));

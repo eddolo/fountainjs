@@ -907,6 +907,44 @@ export function compareGitLabCompatibility(original,fountain){
       add('saveButtonReachable','Save remains directly reachable after task editing',true,left?.saveButtonReachable,right?.saveButtonReachable);
       continue;
     }
+    if (input.scope === 'table-authoring') {
+      const cell = (tag,text = '',span = 1) => ({tag,text,span,rows:1});
+      const header = input.columns.map(label => cell('TH',label));
+      const body = input.body.map(label => cell('TD',label));
+      const blank = row => row.map(entry => cell(entry.tag));
+      const filled = [[header,body]];
+      const extraRow = [[header,body,blank(body)]];
+      const extraColumn = [extraRow[0].map(row => [...row,cell(row[0].tag)])];
+      const mergedLabel = input.columns.slice(0,2).join(' ');
+      const merged = [[[cell('TH',mergedLabel,2),header[2]],body]];
+      const split = [[[cell('TH',mergedLabel),cell('TH'),header[2]],body]];
+      const observe = (report,item) => item?.status === 'observed' && verifiedEditor(report,item) ? {
+        ...item,
+        reopened:verifiedEditor(report,{editorProof:item.reopenedEditorProof}) ? item.reopened : undefined,
+        savedWords:typeof item.savedMarkdown === 'string' ? [...input.columns,...input.body].every(word => item.savedMarkdown.includes(word)) : undefined,
+        remainingProse:item.remainingProse?.replace(/\s+/gu,' ').trim(),
+      } : {};
+      const left = observe(original,a), right = observe(fountain,b);
+      for (const [key,expected,label] of [
+        ['created',[[blank(header),blank(body)]],'The size picker inserts a two-row, three-column table with a header'],
+        ['filled',filled,'The six typed cell values are in their intended cells'],
+        ['addRow',extraRow,'Adding a row preserves existing cells'],
+        ['addColumn',extraColumn,'Adding a column preserves existing cells'],
+        ['deleteColumn',extraRow,'Deleting the added column preserves both original rows'],
+        ['deleteRow',filled,'Deleting the added row restores the original geometry'],
+        ['merged',merged,'Merging adjacent header cells preserves both labels'],
+        ['split',split,'Splitting the merged cell restores its geometry and retains its content'],
+        ['deleted',[],'Delete table removes the table from the editor'],
+        ['remainingProse','Release checklist Owners and dates.','The heading and surrounding prose survive deletion'],
+        ['undo',split,'Undo restores all cells and their content'],
+        ['redo',[],'Redo removes the table again'],
+        ['beforeSave',split,'A final undo restores the table before Save'],
+        ['savedWords',true,'The issue API contains all six authored values'],
+        ['reader',split,'The reloaded reader shows the intended cells'],
+        ['reopened',split,'The rich editor reopens the authored table'],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'writer-import') {
       check('Writer import version',a?.writer?.version,b?.writer?.version);
       if ([original,fountain].some(report => report.suite !== 'writer-import' || report.browser?.engine !== 'chromium') ||

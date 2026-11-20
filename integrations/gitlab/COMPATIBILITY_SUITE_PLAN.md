@@ -1,5 +1,16 @@
 # GitLab paired compatibility and regression suite
 
+## Flagship status on the pinned GitLab CE 19.5.3 deployment
+
+| Status | What the evidence covers |
+| --- | --- |
+| Completed workflows | Issue descriptions and discussions retained independent drafts, formatting, undo histories and saved records in both save orders. The two-author wiki restore passed 19 comparisons on Firefox, followed by an eight-revision rollback check. Native Writer paste passed all eight issue-table checks on Chromium. [Table authoring and save/reopen](COMPATIBILITY_GRID_RESULTS.md#author-and-edit-a-table-in-an-issue-description) passed all 16 checks on Chromium (14 parity and two better undo observations). Each result below identifies the build and browser. |
+| Still open | Physical-device input, multi-instance deployment and rollback, and changing a user's role while a wiki restore is open need direct acceptance evidence. The installation and application checklist also covers the remaining component contracts and GitLab Markdown features. [Full checklist](README.md#remaining-full-application-acceptance) |
+| Blocked by Fountain or its GitLab adapter | Active GitLab collaboration providers and custom serializer hooks require adapters. Rich editing also refuses GitLab's generated table-of-contents list, and an edited image whose canonical source could not be recovered blocks export. These limits belong to the replacement. [Host contracts](services/host_configuration.ts) · [GitLab Markdown conversion](services/markdown_codec.ts) |
+| Documented safe GitLab-only limitations | The stock wiki conflict notice can display untranslated tokens while protecting the competing revision. The tested WebKit private-review navigation reported host errors on both builds while preserving and posting the draft exactly once. The receipts below identify the affected workflows. |
+
+Stock rapid rich-text Save lost the last edit in reproduced cases. Data loss remains a release concern. Use the separately verified prepared Tiptap rollback for immediate rich-text Save on the tested deployment. [Rollback builds and instructions](runtime/README.md#reproduce-the-prepared-tiptap-rich-text-rollback)
+
 ## Current acceptance boundaries
 
 The GitLab flagship is complete when FountainJS reliably replaces the editor for the defined workflows and the deployment can be rolled back safely.

@@ -124,6 +124,14 @@ All eight Fountain checks passed. Five matched stock. Three observed the same di
 
 To repeat this direction, use the runner and comparison commands above with `--suite writer-import` in place of `--suite header-grid --writer-paste`.
 
+## Author and edit a table in an issue description
+
+Run the paired runner above with `--suite table-authoring`. In the rich editor, insert a two-row, three-column table, type all six values, insert and delete rows and columns, merge and split two headers, then delete the table. Undo, redo and undo again before saving. Read the stored issue through the API, reload the reader and reopen the rich editor.
+
+On Fountain build `bd3995d3` the header retained two paragraphs after splitting, but the GitLab adapter refused to save them. [Failed Save](../../artifacts/gitlab-compatibility/table-authoring-20261120/fountain-5/report.json) · [Browser screenshot](../../artifacts/gitlab-compatibility/table-authoring-20261120/fountain-5/table-interrupted.png). Build `c088660e` exports that cell with two HTML paragraphs. Its codec test reimports the serialized table and compares its entire document tree. The browser comparison checks cell roles, spans, text and position. Fountain preserved the blank paragraph authored with Enter before table insertion, while stock consumed it. The table comparison does not grade this surrounding spacing.
+
+In Linux Chromium 151 all 16 Fountain checks passed on the pinned deployment. Fourteen matched stock. At both undo observations following deletion, Fountain restored the latest split header immediately. Stock showed the earlier merged header at those observations, although its saved table reopened split. [Matched report](../../artifacts/gitlab-compatibility/table-authoring-20261120/paired/report.md) · [Fountain reopened](../../artifacts/gitlab-compatibility/table-authoring-20261120/fountain-7/table-reopened.png) · [Stock reopened](../../artifacts/gitlab-compatibility/table-authoring-20261120/original-7/table-reopened.png).
+
 ## Remaining scope
 
 Complex overlapping spans, Unicode/IME, nested content, ownership rules, rapid input, other

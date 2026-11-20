@@ -1,0 +1,22 @@
+{
+  "formatVersion": 1,
+  "workflow": "create-and-edit-an-issue-table",
+  "cases": [
+    {
+      "id": "release-table",
+      "scope": "table-authoring",
+      "title": "Release checklist",
+      "markdown": "## Release checklist\n\nOwners and dates.",
+      "columns": [
+        "Work",
+        "Owner",
+        "Date"
+      ],
+      "body": [
+        "Docs",
+        "Ada",
+        "Friday"
+      ]
+    }
+  ]
+}
