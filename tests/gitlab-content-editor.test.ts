@@ -79,6 +79,32 @@ it('lets a block writer own its children while the surrounding GitLab quote reta
   expect(service.getSerializedContent()).toBe('> SUMMARY\n> Ready');
   expect(write).toHaveBeenCalledWith(summary);
 });
+it('writes attributed marks once across an inner bold range and preserves a refused edit for undo', async () => {
+  const source = 'Press <kbd>A**B**C</kbd>.';
+  const extension: FountainExtension = {name:'keyboard', marks:{shortcut:{
+    attrs:{kind:{default:'kbd'}},
+    parseHTML:[{tag:'kbd',priority:400}], toDOM:() => ['kbd',0],
+  }}};
+  const write = vi.fn(() => ({open:'<kbd>',close:'</kbd>'}));
+  const options = {extensions:[extension], serializerConfig:{marks:{shortcut:{toMarkdown:write}}},
+    describeLabels:() => '', renderMarkdown:async (text:string) => ({body:'<p>' + text.replace('**B**','<strong>B</strong>') + '</p>'})};
+  const service = new GitLabContentEditor(options);
+  services.push(service);
+  await service.setSerializedContent(source);
+  const content = service.editor.state.doc.child(0).content;
+  expect(content.filter(node => node.marks.some(mark => mark.type.name === 'shortcut')).map(node => node.text)).toEqual(['A','B','C']);
+  expect(service.getSerializedContent()).toBe(source);
+  expect(write).not.toHaveBeenCalled();
+  service.editor.dispatch(service.editor.createTransaction().setSelection(Selection.cursor([0,0],0)));
+  expect(insertText(service.editor, 'Now: ')).toBe(true);
+  expect(service.getSerializedContent()).toBe('Now: ' + source);
+  write.mockImplementation(() => {throw new Error('Unknown keyboard format');});
+  expect(() => service.getSerializedContent()).toThrow(expect.objectContaining({issues:expect.arrayContaining([
+    expect.objectContaining({code:'custom-mark-source',message:'Unknown keyboard format'}),
+  ])}));
+  expect(undo(service.editor)).toBe(true);
+  expect(service.getSerializedContent()).toBe(source);
+});
 it('owns a native model without requiring DOM globals and reads only a loaded current document', async () => {
   expect(typeof window).toBe('undefined');
   expect(typeof document).toBe('undefined');

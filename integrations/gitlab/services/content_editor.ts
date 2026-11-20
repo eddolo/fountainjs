@@ -8,7 +8,7 @@ import {
   type FountainExtension,
   type MathDocumentRenderer,
 } from 'fountainjs-editor';
-import { readGitLabNodeSerializers, type GitLabHostConfiguration } from './host_configuration';
+import { readGitLabSerializers, type GitLabHostConfiguration } from './host_configuration';
 import { GitLabAssetResolver, type GitLabAssetResolverOptions } from './asset_resolver';
 import { GitLabMarkdownCodec, createGitLabSchemaSpec } from './markdown_codec';
 import { createGitLabQuickActionPlugin, GitLabQuickActionEditing, type GitLabQuickActionProvider } from './quick_action_editing';
@@ -143,7 +143,7 @@ export class GitLabContentEditor {
     for (const extension of options.extensions ?? []) {
       if ('config' in extension) throw new TypeError('EXPECTED_NATIVE_FOUNTAIN_EXTENSION');
     }
-    const nodeWriters = readGitLabNodeSerializers(options.serializerConfig, options.extensions);
+    const {nodeWriters, markWriters} = readGitLabSerializers(options.serializerConfig, options.extensions);
     this.reportListenerError = options.onListenerError;
     const math = createMathExtension({
       inputRules: false,
@@ -170,6 +170,9 @@ export class GitLabContentEditor {
       } : undefined, options.tableOfContentsLabel);
       for (const name of nodeWriters.keys()) {
         if (schema.nodes[name] !== kit.schema.nodes[name]) throw new TypeError('GITLAB_RESERVED_SERIALIZER_NODE:' + name);
+      }
+      for (const name of markWriters.keys()) {
+        if (schema.marks?.[name] !== kit.schema.marks?.[name]) throw new TypeError('GITLAB_RESERVED_SERIALIZER_MARK:' + name);
       }
       this.editor = createEditor({
         schema,
@@ -198,7 +201,7 @@ export class GitLabContentEditor {
       this.assetResolver.dispose();
       throw error;
     }
-    const codec = this.codec = new GitLabMarkdownCodec({ ...options, nodeWriters });
+    const codec = this.codec = new GitLabMarkdownCodec({ ...options, nodeWriters, markWriters });
     this.controller = new SerializedContentController(this.editor, codec);
     this.alerts = new GitLabAlertEditing({ editor: this.editor,
       ensureReady: () => {

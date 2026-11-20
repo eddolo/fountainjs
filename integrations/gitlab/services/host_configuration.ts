@@ -1,4 +1,4 @@
-import type { FountainExtension, Node } from 'fountainjs-editor';
+import type { FountainExtension, Mark, Node } from 'fountainjs-editor';
 import { readGitLabSuggestionContext } from './code_suggestion_editing';
 export interface GitLabHostConfiguration {
   collaborationProvider?: unknown;
@@ -6,34 +6,50 @@ export interface GitLabHostConfiguration {
   codeSuggestionsConfig?: Record<string, unknown> | null;
 }
 
-const emptyRecord = (value: unknown): boolean =>
-  value !== null &&
-  typeof value === 'object' &&
-  !Array.isArray(value) &&
-  Object.keys(value).length === 0;
+const record = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value);
+const refuseSerializer = (): never => { throw new Error('GITLAB_NATIVE_SERIALIZER_ADAPTER_REQUIRED'); };
+export type GitLabMarkWriter = (mark: Mark) => { open: string; close: string };
 
 type NodeWriter = (node: Node) => string;
-export function readGitLabNodeSerializers(config: GitLabHostConfiguration['serializerConfig'], extensions: readonly FountainExtension[] = []): ReadonlyMap<string, NodeWriter> {
-  const writers = new Map<string, NodeWriter>();
-  if (config == null) return writers;
-  const refuse = (): never => { throw new Error('GITLAB_NATIVE_SERIALIZER_ADAPTER_REQUIRED'); };
-  if (typeof config !== 'object' || Array.isArray(config) || Object.keys(config).some(key => key !== 'marks' && key !== 'nodes')) refuse();
-  if (Object.hasOwn(config, 'marks') && !emptyRecord(config.marks)) refuse();
-  if (!Object.hasOwn(config, 'nodes')) return writers;
-  const nodes = config.nodes;
-  if (nodes === null || typeof nodes !== 'object' || Array.isArray(nodes)) return refuse();
+export function readGitLabSerializers(config: GitLabHostConfiguration['serializerConfig'], extensions: readonly FountainExtension[] = []) {
+  const nodeWriters = new Map<string, NodeWriter>();
+  const markWriters = new Map<string, GitLabMarkWriter>();
+  if (config == null) return {nodeWriters, markWriters};
+  if (!record(config) || Object.keys(config).some(key => key !== 'marks' && key !== 'nodes')) return refuseSerializer();
+  const marks = Object.hasOwn(config, 'marks') ? config.marks : {};
+  const nodes = Object.hasOwn(config, 'nodes') ? config.nodes : {};
+  if (!record(marks) || !record(nodes)) return refuseSerializer();
+  for (const [name, rule] of Object.entries(marks)) {
+    const extension = extensions.find(item => item.marks && Object.hasOwn(item.marks, name));
+    if (!extension || !record(rule)) return refuseSerializer();
+    if (Object.keys(rule).length === 1 && Object.hasOwn(rule, 'toMarkdown') && typeof rule.toMarkdown === 'function') {
+      const write = rule.toMarkdown;
+      markWriters.set(name, mark => {
+        const pair = write(mark);
+        if (!record(pair) || typeof pair.open !== 'string' || typeof pair.close !== 'string')
+          throw new TypeError('Invalid GitLab Markdown delimiters for ' + name);
+        return { open: pair.open, close: pair.close };
+      });
+    } else {
+      if (Object.keys(rule).length !== 2 || !Object.hasOwn(rule, 'open') || !Object.hasOwn(rule, 'close')
+        || typeof rule.open !== 'string' || typeof rule.close !== 'string'
+        || Object.keys(extension.marks![name].attrs ?? {}).length) return refuseSerializer();
+      const pair = {open:rule.open, close:rule.close};
+      markWriters.set(name, () => pair);
+    }
+  }
   for (const [name, rule] of Object.entries(nodes)) {
     if (!extensions.some(extension => extension.nodes && Object.hasOwn(extension.nodes, name))
-      || !rule || typeof rule !== 'object' || Object.keys(rule).length !== 1
-      || !Object.hasOwn(rule, 'toMarkdown') || typeof rule.toMarkdown !== 'function') refuse();
-    const write: NodeWriter = rule.toMarkdown;
-    writers.set(name, node => {
+      || !record(rule) || Object.keys(rule).length !== 1
+      || !Object.hasOwn(rule, 'toMarkdown') || typeof rule.toMarkdown !== 'function') return refuseSerializer();
+    const write = rule.toMarkdown;
+    nodeWriters.set(name, node => {
       const source = write(node);
       if (typeof source !== 'string') throw new TypeError('Invalid GitLab Markdown result for ' + name);
       return source;
     });
   }
-  return writers;
+  return {nodeWriters, markWriters};
 }
 
 /** Default callers accept inactive settings only. The native candidate opts into
@@ -41,7 +57,7 @@ export function readGitLabNodeSerializers(config: GitLabHostConfiguration['seria
 export function assertGitLabNativeHostConfiguration(options: GitLabHostConfiguration, native: { codeSuggestions?: boolean; extensions?: readonly FountainExtension[] } = {}): void {
   if (options.collaborationProvider != null)
     throw new Error('GITLAB_NATIVE_COLLABORATION_ADAPTER_REQUIRED');
-  readGitLabNodeSerializers(options.serializerConfig, native.extensions);
+  readGitLabSerializers(options.serializerConfig, native.extensions);
   const suggestions = options.codeSuggestionsConfig ?? {};
   if (native.codeSuggestions) {
     try { if (readGitLabSuggestionContext(suggestions)) return; }

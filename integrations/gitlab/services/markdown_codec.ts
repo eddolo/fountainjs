@@ -1,7 +1,8 @@
 import { CoreSchemaSpec, MarkdownExporter, MarkdownSourceSnapshot, isSafeURL,
-  type HTMLParseElement, type Node, type Schema, type SchemaSpec } from 'fountainjs-editor';
+  type HTMLParseElement, type Mark, type Node, type Schema, type SchemaSpec } from 'fountainjs-editor';
 import { ServerHTMLImporter, type ServerHTMLImporterOptions } from 'fountainjs-editor/html/server';
 import { parseFragment, serialize, type DefaultTreeAdapterMap } from 'parse5';
+import type { GitLabMarkWriter } from './host_configuration';
 import type { SerializedContentCodec } from './serialized_content';
 import type { GitLabRenderResponse } from './asset_resolver';
 import { gitlabMathNodes, normalizeGitLabMath, serializeGitLabMath } from './math';
@@ -240,6 +241,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     html?: ServerHTMLImporterOptions;
     preserveWikiSource?: boolean;
     nodeWriters?: ReadonlyMap<string, (node: Node) => string>;
+    markWriters?: ReadonlyMap<string, GitLabMarkWriter>;
     tableOfContentsLabel?: string;
   }) {}
 
@@ -308,9 +310,19 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const issues: GitLabMarkdownIssue[] = [], tokens = new Map<string, string>();
     let prefix = 'FOUNTAINGITLABSOURCETOKEN';
     const customSources = new Map<Node, string>();
-    if (this.options.nodeWriters?.size) {
+    const customMarks = new Map<Mark, ReturnType<GitLabMarkWriter>>();
+    if (this.options.nodeWriters?.size || this.options.markWriters?.size) {
       doc.descendants((node, path) => {
-        const write = this.options.nodeWriters!.get(node.type.name);
+        for (const mark of node.marks) {
+          const writer = this.options.markWriters?.get(mark.type.name);
+          if (!writer || customMarks.has(mark)) continue;
+          try { customMarks.set(mark, writer(mark)); }
+          catch (error) {
+            issues.push({ stage:'export', code:'custom-mark-source', path,
+              message:error instanceof Error ? error.message : 'The host serializer could not write ' + mark.type.name });
+          }
+        }
+        const write = this.options.nodeWriters?.get(node.type.name);
         if (!write) return;
         try { customSources.set(node, write(node)); }
         catch (error) {
@@ -322,7 +334,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       if (issues.length) return { markdown: '', preservation: 'canonical', issues };
     }
     const encoded = JSON.stringify(doc.toJSON());
-    const authored = Array.from(customSources.values()).join('\n');
+    const authored = [...customSources.values(), ...Array.from(customMarks.values(), pair => pair.open + '\n' + pair.close)].join('\n');
     while (encoded.includes(prefix) || authored.includes(prefix)) prefix += 'X';
     const noteDefinitions = new Map<string, Node>();
     const noteLabels = new Set<string>();
@@ -500,6 +512,8 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     projected.descendants((node, path) => { paths.set(node, path); });
     const extensionWriters = Object.fromEntries(Array.from(this.options.nodeWriters?.keys() ?? [], name =>
       [name, (node: Node) => customSources.get(node)] as const));
+    const markSerializers = Object.fromEntries(Array.from(this.options.markWriters?.keys() ?? [], name =>
+      [name, (mark: Mark) => customMarks.get(mark)!] as const));
     const blockSerializers = {
       ...extensionWriters,
       table: (node: Node) => serializeGitLabHTMLTable(node, prefix),
@@ -512,15 +526,15 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         if (!['auto', 'ltr', 'rtl'].includes(String(node.attrs.dir)) || node.marks.length
           || Object.entries(node.attrs).some(([key, value]) => key !== 'dir' && value !== undefined)) return undefined;
         const inner = new MarkdownExporter().exportWithReport(node.type.schema.node('doc', {}, node.content),
-          { omitTrailingCaret: true, blockSerializers, inlineSerializers: extensionWriters });
+          { omitTrailingCaret: true, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
         issues.push(...inner.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type,
           message: loss.detail, path: [...(paths.get(node) ?? []), ...loss.path] })));
         return `<div dir="${node.attrs.dir}">\n\n${transformGitLabQuickActions(inner.markdown, 'literal')}\n\n</div>`;
       },
     };
-    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, blockSerializers, inlineSerializers: extensionWriters });
+    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
-    if (!canonical && !issues.length && !tokens.size && !customSources.size && sources.size === 1) {
+    if (!canonical && !issues.length && !tokens.size && !customSources.size && !customMarks.size && sources.size === 1) {
       const source = this.wikiBlockSources.get(sources.values().next().value!);
       if (source?.blocks.length && projected.content.every(block => ['heading', 'paragraph'].includes(block.type.name))) {
         const retained = MarkdownExporter.exportWithSource(projected, source, { omitTrailingCaret: true });

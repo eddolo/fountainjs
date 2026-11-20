@@ -62,6 +62,14 @@ it('ties native Markdown writers to declared node types and rejects unknown rule
     expect(() => validate({serializerConfig:{nodes}},native)).toThrow('GITLAB_NATIVE_SERIALIZER_ADAPTER_REQUIRED');
   }
 });
+it('accepts literal delimiters for attribute-free extension marks and checks every configured rule', () => {
+  const native = {extensions:[{name:'keys',marks:{key:{},binding:{attrs:{scope:{default:'global'}}}}}]};
+  const pair = {open:'<kbd>',close:'</kbd>'};
+  expect(() => validate({serializerConfig:{marks:{key:pair,binding:{toMarkdown:() => pair}}}},native)).not.toThrow();
+  for (const marks of [{binding:pair}, {missing:pair}, {key:{open:'<kbd>'}}, {key:{...pair,mixable:true}}]) {
+    expect(() => validate({serializerConfig:{marks}},native)).toThrow('GITLAB_NATIVE_SERIALIZER_ADAPTER_REQUIRED');
+  }
+});
 it.each(suggestionContexts.fixtures)('keeps real Rapid Diffs $name configuration guarded pending end-to-end acceptance', fixture => {
   expect(() => validate({ codeSuggestionsConfig: fixture.context })).toThrow('GITLAB_NATIVE_SUGGESTIONS_ADAPTER_REQUIRED');
 });

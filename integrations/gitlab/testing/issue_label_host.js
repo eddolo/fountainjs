@@ -2,6 +2,12 @@
 export const issueLabelHost = {
   extensions: [{
     name: 'issue-label',
+    marks: {
+      keyboard_shortcut: {
+        parseHTML: [{tag:'kbd', priority:400}],
+        toDOM: () => ['kbd', {'data-fountain-custom-shortcut':'true'}, 0],
+      },
+    },
     nodes: {
       issue_label: {
         group: 'inline', inline: true, atom: true,
@@ -15,6 +21,7 @@ export const issueLabelHost = {
     },
   }],
   serializerConfig: {
+    marks: {keyboard_shortcut:{open:'<kbd>',close:'</kbd>'}},
     nodes: {
       issue_label: {
         toMarkdown(node) {

@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
 import { CoreSchemaSpec, Schema, MarkdownExporter } from '../src';
-const schema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
+const schema = new Schema({ ...CoreSchemaSpec, marks:{...CoreSchemaSpec.marks, keyboard:{}}, nodes: { ...CoreSchemaSpec.nodes,
   custom: { group: 'block', content: 'text*' },
   badge: { group: 'inline', inline: true, atom: true, attrs: { key: { default: 'team' } } },
 } });
@@ -24,6 +24,15 @@ it('uses an inline writer for a marked atom, its own fragment and a pipe-table c
   const table = schema.node('table', {}, [schema.node('table_row', {}, [header])]);
   expect(render.exportWithReport(table, options).markdown).toContain('**team\\|ops**');
   expect(render.exportWithReport(atom, {inlineSerializers:{badge:() => undefined}}).losses).toContainEqual(expect.objectContaining({type:'badge'}));
+});
+it('keeps one extension mark across text, a hard break and nested bold text', () => {
+  const key = schema.mark('keyboard');
+  const options = {markSerializers:{keyboard:() => ({open:'<kbd>',close:'</kbd>'})}};
+  const paragraph = schema.node('paragraph', {}, [schema.text('A', [key]), schema.node('hard_break').withMarks([key]),
+    schema.text('B', [key, schema.mark('strong')]), schema.text('C', [key])]);
+  expect(render.exportWithReport(paragraph, options)).toEqual({markdown:'<kbd>A  \n**B**C</kbd>',losses:[]});
+  const literal = schema.text('X', [schema.mark('code'), key]);
+  expect(render.exportWithReport(literal, options).losses).toContainEqual(expect.objectContaining({kind:'mark',type:'keyboard'}));
 });
 it('does not execute an inherited serializer', () => {
   const output = render.exportWithReport(custom, { blockSerializers: Object.create(serializers) });

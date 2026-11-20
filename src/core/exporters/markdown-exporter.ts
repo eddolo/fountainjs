@@ -1,5 +1,5 @@
 import type { EditorState } from '../state';
-import type { Node } from '../schema';
+import type { Mark, Node } from '../schema';
 import { fontFamilyCSS } from '../../text-style/values';
 import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/markdown-importer';
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
@@ -30,6 +30,8 @@ export interface MarkdownExportOptions {
   /** Trusted writers for non-text inline extension nodes. Markdown owns the
    * surrounding marks and table-cell escaping. Undefined uses the default writer. */
   inlineSerializers?: Readonly<Record<string, (node: Node) => string | undefined>>;
+  /** Delimiters for native extension marks. The writer owns the mark attributes. */
+  markSerializers?: Readonly<Record<string, (mark: Mark) => { open: string; close: string }>>;
   /** Emit ordinary inline destinations or deterministic reference definitions. */
   linkStyle?: MarkdownLinkStyle;
   /** Preserve blank paragraphs as inert HTML markers (default), or omit with loss reports. */
@@ -332,6 +334,17 @@ function textStyleHTML(node: Node, context: RenderContext, path: readonly number
   return `<span data-fountain-text-style="true" style="${escapeHTML(styles.join(';'))}">${value}</span>`;
 }
 
+function markWriter(context: RenderContext, mark: Mark) {
+  const writers = context.options.markSerializers;
+  return writers && Object.hasOwn(writers, mark.type.name) ? writers[mark.type.name] : undefined;
+}
+
+function wrapMark(value: string, pair: { open: string; close: string }): string {
+  if (!pair || typeof pair.open !== 'string' || typeof pair.close !== 'string')
+    throw new TypeError('A Markdown mark serializer must provide opening and closing strings.');
+  return pair.open + value + pair.close;
+}
+
 function markdownMarks(
   node: Node,
   value: string,
@@ -339,7 +352,12 @@ function markdownMarks(
   path: readonly number[],
   allowCode = false,
 ): string {
-  node.marks.forEach((mark) => {
+  node.marks.forEach((mark, index) => {
+    if (markWriter(context, mark)) {
+      if (node.marks.slice(0, index).some(outer => outer.type.name === 'code'))
+        report(context, 'mark', mark.type.name, path, 'A mark inside literal Markdown code cannot retain its nesting order.');
+      return;
+    }
     if (!SUPPORTED_MARKS.has(mark.type.name) || (!allowCode && mark.type.name === 'code')) {
       report(context, 'mark', mark.type.name, path, 'Mark omitted from Markdown.');
     } else if (mark.type.name === 'link' && mark.attrs.target !== '_blank') {
@@ -352,7 +370,9 @@ function markdownMarks(
   const emIndex = node.marks.findIndex((mark) => mark.type.name === 'em');
   const emDelimiter = strongIndex >= 0 && strongIndex < emIndex ? '_' : '*';
   for (const mark of [...node.marks].reverse().filter((item) => item.type.name !== 'code')) {
-    if (mark.type.name === 'strong') value = `**${value}**`;
+    const custom = markWriter(context, mark);
+    if (custom) value = wrapMark(value, custom(mark));
+    else if (mark.type.name === 'strong') value = `**${value}**`;
     else if (mark.type.name === 'em') value = `${emDelimiter}${value}${emDelimiter}`;
     else if (mark.type.name === 'strike') value = `~~${value}~~`;
     else if (mark.type.name === 'link') value = link(value, mark.attrs.href, mark.attrs.title, context);
@@ -364,6 +384,9 @@ function markdownMarks(
 function schemaHTML(node: Node, context: RenderContext, path: readonly number[]): string {
   // Walk once for diagnostics, serialize once (not once per descendant).
   node.descendants((child, childPath) => {
+    for (const mark of child.marks) {
+      if (markWriter(context, mark)) report(context, 'mark', mark.type.name, [...path, ...childPath], 'HTML projection bypasses the custom Markdown mark writer.');
+    }
     const writers = child.type.isInline ? context.options.inlineSerializers : context.options.blockSerializers;
     if (writers && Object.hasOwn(writers, child.type.name))
       report(context, 'node', child.type.name, [...path, ...childPath], 'HTML projection bypasses the custom Markdown writer.');
@@ -466,6 +489,20 @@ function inlineContent(node: Node, context: RenderContext, path: readonly number
   const result: string[] = [];
   for (let index = 0; index < node.content.length;) {
     const child = node.content[index]!;
+    const outer = child.marks[0];
+    const writer = outer && markWriter(context, outer);
+    if (writer && (child.isText || child.type.name === 'hard_break')) {
+      let end = index + 1;
+      while (end < node.childCount) {
+        const next = node.child(end);
+        if (!(next.isText || next.type.name === 'hard_break') || !next.marks[0]?.eq(outer)) break;
+        end++;
+      }
+      const inner = node.copy(node.content.slice(index, end).map(item => item.withMarks(item.marks.slice(1))));
+      result.push(wrapMark(inlineContent(inner, context, path, indexOffset + index), writer(outer)));
+      index = end;
+      continue;
+    }
     const outerLink = child.isText && child.marks[0]?.type.name === 'link' && child.marks[0].attrs.htmlHref === undefined
       ? child.marks[0] : undefined;
     let linkEnd = index;
