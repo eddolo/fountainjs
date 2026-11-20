@@ -1,0 +1,15 @@
+{
+  "formatVersion": 1,
+  "workflow": "reopen-a-fountain-outline-after-packaged-gitlab-rollback",
+  "cases": [
+    {
+      "id": "outline-handover",
+      "scope": "contents-handover",
+      "title": "Outline rollback",
+      "note": "Draft the outline before adding headings.",
+      "heading": "Release handoff",
+      "body": "Confirm the release owner.",
+      "addition": "The reviewer confirmed the owner."
+    }
+  ]
+}

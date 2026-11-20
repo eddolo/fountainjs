@@ -2,9 +2,11 @@ import { expect } from '@playwright/test';
 import { join } from 'node:path';
 import { editorProof, openRich } from './gitlab-audit-editor.mjs';
 
-export async function runContents({ page, side, project, request, fixture, runId, output }) {
+export async function runContents({ page, side, project, request, fixture, runId, output, mrHandoverFrom }) {
   const [input] = fixture.cases;
-  if (input.scope === 'contents-authoring') return authorContents({page,side,project,request,input,runId,output});
+  if (input.scope === 'contents-handover' && side === 'original')
+    return reopenContentsAfterRollback({page,project,request,input,output,previous:mrHandoverFrom.observations[0]});
+  if (['contents-authoring','contents-handover'].includes(input.scope)) return authorContents({page,side,project,request,input,runId,output});
   const item = { id: input.id, input, status: 'incomplete', stage: 'open' };
   const issue = await request('/api/v4/projects/' + project.id + '/issues', { title: input.title + ' ' + runId, description: input.markdown });
   item.iid = issue.iid;
@@ -55,6 +57,68 @@ export async function runContents({ page, side, project, request, fixture, runId
     item.failure = String(error);
     item.controls = await page.getByTestId('work-item-description-wrapper').ariaSnapshot().catch(()=>'');
     await page.screenshot({path:join(output,'interrupted.png')}).catch(()=>{});
+  }
+  return [item];
+}
+
+async function reopenContentsAfterRollback({page,project,request,input,output,previous}) {
+  const item = {id:input.id,input,iid:previous.iid,status:'incomplete',stage:'handover'};
+  const api = '/api/v4/projects/' + project.id + '/issues/' + previous.iid;
+  const issue = await request(api);
+  expect(issue.description).toBe(previous.proseSaved);
+  expect(issue.project_id).toBe(project.id);
+  try {
+    await page.goto(issue.web_url);
+    const host = page.getByTestId('work-item-description-wrapper');
+    const edit = page.getByTestId('work-item-edit-form-button');
+    const reader = page.locator('.js-work-item-description');
+    const save = host.getByRole('button',{name:'Save changes',exact:true});
+    const source = host.locator('textarea[data-testid="markdown-editor-form-field"]');
+    const openSource = async () => {
+      await edit.click();
+      const toggle = host.getByRole('button',{name:'Switch to plain text editing',exact:true});
+      await expect(source.or(toggle).first()).toBeVisible();
+      if (!await source.isVisible()) await toggle.click();
+      await expect(source).toBeVisible();
+    };
+    const appendAndSave = async (before, addition) => {
+      await openSource();
+      await expect(source).toHaveValue(before);
+      await source.focus();
+      await page.keyboard.press('Control+End');
+      await source.press('Enter');
+      await source.press('Enter');
+      await page.keyboard.insertText(addition);
+      const expected = before + '\n\n' + addition;
+      await expect(source).toHaveValue(expected);
+      await save.click();
+      await expect.poll(async () => (await request(api)).description).toBe(expected);
+      await page.reload();
+      return expected;
+    };
+    await expect(reader).toContainText(input.note);
+    item.initial = issue.description;
+    item.stage = 'plain-save-without-headings';
+    item.withoutHeading = await appendAndSave(item.initial,input.addition);
+    await expect(reader).toContainText(input.addition);
+    item.stage = 'plain-save-with-heading';
+    item.withHeading = await appendAndSave(item.withoutHeading,'## ' + input.heading);
+    const links = reader.locator('ul.section-nav a');
+    await expect(links).toHaveText([input.heading]);
+    item.readerLinks = await links.allTextContents();
+    await edit.click();
+    const rich = await openRich(host,'original');
+    item.editorProof = await editorProof(rich);
+    await expect(rich.locator('.table-of-contents')).toContainText(input.heading);
+    await expect(rich).toContainText(input.note);
+    await expect(rich).toContainText(input.addition);
+    await rich.screenshot({path:join(output,'rollback-outline.png')});
+    expect((await request(api)).description).toBe(item.withHeading);
+    item.stage = 'complete';
+    item.status = 'observed';
+  } catch (error) {
+    item.failure = String(error);
+    await page.screenshot({path:join(output,'rollback-interrupted.png')}).catch(()=>{});
   }
   return [item];
 }
@@ -121,6 +185,14 @@ async function authorContents({page, side, project, request, input, runId, outpu
     await page.getByRole('button',{name:'Save changes',exact:true}).click();
     await expect.poll(async () => (await request(api)).description).toContain(input.note);
     item.proseSaved = (await request(api)).description;
+    if (input.scope === 'contents-handover') {
+      expect(item.emptySaved).toBe('[[_TOC_]]');
+      expect(item.proseSaved).toMatch(directive);
+      expect(item.proseSaved).toContain(input.note);
+      item.stage = 'ready-for-rollback';
+      item.status = 'observed';
+      return [item];
+    }
     await page.reload();
     await enterEdit();
     item.stage = 'add-heading';

@@ -592,6 +592,19 @@ On issue #540 the stock editor visibly undid italic formatting but immediately s
 
 The completed Chromium 151 rerun on Fountain revision `2cb51f61` verified all 44 matched isolation checks. After rollback stock reopened both candidate issues (#542 and #543) and both controls (#544 and #545). Each retained its original comment and a reviewed Markdown edit. Each lost the last rich-text edit at a measured 3.7–5.5 ms from key to click. [Exact build identities and four-record results](../../../artifacts/gitlab-compatibility/emoji-composer-rollback-20261119/comparison-2/report.md).
 
+### Roll back an issue with a table of contents and no headings
+
+Packaged GitLab's rich editor can drop the existing contents directive when it saves a prose edit to an issue that has no headings. Use plain text editing for that edit. Open the saved source, confirm the directive is present, and keep it when adding prose or headings. Once a heading exists, verify the reader outline and reopen rich editing. [Matched stock and Fountain authoring results](../../../artifacts/gitlab-compatibility/contents-authoring-20261120/verified/report.md).
+
+To exercise the deployment switch on one real issue, run these commands in the existing local GitLab audit environment with a fresh run ID.
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite contents-handover --browser chromium --editor fountain --run-id outline-rollback --attempt 1
+node scripts/run-gitlab-compatibility.mjs --suite contents-handover --browser chromium --editor original --run-id outline-rollback --attempt 1
+```
+
+The first run inserts the outline, saves it without headings, reopens it in Fountain and saves a sentence. The second verifies the prior mounted frontend and build, backend volumes, browser, fixture and collector hashes, then reopens the same issue ID. It checks the exact Markdown before and after two stock saves and reopens the resulting outline. Issue #681 passed on Chromium 151 and GitLab CE 19.5.3. [Fountain-authored source](../../../artifacts/gitlab-compatibility/contents-handover-20261120/fountain-2/report.json) · [Packaged GitLab saves and build identity](../../../artifacts/gitlab-compatibility/contents-handover-20261120/original-2/report.json) · [Reopened rich editor](../../../artifacts/gitlab-compatibility/contents-handover-20261120/original-2/rollback-outline.png).
+
 ### Reproduce the prepared Tiptap rich-text rollback
 
 This alternate deployment returns issue authors to GitLab’s Tiptap editor. The patches read the current document at Save, recognize its return through Vue, and return focus to the editor when an author activates a formatting button. It uses the packaged backend and the same database and uploads. The packaged frontend remains the original control for comparisons.
