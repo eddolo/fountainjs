@@ -162,6 +162,13 @@ export function compareGitLabCompatibility(original,fountain){
   }
   const check=(name,a,b)=>{if(a===undefined||b===undefined||!equal(a,b))mismatches.push(name);};
   if(original?.side!=='original'||fountain?.side!=='fountain')mismatches.push('editor-side');
+  const writerRequested = original.writerPaste || fountain.writerPaste;
+  if (writerRequested) {
+    check('native Writer paste requested',original.writerPaste,fountain.writerPaste);
+    if ([original,fountain].some(report => report.suite !== 'header-grid' || report.browser?.engine !== 'chromium' ||
+        report.fixture?.cases?.length !== 1 || report.fixture.cases[0].id !== 'merged-header'))
+      mismatches.push('native Writer profile');
+  }
   if (original.restartRequested || fountain.restartRequested) {
     check('restart requested', original.restartRequested, fountain.restartRequested);
     for (const report of [original, fountain]) {
@@ -907,6 +914,21 @@ export function compareGitLabCompatibility(original,fountain){
       for(const phase of ['copySelection','cutSelection'])add(phase+'.cells','Actual '+phase+' covers exactly the requested rectangle',input.selectedCells,left?.[phase]?.cells,right?.[phase]?.cells);
       if(input.paintControl)for(const phase of ['copySelection','cutSelection'])add(phase+'.outsidePaint','Unselected control cell keeps identical pixels during '+phase,true,left?.[phase]?.outsidePaintUnchanged,right?.[phase]?.outsidePaintUnchanged);
       for(const phase of ['initial','reopened'])add('documentReady.'+phase,phase+': document and both tables are loaded',true,left?.documentReady?.[phase],right?.documentReady?.[phase]);
+      if (writerRequested && input.id === 'merged-header') {
+        check('native Writer version',left?.writer?.version,right?.writer?.version);
+        if (!/^LibreOffice \d+\./.test(left?.writer?.version ?? '')) mismatches.push('unverified Writer version');
+        const [[header],[link,body]] = input.externalGraph.tables[0];
+        const expectedCells = {A1:header.paragraphs[0],A2:link.paragraphs[0],B2:body.paragraphs[0]};
+        for (const phase of ['pasted','reopened']) {
+          for (const [key,label,expected] of [
+            ['count','one native Writer table',1],
+            ['rows','exact cell text including whitespace',expectedCells],
+            ['boldOwner','bold emphasis on owner',true],
+            ['runbookURL','Runbook hyperlink destination',link.links[0].href],
+          ]) add('writer.'+phase+'.'+key, 'Writer '+phase+': '+label, expected, left?.writer?.[phase]?.[key],right?.writer?.[phase]?.[key]);
+        }
+        add('writer.odt.colspan','The stored ODT header cell spans two columns',header.colspan,left?.writer?.firstCellColspan,right?.writer?.firstCellColspan);
+      }
       add('clipboard.text','Cell copy supplies exact TSV boundaries',input.plain,left?.clipboard?.text,right?.clipboard?.text);
       add('clipboard.html','Cell copy supplies actual rich HTML',true,left?.clipboard?typeof left.clipboard.html==='string'&&left.clipboard.html.length>0:undefined,right?.clipboard?typeof right.clipboard.html==='string'&&right.clipboard.html.length>0:undefined);
       add('cutClipboardText','Cell cut supplies exact TSV boundaries',input.plain,left?.cutClipboardText,right?.cutClipboardText);

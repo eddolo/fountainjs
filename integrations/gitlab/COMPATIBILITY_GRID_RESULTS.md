@@ -97,6 +97,23 @@ On GitLab CE 19.5.3 in Chromium 151, the author selected a header spanning two c
 
 Reproduce with `--suite header-grid --browser chromium` on each editor using the paired runner above.
 
+## Paste into LibreOffice Writer
+
+The optional `--writer-paste` run adds a native Linux Writer process to the merged-header workflow. Chromium copies the real GitLab selection on a private X11 display. Writer uses its Paste command, saves an ODT, closes it, and reopens it. The collector reads the Writer cells, bold text and link destination before and after reopening. It reads the merged span from the saved ODT and captures Writer’s window. The test uses a fresh Writer profile for each run.
+
+On the pinned Chromium 151 and GitLab CE 19.5.3 builds, Writer 24.2.7.2 reopened a native table from each editor. Both retained the exact cell text, bold emphasis, Runbook hyperlink and two-column span. Writer displayed a borderless table and left repeating header rows disabled in both ODTs. All nine Writer checks matched. Across the whole run, 26 checks matched and four recorded the same plain-text tab advantage described above. The final screenshots wait for the reopened page to paint. An earlier fixed-delay capture on stock showed only the Writer canvas. [Matched build report](../../artifacts/gitlab-compatibility/writer-header-grid-20261120/comparison-2/report.md) · [Fountain ODT](../../artifacts/gitlab-compatibility/writer-header-grid-20261120/fountain-2/writer-paste.odt) · [Stock ODT](../../artifacts/gitlab-compatibility/writer-header-grid-20261120/original-2/writer-paste.odt).
+
+With Chromium and the pinned GitLab installation prepared, install the Ubuntu packages `xvfb`, `xauth`, `libreoffice-writer`, `python3-uno` and `python3-pil`. Run the two editors sequentially from the checkout:
+
+```sh
+run="writer-paste-$(date +%s)"
+for editor in fountain original; do
+  xvfb-run -a node scripts/run-gitlab-compatibility.mjs --suite header-grid --writer-paste --browser chromium --editor "$editor" --run-id "$run" || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
+```
+
 ## Remaining scope
 
 Complex overlapping spans, Unicode/IME, nested content, ownership rules, rapid input, other

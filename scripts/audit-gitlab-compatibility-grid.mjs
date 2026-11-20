@@ -1,6 +1,8 @@
 import {expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 
 export const tableClipboardGraph=root=>{
@@ -25,7 +27,7 @@ async function selectCells({page,editor,source,input,fixture,output,phase}){
  if(outside){const after=await outside.screenshot({caret:'hide',animations:'disabled'}),files={before:input.id+'-'+phase+'-outside-before.png',after:input.id+'-'+phase+'-outside-after.png'};await writeFile(join(output,files.before),before);await writeFile(join(output,files.after),after);paint.outsidePaintUnchanged=Buffer.compare(before,after)===0;paint.outsidePaint={files,beforeSha256:createHash('sha256').update(before).digest('hex'),afterSha256:createHash('sha256').update(after).digest('hex')};}
  return {cells:selected,focused:focus,anchor:input.anchor,head:input.head,...paint};
 }
-export async function runGitLabGridClipboardCompatibility({side,runId,page,request,project,fixture,output,onProgress}){
+export async function runGitLabGridClipboardCompatibility({side,runId,page,request,project,fixture,output,onProgress,writerPaste}){
  const observations=[],pause=()=>new Promise(resolve=>setTimeout(resolve,fixture.settlingMs));
  for(const input of fixture.cases){
   const result={id:input.id,input,status:'incomplete',stage:'setup',actions:[]};observations.push(result);let external;
@@ -46,6 +48,12 @@ export async function runGitLabGridClipboardCompatibility({side,runId,page,reque
    await stage('select-copy');await page.evaluate(()=>navigator.clipboard.writeText('Table clipboard compatibility sentinel'));
    result.copySelection=await selectCells({page,editor,source,input,fixture,output,phase:'copy'});await shot('selected');await page.keyboard.press('Control+c');
    result.clipboard=await page.evaluate(async()=>{const items=await navigator.clipboard.read(),read=async type=>{const item=items.find(value=>value.types.includes(type));return item?(await item.getType(type)).text():null;};return {text:await read('text/plain'),html:await read('text/html')};});
+   if (writerPaste) {
+     await stage('writer-paste');
+     const consumer = fileURLToPath(new URL('./audit-gitlab-writer-paste.py',import.meta.url));
+     result.writer = JSON.parse(execFileSync('/usr/bin/python3',[consumer,output],{encoding:'utf8',timeout:80000}));
+     await page.bringToFront();
+   }
    await stage('external-paste');external=await page.context().newPage();await external.setContent('<h1>External cell grid</h1><label>Plain grid<textarea aria-label="External plain grid" rows="5"></textarea></label><div contenteditable="true" role="textbox" aria-label="External rich grid" style="border:1px solid #999;padding:20px"></div>');
    const plain=external.getByRole('textbox',{name:'External plain grid',exact:true});await plain.focus();await external.keyboard.press('Control+v');result.externalPlain=await plain.inputValue();
    const rich=external.getByRole('textbox',{name:'External rich grid',exact:true});await rich.focus();await external.keyboard.press('Control+v');await pause();result.externalRich=await rich.evaluate(tableClipboardGraph);

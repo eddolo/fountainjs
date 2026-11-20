@@ -201,6 +201,26 @@ function reports(){
  return [{...sideReport('original'),observations:[{...structuredClone(observation),editorProof:{native:false,className:'tiptap ProseMirror'}}]},
  {...sideReport('fountain'),observations:[{...structuredClone(observation),prefillDOM:'exact\n',editorProof:{native:true,className:'fountain-editor'}}]}];
 }
+it('compares native Writer content and version independently of a browser paste', () => {
+ const [stock, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-header-grid.json',import.meta.url),'utf8'));
+ const input = fixture.cases[0];
+ for (const report of [stock,fountain]) {
+   Object.assign(report,{suite:'header-grid',writerPaste:true,fixture});
+   report.browser.engine = 'chromium';
+   Object.assign(report.observations[0],{id:input.id,input,writer:{version:'LibreOffice 24.2.7.2',
+     firstCellColspan:2,reopened:{count:1,rows:{A1:'Release owner',A2:'Runbook',B2:'Ready'}}}});
+ }
+ const row = (id:string) => compareGitLabCompatibility(stock,fountain).rows.find((entry:any) => entry.invariant === id);
+ expect(row('writer.reopened.rows').classification).toBe('parity');
+ expect(row('writer.pasted.rows').classification).toBe(null);
+ fountain.observations[0].writer.reopened.rows.A1 = 'Release\u00a0owner';
+ expect(row('writer.reopened.rows').classification).toBe('regression');
+ stock.observations[0].writer.reopened.rows.A1 = 'Release\u00a0owner';
+ expect(row('writer.reopened.rows').classification).toBe('shared-limitation');
+ stock.observations[0].writer.version = 'LibreOffice 25.2.0';
+ expect(compareGitLabCompatibility(stock,fountain).environment.mismatches).toContain('native Writer version');
+});
 it('identifies the prepared Tiptap rollback build separately from packaged GitLab', async () => {
  // @ts-expect-error Private JS audit helper intentionally has no published type entry.
  const {buildIdentityError, preparedRollbackTree} = await import('../integrations/gitlab/testing/build-identity.mjs');
