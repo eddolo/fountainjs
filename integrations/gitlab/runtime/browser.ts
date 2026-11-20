@@ -2,6 +2,7 @@ export { gitLabSuggestionDeletesLines } from '../services/code_suggestion_source
 export { GitLabContentEditor, GitLabEditorNotReady } from '../services/content_editor';
 export { assertGitLabNativeHostConfiguration } from '../services/host_configuration';
 export { getGitLabLinkContext } from '../services/link_editing';
+export { insertGitLabContents } from '../services/table_of_contents';
 export { getGitLabCodeContext } from '../services/code_editing';
 export { selectionIncludesGitLabFrontmatter } from '../services/frontmatter';
 export { getGitLabAlertContext } from '../services/alert_editing';
@@ -23,7 +24,7 @@ export {
   insertList,
   toggleList,
   selectAll,
-  insertNode, insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
+  insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
   deleteTableColumn, deleteTable, mergeTableCells, splitTableCell,
   insertInlineImage,
   setLink,

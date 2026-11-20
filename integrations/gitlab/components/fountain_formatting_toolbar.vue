@@ -15,7 +15,7 @@ import {
   redo,
   canUndo,
   canRedo,
-  insertNode, insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
+  insertGitLabContents, insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
   deleteTableColumn, deleteTable, mergeTableCells, splitTableCell,
   getGitLabAlertContext,
   getGitLabCodeContext,
@@ -267,7 +267,7 @@ export default {
       } catch (error) { this.$emit('error', error); }
     },
     insertContents() {
-      this.execute({ run: () => insertNode(this.editor, this.editor.state.schema.node('gitlab_table_of_contents')) });
+      this.execute({ run: () => insertGitLabContents(this.editor) });
     },
     insertTableAtSelection({ rows, cols }) {
       this.execute({ run: () => insertTable(this.editor, { rows, columns: cols, headerRow: true }) });

@@ -1,4 +1,4 @@
-import { NodeSelection, Selection, type EditorView, type Node, type NodeSpec, type NodeViewLike } from 'fountainjs-editor';
+import { insertDocument, NodeSelection, Selection, type Editor, type EditorView, type Node, type NodeSpec, type NodeViewLike } from 'fountainjs-editor';
 import { buildTableOfContents, type TableOfContentsTreeEntry } from 'fountainjs-editor/table-of-contents';
 import type { DefaultTreeAdapterMap } from 'parse5';
 import { GitLabFootnotePositions } from './footnote_positions';
@@ -27,6 +27,12 @@ export function normalizeGitLabContents(elements: readonly Element[], source: st
     element.attrs = [{ name: 'token', value: token }];
     element.childNodes = [];
   }
+}
+
+export function insertGitLabContents(editor: Editor): boolean {
+  const { schema } = editor.state;
+  const outline = schema.node('gitlab_table_of_contents');
+  return editor.runCommandBatch(() => insertDocument(editor, schema.topNodeType.create({}, [outline])));
 }
 
 export function gitLabContentsNode(label: string): NodeSpec {

@@ -5,6 +5,8 @@ import {
   GitLabEditorNotReady,
 } from '../integrations/gitlab/services/content_editor';
 
+import { insertGitLabContents } from '../integrations/gitlab/services/table_of_contents';
+
 const services: GitLabContentEditor[] = [];
 afterEach(() => services.splice(0).forEach((service) => service.dispose()));
 function setup(renderMarkdown = vi.fn(async (text: string) => ({ body: `<p>${text}</p>` }))) {
@@ -38,6 +40,17 @@ it('owns a native model without requiring DOM globals and reads only a loaded cu
   expect(service.getSerializedContent()).toBe('Original updated');
   expect(undo(service.editor)).toBe(true);
   expect(service.getSerializedContent()).toBe('Original');
+});
+
+it('inserts an outline into a blank issue without saving its editable caret as authored paragraphs', async () => {
+  const { service } = setup();
+  await service.setSerializedContent('');
+  expect(insertGitLabContents(service.editor)).toBe(true);
+  expect(service.getSerializedContent()).toBe('[[_TOC_]]');
+  expect(undo(service.editor)).toBe(true);
+  expect(service.getSerializedContent()).toBe('');
+  expect(redo(service.editor)).toBe(true);
+  expect(service.getSerializedContent()).toBe('[[_TOC_]]');
 });
 
 it('loads an empty new comment and retains the latest source for equal-document reloads', async () => {
