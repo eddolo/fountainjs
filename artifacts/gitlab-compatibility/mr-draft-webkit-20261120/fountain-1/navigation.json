@@ -1,0 +1,5147 @@
+[
+  {
+    "ms": 488,
+    "stage": "select-source-branch",
+    "kind": "request",
+    "id": 1,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 644,
+    "stage": "select-source-branch",
+    "kind": "response",
+    "id": 1,
+    "status": 200
+  },
+  {
+    "ms": 646,
+    "stage": "select-source-branch",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 662,
+    "stage": "select-source-branch",
+    "kind": "finished",
+    "id": 1
+  },
+  {
+    "ms": 1114,
+    "stage": "select-source-branch",
+    "kind": "request",
+    "id": 2,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 1726,
+    "stage": "select-source-branch",
+    "kind": "request",
+    "id": 3,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 1804,
+    "stage": "select-source-branch",
+    "kind": "request",
+    "id": 4,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 1811,
+    "stage": "select-source-branch",
+    "kind": "request",
+    "id": 5,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 1814,
+    "stage": "select-source-branch",
+    "kind": "request",
+    "id": 6,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 1879,
+    "stage": "select-source-branch",
+    "kind": "response",
+    "id": 2,
+    "status": 200
+  },
+  {
+    "ms": 1879,
+    "stage": "select-source-branch",
+    "kind": "finished",
+    "id": 2
+  },
+  {
+    "ms": 1896,
+    "stage": "select-source-branch",
+    "kind": "response",
+    "id": 3,
+    "status": 200
+  },
+  {
+    "ms": 1899,
+    "stage": "select-source-branch",
+    "kind": "finished",
+    "id": 3
+  },
+  {
+    "ms": 1999,
+    "stage": "select-source-branch",
+    "kind": "request",
+    "id": 7,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 2075,
+    "stage": "select-source-branch",
+    "kind": "response",
+    "id": 6,
+    "status": 200
+  },
+  {
+    "ms": 2075,
+    "stage": "select-source-branch",
+    "kind": "finished",
+    "id": 6
+  },
+  {
+    "ms": 2081,
+    "stage": "open-new-request",
+    "kind": "pageshow",
+    "path": "/root/fountain-product-integration/-/merge_requests",
+    "documentEpoch": 1795203445155
+  },
+  {
+    "ms": 2121,
+    "stage": "open-new-request",
+    "kind": "response",
+    "id": 5,
+    "status": 200
+  },
+  {
+    "ms": 2121,
+    "stage": "open-new-request",
+    "kind": "finished",
+    "id": 5
+  },
+  {
+    "ms": 2173,
+    "stage": "open-new-request",
+    "kind": "response",
+    "id": 7,
+    "status": 200
+  },
+  {
+    "ms": 2173,
+    "stage": "open-new-request",
+    "kind": "finished",
+    "id": 7
+  },
+  {
+    "ms": 2380,
+    "stage": "open-new-request",
+    "kind": "request",
+    "id": 8,
+    "type": "xhr",
+    "method": "POST",
+    "path": "/api/v4/usage_data/track_event",
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 2382,
+    "stage": "open-new-request",
+    "kind": "request",
+    "id": 9,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 2383,
+    "stage": "open-new-request",
+    "kind": "beforeunload",
+    "path": "/root/fountain-product-integration/-/merge_requests",
+    "documentEpoch": 1795203445155
+  },
+  {
+    "ms": 2385,
+    "stage": "open-new-request",
+    "kind": "failed",
+    "id": 8,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 2386,
+    "stage": "open-new-request",
+    "kind": "failed",
+    "id": 9,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 2386,
+    "stage": "open-new-request",
+    "kind": "failed",
+    "id": 4,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 2387,
+    "stage": "open-new-request",
+    "kind": "request",
+    "id": 10,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/new",
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 2630,
+    "stage": "open-new-request",
+    "kind": "response",
+    "id": 10,
+    "status": 200
+  },
+  {
+    "ms": 2631,
+    "stage": "open-new-request",
+    "kind": "pagehide",
+    "path": "/root/fountain-product-integration/-/merge_requests",
+    "documentEpoch": 1795203445155
+  },
+  {
+    "ms": 2632,
+    "stage": "open-new-request",
+    "kind": "pageerror",
+    "errorIndex": 0,
+    "page": "/root/fountain-product-integration/-/merge_requests"
+  },
+  {
+    "ms": 2636,
+    "stage": "open-new-request",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 2683,
+    "stage": "open-new-request",
+    "kind": "finished",
+    "id": 10
+  },
+  {
+    "ms": 2810,
+    "stage": "open-new-request",
+    "kind": "request",
+    "id": 11,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 3238,
+    "stage": "open-new-request",
+    "kind": "request",
+    "id": 12,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/new/branch_to",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 3270,
+    "stage": "open-new-request",
+    "kind": "response",
+    "id": 11,
+    "status": 200
+  },
+  {
+    "ms": 3270,
+    "stage": "open-new-request",
+    "kind": "finished",
+    "id": 11
+  },
+  {
+    "ms": 3378,
+    "stage": "open-new-request",
+    "kind": "request",
+    "id": 13,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 3385,
+    "stage": "open-new-request",
+    "kind": "pageshow",
+    "path": "/root/fountain-product-integration/-/merge_requests/new",
+    "documentEpoch": 1795203447051
+  },
+  {
+    "ms": 3437,
+    "stage": "open-new-request",
+    "kind": "response",
+    "id": 13,
+    "status": 200
+  },
+  {
+    "ms": 3437,
+    "stage": "open-new-request",
+    "kind": "finished",
+    "id": 13
+  },
+  {
+    "ms": 3446,
+    "stage": "open-new-request",
+    "kind": "response",
+    "id": 12,
+    "status": 200
+  },
+  {
+    "ms": 3452,
+    "stage": "open-new-request",
+    "kind": "finished",
+    "id": 12
+  },
+  {
+    "ms": 3579,
+    "stage": "open-new-request",
+    "kind": "request",
+    "id": 14,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/refs",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 3675,
+    "stage": "open-new-request",
+    "kind": "response",
+    "id": 14,
+    "status": 200
+  },
+  {
+    "ms": 3742,
+    "stage": "open-new-request",
+    "kind": "finished",
+    "id": 14
+  },
+  {
+    "ms": 3877,
+    "stage": "open-new-request",
+    "kind": "request",
+    "id": 15,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/new/branch_from",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 4023,
+    "stage": "compare-branches",
+    "kind": "response",
+    "id": 15,
+    "status": 200
+  },
+  {
+    "ms": 4023,
+    "stage": "compare-branches",
+    "kind": "finished",
+    "id": 15
+  },
+  {
+    "ms": 4039,
+    "stage": "compare-branches",
+    "kind": "beforeunload",
+    "path": "/root/fountain-product-integration/-/merge_requests/new",
+    "documentEpoch": 1795203447051
+  },
+  {
+    "ms": 4039,
+    "stage": "compare-branches",
+    "kind": "request",
+    "id": 16,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/new",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 4141,
+    "stage": "compare-branches",
+    "kind": "pageerror",
+    "errorIndex": 1,
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 4448,
+    "stage": "compare-branches",
+    "kind": "response",
+    "id": 16,
+    "status": 200
+  },
+  {
+    "ms": 4457,
+    "stage": "compare-branches",
+    "kind": "pagehide",
+    "path": "/root/fountain-product-integration/-/merge_requests/new",
+    "documentEpoch": 1795203447051
+  },
+  {
+    "ms": 4459,
+    "stage": "compare-branches",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 4525,
+    "stage": "compare-branches",
+    "kind": "finished",
+    "id": 16
+  },
+  {
+    "ms": 4707,
+    "stage": "compare-branches",
+    "kind": "request",
+    "id": 17,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 5273,
+    "stage": "compare-branches",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 5284,
+    "stage": "compare-branches",
+    "kind": "request",
+    "id": 18,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/compare/signatures",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 5314,
+    "stage": "compare-branches",
+    "kind": "response",
+    "id": 17,
+    "status": 200
+  },
+  {
+    "ms": 5315,
+    "stage": "compare-branches",
+    "kind": "finished",
+    "id": 17
+  },
+  {
+    "ms": 5413,
+    "stage": "compare-branches",
+    "kind": "request",
+    "id": 19,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 5427,
+    "stage": "author-and-submit",
+    "kind": "response",
+    "id": 18,
+    "status": 200
+  },
+  {
+    "ms": 5427,
+    "stage": "author-and-submit",
+    "kind": "finished",
+    "id": 18
+  },
+  {
+    "ms": 5858,
+    "stage": "author-and-submit",
+    "kind": "response",
+    "id": 19,
+    "status": 200
+  },
+  {
+    "ms": 5858,
+    "stage": "author-and-submit",
+    "kind": "finished",
+    "id": 19
+  },
+  {
+    "ms": 5860,
+    "stage": "author-and-submit",
+    "kind": "pageshow",
+    "path": "/root/fountain-product-integration/-/merge_requests/new",
+    "documentEpoch": 1795203448701
+  },
+  {
+    "ms": 6679,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 20,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 6693,
+    "stage": "create-request",
+    "kind": "beforeunload",
+    "path": "/root/fountain-product-integration/-/merge_requests/new",
+    "documentEpoch": 1795203448701
+  },
+  {
+    "ms": 6693,
+    "stage": "create-request",
+    "kind": "failed",
+    "id": 20,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 6693,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 21,
+    "type": "document",
+    "method": "POST",
+    "path": "/root/fountain-product-integration/-/merge_requests",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 6853,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 21,
+    "status": 302
+  },
+  {
+    "ms": 6853,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 21
+  },
+  {
+    "ms": 6853,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 22,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 7301,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 22,
+    "status": 200
+  },
+  {
+    "ms": 7301,
+    "stage": "create-request",
+    "kind": "pagehide",
+    "path": "/root/fountain-product-integration/-/merge_requests/new",
+    "documentEpoch": 1795203448701
+  },
+  {
+    "ms": 7302,
+    "stage": "create-request",
+    "kind": "pageerror",
+    "errorIndex": 2,
+    "page": "/root/fountain-product-integration/-/merge_requests/new"
+  },
+  {
+    "ms": 7311,
+    "stage": "create-request",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 7316,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 23,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/discussions.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 7319,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 24,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 7320,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 25,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/cached_widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 7320,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 26,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 7377,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 22
+  },
+  {
+    "ms": 7595,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 27,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 7971,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 28,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/api/v4/user_counts",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8143,
+    "stage": "create-request",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8198,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 29,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8249,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 30,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8256,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 31,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8269,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 32,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/-/emojis/4/emojis.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8270,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 33,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/api/v4/projects/1/merge_requests/248/award_emoji",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8273,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 34,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/diffs_metadata.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8320,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 25,
+    "status": 200
+  },
+  {
+    "ms": 8320,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 25
+  },
+  {
+    "ms": 8320,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 26,
+    "status": 200
+  },
+  {
+    "ms": 8320,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 26
+  },
+  {
+    "ms": 8321,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 24,
+    "status": 200
+  },
+  {
+    "ms": 8321,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 24
+  },
+  {
+    "ms": 8321,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 23,
+    "status": 200
+  },
+  {
+    "ms": 8321,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 23
+  },
+  {
+    "ms": 8322,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 27,
+    "status": 200
+  },
+  {
+    "ms": 8322,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 27
+  },
+  {
+    "ms": 8323,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 28,
+    "status": 200
+  },
+  {
+    "ms": 8329,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 28
+  },
+  {
+    "ms": 8332,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 32,
+    "status": 200
+  },
+  {
+    "ms": 8419,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 32
+  },
+  {
+    "ms": 8423,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 35,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8437,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 36,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8437,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 37,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8437,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 38,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/ci_environments_status",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8528,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 39,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8551,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 40,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8558,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 41,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8571,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 42,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8602,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 43,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8622,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 44,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8634,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 45,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8666,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 46,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8680,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 47,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8699,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 48,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/drafts",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 8762,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 29,
+    "status": 200
+  },
+  {
+    "ms": 8766,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 29
+  },
+  {
+    "ms": 9225,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 49,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 9287,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 33,
+    "status": 200
+  },
+  {
+    "ms": 9288,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 33
+  },
+  {
+    "ms": 9289,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 30,
+    "status": 200
+  },
+  {
+    "ms": 9289,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 30
+  },
+  {
+    "ms": 9290,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 31,
+    "status": 200
+  },
+  {
+    "ms": 9290,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 31
+  },
+  {
+    "ms": 9290,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 35,
+    "status": 200
+  },
+  {
+    "ms": 9290,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 35
+  },
+  {
+    "ms": 9312,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 50,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/3756/notes",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 9568,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 36,
+    "status": 200
+  },
+  {
+    "ms": 9568,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 36
+  },
+  {
+    "ms": 9571,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 38,
+    "status": 200
+  },
+  {
+    "ms": 9571,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 38
+  },
+  {
+    "ms": 9578,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 51,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 9591,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 52,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 9618,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 34,
+    "status": 200
+  },
+  {
+    "ms": 9618,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 34
+  },
+  {
+    "ms": 9621,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 53,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 9684,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 39,
+    "status": 200
+  },
+  {
+    "ms": 9684,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 39
+  },
+  {
+    "ms": 9698,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 37,
+    "status": 200
+  },
+  {
+    "ms": 9698,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 37
+  },
+  {
+    "ms": 9984,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 42,
+    "status": 200
+  },
+  {
+    "ms": 9984,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 42
+  },
+  {
+    "ms": 10010,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 43,
+    "status": 200
+  },
+  {
+    "ms": 10010,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 43
+  },
+  {
+    "ms": 10067,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 41,
+    "status": 200
+  },
+  {
+    "ms": 10068,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 41
+  },
+  {
+    "ms": 10071,
+    "stage": "create-request",
+    "kind": "request",
+    "id": 54,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 10107,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 40,
+    "status": 200
+  },
+  {
+    "ms": 10107,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 40
+  },
+  {
+    "ms": 10312,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 44,
+    "status": 200
+  },
+  {
+    "ms": 10313,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 44
+  },
+  {
+    "ms": 10315,
+    "stage": "create-request",
+    "kind": "pageshow",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203451359
+  },
+  {
+    "ms": 10355,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 46,
+    "status": 200
+  },
+  {
+    "ms": 10355,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 46
+  },
+  {
+    "ms": 10369,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 47,
+    "status": 200
+  },
+  {
+    "ms": 10369,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 47
+  },
+  {
+    "ms": 10387,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 45,
+    "status": 200
+  },
+  {
+    "ms": 10387,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 45
+  },
+  {
+    "ms": 10550,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 49,
+    "status": 200
+  },
+  {
+    "ms": 10550,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 49
+  },
+  {
+    "ms": 10589,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 48,
+    "status": 200
+  },
+  {
+    "ms": 10592,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 48
+  },
+  {
+    "ms": 10704,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 50,
+    "status": 200
+  },
+  {
+    "ms": 10704,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 50
+  },
+  {
+    "ms": 10787,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 51,
+    "status": 200
+  },
+  {
+    "ms": 10787,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 51
+  },
+  {
+    "ms": 11180,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 52,
+    "status": 200
+  },
+  {
+    "ms": 11180,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 52
+  },
+  {
+    "ms": 11180,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 53,
+    "status": 200
+  },
+  {
+    "ms": 11180,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 53
+  },
+  {
+    "ms": 11180,
+    "stage": "create-request",
+    "kind": "response",
+    "id": 54,
+    "status": 200
+  },
+  {
+    "ms": 11180,
+    "stage": "create-request",
+    "kind": "finished",
+    "id": 54
+  },
+  {
+    "ms": 11771,
+    "stage": "open-edit-form",
+    "kind": "beforeunload",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203451359
+  },
+  {
+    "ms": 11771,
+    "stage": "open-edit-form",
+    "kind": "request",
+    "id": 55,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/edit",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 11916,
+    "stage": "open-edit-form",
+    "kind": "response",
+    "id": 55,
+    "status": 200
+  },
+  {
+    "ms": 11917,
+    "stage": "open-edit-form",
+    "kind": "pagehide",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203451359
+  },
+  {
+    "ms": 11928,
+    "stage": "open-edit-form",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/edit"
+  },
+  {
+    "ms": 12107,
+    "stage": "open-edit-form",
+    "kind": "request",
+    "id": 56,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248/edit"
+  },
+  {
+    "ms": 12452,
+    "stage": "open-edit-form",
+    "kind": "finished",
+    "id": 55
+  },
+  {
+    "ms": 12589,
+    "stage": "open-edit-form",
+    "kind": "request",
+    "id": 57,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/api/v4/projects/1/repository/branches",
+    "page": "/root/fountain-product-integration/-/merge_requests/248/edit"
+  },
+  {
+    "ms": 12596,
+    "stage": "open-edit-form",
+    "kind": "response",
+    "id": 56,
+    "status": 200
+  },
+  {
+    "ms": 12596,
+    "stage": "open-edit-form",
+    "kind": "finished",
+    "id": 56
+  },
+  {
+    "ms": 12681,
+    "stage": "open-edit-form",
+    "kind": "request",
+    "id": 58,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248/edit"
+  },
+  {
+    "ms": 12985,
+    "stage": "open-edit-form",
+    "kind": "request",
+    "id": 59,
+    "type": "xhr",
+    "method": "POST",
+    "path": "/root/fountain-product-integration/-/preview_markdown",
+    "page": "/root/fountain-product-integration/-/merge_requests/248/edit"
+  },
+  {
+    "ms": 13074,
+    "stage": "open-edit-form",
+    "kind": "response",
+    "id": 58,
+    "status": 200
+  },
+  {
+    "ms": 13074,
+    "stage": "open-edit-form",
+    "kind": "finished",
+    "id": 58
+  },
+  {
+    "ms": 13074,
+    "stage": "open-edit-form",
+    "kind": "pageshow",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/edit",
+    "documentEpoch": 1795203456439
+  },
+  {
+    "ms": 13075,
+    "stage": "open-edit-form",
+    "kind": "response",
+    "id": 57,
+    "status": 200
+  },
+  {
+    "ms": 13089,
+    "stage": "open-edit-form",
+    "kind": "finished",
+    "id": 57
+  },
+  {
+    "ms": 13089,
+    "stage": "open-edit-form",
+    "kind": "response",
+    "id": 59,
+    "status": 200
+  },
+  {
+    "ms": 13116,
+    "stage": "open-edit-form",
+    "kind": "finished",
+    "id": 59
+  },
+  {
+    "ms": 13622,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 60,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248/edit"
+  },
+  {
+    "ms": 13633,
+    "stage": "save-description",
+    "kind": "beforeunload",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/edit",
+    "documentEpoch": 1795203456439
+  },
+  {
+    "ms": 13633,
+    "stage": "save-description",
+    "kind": "failed",
+    "id": 60,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 13634,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 61,
+    "type": "document",
+    "method": "POST",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "page": "/root/fountain-product-integration/-/merge_requests/248/edit"
+  },
+  {
+    "ms": 13853,
+    "stage": "save-description",
+    "kind": "response",
+    "id": 61,
+    "status": 302
+  },
+  {
+    "ms": 13853,
+    "stage": "save-description",
+    "kind": "finished",
+    "id": 61
+  },
+  {
+    "ms": 13853,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 62,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "page": "/root/fountain-product-integration/-/merge_requests/248/edit"
+  },
+  {
+    "ms": 14022,
+    "stage": "save-description",
+    "kind": "response",
+    "id": 62,
+    "status": 200
+  },
+  {
+    "ms": 14023,
+    "stage": "save-description",
+    "kind": "pagehide",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/edit",
+    "documentEpoch": 1795203456439
+  },
+  {
+    "ms": 14024,
+    "stage": "save-description",
+    "kind": "pageerror",
+    "errorIndex": 3,
+    "page": "/root/fountain-product-integration/-/merge_requests/248/edit"
+  },
+  {
+    "ms": 14032,
+    "stage": "save-description",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14039,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 63,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/discussions.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14039,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 64,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14039,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 65,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/cached_widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14041,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 66,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14251,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 67,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14620,
+    "stage": "save-description",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14649,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 68,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14690,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 69,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14706,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 70,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14752,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 71,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/api/v4/projects/1/merge_requests/248/award_emoji",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14753,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 72,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/diffs_metadata.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14777,
+    "stage": "save-description",
+    "kind": "finished",
+    "id": 62
+  },
+  {
+    "ms": 14799,
+    "stage": "save-description",
+    "kind": "response",
+    "id": 65,
+    "status": 200
+  },
+  {
+    "ms": 14799,
+    "stage": "save-description",
+    "kind": "finished",
+    "id": 65
+  },
+  {
+    "ms": 14800,
+    "stage": "save-description",
+    "kind": "response",
+    "id": 66,
+    "status": 200
+  },
+  {
+    "ms": 14800,
+    "stage": "save-description",
+    "kind": "finished",
+    "id": 66
+  },
+  {
+    "ms": 14801,
+    "stage": "save-description",
+    "kind": "response",
+    "id": 64,
+    "status": 200
+  },
+  {
+    "ms": 14801,
+    "stage": "save-description",
+    "kind": "finished",
+    "id": 64
+  },
+  {
+    "ms": 14801,
+    "stage": "save-description",
+    "kind": "response",
+    "id": 63,
+    "status": 200
+  },
+  {
+    "ms": 14801,
+    "stage": "save-description",
+    "kind": "finished",
+    "id": 63
+  },
+  {
+    "ms": 14804,
+    "stage": "save-description",
+    "kind": "response",
+    "id": 67,
+    "status": 200
+  },
+  {
+    "ms": 14805,
+    "stage": "save-description",
+    "kind": "finished",
+    "id": 67
+  },
+  {
+    "ms": 14810,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 73,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14819,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 74,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14819,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 75,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14821,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 76,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/ci_environments_status",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14877,
+    "stage": "save-description",
+    "kind": "response",
+    "id": 68,
+    "status": 200
+  },
+  {
+    "ms": 14877,
+    "stage": "save-description",
+    "kind": "finished",
+    "id": 68
+  },
+  {
+    "ms": 14937,
+    "stage": "save-description",
+    "kind": "request",
+    "id": 77,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14948,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 69,
+    "status": 200
+  },
+  {
+    "ms": 14948,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 69
+  },
+  {
+    "ms": 14965,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 78,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14965,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 79,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14973,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 80,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 14987,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 81,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15002,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 82,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15014,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 83,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15019,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 84,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15024,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 85,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15041,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 86,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/drafts",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15093,
+    "stage": "reload-reader",
+    "kind": "beforeunload",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203458301
+  },
+  {
+    "ms": 15094,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 82,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15094,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 73,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15094,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 77,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15094,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 75,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15094,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 86,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15097,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 84,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15097,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 76,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15099,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 85,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15099,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 83,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15099,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 78,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15099,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 74,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15099,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 81,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15099,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 71,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15099,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 70,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15099,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 80,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15100,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 72,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15100,
+    "stage": "reload-reader",
+    "kind": "failed",
+    "id": 79,
+    "reason": "Load request cancelled"
+  },
+  {
+    "ms": 15102,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 87,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15430,
+    "stage": "reload-reader",
+    "kind": "pageerror",
+    "errorIndex": 4,
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15438,
+    "stage": "reload-reader",
+    "kind": "pageerror",
+    "errorIndex": 5,
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15621,
+    "stage": "reload-reader",
+    "kind": "pageerror",
+    "errorIndex": 6,
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15924,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 87,
+    "status": 200
+  },
+  {
+    "ms": 15937,
+    "stage": "reload-reader",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15947,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 88,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/discussions.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15947,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 89,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15947,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 90,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/cached_widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 15947,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 91,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16210,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 92,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16606,
+    "stage": "reload-reader",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16632,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 93,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16740,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 94,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16755,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 95,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16782,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 96,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/api/v4/projects/1/merge_requests/248/award_emoji",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16782,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 97,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/diffs_metadata.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16806,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 87
+  },
+  {
+    "ms": 16819,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 91,
+    "status": 200
+  },
+  {
+    "ms": 16819,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 91
+  },
+  {
+    "ms": 16820,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 90,
+    "status": 200
+  },
+  {
+    "ms": 16820,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 90
+  },
+  {
+    "ms": 16820,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 89,
+    "status": 200
+  },
+  {
+    "ms": 16821,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 89
+  },
+  {
+    "ms": 16821,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 88,
+    "status": 200
+  },
+  {
+    "ms": 16821,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 88
+  },
+  {
+    "ms": 16822,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 92,
+    "status": 200
+  },
+  {
+    "ms": 16822,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 92
+  },
+  {
+    "ms": 16827,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 93,
+    "status": 200
+  },
+  {
+    "ms": 16828,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 93
+  },
+  {
+    "ms": 16853,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 98,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16853,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 99,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16853,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 100,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16853,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 101,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/ci_environments_status",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16934,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 102,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16953,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 103,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16956,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 104,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16966,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 105,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16977,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 106,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16989,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 107,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 16997,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 108,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17007,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 109,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17021,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 110,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17024,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 111,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/drafts",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17038,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 94,
+    "status": 200
+  },
+  {
+    "ms": 17038,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 94
+  },
+  {
+    "ms": 17372,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 112,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17437,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 96,
+    "status": 200
+  },
+  {
+    "ms": 17437,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 96
+  },
+  {
+    "ms": 17438,
+    "stage": "reload-reader",
+    "kind": "pageshow",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203458016
+  },
+  {
+    "ms": 17441,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 95,
+    "status": 200
+  },
+  {
+    "ms": 17441,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 95
+  },
+  {
+    "ms": 17442,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 98,
+    "status": 200
+  },
+  {
+    "ms": 17442,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 98
+  },
+  {
+    "ms": 17442,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 97,
+    "status": 200
+  },
+  {
+    "ms": 17447,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 97
+  },
+  {
+    "ms": 17447,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 99,
+    "status": 200
+  },
+  {
+    "ms": 17447,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 99
+  },
+  {
+    "ms": 17447,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 102,
+    "status": 200
+  },
+  {
+    "ms": 17447,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 102
+  },
+  {
+    "ms": 17447,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 101,
+    "status": 200
+  },
+  {
+    "ms": 17447,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 101
+  },
+  {
+    "ms": 17459,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 113,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17469,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 114,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17492,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 115,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17590,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 100,
+    "status": 200
+  },
+  {
+    "ms": 17590,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 100
+  },
+  {
+    "ms": 17651,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 116,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/3756/notes",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17736,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 105,
+    "status": 200
+  },
+  {
+    "ms": 17736,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 105
+  },
+  {
+    "ms": 17794,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 104,
+    "status": 200
+  },
+  {
+    "ms": 17795,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 104
+  },
+  {
+    "ms": 17807,
+    "stage": "reload-reader",
+    "kind": "request",
+    "id": 117,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 17883,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 103,
+    "status": 200
+  },
+  {
+    "ms": 17885,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 103
+  },
+  {
+    "ms": 17912,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 106,
+    "status": 200
+  },
+  {
+    "ms": 17912,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 106
+  },
+  {
+    "ms": 18088,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 108,
+    "status": 200
+  },
+  {
+    "ms": 18088,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 108
+  },
+  {
+    "ms": 18109,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 107,
+    "status": 200
+  },
+  {
+    "ms": 18109,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 107
+  },
+  {
+    "ms": 18440,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 109,
+    "status": 200
+  },
+  {
+    "ms": 18440,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 109
+  },
+  {
+    "ms": 18440,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 112,
+    "status": 200
+  },
+  {
+    "ms": 18440,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 112
+  },
+  {
+    "ms": 18440,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 110,
+    "status": 200
+  },
+  {
+    "ms": 18440,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 110
+  },
+  {
+    "ms": 18440,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 111,
+    "status": 200
+  },
+  {
+    "ms": 18460,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 111
+  },
+  {
+    "ms": 18496,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 113,
+    "status": 200
+  },
+  {
+    "ms": 18496,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 113
+  },
+  {
+    "ms": 18574,
+    "stage": "reload-reader",
+    "kind": "response",
+    "id": 115,
+    "status": 200
+  },
+  {
+    "ms": 18575,
+    "stage": "reload-reader",
+    "kind": "finished",
+    "id": 115
+  },
+  {
+    "ms": 18638,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 114,
+    "status": 200
+  },
+  {
+    "ms": 18644,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 114
+  },
+  {
+    "ms": 18714,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 117,
+    "status": 200
+  },
+  {
+    "ms": 18715,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 117
+  },
+  {
+    "ms": 18802,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 116,
+    "status": 200
+  },
+  {
+    "ms": 18815,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 116
+  },
+  {
+    "ms": 19445,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 118,
+    "type": "xhr",
+    "method": "POST",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/drafts/publish",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 20012,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 118,
+    "status": 200
+  },
+  {
+    "ms": 20027,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 118
+  },
+  {
+    "ms": 20125,
+    "stage": "recover-pending-review",
+    "kind": "beforeunload",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203458016
+  },
+  {
+    "ms": 20129,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 119,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 20391,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 119,
+    "status": 200
+  },
+  {
+    "ms": 20400,
+    "stage": "recover-pending-review",
+    "kind": "pagehide",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203458016
+  },
+  {
+    "ms": 20404,
+    "stage": "recover-pending-review",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 20417,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 120,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/discussions.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 20417,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 121,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 20417,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 122,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/cached_widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 20417,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 123,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 20694,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 124,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21184,
+    "stage": "recover-pending-review",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21234,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 125,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21286,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 126,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21293,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 127,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21339,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 128,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/api/v4/projects/1/merge_requests/248/award_emoji",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21339,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 129,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/diffs_metadata.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21365,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 119
+  },
+  {
+    "ms": 21381,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 123,
+    "status": 200
+  },
+  {
+    "ms": 21391,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 123
+  },
+  {
+    "ms": 21391,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 122,
+    "status": 200
+  },
+  {
+    "ms": 21391,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 122
+  },
+  {
+    "ms": 21391,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 120,
+    "status": 200
+  },
+  {
+    "ms": 21391,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 120
+  },
+  {
+    "ms": 21391,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 121,
+    "status": 200
+  },
+  {
+    "ms": 21391,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 121
+  },
+  {
+    "ms": 21392,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 124,
+    "status": 200
+  },
+  {
+    "ms": 21392,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 124
+  },
+  {
+    "ms": 21552,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 130,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21553,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 125,
+    "status": 200
+  },
+  {
+    "ms": 21553,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 125
+  },
+  {
+    "ms": 21593,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 131,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21598,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 132,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21611,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 133,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21622,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 134,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21635,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 135,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21643,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 136,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21651,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 137,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21666,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 138,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21670,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 139,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/drafts",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21683,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 126,
+    "status": 200
+  },
+  {
+    "ms": 21683,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 126
+  },
+  {
+    "ms": 21683,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 128,
+    "status": 200
+  },
+  {
+    "ms": 21692,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 128
+  },
+  {
+    "ms": 21692,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 127,
+    "status": 200
+  },
+  {
+    "ms": 21692,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 127
+  },
+  {
+    "ms": 21693,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 140,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21695,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 141,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21712,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 142,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 21712,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 143,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/ci_environments_status",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 22134,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 144,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 22199,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 130,
+    "status": 200
+  },
+  {
+    "ms": 22200,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 130
+  },
+  {
+    "ms": 22201,
+    "stage": "recover-pending-review",
+    "kind": "pageshow",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203463041
+  },
+  {
+    "ms": 22201,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 133,
+    "status": 200
+  },
+  {
+    "ms": 22201,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 133
+  },
+  {
+    "ms": 22201,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 132,
+    "status": 200
+  },
+  {
+    "ms": 22205,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 132
+  },
+  {
+    "ms": 22205,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 129,
+    "status": 200
+  },
+  {
+    "ms": 22205,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 129
+  },
+  {
+    "ms": 22206,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 131,
+    "status": 200
+  },
+  {
+    "ms": 22206,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 131
+  },
+  {
+    "ms": 22206,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 134,
+    "status": 200
+  },
+  {
+    "ms": 22206,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 134
+  },
+  {
+    "ms": 22325,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 136,
+    "status": 200
+  },
+  {
+    "ms": 22325,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 136
+  },
+  {
+    "ms": 22343,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 145,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 22468,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 137,
+    "status": 200
+  },
+  {
+    "ms": 22468,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 137
+  },
+  {
+    "ms": 22526,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 135,
+    "status": 200
+  },
+  {
+    "ms": 22526,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 135
+  },
+  {
+    "ms": 22537,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 146,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/3756/notes",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 22606,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 138,
+    "status": 200
+  },
+  {
+    "ms": 22606,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 138
+  },
+  {
+    "ms": 22708,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 139,
+    "status": 200
+  },
+  {
+    "ms": 22726,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 139
+  },
+  {
+    "ms": 22745,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 140,
+    "status": 200
+  },
+  {
+    "ms": 22745,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 140
+  },
+  {
+    "ms": 22921,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 141,
+    "status": 200
+  },
+  {
+    "ms": 22921,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 141
+  },
+  {
+    "ms": 22923,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 147,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 22934,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 148,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 22944,
+    "stage": "recover-pending-review",
+    "kind": "request",
+    "id": 149,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 23056,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 143,
+    "status": 200
+  },
+  {
+    "ms": 23056,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 143
+  },
+  {
+    "ms": 23082,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 144,
+    "status": 200
+  },
+  {
+    "ms": 23082,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 144
+  },
+  {
+    "ms": 23149,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 142,
+    "status": 200
+  },
+  {
+    "ms": 23149,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 142
+  },
+  {
+    "ms": 23247,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 145,
+    "status": 200
+  },
+  {
+    "ms": 23247,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 145
+  },
+  {
+    "ms": 23603,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 147,
+    "status": 200
+  },
+  {
+    "ms": 23603,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 147
+  },
+  {
+    "ms": 23604,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 149,
+    "status": 200
+  },
+  {
+    "ms": 23604,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 149
+  },
+  {
+    "ms": 23605,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 146,
+    "status": 200
+  },
+  {
+    "ms": 23608,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 146
+  },
+  {
+    "ms": 23609,
+    "stage": "recover-pending-review",
+    "kind": "response",
+    "id": 148,
+    "status": 200
+  },
+  {
+    "ms": 23609,
+    "stage": "recover-pending-review",
+    "kind": "finished",
+    "id": 148
+  },
+  {
+    "ms": 24656,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "beforeunload",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203463041
+  },
+  {
+    "ms": 24657,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 150,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 24839,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 150,
+    "status": 200
+  },
+  {
+    "ms": 24840,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "pagehide",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203463041
+  },
+  {
+    "ms": 24849,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 24854,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 151,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/discussions.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 24854,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 152,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 24854,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 153,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/cached_widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 24854,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 154,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25080,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 155,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25475,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25501,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 156,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25547,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 157,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25555,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 158,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25579,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 159,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/api/v4/projects/1/merge_requests/248/award_emoji",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25580,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 160,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/diffs_metadata.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25607,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 150
+  },
+  {
+    "ms": 25623,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 154,
+    "status": 200
+  },
+  {
+    "ms": 25623,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 154
+  },
+  {
+    "ms": 25624,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 153,
+    "status": 200
+  },
+  {
+    "ms": 25624,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 153
+  },
+  {
+    "ms": 25624,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 152,
+    "status": 200
+  },
+  {
+    "ms": 25625,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 152
+  },
+  {
+    "ms": 25626,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 151,
+    "status": 200
+  },
+  {
+    "ms": 25626,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 151
+  },
+  {
+    "ms": 25626,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 155,
+    "status": 200
+  },
+  {
+    "ms": 25626,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 155
+  },
+  {
+    "ms": 25632,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 161,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25637,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 162,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25642,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 163,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25642,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 164,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/ci_environments_status",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25736,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 156,
+    "status": 200
+  },
+  {
+    "ms": 25736,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 156
+  },
+  {
+    "ms": 25795,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 165,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25825,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 166,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25828,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 167,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25842,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 168,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25852,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 169,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25868,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 170,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25869,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 171,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25879,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 172,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25884,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 173,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25904,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 174,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/drafts",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 25910,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 157,
+    "status": 200
+  },
+  {
+    "ms": 25910,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 157
+  },
+  {
+    "ms": 26304,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 175,
+    "type": "xhr",
+    "method": "POST",
+    "path": "/root/fountain-product-integration/-/preview_markdown",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 26329,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 176,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 26406,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 159,
+    "status": 200
+  },
+  {
+    "ms": 26406,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 159
+  },
+  {
+    "ms": 26408,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "pageshow",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203467573
+  },
+  {
+    "ms": 26408,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 158,
+    "status": 200
+  },
+  {
+    "ms": 26408,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 158
+  },
+  {
+    "ms": 26408,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 161,
+    "status": 200
+  },
+  {
+    "ms": 26408,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 161
+  },
+  {
+    "ms": 26408,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 160,
+    "status": 200
+  },
+  {
+    "ms": 26408,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 160
+  },
+  {
+    "ms": 26412,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 162,
+    "status": 200
+  },
+  {
+    "ms": 26412,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 162
+  },
+  {
+    "ms": 26412,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 164,
+    "status": 200
+  },
+  {
+    "ms": 26412,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 164
+  },
+  {
+    "ms": 26412,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 165,
+    "status": 200
+  },
+  {
+    "ms": 26413,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 165
+  },
+  {
+    "ms": 26413,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 163,
+    "status": 200
+  },
+  {
+    "ms": 26413,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 163
+  },
+  {
+    "ms": 26427,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 177,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 26436,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 178,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 26461,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 179,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 26671,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 180,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/3756/notes",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 26732,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 169,
+    "status": 200
+  },
+  {
+    "ms": 26732,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 169
+  },
+  {
+    "ms": 26732,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 167,
+    "status": 200
+  },
+  {
+    "ms": 26732,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 168,
+    "status": 200
+  },
+  {
+    "ms": 26732,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 167
+  },
+  {
+    "ms": 26732,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 168
+  },
+  {
+    "ms": 26742,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 181,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 26897,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 166,
+    "status": 200
+  },
+  {
+    "ms": 26897,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 166
+  },
+  {
+    "ms": 27011,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 171,
+    "status": 200
+  },
+  {
+    "ms": 27011,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 171
+  },
+  {
+    "ms": 27053,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 172,
+    "status": 200
+  },
+  {
+    "ms": 27053,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 172
+  },
+  {
+    "ms": 27113,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 170,
+    "status": 200
+  },
+  {
+    "ms": 27113,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 170
+  },
+  {
+    "ms": 27164,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 173,
+    "status": 200
+  },
+  {
+    "ms": 27164,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 173
+  },
+  {
+    "ms": 27259,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 175,
+    "status": 200
+  },
+  {
+    "ms": 27290,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 175
+  },
+  {
+    "ms": 27303,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 176,
+    "status": 200
+  },
+  {
+    "ms": 27303,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 176
+  },
+  {
+    "ms": 27333,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 174,
+    "status": 200
+  },
+  {
+    "ms": 27338,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 174
+  },
+  {
+    "ms": 27405,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 177,
+    "status": 200
+  },
+  {
+    "ms": 27405,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 177
+  },
+  {
+    "ms": 27497,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 179,
+    "status": 200
+  },
+  {
+    "ms": 27497,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 179
+  },
+  {
+    "ms": 27586,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 178,
+    "status": 200
+  },
+  {
+    "ms": 27586,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 178
+  },
+  {
+    "ms": 27649,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 181,
+    "status": 200
+  },
+  {
+    "ms": 27649,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 181
+  },
+  {
+    "ms": 27695,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 180,
+    "status": 200
+  },
+  {
+    "ms": 27697,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 180
+  },
+  {
+    "ms": 28296,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 182,
+    "type": "xhr",
+    "method": "POST",
+    "path": "/root/fountain-product-integration/notes",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 28307,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 183,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 28399,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 183,
+    "status": 200
+  },
+  {
+    "ms": 28400,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 183
+  },
+  {
+    "ms": 28400,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 184,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 28457,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 184,
+    "status": 200
+  },
+  {
+    "ms": 28457,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 184
+  },
+  {
+    "ms": 28608,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 182,
+    "status": 200
+  },
+  {
+    "ms": 28664,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 182
+  },
+  {
+    "ms": 28746,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "beforeunload",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203467573
+  },
+  {
+    "ms": 28746,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 185,
+    "type": "document",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 28940,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 185,
+    "status": 200
+  },
+  {
+    "ms": 28941,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "pagehide",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203467573
+  },
+  {
+    "ms": 28949,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 28955,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 186,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/discussions.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 28955,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 187,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 28955,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 188,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/cached_widget.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 28955,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 189,
+    "type": "fetch",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 29176,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 190,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 29540,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "navigated",
+    "path": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 29564,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 191,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 29605,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 192,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 29612,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 193,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 29636,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 194,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/api/v4/projects/1/merge_requests/248/award_emoji",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 29636,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 195,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/diffs_metadata.json",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 29664,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 185
+  },
+  {
+    "ms": 29680,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 188,
+    "status": 200
+  },
+  {
+    "ms": 29680,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 188
+  },
+  {
+    "ms": 29681,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 189,
+    "status": 200
+  },
+  {
+    "ms": 29681,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 189
+  },
+  {
+    "ms": 29681,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 186,
+    "status": 200
+  },
+  {
+    "ms": 29681,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 186
+  },
+  {
+    "ms": 29681,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 187,
+    "status": 200
+  },
+  {
+    "ms": 29681,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 187
+  },
+  {
+    "ms": 29682,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 190,
+    "status": 200
+  },
+  {
+    "ms": 29682,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 190
+  },
+  {
+    "ms": 29921,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 191,
+    "status": 200
+  },
+  {
+    "ms": 29921,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 191
+  },
+  {
+    "ms": 29991,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 196,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/-/collect_events",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 29993,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 194,
+    "status": 200
+  },
+  {
+    "ms": 29995,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 194
+  },
+  {
+    "ms": 29998,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 192,
+    "status": 200
+  },
+  {
+    "ms": 29998,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 192
+  },
+  {
+    "ms": 30041,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 193,
+    "status": 200
+  },
+  {
+    "ms": 30041,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 193
+  },
+  {
+    "ms": 30068,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 197,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30075,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 198,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30082,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 199,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30098,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 200,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30109,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 201,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30115,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 202,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30125,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 203,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30138,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 204,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30143,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 205,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/drafts",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30164,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 196,
+    "status": 200
+  },
+  {
+    "ms": 30164,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 196
+  },
+  {
+    "ms": 30182,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 206,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30182,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 207,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30182,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 208,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30185,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 209,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/-/merge_requests/248/ci_environments_status",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30608,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 210,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30688,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 195,
+    "status": 200
+  },
+  {
+    "ms": 30689,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 195
+  },
+  {
+    "ms": 30690,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "pageshow",
+    "path": "/root/fountain-product-integration/-/merge_requests/248",
+    "documentEpoch": 1795203471661
+  },
+  {
+    "ms": 30690,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 199,
+    "status": 200
+  },
+  {
+    "ms": 30690,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 199
+  },
+  {
+    "ms": 30690,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 198,
+    "status": 200
+  },
+  {
+    "ms": 30690,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 198
+  },
+  {
+    "ms": 30691,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 197,
+    "status": 200
+  },
+  {
+    "ms": 30691,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 197
+  },
+  {
+    "ms": 30691,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 200,
+    "status": 200
+  },
+  {
+    "ms": 30691,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 200
+  },
+  {
+    "ms": 30730,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 211,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 30879,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 202,
+    "status": 200
+  },
+  {
+    "ms": 30879,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 202
+  },
+  {
+    "ms": 30975,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 203,
+    "status": 200
+  },
+  {
+    "ms": 30975,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 203
+  },
+  {
+    "ms": 31072,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 201,
+    "status": 200
+  },
+  {
+    "ms": 31073,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 201
+  },
+  {
+    "ms": 31124,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 212,
+    "type": "xhr",
+    "method": "GET",
+    "path": "/root/fountain-product-integration/noteable/merge_request/3756/notes",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 31211,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 204,
+    "status": 200
+  },
+  {
+    "ms": 31211,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 204
+  },
+  {
+    "ms": 31293,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 205,
+    "status": 200
+  },
+  {
+    "ms": 31298,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 205
+  },
+  {
+    "ms": 31359,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 206,
+    "status": 200
+  },
+  {
+    "ms": 31359,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 206
+  },
+  {
+    "ms": 31609,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 207,
+    "status": 200
+  },
+  {
+    "ms": 31609,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 207
+  },
+  {
+    "ms": 31609,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 213,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 31641,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 214,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 31653,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "request",
+    "id": 215,
+    "type": "fetch",
+    "method": "POST",
+    "path": "/api/graphql",
+    "page": "/root/fountain-product-integration/-/merge_requests/248"
+  },
+  {
+    "ms": 31656,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 210,
+    "status": 200
+  },
+  {
+    "ms": 31656,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 210
+  },
+  {
+    "ms": 31776,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 209,
+    "status": 200
+  },
+  {
+    "ms": 31776,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 209
+  },
+  {
+    "ms": 31839,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 208,
+    "status": 200
+  },
+  {
+    "ms": 31839,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 208
+  },
+  {
+    "ms": 31968,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 211,
+    "status": 200
+  },
+  {
+    "ms": 31968,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 211
+  },
+  {
+    "ms": 32197,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 212,
+    "status": 200
+  },
+  {
+    "ms": 32201,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 212
+  },
+  {
+    "ms": 32216,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 213,
+    "status": 200
+  },
+  {
+    "ms": 32216,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 213
+  },
+  {
+    "ms": 32281,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 215,
+    "status": 200
+  },
+  {
+    "ms": 32281,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 215
+  },
+  {
+    "ms": 32426,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "response",
+    "id": 214,
+    "status": 200
+  },
+  {
+    "ms": 32434,
+    "stage": "reload-unsubmitted-comment",
+    "kind": "finished",
+    "id": 214
+  }
+]
