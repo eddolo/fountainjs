@@ -6,6 +6,7 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import axios from '~/lib/utils/axios_utils';
 import { s__, n__, sprintf } from '~/locale';
+import CommentTemplatesModal from '~/vue_shared/components/markdown/comment_templates_modal.vue';
 import EditorModeSwitcher from '~/vue_shared/components/markdown/editor_mode_switcher.vue';
 import { CONTENT_EDITOR_READY_EVENT, CONTENT_EDITOR_PASTE } from '~/vue_shared/constants';
 import markdownEditorEventHub from '~/vue_shared/components/markdown/eventhub';
@@ -28,12 +29,16 @@ import FountainReferenceMenu from './fountain_reference_menu.vue';
 import FountainQuickActionMenu from './fountain_quick_action_menu.vue';
 
 export default {
-  inject: { fountainWikiSource: { default: false } },
+  inject: {
+    fountainWikiSource: { default: false },
+    inheritedCommentTemplatePaths: { from: 'newCommentTemplatePaths', default: () => [] },
+  },
   name: 'FountainContentEditor',
   components: {
     GlAlert,
     GlButton,
     GlLoadingIcon,
+    CommentTemplatesModal,
     EditorModeSwitcher,
     FountainEditorSurface,
     FountainFormattingToolbar,
@@ -66,6 +71,9 @@ export default {
   computed: {
     surfaceEditable() {
       return this.editable && !this.inactive && !this.isLoading && !this.loadFailed && !this.fatal;
+    },
+    commentTemplatePaths() {
+      return this.inheritedCommentTemplatePaths.length ? this.inheritedCommentTemplatePaths : this.newCommentTemplatePaths;
     },
     canUpload() {
       return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
@@ -117,8 +125,7 @@ export default {
         Object.keys(this.autocompleteDataSources).length > 0 ||
         this.supportsQuickActions ||
         this.supportsTableOfContents ||
-        this.drawioEnabled ||
-        this.newCommentTemplatePaths.length > 0
+        this.drawioEnabled
       );
     },
   },
@@ -498,7 +505,7 @@ export default {
     <gl-alert v-if="adapterGaps && !fatal" variant="warning" :dismissible="false">
       {{
         s__(
-          'ContentEditor|This integration is unfinished. Some reference and command contexts, saved replies and specialized menus are still unavailable. Use source editing for those workflows.',
+          'ContentEditor|This integration is unfinished. Some reference and command contexts and specialized menus are still unavailable. Use source editing for those workflows.',
         )
       }}
     </gl-alert>
@@ -586,6 +593,11 @@ export default {
             <media-bubble-menu ref="mediaMenu" :content-editor="contentEditor" :get-editor-root="getEditorRoot" :disabled="!surfaceEditable" :allow-upload="canUpload" @focus="focus" @error="onSurfaceError" @replace-file="replaceMediaFile" />
           </template>
           <template #header-buttons>
+            <comment-templates-modal
+              v-if="surfaceEditable && commentTemplatePaths.length"
+              :new-comment-template-paths="commentTemplatePaths"
+              @select="pasteContent"
+            />
             <gl-button v-if="codeSuggestionsConfig && codeSuggestionsConfig.canSuggest" size="small" icon="comment" :disabled="!surfaceEditable || inserting" @click="insertSuggestion">{{ s__('ContentEditor|Insert suggestion') }}</gl-button>
             <slot name="header-buttons"></slot>
             <editor-mode-switcher
