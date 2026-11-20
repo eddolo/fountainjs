@@ -1,4 +1,4 @@
-import { Selection, type EditorView, type Node, type NodeSpec, type NodeViewLike } from 'fountainjs-editor';
+import { NodeSelection, Selection, type EditorView, type Node, type NodeSpec, type NodeViewLike } from 'fountainjs-editor';
 import { buildTableOfContents, type TableOfContentsTreeEntry } from 'fountainjs-editor/table-of-contents';
 import type { DefaultTreeAdapterMap } from 'parse5';
 import { GitLabFootnotePositions } from './footnote_positions';
@@ -58,7 +58,11 @@ export function gitLabContentsNode(label: string): NodeSpec {
             button.textContent = entry.title;
             button.onclick = () => {
               const editor = view.editor;
-              editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([...entry.path], 0)).setMeta('addToHistory', false));
+              const doc = editor.state.doc;
+              const heading = entry.path.reduce((node, index) => node.child(index), doc);
+              const firstText = heading.content.findIndex(child => child.isText);
+              const selection = firstText < 0 ? new NodeSelection(doc, entry.path) : Selection.cursor([...entry.path, firstText], 0);
+              editor.dispatch(editor.createTransaction().setSelection(selection).setMeta('addToHistory', false));
               view.focus();
               view.scrollSelectionIntoView();
             };
@@ -81,11 +85,9 @@ export function gitLabContentsNode(label: string): NodeSpec {
         render(view.editor.state.doc);
         this.release = view.editor.subscribe(state => render(state.doc));
       }
-      stopEvent(event: Event): boolean { return Boolean((event.target as ElementTarget | null)?.closest?.('button')); }
+      stopEvent(event: Event): boolean { return Boolean((event.target as globalThis.Element | null)?.closest?.('button')); }
       ignoreMutation(): boolean { return true; }
       destroy(): void { this.release(); }
     },
   };
 }
-
-type ElementTarget = { closest?(selector: string): unknown };
