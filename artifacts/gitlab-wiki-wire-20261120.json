@@ -1,0 +1,20 @@
+{
+  "markedRunMerge": true,
+  "fountainRevision": "f951095d3504837f9ed21a02d00eb54c7d4cf221",
+  "runtimeSHA256": "031ca4ac56e1d82619373b75b5c0773471299bb5938c0bb155c5ee47cc2965ad",
+  "libraryEntryHashes": {
+    "yjs": "a2b78549b6a0f742bc6fe21b6e1d4345c7e2100710cd3b018b3abebdab689c33",
+    "y-prosemirror": "d5193952412d8880ae19e1e13dca889d2455a1ac402b5ed5b886574372061f12",
+    "prosemirror-model": "a13009be6c410612024b8c1360a58c79ad0729da88303169ea011f83c044f69e"
+  },
+  "stockSchemaLossRefused": true,
+  "cancelledSeedLeftRoomEmpty": true,
+  "joinedBeforeSeed": true,
+  "gitlab": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "stockWiki": "Live-release-notes-original-live-wiki-20261120-a3",
+  "joined": "Status: ready. Reviewed. Approved.",
+  "merged": "Fountain: Status: ready. Reviewed. Approved. Stock.",
+  "relativeCursorPreserved": true,
+  "peerEditSurvivedUndo": true,
+  "staleWriteRefused": true
+}

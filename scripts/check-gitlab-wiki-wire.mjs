@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
@@ -9,6 +10,11 @@ const checkout = resolve(process.argv[2] ?? '.');
 const pin = JSON.parse(await readFile(new URL('../integrations/gitlab/runtime/upstream.json', import.meta.url)));
 assert.equal(execFileSync('git',['-C',checkout,'rev-parse','HEAD'],{encoding:'utf8'}).trim(), pin.commit);
 const stock = createRequire(resolve(checkout,'package.json'));
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const runtime = JSON.parse(await readFile(new URL('../artifacts/gitlab-native-runtime/build.json',import.meta.url)));
+assert.equal(hash(await readFile(new URL('../artifacts/gitlab-native-runtime/fountain-runtime.mjs',import.meta.url))),runtime.sha256);
+const libraries = {};
+for (const name of ['yjs','y-prosemirror','prosemirror-model']) libraries[name] = hash(await readFile(stock.resolve(name)));
 const Y = stock('yjs');
 const { prosemirrorJSONToYDoc, updateYFragment, yDocToProsemirrorJSON } = stock('y-prosemirror');
 const stockSchema = stock('@tiptap/core').getSchema(['document','paragraph','text','bold'].map(name =>
@@ -44,6 +50,18 @@ try {
   const text = room.get(1).get(0);
   const cursor = Y.createRelativePositionFromTypeIndex(text,7);
   undo = new Y.UndoManager(room,{trackedOrigins:new Set([origin])});
+
+  // A different host schema may silently discard an attribute in nodeFromJSON.
+  // Refuse before the real Yjs document sees a transaction.
+  const {Schema:StockSchema} = stock('prosemirror-model');
+  const lossySchema = new StockSchema({nodes:stockSchema.spec.nodes.addBefore('paragraph','heading',{content:'text*',group:'block'}),
+    marks:stockSchema.spec.marks});
+  const lossy = await openGitLabWikiRoom({doc:candidate,whenSynced:Promise.resolve({seed:false}),connected:true,
+    seed:shouldNotSeed},schema,{...wire,stockSchema:lossySchema},shouldNotSeed);
+  const heading = schema.node('heading',{level:3},first.child(0).content);
+  const changedType = first.copy([heading,first.child(1)]);
+  assert.throws(() => lossy.binding.apply(first,changedType,origin),/cannot retain/);
+  assert.deepEqual(Y.encodeStateAsUpdate(candidate),initialBytes);
 
   // Partition the two Y.Docs. Stock appends a word while Fountain inserts at
   // the beginning of the same text. Deliver incremental updates in both directions.
@@ -83,6 +101,23 @@ try {
   undo.redo();
   exchange();
   assert.equal(originalText.toString(),merged);
+  undo.stopCapturing();
+  const beforeName = binding.read();
+  const ownerLine = beforeName.child(0);
+  const name = schema.text('Samira',ownerLine.child(1).marks);
+  const afterName = beforeName.copy([ownerLine.copy([ownerLine.child(0),name,ownerLine.child(2)]),beforeName.child(1)]);
+  const originalOwnerLine = original.getXmlFragment('default').get(0).get(0);
+  originalOwnerLine.insert(0,'Team ',{});
+  binding.apply(beforeName,afterName,origin);
+  exchange();
+  const sharedOwner = binding.read().child(0);
+  assert.equal(sharedOwner.textContent,'Team Owner: Samira.');
+  assert.equal(sharedOwner.child(1).marks[0].type.name,'strong');
+  undo.undo();
+  exchange();
+  assert.equal(binding.read().child(0).textContent,'Team Owner: Sam.');
+  assert.equal(originalText.toString(),merged);
+
   // GitLab may acknowledge a joining client before the elected writer finishes
   // converting the saved Markdown. The joiner waits for the first real update.
   const elected = new Y.Doc(), waiting = new Y.Doc();
@@ -111,7 +146,7 @@ try {
     await Promise.resolve();
     assert.equal(aborted.getXmlFragment('default').length,0);
   } finally { aborted.destroy(); }
-  console.log(JSON.stringify({cancelledSeedLeftRoomEmpty:true,joinedBeforeSeed:true,gitlab:pin.commit,stockWiki: item.slug,joined:first.child(1).textContent,
+  console.log(JSON.stringify({markedRunMerge:true,fountainRevision:runtime.parentRevision,runtimeSHA256:runtime.sha256,libraryEntryHashes:libraries,stockSchemaLossRefused:true,cancelledSeedLeftRoomEmpty:true,joinedBeforeSeed:true,gitlab:pin.commit,stockWiki: item.slug,joined:first.child(1).textContent,
     merged,relativeCursorPreserved:true,peerEditSurvivedUndo:true,staleWriteRefused:true}));
 } finally {
   undo?.destroy();
