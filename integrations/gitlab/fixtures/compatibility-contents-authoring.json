@@ -1,0 +1,14 @@
+{
+  "formatVersion": 1,
+  "workflow": "author-contents-in-a-blank-issue",
+  "cases": [
+    {
+      "id": "create-outline",
+      "scope": "contents-authoring",
+      "title": "New outline",
+      "note": "Draft the outline before adding headings.",
+      "heading": "Release handoff",
+      "body": "Confirm the release owner."
+    }
+  ]
+}

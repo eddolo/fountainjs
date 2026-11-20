@@ -221,6 +221,30 @@ it('compares native Writer content and version independently of a browser paste'
  stock.observations[0].writer.version = 'LibreOffice 25.2.0';
  expect(compareGitLabCompatibility(stock,fountain).environment.mismatches).toContain('native Writer version');
 });
+it('checks that a newly created outline survives a save without headings and a change of editing mode', () => {
+ const [original, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-contents-authoring.json',import.meta.url),'utf8'));
+ const input = fixture.cases[0];
+ for (const report of [original,fountain]) {
+   report.fixture = fixture;
+   report.suite = input.scope;
+   const item = report.observations[0];
+   Object.assign(item,{id:input.id,input,startedBlank:true,inserted:1,undone:0,redone:1,emptySaved:'[[_TOC_]]',
+     emptyReopened:1,emptyEditorProof:item.editorProof,proseSaved:'[[_TOC_]]\n\n' + input.note,sourceOnSwitch:'[[_TOC_]]\n\n' + input.note,readerLinks:[input.heading],
+     saved:'[[_TOC_]]\n\n' + input.note + '\n\n## ' + input.heading + '\n\n' + input.body,finalOutline:[input.heading],reopenedEditorProof:item.editorProof});
+ }
+ const result = (key:string) => compareGitLabCompatibility(original,fountain).rows.find((row:any) => row.invariant === key)?.classification;
+ expect(result('proseSaved')).toBe('parity');
+ original.observations[0].proseSaved = input.note;
+ expect(result('proseSaved')).toBe('improvement');
+ expect(result('sourceOnSwitch')).toBe('parity');
+ fountain.observations[0].sourceOnSwitch = '';
+ expect(result('sourceOnSwitch')).toBe('regression');
+ fountain.observations[0].emptyEditorProof = original.observations[0].editorProof;
+ expect(result('emptyReopened')).toBe(null);
+ original.observations[0].finalOutline = [];
+ expect(result('finalOutline')).toBe('improvement');
+});
 it('grades contents semantics separately from exact directive spelling and rich reopen identity', () => {
  const [stock, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-contents.json', import.meta.url), 'utf8'));

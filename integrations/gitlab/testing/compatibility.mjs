@@ -907,6 +907,40 @@ export function compareGitLabCompatibility(original,fountain){
       add('saveButtonReachable','Save remains directly reachable after task editing',true,left?.saveButtonReachable,right?.saveButtonReachable);
       continue;
     }
+    if (input.scope === 'contents-authoring') {
+      const marker = /^(?:\[toc\]|\[\[_toc_\]\])$/imu;
+      const observe = (report, item) => {
+        if (!verifiedEditor(report, item)) return {};
+        return {
+          startedBlank:item.startedBlank, inserted:item.inserted, undone:item.undone, redone:item.redone,
+          emptySaved: typeof item.emptySaved === 'string' ? marker.test(item.emptySaved.trim()) : undefined,
+          exactEmptySource: typeof item.emptySaved === 'string' ? item.emptySaved === '[[_TOC_]]' : undefined,
+          emptyReopened: verifiedEditor(report,{editorProof:item.emptyEditorProof}) ? item.emptyReopened : undefined,
+          proseSaved: typeof item.proseSaved === 'string' ? marker.test(item.proseSaved) && item.proseSaved.includes(input.note) : undefined,
+          sourceOnSwitch: typeof item.sourceOnSwitch === 'string' ? marker.test(item.sourceOnSwitch.trim()) : undefined,
+          saved: typeof item.saved === 'string' ? marker.test(item.saved) && item.saved.includes(input.note) && item.saved.includes('## ' + input.heading) && item.saved.includes(input.body) : undefined,
+          readerLinks:item.readerLinks,
+          finalOutline: verifiedEditor(report,{editorProof:item.reopenedEditorProof}) && Array.isArray(item.finalOutline)
+            ? item.finalOutline.length === 1 && item.finalOutline[0].includes(input.heading) : undefined,
+        };
+      };
+      const left = observe(original, a), right = observe(fountain, b);
+      for (const [key,expected,label] of [
+        ['startedBlank',true,'The issue starts with an empty rich editor'],
+        ['inserted',1,'The toolbar creates one table of contents'],
+        ['undone',0,'Undo removes the new outline'],
+        ['redone',1,'Redo restores it'],
+        ['emptySaved',true,'Save retains the directive before any heading exists'],
+        ['exactEmptySource',true,'Creating the outline saves only the authored directive'],
+        ['emptyReopened',1,'A fresh rich editor shows the outline before a heading exists'],
+        ['proseSaved',true,'Saving a rich prose edit without headings retains the earlier outline directive'],
+        ['sourceOnSwitch',true,'Switching to plain text retains the directive'],
+        ['saved',true,'After authoring a heading, GitLab stores its text, prose and the directive'],
+        ['readerLinks',[input.heading],'The reader links to the new heading'],
+        ['finalOutline',true,'The final rich editor shows one outline with the new heading'],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'contents') {
       const revised = input.heading + input.suffix;
       const observe = (report, item) => {
