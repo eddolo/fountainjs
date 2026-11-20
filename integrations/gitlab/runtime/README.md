@@ -51,6 +51,17 @@ node scripts/run-gitlab-compatibility.mjs --suite mr-review-handover --editor fo
 
 Inspect `observations[0].pending` in the Fountain report and `observations[0].handover` in the stock report. The recorded IDs connect the original private draft, unchanged public discussion and published comment. These are two stages of one deployment test.
 
+### Roll back with an unposted comment in an open tab
+
+From the prepared Linux checkout, run:
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite mr-create-member --editor fountain --browser chromium \
+  --verify-draft-rollback --run-id "mr-live-draft-$(date +%s)"
+```
+
+The project Developer types a formatted comment and leaves it in the composer. The runner keeps the same browser tab open while it stops the isolated service and starts packaged GitLab on the same volumes. After the stock build identity is verified, the Developer reloads that tab. If GitLab redirects to sign-in, the same account signs in through the normal form and returns to the merge request in the original tab. The Developer posts the recovered draft and reloads again. The report records the post-switch session status. This run captures the editor before and after rollback and the published note as screenshots so that sign-in stays out of recordings. The runner checks the rendered comment, exact Markdown, author, earlier notes, empty composer and merge-request description and branch head. The report includes the initial Fountain identity and the stock identity under `draftRollback`. This run represents one deployment switch and is excluded from matched-editor counts.
+
 ### Reproduce issue-board editing
 
 From the prepared Linux checkout, run the same issue-board workflow on both deployments. Each run creates a new issue through the board’s **Create issue** form, edits its description in the drawer, follows the issue reference to the full page, and posts a formatted comment. The browser returns through **Issue boards**, reloads the board and reopens the card. The report checks both editor builds, the issue number and the Markdown in GitLab’s issue and notes APIs. It records visible card numbers on creation, when the drawer is ready, and after reload. It measures the short-description editor and checks the center of Save for obstruction at 1280 and 390 CSS pixels. The narrow run scrolls Save into view and opens and closes the Fountain limits disclosure with the keyboard. These measurements use a desktop browser with a resized viewport.

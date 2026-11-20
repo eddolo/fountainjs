@@ -41,6 +41,9 @@ const browserType = browsers[browserName];
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
 if(!['suggestions','review-history','batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff','deletions','reviews','stale-reviews','relocated-reviews','concurrent-reviews','clipboard','partial','crossblock','wrapped','paint','grid','merged-grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','saved-replies','board-issues','mr-create','mr-create-member','mr-review-handover','quick-save','reconnect','offline-conflict','concurrent-issues','wiki-history','wiki-restore-conflict','wiki-rename','wiki-titles'].includes(suite)||!['original','fountain','prepared'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
  throw new Error('Usage: --editor original|fountain|prepared --run-id safe-id [--attempt 1..99] [--verify-rollback] [--verify-restart] [--browser chromium|firefox|webkit] [--suite suggestions|review-history|batch-reviews|multi-file-reviews|review-invalidation|overlap-reviews|reviewer-handoff|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|saved-replies|board-issues|mr-create|mr-create-member|mr-review-handover|quick-save|reconnect|offline-conflict|concurrent-issues|wiki-history|wiki-restore-conflict|wiki-rename|wiki-titles]');
+const draftRollbackRequested = process.argv.includes('--verify-draft-rollback');
+if (draftRollbackRequested && (suite !== 'mr-create-member' || side !== 'fountain'))
+  throw new Error('Use --verify-draft-rollback with --suite mr-create-member --editor fountain.');
 const preparedRollback = side === 'prepared';
 if (preparedRollback && (suite !== 'composers' || !process.argv.includes('--verify-rollback') ||
     !process.argv.includes('--prepared-source') || !isAbsolute(value('--prepared-source')) ||
@@ -151,7 +154,7 @@ if(process.argv.includes('--verify-rollback')){
 }
 let browser,started=false,authenticated=false;
 const report={formatVersion:2,buildIdentity:{side,expected:expectedBuild,observed:null},runId,attempt,side,scope:preparedRollback?'Opt-in prepared Tiptap rollback deployment.':'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
- suite,restartRequested,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
+ suite,restartRequested,draftRollbackRequested,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
  harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','scripts/verify-gitlab-suggestion-history-rollback.mjs','scripts/verify-gitlab-wiki-rollback.mjs','scripts/verify-gitlab-restart.mjs','scripts/verify-gitlab-footnote-rollback.mjs','integrations/gitlab/testing/save-gesture.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-saved-replies.mjs','scripts/audit-gitlab-issue-board.mjs','scripts/audit-gitlab-mr-create.mjs','scripts/verify-gitlab-mr-handover.mjs','integrations/gitlab/testing/observe-mr-navigation.mjs','scripts/gitlab-audit-editor.mjs','scripts/audit-gitlab-wiki-history.mjs','scripts/audit-gitlab-wiki-rename.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-simultaneous-issues.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-concurrent-review.mjs','scripts/audit-gitlab-batch-review.mjs','scripts/audit-gitlab-reviewer-handoff.mjs','scripts/audit-gitlab-suggestion-history.mjs','scripts/gitlab-audit-member.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs','scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
  started=true;execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
@@ -181,21 +184,22 @@ try{
  const waitUntilReady = (observations,retryLoggerExit) => waitForGitLabDeployment({retryLoggerExit,readState:()=>JSON.parse(docker('inspect','--format','{{json .State}}',containerName)),
   probe:async()=>(await page.request.get('http://127.0.0.1:5080/users/sign_in',{timeout:5000})).status(),
   observe:state=>observations.push(state)});
- await waitUntilReady(report.startup, state => {
+ const waitForBoot = (receipt, containerId) => waitUntilReady(receipt.startup, state => {
    // Check the pinned container again by ID. A service restart during an acceptance case uses the ordinary read-only gate.
-   const current = JSON.parse(docker('inspect',deployment.Id))[0];
+   const current = JSON.parse(docker('inspect',containerId))[0];
    if (current.State.StartedAt!==state.StartedAt || current.State.FinishedAt!==state.FinishedAt) return false;
-   const logs = spawnSync('docker',['logs','--since',state.StartedAt,'--tail','350',deployment.Id],
+   const logs = spawnSync('docker',['logs','--since',state.StartedAt,'--tail','350',containerId],
      {encoding:'utf8',timeout:10000,maxBuffer:1024*1024});
    if (logs.status!==0) return false;
    const service = loggerStartupFailure(current.State, logs.stdout+'\n'+logs.stderr);
    if (!service) return false;
-   const retry = {service,containerId:deployment.Id,startedAt:state.StartedAt,exitedAt:state.FinishedAt,exitCode:state.ExitCode};
-   report.startupRetry = retry;
+   const retry = {service,containerId,startedAt:state.StartedAt,exitedAt:state.FinishedAt,exitCode:state.ExitCode};
+   receipt.startupRetry = retry;
    console.log(JSON.stringify({kind:'gitlab-logger-cold-start-retry',...retry}));
-   docker('start',deployment.Id);
+   docker('start',containerId);
    return true;
  });
+ await waitForBoot(report,deployment.Id);
  if (filter) {
    const digest = docker('exec',containerName,'sha256sum',filter.destination).split(/\s/u)[0];
    expect(digest).toBe(side==='fountain'?filter.patched:filter.original);
@@ -206,12 +210,16 @@ try{
  const workers = /^workers (\d+)$/mu.exec(pumaConfig);
  if (threads?.[1]!=='2' || threads[2]!==pumaThreads || workers?.[1]!=='0') throw new Error('The configured GitLab Puma concurrency differs from the selected profile.');
  report.deployment.puma = {minThreads:2,maxThreads:Number(pumaThreads),workers:0};
+ const headers = {};
+ const signInAdministrator = async () => {
  try{
   await page.goto('http://127.0.0.1:5080/users/sign_in');await page.getByLabel('Username or primary email').fill('root');
   await page.getByLabel('Password',{exact:true}).fill(credential.password);await page.getByRole('button',{name:'Sign in',exact:true}).click();
   await page.waitForURL(url=>!url.pathname.includes('sign_in'));authenticated=true;
  }catch{throw new Error('Isolated sign-in failed; credentialed call log is not retained.');}
- const headers={'X-CSRF-Token':await page.locator('meta[name="csrf-token"]').getAttribute('content')};
+ headers['X-CSRF-Token'] = await page.locator('meta[name="csrf-token"]').getAttribute('content');
+ };
+ await signInAdministrator();
  const request=async(path,data,method='POST')=>{
   const url=new URL(path,'http://127.0.0.1:5080');if(url.origin!=='http://127.0.0.1:5080')throw new Error('Only isolated local API requests are allowed.');
   const response=await page.request.fetch(url.href,{headers,...(data?{method,data}:{})});
@@ -230,10 +238,10 @@ try{
    }
    report.deployment[wikiRestore ? 'wikiRestore' : 'suggestionHistory'] = historyReceipt;
  }
- const identify = async () => {
+ const identify = async (target = report, expected = expectedBuild) => {
  const manifests=docker('exec',containerName,'find',assetTarget,'-maxdepth','1','-name','manifest*.json').trim().split('\n').filter(Boolean);
- report.frontendManifests=manifests.length?docker('exec',containerName,'sha256sum',...manifests).trim().split('\n'):[];
- return observeEditorBuild({page,project,request,expected:expectedBuild,report,observeProbe:probe=>observePage(probe,report,report.errors),readDeployedScripts:paths=>{
+ target.frontendManifests=manifests.length?docker('exec',containerName,'sha256sum',...manifests).trim().split('\n'):[];
+ return observeEditorBuild({page,project,request,expected,report:target,observeProbe:probe=>observePage(probe,target,target.errors),readDeployedScripts:paths=>{
   const prefix='/opt/gitlab/embedded/service/gitlab-rails/public';
   if(!paths.length)return new Map();
   return new Map(docker('exec',containerName,'sha256sum','--',...paths.map(path=>prefix+path)).trim().split('\n').map(line=>[line.slice(66+prefix.length),line.slice(0,64)]));
@@ -258,7 +266,40 @@ try{
    const query = "SELECT json_agg(json_build_object('id', id, 'commit', commit_id) ORDER BY relative_order) FROM suggestions WHERE note_id = " + noteId;
    return JSON.parse(docker('exec',containerName,'gitlab-psql','-d','gitlabhq_production','-XAt','-v','ON_ERROR_STOP=1','-c',query));
  }});
- report.observations=await (['batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff'].includes(suite)?runRecordedGitLabBatch:wikiSuite?runWikiHistory:suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:['mr-create','mr-create-member','mr-review-handover'].includes(suite)?runGitLabMergeRequestCreation:suite==='board-issues'?runGitLabBoardCompatibility:suite==='saved-replies'?runGitLabSavedReplyCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:['grid','merged-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,mrHandoverFrom,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onPageError:error=>report.errors.push(error),onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
+ const switchDraftToStock = draftRollbackRequested ? async () => {
+   const inspect = () => JSON.parse(docker('inspect',containerName))[0];
+   const running = inspect();
+   expect(running.Id).toBe(deployment.Id);
+   expect(running.State.Health?.Status).toBe('healthy');
+   docker('stop',running.Id);
+   // Recreate only the inspected task service from its stock Compose file. Keep all named volumes.
+   const stockCompose = ['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')];
+   docker(...stockCompose,'up','-d','baseline');
+   const stock = inspect();
+   expect(stock.Id).not.toBe(running.Id);
+   expect(stock.Config.Labels['com.docker.compose.project']).toBe('fountain-gitlab-integration');
+   expect(stock.Image).toBe(running.Image);
+   expect(stock.Config.Image).toBe(pin.image);
+   const volumes = stock.Mounts.map(m => ({name:m.Name,destination:m.Destination,type:m.Type})).sort((a,b)=>a.destination.localeCompare(b.destination));
+   expect(volumes).toEqual(backendMounts);
+   expect(stock.Config.Env.some(item => item.startsWith('ENABLE_RSPACK='))).toBe(false);
+   const environmentHash = hash(stock.Config.Env.filter(item=>!item.startsWith('ENABLE_RSPACK=')).sort().join('\n'));
+   expect(environmentHash).toBe(report.deployment.backendEnvironmentHash);
+   const receipt = {side:'original', startup:[], errors:[], containerId:stock.Id, previousContainerId:running.Id,
+     deployment:{image:stock.Config.Image,imageId:stock.Image,backendMounts:volumes,backendEnvironmentHash:environmentHash,assetMount:[]}};
+   report.draftRollback = receipt;
+   await waitForBoot(receipt,stock.Id);
+   const adminSession = await page.request.get('http://127.0.0.1:5080/api/v4/user');
+   receipt.administratorSessionStatus = adminSession.status();
+   if (adminSession.status() === 401) await signInAdministrator();
+   else expect(adminSession.status()).toBe(200);
+   receipt.backend = {version:await request('/api/v4/version')};
+   receipt.buildIdentity = await identify(receipt,{gitlabVersion:pin.version,gitlabCommit:pin.commit,image:pin.image});
+   expect(buildIdentityError(receipt)).toBeFalsy();
+   expect(receipt.errors).toEqual([]);
+   console.log(describeBuild(receipt));
+ } : undefined;
+ report.observations=await (['batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff'].includes(suite)?runRecordedGitLabBatch:wikiSuite?runWikiHistory:suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:['mr-create','mr-create-member','mr-review-handover'].includes(suite)?runGitLabMergeRequestCreation:suite==='board-issues'?runGitLabBoardCompatibility:suite==='saved-replies'?runGitLabSavedReplyCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:['grid','merged-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,mrHandoverFrom,switchDraftToStock,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onPageError:error=>report.errors.push(error),onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
  report.collectionComplete=report.observations.every(item=>item.status==='observed');
  if(restartRequested && report.collectionComplete) await verifyGitLabRestart({report,project,docker,deployment,waitUntilReady,identify,page,request,output:out});
  if(filter && report.collectionComplete) await probeFootnoteCache({report,candidate:rollbackCandidate,page,project,request,output:out,container:containerName});

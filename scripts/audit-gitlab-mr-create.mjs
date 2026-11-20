@@ -17,25 +17,36 @@ export async function runGitLabMergeRequestCreation(options) {
     .find(item => item.id === member.account.id);
   // Authenticate before recording. Only the signed-in session is copied to the recorded browser.
   const login = await page.context().browser().newContext();
-  let membership;
+  let membership, observations;
   try {
     membership = await member.setRole(access);
     const session = await login.newPage();
     await member.signInMember(session, {});
-    return await createMergeRequest({...options, page: session}, membership);
+    observations = await createMergeRequest({...options, page: session, signInMember:member.signInMember}, membership);
   } finally {
     try {
       if (membership && prior?.access_level !== membership.accessLevel) {
         if (prior) await member.setRole(prior.access_level);
         else await request(membershipPath + '/' + member.account.id, {}, 'DELETE');
       }
+      if (options.switchDraftToStock && observations) {
+        const memberAfter = (await request(membershipPath + '?query=' + encodeURIComponent(fixture.username)))
+          .find(item => item.id === member.account.id);
+        observations[0].fixtureAccess = {before:prior?.access_level ?? null, after:memberAfter?.access_level ?? null};
+        expect(observations[0].fixtureAccess.after).toBe(observations[0].fixtureAccess.before);
+      }
+    } catch (error) {
+      if (!observations) throw error;
+      observations[0].status = 'incomplete';
+      observations[0].membershipCleanupError = String(error);
     } finally {
       await login.close();
     }
   }
+  return observations;
 }
 
-async function verifyCommentDraft({actor, input, side, result, output, membership, notes}) {
+async function verifyCommentDraft({actor, input, side, result, output, membership, notes, switchDraftToStock, signInMember}) {
   const form = actor.locator('form.new-note');
   const submit = form.getByTestId('comment-button').locator('button[type=submit]');
   const initial = (await notes()).filter(note => !note.system);
@@ -55,8 +66,30 @@ async function verifyCommentDraft({actor, input, side, result, output, membershi
   await actor.keyboard.insertText('.');
   result.beforeCommentReload = await readRich(editor);
   expect(result.beforeCommentReload).toEqual(expected);
+  const originalURL = actor.url();
+  const restoredSide = switchDraftToStock ? 'original' : side;
+  if (switchDraftToStock) {
+    expect(result.draftEditorProof.native).toBe(true);
+    expect(await newNotes()).toEqual([]);
+    await editor.screenshot({path:join(output,'unposted-before-rollback.png')});
+    await switchDraftToStock();
+  }
   await actor.reload();
-  const recovered = await openRich(form, side);
+  if (switchDraftToStock) {
+    const identityURL = new URL('/api/v4/user',originalURL).href;
+    const session = await actor.request.get(identityURL);
+    result.authorSessionStatusAfterRollback = session.status();
+    if (session.status() === 401) {
+      await expect(actor).toHaveURL(url => url.pathname === '/users/sign_in');
+      await signInMember(actor,{});
+      await actor.goto(originalURL);
+    } else expect(session.status()).toBe(200);
+    const identity = await actor.request.get(identityURL);
+    expect(identity.status()).toBe(200);
+    expect((await identity.json()).id).toBe(membership.id);
+  }
+  await expect(actor).toHaveURL(originalURL);
+  const recovered = await openRich(form, restoredSide);
   result.restoredEditorProof = await editorProof(recovered);
   // Allow asynchronous hydration; a timeout still leaves the actual text available to grade.
   await recovered.getByText(expected.text, {exact:false}).first().waitFor({timeout:5000}).catch(error => {
@@ -64,6 +97,10 @@ async function verifyCommentDraft({actor, input, side, result, output, membershi
   });
   const snapshot = await readRich(recovered);
   result.facts.commentDraft = {...snapshot, publicBefore:(await newNotes()).length};
+  if (switchDraftToStock) {
+    expect(result.restoredEditorProof.native).toBe(false);
+    expect(result.facts.commentDraft).toEqual({...expected,publicBefore:0});
+  }
   await recovered.screenshot({path:join(output,'recovered-comment.png')});
   if (snapshot.text !== expected.text || snapshot.bold.length !== 1 || snapshot.bold[0] !== input.bold) return;
   await submit.click();
@@ -72,7 +109,7 @@ async function verifyCommentDraft({actor, input, side, result, output, membershi
   const [first] = await newNotes();
   const rendered = actor.locator('#note_' + first.id + ' .note-text');
   await expect(rendered).toBeVisible({timeout:30000});
-  const empty = await openRich(form, side);
+  const empty = await openRich(form, restoredSide);
   await expect(submit).toBeDisabled();
   const all = await notes();
   result.facts.commentPublished = {
@@ -81,16 +118,22 @@ async function verifyCommentDraft({actor, input, side, result, output, membershi
     cleared:(await readRich(empty)).text === '',
     priorNotesRetained:initial.every(prior => all.some(note => note.id === prior.id && note.body === prior.body)),
   };
+  if (switchDraftToStock) expect(result.facts.commentPublished).toEqual({
+    count:1, markdown:input.prefix + '**' + input.bold + '**.', sameAuthor:true, bold:expected.bold,
+    reader:expected.text, cleared:true, priorNotesRetained:true,
+  });
   await rendered.screenshot({path:join(output,'published-comment.png')});
 }
 
-async function createMergeRequest({ page, project, request, fixture, runId, side, output, onProgress, mrHandoverFrom }, membership) {
+async function createMergeRequest({ page, project, request, fixture, runId, side, output, onProgress, mrHandoverFrom, switchDraftToStock, signInMember }, membership) {
   const [input] = fixture.cases;
   const result = { id: input.id, input, status: 'incomplete', facts: {}, pageErrors: [] };
   const { facts } = result;
   const context = await page.context().browser().newContext({
     storageState: await page.context().storageState(), viewport: { width: 1280, height: 900 },
-    locale: 'en-US', timezoneId: 'UTC', recordVideo: { dir: output },
+    locale: 'en-US', timezoneId: 'UTC',
+    // The cutover may require a real sign-in. Keep document screenshots without recording credentials.
+    ...(switchDraftToStock ? {} : {recordVideo:{dir:output}}),
   });
   const actor = await context.newPage();
   const api = '/api/v4/projects/' + project.id;
@@ -265,9 +308,15 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
     facts.headPreserved = updated.sha === commit.id && updated.state === 'opened' && updated.title === input.title;
     await reader.screenshot({path:join(output,'updated-reader.png')});
     if (input.unsubmittedComment) {
-      stage('reload-unsubmitted-comment');
-      await verifyCommentDraft({actor, input:input.unsubmittedComment, side, result, output, membership,
+      stage(switchDraftToStock ? 'roll-back-with-unposted-comment' : 'reload-unsubmitted-comment');
+      await verifyCommentDraft({actor, input:input.unsubmittedComment, side, result, output, membership, switchDraftToStock, signInMember,
         notes:() => request(api + '/merge_requests/' + iid + '/notes')});
+      if (switchDraftToStock) {
+        const after = await request(api + '/merge_requests/' + iid);
+        expect([after.id,after.description,after.sha,after.author.id,after.state]).toEqual(
+          [updated.id,input.prefix + '**' + input.bold + '**.\n\n' + input.followup,commit.id,membership.id,'opened']);
+        result.afterDraftRollback = {iid, description:after.description, head:after.sha, authorId:after.author.id};
+      }
     }
     if (input.scope === 'mr-review-handover') {
       stage('leave-fountain-review-pending');

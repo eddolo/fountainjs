@@ -229,6 +229,9 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
 });
 it('keeps deployment handovers out of matched parity counts', () => {
  const [original, fountain] = reports() as any[];
+ fountain.draftRollbackRequested = true;
+ expect(() => compareGitLabCompatibility(original, fountain)).toThrow('sequential deployment test');
+ delete fountain.draftRollbackRequested;
  original.suite = fountain.suite = 'mr-review-handover';
  expect(() => compareGitLabCompatibility(original, fountain)).toThrow('sequential deployment test');
 });
