@@ -40,6 +40,7 @@ import { namespaceGitLabFootnotes } from './footnote_labels';
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
   preserveWikiSource?: boolean;
+  tableOfContentsLabel?: string;
   editable?: boolean;
   extensions?: readonly FountainExtension[];
   renderMath?: MathDocumentRenderer;
@@ -96,6 +97,7 @@ export class GitLabContentEditor {
     const supported = new Set([
       'renderMarkdown',
       'preserveWikiSource',
+      'tableOfContentsLabel',
       'describeLabels',
       'onIssue',
       'maxCacheEntries',
@@ -118,6 +120,8 @@ export class GitLabContentEditor {
     }
     if (options.preserveWikiSource !== undefined && typeof options.preserveWikiSource !== 'boolean')
       throw new TypeError('EXPECTED_GITLAB_WIKI_SOURCE_FLAG');
+    if (options.tableOfContentsLabel !== undefined && (typeof options.tableOfContentsLabel !== 'string' || !options.tableOfContentsLabel.trim()))
+      throw new TypeError('EXPECTED_GITLAB_CONTENTS_LABEL');
     if (options.uploadAttachment !== undefined && typeof options.uploadAttachment !== 'function')
       throw new TypeError('EXPECTED_GITLAB_UPLOAD_HANDLER');
     if (options.describeMedia !== undefined && typeof options.describeMedia !== 'function')
@@ -160,7 +164,7 @@ export class GitLabContentEditor {
       this.editor = createEditor({
         schema: createGitLabSchemaSpec(kit.schema, options.describeMedia ? {
           audio: options.describeMedia('audio'), video: options.describeMedia('video'),
-        } : undefined),
+        } : undefined, options.tableOfContentsLabel),
         plugins: [new Plugin({ props: {
           handleKeyDown: (editor, event) => {
             if (!event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey

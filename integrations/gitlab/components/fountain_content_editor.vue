@@ -127,7 +127,6 @@ export default {
         this.enableAutocomplete ||
         Object.keys(this.autocompleteDataSources).length > 0 ||
         this.supportsQuickActions ||
-        this.supportsTableOfContents ||
         this.drawioEnabled
       );
     },
@@ -162,6 +161,7 @@ export default {
       this.contentEditor = markRaw(
         new GitLabContentEditor({
           preserveWikiSource: this.fountainWikiSource,
+          tableOfContentsLabel: this.supportsTableOfContents ? s__('ContentEditor|Table of contents') : undefined,
           renderMarkdown: (markdown, options) =>
             this.renderMarkdown(markdown, { ...options, noHeaderAnchors: true }),
           describeLabels: this.describeLabels,
@@ -575,6 +575,7 @@ export default {
           :content-editor="contentEditor"
           :disabled="!surfaceEditable"
           :get-editor-root="getEditorRoot"
+          :supports-table-of-contents="supportsTableOfContents"
           :hide-attachment-button="disableAttachments || !uploadsPath"
           @focus="focus"
           @error="onSurfaceError"

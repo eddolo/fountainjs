@@ -15,7 +15,7 @@ import {
   redo,
   canUndo,
   canRedo,
-  insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
+  insertNode, insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
   deleteTableColumn, deleteTable, mergeTableCells, splitTableCell,
   getGitLabAlertContext,
   getGitLabCodeContext,
@@ -33,6 +33,7 @@ export default {
     editor: { type: Object, required: true },
     contentEditor: { type: Object, required: true },
     disabled: { type: Boolean, required: false, default: false },
+    supportsTableOfContents: { type: Boolean, default: false },
     hideAttachmentButton: { type: Boolean, required: false, default: false },
     getEditorRoot: { type: Function, required: false, default: null },
   },
@@ -265,6 +266,9 @@ export default {
         this.$emit('focus');
       } catch (error) { this.$emit('error', error); }
     },
+    insertContents() {
+      this.execute({ run: () => insertNode(this.editor, this.editor.state.schema.node('gitlab_table_of_contents')) });
+    },
     insertTableAtSelection({ rows, cols }) {
       this.execute({ run: () => insertTable(this.editor, { rows, columns: cols, headerRow: true }) });
     },
@@ -356,6 +360,7 @@ export default {
         <gl-disclosure-dropdown v-if="activeCell" size="small" category="tertiary" icon="table"
           :toggle-text="s__('ContentEditor|Table actions')" :items="tableActions" @action="execute" />
         <toolbar-table-button v-else @insert-table="insertTableAtSelection" />
+        <gl-button v-if="supportsTableOfContents && !activeCell" size="small" category="tertiary" @click="insertContents">{{ s__('ContentEditor|Table of contents') }}</gl-button>
       </template>
       <fountain-context-surface v-if="group.keys.includes('footnote') && footnoteContext" :editor="editor" :active="true" :anchor-path="footnoteContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Footnote actions')" :trigger-text="s__('ContentEditor|Note')" :suspended="renameOpen || footnoteOpen" @reveal="$emit('focus')">
         <div class="gl-w-full" role="group" :aria-label="s__('ContentEditor|Footnote controls')">

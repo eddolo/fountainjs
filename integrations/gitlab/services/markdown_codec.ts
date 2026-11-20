@@ -11,6 +11,7 @@ import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } fro
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
 import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLabQuickAction, transformGitLabQuickActions } from './quick_actions';
 import { gitLabCodeSuggestion, normalizeGitLabSuggestionNodes, serializeGitLabSuggestionNode } from './code_suggestion_node';
+import { gitLabContentsNode, normalizeGitLabContents } from './table_of_contents';
 import { gitLabTaskItem } from './task_state';
 import { normalizeGitLabTasks } from './task_rendering';
 import { convertGitLabFootnotes } from './footnote_codec';
@@ -69,7 +70,7 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string): string | un
 }
 
 /** GitLab-owned source attributes remain distinct from navigable display URLs. */
-export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaLabels?: Readonly<Record<GitLabPlayableKind, string>>): SchemaSpec {
+export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaLabels?: Readonly<Record<GitLabPlayableKind, string>>, contentsLabel = 'Table of contents'): SchemaSpec {
   if (!base.nodes.inline_image || !base.marks?.link) throw new TypeError('The GitLab schema requires inline images and links.');
   const image = base.nodes.inline_image, link = base.marks.link;
   const imageAttrs = (element: HTMLParseElement) => {
@@ -90,6 +91,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
   };
   return { ...base, nodes: { ...base.nodes, ...gitlabMathNodes(base), ...gitlabAlertNodes(), ...gitlabMediaNodes(mediaLabels), ...gitLabFootnoteNodes(),
     gitlab_code_suggestion: gitLabCodeSuggestion(),
+    gitlab_table_of_contents: gitLabContentsNode(contentsLabel),
     ...(base.nodes.direction_scope ? { direction_scope: { ...base.nodes.direction_scope,
       parseHTML: [...(base.nodes.direction_scope.parseHTML ?? []), { tag: 'div[dir]', priority: 55,
         getAttrs: (element: HTMLParseElement) => {
@@ -148,7 +150,7 @@ const setAttr = (element: RawElement, name: string, value: string): void => {
   if (existing) existing.value = value;
   else element.attrs.push({ name, value });
 };
-function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>): string {
+function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>, supportsContents: boolean): string {
   const maxBytes = options.maxInputBytes ?? 1_048_576;
   if (new TextEncoder().encode(html).length > maxBytes) throw new Error('GitLab rendering exceeds the configured HTML byte limit.');
   const fragment = parseFragment(html), elements: RawElement[] = [], stack: [RawNode, number][] = [[fragment, 0]];
@@ -159,6 +161,7 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
     if ('tagName' in node) elements.push(node);
     if ('childNodes' in node) for (let index = node.childNodes.length - 1; index >= 0; index--) stack.push([node.childNodes[index]!, depth + 1]);
   }
+  normalizeGitLabContents(elements, source, maxBytes, supportsContents);
   const tasks = normalizeGitLabTasks(elements, source);
   const math = normalizeGitLabMath(elements);
   const diagrams = normalizeGitLabDiagrams(elements);
@@ -237,6 +240,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     renderMarkdown(markdown: string, options?: { signal: AbortSignal }): Promise<GitLabRenderResponse>;
     html?: ServerHTMLImporterOptions;
     preserveWikiSource?: boolean;
+    tableOfContentsLabel?: string;
   }) {}
 
   async deserialize({ schema, markdown, signal }: { schema: Schema; markdown: string; signal: AbortSignal }): Promise<{ document: Node }> {
@@ -254,7 +258,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         ...footnotes.issues.map(code => ({ stage: 'import' as const, code, message: 'A footnote projection requires its explicit source-aware adapter.' })),
       ]);
       const emojiNames = new Map<string,string>();
-      const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema, emojiNames), schema);
+      const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema, emojiNames, this.options.tableOfContentsLabel !== undefined), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
       const document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
       schema.validate(document);
@@ -481,6 +485,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const blockSerializers = {
       table: (node: Node) => serializeGitLabHTMLTable(node, prefix),
       gitlab_code_suggestion: serializeGitLabSuggestionNode,
+      gitlab_table_of_contents: (node: Node) => String(node.attrs.token),
       direction_scope: (node: Node): string | undefined => {
         // GitLab strips Fountain data attributes and bare checkbox inputs. A
         // plain direction container with Markdown children keeps its task/source

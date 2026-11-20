@@ -23,7 +23,7 @@ export {
   insertList,
   toggleList,
   selectAll,
-  insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
+  insertNode, insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
   deleteTableColumn, deleteTable, mergeTableCells, splitTableCell,
   insertInlineImage,
   setLink,

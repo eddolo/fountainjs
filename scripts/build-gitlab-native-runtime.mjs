@@ -54,6 +54,7 @@ for (const path of [
   'integrations/gitlab/services/serialized_content.ts',
   'integrations/gitlab/services/markdown_codec.ts',
   'integrations/gitlab/services/task_rendering.ts',
+  'integrations/gitlab/services/table_of_contents.ts',
   'integrations/gitlab/services/task_state.ts',
   'integrations/gitlab/services/footnote_source.ts',
   'integrations/gitlab/services/footnote_codec.ts',
