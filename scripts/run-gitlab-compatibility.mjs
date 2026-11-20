@@ -35,8 +35,8 @@ const browsers = {chromium, firefox, webkit};
 if (!Object.hasOwn(browsers,browserName)) throw new Error('Use --browser chromium, firefox or webkit.');
 const browserType = browsers[browserName];
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
-if(!['suggestions','review-history','batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff','deletions','reviews','stale-reviews','relocated-reviews','concurrent-reviews','clipboard','partial','crossblock','wrapped','paint','grid','merged-grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','quick-save','reconnect','offline-conflict','concurrent-issues','wiki-history','wiki-restore-conflict','wiki-rename'].includes(suite)||!['original','fountain','prepared'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
- throw new Error('Usage: --editor original|fountain|prepared --run-id safe-id [--attempt 1..99] [--verify-rollback] [--verify-restart] [--browser chromium|firefox|webkit] [--suite suggestions|review-history|batch-reviews|multi-file-reviews|review-invalidation|overlap-reviews|reviewer-handoff|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict|concurrent-issues|wiki-history|wiki-restore-conflict|wiki-rename]');
+if(!['suggestions','review-history','batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff','deletions','reviews','stale-reviews','relocated-reviews','concurrent-reviews','clipboard','partial','crossblock','wrapped','paint','grid','merged-grid','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','quick-save','reconnect','offline-conflict','concurrent-issues','wiki-history','wiki-restore-conflict','wiki-rename','wiki-titles'].includes(suite)||!['original','fountain','prepared'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
+ throw new Error('Usage: --editor original|fountain|prepared --run-id safe-id [--attempt 1..99] [--verify-rollback] [--verify-restart] [--browser chromium|firefox|webkit] [--suite suggestions|review-history|batch-reviews|multi-file-reviews|review-invalidation|overlap-reviews|reviewer-handoff|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|quick-save|reconnect|offline-conflict|concurrent-issues|wiki-history|wiki-restore-conflict|wiki-rename|wiki-titles]');
 const preparedRollback = side === 'prepared';
 if (preparedRollback && (suite !== 'composers' || !process.argv.includes('--verify-rollback') ||
     !process.argv.includes('--prepared-source') || !isAbsolute(value('--prepared-source')) ||
@@ -84,11 +84,11 @@ const rollbackFrom = process.argv.includes('--history-rollback-from') ? value('-
 let previousHistory;
 if (rollbackFrom !== undefined) {
   const parts = /^([a-z0-9][a-z0-9-]{0,60}):([1-9][0-9]?)(?:,([1-9][0-9]?))?$/u.exec(rollbackFrom);
-  if (!parts || !['review-history','wiki-history','wiki-restore-conflict','wiki-rename'].includes(suite) || historyProfile || process.argv.includes('--wiki-restore') || side !== 'original') throw new Error('Use --history-rollback-from run-id:attempt on a packaged stock history deployment.');
+  if (!parts || !['review-history','wiki-history','wiki-restore-conflict','wiki-rename','wiki-titles'].includes(suite) || historyProfile || process.argv.includes('--wiki-restore') || side !== 'original') throw new Error('Use --history-rollback-from run-id:attempt on a packaged stock history deployment.');
   previousHistory = {directory: resolve(root, 'artifacts/gitlab-compatibility', parts[1]), attempts: {original: Number(parts[2]), fountain: Number(parts[3] ?? parts[2])}};
 }
 const wikiRestore = process.argv.includes('--wiki-restore');
-const wikiSuite = ['wiki-history', 'wiki-restore-conflict', 'wiki-rename'].includes(suite);
+const wikiSuite = ['wiki-history', 'wiki-restore-conflict', 'wiki-rename', 'wiki-titles'].includes(suite);
 if (wikiRestore && !wikiSuite) throw new Error('Use --wiki-restore with a wiki suite.');
 const serverProfile = wikiRestore ? 'wiki-restore' : 'suggestion-history';
 const serviceFiles = wikiRestore ? ['app/controllers/concerns/wiki_actions.rb'] : ['app/services/notes/update_service.rb','app/services/suggestions/create_service.rb'];

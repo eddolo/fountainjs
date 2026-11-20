@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "id": "quoted-title",
+      "title": "Rotation schedule",
+      "newTitle": "Mina's rotation #2",
+      "addition": "",
+      "scope": "wiki-history",
+      "source": "---\r\nowner: 'Mina' # maintainers\n\"title\": 'First rotation'  # displayed title\r\nlabels: [ops, release]\r\n---\n# Checklist\r\n\r\nOwner: **Release team**.\r\n\r\nStatus: ready.\r\n",
+      "paragraph": "Status: ready.",
+      "headerBefore": "'First rotation'",
+      "headerAfter": "'Mina''s rotation #2'",
+      "restoreMessage": "Restore initial wiki title and contents"
+    },
+    {
+      "id": "double-title",
+      "title": "Release decisions",
+      "newTitle": "Résumé: \"ready\"",
+      "addition": " Signed off.",
+      "scope": "wiki-history",
+      "source": "---\n# decision log\ntitle: \"Original\" # reviewed\nnotes: |-\n  title: keep this line\n---\n# Checklist\r\n\r\nOwner: **Release team**.\r\n\r\nStatus: ready.\r\n",
+      "paragraph": "Status: ready.",
+      "headerBefore": "\"Original\"",
+      "headerAfter": "\"Résumé: \\\"ready\\\"\"",
+      "restoreMessage": "Restore initial wiki title and contents"
+    },
+    {
+      "id": "new-title",
+      "title": "API handoff",
+      "newTitle": "Handoff: final",
+      "addition": "",
+      "scope": "wiki-history",
+      "source": "---\r\n# handoff\r\nowner: 'Ada' # author\r\nlabels: [api, docs]\r\n---\r\n# Checklist\r\n\r\nOwner: **Release team**.\r\n\r\nStatus: ready.\r\n",
+      "paragraph": "Status: ready.",
+      "headerBefore": "labels: [api, docs]\r\n",
+      "headerAfter": "labels: [api, docs]\r\ntitle: \"Handoff: final\"\r\n",
+      "restoreMessage": "Restore initial wiki title and contents"
+    },
+    {
+      "id": "literal-title",
+      "title": "Roadmap label",
+      "newTitle": "*Roadmap",
+      "addition": "",
+      "scope": "wiki-history",
+      "source": "---\n# literal display label\ntitle: Draft # active\nowner: 'Ada'\n---\n# Checklist\r\n\r\nOwner: **Release team**.\r\n\r\nStatus: ready.\r\n",
+      "paragraph": "Status: ready.",
+      "headerBefore": "title: Draft",
+      "headerAfter": "title: \"*Roadmap\"",
+      "restoreMessage": "Restore the original display label"
+    },
+    {
+      "id": "plain-title",
+      "title": "Seasonal release",
+      "newTitle": "Winter release",
+      "addition": "",
+      "scope": "wiki-history",
+      "source": "---\r\n{owner: 'Zoë', title: Draft, team: [api, docs]} # keep layout\r\n---\r\n# Checklist\r\n\r\nOwner: **Release team**.\r\n\r\nStatus: ready.\r\n",
+      "paragraph": "Status: ready.",
+      "headerBefore": "title: Draft",
+      "headerAfter": "title: Winter release",
+      "restoreMessage": "Restore the original display label"
+    }
+  ]
+}

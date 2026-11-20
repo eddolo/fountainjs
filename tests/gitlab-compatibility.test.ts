@@ -300,6 +300,24 @@ it('requires the rename-history gate and checks sources at the path used by each
   expect(compare().environment.matched).toBe(false);
   expect(compare().comparisonComplete).toBe(false);
 });
+it('checks the reopened title independently from the YAML source and visible body', () => {
+  const [original, fountain] = reports() as any[];
+  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-wiki-titles.json', import.meta.url), 'utf8'));
+  const input = fixture.cases[0];
+  const expectedSource = input.source.replace(input.headerBefore, () => input.headerAfter);
+  for (const report of [original, fountain]) {
+    report.fixture = {cases:[input]};
+    Object.assign(report.observations[0], {id:input.id, input, status:'observed', initialTitle:'First rotation',
+      savedTitle:input.newTitle, restoredTitle:'First rotation', editedSource:expectedSource});
+  }
+  fountain.observations[0].editedSource = expectedSource.replace('# maintainers', '');
+  fountain.observations[0].restoredTitle = input.newTitle;
+  const {rows} = compareGitLabCompatibility(original, fountain);
+  const rating = (key:string) => rows.find((row:any) => row.invariant === key)?.classification;
+  expect(rating('savedTitle')).toBe('parity');
+  expect(rating('editedSource')).toBe('regression');
+  expect(rating('recoveredTitle')).toBe('regression');
+});
 it('requires the mounted wiki controller to match its receipt on both deployments', () => {
  const [original, fountain] = reports() as any[];
  const path = 'app/controllers/concerns/wiki_actions.rb';

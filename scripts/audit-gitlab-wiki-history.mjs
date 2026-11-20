@@ -89,6 +89,11 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     await openEditor();
     item.editorProof = await surface.evaluate(el => ({ native: !!el.closest('[data-fountain-integration=native]'), className: el.className }));
     item.mountedContent = await form.locator('input[type=hidden][name="wiki[content]"]').last().inputValue();
+    const titleField = form.getByTestId('wiki-title-textbox');
+    if (input.newTitle) {
+      item.initialTitle = await titleField.inputValue();
+      await titleField.fill(input.newTitle);
+    }
     const paragraph = surface.locator('p').filter({ hasText: input.paragraph });
     await paragraph.click();
     if (input.insertBefore) {
@@ -97,7 +102,7 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
       await tab.keyboard.press('Enter');
     }
     await tab.keyboard.press('End');
-    await tab.keyboard.insertText(input.addition);
+    if (input.addition) await tab.keyboard.insertText(input.addition);
     item.typed = await paragraph.innerText();
     await saveEdit(tab, 'Verify deployment checklist');
     await tab.reload();
@@ -105,6 +110,11 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     item.editedSource = await read();
     item.editedReader = await reader.locator('p').last().innerText();
     await openEditor();
+    if (input.newTitle) {
+      item.savedTitle = await titleField.inputValue();
+      await titleField.scrollIntoViewIfNeeded();
+      await tab.screenshot({path:join(output, input.id + '-edited-title.png')});
+    }
     item.reopened = await surface.locator('p').filter({hasText: input.paragraph}).innerText();
     await form.getByTestId('wiki-cancel-button').click();
     await expect(reader).toBeVisible();
@@ -183,6 +193,12 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     item.restoredReader = await reader.locator('p').last().innerText();
     item.restoredOwner = await reader.locator('strong').allTextContents();
     await tab.screenshot({path:join(output, input.id + '-restored.png')});
+    if (input.newTitle) {
+      await openEditor();
+      item.restoredTitle = await titleField.inputValue();
+      await form.getByTestId('wiki-cancel-button').click();
+      await expect(reader).toBeVisible();
+    }
     item.after = await openHistory();
     item.revisions = [];
     for (const row of item.after) {

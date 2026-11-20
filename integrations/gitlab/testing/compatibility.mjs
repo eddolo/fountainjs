@@ -517,7 +517,8 @@ export function compareGitLabCompatibility(original,fountain){
     if (input.scope === 'wiki-history') {
       const editedText = input.paragraph + input.addition;
       const replacement = input.insertBefore ? input.insertBefore + input.separator + editedText : editedText;
-      const editedSource = input.source.replace(input.paragraph,replacement);
+      const bodyEdited = input.source.replace(input.paragraph,replacement);
+      const editedSource = input.newTitle ? bodyEdited.replace(input.headerBefore, () => input.headerAfter) : bodyEdited;
       const evidence = (report,item) => {
         if (!verifiedEditor(report,item) || item.status !== 'observed') return {};
         const before = item.before ?? [], after = item.after ?? [], revisions = item.revisions ?? [];
@@ -526,6 +527,7 @@ export function compareGitLabCompatibility(original,fountain){
           restoredSource: report.side === 'fountain' && report.deployment?.wikiRestore &&
             !item.submissions?.requests?.some(entry => entry.stage === 'restore' && entry.restoreVersion &&
               entry.restoreVersion === before.find(row => row.version === 'v1')?.sha) ? undefined : item.restoredSource,
+          recoveredTitle: typeof item.initialTitle === 'string' && item.initialTitle === item.restoredTitle,
           historyBefore: before.map(row => row.version),
           historyAfter: after.map(row => row.version),
           retainedHistory: after.length === 3 && before.length === 2 &&
@@ -544,6 +546,8 @@ export function compareGitLabCompatibility(original,fountain){
         ['editedReader','The reader shows the edit after reload',editedText],
         ['reopened','The rich editor reopens with the saved paragraph',editedText],
         ['editedSource','Persisted Markdown preserves the exact edit and untouched source',editedSource],
+        ...(input.newTitle ? [['savedTitle','The rich editor reopens with the new display title',input.newTitle],
+          ['recoveredTitle','Restore recovers the original display title',true]] : []),
         ['historyBefore','History shows the edit and the seed as two revisions',['v2','v1']],
         ['oldReader','Viewing v1 shows the original paragraph',input.paragraph],
         ['cancelPreserved','Dismissing Restore keeps the edited source byte for byte',true],

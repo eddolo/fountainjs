@@ -59,6 +59,26 @@ node scripts/run-gitlab-compatibility.mjs --suite wiki-history --editor original
 
 The [three-page Chromium comparison](../../../artifacts/gitlab-compatibility/wiki-rich-save-20261119/comparison-3/report.md) tested Fountain `0f3db5f6bfe550275fd0ff440c78d47d5cbab7eb`. The 48 checks include five improvements in exact Markdown retention. The run used `--history-rollback-from wiki-rich-save-20261119:1,3`. After both overlays were removed, [packaged GitLab reopened all six pages and verified all 18 revision contents by ID](../../../artifacts/gitlab-compatibility/wiki-rich-save-stock-20261119/original-1/report.json). The [earlier two-page comparison](../../../artifacts/gitlab-compatibility/wiki-revision-restore-20261119/comparison/report.md) records the rich-text Save failures that prompted these changes.
 
+#### Reproduce wiki display-title edits
+
+Use the existing wiki deployment and run the `wiki-titles` suite with the same controller on both editors. The author changes the display title on a page with a fixed path, saves, reopens the rich editor and checks the title, then restores the original revision. The comparison checks the actual source of each Git revision, including comments, nested YAML, quotation marks, line endings and the final newline. For an isolated title change, the optional controller finds the top-level scalar with Ruby’s YAML parser and checks that GitLab parses the edited header into the requested metadata. It uses GitLab’s submitted header when other metadata changed or the original structure cannot be edited unambiguously.
+
+```sh
+run="wiki-titles-$(date +%s)"
+for editor in original fountain; do
+  node scripts/run-gitlab-compatibility.mjs --suite wiki-titles --wiki-restore --editor "$editor" --run-id "$run" || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
+```
+
+The [five-page comparison](../../../artifacts/gitlab-compatibility/wiki-title-fidelity-20261120/comparison/report.md) recorded 76 equivalent outcomes and 14 improvements. Both editors saved the requested titles. Fountain kept the expected source on all five saves and restores. Stock rewrote the five saves, and four restored pages opened with a title derived from the URL path. The [packaged rollback](../../../artifacts/gitlab-compatibility/wiki-title-fidelity-stock-20261120/original-1/report.json) checked the displayed titles of ten pages and retrieved all 30 stored revisions. Run against the same data volumes with the original and Fountain writer attempts.
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite wiki-titles --editor original \
+  --run-id "wiki-title-stock-$(date +%s)" --history-rollback-from "$run:1,1"
+```
+
 #### Reproduce a wiki restore with an intervening edit
 
 Use the same prepared controller and compiled editor as above. On the same test account, the first tab opens Restore for v1 at v2. A second tab edits the latest page and saves v3. The first tab submits its still-open dialog, checks the notice and current page, opens history again, and deliberately retries the v1 restore. The comparison checks both shown text and all four revision sources by ID.

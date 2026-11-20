@@ -41,7 +41,7 @@
        redirect_to wiki_page_path(wiki, @page, action: :show, edit: 'true')
      end
    end
-@@ -411,6 +425,65 @@
+@@ -411,6 +425,111 @@
    end
    # rubocop:enable Gitlab/ModuleWithInstanceVariables
  
@@ -62,13 +62,59 @@
 +  # Reuse the exact authored header when its parsed values did not change.
 +  def wiki_rich_source(submitted)
 +    parsed = Gitlab::WikiPages::FrontMatterParser.new(submitted).parse
-+    header = if parsed.front_matter.eql?(page.front_matter)
-+               page.raw_content.to_s.delete_suffix(page.content.to_s)
-+             else
-+               submitted.delete_suffix(parsed.content)
++    original = page.raw_content.to_s.delete_suffix(page.content.to_s)
++    metadata = parsed.front_matter
++    header = if metadata.eql?(page.front_matter)
++               original
++             elsif metadata[:title].is_a?(String) && metadata.except(:title).eql?(page.front_matter.except(:title))
++               wiki_header_with_title(original, metadata)
 +             end
 +
-+    header + wiki_rich_body(page.content.to_s, parsed.content)
++    (header || submitted.delete_suffix(parsed.content)) + wiki_rich_body(page.content.to_s, parsed.content)
++  end
++
++  # Locate only the top-level title with Psych. Keep comments, nested keys and
++  # delimiters in their original positions; use the host parser to verify the result.
++  def wiki_header_with_title(header, metadata)
++    yaml = Gitlab::FrontMatter::PATTERN_UNTRUSTED_REGEX.match(header)&.[](:front_matter)
++    return if yaml.blank?
++
++    closing = header.lines.last
++    prefix = header.delete_suffix(closing).delete_suffix(yaml)
++    return unless header == prefix + yaml + closing
++
++    root = Psych.parse(yaml)&.root
++    return unless root.is_a?(Psych::Nodes::Mapping)
++
++    titles = root.children.each_slice(2).select { |key, _| key.is_a?(Psych::Nodes::Scalar) && key.value == 'title' }
++    title = metadata.fetch(:title)
++    quoted = title.to_json
++    if titles.empty? && root.style != Psych::Nodes::Mapping::FLOW
++      ending = yaml.end_with?("\r\n") ? "\r\n" : "\n"
++      candidates = [yaml + (' ' * root.start_column) + "title: #{quoted}" + ending]
++    elsif titles.one? && titles.first.last.is_a?(Psych::Nodes::Scalar)
++      node = titles.first.last
++      lines = yaml.lines
++      first = lines.take(node.start_line).sum(&:size) + node.start_column
++      last = lines.take(node.end_line).sum(&:size) + node.end_column
++      terminator = yaml[first...last][/\r?\n\z/] || ''
++      preferred = case node.style
++                  when Psych::Nodes::Scalar::PLAIN then title if title.match?(/\A[[:alnum:]_][[:alnum:] _.\-]*\z/)
++                  when Psych::Nodes::Scalar::SINGLE_QUOTED then "'" + title.gsub("'", "''") + "'"
++                  end
++      candidates = [preferred, quoted].compact.uniq.map { |value| yaml[0...first] + value + terminator + yaml[last..] }
++    else
++      return
++    end
++
++    candidates.each do |candidate|
++      result = prefix + candidate + closing
++      parsed = Gitlab::WikiPages::FrontMatterParser.new(result).parse
++      return result if parsed.content.empty? && parsed.front_matter.eql?(metadata)
++    end
++    nil
++  rescue Psych::SyntaxError
++    nil
 +  end
 +
 +  def wiki_rich_body(original, submitted)

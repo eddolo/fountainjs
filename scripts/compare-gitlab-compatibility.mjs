@@ -181,7 +181,7 @@ if (reports[0].suite === 'wiki-restore-conflict' && result.environment.matched) 
   }
   table.push('');
 }
-if (reports[0].suite === 'wiki-history' && result.environment.matched) {
+if (['wiki-history','wiki-titles'].includes(reports[0].suite) && result.environment.matched) {
   if (reports[0].deployment?.wikiRestore) {
     table.push('Both deployments used the same wiki controller patch `' + reports[0].deployment.wikiRestore.patchSHA256 +
       '`. The stock frontend submits the content field. The repaired frontend also submits the selected Git revision.', '');

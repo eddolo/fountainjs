@@ -73,6 +73,15 @@ export async function verifyWikiRollback({ previous, report, page, project, requ
       const reader = page.getByTestId('wiki-page-content');
       await expect(reader.locator('p').last()).toHaveText(item.input.paragraph);
       await expect(reader.locator('strong')).toHaveText(['Release team']);
+      let displayTitle;
+      if (item.input.newTitle) {
+        await page.getByTestId('wiki-edit-button').click();
+        const field = page.getByTestId('wiki-title-textbox');
+        await expect(field).toHaveValue(item.restoredTitle);
+        displayTitle = await field.inputValue();
+        await page.getByTestId('wiki-cancel-button').click();
+        await expect(reader).toBeVisible();
+      }
       const history = page.getByTestId('page-history-button');
       if (!await history.isVisible()) await page.getByTestId('wiki-more-dropdown').getByRole('button').first().click();
       await history.click();
@@ -89,7 +98,7 @@ export async function verifyWikiRollback({ previous, report, page, project, requ
         revisions.push({sha:revision.sha, sourceSHA256:createHash('sha256').update(content).digest('hex')});
       }
       await page.screenshot({path:join(output, writer.side + '-' + item.id + '-rollback.png')});
-      result.records.push({writer:writer.side, slug:item.slug, revisions});
+      result.records.push({writer:writer.side, slug:item.slug, revisions, ...(displayTitle !== undefined ? {displayTitle} : {})});
     }
   }
   result.passed = true;
