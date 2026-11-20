@@ -101,7 +101,7 @@ const rollbackFrom = process.argv.includes('--history-rollback-from') ? value('-
 let previousHistory;
 if (rollbackFrom !== undefined) {
   const parts = /^([a-z0-9][a-z0-9-]{0,60}):([1-9][0-9]?)(?:,([1-9][0-9]?))?$/u.exec(rollbackFrom);
-  if (!parts || !['review-history','wiki-history','wiki-restore-conflict','wiki-rename','wiki-titles'].includes(suite) || historyProfile || process.argv.includes('--wiki-restore') || side !== 'original') throw new Error('Use --history-rollback-from run-id:attempt on a packaged stock history deployment.');
+  if (!parts || !['review-history','wiki-history','wiki-restore-conflict','wiki-restore-authors','wiki-rename','wiki-titles'].includes(suite) || historyProfile || process.argv.includes('--wiki-restore') || side !== 'original') throw new Error('Use --history-rollback-from run-id:attempt on a packaged stock history deployment.');
   previousHistory = {directory: resolve(root, 'artifacts/gitlab-compatibility', parts[1]), attempts: {original: Number(parts[2]), fountain: Number(parts[3] ?? parts[2])}};
 }
 const wikiRestore = process.argv.includes('--wiki-restore');

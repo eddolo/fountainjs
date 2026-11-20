@@ -56,6 +56,7 @@ export async function verifyWikiRollback({ previous, report, page, project, requ
   for (const writer of writers) {
     expect(writer.suite).toBe(report.suite);
     expect(writer.fixtureHash).toBe(report.fixtureHash);
+    if (report.suite === 'wiki-restore-authors') expect(writer.browser).toEqual(report.browser);
     expect(writer.deployment.backendMounts).toEqual(report.deployment.backendMounts);
     expect(writer.deployment.imageId).toBe(report.deployment.imageId);
     expect(writer.backend.project).toEqual(report.backend.project);
@@ -88,16 +89,25 @@ export async function verifyWikiRollback({ previous, report, page, project, requ
       const table = page.getByTestId('wiki-history-table');
       await expect(table.locator('tbody tr')).toHaveCount(item.revisions.length);
       const revisions = [];
+      const authors = item.input.writerAccess ? [item.authors.owner.name, item.authors.writer.name, item.authors.owner.name, item.authors.owner.name] : undefined;
+      if (authors) expect(item.after.map(entry => entry.author)).toEqual(authors);
       for (const [index,revision] of item.revisions.entries()) {
         const row = table.locator('tbody tr').nth(index);
         const url = new URL(await row.locator('a').first().getAttribute('href'), page.url());
         expect(url.searchParams.get('version_id')).toBe(revision.sha);
         await expect(row.locator('td').nth(2)).toHaveText(item.after[index].message);
+        let author;
+        if (authors) {
+          const credit = row.locator('td').nth(1);
+          await expect(credit).toHaveText(authors[index]);
+          author = (await credit.innerText()).trim();
+        }
         const {content} = await request(api + '?version=' + revision.sha);
         expect(content).toBe(revision.source);
-        revisions.push({sha:revision.sha, sourceSHA256:createHash('sha256').update(content).digest('hex')});
+        revisions.push({sha:revision.sha, sourceSHA256:createHash('sha256').update(content).digest('hex'), ...(author ? {author} : {})});
       }
-      await page.screenshot({path:join(output, writer.side + '-' + item.id + '-rollback.png')});
+      if (authors) await table.getByRole('link', {name:'v3',exact:true}).hover({trial:true});
+      await page.screenshot({path:join(output, writer.side + '-' + item.id + '-rollback.png'),animations:'disabled'});
       result.records.push({writer:writer.side, slug:item.slug, revisions, ...(displayTitle !== undefined ? {displayTitle} : {})});
     }
   }

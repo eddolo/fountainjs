@@ -122,6 +122,14 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     }
     await expect(content).toBeVisible();
   }
+  async function openFirstRevision() {
+    const link = tab.getByTestId('wiki-history-table').getByRole('link', {name:'v1',exact:true});
+    const destination = new URL(await link.getAttribute('href'), tab.url());
+    await link.hover({trial:true});
+    await link.click();
+    await expect(tab).toHaveURL(destination.href);
+    await expect(tab.getByTestId('wiki-restore-version-button')).toBeVisible();
+  }
   async function openHistory() {
     const history = tab.getByTestId('page-history-button');
     if (!await history.isVisible()) await tab.getByTestId('wiki-more-dropdown').getByRole('button').first().click();
@@ -177,7 +185,7 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
       item.status = 'observed';
       return item;
     }
-    await tab.getByTestId('wiki-history-table').getByRole('link', {name:'v1',exact:true}).click();
+    await openFirstRevision();
     const restore = tab.getByTestId('wiki-restore-version-button');
     await expect(restore).toBeVisible();
     item.oldReader = await reader.locator('p').last().innerText();
@@ -233,7 +241,7 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
       await tab.goto(url);
       item.latestReader = await reader.locator('p').last().innerText();
       item.afterStaleHistory = await openHistory();
-      await tab.getByTestId('wiki-history-table').getByRole('link',{name:'v1',exact:true}).click();
+      await openFirstRevision();
       await restore.click();
       item.retryLock = await modal.locator('[name="wiki[last_commit_sha]"]').inputValue();
       item.stage = 'restore';
@@ -259,7 +267,8 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
       if (!/^[a-f0-9]{40}$/.test(row.sha)) throw new Error('Missing wiki revision SHA in history link for ' + row.version);
       item.revisions.push({sha:row.sha, source:await read(row.sha)});
     }
-    await tab.screenshot({path:join(output, input.id + '-history.png')});
+    if (input.writerAccess) await tab.getByTestId('wiki-history-table').getByRole('link',{name:'v3',exact:true}).hover({trial:true});
+    await tab.screenshot({path:join(output, input.id + '-history.png'),animations:'disabled'});
     item.status = 'observed';
   } catch (error) {
     item.failure = String(error);

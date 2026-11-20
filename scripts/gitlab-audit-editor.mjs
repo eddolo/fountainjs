@@ -5,7 +5,8 @@ export async function observePage(actor, result, pageErrors = result.pageErrors)
   const notice = actor.locator('#security-patch-upgrade-alert-modal[role="dialog"]');
   await actor.addLocatorHandler(notice, async () => {
     const title = await notice.getByTestId('alert-modal-title').innerText();
-    await notice.getByRole('button', { name: 'Close', exact: true }).click();
+    // GitLab remembers this action in the isolated browser context across wiki navigations.
+    await notice.getByRole('button', { name: 'Remind me again in 3 days', exact: true }).click();
     (result.dismissedPatchNotices ??= []).push(title);
   });
 }

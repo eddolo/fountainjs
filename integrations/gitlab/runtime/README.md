@@ -178,6 +178,24 @@ node scripts/run-gitlab-compatibility.mjs --suite wiki-restore-conflict --editor
   --run-id "wiki-stale-stock-$(date +%s)" --history-rollback-from wiki-stale-restore-20261119:4,4
 ```
 
+For the two-author Firefox workflow, keep the same named data volumes throughout. Record the stock and Fountain writer runs with the shared wiki controller first. Then switch back to the packaged frontend and controller and verify both pages.
+
+```sh
+run="wiki-authors-firefox-$(date +%s)"
+for editor in original fountain; do
+  node scripts/run-gitlab-compatibility.mjs --suite wiki-restore-authors --browser firefox --wiki-restore --editor "$editor" --run-id "$run" || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison" || exit 1
+node scripts/run-gitlab-compatibility.mjs --suite wiki-restore-authors --browser firefox --editor original --run-id "$run-stock" --history-rollback-from "$run:1,1"
+```
+
+The rollback verifies the packaged controller digest and checks each version in the history table against the original revision ID, author, commit message and stored source. Its own fresh control runs after it reads both existing pages.
+
+On Linux Firefox 153 with GitLab CE 19.5.3, all 19 comparisons passed on the two builds with the shared controller. After removing both overlays, packaged GitLab displayed both pages and all eight original revision IDs with the expected authors, messages and exact source. The Developer’s competing change remained available as v3 on each page. A fresh stock control retained the revisions and showed the existing translation placeholders in its conflict notice. [Matched builds and outcomes](../../../artifacts/gitlab-compatibility/wiki-authors-firefox-20261120/verified/report.md) · [Rollback by revision and author](../../../artifacts/gitlab-compatibility/wiki-authors-firefox-stock-20261120/original-1/report.json) · [Fountain-authored page under packaged GitLab](../../../artifacts/gitlab-compatibility/wiki-authors-firefox-stock-20261120/original-1/fountain-two-wiki-authors-rollback.png)
+
+Two earlier stock Firefox attempts stopped when GitLab’s release reminder interrupted navigation. In the matched run both temporary browser profiles used the built-in reminder action and verified the selected revision URL before Restore. [First interrupted run](../../../artifacts/gitlab-compatibility/wiki-authors-firefox-20261120/original-1/report.json) · [Second interrupted run](../../../artifacts/gitlab-compatibility/wiki-authors-firefox-20261120/original-2/report.json)
+
 #### Reproduce history after moving a wiki page
 
 Under **Edit page options**, change the page path after saving a rich-text edit. The suite opens the original bookmark and historical URL, then uses the renamed page’s history to select the original revision when GitLab lists it. It compares the resulting reader text and exact source against the original commit.
