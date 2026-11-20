@@ -274,6 +274,32 @@ it('evaluates the stale restore notice, intervening revision and intentional ret
     .toEqual(['readableNotice','reviewedFromNotice','afterStale','retriedAtV3']);
   expect(compare().featureAcceptance.passed).toBe(false);
 });
+it('requires the rename-history gate and checks sources at the path used by each revision', () => {
+  const [original, fountain] = reports() as any[];
+  const {cases} = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-wiki-rename.json', import.meta.url), 'utf8'));
+  const input = cases.find((entry: {followRenames:boolean}) => entry.followRenames);
+  const edited = input.source.replace(input.paragraph, input.paragraph + input.addition);
+  const history = [input.restoreMessage, input.renameMessage, 'Edit', 'Seed'].map((message,index) =>
+    ({version:'v' + (4-index), sha:String(4-index).repeat(40), message}));
+  for (const side of [original, fountain]) {
+    side.fixture = {cases:[input]};
+    Object.assign(side.observations[0], {id:input.id, input, status:'observed', slug:'old', newSlug:'new',
+      renameProfile:{defaultEnabled:false, before:null, enabled:true, after:null, gate:{key:'actors',value:['Project:' + side.backend.project.id]}},
+      before:history.slice(2), renamedHistory:history.slice(1), after:history, movedToExpectedPath:true,
+      editedSource:edited, sourceAfterRename:edited, oldBookmarkRedirect:true, oldBookmarkReader:input.paragraph + input.addition,
+      oldRevisionReader:input.paragraph, oldRevisionSource:input.source, selectedV1:true, historyReader:input.paragraph,
+      restoredSource:input.source, restoredReader:input.paragraph, pageErrors:[],
+      revisions:history.map(({sha}, i) => ({sha, slug:i < 2 ? 'new' : 'old', source:[input.source,edited,edited,input.source][i]})),
+    });
+  }
+  const compare = () => compareGitLabCompatibility(original, fountain);
+  expect(compare().featureAcceptance.passed).toBe(true);
+  fountain.observations[0].revisions[3].slug = 'new';
+  expect(compare().rows.find((row:any) => row.invariant === 'revisionSources')?.classification).toBe('regression');
+  fountain.observations[0].renameProfile.after = {state:'on'};
+  expect(compare().environment.matched).toBe(false);
+  expect(compare().comparisonComplete).toBe(false);
+});
 it('requires the mounted wiki controller to match its receipt on both deployments', () => {
  const [original, fountain] = reports() as any[];
  const path = 'app/controllers/concerns/wiki_actions.rb';

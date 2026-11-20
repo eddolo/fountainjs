@@ -424,6 +424,54 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:paired?a[key]:undefined,fountain:paired?b[key]:undefined,classification:null});
       continue;
     }
+    if (input.scope === 'wiki-rename') {
+      const editedText = input.paragraph + input.addition;
+      const editedSource = input.source.replace(input.paragraph, editedText);
+      const observe = (report, item) => {
+        if (!verifiedEditor(report, item) || item.status !== 'observed') return {};
+        const profile = item.renameProfile;
+        const history = item.renamedHistory;
+        const before = item.before;
+        if (!profile || !Array.isArray(history) || !Array.isArray(before)) return {};
+        const seed = before.find(row => row.version === 'v1');
+        const after = item.after;
+        const selected = item.selectedV1 === true && history.some(row => row.sha === seed?.sha);
+        return {
+          ...item,
+          profileVerified: profile.defaultEnabled === false && (profile.before === null || profile.before?.state === 'off') &&
+            equal(profile.before, profile.after) && profile.enabled === input.followRenames &&
+            (!input.followRenames || equal(profile.gate?.value, ['Project:' + report.backend?.project?.id])),
+          retainedBefore: before.length === 2 && history.length === 3 && history[0].message === input.renameMessage && equal(history.slice(1),before),
+          selected, openedFromNewHistory:selected && item.historyReader === input.paragraph,
+          exactRestore:selected && item.restoredSource === input.source && item.restoredReader === input.paragraph,
+          retainedAfter:selected && Array.isArray(after) && after.length === 4 && after[0].message === input.restoreMessage && equal(after.slice(1),history),
+          revisionSources:selected && Array.isArray(item.revisions) && equal(item.revisions.map(rev => rev.sha), after?.map(row => row.sha)) &&
+            new Set(item.revisions.map(rev => rev.sha)).size === 4 && equal(item.revisions.map(rev => rev.slug), [item.newSlug,item.newSlug,item.slug,item.slug]) &&
+            equal(item.revisions.map(rev => rev.source), [input.source,editedSource,editedSource,input.source]),
+        };
+      };
+      const left = observe(original,a), right = observe(fountain,b);
+      if (!left.profileVerified || !right.profileVerified) mismatches.push(input.id + ': wiki rename-history configuration or cleanup unverified');
+      check(input.id + '.renameProfile', a?.renameProfile, b?.renameProfile);
+      for (const [key,label,expected] of [
+        ['profileVerified','The project used the requested rename-history setting and recovered its prior configuration',true],
+        ['movedToExpectedPath','Saving the new path opens the renamed wiki page',true],
+        ['editedSource','The source before the move contains only the intended edit',editedSource],
+        ['sourceAfterRename','Renaming the path keeps the saved Markdown byte for byte',editedSource],
+        ['oldBookmarkRedirect','The original page bookmark redirects to the new path',true],
+        ['oldBookmarkReader','The original bookmark shows the latest edited content',editedText],
+        ['oldRevisionReader','The bookmarked historical version still shows the original paragraph',input.paragraph],
+        ['oldRevisionSource','The original revision is retrievable by its path and commit ID',input.source],
+        ['retainedBefore','History after the rename retains both earlier revision IDs and messages',true],
+        ['selected','The original revision is selectable through the renamed page’s history',true],
+        ['openedFromNewHistory','The original revision selected at the new path shows the original content',true],
+        ['exactRestore','Restoring at the new path retains the selected original bytes and reader content',true],
+        ['retainedAfter','Restore adds one entry and retains all three earlier history rows',true],
+        ['revisionSources','All four revision IDs retrieve the exact contents at the corresponding historical paths',true],
+        ['pageErrors','The browser reports no wiki exceptions',[]],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'wiki-restore-conflict') {
       const edited = input.source.replace(input.paragraph, input.paragraph + input.addition);
       const latest = input.source.replace(input.paragraph, input.paragraph + input.addition + input.competingEdit);

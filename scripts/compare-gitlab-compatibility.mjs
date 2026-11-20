@@ -156,6 +156,18 @@ if (rollback?.records?.length) {
   }
   table.push('');
 }
+if (reports[0].suite === 'wiki-rename' && result.environment.matched) {
+  table.push('## History at the new page path', '', '| Project setting | Editor | History after move | Original revision selectable | History after restore |', '| --- | --- | --- | --- | --- |');
+  for (const report of reports) {
+    for (const item of report.observations) {
+      const versions = rows => rows?.map(row => row.version + ' (`' + row.sha.slice(0, 12) + '`)').join(', ');
+      table.push('| ' + [item.input.followRenames ? 'Follow renames' : 'GitLab default', report.side,
+        versions(item.renamedHistory) ?? 'Unverified', item.selectedV1 === true ? 'Yes' : item.selectedV1 === false ? 'No' : 'Unverified',
+        versions(item.after) ?? 'Restore unavailable from history'].join(' | ') + ' |');
+    }
+  }
+  table.push('');
+}
 if (reports[0].suite === 'wiki-restore-conflict' && result.environment.matched) {
   const controller = reports[0].deployment?.wikiRestore;
   if (controller) table.push('Both deployments used wiki controller patch `' + controller.patchSHA256 + '`.', '');

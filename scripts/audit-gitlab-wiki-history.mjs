@@ -1,10 +1,13 @@
 import { expect } from '@playwright/test';
 import { join } from 'node:path';
+import {observeWikiRename, observeWikiRenameProfile} from './audit-gitlab-wiki-rename.mjs';
 
 export async function runWikiHistory({ side, runId, page, request, project, fixture, output }) {
   const observations = [];
   for (const input of fixture.cases) {
-    observations.push(await checkWikiPage({ side, runId, page, request, project, input, output }));
+    const collect = () => checkWikiPage({ side, runId, page, request, project, input, output });
+    observations.push(input.scope === 'wiki-rename'
+      ? await observeWikiRenameProfile({input, request, project}, collect) : await collect());
   }
   return observations;
 }
@@ -12,7 +15,7 @@ export async function runWikiHistory({ side, runId, page, request, project, fixt
 async function checkWikiPage({ side, runId, page, request, project, input, output }) {
   const item = { id: input.id, input, status: 'incomplete', stage: 'seed' };
   // Wiki slugs are unique. Each build gets its own page with the same starting source.
-  const title = input.title + '-' + side + '-' + runId;
+  const title = [input.title, ...(input.scope === 'wiki-rename' ? [input.id] : []), side, runId].join('-');
   const api = '/api/v4/projects/' + project.id + '/wikis';
   const seed = await request(api, { title, content: input.source, format: 'markdown' });
   const slug = encodeURIComponent(seed.slug);
@@ -107,6 +110,11 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     await expect(reader).toBeVisible();
     item.stage = 'history';
     item.before = await openHistory();
+    if (input.scope === 'wiki-rename') {
+      await observeWikiRename({item, tab, project, request, api, seed, url, reader, openHistory, openEditor, saveEdit, output});
+      item.status = 'observed';
+      return item;
+    }
     await tab.getByTestId('wiki-history-table').getByRole('link', {name:'v1',exact:true}).click();
     const restore = tab.getByTestId('wiki-restore-version-button');
     await expect(restore).toBeVisible();

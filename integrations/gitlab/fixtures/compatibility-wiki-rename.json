@@ -1,0 +1,26 @@
+{
+  "cases": [
+    {
+      "scope": "wiki-rename",
+      "title": "Service runbook",
+      "source": "# Service runbook\r\n\r\nOwner: **Release team**.\r\n\r\nState: draft.",
+      "paragraph": "State: draft.",
+      "addition": " Signed off.",
+      "renameMessage": "Move the reviewed runbook",
+      "restoreMessage": "Restore the pre-move draft",
+      "id": "default-history",
+      "followRenames": false
+    },
+    {
+      "scope": "wiki-rename",
+      "title": "Service runbook",
+      "source": "# Service runbook\r\n\r\nOwner: **Release team**.\r\n\r\nState: draft.",
+      "paragraph": "State: draft.",
+      "addition": " Signed off.",
+      "renameMessage": "Move the reviewed runbook",
+      "restoreMessage": "Restore the pre-move draft",
+      "id": "project-history",
+      "followRenames": true
+    }
+  ]
+}

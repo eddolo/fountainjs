@@ -81,6 +81,37 @@ node scripts/run-gitlab-compatibility.mjs --suite wiki-restore-conflict --editor
   --run-id "wiki-stale-stock-$(date +%s)" --history-rollback-from wiki-stale-restore-20261119:4,4
 ```
 
+#### Reproduce history after moving a wiki page
+
+Under **Edit page options**, change the page path after saving a rich-text edit. The suite opens the original bookmark and historical URL, then uses the renamed page’s history to select the original revision when GitLab lists it. It compares the resulting reader text and exact source against the original commit.
+
+For a deployment that needs history across moved pages on GitLab CE 19.5.3, an administrator can enable GitLab’s project-scoped setting in the GitLab Rails console. Substitute the destination project’s full path. Record the existing setting before rollout so rollback can restore it.
+
+```ruby
+project = Project.find_by_full_path('group/project') || raise('Project not found')
+Feature.enable(:wiki_page_history_follow_renames, project)
+```
+
+Run `wiki-rename` with the pinned controller prepared above. The first case uses GitLab 19.5.3’s default. The second uses the existing `wiki_page_history_follow_renames` flag for the isolated test project. The collector records the project gate and restores its initial state in a `finally` block.
+
+```sh
+run="wiki-rename-$(date +%s)"
+for editor in original fountain; do
+  node scripts/run-gitlab-compatibility.mjs --suite wiki-rename --wiki-restore --editor "$editor" --run-id "$run" || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
+```
+
+In the [matched Chromium run](../../../artifacts/gitlab-compatibility/wiki-rename-20261120/verified/report.md), both editors passed all 15 checks with the project setting enabled. At the packaged default, the move became v1 in the new path’s history. Six checks depending on access to earlier revisions from that screen remained unmet. The old bookmark and direct historical URL continued to work.
+
+To verify rollback, run the packaged stock image without the wiki controller or Fountain assets. The [recorded rollback](../../../artifacts/gitlab-compatibility/wiki-rename-stock-20261120/original-1/report.json) reopened four moved pages using their old bookmarks and retrieved all 14 saved revisions by commit ID and the path used at that revision. The reader’s history still reflected the packaged default. The command below uses the recorded writer run. Substitute your run ID and attempts for a fresh deployment.
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite wiki-rename --editor original \
+  --run-id "wiki-rename-stock-$(date +%s)" --history-rollback-from wiki-rename-20261120:1,1
+```
+
 ### Reproduce suggestion history across comment edits
 
 Use the [pinned local GitLab environment](./upstream.json) and prepare the native frontend as described below. From the FountainJS checkout in Linux, prepare the two GitLab services from the pinned Git objects. The command prints an error if the checkout is at a different revision or an existing output differs. The patch digest identifies the output directory under `artifacts/gitlab-suggestion-history/`.
