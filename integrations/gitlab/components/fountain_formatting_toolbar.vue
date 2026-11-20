@@ -1,8 +1,9 @@
 <script>
-import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormSelect, GlFormTextarea, GlModal } from '@gitlab/ui';
+import { GlAlert, GlButton, GlDisclosureDropdown, GlForm, GlFormGroup, GlFormInput, GlFormSelect, GlFormTextarea, GlModal } from '@gitlab/ui';
 import { markRaw } from 'vue';
 import { uniqueId } from 'lodash-es';
 import { s__, n__, sprintf } from '~/locale';
+import ToolbarTableButton from '~/content_editor/components/toolbar_table_button.vue';
 import FountainContextSurface from './fountain_context_surface.vue';
 import {
   toggleMark,
@@ -14,6 +15,8 @@ import {
   redo,
   canUndo,
   canRedo,
+  insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
+  deleteTableColumn, deleteTable, mergeTableCells, splitTableCell,
   getGitLabAlertContext,
   getGitLabCodeContext,
   selectionIncludesGitLabFrontmatter,
@@ -25,7 +28,7 @@ import {
 
 export default {
   name: 'FountainFormattingToolbar',
-  components: { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput, GlFormSelect, GlFormTextarea, GlModal, FountainContextSurface },
+  components: { GlAlert, GlButton, GlDisclosureDropdown, GlForm, GlFormGroup, GlFormInput, GlFormSelect, GlFormTextarea, GlModal, FountainContextSurface, ToolbarTableButton },
   props: {
     editor: { type: Object, required: true },
     contentEditor: { type: Object, required: true },
@@ -80,6 +83,26 @@ export default {
     codeContext() { return this.state && getGitLabCodeContext(this.editor); },
     headerSelected() {
       return Boolean(this.state && selectionIncludesGitLabFrontmatter(this.editor));
+    },
+    activeCell() { return this.state && getActiveTableCell(this.editor); },
+    tableActions() {
+      if (!this.activeCell) return [];
+      const { map, cell } = this.activeCell;
+      const multiple = this.state.selection.kind === 'cell' && this.state.selection.cellPaths.length > 1;
+      const insert = [
+        { text: s__('ContentEditor|Insert row above'), run: () => addTableRow(this.editor, 'before') },
+        { text: s__('ContentEditor|Insert row below'), run: () => addTableRow(this.editor, 'after') },
+        { text: s__('ContentEditor|Insert column left'), run: () => addTableColumn(this.editor, 'before') },
+        { text: s__('ContentEditor|Insert column right'), run: () => addTableColumn(this.editor, 'after') },
+      ];
+      const cells = [];
+      if (multiple) cells.push({ text: s__('ContentEditor|Merge cells'), run: () => mergeTableCells(this.editor) });
+      else if (cell.rowspan > 1 || cell.colspan > 1) cells.push({ text: s__('ContentEditor|Split cell'), run: () => splitTableCell(this.editor) });
+      const remove = [];
+      if (!multiple && map.height > 1) remove.push({ text: s__('ContentEditor|Delete row'), run: () => deleteTableRow(this.editor) });
+      if (!multiple && map.width > 1) remove.push({ text: s__('ContentEditor|Delete column'), run: () => deleteTableColumn(this.editor) });
+      remove.push({ text: s__('ContentEditor|Delete table'), run: () => deleteTable(this.editor) });
+      return [multiple ? [] : insert, cells, remove].filter(items => items.length).map(items => ({ items }));
     },
     controls() {
       if (!this.state) return [];
@@ -242,6 +265,9 @@ export default {
         this.$emit('focus');
       } catch (error) { this.$emit('error', error); }
     },
+    insertTableAtSelection({ rows, cols }) {
+      this.execute({ run: () => insertTable(this.editor, { rows, columns: cols, headerRow: true }) });
+    },
     openAttachments() {
       if (!this.disabled && this.editor.editable) this.$refs.attachments.click();
     },
@@ -326,6 +352,11 @@ export default {
       size="small"
       @click="execute(control)"
       />
+      <template v-if="group.keys.includes('footnote') && !disabled && !plainTitle && !codeContext && !headerSelected">
+        <gl-disclosure-dropdown v-if="activeCell" size="small" category="tertiary" icon="table"
+          :toggle-text="s__('ContentEditor|Table actions')" :items="tableActions" @action="execute" />
+        <toolbar-table-button v-else @insert-table="insertTableAtSelection" />
+      </template>
       <fountain-context-surface v-if="group.keys.includes('footnote') && footnoteContext" :editor="editor" :active="true" :anchor-path="footnoteContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Footnote actions')" :trigger-text="s__('ContentEditor|Note')" :suspended="renameOpen || footnoteOpen" @reveal="$emit('focus')">
         <div class="gl-w-full" role="group" :aria-label="s__('ContentEditor|Footnote controls')">
           <h2 class="gl-heading-5 gl-mb-2 gl-break-words">{{ s__('ContentEditor|Footnote') }} {{ footnoteContext.label }}</h2>
