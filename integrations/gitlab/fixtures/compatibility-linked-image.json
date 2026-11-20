@@ -1,0 +1,15 @@
+{
+  "formatVersion": 1,
+  "workflow": "edit-the-description-of-a-linked-image",
+  "cases": [
+    {
+      "id": "linked-figure",
+      "scope": "linked-image",
+      "title": "Design handoff",
+      "alt": "Project icon",
+      "updated": "Release project icon",
+      "intro": "Review this figure.",
+      "end": "Keep the surrounding note."
+    }
+  ]
+}

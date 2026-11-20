@@ -907,6 +907,35 @@ export function compareGitLabCompatibility(original,fountain){
       add('saveButtonReachable','Save remains directly reachable after task editing',true,left?.saveButtonReachable,right?.saveButtonReachable);
       continue;
     }
+    if (input.scope === 'linked-image') {
+      check('linked image source',a?.asset,b?.asset);
+      check('linked image bytes',a?.assetSHA256,b?.assetSHA256);
+      check('linked image destination',a?.target,b?.target);
+      const observe = (report,item) => {
+        if (!verifiedEditor(report,item)) return {};
+        const image = (value, alt) => value && value.alt === alt && value.src === item.asset;
+        return {
+          sourceSpan: item.carriers && item.carriers.image === null && Boolean(item.carriers.position),
+          url: item.propertyURL === undefined ? undefined : item.propertyURL === item.asset,
+          edited: image(item.edited,input.updated), undone:image(item.undone,input.alt), redone:image(item.redone,input.updated),
+          saved: typeof item.saved === 'string' ? item.saved === input.intro + '\n\n[![' + input.updated + '](' + item.asset + ')](' + item.target + ')\n\n' + input.end : undefined,
+          reader: image(item.reader,input.updated) && item.reader.loaded && item.reader.target === item.target,
+          reopened: verifiedEditor(report,{editorProof:item.reopenedEditorProof}) ? image(item.reopened,input.updated) : undefined,
+        };
+      };
+      const left = observe(original,a), right = observe(fountain,b);
+      for (const [key,label] of [
+        ['sourceSpan','GitLab supplies a source position and omits the image canonical attribute'],
+        ['url','The properties form identifies the image asset'],
+        ['edited','Changing the description keeps the displayed image address'],
+        ['undone','Undo restores the initial description and image address'],
+        ['redone','Redo restores the edited description and image address'],
+        ['saved','The issue API preserves the image source, separate link target and surrounding prose'],
+        ['reader','The saved reader loads the image with its edited description and original enclosing link'],
+        ['reopened','The verified rich editor reopens the edited image with its source'],
+      ]) rows.push({case:input.id,invariant:key,label,expected:true,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'contents-authoring') {
       const marker = /^(?:\[toc\]|\[\[_toc_\]\])$/imu;
       const observe = (report, item) => {

@@ -221,6 +221,31 @@ it('compares native Writer content and version independently of a browser paste'
  stock.observations[0].writer.version = 'LibreOffice 25.2.0';
  expect(compareGitLabCompatibility(stock,fountain).environment.mismatches).toContain('native Writer version');
 });
+it('grades the enclosing link independently of the image and verifies the reopened editor identity', () => {
+ const [stock, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-linked-image.json', import.meta.url), 'utf8'));
+ const input = fixture.cases[0];
+ const asset = '/project-icon.png';
+ const target = '/project/issues';
+ const saved = input.intro + '\n\n[![' + input.updated + '](' + asset + ')](' + target + ')\n\n' + input.end;
+ for (const report of [stock, fountain]) {
+   report.suite = input.scope;
+   report.fixture = fixture;
+   const item = report.observations[0];
+   const reader = {alt:input.updated, src:asset, target, loaded:true};
+   Object.assign(item, {id:input.id, input, asset, target, assetSHA256:'same-image', saved, reader,
+     reopened:reader, reopenedEditorProof:item.editorProof});
+ }
+ const result = (key:string) => compareGitLabCompatibility(stock,fountain).rows.find((row:any) => row.invariant === key)?.classification;
+ expect(result('saved')).toBe('parity');
+ expect(result('reader')).toBe('parity');
+ fountain.observations[0].saved = saved.replace('](' + target, '](wrong-url) [separate link](' + target);
+ expect(result('saved')).toBe('regression');
+ fountain.observations[0].reader.target = asset;
+ expect(result('reader')).toBe('regression');
+ fountain.observations[0].reopenedEditorProof = stock.observations[0].editorProof;
+ expect(result('reopened')).toBe(null);
+});
 it('checks that a newly created outline survives a save without headings and a change of editing mode', () => {
  const [original, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-contents-authoring.json',import.meta.url),'utf8'));
