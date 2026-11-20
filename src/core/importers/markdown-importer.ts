@@ -2964,6 +2964,14 @@ function extractFootnoteDefinitions(
 }
 
 export class MarkdownImporter {
+  /** Parse inline source spans using the reference definitions of their original document. */
+  static createInlineReader(markdown: string, schema: Schema): (source: string) => readonly Node[] {
+    const options = { autolinkLiterals: false };
+    const body = extractFootnoteDefinitions(markdown, schema, options).markdown;
+    const { definitions } = references(body, schema, options);
+    return source => inline(source.replace(/\r\n?/gu, '\n'), schema, definitions, [], undefined, options);
+  }
+
   parse(markdown: string, schema: Schema, options: MarkdownImportOptions = {}): Node {
     if (options.parseHTMLDocument) options = {
       // Enable existing syntax capture; finishHTMLBlocks defers this marker.

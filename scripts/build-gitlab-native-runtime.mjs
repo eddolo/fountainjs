@@ -30,6 +30,7 @@ for (const path of [
   'src/core/plugin.ts',
   'src/core/clipboard-write.ts',
   'src/core/commands.ts',
+  'src/core/importers/markdown-importer.ts',
   'src/core/table-commands.ts',
   'src/core/table-clipboard.ts',
   'src/view/input.ts',

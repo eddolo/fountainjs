@@ -1,6 +1,7 @@
 import { MarkdownExporter, MarkdownImporter, isSafeURL, type NodeSpec, type Schema } from 'fountainjs-editor';
 import { parseFragment, type DefaultTreeAdapterMap } from 'parse5';
 import type { GitLabMarkdownIssue } from './markdown_codec';
+import { GitLabFootnotePositions } from './footnote_positions';
 import { GitLabPlayableView } from '../components/media_view';
 
 export type GitLabPlayableKind = 'audio' | 'video';
@@ -71,6 +72,45 @@ export function gitlabMediaNodes(labels: Readonly<Record<GitLabPlayableKind, str
 type Element = DefaultTreeAdapterMap['element'];
 const attr = (element: Element, name: string): string | undefined => element.attrs.find(item => item.name === name)?.value;
 const classes = (element: Element): string[] => (attr(element, 'class') ?? '').split(/\s+/u).filter(Boolean);
+/** Resolve each missing image address from its own host-reported UTF-8 span.
+ * The existing Markdown parser resolves labels in the author's definition scope.
+ * Reader and proxy URLs remain display-only.
+ */
+export function recoverGitLabImageSources(elements: readonly Element[], source: string, schema: Schema, maxBytes: number): void {
+  let positions: GitLabFootnotePositions | undefined;
+  const ranges: { image: Element; from: number; to: number }[] = [];
+  for (const image of elements) {
+    if (image.tagName !== 'img' || !attr(image, 'data-src') || attr(image, 'data-canonical-src')) continue;
+    const parent = image.parentNode;
+    if (parent && 'tagName' in parent && parent.tagName === 'a' && classes(parent).includes('no-attachment-icon')
+      && attr(parent, 'data-canonical-src')) continue;
+    const position = attr(image, 'data-sourcepos');
+    if (!position) continue;
+    positions ??= new GitLabFootnotePositions(source, maxBytes);
+    const range = positions.read(position);
+    if (range && source.startsWith('![', range.from)) ranges.push({ image, ...range });
+  }
+  if (!ranges.length) return;
+  ranges.sort((a,b) => a.from - b.from || a.to - b.to);
+  // Overlapping claims cannot identify independent instances. Bound total parsed
+  // token size by the source length and leave ambiguous images unresolved.
+  let end = 0;
+  const candidates = ranges.filter((range,i) => {
+    const overlaps = range.from < end || (ranges[i + 1]?.from ?? Infinity) < range.to;
+    end = Math.max(end, range.to);
+    return !overlaps;
+  });
+  if (!candidates.length) return;
+  const read = MarkdownImporter.createInlineReader(source, schema);
+  candidates.forEach(({image, from, to}) => {
+    const nodes = read(source.slice(from,to));
+    const parsed = nodes[0];
+    if (nodes.length !== 1 || parsed?.type.name !== 'inline_image' || parsed.marks.length || !isGitLabMediaURL(parsed.attrs.src)
+      || parsed.attrs.alt !== (attr(image, 'alt') ?? '') || (parsed.attrs.title ?? '') !== (attr(image, 'title') ?? '')) return;
+    image.attrs.push({ name: 'data-canonical-src', value: parsed.attrs.src });
+  });
+}
+
 function sourceDimensions(text: string | undefined): { width?: string; height?: string } {
   const declaration = text?.match(/^\{([^{}\r\n]{1,200})\}/u)?.[1];
   if (!declaration) return {};

@@ -8,7 +8,7 @@ import { gitlabMathNodes, normalizeGitLabMath, serializeGitLabMath } from './mat
 import { normalizeGitLabCodeRendering, normalizeGitLabDiagrams } from './code_rendering';
 import { getGitLabFrontmatter, gitlabFrontmatterCode, hydrateGitLabFrontmatter, normalizeGitLabFrontmatter, serializeGitLabFrontmatter } from './frontmatter';
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
-import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, type GitLabPlayableKind } from './media';
+import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, recoverGitLabImageSources, type GitLabPlayableKind } from './media';
 import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLabQuickAction, transformGitLabQuickActions } from './quick_actions';
 import { gitLabCodeSuggestion, normalizeGitLabSuggestionNodes, serializeGitLabSuggestionNode } from './code_suggestion_node';
 import { gitLabContentsNode, normalizeGitLabContents } from './table_of_contents';
@@ -77,9 +77,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
     const child = element.tagName.toLowerCase() === 'img' ? element : element.querySelectorAll?.('img')[0];
     if (!child) return false;
     const src = child.getAttribute('data-src') || child.getAttribute('src') || '';
-    const ownLink = element.tagName.toLowerCase() === 'a' ? element.getAttribute('href') : undefined;
-    const externalCanonical = ownLink && ownLink === src && /^https?:\/\//iu.test(ownLink) ? ownLink : undefined;
-    const original = child.getAttribute('data-canonical-src') || element.getAttribute('data-canonical-src') || externalCanonical || undefined;
+    const original = child.getAttribute('data-canonical-src') || element.getAttribute('data-canonical-src') || undefined;
     if (!isSafeURL(src, { allowDataImage: true }) || original !== undefined && !isSafeURL(original)) return false;
     const size = (name: 'width' | 'height') => {
       const value = child.style[name] || child.getAttribute(name) || 'auto';
@@ -162,6 +160,7 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
     if ('childNodes' in node) for (let index = node.childNodes.length - 1; index >= 0; index--) stack.push([node.childNodes[index]!, depth + 1]);
   }
   normalizeGitLabContents(elements, source, maxBytes, supportsContents);
+  recoverGitLabImageSources(elements, source, schema, maxBytes);
   const tasks = normalizeGitLabTasks(elements, source);
   const math = normalizeGitLabMath(elements);
   const diagrams = normalizeGitLabDiagrams(elements);

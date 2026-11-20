@@ -164,9 +164,43 @@ it('imports nested task states without taking a checked descendant as the parent
   expect(codec.serialize({ doc: append(document) })).toContain('- [x] Child');
 });
 
-it('reports missing canonical image metadata after edits while leaving untouched source exact', async () => {
+it('recovers the relative destination for an image edit from its GitLab source span', async () => {
   const source = '![logo](app/assets/images/logo.svg)';
   const { codec, document } = await convert(source, data.fixtures.REPOSITORY_RELATIVE_IMAGE_WITHOUT_CANONICAL_SRC_HTML);
+  const paragraph = document.child(0), image = paragraph.child(0);
+  expect(image.attrs.gitlabCanonicalSrc).toBe('app/assets/images/logo.svg');
+  expect(image.attrs.src).toContain('/-/raw/master/');
+  const renamed = image.type.create({ ...image.attrs, alt: 'Release diagram' });
+  expect(codec.serialize({ doc: document.copy([paragraph.copy([renamed])]) })).toBe('![Release diagram](app/assets/images/logo.svg)');
+});
+
+it('uses UTF-8 positions and document references to distinguish repeated image descriptions', async () => {
+  const source = 'λ ![plan][old] ![plan][new]\r\n\r\n[old]: v1/plan.png\r\n[new]: v2/plan.png';
+  const img = (position: string, src: string) => '<img alt="plan" data-src="' + src + '" data-sourcepos="' + position + '">';
+  const { document, codec } = await convert(source, '<p>λ ' + img('1:4-1:15','/raw/v1/plan.png') + ' ' + img('1:17-1:28','/raw/v2/plan.png') + '</p>');
+  expect(codec.serialize({doc:append(document)})).toContain('![plan](v1/plan.png) ![plan](v2/plan.png)');
+});
+
+it('does not treat the resolved proxy URL as an author-supplied destination', async () => {
+  const source = '![logo](images/logo.svg)';
+  const proxy = 'https://images.example.org/cache/42';
+  const body = '<p><a class="no-attachment-icon" href="' + proxy + '"><img alt="different" data-src="' + proxy + '" data-sourcepos="1:1-1:24"></a></p>';
+  const { document, codec } = await convert(source, body);
+  expect(codec.serialize({doc:document})).toBe(source);
+  expect(() => codec.serialize({doc:append(document)})).toThrow(GitLabMarkdownConversionError);
+});
+
+it('refuses two lazy images that claim the same source span', async () => {
+  const source = '![logo](images/logo.svg)';
+  const img = '<img alt="logo" data-src="/resolved/logo.svg" data-sourcepos="1:1-1:24">';
+  const { document, codec } = await convert(source, '<p>' + img + img + '</p>');
+  expect(codec.serializeWithReport({doc:append(document)}).issues.filter(issue => issue.code === 'canonical-image-source')).toHaveLength(2);
+});
+
+it('reports missing canonical image metadata when the rendered source position is unavailable', async () => {
+  const source = '![logo](app/assets/images/logo.svg)';
+  const noPosition = data.fixtures.REPOSITORY_RELATIVE_IMAGE_WITHOUT_CANONICAL_SRC_HTML.replaceAll('data-sourcepos=', 'data-unknown-position=');
+  const { codec, document } = await convert(source, noPosition);
   expect(codec.serialize({ doc: document })).toBe(source);
   expect(codec.serializeWithReport({ doc: append(document) }).issues.some(issue => issue.code === 'canonical-image-source')).toBe(true);
   expect(() => codec.serialize({ doc: append(document) })).toThrow(GitLabMarkdownConversionError);
