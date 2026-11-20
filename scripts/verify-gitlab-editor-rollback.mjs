@@ -101,13 +101,29 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     if (richFirst) {
       await expect(activity.locator('strong,b').filter({hasText: input.comment}).first()).toBeVisible();
       await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-first-rich-save.png', animations:'disabled'});
+      if (evidence.quickSavePassed) {
+        // Delete the persisted final period in a fresh editing session.
+        await page.getByTestId('work-item-edit-form-button').click();
+        await stock.or(toggle).first().waitFor({timeout:30000});
+        if (!await stock.isVisible()) await toggle.click();
+        await expect(stock).toHaveText(richBaseline + suffix);
+        await stock.locator('p').click();
+        await page.keyboard.press('Control+End');
+        evidence.deletionGesture = await recordGitLabSave({page, editor:stock, button:save, key:'Backspace', pace:'immediate'});
+        await expect(stock).toBeHidden({timeout:30000});
+        await page.reload();
+        evidence.afterDeletion = (await request(api)).description;
+        await expect(reader).toHaveText(evidence.afterDeletion);
+        evidence.deletionPassed = matchesSaveGesture(evidence.deletionGesture,'Backspace',prefix,'immediate') &&
+          evidence.afterDeletion === prefix;
+      }
     }
     // Preserve a rapid-save failure and separately exercise an author inspecting
     // Markdown before saving. Both controls use the same stock editor deployment.
     await page.getByTestId('work-item-edit-form-button').click();
     await source.or(plain).first().waitFor({timeout:30000});
     if (!await source.isVisible()) await plain.click();
-    await expect(source).toHaveValue(evidence.quickSaveAfterReload);
+    await expect(source).toHaveValue(evidence.afterDeletion ?? evidence.quickSaveAfterReload);
     const reviewed = description + ' Verified in Markdown.';
     await source.fill(reviewed);
     await save.click();
@@ -123,6 +139,6 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-after-rollback.png', animations: 'disabled'});
     Object.assign(evidence, {reviewedSaveAfterReload: saved, notes: savedNotes});
   }
-  result.passed = records.every(record => record.quickSavePassed && (richFirst || record.firstMarkdownPassed));
+  result.passed = records.every(record => record.quickSavePassed && (richFirst ? record.deletionPassed : record.firstMarkdownPassed));
   return result;
 }

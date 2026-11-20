@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { join } from 'node:path';
+import { observePage } from './gitlab-audit-editor.mjs';
 
 export async function runGitLabComposerCompatibility(options) {
   const results = [];
@@ -8,7 +9,7 @@ export async function runGitLabComposerCompatibility(options) {
 }
 
 async function runCase({ side, runId, page, project, request, output, onProgress }, input) {
-  const result = { id: input.id, input, status: 'incomplete', stage: 'setup', facts: {} };
+  const result = { id: input.id, input, status: 'incomplete', stage: 'setup', facts: {}, pageErrors: [] };
   const context = await page.context().browser().newContext({
     storageState: await page.context().storageState(), viewport: { width: 1280, height: 900 },
     locale: 'en-US', timezoneId: 'UTC', recordVideo: { dir: output },
@@ -20,7 +21,7 @@ async function runCase({ side, runId, page, project, request, output, onProgress
     (result.richSnapshots ??= {})[stage] = receipt;
     return receipt.paragraphs;
   }
-  actor.on('pageerror', error => (result.pageErrors ??= []).push(error.message));
+  await observePage(actor, result);
   function stage(name) {
     result.stage = name;
     onProgress({ side, case: input.id, stage: name });

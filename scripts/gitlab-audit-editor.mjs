@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 
-export async function observePage(actor, result) {
-  actor.on('pageerror', error => result.pageErrors.push(error.message));
+export async function observePage(actor, result, pageErrors = result.pageErrors) {
+  actor.on('pageerror', error => pageErrors.push(error.message));
   const notice = actor.locator('#security-patch-upgrade-alert-modal[role="dialog"]');
   await actor.addLocatorHandler(notice, async () => {
     const title = await notice.getByTestId('alert-modal-title').innerText();

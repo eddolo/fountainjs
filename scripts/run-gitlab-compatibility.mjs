@@ -6,6 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {prepareFootnoteDeployment, verifyFootnoteMount, probeFootnoteCache} from './verify-gitlab-footnote-rollback.mjs';
 import {verifyGitLabRestart} from './verify-gitlab-restart.mjs';
 import {verifySuggestionHistoryRollback} from './verify-gitlab-suggestion-history-rollback.mjs';
+import {observePage} from './gitlab-audit-editor.mjs';
 import {verifyGitLabRollback} from './verify-gitlab-editor-rollback.mjs';
 import {buildIdentityError, describeBuild, observeEditorBuild, preparedRollbackTree} from '../integrations/gitlab/testing/build-identity.mjs';
 import {chromium,firefox,webkit,expect} from '@playwright/test';
@@ -228,7 +229,7 @@ try{
  const identityError=buildIdentityError(report);
  if(identityError)throw new Error('Build identity preflight failed: '+identityError);
  console.log(describeBuild(report));
- page.on('pageerror',error=>report.errors.push(error.message));
+ await observePage(page,report,report.errors);
  if (previousHistory && wikiSuite) await verifyWikiRollback({previous:previousHistory,report,page,project,request,output:out});
  if (previousHistory && suite === 'review-history') await verifySuggestionHistoryRollback({previous:previousHistory,report,page,project,request,output:out,readCommits: noteId => {
    if (!Number.isSafeInteger(noteId) || noteId < 1) throw new Error('Invalid saved note ID.');
