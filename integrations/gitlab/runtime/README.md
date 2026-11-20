@@ -19,6 +19,20 @@ connect to an existing GitLab account or installation. Metrics are disabled and
 service concurrency is reduced for this small local test environment; these
 settings are not performance or deployment recommendations.
 
+### Reproduce issue-board editing
+
+From the prepared Linux checkout, run the same issue-board workflow on both deployments. Each run creates a new issue through the board’s **Create issue** form, edits its description in the drawer, follows the issue reference to the full page, and posts a formatted comment. The browser returns through **Issue boards**, reloads the board and reopens the card. The report checks both editor builds, the issue number and the Markdown in GitLab’s issue and notes APIs.
+
+```sh
+run="board-issue-$(date +%s)"
+for editor in original fountain; do
+  node scripts/run-gitlab-compatibility.mjs --suite board-issues --editor "$editor" --run-id "$run" || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" \
+  --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
+```
+
 ### Reproduce personal saved replies
 
 Prepare the [frontend deployment](#reproduce-the-frontend-deployment-and-rollback), then run these commands from the FountainJS checkout in Linux. Both deployments use the same issue and personal comment-template fixture. Each author creates a temporary personal template through GitLab’s authenticated GraphQL API. Cleanup removes each fixture by ID in its owner’s session. The issues and posted comments remain available for inspection.

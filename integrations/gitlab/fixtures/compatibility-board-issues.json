@@ -1,0 +1,14 @@
+{
+  "formatVersion": 1,
+  "workflow": "create-in-board-and-review-on-full-issue",
+  "cases": [
+    {
+      "id": "board-to-issue-and-back",
+      "scope": "board-issue",
+      "title": "Verify the release candidate",
+      "prefix": "Verify ",
+      "bold": "the release build",
+      "comment": "Checked from the full issue."
+    }
+  ]
+}

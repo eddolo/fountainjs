@@ -221,6 +221,26 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  expected.rspackManifestSHA256 = '3'.repeat(64);
  expect(buildIdentityError(prepared)).toBeTruthy();
 });
+it('requires both board and full-page editors and checks persisted marks after navigating back', () => {
+ const [original, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-board-issues.json', import.meta.url), 'utf8'));
+ const input = fixture.cases[0];
+ for (const report of [original, fountain]) {
+   report.fixture = fixture;
+   const item = report.observations[0];
+   const description = {text:input.prefix + input.bold, bold:[input.bold]};
+   Object.assign(item, {id:input.id, input, status:'observed', fullEditorProof:item.editorProof, pageErrors:[],
+     facts:{created:true, drawerReference:true, sameCard:true, drawerRead:description, fullPageRead:description,
+       reopenedDescription:description, reopenedComment:{text:input.comment, bold:[input.comment]},
+       savedDescription:input.prefix + '**' + input.bold + '**', savedComments:['**' + input.comment + '**']}});
+ }
+ const compare = () => compareGitLabCompatibility(original, fountain);
+ expect(compare().summary.parity).toBe(10);
+ fountain.observations[0].facts.reopenedComment.bold = [];
+ expect(compare().rows.find((row:any) => row.invariant === 'reopenedComment').classification).toBe('regression');
+ delete fountain.observations[0].fullEditorProof;
+ expect(compare().summary.incomplete).toBe(10);
+});
 it('withholds personal-template acceptance if another writer sees the template or the second editor is unidentified', () => {
  const [original, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-saved-replies.json', import.meta.url), 'utf8'));

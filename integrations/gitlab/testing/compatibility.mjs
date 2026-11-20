@@ -579,6 +579,28 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:paired ? left[key] : undefined,fountain:paired ? right[key] : undefined,classification:null});
       continue;
     }
+    if (input.scope === 'board-issue') {
+      function observation(report, item) {
+        if (item?.status !== 'observed' || !verifiedEditor(report, item) ||
+            !verifiedEditor(report, { editorProof: item.fullEditorProof })) return {};
+        return { ...item.facts, pageErrors: item.pageErrors };
+      }
+      const left = observation(original, a), right = observation(fountain, b);
+      const description = { text: input.prefix + input.bold, bold: [input.bold] };
+      for (const [key, label, expected] of [
+        ['created', 'Creating a board card creates the intended open GitLab issue', true],
+        ['drawerReference', 'The opened drawer links to the new issue number in the same project', true],
+        ['drawerRead', 'The drawer reader shows the saved description and bold text', description],
+        ['savedDescription', 'The issue API retains the Markdown written in the drawer', input.prefix + '**' + input.bold + '**'],
+        ['fullPageRead', 'Following the drawer link shows the same formatted description', description],
+        ['savedComments', 'The full-page discussion saves one formatted note on the board issue', ['**' + input.comment + '**']],
+        ['sameCard', 'Reloading the board returns the same issue card', true],
+        ['reopenedDescription', 'Reopening the card preserves the description and its mark', description],
+        ['reopenedComment', 'The reopened drawer displays the full-page comment and its mark', { text: input.comment, bold: [input.comment] }],
+        ['pageErrors', 'Board and full-page navigation finish without browser exceptions', []],
+      ]) rows.push({ case: input.id, invariant: key, label, expected, original: left[key], fountain: right[key], classification: null });
+      continue;
+    }
     if (input.scope === 'saved-reply-accounts') {
       function observation(report, item) {
         if (item?.status !== 'observed' || !verifiedEditor(report, item) ||
