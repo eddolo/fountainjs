@@ -674,6 +674,19 @@ docker compose -f integrations/gitlab/runtime/compose.yaml -f integrations/gitla
 
 The second audit run mounts the separate build read-only. It verifies the staged Git tree, Rspack manifest and script bytes loaded by the browser, identifies ProseMirror on the page, and checks that Fountain’s runtime marker is absent. Its first edit after the switch uses the rich editor and clicks Save immediately after the final key. It reopens both Fountain-authored records and the fallback’s own controls. The receipt is `artifacts/gitlab-compatibility/<run_id>/prepared-1/report.json`. To return to the packaged frontend, recreate the service using only the base Compose file. The packaged rich-text Save limitation remains applicable there.
 
+### Reproduce a live two-author wiki edit
+
+Use the pinned local GitLab instance and its standard frontend. The test temporarily enables `wiki_collaborative_editing` for the isolated project's personal namespace. The administrator edits an existing wiki and leaves the changes unsaved. A Developer joins from a separate signed-in browser session, adds text, undoes and redoes their own change. The administrator saves and the Developer reloads the wiki reader. The collector restores the namespace flag and the fixture account's previous membership.
+
+```sh
+run_id=wiki-live-$(date -u +%Y%m%d-%H%M%S)
+node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$run_id" --editor original
+node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$run_id" --editor fountain
+node scripts/compare-gitlab-compatibility.mjs --original "artifacts/gitlab-compatibility/$run_id/original-1/report.json" --fountain "artifacts/gitlab-compatibility/$run_id/fountain-1/report.json" --output "artifacts/gitlab-compatibility/$run_id/comparison"
+```
+
+The report records the two mounted editor identities, the unsaved text the second author received, presence in each direction, the first author's text after peer undo and redo, exact saved source and reader formatting. For the stock build it also records the two shared XML paragraphs from the live Yjs binding. Cursor labels are excluded from paragraph text. The wiki API result is checked independently.
+
 ### Reproduce a host-defined label serializer
 
 Use the pinned local GitLab checkout and the same build command as the default native installation. The optional `--custom-label-host` profile supplies [an issue-label node and a keyboard-shortcut mark](../testing/issue_label_host.js) through the Markdown editor component’s public props. Their Markdown writers produce a GitLab label reference and a `<kbd>` span. The installed frontend identity includes this profile. Packaged GitLab provides the control for both features.

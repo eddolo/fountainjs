@@ -481,6 +481,28 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
       continue;
     }
+    if (input.scope === 'wiki-collaboration') {
+      check('wiki collaboration namespace gate', a?.gate, b?.gate);
+      check('wiki authors', a?.authors, b?.authors);
+      const observe = (report, item) => verifiedEditor(report, item)
+        && verifiedEditor(report, {editorProof:item.peerEditorProof})
+        && item.authors?.peer === fixture.accountName && item.authors.owner !== item.authors.peer
+        && item.restoredFlag === true ? {...item, savedContent:item.saved?.replace(/\r\n/g, '\n')} : {};
+      const left = observe(original, a), right = observe(fountain, b);
+      const status = input.source.split('\n\n').at(-1) + input.ownerEdit;
+      for (const [key, expected, label] of [
+        ['joinedDraft', status, 'The joining author receives the first author’s unsaved draft'],
+        ['ownerSeesPeer', true, 'The first editor identifies the second author after both move their cursors'],
+        ['peerSeesOwner', true, 'The second editor identifies the first author after both move their cursors'],
+        ['afterPeerUndo', status, 'Peer undo retains the first author’s edit'],
+        ['afterPeerRedo', status + input.peerEdit, 'Peer redo restores the second edit on the first screen'],
+        ['savedContent', input.source + input.ownerEdit + input.peerEdit, 'The wiki API stores both edits, paragraphs and original formatting'],
+        ['saved', input.source + input.ownerEdit + input.peerEdit, 'The wiki API also retains the original line endings'],
+        ['reopened', status + input.peerEdit, 'Both edits survive in the other author’s reloaded reader'],
+        ['bold', 'Sam', 'The reader retains the owner’s bold name'],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'wiki-restore-conflict') {
       const edited = input.source.replace(input.paragraph, input.paragraph + input.addition);
       const latest = input.source.replace(input.paragraph, input.paragraph + input.addition + input.competingEdit);

@@ -261,6 +261,29 @@ it('checks hidden footnote definitions in both the saved issue and the source ha
  fountain.observations[0].reopenedEditorProof = stock.observations[0].editorProof;
  expect(result('sourceOnReopen')).toBe(null);
 });
+it('requires both editor identities before grading a shared wiki draft or peer undo', () => {
+ const [stock, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-wiki-collaboration.json', import.meta.url), 'utf8'));
+ const input = fixture.cases[0];
+ for (const report of [stock,fountain]) {
+   report.suite = input.scope;
+   report.fixture = fixture;
+   const item = report.observations[0];
+   Object.assign(item, {id:input.id, input, gate:['Namespaces::UserNamespace:1'], authors:{owner:'Administrator',peer:fixture.accountName},
+     restoredFlag:true, peerEditorProof:item.editorProof, joinedDraft:'Status: ready. Reviewed.',
+     afterPeerUndo:'Status: ready. Reviewed.'});
+ }
+ const result = (key:string) => compareGitLabCompatibility(stock,fountain).rows.find((row:any) => row.invariant === key)?.classification;
+ stock.observations[0].saved = (input.source + input.ownerEdit + input.peerEdit).replace(/\n/g, '\r\n');
+ fountain.observations[0].saved = input.source + input.ownerEdit + input.peerEdit;
+ expect(result('savedContent')).toBe('parity');
+ expect(result('saved')).toBe('improvement');
+ expect(result('joinedDraft')).toBe('parity');
+ fountain.observations[0].afterPeerUndo = 'Status: ready.';
+ expect(result('afterPeerUndo')).toBe('regression');
+ fountain.observations[0].peerEditorProof = stock.observations[0].editorProof;
+ expect(result('joinedDraft')).toBe(null);
+});
 it('grades the enclosing link independently of the image and verifies the reopened editor identity', () => {
  const [stock, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-linked-image.json', import.meta.url), 'utf8'));
