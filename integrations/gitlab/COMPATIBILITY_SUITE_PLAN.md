@@ -2,7 +2,13 @@
 
 ## Current acceptance boundaries
 
-Use stock GitLab as the reference for FountainJS and its editor adapter. Record defects in unrelated GitLab components as host limitations with their effect on the workflow. A change to GitLab itself requires a separate decision.
+The GitLab flagship is complete when FountainJS reliably replaces the editor for the defined workflows and the deployment can be rolled back safely.
+
+- Fix defects in FountainJS or its GitLab adapter. When replacement exposes a GitLab defect, investigate what changed and correct any adapter responsibility.
+- For a pre-existing GitLab defect, record the pinned original and replacement builds, reproduction and user-visible impact. It can be accepted as a known host limitation when matched evidence shows the replacement introduces no new failure or worse outcome and the workflow meets its essential safety requirements.
+- Shared behavior still blocks sign-off when it compromises document integrity, authorization, safe deployment or rollback. Unexplained differences remain open until their impact is understood. Preserve the raw failing observations and report the scope of each compatibility decision.
+
+For example, the [WebKit private-review comparison](../../artifacts/gitlab-compatibility/mr-navigation-20261120/reviewed/report.md) supports compatibility for recovering and submitting that draft on the tested builds. Both readers retained the edited description and existing discussion. Both published the pending comment exactly once under the correct author. The [stock](../../artifacts/gitlab-compatibility/mr-navigation-20261120/original-2/navigation.json) and [Fountain](../../artifacts/gitlab-compatibility/mr-navigation-20261120/fountain-2/navigation.json) traces place the candidate’s navigation errors at the same host requests and transitions seen on stock. The raw zero-error check stays open. Those documented messages do not block editor compatibility for this workflow.
 
 | Area | Verified on the pinned local deployment | Still open |
 | --- | --- | --- |
