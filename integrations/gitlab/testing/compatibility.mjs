@@ -149,7 +149,8 @@ function serviceSourcesMatch(report, receipt, services) {
   });
 }
 export function compareGitLabCompatibility(original,fountain){
-  if ([original,fountain].some(item => item?.suite === 'mr-review-handover' || item?.draftRollbackRequested)) throw new Error('The MR handover is a sequential deployment test. See both build receipts and the stock handover observation.');
+  if ([original,fountain].some(item => ['mr-review-handover','contents-handover'].includes(item?.suite) || item?.draftRollbackRequested || item?.footnoteHandoverSource))
+    throw new Error('Editor handover is a sequential deployment test. See both build receipts and the stock handover observation.');
   const mismatches=[];
   for (const report of [original, fountain]) {
     if ((report.deployment?.suggestionHistory || report.suite === 'review-history') &&

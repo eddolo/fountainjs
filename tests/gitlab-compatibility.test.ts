@@ -393,6 +393,9 @@ it('keeps deployment handovers out of matched parity counts', () => {
  fountain.draftRollbackRequested = true;
  expect(() => compareGitLabCompatibility(original, fountain)).toThrow('sequential deployment test');
  delete fountain.draftRollbackRequested;
+ original.footnoteHandoverSource = {path:'../fountain-1/report.json'};
+ expect(() => compareGitLabCompatibility(original, fountain)).toThrow('sequential deployment test');
+ delete original.footnoteHandoverSource;
  original.suite = fountain.suite = 'mr-review-handover';
  expect(() => compareGitLabCompatibility(original, fountain)).toThrow('sequential deployment test');
 });

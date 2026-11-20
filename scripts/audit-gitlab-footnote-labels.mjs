@@ -2,8 +2,9 @@ import { expect } from '@playwright/test';
 import { join } from 'node:path';
 import { editorProof, openRich } from './gitlab-audit-editor.mjs';
 
-export async function runFootnoteLabels({page, side, project, request, fixture, runId, output}) {
+export async function runFootnoteLabels({page, side, project, request, fixture, runId, output, mrHandoverFrom}) {
   const [input] = fixture.cases;
+  if (mrHandoverFrom) return [await reopenFootnotesInMarkdown({page, project, request, input, output}, mrHandoverFrom.observations[0])];
   const item = {id:input.id, input, status:'incomplete', stage:'seed'};
   try {
     const api = '/api/v4/projects/' + project.id + '/issues';
@@ -55,4 +56,56 @@ export async function runFootnoteLabels({page, side, project, request, fixture, 
     await page.screenshot({path:join(output,'interrupted.png')}).catch(() => {});
   }
   return [item];
+}
+
+async function reopenFootnotesInMarkdown({page, project, request, input, output}, previous) {
+  const item = {id:input.id, input, iid:previous.iid, status:'incomplete', stage:'stock-reader'};
+  try {
+    const api = '/api/v4/projects/' + project.id + '/issues/' + previous.iid;
+    const issue = await request(api);
+    expect(issue.project_id).toBe(project.id);
+    expect(issue.description).toBe(input.edit + input.source);
+    expect(issue.description).toBe(previous.saved);
+    item.before = issue.description;
+    await page.goto(issue.web_url);
+    const host = page.getByTestId('work-item-description-wrapper');
+    const edit = page.getByTestId('work-item-edit-form-button');
+    const source = host.locator('textarea[data-testid="markdown-editor-form-field"]');
+    const toggle = host.getByRole('button',{name:'Switch to plain text editing',exact:true});
+    async function openMarkdown() {
+      await edit.click();
+      await expect(source.or(toggle).first()).toBeVisible();
+      if (!await source.isVisible()) await toggle.click();
+      await expect(source).toBeVisible();
+      return source.inputValue();
+    }
+    item.stage = 'first-markdown-edit';
+    item.openedSource = await openMarkdown();
+    expect(item.openedSource).toBe(item.before);
+    await source.focus();
+    await page.keyboard.press('Control+End');
+    await source.press('Enter');
+    await source.press('Enter');
+    const addition = 'Archive verified.';
+    await page.keyboard.insertText(addition);
+    const expected = item.before + '\n\n' + addition;
+    await expect(source).toHaveValue(expected);
+    await host.getByRole('button',{name:'Save changes',exact:true}).click();
+    await expect.poll(async () => (await request(api)).description).toBe(expected);
+    item.saved = (await request(api)).description;
+    await page.reload();
+    const reader = page.locator('.js-work-item-description');
+    await expect(reader).toContainText(addition);
+    await expect(reader).toContainText('Approved by Engineering.');
+    item.stage = 'reopen';
+    item.reopened = await openMarkdown();
+    expect(item.reopened).toBe(expected);
+    await source.screenshot({path:join(output,'rollback-source.png')});
+    item.status = 'observed';
+    item.stage = 'complete';
+  } catch (error) {
+    item.failure = String(error);
+    await page.screenshot({path:join(output,'interrupted.png')}).catch(() => {});
+  }
+  return item;
 }

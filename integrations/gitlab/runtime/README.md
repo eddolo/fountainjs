@@ -674,6 +674,20 @@ docker compose -f integrations/gitlab/runtime/compose.yaml -f integrations/gitla
 
 The second audit run mounts the separate build read-only. It verifies the staged Git tree, Rspack manifest and script bytes loaded by the browser, identifies ProseMirror on the page, and checks that Fountain’s runtime marker is absent. Its first edit after the switch uses the rich editor and clicks Save immediately after the final key. It reopens both Fountain-authored records and the fallback’s own controls. The receipt is `artifacts/gitlab-compatibility/<run_id>/prepared-1/report.json`. To return to the packaged frontend, recreate the service using only the base Compose file. The packaged rich-text Save limitation remains applicable there.
 
+### Roll back an issue containing uncited footnotes
+
+Start with the compiled Fountain UI installed in the pinned isolated deployment. Run the two commands from the same checkout with the same data volumes. The first edits a paragraph in rich text, saves the issue, and reopens it in Fountain. The second removes the Fountain UI, opens that exact issue in packaged GitLab, enters Markdown mode, and checks every character of the saved source before editing. It appends a paragraph and verifies the issue through the API and a fresh Markdown editor. A disagreement stops the workflow before Save.
+
+```sh
+run_id=footnote-handover-$(date -u +%Y%m%d-%H%M%S)
+node scripts/run-gitlab-compatibility.mjs --suite footnote-labels --run-id "$run_id" --editor fountain --footnote-handover
+node scripts/run-gitlab-compatibility.mjs --suite footnote-labels --run-id "$run_id" --editor original --footnote-handover
+```
+
+On issue #688 the [Fountain save](../../../artifacts/gitlab-compatibility/footnote-handover-20261120/fountain-2/report.json) and [packaged GitLab rollback](../../../artifacts/gitlab-compatibility/footnote-handover-20261120/original-2/report.json) retained all twelve definitions across the deployment switch. The stock API and [reopened Markdown editor](../../../artifacts/gitlab-compatibility/footnote-handover-20261120/original-2/rollback-source.png) contained exactly the previous issue source plus the appended paragraph.
+
+For a rollback involving uncited definitions, retain the original Markdown and use GitLab’s plain-text editing mode. The [matched rich-text comparison](../../../artifacts/gitlab-compatibility/footnote-labels-20261120/verified/report.md) shows how an ordinary stock rich-text Save can remove eleven definitions while the reader still displays the cited note correctly.
+
 ### Reproduce rollback with the footnote renderer
 
 Prepare the pinned filter once, then start with the isolated service stopped. These runs use the same database and a fresh issue with repeated footnote references.

@@ -138,8 +138,10 @@ const containerName='fountain-gitlab-integration-baseline-1';
 const prior=JSON.parse(docker('inspect',containerName))[0];
 if(prior.State.Running||prior.Config.Labels['com.docker.compose.project']!=='fountain-gitlab-integration'||prior.Config.Image!==pin.image)
  throw new Error('Stop the known isolated task deployment before switching editor modes.');
+const footnoteHandover = process.argv.includes('--footnote-handover');
+if (footnoteHandover && suite !== 'footnote-labels') throw new Error('Use --footnote-handover with --suite footnote-labels.');
 let mrHandoverFrom, mrHandoverReceipt;
-if (['mr-review-handover','contents-handover'].includes(suite) && side === 'original') {
+if ((footnoteHandover || ['mr-review-handover','contents-handover'].includes(suite)) && side === 'original') {
   const bytes = await readFile(resolve(out,'..','fountain-'+attempt,'report.json'));
   mrHandoverFrom = JSON.parse(bytes);
   const oldMount = prior.Mounts.find(m => m.Destination === '/opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack');
@@ -148,7 +150,9 @@ if (['mr-review-handover','contents-handover'].includes(suite) && side === 'orig
       mrHandoverFrom.attempt !== attempt || mrHandoverFrom.fixtureHash !== hash(fixtureBytes) || buildIdentityError(mrHandoverFrom) ||
       !mrHandoverFrom.collectionComplete || mrHandoverFrom.errors?.length || mrHandoverFrom.observations[0]?.pageErrors?.length ||
       (suite === 'mr-review-handover' ? !mrHandoverFrom.observations[0]?.pending?.id :
-        !Number.isSafeInteger(mrHandoverFrom.observations[0]?.iid) || !mrHandoverFrom.observations[0]?.proseSaved))
+        !Number.isSafeInteger(mrHandoverFrom.observations[0]?.iid) || (footnoteHandover
+          ? mrHandoverFrom.observations[0]?.saved !== fixture.cases[0].edit + fixture.cases[0].source
+          : !mrHandoverFrom.observations[0]?.proseSaved)))
     throw new Error('The stock handover needs the verified Fountain record and its previously mounted frontend.');
   mrHandoverReceipt = {path:'../fountain-'+attempt+'/report.json', sha256:hash(bytes), build:mrHandoverFrom.buildIdentity.expected};
 }
@@ -273,6 +277,7 @@ try{
      for (const key of keys) expect(right[key]).toEqual(left[key]);
    }
    if (suite === 'mr-review-handover') report.mrHandoverSource = mrHandoverReceipt;
+   else if (footnoteHandover) report.footnoteHandoverSource = mrHandoverReceipt;
    else report.contentsHandoverSource = mrHandoverReceipt;
  }
  await observePage(page,report,report.errors);
