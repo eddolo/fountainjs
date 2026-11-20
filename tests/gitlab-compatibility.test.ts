@@ -234,6 +234,9 @@ it('requires the custom host label to be active on open and reopen', () => {
  }
  const result = (key:string) => compareGitLabCompatibility(stock,fountain).rows.find((row:any) => row.invariant === key)?.classification;
  expect(result('rendered')).toBe('parity');
+ stock.observations[0].reopenedShortcut = input.updatedShortcut;
+ fountain.observations[0].reopenedShortcut = input.shortcut;
+ expect(result('reopenedShortcut')).toBe('regression');
  delete fountain.observations[0].reopenedToken;
  expect(result('reopened')).toBe('regression');
  fountain.observations[0].reopenedEditorProof = stock.observations[0].editorProof;

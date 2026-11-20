@@ -39,7 +39,33 @@ export async function runCustomLabel({page, project, side, request, fixture, run
     await page.keyboard.press('Control+Shift+z');
     await expect(editor).toContainText(input.edit.trim());
     item.redone = await labelNode(editor).isVisible();
-    await expect.poll(() => page.evaluate(id => localStorage.getItem('autosave/gid://gitlab/WorkItem/' + id), issue.id)).toContain(input.edit);
+    const shortcut = root => root.locator(side === 'fountain' ? 'kbd[data-fountain-custom-shortcut]' : 'kbd');
+    const key = shortcut(editor);
+    await expect(key).toHaveText(input.shortcut);
+    await key.scrollIntoViewIfNeeded();
+    const point = await key.evaluate(el => {
+      const range = document.createRange();
+      range.setStart(el.firstChild, 0);
+      range.setEnd(el.firstChild, 1);
+      const rect = range.getBoundingClientRect();
+      return {x:rect.right - 0.25, y:rect.top + rect.height / 2};
+    });
+    await page.mouse.click(point.x, point.y);
+    const caret = await key.evaluate(el => {
+      const selection = el.ownerDocument.getSelection();
+      return {inside:el.contains(selection.anchorNode), offset:selection.anchorOffset, collapsed:selection.isCollapsed};
+    });
+    item.shortcutCaret = caret;
+    expect(caret).toEqual({inside:true, offset:1, collapsed:true});
+    await page.keyboard.insertText('1');
+    await expect(key).toHaveText(input.updatedShortcut);
+    await page.keyboard.press('Control+z');
+    await expect(key).toHaveText(input.shortcut);
+    item.shortcutUndo = await key.innerText();
+    await page.keyboard.press('Control+Shift+z');
+    await expect(key).toHaveText(input.updatedShortcut);
+    item.shortcutRedo = await key.innerText();
+    await expect.poll(() => page.evaluate(id => localStorage.getItem('autosave/gid://gitlab/WorkItem/' + id), issue.id)).toContain('<kbd>' + input.updatedShortcut + '</kbd>');
     await editor.screenshot({path:join(output,'edited-label.png')});
     item.stage = 'save';
     await host.getByRole('button',{name:'Save changes',exact:true}).click();
@@ -48,11 +74,13 @@ export async function runCustomLabel({page, project, side, request, fixture, run
     await page.reload();
     await expect(readerLabel).toContainText(input.label);
     item.readerURL = await readerLabel.getAttribute('href');
+    item.readerShortcut = await reader.locator('kbd').innerText();
     await edit.click();
     const reopened = await openRich(host,side);
     item.reopenedEditorProof = await editorProof(reopened);
     await expect(labelNode(reopened)).toBeVisible();
     item.reopened = await labelNode(reopened).innerText();
+    item.reopenedShortcut = await shortcut(reopened).innerText();
     if (side === 'fountain') item.reopenedToken = await labelNode(reopened).getAttribute('data-fountain-custom-label');
     await host.getByRole('button',{name:'Switch to plain text editing',exact:true}).click();
     item.reopenedSource = await host.locator('textarea[data-testid="markdown-editor-form-field"]').inputValue();

@@ -150,6 +150,18 @@ const result = new MarkdownExporter().exportWithReport(editor.state.doc, {
 
 The surrounding Markdown writer handles supported emphasis and escapes pipe characters inside pipe-table cells. A writer can return `undefined` to delegate conversion. Inspect `result.losses` when combining a custom node with an HTML-only container or unsupported marks. The [GitLab host example](../integrations/gitlab/testing/issue_label_host.js) pairs an inline writer with an HTML parse rule.
 
+A mark writer describes the opening and closing syntax around formatted content. Adjacent text with the same outer mark shares one pair, including when an inner bold range starts or ends.
+
+```ts
+const result = new MarkdownExporter().exportWithReport(editor.state.doc, {
+  markSerializers: {
+    keyboard_shortcut: () => ({ open: '<kbd>', close: '</kbd>' }),
+  },
+})
+```
+
+The callback receives the native mark and can choose delimiters based on its attributes. Include a matching import rule and inspect conversion losses for combinations such as a custom mark nested inside literal code.
+
 ## Automated conformance
 
 The isolated `fountainjs-editor/testing` entry contains no test-runner or React

@@ -7,7 +7,9 @@
       "scope": "custom-label",
       "title": "Component ownership",
       "label": "fountain-workflow",
-      "source": "Responsible team: ~fountain-workflow",
+      "source": "Responsible team: ~fountain-workflow\n\nShortcut: <kbd>F5</kbd>.",
+      "shortcut": "F5",
+      "updatedShortcut": "F15",
       "edit": "Confirmed. "
     }
   ]

@@ -911,10 +911,13 @@ export function compareGitLabCompatibility(original,fountain){
     if (input.scope === 'custom-label') {
       check('project label identity', a?.labelId, b?.labelId);
       const token = '~' + input.label;
+      const expectedSource = input.edit + (input.shortcut ? input.source.replace('<kbd>' + input.shortcut + '</kbd>', '<kbd>' + input.updatedShortcut + '</kbd>') : input.source);
       const observe = (report, item) => {
         if (!verifiedEditor(report, item)) return {};
         const usesLabel = value => report.side === 'original' || value === token;
         return {
+          shortcutUndo:item.shortcutUndo, shortcutRedo:item.shortcutRedo, readerShortcut:item.readerShortcut,
+          reopenedShortcut:verifiedEditor(report, {editorProof:item.reopenedEditorProof}) ? item.reopenedShortcut : undefined,
           rendered: item.renderedLabel === undefined ? undefined : item.renderedLabel.trim() === input.label && usesLabel(item.customToken),
           undone: item.undone, redone: item.redone, saved: item.saved,
           target: item.readerURL && Boolean(item.initialURL && item.readerURL === item.initialURL),
@@ -928,10 +931,16 @@ export function compareGitLabCompatibility(original,fountain){
         ['rendered',true,'The editor displays the project label (native extension on Fountain)'],
         ['undone',true,'Undoing the prose edit retains the label'],
         ['redone',true,'Redoing the edit retains the label'],
-        ['saved',input.edit + input.source,'The GitLab API stores the exact prose and label reference'],
+        ['saved',expectedSource,'The GitLab API stores the exact edited issue Markdown'],
         ['target',true,'The saved reader still links to the same GitLab label'],
         ['reopened',true,'The verified rich editor reopens the label in its configured representation'],
-        ['source',input.edit + input.source,'Switching the reopened editor to Markdown retains the complete edited issue'],
+        ['source',expectedSource,'Switching the reopened editor to Markdown retains the complete edited issue'],
+        ...(input.shortcut ? [
+          ['shortcutUndo',input.shortcut,'Undo restores the original key inside the keyboard mark'],
+          ['shortcutRedo',input.updatedShortcut,'Redo restores the updated key inside the keyboard mark'],
+          ['readerShortcut',input.updatedShortcut,'GitLab renders the saved key as keyboard text'],
+          ['reopenedShortcut',input.updatedShortcut,'The rich editor reopens the key with the configured keyboard mark'],
+        ] : []),
       ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
       continue;
     }

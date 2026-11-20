@@ -676,7 +676,7 @@ The second audit run mounts the separate build read-only. It verifies the staged
 
 ### Reproduce a host-defined label serializer
 
-Use the pinned local GitLab checkout and the same build command as the default native installation. The optional `--custom-label-host` profile supplies [a native issue-label extension and writer](../testing/issue_label_host.js) through the real Markdown editor component’s public props. The profile is included in the installed frontend identity. The ordinary packaged control uses GitLab’s own label editor.
+Use the pinned local GitLab checkout and the same build command as the default native installation. The optional `--custom-label-host` profile supplies [an issue-label node and a keyboard-shortcut mark](../testing/issue_label_host.js) through the Markdown editor component’s public props. Their Markdown writers produce a GitLab label reference and a `<kbd>` span. The installed frontend identity includes this profile. Packaged GitLab provides the control for both features.
 
 ```sh
 run_id=custom-label-$(date -u +%Y%m%d-%H%M%S)
@@ -688,7 +688,7 @@ node scripts/run-gitlab-compatibility.mjs --suite custom-label --run-id "$run_id
 node scripts/compare-gitlab-compatibility.mjs --original "artifacts/gitlab-compatibility/$run_id/original-1/report.json" --fountain "artifacts/gitlab-compatibility/$run_id/fountain-1/report.json" --output "artifacts/gitlab-compatibility/$run_id/verified"
 ```
 
-After the comparison, rerun the installer without `--custom-label-host` and rebuild the frontend to restore the default native host. On issue #691, the [restored standard build](../../../artifacts/gitlab-compatibility/standard-host-after-custom-label-20261120/fountain-1/report.json) retained a linked image’s edited description, asset URL and separate reader link through Save and reopen. The custom-host browser collector checks for the extension’s rendered token in the rich editor on first open and after Save. It also checks GitLab’s persisted Markdown and the label link in the reader.
+After the comparison, rerun the installer without `--custom-label-host` and rebuild the frontend to restore the default native host. On issue #691, the [restored standard build](../../../artifacts/gitlab-compatibility/standard-host-after-custom-label-20261120/fountain-1/report.json) retained a linked image’s edited description, asset URL and separate reader link through Save and reopen. On issue #695, the [standard host restored after the keyboard-mark run](../../../artifacts/gitlab-compatibility/standard-host-after-custom-mark-20261120/fountain-1/report.json) also saved and reopened the linked figure with the edited description, original asset and link intact. This restoration check uses a separate issue. The [custom-host comparison](../../../artifacts/gitlab-compatibility/custom-mark-20261120/verified/report.md) covers the keyboard edit, label reference and exact saved Markdown.
 
 ### Roll back an issue containing uncited footnotes
 

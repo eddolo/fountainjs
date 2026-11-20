@@ -1370,7 +1370,7 @@ starter extensions, math, source-aware GitLab codec, assets/references, history,
 load supersession, explicit failed-source recovery and current-value reads.
 Unloaded/pending/failed replacements cannot submit cached content. Host callback
 failures are isolated from later editor subscribers and remain observable.
-Unsupported options and legacy extensions/providers fail explicitly. In pinned GitLab CE 19.5.3, a search of the shipped frontend found `serializerConfig` in the content editor component, factory and Markdown serializer. Its upstream factory test supplies a custom Tiptap `label` node and a serializer that calls `state.write` and `state.closeBlock`. A host migrating that node can register a Fountain extension and supply a native writer in the same Vue prop. Raw ProseMirror state callbacks and custom mark writers still require porting. Ordinary issue, discussion and wiki workflows use the default configuration.
+Unsupported options and legacy extensions/providers fail explicitly. In pinned GitLab CE 19.5.3, a search of the shipped frontend found `serializerConfig` in the content editor component, factory and Markdown serializer. Its upstream factory test supplies a custom Tiptap `label` node and a serializer that calls `state.write` and `state.closeBlock`. A host migrating that node can register a Fountain extension and supply a native writer in the same Vue prop. Raw ProseMirror state callbacks still require porting. Extension marks can supply literal delimiters or a native attribute-aware writer. Ordinary issue, discussion and wiki workflows use the default configuration.
 
 For an extension that declares an `issue_label` node, the host passes both `extensions` and `serializerConfig` to the editor. The node’s HTML parse rule reads the reference from GitLab’s rendered label. The writer returns its authored Markdown spelling when the document is edited.
 
@@ -1386,7 +1386,9 @@ const serializerConfig = {
 }
 ```
 
-An unchanged document keeps its original Markdown. When a writer cannot represent a node, it can throw. The service reports the failing node’s path and allows the author to undo the edit. Register each writer against a node owned by the supplied Fountain extension. The [working host example](testing/issue_label_host.js) includes the parse rule and rich editor rendering.
+For an attribute-free mark that parses a keyboard shortcut, pass `marks: { keyboard_shortcut: { open: '<kbd>', close: '</kbd>' } }` in the same serializer configuration. For a mark with attributes, implement `toMarkdown(mark)` on its entry in `marks`. Return an object with `open` and `close` strings and encode attribute values for the target syntax. The host owns the returned markup. The adapter rejects unsupported legacy flags and state-dependent callback shapes during setup.
+
+An unchanged document keeps its original Markdown. When a writer cannot represent a node or mark, it can throw. The service reports the failing node’s path and allows the author to undo the edit. Register each writer against a node owned by the supplied Fountain extension. The [working host example](testing/issue_label_host.js) includes the parse rule and rich editor rendering.
 
 The self-contained real-service audit discovers the preview endpoint through
 GitLab GraphQL, uploads its own PNG, imports real renderer HTML into Fountain
