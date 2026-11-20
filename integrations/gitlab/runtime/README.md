@@ -687,6 +687,15 @@ node scripts/compare-gitlab-compatibility.mjs --original "artifacts/gitlab-compa
 
 The report records the two mounted editor identities, the unsaved text the second author received, presence in each direction, the first author's text after peer undo and redo, exact saved source and reader formatting. For the stock build it also records the two shared XML paragraphs from the live Yjs binding. Cursor labels are excluded from paragraph text. The wiki API result is checked independently.
 
+To exercise the wire adapter independently of the browser, build the native runtime and run the following from the Fountain checkout. Pass the pinned GitLab source checkout with its installed JavaScript dependencies.
+
+```sh
+node scripts/build-gitlab-native-runtime.mjs
+node scripts/check-gitlab-wiki-wire.mjs "$GITLAB_SOURCE"
+```
+
+The check takes the paragraph and bold mark recorded by the real stock wiki, creates separate stock and Fountain Yjs documents, and delivers incremental updates after each side edits the same paragraph offline. It checks convergence through the stock schema, relative cursor identity, author-local undo, a stale write, and a second client joining before the elected seed finishes. The fixture also cancels a pending seed and checks that the room stays empty. This check uses the [private document binding](../services/wiki_room_document.ts). Browser mounting, presence and the live GitLab Save handoff remain open.
+
 ### Reproduce a host-defined label serializer
 
 Use the pinned local GitLab checkout and the same build command as the default native installation. The optional `--custom-label-host` profile supplies [an issue-label node and a keyboard-shortcut mark](../testing/issue_label_host.js) through the Markdown editor component’s public props. Their Markdown writers produce a GitLab label reference and a `<kbd>` span. The installed frontend identity includes this profile. Packaged GitLab provides the control for both features.
