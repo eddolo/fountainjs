@@ -1,0 +1,22 @@
+{
+  "formatVersion": 1,
+  "workflow": "developer-creates-and-reopens-a-merge-request",
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "developer-creates-merge-request",
+      "scope": "mr-create",
+      "authorAccess": 30,
+      "title": "Document release verification",
+      "commitMessage": "Add a release verification guide",
+      "filePath": "review/release-verification.md",
+      "fileContent": "Record the release verification steps.\n",
+      "prefix": "Review the ",
+      "bold": "verification guide",
+      "followup": "The smoke test passed."
+    }
+  ]
+}

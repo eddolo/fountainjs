@@ -584,14 +584,21 @@ export function compareGitLabCompatibility(original,fountain){
       const finalReader = {paragraphs: [plain, input.followup], bold: [input.bold]};
       function observation(report, item) {
         if (!equal(item?.beforeSave, finalReader)) return {};
+        if (input.authorAccess && !(Number.isSafeInteger(item.writer?.id) && item.writer.id > 0 &&
+            item.writer.username === fixture.username && item.writer.accessLevel === input.authorAccess)) return {};
         if (item?.status !== 'observed' || !verifiedEditor(report, item) ||
             !verifiedEditor(report, {editorProof: item.reopenedEditorProof})) return {};
-        return {...item.facts, pageErrors: item.pageErrors};
+        const writer = {id:item.writer?.id, username:item.writer?.username};
+        const reopened = item.facts?.reopened;
+        const loaded = reopened?.paragraphs?.some(text => typeof text === 'string' && /\S/u.test(text));
+        return {...item.facts, reopened:loaded ? reopened : undefined,
+          savedAuthor:equal(item.facts?.savedAuthor, [writer, writer]), pageErrors:item.pageErrors};
       }
       const left = observation(original, a), right = observation(fountain, b);
       const markdown = input.prefix + '**' + input.bold + '**.';
       const reader = {paragraphs: [plain], bold: [input.bold]};
       for (const [key, label, expected] of [
+        ...(input.authorAccess ? [['savedAuthor', 'GitLab identifies the signed-in Developer as author after creation and after reopening', true]] : []),
         ['branchSelection', 'The create form uses the selected source and target branches', true],
         ['submission', 'GitLab creates the open request with the intended branches, head and title', true],
         ['createdSource', 'The saved description retains its Markdown', markdown],

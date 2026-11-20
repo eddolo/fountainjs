@@ -24,14 +24,18 @@ settings are not performance or deployment recommendations.
 Prepare the [frontend deployment](#reproduce-the-frontend-deployment-and-rollback) and run the commands below from the FountainJS checkout in Linux. The fixture creates one source branch and commit per editor through GitLab’s repository API. The browser selects that branch, creates the merge request, enters its formatted description, reopens it, adds a paragraph and saves. The collector checks the live draft immediately before Save and reads the saved Markdown and reader after reload. Each run leaves the branch and open merge request available for inspection.
 
 ```sh
-run="mr-create-$(date +%s)"
+suite=mr-create
+browser=chromium
+run="$suite-$browser-$(date +%s)"
 for editor in fountain original; do
-  node scripts/run-gitlab-compatibility.mjs --suite mr-create --editor "$editor" --run-id "$run" || exit 1
+  node scripts/run-gitlab-compatibility.mjs --suite "$suite" --browser "$browser" --editor "$editor" --run-id "$run"
 done
 dir="artifacts/gitlab-compatibility/$run"
 node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" \
   --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
 ```
+
+Set `suite=mr-create-member` to run as the fixture’s project Developer, or set `browser=firefox` or `browser=webkit` for another desktop engine. The Developer uses a separate signed-in session and the visible **Edit merge request** link. The fixture verifies the actual project access level and checks the saved author ID after both submissions. It restores the fixture account’s previous membership afterward. Each browser report includes any page errors. Run the comparator on both reports even when a browser exits with a failed check.
 
 ### Reproduce issue-board editing
 

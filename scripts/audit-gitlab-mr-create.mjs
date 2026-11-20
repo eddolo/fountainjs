@@ -2,7 +2,38 @@ import { expect } from '@playwright/test';
 import { join } from 'node:path';
 import { editorProof, observePage, openRich } from './gitlab-audit-editor.mjs';
 
-export async function runGitLabMergeRequestCreation({ page, project, request, fixture, runId, side, output, onProgress }) {
+import { prepareGitLabAuditMember } from './gitlab-audit-member.mjs';
+
+export async function runGitLabMergeRequestCreation(options) {
+  const {page, project, request, fixture} = options;
+  const access = fixture.cases[0].authorAccess;
+  if (access === undefined) return createMergeRequest(options);
+
+  const member = await prepareGitLabAuditMember({project, request, fixture});
+  const membershipPath = '/api/v4/projects/' + project.id + '/members';
+  const prior = (await request(membershipPath + '?query=' + encodeURIComponent(fixture.username)))
+    .find(item => item.id === member.account.id);
+  // Authenticate before recording. Only the signed-in session is copied to the recorded browser.
+  const login = await page.context().browser().newContext();
+  let membership;
+  try {
+    membership = await member.setRole(access);
+    const session = await login.newPage();
+    await member.signInMember(session, {});
+    return await createMergeRequest({...options, page: session}, membership);
+  } finally {
+    try {
+      if (membership && prior?.access_level !== membership.accessLevel) {
+        if (prior) await member.setRole(prior.access_level);
+        else await request(membershipPath + '/' + member.account.id, {}, 'DELETE');
+      }
+    } finally {
+      await login.close();
+    }
+  }
+}
+
+async function createMergeRequest({ page, project, request, fixture, runId, side, output, onProgress }, membership) {
   const [input] = fixture.cases;
   const result = { id: input.id, input, status: 'incomplete', facts: {}, pageErrors: [] };
   const { facts } = result;
@@ -24,6 +55,17 @@ export async function runGitLabMergeRequestCreation({ page, project, request, fi
   };
   try {
     await observePage(actor, result);
+    if (membership) {
+      const identity = await actor.request.get(new URL('/api/v4/user', list).href);
+      expect(identity.status()).toBe(200);
+      const user = await identity.json();
+      expect(user.id).toBe(membership.id);
+      expect(user.username).toBe(fixture.username);
+      expect(user.is_admin).not.toBe(true);
+      const current = await request(api + '/members/all/' + user.id);
+      expect(current.access_level).toBe(input.authorAccess);
+      result.writer = {id:user.id, username:user.username, accessLevel:current.access_level};
+    }
     stage('select-source-branch');
     const commit = await request(api + '/repository/commits', {
       start_branch: project.default_branch, branch, commit_message: input.commitMessage,
@@ -69,10 +111,16 @@ export async function runGitLabMergeRequestCreation({ page, project, request, fi
     facts.reader = await read();
     await reader.screenshot({path:join(output,'created-reader.png')});
     stage('reopen-edit-and-save');
-    await actor.goto(created.web_url + '/edit');
+    const editLink = actor.getByRole('link', {name:'Edit merge request', exact:true});
+    await expect(editLink).toBeVisible({timeout:30000});
+    expect(new URL(await editLink.getAttribute('href'), actor.url()).href).toBe(created.web_url + '/edit');
+    await editLink.click();
     const reopened = await openRich(form, side);
     result.reopenedEditorProof = await editorProof(reopened);
-    await expect(reopened.locator('p').first()).toBeVisible();
+    // GitLab mounts an empty editor before the saved description finishes loading.
+    const firstParagraph = reopened.locator('p').first();
+    await expect(firstParagraph).toBeVisible();
+    await expect(firstParagraph).toHaveText(/\S/u, {timeout:30000});
     facts.reopened = { paragraphs: await reopened.locator('p').allTextContents(), bold: await reopened.locator('strong,b').allTextContents() };
     await reopened.locator('p').last().click();
     await actor.keyboard.press('Control+End');
@@ -90,6 +138,7 @@ export async function runGitLabMergeRequestCreation({ page, project, request, fi
     facts.finalReader = await read();
     const updated = await request(api + '/merge_requests/' + iid);
     facts.updatedSource = updated.description;
+    if (membership) facts.savedAuthor = [created.author, updated.author].map(author => ({id:author.id, username:author.username}));
     const matches = await mergeRequests();
     facts.singleRecord = matches.length === 1 && matches[0].iid === iid;
     facts.headPreserved = updated.sha === commit.id && updated.state === 'opened' && updated.title === input.title;

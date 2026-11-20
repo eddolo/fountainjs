@@ -227,10 +227,11 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  expected.rspackManifestSHA256 = '3'.repeat(64);
  expect(buildIdentityError(prepared)).toBeTruthy();
 });
-it('checks the merge request reader, saved source and build identity at both edits', () => {
+it.each(['mr-create', 'mr-create-member'])('checks the writer, reader and saved source for %s', suite => {
  const [original, fountain] = reports() as any[];
- const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-mr-create.json', import.meta.url), 'utf8'));
+ const fixture = JSON.parse(readFileSync(new URL(`../integrations/gitlab/fixtures/compatibility-${suite}.json`, import.meta.url), 'utf8'));
  const input = fixture.cases[0];
+ const expectedChecks = input.authorAccess ? 11 : 10;
  const text = input.prefix + input.bold + '.';
  const markdown = input.prefix + '**' + input.bold + '**.';
  for (const report of [original, fountain]) {
@@ -243,14 +244,32 @@ it('checks the merge request reader, saved source and build identity at both edi
        createdSource:markdown, updatedSource:markdown + '\n\n' + input.followup, finalReader:{paragraphs:[text,input.followup], bold:[input.bold]}}});
  }
  const compare = () => compareGitLabCompatibility(original, fountain);
- expect(compare().summary.parity).toBe(10);
+ if (input.authorAccess) {
+   for (const report of [original, fountain]) {
+     const item = report.observations[0];
+     item.writer = {id:52, username:fixture.username, accessLevel:input.authorAccess};
+     item.facts.savedAuthor = [0, 1].map(() => ({id:52, username:fixture.username}));
+   }
+   fountain.observations[0].writer.accessLevel = 50;
+   expect(compare().summary.incomplete).toBe(expectedChecks);
+   fountain.observations[0].writer.accessLevel = input.authorAccess;
+   fountain.observations[0].facts.savedAuthor[0].id = 1;
+   expect(compare().rows.find((row:any) => row.invariant === 'savedAuthor').classification).toBe('regression');
+   fountain.observations[0].facts.savedAuthor[0].id = 52;
+ }
+ expect(compare().summary.parity).toBe(expectedChecks);
+ const draft = original.observations[0].facts.reopened;
+ original.observations[0].facts.reopened = {paragraphs:[''], bold:[]};
+ expect(compare().summary.incomplete).toBe(1);
+ expect(compare().summary.improvement).toBe(0);
+ original.observations[0].facts.reopened = draft;
  fountain.observations[0].facts.finalReader.bold = [];
  expect(compare().rows.find((row:any) => row.invariant === 'finalReader').classification).toBe('regression');
  original.observations[0].beforeSave.paragraphs.pop();
- expect(compare().summary.incomplete).toBe(10);
+ expect(compare().summary.incomplete).toBe(expectedChecks);
  original.observations[0].beforeSave = fountain.observations[0].beforeSave;
  delete fountain.observations[0].reopenedEditorProof;
- expect(compare().summary.incomplete).toBe(10);
+ expect(compare().summary.incomplete).toBe(expectedChecks);
 });
 it('requires both board and full-page editors and checks persisted marks after navigating back', () => {
  const [original, fountain] = reports() as any[];
