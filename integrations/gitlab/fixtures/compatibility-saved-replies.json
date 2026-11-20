@@ -1,0 +1,18 @@
+{
+  "formatVersion": 1,
+  "workflow": "personal-saved-reply-in-a-discussion",
+  "cases": [
+    {
+      "id": "reply-in-comment",
+      "scope": "saved-replies",
+      "title": "Document release verification",
+      "description": "Release checklist.",
+      "draftSuffix": " Verify the build.",
+      "prefix": "Before ",
+      "selected": "PLACE",
+      "suffix": " after.",
+      "reply": "**Tested**",
+      "rendered": "Tested"
+    }
+  ]
+}

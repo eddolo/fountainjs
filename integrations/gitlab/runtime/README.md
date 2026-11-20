@@ -19,6 +19,22 @@ connect to an existing GitLab account or installation. Metrics are disabled and
 service concurrency is reduced for this small local test environment; these
 settings are not performance or deployment recommendations.
 
+### Reproduce personal saved replies
+
+Prepare the [frontend deployment](#reproduce-the-frontend-deployment-and-rollback), then run these commands from the FountainJS checkout in Linux. Both deployments use the same issue and personal comment-template fixture. Each run creates a temporary template through GitLab’s authenticated GraphQL API and removes that template by ID after the browser closes the workflow. The issue and posted note remain available for inspection.
+
+```sh
+run="saved-replies-$(date +%s)"
+for editor in fountain original; do
+  node scripts/run-gitlab-compatibility.mjs --suite saved-replies --editor "$editor" --run-id "$run" || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" \
+  --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
+```
+
+The recording follows an author selecting a word in a discussion draft, cancelling the picker, inserting a formatted saved reply, undoing and redoing it, then posting the note while an unsaved issue description remains open. The score includes focus, both drafts, the stored Markdown and the reloaded reader.
+
 ### Reproduce wiki Save and version restore
 
 Prepare the pinned frontend using [the local deployment instructions](#reproduce-the-frontend-deployment-and-rollback). From the FountainJS checkout in Linux, use a fresh run ID. Each side creates its own wiki page from the same Markdown fixture. The collector records the build that mounted the editor, then uses GitLab’s Edit, Save, Page history and Restore controls.

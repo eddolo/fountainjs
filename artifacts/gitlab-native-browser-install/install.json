@@ -10,7 +10,7 @@
     "target": "es2018",
     "bytes": 1748975,
     "sha256": "167d91c06ce5931c9ad48dd4f7c4eb17db062cf82293f496dad850e7d047bf8e",
-    "parentRevision": "0f3db5f6bfe550275fd0ff440c78d47d5cbab7eb",
+    "parentRevision": "8fb3bd2cbb8e31c3c8c96d0cf2ef68128ab8ebd8",
     "inputs": {
       "integrations/gitlab/runtime/browser.ts": "9395e8c23d92ccfd3cb062d0e6cd0ecececf635cbaf74dba1219281e28c2da39",
       "integrations/gitlab/services/content_editor.ts": "287f4284d2beb535f53220e637198fb9c52966fdd2e41295d147e527b8ad7e73",
@@ -68,7 +68,7 @@
       "dist/pages.js": "bb4951f8e2cf7a89dd7b20149599e58f5aa82b3535e1ea300b5b368b2232c71c"
     }
   },
-  "integrationSHA256": "3102f5bd338dc814d48579f5dfec64910acc2b5306cf225f92bfdbe74e00bd64",
+  "integrationSHA256": "424effd7a3cccd97082fc2e4cbf28804c4168e8d036ef4a1ba4ad8ae74df23e6",
   "preparedComponentSHA256": "cdd3091a8a8cddccbd9b48c231edb38197f73a26fd8e35d9932b90d3579d6bad",
   "files": {
     "app/assets/javascripts/notes/components/noteable_note.vue": "3bf3ccb82beda120fcad98a8d46472e3bc64687daba93c9c64470e9897dfd185",
@@ -91,7 +91,7 @@
     "app/assets/javascripts/behaviors/markdown/fountain_reader_images.js": "9b36b527c5e271ab97ec41b066446b2441afdb78ca79bc89a2fe34a06ba7b125",
     "babel.config.js": "7cc8ec862fb6e42c7e26b3fb29410094b4f49f602f2ed02e6ec6132ac32a20a4",
     "app/assets/javascripts/vue_shared/components/markdown/markdown_editor.vue": "4cf746744c45a254d836155e4e72f72bd1b2de4c71ec0f047fd0f37cae7d96ff",
-    "app/assets/javascripts/content_editor/components/content_editor.vue": "7463f17833b112c08764d6dba6ed52c59d254e40c9bed93a7e70d51dfb61dd34",
+    "app/assets/javascripts/content_editor/components/content_editor.vue": "ec07a8ba7c805af5fc57b80ac871254b31e734ac6dabc1261e2cc3dabdee5563",
     "app/assets/javascripts/content_editor/components/fountain_editor_surface.vue": "8d7ba82b94d6d6d4e1ebdeb707dd40a15e9f577814af7705d03d5ab61eff66f7",
     "app/assets/javascripts/content_editor/components/fountain_formatting_toolbar.vue": "394b611d206cd6f7a773f1e0d802f8e3108bd28e24bfaa5055a107a5c4b7c902",
     "app/assets/javascripts/content_editor/components/fountain_context_surface.vue": "de2db5ca69413aea387a36b0952d0bb6ab8ac15de4e17fc192daae02ecfca95b",

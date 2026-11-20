@@ -1,5 +1,7 @@
 # GitLab application integration
 
+**Personal saved replies, November 20.** An author can open GitLab’s **Insert comment template** picker in a Fountain discussion, search their saved replies, and insert one over selected text. In a matched Chromium 151 run on GitLab CE 19.5.3, build `8fb3bd2c` passed all 11 checks. Both editors preserved the second draft, formatting, one-step undo/redo and exact posted Markdown. At the focus check immediately after insertion, the Fountain comment editor held keyboard focus and the stock editor did not. The run covered one administrator’s personal template in an issue discussion. Group/project templates, other roles and mobile input remain unverified for this workflow. [Builds and comparison](../../artifacts/gitlab-compatibility/personal-reply-v1/comparison/report.md) · [Reproduction steps](runtime/README.md#reproduce-personal-saved-replies)
+
 **Active acceptance work, November 19.** In GitLab CE 19.5.3 an issue description
 and its discussion composer can stay open together. The stock and Fountain
 runs passed all 44 checks across both save orders. The comment toolbar applied

@@ -579,6 +579,30 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:paired ? left[key] : undefined,fountain:paired ? right[key] : undefined,classification:null});
       continue;
     }
+    if (input.scope === 'saved-replies') {
+      function observation(report, item) {
+        if (item?.status !== 'observed' || !verifiedEditor(report, item) ||
+            !verifiedEditor(report, { editorProof: item.descriptionEditorProof })) return {};
+        return { ...item.facts, pageErrors: item.pageErrors };
+      }
+      const left = observation(original, a), right = observation(fountain, b);
+      const draft = input.prefix + input.selected + input.suffix;
+      const rich = { text: input.prefix + input.rendered + input.suffix, bold: [input.rendered] };
+      for (const [key, label, expected] of [
+        ['cancelledDraft', 'Dismissing the picker keeps the draft', draft],
+        ['inserted', 'The reply replaces just the selection with formatted content', rich],
+        ['ownsFocus', 'Keyboard focus returns to the receiving editor', true],
+        ['undo', 'One undo restores the original selection text', { text: draft, bold: [] }],
+        ['redo', 'Redo restores the formatted reply', rich],
+        ['descriptionDraft', 'Insertion preserves the separate issue draft', input.description + input.draftSuffix],
+        ['afterPostDraft', 'Posting preserves the separate issue draft', input.description + input.draftSuffix],
+        ['savedDescription', 'Posting leaves the stored issue unchanged', input.description],
+        ['savedNotes', 'GitLab stores the selected reply as Markdown', [input.prefix + input.reply + input.suffix]],
+        ['reopened', 'Reload renders the saved note with emphasis', rich],
+        ['pageErrors', 'The browser completes the workflow without exceptions', []],
+      ]) rows.push({ case: input.id, invariant: key, label, expected, original: left[key], fountain: right[key], classification: null });
+      continue;
+    }
     if(input.scope==='composers'){
       function facts(report, item) {
         if (!verifiedEditor(report, item) || !verifiedEditor(report, { editorProof: item?.commentEditorProof })) return {};
