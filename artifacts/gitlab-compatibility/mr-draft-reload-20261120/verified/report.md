@@ -1,0 +1,31 @@
+# Matched GitLab editor comparison
+
+**Original** — GitLab CE 19.5.3 @ 0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf · stock Tiptap/ProseMirror · frontend manifest 8198a3fa9feab7a59f708cc2ff97dc0256501d391b843dc575a08234cbc61504
+
+**Replacement** — GitLab CE 19.5.3 @ 0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf · FountainJS 0.5.0-beta.2 @ 442191162f18d104a446bb8f5e4684da0895ee92 · runtime 167d91c06ce5931c9ad48dd4f7c4eb17db062cf82293f496dad850e7d047bf8e · integration dec7e985304723772ba4abc53621b00b78176f38fdc9b310bcc23f330f728c12
+
+Browser on stock / replacement: chromium 151.0.7922.34 (linux) / chromium 151.0.7922.34 (linux)
+
+Environment matched: true. Comparison complete: true.
+Regression gate: passed. Absolute feature acceptance: passed.
+
+| Case | Invariant | Classification |
+| --- | --- | --- |
+| developer-creates-merge-request | GitLab identifies the signed-in Developer as author after creation and after reopening | parity |
+| developer-creates-merge-request | Reload restores the unposted comment and its bold text without publishing it | parity |
+| developer-creates-merge-request | Posting the recovered comment preserves its formatting, author and earlier discussion and clears the composer | parity |
+| developer-creates-merge-request | The Developer can recover the same private draft and read it in the review drawer | parity |
+| developer-creates-merge-request | Submitting the review publishes one comment and clears the pending draft | parity |
+| developer-creates-merge-request | The existing review comment survives navigation in the reader and the notes API | parity |
+| developer-creates-merge-request | The create form uses the selected source and target branches | parity |
+| developer-creates-merge-request | GitLab creates the open request with the intended branches, head and title | parity |
+| developer-creates-merge-request | The saved description retains its Markdown | parity |
+| developer-creates-merge-request | The created request displays the formatted paragraph | parity |
+| developer-creates-merge-request | The reopened editor retains the paragraph and bold range | parity |
+| developer-creates-merge-request | The follow-up edit is persisted alongside the initial formatting | improvement |
+| developer-creates-merge-request | The reloaded reader displays both paragraphs and the bold range | improvement |
+| developer-creates-merge-request | The source branch has exactly one merge request with the original number | parity |
+| developer-creates-merge-request | Updating the description preserves the branch head, title and open state | parity |
+| developer-creates-merge-request | The creation and edit journey finishes without browser exceptions | parity |
+
+Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.

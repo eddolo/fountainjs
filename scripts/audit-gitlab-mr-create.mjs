@@ -35,6 +35,55 @@ export async function runGitLabMergeRequestCreation(options) {
   }
 }
 
+async function verifyCommentDraft({actor, input, side, result, output, membership, notes}) {
+  const form = actor.locator('form.new-note');
+  const submit = form.getByTestId('comment-button').locator('button[type=submit]');
+  const initial = (await notes()).filter(note => !note.system);
+  const newNotes = async () => (await notes()).filter(note => !note.system && !initial.some(prior => prior.id === note.id));
+  const readRich = root => root.evaluate(el => ({
+    // Compare visible prose here. The submitted Markdown is checked byte-for-byte separately.
+    text:el.innerText.trimEnd(), bold:[...el.querySelectorAll('strong,b')].map(item => item.textContent),
+  }));
+  const expected = {text:input.prefix + input.bold + '.', bold:[input.bold]};
+  const editor = await openRich(form, side);
+  result.draftEditorProof = await editorProof(editor);
+  await editor.click();
+  await actor.keyboard.insertText(input.prefix);
+  await actor.keyboard.press('Control+b');
+  await actor.keyboard.insertText(input.bold);
+  await actor.keyboard.press('Control+b');
+  await actor.keyboard.insertText('.');
+  result.beforeCommentReload = await readRich(editor);
+  expect(result.beforeCommentReload).toEqual(expected);
+  await actor.reload();
+  const recovered = await openRich(form, side);
+  result.restoredEditorProof = await editorProof(recovered);
+  // Allow asynchronous hydration; a timeout still leaves the actual text available to grade.
+  await recovered.getByText(expected.text, {exact:false}).first().waitFor({timeout:5000}).catch(error => {
+    if (error.name !== 'TimeoutError') throw error;
+  });
+  const snapshot = await readRich(recovered);
+  result.facts.commentDraft = {...snapshot, publicBefore:(await newNotes()).length};
+  await recovered.screenshot({path:join(output,'recovered-comment.png')});
+  if (snapshot.text !== expected.text || snapshot.bold.length !== 1 || snapshot.bold[0] !== input.bold) return;
+  await submit.click();
+  await expect.poll(async () => (await newNotes()).length, {timeout:30000}).toBeGreaterThan(0);
+  await actor.reload();
+  const [first] = await newNotes();
+  const rendered = actor.locator('#note_' + first.id + ' .note-text');
+  await expect(rendered).toBeVisible({timeout:30000});
+  const empty = await openRich(form, side);
+  await expect(submit).toBeDisabled();
+  const all = await notes();
+  result.facts.commentPublished = {
+    count:(await newNotes()).length, markdown:first.body, sameAuthor:first.author.id === membership.id,
+    bold:await rendered.locator('strong,b').allTextContents(), reader:(await rendered.innerText()).trim(),
+    cleared:(await readRich(empty)).text === '',
+    priorNotesRetained:initial.every(prior => all.some(note => note.id === prior.id && note.body === prior.body)),
+  };
+  await rendered.screenshot({path:join(output,'published-comment.png')});
+}
+
 async function createMergeRequest({ page, project, request, fixture, runId, side, output, onProgress, mrHandoverFrom }, membership) {
   const [input] = fixture.cases;
   const result = { id: input.id, input, status: 'incomplete', facts: {}, pageErrors: [] };
@@ -215,6 +264,11 @@ async function createMergeRequest({ page, project, request, fixture, runId, side
     facts.singleRecord = matches.length === 1 && matches[0].iid === iid;
     facts.headPreserved = updated.sha === commit.id && updated.state === 'opened' && updated.title === input.title;
     await reader.screenshot({path:join(output,'updated-reader.png')});
+    if (input.unsubmittedComment) {
+      stage('reload-unsubmitted-comment');
+      await verifyCommentDraft({actor, input:input.unsubmittedComment, side, result, output, membership,
+        notes:() => request(api + '/merge_requests/' + iid + '/notes')});
+    }
     if (input.scope === 'mr-review-handover') {
       stage('leave-fountain-review-pending');
       await leavePendingReview({actor, request, project, input, result, output});

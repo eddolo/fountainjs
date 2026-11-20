@@ -10,6 +10,7 @@
       "id": "developer-creates-merge-request",
       "scope": "mr-create",
       "authorAccess": 30,
+      "unsubmittedComment": {"prefix":"Before release, ", "bold":"verify the checksum"},
       "pendingReview": "Please confirm the release window.",
       "discussionControl": "Release reviewer confirmed the checklist.",
       "title": "Document release verification",

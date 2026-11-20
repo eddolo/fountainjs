@@ -592,7 +592,12 @@ export function compareGitLabCompatibility(original,fountain){
         const writer = {id:item.writer?.id, username:item.writer?.username};
         const reopened = item.facts?.reopened;
         const loaded = reopened?.paragraphs?.some(text => typeof text === 'string' && /\S/u.test(text));
+        const draft = input.unsubmittedComment;
+        const verifiedDraft = draft && equal(item.beforeCommentReload, {text:draft.prefix + draft.bold + '.', bold:[draft.bold]}) &&
+          [item.draftEditorProof, item.restoredEditorProof].every(editorProof => verifiedEditor(report, {editorProof}));
         return {...item.facts, reopened:loaded ? reopened : undefined,
+          commentDraft:verifiedDraft ? item.facts?.commentDraft : undefined,
+          commentPublished:verifiedDraft ? item.facts?.commentPublished : undefined,
           savedAuthor:equal(item.facts?.savedAuthor, [writer, writer]), pageErrors:item.pageErrors};
       }
       const left = observation(original, a), right = observation(fountain, b);
@@ -600,6 +605,16 @@ export function compareGitLabCompatibility(original,fountain){
       const reader = {paragraphs: [plain], bold: [input.bold]};
       for (const [key, label, expected] of [
         ...(input.authorAccess ? [['savedAuthor', 'GitLab identifies the signed-in Developer as author after creation and after reopening', true]] : []),
+        ...(input.unsubmittedComment ? [
+          ['commentDraft', 'Reload restores the unposted comment and its bold text without publishing it', {
+            text:input.unsubmittedComment.prefix + input.unsubmittedComment.bold + '.', bold:[input.unsubmittedComment.bold], publicBefore:0,
+          }],
+          ['commentPublished', 'Posting the recovered comment preserves its formatting, author and earlier discussion and clears the composer', {
+            count:1, markdown:input.unsubmittedComment.prefix + '**' + input.unsubmittedComment.bold + '**.', sameAuthor:true,
+            bold:[input.unsubmittedComment.bold], reader:input.unsubmittedComment.prefix + input.unsubmittedComment.bold + '.',
+            cleared:true, priorNotesRetained:true,
+          }],
+        ] : []),
         ...(input.pendingReview ? [
           ['pendingReview', 'The Developer can recover the same private draft and read it in the review drawer',
             {sameDraft:true, source:input.pendingReview, preview:input.pendingReview, publishedBefore:0}],

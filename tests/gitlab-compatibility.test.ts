@@ -236,7 +236,7 @@ it.each(['mr-create', 'mr-create-member'])('checks the writer, reader and saved 
  const [original, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL(`../integrations/gitlab/fixtures/compatibility-${suite}.json`, import.meta.url), 'utf8'));
  const input = fixture.cases[0];
- const expectedChecks = input.authorAccess ? 14 : 10;
+ const expectedChecks = input.authorAccess ? 16 : 10;
  const text = input.prefix + input.bold + '.';
  const markdown = input.prefix + '**' + input.bold + '**.';
  for (const report of [original, fountain]) {
@@ -252,12 +252,25 @@ it.each(['mr-create', 'mr-create-member'])('checks the writer, reader and saved 
  if (input.authorAccess) {
    for (const report of [original, fountain]) {
      const item = report.observations[0];
+     const comment = input.unsubmittedComment;
+     item.beforeCommentReload = {text:comment.prefix + comment.bold + '.', bold:[comment.bold]};
+     item.draftEditorProof = item.restoredEditorProof = item.editorProof;
+     item.facts.commentDraft = {text:comment.prefix + comment.bold + '.', bold:[comment.bold], publicBefore:0};
+     item.facts.commentPublished = {count:1, markdown:comment.prefix + '**' + comment.bold + '**.', sameAuthor:true,
+       bold:[comment.bold], reader:comment.prefix + comment.bold + '.', cleared:true, priorNotesRetained:true};
      item.facts.pendingReview = {sameDraft:true, source:input.pendingReview, preview:input.pendingReview, publishedBefore:0};
      item.facts.submittedReview = {posted:1, sameAuthor:true, remainingDrafts:0, reader:input.pendingReview};
      item.facts.discussionAfterReload = {idMatches:true, saved:input.discussionControl, reader:input.discussionControl};
      item.writer = {id:52, username:fixture.username, accessLevel:input.authorAccess};
      item.facts.savedAuthor = [0, 1].map(() => ({id:52, username:fixture.username}));
    }
+   const item = fountain.observations[0];
+   item.restoredEditorProof = original.observations[0].editorProof;
+   expect(compare().summary.incomplete).toBe(2);
+   item.restoredEditorProof = item.editorProof;
+   item.facts.commentDraft.bold = [];
+   expect(compare().rows.find((row:any) => row.invariant === 'commentDraft').classification).toBe('regression');
+   item.facts.commentDraft.bold = [input.unsubmittedComment.bold];
    fountain.observations[0].facts.submittedReview.posted = 2;
    expect(compare().rows.find((row:any) => row.invariant === 'submittedReview').classification).toBe('regression');
    fountain.observations[0].facts.submittedReview.posted = 1;
