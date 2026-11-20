@@ -54,6 +54,14 @@ it('refuses active serializer hooks and legacy collaboration instead of ignoring
   );
 });
 
+it('ties native Markdown writers to declared node types and rejects unknown rule fields', () => {
+  const native = {extensions:[{name:'workflow',nodes:{label:{group:'inline',inline:true,atom:true}}}]};
+  const rule = {toMarkdown:() => '~workflow'};
+  expect(() => validate({serializerConfig:{nodes:{label:rule},marks:{}}},native)).not.toThrow();
+  for (const nodes of [{missing:rule}, {label:{...rule,extra:true}}, {label:() => '~workflow'}]) {
+    expect(() => validate({serializerConfig:{nodes}},native)).toThrow('GITLAB_NATIVE_SERIALIZER_ADAPTER_REQUIRED');
+  }
+});
 it.each(suggestionContexts.fixtures)('keeps real Rapid Diffs $name configuration guarded pending end-to-end acceptance', fixture => {
   expect(() => validate({ codeSuggestionsConfig: fixture.context })).toThrow('GITLAB_NATIVE_SUGGESTIONS_ADAPTER_REQUIRED');
 });

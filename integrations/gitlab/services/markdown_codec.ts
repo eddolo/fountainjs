@@ -239,6 +239,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     renderMarkdown(markdown: string, options?: { signal: AbortSignal }): Promise<GitLabRenderResponse>;
     html?: ServerHTMLImporterOptions;
     preserveWikiSource?: boolean;
+    nodeWriters?: ReadonlyMap<string, (node: Node) => string>;
     tableOfContentsLabel?: string;
   }) {}
 
@@ -306,8 +307,23 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     }
     const issues: GitLabMarkdownIssue[] = [], tokens = new Map<string, string>();
     let prefix = 'FOUNTAINGITLABSOURCETOKEN';
+    const customSources = new Map<Node, string>();
+    if (this.options.nodeWriters?.size) {
+      doc.descendants((node, path) => {
+        const write = this.options.nodeWriters!.get(node.type.name);
+        if (!write) return;
+        try { customSources.set(node, write(node)); }
+        catch (error) {
+          issues.push({ stage: 'export', code: 'custom-node-source', path,
+            message: error instanceof Error ? error.message : 'The host serializer could not write ' + node.type.name });
+        }
+        return false;
+      });
+      if (issues.length) return { markdown: '', preservation: 'canonical', issues };
+    }
     const encoded = JSON.stringify(doc.toJSON());
-    while (encoded.includes(prefix)) prefix += 'X';
+    const authored = Array.from(customSources.values()).join('\n');
+    while (encoded.includes(prefix) || authored.includes(prefix)) prefix += 'X';
     const noteDefinitions = new Map<string, Node>();
     const noteLabels = new Set<string>();
     doc.descendants((node, path) => {
@@ -323,6 +339,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       return token;
     };
     const project = (node: Node, path: number[]): Node => {
+      if (customSources.has(node)) return node;
       if (node.type.name === 'footnote_reference') {
         const definition = noteDefinitions.get(String(node.attrs.id));
         if (!definition || node.marks.some(mark => ['code', 'link'].includes(mark.type.name)))
@@ -481,7 +498,10 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     };
     const projected = project(doc, []), paths = new WeakMap<Node, readonly number[]>();
     projected.descendants((node, path) => { paths.set(node, path); });
+    const extensionWriters = Object.fromEntries(Array.from(this.options.nodeWriters?.keys() ?? [], name =>
+      [name, (node: Node) => customSources.get(node)] as const));
     const blockSerializers = {
+      ...extensionWriters,
       table: (node: Node) => serializeGitLabHTMLTable(node, prefix),
       gitlab_code_suggestion: serializeGitLabSuggestionNode,
       gitlab_table_of_contents: (node: Node) => String(node.attrs.token),
@@ -492,15 +512,15 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         if (!['auto', 'ltr', 'rtl'].includes(String(node.attrs.dir)) || node.marks.length
           || Object.entries(node.attrs).some(([key, value]) => key !== 'dir' && value !== undefined)) return undefined;
         const inner = new MarkdownExporter().exportWithReport(node.type.schema.node('doc', {}, node.content),
-          { omitTrailingCaret: true, blockSerializers });
+          { omitTrailingCaret: true, blockSerializers, inlineSerializers: extensionWriters });
         issues.push(...inner.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type,
           message: loss.detail, path: [...(paths.get(node) ?? []), ...loss.path] })));
         return `<div dir="${node.attrs.dir}">\n\n${transformGitLabQuickActions(inner.markdown, 'literal')}\n\n</div>`;
       },
     };
-    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, blockSerializers });
+    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, blockSerializers, inlineSerializers: extensionWriters });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
-    if (!canonical && !issues.length && !tokens.size && sources.size === 1) {
+    if (!canonical && !issues.length && !tokens.size && !customSources.size && sources.size === 1) {
       const source = this.wikiBlockSources.get(sources.values().next().value!);
       if (source?.blocks.length && projected.content.every(block => ['heading', 'paragraph'].includes(block.type.name))) {
         const retained = MarkdownExporter.exportWithSource(projected, source, { omitTrailingCaret: true });

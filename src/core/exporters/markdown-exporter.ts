@@ -27,6 +27,9 @@ export interface MarkdownExportOptions {
    * This is canonical syntax generation, not source-preservation proof.
    */
   blockSerializers?: Readonly<Record<string, (node: Node) => string | undefined>>;
+  /** Trusted writers for non-text inline extension nodes. Markdown owns the
+   * surrounding marks and table-cell escaping. Undefined uses the default writer. */
+  inlineSerializers?: Readonly<Record<string, (node: Node) => string | undefined>>;
   /** Emit ordinary inline destinations or deterministic reference definitions. */
   linkStyle?: MarkdownLinkStyle;
   /** Preserve blank paragraphs as inert HTML markers (default), or omit with loss reports. */
@@ -361,17 +364,28 @@ function markdownMarks(
 function schemaHTML(node: Node, context: RenderContext, path: readonly number[]): string {
   // Walk once for diagnostics, serialize once (not once per descendant).
   node.descendants((child, childPath) => {
+    const writers = child.type.isInline ? context.options.inlineSerializers : context.options.blockSerializers;
+    if (writers && Object.hasOwn(writers, child.type.name))
+      report(context, 'node', child.type.name, [...path, ...childPath], 'HTML projection bypasses the custom Markdown writer.');
     if (child.type.spec.markdown === 'html' || (child === node && ['html_container', 'definition_list', 'table'].includes(child.type.name))) report(context, 'node', child.type.name, [...path, ...childPath], 'HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed.');
   });
   return encodeTextNewlines(HTMLExporter.export(node, { document: false }));
 }
 
 function inline(node: Node, context: RenderContext, path: readonly number[], preserveMarkBoundary = false): string {
-  if (node.type.spec.markdown === 'html') return schemaHTML(node, context, path);
   if (node.marks.some(mark => mark.type.name === 'link' && mark.attrs.htmlHref !== undefined)) {
     report(context, 'attribute', 'link', path, 'HTML-source link navigation uses a safe HTML carrier and requires an HTML-enabled Markdown reader with the matching link schema.');
     return schemaHTML(node, context, path);
   }
+  const serializers = context.options.inlineSerializers;
+  if (!node.isText && node.type.isInline && serializers && Object.hasOwn(serializers, node.type.name)) {
+    const source = serializers[node.type.name](node);
+    if (source !== undefined) {
+      if (typeof source !== 'string') throw new TypeError('A Markdown inline serializer must return a string or undefined.');
+      return markdownMarks(node, source, context, path);
+    }
+  }
+  if (node.type.spec.markdown === 'html') return schemaHTML(node, context, path);
   if (!node.isText && node.type.isInline && node.marks.length) {
     return markdownMarks(node, inline(node.withMarks([]), context, path, preserveMarkBoundary), context, path);
   }
@@ -585,6 +599,8 @@ function render(
   tableAlignmentRepresented = false,
   alternateListMarker = false,
 ): string {
+  if (node.type.isInline && !node.isText && Object.hasOwn(context.options.inlineSerializers ?? {}, node.type.name))
+    return inline(node, context, path);
   const serializers = context.options.blockSerializers;
   if (node.isBlock && serializers && Object.hasOwn(serializers, node.type.name)) {
     const value = serializers[node.type.name](node);

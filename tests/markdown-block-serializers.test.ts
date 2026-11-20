@@ -2,6 +2,7 @@ import { expect, it } from 'vitest';
 import { CoreSchemaSpec, Schema, MarkdownExporter } from '../src';
 const schema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
   custom: { group: 'block', content: 'text*' },
+  badge: { group: 'inline', inline: true, atom: true, attrs: { key: { default: 'team' } } },
 } });
 const custom = schema.node('custom', {}, [schema.text('source')]);
 const render = new MarkdownExporter();
@@ -12,6 +13,17 @@ it('lets existing list/quote writers indent custom syntax and preserves fallback
   expect(output.losses).toEqual([]);
   expect(output.markdown).toBe('> - ```custom\n>   source\n>   ```');
   expect(render.exportWithReport(node, { blockSerializers: { custom: () => undefined } }).losses).toContainEqual(expect.objectContaining({ kind: 'node', type: 'custom' }));
+});
+it('uses an inline writer for a marked atom, its own fragment and a pipe-table cell', () => {
+  const atom = schema.node('badge');
+  const options = {inlineSerializers:{badge:() => 'team|ops'}};
+  expect(render.exportWithReport(atom, options)).toEqual({markdown:'team|ops', losses:[]});
+  const paragraph = schema.node('paragraph', {}, [atom.withMarks([schema.mark('strong')])]);
+  expect(render.exportWithReport(paragraph, options)).toEqual({markdown:'**team|ops**', losses:[]});
+  const header = schema.node('table_header', {}, [paragraph]);
+  const table = schema.node('table', {}, [schema.node('table_row', {}, [header])]);
+  expect(render.exportWithReport(table, options).markdown).toContain('**team\\|ops**');
+  expect(render.exportWithReport(atom, {inlineSerializers:{badge:() => undefined}}).losses).toContainEqual(expect.objectContaining({type:'badge'}));
 });
 it('does not execute an inherited serializer', () => {
   const output = render.exportWithReport(custom, { blockSerializers: Object.create(serializers) });

@@ -168,6 +168,7 @@ export default {
           describeMedia: kind => kind === 'audio' ? s__('ContentEditor|Select audio') : s__('ContentEditor|Select video'),
           editable: this.editable,
           extensions: this.extensions,
+          serializerConfig: this.serializerConfig,
           renderMath: createKaTeXRenderer(katex),
           onListenerError: this.onSurfaceError,
           uploadAttachment: this.uploadFile,
@@ -233,7 +234,7 @@ export default {
         collaborationProvider: this.collaborationProvider,
         serializerConfig: this.serializerConfig,
         codeSuggestionsConfig: this.codeSuggestionsConfig,
-      }, { codeSuggestions: true });
+      }, { codeSuggestions: true, extensions: this.extensions });
     },
     connectPasteHub() {
       if (this.pasteConnected || !this.contentEditor || this.fatal || this.inactive) return;

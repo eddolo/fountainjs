@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { Selection, insertText, setTextAlignment, undo, redo } from 'fountainjs-editor';
+import { type FountainExtension, type Node, Selection, insertText, setTextAlignment, undo, redo } from 'fountainjs-editor';
 import {
   GitLabContentEditor,
   GitLabEditorNotReady,
@@ -27,6 +27,41 @@ function type(service: GitLabContentEditor, text: string) {
   expect(insertText(editor, text)).toBe(true);
 }
 
+it('keeps an extension-owned issue label through editing, undo, redo and reopening', async () => {
+  const extension: FountainExtension = { name: 'issue-label', nodes: { label: {
+    group: 'inline', inline: true, atom: true,
+    attrs: {labelName: {default: ''}},
+    parseHTML: [{tag: 'span[data-reference="label"]', getAttrs: el => ({labelName:el.getAttribute('data-label-name')})}],
+    toDOM: node => ['span', {'data-reference':'label', 'data-label-name':node.attrs.labelName}, String(node.attrs.labelName)],
+  } } };
+  const toMarkdown = vi.fn((node:Node) => '~' + node.attrs.labelName);
+  const renderMarkdown = vi.fn(async (source:string) => ({body: '<p>' + source.replace('~group::editor',
+    '<span data-reference="label" data-label-name="group::editor">group::editor</span>') + '</p>'}));
+  const options = {renderMarkdown, describeLabels:() => '', extensions:[extension], serializerConfig:{nodes:{label:{toMarkdown}}}};
+  const service = new GitLabContentEditor(options);
+  services.push(service);
+  const original = 'this is a ~group::editor';
+  await service.setSerializedContent(original);
+  expect(service.editor.state.doc.child(0).child(1).type.name).toBe('label');
+  expect(service.getSerializedContent()).toBe(original);
+  expect(toMarkdown).not.toHaveBeenCalled();
+  service.editor.dispatch(service.editor.createTransaction().setSelection(Selection.cursor([0,0], 0)));
+  expect(insertText(service.editor, 'Edited: ')).toBe(true);
+  expect(service.getSerializedContent()).toBe('Edited: ' + original);
+  expect(undo(service.editor)).toBe(true);
+  expect(service.getSerializedContent()).toBe(original);
+  expect(redo(service.editor)).toBe(true);
+  const reopened = new GitLabContentEditor(options);
+  services.push(reopened);
+  await reopened.setSerializedContent(service.getSerializedContent());
+  expect(reopened.editor.state.doc.child(0).child(1).attrs.labelName).toBe('group::editor');
+  toMarkdown.mockImplementation(() => { throw new Error('Label source unavailable'); });
+  expect(() => service.getSerializedContent()).toThrow(expect.objectContaining({ issues: [
+    expect.objectContaining({code:'custom-node-source', path:[0, 1], message:'Label source unavailable'}),
+  ] }));
+  expect(undo(service.editor)).toBe(true);
+  expect(service.getSerializedContent()).toBe(original);
+});
 it('owns a native model without requiring DOM globals and reads only a loaded current document', async () => {
   expect(typeof window).toBe('undefined');
   expect(typeof document).toBe('undefined');

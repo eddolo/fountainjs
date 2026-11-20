@@ -13,12 +13,13 @@ import { prepareGitLabModeRetention } from '../integrations/gitlab/services/mode
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const restore = process.argv[3] === '--restore';
+const customLabelHost = process.argv[3] === '--custom-label-host';
 if (
-  (process.argv.length !== 3 && !(process.argv.length === 4 && restore)) ||
+  (process.argv.length !== 3 && !(process.argv.length === 4 && (restore || customLabelHost))) ||
   !isAbsolute(process.argv[2])
 )
   throw new Error(
-    'Usage: node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source [--restore]',
+    'Usage: node scripts/install-gitlab-native-browser.mjs /absolute/gitlab-source [--restore|--custom-label-host]',
   );
 const source = await realpath(process.argv[2]);
 const pin = JSON.parse(await readFile(resolve(root, 'integrations/gitlab/runtime/upstream.json')));
@@ -508,6 +509,17 @@ files.set(
       'const request = signal ? axios.post(url, { text: markdown }, { signal }) : axios.post(url, { text: markdown });\n      return request',
     ),
 );
+if (customLabelHost) {
+  const renderer = files.get(rendererPath);
+  const componentStart = 'export default {';
+  const editorMount = 'ref="contentEditor"';
+  if ([componentStart, editorMount].some(marker => renderer.split(marker).length !== 2))
+    throw new Error('Inspect the GitLab Markdown host before mounting the custom label extension.');
+  const sample = await readFile(resolve(root, 'integrations/gitlab/testing/issue_label_host.js'), 'utf8');
+  files.set(rendererPath, renderer.replace(componentStart,
+    sample.replace('export const issueLabelHost', 'const issueLabelHost') + '\nexport default {\n  issueLabelHost,')
+    .replace(editorMount, editorMount + '\n        :extensions="$options.issueLabelHost.extensions"\n        :serializer-config="$options.issueLabelHost.serializerConfig"'));
+}
 let component = await readFile(
   resolve(root, 'integrations/gitlab/components/fountain_content_editor.vue'),
   'utf8',
@@ -612,6 +624,7 @@ await writeFile(
       revision: pin.commit,
       scope:
         'Native browser integration in progress; full toolbar/providers/dialect acceptance remains open',
+      ...(customLabelHost ? {hostProfile:'custom-label'} : {}),
       nativeRuntime: manifest,
       integrationSHA256,
       preparedComponentSHA256: preparedHash,

@@ -8,6 +8,7 @@ import {
   type FountainExtension,
   type MathDocumentRenderer,
 } from 'fountainjs-editor';
+import { readGitLabNodeSerializers, type GitLabHostConfiguration } from './host_configuration';
 import { GitLabAssetResolver, type GitLabAssetResolverOptions } from './asset_resolver';
 import { GitLabMarkdownCodec, createGitLabSchemaSpec } from './markdown_codec';
 import { createGitLabQuickActionPlugin, GitLabQuickActionEditing, type GitLabQuickActionProvider } from './quick_action_editing';
@@ -43,6 +44,7 @@ export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
   tableOfContentsLabel?: string;
   editable?: boolean;
   extensions?: readonly FountainExtension[];
+  serializerConfig?: GitLabHostConfiguration['serializerConfig'];
   renderMath?: MathDocumentRenderer;
   onListenerError?(error: unknown): void;
   uploadAttachment?: GitLabUploadHandler;
@@ -105,6 +107,7 @@ export class GitLabContentEditor {
       'maxCacheBytes',
       'editable',
       'extensions',
+      'serializerConfig',
       'renderMath',
       'onListenerError',
       'uploadAttachment',
@@ -140,6 +143,7 @@ export class GitLabContentEditor {
     for (const extension of options.extensions ?? []) {
       if ('config' in extension) throw new TypeError('EXPECTED_NATIVE_FOUNTAIN_EXTENSION');
     }
+    const nodeWriters = readGitLabNodeSerializers(options.serializerConfig, options.extensions);
     this.reportListenerError = options.onListenerError;
     const math = createMathExtension({
       inputRules: false,
@@ -161,10 +165,14 @@ export class GitLabContentEditor {
     let autocomplete: GitLabAutocompleteEditing | undefined;
     const autocompletePlugin = createGitLabAutocompletePlugin(() => autocomplete);
     try {
+      const schema = createGitLabSchemaSpec(kit.schema, options.describeMedia ? {
+        audio: options.describeMedia('audio'), video: options.describeMedia('video'),
+      } : undefined, options.tableOfContentsLabel);
+      for (const name of nodeWriters.keys()) {
+        if (schema.nodes[name] !== kit.schema.nodes[name]) throw new TypeError('GITLAB_RESERVED_SERIALIZER_NODE:' + name);
+      }
       this.editor = createEditor({
-        schema: createGitLabSchemaSpec(kit.schema, options.describeMedia ? {
-          audio: options.describeMedia('audio'), video: options.describeMedia('video'),
-        } : undefined, options.tableOfContentsLabel),
+        schema,
         plugins: [new Plugin({ props: {
           handleKeyDown: (editor, event) => {
             if (!event.isComposing && (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey
@@ -190,7 +198,7 @@ export class GitLabContentEditor {
       this.assetResolver.dispose();
       throw error;
     }
-    const codec = this.codec = new GitLabMarkdownCodec(options);
+    const codec = this.codec = new GitLabMarkdownCodec({ ...options, nodeWriters });
     this.controller = new SerializedContentController(this.editor, codec);
     this.alerts = new GitLabAlertEditing({ editor: this.editor,
       ensureReady: () => {
