@@ -1,0 +1,231 @@
+{
+  "formatVersion": 1,
+  "workflow": "merged-header-clipboard",
+  "settlingMs": 700,
+  "cases": [
+    {
+      "id": "merged-header",
+      "scope": "grid",
+      "title": "Transfer a release approval header",
+      "anchor": [
+        0,
+        0
+      ],
+      "head": [
+        1,
+        1
+      ],
+      "selectedCells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "destination": [
+        0,
+        0
+      ],
+      "paintControl": [
+        0,
+        1
+      ],
+      "markdown": "## Release coverage\n\n<table><tr><th colspan=\"2\"><p>Release <strong>owner</strong></p></th><th><p>Keep header</p></th></tr><tr><td><p><a href=\"https://example.com/runbook\">Runbook</a></p></td><td><p>Ready</p></td><td><p>Keep body</p></td></tr></table>\n\nTransfer the first two columns.\n\n| Old team | Old state | Keep target |\n| --- | --- | --- |\n| Old owner | Old status | Target note |\n| Later | Queued | Later note |\n\nEnd of review.",
+      "plain": "Release owner\t\nRunbook\tReady",
+      "initialGraph": {
+        "headings": [
+          "Release coverage"
+        ],
+        "prose": [
+          "Transfer the first two columns.",
+          "End of review."
+        ],
+        "tables": [
+          [
+            [
+              {"tag":"TH","rowspan":1,"colspan":2,"paragraphs":["Release owner"],"bold":["owner"],"links":[]},
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Keep header"],"bold":[],"links":[]}
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Runbook"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "Runbook",
+                    "href": "https://example.com/runbook"
+                  }
+                ]
+              },
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Ready"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Keep body"],"bold":[],"links":[]}
+            ]
+          ],
+          [
+            [
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Old team"],"bold":[],"links":[]},
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Old state"],"bold":[],"links":[]},
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Keep target"],"bold":[],"links":[]}
+            ],
+            [
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Old owner"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Old status"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Target note"],"bold":[],"links":[]}
+            ],
+            [
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Later"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Queued"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Later note"],"bold":[],"links":[]}
+            ]
+          ]
+        ]
+      },
+      "cutGraph": {
+        "headings": [
+          "Release coverage"
+        ],
+        "prose": [
+          "Transfer the first two columns.",
+          "End of review."
+        ],
+        "tables": [
+          [
+            [
+              {"tag":"TH","rowspan":1,"colspan":2,"paragraphs":[""],"bold":[],"links":[]},
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Keep header"],"bold":[],"links":[]}
+            ],
+            [
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":[""],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":[""],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Keep body"],"bold":[],"links":[]}
+            ]
+          ],
+          [
+            [
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Old team"],"bold":[],"links":[]},
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Old state"],"bold":[],"links":[]},
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Keep target"],"bold":[],"links":[]}
+            ],
+            [
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Old owner"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Old status"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Target note"],"bold":[],"links":[]}
+            ],
+            [
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Later"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Queued"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Later note"],"bold":[],"links":[]}
+            ]
+          ]
+        ]
+      },
+      "pastedGraph": {
+        "headings": [
+          "Release coverage"
+        ],
+        "prose": [
+          "Transfer the first two columns.",
+          "End of review."
+        ],
+        "tables": [
+          [
+            [
+              {"tag":"TH","rowspan":1,"colspan":2,"paragraphs":["Release owner"],"bold":["owner"],"links":[]},
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Keep header"],"bold":[],"links":[]}
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Runbook"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "Runbook",
+                    "href": "https://example.com/runbook"
+                  }
+                ]
+              },
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Ready"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Keep body"],"bold":[],"links":[]}
+            ]
+          ],
+          [
+            [
+              {"tag":"TH","rowspan":1,"colspan":2,"paragraphs":["Release owner"],"bold":["owner"],"links":[]},
+              {"tag":"TH","rowspan":1,"colspan":1,"paragraphs":["Keep target"],"bold":[],"links":[]}
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Runbook"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "Runbook",
+                    "href": "https://example.com/runbook"
+                  }
+                ]
+              },
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Ready"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Target note"],"bold":[],"links":[]}
+            ],
+            [
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Later"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Queued"],"bold":[],"links":[]},
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Later note"],"bold":[],"links":[]}
+            ]
+          ]
+        ]
+      },
+      "externalGraph": {
+        "headings": [],
+        "prose": [],
+        "tables": [
+          [
+            [
+              {"tag":"TH","rowspan":1,"colspan":2,"paragraphs":["Release owner"],"bold":["owner"],"links":[]}
+            ],
+            [
+              {
+                "tag": "TD",
+                "rowspan": 1,
+                "colspan": 1,
+                "paragraphs": [
+                  "Runbook"
+                ],
+                "bold": [],
+                "links": [
+                  {
+                    "text": "Runbook",
+                    "href": "https://example.com/runbook"
+                  }
+                ]
+              },
+              {"tag":"TD","rowspan":1,"colspan":1,"paragraphs":["Ready"],"bold":[],"links":[]}
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

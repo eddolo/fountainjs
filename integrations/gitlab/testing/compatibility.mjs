@@ -911,7 +911,7 @@ export function compareGitLabCompatibility(original,fountain){
       add('clipboard.html','Cell copy supplies actual rich HTML',true,left?.clipboard?typeof left.clipboard.html==='string'&&left.clipboard.html.length>0:undefined,right?.clipboard?typeof right.clipboard.html==='string'&&right.clipboard.html.length>0:undefined);
       add('cutClipboardText','Cell cut supplies exact TSV boundaries',input.plain,left?.cutClipboardText,right?.cutClipboardText);
       add('beforePasteClipboardText','Cell paste retains the copied payload',input.plain,left?.beforePasteClipboardText,right?.beforePasteClipboardText);
-      add('externalRich','Actual external rich paste preserves body-cell roles and semantics',input.externalGraph,left?.externalRich,right?.externalRich);
+      add('externalRich','External rich paste preserves cell roles, spans, marks and links',input.externalGraph,left?.externalRich,right?.externalRich);
       add('externalPlain','Actual external plain paste preserves TSV',input.plain,left?.externalPlain,right?.externalPlain);
       add('destinationReady','Paste begins with a verified caret in the target cell',true,left?.destinationReady,right?.destinationReady);
       add('saveButtonReachable','Save remains directly reachable after table paste',true,left?.saveButtonReachable,right?.saveButtonReachable);

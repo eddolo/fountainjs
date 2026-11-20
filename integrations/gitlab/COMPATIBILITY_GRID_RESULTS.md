@@ -91,9 +91,15 @@ The initial Fountain run stopped before Save when a table screenshot missed full
 
 [Matched results and builds](../../artifacts/gitlab-compatibility/merged-grid-20261119/comparison-2/report.md) · [Initial incomplete run](../../artifacts/gitlab-compatibility/merged-grid-20261119/comparison-1/report.md) · [GitLab preview samples](fixtures/merged-grid-live-html.json). Reproduce with the paired runner, a fresh run ID and `--suite merged-grid`.
 
+## Merged header and linked body cell
+
+On GitLab CE 19.5.3 in Chromium 151, the author selected a header spanning two columns and the two body cells beneath it. Both editors preserved the header role, span, bold text and Runbook link in a separate rich browser field and in the destination table after saving and reopening. Cut and undo restored the source. Paste, undo and redo preserved the adjacent cells and untouched last row. Fountain retained the trailing tab representing the second header column in plain text. Stock omitted it. The four improvement checks observe that one difference during copy, cut, before paste and in the external plain-text field. The other 17 checks matched. [Results and build identities](../../artifacts/gitlab-compatibility/header-grid-20261120/verified/report.md)
+
+Reproduce with `--suite header-grid --browser chromium` on each editor using the paired runner above.
+
 ## Remaining scope
 
-Header-source transfer, complex overlapping spans, Unicode/IME, nested content, ownership rules, rapid input, other
+Complex overlapping spans, Unicode/IME, nested content, ownership rules, rapid input, other
 external applications, permissions/concurrency, physical mobile devices and
 matched restart remain separate requirements. The earlier shared Applied-history
 failure and blank-line suggestion limitation remain open. No overall roadmap
