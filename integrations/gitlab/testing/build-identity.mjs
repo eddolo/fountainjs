@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
 
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
-// GitLab CE 19.5.3 with the current-document and Tiptap save-echo patches staged.
-export const preparedRollbackTree = '075b931b09e4a1b2123bda61cc8f17a2d84c119c';
+// Exact GitLab CE 19.5.3 source trees used for the two fallback builds.
+const saveEchoTree = '075b931b09e4a1b2123bda61cc8f17a2d84c119c';
+export const preparedRollbackTree = '307cccf71054136fcec34e32cd902ce5a87051ce';
 const digest = value => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
 const revision = value => typeof value === 'string' && /^[a-f0-9]{40}$/u.test(value);
 const assetPath = /^\/assets\/webpack\/(?:[\w.-]+\/)*[\w.-]+\.js$/u;
@@ -30,10 +31,11 @@ export function buildIdentityError(report) {
   } else if (id.side === 'prepared') {
     if (mounts?.length !== 1 || mounts[0].readOnly !== true || observed.editor !== 'ProseMirror' ||
         observed.runtimeSHA256 !== null || observed.integrationSHA256 !== null ||
-        expected.sourceTree !== preparedRollbackTree || !digest(expected.rspackManifestSHA256) ||
+        ![saveEchoTree, preparedRollbackTree].includes(expected.sourceTree) || !digest(expected.rspackManifestSHA256) ||
         !report.frontendManifests.includes(expected.rspackManifestSHA256 + '  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json') ||
         !observed.scripts.some(script => script.preparedHandoff === true) ||
-        !observed.scripts.some(script => script.preparedSaveEcho === true))
+        !observed.scripts.some(script => script.preparedSaveEcho === true) ||
+        observed.scripts.some(script => script.preparedToolbarFocus === true) !== (expected.sourceTree === preparedRollbackTree))
       return 'prepared Tiptap rollback build or handoff script mismatch';
   } else if (id.side === 'fountain') {
     if (mounts?.length !== 1 || mounts[0]?.readOnly !== true || observed.editor !== 'FountainJS' ||
@@ -45,7 +47,7 @@ export function buildIdentityError(report) {
   return null;
 }
 
-export async function observeEditorBuild({ page, project, request, expected, report, readDeployedScripts }) {
+export async function observeEditorBuild({ page, project, request, expected, report, observeProbe, readDeployedScripts }) {
   const path = '/api/v4/projects/' + project.id + '/issues';
   const title = 'Fountain compatibility build identity control';
   const description = 'Open this issue to identify the installed rich-text editor.';
@@ -56,6 +58,7 @@ export async function observeEditorBuild({ page, project, request, expected, rep
   const context = await page.context().browser().newContext({ storageState: await page.context().storageState() });
   try {
     const probe = await context.newPage();
+    await observeProbe(probe);
     const scripts = new Map();
     probe.on('response', response => {
       const url = new URL(response.url());
@@ -86,6 +89,8 @@ export async function observeEditorBuild({ page, project, request, expected, rep
         script.preparedHandoff = true;
       if (report.side === 'prepared' && bytes.includes('.handoff=Object.freeze({markdown:') && bytes.includes('this.contentEditor.tiptapEditor.state.doc'))
         script.preparedSaveEcho = true;
+      if (report.side === 'prepared' && bytes.includes('refocusBeforeCommand') && bytes.includes('this.tiptapEditor.view.focus()'))
+        script.preparedToolbarFocus = true;
       observed.scripts.push(script);
     }
     return { side: report.side, expected, observed };

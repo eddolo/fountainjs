@@ -1,0 +1,122 @@
+diff --git a/app/assets/javascripts/content_editor/components/formatting_toolbar.vue b/app/assets/javascripts/content_editor/components/formatting_toolbar.vue
+index c0fc4a77a..20b17362f 100644
+--- a/app/assets/javascripts/content_editor/components/formatting_toolbar.vue
++++ b/app/assets/javascripts/content_editor/components/formatting_toolbar.vue
+@@ -149,6 +149,7 @@ export default {
+       content-type="bold"
+       icon-name="bold"
+       editor-command="toggleBold"
++      refocus-before-command
+       :label="i18n.bold"
+       @execute="trackToolbarControlExecution"
+     />
+@@ -157,6 +158,7 @@ export default {
+       content-type="italic"
+       icon-name="italic"
+       editor-command="toggleItalic"
++      refocus-before-command
+       :label="i18n.italic"
+       @execute="trackToolbarControlExecution"
+     />
+@@ -166,6 +168,7 @@ export default {
+         content-type="strike"
+         icon-name="strikethrough"
+         editor-command="toggleStrike"
++        refocus-before-command
+         :label="i18n.strike"
+         @execute="trackToolbarControlExecution"
+       />
+@@ -176,6 +179,7 @@ export default {
+       content-type="blockquote"
+       icon-name="quote"
+       editor-command="toggleBlockquote"
++      refocus-before-command
+       :label="i18n.quote"
+       @execute="trackToolbarControlExecution"
+     />
+@@ -184,6 +188,7 @@ export default {
+       content-type="code"
+       icon-name="code"
+       editor-command="toggleCode"
++      refocus-before-command
+       :label="i18n.code"
+       @execute="trackToolbarControlExecution"
+     />
+@@ -201,6 +206,7 @@ export default {
+       icon-name="list-bulleted"
+       class="gl-hidden @sm/panel:gl-inline"
+       editor-command="toggleBulletList"
++      refocus-before-command
+       :label="i18n.bulletList"
+       @execute="trackToolbarControlExecution"
+     />
+@@ -210,6 +216,7 @@ export default {
+       icon-name="list-numbered"
+       class="gl-hidden @sm/panel:gl-inline"
+       editor-command="toggleOrderedList"
++      refocus-before-command
+       :label="i18n.numberedList"
+       @execute="trackToolbarControlExecution"
+     />
+@@ -220,6 +227,7 @@ export default {
+         icon-name="list-task"
+         class="gl-hidden @sm/panel:gl-inline"
+         editor-command="toggleTaskList"
++        refocus-before-command
+         :label="i18n.taskList"
+         @execute="trackToolbarControlExecution"
+       />
+diff --git a/app/assets/javascripts/content_editor/components/toolbar_button.vue b/app/assets/javascripts/content_editor/components/toolbar_button.vue
+index 46740f021..9ea3d697b 100644
+--- a/app/assets/javascripts/content_editor/components/toolbar_button.vue
++++ b/app/assets/javascripts/content_editor/components/toolbar_button.vue
+@@ -30,6 +30,10 @@ export default {
+       required: false,
+       default: '',
+     },
++    refocusBeforeCommand: {
++      type: Boolean,
++      default: false,
++    },
+     editorCommandParams: {
+       type: Object,
+       required: false,
+@@ -70,6 +74,8 @@ export default {
+       const { contentType } = this;
+ 
+       if (this.editorCommand) {
++        // Tiptap can defer focus to the next frame. Accept typing as soon as a formatting button activates.
++        if (this.refocusBeforeCommand) this.tiptapEditor.view.focus();
+         this.tiptapEditor.chain()[this.editorCommand](this.editorCommandParams).focus().run();
+       }
+ 
+diff --git a/spec/frontend/content_editor/components/toolbar_button_spec.js b/spec/frontend/content_editor/components/toolbar_button_spec.js
+index 67701494d..6bc6e3a83 100644
+--- a/spec/frontend/content_editor/components/toolbar_button_spec.js
++++ b/spec/frontend/content_editor/components/toolbar_button_spec.js
+@@ -101,6 +101,25 @@ describe('content_editor/components/toolbar_button', () => {
+       expect(wrapper.emitted().execute).toHaveLength(1);
+     });
+ 
++    it.each([true, false])(
++      'returns focus before toggling text formatting when requested: %s',
++      async (refocusBeforeCommand) => {
++        const focusView = jest.spyOn(tiptapEditor.view, 'focus');
++        const commands = mockChainedCommands(tiptapEditor, ['toggleBold', 'focus', 'run']);
++        buildWrapper({ editorCommand: 'toggleBold', refocusBeforeCommand });
++
++        await findButton().vm.$emit('click');
++
++        if (refocusBeforeCommand) {
++          expect(focusView.mock.invocationCallOrder[0]).toBeLessThan(
++            commands.toggleBold.mock.invocationCallOrder[0],
++          );
++        } else {
++          expect(focusView).not.toHaveBeenCalled();
++        }
++      },
++    );
++
+     it('does not executes the content type command when executeCommand = false', async () => {
+       const editorCommand = 'toggleFoo';
+       const mockCommands = mockChainedCommands(tiptapEditor, [editorCommand, 'run']);

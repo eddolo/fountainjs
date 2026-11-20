@@ -216,6 +216,12 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  observed.scripts[0].preparedHandoff = true;
  expect(buildIdentityError(prepared)).toBeTruthy();
  observed.scripts[0].preparedSaveEcho = true;
+ expect(buildIdentityError(prepared)).toBeTruthy();
+ expected.sourceTree = '075b931b09e4a1b2123bda61cc8f17a2d84c119c';
+ expect(buildIdentityError(prepared)).toBeNull();
+ observed.scripts[0].preparedToolbarFocus = true;
+ expect(buildIdentityError(prepared)).toBeTruthy();
+ expected.sourceTree = preparedRollbackTree;
  expect(buildIdentityError(prepared)).toBeNull();
  expect(compareGitLabCompatibility(prepared,fountain).environment.matched).toBe(false);
  expected.rspackManifestSHA256 = '3'.repeat(64);

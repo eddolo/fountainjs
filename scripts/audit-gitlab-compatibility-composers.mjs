@@ -58,8 +58,28 @@ async function runCase({ side, runId, page, project, request, output, onProgress
     await actor.keyboard.press('End');
     await actor.keyboard.insertText(input.suffix);
     await comment.click();
-    await activity.getByRole('button', { name: /^Bold\b/i }).click();
+    const boldButton = activity.getByRole('button', { name: /^Bold\b/i });
+    await comment.evaluate(editor => {
+      const events = [];
+      const name = node => editor.contains(node) ? 'comment' : node?.closest?.('button') ? 'button' : 'other';
+      const listener = event => events.push({
+        type: event.type, target: name(event.target), active: name(document.activeElement), time: event.timeStamp,
+      });
+      const types = ['click', 'focusin', 'beforeinput', 'input'];
+      types.forEach(type => window.addEventListener(type, listener));
+      window.finishComposerFocusTrace = () => {
+        types.forEach(type => window.removeEventListener(type, listener));
+        delete window.finishComposerFocusTrace;
+        return { events, active: name(document.activeElement), text: editor.textContent };
+      };
+    });
+    await boldButton.click();
     await actor.keyboard.insertText(input.comment);
+    result.commentInput = await actor.evaluate(() => window.finishComposerFocusTrace());
+    if (side === 'prepared') {
+      expect(result.commentInput.events.find(event => event.type === 'click')?.active).toBe('comment');
+      expect(result.commentInput.events.some(event => event.type === 'input' && event.target === 'comment')).toBe(true);
+    }
     await actor.keyboard.press('Control+b');
     await expect(comment).toContainText(input.comment);
     result.facts.boldComment = await comment.locator('strong,b').allTextContents();

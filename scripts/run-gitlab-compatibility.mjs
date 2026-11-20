@@ -73,7 +73,7 @@ if (preparedRollback) {
  const sourceTree = git('write-tree');
  if (source !== git('rev-parse','--show-toplevel') || git('rev-parse','HEAD') !== pin.commit ||
      sourceTree !== preparedRollbackTree || git('diff','--name-only') || git('ls-files','--others','--exclude-standard'))
-   throw new Error('The prepared rollback requires the pinned GitLab checkout with both staged rollback patches.');
+   throw new Error('The prepared rollback requires the pinned GitLab checkout with all staged rollback patches.');
  const assets = resolve(source,'public/assets/webpack');
  expectedBuild.sourceTree = sourceTree;
  expectedBuild.rspackManifestSHA256 = hash(await readFile(resolve(assets,'manifest.rspack.json')));
@@ -219,7 +219,7 @@ try{
  const identify = async () => {
  const manifests=docker('exec',containerName,'find',assetTarget,'-maxdepth','1','-name','manifest*.json').trim().split('\n').filter(Boolean);
  report.frontendManifests=manifests.length?docker('exec',containerName,'sha256sum',...manifests).trim().split('\n'):[];
- return observeEditorBuild({page,project,request,expected:expectedBuild,report,readDeployedScripts:paths=>{
+ return observeEditorBuild({page,project,request,expected:expectedBuild,report,observeProbe:probe=>observePage(probe,report,report.errors),readDeployedScripts:paths=>{
   const prefix='/opt/gitlab/embedded/service/gitlab-rails/public';
   if(!paths.length)return new Map();
   return new Map(docker('exec',containerName,'sha256sum','--',...paths.map(path=>prefix+path)).trim().split('\n').map(line=>[line.slice(66+prefix.length),line.slice(0,64)]));

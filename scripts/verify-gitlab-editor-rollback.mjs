@@ -147,8 +147,19 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
     }
     // Preserve a rapid-save failure and separately exercise an author inspecting
     // Markdown before saving. Both controls use the same stock editor deployment.
-    await page.getByTestId('work-item-edit-form-button').click();
-    await source.or(plain).first().waitFor({timeout:30000});
+    const edit = page.getByTestId('work-item-edit-form-button');
+    await edit.click();
+    try {
+      await source.or(plain).filter({visible:true}).first().waitFor({timeout:30000});
+    } catch (error) {
+      evidence.reviewedEditForm = {
+        editVisible: await edit.isVisible(), richVisible: await stock.isVisible(),
+        sourceVisible: await source.isVisible(), switchVisible: await plain.isVisible(),
+        alerts: await page.getByRole('alert').allTextContents(), formText: await form.allTextContents(),
+      };
+      await page.screenshot({path: output + '/' + writer.side + '-' + input.id + '-review-edit-unavailable.png'});
+      throw error;
+    }
     if (!await source.isVisible()) await plain.click();
     await expect(source).toHaveValue(evidence.afterDeletion ?? evidence.quickSaveAfterReload);
     const reviewed = description + ' Verified in Markdown.';
