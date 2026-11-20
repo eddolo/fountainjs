@@ -579,6 +579,29 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:paired ? left[key] : undefined,fountain:paired ? right[key] : undefined,classification:null});
       continue;
     }
+    if (input.scope === 'saved-reply-accounts') {
+      function observation(report, item) {
+        if (item?.status !== 'observed' || !verifiedEditor(report, item) ||
+            !verifiedEditor(report, { editorProof: item.reporterEditorProof })) return {};
+        return { ...item.facts, member: { username: item.membership?.username, access: item.membership?.accessLevel }, pageErrors: item.pageErrors };
+      }
+      const left = observation(original, a), right = observation(fountain, b);
+      const checks = [
+        ['member', 'The second writer holds the Reporter role', { username: fixture.username, access: input.reporterAccess }],
+        ['notes', 'GitLab attributes each posted Markdown reply to its author', input.authors.map(author => ({ username: author.username, body: author.markdown }))],
+        ['pageErrors', 'Both sessions complete without browser exceptions', []],
+      ];
+      for (const author of input.authors) {
+        checks.push(
+          [author.label + 'Picker', author.username + ' sees only their own matching personal template',
+            { ownVisible: true, otherTitleCount: 0, otherContentVisible: false }],
+          [author.label + 'Reader', author.username + ' sees both formatted comments after reload', input.authors.map(writer => writer.text)],
+        );
+      }
+      for (const [key, label, expected] of checks)
+        rows.push({ case: input.id, invariant: key, label, expected, original: left[key], fountain: right[key], classification: null });
+      continue;
+    }
     if (input.scope === 'saved-replies') {
       function observation(report, item) {
         if (item?.status !== 'observed' || !verifiedEditor(report, item) ||

@@ -1,6 +1,10 @@
 {
   "formatVersion": 1,
   "workflow": "personal-saved-reply-in-a-discussion",
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
   "cases": [
     {
       "id": "reply-in-comment",
@@ -13,6 +17,16 @@
       "suffix": " after.",
       "reply": "**Tested**",
       "rendered": "Tested"
+    },
+    {
+      "id": "two-personal-libraries",
+      "scope": "saved-reply-accounts",
+      "title": "Two reviewers share an issue",
+      "reporterAccess": 20,
+      "authors": [
+        {"username":"root","label":"administrator","markdown":"**Release approved**","text":"Release approved","selector":"strong"},
+        {"username":"fountain_compat_access","label":"reporter","markdown":"Checked `build-42`","text":"build-42","selector":"code"}
+      ]
     }
   ]
 }

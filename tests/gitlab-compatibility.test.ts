@@ -221,6 +221,29 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  expected.rspackManifestSHA256 = '3'.repeat(64);
  expect(buildIdentityError(prepared)).toBeTruthy();
 });
+it('withholds personal-template acceptance if another writer sees the template or the second editor is unidentified', () => {
+ const [original, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-saved-replies.json', import.meta.url), 'utf8'));
+ const input = fixture.cases.find((entry: {scope:string}) => entry.scope === 'saved-reply-accounts');
+ for (const report of [original, fountain]) {
+   report.fixture = {...fixture, cases:[input]};
+   const item = report.observations[0];
+   const writers: {username:string; markdown:string; text:string; label:string}[] = input.authors;
+   Object.assign(item, {id:input.id, input, status:'observed', reporterEditorProof:item.editorProof, pageErrors:[],
+     membership:{username:fixture.username,accessLevel:input.reporterAccess},
+     facts:{notes:writers.map(writer => ({username:writer.username, body:writer.markdown}))}});
+   for (const writer of writers) {
+     item.facts[writer.label + 'Picker'] = {ownVisible:true,otherTitleCount:0,otherContentVisible:false};
+     item.facts[writer.label + 'Reader'] = writers.map(other => other.text);
+   }
+ }
+ const score = () => compareGitLabCompatibility(original, fountain);
+ expect(score().summary.parity).toBe(7);
+ fountain.observations[0].facts.reporterPicker.otherContentVisible = true;
+ expect(score().rows.find((row:any) => row.invariant === 'reporterPicker').classification).toBe('regression');
+ delete fountain.observations[0].reporterEditorProof;
+ expect(score().summary.incomplete).toBe(7);
+});
 it('checks historical wiki source and retained revision identities independently of current reader text', () => {
  const [original, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-wiki-history.json',import.meta.url),'utf8'));

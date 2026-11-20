@@ -21,7 +21,7 @@ settings are not performance or deployment recommendations.
 
 ### Reproduce personal saved replies
 
-Prepare the [frontend deployment](#reproduce-the-frontend-deployment-and-rollback), then run these commands from the FountainJS checkout in Linux. Both deployments use the same issue and personal comment-template fixture. Each run creates a temporary template through GitLab’s authenticated GraphQL API and removes that template by ID after the browser closes the workflow. The issue and posted note remain available for inspection.
+Prepare the [frontend deployment](#reproduce-the-frontend-deployment-and-rollback), then run these commands from the FountainJS checkout in Linux. Both deployments use the same issue and personal comment-template fixture. Each author creates a temporary personal template through GitLab’s authenticated GraphQL API. Cleanup removes each fixture by ID in its owner’s session. The issues and posted comments remain available for inspection.
 
 ```sh
 run="saved-replies-$(date +%s)"
@@ -34,6 +34,8 @@ node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report
 ```
 
 The recording follows an author selecting a word in a discussion draft, cancelling the picker, inserting a formatted saved reply, undoing and redoing it, then posting the note while an unsaved issue description remains open. The score includes focus, both drafts, the stored Markdown and the reloaded reader.
+
+A second issue uses separate signed-in administrator and Reporter sessions. Both create a personal template with the same search prefix. Each author searches for that prefix, inspects the picker, posts their own reply, and reopens the issue to read both formatted notes. The collector checks the note authors through the API and restores the test account’s previous project membership. Sign-in takes place before recording starts. If GitLab displays its administrator patch notice, the browser clicks the dialog’s Close button and records its title in the run report. After cancelling the template picker, the author clicks the comment paragraph before selecting text again.
 
 ### Reproduce wiki Save and version restore
 
