@@ -588,6 +588,11 @@ export function compareGitLabCompatibility(original,fountain){
       const left = observation(original, a), right = observation(fountain, b);
       const description = { text: input.prefix + input.bold, bold: [input.bold] };
       for (const [key, label, expected] of [
+        ...(input.measureLayout ? [
+          ['singleCardAtDrawerReady', 'The board shows one card for the new issue when its drawer is ready', true],
+          ['desktopSaveVisible', 'Save is visible and unobstructed after editing at desktop width', true],
+          ['narrowSaveVisible', 'Save is reachable and unobstructed at 390 CSS pixels', true],
+        ] : []),
         ['created', 'Creating a board card creates the intended open GitLab issue', true],
         ['drawerReference', 'The opened drawer links to the new issue number in the same project', true],
         ['drawerRead', 'The drawer reader shows the saved description and bold text', description],

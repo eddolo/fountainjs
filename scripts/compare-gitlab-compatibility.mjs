@@ -33,6 +33,19 @@ const table=['# Matched GitLab editor comparison','','**Original** — '+describ
 ...(rollback?[result.frontendRollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
 '| Case | Invariant | Classification |','| --- | --- | --- |',...result.rows.map(row=>`| ${row.case} | ${row.label} | ${row.classification??row.status} |`),'',
 'Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.',''];
+if (reports[0].suite === 'board-issues' && reports[0].fixture.cases.some(entry => entry.measureLayout) && result.environment.matched) {
+  table.push('## Issue drawer layout', '', 'Distances are CSS pixels. Save position is measured from the top of the drawer. At narrow width the author scrolls Save into view.', '',
+    '| Editor | Viewport width | Drawer width | Editing area height | Save position | Save visible |',
+    '| --- | ---: | ---: | ---: | ---: | --- |');
+  for (const report of reports) {
+    const layout = report.observations.find(item => item.input.measureLayout)?.layout;
+    for (const size of ['desktop', 'narrow']) {
+      const row = layout?.[size];
+      if (row) table.push('| ' + [report.side, row.viewportWidth, row.drawerWidth, row.editorHeight, row.saveTop, row.saveVisible ? 'Yes' : 'No'].join(' | ') + ' |');
+    }
+  }
+  table.push('');
+}
 if (reports[0].fixture.workflow === 'batch-review' && result.environment.matched) {
   table.push('## Batch submissions', '', '| Editor | Workflow | HTTP | Branch before batch | Branch after batch | Single recovery commit |',
     '| --- | --- | ---: | --- | --- | --- |');

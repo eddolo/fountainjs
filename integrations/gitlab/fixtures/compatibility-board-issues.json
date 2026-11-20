@@ -5,6 +5,7 @@
     {
       "id": "board-to-issue-and-back",
       "scope": "board-issue",
+      "measureLayout": true,
       "title": "Verify the release candidate",
       "prefix": "Verify ",
       "bold": "the release build",
