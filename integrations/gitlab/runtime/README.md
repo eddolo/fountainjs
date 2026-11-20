@@ -19,6 +19,20 @@ connect to an existing GitLab account or installation. Metrics are disabled and
 service concurrency is reduced for this small local test environment; these
 settings are not performance or deployment recommendations.
 
+### Reproduce merge-request creation
+
+Prepare the [frontend deployment](#reproduce-the-frontend-deployment-and-rollback) and run the commands below from the FountainJS checkout in Linux. The fixture creates one source branch and commit per editor through GitLab’s repository API. The browser selects that branch, creates the merge request, enters its formatted description, reopens it, adds a paragraph and saves. The collector checks the live draft immediately before Save and reads the saved Markdown and reader after reload. Each run leaves the branch and open merge request available for inspection.
+
+```sh
+run="mr-create-$(date +%s)"
+for editor in fountain original; do
+  node scripts/run-gitlab-compatibility.mjs --suite mr-create --editor "$editor" --run-id "$run" || exit 1
+done
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" \
+  --fountain "$dir/fountain-1/report.json" --output "$dir/comparison"
+```
+
 ### Reproduce issue-board editing
 
 From the prepared Linux checkout, run the same issue-board workflow on both deployments. Each run creates a new issue through the board’s **Create issue** form, edits its description in the drawer, follows the issue reference to the full page, and posts a formatted comment. The browser returns through **Issue boards**, reloads the board and reopens the card. The report checks both editor builds, the issue number and the Markdown in GitLab’s issue and notes APIs. It records visible card numbers on creation, when the drawer is ready, and after reload. It measures the short-description editor and checks the center of Save for obstruction at 1280 and 390 CSS pixels. The narrow run scrolls Save into view and opens and closes the Fountain limits disclosure with the keyboard. These measurements use a desktop browser with a resized viewport.

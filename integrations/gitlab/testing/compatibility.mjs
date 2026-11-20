@@ -579,6 +579,32 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:paired ? left[key] : undefined,fountain:paired ? right[key] : undefined,classification:null});
       continue;
     }
+    if (input.scope === 'mr-create') {
+      const plain = input.prefix + input.bold + '.';
+      const finalReader = {paragraphs: [plain, input.followup], bold: [input.bold]};
+      function observation(report, item) {
+        if (!equal(item?.beforeSave, finalReader)) return {};
+        if (item?.status !== 'observed' || !verifiedEditor(report, item) ||
+            !verifiedEditor(report, {editorProof: item.reopenedEditorProof})) return {};
+        return {...item.facts, pageErrors: item.pageErrors};
+      }
+      const left = observation(original, a), right = observation(fountain, b);
+      const markdown = input.prefix + '**' + input.bold + '**.';
+      const reader = {paragraphs: [plain], bold: [input.bold]};
+      for (const [key, label, expected] of [
+        ['branchSelection', 'The create form uses the selected source and target branches', true],
+        ['submission', 'GitLab creates the open request with the intended branches, head and title', true],
+        ['createdSource', 'The saved description retains its Markdown', markdown],
+        ['reader', 'The created request displays the formatted paragraph', reader],
+        ['reopened', 'The reopened editor retains the paragraph and bold range', reader],
+        ['updatedSource', 'The follow-up edit is persisted alongside the initial formatting', markdown + '\n\n' + input.followup],
+        ['finalReader', 'The reloaded reader displays both paragraphs and the bold range', finalReader],
+        ['singleRecord', 'The source branch has exactly one merge request with the original number', true],
+        ['headPreserved', 'Updating the description preserves the branch head, title and open state', true],
+        ['pageErrors', 'The creation and edit journey finishes without browser exceptions', []],
+      ]) rows.push({case: input.id, invariant: key, label, expected, original: left[key], fountain: right[key], classification: null});
+      continue;
+    }
     if (input.scope === 'board-issue') {
       function observation(report, item) {
         if (item?.status !== 'observed' || !verifiedEditor(report, item) ||

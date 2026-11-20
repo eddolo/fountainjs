@@ -227,6 +227,31 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  expected.rspackManifestSHA256 = '3'.repeat(64);
  expect(buildIdentityError(prepared)).toBeTruthy();
 });
+it('checks the merge request reader, saved source and build identity at both edits', () => {
+ const [original, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-mr-create.json', import.meta.url), 'utf8'));
+ const input = fixture.cases[0];
+ const text = input.prefix + input.bold + '.';
+ const markdown = input.prefix + '**' + input.bold + '**.';
+ for (const report of [original, fountain]) {
+   report.fixture = fixture;
+   const item = report.observations[0];
+   const reader = {paragraphs:[text], bold:[input.bold]};
+   Object.assign(item, {id:input.id, input, status:'observed', reopenedEditorProof:item.editorProof, pageErrors:[],
+     beforeSave:{paragraphs:[text,input.followup], bold:[input.bold]},
+     facts:{branchSelection:true, submission:true, singleRecord:true, headPreserved:true, reader, reopened:reader,
+       createdSource:markdown, updatedSource:markdown + '\n\n' + input.followup, finalReader:{paragraphs:[text,input.followup], bold:[input.bold]}}});
+ }
+ const compare = () => compareGitLabCompatibility(original, fountain);
+ expect(compare().summary.parity).toBe(10);
+ fountain.observations[0].facts.finalReader.bold = [];
+ expect(compare().rows.find((row:any) => row.invariant === 'finalReader').classification).toBe('regression');
+ original.observations[0].beforeSave.paragraphs.pop();
+ expect(compare().summary.incomplete).toBe(10);
+ original.observations[0].beforeSave = fountain.observations[0].beforeSave;
+ delete fountain.observations[0].reopenedEditorProof;
+ expect(compare().summary.incomplete).toBe(10);
+});
 it('requires both board and full-page editors and checks persisted marks after navigating back', () => {
  const [original, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-board-issues.json', import.meta.url), 'utf8'));

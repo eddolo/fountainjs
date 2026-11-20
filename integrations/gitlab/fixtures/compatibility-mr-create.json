@@ -1,0 +1,17 @@
+{
+  "formatVersion": 1,
+  "workflow": "create-and-reopen-a-merge-request",
+  "cases": [
+    {
+      "id": "create-merge-request",
+      "scope": "mr-create",
+      "title": "Document the shipping checklist",
+      "commitMessage": "Add shipping checklist",
+      "filePath": "review/ship-checklist.md",
+      "fileContent": "Review the shipping checklist.\n",
+      "prefix": "Please review ",
+      "bold": "the shipping checklist",
+      "followup": "Confirmed the release contact."
+    }
+  ]
+}
