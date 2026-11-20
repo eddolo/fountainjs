@@ -33,6 +33,7 @@ for (const path of [
   'src/core/table-commands.ts',
   'src/core/table-clipboard.ts',
   'src/view/input.ts',
+  'src/view/paste.ts',
   'src/pages/clipboard.ts',
   'src/pages/index.ts',
   'integrations/gitlab/services/markdown_insertion.ts',

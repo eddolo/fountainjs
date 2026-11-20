@@ -394,6 +394,25 @@ function stripMetadata(
   record(issues, 'source-metadata-removed', 'Application-only clipboard metadata was removed while supported formatting stayed intact.', false, count);
 }
 
+/** Writer indents paragraph contents one tab deeper than the closing table cell. */
+function removeWriterCellIndentation(document: Document): void {
+  const generator = document.head.querySelector('meta[name="generator" i]')?.getAttribute('content') ?? '';
+  if (!/^LibreOffice\b/i.test(generator)) return;
+  if (Array.from(document.querySelectorAll('style')).some(style => /white-space(?:-collapse)?\s*:/i.test(style.textContent ?? ''))) return;
+  for (const cell of document.body.querySelectorAll('td,th')) {
+    const closingIndent = cell.lastChild?.nodeValue;
+    if (!closingIndent || !/^\n\t+$/.test(closingIndent)) continue;
+    const prefix = closingIndent + '\t';
+    for (const paragraph of cell.children) {
+      if (paragraph.tagName !== 'P' || paragraph.closest('pre, [style*="white-space" i]')) continue;
+      const first = paragraph.firstChild;
+      if (first?.nodeType === Node.TEXT_NODE && first.nodeValue?.startsWith(prefix)) {
+        first.nodeValue = first.nodeValue.slice(prefix.length);
+      }
+    }
+  }
+}
+
 function detectExternalComments(html: string, issues: Map<ExternalPasteIssueCode, MutableIssue>): void {
   const matches = html.match(/(?:mso-comment|commentReference|data-(?:comment|annotation)|docs-comment)/gi)?.length ?? 0;
   record(issues, 'external-comments-not-imported', 'External comment threads are not portable clipboard data; visible document text was kept.', true, matches);
@@ -406,7 +425,9 @@ export function normalizeExternalPasteHTML(
   if (typeof DOMParser === 'undefined') throw new Error('External paste normalization requires a browser DOMParser.');
   const source = detectExternalPasteSource(html);
   const issues = new Map<ExternalPasteIssueCode, MutableIssue>();
-  const body = new DOMParser().parseFromString(html, 'text/html').body;
+  const document = new DOMParser().parseFromString(html, 'text/html');
+  if (source !== 'fountain') removeWriterCellIndentation(document);
+  const body = document.body;
 
   stripUnsafeContent(body, issues);
   if (source === 'microsoft-word') {

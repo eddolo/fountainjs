@@ -57,6 +57,29 @@ describe('external clipboard normalization', () => {
     } finally { view.destroy(); editor.destroy(); mount.remove(); }
   });
 
+  it('pastes Writer cell text without transferring its HTML source indentation', () => {
+    const editor = createEditor({ schema: composeExtensions([CoreExtension]).schema });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    const generator = '<meta name="generator" content="LibreOffice 24.2.7.2 (Linux)">';
+    const table = '<table><thead><tr><th colspan="2"><p>\n\t\t\t\tRelease <b>owner</b></p>\n\t\t\t</th></tr></thead>'
+      + '<tbody><tr><td><p>\n\t\t\t\t<a href="https://example.com/runbook">Runbook</a></p>\n\t\t\t</td>'
+      + '<td><p>\n\t\t\t\t\u00a0Ready</p>\n\t\t\t</td></tr></tbody></table>';
+    try {
+      view.dom.dispatchEvent(clipboardEvent('paste', {'text/html':generator + table}).event);
+      expect(Array.from(view.dom.querySelectorAll('th p, td p'), p => p.textContent)).toEqual(['Release owner','Runbook','\u00a0Ready']);
+      expect(view.dom.querySelector('th')?.colSpan).toBe(2);
+      expect(view.dom.querySelector('th strong, th b')?.textContent).toBe('owner');
+      expect(view.dom.querySelector('td a')?.getAttribute('href')).toBe('https://example.com/runbook');
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+    const mixed = generator + '<math><mi>x</mi></math>' + table.replace('Release <b>', '\t Release <b>');
+    expect(normalizeExternalPasteHTML(mixed).html).toContain('<p>\t Release <b>');
+    for (const html of [table,generator + table.replace('<table>','<table style="white-space: pre-wrap">'),
+      generator + '<style>td p {white-space:pre}</style>' + table]) {
+      expect(normalizeExternalPasteHTML(html).html).toContain('<p>\n\t\t\t\t');
+    }
+  });
+
   it('detects the source without depending on a proprietary clipboard MIME type', () => {
     expect(detectExternalPasteSource('<p data-fountain-node="paragraph">Own</p>')).toBe('fountain');
     expect(detectExternalPasteSource('<table style="mso-number-format:General"><tr><td>1</td></tr></table>')).toBe('microsoft-excel');
