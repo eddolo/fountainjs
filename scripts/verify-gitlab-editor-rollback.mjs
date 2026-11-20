@@ -108,14 +108,41 @@ export async function verifyGitLabRollback({ candidate, report, page, project, r
         if (!await stock.isVisible()) await toggle.click();
         await expect(stock).toHaveText(richBaseline + suffix);
         await stock.locator('p').click();
+        // Observe the native caret without changing the editor selection or its timing.
+        await stock.evaluate(editor => {
+          const caret = () => {
+            const selection = editor.ownerDocument.getSelection();
+            if (!selection?.rangeCount || !editor.contains(selection.focusNode)) return null;
+            const before = editor.ownerDocument.createRange();
+            before.selectNodeContents(editor);
+            before.setEnd(selection.focusNode, selection.focusOffset);
+            return { offset: before.toString().length, collapsed: selection.isCollapsed };
+          };
+          const positions = { afterClick: caret() };
+          window.__rollbackDeletionCaret = positions;
+          editor.addEventListener('keyup', event => {
+            if (event.key === 'End') positions.afterEnd = caret();
+          }, { capture: true });
+          editor.addEventListener('keydown', event => {
+            if (event.key === 'Backspace') positions.beforeBackspace = caret();
+          }, { capture: true });
+        });
         await page.keyboard.press('Control+End');
         evidence.deletionGesture = await recordGitLabSave({page, editor:stock, button:save, key:'Backspace', pace:'immediate'});
+        evidence.deletionCaret = await page.evaluate(() => window.__rollbackDeletionCaret);
         await expect(stock).toBeHidden({timeout:30000});
         await page.reload();
         evidence.afterDeletion = (await request(api)).description;
         await expect(reader).toHaveText(evidence.afterDeletion);
         evidence.deletionPassed = matchesSaveGesture(evidence.deletionGesture,'Backspace',prefix,'immediate') &&
+          evidence.deletionCaret?.beforeBackspace?.collapsed === true &&
+          evidence.deletionCaret.beforeBackspace.offset === (richBaseline + suffix).length &&
           evidence.afterDeletion === prefix;
+        evidence.deletionSavedAsShown = evidence.deletionGesture.paragraphs?.length === 1 &&
+          evidence.deletionGesture.paragraphs[0] === evidence.afterDeletion;
+        if (!evidence.deletionPassed) {
+          await reader.screenshot({path: output + '/' + writer.side + '-' + input.id + '-unexpected-deletion.png'});
+        }
       }
     }
     // Preserve a rapid-save failure and separately exercise an author inspecting

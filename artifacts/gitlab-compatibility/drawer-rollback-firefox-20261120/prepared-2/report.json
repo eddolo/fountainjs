@@ -1,0 +1,283 @@
+{
+  "formatVersion": 2,
+  "buildIdentity": {
+    "side": "prepared",
+    "expected": {
+      "gitlabVersion": "19.5.3",
+      "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+      "sourceTree": "075b931b09e4a1b2123bda61cc8f17a2d84c119c",
+      "rspackManifestSHA256": "47bb7fbcad56f644f8f9e09ab3818ef9d44469a3f16c91d60fd7126f12ddc99b"
+    },
+    "observed": null
+  },
+  "runId": "drawer-rollback-firefox-20261120",
+  "attempt": 2,
+  "side": "prepared",
+  "scope": "Opt-in prepared Tiptap rollback deployment.",
+  "suite": "composers",
+  "restartRequested": false,
+  "rollbackRequested": true,
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-composers.json",
+  "fixtureHash": "0a2ba68a07183f2dd13045ba15855e71c8452336e210a5b50181e66788887c62",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "issue-description-and-discussion-in-one-page",
+    "cases": [
+      {
+        "id": "description-and-comment",
+        "scope": "composers",
+        "title": "Independent editor drafts",
+        "description": "Draft release notes.",
+        "suffix": " Include migration steps.",
+        "comment": "Reviewed by the release team.",
+        "firstSave": "comment"
+      },
+      {
+        "id": "description-before-comment",
+        "scope": "composers",
+        "title": "Save description with pending discussion",
+        "description": "Draft release notes.",
+        "suffix": " Include migration steps.",
+        "comment": "Reviewed by the release team.",
+        "firstSave": "description"
+      }
+    ]
+  },
+  "observations": [],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "b5ed679ee9e445f39579a4d050c2d73b825688b26a7c9b300aae71bd738d1b07",
+    "scripts/verify-gitlab-editor-rollback.mjs": "fb4600416430c4ee65c49370ec1935f040f26812179ae8f28feb031396d4d515",
+    "scripts/verify-gitlab-suggestion-history-rollback.mjs": "fb66e652a3b5af60c238555927014c162c7f9f1480609674217aa8a54c47a373",
+    "scripts/verify-gitlab-wiki-rollback.mjs": "ee2dcde2fcf33a498c6d71aeb4b7ef6adecbfd7355e761e5c3366b86d0ad789a",
+    "scripts/verify-gitlab-restart.mjs": "f88570ad3eb433605bd7339f2d078b2bd942c492d18a0558ef32e6a9edcf06c2",
+    "scripts/verify-gitlab-footnote-rollback.mjs": "497c68aab32d9e67dce5a34344cd50924771eb5be828a1d9c47e3c481efb5b32",
+    "integrations/gitlab/testing/save-gesture.mjs": "4754f1e22b3a588c41f1811b9f2ccbd8a1be0e8854f3df4f370e2d21a236a0c3",
+    "integrations/gitlab/testing/build-identity.mjs": "54fb67b12da7be47061776467620f5ce9a00b336620c56e8c882d8cd40c51502",
+    "scripts/audit-gitlab-compatibility-composers.mjs": "0b8c99a5c8d5e0e9d05a7f5dd1c85510ca2c71eaa1f8c313961828d820bc884a",
+    "scripts/audit-gitlab-saved-replies.mjs": "5b7863ff49ead70e41bab928d9e4f682f4b4cc497534948ad9fb19e159ed5fe1",
+    "scripts/audit-gitlab-issue-board.mjs": "1bf44124532370c32effb81a6fb09ec712b8fa2e9faa3d8b5b03860698ae8b93",
+    "scripts/gitlab-audit-editor.mjs": "62e9dcf873010c6955dd77053fd6cd256e1b62764208a5ec0aabb531cbbec239",
+    "scripts/audit-gitlab-wiki-history.mjs": "252dfaa0f87e66922e3a591bd766bd44615c137ac18527f4a01739d70e65baaf",
+    "scripts/audit-gitlab-wiki-rename.mjs": "2e86e7733cc7f95ac77c1708d5692ffcbfd7149f230577858cf76642f2adab9c",
+    "scripts/audit-gitlab-compatibility-quick-save.mjs": "8cb17709efdb43d9df60a522d2fb90c3e2e0f60f1bfb7483ae6565d70169d8fc",
+    "scripts/audit-gitlab-compatibility-reconnect.mjs": "e1512849ede5922fb8c641d4ab5a894687350a0b98ba26df832a706e8a760784",
+    "scripts/audit-gitlab-compatibility-access.mjs": "2eba7a5f34e75944f56cb8789c0fb4eb861493249f3a5acba43bb5d3de06c592",
+    "scripts/audit-gitlab-offline-conflict.mjs": "3a959a11c5e9b91d38f48a1e0eb7cf2c294f563ee79f56bdbd5495239196acdf",
+    "scripts/audit-gitlab-simultaneous-issues.mjs": "6bb7d74d0bb0008de9a00c6db4864400de2c6155ef15c9f9620f5b9506c4a69d",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "277024a259238694df0f0f1e52d667ee9316a0dad8955258702163cec76950a6",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "4036c302767749662667d0987ec8441a37c5b89a2166b6991db39f7411b07212",
+    "scripts/audit-gitlab-concurrent-review.mjs": "8ecc2e2f91c05a00b5a55f60dffc5044245390d0b4b4de1cf6d3826aec3780e2",
+    "scripts/audit-gitlab-batch-review.mjs": "dbd74b5e00c7fe875c584d9a79839d00281653e5665c31a51f1eca2196b80826",
+    "scripts/audit-gitlab-reviewer-handoff.mjs": "3ff850b42fcc4f73fdde22f8d68decff4424b14e96a68e7c59d500eebc4dd55e",
+    "scripts/audit-gitlab-suggestion-history.mjs": "558fb85acd3aea288e81cd39b90983cc4272b0a2fa1a59d1e6bd3f26511fcc0e",
+    "scripts/gitlab-audit-member.mjs": "d72d2d7a08b6111fd4ced3e62e86349a5188769b1008373d23bac90433356675",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "26a16006b2a6dcad81afa41a2905c6229d4a03a12c746887066d9d9e0afac6b3",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "b476d9a583adf969ae7ea6907b84b0ab1499fa0ec6497273eeb997a2e18dacec",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "408339337254d9986b913e1f3dc10c14c3a07967dd4cfe22a9fee598216c9f88",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "c84c64884a3063a56b1e32df26384a11bbc0571b0aebf4f7b84eca9bb5ea1c3f"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [
+      {
+        "source": "/home/eddolo/.cache/fountainjs-gitlab-product/tiptap-rollback-19.5.3/public/assets/webpack",
+        "readOnly": true
+      }
+    ],
+    "backendEnvironmentHash": "bbf9d40a1bb19c6a29c51fa8a118b830aff9d2d8fc5dcf537dc7911f25686239",
+    "assetSelector": "ENABLE_RSPACK=true",
+    "cpus": 2000000000,
+    "memory": 4294967296
+  },
+  "browser": {
+    "engine": "firefox",
+    "version": "153.0",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 16,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 17,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 18,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 19,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 20,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 21,
+      "running": false,
+      "status": "exited",
+      "health": "unhealthy",
+      "exitCode": 1
+    }
+  ],
+  "collectionComplete": false,
+  "failure": "Deployment/authentication preflight failed; no credentialed details recorded."
+}

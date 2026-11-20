@@ -19,6 +19,9 @@ it('identifies only a matching failed logger restart on an exited container',()=
  const redis=logs.replaceAll('gitaly','redis').replace('runit_service[redis]',
    'redis_service[redis] (redis::enable line 19) had an error: Mixlib::ShellOut::ShellCommandFailed: runit_service[redis]');
  expect(loggerStartupFailure(state,redis)).toBe('redis');
+ const sidekiq = redis.replaceAll('redis','sidekiq');
+ expect(loggerStartupFailure(state,sidekiq)).toBe('sidekiq');
+ expect(loggerStartupFailure(state,sidekiq.replace('service/sidekiq/log:', 'service/sidekiq:'))).toBeUndefined();
  const reload = 'FATAL: Mixlib::ShellOut::ShellCommandFailed: runit_service[logrotate] had an error: Mixlib::ShellOut::ShellCommandFailed: ruby_block[reload_log_service]\nSTDOUT: kill: down: /opt/gitlab/service/logrotate/log: 0s, normally up, want up';
  expect(loggerStartupFailure(state,reload)).toBe('logrotate');
  expect(loggerStartupFailure(state,reload.replace('want up','want down'))).toBeUndefined();
