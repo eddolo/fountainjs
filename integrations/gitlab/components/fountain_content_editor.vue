@@ -119,6 +119,9 @@ export default {
         handleFiles: this.attachFiles,
       };
     },
+    editingLimitsMessage() {
+      return s__('ContentEditor|Use plain text editing for unsupported references, quick actions, and specialized menus.');
+    },
     adapterGaps() {
       return (
         this.enableAutocomplete ||
@@ -502,6 +505,9 @@ export default {
     data-fountain-integration="native"
     :data-fountain-error="failureCode"
   >
+    <gl-alert v-if="immersive && adapterGaps && !fatal" variant="warning" :dismissible="false">
+      {{ editingLimitsMessage }}
+    </gl-alert>
     <gl-alert v-if="failure" data-testid="content-editor-error" variant="danger" :dismissible="false">
       {{ failureMessage }}
       <gl-button v-if="hasRecovery" size="small" @click="retryLoad">{{
@@ -620,24 +626,22 @@ export default {
       />
     </div>
     <div
-      v-if="!immersive || (adapterGaps && !fatal)"
+      v-if="!immersive"
       data-testid="content-editor-footer"
       class="gl-border-t gl-flex gl-flex-wrap gl-items-center gl-justify-between gl-gap-2 gl-p-2"
     >
       <editor-mode-switcher
-        v-if="!immersive && !hideModeSwitcher"
+        v-if="!hideModeSwitcher"
         size="small"
         value="richText"
         @switch="handleEditorModeChanged"
       />
-      <slot v-if="!immersive" name="toolbar"></slot>
+      <slot name="toolbar"></slot>
       <details v-if="adapterGaps && !fatal" class="fountain-gitlab-editing-limits gl-text-sm">
         <summary>{{ s__('ContentEditor|Rich-text editing limits') }}</summary>
-        <p class="gl-mb-0 gl-mt-2">{{
-          s__('ContentEditor|Use plain text editing for unsupported references, quick actions, and specialized menus.')
-        }}</p>
+        <p class="gl-mb-0 gl-mt-2">{{ editingLimitsMessage }}</p>
       </details>
-      <gl-button v-if="!immersive" :href="markdownDocsPath" target="_blank" category="tertiary" size="small">{{
+      <gl-button :href="markdownDocsPath" target="_blank" category="tertiary" size="small">{{
         s__('ContentEditor|Markdown help')
       }}</gl-button>
     </div>
