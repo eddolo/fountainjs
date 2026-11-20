@@ -674,6 +674,22 @@ docker compose -f integrations/gitlab/runtime/compose.yaml -f integrations/gitla
 
 The second audit run mounts the separate build read-only. It verifies the staged Git tree, Rspack manifest and script bytes loaded by the browser, identifies ProseMirror on the page, and checks that Fountain’s runtime marker is absent. Its first edit after the switch uses the rich editor and clicks Save immediately after the final key. It reopens both Fountain-authored records and the fallback’s own controls. The receipt is `artifacts/gitlab-compatibility/<run_id>/prepared-1/report.json`. To return to the packaged frontend, recreate the service using only the base Compose file. The packaged rich-text Save limitation remains applicable there.
 
+### Reproduce a host-defined label serializer
+
+Use the pinned local GitLab checkout and the same build command as the default native installation. The optional `--custom-label-host` profile supplies [a native issue-label extension and writer](../testing/issue_label_host.js) through the real Markdown editor component’s public props. The profile is included in the installed frontend identity. The ordinary packaged control uses GitLab’s own label editor.
+
+```sh
+run_id=custom-label-$(date -u +%Y%m%d-%H%M%S)
+node scripts/build-gitlab-native-runtime.mjs
+node scripts/install-gitlab-native-browser.mjs "$GITLAB_SOURCE" --custom-label-host
+(cd "$GITLAB_SOURCE" && FOSS_ONLY=1 yarn rspack-prod)
+node scripts/run-gitlab-compatibility.mjs --suite custom-label --run-id "$run_id" --editor original
+node scripts/run-gitlab-compatibility.mjs --suite custom-label --run-id "$run_id" --editor fountain
+node scripts/compare-gitlab-compatibility.mjs --original "artifacts/gitlab-compatibility/$run_id/original-1/report.json" --fountain "artifacts/gitlab-compatibility/$run_id/fountain-1/report.json" --output "artifacts/gitlab-compatibility/$run_id/verified"
+```
+
+After the comparison, rerun the installer without `--custom-label-host` and rebuild the frontend to restore the default native host. On issue #691, the [restored standard build](../../../artifacts/gitlab-compatibility/standard-host-after-custom-label-20261120/fountain-1/report.json) retained a linked image’s edited description, asset URL and separate reader link through Save and reopen. The custom-host browser collector checks for the extension’s rendered token in the rich editor on first open and after Save. It also checks GitLab’s persisted Markdown and the label link in the reader.
+
 ### Roll back an issue containing uncited footnotes
 
 Start with the compiled Fountain UI installed in the pinned isolated deployment. Run the two commands from the same checkout with the same data volumes. The first edits a paragraph in rich text, saves the issue, and reopens it in Fountain. The second removes the Fountain UI, opens that exact issue in packaged GitLab, enters Markdown mode, and checks every character of the saved source before editing. It appends a paragraph and verifies the issue through the API and a fresh Markdown editor. A disagreement stops the workflow before Save.

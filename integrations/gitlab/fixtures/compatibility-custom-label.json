@@ -1,0 +1,14 @@
+{
+  "formatVersion": 1,
+  "workflow": "edit-a-project-label-in-an-issue-description",
+  "cases": [
+    {
+      "id": "project-label",
+      "scope": "custom-label",
+      "title": "Component ownership",
+      "label": "fountain-workflow",
+      "source": "Responsible team: ~fountain-workflow",
+      "edit": "Confirmed. "
+    }
+  ]
+}

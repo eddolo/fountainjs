@@ -62,6 +62,23 @@ it('keeps an extension-owned issue label through editing, undo, redo and reopeni
   expect(undo(service.editor)).toBe(true);
   expect(service.getSerializedContent()).toBe(original);
 });
+it('lets a block writer own its children while the surrounding GitLab quote retains multiline indentation', async () => {
+  const write = vi.fn((node: Node) => 'SUMMARY\n' + node.textContent);
+  const extension: FountainExtension = {name:'summary', nodes:{workflow_summary:{group:'block',content:'text*'}}};
+  const service = new GitLabContentEditor({
+    describeLabels:() => '', renderMarkdown:async () => ({body:'<p>Before</p>'}),
+    extensions:[extension], serializerConfig:{nodes:{workflow_summary:{toMarkdown:write}}},
+  });
+  services.push(service);
+  await service.setSerializedContent('Before');
+  const {editor} = service;
+  const schema = editor.state.schema;
+  const summary = schema.node('workflow_summary', {}, [schema.text('Ready')]);
+  const quote = schema.node('blockquote', {}, [summary]);
+  expect(editor.dispatch(editor.createTransaction().replaceNode([0], [quote]))).toBe(true);
+  expect(service.getSerializedContent()).toBe('> SUMMARY\n> Ready');
+  expect(write).toHaveBeenCalledWith(summary);
+});
 it('owns a native model without requiring DOM globals and reads only a loaded current document', async () => {
   expect(typeof window).toBe('undefined');
   expect(typeof document).toBe('undefined');

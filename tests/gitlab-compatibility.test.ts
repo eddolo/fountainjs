@@ -221,6 +221,24 @@ it('compares native Writer content and version independently of a browser paste'
  stock.observations[0].writer.version = 'LibreOffice 25.2.0';
  expect(compareGitLabCompatibility(stock,fountain).environment.mismatches).toContain('native Writer version');
 });
+it('requires the custom host label to be active on open and reopen', () => {
+ const [stock, fountain] = reports() as any[];
+ const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-custom-label.json', import.meta.url),'utf8'));
+ const input = fixture.cases[0];
+ for (const report of [stock, fountain]) {
+   report.fixture = fixture;
+   report.suite = input.scope;
+   const item = report.observations[0];
+   Object.assign(item, {id:input.id, input, labelId:3, renderedLabel:input.label, reopened:input.label,
+     reopenedEditorProof:item.editorProof, customToken:'~' + input.label, reopenedToken:'~' + input.label});
+ }
+ const result = (key:string) => compareGitLabCompatibility(stock,fountain).rows.find((row:any) => row.invariant === key)?.classification;
+ expect(result('rendered')).toBe('parity');
+ delete fountain.observations[0].reopenedToken;
+ expect(result('reopened')).toBe('regression');
+ fountain.observations[0].reopenedEditorProof = stock.observations[0].editorProof;
+ expect(result('reopened')).toBe(null);
+});
 it('checks hidden footnote definitions in both the saved issue and the source handed back after reopening', () => {
  const [stock, fountain] = reports() as any[];
  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-footnote-labels.json', import.meta.url), 'utf8'));

@@ -908,6 +908,33 @@ export function compareGitLabCompatibility(original,fountain){
       add('saveButtonReachable','Save remains directly reachable after task editing',true,left?.saveButtonReachable,right?.saveButtonReachable);
       continue;
     }
+    if (input.scope === 'custom-label') {
+      check('project label identity', a?.labelId, b?.labelId);
+      const token = '~' + input.label;
+      const observe = (report, item) => {
+        if (!verifiedEditor(report, item)) return {};
+        const usesLabel = value => report.side === 'original' || value === token;
+        return {
+          rendered: item.renderedLabel === undefined ? undefined : item.renderedLabel.trim() === input.label && usesLabel(item.customToken),
+          undone: item.undone, redone: item.redone, saved: item.saved,
+          target: item.readerURL && Boolean(item.initialURL && item.readerURL === item.initialURL),
+          reopened: verifiedEditor(report, {editorProof:item.reopenedEditorProof})
+            ? item.reopened?.trim() === input.label && usesLabel(item.reopenedToken) : undefined,
+          source: item.reopenedSource,
+        };
+      };
+      const left = observe(original,a), right = observe(fountain,b);
+      for (const [key,expected,label] of [
+        ['rendered',true,'The editor displays the project label (native extension on Fountain)'],
+        ['undone',true,'Undoing the prose edit retains the label'],
+        ['redone',true,'Redoing the edit retains the label'],
+        ['saved',input.edit + input.source,'The GitLab API stores the exact prose and label reference'],
+        ['target',true,'The saved reader still links to the same GitLab label'],
+        ['reopened',true,'The verified rich editor reopens the label in its configured representation'],
+        ['source',input.edit + input.source,'Switching the reopened editor to Markdown retains the complete edited issue'],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'footnote-labels') {
       const definitions = markdown => markdown?.split('\n').filter(line => /^\[\^.+\]: /u.test(line));
       const expectedDefinitions = definitions(input.source);

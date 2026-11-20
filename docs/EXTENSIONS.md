@@ -138,6 +138,18 @@ matching import rules and test every claimed container and interchange path.
 This hook does not prove exact source retention, safe third-party output or
 support for a missing renderer.
 
+For an inline extension node, supply an `inlineSerializers` entry under its schema name.
+
+```ts
+const result = new MarkdownExporter().exportWithReport(editor.state.doc, {
+  inlineSerializers: {
+    issue_label: node => String(node.attrs.token),
+  },
+})
+```
+
+The surrounding Markdown writer handles supported emphasis and escapes pipe characters inside pipe-table cells. A writer can return `undefined` to delegate conversion. Inspect `result.losses` when combining a custom node with an HTML-only container or unsupported marks. The [GitLab host example](../integrations/gitlab/testing/issue_label_host.js) pairs an inline writer with an HTML parse rule.
+
 ## Automated conformance
 
 The isolated `fountainjs-editor/testing` entry contains no test-runner or React
