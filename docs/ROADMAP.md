@@ -1,9 +1,10 @@
 # FountainJS roadmap
 
-Updated 2026-11-19.
+Updated 2026-11-21.
 
-**Current priority: finish the GitLab flagship integration.** Follow its
-[application acceptance checklist](../integrations/gitlab/README.md#remaining-full-application-acceptance).
+**GitLab has passed local qualification.** The six gates passed on `1f16e1b0`, including two-node deployment and rollback. Physical mobile devices and hosted staging still need verification when those environments become available. [Final acceptance ledger](../integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md#frozen-release-decision-for-gitlab-ce-1953).
+
+The next flagship under development is [Directus Data Studio](../integrations/directus/README.md).
 Keep unrelated chart and diagram expansion queued. When an application workflow
 exposes an engine defect, fix it, add coverage at the engine or public editor surface, and return to the application workflow for verification. Use the strongest behavior Fountain can deliver as its own product target. Keep host-specific constraints in the adapter and its compatibility report.
 
@@ -1181,9 +1182,7 @@ and task workflow labs do not satisfy that requirement. GitLab integration has
 recorded real-service coverage for issue discussions, merge-request descriptions
 and wiki pages, including saving and reopening after restart. The [paired
 membership-removal audit](../integrations/gitlab/COMPATIBILITY_MODE_RETENTION_RESULTS.md)
-also verifies draft recovery against stock GitLab 19.5.3. Broader workflow, role,
-browser and device coverage and a clean deployment rollback are still required.
-Outline and Directus remain candidates for the other two flagship slots.
+also verifies draft recovery against stock GitLab 19.5.3. The [final qualification index](../artifacts/gitlab-compatibility/final-1f16e1b0/qualification.json) links the local workflow, recovery and two-node deployment receipts. Physical devices and hosted staging remain open. Directus is the second integration in progress. Outline remains a candidate for the third.
 
 ## Remaining parity work
 

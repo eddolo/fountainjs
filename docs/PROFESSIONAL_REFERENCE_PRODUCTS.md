@@ -27,8 +27,7 @@ the actual GitLab issue and discussion composers, with real rendering, uploads,
 links, ordinary code, alerts, media properties/playback and native diagram source/
 preview/reader-recovery workflows under verification. Normal account sign-in,
 server persistence, private access checks and application restarts are exercised
-against the real local GitLab installation. This remains an incomplete integration;
-the full workflow/role/surface matrix below is the completion requirement.
+against the real local GitLab installation. All six agreed GitLab gates passed locally on candidate `1f16e1b0`. Hosted staging and physical-device testing await their respective environments. The [sign-off ledger](../integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md#frozen-release-decision-for-gitlab-ce-1953) identifies the supported rollback paths and the shared GitLab limitations.
 
 ## Same standard for the other two
 
@@ -39,15 +38,11 @@ available. Where the original is source-available, evaluate running the real app
 with Fountain before building a separate product. Provide variety across full
 workflows and enough breadth to justify a flagship.
 
-Two source-verified candidates for the remaining slots are Outline (a complete
-knowledge-base product) and Directus (a complete content/data-management product).
+The [Directus integration](../integrations/directus/README.md) is underway on the real Data Studio item form. Outline remains the knowledge-base candidate for the third slot.
 Outline's own [package manifest](https://github.com/outline/outline/blob/main/package.json)
 declares the ProseMirror model, state, view, commands, tables, history and
 collaboration bindings. Directus's own [application manifest](https://github.com/directus/directus/blob/main/app/package.json)
-declares Tiptap core, Vue 3, tables, images and other editor modules. These are
-primary-source stack checks, not completed integration audits, comparisons or
-production-ready Fountain implementations. Inspect and pin their actual editor
-contracts before committing to their implementation scope.
+declares Tiptap core, Vue 3, tables, images and other editor modules. Directus has a pinned HTML field contract and a recorded stock-to-Fountain-to-stock handover. The full Data Studio integration remains in development.
 
 For each product:
 

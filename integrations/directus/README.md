@@ -1,0 +1,35 @@
+# Directus Data Studio integration
+
+The second flagship is under development against [Directus v12.7.0](https://github.com/directus/directus/releases/tag/v12.7.0), revision `3e3bdddd20bc5f80200452d2b1aad4e3029c95e4`. The first workflow uses the real Data Studio item form and its authenticated API, SQLite and field metadata. The standalone container image is pinned by digest in [the browser audit](audit-stock.mjs).
+
+## Editor contract
+
+| Surface | Contract to retain | Upstream implementation |
+| --- | --- | --- |
+| HTML field | The registered interface is `input-rich-text-html` on a `text` column. Its form value is an HTML fragment or null. A rich edit emits `input`, and an empty editor emits null. Directus owns item Save. | [Registration](https://github.com/directus/directus/blob/3e3bdddd20bc5f80200452d2b1aad4e3029c95e4/app/src/interfaces/input-rich-text-html/index.ts) · [Field component](https://github.com/directus/directus/blob/3e3bdddd20bc5f80200452d2b1aad4e3029c95e4/app/src/interfaces/input-rich-text-html/input-rich-text-html.vue) |
+| Authoring and source fidelity | Fields configure toolbar actions, link protocols, inline styles, custom formats and contributed extensions. Raw HTML editing and the markup-loss warning have separate paths. Immutable fields and comparison views have distinct behavior. | [Field source and upstream tests](https://github.com/directus/directus/tree/3e3bdddd20bc5f80200452d2b1aad4e3029c95e4/app/src/interfaces/input-rich-text-html) |
+| Assets and links | Media drawers and image selection use Directus file IDs, project URLs and settings. Saved asset references must reopen with the appropriate account permissions. | [Editor composables](https://github.com/directus/directus/tree/3e3bdddd20bc5f80200452d2b1aad4e3029c95e4/app/src/interfaces/input-rich-text-html/composables) |
+| Review and lifecycle | Item Save, drafts, versions, revisions and preview belong to Data Studio. The revision comparison imports the original editor schema directly. Mapping the field interface alone leaves comparison work open. | [Item form](https://github.com/directus/directus/blob/3e3bdddd20bc5f80200452d2b1aad4e3029c95e4/app/src/modules/content/routes/item.vue) · [Comparison](https://github.com/directus/directus/blob/3e3bdddd20bc5f80200452d2b1aad4e3029c95e4/app/src/views/private/components/comparison/use-comparison.ts) |
+
+The separately registered Markdown field and Editor.js JSON block field have different storage contracts. This integration starts with the HTML field. [Other Directus interfaces](https://github.com/directus/directus/tree/3e3bdddd20bc5f80200452d2b1aad4e3029c95e4/app/src/interfaces)
+
+## Reproduce the first workflow
+
+With the FountainJS checkout's dependencies, Docker and Playwright Chromium installed, run from the repository root. The audit uses a disposable container bound to loopback, generates its own credentials, and removes the container on exit.
+
+```sh
+docker pull directus/directus@sha256:f197911d949a37d882f781b0381955b851c86625435014cd67bdaf3eabcff2a7
+node integrations/directus/audit-stock.mjs
+node integrations/directus/build.mjs
+node integrations/directus/audit-stock.mjs --paired
+```
+
+The stock audit creates a collection and a formatted item, signs in through the browser, edits a paragraph, undoes and redoes it, saves and compares the complete HTML with the API. A fresh signed-in browser reopens the record after the service restarts. Each run records the image ID and loaded stock editor chunk hash.
+
+The handover audit changes only the field's interface metadata on the same item. It checks the mounted Fountain build ID and installed bundle digest, saves through Directus, restarts the service, then switches the field back and saves a further edit in the stock editor. Receipts and screenshots are written under `artifacts/directus-stock/` and `artifacts/directus-handover/`.
+
+The [paired run with reopened editor captures](../../artifacts/directus-handover/a28cef93-d370-4c43-88f5-3b65af7f345e/report.json) retained the item heading and bold owner across all three saves. The receipt identifies the installed Fountain bundle by SHA-256 and the loaded stock editor chunk. [Fountain field](../../artifacts/directus-handover/a28cef93-d370-4c43-88f5-3b65af7f345e/fountain.png) · [Same item after rollback](../../artifacts/directus-handover/a28cef93-d370-4c43-88f5-3b65af7f345e/stock-rollback.png).
+
+The reopened Fountain capture shows the heading and paragraphs with nearly uniform typography and tight spacing. Matching the host field’s readable heading hierarchy and paragraph spacing remains open.
+
+The private field currently admits fragments it can serialize exactly. It displays other source as text to protect the stored field during evaluation. Full editing of those documents remains required for parity. The configurable toolbar, asset drawers, raw and comparison modes, extension-defined HTML, non-admin permissions, concurrent authors and the broader lifecycle matrix remain open.
