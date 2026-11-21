@@ -32,6 +32,8 @@ export interface MarkdownExportOptions {
   inlineSerializers?: Readonly<Record<string, (node: Node) => string | undefined>>;
   /** Delimiters for native extension marks. The writer owns the mark attributes. */
   markSerializers?: Readonly<Record<string, (mark: Mark) => { open: string; close: string }>>;
+  /** Select a bullet for each unordered list. Adjacent lists still require distinct delimiters. */
+  bulletMarker?: (node: Node) => '*' | '+' | '-' | undefined;
   /** Emit ordinary inline destinations or deterministic reference definitions. */
   linkStyle?: MarkdownLinkStyle;
   /** Preserve blank paragraphs as inert HTML markers (default), or omit with loss reports. */
@@ -620,11 +622,19 @@ function withSourceFrontmatter(source: MarkdownSourceSnapshot, body: string): st
   return `${frontmatter}${separator}${body}`;
 }
 
+function listDelimiter(node: Node, context: RenderContext, previous?: string): string | undefined {
+  if (!LIST_TYPES.has(node.type.name)) return undefined;
+  if (node.type.name === 'ordered_list') return previous === '.' ? ')' : '.';
+  const preferred = node.type.name === 'bullet_list' ? context.options.bulletMarker?.(node) ?? '-' : '-';
+  if (preferred !== '-' && preferred !== '+' && preferred !== '*') throw new TypeError('Invalid Markdown bullet marker.');
+  return preferred !== previous ? preferred : preferred === '+' ? '-' : '+';
+}
+
 function renderBlockSequence(nodes: readonly Node[], context: RenderContext, path: readonly number[], depth = 0): string {
-  let alternate = false;
+  let delimiter: string | undefined;
   return nodes.map((node, index) => {
-    alternate = LIST_TYPES.has(node.type.name) && nodes[index - 1]?.type === node.type ? !alternate : false;
-    return render(node, context, [...path, index], depth, false, alternate);
+    delimiter = listDelimiter(node, context, nodes[index - 1]?.type === node.type ? delimiter : undefined);
+    return render(node, context, [...path, index], depth, false, delimiter);
   }).join('\n\n');
 }
 
@@ -634,7 +644,7 @@ function render(
   path: readonly number[] = [],
   depth = 0,
   tableAlignmentRepresented = false,
-  alternateListMarker = false,
+  delimiter?: string,
 ): string {
   if (node.type.isInline && !node.isText && Object.hasOwn(context.options.inlineSerializers ?? {}, node.type.name))
     return inline(node, context, path);
@@ -702,28 +712,32 @@ function render(
     }
     case 'html_container': case 'definition_list':
       return schemaHTML(node, context, path);
-    case 'bullet_list': case 'ordered_list': case 'task_list': return node.content.map((item, index) => {
-      reportNodeAttributes(item, context, [...path, index]);
-      const marker = node.type.name === 'ordered_list'
-        ? `${((node.attrs.start as number) + index) % 1e9}${alternateListMarker ? ')' : '.'} `
-        : alternateListMarker ? '+ ' : '- ';
-      const prefix = marker + (item.type.name === 'task_item' ? `[${item.attrs.checked === 'inapplicable' ? '~' : item.attrs.checked ? 'x' : ' '}] ` : '');
-      const indentation = ' '.repeat(marker.length);
-      let alternate = false;
-      let previousRendered: Node | undefined;
-      const body = item.content.map((child, childIndex) => {
-        alternate = LIST_TYPES.has(child.type.name) && previousRendered?.type === child.type ? !alternate : false;
-        const value = render(child, context, [...path, index, childIndex], 0, false, alternate);
-        if (!value) return '';
-        // Only a list starting at 1 may interrupt an existing paragraph.
-        const compactList = LIST_TYPES.has(child.type.name)
-          && (child.type.name !== 'ordered_list' || Number(child.attrs.start ?? 1) === 1);
-        const separator = previousRendered ? compactList ? '\n' : '\n\n' : '';
-        previousRendered = child;
-        return separator + value;
-      }).join('');
-      return prefix + body.replace(/\n/g, `\n${indentation}`);
-    }).join('\n');
+    case 'bullet_list': case 'ordered_list': case 'task_list': {
+      const symbol = delimiter ?? listDelimiter(node, context);
+      return node.content.map((item, index) => {
+        reportNodeAttributes(item, context, [...path, index]);
+        const marker = node.type.name === 'ordered_list'
+          ? `${((node.attrs.start as number) + index) % 1e9}${symbol} `
+          : `${symbol} `;
+        const prefix = marker + (item.type.name === 'task_item' ? `[${item.attrs.checked === 'inapplicable' ? '~' : item.attrs.checked ? 'x' : ' '}] ` : '');
+        const indentation = ' '.repeat(marker.length);
+        let childDelimiter: string | undefined;
+        let previousRendered: Node | undefined;
+        const body = item.content.map((child, childIndex) => {
+          const nextDelimiter = listDelimiter(child, context, previousRendered?.type === child.type ? childDelimiter : undefined);
+          const value = render(child, context, [...path, index, childIndex], 0, false, nextDelimiter);
+          if (!value) return '';
+          // Only a list starting at 1 may interrupt an existing paragraph.
+          const compactList = LIST_TYPES.has(child.type.name)
+            && (child.type.name !== 'ordered_list' || Number(child.attrs.start ?? 1) === 1);
+          const separator = previousRendered ? compactList ? '\n' : '\n\n' : '';
+          previousRendered = child;
+          childDelimiter = nextDelimiter;
+          return separator + value;
+        }).join('');
+        return prefix + body.replace(/\n/g, `\n${indentation}`);
+      }).join('\n');
+    }
     case 'list_item': case 'task_item': return node.content
       .map((child, index) => render(child, context, [...path, index])).join('\n\n');
     case 'code_block': {
@@ -980,7 +994,9 @@ export class MarkdownExporter {
             // spellings represent this same node; the parser proves separation.
             // Formatting-loss callbacks already ran for this node above.
             const alternate: RenderContext = { ...context, options: { ...context.options, onLoss: undefined }, losses: [] };
-            renderedBlocks[repair] = withLineEnding(render(node.content[repair], alternate, [repair], 0, false, true).trimEnd(), source.lineEnding);
+            const block = node.content[repair];
+            const delimiter = listDelimiter(block, alternate, listDelimiter(block, alternate));
+            renderedBlocks[repair] = withLineEnding(render(block, alternate, [repair], 0, false, delimiter).trimEnd(), source.lineEnding);
           }
           canonicalized.add(repair);
           preservedBlocks--;

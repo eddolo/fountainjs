@@ -22,6 +22,7 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
   const result: Attributes = {};
   for (const [key,value] of Object.entries(attrs)) {
     if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) result[key] = value;
+    else if (type === 'bulletList' && key === 'bullet' && (value === '+' || value === '-')) result.gitlabBullet = value;
     else if (!(type === 'blockquote' && key === 'multiline' && value === false)
       && !(type === 'orderedList' && ((key === 'parens' && value === false) || (key === 'type' && value === null)))
       && !(type === 'bulletList' && key === 'bullet' && value === '*')) unsupported(path, type + '.' + key);
@@ -202,6 +203,7 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
     const attrs: Attributes = {};
     for (const [key,value] of Object.entries(node.attrs)) {
       if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) attrs[key] = value;
+      else if (type === 'bulletList' && key === 'gitlabBullet' && (value === '+' || value === '-')) attrs.bullet = value;
       else if (value !== node.type.spec.attrs?.[key]?.default) unsupported(path,node.type.name + '.' + key);
     }
     const result: NodeJSON = {type};

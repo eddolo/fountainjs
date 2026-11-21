@@ -71,7 +71,7 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string): string | un
 }
 
 /** GitLab-owned source attributes remain distinct from navigable display URLs. */
-export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaLabels?: Readonly<Record<GitLabPlayableKind, string>>, contentsLabel = 'Table of contents'): SchemaSpec {
+export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaLabels?: Readonly<Record<GitLabPlayableKind, string>>, contentsLabel = 'Table of contents', wikiRoom = false): SchemaSpec {
   if (!base.nodes.inline_image || !base.marks?.link) throw new TypeError('The GitLab schema requires inline images and links.');
   const image = base.nodes.inline_image, link = base.marks.link;
   const imageAttrs = (element: HTMLParseElement) => {
@@ -101,6 +101,10 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
           return { dir };
         } }],
     } } : {}),
+    ...(wikiRoom && base.nodes.bullet_list ? { bullet_list: { ...base.nodes.bullet_list, attrs: {
+      ...base.nodes.bullet_list.attrs,
+      gitlabBullet: { default: undefined, validate: value => value === undefined || value === '-' || value === '+' },
+    } } } : {}),
     task_item: gitLabTaskItem(base),
     paragraph: { ...base.nodes.paragraph!, attrs: { ...base.nodes.paragraph!.attrs,
       gitlabLiteralSlash: { default: false, validate: value => typeof value === 'boolean' } } },
@@ -248,6 +252,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     renderMarkdown(markdown: string, options?: { signal: AbortSignal }): Promise<GitLabRenderResponse>;
     html?: ServerHTMLImporterOptions;
     preserveWikiSource?: boolean;
+    wikiBulletMarkers?: boolean;
     nodeWriters?: ReadonlyMap<string, (node: Node) => string>;
     markWriters?: ReadonlyMap<string, GitLabMarkWriter>;
     tableOfContentsLabel?: string;
@@ -527,6 +532,10 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       [name, (node: Node) => customSources.get(node)] as const));
     const markSerializers = Object.fromEntries(Array.from(this.options.markWriters?.keys() ?? [], name =>
       [name, (mark: Mark) => customMarks.get(mark)!] as const));
+    const bulletMarker = this.options.wikiBulletMarkers ? (node: Node): '+' | '-' | '*' => {
+      const marker = node.attrs.gitlabBullet;
+      return marker === '+' || marker === '-' ? marker : '*';
+    } : undefined;
     const blockSerializers = {
       ...extensionWriters,
       table: (node: Node) => serializeGitLabHTMLTable(node, prefix),
@@ -539,13 +548,13 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         if (!['auto', 'ltr', 'rtl'].includes(String(node.attrs.dir)) || node.marks.length
           || Object.entries(node.attrs).some(([key, value]) => key !== 'dir' && value !== undefined)) return undefined;
         const inner = new MarkdownExporter().exportWithReport(node.type.schema.node('doc', {}, node.content),
-          { omitTrailingCaret: true, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
+          { omitTrailingCaret: true, bulletMarker, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
         issues.push(...inner.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type,
           message: loss.detail, path: [...(paths.get(node) ?? []), ...loss.path] })));
         return `<div dir="${node.attrs.dir}">\n\n${transformGitLabQuickActions(inner.markdown, 'literal')}\n\n</div>`;
       },
     };
-    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
+    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, bulletMarker, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
     if (!canonical && !issues.length && !tokens.size && !customSources.size && !customMarks.size && sources.size === 1) {
       const source = this.wikiBlockSources.get(sources.values().next().value!);

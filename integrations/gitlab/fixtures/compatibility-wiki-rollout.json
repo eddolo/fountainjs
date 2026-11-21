@@ -1,0 +1,23 @@
+{
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "structured-wiki-handover",
+      "scope": "wiki-collaboration",
+      "title": "Release handover",
+      "source": "## Release handover\n\nOwner: **Sam**.\n\n* Verify the service\n  * Check the logs\n\n> Keep the incident open.\n\nStatus: ready.",
+      "ownerEdit": " Reviewed.",
+      "peerEdit": " Approved.",
+      "structure": {
+        "heading": "Release handover",
+        "parent": "Verify the service",
+        "child": "Check the logs",
+        "quote": "Keep the incident open.",
+        "pending": " before handover."
+      }
+    }
+  ]
+}

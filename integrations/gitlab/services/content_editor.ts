@@ -172,7 +172,7 @@ export class GitLabContentEditor {
     try {
       const schema = createGitLabSchemaSpec(kit.schema, options.describeMedia ? {
         audio: options.describeMedia('audio'), video: options.describeMedia('video'),
-      } : undefined, options.tableOfContentsLabel);
+      } : undefined, options.tableOfContentsLabel, Boolean(this.wiki));
       for (const name of nodeWriters.keys()) {
         if (schema.nodes[name] !== kit.schema.nodes[name]) throw new TypeError('GITLAB_RESERVED_SERIALIZER_NODE:' + name);
       }
@@ -206,7 +206,7 @@ export class GitLabContentEditor {
       this.assetResolver.dispose();
       throw error;
     }
-    const codec = this.codec = new GitLabMarkdownCodec({ ...options, nodeWriters, markWriters });
+    const codec = this.codec = new GitLabMarkdownCodec({ ...options, wikiBulletMarkers:Boolean(this.wiki), nodeWriters, markWriters });
     this.controller = new SerializedContentController(this.editor, codec);
     this.alerts = new GitLabAlertEditing({ editor: this.editor,
       ensureReady: () => {

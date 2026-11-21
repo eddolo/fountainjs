@@ -70,6 +70,15 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
         return content.textContent;
       });
     }
+    async function checkStructure(surface, childText) {
+      const {heading,parent,quote} = input.structure;
+      const nested = surface.locator('ul > li > ul > li');
+      await expect.poll(async () => (await paragraphText(surface.locator('h2'))).trim()).toBe(heading);
+      await expect.poll(async () => (await paragraphText(surface.locator('blockquote'))).trim()).toBe(quote);
+      await expect(surface.locator('li').filter({has:surface.page().locator('ul')})).toContainText(parent);
+      await expect.poll(async () => (await paragraphText(nested)).trim()).toBe(childText);
+      return {heading,quote,parent,childText};
+    }
     async function append(tab, paragraph, text) {
       await paragraph.click();
       await tab.keyboard.press('End');
@@ -134,9 +143,11 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       item.stockWire = await first.evaluate(element => {
         const state = element.editor?.state;
         const binding = state?.plugins.find(plugin => plugin.key.startsWith('y-sync$'))?.getState(state);
-        return binding?.type?.toArray().map(block => ({
-          name:block.nodeName, attrs:block.getAttributes(), children:block.toArray().map(text => text.toDelta()),
-        }));
+        function snapshot(node) {
+          if (node.nodeName === undefined) return node.toDelta();
+          return {name:node.nodeName,attrs:node.getAttributes(),children:node.toArray().map(snapshot)};
+        }
+        return binding?.type?.toArray().map(snapshot);
       });
     }
     await first.screenshot({path:join(output,'shared-wiki.png')});
@@ -170,6 +181,13 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       expect(handover[rollout ? 'stock' : 'fountain'].native).toBe(!rollout);
       expect(await read()).toBe(item.saved);
       handover.unsaved = draft;
+      if (input.structure) {
+        const {child,pending} = input.structure;
+        handover.beforeNestedEdit = await checkStructure(writer,child);
+        await append(page,writer.locator('ul > li > ul > li p'),pending);
+        handover.stockStructure = await checkStructure(witness,child + pending);
+        expect(await read()).toBe(item.saved);
+      }
       await writer.screenshot({path:join(output,rollout ? 'unsaved-before-rollout.png' : 'unsaved-before-rollback.png')});
       await page.goto('about:blank');
       // The cold rollback closes every native tab. The rolling case keeps one author at the same mounted editor.
@@ -291,6 +309,7 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
           await expect.poll(() => paragraphText(status),{timeout:20000}).toBe(draft);
           await expect(editor.locator('strong')).toHaveText('Sam');
           handover.recovered = await paragraphText(status);
+          if (input.structure) handover.recoveredStructure = await checkStructure(editor,input.structure.child + input.structure.pending);
           await editor.screenshot({path:join(output,(rollout ? 'fountain' : 'stock') + '-recovered-draft.png')});
           await append(restored,status,' Published.');
           if (rollout) {
@@ -308,11 +327,28 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
           if (await confirm.isVisible()) await confirm.click();
           await expect(reader).toContainText(draft + ' Published.');
           handover.saved = await read();
-          expect(handover.saved).toBe(item.saved + pending + ' Published.');
+          let expectedSource = item.saved;
+          if (input.structure) {
+            const {child,pending} = input.structure;
+            expect(expectedSource.split(child)).toHaveLength(2);
+            expectedSource = expectedSource.replace(child,child + pending);
+          }
+          expect(handover.saved).toBe(expectedSource + pending + ' Published.');
           await restored.reload();
           await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
           await expect(reader.locator('strong')).toHaveText('Sam');
+          if (input.structure) {
+            handover.readerStructure = await checkStructure(reader,input.structure.child + input.structure.pending);
+            await reader.screenshot({path:join(output,'reopened-structured-wiki.png')});
+          }
           handover.reopened = true;
+        } catch (error) {
+          const failedTab = clean.pages().at(-1);
+          if (failedTab) {
+            handover.controls = await failedTab.locator('form.wiki-form').ariaSnapshot({timeout:2000}).catch(() => '');
+            await failedTab.screenshot({path:join(output,'handover-interrupted.png')}).catch(() => {});
+          }
+          throw error;
         } finally { await clean.close(); }
       }
     }
