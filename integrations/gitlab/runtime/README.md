@@ -80,6 +80,8 @@ For numbered task markers ending in `)`, use `--wiki-parenthesized-checklist` in
 
 Use `--wiki-table-tasks` on both sides with a fresh run ID to test checkboxes inside a pipe table. The two authors edit the status paragraph, then the Developer ticks the Backup cell, undoes it and redoes it. Compare the saved Markdown and `saved-table-tasks.png`, including the completed Deploy cell and the not-applicable Retire cell.
 
+For the right-aligned column use `--wiki-aligned-table-tasks --browser firefox` on both sides. The report records each checkbox center as a fraction of its cell width, in the live editor and again after reopening the reader. The wide column makes left and right positions visibly distinct. Check `shared-wiki.png` and `saved-table-tasks.png` against those measurements.
+
 ### Reproduce a wiki restore across a project role change
 
 Run the two collectors sequentially against the prepared wiki controller and
