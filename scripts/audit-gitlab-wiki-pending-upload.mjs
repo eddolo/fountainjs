@@ -282,6 +282,9 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
         if (pending.saveDisabledWithoutPresence) {
           await fresh.locator('p').filter({hasText:'Status:'}).press('Control+Enter');
           await expect(save).toBeDisabled();
+          const actions = await page.getByTestId('wiki-form-actions').boundingBox();
+          const noticeRow = await page.getByTestId('wiki-upload-notice').boundingBox();
+          expect(noticeRow.y).toBeGreaterThanOrEqual(actions.y + actions.height - 1);
           await page.locator('form.wiki-form').screenshot({path:join(output,'save-held-before-presence.png')});
           expect(await read()).toBe(before);
           expect(submissions).toEqual([]);

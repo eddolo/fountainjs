@@ -839,17 +839,24 @@ To test a file upload across the deployment switch, run the stock rollout and Fo
 
 #### Reproduce the prepared rollback with a pending wiki upload
 
-In a separate pinned GitLab checkout, apply the three patches from [the prepared Tiptap rollback](#reproduce-the-prepared-tiptap-rich-text-rollback). Before building, add the wiki upload guard. Run the following from the FountainJS checkout with `fallback` set to the absolute path of this fourth-patch checkout. Use the same pinned dependencies as the three-patch build.
+In a separate pinned GitLab checkout, apply the three patches from [the prepared Tiptap rollback](#reproduce-the-prepared-tiptap-rich-text-rollback). Before building, add the wiki upload guard and room-replay patch. Run the following from the FountainJS checkout with `fallback` set to the absolute path of this prepared checkout. Use the same pinned dependencies as the three-patch build.
 
 ```sh
 git -C "$fallback" apply --index "$PWD/integrations/gitlab/patches/gitlab-19.5.3-tiptap-wiki-upload.patch"
+git -C "$fallback" apply --index "$PWD/integrations/gitlab/patches/gitlab-19.5.3-tiptap-wiki-upload-replay.patch"
 (cd "$fallback" && FOSS_ONLY=1 corepack yarn rspack-prod)
 node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --editor fountain \
   --run-id "prepared-wiki-upload-$(date +%s)" --verify-draft-rollback --structured-wiki-rollback \
   --wiki-pending-upload --wiki-upload-rollback-source "$fallback"
 ```
 
-This handover uses the stock Tiptap editor with an opt-in Fountain integration patch. The wiki form reads pending filenames from the current collaborators, shows them beside Save, and waits for completion or departure. The run checks the compiled wiki guard before accepting the deployment. The browser holds a real upload response across rollback so a second author can try to save, then checks the saved link and downloads the bytes. The [Chromium handover](../../../artifacts/gitlab-compatibility/wiki-upload-prepared-20261121/fountain-2/report.json) verified the visible notice, keyboard guard and recovered file. Save was enabled at the first observation, before the notice arrived. Keep draining active uploads for planned rollback until the immediate-join check passes. The packaged GitLab procedure below also applies when the prepared fallback is unavailable.
+Use a Fountain publisher with room reservations (first included in `daa122ba`) and the prepared Tiptap wiki build from the commands above. The filename travels in live presence. A numbered reservation for each uploading browser travels in shared room metadata. It stays separate from the published Markdown. The prepared form waits for the initial room state, then guards Save while reservations or live notices exist. Completion, cancellation and failure clear the uploader’s reservation.
+
+If the uploader has gone away and left an unfinished reservation, contact the author to verify the transfer stopped. **Review interrupted uploads** offers an explicit recovery action. Confirming clears only the selected absent browsers’ original reservations. A newer batch or a browser that has returned stays protected. Clearing a reservation does not attach a file or submit a revision. Reattach any missing file before saving.
+
+To test an uploader that never returns, add `--wiki-abandoned-upload` and use a fresh run ID. The browser selects a real file and GitLab accepts the bytes. After the app node stops, the collector closes the uploading tab while its response is still withheld. The other author cancels recovery once, confirms it on the second attempt, checks the saved wiki is untouched, and reattaches the file through the GitLab picker. The test verifies the single reopened link and downloaded bytes. The originally accepted upload can remain in GitLab storage.
+
+The collector delays incoming wiki presence after rollback while allowing room initialization, document edits and HTTP traffic through. It records the initial Save state, attempts Save before the filename arrives, then checks both authors’ edits and downloads the final attachment. The [earlier presence-only fallback](../../../artifacts/gitlab-compatibility/wiki-upload-prepared-20261121/fountain-3/report.json) reproduced a text-only revision. Use the packaged procedure below for older uploaders or an unmodified fallback.
 
 For a planned rollback, let uploaders finish and save the attachment links before switching the frontend. If rollback happens during an upload, keep the original uploader tab open. In the [live rollback](../../../artifacts/gitlab-compatibility/wiki-early-handover-20261121/fountain-1/report.json), stock GitLab offered Save before it could display the pending filename. The resulting revision contained both authors’ text and no attachment. Reopening that wiki for editing allowed the two tabs to receive the final link. The author saved it explicitly and verified the downloaded file from the reader. In the [opposite rollout](../../../artifacts/gitlab-compatibility/wiki-early-handover-20261121/original-1/report.json), Fountain displayed the pending filename and prevented an early Save, including Ctrl+Enter. Both runs checked the same builds, backend, fixture and collector. An intermediate stock revision remains a text-only revision even after the file arrives.
 

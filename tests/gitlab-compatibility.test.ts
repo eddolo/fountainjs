@@ -439,6 +439,8 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  expected.sourceTree = wikiUploadReplayTree;
  expect(buildIdentityError(prepared)).toBeTruthy();
  observed.scripts[0].wikiUploadReplay = true;
+ expect(buildIdentityError(prepared)).toBeTruthy();
+ observed.scripts[0].wikiUploadNotice = true;
  expect(buildIdentityError(prepared)).toBeNull();
  expected.rspackManifestSHA256 = '3'.repeat(64);
  expect(buildIdentityError(prepared)).toBeTruthy();

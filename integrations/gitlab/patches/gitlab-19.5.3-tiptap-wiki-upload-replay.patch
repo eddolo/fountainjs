@@ -1,5 +1,5 @@
 diff --git a/app/assets/javascripts/wikis/components/wiki_form.vue b/app/assets/javascripts/wikis/components/wiki_form.vue
-index 9ff1212ab..16be70b94 100644
+index 9ff1212ab..e014173b4 100644
 --- a/app/assets/javascripts/wikis/components/wiki_form.vue
 +++ b/app/assets/javascripts/wikis/components/wiki_form.vue
 @@ -229,6 +229,9 @@ export default {
@@ -76,27 +76,45 @@ index 9ff1212ab..16be70b94 100644
        this.collaborationProvider?.awareness.off('change', this.updatePeerUploads);
        this.peerUploadNames = [];
        this.collaborationProvider?.destroy();
-@@ -890,10 +924,18 @@ export default {
+@@ -889,12 +923,6 @@ export default {
+                 </div>
                  <div class="gl-grow"></div>
                  <div class="gl-my-3 gl-flex gl-shrink-0 gl-items-center gl-gap-3">
-                   <div v-if="waitingForPeerUpload" role="status">
+-                  <div v-if="waitingForPeerUpload" role="status">
 -                    {{ s__('WikiPage|Waiting for attachments before saving') }}
 -                    <ul :aria-label="s__('WikiPage|Files being attached by other authors')">
-+                    <span v-if="!uploadRoomReady">{{ s__('WikiPage|Loading the shared draft') }}</span>
-+                    <span v-else>{{ s__('WikiPage|Waiting for attachments before saving') }}</span>
-+                    <ul v-if="peerUploadNames.length" :aria-label="s__('WikiPage|Files being attached by other authors')">
-                       <li v-for="(name, index) in peerUploadNames" :key="index">{{ name }}</li>
-                     </ul>
-+                    <gl-button
-+                      v-if="uploadRoomReady && absentUploadBatches.length"
-+                      size="small"
-+                      category="tertiary"
-+                      data-testid="wiki-recover-uploads"
-+                      @click="discardAbandonedUploadBatches"
-+                    >{{ s__('WikiPage|Review interrupted uploads') }}</gl-button>
-                   </div>
+-                      <li v-for="(name, index) in peerUploadNames" :key="index">{{ name }}</li>
+-                    </ul>
+-                  </div>
                    <collaborators-indicator
                      v-if="isCollaborating"
+                     :provider="collaborationProvider"
+@@ -931,6 +959,25 @@ export default {
+                   <delete-wiki-modal v-if="isCustomSidebar || isTemplate" />
+                 </div>
+               </div>
++              <div
++                v-if="waitingForPeerUpload"
++                role="status"
++                data-testid="wiki-upload-notice"
++                class="gl-flex gl-flex-wrap gl-items-center gl-gap-3 gl-bg-subtle gl-px-5 gl-py-2"
++              >
++                <span v-if="!uploadRoomReady">{{ s__('WikiPage|Loading the shared draft') }}</span>
++                <span v-else>{{ s__('WikiPage|Waiting for attachments before saving') }}</span>
++                <ul v-if="peerUploadNames.length" class="gl-mb-0 gl-break-all" :aria-label="s__('WikiPage|Files being attached by other authors')">
++                  <li v-for="(name, index) in peerUploadNames" :key="index">{{ name }}</li>
++                </ul>
++                <gl-button
++                  v-if="uploadRoomReady && absentUploadBatches.length"
++                  size="small"
++                  category="tertiary"
++                  data-testid="wiki-recover-uploads"
++                  @click="discardAbandonedUploadBatches"
++                >{{ s__('WikiPage|Review interrupted uploads') }}</gl-button>
++              </div>
+             </template>
+           </markdown-editor>
+           <input name="wiki[content]" type="hidden" :value="rawContent" />
 diff --git a/spec/frontend/wikis/components/wiki_form_spec.js b/spec/frontend/wikis/components/wiki_form_spec.js
 index 38ec0291a..adca9429e 100644
 --- a/spec/frontend/wikis/components/wiki_form_spec.js
