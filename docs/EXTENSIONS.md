@@ -116,6 +116,10 @@ Document JSON is the lossless persistence boundary. Custom nodes and marks only
 work when every writer/reader composes a compatible schema. HTML, Markdown, and
 text may be lossy unless the extension contributes explicit rules or formats.
 
+## Markdown list bullets
+
+When a host stores the author's bullet character, pass a `bulletMarker` callback to `MarkdownExporter.exportWithReport`. It receives each unordered list, including nested lists, and can return `*`, `+`, `-` or `undefined`. Returning `undefined` uses the default hyphen. Two adjacent unordered lists need different markers to reopen as separate lists, so the exporter chooses an alternate if their requested markers coincide.
+
 ## Canonical Markdown for custom blocks
 
 Pass host-owned `blockSerializers` to `MarkdownExporter.exportWithReport` when

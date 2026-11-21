@@ -1584,6 +1584,14 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('keeps adjacent and nested list boundaries when the host requests the same bullet for every list', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const original = MarkdownImporter.parse('- one\n  - nested\n  + other\n+ two\n- three', schema);
+    const result = new MarkdownExporter().exportWithReport(original, {bulletMarker: () => '*'});
+    expect(result.markdown).toBe('* one\n  * nested\n  + other\n\n+ two\n\n* three');
+    expect(MarkdownImporter.parse(result.markdown, schema).eq(original)).toBe(true);
+  });
+
   it('exports adjacent distinct lists without merging them on re-import', () => {
     const schema = new Schema(CoreSchemaSpec);
     for (const source of ['- foo\n- bar\n+ baz', '1. foo\n2. bar\n3) baz', '> - foo\n> + bar', '- - foo\n  + bar']) {
