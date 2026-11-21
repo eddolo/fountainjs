@@ -89,6 +89,8 @@ export default {
       return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
     },
     failureMessage() {
+      if (this.failureCode === 'GITLAB_WIKI_DISCONNECTED')
+        return s__('ContentEditor|Your wiki draft is still here. Reconnect to the shared session before saving.');
       if (this.failureCode === 'GITLAB_CODE_SOURCE_DRAFT_PENDING')
         return s__('ContentEditor|Apply or cancel your source draft before saving or switching editing mode.');
       if (this.failureCode === 'GITLAB_ALERT_TITLE_SINGLE_LINE')

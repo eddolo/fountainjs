@@ -74,6 +74,7 @@ export class GitLabWikiSession {
 
   assertCurrent(doc:Node) {
     if (this.failure) throw this.failure;
+    if (this.binding && !this.options.provider.connected) throw new Error('GITLAB_WIKI_DISCONNECTED');
     if (!this.binding || !this.binding.read().eq(doc)) throw new Error('The current GitLab wiki draft is unavailable.');
   }
   private indexText() {

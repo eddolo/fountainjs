@@ -125,8 +125,17 @@ try {
     let seedCalls = 0;
     const wait = openGitLabWikiRoom({doc:waiting,connected:true,whenSynced:Promise.resolve({seed:false}),seed:shouldNotSeed},
       schema,wire,shouldNotSeed);
-    const seeded = await openGitLabWikiRoom({doc:elected,connected:true,whenSynced:Promise.resolve({seed:true}),
-      async seed(populate) { seedCalls++; await populate(); }}, schema,wire,async () => first);
+    const confirming = {doc:elected,connected:false,whenSynced:Promise.resolve({seed:true}),
+      async seed(populate) { seedCalls++; assert.equal(this.connected,true); await populate(); }};
+    await assert.rejects(openGitLabWikiRoom(confirming,schema,wire,shouldNotSeed,{timeoutMs:40}),/timed out/);
+    assert.equal(seedCalls,0);
+    assert.equal(elected.getXmlFragment('default').length,0);
+    const joining = openGitLabWikiRoom(confirming,schema,wire,async () => first);
+    await new Promise(resolve => setTimeout(resolve,35));
+    assert.equal(seedCalls,0);
+    assert.equal(elected.getXmlFragment('default').length,0);
+    confirming.connected = true;
+    const seeded = await joining;
     Y.applyUpdate(waiting,Y.encodeStateAsUpdate(elected));
     assert.equal((await wait).document.eq(seeded.document),true);
     assert.equal(seedCalls,1);
@@ -168,8 +177,15 @@ try {
     assert.equal(live.editor.state.doc.child(1).textContent,'From stock: ' + line);
     assert.equal(redoEdit(live.editor),true);
     assert.ok(live.getSerializedContent().includes('From stock: ' + line + ' Live.'));
+    provider.connected = false;
+    const beforeOffline = live.editor.state.doc.child(1).textContent;
+    assert.ok(live.editor.dispatch(live.editor.createTransaction().insertText([1,0],beforeOffline.length,' Offline.')));
+    assert.throws(() => live.getSerializedContent(), /GITLAB_WIKI_DISCONNECTED/);
+    assert.equal(live.editor.state.doc.child(1).textContent, beforeOffline + ' Offline.');
+    provider.connected = true;
+    assert.ok(live.getSerializedContent().includes(beforeOffline + ' Offline.'));
   } finally { live.dispose(); awareness.destroy(); liveDoc.destroy(); }
-  console.log(JSON.stringify({editorSession:true,markedRunMerge:true,fountainRevision:runtime.parentRevision,runtimeSHA256:runtime.sha256,libraryEntryHashes:libraries,stockSchemaLossRefused:true,cancelledSeedLeftRoomEmpty:true,joinedBeforeSeed:true,gitlab:pin.commit,stockWiki: item.slug,joined:first.child(1).textContent,
+  console.log(JSON.stringify({editorSession:true,seedWaitedForConfirmation:true,disconnectedSaveRefused:true,offlineEditRetained:true,markedRunMerge:true,fountainRevision:runtime.parentRevision,runtimeSHA256:runtime.sha256,libraryEntryHashes:libraries,stockSchemaLossRefused:true,cancelledSeedLeftRoomEmpty:true,joinedBeforeSeed:true,gitlab:pin.commit,stockWiki: item.slug,joined:first.child(1).textContent,
     merged,relativeCursorPreserved:true,peerEditSurvivedUndo:true,staleWriteRefused:true}));
 } finally {
   undo?.destroy();

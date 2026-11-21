@@ -143,10 +143,20 @@ export async function openGitLabWikiRoom<StockNode extends StockWikiNode>(
     else life.signal.addEventListener('abort',cancel,{once:true});
   });
   let unobserve: (() => void) | undefined;
+  let pendingConfirmation: ReturnType<typeof setInterval> | undefined;
   try {
     const {seed} = await Promise.race([provider.whenSynced,cancelled]);
     life.signal.throwIfAborted();
-    if (!provider.connected) throw new Error('GitLab wiki collaboration is disconnected.');
+    // ActionCable may deliver the initial document before it confirms the subscription.
+    // GitLab exposes that confirmation as a boolean. Wait only while joining this room.
+    if (!provider.connected) {
+      const confirmed = new Promise<void>(resolve => {
+        pendingConfirmation = setInterval(() => { if (provider.connected) resolve(); }, 25);
+      });
+      await Promise.race([confirmed,cancelled]);
+      clearInterval(pendingConfirmation);
+      life.signal.throwIfAborted();
+    }
     const fragment = provider.doc.getXmlFragment('default');
     if (!fragment.length && seed) {
       const initial = await Promise.race([loadSeed(),cancelled]);
@@ -174,6 +184,7 @@ export async function openGitLabWikiRoom<StockNode extends StockWikiNode>(
     const binding = bindGitLabWikiDocument(fragment,schema,wire);
     return {binding, document:binding.read()};
   } finally {
+    clearInterval(pendingConfirmation);
     unobserve?.();
     clearTimeout(timer);
     signal?.removeEventListener('abort',stop);
