@@ -693,6 +693,8 @@ Use `--wiki-code` on both wiki collaboration runs with a fresh run ID to test a 
 
 Use `--wiki-code-params` in place of `--wiki-code` on the two fixed-deployment commands to test parameter retention. The fixture uses the same Python language in both listings and supplies a different filename in each fence. The [matched comparison](../../../artifacts/gitlab-compatibility/wiki-fence-params-20261121/verified/report.md) checks the code edit, both separators in saved Markdown, and the metadata in GitLab’s reopened reader.
 
+Use `--wiki-code-params=repeated` to give both Python listings the same filename. In the [matched repeated-filename run](../../../artifacts/gitlab-compatibility/wiki-repeated-fence-20261121/verified/report.md), the peer edited the first listing and the saved source retained its two spaces and the second listing’s colon. Source matching is local to the joined wiki session and uses the identity of each live code block through subsequent text edits.
+
 To repeat the code handover on the packaged backend, run the two commands below from the same pinned installation. Each command starts with the named editor, switches the frontend once, checks the unsaved code in a fresh browser, and saves another edit.
 
 ```sh

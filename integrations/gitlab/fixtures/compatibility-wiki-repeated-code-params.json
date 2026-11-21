@@ -1,0 +1,26 @@
+{
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "wiki-repeated-fence-parameters",
+      "scope": "wiki-collaboration",
+      "title": "Two examples from one source file",
+      "source": "Owner: **Sam**.\n\n```python  title=threshold.py\ndef threshold():\n    return 3\n```\n\n```python:title=threshold.py\nprint(threshold())\n```\n\nStatus: ready.",
+      "ownerEdit": " Reviewed.",
+      "peerEdit": " Approved.",
+      "code": {
+        "language": "python",
+        "text": "def threshold():\n    return 3",
+        "edited": "def threshold():\n    return 30",
+        "companion": {
+          "language": "python",
+          "params": "title=threshold.py",
+          "text": "print(threshold())"
+        }
+      }
+    }
+  ]
+}
