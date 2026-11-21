@@ -8,7 +8,7 @@ import {verifyGitLabRestart} from './verify-gitlab-restart.mjs';
 import {verifySuggestionHistoryRollback} from './verify-gitlab-suggestion-history-rollback.mjs';
 import {observePage} from './gitlab-audit-editor.mjs';
 import {verifyGitLabRollback} from './verify-gitlab-editor-rollback.mjs';
-import {buildIdentityError, describeBuild, observeEditorBuild, preparedRollbackTree, wikiUploadReplayTree} from '../integrations/gitlab/testing/build-identity.mjs';
+import {buildIdentityError, describeBuild, observeEditorBuild, preparedRollbackTree, wikiUploadReplayTree, alignedCheckboxRollbackTree} from '../integrations/gitlab/testing/build-identity.mjs';
 import {chromium,firefox,webkit,expect} from '@playwright/test';
 import {readGitLabAuditCredential} from './gitlab-audit-credentials.mjs';
 import {loggerStartupFailure,waitForGitLabDeployment} from './gitlab-deployment-readiness.mjs';
@@ -32,7 +32,7 @@ import {runCustomLabel} from './audit-gitlab-custom-label.mjs';
 import {runFootnoteLabels} from './audit-gitlab-footnote-labels.mjs';
 import {runLinkedImage} from './audit-gitlab-linked-image.mjs';
 import {runContents} from './audit-gitlab-contents.mjs';
-import {runMergedTableTasks,runTableCheckboxRecovery} from './audit-gitlab-merged-table-tasks.mjs';
+import {runMergedTableTasks,runTableCheckboxRecovery,verifyCheckboxRollback} from './audit-gitlab-merged-table-tasks.mjs';
 import {runTableAuthoring} from './audit-gitlab-table-authoring.mjs';
 import {runWriterImport} from './audit-gitlab-writer-import.mjs';
 import {runGitLabGridClipboardCompatibility} from './audit-gitlab-compatibility-grid.mjs';
@@ -74,11 +74,12 @@ if (structuredWikiRollback && (suite !== 'wiki-collaboration' || side !== 'fount
 const draftRollbackRequested = mixedWiki || process.argv.includes('--verify-draft-rollback');
 if (draftRollbackRequested && (!['mr-create-member','wiki-collaboration'].includes(suite) || side !== 'fountain'))
   throw new Error('Use --verify-draft-rollback with a Fountain member MR or live wiki workflow.');
+const alignedCheckboxRecovery = process.argv.includes('--aligned-checkboxes');
 const preparedRollback = side === 'prepared';
-if (preparedRollback && (suite !== 'composers' || !process.argv.includes('--verify-rollback') ||
+if (preparedRollback && ((suite !== 'composers' && !(alignedCheckboxRecovery && suite === 'table-checkbox-recovery')) || !process.argv.includes('--verify-rollback') ||
     !process.argv.includes('--prepared-source') || !isAbsolute(value('--prepared-source')) ||
     ['--footnote-cache','--suggestion-history','--verify-restart'].some(flag => process.argv.includes(flag))))
-  throw new Error('The prepared Tiptap build requires --suite composers --verify-rollback --prepared-source /absolute/gitlab-checkout.');
+  throw new Error('The prepared Tiptap build requires composers or aligned checkbox recovery with --verify-rollback --prepared-source /absolute/gitlab-checkout.');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -109,7 +110,6 @@ const wikiParenthesized = process.argv.includes('--wiki-parenthesized-checklist'
 const wikiChecklist = wikiTableTasks || wikiParenthesized || process.argv.includes('--wiki-checklist');
 if (wikiChecklist && (suite !== 'wiki-collaboration' || wikiRollout || mixedWiki || draftRollbackRequested || wikiCode || wikiPendingUpload || wikiReferenceLinks || wikiPageLinks))
   throw new Error('Use --wiki-checklist for a matched wiki collaboration comparison.');
-const alignedCheckboxRecovery = process.argv.includes('--aligned-checkboxes');
 if (alignedCheckboxRecovery && suite !== 'table-checkbox-recovery') throw new Error('--aligned-checkboxes requires the table-checkbox-recovery suite');
 const fixturePath=`integrations/gitlab/fixtures/compatibility-${alignedCheckboxRecovery ? 'aligned-checkbox-recovery' : wikiAlignedTasks ? 'wiki-aligned-table-tasks' : wikiTableTasks ? 'wiki-table-tasks' : wikiParenthesized ? 'wiki-parenthesized-checklist' : wikiChecklist ? 'wiki-checklist' : repeatedFenceParams ? 'wiki-repeated-code-params' : wikiCodeParams ? 'wiki-code-params' : wikiCode ? 'wiki-code' : wikiPartialUpload ? 'wiki-partial-upload' : wikiUploaderClose ? 'wiki-uploader-close' : wikiInterruptedUpload ? 'wiki-interrupted-upload' : wikiPendingUpload ? 'wiki-pending-upload' : wikiReferenceLinks ? 'wiki-reference-links' : wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
 const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
@@ -142,7 +142,7 @@ if (preparedRollback || wikiFallback) {
  const source = resolve(value(wikiFallback ? '--wiki-upload-rollback-source' : '--prepared-source'));
  const git = (...args) => execFileSync('git',['-C',source,...args],{encoding:'utf8'}).trim();
  const sourceTree = git('write-tree');
- const allowedTrees = wikiFallback ? [wikiUploadReplayTree] : [preparedRollbackTree, wikiUploadReplayTree];
+ const allowedTrees = wikiFallback ? [wikiUploadReplayTree] : [preparedRollbackTree, wikiUploadReplayTree, alignedCheckboxRollbackTree];
  if (source !== git('rev-parse','--show-toplevel') || git('rev-parse','HEAD') !== pin.commit ||
      !allowedTrees.includes(sourceTree) || git('diff','--name-only') || git('ls-files','--others','--exclude-standard'))
    throw new Error('The prepared rollback requires the pinned GitLab checkout with all staged rollback patches.');
@@ -218,7 +218,7 @@ if ((footnoteHandover || ['mr-review-handover','contents-handover'].includes(sui
 }
 let rollbackCandidate;
 if(process.argv.includes('--verify-rollback')){
- if((side!=='original'&&!preparedRollback)||suite!=='composers')throw new Error('Rollback verification requires the stock composers run after its matching native run.');
+ if((side!=='original'&&!preparedRollback)||(suite!=='composers'&&!alignedCheckboxRecovery))throw new Error('Rollback verification requires a matching native run for the composers or aligned-checkbox suite.');
  rollbackCandidate=JSON.parse(await readFile(resolve(out,'..','fountain-'+attempt,'report.json')));
  if (Boolean(rollbackCandidate.footnoteCache) !== checkFootnotes) throw new Error('Use the same cache rollback profile as the candidate.');
  if (filter) {
@@ -227,14 +227,14 @@ if(process.argv.includes('--verify-rollback')){
      throw new Error('The candidate footnote deployment or cache observation is incomplete.');
  }
  const previousMount=prior.Mounts.find(m=>m.Destination==='/opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack');
- if(buildIdentityError(rollbackCandidate)||!rollbackCandidate.collectionComplete||!previousMount||
+ if(rollbackCandidate.side !== 'fountain' || rollbackCandidate.suite !== suite || rollbackCandidate.runId !== runId || rollbackCandidate.attempt !== attempt || rollbackCandidate.fixtureHash !== hash(fixtureBytes) || buildIdentityError(rollbackCandidate)||!rollbackCandidate.collectionComplete||!previousMount||
     previousMount.RW||previousMount.Source!==rollbackCandidate.deployment.assetMount[0].source)
    throw new Error('Rollback requires the previously verified, stopped Fountain deployment.');
 }
 let browser,started=false,authenticated=false;
 const report={formatVersion:2,buildIdentity:{side,expected:expectedBuild,observed:null},runId,attempt,side,scope:preparedRollback?'Opt-in prepared Tiptap rollback deployment.':'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
  suite,restartRequested,draftRollbackRequested,mixedWiki,wikiRollout,...(wikiFallback ? {abandonWikiUpload} : {}),writerPaste,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
- harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','scripts/verify-gitlab-suggestion-history-rollback.mjs','scripts/verify-gitlab-wiki-rollback.mjs','scripts/verify-gitlab-restart.mjs','scripts/verify-gitlab-footnote-rollback.mjs','integrations/gitlab/testing/save-gesture.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-saved-replies.mjs','scripts/audit-gitlab-issue-board.mjs','scripts/audit-gitlab-mr-create.mjs','scripts/verify-gitlab-mr-handover.mjs','integrations/gitlab/testing/observe-mr-navigation.mjs','scripts/gitlab-audit-editor.mjs','scripts/audit-gitlab-wiki-history.mjs','scripts/audit-gitlab-wiki-rename.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-simultaneous-issues.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-concurrent-review.mjs','scripts/audit-gitlab-batch-review.mjs','scripts/audit-gitlab-reviewer-handoff.mjs','scripts/audit-gitlab-suggestion-history.mjs','scripts/gitlab-audit-member.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs',...(writerPaste || writerImport ? ['scripts/audit-gitlab-writer-paste.py'] : []),...(suite === 'wiki-collaboration' ? ['scripts/audit-gitlab-wiki-collaboration.mjs','scripts/audit-gitlab-wiki-pending-upload.mjs','scripts/gitlab-partial-wiki-transfer.mjs'] : []),...(wikiPartialUpload ? ['integrations/gitlab/runtime/compose.upload-ingress.yaml'] : []),...(suite === 'custom-label' ? ['scripts/audit-gitlab-custom-label.mjs','integrations/gitlab/testing/issue_label_host.js'] : []),...(suite === 'footnote-labels' ? ['scripts/audit-gitlab-footnote-labels.mjs'] : []),...(suite === 'linked-image' ? ['scripts/audit-gitlab-linked-image.mjs'] : []),...(['contents','contents-authoring','contents-handover'].includes(suite) ? ['scripts/audit-gitlab-contents.mjs'] : []),...(['merged-table-tasks','table-checkbox-recovery'].includes(suite) ? ['scripts/audit-gitlab-merged-table-tasks.mjs'] : []),...(suite === 'table-authoring' ? ['scripts/audit-gitlab-table-authoring.mjs'] : []),...(writerImport ? ['scripts/audit-gitlab-writer-import.mjs'] : []),'scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
+ harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','scripts/verify-gitlab-suggestion-history-rollback.mjs','scripts/verify-gitlab-wiki-rollback.mjs','scripts/verify-gitlab-restart.mjs','scripts/verify-gitlab-footnote-rollback.mjs','integrations/gitlab/testing/save-gesture.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-saved-replies.mjs','scripts/audit-gitlab-issue-board.mjs','scripts/audit-gitlab-mr-create.mjs','scripts/verify-gitlab-mr-handover.mjs','integrations/gitlab/testing/observe-mr-navigation.mjs','scripts/gitlab-audit-editor.mjs','scripts/audit-gitlab-wiki-history.mjs','scripts/audit-gitlab-wiki-rename.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-simultaneous-issues.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-concurrent-review.mjs','scripts/audit-gitlab-batch-review.mjs','scripts/audit-gitlab-reviewer-handoff.mjs','scripts/audit-gitlab-suggestion-history.mjs','scripts/gitlab-audit-member.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs',...(writerPaste || writerImport ? ['scripts/audit-gitlab-writer-paste.py'] : []),...(suite === 'wiki-collaboration' ? ['scripts/audit-gitlab-wiki-collaboration.mjs','scripts/audit-gitlab-wiki-pending-upload.mjs','scripts/gitlab-partial-wiki-transfer.mjs'] : []),...(wikiPartialUpload ? ['integrations/gitlab/runtime/compose.upload-ingress.yaml'] : []),...(suite === 'custom-label' ? ['scripts/audit-gitlab-custom-label.mjs','integrations/gitlab/testing/issue_label_host.js'] : []),...(suite === 'footnote-labels' ? ['scripts/audit-gitlab-footnote-labels.mjs'] : []),...(suite === 'linked-image' ? ['scripts/audit-gitlab-linked-image.mjs'] : []),...(['contents','contents-authoring','contents-handover'].includes(suite) ? ['scripts/audit-gitlab-contents.mjs'] : []),...(['merged-table-tasks','table-checkbox-recovery'].includes(suite) ? ['scripts/audit-gitlab-merged-table-tasks.mjs','integrations/gitlab/testing/checkbox-rollback.mjs'] : []),...(suite === 'table-authoring' ? ['scripts/audit-gitlab-table-authoring.mjs'] : []),...(writerImport ? ['scripts/audit-gitlab-writer-import.mjs'] : []),'scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
  started=true;execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
  const deployment=JSON.parse(docker('inspect',containerName))[0];
@@ -328,7 +328,7 @@ try{
  }});
  };
  let wikiProbeURL;
- if (preparedRollback && expectedBuild.sourceTree === wikiUploadReplayTree) {
+ if (preparedRollback && [wikiUploadReplayTree,alignedCheckboxRollbackTree].includes(expectedBuild.sourceTree)) {
    const wiki = await request('/api/v4/projects/' + project.id + '/wikis', {
      title: 'Build probe ' + runId + ' a' + attempt, content: 'Check the installed wiki editor.', format: 'markdown',
    });
@@ -339,15 +339,16 @@ try{
  const identityError=buildIdentityError(report);
  if(identityError)throw new Error('Build identity preflight failed: '+identityError);
  console.log(describeBuild(report));
- if (mrHandoverFrom) {
+ if (mrHandoverFrom || (alignedCheckboxRecovery && rollbackCandidate)) {
+   const authoringRun = mrHandoverFrom ?? rollbackCandidate;
    for (const [object,keys] of [[null,['harnessHashes','browser','backend']],['deployment',['imageId','backendMounts','backendEnvironmentHash']]]) {
-     const left = object ? mrHandoverFrom[object] : mrHandoverFrom;
+     const left = object ? authoringRun[object] : authoringRun;
      const right = object ? report[object] : report;
      for (const key of keys) expect(right[key]).toEqual(left[key]);
    }
    if (suite === 'mr-review-handover') report.mrHandoverSource = mrHandoverReceipt;
    else if (footnoteHandover) report.footnoteHandoverSource = mrHandoverReceipt;
-   else report.contentsHandoverSource = mrHandoverReceipt;
+   else if (mrHandoverFrom) report.contentsHandoverSource = mrHandoverReceipt;
  }
  await observePage(page,report,report.errors);
  if (previousHistory && wikiSuite) await verifyWikiRollback({previous:previousHistory,report,page,project,request,output:out});
@@ -463,7 +464,8 @@ try{
  if(restartRequested && report.collectionComplete) await verifyGitLabRestart({report,project,docker,deployment,waitUntilReady,identify,page,request,output:out});
  if(filter && report.collectionComplete) await probeFootnoteCache({report,candidate:rollbackCandidate,page,project,request,output:out,container:containerName});
  if(rollbackCandidate && report.collectionComplete) {
-  report.rollback=await verifyGitLabRollback({candidate:rollbackCandidate,report,page,project,request,output:out});
+  const verifyRollback = alignedCheckboxRecovery ? verifyCheckboxRollback : verifyGitLabRollback;
+  report.rollback=await verifyRollback({candidate:rollbackCandidate,report,page,project,request,output:out});
   console.log(JSON.stringify({kind:'compiled-frontend-rollback',passed:report.rollback.passed,records:report.rollback.records.length}));
  }
  if(!report.collectionComplete||report.errors.length||report.observations.some(item => item.pageErrors?.length)||(rollbackCandidate&&!report.rollback?.passed))process.exitCode=1;

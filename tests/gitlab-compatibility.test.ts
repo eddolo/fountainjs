@@ -411,7 +411,7 @@ it('requires the native Writer source and reopened editor for an inbound paste c
 });
 it('identifies the prepared Tiptap rollback build separately from packaged GitLab', async () => {
  // @ts-expect-error Private JS audit helper intentionally has no published type entry.
- const {buildIdentityError, preparedRollbackTree, wikiUploadRollbackTree, wikiUploadReplayTree} = await import('../integrations/gitlab/testing/build-identity.mjs');
+ const {buildIdentityError, preparedRollbackTree, wikiUploadRollbackTree, wikiUploadReplayTree, originalMarkdownTree, alignedCheckboxRollbackTree} = await import('../integrations/gitlab/testing/build-identity.mjs');
  const [prepared, fountain] = reports() as any[];
  prepared.side = prepared.buildIdentity.side = 'prepared';
  const digest = '2'.repeat(64);
@@ -441,6 +441,14 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  observed.scripts[0].wikiUploadReplay = true;
  expect(buildIdentityError(prepared)).toBeTruthy();
  observed.scripts[0].wikiUploadNotice = true;
+ expect(buildIdentityError(prepared)).toBeNull();
+ expected.sourceTree = originalMarkdownTree;
+ expect(buildIdentityError(prepared)).toBeTruthy();
+ observed.scripts[0].originalMarkdownHandoff = true;
+ expect(buildIdentityError(prepared)).toBeNull();
+ expected.sourceTree = alignedCheckboxRollbackTree;
+ expect(buildIdentityError(prepared)).toBeTruthy();
+ observed.scripts[0].scopedMarkdownHandoff = true;
  expect(buildIdentityError(prepared)).toBeNull();
  expected.rspackManifestSHA256 = '3'.repeat(64);
  expect(buildIdentityError(prepared)).toBeTruthy();
@@ -798,6 +806,37 @@ it.each([undefined, {passed: false}, {passed: true}])('requires the requested de
  expect(result.summary.parity).toBe(result.summary.total);
  expect(result.featureAcceptance.passed).toBe(false);
 });
+it('requires every checkbox rollback document, its source, rich edit and per-cell state on reload', () => {
+ const [stock,fountain] = reports() as any[];
+ const input = {id:'center',scope:'table-checkbox-recovery',alignment:'center'};
+ const table = {spans:[[1,2]],states:[true,'inapplicable',false]};
+ const snapshot = {table,cells:[[{span:2,alignment:'center',states:table.states}]]};
+ const source = '<table>...</table>\n\nStatus: waiting. Reviewed.';
+ const records = [];
+ for (const [index,writer] of [stock,fountain].entries()) {
+   writer.fixture = {workflow:'recover-aligned-standalone-checkboxes-after-a-table-merge',cases:[input]};
+   Object.assign(writer,{suite:'table-checkbox-recovery',attempt:1});
+   const iid = 50 + index;
+   Object.assign(writer.observations[0],{id:input.id,input,iid,status:'observed',savedMarkdown:source,reader:table});
+   records.push({writer:writer.side,case:input.id,iid,before:source,afterMarkdown:source+' Markdown follow-up.',
+     afterRich:source+' Markdown follow-up. Rich follow-up.',beforeReader:snapshot,markdownReader:snapshot,
+     richReader:structuredClone(snapshot),richDraft:table,reopened:table,richEditor:{native:false,className:'ProseMirror'}});
+ }
+ stock.rollbackRequested = true;
+ stock.rollback = {formatVersion:3,candidateBuild:fountain.buildIdentity.expected,passed:true,records};
+ const passed = () => compareGitLabCompatibility(stock,fountain).frontendRollback.passed;
+ expect(passed()).toBe(true);
+ const record = records[1]!;
+ record.afterRich = record.afterMarkdown;
+ expect(passed()).toBe(false);
+ record.afterRich += ' Rich follow-up.';
+ record.richReader.cells[0]![0]!.alignment = 'left';
+ expect(passed()).toBe(false);
+ record.richReader = structuredClone(snapshot);
+ record.iid = records[0]!.iid;
+ expect(passed()).toBe(false);
+});
+
 it('checks each timed rollback record independently of its reported pass flag', () => {
  const [original,fountain] = reports();
  const input = {...original.fixture.cases[0]!,description:'Release',suffix:' now.',comment:'Reviewed'};

@@ -837,6 +837,42 @@ Use `--wiki-reference-links` on either command or on two independent `--suite wi
 
 To test a file upload across the deployment switch, run the stock rollout and Fountain structured rollback commands above with `--wiki-pending-upload` and fresh run IDs. The Developer attaches a text file through the wiki’s file picker. The collector waits for GitLab to accept the actual bytes, holds delivery of the HTTP response to the uploader, and switches the frontend while that tab stays open. The other author edits the wiki before the response is released. The final assertions check one upload request, both authors’ text, the saved Markdown link and the exact bytes served by the reopened reader. [Stock-to-Fountain result](../../../artifacts/gitlab-compatibility/wiki-pending-upload-20261121/original-4/report.json) · [Fountain-to-stock result](../../../artifacts/gitlab-compatibility/wiki-pending-upload-20261121/fountain-4/report.json).
 
+#### Reproduce rollback of aligned issue checkboxes
+
+Start with a separate pinned fallback worktree containing the five staged patches described in [the wiki upload rollback](#reproduce-the-prepared-rollback-with-a-pending-wiki-upload). Keep the Fountain candidate installed in its own checkout. From the Fountain repository, apply the following additions to the fallback worktree. The issue reader uses the same CSS file as the replacement integration.
+
+```sh
+test "$(git -C "$fallback" write-tree)" = 084f348a1f39c84bdfcbebabc03e7b227e4583ad || exit 1
+git -C "$fallback" apply --index "$PWD/integrations/gitlab/patches/gitlab-19.5.3-tiptap-original-markdown.patch"
+git -C "$fallback" apply --index "$PWD/integrations/gitlab/patches/gitlab-19.5.3-tiptap-table-reader.patch"
+reader_style=app/assets/javascripts/work_items/components/fountain_work_item_table_tasks.css
+cp integrations/gitlab/components/work_item_table_tasks.css "$fallback/$reader_style"
+# Pin the file mode from the tested source tree across native and Windows checkouts.
+git -C "$fallback" add --chmod=+x -- "$reader_style"
+test "$(git -C "$fallback" write-tree)" = 6133fd5fecf0e94a017e8920e7e587947b44a726 || exit 1
+(
+  cd "$fallback" || exit 1
+  corepack yarn install --frozen-lockfile &&
+    FOSS_ONLY=1 corepack yarn jest --runInBand \
+      spec/frontend/content_editor/services/content_editor_spec.js \
+      spec/frontend/content_editor/components/content_editor_spec.js \
+      spec/frontend/vue_shared/components/markdown/markdown_editor_spec.js &&
+    FOSS_ONLY=1 RAYON_NUM_THREADS=3 corepack yarn rspack-prod
+)
+```
+
+Use one fresh run ID for both commands. The first run creates two issues with Fountain and leaves its deployment stopped. The second switches the same backend volumes to the prepared Tiptap frontend, creates two independent controls, then edits all four records through Markdown and rich text. The collector checks the prior deployment, package identity, loaded scripts, issue identities and exact source before editing. It retains the stored Markdown, per-cell data, checkbox coordinates and reader screenshots. A failed rollback sets a nonzero exit code. The receipt is `prepared-1/report.json` in the run directory.
+
+```sh
+run_id=aligned-issue-rollback-$(date -u +%Y%m%d-%H%M%S)
+node scripts/run-gitlab-compatibility.mjs --suite table-checkbox-recovery --aligned-checkboxes \
+  --editor fountain --run-id "$run_id"
+node scripts/run-gitlab-compatibility.mjs --suite table-checkbox-recovery --aligned-checkboxes \
+  --editor prepared --run-id "$run_id" --verify-rollback --prepared-source "$fallback"
+```
+
+To repeat the packaged stock comparison, use a separate fresh run ID, repeat the Fountain command, then run `--editor original --verify-rollback` with the same suite, fixture and run ID. The prepared build is an opt-in deployment target and has its own build identity. [Results and limits](../COMPATIBILITY_GRID_RESULTS.md#rollback-of-aligned-issue-checkboxes).
+
 #### Reproduce the prepared rollback with a pending wiki upload
 
 In a separate pinned GitLab checkout, apply the three patches from [the prepared Tiptap rollback](#reproduce-the-prepared-tiptap-rich-text-rollback). Before building, add the wiki upload guard and room-replay patch. Run the following from the FountainJS checkout with `fallback` set to the absolute path of this prepared checkout. Use the same pinned dependencies as the three-patch build.

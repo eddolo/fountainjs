@@ -32,7 +32,20 @@ const table=['# Matched GitLab editor comparison','','**Original** — '+describ
   report.deployment?.suggestionHistory ? 'suggestion-history repair `' + report.deployment.suggestionHistory.patchSHA256 + '`' : 'packaged services').join(' / ') + '. The raw reports identify each loaded Ruby service.', ''] : []),
 ...(reports[0].suite === 'wiki-collaboration' ? ['Wiki controller on stock / replacement: ' + reports.map(report =>
   report.deployment?.wikiRestore ? 'source-preserving patch `' + report.deployment.wikiRestore.patchSHA256 + '`' : 'packaged controller').join(' / ') + '.', ''] : []),
-...(rollback?[result.frontendRollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
+...(rollback && reports[0].suite === 'table-checkbox-recovery' ? [
+  (reports[0].side === 'prepared' ? 'Prepared Tiptap' : 'Packaged GitLab') + ' rollback data retention: ' + (result.frontendRollback.passed ? 'passed.' : 'open.'),
+  '', '| Authoring editor | Issue | Markdown edit and original source | Rich edit saved | Table content and attributes after rich Save | Reader control alignment on arrival |',
+  '| --- | ---: | --- | --- | --- | --- |',
+  ...rollback.records.map(record => {
+    const check = (observed,pass) => observed === undefined ? 'Unverified' : pass ? 'Preserved' : 'Changed';
+    const alignment = reports[0].fixture.cases.find(input => input.id === record.case)?.alignment;
+    const positions = record.beforePositions?.map(box => box.alignment);
+    const rich = record.richReader;
+    const sameTable = rich && JSON.stringify(rich) === JSON.stringify(record.beforeReader);
+    return '| ' + [record.writer,'#' + record.iid,check(record.afterMarkdown,record.afterMarkdown === record.before + ' Markdown follow-up.'),
+      check(record.afterRich,record.afterRich?.endsWith('Status: waiting. Reviewed. Markdown follow-up. Rich follow-up.')), check(rich,sameTable), positions?.length === 3 ? positions.every(value => value === alignment) ? alignment : positions.join(', ') : 'Unverified'].join(' | ') + ' |';
+  }), ''
+] : rollback?[result.frontendRollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
 '| Case | Invariant | Classification |','| --- | --- | --- |',...result.rows.map(row=>`| ${row.case} | ${row.label} | ${row.classification??row.status} |`),'',
 'Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.',''];
 if (reports[0].suite === 'board-issues' && reports[0].fixture.cases.some(entry => entry.measureLayout) && result.environment.matched) {
@@ -153,7 +166,7 @@ if (reports.some(report => report.restartRequested)) {
   }
   table.push('', 'The restart checks compare each saved description and formatted comment in the API and a fresh browser session. The input reports contain the volume records and the browser build identity after restart.', '');
 }
-if (rollback?.records?.length) {
+if (rollback?.records?.length && reports[0].suite === 'composers') {
   table.push('## Saved issues after frontend rollback', '');
   if (rollback.formatVersion === 2) {
     table.push('Immediate Markdown Save as the first edit after rollback: ' +

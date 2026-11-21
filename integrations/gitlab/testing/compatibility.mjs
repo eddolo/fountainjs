@@ -1,4 +1,5 @@
 import { matchesSaveGesture } from './save-gesture.mjs';
+import { alignedCheckboxRollbackPassed } from './checkbox-rollback.mjs';
 import { batchReviewChecks } from './batch-review.mjs';
 import { buildIdentityError } from './build-identity.mjs';
 
@@ -1502,7 +1503,9 @@ export function compareGitLabCompatibility(original,fountain){
         matchesSaveGesture(record.firstMarkdownGesture,'.',expected,'immediate','markdown') &&
         record.firstMarkdownAfterReload === expected && equal(record.firstMarkdownNotes,expectedNotes);
     }));
-  const rollbackVerified = (rollback?.formatVersion !== 2 || firstEditsVerified) && rollback?.passed === true && Array.isArray(rollback.records) &&
+  const rollbackVerified = fixture.workflow === 'recover-aligned-standalone-checkboxes-after-a-table-merge'
+    ? (matched || original.side === 'prepared') && alignedCheckboxRollbackPassed(fountain,original)
+    : (rollback?.formatVersion !== 2 || firstEditsVerified) && rollback?.passed === true && Array.isArray(rollback.records) &&
     rollback.records.length === fixture.cases.length * 2 && fixture.cases.every(input =>
       ['original','fountain'].every(writer => {
         const record = rollback.records.find(entry => entry.case === input.id && entry.writer === writer);

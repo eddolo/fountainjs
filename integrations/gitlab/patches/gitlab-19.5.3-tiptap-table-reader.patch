@@ -1,0 +1,10 @@
+diff --git a/app/assets/javascripts/work_items/components/work_item_description.vue b/app/assets/javascripts/work_items/components/work_item_description.vue
+index 02777eac2..59db410fc 100644
+--- a/app/assets/javascripts/work_items/components/work_item_description.vue
++++ b/app/assets/javascripts/work_items/components/work_item_description.vue
+@@ -824,3 +824,5 @@ export default {
+     />
+   </div>
+ </template>
++
++<style src="./fountain_work_item_table_tasks.css"></style>

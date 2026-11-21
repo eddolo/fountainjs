@@ -1,0 +1,63 @@
+diff --git a/app/assets/javascripts/content_editor/components/content_editor.vue b/app/assets/javascripts/content_editor/components/content_editor.vue
+index 5b69d006a..58df066f6 100644
+--- a/app/assets/javascripts/content_editor/components/content_editor.vue
++++ b/app/assets/javascripts/content_editor/components/content_editor.vue
+@@ -300,7 +300,7 @@ export default {
+       ) {
+         throw new Error('MARKDOWN_SERIALIZATION_NOT_READY');
+       }
+-      const markdown = this.contentEditor.getSerializedContent();
++      const markdown = this.contentEditor.getSerializedContent({ preserveLoadedSource: true });
+       // Save can publish this source before the debounced change observer fires.
+       this.handoff = Object.freeze({ markdown, doc: this.contentEditor.tiptapEditor.state.doc });
+       return markdown;
+diff --git a/app/assets/javascripts/content_editor/services/content_editor.js b/app/assets/javascripts/content_editor/services/content_editor.js
+index dc6a2308f..99e4d4af6 100644
+--- a/app/assets/javascripts/content_editor/services/content_editor.js
++++ b/app/assets/javascripts/content_editor/services/content_editor.js
+@@ -151,13 +151,19 @@ export class ContentEditor {
+         tr = tr.step(new DocAttrStep(key, value));
+       }
+       editor.view.dispatch(tr.setMeta('preventUpdate', true).setMeta('addToHistory', addToHistory));
++      // A mode switch can ask for Markdown before the author has edited anything.
++      // Keep the original spelling (including empty checklist labels) for this document.
++      this._loadedSourceDocument = editor.state.doc;
++      this._loadedMarkdown = serializedContent;
+     }
+   }
+ 
+-  getSerializedContent() {
++  getSerializedContent({ preserveLoadedSource = false } = {}) {
+     const { _tiptapEditor: editor, _serializer: serializer } = this;
+     const { doc } = editor.state;
+ 
++    if (preserveLoadedSource && doc === this._loadedSourceDocument) return this._loadedMarkdown;
++
+     return serializer.serialize({ doc });
+   }
+ }
+diff --git a/spec/frontend/content_editor/services/content_editor_spec.js b/spec/frontend/content_editor/services/content_editor_spec.js
+index e23e43481..b1a0cbadf 100644
+--- a/spec/frontend/content_editor/services/content_editor_spec.js
++++ b/spec/frontend/content_editor/services/content_editor_spec.js
+@@ -82,7 +82,20 @@ describe('content_editor/services/content_editor', () => {
+   });
+ 
+   describe('when setSerializedContent succeeds', () => {
++    it('hands off the original Markdown until the loaded document changes', async () => {
++      const source = '- [x] ' + '\n\n' + '* [~] ';
++      deserializer.deserialize.mockResolvedValueOnce({ document: testDoc() });
++      await contentEditor.setSerializedContent(source);
++
++      expect(contentEditor.getSerializedContent({ preserveLoadedSource: true })).toBe(source);
++      expect(serializer.serialize).not.toHaveBeenCalled();
++      typeAtTheEnd(' changed');
++      serializer.serialize.mockReturnValue('document changed');
++      expect(contentEditor.getSerializedContent({ preserveLoadedSource: true })).toBe('document changed');
++      expect(serializer.serialize).toHaveBeenCalledWith({ doc: tiptapEditor.state.doc });
++    });
++
+     it('sets the deserialized document in the tiptap editor object', async () => {
+       const document = testDoc();
+ 
+       deserializer.deserialize.mockResolvedValueOnce({ document });

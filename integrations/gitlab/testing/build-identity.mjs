@@ -7,6 +7,13 @@ export const preparedRollbackTree = '307cccf71054136fcec34e32cd902ce5a87051ce';
 export const wikiUploadRollbackTree = '71d94ee242ba0dc3ddbfd279ecd4fc06996cbc9f';
 const initialWikiReplayTree = '05680cf7f8c2cdb1713329025aecc2ace113334c';
 export const wikiUploadReplayTree = '084f348a1f39c84bdfcbebabc03e7b227e4583ad';
+export const originalMarkdownTree = '33b218b425f86afe2a6bce5d00201dead8221188';
+const firstAlignedReaderTree = 'd4c158d3795a69c42b65166ba7768735b1041fda';
+export const alignedCheckboxRollbackTree = '6133fd5fecf0e94a017e8920e7e587947b44a726';
+const markdownSourceTrees = [originalMarkdownTree, firstAlignedReaderTree, alignedCheckboxRollbackTree];
+const noticeTrees = [wikiUploadReplayTree, ...markdownSourceTrees];
+const replayTrees = [initialWikiReplayTree, ...noticeTrees];
+const uploadGuardTrees = [wikiUploadRollbackTree, ...replayTrees];
 const digest = value => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
 const revision = value => typeof value === 'string' && /^[a-f0-9]{40}$/u.test(value);
 const assetPath = /^\/assets\/webpack\/(?:[\w.-]+\/)*[\w.-]+\.js$/u;
@@ -34,14 +41,16 @@ export function buildIdentityError(report) {
   } else if (id.side === 'prepared') {
     if (mounts?.length !== 1 || mounts[0].readOnly !== true || observed.editor !== 'ProseMirror' ||
         observed.runtimeSHA256 !== null || observed.integrationSHA256 !== null ||
-        ![saveEchoTree, preparedRollbackTree, wikiUploadRollbackTree, initialWikiReplayTree, wikiUploadReplayTree].includes(expected.sourceTree) || !digest(expected.rspackManifestSHA256) ||
+        ![saveEchoTree, preparedRollbackTree, ...uploadGuardTrees].includes(expected.sourceTree) || !digest(expected.rspackManifestSHA256) ||
         !report.frontendManifests.includes(expected.rspackManifestSHA256 + '  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json') ||
         !observed.scripts.some(script => script.preparedHandoff === true) ||
         !observed.scripts.some(script => script.preparedSaveEcho === true) ||
         observed.scripts.some(script => script.preparedToolbarFocus === true) !== (expected.sourceTree !== saveEchoTree) ||
-        ([wikiUploadRollbackTree,initialWikiReplayTree,wikiUploadReplayTree].includes(expected.sourceTree) && !observed.scripts.some(script => script.wikiUploadGuard === true)) ||
-        ([initialWikiReplayTree,wikiUploadReplayTree].includes(expected.sourceTree) && !observed.scripts.some(script => script.wikiUploadReplay === true)) ||
-        (expected.sourceTree === wikiUploadReplayTree && !observed.scripts.some(script => script.wikiUploadNotice === true)))
+        (uploadGuardTrees.includes(expected.sourceTree) && !observed.scripts.some(script => script.wikiUploadGuard === true)) ||
+        (replayTrees.includes(expected.sourceTree) && !observed.scripts.some(script => script.wikiUploadReplay === true)) ||
+        (noticeTrees.includes(expected.sourceTree) && !observed.scripts.some(script => script.wikiUploadNotice === true)) ||
+        (markdownSourceTrees.includes(expected.sourceTree) && !observed.scripts.some(script => script.originalMarkdownHandoff === true)) ||
+        (expected.sourceTree === alignedCheckboxRollbackTree && !observed.scripts.some(script => script.scopedMarkdownHandoff === true)))
       return 'prepared Tiptap rollback build or handoff script mismatch';
   } else if (id.side === 'fountain') {
     if (mounts?.length !== 1 || mounts[0]?.readOnly !== true || observed.editor !== 'FountainJS' ||
@@ -110,6 +119,8 @@ export async function observeEditorBuild({ page, project, request, expected, rep
         script.wikiUploadGuard = true;
       if (script.wikiUploadGuard && bytes.includes('fountainWikiPendingUploads') && bytes.includes('discardAbandonedUploadBatches'))
         script.wikiUploadReplay = true;
+      if (bytes.includes('_loadedSourceDocument') && bytes.includes('_loadedMarkdown')) script.originalMarkdownHandoff = true;
+      if (bytes.includes('preserveLoadedSource')) script.scopedMarkdownHandoff = true;
       if (script.wikiUploadReplay && bytes.includes('wiki-upload-notice')) script.wikiUploadNotice = true;
       observed.scripts.push(script);
     }
