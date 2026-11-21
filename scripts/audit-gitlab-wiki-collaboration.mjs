@@ -146,7 +146,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
         return content.textContent;
       });
     }
-    const code = surface => surface.locator('[data-testid="suggestion-field"], pre[data-language] code');
+    const code = surface => surface.locator('[data-testid="suggestion-field"], pre[data-language] code').filter({hasText:'def threshold()'});
     const wikiCodeText = async surface => (await paragraphText(code(surface))).replace(/\n$/u,'');
     async function appendToWikiCode(tab, surface) {
       await code(surface).scrollIntoViewIfNeeded();
@@ -355,7 +355,11 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
     if (input.code) {
-      const rendered = peerReader.locator('pre');
+      const rendered = peerReader.locator('pre').filter({hasText:'def threshold()'});
+      if (input.code.companion) {
+        const companion = peerReader.locator('pre').filter({hasText:input.code.companion.text});
+        item.readerFenceParams = await companion.getAttribute('data-lang-params');
+      }
       item.readerCode = (await rendered.textContent()).replace(/\n$/u,'');
       expect(item.readerCode).toBe(input.code.edited);
       await rendered.screenshot({path:join(output,'reopened-reader-code.png')});
@@ -714,7 +718,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
             await reader.getByRole('table').filter({hasText:'Sign-off'}).screenshot({path:join(output,'reopened-merged-table.png')});
           }
           if (input.code) {
-            const code = reader.locator('pre');
+            const code = reader.locator('pre').filter({hasText:'def threshold()'});
             handover.readerCode = (await code.textContent()).replace(/\n$/u,'');
             expect(handover.readerCode).toBe(input.code.edited + '00');
             await code.screenshot({path:join(output,'handover-reader-code.png')});

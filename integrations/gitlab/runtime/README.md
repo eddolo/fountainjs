@@ -691,6 +691,8 @@ To compare source fidelity with the optional wiki controller installed, prepare 
 
 Use `--wiki-code` on both wiki collaboration runs with a fresh run ID to test a fenced Python function. The second author changes an indented return value, undoes and redoes the change while the first author observes, then both verify the saved code in GitLab. Adding `--wiki-restore` to both fixed deployments also exercises original line-ending retention. [Matched source and reader evidence](../../../artifacts/gitlab-compatibility/wiki-fenced-code-20261121/verified/report.md).
 
+Use `--wiki-code-params` in place of `--wiki-code` on the two fixed-deployment commands to test parameter retention. The fixture uses the same Python language in both listings and supplies a different filename in each fence. The [matched comparison](../../../artifacts/gitlab-compatibility/wiki-fence-params-20261121/verified/report.md) checks the code edit, both separators in saved Markdown, and the metadata in GitLab’s reopened reader.
+
 To repeat the code handover on the packaged backend, run the two commands below from the same pinned installation. Each command starts with the named editor, switches the frontend once, checks the unsaved code in a fresh browser, and saves another edit.
 
 ```sh

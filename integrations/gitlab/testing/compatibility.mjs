@@ -534,6 +534,7 @@ export function compareGitLabCompatibility(original,fountain){
         ['afterPeerUndo', status, 'Peer undo retains the first author’s edit'],
         ['afterPeerRedo', status + input.peerEdit, 'Peer redo restores the second edit on the first screen'],
         ...(input.code ? [
+          ...(input.code.companion ? [['readerFenceParams',input.code.companion.params,'The reopened reader exposes the second listing’s original parameter']] : []),
           ['codeBefore',input.code.text,'The joining editor sees the indented code'],
           ['codeUndo',input.code.text,'Undo restores the original code on the other screen'],
           ['codeRedo',input.code.edited,'Redo restores the code edit on the other screen'],
