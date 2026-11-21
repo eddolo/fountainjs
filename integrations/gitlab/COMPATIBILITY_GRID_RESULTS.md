@@ -132,6 +132,14 @@ On Fountain build `bd3995d3` the header retained two paragraphs after splitting,
 
 In Linux Chromium 151 all 16 Fountain checks passed on the pinned deployment. Fourteen matched stock. At both undo observations following deletion, Fountain restored the latest split header immediately. Stock showed the earlier merged header at those observations, although its saved table reopened split. [Matched report](../../artifacts/gitlab-compatibility/table-authoring-20261120/paired/report.md) · [Fountain reopened](../../artifacts/gitlab-compatibility/table-authoring-20261120/fountain-7/table-reopened.png) · [Stock reopened](../../artifacts/gitlab-compatibility/table-authoring-20261120/original-7/table-reopened.png).
 
+## Checklists inside merged issue tables
+
+Run the paired issue workflow above with `--suite merged-table-tasks`. It opens an existing release checklist, checks “Verify backup”, adds “Filed.” to the paragraph below the list, and saves. The API records the Markdown. The reader and reopened rich editor are checked for both merged spans, the surrounding cell text and all three labelled task states.
+
+All five checks matched stock in Chromium 151. Fountain `4c32cdb2` and stock GitLab retained both merged spans, labels, paragraph edits and all three task states in the editor and reader. The first Fountain export added 32 pixels of row height by wrapping simple cell text in paragraphs. After the fix, the two 669 × 260 reader screenshots had identical RGB pixels. [Matched builds and checks](../../artifacts/gitlab-compatibility/merged-cell-tasks-20261121/final/report.md) · [Fountain reader](../../artifacts/gitlab-compatibility/merged-cell-tasks-20261121/fountain-3/saved-checklist.png) · [Stock reader](../../artifacts/gitlab-compatibility/merged-cell-tasks-20261121/original-2/saved-checklist.png)
+
+For a checklist inside an HTML table, leave a blank line on each side of a Markdown task list within the cell. The GitLab CE 19.5.3 renderer also supports an isolated `[x]` in a pipe-table cell. Inside a raw HTML cell the same marker renders as literal text, and a raw checkbox input disappears. Fountain reports a conversion issue if a merge would silently turn a standalone pipe-table checkbox into text. [Seven renderer examples](fixtures/merged-task-cell-renderer.json)
+
 ## Remaining scope
 
 Complex overlapping spans, Unicode/IME, nested content, ownership rules, rapid input, other

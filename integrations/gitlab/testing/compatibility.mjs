@@ -1213,6 +1213,27 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
       continue;
     }
+    if (input.scope === 'merged-table-tasks') {
+      const initial = {spans:[2,2],checks:[false,true,'inapplicable'],labels:['Verify backup','Notify team','Legacy signoff'],
+        paragraphs:['First review','Keep the receipt.'],neighbors:['Release gates','Night shift','Next shift']};
+      const edited = {...initial,checks:[true,true,'inapplicable'],paragraphs:['First review','Keep the receipt. Filed.']};
+      const evidence = (report,item,key) => item?.status === 'observed' && verifiedEditor(report,item) &&
+        (key !== 'reopened' || verifiedEditor(report,{editorProof:item.reopenedEditorProof})) ? item[key] : undefined;
+      const savedTasks = report => {
+        const source = evidence(report,report === original ? a : b,'savedMarkdown');
+        if (typeof source !== 'string') return undefined;
+        return [...source.matchAll(/^\s*[-+*] \[([ x~])\] (Verify backup|Notify team|Legacy signoff)\s*$/gmu)]
+          .map(match => [match[1],match[2]]);
+      };
+      rows.push({case:input.id,invariant:'saved-tasks',label:'The issue API stores the three intended task markers and labels',
+        expected:[['x','Verify backup'],['x','Notify team'],['~','Legacy signoff']],
+        original:savedTasks(original),fountain:savedTasks(fountain),classification:null});
+      for (const [key,expected] of [['before',initial],['edited',edited],['reader',edited],['reopened',edited]]) {
+        rows.push({case:input.id,invariant:key,label:'Task states, cell spans, labels and paragraphs in ' + key,
+          expected,original:evidence(original,a,key),fountain:evidence(fountain,b,key),classification:null});
+      }
+      continue;
+    }
     if (input.scope === 'table-authoring') {
       const cell = (tag,text = '',span = 1) => ({tag,text,span,rows:1});
       const header = input.columns.map(label => cell('TH',label));

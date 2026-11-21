@@ -1,0 +1,12 @@
+{
+  "formatVersion": 1,
+  "workflow": "edit-checklist-in-a-merged-issue-table",
+  "cases": [
+    {
+      "id": "merged-release-checklist",
+      "scope": "merged-table-tasks",
+      "title": "Release readiness review",
+      "markdown": "<table>\n<tr><th colspan=\"2\">Release gates</th></tr>\n<tr><td rowspan=\"2\">Night shift</td><td>\n\nFirst review\n\n- [ ] Verify backup\n- [x] Notify team\n- [~] Legacy signoff\n\nKeep the receipt.\n\n</td></tr>\n<tr><td>Next shift</td></tr>\n</table>"
+    }
+  ]
+}
