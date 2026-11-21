@@ -5,7 +5,7 @@ import { Schema } from 'fountainjs-editor';
 import rollout from '../integrations/gitlab/fixtures/compatibility-wiki-rollout.json';
 import seedPreview from '../integrations/gitlab/fixtures/wiki-structured-seed-render.html?raw';
 import { createGitLabSchemaSpec, GitLabMarkdownCodec } from '../integrations/gitlab/services/markdown_codec';
-import { readGitLabWikiRoom, toGitLabWikiJSON } from '../integrations/gitlab/services/wiki_room_document';
+import { readGitLabWikiRoom, sameWikiDocument, toGitLabWikiJSON } from '../integrations/gitlab/services/wiki_room_document';
 
 const schema = new Schema(createGitLabSchemaSpec(undefined,undefined,undefined,true));
 it('maps a stock peer’s edit to the actual location even when adjacent letters are identical', async () => {
@@ -40,6 +40,22 @@ it('maps a stock peer’s edit to the actual location even when adjacent letters
     expect(ranges.splice(0)).toEqual([[0,firstBlockSize,firstBlockSize]]);
     expect(service.editor.state.doc.child(1).textContent).toBe('Attach here');
   } finally { service.dispose(); doc.destroy(); }
+});
+
+it('round-trips the editable caret in an empty wiki paragraph without writing a zero-length ProseMirror text node', () => {
+  const doc = new Y.Doc();
+  try {
+    const room = doc.getXmlFragment('default');
+    room.push([new Y.XmlElement('paragraph'),new Y.XmlElement('paragraph')]);
+    const recovered = readGitLabWikiRoom(room,schema,Y);
+    expect(recovered.child(1).child(0).text).toBe('');
+    expect(toGitLabWikiJSON(recovered).content).toEqual([{type:'paragraph'},{type:'paragraph'}]);
+    const empty = schema.node('paragraph');
+    expect(sameWikiDocument(recovered,schema.node('doc',{},[empty,empty]))).toBe(true);
+    const space = schema.node('paragraph',{},[schema.text(' ')]);
+    expect(sameWikiDocument(recovered,schema.node('doc',{},[empty,space]))).toBe(false);
+    expect(toGitLabWikiJSON(schema.node('doc',{},[space])).content?.[0].content?.[0].text).toBe(' ');
+  } finally { doc.destroy(); }
 });
 
 it('reads a stock keyboard edit without changing Yjs state or folding distinct formatting runs', () => {

@@ -20,6 +20,13 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
   // Give the upload its own paragraph so each editor's insertion can be checked after reload.
   await peer.keyboard.press('End');
   await peer.keyboard.press('Enter');
+  // Verify Enter on both clients before opening the picker. A refused split can
+  // otherwise insert the completed attachment at the end of the status instead.
+  for (const view of [actor,observer]) {
+    const paragraphs = view.locator(':scope > p');
+    await expect(paragraphs).toHaveCount(3);
+    await expect.poll(() => paragraphText(paragraphs.last())).toBe('');
+  }
   const release = Promise.withResolvers();
   let routeFailure;
   // Hold delivery of the actual GitLab response to the uploader across the restart.

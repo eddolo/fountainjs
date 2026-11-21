@@ -47,6 +47,9 @@ function fromStockNode(name: string, attrs: Attributes, content: NodeJSON[] | un
       return {...child,attrs:{...child.attrs,align:attrs.align}};
     });
   }
+  // ProseMirror represents an empty text block with no children. Fountain uses an
+  // empty text leaf for a caret that can receive typing, paste or an attachment.
+  if ((type === 'paragraph' || type === 'heading') && !content?.length) content = [{type:'text',text:''}];
   return {type,attrs:projected,content};
 }
 
@@ -113,6 +116,21 @@ export interface GitLabWikiWire<StockNode> {
     meta: { mapping: Map<any, any>; isOMark: Map<any, boolean> }): void;
 }
 
+function isEmptyCaret(node: Node): boolean {
+  return node.isText && node.text === '' && !node.marks.length && !Object.keys(node.attrs).length;
+}
+
+function withoutEmptyCarets(node: Node): Node {
+  if (!node.childCount) return node;
+  const textBlock = node.type.name === 'paragraph' || node.type.name === 'heading';
+  const content = node.content.filter(child => !(textBlock && isEmptyCaret(child))).map(withoutEmptyCarets);
+  return content.length === node.childCount && content.every((child,index) => child === node.child(index)) ? node : node.copy(content);
+}
+
+export function sameWikiDocument(left: Node, right: Node): boolean {
+  return left.eq(right) || withoutEmptyCarets(left).eq(withoutEmptyCarets(right));
+}
+
 type StockWikiNode = { check(): void; toJSON(): NodeJSON };
 
 function prepareStockNode<T extends StockWikiNode>(document: Node, wire: GitLabWikiWire<T>): T {
@@ -126,7 +144,7 @@ function prepareStockNode<T extends StockWikiNode>(document: Node, wire: GitLabW
     return {...fromStockNode(node.type,node.attrs ?? {},content,path),text:node.text,
       marks:node.marks?.map(mark => fromStockMark(mark.type,mark.attrs ?? {},path))};
   }
-  if (!native.nodeFromJSON(project(prepared.toJSON(),[])).eq(document))
+  if (!sameWikiDocument(native.nodeFromJSON(project(prepared.toJSON(),[])),document))
     throw new Error('The stock wiki schema cannot retain this Fountain document.');
   return prepared;
 }
@@ -140,7 +158,7 @@ export function bindGitLabWikiDocument<StockNode extends StockWikiNode>(
   const read = () => readGitLabWikiRoom(fragment, schema, wire.types);
   let lastProjection: {doc: Node; stock: StockNode} | undefined;
   function prepare(before: Node, after: Node) {
-    if (before.type.schema !== schema || after.type.schema !== schema || !read().eq(before))
+    if (before.type.schema !== schema || after.type.schema !== schema || !sameWikiDocument(read(),before))
       throw new Error('The GitLab wiki draft changed. Read the current room before applying an edit.');
     if (lastProjection?.doc !== after) lastProjection = {doc:after,stock:prepareStockNode(after,wire)};
     return lastProjection.stock;
@@ -258,7 +276,11 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
     const result: NodeJSON = {type};
     if (Object.keys(attrs).length) result.attrs = attrs;
     if (node.isText) result.text = node.text;
-    if (node.childCount) result.content = node.content.map((child,index) => encode(child,[...path,index],isStockCell(type) ? attrs.align : undefined));
+    if (node.childCount) {
+      const content = node.content.flatMap((child,index) => (type === 'paragraph' || type === 'heading') && isEmptyCaret(child)
+        ? [] : [encode(child,[...path,index],isStockCell(type) ? attrs.align : undefined)]);
+      if (content.length) result.content = content;
+    }
     if (node.marks.length) {
       if (!node.isText) unsupported(path,'marked inline element');
       result.marks = node.marks.map(mark => {

@@ -4,7 +4,7 @@ import {
   type CollaborationPresence, type Node, type NodeJSON,
 } from 'fountainjs-editor';
 import type * as Y from 'yjs';
-import { openGitLabWikiRoom, type GitLabWikiProvider, type GitLabWikiWire } from './wiki_room_document';
+import { openGitLabWikiRoom, sameWikiDocument, type GitLabWikiProvider, type GitLabWikiWire } from './wiki_room_document';
 
 type StockNode = {check():void; toJSON():NodeJSON};
 type Cursor = {anchor:Y.RelativePosition; head:Y.RelativePosition};
@@ -79,7 +79,7 @@ export class GitLabWikiSession {
   assertCurrent(doc:Node) {
     if (this.failure) throw this.failure;
     if (this.binding && !this.options.provider.connected) throw new Error('GITLAB_WIKI_DISCONNECTED');
-    if (!this.binding || !this.binding.read().eq(doc)) throw new Error('The current GitLab wiki draft is unavailable.');
+    if (!this.binding || !sameWikiDocument(this.binding.read(),doc)) throw new Error('The current GitLab wiki draft is unavailable.');
   }
   private indexText() {
     const spans: typeof this.spans = [];
