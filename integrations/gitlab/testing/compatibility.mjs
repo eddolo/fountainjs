@@ -524,7 +524,7 @@ export function compareGitLabCompatibility(original,fountain){
       }
       const status = input.source.split('\n\n').at(-1) + input.ownerEdit;
       const reference = input.wikiLink?.reference;
-      const authored = (input.checklist ? input.source.replace('[ ] '+input.checklist.label,'[x] '+input.checklist.label) : input.code ? input.source.replace(input.code.text,input.code.edited) : reference ? input.source.replace('[' + input.wikiLink.label + '][','[' + input.wikiLink.peerLabel + '][') : input.source)
+      const authored = (input.tableTasks ? input.source.replace('| Backup | [ ] |','| Backup | [x] |') : input.checklist ? input.source.replace('[ ] '+input.checklist.label,'[x] '+input.checklist.label) : input.code ? input.source.replace(input.code.text,input.code.edited) : reference ? input.source.replace('[' + input.wikiLink.label + '][','[' + input.wikiLink.peerLabel + '][') : input.source)
         + input.ownerEdit + input.peerEdit;
       for (const [key, expected, label] of [
         ['joinedDraft', status, 'The joining author receives the first author’s unsaved draft'],
@@ -533,6 +533,13 @@ export function compareGitLabCompatibility(original,fountain){
         ['cursors', [true,true], 'Both rich editors render the other author’s named caret'],
         ['afterPeerUndo', status, 'Peer undo retains the first author’s edit'],
         ['afterPeerRedo', status + input.peerEdit, 'Peer redo restores the second edit on the first screen'],
+        ...(input.tableTasks ? [
+          ['tableTaskBefore',[false,true,false],'The joining editor sees all three checkbox cells'],
+          ['tableTaskUndo',[false,true,false],'Checkbox undo reaches the first author'],
+          ['tableTaskRedo',[true,true,false],'Checkbox redo reaches the first author'],
+          ['tableTaskReader',[true,true,false],'The reader reopens all three checkbox cells in order'],
+          ['retiredTaskInapplicable',true,'The Retire cell retains its not-applicable state'],
+        ] : []),
         ...(input.checklist ? [
           ['checklistBefore',input.checklist.states,'The joining author sees the original task states'],
           ['checklistUndo',input.checklist.states,'Undo restores the shared checkbox without losing either author’s prose'],

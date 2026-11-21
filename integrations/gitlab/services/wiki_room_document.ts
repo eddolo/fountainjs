@@ -37,7 +37,7 @@ function hasCaretLeaf(type: string): boolean {
   return type === 'paragraph' || type === 'heading' || type === 'code_block';
 }
 
-function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): Attributes {
+function stockAttrs(type: string, attrs: Attributes, path: readonly number[], inTaskCell: boolean): Attributes {
   // A missing Yjs attribute uses the upstream codeBlock schema's null default.
   const result: Attributes = type === 'codeBlock' ? { language:'' } : {};
   for (const [key,value] of Object.entries(attrs)) {
@@ -46,7 +46,10 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
       result.checked = attrs.inapplicable === true ? NOT_APPLICABLE : value;
     } else if (type === 'taskItem' && key === 'inapplicable' && typeof value === 'boolean') {
       if (value) result.checked = NOT_APPLICABLE;
-    } else if (type === 'taskItem' && key === 'taskTableItem' && value === false) continue;
+    } else if (type === 'taskItem' && key === 'taskTableItem' && typeof value === 'boolean') {
+      if (value && !inTaskCell) unsupported(path,'taskTableItem outside a table cell');
+      if (value) result.gitlabTableItem = true;
+    }
     else if (type === 'taskList' && key === 'numeric' && typeof value === 'boolean') continue;
     else if (type === 'taskList' && key === 'start' && (attrs.numeric === true || value === 1)) {
       if (attrs.numeric === true) result.start = value;
@@ -70,10 +73,10 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
   return result;
 }
 
-function fromStockNode(name: string, attrs: Attributes, content: NodeJSON[] | undefined, path: readonly number[]): NodeJSON {
+function fromStockNode(name: string, attrs: Attributes, content: NodeJSON[] | undefined, path: readonly number[], inTaskCell = false): NodeJSON {
   const type = name === 'doc' || name === 'text' ? name : name === 'taskList' && attrs.numeric === true ? 'ordered_list' : nodes.get(name);
   if (!type) unsupported(path,name);
-  const projected = stockAttrs(name,attrs,path);
+  const projected = stockAttrs(name,attrs,path,inTaskCell);
   if (isStockCell(name) && (attrs.align === 'center' || attrs.align === 'right')) {
     // GitLab places alignment on the cell. Fountain's editable paragraphs own it.
     content = content?.map(child => {
@@ -135,7 +138,8 @@ export function readGitLabWikiRoom(fragment: Y.XmlFragment, schema: Schema, type
           content.push({type:'text',text:span.insert,marks:formatting});
         }
       } else if (child instanceof types.XmlElement && nodes.has(child.nodeName)) {
-        content.push(fromStockNode(child.nodeName,child.getAttributes(),children(child,childPath),childPath));
+        content.push(fromStockNode(child.nodeName,child.getAttributes(),children(child,childPath),childPath,
+          parent instanceof types.XmlElement && parent.nodeName === 'taskList' && parent.parent instanceof types.XmlElement && isStockCell(parent.parent.nodeName)));
       } else unsupported(childPath, child instanceof types.XmlElement ? child.nodeName : 'XML type');
     }
     return content;
@@ -176,9 +180,9 @@ function prepareStockNode<T extends StockWikiNode>(document: Node, wire: GitLabW
   prepared.check();
   // A stock schema can accept JSON while silently discarding unknown attributes.
   // Validate the actual stock projection before touching the live fragment.
-  function project(node: NodeJSON, path: readonly number[]): NodeJSON {
-    const content = node.content?.map((child,index) => project(child,[...path,index]));
-    return {...fromStockNode(node.type,node.attrs ?? {},content,path),text:node.text,
+  function project(node: NodeJSON, path: readonly number[], parent = '', grandparent = ''): NodeJSON {
+    const content = node.content?.map((child,index) => project(child,[...path,index],node.type,parent));
+    return {...fromStockNode(node.type,node.attrs ?? {},content,path,parent === 'taskList' && isStockCell(grandparent)),text:node.text,
       marks:node.marks?.map(mark => fromStockMark(mark.type,mark.attrs ?? {},path))};
   }
   if (!sameWikiDocument(native.nodeFromJSON(project(prepared.toJSON(),[])),document))
@@ -348,6 +352,12 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
     if (!type) unsupported(path,node.type.name);
     const attrs: Attributes = numericTasks ? {numeric:true} : {};
     for (const [key,value] of Object.entries(node.attrs)) {
+      if (type === 'taskItem' && key === 'gitlabTableItem' && value === true) {
+        const parent = path.slice(0,-2).reduce((n,i) => n.child(i),doc);
+        if (!['table_cell','table_header'].includes(parent.type.name)) unsupported(path,'taskTableItem outside a table cell');
+        attrs.taskTableItem = true;
+        continue;
+      }
       if (type === 'taskItem' && key === 'checked') {
         attrs.checked = value === true;
         attrs.inapplicable = value === NOT_APPLICABLE;

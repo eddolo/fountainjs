@@ -236,7 +236,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     }
     item.stage = 'open-first-editor';
     let seedRendering;
-    if ((input.structure || input.wikiLink || input.code) && side === 'fountain') {
+    if (input.tableTasks || ((input.structure || input.wikiLink || input.code) && side === 'fountain')) {
       // Capture only the GitLab preview of this suite's known, generated source.
       seedRendering = page.waitForResponse(response => {
         if (response.request().method() !== 'POST' || !response.ok()) return false;
@@ -338,6 +338,22 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       await expect.poll(() => wikiCodeText(first)).toBe(input.code.edited);
       item.codeRedo = await wikiCodeText(first);
     }
+    const tableStates = surface => surface.locator('td input[type="checkbox"]').evaluateAll(boxes => boxes.map(box => box.checked));
+    if (input.tableTasks) {
+      item.stage = 'shared-table-checkbox';
+      item.tableTaskBefore = await tableStates(other);
+      expect(item.tableTaskBefore).toEqual([false,true,false]);
+      await other.getByRole('row').filter({hasText:'Backup'}).getByRole('checkbox').click();
+      await expect.poll(() => tableStates(first)).toEqual([true,true,false]);
+      await peerStatus.click();
+      await peer.keyboard.press('Control+z');
+      await expect.poll(() => tableStates(first)).toEqual([false,true,false]);
+      item.tableTaskUndo = await tableStates(first);
+      await peer.keyboard.press('Control+Shift+z');
+      await expect.poll(() => tableStates(first)).toEqual([true,true,false]);
+      item.tableTaskRedo = await tableStates(first);
+      expect(await paragraphText(firstStatus)).toBe(both);
+    }
     if (input.checklist) {
       item.stage = 'shared-checklist';
       const boxes = surface => surface.locator('li input[type="checkbox"]');
@@ -372,6 +388,12 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     await expect(peerReader).toContainText(both);
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
+    if (input.tableTasks) {
+      item.tableTaskReader = await tableStates(peerReader);
+      item.retiredTaskInapplicable = await peerReader.getByRole('row').filter({hasText:'Retire'})
+        .getByRole('checkbox').evaluate(box => box.hasAttribute('data-inapplicable'));
+      await peerReader.screenshot({path:join(output,'saved-table-tasks.png')});
+    }
     if (input.checklist) {
       item.readerChecks = await peerReader.locator('li input[type="checkbox"]').evaluateAll(boxes=>boxes.map(box=>box.checked));
       item.inapplicableTasks = await peerReader.locator('li.inapplicable').allInnerTexts();

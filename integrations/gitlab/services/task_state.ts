@@ -8,12 +8,22 @@ export const NOT_APPLICABLE = 'inapplicable';
  * commands naturally return to the existing pending/completed states. */
 export function gitLabTaskItem(base: SchemaSpec): NodeSpec {
   const original = base.nodes.task_item!;
-  return { ...original, attrs: { ...original.attrs,
+  return { ...original, contextualDOM:true, attrs: { ...original.attrs,
+    gitlabTableItem: { default: undefined, validate: value => value === undefined || value === true },
     checked: { default: false, validate: value => typeof value === 'boolean' || value === NOT_APPLICABLE },
   }, toDOM: (node, context) => {
     const inactive = node.attrs.checked === NOT_APPLICABLE;
     const rendered = original.toDOM!(inactive ? node.type.create({ ...node.attrs, checked: false }, node.content) : node, context) as [string, Record<string, unknown>, TaskDOM, TaskDOM];
     const attrs = rendered[1];
+    if (node.attrs.gitlabTableItem) {
+      const input = (rendered[2] as [string,Record<string,unknown>])[1];
+      if (inactive) input.disabled = true;
+      if (context && context.path.length >= 4) {
+        const table = context.path.slice(0,-4).reduce((parent,i) => parent.child(i),context.document);
+        const heading = table.content[0]?.content[context.path.at(-3)!]?.textContent;
+        if (heading) input['aria-label'] = 'Check option in column "' + heading + '"';
+      }
+    }
     attrs.class = [attrs.class, 'fountain-gitlab-task'].filter(Boolean).join(' ');
     if (inactive) {
       attrs['data-checked'] = NOT_APPLICABLE;

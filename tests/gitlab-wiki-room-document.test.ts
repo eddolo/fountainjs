@@ -2,6 +2,8 @@ import { expect, it } from 'vitest';
 import * as Y from 'yjs';
 import { GitLabContentEditor } from '../integrations/gitlab/services/content_editor';
 import { Schema } from 'fountainjs-editor';
+import tableTaskHTML from '../integrations/gitlab/fixtures/wiki-task-cell-render.html?raw';
+import tableTaskFixture from '../integrations/gitlab/fixtures/compatibility-wiki-table-tasks.json';
 import taskPreviews from '../integrations/gitlab/fixtures/task-live-html.json';
 import rollout from '../integrations/gitlab/fixtures/compatibility-wiki-rollout.json';
 import seedPreview from '../integrations/gitlab/fixtures/wiki-structured-seed-render.html?raw';
@@ -41,6 +43,22 @@ it('preserves parenthesized numbered tasks from preview, stock room and edited e
     expect(codec.serialize({doc:result})).toBe('3) [x] Reviewed');
     expect(toGitLabWikiJSON(result).content![0].attrs).toMatchObject({numeric:true,start:3,parens:true});
   } finally {doc.destroy();}
+});
+
+it('round-trips three GitLab table checkbox states and retains adjacent cell text', async () => {
+  const source = tableTaskFixture.cases[0].source;
+  const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async()=>({body:tableTaskHTML})});
+  const seed = (markdown: string) => codec.deserialize({schema,markdown,signal:new AbortController().signal,wikiRoomSeed:true});
+  const {document} = await seed(source);
+  const table = toGitLabWikiJSON(document).content![1];
+  expect(table.attrs?.isMarkdown).toBe(true);
+  expect(table.content!.slice(1).map(row => row.content![1].content![0].content![0].attrs)).toEqual([
+    {taskTableItem:true,checked:false,inapplicable:false},
+    {taskTableItem:true,checked:true,inapplicable:false},
+    {taskTableItem:true,checked:false,inapplicable:true},
+  ]);
+  expect(codec.serializeWithReport({doc:document,canonical:true})).toMatchObject({markdown:source,issues:[]});
+  await expect(seed(source.replace('| Backup | [ ] |','| Backup | [x] |'))).rejects.toThrow();
 });
 
 it('refuses conflicting checkbox flags and task-table items before changing the shared room', () => {

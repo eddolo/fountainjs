@@ -15,6 +15,7 @@ import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLa
 import { gitLabCodeSuggestion, normalizeGitLabSuggestionNodes, serializeGitLabSuggestionNode } from './code_suggestion_node';
 import { gitLabContentsNode, normalizeGitLabContents } from './table_of_contents';
 import { gitLabTaskItem } from './task_state';
+import { readTaskCells, hydrateTaskCells, taskCellParagraph } from './task_cells';
 import { normalizeGitLabTasks } from './task_rendering';
 import { convertGitLabFootnotes } from './footnote_codec';
 import { gitLabFootnoteNodes, validGitLabFootnoteLabel } from './footnote_nodes';
@@ -48,10 +49,14 @@ function labelForeground(value: unknown): string {
 }
 
 // Pipe tables cannot retain spans, multiple paragraphs in a cell, or mixed header roles.
-function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: boolean): string | undefined {
-  if (!table.content.some((row, index) => row.content.some(cell =>
+function requiresHTMLTable(table: Node): boolean {
+  return table.content.some((row, index) => row.content.some(cell =>
     Number(cell.attrs.rowspan) > 1 || Number(cell.attrs.colspan) > 1 || cell.childCount > 1
-    || cell.type.name !== (index === 0 ? 'table_header' : 'table_cell')))) return undefined;
+    || cell.type.name !== (index === 0 ? 'table_header' : 'table_cell')));
+}
+
+function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: boolean): string | undefined {
+  if (!requiresHTMLTable(table)) return undefined;
   let supported = true;
   table.descendants(node => {
     const name = node.type.name;
@@ -196,7 +201,7 @@ const setAttr = (element: RawElement, name: string, value: string): void => {
 };
 interface WikiBlockOrigin { type: 'bullet_list' | 'task_list' | 'ordered_list' | 'table'; parens?: boolean; bullet?: string; isMarkdown?: boolean }
 
-function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>, supportsContents: boolean, wikiOrigins?: {blocks:WikiBlockOrigin[]; inactive:[number,number][]}): string {
+function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>, supportsContents: boolean, taskCells: Map<number,boolean|'inapplicable'>, wikiOrigins?: {blocks:WikiBlockOrigin[]; inactive:[number,number][]}): string {
   const maxBytes = options.maxInputBytes ?? 1_048_576;
   if (new TextEncoder().encode(html).length > maxBytes) throw new Error('GitLab rendering exceeds the configured HTML byte limit.');
   const fragment = parseFragment(html), elements: RawElement[] = [], stack: [RawNode, number][] = [[fragment, 0]];
@@ -220,6 +225,7 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   }
   normalizeGitLabContents(elements, source, maxBytes, supportsContents);
   recoverGitLabImageSources(elements, source, schema, maxBytes);
+  readTaskCells(elements,source,taskCells);
   const tasks = normalizeGitLabTasks(elements, source, wikiOrigins?.inactive);
   const math = normalizeGitLabMath(elements);
   const diagrams = normalizeGitLabDiagrams(elements);
@@ -271,7 +277,7 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
       || attr(element, 'data-lang-params') === 'frontmatter'
       || ['mermaid', 'suggestion'].includes(attr(element, 'data-canonical-lang') ?? '')
       || (attr(element, 'data-canonical-src') ?? '').endsWith('drawio.svg')
-      || classes.includes('task-table-item')) {
+      || (classes.includes('task-table-item') && element.tagName !== 'td' && element.tagName !== 'th')) {
       issues.push({ stage: 'import', code: 'specialized-renderer', message: 'This specialized GitLab rendering requires a source-aware document adapter before visual editing.' });
     }
   }
@@ -345,6 +351,8 @@ function wikiSeedCandidate(node: Node, trimListSeparator = false): Node {
 }
 
 function wikiSeedSourceText(node: Node): Node {
+  const taskCell = taskCellParagraph(node);
+  if (taskCell) return node.copy([taskCell]);
   if (node.type.name === 'code_block' && typeof node.attrs.gitlabFenceSuffix === 'string') {
     // The independent CommonMark parser treats the first info word as the language.
     const info = String(node.attrs.language) + node.attrs.gitlabFenceSuffix;
@@ -370,6 +378,7 @@ function withWikiBlockOrigins(document: Node, origins: readonly WikiBlockOrigin[
   let index = 0;
   function apply(node: Node): Node {
     if (node.isText) return node;
+    if (node.type.name === 'task_list' && node.content[0]?.attrs.gitlabTableItem) return node;
     let decorated = node;
     if (node.type.name === 'table' || node.type.name === 'ordered_list' || node.type.name === 'bullet_list' || node.type.name === 'task_list') {
       const origin = origins[index++];
@@ -422,9 +431,11 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       ]);
       const emojiNames = new Map<string,string>();
       const wikiOrigins = wikiRoomSeed && this.options.wikiRoom ? {blocks:[] as WikiBlockOrigin[],inactive:[] as [number,number][]} : undefined;
-      const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema, emojiNames, this.options.tableOfContentsLabel !== undefined,wikiOrigins), schema);
+      const taskCells = new Map<number,boolean|'inapplicable'>();
+      const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema, emojiNames, this.options.tableOfContentsLabel !== undefined,taskCells,wikiOrigins), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
       let document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
+      document = hydrateTaskCells(document,taskCells);
       schema.validate(document);
       let wikiSource: MarkdownSourceSnapshot | undefined;
       const proseOnly = document.content.every(block => ['heading', 'paragraph'].includes(block.type.name));
@@ -554,7 +565,18 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       tokens.set(token, label);
       return token;
     };
+    const cellMarkers = new WeakMap<Node,string>();
     const project = (node: Node, path: number[]): Node => {
+      if (node.type.name === 'table' && requiresHTMLTable(node)
+        && node.content.some(row => row.content.some(cell => taskCellParagraph(cell)))) {
+        issues.push({stage:'export',code:'table-task-layout',path,message:'A checkbox in a table requiring HTML needs a dedicated GitLab source representation.'});
+      }
+      const p = taskCellParagraph(node);
+      if (p) {
+        cellMarkers.set(p,p.textContent);
+        return node.copy([p]);
+      }
+      if (node.attrs.gitlabTableItem) issues.push({stage:'export',code:'table-task-content',path,message:'A table checkbox must occupy its own cell. Preserve additional content in a separate cell.'});
       if (customSources.has(node)) return node;
       if (node.type.name === 'footnote_reference') {
         const definition = noteDefinitions.get(String(node.attrs.id));
@@ -746,6 +768,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const tableDelimiterStyle = this.options.wikiRoom ? 'header-width' : 'compact';
     const blockSerializers = {
       ...extensionWriters,
+      paragraph: (node: Node) => cellMarkers.get(node) ?? extensionWriters.paragraph?.(node),
       table: (node: Node) => serializeGitLabHTMLTable(node, prefix, Boolean(this.options.wikiRoom)),
       gitlab_code_suggestion: serializeGitLabSuggestionNode,
       gitlab_table_of_contents: (node: Node) => String(node.attrs.token),
