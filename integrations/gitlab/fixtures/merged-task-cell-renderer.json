@@ -1,0 +1,51 @@
+{
+  "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+  "gitlabVersion": {
+    "version": "19.5.3",
+    "revision": "0d4c9a9a2fa",
+    "kas": {
+      "enabled": true,
+      "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+      "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+      "version": "19.5.3"
+    },
+    "enterprise": false
+  },
+  "fixtures": [
+    {
+      "id": "pipe",
+      "source": "| Control | Done |\n| --- | --- |\n| Backup | [x] |",
+      "html": "<table data-sourcepos=\"1:1-3:16\" dir=\"auto\">\n<thead>\n<tr data-sourcepos=\"1:1-1:18\">\n<th data-sourcepos=\"1:2-1:10\">Control</th>\n<th data-sourcepos=\"1:12-1:17\">Done</th>\n</tr>\n</thead>\n<tbody>\n<tr data-sourcepos=\"3:1-3:16\">\n<td data-sourcepos=\"3:2-3:9\">Backup</td>\n<td data-sourcepos=\"3:11-3:15\" class=\"task-table-item\">\n<input type=\"checkbox\" data-sourcepos=\"3:12-3:14\" data-checkbox-sourcepos=\"3:13-3:13\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option in column &quot;Done&quot;\"> </td>\n</tr>\n</tbody>\n</table>"
+    },
+    {
+      "id": "inline",
+      "source": "<table>\n<tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>[x]</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>[x]</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "input",
+      "source": "<table>\n<tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td><input type=\"checkbox\" checked></td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td></td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "task",
+      "source": "<table>\n<tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>\n\n- [x] Verify backup\n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>\n<ul class=\"task-list\" data-sourcepos=\"6:1-6:19\">\n<li class=\"task-list-item\" data-sourcepos=\"6:1-7:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"6:4-6:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "empty",
+      "source": "<table>\n<tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>\n\n- [x] \n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>\n<ul class=\"task-list\" data-sourcepos=\"6:1-6:6\">\n<li class=\"task-list-item\" data-sourcepos=\"6:1-7:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"6:4-6:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option\"> </li>\n</ul>\n</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "inactive",
+      "source": "<table>\n<tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>\n\n- [~] Verify backup\n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>\n<ul class=\"task-list\" data-sourcepos=\"6:1-6:19\">\n<li class=\"inapplicable task-list-item\" data-sourcepos=\"6:1-7:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"6:4-6:4\" class=\"task-list-item-checkbox\" data-inapplicable=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> <s class=\"inapplicable\"> Verify backup</s></li>\n</ul>\n</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "many",
+      "source": "<table>\n<tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>\n\n- [ ] Draft\n- [x] Review\n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th colspan=\"2\">Release</th></tr>\n<tr><td>Backup</td>\n<td>\n<ul class=\"task-list\" data-sourcepos=\"6:1-7:12\">\n<li class=\"task-list-item\" data-sourcepos=\"6:1-6:11\"><input type=\"checkbox\" data-checkbox-sourcepos=\"6:4-6:4\" class=\"task-list-item-checkbox\" disabled=\"\" aria-label=\"Check option: Draft\"> Draft</li>\n<li class=\"task-list-item\" data-sourcepos=\"7:1-8:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"7:4-7:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Review\"> Review</li>\n</ul>\n</td></tr>\n</tbody></table>"
+    }
+  ]
+}

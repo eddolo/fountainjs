@@ -1,4 +1,4 @@
-import { CoreSchemaSpec, MarkdownExporter, MarkdownSourceSnapshot, isSafeURL,
+import { CoreSchemaSpec, HTMLExporter, MarkdownExporter, MarkdownSourceSnapshot, isSafeURL,
   type HTMLParseElement, type Mark, type Node, type Schema, type SchemaSpec } from 'fountainjs-editor';
 import { ServerHTMLImporter, type ServerHTMLImporterOptions } from 'fountainjs-editor/html/server';
 import { parseFragment, serialize, type DefaultTreeAdapterMap } from 'parse5';
@@ -48,10 +48,16 @@ function labelForeground(value: unknown): string {
   return (luminance + 0.05) / 0.05 >= 1.05 / (luminance + 0.05) ? '#000' : '#fff';
 }
 
+function wikiBulletMarker(node: Node): '+' | '-' | '*' {
+  const marker = node.attrs.gitlabBullet;
+  return marker === '+' || marker === '-' ? marker : '*';
+}
+
 // Pipe tables cannot retain spans, multiple paragraphs in a cell, or mixed header roles.
 function requiresHTMLTable(table: Node): boolean {
   return table.content.some((row, index) => row.content.some(cell =>
     Number(cell.attrs.rowspan) > 1 || Number(cell.attrs.colspan) > 1 || cell.childCount > 1
+    || (cell.content.some(block => block.type.name === 'task_list') && !taskCellParagraph(cell))
     || cell.type.name !== (index === 0 ? 'table_header' : 'table_cell')));
 }
 
@@ -61,10 +67,11 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
   table.descendants(node => {
     const name = node.type.name;
     const cell = name === 'table_header' || name === 'table_cell';
-    if (!['table', 'table_row', 'table_header', 'table_cell', 'paragraph', 'text'].includes(name)
+    if (!['table', 'table_row', 'table_header', 'table_cell', 'paragraph', 'task_list', 'task_item', 'text'].includes(name)
       || (node !== table && name === 'table') || node.text?.includes(tokenPrefix)
       || Object.entries(node.attrs).some(([key, value]) => value !== node.type.spec.attrs?.[key]?.default
-        && !(name === 'table' && key === 'gitlabIsMarkdown') && !(cell && (key === 'rowspan' || key === 'colspan')))) supported = false;
+        && !(name === 'table' && key === 'gitlabIsMarkdown')
+        && !(name === 'task_item' && key === 'checked') && !(name === 'task_list' && key === 'gitlabBullet') && !(cell && (key === 'rowspan' || key === 'colspan')))) supported = false;
     for (const mark of node.marks) {
       if (!['strong', 'em', 'code', 'link'].includes(mark.type.name)
         || Object.entries(mark.attrs).some(([key, value]) => value !== mark.type.spec.attrs?.[key]?.default
@@ -74,14 +81,14 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
     return supported;
   });
   if (!supported) return undefined;
-  if (wikiRoom) {
-    // GitLab's wiki writes plain cell text inline, and successive paragraphs
-    // between blank lines. Use explicit HTML for syntax, whitespace or marks
-    // whose interpretation could change in that mixed Markdown/HTML context.
-    const plain = table.content.every(row => row.content.every(cell =>
+  const hasTaskList = table.content.some(row => row.content.some(cell => cell.content.some(block => block.type.name === 'task_list')));
+  if (wikiRoom || hasTaskList) {
+    // GitLab accepts Markdown task lists between blank lines inside a raw table.
+    // Its HTML sanitizer removes raw checkbox inputs.
+    const plain = !hasTaskList && table.content.every(row => row.content.every(cell =>
       cell.content.every(p => p.childCount === 1 && p.child(0).isText && !p.child(0).marks.length
         && /^(?![0-9]{1,9}\.$)[\p{L}\p{N}]+(?:[ -][\p{L}\p{N}]+)*[.!?]?$/u.test(p.child(0).text!))));
-    if (plain) {
+    if (plain || hasTaskList) {
       const lines = ['<table>'];
       for (const row of table.content) {
         lines.push('<tr>');
@@ -89,8 +96,22 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
           const tag = cell.type.name === 'table_header' ? 'th' : 'td';
           const spans = ['colspan','rowspan'].filter(key => Number(cell.attrs[key]) > 1)
             .map(key => ` ${key}="${Number(cell.attrs[key])}"`).join('');
-          const paragraphs = cell.content.map(p => p.child(0).text);
-          const text = paragraphs.length === 1 ? paragraphs[0] : '\n\n' + paragraphs.join('\n\n') + '\n';
+          const parts: string[] = [];
+          for (const block of cell.content) {
+            if (plain) parts.push(block.child(0).text!);
+            else if (block.type.name === 'paragraph') {
+              parts.push(HTMLExporter.export(block, {document:false}).replaceAll('\r','&#13;').replaceAll('\n','&#10;'));
+            } else if (block.type.name === 'task_list') {
+              // Adjacent lists must retain independent list boundaries on reopen.
+              if (cell.content[parts.length - 1]?.type.name === 'task_list') return undefined;
+              const list = new MarkdownExporter().exportWithReport(block, {
+                bulletMarker: wikiRoom ? wikiBulletMarker : undefined,
+              });
+              if (list.losses.length) return undefined;
+              parts.push(list.markdown);
+            } else return undefined;
+          }
+          const text = plain && parts.length === 1 ? parts[0] : '\n\n' + parts.join('\n\n') + (plain ? '\n' : '\n\n');
           lines.push(`<${tag}${spans}>${text}</${tag}>`);
         }
         lines.push('</tr>');
@@ -760,10 +781,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       [name, (node: Node) => customSources.get(node)] as const));
     const markSerializers = Object.fromEntries(Array.from(this.options.markWriters?.keys() ?? [], name =>
       [name, (mark: Mark) => customMarks.get(mark)!] as const));
-    const bulletMarker = this.options.wikiRoom ? (node: Node): '+' | '-' | '*' => {
-      const marker = node.attrs.gitlabBullet;
-      return marker === '+' || marker === '-' ? marker : '*';
-    } : undefined;
+    const bulletMarker = this.options.wikiRoom ? wikiBulletMarker : undefined;
     const orderedListDelimiter = this.options.wikiRoom ? (node: Node) => node.attrs.gitlabParens ? ')' as const : '.' as const : undefined;
     const tableDelimiterStyle = this.options.wikiRoom ? 'header-width' : 'compact';
     const blockSerializers = {

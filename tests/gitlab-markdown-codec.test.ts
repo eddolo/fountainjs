@@ -2,6 +2,7 @@ import { expect, it, vi } from 'vitest';
 import { Schema, type Node } from 'fountainjs-editor';
 import { GitLabMarkdownCodec, GitLabMarkdownConversionError, createGitLabSchemaSpec } from '../integrations/gitlab/services/markdown_codec';
 import data from '../integrations/gitlab/fixtures/service-html.json';
+import taskTablePreviews from '../integrations/gitlab/fixtures/merged-task-cell-renderer.json';
 import mergedPreviews from '../integrations/gitlab/fixtures/merged-grid-live-html.json';
 import emojiPreviews from '../integrations/gitlab/fixtures/clipboard-unicode-live-html.json';
 
@@ -14,6 +15,20 @@ async function convert(markdown: string, body: string, preserveWikiSource = fals
 }
 const append = (document: Node): Node => document.copy([...document.content,
   document.type.schema.node('paragraph', {}, [document.type.schema.text('Added.')])]);
+
+it.each(taskTablePreviews.fixtures.filter(item => ['task','inactive','empty','many'].includes(item.id)))(
+  'preserves the GitLab checkbox list in a merged table on edited Save ($id)', async ({source,html}) => {
+    const {codec,document} = await convert(source,html);
+    const table = document.child(0), cell = table.child(1).child(1);
+    expect(table.child(0).child(0).attrs.colspan).toBe(2);
+    expect(cell.child(0).type.name).toBe('task_list');
+    const exported = codec.serializeWithReport({doc:append(document)});
+    expect(exported.issues).toEqual([]);
+    expect(exported.markdown).toContain('colspan="2"');
+    const markers = source.match(/- \[[ x~]\] /gu)!;
+    expect(exported.markdown.match(/[-*+] \[[ x~]\] /gu)).toEqual(markers.map(m => expect.stringContaining(m.slice(1))));
+    expect(exported.markdown).toContain('Added.');
+  });
 
 it.each(mergedPreviews.fixtures)('keeps $name through canonical GitLab Save while ordinary tables stay in Markdown',async ({name,source,body})=>{
   const {codec,document}=await convert(source,body);
