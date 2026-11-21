@@ -318,6 +318,21 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       else item.rollback = handover;
       const writer = await edit(page);
       const witness = await edit(peer);
+      if (input.wikiLink && side === 'fountain') {
+        item.stage = 'edit-wiki-alias-in-link-form';
+        const temporary = 'Escalation contact list';
+        await writer.getByRole('link',{name:input.wikiLink.label,exact:true}).click();
+        await page.locator('form.wiki-form').getByRole('button',{name:'Insert or edit link',exact:true}).click();
+        const dialog = page.getByRole('dialog',{name:'Edit link',exact:true});
+        await expect(dialog.getByRole('textbox',{name:'Link URL',exact:true})).toHaveValue(input.wikiLink.target);
+        await dialog.getByRole('textbox',{name:'Link text',exact:true}).fill(temporary);
+        await dialog.getByRole('button',{name:'Apply link',exact:true}).click();
+        handover.formPageLinks = await checkWikiLinks(witness,temporary);
+        await writer.locator('p').filter({hasText:'Status:'}).click();
+        await page.keyboard.press('Control+z');
+        await checkWikiLinks(witness,input.wikiLink.label);
+        expect(await read()).toBe(item.saved);
+      }
       const pending = rollout ? ' Pending rollout review.' : ' Pending rollback review.';
       const draft = both + pending;
       await append(page,writer.locator('p').filter({hasText:'Status:'}),pending);
