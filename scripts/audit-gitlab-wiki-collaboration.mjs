@@ -534,8 +534,15 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
           await request(endpoint, {namespace, value:'false'});
           if (before === null && (await readFlag())?.state === 'off') await request(endpoint, {}, 'DELETE');
         }
-        expect(await readFlag()).toEqual(before);
-        item.restoredFlag = true;
+        const restored = await readFlag();
+        try {
+          expect(restored).toEqual(before);
+          item.restoredFlag = true;
+        } catch (error) {
+          item.restoredFlag = false;
+          item.cleanupFailure = String(error);
+          item.status = 'incomplete';
+        }
       }
     }
   }
