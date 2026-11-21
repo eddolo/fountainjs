@@ -34,7 +34,7 @@ async function loadWikiCollaboration(provider) {
     import('~/collaborative_editing/user_colors'),
   ]);
   const stockSchema = getSchema(['Document','Paragraph','Heading','Blockquote','BulletList','OrderedList','ListItem',
-    'HardBreak','HorizontalRule','Table','TableRow','TableHeader','TableCell','Text','Bold','Italic','Strike','Code','Subscript','Superscript','Link'].map(name => extensions[name]));
+    'HardBreak','HorizontalRule','CodeBlockHighlight','Table','TableRow','TableHeader','TableCell','Text','Bold','Italic','Strike','Code','Subscript','Superscript','Link'].map(name => extensions[name]));
   return {provider,wire:{types,stockSchema,updateYFragment},colorFor:assignUserColor};
 }
 
