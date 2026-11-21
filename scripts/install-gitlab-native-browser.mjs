@@ -330,7 +330,10 @@ if (await realpath(formTarget) !== formTarget || (formDigest !== wikiFormHash &&
   throw new Error('Refusing to replace an unrecognized GitLab wiki form.');
 const contentInput = '          <input name="wiki[content]" type="hidden" :value="rawContent" />';
 files.set(wikiFormPath, originalWikiForm
+  .replace('    handleSave() {','    handleSave() {\n      if (this.isCollaborating && this.fountainWikiUploadPending) return;')
+  .replace('    submitFormWithShortcut() {','    submitFormWithShortcut() {\n      if (this.isCollaborating && this.fountainWikiUploadPending) return;')
   .replace('    async submitForm() {', `    async submitForm() {
+      if (this.isCollaborating && this.fountainWikiUploadPending) return;
       if (this.isCollaborating) {
         const editor = this.$refs.markdownEditor?.$refs.contentEditor;
         try {

@@ -75,6 +75,7 @@ export default {
       replacementSource: null,
       inserting: false,
       waitingForWikiFile: false,
+      peerUploadNames: [],
       failedInsertionSource: null,
       loadFailed: false,
       uploads: [],
@@ -88,7 +89,7 @@ export default {
       return this.inheritedCommentTemplatePaths.length ? this.inheritedCommentTemplatePaths : this.newCommentTemplatePaths;
     },
     wikiUploadPending() {
-      return this.waitingForWikiFile || this.uploads.length > 0;
+      return this.waitingForWikiFile || this.uploads.length > 0 || this.peerUploadNames.length > 0;
     },
     canUpload() {
       return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
@@ -207,6 +208,7 @@ export default {
         this.replacementSource = this.contentEditor.recovery?.markdown ?? null;
         this.inserting = this.contentEditor.pendingInsertions > 0;
       });
+      this.releasePeerUploads = this.contentEditor.subscribePeerWikiUploads(names => { this.peerUploadNames = names; });
       this.releaseUploads = this.contentEditor.subscribeUploads(uploads => { this.uploads = uploads; });
     } catch (error) {
       this.fatal = true;
@@ -245,6 +247,7 @@ export default {
     this.loadRequest += 1;
     this.releaseChange?.();
     this.releaseStatus?.();
+    this.releasePeerUploads?.();
     this.releaseUploads?.();
     this.contentEditor?.dispose();
   },
@@ -454,6 +457,7 @@ export default {
     // eslint-disable-next-line vue/no-unused-properties -- Public MarkdownEditor handoff contract.
     getSerializedContentForHandoff() {
       this.ensureNoSourceDraft();
+      if (this.collaborationProvider && this.wikiUploadPending) throw new Error('GITLAB_WIKI_UPLOAD_PENDING');
       if (this.isLoading || this.fatal || (!this.collaborationProvider && this.latestMarkdown !== this.markdown))
         throw new Error('MARKDOWN_SERIALIZATION_NOT_READY');
       return this.$refs.surface.getSerializedContentForHandoff();
@@ -557,6 +561,12 @@ export default {
         rows="6"
       ></textarea>
     </details>
+    <div v-if="peerUploadNames.length" role="status" class="gl-m-3">
+      {{ s__('ContentEditor|Another author is attaching a file. You can keep editing and save when it finishes.') }}
+      <ul :aria-label="s__('ContentEditor|Files being attached by other authors')">
+        <li v-for="(name, index) in peerUploadNames" :key="index">{{ name }}</li>
+      </ul>
+    </div>
     <p v-if="waitingForWikiFile" role="status" class="gl-m-3">
       {{ s__('ContentEditor|An attachment is uploading in another editor. You can keep editing. Save becomes available when the file is ready.') }}
     </p>

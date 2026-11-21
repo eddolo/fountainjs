@@ -12,7 +12,7 @@ export interface GitLabWikiOptions {
   provider: GitLabWikiProvider & {
     identityFor(id:number): {id:number;name:string} | null;
     awareness: {
-      getStates(): Map<number,{cursor?: Cursor}>;
+      getStates(): Map<number,{cursor?: Cursor; fountainWikiFiles?: unknown}>;
       setLocalStateField(name:string,value:unknown):void;
       on(event:'change',fn:()=>void):void;
       off(event:'change',fn:()=>void):void;
@@ -33,7 +33,10 @@ export class GitLabWikiSession {
   private failure?: unknown;
   private readonly origin = {};
   private options!:GitLabWikiOptions;
-  constructor(private readonly loadOptions:()=>Promise<GitLabWikiOptions>, private readonly notify:(error:unknown)=>void) {}
+  private localFiles: readonly string[] = [];
+  private peerFiles: readonly string[] = [];
+  constructor(private readonly loadOptions:()=>Promise<GitLabWikiOptions>, private readonly notify:(error:unknown)=>void,
+    private readonly onPeerFiles:(names:readonly string[])=>void) {}
 
   extension() {
     const extension = createCollaborationExtension({adapter:() => this});
@@ -187,20 +190,35 @@ export class GitLabWikiSession {
     this.cursor = cursor;
     this.options.provider.awareness.setLocalStateField('cursor',cursor ?? null);
   }
+  publishFiles(names: readonly string[]) {
+    if (!this.binding || (names.length === this.localFiles.length && names.every((name,i) => name === this.localFiles[i]))) return;
+    this.localFiles = names;
+    // The original bytes and the uploader's progress belong to that browser.
+    this.options.provider.awareness.setLocalStateField('fountainWikiFiles',names.length ? names : null);
+  }
   private presences = () => {
     if (!this.binding || !this.context) return;
     const {provider,colorFor} = this.options;
     const users:CollaborationPresence[] = [];
+    const files:string[] = [];
     for (const [client,state] of provider.awareness.getStates()) {
       if (client === provider.doc.clientID) continue;
       const peer = provider.identityFor(client);
       if (!peer) continue;
+      if (Array.isArray(state.fountainWikiFiles) && state.fountainWikiFiles.length <= 1000) {
+        for (const name of state.fountainWikiFiles)
+          if (typeof name === 'string' && name.length > 0 && name.length <= 1024) files.push(name);
+      }
       let anchor, head;
       try {
         if (state.cursor) { anchor = this.absolute(state.cursor.anchor); head = this.absolute(state.cursor.head); }
       } catch { /* A peer with an unresolvable cursor still appears in the presence list. */ }
       users.push({clientId:String(client),user:{id:String(peer.id),name:peer.name,color:colorFor(peer.id)},
         selection:anchor != null && head != null ? {anchor,head} : undefined});
+    }
+    if (files.length !== this.peerFiles.length || files.some((name,i) => name !== this.peerFiles[i])) {
+      this.peerFiles = files;
+      this.onPeerFiles(files);
     }
     this.context.setPresences(users);
   };
@@ -214,8 +232,10 @@ export class GitLabWikiSession {
     if (this.binding) {
       this.options.provider.awareness.off('change',this.presences);
       this.fragment?.unobserveDeep(this.changed);
+      this.publishFiles([]);
       if (this.cursor) this.options.provider.awareness.setLocalStateField('cursor',null);
     }
+    if (this.peerFiles.length) { this.peerFiles = []; this.onPeerFiles([]); }
     this.history?.destroy();
     this.binding = undefined; this.fragment = undefined; this.context = undefined;
     this.history = undefined; this.cursor = undefined; this.spans = []; this.failure = undefined;

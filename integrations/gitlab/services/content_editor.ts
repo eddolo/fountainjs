@@ -84,6 +84,7 @@ export class GitLabContentEditor {
   readonly quickActions: GitLabQuickActionEditing;
   readonly autocomplete: GitLabAutocompleteEditing;
   readonly suggestions: GitLabSuggestionEditing;
+  private readonly peerUploadListeners = new Set<(files: readonly string[]) => void>();
   private readonly uploadListeners = new Set<(uploads: readonly GitLabUploadSnapshot[]) => void>();
   private readonly releaseChanges: () => void;
   private readonly listeners = new Set<(change: SerializedContentChange) => void>();
@@ -161,7 +162,8 @@ export class GitLabContentEditor {
             })
         : undefined,
     });
-    if (options.wikiCollaboration) this.wiki = new GitLabWikiSession(options.wikiCollaboration,error => options.onListenerError?.(error));
+    if (options.wikiCollaboration) this.wiki = new GitLabWikiSession(options.wikiCollaboration,error => options.onListenerError?.(error),
+      files => this.notify(this.peerUploadListeners,files));
     const kit = composeExtensions([...StarterKit.extensions.map(extension => extension.name === 'trailing-editable-block'
       ? gitLabFootnoteBoundary(extension) : extension), math, ...(options.extensions ?? []), ...(this.wiki ? [this.wiki.extension()] : [])]);
     this.assetResolver = new GitLabAssetResolver(options);
@@ -239,7 +241,11 @@ export class GitLabContentEditor {
       () => this.notifyStatus(),
     );
     this.uploads = new GitLabAttachmentUploads(this.insertions, options.uploadAttachment,
-      uploads => { this.notifyStatus(); this.notify(this.uploadListeners, uploads); }, options.maxUploadEntries);
+      uploads => {
+        this.wiki?.publishFiles(uploads.filter(entry => entry.status !== 'failed').map(entry => entry.fileName));
+        this.notifyStatus();
+        this.notify(this.uploadListeners, uploads);
+      }, options.maxUploadEntries);
     this.releaseChanges = this.controller.subscribeChange((change) => {
       if (this.destroyed || (this.wiki && this.loading)) return;
       this.exportFailure = change.status === 'error';
@@ -481,6 +487,11 @@ export class GitLabContentEditor {
     }
     return removed;
   }
+  subscribePeerWikiUploads(listener: (files: readonly string[]) => void): () => void {
+    this.assertAlive();
+    this.peerUploadListeners.add(listener);
+    return () => { this.peerUploadListeners.delete(listener); };
+  }
   subscribeUploads(listener: (uploads: readonly GitLabUploadSnapshot[]) => void): () => void {
     this.assertAlive();
     this.uploadListeners.add(listener);
@@ -614,6 +625,7 @@ export class GitLabContentEditor {
     this.mediaSession = undefined;
     this.insertions.dispose();
     this.uploads.dispose();
+    this.peerUploadListeners.clear();
     this.uploadListeners.clear();
     this.releaseChanges();
     this.controller.dispose();

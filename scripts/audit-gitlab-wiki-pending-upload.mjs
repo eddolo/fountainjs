@@ -65,18 +65,24 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
       await expect(form.getByRole('list',{name:'Attachment uploads'})).toContainText(name);
       await expect(observer.getByText(name,{exact:true})).toHaveCount(0);
       pending.sharedPlaceholder = false;
+      const notice = page.getByRole('list',{name:'Files being attached by other authors'});
+      await expect(notice.getByText(name,{exact:true})).toBeVisible();
+      pending.peerUploadNotice = true;
     }
     expect(await read()).toBe(before);
     await form.screenshot({path:join(output,'pending-upload.png')});
-    await page.goto('about:blank');
-    item.stage = 'join-switched-wiki-before-upload-completion';
-    await switchWikiDeployment({wikiSlug:item.slug});
-    const next = side === 'original' ? 'fountain' : 'original';
-    const fresh = await edit(page,next);
+    let fresh = observer, next = side;
+    if (switchWikiDeployment) {
+      await page.goto('about:blank');
+      item.stage = 'join-switched-wiki-before-upload-completion';
+      await switchWikiDeployment({wikiSlug:item.slug});
+      next = side === 'original' ? 'fountain' : 'original';
+      fresh = await edit(page,next);
+    }
     pending.destination = await editorProof(fresh);
     expect(pending.destination.native).toBe(next === 'fountain');
     await expect.poll(() => statusText(fresh)).toBe(expectedStatus);
-    if (side === 'original') {
+    if (side === 'original' && next === 'fountain') {
       await expect(fresh).toContainText(name);
       await expect(fresh.locator('a[href^="blob:"]')).toHaveCount(0);
       await expect(page.getByTestId('wiki-submit-button')).toBeDisabled();
@@ -90,6 +96,37 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     await expect.poll(() => statusText(actor),{timeout:30000}).toBe(pending.witnessDraft);
     await fresh.screenshot({path:join(output,'destination-before-completion.png')});
     expect(await read()).toBe(before);
+    if (!switchWikiDeployment) {
+      item.stage = 'save-before-attachment-completion';
+      const save = page.getByTestId('wiki-submit-button');
+      pending.peerSave = {disabled:await save.isDisabled()};
+      if (side === 'fountain') expect(pending.peerSave.disabled).toBe(true);
+      await page.locator('form.wiki-form').screenshot({path:join(output,'peer-save-before-completion.png')});
+      if (!pending.peerSave.disabled) {
+        await save.click();
+        const confirm = page.getByTestId('wiki-confirm-message'), reader = page.getByTestId('wiki-page-content');
+        await expect(confirm.or(reader).first()).toBeVisible();
+        if (await confirm.isVisible()) await confirm.click();
+        await expect(reader).toContainText(pending.witnessDraft);
+        pending.peerSave.source = await read();
+        pending.peerSave.hasObjectURL = pending.peerSave.source.includes('blob:');
+        pending.peerSave.hasFileName = pending.peerSave.source.includes(name);
+        await reader.screenshot({path:join(output,'intermediate-saved-reader.png')});
+        fresh = await edit(page);
+      } else {
+        const submissions = [];
+        const record = req => { if (req.isNavigationRequest() && req.method() === 'POST') submissions.push(new URL(req.url()).pathname); };
+        page.on('request',record);
+        try {
+          await fresh.locator('p').filter({hasText:'Status:'}).press('Control+Enter');
+          await expect(fresh).toBeVisible();
+          await expect(save).toBeDisabled();
+          expect(await read()).toBe(before);
+          expect(submissions).toEqual([]);
+          pending.peerSave.keyboardSubmissions = submissions;
+        } finally { page.off('request',record); }
+      }
+    }
     item.stage = 'resolve-pending-wiki-upload';
     release.resolve();
     const link = fresh.getByRole('link',{name,exact:true});
@@ -99,6 +136,10 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     expect(new URL(url).origin).toBe(origin);
     expect((await actor.getByRole('link',{name,exact:true}).evaluate(a => a.href))).toBe(url);
     await expect.poll(() => statusText(fresh)).toBe(pending.witnessDraft);
+    if (next === 'fountain') {
+      await expect(page.getByRole('list',{name:'Files being attached by other authors'})).toHaveCount(0);
+      await expect(page.getByTestId('wiki-submit-button')).toBeEnabled();
+    }
     item.stage = 'save-resolved-wiki-upload';
     await page.getByTestId('wiki-submit-button').click();
     const confirm = page.getByTestId('wiki-confirm-message'), reader = page.getByTestId('wiki-page-content');

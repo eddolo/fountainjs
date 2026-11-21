@@ -86,8 +86,8 @@ const wikiReferenceLinks = process.argv.includes('--wiki-reference-links');
 if (wikiReferenceLinks && (suite !== 'wiki-collaboration' || wikiPageLinks || mixedWiki || (draftRollbackRequested && !structuredWikiRollback)))
   throw new Error('Use --wiki-reference-links on a matched wiki collaboration run, wiki rollout or structured rollback.');
 const wikiPendingUpload = process.argv.includes('--wiki-pending-upload');
-if (wikiPendingUpload && (wikiPageLinks || wikiReferenceLinks || !(wikiRollout || structuredWikiRollback)))
-  throw new Error('Use --wiki-pending-upload on a wiki rollout or structured rollback.');
+if (wikiPendingUpload && (suite !== 'wiki-collaboration' || wikiPageLinks || wikiReferenceLinks || mixedWiki || (draftRollbackRequested && !structuredWikiRollback)))
+  throw new Error('Use --wiki-pending-upload on a matched wiki collaboration run, wiki rollout or structured rollback.');
 const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiPendingUpload ? 'wiki-pending-upload' : wikiReferenceLinks ? 'wiki-reference-links' : wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
 const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
 const pin=JSON.parse(await readFile(resolve(root,'integrations/gitlab/runtime/upstream.json')));

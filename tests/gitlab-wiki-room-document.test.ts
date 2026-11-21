@@ -42,6 +42,43 @@ it('maps a stock peer’s edit to the actual location even when adjacent letters
   } finally { service.dispose(); doc.destroy(); }
 });
 
+it('shows file notices only for known peers, clears departed peers, and keeps notices out of wiki content', async () => {
+  const doc = new Y.Doc(), room = doc.getXmlFragment('default');
+  const paragraph = new Y.XmlElement('paragraph');
+  room.push([paragraph]);
+  paragraph.push([new Y.XmlText('Draft')]);
+  const peerId = doc.clientID + 1;
+  const states = new Map<number,{fountainWikiFiles?:unknown}>();
+  let update = () => {};
+  const unused = () => { throw new Error('A peer notice must never write or seed a wiki document'); };
+  const service = new GitLabContentEditor({
+    renderMarkdown:unused, describeLabels:()=> '',
+    wikiCollaboration:async () => ({
+      provider:{doc,connected:true,whenSynced:Promise.resolve({seed:false}),seed:unused,
+        identityFor:id => id === peerId ? {id:2,name:'Author'} : null,
+        awareness:{getStates:()=>states,setLocalStateField:()=>{},on:(_event,fn)=>{ update=fn; },off:()=>{}}},
+      wire:{types:Y,stockSchema:{nodeFromJSON:unused},updateYFragment:unused},colorFor:()=> '#468',
+    }),
+  });
+  try {
+    const seen: (readonly string[])[] = [];
+    service.subscribePeerWikiUploads(files => seen.push(files));
+    await service.setSerializedContent('Draft');
+    const bytes = Y.encodeStateAsUpdate(doc);
+    states.set(doc.clientID,{fountainWikiFiles:['local.txt']});
+    states.set(peerId+1,{fountainWikiFiles:['unknown.txt']});
+    states.set(peerId,{fountainWikiFiles:['a.txt',null,'b.txt']});
+    update();
+    update();
+    expect(seen).toEqual([['a.txt','b.txt']]);
+    states.delete(peerId);
+    update();
+    expect(seen).toEqual([['a.txt','b.txt'],[]]);
+    expect(service.getSerializedContent()).toBe('Draft');
+    expect(Y.encodeStateAsUpdate(doc)).toEqual(bytes);
+  } finally { service.dispose(); doc.destroy(); }
+});
+
 it('round-trips the editable caret in an empty wiki paragraph without writing a zero-length ProseMirror text node', () => {
   const doc = new Y.Doc();
   try {
