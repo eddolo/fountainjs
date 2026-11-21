@@ -57,11 +57,14 @@ function fromStockMark(name: string, value: unknown, path: readonly number[]): M
   if (name === 'link') {
     for (const [key,flag] of Object.entries(attrs)) {
       if (key === 'href' || key === 'title' || key === 'canonicalSrc') continue;
+      if (attrs.isGollumLink === true && typeof attrs.canonicalSrc === 'string' && attrs.canonicalSrc.length &&
+        (key === 'isGollumLink' || key === 'isWikiPage') && typeof flag === 'boolean') continue;
       if (['uploading','isGollumLink','isWikiPage','isReference'].includes(key) && flag === false) continue;
       unsupported(path,'link.' + key);
     }
     // The GitLab schema validates both URLs when constructing the Fountain mark.
-    return {type:'link',attrs:{href:attrs.href,title:attrs.title ?? '',gitlabCanonicalSrc:attrs.canonicalSrc ?? undefined}};
+    return {type:'link',attrs:{href:attrs.href,title:attrs.title ?? '',gitlabCanonicalSrc:attrs.canonicalSrc ?? undefined,
+      ...(attrs.isGollumLink ? {gitlabWikiLink:attrs.isWikiPage ? 'page' : 'external'} : {})}};
   }
   const type = marks.get(name);
   if (!type || Object.keys(attrs).length) unsupported(path,name);
@@ -252,12 +255,14 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
       if (!node.isText) unsupported(path,'marked inline element');
       result.marks = node.marks.map(mark => {
         if (mark.type.name === 'link') {
-          const {href,title,gitlabCanonicalSrc} = mark.attrs;
+          const {href,title,gitlabCanonicalSrc,gitlabWikiLink} = mark.attrs;
+          if (gitlabWikiLink && !gitlabCanonicalSrc) unsupported(path,'wiki link without authored target');
           for (const [key,value] of Object.entries(mark.attrs)) {
-            if (!['href','title','gitlabCanonicalSrc'].includes(key) && value !== mark.type.spec.attrs?.[key]?.default)
+            if (!['href','title','gitlabCanonicalSrc','gitlabWikiLink'].includes(key) && value !== mark.type.spec.attrs?.[key]?.default)
               unsupported(path,'link.' + key);
           }
-          return {type:'link',attrs:{href,title:title || null,canonicalSrc:gitlabCanonicalSrc ?? null}};
+          return {type:'link',attrs:{href,title:title || null,canonicalSrc:gitlabCanonicalSrc ?? null,
+            ...(gitlabWikiLink ? {isGollumLink:true,isWikiPage:gitlabWikiLink === 'page'} : {})}};
         }
         const name = stockMarks.get(mark.type.name);
         if (!name || Object.keys(mark.attrs).length) unsupported(path,mark.type.name);

@@ -80,7 +80,9 @@ if (preparedRollback && (suite !== 'composers' || !process.argv.includes('--veri
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
+const wikiPageLinks = process.argv.includes('--wiki-page-links');
+if (wikiPageLinks && !(wikiRollout || structuredWikiRollback)) throw new Error('Use --wiki-page-links with the wiki rollout or structured rollback.');
+const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
 const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
 const pin=JSON.parse(await readFile(resolve(root,'integrations/gitlab/runtime/upstream.json')));
 const compose=['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')],env={...process.env};

@@ -90,6 +90,25 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     expect(identity.id).not.toBe(owner.id);
     item.authors = {owner:owner.name, peer:identity.name};
     const wikis = '/api/v4/projects/' + project.id + '/wikis';
+    let targetURL;
+    if (input.wikiLink) {
+      const {target,targetText} = input.wikiLink;
+      const endpoint = wikis + '/' + encodeURIComponent(target);
+      const response = await page.request.get(new URL(endpoint,project.web_url).href);
+      if (response.status() === 404) await request(wikis,{title:target,content:targetText,format:'markdown'});
+      const destination = await request(endpoint);
+      expect(destination.content).toBe(targetText);
+      targetURL = project.web_url + '/-/wikis/' + encodeURIComponent(destination.slug);
+    }
+    async function checkWikiLinks(surface,label) {
+      const links = [surface.getByRole('link',{name:label,exact:true}),
+        surface.getByRole('link',{name:input.wikiLink.target,exact:true})];
+      for (const link of links) {
+        await expect(link).toBeVisible();
+        expect(await link.evaluate(a => a.href)).toBe(targetURL);
+      }
+      return {label,shorthand:input.wikiLink.target,destination:targetURL};
+    }
     const wiki = await request(wikis, {title:[input.title,side,runId].join('-'),content:input.source,format:'markdown'});
     item.slug = wiki.slug;
     const url = project.web_url + '/-/wikis/' + encodeURIComponent(wiki.slug);
@@ -185,7 +204,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     }
     item.stage = 'open-first-editor';
     let seedRendering;
-    if (input.structure && side === 'fountain') {
+    if ((input.structure || input.wikiLink) && side === 'fountain') {
       // Capture only the GitLab preview of this suite's known, generated source.
       seedRendering = page.waitForResponse(response => {
         if (response.request().method() !== 'POST' || !response.ok()) return false;
@@ -284,6 +303,10 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       item[sourceEditor + 'ReaderTable'] = await checkTable(peerReader,false,false,headerAlignments);
       item[sourceEditor + 'ReaderMatchesAuthoredAlignment'] = headerAlignments.every((align,i) => align === input.table.alignments[i]);
       await peerReader.getByRole('table').filter({hasText:input.table.headings[0]}).screenshot({path:join(output,sourceEditor + '-reader-table.png')});
+    }
+    if (input.wikiLink) {
+      item.initialPageLinks = await checkWikiLinks(peerReader,input.wikiLink.label);
+      expect(item.saved.replaceAll('\r\n','\n')).toBe(input.source + input.ownerEdit + input.peerEdit);
     }
     if (input.mergedTable) item[sourceEditor + 'ReaderMergedTable'] = await checkMergedTable(peerReader);
     if (switchWikiDeployment) {
@@ -493,6 +516,20 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
             await checkTable(editor,true,true);
             expect(await read()).toBe(item.saved);
           }
+          if (input.wikiLink) {
+            item.stage = 'edit-recovered-wiki-link';
+            handover.recoveredPageLinks = await checkWikiLinks(editor,input.wikiLink.label);
+            await editor.locator('p').filter({hasText:'Consult '}).click();
+            await restored.keyboard.press('Home');
+            for (const _ of 'Consult Escalation ') await restored.keyboard.press('ArrowRight');
+            await restored.keyboard.insertText('field ');
+            await checkWikiLinks(editor,input.wikiLink.edited);
+            await restored.keyboard.press('Control+z');
+            await checkWikiLinks(editor,input.wikiLink.label);
+            await restored.keyboard.press('Control+Shift+z');
+            await checkWikiLinks(editor,input.wikiLink.edited);
+            expect(await read()).toBe(item.saved);
+          }
           if (input.mergedTable) {
             item.stage = 'edit-recovered-merged-table';
             handover.recoveredMergedTable = await checkMergedTable(editor,' handoff');
@@ -530,6 +567,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
             expect(expectedSource.split('Pat')).toHaveLength(2);
             expectedSource = expectedSource.replace('Night shift','Night shift handoff').replace('Pat','Pat Chen');
           }
+          if (input.wikiLink) expectedSource = expectedSource.replace('[[' + input.wikiLink.label + '|','[[' + input.wikiLink.edited + '|');
           expect(handover.saved).toBe(expectedSource + pending + ' Published.');
           await restored.reload();
           await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
@@ -551,6 +589,14 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
           if (input.structure) {
             handover.readerStructure = await checkStructure(reader,input.structure.child + input.structure.pending);
             await reader.screenshot({path:join(output,'reopened-structured-wiki.png')});
+          }
+          if (input.wikiLink) {
+            handover.readerPageLinks = await checkWikiLinks(reader,input.wikiLink.edited);
+            await reader.screenshot({path:join(output,'reopened-page-links.png')});
+            await reader.getByRole('link',{name:input.wikiLink.edited,exact:true}).click();
+            await expect(restored).toHaveURL(targetURL);
+            await expect(restored.getByTestId('wiki-page-content')).toHaveText(input.wikiLink.targetText);
+            handover.visitedWiki = restored.url();
           }
           handover.reopened = true;
         } catch (error) {

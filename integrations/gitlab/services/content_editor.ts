@@ -436,22 +436,27 @@ export class GitLabContentEditor {
         if (!this.loaded || this.loading || this.loadFailure || this.exportFailure || !this.editable)
           throw new GitLabEditorNotReady(this.status);
       },
-      resolveURL: async (href, signal) => {
+      resolveURL: async (href, signal, wikiLink) => {
         const { schema } = this.editor.state;
         const document = schema.node('doc', {}, [schema.node('paragraph', {}, [
-          schema.text('link', [schema.mark('link', { href })]),
+          schema.text('link', [schema.mark('link', wikiLink ? {href,gitlabCanonicalSrc:href,gitlabWikiLink:'page'} : {href})]),
         ])]);
         const markdown = this.codec.serialize({ doc: document });
         const result = await this.codec.deserialize({ schema, markdown, signal });
-        let resolved: string | undefined;
+        let resolved: string | undefined, wikiKind: 'page' | 'external' | undefined;
         result.document.descendants(node => {
           if (!node.isText || !node.text) return;
           const link = node.marks.find(mark => mark.type.name === 'link');
           if (!link || resolved !== undefined && resolved !== link.attrs.href)
             throw new Error('GITLAB_LINK_RESOLUTION_FAILED');
           resolved = String(link.attrs.href);
+          if (link.attrs.gitlabWikiLink === 'page' || link.attrs.gitlabWikiLink === 'external') wikiKind = link.attrs.gitlabWikiLink;
         });
         if (!resolved || result.document.textContent !== 'link') throw new Error('GITLAB_LINK_RESOLUTION_FAILED');
+        if (wikiLink) {
+          if (!wikiKind) throw new Error('GITLAB_LINK_RESOLUTION_FAILED');
+          return {href:resolved,wikiKind};
+        }
         return resolved;
       },
       validate: doc => { this.codec.serialize({ doc }); },

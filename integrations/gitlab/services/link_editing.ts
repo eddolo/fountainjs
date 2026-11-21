@@ -18,7 +18,7 @@ export interface GitLabLinkSnapshot extends GitLabLinkContext {
 interface LinkTarget extends GitLabLinkContext { readonly mark?: Mark }
 interface LinkEditingOptions {
   editor: Editor;
-  resolveURL(href: string, signal: AbortSignal): Promise<string>;
+  resolveURL(href: string, signal: AbortSignal, wikiLink?: boolean): Promise<string | {href:string; wikiKind:'page' | 'external'}>;
   validate(doc: Node): void;
   ensureReady(): void;
   changed?(snapshot: GitLabLinkSnapshot): void;
@@ -185,9 +185,10 @@ export class GitLabLinkEditingSession {
       if (this.cancel.signal.aborted) onAbort();
     });
     try {
-      const displayHref = await Promise.race([options.resolveURL(href, this.cancel.signal), aborted]);
-      if (!this.options || displayHref === undefined) return { status: 'superseded' };
+      const resolved = await Promise.race([options.resolveURL(href,this.cancel.signal,Boolean(this.initial.mark?.attrs.gitlabWikiLink)),aborted]);
+      if (!this.options || resolved === undefined) return { status: 'superseded' };
       this.ready();
+      const displayHref = typeof resolved === 'string' ? resolved : resolved.href;
       if (typeof displayHref !== 'string' || displayHref.length > 8192 || !isSafeURL(displayHref))
         throw new Error('GITLAB_LINK_UNSAFE_URL');
       closeHistory(options.editor);
@@ -205,7 +206,8 @@ export class GitLabLinkEditingSession {
       }
       const landing = mapMarkRangeSelection(transaction.doc, selected.path, selected.from, selected.endPath, selected.to);
       const mark = editor.state.schema.mark('link', { ...this.initial.mark?.attrs,
-        href: displayHref, gitlabCanonicalSrc: href, htmlHref: undefined });
+        href: displayHref, gitlabCanonicalSrc: href, htmlHref: undefined,
+        ...(typeof resolved === 'string' ? {} : {gitlabWikiLink:resolved.wikiKind}) });
       if (this.initial.existing) transaction.addMarkRange(selected.path, selected.from, selected.endPath, selected.to, mark);
       else transaction.step(new WrapLinkStep(selected, mark));
       transaction.setSelection(landing && ownsSelection

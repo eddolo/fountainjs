@@ -164,11 +164,14 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
       }) }], toText: node => String(node.attrs.value),
       toDOM: node => ['span', { 'data-fountain-gitlab-placeholder': 'true' }, String(node.attrs.value)] },
   }, marks: { ...base.marks,
-    link: { ...link, attrs: { ...link.attrs, gitlabCanonicalSrc: canonical },
+    link: { ...link, attrs: { ...link.attrs, gitlabCanonicalSrc: canonical,
+      gitlabWikiLink:{default:undefined,validate:value => value === undefined || value === 'page' || value === 'external'} },
       parseHTML: [{ tag: 'a[data-canonical-src], a[data-original-href], a[data-link-reference="true"]', priority: 200, getAttrs: element => {
         const href = element.getAttribute('href'), original = element.getAttribute('data-canonical-src') || element.getAttribute('data-original-href') || undefined;
         if (!isSafeURL(href, { allowEmpty: true }) || original !== undefined && !isSafeURL(original)) return false;
-        return { href, gitlabCanonicalSrc: original, title: element.getAttribute('data-reference-type') ? '' : element.getAttribute('title') ?? '' };
+        return { href, gitlabCanonicalSrc: original, gitlabWikiLink:element.getAttribute('data-gollum') === 'true'
+          ? ((element.getAttribute('class') ?? '').split(/\s+/u).includes('gfm-gollum-wiki-page') ? 'page' : 'external') : undefined,
+          title: element.getAttribute('data-reference-type') ? '' : element.getAttribute('title') ?? '' };
       } }, ...(link.parseHTML ?? [])] },
   } };
 }
@@ -283,6 +286,35 @@ function withoutReaderDirection(node: Node): Node {
   return children.some((child,index) => child !== node.child(index)) ? node.copy(children) : node;
 }
 
+const wikiMark = (node: Node) => node.marks.find(mark => mark.type.name === 'link' && mark.attrs.gitlabWikiLink);
+
+// A link can span adjacent text runs. Emit its delimiters once and preserve
+// formatting shared by the entire label. A partial style has no Gollum source form.
+function wikiLinkChildren(parent: Node, visit: (child: Node, index: number) => Node, encode: (source: string) => string): Node[] {
+  const output: Node[] = [];
+  for (let i = 0; i < parent.childCount; i++) {
+    const child = parent.child(i), link = wikiMark(child);
+    if (!link) { output.push(visit(child,i)); continue; }
+    const start = i, marks = child.marks.filter(mark => mark !== link);
+    const target = link.attrs.gitlabCanonicalSrc;
+    let label = child.text ?? '';
+    while (i+1 < parent.childCount) {
+      const next = parent.child(i+1), nextLink = wikiMark(next);
+      if (!nextLink || !nextLink.eq(link)) break;
+      const other = next.marks.filter(mark => mark !== nextLink);
+      if (other.length !== marks.length || !other.every((mark,j) => mark.eq(marks[j])))
+        throw new GitLabMarkdownConversionError([{stage:'export',code:'wiki-link-label-format',message:'Formatting within part of a wiki link label requires source editing.'}]);
+      label += next.text ?? '';
+      i++;
+    }
+    if (!child.isText || !label.trim() || typeof target !== 'string' || !target.trim() || !isSafeURL(target)
+      || [target,label].some(value => /[|\r\n]|\[\[|\]\]/u.test(value) || value !== value.trim()) || link.attrs.title)
+      throw new GitLabMarkdownConversionError([{stage:'export',code:'wiki-link-source',message:'The wiki link label or destination cannot be represented losslessly in double brackets.'}]);
+    output.push(visit(parent.type.schema.text(encode(label === target ? '[[' + label + ']]' : '[[' + label + '|' + target + ']]'),marks),start));
+  }
+  return output;
+}
+
 // Compare the host preview with an independent parse of the authored source before
 // removing reader presentation. A mismatch leaves the original import untouched.
 function wikiSeedCandidate(node: Node, trimListSeparator = false): Node {
@@ -299,6 +331,22 @@ function wikiSeedCandidate(node: Node, trimListSeparator = false): Node {
     return wikiSeedCandidate(child,beforeList || (trimListSeparator && i === node.childCount-1));
   });
   return node.type.create(markdownAttributes(node),children,undefined,node.marks);
+}
+
+function wikiSeedSourceText(node: Node): Node {
+  if (node.isText) return node;
+  if (!node.content.some(wikiMark)) {
+    const children = node.content.map(wikiSeedSourceText);
+    return children.some((child,i) => child !== node.child(i)) ? node.copy(children) : node;
+  }
+  const output: Node[] = [];
+  for (const child of wikiLinkChildren(node,wikiSeedSourceText,source => source)) {
+    const last = output.at(-1);
+    if (child.isText && last?.isText && child.marks.length === last.marks.length && child.marks.every((mark,i) => mark.eq(last.marks[i])))
+      output[output.length-1] = last.withText(last.text! + child.text!);
+    else output.push(child);
+  }
+  return node.copy(output);
 }
 
 function withWikiBlockOrigins(document: Node, origins: readonly WikiBlockOrigin[]): Node {
@@ -367,9 +415,10 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
             return raw.issues.length ? null : raw.document;
           }} : {});
           const prose = wikiOrigins ? wikiSeedCandidate(document) : withoutReaderDirection(document);
-          if (parsed.document.eq(prose)) {
+          const compared = wikiOrigins ? wikiSeedSourceText(prose) : prose;
+          if (parsed.document.eq(compared)) {
             if (wikiRoomSeed) document = wikiOrigins ? withWikiBlockOrigins(prose,wikiOrigins) : prose;
-            if (proseOnly) wikiSource = parsed.source;
+            if (proseOnly && compared === prose) wikiSource = parsed.source;
           }
         } catch {
           // A wiki extension may accept syntax outside the local parser.
@@ -601,14 +650,21 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         text = open + (text ?? '') + close;
         return false;
       });
-      const content = node.content.map((child, index) => project(child, [...path, index]));
+      const projectChild = (child: Node,index: number) => project(child,[...path,index]);
+      const content = node.content.some(wikiMark) ? wikiLinkChildren(node,projectChild,noteToken) : node.content.map(projectChild);
       if (text === node.text && retainedMarks.length === node.marks.length && retainedMarks.every((mark, index) => mark === node.marks[index])
         && content.every((child, index) => child === node.child(index))
         && Object.keys(attrs).length === Object.keys(node.attrs).length
         && Object.entries(attrs).every(([key, value]) => value === node.attrs[key])) return node;
       return node.type.create(attrs, content, text, retainedMarks);
     };
-    const projected = project(doc, []), paths = new WeakMap<Node, readonly number[]>();
+    let projected: Node;
+    try { projected = project(doc,[]); }
+    catch (error) {
+      if (!(error instanceof GitLabMarkdownConversionError)) throw error;
+      return {markdown:'',preservation:'canonical',issues:[...issues,...error.issues]};
+    }
+    const paths = new WeakMap<Node, readonly number[]>();
     projected.descendants((node, path) => { paths.set(node, path); });
     const extensionWriters = Object.fromEntries(Array.from(this.options.nodeWriters?.keys() ?? [], name =>
       [name, (node: Node) => customSources.get(node)] as const));

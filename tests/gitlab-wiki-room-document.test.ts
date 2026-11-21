@@ -75,10 +75,31 @@ it('preserves the rendered and authored destinations of ordinary links in a stoc
       type:'link',attrs:{href:attrs.href,title:attrs.title,canonicalSrc:attrs.canonicalSrc},
     });
     expect(Y.encodeStateAsUpdate(doc)).toEqual(roomBytes);
-    text.format(5,13,{link:{...attrs,isGollumLink:true}});
+    text.format(5,13,{link:{...attrs,isReference:true}});
     const unsupported = Y.encodeStateAsUpdate(doc);
-    expect(() => readGitLabWikiRoom(root,schema,Y)).toThrow('isGollumLink');
+    expect(() => readGitLabWikiRoom(root,schema,Y)).toThrow('isReference');
     expect(Y.encodeStateAsUpdate(doc)).toEqual(unsupported);
+  } finally { doc.destroy(); }
+});
+
+it('retains the wiki target independently of the edited display label', async () => {
+  const doc = new Y.Doc();
+  try {
+    const room = doc.getXmlFragment('default'), p = new Y.XmlElement('paragraph'), text = new Y.XmlText();
+    room.push([p]); p.push([text]);
+    const slug = 'escalation-guide', href = '/project/-/wikis/' + slug;
+    const attrs = {href,canonicalSrc:slug,isWikiPage:true,isGollumLink:true,uploading:false,isReference:false,title:null};
+    text.applyDelta([{insert:'See '},{insert:'Escalation guide',attributes:{link:attrs}},{insert:' or '},
+      {insert:slug,attributes:{link:attrs}},{insert:'.'}]);
+    const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async () => ({body:''})});
+    const document = readGitLabWikiRoom(room,schema,Y);
+    expect(codec.serialize({doc:document})).toBe('See [[Escalation guide|escalation-guide]] or [[escalation-guide]].');
+    expect(toGitLabWikiJSON(document).content?.[0].content?.[1].marks?.[0].attrs).toMatchObject({
+      href,canonicalSrc:slug,isGollumLink:true,isWikiPage:true,
+    });
+    const mark = document.child(0).child(1).marks[0];
+    const ambiguous = schema.node('doc',{},[schema.node('paragraph',{},[schema.text('A|B',[mark])])]);
+    expect(codec.serializeWithReport({doc:ambiguous}).issues.map(issue => issue.code)).toContain('wiki-link-source');
   } finally { doc.destroy(); }
 });
 
