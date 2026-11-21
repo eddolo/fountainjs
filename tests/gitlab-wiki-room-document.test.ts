@@ -5,7 +5,7 @@ import { Schema } from 'fountainjs-editor';
 import rollout from '../integrations/gitlab/fixtures/compatibility-wiki-rollout.json';
 import seedPreview from '../integrations/gitlab/fixtures/wiki-structured-seed-render.html?raw';
 import { createGitLabSchemaSpec, GitLabMarkdownCodec } from '../integrations/gitlab/services/markdown_codec';
-import { readGitLabWikiRoom, sameWikiDocument, toGitLabWikiJSON } from '../integrations/gitlab/services/wiki_room_document';
+import { bindGitLabWikiDocument, readGitLabWikiRoom, sameWikiDocument, toGitLabWikiJSON } from '../integrations/gitlab/services/wiki_room_document';
 
 const schema = new Schema(createGitLabSchemaSpec(undefined,undefined,undefined,true));
 it('maps a stock peer’s edit to the actual location even when adjacent letters are identical', async () => {
@@ -122,6 +122,41 @@ it('round-trips a wiki code block without changing indentation, blank lines, or 
     expect(toGitLabWikiJSON(named).content?.[0].attrs?.langParams).toBe('title=threshold.py');
     code.setAttribute('langParams','frontmatter');
     expect(() => readGitLabWikiRoom(room,schema,Y)).toThrow(/codeBlock.langParams/);
+  } finally { doc.destroy(); }
+});
+
+it('follows the actual shared code element after peer edits and an earlier block insertion', () => {
+  const doc = new Y.Doc();
+  try {
+    const room = doc.getXmlFragment('default');
+    const element = (text:string) => {
+      const block = new Y.XmlElement('codeBlock');
+      block.setAttribute('language','python');
+      block.setAttribute('langParams','title=shared.py');
+      block.push([new Y.XmlText(text)]);
+      return block;
+    };
+    const a = element('first'), b = element('second');
+    room.push([a,b]);
+    const unused = ():never => { throw new Error('Source matching must leave the room untouched'); };
+    const binding = bindGitLabWikiDocument(room,schema,{types:Y,stockSchema:{nodeFromJSON:unused},updateYFragment:unused});
+    const source = binding.read();
+    const one = source.child(0).withAttrs({...source.child(0).attrs,gitlabFenceSuffix:'  title=shared.py'});
+    const saved = source.copy([one,source.child(1)]);
+    binding.rememberFenceSources(saved);
+    const shared = a.get(0) as Y.XmlText;
+    shared.delete(0,shared.length);
+    shared.insert(0,'second');
+    room.insert(0,[new Y.XmlElement('paragraph')]);
+    const current = binding.read();
+    expect(binding.fenceSpelling(current.child(1),[1])).toBe('  title=shared.py');
+    expect(binding.fenceSpelling(current.child(2),[2])).toBe(':title=shared.py');
+    const late = bindGitLabWikiDocument(room,schema,{types:Y,stockSchema:{nodeFromJSON:unused},updateYFragment:unused});
+    late.rememberFenceSources(saved);
+    expect(late.fenceSpelling(current.child(1),[1])).toBeUndefined();
+    room.delete(1,1);
+    room.insert(1,[element('second')]);
+    expect(binding.fenceSpelling(binding.read().child(1),[1])).toBeUndefined();
   } finally { doc.destroy(); }
 });
 

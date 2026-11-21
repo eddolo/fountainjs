@@ -388,6 +388,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     html?: ServerHTMLImporterOptions;
     preserveWikiSource?: boolean;
     wikiRoom?: boolean;
+    wikiFenceSpelling?: (node:Node,path:readonly number[]) => string | undefined;
     nodeWriters?: ReadonlyMap<string, (node: Node) => string>;
     markWriters?: ReadonlyMap<string, GitLabMarkWriter>;
     tableOfContentsLabel?: string;
@@ -563,7 +564,8 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       if (node.type.name === 'code_block' && node.attrs.gitlabFenceSuffix != null) {
         const suffix = node.attrs.gitlabFenceSuffix, params = fenceParameters(suffix);
         const language = String(node.attrs.language);
-        const spelling = params && !canonical ? this.wikiFenceSpellings.get(language + ':' + params) : undefined;
+        const groupSpelling = !canonical && params ? this.wikiFenceSpellings.get(language + ':' + params) : undefined;
+        const spelling = groupSpelling === null ? this.options.wikiFenceSpelling?.(node,path) ?? null : groupSpelling;
         if (typeof suffix !== 'string' || !params || !ordinaryFence(language,params) || spelling === null || node.attrs.gitlabFrontmatter) {
           issues.push({stage:'export',code:'code-fence-parameters',path,message:'The code fence parameters need an unambiguous source spelling.'});
           return node;

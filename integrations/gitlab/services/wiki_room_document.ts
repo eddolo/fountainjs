@@ -179,6 +179,57 @@ export function bindGitLabWikiDocument<StockNode extends StockWikiNode>(
   const doc = fragment.doc;
   if (!doc || !Object.is(doc.share.get('default'), fragment)) throw new Error('Expected the attached GitLab default wiki fragment.');
   const read = () => readGitLabWikiRoom(fragment, schema, wire.types);
+  // A Yjs element keeps its identity when a peer edits its code or inserts a sibling.
+  // Keep source spelling in this binding only. Stock GitLab owns the shared schema.
+  const fenceSources = new WeakMap<Y.XmlElement,{language:unknown; params:string; suffix:string}>();
+  function codeElement(path: readonly number[]) {
+    let parent: Y.XmlFragment = fragment;
+    for (const index of path) {
+      if (index >= parent.length) return;
+      const child = parent.get(index);
+      if (!(child instanceof wire.types.XmlElement)) return;
+      parent = child;
+    }
+    if (parent instanceof wire.types.XmlElement && parent.nodeName === 'codeBlock') return parent;
+  }
+  function rememberFenceSources(source: Node) {
+    function listings(doc: Node) {
+      const groups = new Map<string,{node:Node;path:readonly number[];suffix:string;params:string}[]>();
+      doc.descendants((node,path) => {
+        const suffix = node.attrs.gitlabFenceSuffix, params = fenceParameters(suffix);
+        if (node.type.name !== 'code_block' || typeof suffix !== 'string' || !params) return;
+        const key = node.attrs.language + ':' + params;
+        const group = groups.get(key) ?? [];
+        group.push({node,path,suffix,params});
+        groups.set(key,group);
+      });
+      return groups;
+    }
+    const saved = listings(source);
+    const ambiguous = [...saved].filter(([,group]) => group.some(entry => entry.suffix !== group[0].suffix));
+    if (!ambiguous.length) return;
+    const live = listings(read());
+    for (const [key,group] of ambiguous) {
+      const current = live.get(key);
+      if (current?.length !== group.length) continue;
+      const byText = new Map(group.map(entry => [entry.node.textContent,entry.suffix]));
+      // Bind only a one-to-one match of the whole group. A late join may
+      // already contain edits, deletions, or two indistinguishable listings.
+      const bodies = new Set(current.map(entry => entry.node.textContent));
+      if (byText.size !== group.length || bodies.size !== group.length || current.some(entry => !byText.has(entry.node.textContent))) continue;
+      for (const {node,path,params} of current) {
+        const element = codeElement(path);
+        if (element) fenceSources.set(element,{language:node.attrs.language,params,suffix:byText.get(node.textContent)!});
+      }
+    }
+  }
+  function fenceSpelling(node: Node, path: readonly number[]) {
+    const element = codeElement(path);
+    const known = element && fenceSources.get(element);
+    if (known && known.language === node.attrs.language && known.params === fenceParameters(node.attrs.gitlabFenceSuffix)
+      && element.getAttribute('language') === known.language && element.getAttribute('langParams') === known.params)
+      return known.suffix;
+  }
   let lastProjection: {doc: Node; stock: StockNode} | undefined;
   function prepare(before: Node, after: Node) {
     if (before.type.schema !== schema || after.type.schema !== schema || !sameWikiDocument(read(),before))
@@ -187,7 +238,7 @@ export function bindGitLabWikiDocument<StockNode extends StockWikiNode>(
     return lastProjection.stock;
   }
   return {
-    read, prepare,
+    read, prepare, rememberFenceSources, fenceSpelling,
     apply(before: Node, after: Node, origin: object): void {
       const stockNode = prepare(before,after);
       if (before.eq(after)) return;

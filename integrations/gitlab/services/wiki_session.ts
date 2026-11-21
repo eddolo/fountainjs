@@ -66,7 +66,7 @@ export class GitLabWikiSession {
     let saved: Promise<Node> | undefined;
     const read = () => saved ??= loadSeed(controller.signal);
     const {binding} = await openGitLabWikiRoom(provider,this.context.editor.state.schema,wire,read,{signal:controller.signal});
-    if (readSavedSource) await read();
+    if (readSavedSource) binding.rememberFenceSources(await read());
     controller.signal.throwIfAborted();
     this.fragment = provider.doc.getXmlFragment('default');
     this.binding = binding;
@@ -78,6 +78,8 @@ export class GitLabWikiSession {
     this.publishSelection(this.context.editor.state.doc,this.context.editor.state.selection);
     this.presences();
   }
+
+  fenceSpelling(node:Node, path:readonly number[]) { return this.binding?.fenceSpelling(node,path); }
 
   assertCurrent(doc:Node) {
     if (this.failure) throw this.failure;
