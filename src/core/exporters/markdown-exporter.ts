@@ -42,6 +42,8 @@ export interface MarkdownExportOptions {
   omitTrailingCaret?: boolean;
   /** Pipe tables (default), or safe HTML preserving supported block content and cell layout. */
   tableFormat?: 'pipe' | 'html';
+  /** Size the delimiter under each column to its escaped header, as in GitLab Markdown. */
+  tableDelimiterStyle?: 'compact' | 'header-width';
   /** Receives each lossy projection after it is recorded in the returned report. */
   onLoss?: (loss: MarkdownExportLoss) => void;
 }
@@ -783,8 +785,17 @@ function render(
           report(context, 'node', 'table_row', [...path, rowIndex], 'Pipe Markdown makes the first row column headers and later rows data cells. Use HTML tables to preserve different cell roles.');
         }
         const cells = row.content.map((cell, cellIndex) => tableCell(cell, context, [...path, rowIndex, cellIndex], depth, alignments[cellIndex] ?? 'default'));
-        const delimiter = alignments.map(align => tableDelimiters[align]);
-        return `| ${cells.join(' | ')} |${rowIndex === 0 ? `\n| ${delimiter.join(' | ')} |` : ''}`;
+        const line = `| ${cells.join(' | ')} |`;
+        if (rowIndex !== 0) return line;
+        if (context.options.tableDelimiterStyle === 'header-width') {
+          const delimiters = alignments.map((align,index) => {
+            const left = align === 'center' || align === 'left' ? ':' : '-';
+            const right = align === 'center' || align === 'right' ? ':' : '-';
+            return left + '-'.repeat(Math.max(1,cells[index].length)) + right;
+          });
+          return line + '\n|' + delimiters.join('|') + '|';
+        }
+        return line + '\n| ' + alignments.map(align => tableDelimiters[align]).join(' | ') + ' |';
       }).join('\n');
     }
     case 'table_row': case 'table_header': case 'table_cell': return children();

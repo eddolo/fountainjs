@@ -6,6 +6,7 @@ import type * as Y from 'yjs';
 type XmlTypes = Pick<typeof Y, 'XmlText' | 'XmlElement'>;
 const nodes = new Map(Object.entries({
   paragraph:'paragraph', heading:'heading', blockquote:'blockquote', bulletList:'bullet_list',
+  table:'table', tableRow:'table_row', tableHeader:'table_header', tableCell:'table_cell',
   orderedList:'ordered_list', listItem:'list_item', hardBreak:'hard_break', horizontalRule:'horizontal_rule',
 }));
 const marks = new Map(Object.entries({
@@ -18,16 +19,35 @@ function unsupported(path: readonly number[], value: string): never {
   throw new Error('Unsupported GitLab wiki room content at ' + (path.join('.') || 'root') + ': ' + value);
 }
 
+function isStockCell(type: string) { return type === 'tableCell' || type === 'tableHeader'; }
+
 function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): Attributes {
   const result: Attributes = {};
   for (const [key,value] of Object.entries(attrs)) {
     if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) result[key] = value;
+    else if (type === 'table' && key === 'isMarkdown' && (value === null || typeof value === 'boolean')) result.gitlabIsMarkdown = value;
+    else if (isStockCell(type) && ['colspan','rowspan','colwidth'].includes(key)) result[key] = value;
+    else if (isStockCell(type) && key === 'align' && (value === 'left' || value === 'center' || value === 'right')) continue;
     else if (type === 'bulletList' && key === 'bullet' && (value === '+' || value === '-')) result.gitlabBullet = value;
     else if (!(type === 'blockquote' && key === 'multiline' && value === false)
       && !(type === 'orderedList' && ((key === 'parens' && value === false) || (key === 'type' && value === null)))
       && !(type === 'bulletList' && key === 'bullet' && value === '*')) unsupported(path, type + '.' + key);
   }
   return result;
+}
+
+function fromStockNode(name: string, attrs: Attributes, content: NodeJSON[] | undefined, path: readonly number[]): NodeJSON {
+  const type = name === 'doc' || name === 'text' ? name : nodes.get(name);
+  if (!type) unsupported(path,name);
+  const projected = stockAttrs(name,attrs,path);
+  if (isStockCell(name) && (attrs.align === 'center' || attrs.align === 'right')) {
+    // GitLab places alignment on the cell. Fountain's editable paragraphs own it.
+    content = content?.map(child => {
+      if (child.type !== 'paragraph') unsupported(path,'aligned cell containing ' + child.type);
+      return {...child,attrs:{...child.attrs,align:attrs.align}};
+    });
+  }
+  return {type,attrs:projected,content};
 }
 
 /** Both projection validation and live room reads must interpret the stock marks identically. */
@@ -67,8 +87,7 @@ export function readGitLabWikiRoom(fragment: Y.XmlFragment, schema: Schema, type
           content.push({type:'text',text:span.insert,marks:formatting});
         }
       } else if (child instanceof types.XmlElement && nodes.has(child.nodeName)) {
-        content.push({type:nodes.get(child.nodeName)!, attrs:stockAttrs(child.nodeName,child.getAttributes(),childPath),
-          content:children(child,childPath)});
+        content.push(fromStockNode(child.nodeName,child.getAttributes(),children(child,childPath),childPath));
       } else unsupported(childPath, child instanceof types.XmlElement ? child.nodeName : 'XML type');
     }
     return content;
@@ -92,11 +111,9 @@ function prepareStockNode<T extends StockWikiNode>(document: Node, wire: GitLabW
   // A stock schema can accept JSON while silently discarding unknown attributes.
   // Validate the actual stock projection before touching the live fragment.
   function project(node: NodeJSON, path: readonly number[]): NodeJSON {
-    const type = node.type === 'doc' || node.type === 'text' ? node.type : nodes.get(node.type);
-    if (!type) unsupported(path,node.type);
-    const formatting = node.marks?.map(mark => fromStockMark(mark.type,mark.attrs ?? {},path));
-    return {type,attrs:stockAttrs(node.type,node.attrs ?? {},path),text:node.text,marks:formatting,
-      content:node.content?.map((child,index) => project(child,[...path,index]))};
+    const content = node.content?.map((child,index) => project(child,[...path,index]));
+    return {...fromStockNode(node.type,node.attrs ?? {},content,path),text:node.text,
+      marks:node.marks?.map(mark => fromStockMark(mark.type,mark.attrs ?? {},path))};
   }
   if (!native.nodeFromJSON(project(prepared.toJSON(),[])).eq(document))
     throw new Error('The stock wiki schema cannot retain this Fountain document.');
@@ -208,19 +225,29 @@ export async function openGitLabWikiRoom<StockNode extends StockWikiNode>(
 export function toGitLabWikiJSON(doc: Node): NodeJSON {
   doc.type.schema.validate(doc);
   if (doc.type !== doc.type.schema.topNodeType) unsupported([], 'expected document');
-  function encode(node: Node, path: readonly number[]): NodeJSON {
+  function encode(node: Node, path: readonly number[], inheritedCellAlign?: unknown): NodeJSON {
     const type = node === doc ? 'doc' : node.isText ? 'text' : stockNodes.get(node.type.name);
     if (!type) unsupported(path,node.type.name);
     const attrs: Attributes = {};
     for (const [key,value] of Object.entries(node.attrs)) {
       if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) attrs[key] = value;
+      else if (type === 'table' && key === 'gitlabIsMarkdown') attrs.isMarkdown = value;
+      else if (isStockCell(type) && ['colspan','rowspan','colwidth'].includes(key)) attrs[key] = value;
+      else if (type === 'paragraph' && key === 'align' && inheritedCellAlign === value) continue;
       else if (type === 'bulletList' && key === 'gitlabBullet' && (value === '+' || value === '-')) attrs.bullet = value;
       else if (value !== node.type.spec.attrs?.[key]?.default) unsupported(path,node.type.name + '.' + key);
+    }
+    if (isStockCell(type)) {
+      const align = node.content[0]?.attrs.align ?? 'left';
+      if (!['left','center','right'].includes(String(align)) ||
+        node.content.some(child => (child.attrs.align ?? 'left') !== align || (align !== 'left' && child.type.name !== 'paragraph')))
+        unsupported(path,'mixed or unsupported cell alignment');
+      attrs.align = align;
     }
     const result: NodeJSON = {type};
     if (Object.keys(attrs).length) result.attrs = attrs;
     if (node.isText) result.text = node.text;
-    if (node.childCount) result.content = node.content.map((child,index) => encode(child,[...path,index]));
+    if (node.childCount) result.content = node.content.map((child,index) => encode(child,[...path,index],isStockCell(type) ? attrs.align : undefined));
     if (node.marks.length) {
       if (!node.isText) unsupported(path,'marked inline element');
       result.marks = node.marks.map(mark => {

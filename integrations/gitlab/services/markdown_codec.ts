@@ -58,7 +58,7 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string): string | un
     if (!['table', 'table_row', 'table_header', 'table_cell', 'paragraph', 'text'].includes(name)
       || (node !== table && name === 'table') || node.text?.includes(tokenPrefix)
       || Object.entries(node.attrs).some(([key, value]) => value !== node.type.spec.attrs?.[key]?.default
-        && !(cell && (key === 'rowspan' || key === 'colspan')))) supported = false;
+        && !(name === 'table' && key === 'gitlabIsMarkdown') && !(cell && (key === 'rowspan' || key === 'colspan')))) supported = false;
     for (const mark of node.marks) {
       if (!['strong', 'em', 'code', 'link'].includes(mark.type.name)
         || Object.entries(mark.attrs).some(([key, value]) => value !== mark.type.spec.attrs?.[key]?.default
@@ -101,6 +101,9 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
           return { dir };
         } }],
     } } : {}),
+    ...(wikiRoom && base.nodes.table ? { table: { ...base.nodes.table, attrs: { ...base.nodes.table.attrs,
+      gitlabIsMarkdown: {default:null,validate:value => value === null || typeof value === 'boolean'},
+    } } } : {}),
     ...(wikiRoom && base.nodes.bullet_list ? { bullet_list: { ...base.nodes.bullet_list, attrs: {
       ...base.nodes.bullet_list.attrs,
       gitlabBullet: { default: undefined, validate: value => value === undefined || value === '-' || value === '+' },
@@ -252,7 +255,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     renderMarkdown(markdown: string, options?: { signal: AbortSignal }): Promise<GitLabRenderResponse>;
     html?: ServerHTMLImporterOptions;
     preserveWikiSource?: boolean;
-    wikiBulletMarkers?: boolean;
+    wikiRoom?: boolean;
     nodeWriters?: ReadonlyMap<string, (node: Node) => string>;
     markWriters?: ReadonlyMap<string, GitLabMarkWriter>;
     tableOfContentsLabel?: string;
@@ -532,10 +535,11 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       [name, (node: Node) => customSources.get(node)] as const));
     const markSerializers = Object.fromEntries(Array.from(this.options.markWriters?.keys() ?? [], name =>
       [name, (mark: Mark) => customMarks.get(mark)!] as const));
-    const bulletMarker = this.options.wikiBulletMarkers ? (node: Node): '+' | '-' | '*' => {
+    const bulletMarker = this.options.wikiRoom ? (node: Node): '+' | '-' | '*' => {
       const marker = node.attrs.gitlabBullet;
       return marker === '+' || marker === '-' ? marker : '*';
     } : undefined;
+    const tableDelimiterStyle = this.options.wikiRoom ? 'header-width' : 'compact';
     const blockSerializers = {
       ...extensionWriters,
       table: (node: Node) => serializeGitLabHTMLTable(node, prefix),
@@ -548,13 +552,13 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         if (!['auto', 'ltr', 'rtl'].includes(String(node.attrs.dir)) || node.marks.length
           || Object.entries(node.attrs).some(([key, value]) => key !== 'dir' && value !== undefined)) return undefined;
         const inner = new MarkdownExporter().exportWithReport(node.type.schema.node('doc', {}, node.content),
-          { omitTrailingCaret: true, bulletMarker, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
+          { omitTrailingCaret: true, bulletMarker, tableDelimiterStyle, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
         issues.push(...inner.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type,
           message: loss.detail, path: [...(paths.get(node) ?? []), ...loss.path] })));
         return `<div dir="${node.attrs.dir}">\n\n${transformGitLabQuickActions(inner.markdown, 'literal')}\n\n</div>`;
       },
     };
-    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, bulletMarker, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
+    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, bulletMarker, tableDelimiterStyle, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
     if (!canonical && !issues.length && !tokens.size && !customSources.size && !customMarks.size && sources.size === 1) {
       const source = this.wikiBlockSources.get(sources.values().next().value!);

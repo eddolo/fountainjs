@@ -70,6 +70,22 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
         return content.textContent;
       });
     }
+    async function checkTable(surface, reviewed, revisedHours) {
+      const {headings,rows,alignments} = input.table;
+      const expected = [headings,[rows[0][0] + (reviewed ? ' notes' : ''),rows[0][1]],
+        [rows[1][0],rows[1][1] + (revisedHours ? '0' : '')]];
+      const grid = surface.locator('table');
+      const snapshot = () => grid.evaluate(table => Array.from(table.rows, row => Array.from(row.cells, cell => {
+        const content = cell.cloneNode(true);
+        for (const cursor of content.querySelectorAll('.collaboration-cursor-caret,[data-fountain-collaborator]')) cursor.remove();
+        const text = content.textContent.trim();
+        const align = getComputedStyle(cell.querySelector('p') ?? cell).textAlign.replace(/^-webkit-/,'');
+        return {tag:cell.tagName,text,align};
+      })));
+      const cells = expected.map((row,i) => row.map((text,j) => ({tag:i ? 'TD' : 'TH',text,align:alignments[j]})));
+      await expect.poll(snapshot).toEqual(cells);
+      return cells;
+    }
     async function checkLink(surface,label) {
       const link = surface.getByRole('link',{name:label,exact:true});
       await expect(link).toHaveAttribute('href',input.link.href);
@@ -198,6 +214,12 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
         if (input.link) handover.stockLink = await checkLink(writer,input.link.label);
         await append(page,writer.locator('ul > li > ul > li p'),pending);
         handover.stockStructure = await checkStructure(witness,child + pending);
+        expect(await read()).toBe(item.saved);
+      }
+      if (input.table) {
+        handover.stockTable = await checkTable(writer,false,false);
+        await append(page,writer.locator('td p').first(),' notes');
+        handover.stockTableDraft = await checkTable(witness,true,false);
         expect(await read()).toBe(item.saved);
       }
       await writer.screenshot({path:join(output,rollout ? 'unsaved-before-rollout.png' : 'unsaved-before-rollback.png')});
@@ -348,6 +370,18 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
             await checkLink(editor,input.link.editedLabel);
             expect(await read()).toBe(item.saved);
           }
+          if (input.table) {
+            item.stage = 'edit-recovered-table';
+            handover.recoveredTable = await checkTable(editor,true,false);
+            await append(restored,editor.locator('td p').last(),'0');
+            handover.editedTable = await checkTable(editor,true,true);
+            await restored.keyboard.press('Control+z');
+            await checkTable(editor,true,false);
+            if (input.link) await checkLink(editor,input.link.editedLabel);
+            await restored.keyboard.press('Control+Shift+z');
+            await checkTable(editor,true,true);
+            expect(await read()).toBe(item.saved);
+          }
           await restored.getByTestId('wiki-submit-button').click();
           const confirm = restored.getByTestId('wiki-confirm-message');
           const reader = restored.getByTestId('wiki-page-content');
@@ -365,10 +399,16 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
             expect(expectedSource.split('[' + input.link.label + ']')).toHaveLength(2);
             expectedSource = expectedSource.replace('[' + input.link.label + ']','[' + input.link.editedLabel + ']');
           }
+          if (input.table) {
+            expect(expectedSource.split('| Review | 12 |')).toHaveLength(2);
+            expect(expectedSource.split('| Deploy | 24 |')).toHaveLength(2);
+            expectedSource = expectedSource.replace('| Review | 12 |','| Review notes | 12 |').replace('| Deploy | 24 |','| Deploy | 240 |');
+          }
           expect(handover.saved).toBe(expectedSource + pending + ' Published.');
           await restored.reload();
           await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
           await expect(reader.locator('strong')).toHaveText('Sam');
+          if (input.table) handover.readerTable = await checkTable(reader,true,true);
           if (input.link) handover.readerLink = await checkLink(reader,input.link.editedLabel);
           if (input.structure) {
             handover.readerStructure = await checkStructure(reader,input.structure.child + input.structure.pending);

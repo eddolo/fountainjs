@@ -8,9 +8,14 @@
       "id": "structured-wiki-handover",
       "scope": "wiki-collaboration",
       "title": "Release handover",
-      "source": "## Release handover\n\nOwner: **Sam**.\n\n* Verify the service\n  * Check the logs\n\n> Keep the incident open.\n\nRead the [release guide](https://example.org/runbook \"Publishing steps\") before publishing.\n\nStatus: ready.",
+      "source": "## Release handover\n\nOwner: **Sam**.\n\n* Verify the service\n  * Check the logs\n\n> Keep the incident open.\n\nRead the [release guide](https://example.org/runbook \"Publishing steps\") before publishing.\n\n| Stage | Hours |\n|:-----:|------:|\n| Review | 12 |\n| Deploy | 24 |\n\nStatus: ready.",
       "ownerEdit": " Reviewed.",
       "peerEdit": " Approved.",
+      "table": {
+        "headings": ["Stage", "Hours"],
+        "rows": [["Review", "12"], ["Deploy", "24"]],
+        "alignments": ["center", "right"]
+      },
       "link": {
         "label": "release guide",
         "editedLabel": "release operator guide",

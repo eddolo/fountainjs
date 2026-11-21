@@ -45,7 +45,7 @@ it('retains nested stock wiki bullet markers in the shared draft and saved Markd
     list(outer,'+','Check the logs');
     list(room,'-','Close the incident');
     const document = readGitLabWikiRoom(room,schema,Y);
-    const codec = new GitLabMarkdownCodec({wikiBulletMarkers:true,renderMarkdown:async () => ({body:''})});
+    const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async () => ({body:''})});
     expect(codec.serialize({doc:document})).toBe('* Verify the service\n  + Check the logs\n\n- Close the incident');
     const json = toGitLabWikiJSON(document);
     expect(json.content?.[0].content?.[0].content?.[1].attrs?.bullet).toBe('+');
@@ -77,6 +77,46 @@ it('preserves the rendered and authored destinations of ordinary links in a stoc
     const unsupported = Y.encodeStateAsUpdate(doc);
     expect(() => readGitLabWikiRoom(root,schema,Y)).toThrow('isGollumLink');
     expect(Y.encodeStateAsUpdate(doc)).toEqual(unsupported);
+  } finally { doc.destroy(); }
+});
+
+it('round-trips a shared GitLab table with aligned headers and body cells', () => {
+  const doc = new Y.Doc();
+  try {
+    const root = doc.getXmlFragment('default');
+    const table = new Y.XmlElement<Record<string,any>>('table');
+    root.push([table]);
+    table.setAttribute('isMarkdown',true);
+    for (const [index,values] of [['Stage','Hours'],['Review','12']].entries()) {
+      const row = new Y.XmlElement('tableRow');
+      table.push([row]);
+      values.forEach((value,column) => {
+        const cell = new Y.XmlElement<Record<string,any>>(index ? 'tableCell' : 'tableHeader');
+        row.push([cell]);
+        cell.setAttribute('align',column ? 'right' : 'center');
+        cell.setAttribute('colspan',1);
+        cell.setAttribute('rowspan',1);
+        const paragraph = new Y.XmlElement('paragraph');
+        cell.push([paragraph]);
+        paragraph.push([new Y.XmlText(value)]);
+      });
+    }
+    const bytes = Y.encodeStateAsUpdate(doc);
+    const document = readGitLabWikiRoom(root,schema,Y);
+    expect(document.child(0).child(0).child(1).child(0).attrs.align).toBe('right');
+    const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async () => ({body:''})});
+    expect(codec.serialize({doc:document})).toBe('| Stage | Hours |\n|:-----:|------:|\n| Review | 12 |');
+    const stock = toGitLabWikiJSON(document).content![0];
+    expect(stock.attrs).toEqual({isMarkdown:true});
+    expect(stock.content![0].content![0]).toMatchObject({type:'tableHeader',attrs:{align:'center',colspan:1,rowspan:1}});
+    expect(stock.content![1].content![1]).toMatchObject({type:'tableCell',attrs:{align:'right'}});
+    expect(Y.encodeStateAsUpdate(doc)).toEqual(bytes);
+
+    const nativeTable = document.child(0), header = nativeTable.child(0), firstCell = header.child(0);
+    const mixed = firstCell.copy([...firstCell.content,schema.node('paragraph',{align:'right'},[schema.text('Second')])]);
+    const edited = document.copy([nativeTable.copy([header.copy([mixed,header.child(1)]),nativeTable.child(1)])]);
+    expect(() => toGitLabWikiJSON(edited)).toThrow('mixed or unsupported cell alignment');
+    expect(Y.encodeStateAsUpdate(doc)).toEqual(bytes);
   } finally { doc.destroy(); }
 });
 

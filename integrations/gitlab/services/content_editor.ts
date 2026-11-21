@@ -206,7 +206,7 @@ export class GitLabContentEditor {
       this.assetResolver.dispose();
       throw error;
     }
-    const codec = this.codec = new GitLabMarkdownCodec({ ...options, wikiBulletMarkers:Boolean(this.wiki), nodeWriters, markWriters });
+    const codec = this.codec = new GitLabMarkdownCodec({ ...options, wikiRoom:Boolean(this.wiki), nodeWriters, markWriters });
     this.controller = new SerializedContentController(this.editor, codec);
     this.alerts = new GitLabAlertEditing({ editor: this.editor,
       ensureReady: () => {
