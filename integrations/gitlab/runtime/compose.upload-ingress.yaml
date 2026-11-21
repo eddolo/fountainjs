@@ -1,0 +1,4 @@
+services:
+  baseline:
+    environment:
+      GITLAB_OMNIBUS_CONFIG: ${FOUNTAIN_GITLAB_INGRESS_CONFIG:?Expected the isolated GitLab ingress measurement profile}

@@ -1,0 +1,23 @@
+{
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "partial-wiki-upload",
+      "scope": "wiki-collaboration",
+      "title": "Interrupted file transfer to the wiki",
+      "source": "Owner: **Sam**.\n\nStatus: ready.",
+      "ownerEdit": " Reviewed.",
+      "peerEdit": " Approved.",
+      "upload": {
+        "name": "incident-evidence.txt",
+        "text": "Incident owner: Sam\nEvidence collected before the editor switch.\n",
+        "peerEditDuringFailure": " Transfer interrupted.",
+        "partialTransfer": true,
+        "repetitions": 16384
+      }
+    }
+  ]
+}

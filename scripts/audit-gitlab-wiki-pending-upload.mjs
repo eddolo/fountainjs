@@ -1,10 +1,11 @@
 import { expect } from '@playwright/test';
 import { join } from 'node:path';
+import { throttleWikiUpload } from './gitlab-partial-wiki-transfer.mjs';
 import { editorProof } from './gitlab-audit-editor.mjs';
 
-export async function checkPendingWikiUpload({page, peer, item, edit, read, paragraphText, side, project, switchWikiDeployment, output}) {
-  const {peerEditDuringFailure,closeBeforeTransfer} = item.input.upload;
-  const {name,text} = item.input.upload, bytes = Buffer.from(text);
+export async function checkPendingWikiUpload({page, peer, item, edit, read, paragraphText, side, project, switchWikiDeployment, output, readIngress}) {
+  const {peerEditDuringFailure,closeBeforeTransfer,partialTransfer,repetitions = 1} = item.input.upload;
+  const {name,text} = item.input.upload, bytes = Buffer.from(text.repeat(repetitions));
   const origin = new URL(project.web_url).origin;
   const actor = await edit(peer), observer = await edit(page);
   const statusText = editor => paragraphText(editor.locator('p').filter({hasText:'Status:'}));
@@ -31,7 +32,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     await expect.poll(() => paragraphText(paragraphs.last())).toBe('');
   }
   const interrupt = Promise.withResolvers(), release = Promise.withResolvers();
-  let routeFailure;
+  let routeFailure, throttle, headerBound;
   // Hold delivery of the actual GitLab response to the uploader across the restart.
   // The bytes, endpoint, authentication, response and resulting reader URL are real.
   const matches = url => url.origin === origin && /\/(?:uploads|attachments)(?:\.json)?\/?$/u.test(url.pathname);
@@ -39,6 +40,14 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     if (route.request().method() !== 'POST' || !route.request().headers()['content-type']?.startsWith('multipart/form-data'))
       return route.continue();
     pending.requests++;
+    if (partialTransfer && pending.requests === 1) {
+      // Chromium sends its original multipart request, with the test header and its normal session.
+      const headers = await route.request().headersArray();
+      headerBound = 16384 + Buffer.byteLength(route.request().url()) + headers.reduce((sum,{name,value}) => sum+Buffer.byteLength(name+value)+4,0);
+      pending.forwardedRequests++;
+      await route.continue();
+      return;
+    }
     if ((peerEditDuringFailure || closeBeforeTransfer) && pending.requests === 1) {
       // Fail this browser request before it is forwarded to the authenticated endpoint.
       await interrupt.promise;
@@ -67,6 +76,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
   }
   try {
     item.stage = 'upload-through-wiki-picker';
+    if (partialTransfer) throttle = await throttleWikiUpload(peer,name,bytes.length);
     await selectFile();
     if (closeBeforeTransfer) {
       item.stage = 'save-after-uploader-tab-closes';
@@ -133,8 +143,11 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
       expectedStatus += peerEditDuringFailure;
       await expect.poll(() => statusText(actor)).toBe(expectedStatus);
       await expect.poll(() => pending.requests).toBe(1);
-      expect(pending.forwardedRequests).toBe(0);
-      interrupt.resolve();
+      if (partialTransfer) pending.partialIngress = await throttle.interrupt(readIngress,headerBound);
+      else {
+        expect(pending.forwardedRequests).toBe(0);
+        interrupt.resolve();
+      }
       const retry = form.getByRole('button',{name:'Retry upload',exact:true});
       const failure = isNative ? form.getByRole('list',{name:'Attachment uploads'})
         : peer.getByText('An error occurred while uploading the file. Please try again.',{exact:true});
@@ -261,7 +274,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     pending.saved = await read();
     expect(pending.saved.replaceAll('\r\n','\n')).toBe(before.replaceAll('\r\n','\n') + ' Evidence pending.' + (peerEditDuringFailure ?? '') + ' Witness checked.\n\n' + pending.markdown);
     expect(pending.requests).toBe(peerEditDuringFailure ? 2 : 1);
-    expect(pending.forwardedRequests).toBe(1);
+    expect(pending.forwardedRequests).toBe(partialTransfer ? 2 : 1);
     pending.verifiedBytes = bytes.length;
     await reader.screenshot({path:join(output,'reopened-attachment.png')});
   } catch (error) {
@@ -276,6 +289,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
   } finally {
     interrupt.resolve();
     release.resolve();
-    if (!peer.isClosed()) await peer.unrouteAll({behavior:'wait'});
+    try { if (!peer.isClosed()) await peer.unrouteAll({behavior:'wait'}); }
+    finally { await throttle?.dispose(); }
   }
 }

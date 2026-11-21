@@ -508,6 +508,7 @@ export function compareGitLabCompatibility(original,fountain){
             view.forwardedBeforeRetry = upload.interruption.forwardedBeforeRetry;
             view.fileRetainedForRetry = upload.interruption.retainedFile;
             view.attemptsIncludingRetry = upload.requests;
+            if (input.upload.partialTransfer && upload.partialIngress) view.partialFileReachedGitLab = upload.partialIngress.minimumFileBytes > 0 && upload.partialIngress.requestBytes < upload.partialIngress.fileBytes;
           }
           view.downloadedBytes = upload.verifiedBytes;
           const expected = input.source + input.ownerEdit + input.peerEdit + ' Evidence pending.'
@@ -549,13 +550,13 @@ export function compareGitLabCompatibility(original,fountain){
           ['peerSawPendingFile',true,'The second author sees the pending filename before Save'],
           ['peerSaveWaited',true,'Save waits until the attachment can be included in the revision'],
           ...(input.upload.peerEditDuringFailure ? [
-            ['forwardedBeforeRetry',0,'The interrupted request is never forwarded to GitLab'],
+            ...(input.upload.partialTransfer ? [['partialFileReachedGitLab',true,'GitLab ingress received a nonempty, incomplete portion of the file before interruption']] : [['forwardedBeforeRetry',0,'The interrupted request is never forwarded to GitLab']]),
             ['fileRetainedForRetry',true,'The author can retry the retained file without opening the picker again'],
             ['attemptsIncludingRetry',2,'One deliberate retry completes the interrupted transfer'],
           ] : []),
-          ['uploadRequests',1,'GitLab receives the file once'],
+          ['uploadRequests',input.upload.partialTransfer ? 2 : 1,input.upload.partialTransfer ? 'GitLab receives one interrupted request and one successful retry' : 'GitLab receives the file once'],
           ['attachmentInOwnParagraph',true,'The saved source retains both authors’ text and the attachment in its own paragraph'],
-          ['downloadedBytes',new TextEncoder().encode(input.upload.text).length,'The reopened attachment matches the original bytes'],
+          ['downloadedBytes',new TextEncoder().encode(input.upload.text).length * (input.upload.repetitions ?? 1),'The reopened attachment matches the original bytes'],
         ] : []),
         ['reopened', status + input.peerEdit, 'Both edits survive in the other author’s reloaded reader'],
         ['bold', 'Sam', 'The reader retains the owner’s bold name'],

@@ -52,7 +52,7 @@ export async function runWikiCollaboration(options) {
   }
 }
 
-async function runWikiEditors({page, request, project, fixture, side, runId, output, switchWikiDeployment, mixedWiki, wikiFlagAudit,readStoredWikiFlag}) {
+async function runWikiEditors({page, request, project, fixture, side, runId, output, switchWikiDeployment, mixedWiki, wikiFlagAudit,readStoredWikiFlag,readIngress}) {
   const [input] = fixture.cases;
   const sourceEditor = side === 'original' ? 'stock' : 'fountain';
   const firstLabel = input.wikiLink?.peerLabel ?? input.wikiLink?.label;
@@ -347,7 +347,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     }
     if (input.mergedTable) item[sourceEditor + 'ReaderMergedTable'] = await checkMergedTable(peerReader);
     if (input.upload) {
-      await checkPendingWikiUpload({page,peer,item,edit,read,paragraphText,side,project,switchWikiDeployment,output});
+      await checkPendingWikiUpload({page,peer,item,edit,read,paragraphText,side,project,switchWikiDeployment,output,readIngress});
     } else if (switchWikiDeployment) {
       const rollout = side === 'original';
       const destination = rollout ? 'fountain' : 'original';
