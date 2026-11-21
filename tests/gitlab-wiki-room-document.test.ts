@@ -95,6 +95,30 @@ it('round-trips the editable caret in an empty wiki paragraph without writing a 
   } finally { doc.destroy(); }
 });
 
+it('round-trips a wiki code block without changing indentation, blank lines, or the language', () => {
+  const doc = new Y.Doc();
+  try {
+    const room = doc.getXmlFragment('default');
+    const code = new Y.XmlElement('codeBlock');
+    const empty = new Y.XmlElement('codeBlock');
+    room.push([code,empty]);
+    code.setAttribute('language','python');
+    code.setAttribute('class','code highlight');
+    const source = 'def threshold():\n\n    return 3\n';
+    code.push([new Y.XmlText(source)]);
+    const native = readGitLabWikiRoom(room,schema,Y);
+    expect(native.child(0).attrs.language).toBe('python');
+    expect(native.child(1).attrs.language).toBe('');
+    expect(native.child(1).child(0).text).toBe('');
+    expect(toGitLabWikiJSON(native).content).toEqual([
+      {type:'codeBlock',attrs:{language:'python'},content:[{type:'text',text:source}]},
+      {type:'codeBlock',attrs:{language:null}},
+    ]);
+    code.setAttribute('langParams','frontmatter');
+    expect(() => readGitLabWikiRoom(room,schema,Y)).toThrow(/codeBlock.langParams/);
+  } finally { doc.destroy(); }
+});
+
 it('reads a stock keyboard edit without changing Yjs state or folding distinct formatting runs', () => {
   const doc = new Y.Doc();
   try {

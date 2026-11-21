@@ -5,7 +5,7 @@ import type * as Y from 'yjs';
 // can be built separately and a second Yjs installation has different identities.
 type XmlTypes = Pick<typeof Y, 'XmlText' | 'XmlElement'>;
 const nodes = new Map(Object.entries({
-  paragraph:'paragraph', heading:'heading', blockquote:'blockquote', bulletList:'bullet_list',
+  codeBlock:'code_block', paragraph:'paragraph', heading:'heading', blockquote:'blockquote', bulletList:'bullet_list',
   table:'table', tableRow:'table_row', tableHeader:'table_header', tableCell:'table_cell',
   orderedList:'ordered_list', listItem:'list_item', hardBreak:'hard_break', horizontalRule:'horizontal_rule',
 }));
@@ -21,10 +21,23 @@ function unsupported(path: readonly number[], value: string): never {
 
 function isStockCell(type: string) { return type === 'tableCell' || type === 'tableHeader'; }
 
+function wikiCodeLanguage(value: unknown): value is string {
+  // These GitLab fences have dedicated renderers and document semantics.
+  return typeof value === 'string' && (value === '' || /^[A-Za-z0-9_+.#-]{1,80}$/u.test(value))
+    && !['math','mermaid','plantuml','glql','suggestion'].includes(value.toLowerCase());
+}
+
+function hasCaretLeaf(type: string): boolean {
+  return type === 'paragraph' || type === 'heading' || type === 'code_block';
+}
+
 function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): Attributes {
-  const result: Attributes = {};
+  // A missing Yjs attribute uses the upstream codeBlock schema's null default.
+  const result: Attributes = type === 'codeBlock' ? { language:'' } : {};
   for (const [key,value] of Object.entries(attrs)) {
-    if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) result[key] = value;
+    if (type === 'codeBlock' && key === 'language' && (value === null || wikiCodeLanguage(value))) result.language = value ?? '';
+    else if (type === 'codeBlock' && ((key === 'class' && value === 'code highlight') || (key === 'langParams' && value === null))) continue;
+    else if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) result[key] = value;
     else if (type === 'table' && key === 'isMarkdown' && (value === null || typeof value === 'boolean')) result.gitlabIsMarkdown = value;
     else if (isStockCell(type) && ['colspan','rowspan','colwidth'].includes(key)) result[key] = value;
     else if (isStockCell(type) && key === 'align' && (value === 'left' || value === 'center' || value === 'right')) continue;
@@ -49,7 +62,7 @@ function fromStockNode(name: string, attrs: Attributes, content: NodeJSON[] | un
   }
   // ProseMirror represents an empty text block with no children. Fountain uses an
   // empty text leaf for a caret that can receive typing, paste or an attachment.
-  if ((type === 'paragraph' || type === 'heading') && !content?.length) content = [{type:'text',text:''}];
+  if (hasCaretLeaf(type) && !content?.length) content = [{type:'text',text:''}];
   return {type,attrs:projected,content};
 }
 
@@ -122,7 +135,7 @@ function isEmptyCaret(node: Node): boolean {
 
 function withoutEmptyCarets(node: Node): Node {
   if (!node.childCount) return node;
-  const textBlock = node.type.name === 'paragraph' || node.type.name === 'heading';
+  const textBlock = hasCaretLeaf(node.type.name);
   const content = node.content.filter(child => !(textBlock && isEmptyCaret(child))).map(withoutEmptyCarets);
   return content.length === node.childCount && content.every((child,index) => child === node.child(index)) ? node : node.copy(content);
 }
@@ -259,7 +272,10 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
     if (!type) unsupported(path,node.type.name);
     const attrs: Attributes = {};
     for (const [key,value] of Object.entries(node.attrs)) {
-      if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) attrs[key] = value;
+      if (type === 'codeBlock' && key === 'language') {
+        if (!wikiCodeLanguage(value)) unsupported(path,'codeBlock.language');
+        attrs.language = value || null;
+      } else if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) attrs[key] = value;
       else if (type === 'table' && key === 'gitlabIsMarkdown') attrs.isMarkdown = value;
       else if (isStockCell(type) && ['colspan','rowspan','colwidth'].includes(key)) attrs[key] = value;
       else if (type === 'paragraph' && key === 'align' && inheritedCellAlign === value) continue;
@@ -277,7 +293,7 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
     if (Object.keys(attrs).length) result.attrs = attrs;
     if (node.isText) result.text = node.text;
     if (node.childCount) {
-      const content = node.content.flatMap((child,index) => (type === 'paragraph' || type === 'heading') && isEmptyCaret(child)
+      const content = node.content.flatMap((child,index) => hasCaretLeaf(node.type.name) && isEmptyCaret(child)
         ? [] : [encode(child,[...path,index],isStockCell(type) ? attrs.align : undefined)]);
       if (content.length) result.content = content;
     }
