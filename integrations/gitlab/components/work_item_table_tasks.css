@@ -14,3 +14,19 @@
   inset: auto;
   vertical-align: middle;
 }
+
+/* Absolute pseudo-elements otherwise inherit a static position on the aligned
+   text line, which can place the tick outside its own control. */
+.js-work-item-description :is(td, th):is([align="center" i], [align="right" i]) > ul.task-list > li.task-list-item > input.task-list-item-checkbox:checked::after {
+  inset-inline-start: 0;
+  inset-block-start: 0;
+}
+
+.js-work-item-description :is(td, th):is([align="center" i], [align="right" i]) > ul.task-list > li.task-list-item > input.task-list-item-checkbox[data-inapplicable]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 3px;
+  inset-block-start: calc(50% - 1px);
+  height: 2px;
+  background-color: var(--gl-text-color-subtle, currentColor);
+}
