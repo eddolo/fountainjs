@@ -95,6 +95,8 @@ export default {
       return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
     },
     failureMessage() {
+      if (this.failureCode === 'GITLAB_TABLE_CHECKBOX_LAYOUT')
+        return s__('ContentEditor|To save the table with these checkboxes, click a cell and choose Table actions → Convert table checkboxes to checklist items. You can also undo the layout change.');
       if (this.failureCode === 'GITLAB_WIKI_DISCONNECTED')
         return s__('ContentEditor|Your wiki draft is still here. Reconnect to the shared session before saving.');
       if (this.failureCode === 'GITLAB_CODE_SOURCE_DRAFT_PENDING')
@@ -120,6 +122,8 @@ export default {
       );
     },
     failureCode() {
+      if (this.failure?.issues?.some(issue => issue.code === 'table-task-layout' || issue.code === 'table-task-content'))
+        return 'GITLAB_TABLE_CHECKBOX_LAYOUT';
       const message = this.failure?.message;
       if (typeof message === 'string' && /^[A-Z][A-Z0-9_]+$/u.test(message)) return message;
       return this.failure ? 'GITLAB_NATIVE_OPERATION_FAILED' : null;
