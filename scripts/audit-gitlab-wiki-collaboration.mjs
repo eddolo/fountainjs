@@ -3,13 +3,59 @@ import { join } from 'node:path';
 import { prepareGitLabAuditMember } from './gitlab-audit-member.mjs';
 import { editorProof, observePage, openRich } from './gitlab-audit-editor.mjs';
 
-export async function runWikiCollaboration({page, request, project, fixture, side, runId, output, switchWikiDeployment, mixedWiki}) {
+const wikiFlagPath = '/api/v4/features/wiki_collaborative_editing';
+const readWikiFlag = async request => (await request('/api/v4/features')).find(flag => flag.name === 'wiki_collaborative_editing') ?? null;
+
+export async function runWikiCollaboration(options) {
+  const {wikiFlagAudit:audit,readStoredWikiFlag,request,project} = options;
+  if (!audit) return runWikiEditors(options);
+  const namespace = project.namespace.full_path;
+  expect(project.namespace.kind).toBe('user');
+  expect(namespace).toBe('root');
+  const actor = 'Namespaces::UserNamespace:' + project.namespace.id;
+  const scoped = [{key:'actors',value:actor}];
+  async function snapshot() {
+    const flag = await readWikiFlag(request);
+    return {apiState:flag?.state ?? 'absent',apiGates:flag?.gates ?? [],stored:readStoredWikiFlag()};
+  }
+  audit.initial = await snapshot();
+  const before = audit.initial.stored;
+  if (before.gates.length) expect(before.gates).toEqual(scoped);
+  const initialGates = audit.initial.apiGates.filter(({key,value}) =>
+    !(key === 'boolean' && value === false) && !(key === 'expression' && value === null));
+  const storedState = before.gates.length ? 'conditional' : before.exists ? 'off' : 'absent';
+  expect(audit.initial.apiState,'GitLab wiki flag API and PostgreSQL disagree before editor setup').toBe(storedState);
+  expect(initialGates).toEqual(before.gates.length ? [{key:'actors',value:[actor]}] : []);
+  // The outer fixture owns only the scoped enable it creates. The editor
+  // workflow must leave that configuration intact when it finishes.
+  const prepare = audit.preconfigured && before.gates.length === 0;
+  try {
+    if (prepare) await request(wikiFlagPath,{namespace,value:'true'});
+    if (audit.preconfigured) {
+      audit.beforeEditors = await snapshot();
+      expect(audit.beforeEditors.apiState).toBe('conditional');
+      expect(audit.beforeEditors.stored).toEqual({exists:true,gates:scoped});
+    }
+    const observations = await runWikiEditors(options);
+    audit.afterEditors = await snapshot();
+    if (audit.preconfigured) expect(audit.afterEditors).toEqual(audit.beforeEditors);
+    return observations;
+  } finally {
+    if (prepare) {
+      await request(wikiFlagPath,{namespace,value:'false'});
+      if (!before.exists && (await readWikiFlag(request))?.state === 'off') await request(wikiFlagPath,{},'DELETE');
+    }
+    audit.restored = await snapshot();
+    expect(audit.restored.stored).toEqual(before);
+    if (prepare) expect(audit.restored.apiState).toBe(before.exists ? 'off' : 'absent');
+  }
+}
+
+async function runWikiEditors({page, request, project, fixture, side, runId, output, switchWikiDeployment, mixedWiki, wikiFlagAudit,readStoredWikiFlag}) {
   const [input] = fixture.cases;
   const item = {id:input.id, input, stage:'setup', status:'incomplete', pageErrors:[]};
-  const flag = 'wiki_collaborative_editing';
-  const flags = '/api/v4/features';
-  const endpoint = flags + '/' + flag;
-  const readFlag = async () => (await request(flags)).find(value => value.name === flag) ?? null;
+  const endpoint = wikiFlagPath;
+  const readFlag = () => readWikiFlag(request);
   const before = await readFlag();
   const namespace = project.namespace.full_path;
   expect(project.namespace.kind).toBe('user');
@@ -268,8 +314,17 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       // The cold rollback closes every native tab. The rolling case keeps one author at the same mounted editor.
       if (!mixedWiki) await peer.goto('about:blank');
       item.stage = 'reopen-live-room-on-' + destination;
+      if (wikiFlagAudit) {
+        wikiFlagAudit.beforeSwitch = readStoredWikiFlag();
+        expect(wikiFlagAudit.beforeSwitch).toEqual({exists:true,gates:[{key:'actors',value:expectedActor}]});
+      }
       await switchWikiDeployment({wikiSlug:item.slug});
-      expect((await readFlag()).gates.find(value => value.key === 'actors')?.value).toEqual(item.gate);
+      const destinationFlag = await readFlag();
+      if (wikiFlagAudit) {
+        wikiFlagAudit.afterSwitch = {apiState:destinationFlag?.state ?? 'absent',stored:readStoredWikiFlag()};
+        expect(wikiFlagAudit.afterSwitch.stored).toEqual(wikiFlagAudit.beforeSwitch);
+      }
+      expect(destinationFlag?.gates.find(value => value.key === 'actors')?.value).toEqual(item.gate);
       expect(await read()).toBe(item.saved);
       if (mixedWiki) {
         item.stage = 'mixed-editor-session';
