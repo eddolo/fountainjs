@@ -32,6 +32,7 @@ docker compose -f integrations/gitlab/runtime/compose.yaml \
   -f integrations/gitlab/runtime/compose.frontend.yaml up -d --wait baseline
 node scripts/audit-gitlab-two-node-wiki.mjs --rollback
 node scripts/audit-gitlab-two-node-wiki.mjs --rollout
+node scripts/audit-gitlab-two-node-wiki.mjs --rollback --wiki-checklist
 docker compose -f integrations/gitlab/runtime/compose.yaml stop baseline
 ```
 
@@ -58,6 +59,22 @@ stops the peer. The local volumes retain the saved wiki for inspection.
 This case covers a single shared data tier and a returning author who reopens
 the wiki. Automatic load-balancer failover, a tab left open on the replaced
 frontend and failure of a data service require their own evidence.
+
+### Reproduce two authors editing a wiki checklist
+
+Use the prepared wiki controller on both builds. The fixture contains completed,
+pending and not-applicable tasks followed by a numbered checklist starting at
+three. The Developer toggles a checkbox, undoes it and redoes it. The owner saves,
+and the Developer reopens the reader. Compare the stored Markdown and both
+`saved-checklist.png` screenshots.
+
+```sh
+run="wiki-checklist-$(date +%s)"
+node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --wiki-checklist --wiki-restore --editor original --run-id "$run"
+node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --wiki-checklist --wiki-restore --editor fountain --run-id "$run"
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/verified"
+```
 
 ### Reproduce a wiki restore across a project role change
 

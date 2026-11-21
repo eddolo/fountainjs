@@ -17,12 +17,14 @@ const readJSON = async path => JSON.parse(await readFile(path, 'utf8'));
 const pin = await readJSON(files + 'upstream.json');
 const install = await readJSON('artifacts/gitlab-native-browser-install/install.json');
 const build = await readJSON('artifacts/gitlab-native-runtime/build.json');
-const fixture = await readJSON('integrations/gitlab/fixtures/compatibility-wiki-collaboration.json');
+const args = process.argv.slice(2);
+const checklist = args.includes('--wiki-checklist');
+const switches = args.filter(arg=>arg!=='--wiki-checklist');
+assert.ok(switches.length<=1 && switches.every(arg=>['--rollback','--rollout'].includes(arg)), 'Use --rollback or --rollout with optional --wiki-checklist');
+const fixture = await readJSON('integrations/gitlab/fixtures/compatibility-wiki-'+(checklist?'checklist':'collaboration')+'.json');
 const input = fixture.cases[0];
 const id = new Date().toISOString().replace(/[^0-9]/g, '');
-const args = process.argv.slice(2);
-assert.ok(args.length<=1 && args.every(value=>['--rollback','--rollout'].includes(value)), 'Use --rollback or --rollout');
-const direction = args[0]==='--rollout' ? 'rollout' : 'rollback';
+const direction = switches[0]==='--rollout' ? 'rollout' : 'rollback';
 const initialSide = direction==='rollback' ? 'fountain' : 'original';
 const finalSide = direction==='rollback' ? 'original' : 'fountain';
 const out = 'artifacts/gitlab-compatibility/wiki-two-nodes-' + direction + '-' + id;
@@ -167,6 +169,7 @@ try {
     for (const label of copy.querySelectorAll('.collaboration-cursor-caret,[data-fountain-collaborator]')) label.remove();
     return copy.textContent;
   });
+  const taskBox = (surface,label) => surface.locator('li').filter({hasText:label}).getByRole('checkbox');
   const shows = (surface,text) => expect.poll(()=>content(surface),{timeout:20000}).toBe(text);
   const first = await editor(owner,'baseline','fountain');
   const left = 'Status: ready.'+input.ownerEdit;
@@ -192,6 +195,10 @@ try {
   const during = ' Edited during '+direction+'.';
   await append(owner,first,during);
   await shows(first,both+during);
+  if (checklist) {
+    await taskBox(first,input.checklist.label).check();
+    await expect(taskBox(first,input.checklist.label)).toBeChecked();
+  }
   assert.equal(inspect('peer').State.Running,false);
   assert.equal(await saved(),input.source);
   deployPeer(finalSide==='fountain');
@@ -209,6 +216,13 @@ try {
   await shows(first,both+during);
   await witness.keyboard.press('Control+Shift+z');
   await shows(first,finalText);
+  if (checklist) {
+    await expect(taskBox(recovered,input.checklist.label)).toBeChecked();
+    await expect(taskBox(recovered,'Notify the team')).not.toBeChecked();
+    await taskBox(recovered,'Notify the team').check();
+    await expect(taskBox(first,'Notify the team')).toBeChecked();
+    report.checks.push({recoveredTask:input.checklist.label,peerCompleted:'Notify the team'});
+  }
   await recovered.screenshot({path:join(out,'recovered-editor.png')});
   await witness.getByTestId('wiki-submit-button').click();
   const confirm = witness.getByTestId('wiki-confirm-message');
@@ -217,10 +231,23 @@ try {
   if (await confirm.isVisible()) await confirm.click();
   await expect(reader.locator('p').last()).toHaveText(finalText);
   const persisted = await saved();
-  assert.equal(persisted.replaceAll('\r\n','\n'),'Owner: **Sam**.\n\n'+finalText);
+  let expected = input.source.replace('Status: ready.',finalText);
+  if (checklist) {
+    expected = expected.replace('[ ] '+input.checklist.label,'[x] '+input.checklist.label)
+      .replace('3. [ ] Notify the team','3. [x] Notify the team');
+    // The packaged writer inserts an additional separator between these list types.
+    if (finalSide==='original') expected = expected.replace('\n\n3. ','\n\n\n3. ');
+  }
+  assert.equal(persisted.replaceAll('\r\n','\n'),expected);
   await owner.goto(url);
   await expect(owner.getByTestId('wiki-page-content').locator('strong')).toHaveText('Sam');
   await expect(owner.getByTestId('wiki-page-content').locator('p').last()).toHaveText(finalText);
+  if (checklist) {
+    const finalReader = owner.getByTestId('wiki-page-content');
+    assert.deepEqual(await finalReader.locator('input[type=checkbox]').evaluateAll(boxes=>boxes.map(box=>box.checked)),[true,true,false,true,true]);
+    await expect(finalReader.locator('li.inapplicable')).toHaveText('Restart the old worker');
+    await expect(finalReader.locator('ol')).toHaveAttribute('start','3');
+  }
   await owner.getByTestId('wiki-page-content').screenshot({path:join(out,'saved-on-surviving-node.png')});
   const survivor=inspect('baseline');
   assert.equal(survivor.Id,baseline.Id);

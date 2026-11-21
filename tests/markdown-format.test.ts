@@ -1592,6 +1592,14 @@ describe('Markdown interchange', () => {
     expect(MarkdownImporter.parse(result.markdown, schema).eq(original)).toBe(true);
   });
 
+  it('uses the host bullet for task lists and preserves their checked states through re-import', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const doc = MarkdownImporter.parse('- [ ] Review\n- [x] Publish', schema);
+    const result = new MarkdownExporter().exportWithReport(doc, {bulletMarker: () => '+'});
+    expect(result.markdown).toBe('+ [ ] Review\n+ [x] Publish');
+    expect(MarkdownImporter.parse(result.markdown, schema).eq(doc)).toBe(true);
+  });
+
   it('exports adjacent distinct lists without merging them on re-import', () => {
     const schema = new Schema(CoreSchemaSpec);
     for (const source of ['- foo\n- bar\n+ baz', '1. foo\n2. bar\n3) baz', '> - foo\n> + bar', '- - foo\n  + bar']) {
