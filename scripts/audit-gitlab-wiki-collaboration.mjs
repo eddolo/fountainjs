@@ -73,8 +73,13 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
     async function checkLink(surface,label) {
       const link = surface.getByRole('link',{name:label,exact:true});
       await expect(link).toHaveAttribute('href',input.link.href);
-      await expect(link).toHaveAttribute('title',input.link.title);
-      return {label:await link.innerText(),href:await link.getAttribute('href'),title:await link.getAttribute('title')};
+      // GitLab moves the title to data-original-title while its Bootstrap link popover is open.
+      const title = () => link.evaluate(element => {
+        const tooltip = element.ownerDocument.getElementById(element.getAttribute('aria-describedby') ?? '');
+        return element.title || (tooltip?.getAttribute('role') === 'tooltip' ? element.dataset.originalTitle : '');
+      });
+      await expect.poll(title).toBe(input.link.title);
+      return {label:await link.innerText(),href:await link.getAttribute('href'),title:await title()};
     }
     async function checkStructure(surface, childText) {
       const {heading,parent,quote} = input.structure;

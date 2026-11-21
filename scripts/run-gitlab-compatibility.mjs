@@ -355,10 +355,17 @@ try{
      receipt.wikiRoom = {before:checkpoint,after:roomLog(target.Id)};
      expect(receipt.wikiRoom.after).toEqual(checkpoint);
    }
-   const adminSession = await page.request.get('http://127.0.0.1:5080/api/v4/user');
-   receipt.administratorSessionStatus = adminSession.status();
-   if (adminSession.status() === 401) await signInAdministrator();
-   else expect(adminSession.status()).toBe(200);
+   // The sign-in page may respond while the restarted API still returns a gateway error.
+   // Only repeat the read-only readiness probe. Keep every observed status in the receipt.
+   receipt.sessionProbeStatuses = [];
+   await expect.poll(async () => {
+     const session = await page.request.get('http://127.0.0.1:5080/api/v4/user',{timeout:5000});
+     receipt.sessionProbeStatuses.push(session.status());
+     return [502,503,504].includes(session.status());
+   },{timeout:30000,intervals:[500,1000,2000]}).toBe(false);
+   receipt.administratorSessionStatus = receipt.sessionProbeStatuses.at(-1);
+   if (receipt.administratorSessionStatus === 401) await signInAdministrator();
+   else expect(receipt.administratorSessionStatus).toBe(200);
    receipt.backend = {version:await request('/api/v4/version')};
    receipt.buildIdentity = await identify(receipt,targetBuild);
    expect(buildIdentityError(receipt)).toBeFalsy();
