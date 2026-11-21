@@ -695,6 +695,12 @@ In the [first run without the Redis checkpoint](../../../artifacts/gitlab-compat
 node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$run_id-rollback" --editor fountain --verify-draft-rollback
 ```
 
+To reproduce the mixed-editor workflow on the same single-container profile, use a fresh run ID and the following command. A Developer keeps the native Fountain wiki open through the deployment switch. The administrator opens that same wiki in the packaged stock editor. The collector verifies the two frontend builds, both authenticated users, changes on both screens, each author's undo and redo, named peer cursors, and the Markdown stored after Save. The authors also type in different paragraphs concurrently. DOM observers on both editors must see a local-only edit before both edits appear, and the API and reloaded reader must retain the combined text. The mixed run has its own evidence and is excluded from same-editor comparisons.
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$run_id-mixed" --editor fountain --verify-mixed-wiki
+```
+
 To exercise the wire adapter independently of the browser, build the native runtime and run the following from the Fountain checkout. Pass the pinned GitLab source checkout with its installed JavaScript dependencies.
 
 ```sh

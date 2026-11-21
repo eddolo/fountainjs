@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { prepareGitLabAuditMember } from './gitlab-audit-member.mjs';
 import { editorProof, observePage, openRich } from './gitlab-audit-editor.mjs';
 
-export async function runWikiCollaboration({page, request, project, fixture, side, runId, output, switchDraftToStock}) {
+export async function runWikiCollaboration({page, request, project, fixture, side, runId, output, switchDraftToStock, mixedWiki}) {
   const [input] = fixture.cases;
   const item = {id:input.id, input, stage:'setup', status:'incomplete', pageErrors:[]};
   const flag = 'wiki_collaborative_editing';
@@ -157,39 +157,141 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       expect(await read()).toBe(item.saved);
       rollback.unsaved = draft;
       await writer.screenshot({path:join(output,'unsaved-before-rollback.png')});
-      // Leave no native tab connected that could reseed the room after the restart.
-      await Promise.all([page.goto('about:blank'),peer.goto('about:blank')]);
+      await page.goto('about:blank');
+      // The cold rollback closes every native tab. The rolling case keeps one author at the same mounted editor.
+      if (!mixedWiki) await peer.goto('about:blank');
       item.stage = 'reopen-live-room-on-stock';
       await switchDraftToStock({wikiSlug:item.slug});
       expect((await readFlag()).gates.find(value => value.key === 'actors')?.value).toEqual(item.gate);
       expect(await read()).toBe(item.saved);
-      const clean = await page.context().browser().newContext();
-      try {
-        const restored = await clean.newPage();
-        await member.signInMember(restored,{});
-        await observePage(restored,item);
-        const editor = await edit(restored,'original');
-        rollback.stock = await editorProof(editor);
-        expect(rollback.stock.native).toBe(false);
-        const status = editor.locator('p').filter({hasText:'Status:'});
-        await expect.poll(() => paragraphText(status),{timeout:20000}).toBe(draft);
-        await expect(editor.locator('strong')).toHaveText('Sam');
-        rollback.recovered = await paragraphText(status);
-        await editor.screenshot({path:join(output,'stock-recovered-draft.png')});
-        await append(restored,status,' Published.');
-        await restored.getByTestId('wiki-submit-button').click();
-        const confirm = restored.getByTestId('wiki-confirm-message');
-        const reader = restored.getByTestId('wiki-page-content');
+      if (mixedWiki) {
+        item.stage = 'mixed-editor-session';
+        const stock = await edit(page,'original');
+        const nativeLine = witness.locator('p').filter({hasText:'Status:'});
+        const stockLine = stock.locator('p').filter({hasText:'Status:'});
+        const mixed = item.mixed = {stock:await editorProof(stock), fountain:await editorProof(witness)};
+        expect(mixed.stock.native).toBe(false);
+        expect(mixed.fountain.native).toBe(true);
+        const session = await peer.request.get(new URL('/api/v4/user', project.web_url).href);
+        expect(session.status()).toBe(200);
+        expect((await session.json()).id).toBe(identity.id);
+        const verifyBoth = async expected => {
+          const readBoth = () => Promise.all([paragraphText(stockLine),paragraphText(nativeLine)]);
+          await expect.poll(readBoth,{timeout:30000}).toEqual([expected,expected]);
+          return expected;
+        };
+        mixed.joined = await verifyBoth(draft);
+        const fromStock = ' Stock edit.', fromFountain = ' Fountain edit.';
+        item.stage = 'mixed-stock-to-fountain';
+        await append(page,stockLine,fromStock);
+        mixed.fromStock = await verifyBoth(draft + fromStock);
+        item.stage = 'mixed-fountain-to-stock';
+        await append(peer,nativeLine,fromFountain);
+        mixed.fromFountain = await verifyBoth(draft + fromStock + fromFountain);
+        // Each editor must undo its own edit even after it receives another user's change.
+        item.stage = 'mixed-history';
+        await stockLine.click();
+        await page.keyboard.press('Control+z');
+        mixed.stockUndo = await verifyBoth(draft + fromFountain);
+        await nativeLine.click();
+        await peer.keyboard.press('Control+z');
+        mixed.fountainUndo = await verifyBoth(draft);
+        await page.keyboard.press('Control+Shift+z');
+        mixed.stockRedo = await verifyBoth(draft + fromStock);
+        await peer.keyboard.press('Control+Shift+z');
+        mixed.fountainRedo = await verifyBoth(draft + fromStock + fromFountain);
+        item.stage = 'mixed-cursors';
+        await stockLine.click();
+        await page.keyboard.press('Home');
+        await nativeLine.click();
+        await peer.keyboard.press('End');
+        await expect.poll(() => Promise.all([peerCursorVisible(stock,identity.name),peerCursorVisible(witness,owner.name)]),
+          {timeout:10000}).toEqual([true,true]);
+        mixed.cursors = [true,true];
+        await stock.screenshot({path:join(output,'mixed-stock.png')});
+        await witness.screenshot({path:join(output,'mixed-fountain.png')});
+        expect(await read()).toBe(item.saved);
+        item.stage = 'mixed-overlapping-edits';
+        const leftAddition = ' Stock owner.', rightAddition = ' Fountain status.';
+        const ownerLine = stock.locator('p').filter({hasText:'Owner:'});
+        await ownerLine.click();
+        await page.keyboard.press('End');
+        await nativeLine.click();
+        await peer.keyboard.press('End');
+        // Observe the document each browser actually paints, including the transient
+        // local-only draft. Concurrent dispatch by the driver alone is insufficient.
+        const watch = (editor, local, remote) => editor.evaluateHandle((root, [own, other]) => {
+          const observations = {localFirst:false, together:false};
+          const observer = new MutationObserver(() => {
+            const text = root.textContent;
+            if (text.includes(own) && !text.includes(other)) observations.localFirst = true;
+            if (text.includes(own) && text.includes(other)) observations.together = true;
+          });
+          observer.observe(root,{subtree:true,childList:true,characterData:true});
+          return {observations,observer};
+        },[local,remote]);
+        const watchers = await Promise.all([watch(stock,leftAddition,rightAddition),watch(witness,rightAddition,leftAddition)]);
+        try {
+          await Promise.all([page.keyboard.insertText(leftAddition),peer.keyboard.insertText(rightAddition)]);
+          mixed.concurrentStatus = await verifyBoth(mixed.fountainRedo + rightAddition);
+          const nativeOwner = witness.locator('p').filter({hasText:'Owner:'});
+          await expect.poll(() => Promise.all([paragraphText(ownerLine),paragraphText(nativeOwner)]))
+            .toEqual(['Owner: Sam.' + leftAddition,'Owner: Sam.' + leftAddition]);
+          mixed.concurrentOwner = await paragraphText(nativeOwner);
+          mixed.overlap = await Promise.all(watchers.map(w => w.evaluate(({observations}) => observations)));
+        } finally {
+          await Promise.all(watchers.map(async w => {
+            await w.evaluate(({observer}) => observer.disconnect());
+            await w.dispose();
+          }));
+        }
+        expect(mixed.overlap).toEqual([{localFirst:true,together:true},{localFirst:true,together:true}]);
+        await stock.screenshot({path:join(output,'mixed-converged-stock.png')});
+        await witness.screenshot({path:join(output,'mixed-converged-fountain.png')});
+        item.stage = 'mixed-save-and-reopen';
+        await page.getByTestId('wiki-submit-button').click();
+        const confirm = page.getByTestId('wiki-confirm-message');
+        const reader = page.getByTestId('wiki-page-content');
         await expect(confirm.or(reader).first()).toBeVisible();
         if (await confirm.isVisible()) await confirm.click();
-        await expect(reader).toContainText(draft + ' Published.');
-        rollback.saved = await read();
-        expect(rollback.saved).toBe(item.saved + ' Pending rollback review. Published.');
-        await restored.reload();
-        await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
-        await expect(reader.locator('strong')).toHaveText('Sam');
-        rollback.reopened = true;
-      } finally { await clean.close(); }
+        await expect(reader).toContainText(mixed.concurrentStatus);
+        mixed.saved = await read();
+        expect(mixed.saved).toBe('Owner: **Sam**.' + leftAddition + '\r\n\r\n' + mixed.concurrentStatus);
+        await peer.goto(url);
+        const peerReader = peer.getByTestId('wiki-page-content');
+        await expect(peerReader.locator('p').first()).toHaveText(mixed.concurrentOwner);
+        await expect(peerReader.locator('p').last()).toHaveText(mixed.concurrentStatus);
+        await expect(peerReader.locator('strong')).toHaveText('Sam');
+        mixed.reopened = true;
+      } else {
+        const clean = await page.context().browser().newContext();
+        try {
+          const restored = await clean.newPage();
+          await member.signInMember(restored,{});
+          await observePage(restored,item);
+          const editor = await edit(restored,'original');
+          rollback.stock = await editorProof(editor);
+          expect(rollback.stock.native).toBe(false);
+          const status = editor.locator('p').filter({hasText:'Status:'});
+          await expect.poll(() => paragraphText(status),{timeout:20000}).toBe(draft);
+          await expect(editor.locator('strong')).toHaveText('Sam');
+          rollback.recovered = await paragraphText(status);
+          await editor.screenshot({path:join(output,'stock-recovered-draft.png')});
+          await append(restored,status,' Published.');
+          await restored.getByTestId('wiki-submit-button').click();
+          const confirm = restored.getByTestId('wiki-confirm-message');
+          const reader = restored.getByTestId('wiki-page-content');
+          await expect(confirm.or(reader).first()).toBeVisible();
+          if (await confirm.isVisible()) await confirm.click();
+          await expect(reader).toContainText(draft + ' Published.');
+          rollback.saved = await read();
+          expect(rollback.saved).toBe(item.saved + ' Pending rollback review. Published.');
+          await restored.reload();
+          await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
+          await expect(reader.locator('strong')).toHaveText('Sam');
+          rollback.reopened = true;
+        } finally { await clean.close(); }
+      }
     }
     item.status = 'observed';
     item.stage = 'complete';
