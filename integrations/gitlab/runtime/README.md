@@ -60,7 +60,22 @@ stops the peer. The local volumes retain the saved wiki for inspection.
 
 With `--keep-tab-open`, the Developer also keeps their original editor mounted on the peer. While the peer is stopped, they type a sign-off in the first paragraph and the owner independently edits the status on the surviving node. After replacement, the test checks both edits, the original browser navigation and editor element, the Developer’s undo/redo, and the source before Save. A fresh session on the replacement checks the merged draft and saves it. The owner reopens that revision. Inspect `open-tab-offline.png` and `open-tab-reconnected.png` alongside the saved reader.
 
-The two-node deployment shares one data tier and uses explicit browser routing. Automatic load-balancer failover and failure of a data service require separate evidence.
+### Reproduce automatic application-node failover
+
+Use the same local project, volumes and pinned frontend as the two-node check above. This Linux Docker profile uses loopback ports 5080, 5081 and 5082. The Developer's browser keeps the canonical GitLab origin while connecting through NGINX on 5082. The owner has a direct connection to the surviving node to independently observe edits. The [NGINX configuration](wiki-failover.nginx.conf) prefers port 5081, falls back to 5080 on connection or upstream errors, and forwards WebSocket upgrades. The harness starts and stops the digest-pinned proxy. The two app nodes share PostgreSQL, Redis and Gitaly.
+
+For rollout, start the surviving baseline with Fountain. For rollback, start it with the packaged stock frontend. Run each command against the corresponding healthy baseline. If testing the optional wiki controller, use the same controller override for both baseline starts.
+
+```sh
+docker compose -f integrations/gitlab/runtime/compose.yaml -f integrations/gitlab/runtime/compose.frontend.yaml up -d --wait baseline
+node scripts/audit-gitlab-two-node-wiki.mjs --rollout --load-balancer
+docker compose -f integrations/gitlab/runtime/compose.yaml stop -t 150 baseline
+docker compose -f integrations/gitlab/runtime/compose.yaml up -d --wait baseline
+node scripts/audit-gitlab-two-node-wiki.mjs --rollback --load-balancer
+docker compose -f integrations/gitlab/runtime/compose.yaml stop -t 150 baseline
+```
+
+Inspect `proxy.handshakes` for the initial and reconnected cable upstreams, and `proxy.save` for the serving Workhorse request ID while the peer was stopped. The saved source and reader must contain both authors' edits. After the replacement becomes healthy, a fresh browser opens the same revision on the preferred node. This test exercises application-node loss with a healthy shared data tier.
 
 ### Reproduce two authors editing a wiki checklist
 
