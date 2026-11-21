@@ -231,6 +231,14 @@ function markdownAttributes(node: Node) {
   return attrs;
 }
 
+function withoutReaderDirection(node: Node): Node {
+  if (node.isText) return node;
+  const children = node.content.map(withoutReaderDirection);
+  if (node.attrs.dir === 'auto' && (node.type.name === 'paragraph' || node.type.name === 'heading'))
+    return node.type.create(markdownAttributes(node),children,undefined,node.marks);
+  return children.some((child,index) => child !== node.child(index)) ? node.copy(children) : node;
+}
+
 /** Explicit GitLab conversion boundary; known unhandled expansions remain errors. */
 export class GitLabMarkdownCodec implements SerializedContentCodec {
   private readonly emojiSpellings = new WeakMap<Node, ReadonlyMap<string,string>>();
@@ -245,7 +253,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     tableOfContentsLabel?: string;
   }) {}
 
-  async deserialize({ schema, markdown, signal }: { schema: Schema; markdown: string; signal: AbortSignal }): Promise<{ document: Node }> {
+  async deserialize({ schema, markdown, signal, wikiRoomSeed = false }: { schema: Schema; markdown: string; signal: AbortSignal; wikiRoomSeed?: boolean }): Promise<{ document: Node }> {
     if (signal.aborted) throw new Error('GitLab Markdown rendering was cancelled.');
     if (!schema.nodes.gitlab_reference || !schema.nodes.gitlab_placeholder) throw new Error('Use the explicit GitLab schema adapter.');
     try {
@@ -262,22 +270,27 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       const emojiNames = new Map<string,string>();
       const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema, emojiNames, this.options.tableOfContentsLabel !== undefined), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
-      const document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
+      let document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
       schema.validate(document);
-      const source = MarkdownSourceSnapshot.capture(markdown, document);
-      if (this.options.preserveWikiSource && document.content.every(block => ['heading', 'paragraph'].includes(block.type.name))) {
+      let wikiSource: MarkdownSourceSnapshot | undefined;
+      const proseOnly = document.content.every(block => ['heading', 'paragraph'].includes(block.type.name));
+      if (wikiRoomSeed || (this.options.preserveWikiSource && proseOnly)) {
         // GitLab owns the dialect. Reuse the core's block map only when parsing
         // the same source produces the complete tree returned by GitLab.
         try {
           const parsed = MarkdownSourceSnapshot.parse(markdown, schema);
-          const prose = document.copy(document.content.map(block => block.attrs.dir === 'auto'
-            ? block.type.create(markdownAttributes(block), block.content, undefined, block.marks) : block));
-          if (parsed.document.eq(prose)) this.wikiBlockSources.set(source, parsed.source);
+          const prose = withoutReaderDirection(document);
+          if (parsed.document.eq(prose)) {
+            if (wikiRoomSeed) document = prose;
+            if (proseOnly) wikiSource = parsed.source;
+          }
         } catch {
           // A wiki extension may accept syntax outside the local parser.
           // Its server-rendered tree still has the original source snapshot.
         }
       }
+      const source = MarkdownSourceSnapshot.capture(markdown, document);
+      if (wikiSource) this.wikiBlockSources.set(source,wikiSource);
       document.descendants(node => {
         this.sources.set(node, source);
         if (emojiNames.size && node.isText && /\p{Extended_Pictographic}/u.test(node.text ?? '')) this.emojiSpellings.set(node,emojiNames);

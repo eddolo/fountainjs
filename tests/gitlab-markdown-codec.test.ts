@@ -238,6 +238,22 @@ it('reports a highlight color that the default GitLab mark cannot retain', async
   expect(codec.serializeWithReport({ doc: append(document) }).issues.some(issue => issue.code === 'highlight-color')).toBe(true);
 });
 
+it('removes only source-verified reader direction before seeding a shared wiki', async () => {
+  const schema = new Schema(createGitLabSchemaSpec());
+  const seed = async (markdown:string, body:string) => new GitLabMarkdownCodec({renderMarkdown:async () => ({body})})
+    .deserialize({schema,markdown,signal:new AbortController().signal,wikiRoomSeed:true});
+  const body = '<p dir="auto">Owner: <strong>Sam</strong>.</p><p dir="auto">Status: ready.</p>';
+  const source = 'Owner: **Sam**.\n\nStatus: ready.';
+  const plain = await seed(source,body);
+  expect(plain.document.child(0).attrs).toEqual(schema.node('paragraph').attrs);
+  expect(plain.document.child(0).child(1).marks[0].type.name).toBe('strong');
+  const mismatched = await seed('Different source', body);
+  expect(mismatched.document.child(0).attrs.dir).toBe('auto');
+  const explicit = '<p dir="rtl" style="text-align:center">שלום</p>';
+  const authored = await seed(explicit,explicit);
+  expect(authored.document.child(0).attrs).toMatchObject({dir:'rtl',align:'center'});
+});
+
 it('does not discard an authored alignment while normalizing renderer-added automatic direction', async () => {
   const source = '<p dir="auto" style="text-align:left">שלום</p>';
   const { codec, document } = await convert(source, source);

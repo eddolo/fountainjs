@@ -509,7 +509,7 @@ export class GitLabContentEditor {
     try {
       let result: SerializedContentResult;
       if (this.wiki) {
-        await this.wiki.join(async signal => (await this.codec.deserialize({schema:this.editor.state.schema,markdown,signal})).document);
+        await this.wiki.join(async signal => (await this.codec.deserialize({schema:this.editor.state.schema,markdown,signal,wikiRoomSeed:true})).document);
         result = {status:'applied'};
       } else result = await this.controller.setSerializedContent(markdown, options);
       if (request !== this.request || this.destroyed) return { status: 'superseded' };
