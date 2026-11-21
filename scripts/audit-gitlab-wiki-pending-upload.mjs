@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { editorProof } from './gitlab-audit-editor.mjs';
 
 export async function checkPendingWikiUpload({page, peer, item, edit, read, paragraphText, side, project, switchWikiDeployment, output}) {
-  const {peerEditDuringFailure} = item.input.upload;
+  const {peerEditDuringFailure,closeBeforeTransfer} = item.input.upload;
   const {name,text} = item.input.upload, bytes = Buffer.from(text);
   const origin = new URL(project.web_url).origin;
   const actor = await edit(peer), observer = await edit(page);
@@ -39,10 +39,10 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     if (route.request().method() !== 'POST' || !route.request().headers()['content-type']?.startsWith('multipart/form-data'))
       return route.continue();
     pending.requests++;
-    if (peerEditDuringFailure && pending.requests === 1) {
+    if ((peerEditDuringFailure || closeBeforeTransfer) && pending.requests === 1) {
       // Fail this browser request before it is forwarded to the authenticated endpoint.
       await interrupt.promise;
-      await route.abort('connectionreset');
+      if (!peer.isClosed()) await route.abort('connectionreset');
       return;
     }
     try {
@@ -68,6 +68,58 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
   try {
     item.stage = 'upload-through-wiki-picker';
     await selectFile();
+    if (closeBeforeTransfer) {
+      item.stage = 'save-after-uploader-tab-closes';
+      await expect.poll(() => pending.requests).toBe(1);
+      const isNative = side === 'fountain';
+      const visibleFile = isNative ? page.getByRole('list',{name:'Files being attached by other authors'}).getByText(name,{exact:true})
+        : observer.getByRole('link',{name,exact:true});
+      const avatar = page.getByTestId('collaborators-indicator').getByAltText(item.authors.peer,{exact:true});
+      const save = page.getByTestId('wiki-submit-button');
+      await expect(visibleFile).toBeVisible();
+      await expect(avatar).toBeVisible();
+      if (isNative) await expect(save).toBeDisabled();
+      await observer.locator('p').filter({hasText:'Status:'}).click();
+      await page.keyboard.press('End');
+      await page.keyboard.insertText(' Handoff recorded.');
+      expectedStatus += ' Handoff recorded.';
+      await expect.poll(() => statusText(actor)).toBe(expectedStatus);
+      await page.locator('form.wiki-form').screenshot({path:join(output,'peer-before-departure.png')});
+      const departure = pending.departure = {visibleBeforeClose:true,forwardedBeforeClose:pending.forwardedRequests};
+      const start = Date.now();
+      await peer.close();
+      expect(peer.isClosed()).toBe(true);
+      interrupt.resolve();
+      await expect(avatar).toHaveCount(0,{timeout:60000});
+      if (isNative) await expect(visibleFile).toHaveCount(0,{timeout:10000});
+      await expect(save).toBeEnabled();
+      departure.saveAvailableAfterDepartureMs = Date.now() - start;
+      departure.pendingStillVisible = await visibleFile.isVisible();
+      expect(await read()).toBe(before);
+      await observer.locator('p').filter({hasText:'Status:'}).click();
+      await page.keyboard.press('End');
+      await page.keyboard.insertText(' Saved after closure.');
+      expectedStatus += ' Saved after closure.';
+      await expect.poll(() => statusText(observer)).toBe(expectedStatus);
+      await page.locator('form.wiki-form').screenshot({path:join(output,'peer-after-departure.png')});
+      await save.click();
+      const confirm = page.getByTestId('wiki-confirm-message'), reader = page.getByTestId('wiki-page-content');
+      await expect(confirm.or(reader).first()).toBeVisible();
+      if (await confirm.isVisible()) await confirm.click();
+      await expect(reader).toContainText(expectedStatus);
+      await page.reload();
+      await expect(reader).toContainText(expectedStatus);
+      await expect(reader.locator('strong')).toHaveText('Sam');
+      await expect(reader.getByRole('link',{name,exact:true})).toHaveCount(0);
+      departure.saved = await read();
+      expect(departure.saved).not.toContain('blob:');
+      departure.savedHasFilename = departure.saved.includes(name);
+      departure.readerText = await reader.innerText();
+      expect(pending.forwardedRequests).toBe(0);
+      expect(pending.requests).toBe(1);
+      await reader.screenshot({path:join(output,'reopened-after-departure.png')});
+      return;
+    }
     if (peerEditDuringFailure) {
       item.stage = 'recover-upload-before-server-acceptance';
       const isNative = side === 'fountain';
@@ -208,6 +260,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     await reader.screenshot({path:join(output,'reopened-attachment.png')});
   } catch (error) {
     for (const [key,tab] of [['source',peer],['destination',page]]) {
+      if (tab.isClosed()) continue;
       const wiki = tab.locator('form.wiki-form');
       pending[key + 'Feedback'] = await wiki.locator('[role="status"],[data-testid="content-editor-error"]')
         .allTextContents().catch(() => []);
@@ -217,6 +270,6 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
   } finally {
     interrupt.resolve();
     release.resolve();
-    await peer.unrouteAll({behavior:'wait'});
+    if (!peer.isClosed()) await peer.unrouteAll({behavior:'wait'});
   }
 }

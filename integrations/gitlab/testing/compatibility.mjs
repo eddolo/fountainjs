@@ -490,6 +490,15 @@ export function compareGitLabCompatibility(original,fountain){
         && item.restoredFlag === true ? {...item, savedContent:item.saved?.replace(/\r\n/g, '\n')} : {};
       const left = observe(original, a), right = observe(fountain, b);
       for (const view of [left,right]) {
+        if (input.upload?.closeBeforeTransfer && view.pendingUpload?.departure) {
+          const {departure,forwardedRequests} = view.pendingUpload;
+          view.visibleBeforeClose = departure.visibleBeforeClose;
+          view.forwardedOnClose = forwardedRequests;
+          view.saveAfterDeparture = Number.isFinite(departure.saveAvailableAfterDepartureMs);
+          view.noUnreceivedFilename = departure.savedHasFilename === false && !departure.readerText?.includes(input.upload.name);
+          const status = input.source + input.ownerEdit + input.peerEdit + ' Evidence pending. Handoff recorded. Saved after closure.';
+          view.survivingDraft = departure.saved?.replaceAll('\r\n','\n').split('\n\n').slice(0,2).join('\n\n') === status;
+        }
         if (input.upload && view.pendingUpload?.peerSave) {
           const upload = view.pendingUpload;
           view.peerSawPendingFile = upload.sharedPlaceholder === true || upload.peerUploadNotice === true;
@@ -530,7 +539,13 @@ export function compareGitLabCompatibility(original,fountain){
           ['visitedReference',input.wikiLink.targetText,'The reloaded reader opens the intended wiki page'],
           ['originalLineEndings',true,'The wiki API retains the fixture’s LF line endings'],
         ] : [['saved',authored,'The wiki API also retains the original line endings']]),
-        ...(input.upload ? [
+        ...(input.upload?.closeBeforeTransfer ? [
+          ['visibleBeforeClose',true,'The other author sees the pending file before the uploader leaves'],
+          ['forwardedOnClose',0,'No upload reaches GitLab after the uploader closes'],
+          ['saveAfterDeparture',true,'The remaining author regains Save after the uploader leaves'],
+          ['survivingDraft',true,'Saved Markdown retains the edits before and after the uploader left'],
+          ['noUnreceivedFilename',true,'The reopened wiki contains no filename for a file GitLab never received'],
+        ] : input.upload ? [
           ['peerSawPendingFile',true,'The second author sees the pending filename before Save'],
           ['peerSaveWaited',true,'Save waits until the attachment can be included in the revision'],
           ...(input.upload.peerEditDuringFailure ? [
