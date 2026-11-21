@@ -191,6 +191,10 @@ function renderMarks(content: string, marks: readonly Mark[]): string {
   // including font marks, so a round trip retains the original mark sequence.
   const ordered = [...marks].reverse();
   for (const mark of ordered) {
+    if (mark.type.spec.toHTML) {
+      content = renderDOMOutputSpec(mark.type.spec.toHTML(mark), content);
+      continue;
+    }
     switch (mark.type.name) {
       case 'strong': content = `<strong>${content}</strong>`; break;
       case 'em': content = `<em>${content}</em>`; break;

@@ -34,7 +34,7 @@ In the default desktop theme, the reopened heading, body, bold text and paragrap
 
 ## Configure an HTML field toolbar
 
-In Data Studio, open **Settings → Data Model**, select the collection and open its Fountain HTML field. On the **Interface** tab, use **Toolbar** to select controls, then save. The default includes Bold, Italic, Underline, Heading 1–3, numbered lists, bulleted lists, Block quote and Edit HTML source. Administrators can also enable Heading 4–6, Strikethrough, Subscript, Superscript, Undo and Redo. An empty selection of controls leaves the field editable.
+In Data Studio, open **Settings → Data Model**, select the collection and open its Fountain HTML field. On the **Interface** tab, use **Toolbar** to select controls, then save. The default includes Bold, Italic, Underline, Heading 1–3, numbered lists, bulleted lists, Block quote, Link and Edit HTML source. Administrators can also enable Heading 4–6, Strikethrough, Subscript, Superscript, Unlink, Undo and Redo. An empty selection of controls leaves the field editable.
 
 The [paired Chromium workflow](../../artifacts/directus-handover/7b6786bb-966f-4dec-8437-6255931d49a7/report.json) applied each mark to a selected word, used the toolbar to undo and redo, and checked the complete stored HTML on both editors. In the [administrator screen](../../artifacts/directus-handover/7b6786bb-966f-4dec-8437-6255931d49a7/toolbar-settings.png), the administrator then enabled only Italic. An author reopened the item, removed that mark with the keyboard, regained editor focus and saved the remaining formatting intact. [Fountain toolbar](../../artifacts/directus-handover/7b6786bb-966f-4dec-8437-6255931d49a7/fountain-toolbar.png) · [Stock toolbar](../../artifacts/directus-handover/7b6786bb-966f-4dec-8437-6255931d49a7/stock-toolbar.png).
 
@@ -49,6 +49,14 @@ Run `node integrations/directus/audit-stock.mjs --structure` after building the 
 Select paragraphs and click **Block quote** to quote them. To remove quoting from only one paragraph, place the caret there and click the button again. Other quoted paragraphs keep their formatting. At the end of the last quoted paragraph, pressing Enter twice starts an ordinary paragraph after the quote.
 
 Run `node integrations/directus/audit-stock.mjs --quote` after building the extension. The [matched Chromium run](../../artifacts/directus-handover/08ffaa2a-a85e-4394-bbc5-7eb4e8258d20/report.json) checked exact saved HTML after quoting three paragraphs, lifting the middle one, undoing and redoing, and typing outside the quote. After rollback, stock Directus reopened and edited the same Fountain item. The receipt includes the keyboard observations. [Fountain quote](../../artifacts/directus-handover/08ffaa2a-a85e-4394-bbc5-7eb4e8258d20/fountain-quote.png) · [Stock quote](../../artifacts/directus-handover/08ffaa2a-a85e-4394-bbc5-7eb4e8258d20/stock-quote.png).
+
+### Text links
+
+Select text in a paragraph and choose **Link**, or place the caret in an existing link to edit it. The drawer shows its URL, display text, tooltip and **New Tab** setting. Applying a link updates the form. Save the item to persist it. **Unlink** removes the destination and leaves the text in place. The field undo and redo controls also work after unlinking.
+
+Build the extension and run `node integrations/directus/audit-stock.mjs --links` to compare against the stock HTML field. In the [paired Chromium run](../../artifacts/directus-handover/9b23455d-4a18-4054-9393-147954b3fa52/report.json), the two editors saved identical HTML for creating a new-tab link, changing its label and destination, unlinking it, editing a partly bold link with an author-supplied `nofollow` relationship, and inserting a URL at an empty caret with Ctrl+K. Stock Directus then edited the tooltip on that same Fountain-authored link after rollback. [Fountain drawer](../../artifacts/directus-handover/9b23455d-4a18-4054-9393-147954b3fa52/fountain-link.png) · [Stock drawer](../../artifacts/directus-handover/9b23455d-4a18-4054-9393-147954b3fa52/stock-link.png)
+
+The text-link workflow uses Fountain’s URL policy. Image links, field-specific additional protocols and selections spanning multiple blocks still need separate integration work.
 
 ### Edit HTML source
 

@@ -7,5 +7,7 @@ export interface MarkSpec {
   parseDOM?: readonly DOMParseRule[];
   /** HTML-import rules usable by both browser and server parsers. */
   parseHTML?: readonly HTMLParseRule[];
+  /** Optional HTML export representation, including host overrides for built-in marks. */
+  toHTML?: (mark: Mark) => DOMOutputSpec;
   toDOM?: (mark: Mark) => DOMOutputSpec;
 }

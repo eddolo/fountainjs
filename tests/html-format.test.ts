@@ -61,6 +61,19 @@ const kit = composeExtensions([CoreExtension, customHTML]);
 const schema = new Schema(kit.schema);
 
 describe('schema-owned HTML interchange', () => {
+  it('exports a host-defined representation of a built-in mark without changing the default schema', () => {
+    const spec = kit.schema;
+    const host = new Schema({ ...spec, marks: { ...spec.marks, link: {
+      ...spec.marks!.link,
+      toHTML: mark => ['a', { href: mark.attrs.href, title: mark.attrs.title }, 0],
+    } } });
+    const exportLink = (owner: Schema) => HTMLExporter.export(
+      owner.text('R&D', [owner.mark('link', { href: '/guide', title: 'Review "A"' })]), { document: false },
+    );
+    expect(exportLink(host)).toBe('<a href="/guide" title="Review &quot;A&quot;">R&amp;D</a>');
+    expect(exportLink(schema)).toContain('target="_blank" rel="noopener noreferrer nofollow"');
+  });
+
   it('round-trips extension-defined block, inline atom, mark, attributes, and nested content', () => {
     const annotation = schema.mark('annotation', { id: 'note-7' });
     const document = schema.node('doc', {}, [

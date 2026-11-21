@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium, expect } from '@playwright/test';
 
+import { auditLinks } from './audit-links.mjs';
 import { auditSource } from './audit-source.mjs';
 import { auditQuote } from './audit-quote.mjs';
 import { auditStructure } from './audit-structure.mjs';
@@ -23,7 +24,9 @@ const id = randomUUID();
 const structureOnly = process.argv.includes('--structure');
 const quoteOnly = process.argv.includes('--quote');
 const sourceOnly = process.argv.includes('--source');
-const paired = sourceOnly || quoteOnly || structureOnly || process.argv.includes('--paired');
+const linksOnly = process.argv.includes('--links');
+const stockLinks = process.argv.includes('--stock-links');
+const paired = linksOnly || sourceOnly || quoteOnly || structureOnly || process.argv.includes('--paired');
 const extension = fileURLToPath(new URL('../../artifacts/directus-extension/', import.meta.url));
 const candidate = paired ? JSON.parse(await readFile(join(extension,'identity.json'),'utf8')) : null;
 const out = fileURLToPath(new URL('../../artifacts/directus-'+(paired?'handover':'stock')+'/' + id + '/', import.meta.url));
@@ -181,6 +184,15 @@ try {
     });
     assert.equal(updated.meta.interface,name);
   }
+  async function checkLinks() {
+    report.links = {};
+    for (const side of stockLinks ? ['stock'] : ['stock', 'fountain']) {
+      report.links[side] = await auditLinks({ side, api, collection, selectInterface, openItem, out, report });
+    }
+    if (!stockLinks) {
+      for (const key of ['created', 'edited', 'removed', 'richHTML', 'insertedAtCaret']) assert.equal(report.links.fountain[key], report.links.stock[key]);
+    }
+  }
   async function checkSource() {
     report.sourceEditing = {};
     for (const side of ['stock', 'fountain']) {
@@ -274,6 +286,7 @@ try {
       await checkStructure();
       await checkQuotes();
       await checkSource();
+      await checkLinks();
       report.toolbar = {};
       for (const side of ['stock', 'fountain']) {
         report.toolbar[side] = await auditToolbar({ side, api, collection, selectInterface, openItem, out, report });
@@ -328,7 +341,8 @@ try {
       report.handover={itemId:item.id,saved:finalHTML,rollbackSaved:rollbackHTML};
     }
   }
-  if (sourceOnly) await checkSource();
+  if (linksOnly || stockLinks) await checkLinks();
+  else if (sourceOnly) await checkSource();
   else if (quoteOnly) await checkQuotes();
   else if (structureOnly) await checkStructure();
   else await checkSavedItem();

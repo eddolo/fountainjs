@@ -23,6 +23,21 @@
   resize: vertical;
 }
 
+.fountain-directus-link-form {
+  display: grid;
+  gap: 1.5rem;
+  padding: var(--content-padding, 1rem);
+}
+.fountain-directus-link-form label { display: grid; gap: 0.5rem; }
+.fountain-directus-link-form label:has([type=checkbox]) { display: flex; align-items: center; }
+.fountain-directus-link-form input[type=text] {
+  width: 100%;
+  min-height: var(--input-height, 3rem);
+  padding-inline: 0.75rem;
+  border: var(--theme--border-width) solid var(--theme--form--field--input--border-color);
+  border-radius: var(--theme--border-radius);
+}
+.fountain-directus-field .fountain-editor a { color: var(--theme--primary); text-decoration: underline; }
 .fountain-directus-toolbar {
   display: flex;
   flex-wrap: wrap;

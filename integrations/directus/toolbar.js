@@ -1,6 +1,7 @@
 import { computed, defineComponent, h, resolveComponent } from 'vue';
 import { canRedo, canUndo, isMarkActive, redo, setBlockType, toggleList, toggleMark, toggleQuote, undo } from '../../src/index';
 import { selectedBlockPaths } from '../../src/core/block-range';
+import { linkSelection, writeLink } from './links';
 import { useFountainState } from '../../src/vue';
 
 const marks = {
@@ -59,9 +60,17 @@ function selectedStructures({ doc, selection }) {
   return common ?? new Set();
 }
 
+actions.set('customLink', {
+  label: 'Link', icon: 'link', available: editor => !!linkSelection(editor),
+  pressed: editor => !!linkSelection(editor)?.active,
+});
+actions.set('unlink', {
+  label: 'Unlink', icon: 'link_off', available: editor => !!linkSelection(editor)?.active,
+  run: editor => writeLink(editor, linkSelection(editor), null),
+});
 actions.set('code', { label: 'Edit HTML source', icon: 'html' });
 
-export const defaultToolbar = ['bold', 'italic', 'underline', 'h1', 'h2', 'h3', 'numlist', 'bullist', 'blockquote', 'code'];
+export const defaultToolbar = ['bold', 'italic', 'underline', 'h1', 'h2', 'h3', 'numlist', 'bullist', 'blockquote', 'customLink', 'code'];
 export const toolbarOption = {
   field: 'toolbar', name: 'Toolbar', type: 'json', schema: { default_value: defaultToolbar },
   meta: {
@@ -73,7 +82,7 @@ export const toolbarOption = {
 export const FieldToolbar = defineComponent({
   name: 'FountainDirectusToolbar',
   props: { editor: Object, buttons: Array },
-  emits: ['refocus', 'source'],
+  emits: ['refocus', 'source', 'link'],
   setup(props, { emit }) {
     const icon = resolveComponent('v-icon');
     const state = useFountainState(() => props.editor);
@@ -91,6 +100,7 @@ export const FieldToolbar = defineComponent({
             onMousedown: event => event.preventDefault(),
             onClick: () => {
               if (key === 'code') { emit('source'); return; }
+              if (key === 'customLink') { emit('link'); return; }
               action.run(props.editor, pressed);
               emit('refocus');
             },

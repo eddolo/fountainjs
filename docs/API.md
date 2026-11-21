@@ -187,7 +187,10 @@ only tag/text/attribute/dataset/inline-style data. Browser-only `parseDOM`
 rules and `DOMParseRule.getAttrs(HTMLElement)` remain compatible with the root
 `HTMLImporter`; a server import reports a matching callback unless a portable
 rule is supplied. `toDOM` is the matching
-export contract for both nodes and marks. A node serializer may read the
+export contract for custom nodes and marks. To override the HTML output of a built-in mark,
+provide `MarkSpec.toHTML(mark)`. `HTMLExporter` uses the returned `DOMOutputSpec`
+with its normal tag, attribute and URL filtering. The editor continues to use `toDOM`
+for the live view. A node serializer may read the
 optional `{ document, path }` context when presentation depends on document
 order. Set `contextualDOM: true` for such a node so top-level reconciliation
 re-renders an otherwise unchanged ancestor after another part of the document
