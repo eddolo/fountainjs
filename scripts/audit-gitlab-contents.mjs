@@ -220,7 +220,7 @@ async function authorContents({page, side, project, request, input, runId, outpu
     await enterEdit();
     item.stage = 'add-heading';
     await host.getByRole('button',{name:'Switch to plain text editing',exact:true}).click();
-    const field = host.getByTestId('markdown-editor-form-field');
+    const field = host.locator('textarea[data-testid="markdown-editor-form-field"]');
     await expect(field).toBeVisible();
     item.sourceOnSwitch = await field.inputValue();
     await field.fill(item.sourceOnSwitch + '\n\n## ' + input.heading + '\n\n' + input.body);

@@ -515,7 +515,6 @@ if (
 files.set(
   rendererPath,
   prepareGitLabModeRetention(originalRenderer)
-    .replace('ref="contentEditor"', 'ref="contentEditor"\n        :key="collaborationProvider && collaborationProvider.doc ? collaborationProvider.doc.guid : null"')
     .replace(
       rendererSignature,
       'renderMarkdown(markdown, { noHeaderAnchors = false, signal } = {}) {',

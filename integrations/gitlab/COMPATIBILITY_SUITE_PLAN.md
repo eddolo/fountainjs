@@ -1,6 +1,25 @@
 # GitLab paired compatibility and regression suite
 
-## Flagship status on the pinned GitLab CE 19.5.3 deployment
+## Frozen release decision for GitLab CE 19.5.3
+
+The [eight agreed application requirements](README.md#remaining-full-application-acceptance) resolve into the six gates below. **Release decision: open.** Each gate closes against the same installed Fountain runtime and integration digest, with the pinned GitLab revision, host overlays and supported rollback target recorded. A rebuild invalidates passes from the previous installed integration. The workflow history below supplies fixtures and reproduction instructions.
+
+| Gate | Remaining mandatory evidence | Status |
+| --- | --- | --- |
+| 1. Install and identify the editor | Reproduce installation against pinned GitLab, identify the loaded editor in matched runs, and pass the applicable upstream component suites. | Blocked on the initial candidate. Two upstream suites could not compile its Markdown editor because the installer generated two Vue keys on one component. |
+| 2. Edit and preserve content | Verify the existing composer independence, undo/redo, controls, read-only, source switching and GitLab Markdown fixtures. Finish the existing outline checks. Retain the measured source-fidelity comparison. | Needs verification on the corrected installation. |
+| 3. Use real GitLab records | Create, edit, save and reopen issues, MR descriptions and discussions, reviews and wiki pages. Verify board/project navigation, templates and links over real saved records. | Needs verification on the corrected installation. |
+| 4. Protect work and access | Verify permissions and revocation, stale/concurrent edits, reconnect, wiki collaboration and interrupted-upload recovery using the existing fixtures. | Needs verification on the corrected installation. |
+| 5. Use supported inputs | Verify the agreed keyboard and selection paths, mobile/touch and accessibility in the host. Identify browser, input method and device in the evidence. | Needs verification. Desktop WebKit and touch emulation provide separate evidence from physical input. |
+| 6. Deploy, recover and demonstrate | Retain saved records across service restart. Reproduce installation and rollback, including the documented safe paths for unsaved work and known stock losses. Verify the agreed hosted deployment and link the public showcase to evidence from the real integration. | Needs verification on the corrected installation. |
+
+**Decision rules.** Passed requires final-candidate evidence. Needs verification covers earlier passes, missing receipts and inconclusive harness runs. Blocked requires an observed, reproducible acceptance failure. Accepted limitation requires a documented safe outcome outside the agreed replacement scope. Data loss, authorization failures and unsafe rollback block sign-off even when stock GitLab reproduces them. A recovery path must itself be demonstrated. When all six gates pass, the GitLab flagship is complete for this deployment.
+
+**Accepted GitLab limitations.** The pinned wiki can show an untranslated conflict notice while preserving the newer revision. Both editors reported WebKit review-navigation errors while posting the draft exactly once. The wiki reader left-aligns table headers while preserving the source, alignment attributes and body cells. The linked historical receipts below document these boundaries.
+
+**Optional follow-up.** Additional third-party collaboration providers, other GitLab versions and browser permutations beyond the agreed coverage are separate work. Further checks enter this ledger only when testing reveals a defect affecting correctness, safety or an agreed capability.
+
+## Historical workflow evidence on the pinned GitLab deployment
 
 | Status | What the evidence covers |
 | --- | --- |
