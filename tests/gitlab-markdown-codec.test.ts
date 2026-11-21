@@ -24,11 +24,23 @@ it.each(taskTablePreviews.fixtures.filter(item => ['task','inactive','empty','ma
     expect(cell.child(0).type.name).toBe('task_list');
     const exported = codec.serializeWithReport({doc:append(document)});
     expect(exported.issues).toEqual([]);
-    expect(exported.markdown).toContain('colspan="2"');
+    expect(exported.markdown).toContain('<th colspan="2">Release</th>');
+    expect(exported.markdown).toContain('<td>Backup</td>');
     const markers = source.match(/- \[[ x~]\] /gu)!;
     expect(exported.markdown.match(/[-*+] \[[ x~]\] /gu)).toEqual(markers.map(m => expect.stringContaining(m.slice(1))));
     expect(exported.markdown).toContain('Added.');
   });
+
+it('reports a standalone pipe-table checkbox when merging cells would turn its marker into text', async () => {
+  const sample = taskTablePreviews.fixtures.find(item => item.id === 'pipe')!;
+  const {schema,codec,document} = await convert(sample.source,sample.html);
+  const table = document.child(0), row = table.child(0), header = row.child(0);
+  const mergedHeader = header.type.create({...header.attrs,colspan:2},header.content);
+  const merged = table.copy([row.copy([mergedHeader]),table.child(1)]);
+  const doc = schema.node('doc',{},[merged]);
+  expect(codec.serializeWithReport({doc}).issues).toContainEqual(expect.objectContaining({code:'table-task-layout'}));
+  expect(() => codec.serialize({doc})).toThrow(GitLabMarkdownConversionError);
+});
 
 it.each(mergedPreviews.fixtures)('keeps $name through canonical GitLab Save while ordinary tables stay in Markdown',async ({name,source,body})=>{
   const {codec,document}=await convert(source,body);

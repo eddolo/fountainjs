@@ -81,13 +81,15 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
     return supported;
   });
   if (!supported) return undefined;
+  const inlineCellParagraph = (p: Node) => p.type.name === 'paragraph' && p.childCount === 1
+    && p.child(0).isText && !p.child(0).marks.length
+    && /^(?![0-9]{1,9}\.$)[\p{L}\p{N}]+(?:[ -][\p{L}\p{N}]+)*[.!?]?$/u.test(p.child(0).text!);
   const hasTaskList = table.content.some(row => row.content.some(cell => cell.content.some(block => block.type.name === 'task_list')));
   if (wikiRoom || hasTaskList) {
     // GitLab accepts Markdown task lists between blank lines inside a raw table.
     // Its HTML sanitizer removes raw checkbox inputs.
     const plain = !hasTaskList && table.content.every(row => row.content.every(cell =>
-      cell.content.every(p => p.childCount === 1 && p.child(0).isText && !p.child(0).marks.length
-        && /^(?![0-9]{1,9}\.$)[\p{L}\p{N}]+(?:[ -][\p{L}\p{N}]+)*[.!?]?$/u.test(p.child(0).text!))));
+      cell.content.every(inlineCellParagraph)));
     if (plain || hasTaskList) {
       const lines = ['<table>'];
       for (const row of table.content) {
@@ -96,6 +98,10 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
           const tag = cell.type.name === 'table_header' ? 'th' : 'td';
           const spans = ['colspan','rowspan'].filter(key => Number(cell.attrs[key]) > 1)
             .map(key => ` ${key}="${Number(cell.attrs[key])}"`).join('');
+          if (cell.childCount === 1 && inlineCellParagraph(cell.child(0))) {
+            lines.push(`<${tag}${spans}>${cell.child(0).child(0).text}</${tag}>`);
+            continue;
+          }
           const parts: string[] = [];
           for (const block of cell.content) {
             if (plain) parts.push(block.child(0).text!);
@@ -111,7 +117,7 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
               parts.push(list.markdown);
             } else return undefined;
           }
-          const text = plain && parts.length === 1 ? parts[0] : '\n\n' + parts.join('\n\n') + (plain ? '\n' : '\n\n');
+          const text = '\n\n' + parts.join('\n\n') + (plain ? '\n' : '\n\n');
           lines.push(`<${tag}${spans}>${text}</${tag}>`);
         }
         lines.push('</tr>');
