@@ -8,9 +8,15 @@
       "id": "structured-wiki-handover",
       "scope": "wiki-collaboration",
       "title": "Release handover",
-      "source": "## Release handover\n\nOwner: **Sam**.\n\n* Verify the service\n  * Check the logs\n\n> Keep the incident open.\n\nStatus: ready.",
+      "source": "## Release handover\n\nOwner: **Sam**.\n\n* Verify the service\n  * Check the logs\n\n> Keep the incident open.\n\nRead the [release guide](https://example.org/runbook \"Publishing steps\") before publishing.\n\nStatus: ready.",
       "ownerEdit": " Reviewed.",
       "peerEdit": " Approved.",
+      "link": {
+        "label": "release guide",
+        "editedLabel": "release operator guide",
+        "href": "https://example.org/runbook",
+        "title": "Publishing steps"
+      },
       "structure": {
         "heading": "Release handover",
         "parent": "Verify the service",

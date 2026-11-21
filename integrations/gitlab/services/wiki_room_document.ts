@@ -30,6 +30,24 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
   return result;
 }
 
+/** Both projection validation and live room reads must interpret the stock marks identically. */
+function fromStockMark(name: string, value: unknown, path: readonly number[]): MarkJSON {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) unsupported(path,name);
+  const attrs = value as Attributes;
+  if (name === 'link') {
+    for (const [key,flag] of Object.entries(attrs)) {
+      if (key === 'href' || key === 'title' || key === 'canonicalSrc') continue;
+      if (['uploading','isGollumLink','isWikiPage','isReference'].includes(key) && flag === false) continue;
+      unsupported(path,'link.' + key);
+    }
+    // The GitLab schema validates both URLs when constructing the Fountain mark.
+    return {type:'link',attrs:{href:attrs.href,title:attrs.title ?? '',gitlabCanonicalSrc:attrs.canonicalSrc ?? undefined}};
+  }
+  const type = marks.get(name);
+  if (!type || Object.keys(attrs).length) unsupported(path,name);
+  return {type};
+}
+
 /** Decode the existing stock fragment without creating, seeding or repairing Yjs types. */
 export function readGitLabWikiRoom(fragment: Y.XmlFragment, schema: Schema, types: XmlTypes): Node {
   let count = 0;
@@ -44,10 +62,7 @@ export function readGitLabWikiRoom(fragment: Y.XmlFragment, schema: Schema, type
           if (typeof span.insert !== 'string' || !span.insert.length) unsupported(childPath, 'text embed or empty span');
           const formatting: MarkJSON[] = [];
           for (const [name,attrs] of Object.entries(span.attributes ?? {})) {
-            const type = marks.get(name);
-            if (!type || !attrs || typeof attrs !== 'object' || Array.isArray(attrs) || Object.keys(attrs).length)
-              unsupported(childPath, name);
-            formatting.push({type});
+            formatting.push(fromStockMark(name,attrs,childPath));
           }
           content.push({type:'text',text:span.insert,marks:formatting});
         }
@@ -79,11 +94,7 @@ function prepareStockNode<T extends StockWikiNode>(document: Node, wire: GitLabW
   function project(node: NodeJSON, path: readonly number[]): NodeJSON {
     const type = node.type === 'doc' || node.type === 'text' ? node.type : nodes.get(node.type);
     if (!type) unsupported(path,node.type);
-    const formatting = node.marks?.map(mark => {
-      const name = marks.get(mark.type);
-      if (!name || Object.keys(mark.attrs ?? {}).length) unsupported(path,mark.type);
-      return {type:name};
-    });
+    const formatting = node.marks?.map(mark => fromStockMark(mark.type,mark.attrs ?? {},path));
     return {type,attrs:stockAttrs(node.type,node.attrs ?? {},path),text:node.text,marks:formatting,
       content:node.content?.map((child,index) => project(child,[...path,index]))};
   }
@@ -213,6 +224,14 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
     if (node.marks.length) {
       if (!node.isText) unsupported(path,'marked inline element');
       result.marks = node.marks.map(mark => {
+        if (mark.type.name === 'link') {
+          const {href,title,gitlabCanonicalSrc} = mark.attrs;
+          for (const [key,value] of Object.entries(mark.attrs)) {
+            if (!['href','title','gitlabCanonicalSrc'].includes(key) && value !== mark.type.spec.attrs?.[key]?.default)
+              unsupported(path,'link.' + key);
+          }
+          return {type:'link',attrs:{href,title:title || null,canonicalSrc:gitlabCanonicalSrc ?? null}};
+        }
         const name = stockMarks.get(mark.type.name);
         if (!name || Object.keys(mark.attrs).length) unsupported(path,mark.type.name);
         return {type:name};

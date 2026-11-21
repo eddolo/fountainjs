@@ -70,6 +70,12 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
         return content.textContent;
       });
     }
+    async function checkLink(surface,label) {
+      const link = surface.getByRole('link',{name:label,exact:true});
+      await expect(link).toHaveAttribute('href',input.link.href);
+      await expect(link).toHaveAttribute('title',input.link.title);
+      return {label:await link.innerText(),href:await link.getAttribute('href'),title:await link.getAttribute('title')};
+    }
     async function checkStructure(surface, childText) {
       const {heading,parent,quote} = input.structure;
       const nested = surface.locator('ul > li > ul > li');
@@ -184,6 +190,7 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       if (input.structure) {
         const {child,pending} = input.structure;
         handover.beforeNestedEdit = await checkStructure(writer,child);
+        if (input.link) handover.stockLink = await checkLink(writer,input.link.label);
         await append(page,writer.locator('ul > li > ul > li p'),pending);
         handover.stockStructure = await checkStructure(witness,child + pending);
         expect(await read()).toBe(item.saved);
@@ -320,6 +327,22 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
             await expect.poll(() => paragraphText(status)).toBe(draft + ' Published.');
             expect(await read()).toBe(item.saved);
           }
+          if (input.link) {
+            item.stage = 'edit-recovered-link';
+            handover.recoveredLink = await checkLink(editor,input.link.label);
+            const line = editor.locator('p').filter({hasText:'before publishing.'});
+            await line.click();
+            await restored.keyboard.press('Home');
+            for (const _ of 'Read the release ') await restored.keyboard.press('ArrowRight');
+            await restored.keyboard.insertText('operator ');
+            handover.editedLink = await checkLink(editor,input.link.editedLabel);
+            await restored.keyboard.press('Control+z');
+            await checkLink(editor,input.link.label);
+            await expect.poll(() => paragraphText(status)).toBe(draft + ' Published.');
+            await restored.keyboard.press('Control+Shift+z');
+            await checkLink(editor,input.link.editedLabel);
+            expect(await read()).toBe(item.saved);
+          }
           await restored.getByTestId('wiki-submit-button').click();
           const confirm = restored.getByTestId('wiki-confirm-message');
           const reader = restored.getByTestId('wiki-page-content');
@@ -333,10 +356,15 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
             expect(expectedSource.split(child)).toHaveLength(2);
             expectedSource = expectedSource.replace(child,child + pending);
           }
+          if (input.link) {
+            expect(expectedSource.split('[' + input.link.label + ']')).toHaveLength(2);
+            expectedSource = expectedSource.replace('[' + input.link.label + ']','[' + input.link.editedLabel + ']');
+          }
           expect(handover.saved).toBe(expectedSource + pending + ' Published.');
           await restored.reload();
           await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
           await expect(reader.locator('strong')).toHaveText('Sam');
+          if (input.link) handover.readerLink = await checkLink(reader,input.link.editedLabel);
           if (input.structure) {
             handover.readerStructure = await checkStructure(reader,input.structure.child + input.structure.pending);
             await reader.screenshot({path:join(output,'reopened-structured-wiki.png')});

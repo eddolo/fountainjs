@@ -53,6 +53,33 @@ it('retains nested stock wiki bullet markers in the shared draft and saved Markd
   } finally { doc.destroy(); }
 });
 
+it('preserves the rendered and authored destinations of ordinary links in a stock wiki room', () => {
+  const doc = new Y.Doc();
+  try {
+    const root = doc.getXmlFragment('default'), paragraph = new Y.XmlElement('paragraph'), text = new Y.XmlText();
+    root.push([paragraph]);
+    paragraph.push([text]);
+    const attrs = {href:'https://example.org/project/runbook',title:'Publishing steps',canonicalSrc:'./runbook',
+      uploading:false,isGollumLink:false,isWikiPage:false,isReference:false};
+    text.applyDelta([{insert:'Read '},{insert:'release guide',attributes:{link:attrs}},{insert:'.'}]);
+    const roomBytes = Y.encodeStateAsUpdate(doc);
+    const document = readGitLabWikiRoom(root,schema,Y);
+    expect(document.child(0).child(1).marks[0].attrs).toMatchObject({
+      href:attrs.href,title:attrs.title,gitlabCanonicalSrc:attrs.canonicalSrc,
+    });
+    const codec = new GitLabMarkdownCodec({renderMarkdown:async () => ({body:''})});
+    expect(codec.serialize({doc:document})).toBe('Read [release guide](./runbook "Publishing steps").');
+    expect(toGitLabWikiJSON(document).content?.[0].content?.[1].marks?.[0]).toMatchObject({
+      type:'link',attrs:{href:attrs.href,title:attrs.title,canonicalSrc:attrs.canonicalSrc},
+    });
+    expect(Y.encodeStateAsUpdate(doc)).toEqual(roomBytes);
+    text.format(5,13,{link:{...attrs,isGollumLink:true}});
+    const unsupported = Y.encodeStateAsUpdate(doc);
+    expect(() => readGitLabWikiRoom(root,schema,Y)).toThrow('isGollumLink');
+    expect(Y.encodeStateAsUpdate(doc)).toEqual(unsupported);
+  } finally { doc.destroy(); }
+});
+
 it('retains heading levels and refuses unrepresentable attributes in both directions', () => {
   const doc = new Y.Doc();
   try {
