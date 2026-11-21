@@ -139,8 +139,9 @@ if (preparedRollback || wikiFallback) {
  const source = resolve(value(wikiFallback ? '--wiki-upload-rollback-source' : '--prepared-source'));
  const git = (...args) => execFileSync('git',['-C',source,...args],{encoding:'utf8'}).trim();
  const sourceTree = git('write-tree');
+ const allowedTrees = wikiFallback ? [wikiUploadReplayTree] : [preparedRollbackTree, wikiUploadReplayTree];
  if (source !== git('rev-parse','--show-toplevel') || git('rev-parse','HEAD') !== pin.commit ||
-     sourceTree !== (wikiFallback ? wikiUploadReplayTree : preparedRollbackTree) || git('diff','--name-only') || git('ls-files','--others','--exclude-standard'))
+     !allowedTrees.includes(sourceTree) || git('diff','--name-only') || git('ls-files','--others','--exclude-standard'))
    throw new Error('The prepared rollback requires the pinned GitLab checkout with all staged rollback patches.');
  const assets = resolve(source,'public/assets/webpack');
  const identity = wikiFallback ? targetBuild : expectedBuild;
@@ -323,7 +324,15 @@ try{
   return new Map(docker('exec',containerName,'sha256sum','--',...paths.map(path=>prefix+path)).trim().split('\n').map(line=>[line.slice(66+prefix.length),line.slice(0,64)]));
  }});
  };
- report.buildIdentity = await identify();
+ let wikiProbeURL;
+ if (preparedRollback && expectedBuild.sourceTree === wikiUploadReplayTree) {
+   const wiki = await request('/api/v4/projects/' + project.id + '/wikis', {
+     title: 'Build probe ' + runId + ' a' + attempt, content: 'Check the installed wiki editor.', format: 'markdown',
+   });
+   wikiProbeURL = project.web_url + '/-/wikis/' + encodeURIComponent(wiki.slug);
+   report.buildProbeWiki = { slug: wiki.slug };
+ }
+ report.buildIdentity = await identify(report, expectedBuild, wikiProbeURL);
  const identityError=buildIdentityError(report);
  if(identityError)throw new Error('Build identity preflight failed: '+identityError);
  console.log(describeBuild(report));
