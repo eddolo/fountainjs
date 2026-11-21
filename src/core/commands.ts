@@ -1174,7 +1174,7 @@ export function insertQuote(editor: Editor, text = ''): boolean {
 }
 
 /** Wraps the selected block range in a quote, or unwraps the quote containing the selection. */
-export function toggleQuote(editor: Editor): boolean {
+export function toggleQuote(editor: Editor, liftScope: 'quote' | 'selection' = 'quote'): boolean {
   if (!editor.editable || editor.state.selection instanceof GapSelection) return false;
   if (editor.state.selection instanceof CellSelection) {
     const selection = editor.state.selection;
@@ -1182,7 +1182,7 @@ export function toggleQuote(editor: Editor): boolean {
       for (const path of selection.cellPaths) {
         const range = nodeRangeAtPath(editor.state.doc, path);
         if (!editor.dispatch(editor.createTransaction().setSelection(new RangeSelection(editor.state.doc, range.from + 1, range.to - 1)))
-          || !toggleQuote(editor)) return false;
+          || !toggleQuote(editor, liftScope)) return false;
       }
       return editor.dispatch(editor.createTransaction().setSelection(new CellSelection(editor.state.doc, selection.anchorCellPath, selection.headCellPath)));
     });
@@ -1202,7 +1202,22 @@ export function toggleQuote(editor: Editor): boolean {
     const transaction = state.createTransaction();
     if (quotePath) {
       const quote = getNodeAtPath(state.doc, quotePath);
-      transaction.step(new RestructureChildrenStep(quotePath.slice(0, -1), quotePath.at(-1)!, [quote], quote.content));
+      let replacement = quote.content;
+      if (liftScope === 'selection' && first.length > quotePath.length) {
+        const from = first[quotePath.length]!;
+        const to = paths.at(-1)![quotePath.length]! + 1;
+        const before = quote.content.slice(0, from);
+        const after = quote.content.slice(to);
+        const suffixAttrs = { ...quote.attrs };
+        // Keep the original identity on the first surviving wrapper.
+        if (before.length) delete suffixAttrs.nodeId;
+        replacement = [
+          ...(before.length ? [quote.type.create(quote.attrs, before, undefined, quote.marks)] : []),
+          ...quote.content.slice(from, to),
+          ...(after.length ? [quote.type.create(suffixAttrs, after, undefined, quote.marks)] : []),
+        ];
+      }
+      transaction.step(new RestructureChildrenStep(quotePath.slice(0, -1), quotePath.at(-1)!, [quote], replacement));
       if (state.selection instanceof NodeSelection && comparePaths(state.selection.nodePath, quotePath) === 0) {
         transaction.setSelection(new RangeSelection(transaction.doc,
           transaction.mapping.map(state.selection.structuralFrom, 1), transaction.mapping.map(state.selection.structuralTo, -1)));

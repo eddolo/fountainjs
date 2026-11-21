@@ -6,6 +6,33 @@ const p = (text: string, id = text): NodeJSON => ({ type: 'paragraph', attrs: { 
 const image: NodeJSON = { type: 'image_super', attrs: { src: '/figure.png', alt: 'Retained figure', nodeId: 'figure' } };
 const source: NodeJSON = { type: 'doc', attrs: { audit: 'root' }, content: [p('Before'), p('Left'), image, p('After')] };
 
+it('lifts selected quote children, retaining the surrounding wrappers and the directed selection through history', () => {
+  const editor = createEditor({ schema: StarterKit.schema, plugins: [createHistoryPlugin()], content: {
+    type: 'doc', content: [{ type: 'blockquote', attrs: { nodeId: 'q', dir: 'rtl' },
+      content: [p('First'), p('Middle'), p('Another'), p('Last')] }, p('Outside')],
+  } });
+  try {
+    const before = editor.state.doc;
+    const selection = new RangeSelection(before, textPointToPosition(before, [0, 2, 0], 3),
+      textPointToPosition(before, [0, 1, 0], 2));
+    editor.dispatch(editor.createTransaction().setSelection(selection));
+    expect(toggleQuote(editor, 'selection')).toBe(true);
+    const result = editor.state.doc;
+    expect(result.content.map(n => n.type.name)).toEqual(['blockquote', 'paragraph', 'paragraph', 'blockquote', 'paragraph']);
+    expect(result.content.map(n => n.textContent)).toEqual(['First', 'Middle', 'Another', 'Last', 'Outside']);
+    expect(result.child(0).attrs.nodeId).toBe('q');
+    expect(result.child(3).attrs.nodeId).not.toBe('q');
+    expect(result.child(3).attrs.dir).toBe('rtl');
+    const mapped = new RangeSelection(result, textPointToPosition(result, [2, 0], 3), textPointToPosition(result, [1, 0], 2));
+    expect(editor.state.selection.eq(mapped)).toBe(true);
+    expect(undo(editor)).toBe(true);
+    expect(editor.state.doc.eq(before)).toBe(true);
+    expect(editor.state.selection.eq(selection)).toBe(true);
+    expect(redo(editor)).toBe(true);
+    expect(editor.state.selection.eq(mapped)).toBe(true);
+  } finally { editor.destroy(); }
+});
+
 it.each([false, true])('wraps and unwraps a directed text/media range in a quote without changing its content (backward: %s)', backward => {
   const editor = createEditor({ schema: StarterKit.schema, plugins: [createHistoryPlugin()], content: source });
   try {

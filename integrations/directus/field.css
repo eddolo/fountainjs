@@ -56,6 +56,12 @@
 .fountain-directus-field h5 { font-size: 0.8125rem; line-height: 1.6923; margin-block-start: 2em; }
 .fountain-directus-field h6 { font-size: 0.6875rem; line-height: 1.8182; margin-block-start: 2em; }
 
+.fountain-directus-field blockquote {
+  margin-inline-start: 0;
+  padding-inline-start: 1em;
+  border-inline-start: 2px solid var(--theme--form--field--input--border-color);
+}
+
 .fountain-directus-field p { margin-block: 1.5em; }
 .fountain-directus-field :is(h1, h2, h3, h4, h5, h6) + p { margin-block-start: 0.5em; }
 .fountain-directus-field :is(ul, ol) { padding-inline-start: 2.5rem; margin-block: 1.5em; }

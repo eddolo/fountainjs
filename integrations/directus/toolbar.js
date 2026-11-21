@@ -1,5 +1,5 @@
 import { computed, defineComponent, h, resolveComponent } from 'vue';
-import { canRedo, canUndo, isMarkActive, redo, setBlockType, toggleList, toggleMark, undo } from '../../src/index';
+import { canRedo, canUndo, isMarkActive, redo, setBlockType, toggleList, toggleMark, toggleQuote, undo } from '../../src/index';
 import { selectedBlockPaths } from '../../src/core/block-range';
 import { useFountainState } from '../../src/vue';
 
@@ -14,6 +14,10 @@ const marks = {
 const actions = new Map(Object.entries(marks).map(([key, [label, icon, mark]]) => [key, {
   label, icon, run: editor => toggleMark(editor, mark), pressed: editor => isMarkActive(editor, mark),
 }]));
+actions.set('blockquote', {
+  label: 'Block quote', icon: 'format_quote', run: editor => toggleQuote(editor, 'selection'),
+  pressed: (_editor, blocks) => blocks.has('blockquote'),
+});
 actions.set('undo', { label: 'Undo', icon: 'undo', run: undo, available: canUndo });
 actions.set('redo', { label: 'Redo', icon: 'redo', run: redo, available: canRedo });
 
@@ -44,6 +48,7 @@ function selectedStructures({ doc, selection }) {
     let node = doc;
     for (const index of path) {
       node = node.child(index);
+      if (node.type.name === 'blockquote') keys.add('blockquote');
       if (node.type.name === 'heading') keys.add('h' + node.attrs.level);
       if (node.type.name === 'ordered_list') keys.add('numlist');
       if (node.type.name === 'bullet_list') keys.add('bullist');
@@ -54,7 +59,7 @@ function selectedStructures({ doc, selection }) {
   return common ?? new Set();
 }
 
-export const defaultToolbar = ['bold', 'italic', 'underline', 'h1', 'h2', 'h3', 'numlist', 'bullist'];
+export const defaultToolbar = ['bold', 'italic', 'underline', 'h1', 'h2', 'h3', 'numlist', 'bullist', 'blockquote'];
 export const toolbarOption = {
   field: 'toolbar', name: 'Toolbar', type: 'json', schema: { default_value: defaultToolbar },
   meta: {

@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium, expect } from '@playwright/test';
 
+import { auditQuote } from './audit-quote.mjs';
 import { auditStructure } from './audit-structure.mjs';
 import { auditToolbar } from './audit-toolbar.mjs';
 
@@ -19,7 +20,8 @@ const source = '<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</
 const expected = source.replace('Ready for review.', 'Ready for review. Approved.');
 const id = randomUUID();
 const structureOnly = process.argv.includes('--structure');
-const paired = structureOnly || process.argv.includes('--paired');
+const quoteOnly = process.argv.includes('--quote');
+const paired = quoteOnly || structureOnly || process.argv.includes('--paired');
 const extension = fileURLToPath(new URL('../../artifacts/directus-extension/', import.meta.url));
 const candidate = paired ? JSON.parse(await readFile(join(extension,'identity.json'),'utf8')) : null;
 const out = fileURLToPath(new URL('../../artifacts/directus-'+(paired?'handover':'stock')+'/' + id + '/', import.meta.url));
@@ -176,6 +178,26 @@ try {
     });
     assert.equal(updated.meta.interface,name);
   }
+  async function checkQuotes() {
+    report.quotes = {};
+    for (const side of ['stock', 'fountain']) {
+      report.quotes[side] = await auditQuote({ side, api, collection, selectInterface, openItem, out, report });
+    }
+    const { item: id, geometry, revised } = report.quotes.fountain;
+    assert.deepEqual(geometry, report.quotes.stock.geometry);
+    await selectInterface('input-rich-text-html');
+    const stock = await openItem('stock', '/admin/content/' + collection + '/' + id);
+    report.stage = 'continue editing split Fountain quote in stock Directus';
+    await expect(stock.editor.locator('blockquote')).toHaveCount(2);
+    await stock.editor.getByText('After the review.').click();
+    await stock.page.keyboard.press('End');
+    await stock.page.keyboard.insertText(' Approved.');
+    await stock.page.keyboard.press('Control+s');
+    const continued = revised.replace('After the review.', 'After the review. Approved.');
+    await expect.poll(async () => (await api('/items/' + collection + '/' + id)).body).toBe(continued);
+    report.quotes.rollback = { item: id, saved: continued };
+    await stock.context.close();
+  }
   async function checkStructure() {
     report.structure = {};
     for (const side of ['stock', 'fountain']) {
@@ -229,6 +251,7 @@ try {
       report.layout = { stock: await measureContent(reopened.editor) };
       await reopened.context.close();
       await checkStructure();
+      await checkQuotes();
       report.toolbar = {};
       for (const side of ['stock', 'fountain']) {
         report.toolbar[side] = await auditToolbar({ side, api, collection, selectInterface, openItem, out, report });
@@ -283,7 +306,8 @@ try {
       report.handover={itemId:item.id,saved:finalHTML,rollbackSaved:rollbackHTML};
     }
   }
-  if (structureOnly) await checkStructure();
+  if (quoteOnly) await checkQuotes();
+  else if (structureOnly) await checkStructure();
   else await checkSavedItem();
   report.stage = 'complete';
   report.passed = true;

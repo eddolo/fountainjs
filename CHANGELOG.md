@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `toggleQuote(editor, 'selection')` can lift part of a block quote while preserving quoted content on either side. The Directus Block quote button uses this mode.
+
 - `toggleList` accepts an optional `'list'` scope for switching an entire bullet or numbered list while keeping the selection. The Directus toolbar uses this mode.
 
 - Smart typography preserves literal punctuation inside code blocks and inline code, including Mermaid arrows typed character by character.

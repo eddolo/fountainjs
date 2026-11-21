@@ -153,6 +153,12 @@ HTML and native DOCX preserve it, while ordinary Markdown reports styling loss.
 Custom host schemas must declare the attribute to accept the native projection.
 See [the quote contract](DOCX.md#source-owned-quote-appearance).
 
+`toggleQuote(editor)` wraps selected blocks or unwraps the containing quote.
+Use `toggleQuote(editor, 'selection')` to lift only the selected children from
+a quote. For example, lifting the middle paragraph of a three-paragraph quote
+leaves two quoted paragraphs with the lifted paragraph between them. The whole
+change is undoable in one step.
+
 ## Extension composition
 
 `defineExtension()` declares a named, framework-neutral module. It can contribute `nodes`, `marks`, `plugins`, commands with typed arguments, `formats`, and arbitrary host-owned `services`. A custom `NodeSpec` may provide a `nodeView` class to mount interactive product UI without depending on React. Independently published extensions declare a `manifest` with their SemVer package version, `FOUNTAIN_EXTENSION_API_VERSION`, optional descriptive metadata, and ordered runtime dependencies in `requires`. Invalid metadata and unsupported API versions fail before the extension can enter a kit.
