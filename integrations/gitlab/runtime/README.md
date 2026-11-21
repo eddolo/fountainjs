@@ -723,6 +723,14 @@ Use `--wiki-reference-links` on either command or on two independent `--suite wi
 
 To test a file upload across the deployment switch, run the stock rollout and Fountain structured rollback commands above with `--wiki-pending-upload` and fresh run IDs. The Developer attaches a text file through the wiki’s file picker. The collector waits for GitLab to accept the actual bytes, holds delivery of the HTTP response to the uploader, and switches the frontend while that tab stays open. The other author edits the wiki before the response is released. The final assertions check one upload request, both authors’ text, the saved Markdown link and the exact bytes served by the reopened reader. [Stock-to-Fountain result](../../../artifacts/gitlab-compatibility/wiki-pending-upload-20261121/original-4/report.json) · [Fountain-to-stock result](../../../artifacts/gitlab-compatibility/wiki-pending-upload-20261121/fountain-4/report.json).
 
+To check a peer saving before upload completion without switching frontends, run the same fixture twice on the pinned deployment. Inspect `observations[0].pendingUpload.peerSave` for the button state and intermediate saved source or keyboard submission observation. Both runs verify the final reader download. The [matched report](../../../artifacts/gitlab-compatibility/wiki-peer-save-20261121/verified/report.md) records the Save behavior and the shared line-ending limitation. Use a fresh run ID shared by both commands.
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$run_id" --editor original --wiki-pending-upload
+node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$run_id" --editor fountain --wiki-pending-upload
+node scripts/compare-gitlab-compatibility.mjs --original "artifacts/gitlab-compatibility/$run_id/original-1/report.json" --fountain "artifacts/gitlab-compatibility/$run_id/fountain-1/report.json" --output "artifacts/gitlab-compatibility/$run_id/verified"
+```
+
 The single-container rollback suite checkpoints Redis after fixture cleanup as well as before switching frontends. This prevents a cold boot from reopening the earlier snapshot of the temporary feature flag. An [observed cold start](../../../artifacts/gitlab-compatibility/wiki-native-seed-20261121/fountain-1/report.json) returned a namespace actor from the API while PostgreSQL held no enabled gate. The collector stopped before editor setup. In this isolated deployment, expiring the single wiki flag cache made GitLab report the stored off value. The [following boot](../../../artifacts/gitlab-compatibility/wiki-native-seed-20261121/fountain-2/report.json) recorded agreement.
 
 To exercise the wire adapter independently of the browser, build the native runtime and run the following from the Fountain checkout. Pass the pinned GitLab source checkout with its installed JavaScript dependencies.

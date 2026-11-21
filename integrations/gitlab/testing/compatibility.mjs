@@ -490,6 +490,15 @@ export function compareGitLabCompatibility(original,fountain){
         && item.restoredFlag === true ? {...item, savedContent:item.saved?.replace(/\r\n/g, '\n')} : {};
       const left = observe(original, a), right = observe(fountain, b);
       for (const view of [left,right]) {
+        if (input.upload && view.pendingUpload?.peerSave) {
+          const upload = view.pendingUpload;
+          view.peerSawPendingFile = upload.sharedPlaceholder === true || upload.peerUploadNotice === true;
+          view.peerSaveWaited = upload.peerSave.disabled;
+          view.uploadRequests = upload.requests;
+          view.downloadedBytes = upload.verifiedBytes;
+          const expected = input.source + input.ownerEdit + input.peerEdit + ' Evidence pending. Witness checked.\n\n' + upload.markdown;
+          view.attachmentInOwnParagraph = typeof upload.markdown === 'string' && upload.saved?.replaceAll('\r\n','\n') === expected;
+        }
         if (input.wikiLink?.reference && typeof view.saved === 'string') {
           view.originalLineEndings = !view.saved.includes('\r');
           view.peerLinkLabel = view.peerEditedLinks?.label;
@@ -515,6 +524,13 @@ export function compareGitLabCompatibility(original,fountain){
           ['visitedReference',input.wikiLink.targetText,'The reloaded reader opens the intended wiki page'],
           ['originalLineEndings',true,'The wiki API retains the fixture’s LF line endings'],
         ] : [['saved',authored,'The wiki API also retains the original line endings']]),
+        ...(input.upload ? [
+          ['peerSawPendingFile',true,'The second author sees the pending filename before Save'],
+          ['peerSaveWaited',true,'Save waits until the attachment can be included in the revision'],
+          ['uploadRequests',1,'GitLab receives the file once'],
+          ['attachmentInOwnParagraph',true,'The saved source retains both authors’ text and the attachment in its own paragraph'],
+          ['downloadedBytes',new TextEncoder().encode(input.upload.text).length,'The reopened attachment matches the original bytes'],
+        ] : []),
         ['reopened', status + input.peerEdit, 'Both edits survive in the other author’s reloaded reader'],
         ['bold', 'Sam', 'The reader retains the owner’s bold name'],
       ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
