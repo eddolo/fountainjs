@@ -76,6 +76,8 @@ dir="artifacts/gitlab-compatibility/$run"
 node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/verified"
 ```
 
+For numbered task markers ending in `)`, use `--wiki-parenthesized-checklist` in both commands with a fresh run ID. The Developer toggles item three. Inspect the saved Markdown in each report as well as the reader, since the reader can display the same numbering for both source spellings.
+
 ### Reproduce a wiki restore across a project role change
 
 Run the two collectors sequentially against the prepared wiki controller and
