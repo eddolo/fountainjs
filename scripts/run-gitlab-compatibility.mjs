@@ -116,7 +116,8 @@ if (rollbackFrom !== undefined) {
 }
 const wikiRestore = process.argv.includes('--wiki-restore');
 const wikiSuite = ['wiki-history', 'wiki-restore-conflict', 'wiki-restore-authors', 'wiki-rename', 'wiki-titles'].includes(suite);
-if (wikiRestore && !wikiSuite) throw new Error('Use --wiki-restore with a wiki suite.');
+if (wikiRestore && ((!wikiSuite && suite !== 'wiki-collaboration') || draftRollbackRequested))
+  throw new Error('Use --wiki-restore with a wiki workflow on a fixed deployment.');
 const serverProfile = wikiRestore ? 'wiki-restore' : 'suggestion-history';
 const serviceFiles = wikiRestore ? ['app/controllers/concerns/wiki_actions.rb'] : ['app/services/notes/update_service.rb','app/services/suggestions/create_service.rb'];
 const historyDestinations = new Map();

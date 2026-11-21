@@ -343,7 +343,7 @@ files.set(wikiFormPath, originalWikiForm
   .replace("  name: 'WikiForm',", "  name: 'WikiForm',\n  provide: { fountainWikiSource: true },")
   .replace(contentInput, contentInput + `
           <input
-            v-if="pageInfo.persisted && isMarkdownFormat && isContentEditorActive && !isCollaborating && !isTemplate"
+            v-if="pageInfo.persisted && isMarkdownFormat && isContentEditorActive && !isTemplate"
             type="hidden"
             name="wiki_rich_source"
             value="1"
