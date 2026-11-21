@@ -34,6 +34,8 @@ export interface MarkdownExportOptions {
   markSerializers?: Readonly<Record<string, (mark: Mark) => { open: string; close: string }>>;
   /** Select a bullet for each unordered list. Adjacent lists still require distinct delimiters. */
   bulletMarker?: (node: Node) => '*' | '+' | '-' | undefined;
+  /** Select the punctuation after each ordered list number. Adjacent lists must stay distinct. */
+  orderedListDelimiter?: (node: Node) => '.' | ')' | undefined;
   /** Emit ordinary inline destinations or deterministic reference definitions. */
   linkStyle?: MarkdownLinkStyle;
   /** Preserve blank paragraphs as inert HTML markers (default), or omit with loss reports. */
@@ -626,7 +628,11 @@ function withSourceFrontmatter(source: MarkdownSourceSnapshot, body: string): st
 
 function listDelimiter(node: Node, context: RenderContext, previous?: string): string | undefined {
   if (!LIST_TYPES.has(node.type.name)) return undefined;
-  if (node.type.name === 'ordered_list') return previous === '.' ? ')' : '.';
+  if (node.type.name === 'ordered_list') {
+    const preferred = context.options.orderedListDelimiter?.(node) ?? '.';
+    if (preferred !== '.' && preferred !== ')') throw new TypeError('Invalid Markdown ordered list delimiter.');
+    return previous !== preferred ? preferred : preferred === '.' ? ')' : '.';
+  }
   const preferred = context.options.bulletMarker?.(node) ?? '-';
   if (preferred !== '-' && preferred !== '+' && preferred !== '*') throw new TypeError('Invalid Markdown bullet marker.');
   return preferred !== previous ? preferred : preferred === '+' ? '-' : '+';

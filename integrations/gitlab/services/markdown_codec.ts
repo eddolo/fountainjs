@@ -130,6 +130,10 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
     ...(wikiRoom && base.nodes.table ? { table: { ...base.nodes.table, attrs: { ...base.nodes.table.attrs,
       gitlabIsMarkdown: {default:null,validate:value => value === null || typeof value === 'boolean'},
     } } } : {}),
+    ...(wikiRoom && base.nodes.ordered_list ? { ordered_list: { ...base.nodes.ordered_list, attrs: {
+      ...base.nodes.ordered_list.attrs,
+      gitlabParens: { default: false, validate: value => typeof value === 'boolean' },
+    } } } : {}),
     ...(wikiRoom && base.nodes.bullet_list ? { bullet_list: { ...base.nodes.bullet_list, attrs: {
       ...base.nodes.bullet_list.attrs,
       gitlabBullet: { default: undefined, validate: value => value === undefined || value === '-' || value === '+' },
@@ -190,7 +194,7 @@ const setAttr = (element: RawElement, name: string, value: string): void => {
   if (existing) existing.value = value;
   else element.attrs.push({ name, value });
 };
-interface WikiBlockOrigin { type: 'bullet_list' | 'task_list' | 'table'; bullet?: string; isMarkdown?: boolean }
+interface WikiBlockOrigin { type: 'bullet_list' | 'task_list' | 'ordered_list' | 'table'; parens?: boolean; bullet?: string; isMarkdown?: boolean }
 
 function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>, supportsContents: boolean, wikiOrigins?: {blocks:WikiBlockOrigin[]; inactive:[number,number][]}): string {
   const maxBytes = options.maxInputBytes ?? 1_048_576;
@@ -206,10 +210,11 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   if (wikiOrigins) {
     const lines = source.split(/\r\n?|\n/u);
     for (const element of elements) {
-      if (element.tagName !== 'ul' && element.tagName !== 'table') continue;
+      if (element.tagName !== 'ul' && element.tagName !== 'ol' && element.tagName !== 'table') continue;
       const position = attr(element,'data-sourcepos')?.match(/^(\d+):(\d+)-/u);
       const start = position && lines[Number(position[1]) - 1]?.slice(Number(position[2]) - 1);
       if (element.tagName === 'table') wikiOrigins.blocks.push({type:'table',isMarkdown:Boolean(start && !start.startsWith('<'))});
+      else if (element.tagName === 'ol') wikiOrigins.blocks.push({type:'ordered_list',parens:/^\d{1,9}\)(?:\s|$)/u.test(start ?? '')});
       else wikiOrigins.blocks.push({type:(attr(element,'class') ?? '').split(/\s+/u).includes('task-list') ? 'task_list' : 'bullet_list',bullet:start?.match(/^([-+*])(?:\s|$)/u)?.[1]});
     }
   }
@@ -366,10 +371,11 @@ function withWikiBlockOrigins(document: Node, origins: readonly WikiBlockOrigin[
   function apply(node: Node): Node {
     if (node.isText) return node;
     let decorated = node;
-    if (node.type.name === 'table' || node.type.name === 'bullet_list' || node.type.name === 'task_list') {
+    if (node.type.name === 'table' || node.type.name === 'ordered_list' || node.type.name === 'bullet_list' || node.type.name === 'task_list') {
       const origin = origins[index++];
       if (origin?.type !== node.type.name) throw new Error('Wiki preview block order does not match the source.');
       if (origin.type === 'table') decorated = node.withAttrs({...node.attrs,gitlabIsMarkdown:origin.isMarkdown});
+      else if (origin.parens) decorated = node.withAttrs({...node.attrs,gitlabParens:true});
       else if (origin.bullet === '-' || origin.bullet === '+') decorated = node.withAttrs({...node.attrs,gitlabBullet:origin.bullet});
     }
     const children = node.content.map(apply);
@@ -736,6 +742,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
       const marker = node.attrs.gitlabBullet;
       return marker === '+' || marker === '-' ? marker : '*';
     } : undefined;
+    const orderedListDelimiter = this.options.wikiRoom ? (node: Node) => node.attrs.gitlabParens ? ')' as const : '.' as const : undefined;
     const tableDelimiterStyle = this.options.wikiRoom ? 'header-width' : 'compact';
     const blockSerializers = {
       ...extensionWriters,
@@ -749,13 +756,13 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         if (!['auto', 'ltr', 'rtl'].includes(String(node.attrs.dir)) || node.marks.length
           || Object.entries(node.attrs).some(([key, value]) => key !== 'dir' && value !== undefined)) return undefined;
         const inner = new MarkdownExporter().exportWithReport(node.type.schema.node('doc', {}, node.content),
-          { omitTrailingCaret: true, bulletMarker, tableDelimiterStyle, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
+          { omitTrailingCaret: true, bulletMarker, orderedListDelimiter, tableDelimiterStyle, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
         issues.push(...inner.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type,
           message: loss.detail, path: [...(paths.get(node) ?? []), ...loss.path] })));
         return `<div dir="${node.attrs.dir}">\n\n${transformGitLabQuickActions(inner.markdown, 'literal')}\n\n</div>`;
       },
     };
-    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, bulletMarker, tableDelimiterStyle, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
+    const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, bulletMarker, orderedListDelimiter, tableDelimiterStyle, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
     if (!canonical && !issues.length && !tokens.size && !customSources.size && !customMarks.size) {
       let source = sources.size === 1 ? this.wikiBlockSources.get(sources.values().next().value!) : undefined;

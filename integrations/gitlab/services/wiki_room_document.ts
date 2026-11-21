@@ -50,6 +50,8 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
     else if (type === 'taskList' && key === 'numeric' && typeof value === 'boolean') continue;
     else if (type === 'taskList' && key === 'start' && (attrs.numeric === true || value === 1)) {
       if (attrs.numeric === true) result.start = value;
+    } else if ((type === 'orderedList' || (type === 'taskList' && attrs.numeric === true)) && key === 'parens' && typeof value === 'boolean') {
+      if (value) result.gitlabParens = true;
     } else if (type === 'taskList' && key === 'parens' && value === false) continue;
     else if (type === 'taskList' && key === 'bullet' && value === '*') continue;
     else if (type === 'codeBlock' && key === 'language' && (value === null || wikiCodeLanguage(value))) result.language = value ?? '';
@@ -62,7 +64,7 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
     else if (isStockCell(type) && key === 'align' && (value === 'left' || value === 'center' || value === 'right')) continue;
     else if ((type === 'bulletList' || (type === 'taskList' && !attrs.numeric)) && key === 'bullet' && (value === '+' || value === '-')) result.gitlabBullet = value;
     else if (!(type === 'blockquote' && key === 'multiline' && value === false)
-      && !(type === 'orderedList' && ((key === 'parens' && value === false) || (key === 'type' && value === null)))
+      && !(type === 'orderedList' && key === 'type' && value === null)
       && !(type === 'bulletList' && key === 'bullet' && value === '*')) unsupported(path, type + '.' + key);
   }
   return result;
@@ -349,6 +351,10 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
       if (type === 'taskItem' && key === 'checked') {
         attrs.checked = value === true;
         attrs.inapplicable = value === NOT_APPLICABLE;
+        continue;
+      }
+      if ((numericTasks || type === 'orderedList') && key === 'gitlabParens') {
+        if (value) attrs.parens = true;
         continue;
       }
       if (numericTasks && key === 'start') { attrs.start = value; continue; }

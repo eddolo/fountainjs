@@ -1592,6 +1592,14 @@ describe('Markdown interchange', () => {
     expect(MarkdownImporter.parse(result.markdown, schema).eq(original)).toBe(true);
   });
 
+  it('preserves numbered list boundaries when the host prefers parentheses', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const doc = MarkdownImporter.parse('3. first\n1) second', schema);
+    const result = new MarkdownExporter().exportWithReport(doc, {orderedListDelimiter: () => ')'});
+    expect(result.markdown).toBe('3) first\n\n1. second');
+    expect(MarkdownImporter.parse(result.markdown, schema).eq(doc)).toBe(true);
+  });
+
   it('uses the host bullet for task lists and preserves their checked states through re-import', () => {
     const schema = new Schema(CoreSchemaSpec);
     const doc = MarkdownImporter.parse('- [ ] Review\n- [x] Publish', schema);

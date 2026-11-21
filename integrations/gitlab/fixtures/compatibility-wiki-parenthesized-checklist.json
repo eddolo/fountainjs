@@ -1,0 +1,26 @@
+{
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "parenthesized-task-list",
+      "scope": "wiki-collaboration",
+      "title": "Numbered deployment checks",
+      "source": "Owner: **Sam**.\n\n3) [ ] Verify the backup\n4) [x] Check the logs\n5) [~] Restart the old worker\n\n- [ ] Notify the team\n- [x] Publish the summary\n\nStatus: ready.",
+      "ownerEdit": " Reviewed.",
+      "peerEdit": " Approved.",
+      "checklist": {
+        "label": "Verify the backup",
+        "states": [
+          false,
+          true,
+          false,
+          false,
+          true
+        ]
+      }
+    }
+  ]
+}

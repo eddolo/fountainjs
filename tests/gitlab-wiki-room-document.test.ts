@@ -22,6 +22,27 @@ it.each(['plain','inapplicable','ordered-tasks','nested'])('seeds the shared wik
   ]);
 });
 
+it('preserves parenthesized numbered tasks from preview, stock room and edited export', async () => {
+  const fixture = taskPreviews.fixtures.find(item => item.name === 'ordered-tasks')!;
+  const source = fixture.source.replace(/^(\d+)\./gmu, '$1)');
+  const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async()=>({body:fixture.body})});
+  const {document} = await codec.deserialize({schema,markdown:source,signal:new AbortController().signal,wikiRoomSeed:true});
+  expect(toGitLabWikiJSON(document).content![0].attrs).toMatchObject({numeric:true,start:3,parens:true});
+  const doc = new Y.Doc();
+  try {
+    const room = doc.getXmlFragment('default');
+    const list = new Y.XmlElement<Record<string,any>>('taskList');
+    const task = new Y.XmlElement<Record<string,any>>('taskItem');
+    const paragraph = new Y.XmlElement('paragraph');
+    room.push([list]); list.setAttribute('numeric',true); list.setAttribute('start',3);
+    list.setAttribute('parens',true); list.push([task]); task.setAttribute('checked',true);
+    task.push([paragraph]); paragraph.push([new Y.XmlText('Reviewed')]);
+    const result = readGitLabWikiRoom(room,schema,Y);
+    expect(codec.serialize({doc:result})).toBe('3) [x] Reviewed');
+    expect(toGitLabWikiJSON(result).content![0].attrs).toMatchObject({numeric:true,start:3,parens:true});
+  } finally {doc.destroy();}
+});
+
 it('refuses conflicting checkbox flags and task-table items before changing the shared room', () => {
   const doc = new Y.Doc();
   try {
