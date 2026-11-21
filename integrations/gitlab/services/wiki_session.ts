@@ -102,22 +102,64 @@ export class GitLabWikiSession {
     const span = resolved && this.spans.find(entry => Object.is(entry.text,resolved.type));
     return span && resolved ? span.start + resolved.index : undefined;
   }
-  private refresh() {
+  // The old text index identifies the original positions in this Yjs transaction.
+  // Applying the observed deltas keeps pending attachment targets in unrelated text alive.
+  private remoteChange(events: readonly Y.YEvent<any>[], doc: Node) {
+    const state = this.context!.editor.state;
+    if (state.doc.eq(doc) || !events.length) return;
+    if (events.length === 1 && events[0].target instanceof this.options.wire.types.XmlText) {
+      const event = events[0] as Y.YTextEvent;
+      const span = this.spans.find(entry => entry.text === event.target);
+      if (span && event.delta.every(op => !op.attributes && (op.retain !== undefined || op.delete !== undefined || typeof op.insert === 'string'))) {
+        const tr = state.createTransaction();
+        let position = span.start;
+        try {
+          for (const op of event.delta) {
+            if (op.retain !== undefined) position += op.retain;
+            else if (op.delete !== undefined) tr.replaceRange(position,position + op.delete);
+            else if (typeof op.insert === 'string') {
+              tr.replaceRange(position,position,op.insert);
+              position += op.insert.length;
+            }
+          }
+          if (tr.doc.eq(doc)) return tr;
+        } catch { /* Some text boundaries need a structural change. */ }
+      }
+    }
+    // A nested change may update marks or several text runs in a block. Only replace
+    // blocks identified by the shared fragment; a changed root needs a full refresh.
+    const blocks = new Set<number>();
+    if (doc.childCount !== state.doc.childCount) return;
+    for (const event of events) {
+      const index = event.path[0];
+      if (typeof index !== 'number' || index < 0 || index >= doc.childCount) return;
+      blocks.add(index);
+    }
+    const tr = state.createTransaction();
+    for (const index of blocks) {
+      if (!state.doc.child(index).eq(doc.child(index))) tr.replaceNode([index],[doc.child(index)]);
+    }
+    if (tr.doc.eq(doc)) return tr;
+  }
+  private refresh(events: readonly Y.YEvent<any>[] = []) {
     if (!this.binding || !this.context) return;
     try {
       const doc = this.binding.read();
+      const change = this.remoteChange(events,doc);
       this.indexText();
       const a = this.cursor && this.absolute(this.cursor.anchor), h = this.cursor && this.absolute(this.cursor.head);
       const selection = a != null && h != null ? (a === h ? selectionAtPosition(doc,a) : new RangeSelection(doc,a,h)) : undefined;
       this.failure = undefined;
-      this.context.applyRemoteDocument(doc,{origin:this.options.provider,selection});
+      const options = {origin:this.options.provider,selection};
+      if (change) this.context.applyRemoteTransaction(change,options);
+      else this.context.applyRemoteDocument(doc,options);
       if (!this.context.editor.state.doc.eq(doc)) throw new Error('The editor refused the shared GitLab wiki draft.');
       this.presences();
     } catch (error) { this.failure = error; this.notify(error); }
   }
-  private changed = (_events:unknown,transaction:Y.Transaction) => {
+  private changed = (events:Y.YEvent<any>[],transaction:Y.Transaction) => {
     if (transaction.origin === this.origin) this.indexText();
-    else this.refresh();
+    else this.refresh(events);
   };
   onLocalUpdate({before,document}:CollaborationLocalUpdate) {
     try { this.binding?.apply(before,document,this.origin); }

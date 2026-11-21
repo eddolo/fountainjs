@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
+import { GitLabContentEditor } from '../integrations/gitlab/services/content_editor';
 import { Schema } from 'fountainjs-editor';
 import rollout from '../integrations/gitlab/fixtures/compatibility-wiki-rollout.json';
 import seedPreview from '../integrations/gitlab/fixtures/wiki-structured-seed-render.html?raw';
@@ -7,6 +8,40 @@ import { createGitLabSchemaSpec, GitLabMarkdownCodec } from '../integrations/git
 import { readGitLabWikiRoom, toGitLabWikiJSON } from '../integrations/gitlab/services/wiki_room_document';
 
 const schema = new Schema(createGitLabSchemaSpec(undefined,undefined,undefined,true));
+it('maps a stock peer’s edit to the actual location even when adjacent letters are identical', async () => {
+  const doc = new Y.Doc(), root = doc.getXmlFragment('default');
+  const first = new Y.XmlElement('paragraph'), second = new Y.XmlElement('paragraph');
+  root.push([first, second]);
+  const repeated = new Y.XmlText('aaaaaa');
+  first.push([repeated]);
+  second.push([new Y.XmlText('Attach here')]);
+  const unused = () => { throw new Error('A remote-only test must never seed or write the room'); };
+  const service = new GitLabContentEditor({
+    renderMarkdown: unused, describeLabels: () => '',
+    wikiCollaboration: async () => ({
+      provider:{doc,connected:true,whenSynced:Promise.resolve({seed:false}),seed:unused,identityFor:()=>null,
+        awareness:{getStates:()=>new Map(),setLocalStateField:()=>{},on:()=>{},off:()=>{}}},
+      wire:{types:Y,stockSchema:{nodeFromJSON:unused},updateYFragment:unused},colorFor:()=> '#468',
+    }),
+  });
+  try {
+    await service.setSerializedContent('aaaaaa\n\nAttach here');
+    const ranges: (readonly number[])[] = [];
+    service.editor.subscribe((_state,tr) => {
+      if (tr.docChanged) ranges.push(...tr.mapping.maps.map(map => map.ranges));
+    });
+    repeated.insert(2,'a');
+    expect(ranges.splice(0)).toEqual([[3,0,1]]);
+    repeated.delete(4,2);
+    expect(ranges.splice(0)).toEqual([[5,2,0]]);
+    repeated.format(0,2,{bold:{}});
+    expect(service.editor.state.doc.child(0).child(0).marks[0].type.name).toBe('strong');
+    const firstBlockSize = service.editor.state.doc.child(0).nodeSize;
+    expect(ranges.splice(0)).toEqual([[0,firstBlockSize,firstBlockSize]]);
+    expect(service.editor.state.doc.child(1).textContent).toBe('Attach here');
+  } finally { service.dispose(); doc.destroy(); }
+});
+
 it('reads a stock keyboard edit without changing Yjs state or folding distinct formatting runs', () => {
   const doc = new Y.Doc();
   try {

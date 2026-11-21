@@ -2,10 +2,11 @@ import { expect } from '@playwright/test';
 import { join } from 'node:path';
 import { editorProof } from './gitlab-audit-editor.mjs';
 
-export async function checkPendingWikiUpload({page, peer, item, edit, read, side, project, switchWikiDeployment, output}) {
+export async function checkPendingWikiUpload({page, peer, item, edit, read, paragraphText, side, project, switchWikiDeployment, output}) {
   const {name,text} = item.input.upload, bytes = Buffer.from(text);
   const origin = new URL(project.web_url).origin;
   const actor = await edit(peer), observer = await edit(page);
+  const statusText = editor => paragraphText(editor.locator('p').filter({hasText:'Status:'}));
   const pending = item.pendingUpload = {requests:0,uploader:await editorProof(actor)};
   expect(pending.uploader.native).toBe(side === 'fountain');
   const form = peer.locator('form.wiki-form');
@@ -15,7 +16,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, side
   await peer.keyboard.press('End');
   await peer.keyboard.insertText(' Evidence pending.');
   const expectedStatus = 'Status: ready.' + item.input.ownerEdit + item.input.peerEdit + ' Evidence pending.';
-  await expect(observer).toContainText(expectedStatus);
+  await expect.poll(() => statusText(observer)).toBe(expectedStatus);
   // Give the upload its own paragraph so each editor's insertion can be checked after reload.
   await peer.keyboard.press('End');
   await peer.keyboard.press('Enter');
@@ -65,7 +66,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, side
     const fresh = await edit(page,next);
     pending.destination = await editorProof(fresh);
     expect(pending.destination.native).toBe(next === 'fountain');
-    await expect(fresh).toContainText(expectedStatus);
+    await expect.poll(() => statusText(fresh)).toBe(expectedStatus);
     if (side === 'original') {
       await expect(fresh).toContainText(name);
       await expect(fresh.locator('a[href^="blob:"]')).toHaveCount(0);
@@ -77,7 +78,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, side
     await page.keyboard.press('End');
     await page.keyboard.insertText(' Witness checked.');
     pending.witnessDraft = expectedStatus + ' Witness checked.';
-    await expect(actor).toContainText(pending.witnessDraft,{timeout:30000});
+    await expect.poll(() => statusText(actor),{timeout:30000}).toBe(pending.witnessDraft);
     await fresh.screenshot({path:join(output,'destination-before-completion.png')});
     expect(await read()).toBe(before);
     item.stage = 'resolve-pending-wiki-upload';
@@ -88,7 +89,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, side
     const url = await link.evaluate(a => a.href);
     expect(new URL(url).origin).toBe(origin);
     expect((await actor.getByRole('link',{name,exact:true}).evaluate(a => a.href))).toBe(url);
-    await expect(fresh).toContainText(expectedStatus);
+    await expect.poll(() => statusText(fresh)).toBe(pending.witnessDraft);
     item.stage = 'save-resolved-wiki-upload';
     await page.getByTestId('wiki-submit-button').click();
     const confirm = page.getByTestId('wiki-confirm-message'), reader = page.getByTestId('wiki-page-content');
@@ -108,6 +109,14 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, side
     expect(pending.requests).toBe(1);
     pending.verifiedBytes = bytes.length;
     await reader.screenshot({path:join(output,'reopened-attachment.png')});
+  } catch (error) {
+    for (const [key,tab] of [['source',peer],['destination',page]]) {
+      const wiki = tab.locator('form.wiki-form');
+      pending[key + 'Feedback'] = await wiki.locator('[role="status"],[data-testid="content-editor-error"]')
+        .allTextContents().catch(() => []);
+      if (await wiki.count()) await wiki.screenshot({path:join(output,key + '-upload-interrupted.png')}).catch(() => {});
+    }
+    throw error;
   } finally {
     release.resolve();
     await peer.unrouteAll({behavior:'wait'});

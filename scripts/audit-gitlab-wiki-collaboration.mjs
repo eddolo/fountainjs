@@ -347,7 +347,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     }
     if (input.mergedTable) item[sourceEditor + 'ReaderMergedTable'] = await checkMergedTable(peerReader);
     if (input.upload) {
-      await checkPendingWikiUpload({page,peer,item,edit,read,side,project,switchWikiDeployment,output});
+      await checkPendingWikiUpload({page,peer,item,edit,read,paragraphText,side,project,switchWikiDeployment,output});
     } else if (switchWikiDeployment) {
       const rollout = side === 'original';
       const destination = rollout ? 'fountain' : 'original';
