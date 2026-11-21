@@ -703,6 +703,12 @@ To reproduce the mixed-editor workflow on the same single-container profile, use
 node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$run_id-mixed" --editor fountain --verify-mixed-wiki
 ```
 
+To test rollout in the opposite direction, start with the packaged stock editor. The two stock authors confirm the unsaved sentence before both leave the room. After checkpointing the room and switching the frontend, a fresh Developer browser opens Fountain, edits the recovered draft, undoes and redoes its own edit, saves, and reloads the reader. The report records both build identities and the room digest before and after the switch.
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$run_id-rollout" --editor original --verify-wiki-rollout
+```
+
 To exercise the wire adapter independently of the browser, build the native runtime and run the following from the Fountain checkout. Pass the pinned GitLab source checkout with its installed JavaScript dependencies.
 
 ```sh

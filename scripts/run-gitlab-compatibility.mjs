@@ -57,6 +57,10 @@ if (writerPaste || writerImport) {
   if (!pid || !/^\d+$/.test(pid) || (await readFile('/proc/' + pid + '/comm','utf8')).trim() !== 'Xvfb')
     throw new Error('Run the Writer test under xvfb-run with a private display and clipboard.');
 }
+const wikiRollout = process.argv.includes('--verify-wiki-rollout');
+if (wikiRollout && (suite !== 'wiki-collaboration' || side !== 'original' ||
+    ['--verify-draft-rollback','--verify-mixed-wiki','--wiki-restore'].some(flag => process.argv.includes(flag))))
+  throw new Error('Use --verify-wiki-rollout on a packaged stock wiki collaboration deployment.');
 const mixedWiki = process.argv.includes('--verify-mixed-wiki');
 if (mixedWiki && (suite !== 'wiki-collaboration' || side !== 'fountain' || process.argv.includes('--verify-draft-rollback')))
   throw new Error('Use --verify-mixed-wiki with --suite wiki-collaboration --editor fountain.');
@@ -78,18 +82,19 @@ const compose=['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.
 const pumaThreads = env.FOUNTAIN_GITLAB_PUMA_THREADS ?? '4';
 if (!['2','4'].includes(pumaThreads)) throw new Error('Use 2 or 4 Puma threads for the pinned local comparison.');
 const expectedBuild={gitlabVersion:pin.version,gitlabCommit:pin.commit,image:pin.image};
-if(side==='fountain'){
+const targetBuild = {...expectedBuild};
+if(side==='fountain' || wikiRollout){
  const install=JSON.parse(await readFile(resolve(root,'artifacts/gitlab-native-browser-install/install.json')));
  const build=JSON.parse(await readFile(resolve(root,'artifacts/gitlab-native-runtime/build.json')));
  if ((suite === 'custom-label') !== (install.hostProfile === 'custom-label')) throw new Error('The custom-label suite requires its dedicated host profile and other suites require the standard build.');
  if(install.restored||install.revision!==pin.commit)throw new Error('No matching installed native candidate.');
  if(install.nativeRuntime.sha256!==build.sha256||install.nativeRuntime.parentRevision!==build.parentRevision||
     install.nativeRuntime.packageVersion!==build.packageVersion||!install.integrationSHA256)throw new Error('Reinstall the exact Fountain build before comparing.');
- Object.assign(expectedBuild,{packageVersion:build.packageVersion,fountainRevision:build.parentRevision,runtimeSHA256:build.sha256,integrationSHA256:install.integrationSHA256});
+ Object.assign(wikiRollout ? targetBuild : expectedBuild,{packageVersion:build.packageVersion,fountainRevision:build.parentRevision,runtimeSHA256:build.sha256,integrationSHA256:install.integrationSHA256});
  for(const [path,expected] of Object.entries(build.inputs))if(hash(await readFile(resolve(root,path)))!==expected)throw new Error('Stale native runtime input: '+path);
  for(const [path,expected] of Object.entries(install.files))if(hash(await readFile(resolve(install.source,path)))!==expected)throw new Error('Changed installed native source: '+path);
  env.FOUNTAIN_GITLAB_FRONTEND_ASSETS=resolve(install.source,'public/assets/webpack');
- compose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
+ if (!wikiRollout) compose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
 }
 if (preparedRollback) {
  const source = resolve(value('--prepared-source'));
@@ -180,7 +185,7 @@ if(process.argv.includes('--verify-rollback')){
 }
 let browser,started=false,authenticated=false;
 const report={formatVersion:2,buildIdentity:{side,expected:expectedBuild,observed:null},runId,attempt,side,scope:preparedRollback?'Opt-in prepared Tiptap rollback deployment.':'Matched original GitLab/Fountain UI observations, not automatic superiority claims.',
- suite,restartRequested,draftRollbackRequested,mixedWiki,writerPaste,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
+ suite,restartRequested,draftRollbackRequested,mixedWiki,wikiRollout,writerPaste,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
  harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','scripts/verify-gitlab-suggestion-history-rollback.mjs','scripts/verify-gitlab-wiki-rollback.mjs','scripts/verify-gitlab-restart.mjs','scripts/verify-gitlab-footnote-rollback.mjs','integrations/gitlab/testing/save-gesture.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-saved-replies.mjs','scripts/audit-gitlab-issue-board.mjs','scripts/audit-gitlab-mr-create.mjs','scripts/verify-gitlab-mr-handover.mjs','integrations/gitlab/testing/observe-mr-navigation.mjs','scripts/gitlab-audit-editor.mjs','scripts/audit-gitlab-wiki-history.mjs','scripts/audit-gitlab-wiki-rename.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-simultaneous-issues.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-concurrent-review.mjs','scripts/audit-gitlab-batch-review.mjs','scripts/audit-gitlab-reviewer-handoff.mjs','scripts/audit-gitlab-suggestion-history.mjs','scripts/gitlab-audit-member.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs',...(writerPaste || writerImport ? ['scripts/audit-gitlab-writer-paste.py'] : []),...(suite === 'wiki-collaboration' ? ['scripts/audit-gitlab-wiki-collaboration.mjs'] : []),...(suite === 'custom-label' ? ['scripts/audit-gitlab-custom-label.mjs','integrations/gitlab/testing/issue_label_host.js'] : []),...(suite === 'footnote-labels' ? ['scripts/audit-gitlab-footnote-labels.mjs'] : []),...(suite === 'linked-image' ? ['scripts/audit-gitlab-linked-image.mjs'] : []),...(['contents','contents-authoring','contents-handover'].includes(suite) ? ['scripts/audit-gitlab-contents.mjs'] : []),...(suite === 'table-authoring' ? ['scripts/audit-gitlab-table-authoring.mjs'] : []),...(writerImport ? ['scripts/audit-gitlab-writer-import.mjs'] : []),'scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
  started=true;execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
@@ -295,7 +300,7 @@ try{
    const query = "SELECT json_agg(json_build_object('id', id, 'commit', commit_id) ORDER BY relative_order) FROM suggestions WHERE note_id = " + noteId;
    return JSON.parse(docker('exec',containerName,'gitlab-psql','-d','gitlabhq_production','-XAt','-v','ON_ERROR_STOP=1','-c',query));
  }});
- const switchDraftToStock = draftRollbackRequested ? async ({wikiSlug} = {}) => {
+ const switchEditorDeployment = draftRollbackRequested || wikiRollout ? async ({wikiSlug} = {}) => {
    const inspect = () => JSON.parse(docker('inspect',containerName))[0];
    const running = inspect();
    expect(running.Id).toBe(deployment.Id);
@@ -312,7 +317,7 @@ try{
    let checkpoint;
    if (wikiSlug !== undefined) {
      if (suite !== 'wiki-collaboration' || !Number.isSafeInteger(project.id)
-       || !/^[A-Za-z0-9-]+$/.test(wikiSlug) || !wikiSlug.endsWith('-fountain-' + runId + '-a' + attempt))
+       || !/^[A-Za-z0-9-]+$/.test(wikiSlug) || !wikiSlug.endsWith('-' + side + '-' + runId + '-a' + attempt))
        throw new Error('Expected this run’s isolated wiki room.');
      roomKey = 'collaborative_editing:{wiki:Project:' + project.id + ':' + wikiSlug + '}:updates';
      checkpoint = roomLog(running.Id);
@@ -322,25 +327,32 @@ try{
      expect(roomLog(running.Id)).toEqual(checkpoint);
    }
    docker('stop',running.Id);
-   // Recreate only the inspected task service from its stock Compose file. Keep all named volumes.
-   const stockCompose = ['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')];
-   docker(...stockCompose,'up','-d','baseline');
-   const stock = inspect();
-   expect(stock.Id).not.toBe(running.Id);
-   expect(stock.Config.Labels['com.docker.compose.project']).toBe('fountain-gitlab-integration');
-   expect(stock.Image).toBe(running.Image);
-   expect(stock.Config.Image).toBe(pin.image);
-   const volumes = stock.Mounts.map(m => ({name:m.Name,destination:m.Destination,type:m.Type})).sort((a,b)=>a.destination.localeCompare(b.destination));
+   // Recreate the inspected service on its existing volumes, changing only the frontend.
+   const targetCompose = ['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')];
+   if (wikiRollout) targetCompose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
+   docker(...targetCompose,'up','-d','baseline');
+   const target = inspect();
+   expect(target.Id).not.toBe(running.Id);
+   expect(target.Config.Labels['com.docker.compose.project']).toBe('fountain-gitlab-integration');
+   expect(target.Image).toBe(running.Image);
+   expect(target.Config.Image).toBe(pin.image);
+   const mounts = target.Mounts.filter(m => m.Destination === assetTarget);
+   if (wikiRollout) {
+     expect(mounts).toHaveLength(1);
+     expect(mounts[0]).toMatchObject({Type:'bind',Source:env.FOUNTAIN_GITLAB_FRONTEND_ASSETS,RW:false});
+   } else expect(mounts).toEqual([]);
+   const volumes = target.Mounts.filter(m => m.Destination !== assetTarget).map(m => ({name:m.Name,destination:m.Destination,type:m.Type})).sort((a,b)=>a.destination.localeCompare(b.destination));
    expect(volumes).toEqual(backendMounts);
-   expect(stock.Config.Env.some(item => item.startsWith('ENABLE_RSPACK='))).toBe(false);
-   const environmentHash = hash(stock.Config.Env.filter(item=>!item.startsWith('ENABLE_RSPACK=')).sort().join('\n'));
+   expect(target.Config.Env.filter(item => item.startsWith('ENABLE_RSPACK='))).toEqual(wikiRollout ? ['ENABLE_RSPACK=true'] : []);
+   const environmentHash = hash(target.Config.Env.filter(item=>!item.startsWith('ENABLE_RSPACK=')).sort().join('\n'));
    expect(environmentHash).toBe(report.deployment.backendEnvironmentHash);
-   const receipt = {side:'original', startup:[], errors:[], containerId:stock.Id, previousContainerId:running.Id,
-     deployment:{image:stock.Config.Image,imageId:stock.Image,backendMounts:volumes,backendEnvironmentHash:environmentHash,assetMount:[]}};
-   report.draftRollback = receipt;
-   await waitForBoot(receipt,stock.Id);
+   const receipt = {side:wikiRollout ? 'fountain' : 'original', startup:[], errors:[], containerId:target.Id, previousContainerId:running.Id,
+     deployment:{image:target.Config.Image,imageId:target.Image,backendMounts:volumes,backendEnvironmentHash:environmentHash,assetMount:mounts.map(m => ({source:m.Source,readOnly:!m.RW}))}};
+   if (wikiRollout) report.wikiDeploymentRollout = receipt;
+   else report.draftRollback = receipt;
+   await waitForBoot(receipt,target.Id);
    if (checkpoint) {
-     receipt.wikiRoom = {before:checkpoint,after:roomLog(stock.Id)};
+     receipt.wikiRoom = {before:checkpoint,after:roomLog(target.Id)};
      expect(receipt.wikiRoom.after).toEqual(checkpoint);
    }
    const adminSession = await page.request.get('http://127.0.0.1:5080/api/v4/user');
@@ -348,12 +360,12 @@ try{
    if (adminSession.status() === 401) await signInAdministrator();
    else expect(adminSession.status()).toBe(200);
    receipt.backend = {version:await request('/api/v4/version')};
-   receipt.buildIdentity = await identify(receipt,{gitlabVersion:pin.version,gitlabCommit:pin.commit,image:pin.image});
+   receipt.buildIdentity = await identify(receipt,targetBuild);
    expect(buildIdentityError(receipt)).toBeFalsy();
    expect(receipt.errors).toEqual([]);
    console.log(describeBuild(receipt));
  } : undefined;
- report.observations=await (['batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff'].includes(suite)?runRecordedGitLabBatch:suite==='wiki-collaboration'?runWikiCollaboration:wikiSuite?runWikiHistory:suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:['mr-create','mr-create-member','mr-review-handover'].includes(suite)?runGitLabMergeRequestCreation:suite==='board-issues'?runGitLabBoardCompatibility:suite==='saved-replies'?runGitLabSavedReplyCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:suite==='custom-label'?runCustomLabel:suite==='footnote-labels'?runFootnoteLabels:suite==='linked-image'?runLinkedImage:['contents','contents-authoring','contents-handover'].includes(suite)?runContents:suite==='table-authoring'?runTableAuthoring:writerImport?runWriterImport:['grid','merged-grid','header-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,mrHandoverFrom,switchDraftToStock,mixedWiki,writerPaste,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onPageError:error=>report.errors.push(error),onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
+ report.observations=await (['batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff'].includes(suite)?runRecordedGitLabBatch:suite==='wiki-collaboration'?runWikiCollaboration:wikiSuite?runWikiHistory:suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:['mr-create','mr-create-member','mr-review-handover'].includes(suite)?runGitLabMergeRequestCreation:suite==='board-issues'?runGitLabBoardCompatibility:suite==='saved-replies'?runGitLabSavedReplyCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:suite==='custom-label'?runCustomLabel:suite==='footnote-labels'?runFootnoteLabels:suite==='linked-image'?runLinkedImage:['contents','contents-authoring','contents-handover'].includes(suite)?runContents:suite==='table-authoring'?runTableAuthoring:writerImport?runWriterImport:['grid','merged-grid','header-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,mrHandoverFrom,switchDraftToStock:draftRollbackRequested ? switchEditorDeployment : undefined,switchWikiDeployment:switchEditorDeployment,mixedWiki,writerPaste,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onPageError:error=>report.errors.push(error),onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
  report.collectionComplete=report.observations.every(item=>item.status==='observed');
  if(restartRequested && report.collectionComplete) await verifyGitLabRestart({report,project,docker,deployment,waitUntilReady,identify,page,request,output:out});
  if(filter && report.collectionComplete) await probeFootnoteCache({report,candidate:rollbackCandidate,page,project,request,output:out,container:containerName});

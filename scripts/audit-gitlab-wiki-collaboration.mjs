@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { prepareGitLabAuditMember } from './gitlab-audit-member.mjs';
 import { editorProof, observePage, openRich } from './gitlab-audit-editor.mjs';
 
-export async function runWikiCollaboration({page, request, project, fixture, side, runId, output, switchDraftToStock, mixedWiki}) {
+export async function runWikiCollaboration({page, request, project, fixture, side, runId, output, switchWikiDeployment, mixedWiki}) {
   const [input] = fixture.cases;
   const item = {id:input.id, input, stage:'setup', status:'incomplete', pageErrors:[]};
   const flag = 'wiki_collaborative_editing';
@@ -153,24 +153,29 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
     await expect(peerReader).toContainText(both);
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
-    if (switchDraftToStock) {
-      item.stage = 'unsaved-draft-before-rollback';
-      const rollback = item.rollback = {};
+    if (switchWikiDeployment) {
+      const rollout = side === 'original';
+      const destination = rollout ? 'fountain' : 'original';
+      item.stage = 'unsaved-draft-before-deployment';
+      const handover = {};
+      if (rollout) item.rollout = handover;
+      else item.rollback = handover;
       const writer = await edit(page);
       const witness = await edit(peer);
-      const draft = both + ' Pending rollback review.';
-      await append(page,writer.locator('p').filter({hasText:'Status:'}),' Pending rollback review.');
+      const pending = rollout ? ' Pending rollout review.' : ' Pending rollback review.';
+      const draft = both + pending;
+      await append(page,writer.locator('p').filter({hasText:'Status:'}),pending);
       await expect.poll(() => paragraphText(witness.locator('p').filter({hasText:'Status:'}))).toBe(draft);
-      rollback.fountain = await editorProof(writer);
-      expect(rollback.fountain.native).toBe(true);
+      handover[rollout ? 'stock' : 'fountain'] = await editorProof(writer);
+      expect(handover[rollout ? 'stock' : 'fountain'].native).toBe(!rollout);
       expect(await read()).toBe(item.saved);
-      rollback.unsaved = draft;
-      await writer.screenshot({path:join(output,'unsaved-before-rollback.png')});
+      handover.unsaved = draft;
+      await writer.screenshot({path:join(output,rollout ? 'unsaved-before-rollout.png' : 'unsaved-before-rollback.png')});
       await page.goto('about:blank');
       // The cold rollback closes every native tab. The rolling case keeps one author at the same mounted editor.
       if (!mixedWiki) await peer.goto('about:blank');
-      item.stage = 'reopen-live-room-on-stock';
-      await switchDraftToStock({wikiSlug:item.slug});
+      item.stage = 'reopen-live-room-on-' + destination;
+      await switchWikiDeployment({wikiSlug:item.slug});
       expect((await readFlag()).gates.find(value => value.key === 'actors')?.value).toEqual(item.gate);
       expect(await read()).toBe(item.saved);
       if (mixedWiki) {
@@ -278,27 +283,36 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
           const restored = await clean.newPage();
           await member.signInMember(restored,{});
           await observePage(restored,item);
-          const editor = await edit(restored,'original');
-          rollback.stock = await editorProof(editor);
-          expect(rollback.stock.native).toBe(false);
+          const editor = await edit(restored,destination);
+          const proof = await editorProof(editor);
+          handover[rollout ? 'fountain' : 'stock'] = proof;
+          expect(proof.native).toBe(rollout);
           const status = editor.locator('p').filter({hasText:'Status:'});
           await expect.poll(() => paragraphText(status),{timeout:20000}).toBe(draft);
           await expect(editor.locator('strong')).toHaveText('Sam');
-          rollback.recovered = await paragraphText(status);
-          await editor.screenshot({path:join(output,'stock-recovered-draft.png')});
+          handover.recovered = await paragraphText(status);
+          await editor.screenshot({path:join(output,(rollout ? 'fountain' : 'stock') + '-recovered-draft.png')});
           await append(restored,status,' Published.');
+          if (rollout) {
+            await restored.keyboard.press('Control+z');
+            await expect.poll(() => paragraphText(status)).toBe(draft);
+            handover.afterUndo = await paragraphText(status);
+            await restored.keyboard.press('Control+Shift+z');
+            await expect.poll(() => paragraphText(status)).toBe(draft + ' Published.');
+            expect(await read()).toBe(item.saved);
+          }
           await restored.getByTestId('wiki-submit-button').click();
           const confirm = restored.getByTestId('wiki-confirm-message');
           const reader = restored.getByTestId('wiki-page-content');
           await expect(confirm.or(reader).first()).toBeVisible();
           if (await confirm.isVisible()) await confirm.click();
           await expect(reader).toContainText(draft + ' Published.');
-          rollback.saved = await read();
-          expect(rollback.saved).toBe(item.saved + ' Pending rollback review. Published.');
+          handover.saved = await read();
+          expect(handover.saved).toBe(item.saved + pending + ' Published.');
           await restored.reload();
           await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
           await expect(reader.locator('strong')).toHaveText('Sam');
-          rollback.reopened = true;
+          handover.reopened = true;
         } finally { await clean.close(); }
       }
     }
