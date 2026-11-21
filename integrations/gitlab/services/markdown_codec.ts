@@ -47,7 +47,7 @@ function labelForeground(value: unknown): string {
 }
 
 // Pipe tables cannot retain spans, multiple paragraphs in a cell, or mixed header roles.
-function serializeGitLabHTMLTable(table: Node, tokenPrefix: string): string | undefined {
+function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: boolean): string | undefined {
   if (!table.content.some((row, index) => row.content.some(cell =>
     Number(cell.attrs.rowspan) > 1 || Number(cell.attrs.colspan) > 1 || cell.childCount > 1
     || cell.type.name !== (index === 0 ? 'table_header' : 'table_cell')))) return undefined;
@@ -67,7 +67,32 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string): string | un
     }
     return supported;
   });
-  return supported ? MarkdownExporter.export(table, { tableFormat: 'html' }) : undefined;
+  if (!supported) return undefined;
+  if (wikiRoom) {
+    // GitLab's wiki writes plain cell text inline, and successive paragraphs
+    // between blank lines. Use explicit HTML for syntax, whitespace or marks
+    // whose interpretation could change in that mixed Markdown/HTML context.
+    const plain = table.content.every(row => row.content.every(cell =>
+      cell.content.every(p => p.childCount === 1 && p.child(0).isText && !p.child(0).marks.length
+        && /^(?![0-9]{1,9}\.$)[\p{L}\p{N}]+(?:[ -][\p{L}\p{N}]+)*[.!?]?$/u.test(p.child(0).text!))));
+    if (plain) {
+      const lines = ['<table>'];
+      for (const row of table.content) {
+        lines.push('<tr>');
+        for (const cell of row.content) {
+          const tag = cell.type.name === 'table_header' ? 'th' : 'td';
+          const spans = ['colspan','rowspan'].filter(key => Number(cell.attrs[key]) > 1)
+            .map(key => ` ${key}="${Number(cell.attrs[key])}"`).join('');
+          const paragraphs = cell.content.map(p => p.child(0).text);
+          const text = paragraphs.length === 1 ? paragraphs[0] : '\n\n' + paragraphs.join('\n\n') + '\n';
+          lines.push(`<${tag}${spans}>${text}</${tag}>`);
+        }
+        lines.push('</tr>');
+      }
+      return [...lines,'</table>'].join('\n');
+    }
+  }
+  return MarkdownExporter.export(table, { tableFormat: 'html' });
 }
 
 /** GitLab-owned source attributes remain distinct from navigable display URLs. */
@@ -542,7 +567,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const tableDelimiterStyle = this.options.wikiRoom ? 'header-width' : 'compact';
     const blockSerializers = {
       ...extensionWriters,
-      table: (node: Node) => serializeGitLabHTMLTable(node, prefix),
+      table: (node: Node) => serializeGitLabHTMLTable(node, prefix, Boolean(this.options.wikiRoom)),
       gitlab_code_suggestion: serializeGitLabSuggestionNode,
       gitlab_table_of_contents: (node: Node) => String(node.attrs.token),
       direction_scope: (node: Node): string | undefined => {

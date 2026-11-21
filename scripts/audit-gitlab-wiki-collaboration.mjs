@@ -71,7 +71,7 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       });
     }
     async function readerHeaderAlignment(surface) {
-      const headers = surface.locator('table tr').first().locator('th');
+      const headers = surface.getByRole('table').filter({hasText:input.table.headings[0]}).locator('tr').first().locator('th');
       await expect(headers).toHaveCount(input.table.headings.length);
       return headers.evaluateAll(cells => cells.map(cell => ({
         text:cell.textContent.trim(),attribute:cell.getAttribute('align'),inline:cell.style.textAlign,
@@ -82,7 +82,7 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       const {headings,rows,alignments} = input.table;
       const expected = [headings,[rows[0][0] + (reviewed ? ' notes' : ''),rows[0][1]],
         [rows[1][0],rows[1][1] + (revisedHours ? '0' : '')]];
-      const grid = surface.locator('table');
+      const grid = surface.getByRole('table').filter({hasText:headings[0]});
       const snapshot = () => grid.evaluate(table => Array.from(table.rows, row => Array.from(row.cells, cell => {
         const content = cell.cloneNode(true);
         for (const cursor of content.querySelectorAll('.collaboration-cursor-caret,[data-fountain-collaborator]')) cursor.remove();
@@ -93,6 +93,24 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       const cells = expected.map((row,i) => row.map((text,j) => ({tag:i ? 'TD' : 'TH',text,align:(i ? alignments : headerAlignments)[j]})));
       await expect.poll(snapshot).toEqual(cells);
       return cells;
+    }
+    async function checkMergedTable(surface, ownerEdit = '', peerEdit = '') {
+      const table = surface.getByRole('table').filter({hasText:'Sign-off'});
+      const cell = (tag, paragraphs, rowSpan = 1, colSpan = 1) => ({tag,paragraphs,rowSpan,colSpan});
+      const expected = [
+        [cell('TH',['Sign-off'],1,2),cell('TH',['Contact'])],
+        [cell('TD',['Operations','Night shift' + ownerEdit],2),cell('TD',['Primary']),cell('TD',['Lee'])],
+        [cell('TD',['Backup']),cell('TD',['Pat' + peerEdit])],
+      ];
+      const snapshot = () => table.evaluate(table => Array.from(table.rows,row => Array.from(row.cells,cell => {
+        const copy = cell.cloneNode(true);
+        for (const cursor of copy.querySelectorAll('.collaboration-cursor-caret,[data-fountain-collaborator]')) cursor.remove();
+        const paragraphs = Array.from(copy.querySelectorAll('p'),p => p.textContent.trim());
+        return {tag:cell.tagName,paragraphs:paragraphs.length ? paragraphs : [copy.textContent.trim()],
+          rowSpan:cell.rowSpan,colSpan:cell.colSpan};
+      })));
+      await expect.poll(snapshot).toEqual(expected);
+      return snapshot();
     }
     async function checkLink(surface,label) {
       const link = surface.getByRole('link',{name:label,exact:true});
@@ -204,8 +222,9 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       const headerAlignments = item.stockReaderHeaders.map(cell => cell.computed);
       item.stockReaderTable = await checkTable(peerReader,false,false,headerAlignments);
       item.stockReaderMatchesAuthoredAlignment = headerAlignments.every((align,i) => align === input.table.alignments[i]);
-      await peerReader.locator('table').screenshot({path:join(output,'stock-reader-table.png')});
+      await peerReader.getByRole('table').filter({hasText:input.table.headings[0]}).screenshot({path:join(output,'stock-reader-table.png')});
     }
+    if (input.mergedTable) item.stockReaderMergedTable = await checkMergedTable(peerReader);
     if (switchWikiDeployment) {
       const rollout = side === 'original';
       const destination = rollout ? 'fountain' : 'original';
@@ -233,8 +252,15 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       }
       if (input.table) {
         handover.stockTable = await checkTable(writer,false,false);
-        await append(page,writer.locator('td p').first(),' notes');
+        await append(page,writer.getByRole('table').filter({hasText:input.table.headings[0]}).locator('td p').first(),' notes');
         handover.stockTableDraft = await checkTable(witness,true,false);
+        expect(await read()).toBe(item.saved);
+      }
+      if (input.mergedTable) {
+        item.stage = 'edit-stock-merged-cell';
+        await checkMergedTable(writer);
+        await append(page,writer.locator('td p').filter({hasText:'Night shift'}),' handoff');
+        handover.stockMergedDraft = await checkMergedTable(witness,' handoff');
         expect(await read()).toBe(item.saved);
       }
       await writer.screenshot({path:join(output,rollout ? 'unsaved-before-rollout.png' : 'unsaved-before-rollback.png')});
@@ -388,7 +414,7 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
           if (input.table) {
             item.stage = 'edit-recovered-table';
             handover.recoveredTable = await checkTable(editor,true,false);
-            await append(restored,editor.locator('td p').last(),'0');
+            await append(restored,editor.getByRole('table').filter({hasText:input.table.headings[0]}).locator('td p').last(),'0');
             handover.editedTable = await checkTable(editor,true,true);
             await restored.keyboard.press('Control+z');
             await checkTable(editor,true,false);
@@ -396,6 +422,16 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
             await restored.keyboard.press('Control+Shift+z');
             await checkTable(editor,true,true);
             expect(await read()).toBe(item.saved);
+          }
+          if (input.mergedTable) {
+            item.stage = 'edit-recovered-merged-table';
+            handover.recoveredMergedTable = await checkMergedTable(editor,' handoff');
+            await append(restored,editor.locator('td p').filter({hasText:'Pat'}),' Chen');
+            await checkMergedTable(editor,' handoff',' Chen');
+            await restored.keyboard.press('Control+z');
+            await checkMergedTable(editor,' handoff');
+            await restored.keyboard.press('Control+Shift+z');
+            await checkMergedTable(editor,' handoff',' Chen');
           }
           await restored.getByTestId('wiki-submit-button').click();
           const confirm = restored.getByTestId('wiki-confirm-message');
@@ -419,6 +455,11 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
             expect(expectedSource.split('| Deploy | 24 |')).toHaveLength(2);
             expectedSource = expectedSource.replace('| Review | 12 |','| Review notes | 12 |').replace('| Deploy | 24 |','| Deploy | 240 |');
           }
+          if (input.mergedTable) {
+            expect(expectedSource.split('Night shift')).toHaveLength(2);
+            expect(expectedSource.split('Pat')).toHaveLength(2);
+            expectedSource = expectedSource.replace('Night shift','Night shift handoff').replace('Pat','Pat Chen');
+          }
           expect(handover.saved).toBe(expectedSource + pending + ' Published.');
           await restored.reload();
           await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
@@ -430,7 +471,11 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
             const headerAlignments = handover.readerHeaders.map(cell => cell.computed);
             handover.readerMatchesAuthoredAlignment = headerAlignments.every((align,i) => align === input.table.alignments[i]);
             handover.readerTable = await checkTable(reader,true,true,headerAlignments);
-            await reader.locator('table').screenshot({path:join(output,'reopened-reader-table.png')});
+            await reader.getByRole('table').filter({hasText:input.table.headings[0]}).screenshot({path:join(output,'reopened-reader-table.png')});
+          }
+          if (input.mergedTable) {
+            handover.readerMergedTable = await checkMergedTable(reader,' handoff',' Chen');
+            await reader.getByRole('table').filter({hasText:'Sign-off'}).screenshot({path:join(output,'reopened-merged-table.png')});
           }
           if (input.link) handover.readerLink = await checkLink(reader,input.link.editedLabel);
           if (input.structure) {

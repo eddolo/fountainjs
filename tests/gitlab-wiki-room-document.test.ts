@@ -120,6 +120,29 @@ it('round-trips a shared GitLab table with aligned headers and body cells', () =
   } finally { doc.destroy(); }
 });
 
+it('writes merged wiki cells and distinct paragraphs in the pinned GitLab source format', () => {
+  const paragraph = (text: string) => schema.node('paragraph',{},[schema.text(text)]);
+  const header = schema.node('table_header',{colspan:2},[paragraph('Sign-off')]);
+  const team = schema.node('table_cell',{rowspan:2},[paragraph('Operations'),paragraph('Night shift handoff')]);
+  const cell = (text: string) => schema.node('table_cell',{},[paragraph(text)]);
+  const table = schema.node('table',{gitlabIsMarkdown:false},[
+    schema.node('table_row',{},[header]),
+    schema.node('table_row',{},[team,cell('Lee')]),
+    schema.node('table_row',{},[cell('Pat Chen')]),
+  ]);
+  const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async () => ({body:''})});
+  expect(codec.serialize({doc:schema.node('doc',{},[table])})).toBe([
+    '<table>','<tr>','<th colspan="2">Sign-off</th>','</tr>','<tr>',
+    '<td rowspan="2">','','Operations','','Night shift handoff','</td>',
+    '<td>Lee</td>','</tr>','<tr>','<td>Pat Chen</td>','</tr>','</table>',
+  ].join('\n'));
+
+  // A line consisting of an ordered-list marker cannot be emitted as a bare paragraph.
+  const literal = schema.node('table_cell',{rowspan:2},[paragraph('1.'),paragraph('<td>')]);
+  const rich = table.copy([table.child(0),table.child(1).copy([literal,cell('Lee')]),table.child(2)]);
+  expect(codec.serialize({doc:schema.node('doc',{},[rich])})).toContain('<p>1.</p><p>&lt;td&gt;</p>');
+});
+
 it('retains heading levels and refuses unrepresentable attributes in both directions', () => {
   const doc = new Y.Doc();
   try {
