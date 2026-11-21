@@ -5,7 +5,7 @@ import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/ma
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
 import { literalLinkAttributes } from '../link-destination';
-import { hasMarkdownSourceProjection, markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceProjectionWithReferences, markdownSourceSeparator, rewriteMarkdownProjection, tailSourceSeparator } from '../markdown-source-boundary';
+import { hasMarkdownSourceProjection, markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceProjectionWithReferences, markdownSourceSeparator, rewriteMarkdownReferenceLabel, rewriteMarkdownProjection, tailSourceSeparator } from '../markdown-source-boundary';
 import { draftMarkdownNestedSource, hasMarkdownNestedSource, renderMarkdownNestedSource } from '../markdown-nested-source';
 import { isAutomaticTrailingParagraph } from '../editing-provenance';
 
@@ -901,7 +901,7 @@ export class MarkdownExporter {
             rendered = captured.source;
           } else {
             let staged: RenderContext | undefined;
-            const nested = context.references.size ? null : (draft ? draftMarkdownNestedSource : renderMarkdownNestedSource)(captured, block, (child, path) => {
+            const nested = context.references.size ? null : rewriteMarkdownReferenceLabel(captured, block) ?? (draft ? draftMarkdownNestedSource : renderMarkdownNestedSource)(captured, block, (child, path) => {
               staged ??= { options: { ...options, onLoss: undefined }, losses: [], references: new Map() };
               return withLineEnding(render(child, staged, [index, ...path]).trimEnd(), source.lineEnding);
             });

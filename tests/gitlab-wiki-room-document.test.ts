@@ -103,6 +103,21 @@ it('retains the wiki target independently of the edited display label', async ()
   } finally { doc.destroy(); }
 });
 
+it('retains the author’s shared link definition after a remote wiki edit recreates every node', async () => {
+  const definition = '[on-call]: /wiki/on-call "Team guide"';
+  const source = ['See [the team][on-call].','Use [this guide][on-call].',definition,'Status: ready.'].join('\n\n');
+  const html = ['See <a href="/wiki/on-call" title="Team guide">the team</a>.',
+    'Use <a href="/wiki/on-call" title="Team guide">this guide</a>.','Status: ready.']
+    .map(text => '<p dir="auto">' + text + '</p>').join('\n');
+  const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async () => ({body:html})});
+  const seed = await codec.deserialize({schema,markdown:source,signal:new AbortController().signal,wikiRoomSeed:true});
+  const remote = schema.nodeFromJSON(seed.document.toJSON());
+  expect(codec.serialize({doc:remote})).toBe(source);
+  const edited = remote.copy([...remote.content.slice(0,-1),schema.node('paragraph',{},[schema.text('Status: ready. Reviewed.')])]);
+  expect(codec.serialize({doc:edited})).toBe(source + ' Reviewed.');
+  expect(codec.serialize({doc:schema.node('doc',{},[schema.node('paragraph',{},[schema.text('Other document')])])})).toBe('Other document');
+});
+
 it('seeds stock-compatible structures from the real wiki preview', async () => {
   const markdown = rollout.cases[0].source;
   const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async () => ({body:seedPreview})});

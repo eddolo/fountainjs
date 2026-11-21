@@ -53,6 +53,8 @@ export async function runWikiCollaboration(options) {
 async function runWikiEditors({page, request, project, fixture, side, runId, output, switchWikiDeployment, mixedWiki, wikiFlagAudit,readStoredWikiFlag}) {
   const [input] = fixture.cases;
   const sourceEditor = side === 'original' ? 'stock' : 'fountain';
+  const firstLabel = input.wikiLink?.reference ? 'Escalation duty guide' : input.wikiLink?.label;
+  const finalLabel = input.wikiLink?.reference ? 'Escalation field duty guide' : input.wikiLink?.edited;
   const item = {id:input.id, input, stage:'setup', status:'incomplete', pageErrors:[]};
   const endpoint = wikiFlagPath;
   const readFlag = () => readWikiFlag(request);
@@ -100,12 +102,19 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       expect(destination.content).toBe(targetText);
       targetURL = project.web_url + '/-/wikis/' + encodeURIComponent(destination.slug);
     }
+    function expandReference(source) {
+      const {reference,title} = input.wikiLink, path = new URL(targetURL).pathname;
+      const ending = source.includes('\r\n') ? '\r\n' : '\n';
+      return source.replace('[' + reference + ']: ' + path + ' "' + title + '"' + ending.repeat(2),'')
+        .replaceAll('][' + reference + ']','](' + path + ' "' + title + '")');
+    }
     async function checkWikiLinks(surface,label) {
       const links = [surface.getByRole('link',{name:label,exact:true}),
         surface.getByRole('link',{name:input.wikiLink.target,exact:true})];
       for (const link of links) {
         await expect(link).toBeVisible();
         expect(await link.evaluate(a => a.href)).toBe(targetURL);
+        if (input.wikiLink.title) await expect.poll(() => link.evaluate(a => a.title || a.dataset.originalTitle)).toBe(input.wikiLink.title);
       }
       return {label,shorthand:input.wikiLink.target,destination:targetURL};
     }
@@ -273,6 +282,8 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     await expect.poll(() => paragraphText(firstStatus)).toBe(both);
     item.afterPeerRedo = await paragraphText(firstStatus);
     if (side === 'original') {
+      if (input.wikiLink?.reference)
+        item.stockSupportsReferenceDefinition = await first.evaluate(el => Boolean(el.editor?.schema.nodes.referenceDefinition));
       item.stockWire = await first.evaluate(element => {
         const state = element.editor?.state;
         const binding = state?.plugins.find(plugin => plugin.key.startsWith('y-sync$'))?.getState(state);
@@ -283,11 +294,20 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
         return binding?.type?.toArray().map(snapshot);
       });
     }
+    if (input.wikiLink?.reference) {
+      await other.locator('p').filter({hasText:'Consult '}).click();
+      await peer.keyboard.press('Home');
+      for (const _ of 'Consult Escalation ') await peer.keyboard.press('ArrowRight');
+      await peer.keyboard.insertText('duty ');
+      item.peerEditedLinks = await checkWikiLinks(first,firstLabel);
+      expect(await read()).toBe(input.source);
+    }
     await first.screenshot({path:join(output,'shared-wiki.png')});
     item.stage = 'save-and-reopen';
-    await page.getByTestId('wiki-submit-button').click();
-    const confirm = page.getByTestId('wiki-confirm-message');
-    const reader = page.getByTestId('wiki-page-content');
+    const savingTab = input.wikiLink?.reference ? peer : page;
+    await savingTab.getByTestId('wiki-submit-button').click();
+    const confirm = savingTab.getByTestId('wiki-confirm-message');
+    const reader = savingTab.getByTestId('wiki-page-content');
     await expect(confirm.or(reader).first()).toBeVisible();
     if (await confirm.isVisible()) await confirm.click();
     await expect(reader).toContainText(both);
@@ -305,8 +325,15 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       await peerReader.getByRole('table').filter({hasText:input.table.headings[0]}).screenshot({path:join(output,sourceEditor + '-reader-table.png')});
     }
     if (input.wikiLink) {
-      item.initialPageLinks = await checkWikiLinks(peerReader,input.wikiLink.label);
-      expect(item.saved.replaceAll('\r\n','\n')).toBe(input.source + input.ownerEdit + input.peerEdit);
+      item.initialPageLinks = await checkWikiLinks(peerReader,firstLabel);
+      const authored = input.source.replace('[' + input.wikiLink.label + '][','[' + firstLabel + '][') + input.ownerEdit + input.peerEdit;
+      const saved = item.saved.replaceAll('\r\n','\n');
+      if (input.wikiLink.reference) {
+        const inline = expandReference(authored);
+        item.referenceSource = saved === authored ? 'shared-definition' : saved === inline ? 'expanded-inline' : 'other';
+        if (side === 'fountain') expect(saved).toBe(authored);
+        else expect([authored,inline]).toContain(saved);
+      } else expect(saved).toBe(authored);
     }
     if (input.mergedTable) item[sourceEditor + 'ReaderMergedTable'] = await checkMergedTable(peerReader);
     if (switchWikiDeployment) {
@@ -318,7 +345,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       else item.rollback = handover;
       const writer = await edit(page);
       const witness = await edit(peer);
-      if (input.wikiLink && side === 'fountain') {
+      if (input.wikiLink && !input.wikiLink.reference && side === 'fountain') {
         item.stage = 'edit-wiki-alias-in-link-form';
         const temporary = 'Escalation contact list';
         await writer.getByRole('link',{name:input.wikiLink.label,exact:true}).click();
@@ -533,16 +560,16 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
           }
           if (input.wikiLink) {
             item.stage = 'edit-recovered-wiki-link';
-            handover.recoveredPageLinks = await checkWikiLinks(editor,input.wikiLink.label);
+            handover.recoveredPageLinks = await checkWikiLinks(editor,firstLabel);
             await editor.locator('p').filter({hasText:'Consult '}).click();
             await restored.keyboard.press('Home');
             for (const _ of 'Consult Escalation ') await restored.keyboard.press('ArrowRight');
             await restored.keyboard.insertText('field ');
-            await checkWikiLinks(editor,input.wikiLink.edited);
+            await checkWikiLinks(editor,finalLabel);
             await restored.keyboard.press('Control+z');
-            await checkWikiLinks(editor,input.wikiLink.label);
+            await checkWikiLinks(editor,firstLabel);
             await restored.keyboard.press('Control+Shift+z');
-            await checkWikiLinks(editor,input.wikiLink.edited);
+            await checkWikiLinks(editor,finalLabel);
             expect(await read()).toBe(item.saved);
           }
           if (input.mergedTable) {
@@ -582,8 +609,18 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
             expect(expectedSource.split('Pat')).toHaveLength(2);
             expectedSource = expectedSource.replace('Night shift','Night shift handoff').replace('Pat','Pat Chen');
           }
-          if (input.wikiLink) expectedSource = expectedSource.replace('[[' + input.wikiLink.label + '|','[[' + input.wikiLink.edited + '|');
-          expect(handover.saved).toBe(expectedSource + pending + ' Published.');
+          if (input.wikiLink) {
+            const {reference} = input.wikiLink;
+            const spelling = text => !reference ? '[[' + text + '|'
+              : item.referenceSource === 'shared-definition' ? '[' + text + '][' + reference + ']' : '[' + text + '](';
+            expect(expectedSource.split(spelling(firstLabel))).toHaveLength(2);
+            expectedSource = expectedSource.replace(spelling(firstLabel),spelling(finalLabel));
+          }
+          const finalSource = expectedSource + pending + ' Published.';
+          if (input.wikiLink?.reference && destination === 'original') {
+            handover.referenceSource = handover.saved === finalSource ? item.referenceSource : 'expanded-inline';
+            expect([finalSource,expandReference(finalSource)]).toContain(handover.saved);
+          } else expect(handover.saved).toBe(finalSource);
           await restored.reload();
           await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
           await expect(reader.locator('strong')).toHaveText('Sam');
@@ -606,9 +643,9 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
             await reader.screenshot({path:join(output,'reopened-structured-wiki.png')});
           }
           if (input.wikiLink) {
-            handover.readerPageLinks = await checkWikiLinks(reader,input.wikiLink.edited);
+            handover.readerPageLinks = await checkWikiLinks(reader,finalLabel);
             await reader.screenshot({path:join(output,'reopened-page-links.png')});
-            await reader.getByRole('link',{name:input.wikiLink.edited,exact:true}).click();
+            await reader.getByRole('link',{name:finalLabel,exact:true}).click();
             await expect(restored).toHaveURL(targetURL);
             await expect(restored.getByTestId('wiki-page-content')).toHaveText(input.wikiLink.targetText);
             handover.visitedWiki = restored.url();

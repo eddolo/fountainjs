@@ -23,6 +23,29 @@ export function registerMarkdownSourceBoundary(block: MarkdownSourceBlockSnapsho
   parsers.set(block, parse);
 }
 
+/** Keep the author's explicit reference when a visual edit changes only its visible label.
+ * Prove the replacement in the original reference scope before returning any source. */
+export function rewriteMarkdownReferenceLabel(block: MarkdownSourceBlockSnapshot, current: Node): string | null {
+  const parse = parsers.get(block);
+  if (!parse || !block.source.includes('][') || !['paragraph','heading'].includes(current.type.name)) return null;
+  const original = parse(block.source);
+  if (original.length !== 1 || !block.matches(original[0]) || original[0].childCount !== current.childCount) return null;
+  let result: string | undefined;
+  for (const [index, before] of original[0].content.entries()) {
+    const after = current.child(index);
+    if (before.eq(after)) continue;
+    if (result !== undefined || !before.isText || !after.isText || !before.marks.some(mark => mark.type.name === 'link')
+      || !before.withText(after.text!).eq(after) || /[[\]\\<>\r\n]/u.test(after.text!)) return null;
+    const spelling = '[' + before.text + '][';
+    const start = block.source.indexOf(spelling);
+    if (start < 0 || block.source.indexOf(spelling,start+1) !== -1) return null;
+    result = block.source.slice(0,start+1) + after.text + block.source.slice(start+1+before.text!.length);
+  }
+  if (result === undefined) return null;
+  const proposed = parse(result);
+  return proposed.length === 1 && current.eq(proposed[0]) ? result : null;
+}
+
 export function registerMarkdownSourceProjection(source: MarkdownSourceSnapshot, parse: (value: string) => Node,
   capture?: ProjectionCapture): void {
   projections.set(source, { parse, capture });

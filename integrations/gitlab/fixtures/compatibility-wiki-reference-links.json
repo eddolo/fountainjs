@@ -1,0 +1,24 @@
+{
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "reference-link-handover",
+      "scope": "wiki-collaboration",
+      "title": "Incident reference handover",
+      "source": "Owner: **Sam**.\n\nConsult [Escalation guide][on-call].\n\nAlso listed as [fountain-compat-escalation-guide][on-call].\n\n[on-call]: /root/fountain-product-integration/-/wikis/fountain-compat-escalation-guide \"Escalation procedure\"\n\nStatus: ready.",
+      "ownerEdit": " Reviewed.",
+      "peerEdit": " Approved.",
+      "wikiLink": {
+        "target": "fountain-compat-escalation-guide",
+        "targetText": "Contact the incident commander for escalation.",
+        "label": "Escalation guide",
+        "edited": "Escalation field guide",
+        "reference": "on-call",
+        "title": "Escalation procedure"
+      }
+    }
+  ]
+}

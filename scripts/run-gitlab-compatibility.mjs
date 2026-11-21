@@ -82,7 +82,10 @@ await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const wikiPageLinks = process.argv.includes('--wiki-page-links');
 if (wikiPageLinks && !(wikiRollout || structuredWikiRollback)) throw new Error('Use --wiki-page-links with the wiki rollout or structured rollback.');
-const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
+const wikiReferenceLinks = process.argv.includes('--wiki-reference-links');
+if (wikiReferenceLinks && (wikiPageLinks || !(wikiRollout || structuredWikiRollback)))
+  throw new Error('Use --wiki-reference-links by itself on a wiki rollout or structured rollback.');
+const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiReferenceLinks ? 'wiki-reference-links' : wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
 const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
 const pin=JSON.parse(await readFile(resolve(root,'integrations/gitlab/runtime/upstream.json')));
 const compose=['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')],env={...process.env};
@@ -380,7 +383,15 @@ try{
    receipt.administratorSessionStatus = receipt.sessionProbeStatuses.at(-1);
    if (receipt.administratorSessionStatus === 401) await signInAdministrator();
    else expect(receipt.administratorSessionStatus).toBe(200);
-   receipt.backend = {version:await request('/api/v4/version')};
+   receipt.versionProbeStatuses = [];
+   let versionResponse;
+   await expect.poll(async () => {
+     versionResponse = await page.request.get('http://127.0.0.1:5080/api/v4/version',{timeout:5000});
+     receipt.versionProbeStatuses.push(versionResponse.status());
+     return [502,503,504].includes(versionResponse.status());
+   },{timeout:30000,intervals:[500,1000,2000]}).toBe(false);
+   expect(versionResponse.status()).toBe(200);
+   receipt.backend = {version:await versionResponse.json()};
    receipt.buildIdentity = await identify(receipt,targetBuild);
    expect(buildIdentityError(receipt)).toBeFalsy();
    expect(receipt.errors).toEqual([]);

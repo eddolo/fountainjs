@@ -2,6 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { CoreSchemaSpec, MarkdownExporter, MarkdownImporter, Schema } from '../src';
 
 describe('reference-definition source provenance', () => {
+  it('keeps a shared reference identifier when one displayed label changes', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = 'Use [the guide][On-Call].\n\nAlso see [the roster][On-Call].\n\n[On-Call]: /help "Support"';
+    const {document,source:snapshot} = MarkdownImporter.parseWithSource(source,schema);
+    const first = document.child(0);
+    const edit = (label:string) => document.copy([first.copy(first.content.map(node =>
+      node.text === 'the guide' ? node.withText(label) : node)), ...document.content.slice(1)]);
+    for (const label of ['the field guide','the [other] guide','the <guide>']) {
+      const changed = edit(label), result = MarkdownExporter.exportWithSource(changed,snapshot);
+      if (label === 'the field guide') expect(result.markdown).toBe(source.replace('the guide',label));
+      expect(MarkdownImporter.parse(result.markdown,schema).eq(changed)).toBe(true);
+    }
+  });
+
   it.each(['\n', '\r\n', '\r'])('preserves definition prefixes before paragraphs and headings (%j)', ending => {
     const schema = new Schema(CoreSchemaSpec);
     const source = ['[ref]: ./first.md "First"', 'Heading', '=======', '',

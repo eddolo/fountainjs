@@ -49,7 +49,7 @@ export class GitLabWikiSession {
   }
   connect(context:CollaborationAdapterContext) { this.context = context; }
 
-  async join(loadSeed:(signal:AbortSignal)=>Promise<Node>) {
+  async join(loadSeed:(signal:AbortSignal)=>Promise<Node>, readSavedSource = false) {
     if (!this.context) throw new Error('GitLab wiki editor is unavailable.');
     if (this.binding) { this.assertCurrent(this.context.editor.state.doc); return; }
     this.controller?.abort();
@@ -58,8 +58,12 @@ export class GitLabWikiSession {
     controller.signal.throwIfAborted();
     this.options = options;
     const {provider,wire} = options;
-    const {binding} = await openGitLabWikiRoom(provider,this.context.editor.state.schema,wire,
-      () => loadSeed(controller.signal),{signal:controller.signal});
+    // A late join must also know the saved Markdown when its link definitions live outside the shared XML.
+    // Only the elected seeder passes the resulting document to the provider.
+    let saved: Promise<Node> | undefined;
+    const read = () => saved ??= loadSeed(controller.signal);
+    const {binding} = await openGitLabWikiRoom(provider,this.context.editor.state.schema,wire,read,{signal:controller.signal});
+    if (readSavedSource) await read();
     controller.signal.throwIfAborted();
     this.fragment = provider.doc.getXmlFragment('default');
     this.binding = binding;

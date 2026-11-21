@@ -373,6 +373,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
   private readonly emojiSpellings = new WeakMap<Node, ReadonlyMap<string,string>>();
   private readonly wikiBlockSources = new WeakMap<MarkdownSourceSnapshot, MarkdownSourceSnapshot>();
   private readonly sources = new WeakMap<Node, MarkdownSourceSnapshot>();
+  private wikiReferences?: {source: MarkdownSourceSnapshot; links: Set<string>};
   constructor(private readonly options: {
     renderMarkdown(markdown: string, options?: { signal: AbortSignal }): Promise<GitLabRenderResponse>;
     html?: ServerHTMLImporterOptions;
@@ -385,6 +386,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
 
   async deserialize({ schema, markdown, signal, wikiRoomSeed = false }: { schema: Schema; markdown: string; signal: AbortSignal; wikiRoomSeed?: boolean }): Promise<{ document: Node }> {
     if (signal.aborted) throw new Error('GitLab Markdown rendering was cancelled.');
+    if (wikiRoomSeed) this.wikiReferences = undefined;
     if (!schema.nodes.gitlab_reference || !schema.nodes.gitlab_placeholder) throw new Error('Use the explicit GitLab schema adapter.');
     try {
       const parser = new ServerHTMLImporter(this.options.html);
@@ -418,7 +420,14 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
           const compared = wikiOrigins ? wikiSeedSourceText(prose) : prose;
           if (parsed.document.eq(compared)) {
             if (wikiRoomSeed) document = wikiOrigins ? withWikiBlockOrigins(prose,wikiOrigins) : prose;
-            if (proseOnly && compared === prose) wikiSource = parsed.source;
+            if (proseOnly && compared === prose) {
+              wikiSource = parsed.source;
+              if (wikiRoomSeed && wikiSource.referenceDefinitions) {
+                const links = new Set<string>();
+                prose.descendants(node => { for (const mark of node.marks) if (mark.type.name === 'link') links.add(JSON.stringify(mark.toJSON())); });
+                this.wikiReferences = {source:wikiSource,links};
+              }
+            }
           }
         } catch {
           // A wiki extension may accept syntax outside the local parser.
@@ -695,12 +704,22 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     };
     const exported = new MarkdownExporter().exportWithReport(projected, { omitTrailingCaret: true, bulletMarker, tableDelimiterStyle, blockSerializers, inlineSerializers: extensionWriters, markSerializers });
     issues.push(...exported.losses.map(loss => ({ stage: 'export' as const, code: loss.kind + ':' + loss.type, message: loss.detail, path: loss.path })));
-    if (!canonical && !issues.length && !tokens.size && !customSources.size && !customMarks.size && sources.size === 1) {
-      const source = this.wikiBlockSources.get(sources.values().next().value!);
+    if (!canonical && !issues.length && !tokens.size && !customSources.size && !customMarks.size) {
+      let source = sources.size === 1 ? this.wikiBlockSources.get(sources.values().next().value!) : undefined;
+      // The host recreates node identities on remote edits. Use the verified baseline only while
+      // a link from that wiki survives. The exporter maps blocks by their current semantics.
+      if (!source && this.wikiReferences && projected.content.every(block => ['heading','paragraph'].includes(block.type.name))) {
+        const baseline = this.wikiReferences;
+        let linked = false;
+        projected.descendants(node => {
+          if (!linked) linked = node.marks.some(mark => mark.type.name === 'link' && baseline.links.has(JSON.stringify(mark.toJSON())));
+        });
+        if (linked) source = baseline.source;
+      }
       if (source?.blocks.length && projected.content.every(block => ['heading', 'paragraph'].includes(block.type.name))) {
         const retained = MarkdownExporter.exportWithSource(projected, source, { omitTrailingCaret: true });
-        if (!retained.losses.length && ['blocks', 'mapped-blocks'].includes(retained.preservation))
-          return { markdown: retained.markdown, preservation: 'blocks', issues };
+        if (!retained.losses.length && ['exact','blocks','mapped-blocks'].includes(retained.preservation))
+          return { markdown: retained.markdown, preservation: retained.preservation === 'exact' ? 'exact' : 'blocks', issues };
       }
     }
     // Expand complete markers once, including double-digit footnote indexes.
