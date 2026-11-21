@@ -494,9 +494,15 @@ export function compareGitLabCompatibility(original,fountain){
           const upload = view.pendingUpload;
           view.peerSawPendingFile = upload.sharedPlaceholder === true || upload.peerUploadNotice === true;
           view.peerSaveWaited = upload.peerSave.disabled;
-          view.uploadRequests = upload.requests;
+          view.uploadRequests = input.upload.peerEditDuringFailure ? upload.forwardedRequests : upload.requests;
+          if (input.upload.peerEditDuringFailure && upload.interruption) {
+            view.forwardedBeforeRetry = upload.interruption.forwardedBeforeRetry;
+            view.fileRetainedForRetry = upload.interruption.retainedFile;
+            view.attemptsIncludingRetry = upload.requests;
+          }
           view.downloadedBytes = upload.verifiedBytes;
-          const expected = input.source + input.ownerEdit + input.peerEdit + ' Evidence pending. Witness checked.\n\n' + upload.markdown;
+          const expected = input.source + input.ownerEdit + input.peerEdit + ' Evidence pending.'
+            + (input.upload.peerEditDuringFailure ?? '') + ' Witness checked.\n\n' + upload.markdown;
           view.attachmentInOwnParagraph = typeof upload.markdown === 'string' && upload.saved?.replaceAll('\r\n','\n') === expected;
         }
         if (input.wikiLink?.reference && typeof view.saved === 'string') {
@@ -527,6 +533,11 @@ export function compareGitLabCompatibility(original,fountain){
         ...(input.upload ? [
           ['peerSawPendingFile',true,'The second author sees the pending filename before Save'],
           ['peerSaveWaited',true,'Save waits until the attachment can be included in the revision'],
+          ...(input.upload.peerEditDuringFailure ? [
+            ['forwardedBeforeRetry',0,'The interrupted request is never forwarded to GitLab'],
+            ['fileRetainedForRetry',true,'The author can retry the retained file without opening the picker again'],
+            ['attemptsIncludingRetry',2,'One deliberate retry completes the interrupted transfer'],
+          ] : []),
           ['uploadRequests',1,'GitLab receives the file once'],
           ['attachmentInOwnParagraph',true,'The saved source retains both authors’ text and the attachment in its own paragraph'],
           ['downloadedBytes',new TextEncoder().encode(input.upload.text).length,'The reopened attachment matches the original bytes'],
