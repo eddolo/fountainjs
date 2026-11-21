@@ -13,7 +13,7 @@ import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } fro
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, recoverGitLabImageSources, type GitLabPlayableKind } from './media';
 import { GitLabQuickActionSourceError, hydrateGitLabQuickActions, serializeGitLabQuickAction, transformGitLabQuickActions } from './quick_actions';
 import { gitLabCodeSuggestion, normalizeGitLabSuggestionNodes, serializeGitLabSuggestionNode } from './code_suggestion_node';
-import { gitLabContentsNode, normalizeGitLabContents } from './table_of_contents';
+import { gitLabContentsNode, normalizeGitLabContents, restoreGitLabReaderContents } from './table_of_contents';
 import { gitLabTaskItem } from './task_state';
 import { readTaskCells, hydrateTaskCells, taskCellParagraph } from './task_cells';
 import { normalizeGitLabTasks } from './task_rendering';
@@ -259,14 +259,20 @@ interface WikiBlockOrigin { type: 'bullet_list' | 'task_list' | 'ordered_list' |
 function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>, supportsContents: boolean, taskCells: Map<number,boolean|'inapplicable'>, wikiOrigins?: {blocks:WikiBlockOrigin[]; inactive:[number,number][]}): string {
   const maxBytes = options.maxInputBytes ?? 1_048_576;
   if (new TextEncoder().encode(html).length > maxBytes) throw new Error('GitLab rendering exceeds the configured HTML byte limit.');
-  const fragment = parseFragment(html), elements: RawElement[] = [], stack: [RawNode, number][] = [[fragment, 0]];
-  let count = 0;
-  while (stack.length) {
-    const [node, depth] = stack.pop()!;
-    if (++count > (options.maxNodes ?? 50_000) || depth > (options.maxDepth ?? 128)) throw new Error('GitLab rendering exceeds configured structural limits.');
-    if ('tagName' in node) elements.push(node);
-    if ('childNodes' in node) for (let index = node.childNodes.length - 1; index >= 0; index--) stack.push([node.childNodes[index]!, depth + 1]);
-  }
+  const fragment = parseFragment(html);
+  const collectElements = () => {
+    const elements: RawElement[] = [], stack: [RawNode, number][] = [[fragment, 0]];
+    let count = 0;
+    while (stack.length) {
+      const [node, depth] = stack.pop()!;
+      if (++count > (options.maxNodes ?? 50_000) || depth > (options.maxDepth ?? 128)) throw new Error('GitLab rendering exceeds configured structural limits.');
+      if ('tagName' in node) elements.push(node);
+      if ('childNodes' in node) for (let index = node.childNodes.length - 1; index >= 0; index--) stack.push([node.childNodes[index]!, depth + 1]);
+    }
+    return elements;
+  };
+  let elements = collectElements();
+  if (supportsContents && restoreGitLabReaderContents(fragment, source, schema, maxBytes)) elements = collectElements();
   if (wikiOrigins) {
     const lines = source.split(/\r\n?|\n/u);
     for (const element of elements) {

@@ -1195,6 +1195,8 @@ export function compareGitLabCompatibility(original,fountain){
       const observe = (report, item) => {
         if (!verifiedEditor(report, item)) return {};
         return {
+          readerPreview: input.readerPreview ? [input.markdown,item.saved].every(source => item.previews?.some(preview =>
+            preview.source === source && preview.status === 200 && /<ul class="section-nav">/u.test(preview.body))) : undefined,
           originalHeading: item.outlineBefore?.includes(input.heading),
           changedHeading: item.outlineAfter?.includes(revised),
           savedDirective: typeof item.saved === 'string' ? /^\s*(?:\[toc\]|\[\[_toc_\]\])\s*$/imu.test(item.saved) : undefined,
@@ -1205,6 +1207,7 @@ export function compareGitLabCompatibility(original,fountain){
       };
       const left = observe(original, a), right = observe(fountain, b);
       for (const [key,expected,label] of [
+        ...(input.readerPreview ? [['readerPreview',true,'GitLab returned a generated outline to the editor on initial load and reopen']] : []),
         ['originalHeading',true,'The rich outline contains the original heading'],
         ['changedHeading',true,'The rich outline reflects the heading edit'],
         ['savedDirective',true,'The saved issue retains an active contents directive'],

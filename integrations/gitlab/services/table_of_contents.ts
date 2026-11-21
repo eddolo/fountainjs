@@ -1,12 +1,91 @@
-import { insertDocument, NodeSelection, Selection, type Editor, type EditorView, type Node, type NodeSpec, type NodeViewLike } from 'fountainjs-editor';
+import { insertDocument, MarkdownSourceSnapshot, NodeSelection, Selection, type Schema, type Editor, type EditorView, type Node, type NodeSpec, type NodeViewLike } from 'fountainjs-editor';
 import { buildTableOfContents, type TableOfContentsTreeEntry } from 'fountainjs-editor/table-of-contents';
-import type { DefaultTreeAdapterMap } from 'parse5';
+import { parseFragment, type DefaultTreeAdapterMap } from 'parse5';
 import { GitLabFootnotePositions } from './footnote_positions';
 
 type Element = DefaultTreeAdapterMap['element'];
 const attribute = (element: Element, name: string) => element.attrs.find(item => item.name === name)?.value;
 const valid = (value: unknown): value is string => typeof value === 'string' && /^(?:\[toc\]|\[\[_toc_\]\])$/iu.test(value);
 const tag = 'fountain-gitlab-toc';
+
+/**
+ * A reader preview can collapse several directives into one navigation list or
+ * omit them entirely. Only restore whole source blocks between verified peers.
+ */
+export function restoreGitLabReaderContents(fragment: DefaultTreeAdapterMap['documentFragment'], source: string, schema: Schema, maxBytes: number) {
+  const possible = /^ {0,3}(?:\[toc\]|\[\[_toc_\]\]|\\\[toc\\\])[ \t]*\r?$/gimu;
+  const first = possible.exec(source);
+  if (!first) return;
+  const positions = new GitLabFootnotePositions(source, maxBytes);
+  const children = fragment.childNodes.filter(node => !('value' in node && !node.value.trim()));
+  const nav = (node: typeof children[number]) => 'tagName' in node && node.tagName === 'ul'
+    && attribute(node, 'class') === 'section-nav' && !attribute(node, 'data-sourcepos');
+  const ordinary = children.filter(node => !nav(node));
+  const spans = ordinary.map(node => {
+    if (!('tagName' in node)) return undefined;
+    const carrier = node.tagName === 'div' && attribute(node, 'class')?.split(/\s+/u).includes('js-markdown-code')
+      ? node.childNodes.find(child => 'tagName' in child && child.tagName === 'pre') : node;
+    return carrier && 'tagName' in carrier ? positions.read(attribute(carrier, 'data-sourcepos') ?? '') : undefined;
+  });
+  // The normal editor response already accounts for directives and code examples.
+  if (ordinary.length === children.length) {
+    let index = 0, match: RegExpExecArray | null = first;
+    while (match) {
+      while (index < spans.length && (!spans[index] || spans[index]!.to <= match.index)) index++;
+      const span = spans[index];
+      if (!span || span.from > match.index + match[0].search(/\S/u) || span.to < match.index + match[0].trimEnd().length) break;
+      match = possible.exec(source);
+    }
+    if (!match) return;
+  }
+
+  const { source: snapshot, document } = MarkdownSourceSnapshot.parse(source, schema);
+  const marker = (block: string) => /^ {0,3}(\[toc\]|\[\[_toc_\]\]|\\\[toc\\\])[ \t]*$/iu.exec(block)?.[1];
+  const fail = () => { throw new Error('GitLab reader blocks do not match the original table-of-contents source.'); };
+  if (!snapshot.blocks.length) fail();
+  if (!snapshot.blocks.some(block => marker(block.source))) return;
+  if (snapshot.body !== source || snapshot.leading.trim() || snapshot.blocks.length !== document.childCount) fail();
+  let offset = snapshot.leading.length, line = 1 + (snapshot.leading.match(/\r\n?|\n/gu)?.length ?? 0);
+  let next = 0, cursor = 0, restored = 0;
+  const rebuilt: typeof children = [];
+  for (const [index, block] of snapshot.blocks.entries()) {
+    if (block.separatorAfter.trim()) fail();
+    const end = offset + block.source.length, span = spans[next];
+    if (span?.from === offset && span.to === end && ordinary[next] === children[cursor]) {
+      const node = ordinary[next++]!;
+      if ('tagName' in node && /^h[1-6]$/u.test(node.tagName)) {
+        const anchor = node.childNodes.at(-1);
+        const target = attribute(node, 'id')?.match(/^user-content-(.+)$/u)?.[1];
+        // GitLab appends an empty self-link after the author's heading content.
+        if (target && anchor && 'tagName' in anchor && anchor.tagName === 'a' && !anchor.childNodes.length
+          && attribute(anchor, 'class') === 'anchor' && attribute(anchor, 'data-heading-content') !== undefined
+          && attribute(anchor, 'href') === '#' + target && !/<a[\s>]/iu.test(block.source)) node.childNodes.pop();
+      }
+      rebuilt.push(node);
+      cursor++;
+    } else {
+      const token = marker(block.source);
+      const paragraphNode = document.child(index);
+      if (!token || paragraphNode.type.name !== 'paragraph' || paragraphNode.content.some(node => node.marks.some(mark => mark.type.name === 'link'))) return fail();
+      if (children[cursor] && nav(children[cursor]!)) cursor++;
+      // Only bracketed ASCII tokens reach here. Feed the ordinary importer the
+      // same paragraph and inclusive source position as the editing preview.
+      const column = block.source.indexOf(token) + 1;
+      const value = token.replaceAll('\\', '');
+      const paragraph = parseFragment('<p dir="auto" data-sourcepos="' + line + ':' + column + '-' + line + ':' + (column + token.length - 1) + '">' + value + '</p>').childNodes[0]!;
+      paragraph.parentNode = fragment;
+      rebuilt.push(paragraph);
+      restored++;
+    }
+    const consumed = block.source + block.separatorAfter;
+    offset += consumed.length;
+    line += consumed.match(/\r\n?|\n/gu)?.length ?? 0;
+  }
+  if (offset !== source.length || cursor !== children.length || next !== ordinary.length) fail();
+  if (!restored) return false;
+  fragment.childNodes = rebuilt;
+  return true;
+}
 
 export function normalizeGitLabContents(elements: readonly Element[], source: string, maxBytes: number, enabled: boolean) {
   let positions: GitLabFootnotePositions | undefined;

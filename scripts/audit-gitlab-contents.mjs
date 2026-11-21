@@ -11,6 +11,26 @@ export async function runContents({ page, side, project, request, fixture, runId
   const issue = await request('/api/v4/projects/' + project.id + '/issues', { title: input.title + ' ' + runId, description: input.markdown });
   item.iid = issue.iid;
   const api = '/api/v4/projects/' + project.id + '/issues/' + issue.iid;
+  if (input.readerPreview) {
+    item.previews = [];
+    const projectURL = new URL(project.web_url);
+    await page.route(url => url.origin === projectURL.origin && url.pathname.startsWith(projectURL.pathname + '/')
+      && url.searchParams.has('no_header_anchors'), async route => {
+      const req = route.request();
+      if (req.method() !== 'POST') return route.continue();
+      const url = new URL(req.url());
+      url.searchParams.set('no_header_anchors', 'false');
+      const response = await route.fetch({url:url.href, maxRedirects:0});
+      try {
+        const source = req.postDataJSON()?.text;
+        if (typeof source === 'string' && source.includes('# Runbook')) {
+          const {body} = await response.json();
+          item.previews.push({source, status:response.status(), body});
+        }
+        await route.fulfill({response});
+      } finally { await response.dispose(); }
+    });
+  }
   try {
     await page.goto(issue.web_url);
     const host = page.getByTestId('work-item-description-wrapper');
