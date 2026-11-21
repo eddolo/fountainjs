@@ -630,8 +630,8 @@ export function outdentListItem(editor: Editor): boolean {
   return dispatchListTransform(editor, transaction);
 }
 
-/** Wraps sibling text blocks in their existing parent, converts a list range, or toggles it off. */
-export function toggleList(editor: Editor, kind: ListKind): boolean {
+/** Wraps sibling text blocks in their existing parent, converts selected items (or a whole bullet/numbered list), or toggles it off. */
+export function toggleList(editor: Editor, kind: ListKind, conversionScope: 'items' | 'list' = 'items'): boolean {
   if (!editor.editable || editor.state.selection instanceof GapSelection) return false;
   if (editor.state.selection instanceof CellSelection) {
     const selection = editor.state.selection;
@@ -639,7 +639,7 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
       for (const path of selection.cellPaths) {
         const range = nodeRangeAtPath(editor.state.doc, path);
         if (!editor.dispatch(editor.createTransaction().setSelection(new RangeSelection(editor.state.doc, range.from + 1, range.to - 1)))
-          || !toggleList(editor, kind)) return false;
+          || !toggleList(editor, kind, conversionScope)) return false;
       }
       return editor.dispatch(editor.createTransaction().setSelection(new CellSelection(editor.state.doc, selection.anchorCellPath, selection.headCellPath)));
     });
@@ -665,15 +665,18 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
       return dispatchListTransform(editor, transaction);
     }
     if (range.list.type.name === target.list) return outdentListItem(editor);
-    const selected = range.list.content.slice(range.from, range.to + 1)
+    const wholeList = conversionScope === 'list' && kind !== 'task' && range.list.content.every(item => item.type.name === 'list_item');
+    const firstItem = wholeList ? 0 : range.from;
+    const lastItem = wholeList ? range.list.childCount - 1 : range.to;
+    const selected = range.list.content.slice(firstItem, lastItem + 1)
       .map((item) => {
         const converted = convertListItem(editor, item, target.item);
         const layout = converted?.type.spec.attrs?.layout && layoutForListKind(converted.attrs.layout, kind, false);
         return converted && layout ? converted.type.create({ ...converted.attrs, layout }, converted.content) : converted;
       });
     if (selected.some((item) => !item)) return false;
-    const before = range.list.content.slice(0, range.from);
-    const after = range.list.content.slice(range.to + 1);
+    const before = range.list.content.slice(0, firstItem);
+    const after = range.list.content.slice(lastItem + 1);
     const sharedAuto = ownListDirection(range.list) === 'auto'
       && Boolean(before.length || after.length || !targetListType.spec.attrs?.dir);
     let replacements: Node[];
@@ -687,7 +690,7 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
       replacements = [
         ...(before.length ? [copyListSlice(range.list, before)] : []),
         converted,
-        ...(after.length ? [copyListSlice(range.list, after, range.to + 1)] : []),
+        ...(after.length ? [copyListSlice(range.list, after, lastItem + 1)] : []),
       ];
     } catch { return false; }
     let convertedPath = [
@@ -707,8 +710,8 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
     const transaction = editor.state.createTransaction();
     restructureNode(transaction, range.listPath, replacements);
     selectListRange(editor, transaction,
-        [...convertedPath, 0, ...startRelative],
-        [...convertedPath, (selected as Node[]).length - 1, ...endRelative],
+        [...convertedPath, range.from - firstItem, ...startRelative],
+        [...convertedPath, range.to - firstItem, ...endRelative],
       );
     if (editor.state.selection instanceof NodeSelection && editor.state.selection.nodePath.join('.') === range.listPath.join('.')) {
       transaction.setSelection(new NodeSelection(transaction.doc, convertedPath));

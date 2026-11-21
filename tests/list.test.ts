@@ -20,6 +20,19 @@ const paragraph = (text: string) => ({ type: 'paragraph', content: [{ type: 'tex
 const item = (text: string) => ({ type: 'list_item', content: [paragraph(text)] });
 
 describe('professional list transforms', () => {
+  it('converts a whole list while keeping a partial selection in the same items', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [
+      { type: 'ordered_list', content: [item('First'), item('Second'), item('Third')] }, paragraph('Outside'),
+    ] } });
+    const selection = Selection.range([0, 1, 0, 0], 2, [0, 2, 0, 0], 3);
+    editor.dispatch(editor.createTransaction().setSelection(selection));
+    expect(toggleList(editor, 'bullet', 'list')).toBe(true);
+    expect(editor.state.doc.content.map(node => node.type.name)).toEqual(['bullet_list', 'paragraph']);
+    expect(editor.state.doc.child(0).content.map(node => node.textContent)).toEqual(['First', 'Second', 'Third']);
+    expect(editor.state.selection.eq(selection)).toBe(true);
+    editor.destroy();
+  });
+
   it('names exported task checkboxes from their own text and preserves task state', () => {
     const schema = new Schema(CoreSchemaSpec);
     const text = 'Verify "<draft>" & sign';

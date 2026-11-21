@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium, expect } from '@playwright/test';
 
+import { auditStructure } from './audit-structure.mjs';
 import { auditToolbar } from './audit-toolbar.mjs';
 
 const pin = {
@@ -17,7 +18,8 @@ const pin = {
 const source = '<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review.</p>';
 const expected = source.replace('Ready for review.', 'Ready for review. Approved.');
 const id = randomUUID();
-const paired = process.argv.includes('--paired');
+const structureOnly = process.argv.includes('--structure');
+const paired = structureOnly || process.argv.includes('--paired');
 const extension = fileURLToPath(new URL('../../artifacts/directus-extension/', import.meta.url));
 const candidate = paired ? JSON.parse(await readFile(join(extension,'identity.json'),'utf8')) : null;
 const out = fileURLToPath(new URL('../../artifacts/directus-'+(paired?'handover':'stock')+'/' + id + '/', import.meta.url));
@@ -163,99 +165,126 @@ try {
     return { itemId: record.id, savedHTML: html, clearedValue: null, invisibleHTML };
 
   }
-  const {context,page,editor} = await openItem();
-  await expect(editor.locator('h2')).toHaveText('Publication brief');
-  await expect(editor.locator('strong')).toHaveText('Research');
-  const paragraph = editor.locator('p').last();
-  await paragraph.click();
-  await page.keyboard.press('End');
-  await page.keyboard.insertText(' Approved.');
-  await expect(paragraph).toHaveText('Ready for review. Approved.');
-  await page.keyboard.press('Control+z');
-  await expect(paragraph).toHaveText('Ready for review.');
-  await page.keyboard.press('Control+Shift+z');
-  await expect(paragraph).toHaveText('Ready for review. Approved.');
-  assert.equal((await api(itemPath)).body, source);
-  await page.keyboard.press('Control+s');
-  await expect.poll(async () => (await api(itemPath)).body,{timeout:15000}).toBe(expected);
-  report.saved = (await api(itemPath)).body;
-  await context.close();
-  report.stage = 'restart and reopen';
-  docker('restart', container);
-  origin = publishedOrigin();
-  await ready();
-  token = await login();
-  assert.equal((await api(itemPath)).body, expected);
-  const reopened = await openItem();
-  await expect(reopened.editor.locator('p').last()).toHaveText('Ready for review. Approved.');
-  await expect(reopened.editor.locator('strong')).toHaveText('Research');
-  await reopened.page.screenshot({path:join(out,'reopened.png')});
-  report.restoredAfterRestart = true;
   if (paired) {
-    report.layout = { stock: await measureContent(reopened.editor) };
-    await reopened.context.close();
     const installedHash = docker('exec',container,'sha256sum','/directus/extensions/directus-extension-fountain-html/index.js').split(' ')[0];
     assert.equal(installedHash,candidate.bundleSHA256);
     report.fountain = candidate;
-    async function selectInterface(name, options = null) {
-      const updated = await api('/fields/'+collection+'/body',{
-        method:'PATCH',body:JSON.stringify({meta:{interface:name, options}}),
-      });
-      assert.equal(updated.meta.interface,name);
-    }
-    report.toolbar = {};
+  }
+  async function selectInterface(name, options = null) {
+    const updated = await api('/fields/'+collection+'/body',{
+      method:'PATCH',body:JSON.stringify({meta:{interface:name, options}}),
+    });
+    assert.equal(updated.meta.interface,name);
+  }
+  async function checkStructure() {
+    report.structure = {};
     for (const side of ['stock', 'fountain']) {
-      report.toolbar[side] = await auditToolbar({ side, api, collection, selectInterface, openItem, out, report });
+      report.structure[side] = await auditStructure({ side, api, collection, selectInterface, openItem, out, report });
     }
+    const { item: id, marker, switchedHTML } = report.structure.fountain;
+    assert.deepEqual(marker, report.structure.stock.marker);
     await selectInterface('input-rich-text-html');
-    report.optionalField = { stock: await checkOptionalField('stock') };
-    await selectInterface('fountain-rich-text-html');
-    report.optionalField.fountain = await checkOptionalField('fountain');
-    const replacement = await openItem('fountain');
-    report.stage = 'Fountain edit and save';
-    const last = replacement.editor.locator('p').last();
-    await expect(last).toHaveText('Ready for review. Approved.');
-    await expect(replacement.editor.locator('strong')).toHaveText('Research');
-    await last.click();
-    await replacement.page.keyboard.press('End');
-    await replacement.page.keyboard.insertText(' Scheduled.');
-    await expect(last).toHaveText('Ready for review. Approved. Scheduled.');
-    await replacement.page.keyboard.press('Control+z');
-    await expect(last).toHaveText('Ready for review. Approved.');
-    await replacement.page.keyboard.press('Control+Shift+z');
-    await expect(last).toHaveText('Ready for review. Approved. Scheduled.');
-    assert.equal((await api(itemPath)).body,expected);
-    const finalHTML = expected.replace(' Approved.', ' Approved. Scheduled.');
-    await replacement.page.keyboard.press('Control+s');
-    await expect.poll(async ()=>(await api(itemPath)).body,{timeout:15000}).toBe(finalHTML);
-    await replacement.context.close();
-    docker('restart',container);
+    const stock = await openItem('stock', '/admin/content/' + collection + '/' + id);
+    report.stage = 'continue editing the Fountain list in stock Directus';
+    await expect(stock.editor.locator('ul > li')).toHaveText(['Pack assets.', 'Ship build. Ready.']);
+    await stock.editor.getByText('Ship build. Ready.', { exact: true }).click();
+    await stock.page.keyboard.press('End');
+    await stock.page.keyboard.insertText(' Checked.');
+    await stock.page.keyboard.press('Control+s');
+    const continued = switchedHTML.replace('Ready.', 'Ready. Checked.');
+    await expect.poll(async () => (await api('/items/' + collection + '/' + id)).body).toBe(continued);
+    report.structure.rollback = { item: id, saved: continued };
+    await stock.context.close();
+  }
+  async function checkSavedItem() {
+    const {context,page,editor} = await openItem();
+    await expect(editor.locator('h2')).toHaveText('Publication brief');
+    await expect(editor.locator('strong')).toHaveText('Research');
+    const paragraph = editor.locator('p').last();
+    await paragraph.click();
+    await page.keyboard.press('End');
+    await page.keyboard.insertText(' Approved.');
+    await expect(paragraph).toHaveText('Ready for review. Approved.');
+    await page.keyboard.press('Control+z');
+    await expect(paragraph).toHaveText('Ready for review.');
+    await page.keyboard.press('Control+Shift+z');
+    await expect(paragraph).toHaveText('Ready for review. Approved.');
+    assert.equal((await api(itemPath)).body, source);
+    await page.keyboard.press('Control+s');
+    await expect.poll(async () => (await api(itemPath)).body,{timeout:15000}).toBe(expected);
+    report.saved = (await api(itemPath)).body;
+    await context.close();
+    report.stage = 'restart and reopen';
+    docker('restart', container);
     origin = publishedOrigin();
     await ready();
     token = await login();
-    assert.equal((await api(itemPath)).body,finalHTML);
-    const fresh = await openItem('fountain');
-    await expect(fresh.editor.locator('p').last()).toHaveText('Ready for review. Approved. Scheduled.');
-    await expect(fresh.editor.locator('h2')).toBeVisible();
-    await fresh.editor.screenshot({path:join(out,'fountain.png')});
-    report.layout.fountain = await measureContent(fresh.editor);
-    assert.deepEqual(report.layout.fountain, report.layout.stock, 'Reopened rich field typography and spacing');
-    await fresh.context.close();
-    await selectInterface('input-rich-text-html');
-    const rollback = await openItem();
-    const restored = rollback.editor.locator('p').last();
-    await expect(restored).toHaveText('Ready for review. Approved. Scheduled.');
-    await restored.click();
-    await rollback.page.keyboard.press('End');
-    await rollback.page.keyboard.insertText(' Published.');
-    await rollback.page.keyboard.press('Control+s');
-    const rollbackHTML=finalHTML.replace(' Scheduled.', ' Scheduled. Published.');
-    await expect.poll(async ()=>(await api(itemPath)).body,{timeout:15000}).toBe(rollbackHTML);
-    const stockReopened = await openItem();
-    await expect(stockReopened.editor.locator('p').last()).toHaveText('Ready for review. Approved. Scheduled. Published.');
-    await stockReopened.editor.screenshot({path:join(out,'stock-rollback.png')});
-    report.handover={itemId:item.id,saved:finalHTML,rollbackSaved:rollbackHTML};
+    assert.equal((await api(itemPath)).body, expected);
+    const reopened = await openItem();
+    await expect(reopened.editor.locator('p').last()).toHaveText('Ready for review. Approved.');
+    await expect(reopened.editor.locator('strong')).toHaveText('Research');
+    await reopened.page.screenshot({path:join(out,'reopened.png')});
+    report.restoredAfterRestart = true;
+    if (paired) {
+      report.layout = { stock: await measureContent(reopened.editor) };
+      await reopened.context.close();
+      await checkStructure();
+      report.toolbar = {};
+      for (const side of ['stock', 'fountain']) {
+        report.toolbar[side] = await auditToolbar({ side, api, collection, selectInterface, openItem, out, report });
+      }
+      await selectInterface('input-rich-text-html');
+      report.optionalField = { stock: await checkOptionalField('stock') };
+      await selectInterface('fountain-rich-text-html');
+      report.optionalField.fountain = await checkOptionalField('fountain');
+      const replacement = await openItem('fountain');
+      report.stage = 'Fountain edit and save';
+      const last = replacement.editor.locator('p').last();
+      await expect(last).toHaveText('Ready for review. Approved.');
+      await expect(replacement.editor.locator('strong')).toHaveText('Research');
+      await last.click();
+      await replacement.page.keyboard.press('End');
+      await replacement.page.keyboard.insertText(' Scheduled.');
+      await expect(last).toHaveText('Ready for review. Approved. Scheduled.');
+      await replacement.page.keyboard.press('Control+z');
+      await expect(last).toHaveText('Ready for review. Approved.');
+      await replacement.page.keyboard.press('Control+Shift+z');
+      await expect(last).toHaveText('Ready for review. Approved. Scheduled.');
+      assert.equal((await api(itemPath)).body,expected);
+      const finalHTML = expected.replace(' Approved.', ' Approved. Scheduled.');
+      await replacement.page.keyboard.press('Control+s');
+      await expect.poll(async ()=>(await api(itemPath)).body,{timeout:15000}).toBe(finalHTML);
+      await replacement.context.close();
+      docker('restart',container);
+      origin = publishedOrigin();
+      await ready();
+      token = await login();
+      assert.equal((await api(itemPath)).body,finalHTML);
+      const fresh = await openItem('fountain');
+      await expect(fresh.editor.locator('p').last()).toHaveText('Ready for review. Approved. Scheduled.');
+      await expect(fresh.editor.locator('h2')).toBeVisible();
+      await fresh.editor.screenshot({path:join(out,'fountain.png')});
+      report.layout.fountain = await measureContent(fresh.editor);
+      assert.deepEqual(report.layout.fountain, report.layout.stock, 'Reopened rich field typography and spacing');
+      await fresh.context.close();
+      await selectInterface('input-rich-text-html');
+      const rollback = await openItem();
+      const restored = rollback.editor.locator('p').last();
+      await expect(restored).toHaveText('Ready for review. Approved. Scheduled.');
+      await restored.click();
+      await rollback.page.keyboard.press('End');
+      await rollback.page.keyboard.insertText(' Published.');
+      await rollback.page.keyboard.press('Control+s');
+      const rollbackHTML=finalHTML.replace(' Scheduled.', ' Scheduled. Published.');
+      await expect.poll(async ()=>(await api(itemPath)).body,{timeout:15000}).toBe(rollbackHTML);
+      const stockReopened = await openItem();
+      await expect(stockReopened.editor.locator('p').last()).toHaveText('Ready for review. Approved. Scheduled. Published.');
+      await stockReopened.editor.screenshot({path:join(out,'stock-rollback.png')});
+      report.handover={itemId:item.id,saved:finalHTML,rollbackSaved:rollbackHTML};
+    }
   }
+  if (structureOnly) await checkStructure();
+  else await checkSavedItem();
   report.stage = 'complete';
   report.passed = true;
 } catch(error) {

@@ -276,6 +276,12 @@ the selected items and preserves the list segments on either side; invoking the
 active kind lifts the range out. Ordered segments retain their correct numeric
 start after a split.
 
+For a toolbar that switches the whole containing list between bullets and
+numbers, use `toggleList(editor, 'ordered', 'list')` or
+`toggleList(editor, 'bullet', 'list')`. The caret or text selection stays in
+the same items. Clicking the active kind still lifts the selected items.
+The two-argument form keeps its selected-item behavior.
+
 `indentListItem(editor, nestedKind?)` and `outdentListItem(editor)` transform
 every selected item when both endpoints share a list. Passing `nestedKind`
 creates mixed hierarchy such as an ordered list inside a bullet item. Lifting a

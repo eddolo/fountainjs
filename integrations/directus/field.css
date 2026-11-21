@@ -58,5 +58,9 @@
 
 .fountain-directus-field p { margin-block: 1.5em; }
 .fountain-directus-field :is(h1, h2, h3, h4, h5, h6) + p { margin-block-start: 0.5em; }
+.fountain-directus-field :is(ul, ol) { padding-inline-start: 2.5rem; margin-block: 1.5em; }
+.fountain-directus-field ul { list-style-type: disc; }
+.fountain-directus-field ol { list-style-type: decimal; }
+.fountain-directus-field li :is(ul, ol) { margin-block: 0; }
 .fountain-directus-field li > p { margin: 0; }
 .fountain-directus-field :is(strong, b) { font-weight: 700; }

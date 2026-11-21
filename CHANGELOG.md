@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `toggleList` accepts an optional `'list'` scope for switching an entire bullet or numbered list while keeping the selection. The Directus toolbar uses this mode.
+
 - Smart typography preserves literal punctuation inside code blocks and inline code, including Mermaid arrows typed character by character.
 
 - Block insertion at a text cursor now reports when the application rejects the edit.
