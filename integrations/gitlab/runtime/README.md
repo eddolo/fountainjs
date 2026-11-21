@@ -711,6 +711,14 @@ node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$
 
 To verify a deployment with wiki collaboration already enabled for the project namespace, add `--preconfigured-wiki` to the stock rollout command. The fixture records the Features API response and reads the matching rows in PostgreSQL before it changes the namespace gate. The source and destination use the same persisted actor. The report records both the gate after the editors close and the original configuration after fixture cleanup. A disagreement at initial setup stops the comparison before a wiki is created.
 
+To test the opposite deployment direction with the same structured document, run the following on the pinned local installation. Fountain creates the initial shared room from GitLab’s rendered preview. Both authors edit the room before GitLab switches back to the packaged stock frontend. The same source, table, link and reader checks apply after the switch. The [native-first comparison](../../../artifacts/gitlab-compatibility/wiki-native-seed-20261121/fountain-3/report.json) verified the unsaved edits, author-local undo and redo, nine room updates, exact saved Markdown and final reader.
+
+```sh
+node scripts/run-gitlab-compatibility.mjs --suite wiki-collaboration --run-id "$run_id-structured-rollback" --editor fountain --verify-draft-rollback --structured-wiki-rollback
+```
+
+The single-container rollback suite checkpoints Redis after fixture cleanup as well as before switching frontends. This prevents a cold boot from reopening the earlier snapshot of the temporary feature flag. An [observed cold start](../../../artifacts/gitlab-compatibility/wiki-native-seed-20261121/fountain-1/report.json) returned a namespace actor from the API while PostgreSQL held no enabled gate. The collector stopped before editor setup. In this isolated deployment, expiring the single wiki flag cache made GitLab report the stored off value. The [following boot](../../../artifacts/gitlab-compatibility/wiki-native-seed-20261121/fountain-2/report.json) recorded agreement.
+
 To exercise the wire adapter independently of the browser, build the native runtime and run the following from the Fountain checkout. Pass the pinned GitLab source checkout with its installed JavaScript dependencies.
 
 ```sh
