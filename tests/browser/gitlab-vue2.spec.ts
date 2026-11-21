@@ -288,6 +288,25 @@ test('loads real Markdown, retains template undo and sends only actual user chan
   );
 });
 
+test('saves a caption edit with the original repository image address', async ({page}, info) => {
+  const source = '![logo](app/assets/images/logo.svg)\n\nRelease notes.';
+  await page.route('**/gitlab-org/gitlab/-/raw/master/app/assets/images/logo.svg', route =>
+    route.fulfill({ path:'tests/fixtures/cross-container-figure.png', contentType:'image/png' }));
+  await page.goto('/tests/browser/fixtures/gitlab-vue2.html?gitlab-rendered=1');
+  await page.getByRole('textbox', {name:'Markdown replacement source'}).fill(source);
+  await page.getByRole('button', {name:'Load Markdown baseline', exact:true}).click();
+  const editor = page.getByRole('textbox', {name:'GitLab Vue 2 bridge editor', exact:true});
+  const image = editor.getByAltText('logo', {exact:true});
+  await expect(image).toBeVisible();
+  await expect.poll(() => image.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await editor.getByText('Release notes.', {exact:true}).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Reviewed.');
+  await page.getByRole('button', {name:'Save current document', exact:true}).click();
+  await expect(page.getByLabel('Private submitted Markdown', {exact:true})).toHaveJSProperty('textContent', source + ' Reviewed.');
+  await editor.screenshot({path:info.outputPath('repository-image-caption.png')});
+});
+
 test('edits pinned GitLab reference rendering without replacing source tokens with display labels', async ({
   page,
 }, info) => {

@@ -95,6 +95,12 @@ const pinnedGitLabCodec = new GitLabMarkdownCodec({
   renderMarkdown: async (markdown) => {
     const math = gitlabMath.rows.find((row) => row.markdown === markdown);
     if (math) return { body: math.html };
+    if (markdown === '![logo](app/assets/images/logo.svg)\n\nRelease notes.') {
+      // Exercise the captured repository image with only its paragraph source span.
+      const body = gitlabHTML.fixtures.REPOSITORY_RELATIVE_IMAGE_WITHOUT_CANONICAL_SRC_HTML
+        .replace('<img data-sourcepos="1:1-1:35"', '<img');
+      return { body: body + '<p>Release notes.</p>' };
+    }
     if (markdown !== 'See #1 and !1 by @root with ~bug in b51c8ef20575')
       throw new Error('This private contract fixture has no live GitLab renderer.');
     return { body: gitlabHTML.fixtures.RESOLVED_REFERENCES_PARAGRAPH_HTML };

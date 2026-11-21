@@ -256,6 +256,32 @@ it('recovers the relative destination for an image edit from its GitLab source s
   expect(codec.serialize({ doc: document.copy([paragraph.copy([renamed])]) })).toBe('![Release diagram](app/assets/images/logo.svg)');
 });
 
+it.each(['wrapper', 'paragraph'])('recovers an image from its sole %s source span after a text edit', async (carrier) => {
+  const source = '![logo](assets/logo.svg)\n\nKeep this caption.';
+  const span = ' data-sourcepos="1:1-1:24"';
+  const image = '<img alt="logo" data-src="/project/-/raw/main/assets/logo.svg">';
+  const html = '<p' + (carrier === 'paragraph' ? span : '') + '><a class="no-attachment-icon" href="/preview"'
+    + (carrier === 'wrapper' ? span : '') + '>' + image + '</a></p><p>Keep this caption.</p>';
+  const { document, codec } = await convert(source, html);
+  expect(document.child(0).child(0).attrs.gitlabCanonicalSrc).toBe('assets/logo.svg');
+  expect(codec.serialize({doc:append(document)})).toBe(source + '\n\nAdded.');
+});
+
+it('leaves a paragraph span unresolved when the image has a rendered sibling', async () => {
+  const source = '![logo](assets/logo.svg)';
+  const html = '<p data-sourcepos="1:1-1:24"><img alt="logo" data-src="/preview"> another element</p>';
+  const { document, codec } = await convert(source, html);
+  expect(codec.serializeWithReport({doc:append(document)}).issues.some(issue => issue.code === 'canonical-image-source')).toBe(true);
+});
+
+it('preserves an unresolved image when a known image also claims the same span', async () => {
+  const source = '![logo](assets/logo.svg)';
+  const known = '<img alt="logo" data-canonical-src="assets/logo.svg" data-src="/preview" data-sourcepos="1:1-1:24">';
+  const missing = '<p data-sourcepos="1:1-1:24"><img alt="logo" data-src="/other-preview"></p>';
+  const { document, codec } = await convert(source, '<p>' + known + '</p>' + missing);
+  expect(codec.serializeWithReport({doc:append(document)}).issues.filter(issue => issue.code === 'canonical-image-source')).toHaveLength(1);
+});
+
 it('uses UTF-8 positions and document references to distinguish repeated image descriptions', async () => {
   const source = 'λ ![plan][old] ![plan][new]\r\n\r\n[old]: v1/plan.png\r\n[new]: v2/plan.png';
   const img = (position: string, src: string) => '<img alt="plan" data-src="' + src + '" data-sourcepos="' + position + '">';

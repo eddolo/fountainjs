@@ -72,23 +72,45 @@ export function gitlabMediaNodes(labels: Readonly<Record<GitLabPlayableKind, str
 type Element = DefaultTreeAdapterMap['element'];
 const attr = (element: Element, name: string): string | undefined => element.attrs.find(item => item.name === name)?.value;
 const classes = (element: Element): string[] => (attr(element, 'class') ?? '').split(/\s+/u).filter(Boolean);
+function imageSourcePosition(image: Element): string | undefined {
+  const own = attr(image, 'data-sourcepos');
+  if (own !== undefined) return own;
+  let child = image;
+  let parent = child.parentNode;
+  // GitLab can wrap a lazy image with its own download link. The wrapper or
+  // paragraph span belongs to the image only when it has no other content.
+  if (parent && 'tagName' in parent && parent.tagName === 'a' && classes(parent).includes('no-attachment-icon')
+    && parent.childNodes.length === 1) {
+    child = parent;
+    const wrapper = attr(child, 'data-sourcepos');
+    if (wrapper !== undefined) return wrapper;
+    parent = child.parentNode;
+  }
+  if (parent && 'tagName' in parent && parent.tagName === 'p' && parent.childNodes.length === 1) {
+    return attr(parent, 'data-sourcepos');
+  }
+  return undefined;
+}
+
 /** Resolve each missing image address from its own host-reported UTF-8 span.
  * The existing Markdown parser resolves labels in the author's definition scope.
  * Reader and proxy URLs remain display-only.
  */
 export function recoverGitLabImageSources(elements: readonly Element[], source: string, schema: Schema, maxBytes: number): void {
   let positions: GitLabFootnotePositions | undefined;
-  const ranges: { image: Element; from: number; to: number }[] = [];
+  const ranges: { image: Element; from: number; to: number; missing: boolean }[] = [];
+  if (!elements.some(el => el.tagName === 'img' && attr(el, 'data-src') && !attr(el, 'data-canonical-src'))) return;
   for (const image of elements) {
-    if (image.tagName !== 'img' || !attr(image, 'data-src') || attr(image, 'data-canonical-src')) continue;
+    if (image.tagName !== 'img') continue;
     const parent = image.parentNode;
-    if (parent && 'tagName' in parent && parent.tagName === 'a' && classes(parent).includes('no-attachment-icon')
-      && attr(parent, 'data-canonical-src')) continue;
-    const position = attr(image, 'data-sourcepos');
+    const wrapperCanonical = parent && 'tagName' in parent && parent.tagName === 'a' && classes(parent).includes('no-attachment-icon')
+      && attr(parent, 'data-canonical-src');
+    const missing = Boolean(attr(image, 'data-src') && !attr(image, 'data-canonical-src') && !wrapperCanonical);
+    const position = imageSourcePosition(image);
     if (!position) continue;
     positions ??= new GitLabFootnotePositions(source, maxBytes);
     const range = positions.read(position);
-    if (range && source.startsWith('![', range.from)) ranges.push({ image, ...range });
+    if (range && source.startsWith('![', range.from)) ranges.push({ image, missing, ...range });
   }
   if (!ranges.length) return;
   ranges.sort((a,b) => a.from - b.from || a.to - b.to);
@@ -98,7 +120,7 @@ export function recoverGitLabImageSources(elements: readonly Element[], source: 
   const candidates = ranges.filter((range,i) => {
     const overlaps = range.from < end || (ranges[i + 1]?.from ?? Infinity) < range.to;
     end = Math.max(end, range.to);
-    return !overlaps;
+    return range.missing && !overlaps;
   });
   if (!candidates.length) return;
   const read = MarkdownImporter.createInlineReader(source, schema);
