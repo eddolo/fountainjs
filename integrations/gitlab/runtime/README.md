@@ -19,6 +19,46 @@ connect to an existing GitLab account or installation. Metrics are disabled and
 service concurrency is reduced for this small local test environment; these
 settings are not performance or deployment recommendations.
 
+### Reproduce a rolling wiki frontend switch on two application nodes
+
+Use the prepared native Fountain frontend, its matching build and install receipts,
+and the isolated private project used by the wiki comparison. Run from the
+FountainJS checkout with Docker Compose supporting volume subpaths. Install the
+project's Playwright Chromium build or point `PLAYWRIGHT_BROWSERS_PATH` at it.
+
+```sh
+export FOUNTAIN_GITLAB_FRONTEND_ASSETS="$(node -p "require('./artifacts/gitlab-native-browser-install/install.json').source + '/public/assets/webpack'")"
+docker compose -f integrations/gitlab/runtime/compose.yaml \
+  -f integrations/gitlab/runtime/compose.frontend.yaml up -d --wait baseline
+node scripts/audit-gitlab-two-node-wiki.mjs --rollback
+node scripts/audit-gitlab-two-node-wiki.mjs --rollout
+docker compose -f integrations/gitlab/runtime/compose.yaml stop baseline
+```
+
+For the source-preserving wiki controller used in the retained runs, set
+`FOUNTAIN_GITLAB_WIKI_DIR` to its prepared directory and add
+`-f integrations/gitlab/runtime/compose.wiki-restore.yaml` to the baseline startup.
+The runner mirrors the baseline controller on the peer and checks its file digest
+through both stages. Both nodes use the same pinned image. Each runs its own
+Rails, Workhorse and NGINX processes. The peer connects to the baseline's
+PostgreSQL, Redis and Gitaly sockets and shares the local test uploads directory.
+Start the baseline first. Recreate the peer if those socket files are replaced.
+
+The owner uses the baseline on loopback port 5080. Chromium routes the Developer
+to port 5081 while preserving GitLab's canonical URL. Workhorse request IDs
+identify the serving node. The runner checks the editor shown in the browser and
+the loaded script bytes against each container before allowing edits. It stops
+only the peer during the switch, checks an owner edit while the peer is offline,
+then opens a fresh Developer session using the same signed-in identity. The
+Developer recovers the draft, edits, undoes, redoes and saves. The owner reloads
+the result. Inspect `report.json` and the three screenshots in the printed
+artifact directory. The runner restores the namespace flag and fixture role and
+stops the peer. The local volumes retain the saved wiki for inspection.
+
+This case covers a single shared data tier and a returning author who reopens
+the wiki. Automatic load-balancer failover, a tab left open on the replaced
+frontend and failure of a data service require their own evidence.
+
 ### Reproduce merge-request creation
 
 Prepare the [frontend deployment](#reproduce-the-frontend-deployment-and-rollback) and run the commands below from the FountainJS checkout in Linux. The fixture creates one source branch and commit per editor through GitLab’s repository API. The browser selects that branch, creates the merge request, enters its formatted description, reopens it, adds a paragraph and saves. The collector checks the live draft immediately before Save and reads the saved Markdown and reader after reload. Each run leaves the branch and open merge request available for inspection.

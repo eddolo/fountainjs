@@ -1,0 +1,7 @@
+services:
+  peer:
+    volumes:
+      - type: bind
+        source: ${FOUNTAIN_GITLAB_WIKI_DIR:?Set the prepared wiki restore directory}/app/controllers/concerns/wiki_actions.rb
+        target: /opt/gitlab/embedded/service/gitlab-rails/app/controllers/concerns/wiki_actions.rb
+        read_only: true

@@ -1,0 +1,78 @@
+# A second Rails, Workhorse and Action Cable instance for the local wiki rollout check.
+# Start baseline first so Docker can mount the live sockets individually.
+services:
+  peer:
+    image: gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615
+    platform: linux/amd64
+    hostname: fountain-gitlab-peer
+    restart: "no"
+    cpus: 2
+    mem_limit: 2g
+    memswap_limit: 3g
+    shm_size: 256m
+    ports:
+      - "127.0.0.1:5081:5080"
+    environment:
+      SVWAIT: "30"
+      GITLAB_DISABLE_OPENSSH: "true"
+      GITLAB_SKIP_PG_UPGRADE: "true"
+      GITLAB_PRE_RECONFIGURE_SCRIPT: install -m 0600 /mnt/cluster/gitlab-secrets.json /etc/gitlab/gitlab-secrets.json
+      GITLAB_OMNIBUS_CONFIG: |
+        roles ['application_role']
+        external_url 'http://127.0.0.1:5080'
+        letsencrypt['enable'] = false
+        prometheus_monitoring['enable'] = false
+        postgresql['enable'] = false
+        redis['enable'] = false
+        gitaly['enable'] = false
+        sidekiq['enable'] = false
+        gitlab_kas['enable'] = false
+        puma['worker_processes'] = 0
+        puma['min_threads'] = 2
+        puma['max_threads'] = 4
+        gitlab_rails['auto_migrate'] = false
+        gitlab_rails['db_host'] = '/mnt/cluster'
+        gitlab_rails['db_username'] = 'gitlab'
+        gitlab_rails['redis_socket'] = '/mnt/cluster/redis.socket'
+        gitlab_workhorse['redis_socket'] = '/mnt/cluster/redis.socket'
+        gitlab_rails['repositories_storages'] = { 'default' => { 'gitaly_address' => 'unix:/mnt/cluster/gitaly.socket' } }
+        gitlab_rails['env'] = { 'ENABLE_RSPACK' => ENV.fetch('ENABLE_RSPACK', 'false') }
+    volumes:
+      - peer-config:/etc/gitlab
+      - peer-data:/var/opt/gitlab
+      - peer-logs:/var/log/gitlab
+      - type: volume
+        source: baseline-config
+        target: /mnt/cluster/gitlab-secrets.json
+        read_only: true
+        volume: { subpath: gitlab-secrets.json, nocopy: true }
+      - type: volume
+        source: baseline-data
+        target: /mnt/cluster/.s.PGSQL.5432
+        read_only: true
+        volume: { subpath: postgresql/.s.PGSQL.5432, nocopy: true }
+      - type: volume
+        source: baseline-data
+        target: /mnt/cluster/redis.socket
+        read_only: true
+        volume: { subpath: redis/redis.socket, nocopy: true }
+      - type: volume
+        source: baseline-data
+        target: /mnt/cluster/gitaly.socket
+        read_only: true
+        volume: { subpath: gitaly/gitaly.socket, nocopy: true }
+      - type: volume
+        source: baseline-data
+        target: /var/opt/gitlab/gitlab-rails/uploads
+        volume: { subpath: gitlab-rails/uploads, nocopy: true }
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS 'http://127.0.0.1:5080/-/readiness?all=1' > /dev/null"]
+      interval: 15s
+      timeout: 10s
+      start_period: 5m
+      retries: 3
+
+volumes:
+  peer-config:
+  peer-data:
+  peer-logs:
