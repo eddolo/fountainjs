@@ -33,6 +33,8 @@ docker compose -f integrations/gitlab/runtime/compose.yaml \
 node scripts/audit-gitlab-two-node-wiki.mjs --rollback
 node scripts/audit-gitlab-two-node-wiki.mjs --rollout
 node scripts/audit-gitlab-two-node-wiki.mjs --rollback --wiki-checklist
+node scripts/audit-gitlab-two-node-wiki.mjs --rollback --keep-tab-open
+node scripts/audit-gitlab-two-node-wiki.mjs --rollout --keep-tab-open
 docker compose -f integrations/gitlab/runtime/compose.yaml stop baseline
 ```
 
@@ -56,9 +58,9 @@ the result. Inspect `report.json` and the three screenshots in the printed
 artifact directory. The runner restores the namespace flag and fixture role and
 stops the peer. The local volumes retain the saved wiki for inspection.
 
-This case covers a single shared data tier and a returning author who reopens
-the wiki. Automatic load-balancer failover, a tab left open on the replaced
-frontend and failure of a data service require their own evidence.
+With `--keep-tab-open`, the Developer also keeps their original editor mounted on the peer. While the peer is stopped, they type a sign-off in the first paragraph and the owner independently edits the status on the surviving node. After replacement, the test checks both edits, the original browser navigation and editor element, the Developer’s undo/redo, and the source before Save. A fresh session on the replacement checks the merged draft and saves it. The owner reopens that revision. Inspect `open-tab-offline.png` and `open-tab-reconnected.png` alongside the saved reader.
+
+The two-node deployment shares one data tier and uses explicit browser routing. Automatic load-balancer failover and failure of a data service require separate evidence.
 
 ### Reproduce two authors editing a wiki checklist
 

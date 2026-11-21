@@ -19,8 +19,9 @@ const install = await readJSON('artifacts/gitlab-native-browser-install/install.
 const build = await readJSON('artifacts/gitlab-native-runtime/build.json');
 const args = process.argv.slice(2);
 const checklist = args.includes('--wiki-checklist');
-const switches = args.filter(arg=>arg!=='--wiki-checklist');
-assert.ok(switches.length<=1 && switches.every(arg=>['--rollback','--rollout'].includes(arg)), 'Use --rollback or --rollout with optional --wiki-checklist');
+const keepTab = args.includes('--keep-tab-open');
+const switches = args.filter(arg=>arg!=='--wiki-checklist' && arg!=='--keep-tab-open');
+assert.ok(switches.length<=1 && switches.every(arg=>['--rollback','--rollout'].includes(arg)), 'Use --rollback or --rollout with optional --wiki-checklist and --keep-tab-open');
 const fixture = await readJSON('integrations/gitlab/fixtures/compatibility-wiki-'+(checklist?'checklist':'collaboration')+'.json');
 const input = fixture.cases[0];
 const id = new Date().toISOString().replace(/[^0-9]/g, '');
@@ -29,7 +30,7 @@ const initialSide = direction==='rollback' ? 'fountain' : 'original';
 const finalSide = direction==='rollback' ? 'original' : 'fountain';
 const out = 'artifacts/gitlab-compatibility/wiki-two-nodes-' + direction + '-' + id;
 await mkdir(out, {recursive:true});
-const report = {direction,checks:[],nodes:[],errors:[],passed:false,fixtureSHA256:sha256(JSON.stringify(fixture)),
+const report = {direction,keepTab,checks:[],nodes:[],errors:[],passed:false,fixtureSHA256:sha256(JSON.stringify(fixture)),
   harnessSHA256:sha256(await readFile(new URL(import.meta.url)))};
 const docker = (...args) => execFileSync('docker', args, {encoding:'utf8',timeout:360000,maxBuffer:16*1024*1024});
 const name = node => group + '-' + node + '-1';
@@ -164,11 +165,12 @@ try {
     await tab.keyboard.press('End');
     await tab.keyboard.insertText(text);
   };
-  const content = surface => surface.locator('p').last().evaluate(el=>{
+  const paragraphText = p => p.evaluate(el=>{
     const copy=el.cloneNode(true);
     for (const label of copy.querySelectorAll('.collaboration-cursor-caret,[data-fountain-collaborator]')) label.remove();
     return copy.textContent;
   });
+  const content = surface => paragraphText(surface.locator('p').last());
   const taskBox = (surface,label) => surface.locator('li').filter({hasText:label}).getByRole('checkbox');
   const shows = (surface,text) => expect.poll(()=>content(surface),{timeout:20000}).toBe(text);
   const first = await editor(owner,'baseline','fountain');
@@ -190,7 +192,11 @@ try {
   assert.equal(await saved(),input.source);
   await first.screenshot({path:join(out,'before-switch.png')});
   report.checks.push({bothAuthorsBeforeSwitch:both,savedBefore:input.source});
-  await peer.close();
+  const retainedRoot = keepTab ? await second.elementHandle() : null;
+  const originalLoad = keepTab ? await peer.evaluate(() => performance.timeOrigin) : null;
+  const localNote = ' Offline sign-off.';
+  const ownerLine = surface => paragraphText(surface.locator('p').first());
+  if (!keepTab) await peer.close();
   docker('stop','--time','30',name('peer'));
   const during = ' Edited during '+direction+'.';
   await append(owner,first,during);
@@ -200,14 +206,40 @@ try {
     await expect(taskBox(first,input.checklist.label)).toBeChecked();
   }
   assert.equal(inspect('peer').State.Running,false);
+  if (keepTab) {
+    await second.locator('p').first().click();
+    await peer.keyboard.press('End');
+    await peer.keyboard.insertText(localNote);
+    await expect.poll(() => ownerLine(second)).toBe('Owner: Sam.'+localNote);
+    assert.equal(await ownerLine(first),'Owner: Sam.');
+    assert.equal(await content(second),both);
+    report.checks.push({isolatedPeerOwnerLine:await ownerLine(second),isolatedPrimaryStatus:await content(first)});
+    await second.screenshot({path:join(out,'open-tab-offline.png')});
+  }
   assert.equal(await saved(),input.source);
   deployPeer(finalSide==='fountain');
   await identify('peer',admin,finalSide);
   assert.notEqual(report.nodes[1].container,report.nodes[2].container);
+  if (keepTab) {
+    await expect.poll(() => ownerLine(first),{timeout:60000}).toBe('Owner: Sam.'+localNote);
+    await shows(second,both+during);
+    assert.equal(await peer.evaluate(() => performance.timeOrigin),originalLoad);
+    assert.equal(await retainedRoot.evaluate(el=>el.isConnected),true);
+    await peer.keyboard.press('Control+z');
+    await expect.poll(() => ownerLine(first)).toBe('Owner: Sam.');
+    await shows(second,both+during);
+    await peer.keyboard.press('Control+Shift+z');
+    await expect.poll(() => ownerLine(first)).toBe('Owner: Sam.'+localNote);
+    assert.equal(await saved(),input.source);
+    report.checks.push({originalEditor:initialSide,reconnectedTo:finalSide,sameMountedEditor:true,
+      afterReconnect:await ownerLine(first),survivingStatus:await content(second)});
+    await second.screenshot({path:join(out,'open-tab-reconnected.png')});
+  }
   const witness = await peerBrowser.newPage({storageState:peerState});
   await observePage(witness,report,report.errors);
   const recovered = await editor(witness,'peer',finalSide);
   await shows(recovered,both+during);
+  if (keepTab) assert.equal(await ownerLine(recovered),'Owner: Sam.'+localNote);
   const lastEdit = finalSide==='original' ? ' Checked on stock.' : ' Checked on Fountain.';
   const finalText = both+during+lastEdit;
   await append(witness,recovered,lastEdit);
@@ -232,6 +264,7 @@ try {
   await expect(reader.locator('p').last()).toHaveText(finalText);
   const persisted = await saved();
   let expected = input.source.replace('Status: ready.',finalText);
+  if (keepTab) expected = expected.replace('Owner: **Sam**.','Owner: **Sam**.'+localNote);
   if (checklist) {
     expected = expected.replace('[ ] '+input.checklist.label,'[x] '+input.checklist.label)
       .replace('3. [ ] Notify the team','3. [x] Notify the team');
@@ -242,6 +275,7 @@ try {
   await owner.goto(url);
   await expect(owner.getByTestId('wiki-page-content').locator('strong')).toHaveText('Sam');
   await expect(owner.getByTestId('wiki-page-content').locator('p').last()).toHaveText(finalText);
+  if (keepTab) await expect(owner.getByTestId('wiki-page-content').locator('p').first()).toHaveText('Owner: Sam.'+localNote);
   if (checklist) {
     const finalReader = owner.getByTestId('wiki-page-content');
     assert.deepEqual(await finalReader.locator('input[type=checkbox]').evaluateAll(boxes=>boxes.map(box=>box.checked)),[true,true,false,true,true]);
