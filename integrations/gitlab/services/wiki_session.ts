@@ -14,8 +14,8 @@ export interface GitLabWikiOptions {
     awareness: {
       getStates(): Map<number,{cursor?: Cursor; fountainWikiFiles?: unknown}>;
       setLocalStateField(name:string,value:unknown):void;
-      on(event:'change',fn:()=>void):void;
-      off(event:'change',fn:()=>void):void;
+      on(event:'change',fn:(change?:{added:readonly number[]})=>void):void;
+      off(event:'change',fn:(change?:{added:readonly number[]})=>void):void;
     };
   };
   wire: GitLabWikiWire<StockNode> & {types: typeof Y};
@@ -198,9 +198,12 @@ export class GitLabWikiSession {
     // The original bytes and the uploader's progress belong to that browser.
     this.options.provider.awareness.setLocalStateField('fountainWikiFiles',names.length ? names : null);
   }
-  private presences = () => {
+  private presences = (change?:{added:readonly number[]}) => {
     if (!this.binding || !this.context) return;
     const {provider,colorFor} = this.options;
+    // GitLab replays room edits to late joiners, but only broadcasts presence to current subscribers.
+    if (this.localFiles.length && change?.added.some(id => id !== provider.doc.clientID && provider.identityFor(id)))
+      provider.awareness.setLocalStateField('fountainWikiFiles',this.localFiles);
     const users:CollaborationPresence[] = [];
     const files:string[] = [];
     for (const [client,state] of provider.awareness.getStates()) {

@@ -144,14 +144,17 @@ it('shows file notices only for known peers, clears departed peers, and keeps no
   paragraph.push([new Y.XmlText('Draft')]);
   const peerId = doc.clientID + 1;
   const states = new Map<number,{fountainWikiFiles?:unknown}>();
-  let update = () => {};
+  let update: (change?:{added:number[]})=>void = () => {};
+  const sent: unknown[] = [];
+  let rejectUpload!: (error:Error)=>void;
   const unused = () => { throw new Error('A peer notice must never write or seed a wiki document'); };
   const service = new GitLabContentEditor({
     renderMarkdown:unused, describeLabels:()=> '',
+    uploadAttachment:() => new Promise((_resolve,reject) => { rejectUpload = reject; }),
     wikiCollaboration:async () => ({
       provider:{doc,connected:true,whenSynced:Promise.resolve({seed:false}),seed:unused,
         identityFor:id => id === peerId ? {id:2,name:'Author'} : null,
-        awareness:{getStates:()=>states,setLocalStateField:()=>{},on:(_event,fn)=>{ update=fn; },off:()=>{}}},
+        awareness:{getStates:()=>states,setLocalStateField:(key,value)=>{ if (key==='fountainWikiFiles') sent.push(value); },on:(_event,fn)=>{ update=fn; },off:()=>{}}},
       wire:{types:Y,stockSchema:{nodeFromJSON:unused},updateYFragment:unused},colorFor:()=> '#468',
     }),
   });
@@ -170,6 +173,18 @@ it('shows file notices only for known peers, clears departed peers, and keeps no
     update();
     expect(seen).toEqual([['a.txt','b.txt'],[]]);
     expect(service.getSerializedContent()).toBe('Draft');
+    expect(Y.encodeStateAsUpdate(doc)).toEqual(bytes);
+    const upload = service.uploadAttachment(new File(['evidence'],'proof.txt')).catch(() => {});
+    expect(sent).toEqual([['proof.txt']]);
+    update({added:[peerId+1,doc.clientID]});
+    update({added:[peerId]});
+    update({added:[]});
+    expect(sent).toEqual([['proof.txt'],['proof.txt']]);
+    await expect.poll(() => typeof rejectUpload).toBe('function');
+    rejectUpload(new Error('transfer interrupted'));
+    await upload;
+    update({added:[peerId]});
+    expect(sent).toEqual([['proof.txt'],['proof.txt'],null]);
     expect(Y.encodeStateAsUpdate(doc)).toEqual(bytes);
   } finally { service.dispose(); doc.destroy(); }
 });
