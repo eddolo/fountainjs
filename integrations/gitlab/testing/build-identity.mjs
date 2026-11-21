@@ -5,6 +5,7 @@ export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const saveEchoTree = '075b931b09e4a1b2123bda61cc8f17a2d84c119c';
 export const preparedRollbackTree = '307cccf71054136fcec34e32cd902ce5a87051ce';
 export const wikiUploadRollbackTree = '71d94ee242ba0dc3ddbfd279ecd4fc06996cbc9f';
+export const wikiUploadReplayTree = '05680cf7f8c2cdb1713329025aecc2ace113334c';
 const digest = value => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
 const revision = value => typeof value === 'string' && /^[a-f0-9]{40}$/u.test(value);
 const assetPath = /^\/assets\/webpack\/(?:[\w.-]+\/)*[\w.-]+\.js$/u;
@@ -32,12 +33,13 @@ export function buildIdentityError(report) {
   } else if (id.side === 'prepared') {
     if (mounts?.length !== 1 || mounts[0].readOnly !== true || observed.editor !== 'ProseMirror' ||
         observed.runtimeSHA256 !== null || observed.integrationSHA256 !== null ||
-        ![saveEchoTree, preparedRollbackTree, wikiUploadRollbackTree].includes(expected.sourceTree) || !digest(expected.rspackManifestSHA256) ||
+        ![saveEchoTree, preparedRollbackTree, wikiUploadRollbackTree, wikiUploadReplayTree].includes(expected.sourceTree) || !digest(expected.rspackManifestSHA256) ||
         !report.frontendManifests.includes(expected.rspackManifestSHA256 + '  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json') ||
         !observed.scripts.some(script => script.preparedHandoff === true) ||
         !observed.scripts.some(script => script.preparedSaveEcho === true) ||
         observed.scripts.some(script => script.preparedToolbarFocus === true) !== (expected.sourceTree !== saveEchoTree) ||
-        (expected.sourceTree === wikiUploadRollbackTree && !observed.scripts.some(script => script.wikiUploadGuard === true)))
+        ([wikiUploadRollbackTree,wikiUploadReplayTree].includes(expected.sourceTree) && !observed.scripts.some(script => script.wikiUploadGuard === true)) ||
+        (expected.sourceTree === wikiUploadReplayTree && !observed.scripts.some(script => script.wikiUploadReplay === true)))
       return 'prepared Tiptap rollback build or handoff script mismatch';
   } else if (id.side === 'fountain') {
     if (mounts?.length !== 1 || mounts[0]?.readOnly !== true || observed.editor !== 'FountainJS' ||
@@ -104,6 +106,8 @@ export async function observeEditorBuild({ page, project, request, expected, rep
         script.preparedToolbarFocus = true;
       if (wikiProbeURL && bytes.includes('fountainWikiFiles') && bytes.includes('Waiting for attachments before saving'))
         script.wikiUploadGuard = true;
+      if (script.wikiUploadGuard && bytes.includes('fountainWikiPendingUploads') && bytes.includes('discardAbandonedUploadBatches'))
+        script.wikiUploadReplay = true;
       observed.scripts.push(script);
     }
     return { side: report.side, expected, observed };

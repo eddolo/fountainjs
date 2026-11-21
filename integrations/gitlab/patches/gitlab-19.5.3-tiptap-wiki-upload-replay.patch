@@ -1,0 +1,151 @@
+diff --git a/app/assets/javascripts/wikis/components/wiki_form.vue b/app/assets/javascripts/wikis/components/wiki_form.vue
+index 9ff1212ab..16be70b94 100644
+--- a/app/assets/javascripts/wikis/components/wiki_form.vue
++++ b/app/assets/javascripts/wikis/components/wiki_form.vue
+@@ -229,6 +229,9 @@ export default {
+       isSubmitting: false,
+       collaborationProvider: null,
+       peerUploadNames: [],
++      uploadRoomReady: false,
++      pendingUploadBatches: [],
++      absentUploadBatches: [],
+       plainTextStartContent: this.pageInfo.content || '',
+     };
+   },
+@@ -242,7 +245,7 @@ export default {
+   },
+   computed: {
+     waitingForPeerUpload() {
+-      return this.peerUploadNames.length > 0;
++      return (this.isCollaborating && !this.uploadRoomReady) || this.pendingUploadBatches.length > 0 || this.peerUploadNames.length > 0;
+     },
+     isCollaborating() {
+       return Boolean(this.collaborationProvider);
+@@ -392,14 +395,25 @@ export default {
+ 
+       this.collaborationProvider = provider;
+       provider.awareness.on('change', this.updatePeerUploads);
++      const batches = provider.doc.getMap('fountainWikiPendingUploads');
++      batches.observe(this.updatePeerUploads);
+       provider.connect();
++      provider.whenSynced.then(() => {
++        if (this.collaborationProvider !== provider) return;
++        this.updatePeerUploads();
++        this.uploadRoomReady = true;
++      });
+       this.updatePeerUploads();
+     },
+ 
+     updatePeerUploads() {
+       const provider = this.collaborationProvider;
+       const names = [];
+-      for (const [client, state] of provider.awareness.getStates()) {
++      const states = provider.awareness.getStates();
++      this.pendingUploadBatches = Array.from(provider.doc.getMap('fountainWikiPendingUploads'))
++        .filter(([id, batch]) => /^\d+$/.test(id) && Number.isSafeInteger(batch) && batch > 0);
++      this.absentUploadBatches = this.pendingUploadBatches.filter(([id]) => !states.has(Number(id)));
++      for (const [client, state] of states) {
+         if (client === provider.doc.clientID || !provider.identityFor(client)) continue;
+         const files = state.fountainWikiFiles;
+         if (!Array.isArray(files) || files.length > 1000) continue;
+@@ -409,7 +423,27 @@ export default {
+       }
+       this.peerUploadNames = names;
+     },
++    async discardAbandonedUploadBatches() {
++      const provider = this.collaborationProvider;
++      const absent = this.absentUploadBatches;
++      if (!provider || !this.uploadRoomReady || !absent.length) return;
++      const confirmed = await confirmAction(
++        s__('WikiPage|Confirm with the authors that their uploads stopped. Any missing attachments will need to be uploaded again.'),
++        { primaryBtnText: s__('WikiPage|Clear interrupted uploads') },
++      );
++      if (!confirmed || this.collaborationProvider !== provider) return;
++      const batches = provider.doc.getMap('fountainWikiPendingUploads');
++      provider.doc.transact(() => {
++        for (const [id, batch] of absent) {
++          if (batches.get(id) === batch && !provider.awareness.getStates().has(Number(id))) batches.delete(id);
++        }
++      });
++    },
+     stopCollaborativeEditing() {
++      this.collaborationProvider?.doc.getMap('fountainWikiPendingUploads').unobserve(this.updatePeerUploads);
++      this.uploadRoomReady = false;
++      this.pendingUploadBatches = [];
++      this.absentUploadBatches = [];
+       this.collaborationProvider?.awareness.off('change', this.updatePeerUploads);
+       this.peerUploadNames = [];
+       this.collaborationProvider?.destroy();
+@@ -890,10 +924,18 @@ export default {
+                 <div class="gl-grow"></div>
+                 <div class="gl-my-3 gl-flex gl-shrink-0 gl-items-center gl-gap-3">
+                   <div v-if="waitingForPeerUpload" role="status">
+-                    {{ s__('WikiPage|Waiting for attachments before saving') }}
+-                    <ul :aria-label="s__('WikiPage|Files being attached by other authors')">
++                    <span v-if="!uploadRoomReady">{{ s__('WikiPage|Loading the shared draft') }}</span>
++                    <span v-else>{{ s__('WikiPage|Waiting for attachments before saving') }}</span>
++                    <ul v-if="peerUploadNames.length" :aria-label="s__('WikiPage|Files being attached by other authors')">
+                       <li v-for="(name, index) in peerUploadNames" :key="index">{{ name }}</li>
+                     </ul>
++                    <gl-button
++                      v-if="uploadRoomReady && absentUploadBatches.length"
++                      size="small"
++                      category="tertiary"
++                      data-testid="wiki-recover-uploads"
++                      @click="discardAbandonedUploadBatches"
++                    >{{ s__('WikiPage|Review interrupted uploads') }}</gl-button>
+                   </div>
+                   <collaborators-indicator
+                     v-if="isCollaborating"
+diff --git a/spec/frontend/wikis/components/wiki_form_spec.js b/spec/frontend/wikis/components/wiki_form_spec.js
+index 38ec0291a..adca9429e 100644
+--- a/spec/frontend/wikis/components/wiki_form_spec.js
++++ b/spec/frontend/wikis/components/wiki_form_spec.js
+@@ -1409,7 +1409,47 @@ describe('WikiForm', () => {
+       });
+     });
+ 
++    it('waits for replay and clears only confirmed, still-abandoned upload batches', async () => {
++      let finishSync;
++      ActionCableProvider.prototype.connect.mockImplementation(function connect() {
++        this.whenSynced = new Promise(resolve => { finishSync = resolve; });
++      });
++      createCollaborativeWrapper();
++      await activateRichTextEditor();
++      const provider = findCollaborationProvider();
++      const batches = provider.doc.getMap('fountainWikiPendingUploads');
++      const save = () => wrapper.findComponentByTestId('wiki-submit-button');
++      const recover = () => wrapper.findComponentByTestId('wiki-recover-uploads').vm.$emit('click');
++      expect(save().props('disabled')).toBe(true);
++      batches.set('11', 1);
++      batches.set('12', 1);
++      batches.set('13', 1);
++      finishSync({seed: false});
++      await waitForPromises();
++      expect(save().props('disabled')).toBe(true);
++
++      confirmAction.mockResolvedValueOnce(false);
++      recover();
++      await waitForPromises();
++      expect(batches.size).toBe(3);
++      let confirm;
++      confirmAction.mockImplementationOnce(() => new Promise(resolve => { confirm = resolve; }));
++      recover();
++      batches.set('12', 2);
++      provider.awareness.getStates().set(13, {});
++      confirm(true);
++      await waitForPromises();
++      expect([...batches.entries()]).toEqual([['12', 2], ['13', 1]]);
++      expect(save().props('disabled')).toBe(true);
++      batches.clear();
++      await nextTick();
++      expect(save().props('disabled')).toBe(false);
++    });
++
+     it('holds button, shortcut and confirmed Save until the last peer file clears', async () => {
++      ActionCableProvider.prototype.connect.mockImplementation(function connect() {
++        this.whenSynced = Promise.resolve({seed: false});
++      });
+       createCollaborativeWrapper();
+       await activateRichTextEditor();
+       const provider = findCollaborationProvider();

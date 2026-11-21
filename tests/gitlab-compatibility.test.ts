@@ -411,7 +411,7 @@ it('requires the native Writer source and reopened editor for an inbound paste c
 });
 it('identifies the prepared Tiptap rollback build separately from packaged GitLab', async () => {
  // @ts-expect-error Private JS audit helper intentionally has no published type entry.
- const {buildIdentityError, preparedRollbackTree, wikiUploadRollbackTree} = await import('../integrations/gitlab/testing/build-identity.mjs');
+ const {buildIdentityError, preparedRollbackTree, wikiUploadRollbackTree, wikiUploadReplayTree} = await import('../integrations/gitlab/testing/build-identity.mjs');
  const [prepared, fountain] = reports() as any[];
  prepared.side = prepared.buildIdentity.side = 'prepared';
  const digest = '2'.repeat(64);
@@ -435,6 +435,10 @@ it('identifies the prepared Tiptap rollback build separately from packaged GitLa
  expected.sourceTree = wikiUploadRollbackTree;
  expect(buildIdentityError(prepared)).toBeTruthy();
  observed.scripts[0].wikiUploadGuard = true;
+ expect(buildIdentityError(prepared)).toBeNull();
+ expected.sourceTree = wikiUploadReplayTree;
+ expect(buildIdentityError(prepared)).toBeTruthy();
+ observed.scripts[0].wikiUploadReplay = true;
  expect(buildIdentityError(prepared)).toBeNull();
  expected.rspackManifestSHA256 = '3'.repeat(64);
  expect(buildIdentityError(prepared)).toBeTruthy();

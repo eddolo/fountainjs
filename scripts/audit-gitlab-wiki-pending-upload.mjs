@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { throttleWikiUpload } from './gitlab-partial-wiki-transfer.mjs';
 import { editorProof } from './gitlab-audit-editor.mjs';
 
-export async function checkPendingWikiUpload({page, peer, item, edit, read, paragraphText, side, project, switchWikiDeployment, output, readIngress}) {
+export async function checkPendingWikiUpload({page, peer, item, edit, read, paragraphText, side, project, switchWikiDeployment, abandonWikiUpload, output, readIngress}) {
   const {peerEditDuringFailure,closeBeforeTransfer,partialTransfer,repetitions = 1} = item.input.upload;
   const {name,text} = item.input.upload, bytes = Buffer.from(text.repeat(repetitions));
   const origin = new URL(project.web_url).origin;
@@ -33,6 +33,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
   }
   const interrupt = Promise.withResolvers(), release = Promise.withResolvers();
   let routeFailure, throttle, headerBound;
+  let releasePresence;
   // Hold delivery of the actual GitLab response to the uploader across the restart.
   // The bytes, endpoint, authentication, response and resulting reader URL are real.
   const matches = url => url.origin === origin && /\/(?:uploads|attachments)(?:\.json)?\/?$/u.test(url.pathname);
@@ -186,18 +187,134 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     if (switchWikiDeployment) {
       await page.goto('about:blank');
       item.stage = 'join-switched-wiki-before-upload-completion';
-      next = await switchWikiDeployment({wikiSlug:item.slug});
+      next = await switchWikiDeployment({wikiSlug:item.slug,afterStop:abandonWikiUpload ? async () => {
+        await peer.close();
+        release.resolve();
+        pending.uploaderClosedDuringOutage = peer.isClosed();
+      } : undefined});
+      if (next === 'prepared' && !abandonWikiUpload) {
+        // Hold only inbound wiki presence. Room initialization, document edits and HTTP use the live backend.
+        const held = [];
+        pending.delayedPresenceFrames = 0;
+        let delaying = true;
+        await page.routeWebSocket(url => url.origin === 'ws://127.0.0.1:5080' && url.pathname === '/-/cable', socket => {
+          const upstream = socket.connectToServer();
+          upstream.onMessage(message => {
+            const frame = typeof message === 'string' ? JSON.parse(message) : {};
+            if (delaying && frame.identifier?.includes('CollaborativeEditing::WikiPageChannel') && frame.message?.type === 'awareness') {
+              held.push(() => socket.send(message));
+              pending.delayedPresenceFrames++;
+            } else socket.send(message);
+          });
+        });
+        releasePresence = () => {
+          delaying = false;
+          releasePresence = undefined;
+          held.splice(0).forEach(forward => forward());
+        };
+      }
       fresh = await edit(page,next);
     }
     pending.destinationSide = next;
     pending.destination = await editorProof(fresh);
     expect(pending.destination.native).toBe(next === 'fountain');
     await expect.poll(() => statusText(fresh)).toBe(expectedStatus);
+    if (abandonWikiUpload) {
+      item.stage = 'recover-reservation-after-uploader-closed-during-outage';
+      expect(next).toBe('prepared');
+      expect(pending.uploaderClosedDuringOutage).toBe(true);
+      const save = page.getByTestId('wiki-submit-button');
+      const recover = page.getByTestId('wiki-recover-uploads');
+      const dialog = page.getByRole('dialog').filter({hasText:'Confirm with the authors'});
+      await expect(save).toBeDisabled();
+      await recover.click();
+      await dialog.getByRole('button',{name:'Cancel',exact:true}).click();
+      await expect(save).toBeDisabled();
+      expect(await read()).toBe(before);
+      await recover.click();
+      await dialog.screenshot({path:join(output,'confirm-interrupted-upload.png')});
+      await dialog.getByRole('button',{name:'Clear interrupted uploads',exact:true}).click();
+      await expect(save).toBeEnabled();
+      expect(await read()).toBe(before);
+      pending.clearedWithoutSave = true;
+
+      const chooser = page.waitForEvent('filechooser');
+      const uploaded = page.waitForResponse(res => matches(new URL(res.url())) && res.request().method() === 'POST');
+      await fresh.locator('p').last().click();
+      await Promise.all([chooser.then(file => file.setFiles({name,mimeType:'text/plain',buffer:bytes})),
+        page.locator('form.wiki-form').getByRole('button',{name:'Attach a file or image',exact:true}).click()]);
+      const replacement = await uploaded;
+      expect(replacement.ok()).toBe(true);
+      const data = await replacement.json();
+      const markdown = (data.link ?? data).markdown;
+      const link = fresh.getByRole('link',{name,exact:true});
+      await expect(link).toHaveAttribute('href',/^(?!blob:).+$/u);
+      const href = await link.evaluate(a => a.href);
+      await save.click();
+      const confirm = page.getByTestId('wiki-confirm-message'), reader = page.getByTestId('wiki-page-content');
+      await expect(confirm.or(reader).first()).toBeVisible();
+      if (await confirm.isVisible()) await confirm.click();
+      await expect(reader).toContainText(expectedStatus);
+      await page.reload();
+      await expect(reader.getByRole('link',{name,exact:true})).toHaveCount(1);
+      expect(await reader.getByRole('link',{name,exact:true}).evaluate(a=>a.href)).toBe(href);
+      expect(new URL(href).origin).toBe(origin);
+      const downloaded = await page.request.get(href);
+      expect(downloaded.ok()).toBe(true);
+      expect(await downloaded.body()).toEqual(bytes);
+      pending.saved = await read();
+      expect(pending.saved.replaceAll('\r\n','\n')).toBe(before.replaceAll('\r\n','\n')+' Evidence pending.\n\n'+markdown);
+      pending.verifiedBytes = bytes.length;
+      await reader.screenshot({path:join(output,'reopened-recovered-attachment.png')});
+      return;
+    }
     if (next === 'prepared') {
       const save = page.getByTestId('wiki-submit-button');
       const notice = page.getByRole('list',{name:'Files being attached by other authors'}).getByText(name,{exact:true});
       const start = Date.now();
       pending.saveDisabledOnJoin = await save.isDisabled();
+      await expect.poll(() => pending.delayedPresenceFrames,{timeout:20000}).toBeGreaterThan(0);
+      pending.saveDisabledWithoutPresence = await save.isDisabled();
+      const submissions = [];
+      const record = req => { if (req.isNavigationRequest() && req.method() === 'POST') submissions.push(new URL(req.url()).pathname); };
+      page.on('request',record);
+      try {
+        if (pending.saveDisabledWithoutPresence) {
+          await fresh.locator('p').filter({hasText:'Status:'}).press('Control+Enter');
+          await expect(save).toBeDisabled();
+          await page.locator('form.wiki-form').screenshot({path:join(output,'save-held-before-presence.png')});
+          expect(await read()).toBe(before);
+          expect(submissions).toEqual([]);
+
+          const recover = page.getByTestId('wiki-recover-uploads');
+          const dialog = page.getByRole('dialog').filter({hasText:'Confirm with the authors'});
+          await recover.click();
+          await dialog.getByRole('button',{name:'Cancel',exact:true}).click();
+          await expect(save).toBeDisabled();
+          await recover.click();
+          await expect(dialog).toBeVisible();
+          releasePresence();
+          await expect(notice).toBeVisible();
+          await dialog.getByRole('button',{name:'Clear interrupted uploads',exact:true}).click();
+          await expect(dialog).toBeHidden();
+          await expect(recover).toHaveCount(0);
+          await expect(save).toBeDisabled();
+          pending.returningUploaderProtected = true;
+        } else {
+          await save.click();
+          const confirm = page.getByTestId('wiki-confirm-message'), reader = page.getByTestId('wiki-page-content');
+          await expect(confirm.or(reader).first()).toBeVisible();
+          if (await confirm.isVisible()) await confirm.click();
+          await expect(reader).toContainText(expectedStatus);
+          pending.earlySavedSource = await read();
+          await reader.screenshot({path:join(output,'saved-before-upload-notice.png')});
+        }
+        pending.earlySubmissions = submissions;
+      } finally {
+        page.off('request',record);
+        releasePresence?.();
+      }
+      expect(pending.saveDisabledWithoutPresence,'The initial room data must protect Save without a live presence message').toBe(true);
       await expect(notice).toBeVisible();
       await expect(save).toBeDisabled();
       pending.peerNoticeBeforeTypingMs = Date.now() - start;
@@ -302,6 +419,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     }
     throw error;
   } finally {
+    releasePresence?.();
     interrupt.resolve();
     release.resolve();
     try { if (!peer.isClosed()) await peer.unrouteAll({behavior:'wait'}); }
