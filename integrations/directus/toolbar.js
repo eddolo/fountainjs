@@ -59,7 +59,9 @@ function selectedStructures({ doc, selection }) {
   return common ?? new Set();
 }
 
-export const defaultToolbar = ['bold', 'italic', 'underline', 'h1', 'h2', 'h3', 'numlist', 'bullist', 'blockquote'];
+actions.set('code', { label: 'Edit HTML source', icon: 'html' });
+
+export const defaultToolbar = ['bold', 'italic', 'underline', 'h1', 'h2', 'h3', 'numlist', 'bullist', 'blockquote', 'code'];
 export const toolbarOption = {
   field: 'toolbar', name: 'Toolbar', type: 'json', schema: { default_value: defaultToolbar },
   meta: {
@@ -71,7 +73,7 @@ export const toolbarOption = {
 export const FieldToolbar = defineComponent({
   name: 'FountainDirectusToolbar',
   props: { editor: Object, buttons: Array },
-  emits: ['refocus'],
+  emits: ['refocus', 'source'],
   setup(props, { emit }) {
     const icon = resolveComponent('v-icon');
     const state = useFountainState(() => props.editor);
@@ -88,6 +90,7 @@ export const FieldToolbar = defineComponent({
             'aria-pressed': pressed, disabled: action.available && !action.available(props.editor),
             onMousedown: event => event.preventDefault(),
             onClick: () => {
+              if (key === 'code') { emit('source'); return; }
               action.run(props.editor, pressed);
               emit('refocus');
             },

@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium, expect } from '@playwright/test';
 
+import { auditSource } from './audit-source.mjs';
 import { auditQuote } from './audit-quote.mjs';
 import { auditStructure } from './audit-structure.mjs';
 import { auditToolbar } from './audit-toolbar.mjs';
@@ -21,7 +22,8 @@ const expected = source.replace('Ready for review.', 'Ready for review. Approved
 const id = randomUUID();
 const structureOnly = process.argv.includes('--structure');
 const quoteOnly = process.argv.includes('--quote');
-const paired = quoteOnly || structureOnly || process.argv.includes('--paired');
+const sourceOnly = process.argv.includes('--source');
+const paired = sourceOnly || quoteOnly || structureOnly || process.argv.includes('--paired');
 const extension = fileURLToPath(new URL('../../artifacts/directus-extension/', import.meta.url));
 const candidate = paired ? JSON.parse(await readFile(join(extension,'identity.json'),'utf8')) : null;
 const out = fileURLToPath(new URL('../../artifacts/directus-'+(paired?'handover':'stock')+'/' + id + '/', import.meta.url));
@@ -76,7 +78,7 @@ try {
   report.fieldInterface = field.meta.interface;
   browser = await chromium.launch({headless:true});
   report.browser = browser.version();
-  async function openItem(side = 'stock', route = itemRoute) {
+  async function openItem(side = 'stock', route = itemRoute, { protectedSource = false } = {}) {
     const context = await browser.newContext({viewport:{width:1280,height:900}});
     const page = await context.newPage();
     activePage = page;
@@ -92,7 +94,8 @@ try {
     }
     report.stage = 'open item form';
     await page.goto(origin + route);
-    const editor = page.locator(side==='stock' ? '.tiptap.ProseMirror[contenteditable=true]' : '.fountain-editor[contenteditable=true]');
+    const selector = side === 'stock' ? '.tiptap.ProseMirror' : (protectedSource ? '.fountain-directus-field' : '.fountain-editor');
+    const editor = page.locator(selector + (protectedSource ? '' : '[contenteditable=true]'));
     if (side==='fountain') {
       await expect(editor).toHaveAttribute('data-fountain-directus-build',candidate.buildId,{timeout:30000});
       return {context,page,editor};
@@ -178,6 +181,24 @@ try {
     });
     assert.equal(updated.meta.interface,name);
   }
+  async function checkSource() {
+    report.sourceEditing = {};
+    for (const side of ['stock', 'fountain']) {
+      report.sourceEditing[side] = await auditSource({ side, api, collection, selectInterface, openItem, out, report });
+    }
+    await selectInterface('input-rich-text-html');
+    const candidate = report.sourceEditing.fountain;
+    const rollback = await openItem('stock', '/admin/content/' + collection + '/' + candidate.archived);
+    await expect(rollback.editor.locator('strong')).toHaveText('Ada');
+    await rollback.editor.locator('p').click();
+    await rollback.page.keyboard.press('End');
+    await rollback.page.keyboard.insertText(' Published.');
+    await rollback.page.keyboard.press('Control+s');
+    const continued = candidate.savedHTML.replace('</p>', ' Published.</p>');
+    await expect.poll(async () => (await api('/items/' + collection + '/' + candidate.archived)).body).toBe(continued);
+    report.sourceEditing.rollback = { item: candidate.archived, saved: continued };
+    await rollback.context.close();
+  }
   async function checkQuotes() {
     report.quotes = {};
     for (const side of ['stock', 'fountain']) {
@@ -252,6 +273,7 @@ try {
       await reopened.context.close();
       await checkStructure();
       await checkQuotes();
+      await checkSource();
       report.toolbar = {};
       for (const side of ['stock', 'fountain']) {
         report.toolbar[side] = await auditToolbar({ side, api, collection, selectInterface, openItem, out, report });
@@ -306,7 +328,8 @@ try {
       report.handover={itemId:item.id,saved:finalHTML,rollbackSaved:rollbackHTML};
     }
   }
-  if (quoteOnly) await checkQuotes();
+  if (sourceOnly) await checkSource();
+  else if (quoteOnly) await checkQuotes();
   else if (structureOnly) await checkStructure();
   else await checkSavedItem();
   report.stage = 'complete';
