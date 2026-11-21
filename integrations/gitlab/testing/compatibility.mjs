@@ -513,6 +513,7 @@ export function compareGitLabCompatibility(original,fountain){
           view.downloadedBytes = upload.verifiedBytes;
           const expected = input.source + input.ownerEdit + input.peerEdit + ' Evidence pending.'
             + (input.upload.peerEditDuringFailure ?? '') + ' Witness checked.\n\n' + upload.markdown;
+          if (typeof upload.saved === 'string' && typeof upload.markdown === 'string') view.exactAttachmentRevision = upload.saved === expected;
           view.attachmentInOwnParagraph = typeof upload.markdown === 'string' && upload.saved?.replaceAll('\r\n','\n') === expected;
         }
         if (input.wikiLink?.reference && typeof view.saved === 'string') {
@@ -556,6 +557,7 @@ export function compareGitLabCompatibility(original,fountain){
           ] : []),
           ['uploadRequests',input.upload.partialTransfer ? 2 : 1,input.upload.partialTransfer ? 'GitLab receives one interrupted request and one successful retry' : 'GitLab receives the file once'],
           ['attachmentInOwnParagraph',true,'The saved source retains both authors’ text and the attachment in its own paragraph'],
+          ['exactAttachmentRevision',true,'The final revision retains the authored Markdown and line endings after inserting the attachment'],
           ['downloadedBytes',new TextEncoder().encode(input.upload.text).length * (input.upload.repetitions ?? 1),'The reopened attachment matches the original bytes'],
         ] : []),
         ['reopened', status + input.peerEdit, 'Both edits survive in the other author’s reloaded reader'],

@@ -30,6 +30,8 @@ const table=['# Matched GitLab editor comparison','','**Original** — '+describ
 ...(reports[0].suggestionHistoryRollback?.passed ? ['The restored packaged GitLab services reopened ' + reports[0].suggestionHistoryRollback.records.length + ' notes from the repaired deployment. Their saved suggestion identities, Applied flags, eligibility, file bytes and branch heads matched.', ''] : []),
 ...(reports.some(report => report.deployment?.suggestionHistory) ? ['GitLab server profile on stock and replacement: ' + reports.map(report =>
   report.deployment?.suggestionHistory ? 'suggestion-history repair `' + report.deployment.suggestionHistory.patchSHA256 + '`' : 'packaged services').join(' / ') + '. The raw reports identify each loaded Ruby service.', ''] : []),
+...(reports[0].suite === 'wiki-collaboration' ? ['Wiki controller on stock / replacement: ' + reports.map(report =>
+  report.deployment?.wikiRestore ? 'source-preserving patch `' + report.deployment.wikiRestore.patchSHA256 + '`' : 'packaged controller').join(' / ') + '.', ''] : []),
 ...(rollback?[result.frontendRollback.passed?'Stock GitLab reopened candidate-authored issues '+result.frontendRollback.issueIds.map(id=>'#'+id).join(', ')+', saved edits after rollback and retained their discussion comments.':'Frontend rollback acceptance remains open. See the stock input report for the immediate rich-text Save and Markdown Save outcomes.','']:[]),
 '| Case | Invariant | Classification |','| --- | --- | --- |',...result.rows.map(row=>`| ${row.case} | ${row.label} | ${row.classification??row.status} |`),'',
 'Classifications apply only to these observed workflows and the recorded candidate. Shared limitations remain unmet requirements.',''];
