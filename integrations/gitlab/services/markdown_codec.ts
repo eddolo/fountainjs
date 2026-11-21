@@ -108,13 +108,25 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
             else if (block.type.name === 'paragraph') {
               parts.push(HTMLExporter.export(block, {document:false}).replaceAll('\r','&#13;').replaceAll('\n','&#10;'));
             } else if (block.type.name === 'task_list') {
-              // Adjacent lists must retain independent list boundaries on reopen.
-              if (cell.content[parts.length - 1]?.type.name === 'task_list') return undefined;
+              // A new marker keeps adjacent Markdown lists distinct. In a wiki the
+              // marker is shared document state, so preserve the authored value.
+              let marker: '-' | '+' | '*' = wikiRoom ? wikiBulletMarker(block) : '-';
+              if (cell.content[parts.length - 1]?.type.name === 'task_list' && parts.at(-1)?.startsWith(marker + ' ')) {
+                if (wikiRoom) return undefined;
+                marker = marker === '-' ? '*' : '-';
+              }
+              const emptyLabels = new Set(block.content.filter(item => item.type.name === 'task_item'
+                && item.childCount === 1 && item.child(0).type.name === 'paragraph' && !item.child(0).textContent
+                && item.child(0).content.every(child => child.isText && !child.marks.length)).map(item => item.child(0)));
+              // GitLab recognizes an empty task by the space after its marker.
+              // Keep it through the generic exporter's final whitespace trim.
+              const emptyLabelToken = tokenPrefix + 'EMPTYTASK';
               const list = new MarkdownExporter().exportWithReport(block, {
-                bulletMarker: wikiRoom ? wikiBulletMarker : undefined,
+                blockSerializers: {paragraph: p => emptyLabels.has(p) ? emptyLabelToken : undefined},
+                bulletMarker: node => node === block ? marker : wikiRoom ? wikiBulletMarker(node) : undefined,
               });
               if (list.losses.length) return undefined;
-              parts.push(list.markdown);
+              parts.push(list.markdown.replaceAll(emptyLabelToken,''));
             } else return undefined;
           }
           const text = '\n\n' + parts.join('\n\n') + (plain ? '\n' : '\n\n');
@@ -596,14 +608,14 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
     const project = (node: Node, path: number[]): Node => {
       if (node.type.name === 'table' && requiresHTMLTable(node)
         && node.content.some(row => row.content.some(cell => taskCellParagraph(cell)))) {
-        issues.push({stage:'export',code:'table-task-layout',path,message:'A checkbox in a table requiring HTML needs a dedicated GitLab source representation.'});
+        issues.push({stage:'export',code:'table-task-layout',path,message:'To save this table layout, open Table actions and choose “Convert table checkboxes to checklist items”, or undo the layout change.'});
       }
       const p = taskCellParagraph(node);
       if (p) {
         cellMarkers.set(p,p.textContent);
         return node.copy([p]);
       }
-      if (node.attrs.gitlabTableItem) issues.push({stage:'export',code:'table-task-content',path,message:'A table checkbox must occupy its own cell. Preserve additional content in a separate cell.'});
+      if (node.attrs.gitlabTableItem) issues.push({stage:'export',code:'table-task-content',path,message:'Use “Convert table checkboxes to checklist items” in Table actions to keep the checkbox with other content.'});
       if (customSources.has(node)) return node;
       if (node.type.name === 'footnote_reference') {
         const definition = noteDefinitions.get(String(node.attrs.id));

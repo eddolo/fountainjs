@@ -1,7 +1,8 @@
 import { expect, it, vi } from 'vitest';
-import { Schema, type Node } from 'fountainjs-editor';
+import { Schema, createEditor, createHistoryPlugin, Selection, undo, redo, type Node } from 'fountainjs-editor';
 import { GitLabMarkdownCodec, GitLabMarkdownConversionError, createGitLabSchemaSpec } from '../integrations/gitlab/services/markdown_codec';
 import data from '../integrations/gitlab/fixtures/service-html.json';
+import {convertGitLabTableCheckboxes,hasGitLabTableCheckboxes} from '../integrations/gitlab/services/task_cells';
 import taskTablePreviews from '../integrations/gitlab/fixtures/merged-task-cell-renderer.json';
 import mergedPreviews from '../integrations/gitlab/fixtures/merged-grid-live-html.json';
 import emojiPreviews from '../integrations/gitlab/fixtures/clipboard-unicode-live-html.json';
@@ -40,6 +41,38 @@ it('reports a standalone pipe-table checkbox when merging cells would turn its m
   const doc = schema.node('doc',{},[merged]);
   expect(codec.serializeWithReport({doc}).issues).toContainEqual(expect.objectContaining({code:'table-task-layout'}));
   expect(() => codec.serialize({doc})).toThrow(GitLabMarkdownConversionError);
+});
+
+it('recovers a merged table with one undoable checkbox conversion scoped to the active table', async () => {
+  const {schema,codec} = await convert('Title','<p>Title</p>');
+  const p = (text: string) => schema.node('paragraph',{},[schema.text(text)]);
+  const checkbox = (checked: boolean | 'inapplicable') => schema.node('task_list',{},[
+    schema.node('task_item',{gitlabTableItem:true,checked},[p('')]),
+  ]);
+  const row = schema.node('table_row',{},[schema.node('table_cell',{colspan:2},[
+    p('Review'),checkbox(false),checkbox(true),checkbox('inapplicable'),
+  ])]);
+  const table = schema.node('table',{},[row]);
+  const untouched = schema.node('table',{},[schema.node('table_row',{},[schema.node('table_header',{},[checkbox(true)])])]);
+  const editor = createEditor({schema:createGitLabSchemaSpec(),content:schema.node('doc',{},[table,untouched]).toJSON(),plugins:[createHistoryPlugin()]});
+  try {
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0,0,0,0,0],2)));
+    const before = editor.state.doc;
+    expect(() => codec.serialize({doc:before})).toThrow(GitLabMarkdownConversionError);
+    expect(convertGitLabTableCheckboxes(editor)).toBe(true);
+    const after = editor.state.doc;
+    expect(hasGitLabTableCheckboxes(after.child(0))).toBe(false);
+    expect(after.child(1)).toBe(before.child(1));
+    expect(editor.state.selection.path).toEqual([0,0,0,0,0]);
+    const result = codec.serializeWithReport({doc:after});
+    expect(result.issues).toEqual([]);
+    expect(result.markdown).toMatch(/- \[ \] \n\n\* \[x\] \n\n- \[~\] /u);
+    expect(convertGitLabTableCheckboxes(editor)).toBe(false);
+    expect(undo(editor)).toBe(true);
+    expect(editor.state.doc.eq(before)).toBe(true);
+    expect(redo(editor)).toBe(true);
+    expect(editor.state.doc.eq(after)).toBe(true);
+  } finally { editor.destroy(); }
 });
 
 it.each(mergedPreviews.fixtures)('keeps $name through canonical GitLab Save while ordinary tables stay in Markdown',async ({name,source,body})=>{

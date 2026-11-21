@@ -1,4 +1,4 @@
-import type { Node } from 'fountainjs-editor';
+import { getActiveTableCell, type Editor, type Node } from 'fountainjs-editor';
 import type { DefaultTreeAdapterMap } from 'parse5';
 
 type Element = DefaultTreeAdapterMap['element'];
@@ -63,6 +63,33 @@ export function hydrateTaskCells(doc: Node, states: CellStates): Node {
   const result = visit(doc);
   if (found !== states.size) throw new Error('Missing verified table checkbox.');
   return result;
+}
+
+function* standaloneTasks(table: Node) {
+  for (const [r,row] of table.content.entries()) for (const [c,cell] of row.content.entries()) {
+    for (const [b,block] of cell.content.entries()) {
+      if (block.type.name !== 'task_list') continue;
+      for (const [i,item] of block.content.entries()) {
+        if (item.attrs.gitlabTableItem === true) yield {item,path:[r,c,b,i]};
+      }
+    }
+  }
+}
+
+export function hasGitLabTableCheckboxes(table: Node): boolean {
+  return !standaloneTasks(table).next().done;
+}
+
+/** Explicit author conversion. Preserve all three states, text, and selection in one undo step. */
+export function convertGitLabTableCheckboxes(editor: Editor): boolean {
+  if (!editor.editable) return false;
+  const active = getActiveTableCell(editor);
+  if (!active) return false;
+  const tr = editor.createTransaction();
+  for (const {item,path} of standaloneTasks(active.table)) {
+    tr.setNodeAttrs([...active.tablePath,...path], {...item.attrs,gitlabTableItem:undefined});
+  }
+  return tr.steps.length > 0 && editor.dispatch(tr);
 }
 
 export function taskCellBody(cell: Node): Node | undefined {

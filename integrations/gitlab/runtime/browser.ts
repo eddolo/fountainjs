@@ -4,6 +4,7 @@ export { GitLabContentEditor, GitLabEditorNotReady } from '../services/content_e
 export { assertGitLabNativeHostConfiguration } from '../services/host_configuration';
 export { getGitLabLinkContext } from '../services/link_editing';
 export { insertGitLabContents } from '../services/table_of_contents';
+export { convertGitLabTableCheckboxes, hasGitLabTableCheckboxes } from '../services/task_cells';
 export { getGitLabCodeContext } from '../services/code_editing';
 export { selectionIncludesGitLabFrontmatter } from '../services/frontmatter';
 export { getGitLabAlertContext } from '../services/alert_editing';

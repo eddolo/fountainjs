@@ -16,7 +16,7 @@ import {
   canUndo,
   canRedo,
   insertGitLabContents, insertTable, getActiveTableCell, addTableRow, addTableColumn, deleteTableRow,
-  deleteTableColumn, deleteTable, mergeTableCells, splitTableCell,
+  deleteTableColumn, deleteTable, mergeTableCells, splitTableCell, convertGitLabTableCheckboxes, hasGitLabTableCheckboxes,
   getGitLabAlertContext,
   getGitLabCodeContext,
   selectionIncludesGitLabFrontmatter,
@@ -99,6 +99,9 @@ export default {
       const cells = [];
       if (multiple) cells.push({ text: s__('ContentEditor|Merge cells'), run: () => mergeTableCells(this.editor) });
       else if (cell.rowspan > 1 || cell.colspan > 1) cells.push({ text: s__('ContentEditor|Split cell'), run: () => splitTableCell(this.editor) });
+      if (hasGitLabTableCheckboxes(this.activeCell.table)) {
+        cells.push({ text: s__('ContentEditor|Convert table checkboxes to checklist items'), run: () => convertGitLabTableCheckboxes(this.editor) });
+      }
       const remove = [];
       if (!multiple && map.height > 1) remove.push({ text: s__('ContentEditor|Delete row'), run: () => deleteTableRow(this.editor) });
       if (!multiple && map.width > 1) remove.push({ text: s__('ContentEditor|Delete column'), run: () => deleteTableColumn(this.editor) });
