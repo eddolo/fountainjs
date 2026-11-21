@@ -3,6 +3,8 @@ import { join } from 'node:path';
 import { prepareGitLabAuditMember } from './gitlab-audit-member.mjs';
 import { editorProof, observePage, openRich } from './gitlab-audit-editor.mjs';
 
+import { checkPendingWikiUpload } from './audit-gitlab-wiki-pending-upload.mjs';
+
 const wikiFlagPath = '/api/v4/features/wiki_collaborative_editing';
 const readWikiFlag = async request => (await request('/api/v4/features')).find(flag => flag.name === 'wiki_collaborative_editing') ?? null;
 
@@ -344,7 +346,9 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       }
     }
     if (input.mergedTable) item[sourceEditor + 'ReaderMergedTable'] = await checkMergedTable(peerReader);
-    if (switchWikiDeployment) {
+    if (input.upload) {
+      await checkPendingWikiUpload({page,peer,item,edit,read,side,project,switchWikiDeployment,output});
+    } else if (switchWikiDeployment) {
       const rollout = side === 'original';
       const destination = rollout ? 'fountain' : 'original';
       item.stage = 'unsaved-draft-before-deployment';

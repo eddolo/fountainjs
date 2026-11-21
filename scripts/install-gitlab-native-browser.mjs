@@ -340,7 +340,9 @@ files.set(wikiFormPath, originalWikiForm
           return;
         }
       }`)
-  .replace("  name: 'WikiForm',", "  name: 'WikiForm',\n  provide: { fountainWikiSource: true },")
+  .replace("  name: 'WikiForm',", "  name: 'WikiForm',\n  provide() { return { fountainWikiSource: true, setFountainWikiUploadPending: value => { this.fountainWikiUploadPending = value; } }; },")
+  .replace('      isSubmitting: false,','      isSubmitting: false,\n      fountainWikiUploadPending: false,')
+  .replace('data-testid="wiki-submit-button"','data-testid="wiki-submit-button"\n                      :disabled="isCollaborating && fountainWikiUploadPending"')
   .replace(contentInput, contentInput + `
           <input
             v-if="pageInfo.persisted && isMarkdownFormat && isContentEditorActive && !isTemplate"

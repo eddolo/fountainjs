@@ -55,6 +55,14 @@ function fromStockMark(name: string, value: unknown, path: readonly number[]): M
   if (!value || typeof value !== 'object' || Array.isArray(value)) unsupported(path,name);
   const attrs = value as Attributes;
   if (name === 'link') {
+    if (typeof attrs.uploading === 'string') {
+      for (const [key,flag] of Object.entries(attrs)) {
+        if (key === 'uploading' || key === 'href' || (['title','canonicalSrc'].includes(key) && flag === null)
+          || (['isReference','isGollumLink','isWikiPage'].includes(key) && flag === false)) continue;
+        unsupported(path,'pending link.' + key);
+      }
+      return {type:'gitlab_pending_wiki_file',attrs:{uploadId:attrs.uploading,objectURL:attrs.href}};
+    }
     for (const [key,flag] of Object.entries(attrs)) {
       if (key === 'href' || key === 'title' || key === 'canonicalSrc') continue;
       if (attrs.isGollumLink === true && typeof attrs.canonicalSrc === 'string' && attrs.canonicalSrc.length &&
@@ -254,6 +262,8 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
     if (node.marks.length) {
       if (!node.isText) unsupported(path,'marked inline element');
       result.marks = node.marks.map(mark => {
+        if (mark.type.name === 'gitlab_pending_wiki_file')
+          return {type:'link',attrs:{uploading:mark.attrs.uploadId,href:mark.attrs.objectURL}};
         if (mark.type.name === 'link') {
           const {href,title,gitlabCanonicalSrc,gitlabWikiLink} = mark.attrs;
           if (gitlabWikiLink && !gitlabCanonicalSrc) unsupported(path,'wiki link without authored target');

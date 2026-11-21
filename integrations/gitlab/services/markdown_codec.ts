@@ -2,6 +2,7 @@ import { CoreSchemaSpec, MarkdownExporter, MarkdownSourceSnapshot, isSafeURL,
   type HTMLParseElement, type Mark, type Node, type Schema, type SchemaSpec } from 'fountainjs-editor';
 import { ServerHTMLImporter, type ServerHTMLImporterOptions } from 'fountainjs-editor/html/server';
 import { parseFragment, serialize, type DefaultTreeAdapterMap } from 'parse5';
+import { hasPendingWikiFile, pendingWikiFile } from './wiki_pending_upload';
 import type { GitLabMarkWriter } from './host_configuration';
 import type { SerializedContentCodec } from './serialized_content';
 import type { GitLabRenderResponse } from './asset_resolver';
@@ -164,6 +165,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
       }) }], toText: node => String(node.attrs.value),
       toDOM: node => ['span', { 'data-fountain-gitlab-placeholder': 'true' }, String(node.attrs.value)] },
   }, marks: { ...base.marks,
+    ...(wikiRoom ? {gitlab_pending_wiki_file:pendingWikiFile} : {}),
     link: { ...link, attrs: { ...link.attrs, gitlabCanonicalSrc: canonical,
       gitlabWikiLink:{default:undefined,validate:value => value === undefined || value === 'page' || value === 'external'} },
       parseHTML: [{ tag: 'a[data-canonical-src], a[data-original-href], a[data-link-reference="true"]', priority: 200, getAttrs: element => {
@@ -451,6 +453,9 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
   }
 
   serializeWithReport({ doc, canonical = false }: { doc: Node; canonical?: boolean }): { markdown: string; preservation: 'exact' | 'canonical' | 'blocks'; issues: readonly GitLabMarkdownIssue[] } {
+    if (this.options.wikiRoom && hasPendingWikiFile(doc)) return {markdown:'',preservation:'canonical',issues:[{
+      stage:'export',code:'pending-wiki-upload',message:'Wait for the attachment to finish uploading before saving this wiki page.',
+    }]};
     const sources = new Set<MarkdownSourceSnapshot>();
     doc.descendants(node => { const source = this.sources.get(node); if (source) sources.add(source); });
     if (!canonical && sources.size === 1) {

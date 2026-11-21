@@ -1,0 +1,20 @@
+{
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "pending-wiki-attachment",
+      "scope": "wiki-collaboration",
+      "title": "Incident attachment handover",
+      "source": "Owner: **Sam**.\n\nStatus: ready.",
+      "ownerEdit": " Reviewed.",
+      "peerEdit": " Approved.",
+      "upload": {
+        "name": "incident-evidence.txt",
+        "text": "Incident owner: Sam\nEvidence collected before the editor switch.\n"
+      }
+    }
+  ]
+}

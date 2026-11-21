@@ -11,6 +11,7 @@ import {
 import { GitLabWikiSession, type GitLabWikiOptions } from './wiki_session';
 import { readGitLabSerializers, type GitLabHostConfiguration } from './host_configuration';
 import { GitLabAssetResolver, type GitLabAssetResolverOptions } from './asset_resolver';
+import { hasPendingWikiFile } from './wiki_pending_upload';
 import { GitLabMarkdownCodec, createGitLabSchemaSpec } from './markdown_codec';
 import { createGitLabQuickActionPlugin, GitLabQuickActionEditing, type GitLabQuickActionProvider } from './quick_action_editing';
 import { createGitLabAutocompletePlugin, GitLabAutocompleteEditing } from './autocomplete_editing';
@@ -288,9 +289,11 @@ export class GitLabContentEditor {
     });
   }
 
+  get waitingForWikiFile(): boolean { return Boolean(this.wiki && hasPendingWikiFile(this.editor.state.doc)); }
+
   get status(): GitLabEditorStatus {
     if (this.destroyed) return 'destroyed';
-    if (this.loading || this.insertions.pendingCount > 0) return 'loading';
+    if (this.loading || this.insertions.pendingCount > 0 || this.waitingForWikiFile) return 'loading';
     if (this.loadFailure || this.exportFailure || this.uploads.hasFailures) return 'error';
     return this.loaded ? 'ready' : 'unloaded';
   }

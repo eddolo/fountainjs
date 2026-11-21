@@ -41,6 +41,7 @@ async function loadWikiCollaboration(provider) {
 export default {
   inject: {
     fountainWikiSource: { default: false },
+    setFountainWikiUploadPending: { default: null },
     inheritedCommentTemplatePaths: { from: 'newCommentTemplatePaths', default: () => [] },
   },
   name: 'FountainContentEditor',
@@ -73,6 +74,7 @@ export default {
       hasRecovery: false,
       replacementSource: null,
       inserting: false,
+      waitingForWikiFile: false,
       failedInsertionSource: null,
       loadFailed: false,
       uploads: [],
@@ -84,6 +86,9 @@ export default {
     },
     commentTemplatePaths() {
       return this.inheritedCommentTemplatePaths.length ? this.inheritedCommentTemplatePaths : this.newCommentTemplatePaths;
+    },
+    wikiUploadPending() {
+      return this.waitingForWikiFile || this.uploads.length > 0;
     },
     canUpload() {
       return this.surfaceEditable && !this.disableAttachments && Boolean(this.uploadsPath);
@@ -144,6 +149,7 @@ export default {
     },
   },
   watch: {
+    wikiUploadPending(value) { if (this.collaborationProvider) this.setFountainWikiUploadPending?.(value); },
     markdown(value) {
       if (value === this.latestMarkdown || !this.contentEditor) return;
       // A fresh handoff may echo an edit suppressed from change events. Reuse
@@ -234,6 +240,7 @@ export default {
   },
   beforeDestroy() {
     this.disconnectPasteHub();
+    if (this.collaborationProvider && this.wikiUploadPending) this.setFountainWikiUploadPending?.(false);
     this.disposed = true;
     this.loadRequest += 1;
     this.releaseChange?.();
@@ -418,8 +425,9 @@ export default {
       try {
         const result = await this.contentEditor.setSerializedContent(markdown, options);
         if (this.disposed || request !== this.loadRequest || result.status !== 'applied') return;
-        this.latestMarkdown = this.collaborationProvider ? this.contentEditor.getSerializedContent() : markdown;
-        if (this.latestMarkdown !== markdown) this.$emit('change', {markdown:this.latestMarkdown});
+        this.waitingForWikiFile = this.contentEditor.waitingForWikiFile;
+        this.latestMarkdown = this.waitingForWikiFile ? null : this.collaborationProvider ? this.contentEditor.getSerializedContent() : markdown;
+        if (!this.waitingForWikiFile && this.latestMarkdown !== markdown) this.$emit('change', {markdown:this.latestMarkdown});
         this.failure = null;
         this.loadFailed = false;
         this.isLoading = false;
@@ -458,6 +466,8 @@ export default {
       if (this.$refs.codeMenu?.hasUnappliedSource) throw new Error('GITLAB_CODE_SOURCE_DRAFT_PENDING');
     },
     onDocumentChange(change) {
+      this.waitingForWikiFile = this.contentEditor.waitingForWikiFile;
+      if (this.waitingForWikiFile) return;
       if (change.status !== 'ready') {
         this.onSurfaceError(change.error);
         return;
@@ -547,6 +557,9 @@ export default {
         rows="6"
       ></textarea>
     </details>
+    <p v-if="waitingForWikiFile" role="status" class="gl-m-3">
+      {{ s__('ContentEditor|An attachment is uploading in another editor. You can keep editing. Save becomes available when the file is ready.') }}
+    </p>
     <ul v-if="uploads.length" :aria-label="s__('ContentEditor|Attachment uploads')" class="gl-m-3 gl-list-none gl-p-0">
       <li v-for="upload in uploads" :key="upload.id" class="gl-mb-3 gl-rounded-base gl-border gl-p-3">
         <span class="gl-font-bold">{{ upload.fileName }}</span>

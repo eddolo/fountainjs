@@ -82,6 +82,30 @@ it('preserves the rendered and authored destinations of ordinary links in a stoc
   } finally { doc.destroy(); }
 });
 
+it('keeps the uploader’s temporary file handle inert until the stock author publishes its resolution', () => {
+  const doc = new Y.Doc();
+  try {
+    const root = doc.getXmlFragment('default'), p = new Y.XmlElement('paragraph'), text = new Y.XmlText();
+    root.push([p]); p.push([text]);
+    const href = 'blob:http://127.0.0.1:5080/6df42113-b54c-4f32-b7e6-27e906bf99d0';
+    const attrs = {uploading:'file12',href,title:null,canonicalSrc:null,isReference:false,isWikiPage:false,isGollumLink:false};
+    text.applyDelta([{insert:'evidence.txt',attributes:{link:attrs}}]);
+    const version = Y.encodeStateAsUpdate(doc);
+    const pending = readGitLabWikiRoom(root,schema,Y);
+    const mark = pending.child(0).child(0).marks[0];
+    expect(mark.type.name).toBe('gitlab_pending_wiki_file');
+    expect(mark.type.spec.toDOM!(mark)).toEqual(['span',{'data-fountain-pending-wiki-file':'true','aria-busy':'true'},0]);
+    expect(toGitLabWikiJSON(pending).content?.[0].content?.[0].marks).toEqual([{type:'link',attrs:{uploading:'file12',href}}]);
+    const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async () => ({body:''})});
+    expect(codec.serializeWithReport({doc:pending})).toMatchObject({markdown:'',issues:[{code:'pending-wiki-upload'}]});
+    expect(Y.encodeStateAsUpdate(doc)).toEqual(version);
+    text.format(0,text.length,{link:{...attrs,uploading:false,href:'/files/evidence.txt',canonicalSrc:'uploads/evidence.txt'}});
+    expect(codec.serialize({doc:readGitLabWikiRoom(root,schema,Y)})).toBe('[evidence.txt](uploads/evidence.txt)');
+    text.format(0,text.length,{link:{...attrs,href:'https://example.invalid/'}});
+    expect(() => readGitLabWikiRoom(root,schema,Y)).toThrow();
+  } finally { doc.destroy(); }
+});
+
 it('retains the wiki target independently of the edited display label', async () => {
   const doc = new Y.Doc();
   try {
