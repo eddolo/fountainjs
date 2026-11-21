@@ -627,7 +627,7 @@ function withSourceFrontmatter(source: MarkdownSourceSnapshot, body: string): st
 function listDelimiter(node: Node, context: RenderContext, previous?: string): string | undefined {
   if (!LIST_TYPES.has(node.type.name)) return undefined;
   if (node.type.name === 'ordered_list') return previous === '.' ? ')' : '.';
-  const preferred = node.type.name === 'bullet_list' ? context.options.bulletMarker?.(node) ?? '-' : '-';
+  const preferred = context.options.bulletMarker?.(node) ?? '-';
   if (preferred !== '-' && preferred !== '+' && preferred !== '*') throw new TypeError('Invalid Markdown bullet marker.');
   return preferred !== previous ? preferred : preferred === '+' ? '-' : '+';
 }

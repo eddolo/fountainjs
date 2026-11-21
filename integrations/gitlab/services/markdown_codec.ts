@@ -134,6 +134,10 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
       ...base.nodes.bullet_list.attrs,
       gitlabBullet: { default: undefined, validate: value => value === undefined || value === '-' || value === '+' },
     } } } : {}),
+    ...(wikiRoom && base.nodes.task_list ? { task_list: { ...base.nodes.task_list, attrs: {
+      ...base.nodes.task_list.attrs,
+      gitlabBullet: { default: undefined, validate: value => value === undefined || value === '-' || value === '+' },
+    } } } : {}),
     task_item: gitLabTaskItem(base),
     paragraph: { ...base.nodes.paragraph!, attrs: { ...base.nodes.paragraph!.attrs,
       gitlabLiteralSlash: { default: false, validate: value => typeof value === 'boolean' } } },
@@ -186,9 +190,9 @@ const setAttr = (element: RawElement, name: string, value: string): void => {
   if (existing) existing.value = value;
   else element.attrs.push({ name, value });
 };
-interface WikiBlockOrigin { type: 'bullet_list' | 'table'; bullet?: string; isMarkdown?: boolean }
+interface WikiBlockOrigin { type: 'bullet_list' | 'task_list' | 'table'; bullet?: string; isMarkdown?: boolean }
 
-function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>, supportsContents: boolean, wikiOrigins?: WikiBlockOrigin[]): string {
+function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>, supportsContents: boolean, wikiOrigins?: {blocks:WikiBlockOrigin[]; inactive:[number,number][]}): string {
   const maxBytes = options.maxInputBytes ?? 1_048_576;
   if (new TextEncoder().encode(html).length > maxBytes) throw new Error('GitLab rendering exceeds the configured HTML byte limit.');
   const fragment = parseFragment(html), elements: RawElement[] = [], stack: [RawNode, number][] = [[fragment, 0]];
@@ -205,13 +209,13 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
       if (element.tagName !== 'ul' && element.tagName !== 'table') continue;
       const position = attr(element,'data-sourcepos')?.match(/^(\d+):(\d+)-/u);
       const start = position && lines[Number(position[1]) - 1]?.slice(Number(position[2]) - 1);
-      if (element.tagName === 'table') wikiOrigins.push({type:'table',isMarkdown:Boolean(start && !start.startsWith('<'))});
-      else wikiOrigins.push({type:'bullet_list',bullet:start?.match(/^([-+*])(?:\s|$)/u)?.[1]});
+      if (element.tagName === 'table') wikiOrigins.blocks.push({type:'table',isMarkdown:Boolean(start && !start.startsWith('<'))});
+      else wikiOrigins.blocks.push({type:(attr(element,'class') ?? '').split(/\s+/u).includes('task-list') ? 'task_list' : 'bullet_list',bullet:start?.match(/^([-+*])(?:\s|$)/u)?.[1]});
     }
   }
   normalizeGitLabContents(elements, source, maxBytes, supportsContents);
   recoverGitLabImageSources(elements, source, schema, maxBytes);
-  const tasks = normalizeGitLabTasks(elements, source);
+  const tasks = normalizeGitLabTasks(elements, source, wikiOrigins?.inactive);
   const math = normalizeGitLabMath(elements);
   const diagrams = normalizeGitLabDiagrams(elements);
   const media = normalizeGitLabMedia(elements.filter(element => !diagrams.handled.has(element)), source, schema);
@@ -341,6 +345,7 @@ function wikiSeedSourceText(node: Node): Node {
     const info = String(node.attrs.language) + node.attrs.gitlabFenceSuffix;
     return node.withAttrs({...node.attrs,language:info.split(/\s+/u)[0],gitlabFenceSuffix:null});
   }
+  if (node.type.name === 'task_item' && node.attrs.checked === 'inapplicable') node = node.withAttrs({...node.attrs,checked:false});
   if (node.isText) return node;
   if (!node.content.some(wikiMark)) {
     const children = node.content.map(wikiSeedSourceText);
@@ -361,7 +366,7 @@ function withWikiBlockOrigins(document: Node, origins: readonly WikiBlockOrigin[
   function apply(node: Node): Node {
     if (node.isText) return node;
     let decorated = node;
-    if (node.type.name === 'table' || node.type.name === 'bullet_list') {
+    if (node.type.name === 'table' || node.type.name === 'bullet_list' || node.type.name === 'task_list') {
       const origin = origins[index++];
       if (origin?.type !== node.type.name) throw new Error('Wiki preview block order does not match the source.');
       if (origin.type === 'table') decorated = node.withAttrs({...node.attrs,gitlabIsMarkdown:origin.isMarkdown});
@@ -410,7 +415,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         ...footnotes.issues.map(code => ({ stage: 'import' as const, code, message: 'A footnote projection requires its explicit source-aware adapter.' })),
       ]);
       const emojiNames = new Map<string,string>();
-      const wikiOrigins = wikiRoomSeed && this.options.wikiRoom ? [] as WikiBlockOrigin[] : undefined;
+      const wikiOrigins = wikiRoomSeed && this.options.wikiRoom ? {blocks:[] as WikiBlockOrigin[],inactive:[] as [number,number][]} : undefined;
       const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema, emojiNames, this.options.tableOfContentsLabel !== undefined,wikiOrigins), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
       let document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
@@ -421,7 +426,19 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         // GitLab owns the dialect. Reuse the core's block map only when parsing
         // the same source produces the complete tree returned by GitLab.
         try {
-          const parsed = MarkdownSourceSnapshot.parse(markdown, schema, wikiOrigins ? {parseHTMLBlock:(html,target) => {
+          // GitLab verifies each [~] marker against its rendered checkbox source position.
+          // Compare those positions as ordinary pending tasks with the CommonMark parser.
+          let comparisonSource = markdown;
+          if (wikiOrigins?.inactive.length) {
+            const lines = markdown.split(/(\r\n|\r|\n)/u);
+            for (const [row,column] of wikiOrigins.inactive) {
+              const i = row * 2, line = lines[i];
+              if (line?.slice(column-1,column+2) !== '[~]') throw new Error('Wiki task source position mismatch.');
+              lines[i] = line.slice(0,column) + ' ' + line.slice(column+1);
+            }
+            comparisonSource = lines.join('');
+          }
+          const parsed = MarkdownSourceSnapshot.parse(comparisonSource, schema, wikiOrigins ? {parseHTMLBlock:(html,target) => {
             if (!/^\s*<table[\s>]/iu.test(html)) return null;
             const raw = parser.parseWithReport(html,target);
             return raw.issues.length ? null : raw.document;
@@ -429,7 +446,7 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
           const prose = wikiOrigins ? wikiSeedCandidate(document) : withoutReaderDirection(document);
           const compared = wikiOrigins ? wikiSeedSourceText(prose) : prose;
           if (parsed.document.eq(compared)) {
-            if (wikiRoomSeed) document = wikiOrigins ? withWikiBlockOrigins(prose,wikiOrigins) : prose;
+            if (wikiRoomSeed) document = wikiOrigins ? withWikiBlockOrigins(prose,wikiOrigins.blocks) : prose;
             if (proseOnly && compared === prose) {
               wikiSource = parsed.source;
               if (wikiRoomSeed && wikiSource.referenceDefinitions) {

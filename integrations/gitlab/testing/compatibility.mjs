@@ -524,7 +524,7 @@ export function compareGitLabCompatibility(original,fountain){
       }
       const status = input.source.split('\n\n').at(-1) + input.ownerEdit;
       const reference = input.wikiLink?.reference;
-      const authored = (input.code ? input.source.replace(input.code.text,input.code.edited) : reference ? input.source.replace('[' + input.wikiLink.label + '][','[' + input.wikiLink.peerLabel + '][') : input.source)
+      const authored = (input.checklist ? input.source.replace('[ ] '+input.checklist.label,'[x] '+input.checklist.label) : input.code ? input.source.replace(input.code.text,input.code.edited) : reference ? input.source.replace('[' + input.wikiLink.label + '][','[' + input.wikiLink.peerLabel + '][') : input.source)
         + input.ownerEdit + input.peerEdit;
       for (const [key, expected, label] of [
         ['joinedDraft', status, 'The joining author receives the first author’s unsaved draft'],
@@ -533,6 +533,14 @@ export function compareGitLabCompatibility(original,fountain){
         ['cursors', [true,true], 'Both rich editors render the other author’s named caret'],
         ['afterPeerUndo', status, 'Peer undo retains the first author’s edit'],
         ['afterPeerRedo', status + input.peerEdit, 'Peer redo restores the second edit on the first screen'],
+        ...(input.checklist ? [
+          ['checklistBefore',input.checklist.states,'The joining author sees the original task states'],
+          ['checklistUndo',input.checklist.states,'Undo restores the shared checkbox without losing either author’s prose'],
+          ['checklistRedo',[true,...input.checklist.states.slice(1)],'Redo marks the task complete on the other screen'],
+          ['readerChecks',[true,...input.checklist.states.slice(1)],'The reopened reader displays all five saved checkboxes'],
+          ['inapplicableTasks',['Restart the old worker'],'The reopened reader retains the not-applicable task'],
+          ['numberedStart','3','The numbered checklist still starts at three'],
+        ] : []),
         ...(input.code ? [
           ...(input.code.companion ? [['readerFenceParams',input.code.companion.params,'The reopened reader exposes the second listing’s original parameter']] : []),
           ['codeBefore',input.code.text,'The joining editor sees the indented code'],

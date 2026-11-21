@@ -13,7 +13,7 @@ const setAttr = (element: RawElement, name: string, value: string): void => {
  * Third-state carriers are prepared here; callers must still require a schema,
  * serializer and input adapter that explicitly support that state.
  */
-export function normalizeGitLabTasks(elements: readonly RawElement[], source: string): {
+export function normalizeGitLabTasks(elements: readonly RawElement[], source: string, inactivePositions?: [number,number][]): {
   issues: GitLabMarkdownIssue[]; inapplicable: Set<RawElement>;
 } {
   const issues: GitLabMarkdownIssue[] = [], inapplicable = new Set<RawElement>();
@@ -101,6 +101,7 @@ export function normalizeGitLabTasks(elements: readonly RawElement[], source: st
             previous.value += current.value; item.childNodes.splice(index, 1);
           }
         }
+        inactivePositions?.push([Number(position[1])-1,column]);
         inapplicable.add(item);
         setAttr(item, 'data-fountain-gitlab-task-state', 'inapplicable');
       }

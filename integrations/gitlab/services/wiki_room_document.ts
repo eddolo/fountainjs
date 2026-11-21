@@ -1,4 +1,5 @@
 import type { Attributes, MarkJSON, Node, NodeJSON, Schema } from 'fountainjs-editor';
+import { NOT_APPLICABLE } from './task_state';
 import { fenceParameters, ordinaryFence } from './code_rendering';
 import type * as Y from 'yjs';
 
@@ -8,7 +9,7 @@ type XmlTypes = Pick<typeof Y, 'XmlText' | 'XmlElement'>;
 const nodes = new Map(Object.entries({
   codeBlock:'code_block', paragraph:'paragraph', heading:'heading', blockquote:'blockquote', bulletList:'bullet_list',
   table:'table', tableRow:'table_row', tableHeader:'table_header', tableCell:'table_cell',
-  orderedList:'ordered_list', listItem:'list_item', hardBreak:'hard_break', horizontalRule:'horizontal_rule',
+  taskList:'task_list', taskItem:'task_item', orderedList:'ordered_list', listItem:'list_item', hardBreak:'hard_break', horizontalRule:'horizontal_rule',
 }));
 const marks = new Map(Object.entries({
   bold:'strong', italic:'em', strike:'strike', code:'code', subscript:'subscript', superscript:'superscript',
@@ -40,7 +41,18 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
   // A missing Yjs attribute uses the upstream codeBlock schema's null default.
   const result: Attributes = type === 'codeBlock' ? { language:'' } : {};
   for (const [key,value] of Object.entries(attrs)) {
-    if (type === 'codeBlock' && key === 'language' && (value === null || wikiCodeLanguage(value))) result.language = value ?? '';
+    if (type === 'taskItem' && key === 'checked' && typeof value === 'boolean') {
+      if (value && attrs.inapplicable === true) unsupported(path,'conflicting task states');
+      result.checked = attrs.inapplicable === true ? NOT_APPLICABLE : value;
+    } else if (type === 'taskItem' && key === 'inapplicable' && typeof value === 'boolean') {
+      if (value) result.checked = NOT_APPLICABLE;
+    } else if (type === 'taskItem' && key === 'taskTableItem' && value === false) continue;
+    else if (type === 'taskList' && key === 'numeric' && typeof value === 'boolean') continue;
+    else if (type === 'taskList' && key === 'start' && (attrs.numeric === true || value === 1)) {
+      if (attrs.numeric === true) result.start = value;
+    } else if (type === 'taskList' && key === 'parens' && value === false) continue;
+    else if (type === 'taskList' && key === 'bullet' && value === '*') continue;
+    else if (type === 'codeBlock' && key === 'language' && (value === null || wikiCodeLanguage(value))) result.language = value ?? '';
     else if (type === 'codeBlock' && key === 'langParams' && typeof value === 'string'
       && fenceParameters(':' + value) === value && ordinaryFence(attrs.language,value)) result.gitlabFenceSuffix = ':' + value;
     else if (type === 'codeBlock' && ((key === 'class' && (value === 'code highlight' || value === wikiCodeClass(attrs.language))) || (key === 'langParams' && value === null))) continue;
@@ -48,7 +60,7 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
     else if (type === 'table' && key === 'isMarkdown' && (value === null || typeof value === 'boolean')) result.gitlabIsMarkdown = value;
     else if (isStockCell(type) && ['colspan','rowspan','colwidth'].includes(key)) result[key] = value;
     else if (isStockCell(type) && key === 'align' && (value === 'left' || value === 'center' || value === 'right')) continue;
-    else if (type === 'bulletList' && key === 'bullet' && (value === '+' || value === '-')) result.gitlabBullet = value;
+    else if ((type === 'bulletList' || (type === 'taskList' && !attrs.numeric)) && key === 'bullet' && (value === '+' || value === '-')) result.gitlabBullet = value;
     else if (!(type === 'blockquote' && key === 'multiline' && value === false)
       && !(type === 'orderedList' && ((key === 'parens' && value === false) || (key === 'type' && value === null)))
       && !(type === 'bulletList' && key === 'bullet' && value === '*')) unsupported(path, type + '.' + key);
@@ -57,7 +69,7 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
 }
 
 function fromStockNode(name: string, attrs: Attributes, content: NodeJSON[] | undefined, path: readonly number[]): NodeJSON {
-  const type = name === 'doc' || name === 'text' ? name : nodes.get(name);
+  const type = name === 'doc' || name === 'text' ? name : name === 'taskList' && attrs.numeric === true ? 'ordered_list' : nodes.get(name);
   if (!type) unsupported(path,name);
   const projected = stockAttrs(name,attrs,path);
   if (isStockCell(name) && (attrs.align === 'center' || attrs.align === 'right')) {
@@ -329,10 +341,17 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
   doc.type.schema.validate(doc);
   if (doc.type !== doc.type.schema.topNodeType) unsupported([], 'expected document');
   function encode(node: Node, path: readonly number[], inheritedCellAlign?: unknown): NodeJSON {
-    const type = node === doc ? 'doc' : node.isText ? 'text' : stockNodes.get(node.type.name);
+    const numericTasks = node.type.name === 'ordered_list' && node.content.some(child => child.type.name === 'task_item');
+    const type = numericTasks ? 'taskList' : node === doc ? 'doc' : node.isText ? 'text' : stockNodes.get(node.type.name);
     if (!type) unsupported(path,node.type.name);
-    const attrs: Attributes = {};
+    const attrs: Attributes = numericTasks ? {numeric:true} : {};
     for (const [key,value] of Object.entries(node.attrs)) {
+      if (type === 'taskItem' && key === 'checked') {
+        attrs.checked = value === true;
+        attrs.inapplicable = value === NOT_APPLICABLE;
+        continue;
+      }
+      if (numericTasks && key === 'start') { attrs.start = value; continue; }
       if (type === 'codeBlock' && key === 'language') {
         if (!wikiCodeLanguage(value)) unsupported(path,'codeBlock.language');
         attrs.language = value || null;
@@ -345,7 +364,7 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
       else if (type === 'table' && key === 'gitlabIsMarkdown') attrs.isMarkdown = value;
       else if (isStockCell(type) && ['colspan','rowspan','colwidth'].includes(key)) attrs[key] = value;
       else if (type === 'paragraph' && key === 'align' && inheritedCellAlign === value) continue;
-      else if (type === 'bulletList' && key === 'gitlabBullet' && (value === '+' || value === '-')) attrs.bullet = value;
+      else if ((type === 'bulletList' || type === 'taskList') && key === 'gitlabBullet' && (value === '+' || value === '-')) attrs.bullet = value;
       else if (value !== node.type.spec.attrs?.[key]?.default) unsupported(path,node.type.name + '.' + key);
     }
     if (isStockCell(type)) {

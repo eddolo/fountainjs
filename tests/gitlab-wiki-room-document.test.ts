@@ -2,12 +2,40 @@ import { expect, it } from 'vitest';
 import * as Y from 'yjs';
 import { GitLabContentEditor } from '../integrations/gitlab/services/content_editor';
 import { Schema } from 'fountainjs-editor';
+import taskPreviews from '../integrations/gitlab/fixtures/task-live-html.json';
 import rollout from '../integrations/gitlab/fixtures/compatibility-wiki-rollout.json';
 import seedPreview from '../integrations/gitlab/fixtures/wiki-structured-seed-render.html?raw';
 import { createGitLabSchemaSpec, GitLabMarkdownCodec } from '../integrations/gitlab/services/markdown_codec';
 import { bindGitLabWikiDocument, readGitLabWikiRoom, sameWikiDocument, toGitLabWikiJSON } from '../integrations/gitlab/services/wiki_room_document';
 
 const schema = new Schema(createGitLabSchemaSpec(undefined,undefined,undefined,true));
+it.each(['plain','inapplicable','ordered-tasks','nested'])('seeds the shared wiki from GitLab’s %s task preview', async name => {
+  const fixture = taskPreviews.fixtures.find(item=>item.name===name)!;
+  const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async()=>({body:fixture.body})});
+  const {document} = await codec.deserialize({schema,markdown:fixture.source,signal:new AbortController().signal,wikiRoomSeed:true});
+  const list = toGitLabWikiJSON(document).content![0];
+  expect(list.type).toBe('taskList');
+  if (name==='ordered-tasks') expect(list.attrs).toMatchObject({numeric:true,start:3});
+  else expect(list.attrs?.bullet).toBe('-');
+  if (name==='inapplicable') expect(list.content!.map(item=>item.attrs)).toEqual([
+    {checked:false,inapplicable:true},{checked:false,inapplicable:false},{checked:true,inapplicable:false},
+  ]);
+});
+
+it('refuses conflicting checkbox flags and task-table items before changing the shared room', () => {
+  const doc = new Y.Doc();
+  try {
+    const room = doc.getXmlFragment('default'), list=new Y.XmlElement('taskList'), task=new Y.XmlElement<Record<string,any>>('taskItem');
+    room.push([list]); list.push([task]); task.push([new Y.XmlElement('paragraph')]);
+    task.setAttribute('inapplicable',true);
+    task.setAttribute('checked',true);
+    expect(()=>readGitLabWikiRoom(room,schema,Y)).toThrow(/conflicting task states/);
+    task.removeAttribute('inapplicable');
+    task.setAttribute('taskTableItem',true);
+    expect(()=>readGitLabWikiRoom(room,schema,Y)).toThrow(/taskTableItem/);
+  } finally {doc.destroy();}
+});
+
 it('maps a stock peer’s edit to the actual location even when adjacent letters are identical', async () => {
   const doc = new Y.Doc(), root = doc.getXmlFragment('default');
   const first = new Y.XmlElement('paragraph'), second = new Y.XmlElement('paragraph');

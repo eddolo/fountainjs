@@ -338,6 +338,24 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       await expect.poll(() => wikiCodeText(first)).toBe(input.code.edited);
       item.codeRedo = await wikiCodeText(first);
     }
+    if (input.checklist) {
+      item.stage = 'shared-checklist';
+      const boxes = surface => surface.locator('li input[type="checkbox"]');
+      const states = surface => boxes(surface).evaluateAll(inputs => inputs.map(box => box.checked));
+      const original = input.checklist.states, toggled = [true,...original.slice(1)];
+      item.checklistBefore = await states(other);
+      expect(item.checklistBefore).toEqual(original);
+      await other.locator('li').filter({hasText:input.checklist.label}).getByRole('checkbox').click();
+      await expect.poll(() => states(first)).toEqual(toggled);
+      await peerStatus.click();
+      await peer.keyboard.press('Control+z');
+      await expect.poll(() => states(first)).toEqual(original);
+      item.checklistUndo = await states(first);
+      await peer.keyboard.press('Control+Shift+z');
+      await expect.poll(() => states(first)).toEqual(toggled);
+      item.checklistRedo = await states(first);
+      expect(await paragraphText(firstStatus)).toBe(both);
+    }
     await first.screenshot({path:join(output,'shared-wiki.png')});
     item.stage = 'save-and-reopen';
     const savingTab = input.wikiLink?.reference ? peer : page;
@@ -354,6 +372,12 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     await expect(peerReader).toContainText(both);
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
+    if (input.checklist) {
+      item.readerChecks = await peerReader.locator('li input[type="checkbox"]').evaluateAll(boxes=>boxes.map(box=>box.checked));
+      item.inapplicableTasks = await peerReader.locator('li.inapplicable').allInnerTexts();
+      item.numberedStart = await peerReader.locator('ol').getAttribute('start');
+      await peerReader.screenshot({path:join(output,'saved-checklist.png')});
+    }
     if (input.code) {
       const rendered = peerReader.locator('pre').filter({hasText:'def threshold()'});
       if (input.code.companion) {

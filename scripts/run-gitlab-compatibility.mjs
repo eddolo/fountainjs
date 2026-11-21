@@ -102,7 +102,10 @@ const wikiCodeParams = repeatedFenceParams || process.argv.includes('--wiki-code
 const wikiCode = wikiCodeParams || process.argv.includes('--wiki-code');
 if (wikiCode && (suite !== 'wiki-collaboration' || mixedWiki || wikiPendingUpload || wikiPageLinks || wikiReferenceLinks))
   throw new Error('Use --wiki-code on a wiki collaboration comparison or deployment handover.');
-const fixturePath=`integrations/gitlab/fixtures/compatibility-${repeatedFenceParams ? 'wiki-repeated-code-params' : wikiCodeParams ? 'wiki-code-params' : wikiCode ? 'wiki-code' : wikiPartialUpload ? 'wiki-partial-upload' : wikiUploaderClose ? 'wiki-uploader-close' : wikiInterruptedUpload ? 'wiki-interrupted-upload' : wikiPendingUpload ? 'wiki-pending-upload' : wikiReferenceLinks ? 'wiki-reference-links' : wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
+const wikiChecklist = process.argv.includes('--wiki-checklist');
+if (wikiChecklist && (suite !== 'wiki-collaboration' || wikiRollout || mixedWiki || draftRollbackRequested || wikiCode || wikiPendingUpload || wikiReferenceLinks || wikiPageLinks))
+  throw new Error('Use --wiki-checklist for a matched wiki collaboration comparison.');
+const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiChecklist ? 'wiki-checklist' : repeatedFenceParams ? 'wiki-repeated-code-params' : wikiCodeParams ? 'wiki-code-params' : wikiCode ? 'wiki-code' : wikiPartialUpload ? 'wiki-partial-upload' : wikiUploaderClose ? 'wiki-uploader-close' : wikiInterruptedUpload ? 'wiki-interrupted-upload' : wikiPendingUpload ? 'wiki-pending-upload' : wikiReferenceLinks ? 'wiki-reference-links' : wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
 const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
 const pin=JSON.parse(await readFile(resolve(root,'integrations/gitlab/runtime/upstream.json')));
 const compose=['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')],env={...process.env};

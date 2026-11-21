@@ -33,7 +33,7 @@ async function loadWikiCollaboration(provider) {
     import('yjs'), import('y-prosemirror'), import('@tiptap/core'), import('../extensions'),
     import('~/collaborative_editing/user_colors'),
   ]);
-  const stockSchema = getSchema(['Document','Paragraph','Heading','Blockquote','BulletList','OrderedList','ListItem',
+  const stockSchema = getSchema(['Document','Paragraph','Heading','Blockquote','BulletList','OrderedList','ListItem','TaskList','TaskItem',
     'HardBreak','HorizontalRule','CodeBlockHighlight','Table','TableRow','TableHeader','TableCell','Text','Bold','Italic','Strike','Code','Subscript','Superscript','Link'].map(name => extensions[name]));
   return {provider,wire:{types,stockSchema,updateYFragment},colorFor:assignUserColor};
 }
