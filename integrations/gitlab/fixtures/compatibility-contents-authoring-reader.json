@@ -1,0 +1,15 @@
+{
+  "formatVersion": 1,
+  "workflow": "author-an-outline-with-the-gitlab-reader-preview",
+  "cases": [
+    {
+      "id": "create-outline",
+      "scope": "contents-authoring",
+      "title": "New outline",
+      "note": "Draft the outline before adding headings.",
+      "heading": "Release handoff",
+      "body": "Confirm the release owner.",
+      "readerPreview": true
+    }
+  ]
+}

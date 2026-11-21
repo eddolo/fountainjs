@@ -1161,6 +1161,8 @@ export function compareGitLabCompatibility(original,fountain){
       const observe = (report, item) => {
         if (!verifiedEditor(report, item)) return {};
         return {
+          emptyReaderPreview:item.previews?.some(preview => preview.source === item.emptySaved && preview.status === 200
+            && typeof preview.body === 'string' && !preview.body.trim()),
           startedBlank:item.startedBlank, inserted:item.inserted, undone:item.undone, redone:item.redone,
           emptySaved: typeof item.emptySaved === 'string' ? marker.test(item.emptySaved.trim()) : undefined,
           exactEmptySource: typeof item.emptySaved === 'string' ? item.emptySaved === '[[_TOC_]]' : undefined,
@@ -1175,6 +1177,7 @@ export function compareGitLabCompatibility(original,fountain){
       };
       const left = observe(original, a), right = observe(fountain, b);
       for (const [key,expected,label] of [
+        ...(input.readerPreview ? [['emptyReaderPreview',true,'GitLab returned an empty reader preview for the saved outline-only source']] : []),
         ['startedBlank',true,'The issue starts with an empty rich editor'],
         ['inserted',1,'The toolbar creates one table of contents'],
         ['undone',0,'Undo removes the new outline'],

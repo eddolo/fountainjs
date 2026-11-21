@@ -38,6 +38,18 @@ it('keeps escaped text and a fenced example literal', async () => {
   const { document } = await open('literal');
   expect(document.content.map(node => node.type.name)).toEqual(['paragraph','code_block']);
 });
+it('reopens an outline, intentional empty paragraph and prose from the heading-free issue reader', async () => {
+  const source = '[[_TOC_]]\n\n<p data-fountain-empty="text"></p>\n\nDraft the outline before adding headings.';
+  const rendered = '&#x000A;<p dir="auto"></p>&#x000A;<p data-sourcepos="5:1-5:41" dir="auto">Draft the outline before adding headings.</p>';
+  const codec = new GitLabMarkdownCodec({tableOfContentsLabel:'Contents', renderMarkdown:async () => ({body:rendered})});
+  const {document} = await codec.deserialize({schema, markdown:source, signal:new AbortController().signal});
+  expect(document.content.map(node => node.type.name)).toEqual(['gitlab_table_of_contents','paragraph','paragraph']);
+  expect(document.child(1).textContent).toBe('');
+  expect(codec.serialize({doc:document})).toBe(source);
+  const changed = document.copy([...document.content,schema.node('paragraph', {}, [schema.text('Another paragraph.')])]);
+  expect(codec.serialize({doc:changed})).toContain('Draft the outline before adding headings.');
+});
+
 it('refuses reader reconstruction when the host drops unrelated prose', async () => {
   const sample = captured.cases.find(row => row.id === 'simple')!;
   const codec = new GitLabMarkdownCodec({tableOfContentsLabel:'Contents', renderMarkdown:async () => ({

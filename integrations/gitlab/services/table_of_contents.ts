@@ -51,8 +51,13 @@ export function restoreGitLabReaderContents(fragment: DefaultTreeAdapterMap['doc
   for (const [index, block] of snapshot.blocks.entries()) {
     if (block.separatorAfter.trim()) fail();
     const end = offset + block.source.length, span = spans[next];
-    if (span?.from === offset && span.to === end && ordinary[next] === children[cursor]) {
-      const node = ordinary[next++]!;
+    const node = ordinary[next];
+    // GitLab drops both the marker attribute and sourcepos when sanitizing an
+    // intentional empty paragraph written by the Markdown exporter.
+    const emptyParagraph = block.source === '<p data-fountain-empty="text"></p>' && node && 'tagName' in node
+      && node.tagName === 'p' && !node.childNodes.length && node.attrs.every(a => a.name === 'dir' && a.value === 'auto');
+    if (node && node === children[cursor] && ((span?.from === offset && span.to === end) || emptyParagraph)) {
+      next++;
       if ('tagName' in node && /^h[1-6]$/u.test(node.tagName)) {
         const anchor = node.childNodes.at(-1);
         const target = attribute(node, 'id')?.match(/^user-content-(.+)$/u)?.[1];
