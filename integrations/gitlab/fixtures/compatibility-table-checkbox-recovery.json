@@ -1,0 +1,12 @@
+{
+  "formatVersion": 1,
+  "workflow": "recover-standalone-checkboxes-after-a-table-merge",
+  "cases": [
+    {
+      "id": "merge-release-gates",
+      "scope": "table-checkbox-recovery",
+      "title": "Combine release gates",
+      "markdown": "| Work | Required | Approved |\n| --- | --- | --- |\n| Backups | [x] | [~] |\n| Handover | [ ] | Ready |\n\nStatus: waiting."
+    }
+  ]
+}

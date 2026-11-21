@@ -1213,6 +1213,25 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
       continue;
     }
+    if (input.scope === 'table-checkbox-recovery') {
+      const states = [true,'inapplicable',false];
+      const before = {spans:[[1,1,1],[1,1,1],[1,1,1]],states};
+      const merged = {spans:[[1,1,1],[1,2],[1,1,1]],states};
+      const evidence = (report,item,key) => {
+        if (item?.status !== 'observed' || !verifiedEditor(report,item)) return undefined;
+        if (key === 'reopened' && !verifiedEditor(report,{editorProof:item.reopenedEditorProof})) return undefined;
+        if (key === 'prose') return item.savedMarkdown?.includes('Status: waiting. Reviewed.');
+        return item[key];
+      };
+      for (const [key,label,expected] of [
+        ['before','All three original checkbox states are editable in their own cells',before],
+        ['merged','The merged draft retains both selected checkboxes and the neighboring pending task',merged],
+        ['prose','The saved issue retains the edit made before merging the cells',true],
+        ['reader','The saved reader retains all three checkbox states in the intended layout',merged],
+        ['reopened','The rich editor reopens the merged table with all three checkbox states',merged],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:evidence(original,a,key),fountain:evidence(fountain,b,key),classification:null});
+      continue;
+    }
     if (input.scope === 'merged-table-tasks') {
       const initial = {spans:[2,2],checks:[false,true,'inapplicable'],labels:['Verify backup','Notify team','Legacy signoff'],
         paragraphs:['First review','Keep the receipt.'],neighbors:['Release gates','Night shift','Next shift']};
