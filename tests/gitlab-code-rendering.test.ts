@@ -62,6 +62,18 @@ it.each(['mermaid', 'plantuml'])('retains %s source as editable non-executing co
   const edited = document.copy([...document.content, schema.node('paragraph', {}, [schema.text('Added')])]);
   expect(codec.serialize({ doc: edited })).toBe(source + '\n\nAdded');
 });
-it('refuses fence parameters until their source representation is implemented', async () => {
+it.each([':', '  '])('retains an ordinary fence parameter and its %j separator through a code edit', async separator => {
+  const opening = '```python' + separator + 'title=threshold.py';
+  const source = opening + '\n    return 3\n```';
+  const html = '<pre data-sourcepos="1:1-3:3" data-canonical-lang="python" data-lang-params="title=threshold.py"><code>    return 3</code></pre>';
+  const {codec,document} = await convert(html,source);
+  const block = document.child(0);
+  expect(block.attrs.language).toBe('python');
+  expect(block.attrs.gitlabFenceSuffix).toBe(separator + 'title=threshold.py');
+  const edited = document.copy([block.copy([schema.text('    return 30')])]);
+  expect(codec.serialize({doc:edited})).toBe(opening + '\n    return 30\n```');
+});
+
+it('refuses fence parameters when the original source cannot corroborate the renderer', async () => {
   await expect(convert('<pre data-canonical-lang="json" data-lang-params="title=Example"><code>{}</code></pre>', 'source')).rejects.toMatchObject({ issues: expect.arrayContaining([expect.objectContaining({ code: 'specialized-renderer' })]) });
 });

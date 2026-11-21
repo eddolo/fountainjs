@@ -1,9 +1,40 @@
+import type { NodeSpec } from 'fountainjs-editor';
 import { isSafeURL } from 'fountainjs-editor';
 import type { DefaultTreeAdapterMap } from 'parse5';
 type Element = DefaultTreeAdapterMap['element'];
 type RawNode = DefaultTreeAdapterMap['node'];
 const attr = (node: Element, name: string): string | undefined => node.attrs.find(item => item.name === name)?.value;
 const specialized = new Set(['math', 'suggestion', 'glql']);
+
+const fenceAttribute = 'data-fountain-gitlab-fence-suffix';
+
+export function fenceParameters(suffix: unknown): string | undefined {
+  if (typeof suffix !== 'string' || !/^(?::|[ \t]+)/u.test(suffix)) return;
+  const value = suffix.replace(/^(?::|[ \t]+)/u,'').trim();
+  if (!value || /[\u0000-\u001f\u007f`\\&]/u.test(value) || /[\r\n]/u.test(suffix)) return;
+  return value;
+}
+
+export function ordinaryFence(language: unknown, params: string): boolean {
+  return typeof language === 'string' && /^[A-Za-z0-9_+.#-]{1,80}$/u.test(language)
+    && !specialized.has(language.toLowerCase()) && !['mermaid','plantuml'].includes(language.toLowerCase())
+    && params !== 'frontmatter' && !(language.toLowerCase() === 'json' && params.split(/\s+/u).includes('table'));
+}
+
+export function parameterizedGitLabCode(base: NodeSpec): NodeSpec {
+  return {...base,attrs:{...base.attrs,gitlabFenceSuffix:{default:null,validate:value => value === null || fenceParameters(value) !== undefined}},
+    parseHTML:[{tag:'pre[' + fenceAttribute + ']',priority:300,getAttrs:element => {
+      const suffix = element.getAttribute(fenceAttribute), language = element.getAttribute('data-language');
+      const params = fenceParameters(suffix);
+      return params && ordinaryFence(language,params) ? {language,gitlabFenceSuffix:suffix} : false;
+    }},...(base.parseHTML ?? [])],
+    toDOM:node => {
+      const output = base.toDOM!(node);
+      if (!node.attrs.gitlabFenceSuffix) return output;
+      if (!Array.isArray(output) || !output[1] || typeof output[1] !== 'object' || Array.isArray(output[1])) throw new Error('GITLAB_CODE_DOM');
+      return [output[0],{...output[1],[fenceAttribute]:node.attrs.gitlabFenceSuffix},...output.slice(2)] as typeof output;
+    }};
+}
 
 /** Only presentation spans may surround literal source in the pinned renderer. */
 export function readGitLabCodeRendering(pre: Element, frontmatter = false): string | undefined {
@@ -68,24 +99,31 @@ export function normalizeGitLabDiagrams(elements: readonly Element[]) {
 }
 
 /** Strip only GitLab's presentation carriers, retaining every code character. */
-export function normalizeGitLabCodeRendering(elements: readonly Element[]): readonly { code: string; message: string }[] {
+export function normalizeGitLabCodeRendering(elements: readonly Element[], markdown: string): readonly { code: string; message: string }[] {
   const issues: { code: string; message: string }[] = [];
+  const lines = markdown.split(/\r\n?|\n/u);
   for (const pre of elements) {
     if (pre.tagName !== 'pre') continue;
     const unspecified = attr(pre, 'data-canonical-lang') === undefined
       && (attr(pre, 'class') ?? '').split(/\s+/u).includes('language-plaintext');
     if (attr(pre, 'data-canonical-lang') === undefined && !unspecified) continue;
     const language = unspecified ? '' : attr(pre, 'data-canonical-lang') || 'text';
-    if (specialized.has(language.toLowerCase()) || attr(pre, 'data-lang-params')) {
+    const params = attr(pre,'data-lang-params');
+    const position = attr(pre,'data-sourcepos')?.match(/^(\d+):(\d+)-/u);
+    const opening = position && lines[Number(position[1])-1]?.slice(Number(position[2])-1);
+    const header = opening && /^(?:`{3,}|~{3,})[ \t]*([A-Za-z0-9_+.#-]+)((?::|[ \t]+).*?)$/u.exec(opening);
+    const suffix = header && header[1] === language ? header[2] : undefined;
+    if (specialized.has(language.toLowerCase()) || (params || suffix?.trim()) &&
+        (!suffix || !params || fenceParameters(suffix) !== params || !ordinaryFence(language,params))) {
       issues.push({ code: 'specialized-renderer', message: 'This code language or fence parameters require a dedicated source-aware adapter.' });
       continue;
     }
-    const source = readGitLabCodeRendering(pre);
+    const source = readGitLabCodeRendering(pre, Boolean(params));
     if (source === undefined || language !== '' && !/^[A-Za-z0-9_+.#-]{1,80}$/u.test(language)) {
       issues.push({ code: 'code-rendering', message: 'The code rendering has ambiguous structure or metadata; retain source editing.' });
       continue;
     }
-    replaceGitLabCodeRendering(pre, [{ name: 'data-language', value: language }], source);
+    replaceGitLabCodeRendering(pre, [{ name: 'data-language', value: language }, ...(params && suffix ? [{name:fenceAttribute,value:suffix}] : [])], source);
   }
   return issues;
 }

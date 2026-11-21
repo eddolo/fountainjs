@@ -7,7 +7,7 @@ import type { GitLabMarkWriter } from './host_configuration';
 import type { SerializedContentCodec } from './serialized_content';
 import type { GitLabRenderResponse } from './asset_resolver';
 import { gitlabMathNodes, normalizeGitLabMath, serializeGitLabMath } from './math';
-import { normalizeGitLabCodeRendering, normalizeGitLabDiagrams } from './code_rendering';
+import { fenceParameters, ordinaryFence, parameterizedGitLabCode, normalizeGitLabCodeRendering, normalizeGitLabDiagrams } from './code_rendering';
 import { getGitLabFrontmatter, gitlabFrontmatterCode, hydrateGitLabFrontmatter, normalizeGitLabFrontmatter, serializeGitLabFrontmatter } from './frontmatter';
 import { gitlabAlertNodes, hydrateGitLabAlertTitles, normalizeGitLabAlerts } from './alerts';
 import { gitlabMediaNodes, gitlabMediaSource, normalizeGitLabMedia, recoverGitLabImageSources, type GitLabPlayableKind } from './media';
@@ -137,7 +137,7 @@ export function createGitLabSchemaSpec(base: SchemaSpec = CoreSchemaSpec, mediaL
     task_item: gitLabTaskItem(base),
     paragraph: { ...base.nodes.paragraph!, attrs: { ...base.nodes.paragraph!.attrs,
       gitlabLiteralSlash: { default: false, validate: value => typeof value === 'boolean' } } },
-    code_block: gitlabFrontmatterCode(base.nodes.code_block!),
+    code_block: parameterizedGitLabCode(gitlabFrontmatterCode(base.nodes.code_block!)),
     inline_image: { ...image, attrs: { ...image.attrs, gitlabCanonicalSrc: canonical,
       gitlabIntrinsicSize: { default: false, validate: value => typeof value === 'boolean' },
       gitlabCanonicalMissing: { default: false, validate: value => typeof value === 'boolean' } },
@@ -218,7 +218,7 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
   const alerts = normalizeGitLabAlerts(elements, source);
   const frontmatter = normalizeGitLabFrontmatter(elements, source);
   const suggestions = normalizeGitLabSuggestionNodes(elements, source);
-  const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element) && !diagrams.handled.has(element) && !suggestions.handled.has(element)));
+  const codeIssues = normalizeGitLabCodeRendering(elements.filter(element => !math.handled.has(element) && !diagrams.handled.has(element) && !suggestions.handled.has(element)), source);
   const issues: GitLabMarkdownIssue[] = [
     ...tasks.issues, ...suggestions.issues.map(issue => ({ stage: 'import' as const, ...issue })), ...math.issues, ...alerts.issues, ...media.issues, ...[...diagrams.issues, ...codeIssues, ...frontmatter.issues].map(issue => ({ stage: 'import' as const, ...issue })),
   ];
@@ -336,6 +336,11 @@ function wikiSeedCandidate(node: Node, trimListSeparator = false): Node {
 }
 
 function wikiSeedSourceText(node: Node): Node {
+  if (node.type.name === 'code_block' && typeof node.attrs.gitlabFenceSuffix === 'string') {
+    // The independent CommonMark parser treats the first info word as the language.
+    const info = String(node.attrs.language) + node.attrs.gitlabFenceSuffix;
+    return node.withAttrs({...node.attrs,language:info.split(/\s+/u)[0],gitlabFenceSuffix:null});
+  }
   if (node.isText) return node;
   if (!node.content.some(wikiMark)) {
     const children = node.content.map(wikiSeedSourceText);
@@ -375,6 +380,8 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
   private readonly emojiSpellings = new WeakMap<Node, ReadonlyMap<string,string>>();
   private readonly wikiBlockSources = new WeakMap<MarkdownSourceSnapshot, MarkdownSourceSnapshot>();
   private readonly sources = new WeakMap<Node, MarkdownSourceSnapshot>();
+  // GitLab shares the parameter value without the separator that introduced it.
+  private wikiFenceSpellings = new Map<string,string | null>();
   private wikiReferences?: {source: MarkdownSourceSnapshot; links: Set<string>};
   constructor(private readonly options: {
     renderMarkdown(markdown: string, options?: { signal: AbortSignal }): Promise<GitLabRenderResponse>;
@@ -435,6 +442,16 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
           // A wiki extension may accept syntax outside the local parser.
           // Its server-rendered tree still has the original source snapshot.
         }
+      }
+      if (wikiRoomSeed) {
+        const spellings = new Map<string,string | null>();
+        document.descendants(node => {
+          const suffix = node.attrs.gitlabFenceSuffix, params = fenceParameters(suffix);
+          if (typeof suffix !== 'string' || !params) return;
+          const key = node.attrs.language + ':' + params;
+          spellings.set(key,spellings.has(key) && spellings.get(key) !== suffix ? null : suffix);
+        });
+        this.wikiFenceSpellings = spellings;
       }
       const source = MarkdownSourceSnapshot.capture(markdown, document);
       if (wikiSource) this.wikiBlockSources.set(source,wikiSource);
@@ -542,6 +559,18 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
             node.type.schema.text(leadingSlash[1] + token + first.text!.slice(leadingSlash[0].length)), ...node.content.slice(1),
           ]), path);
         }
+      }
+      if (node.type.name === 'code_block' && node.attrs.gitlabFenceSuffix != null) {
+        const suffix = node.attrs.gitlabFenceSuffix, params = fenceParameters(suffix);
+        const language = String(node.attrs.language);
+        const spelling = params && !canonical ? this.wikiFenceSpellings.get(language + ':' + params) : undefined;
+        if (typeof suffix !== 'string' || !params || !ordinaryFence(language,params) || spelling === null || node.attrs.gitlabFrontmatter) {
+          issues.push({stage:'export',code:'code-fence-parameters',path,message:'The code fence parameters need an unambiguous source spelling.'});
+          return node;
+        }
+        const token = `${prefix}${tokens.size}END`;
+        tokens.set(token,language + (spelling ?? suffix));
+        return node.type.create({...node.attrs,language:token,gitlabFenceSuffix:null},node.content);
       }
       if (node.attrs.gitlabFrontmatter) {
         try {

@@ -1,4 +1,5 @@
 import type { Attributes, MarkJSON, Node, NodeJSON, Schema } from 'fountainjs-editor';
+import { fenceParameters, ordinaryFence } from './code_rendering';
 import type * as Y from 'yjs';
 
 // Use the host's Yjs constructors. The GitLab runtime and the Fountain bundle
@@ -40,6 +41,8 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
   const result: Attributes = type === 'codeBlock' ? { language:'' } : {};
   for (const [key,value] of Object.entries(attrs)) {
     if (type === 'codeBlock' && key === 'language' && (value === null || wikiCodeLanguage(value))) result.language = value ?? '';
+    else if (type === 'codeBlock' && key === 'langParams' && typeof value === 'string'
+      && fenceParameters(':' + value) === value && ordinaryFence(attrs.language,value)) result.gitlabFenceSuffix = ':' + value;
     else if (type === 'codeBlock' && ((key === 'class' && (value === 'code highlight' || value === wikiCodeClass(attrs.language))) || (key === 'langParams' && value === null))) continue;
     else if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) result[key] = value;
     else if (type === 'table' && key === 'isMarkdown' && (value === null || typeof value === 'boolean')) result.gitlabIsMarkdown = value;
@@ -138,6 +141,9 @@ function isEmptyCaret(node: Node): boolean {
 }
 
 function withoutEmptyCarets(node: Node): Node {
+  // The stock wire carries langParams but has no source-separator field.
+  const suffix = node.attrs.gitlabFenceSuffix;
+  if (node.type.name === 'code_block' && typeof suffix === 'string') node = node.withAttrs({...node.attrs,gitlabFenceSuffix:':' + fenceParameters(suffix)});
   if (!node.childCount) return node;
   const textBlock = hasCaretLeaf(node.type.name);
   const content = node.content.filter(child => !(textBlock && isEmptyCaret(child))).map(withoutEmptyCarets);
@@ -280,6 +286,10 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
         if (!wikiCodeLanguage(value)) unsupported(path,'codeBlock.language');
         attrs.language = value || null;
         attrs.class = wikiCodeClass(value);
+      } else if (type === 'codeBlock' && key === 'gitlabFenceSuffix' && value != null) {
+        const params = fenceParameters(value);
+        if (!params || !ordinaryFence(node.attrs.language,params)) unsupported(path,'codeBlock.langParams');
+        attrs.langParams = params;
       } else if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) attrs[key] = value;
       else if (type === 'table' && key === 'gitlabIsMarkdown') attrs.isMarkdown = value;
       else if (isStockCell(type) && ['colspan','rowspan','colwidth'].includes(key)) attrs[key] = value;

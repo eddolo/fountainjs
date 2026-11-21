@@ -114,6 +114,12 @@ it('round-trips a wiki code block without changing indentation, blank lines, or 
       {type:'codeBlock',attrs:{language:'python',class:'code highlight js-syntax-highlight language-python'},content:[{type:'text',text:source}]},
       {type:'codeBlock',attrs:{language:null,class:'code highlight js-syntax-highlight language-plaintext'}},
     ]);
+    code.setAttribute('langParams','title=threshold.py');
+    const named = readGitLabWikiRoom(room,schema,Y);
+    expect(named.child(0).attrs.gitlabFenceSuffix).toBe(':title=threshold.py');
+    const spaced = named.child(0).withAttrs({...named.child(0).attrs,gitlabFenceSuffix:'  title=threshold.py'});
+    expect(sameWikiDocument(named,named.copy([spaced,named.child(1)]))).toBe(true);
+    expect(toGitLabWikiJSON(named).content?.[0].attrs?.langParams).toBe('title=threshold.py');
     code.setAttribute('langParams','frontmatter');
     expect(() => readGitLabWikiRoom(room,schema,Y)).toThrow(/codeBlock.langParams/);
   } finally { doc.destroy(); }
