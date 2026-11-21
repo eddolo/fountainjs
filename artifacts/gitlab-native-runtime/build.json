@@ -5,7 +5,7 @@
   "target": "es2018",
   "bytes": 1809489,
   "sha256": "e0fb074b48490b93d45d04f638a7356f94859a7035186eba6e91b9a67cf99735",
-  "parentRevision": "d78fe0a3e2b1743c665b96c31ee188a6316db22b",
+  "parentRevision": "6b4a4b06f468e596cd5171e3984e95ee03b10b2d",
   "inputs": {
     "integrations/gitlab/runtime/browser.ts": "904b54095b31c878cea2b6431d9a878da3747181fa55020aa7b79fcda203e0a9",
     "integrations/gitlab/services/content_editor.ts": "186b63be8c417c5aaefe92c807d0d7535943dee83bba1d949a981b8334ea1d19",

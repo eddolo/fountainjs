@@ -11,18 +11,27 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
   const endpoint = flags + '/' + flag;
   const readFlag = async () => (await request(flags)).find(value => value.name === flag) ?? null;
   const before = await readFlag();
-  if (before && before.state !== 'off') throw new Error('Wiki collaboration comparison expects the packaged default.');
   const namespace = project.namespace.full_path;
   expect(project.namespace.kind).toBe('user');
   expect(namespace).toBe('root');
+  const expectedActor = 'Namespaces::UserNamespace:' + project.namespace.id;
+  const activeGates = before?.gates.filter(({key,value}) =>
+    !(key === 'boolean' && value === false) && !(key === 'expression' && value === null));
+  const alreadyScoped = before?.state === 'conditional' && activeGates.length === 1
+    && activeGates[0].key === 'actors' && Array.isArray(activeGates[0].value)
+    && activeGates[0].value.length === 1 && activeGates[0].value[0] === expectedActor;
+  if (before && before.state !== 'off' && !alreadyScoped)
+    throw new Error('Unexpected wiki collaboration flag configuration: ' + JSON.stringify({state:before.state,gates:before.gates}));
+  item.initialFlagState = before?.state ?? 'absent';
   const member = await prepareGitLabAuditMember({project, request, fixture});
   const members = '/api/v4/projects/' + project.id + '/members';
   const readMember = async () => (await request(members + '?query=' + fixture.username)).find(value => value.id === member.account.id);
   const membership = await readMember();
   const second = await page.context().browser().newContext();
   try {
-    const gate = await request(endpoint, {namespace, value:'true'});
+    const gate = alreadyScoped ? before : await request(endpoint, {namespace, value:'true'});
     item.gate = gate.gates.find(value => value.key === 'actors')?.value;
+    expect(item.gate).toEqual([expectedActor]);
     if (membership?.access_level !== 30) await member.setRole(30);
     const peer = await second.newPage();
     await member.signInMember(peer, {});
@@ -330,8 +339,10 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
         }
         expect((await readMember())?.access_level).toBe(membership?.access_level);
       } finally {
-        await request(endpoint, {namespace, value:'false'});
-        if (before === null && (await readFlag())?.state === 'off') await request(endpoint, {}, 'DELETE');
+        if (!alreadyScoped) {
+          await request(endpoint, {namespace, value:'false'});
+          if (before === null && (await readFlag())?.state === 'off') await request(endpoint, {}, 'DELETE');
+        }
         expect(await readFlag()).toEqual(before);
         item.restoredFlag = true;
       }

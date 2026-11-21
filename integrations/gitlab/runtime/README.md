@@ -676,7 +676,7 @@ The second audit run mounts the separate build read-only. It verifies the staged
 
 ### Reproduce a live two-author wiki edit
 
-Use the pinned local GitLab instance and its standard frontend. The test temporarily enables `wiki_collaborative_editing` for the isolated project's personal namespace. The administrator edits an existing wiki and leaves the changes unsaved. A Developer joins from a separate signed-in browser session, adds text, undoes and redoes their own change. The administrator saves and the Developer reloads the wiki reader. The collector restores the namespace flag and the fixture account's previous membership.
+Use the pinned local GitLab instance and its standard frontend. The test uses `wiki_collaborative_editing` for the isolated project's personal namespace. If the flag starts disabled, the collector temporarily enables it for that namespace. If it already has exactly that namespace gate, the collector uses the existing configuration. The administrator edits an existing wiki and leaves the changes unsaved. A Developer joins from a separate signed-in browser session, adds text, undoes and redoes their own change. The administrator saves and the Developer reloads the wiki reader. The collector restores the namespace flag and the fixture account's previous membership.
 
 ```sh
 run_id=wiki-live-$(date -u +%Y%m%d-%H%M%S)
@@ -686,6 +686,8 @@ node scripts/compare-gitlab-compatibility.mjs --original "artifacts/gitlab-compa
 ```
 
 The report records the two mounted editor identities, the unsaved text the second author received, presence in each direction, the first author's text after peer undo and redo, exact saved source and reader formatting. For the stock build it also records the two shared XML paragraphs from the live Yjs binding. The test checks that each editor visibly paints the other author’s named cursor. It excludes cursor labels from paragraph text and reads saved content independently through the wiki API. The browser receipt records the order of room initialization and subscription confirmation.
+
+To compare source fidelity with the optional wiki controller installed, prepare it with `node scripts/prepare-gitlab-suggestion-history.mjs "$GITLAB_SOURCE" --wiki-restore`. Use a fresh run ID for the two runs above, add `--wiki-restore` to **both** editor commands, then run the same comparator. The controller reads the stored wiki file’s line endings when the Fountain rich form requests source preservation. The [matched optional-controller run](../../../artifacts/gitlab-compatibility/wiki-live-source-20261121/verified/report.md) retained the original LF break on Fountain. Stock stored CRLF. The [packaged-backend run](../../../artifacts/gitlab-compatibility/wiki-provider-20261121/verified/report.md) stored CRLF on both sides.
 
 To check an unsaved draft during rollback, run the following on the same isolated deployment. It first confirms that two Fountain sessions see the draft while the wiki API still serves the last save. It closes both editor tabs. On this single-container deployment, replacing the frontend also restarts Redis. The test records the update count and SHA-256 of the fixture’s room log, checkpoints local Redis to its existing data volume, and requires the same count and hash on the stock deployment. It verifies the stock build identity and opens the wiki in a fresh browser context.
 
