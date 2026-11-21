@@ -28,6 +28,7 @@ for (const path of [
   'integrations/gitlab/runtime/browser.ts',
   'integrations/gitlab/services/content_editor.ts',
   'integrations/gitlab/services/wiki_room_document.ts',
+  'integrations/gitlab/services/wiki_session.ts',
   'src/core/plugin.ts',
   'src/core/clipboard-write.ts',
   'src/core/commands.ts',

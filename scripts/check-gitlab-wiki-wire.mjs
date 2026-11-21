@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
-import { openGitLabWikiRoom, GitLabContentEditor } from '../artifacts/gitlab-native-runtime/fountain-runtime.mjs';
+import { openGitLabWikiRoom, GitLabContentEditor, undo as undoEdit, redo as redoEdit } from '../artifacts/gitlab-native-runtime/fountain-runtime.mjs';
 
 const checkout = resolve(process.argv[2] ?? '.');
 const pin = JSON.parse(await readFile(new URL('../integrations/gitlab/runtime/upstream.json', import.meta.url)));
@@ -146,7 +146,30 @@ try {
     await Promise.resolve();
     assert.equal(aborted.getXmlFragment('default').length,0);
   } finally { aborted.destroy(); }
-  console.log(JSON.stringify({markedRunMerge:true,fountainRevision:runtime.parentRevision,runtimeSHA256:runtime.sha256,libraryEntryHashes:libraries,stockSchemaLossRefused:true,cancelledSeedLeftRoomEmpty:true,joinedBeforeSeed:true,gitlab:pin.commit,stockWiki: item.slug,joined:first.child(1).textContent,
+  const liveDoc = new Y.Doc();
+  Y.applyUpdate(liveDoc,Y.encodeStateAsUpdate(original));
+  const {Awareness} = stock('y-protocols/awareness');
+  const awareness = new Awareness(liveDoc);
+  const provider = {doc:liveDoc,connected:true,whenSynced:Promise.resolve({seed:false}),seed:shouldNotSeed,
+    awareness,identityFor:() => null};
+  const live = new GitLabContentEditor({wikiCollaboration:async () => ({provider, wire, colorFor:() => '#123456'}),
+    describeLabels:() => '',renderMarkdown:shouldNotSeed});
+  try {
+    await live.setSerializedContent('Stale database copy');
+    assert.equal(live.editor.state.doc.child(1).textContent,merged);
+    const line = live.editor.state.doc.child(1).textContent;
+    assert.equal(live.editor.dispatch(live.editor.createTransaction().insertText([1,0],line.length,' Live.')),true);
+    assert.equal(liveDoc.getXmlFragment('default').get(1).get(0).toString(),line + ' Live.');
+    const remote = original.getXmlFragment('default').get(1).get(0);
+    remote.insert(0,'From stock: ');
+    Y.applyUpdate(liveDoc,Y.encodeStateAsUpdate(original,Y.encodeStateVector(liveDoc)));
+    assert.equal(live.editor.state.doc.child(1).textContent,'From stock: ' + line + ' Live.');
+    assert.equal(undoEdit(live.editor),true);
+    assert.equal(live.editor.state.doc.child(1).textContent,'From stock: ' + line);
+    assert.equal(redoEdit(live.editor),true);
+    assert.ok(live.getSerializedContent().includes('From stock: ' + line + ' Live.'));
+  } finally { live.dispose(); awareness.destroy(); liveDoc.destroy(); }
+  console.log(JSON.stringify({editorSession:true,markedRunMerge:true,fountainRevision:runtime.parentRevision,runtimeSHA256:runtime.sha256,libraryEntryHashes:libraries,stockSchemaLossRefused:true,cancelledSeedLeftRoomEmpty:true,joinedBeforeSeed:true,gitlab:pin.commit,stockWiki: item.slug,joined:first.child(1).textContent,
     merged,relativeCursorPreserved:true,peerEditSurvivedUndo:true,staleWriteRefused:true}));
 } finally {
   undo?.destroy();

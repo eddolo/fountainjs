@@ -54,8 +54,8 @@ export function readGitLabSerializers(config: GitLabHostConfiguration['serialize
 
 /** Default callers accept inactive settings only. The native candidate opts into
  * its explicit source/range adapter; unknown active contracts still refuse. */
-export function assertGitLabNativeHostConfiguration(options: GitLabHostConfiguration, native: { codeSuggestions?: boolean; extensions?: readonly FountainExtension[] } = {}): void {
-  if (options.collaborationProvider != null)
+export function assertGitLabNativeHostConfiguration(options: GitLabHostConfiguration, native: { codeSuggestions?: boolean; wikiProvider?: unknown; extensions?: readonly FountainExtension[] } = {}): void {
+  if (options.collaborationProvider != null && options.collaborationProvider !== native.wikiProvider)
     throw new Error('GITLAB_NATIVE_COLLABORATION_ADAPTER_REQUIRED');
   readGitLabSerializers(options.serializerConfig, native.extensions);
   const suggestions = options.codeSuggestionsConfig ?? {};

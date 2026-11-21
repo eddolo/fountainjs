@@ -28,6 +28,16 @@ import MediaBubbleMenu from './bubble_menus/media_bubble_menu.vue';
 import FountainReferenceMenu from './fountain_reference_menu.vue';
 import FountainQuickActionMenu from './fountain_quick_action_menu.vue';
 
+async function loadWikiCollaboration(provider) {
+  const [types, {updateYFragment}, {getSchema}, extensions, {assignUserColor}] = await Promise.all([
+    import('yjs'), import('y-prosemirror'), import('@tiptap/core'), import('../extensions'),
+    import('~/collaborative_editing/user_colors'),
+  ]);
+  const stockSchema = getSchema(['Document','Paragraph','Heading','Blockquote','BulletList','OrderedList','ListItem',
+    'HardBreak','HorizontalRule','Text','Bold','Italic','Strike','Code','Subscript','Superscript'].map(name => extensions[name]));
+  return {provider,wire:{types,stockSchema,updateYFragment},colorFor:assignUserColor};
+}
+
 export default {
   inject: {
     fountainWikiSource: { default: false },
@@ -161,6 +171,7 @@ export default {
       this.contentEditor = markRaw(
         new GitLabContentEditor({
           preserveWikiSource: this.fountainWikiSource,
+          wikiCollaboration: this.collaborationProvider ? () => loadWikiCollaboration(this.collaborationProvider) : undefined,
           tableOfContentsLabel: this.supportsTableOfContents ? s__('ContentEditor|Table of contents') : undefined,
           renderMarkdown: (markdown, options) =>
             this.renderMarkdown(markdown, { ...options, noHeaderAnchors: true }),
@@ -234,7 +245,9 @@ export default {
         collaborationProvider: this.collaborationProvider,
         serializerConfig: this.serializerConfig,
         codeSuggestionsConfig: this.codeSuggestionsConfig,
-      }, { codeSuggestions: true, extensions: this.extensions });
+      }, { codeSuggestions: true, extensions: this.extensions,
+        wikiProvider:this.fountainWikiSource && this.collaborationProvider?.channel === 'CollaborativeEditing::WikiPageChannel'
+          ? this.collaborationProvider : undefined });
     },
     connectPasteHub() {
       if (this.pasteConnected || !this.contentEditor || this.fatal || this.inactive) return;
@@ -403,7 +416,8 @@ export default {
       try {
         const result = await this.contentEditor.setSerializedContent(markdown, options);
         if (this.disposed || request !== this.loadRequest || result.status !== 'applied') return;
-        this.latestMarkdown = markdown;
+        this.latestMarkdown = this.collaborationProvider ? this.contentEditor.getSerializedContent() : markdown;
+        if (this.latestMarkdown !== markdown) this.$emit('change', {markdown:this.latestMarkdown});
         this.failure = null;
         this.loadFailed = false;
         this.isLoading = false;
@@ -430,7 +444,7 @@ export default {
     // eslint-disable-next-line vue/no-unused-properties -- Public MarkdownEditor handoff contract.
     getSerializedContentForHandoff() {
       this.ensureNoSourceDraft();
-      if (this.isLoading || this.fatal || this.latestMarkdown !== this.markdown)
+      if (this.isLoading || this.fatal || (!this.collaborationProvider && this.latestMarkdown !== this.markdown))
         throw new Error('MARKDOWN_SERIALIZATION_NOT_READY');
       return this.$refs.surface.getSerializedContentForHandoff();
     },

@@ -98,13 +98,18 @@ export function bindGitLabWikiDocument<StockNode extends StockWikiNode>(
   const doc = fragment.doc;
   if (!doc || !Object.is(doc.share.get('default'), fragment)) throw new Error('Expected the attached GitLab default wiki fragment.');
   const read = () => readGitLabWikiRoom(fragment, schema, wire.types);
+  let lastProjection: {doc: Node; stock: StockNode} | undefined;
+  function prepare(before: Node, after: Node) {
+    if (before.type.schema !== schema || after.type.schema !== schema || !read().eq(before))
+      throw new Error('The GitLab wiki draft changed. Read the current room before applying an edit.');
+    if (lastProjection?.doc !== after) lastProjection = {doc:after,stock:prepareStockNode(after,wire)};
+    return lastProjection.stock;
+  }
   return {
-    read,
+    read, prepare,
     apply(before: Node, after: Node, origin: object): void {
-      if (before.type.schema !== schema || after.type.schema !== schema || !read().eq(before))
-        throw new Error('The GitLab wiki draft changed. Read the current room before applying an edit.');
+      const stockNode = prepare(before,after);
       if (before.eq(after)) return;
-      const stockNode = prepareStockNode(after,wire);
       // GitLab's normal binding reconciles XML children and text in place. A new
       // mapping reflects remote changes since the previous local operation.
       doc.transact(() => wire.updateYFragment(doc, fragment, stockNode, {mapping:new Map(), isOMark:new Map()}), origin);

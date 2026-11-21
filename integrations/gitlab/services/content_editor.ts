@@ -8,6 +8,7 @@ import {
   type FountainExtension,
   type MathDocumentRenderer,
 } from 'fountainjs-editor';
+import { GitLabWikiSession, type GitLabWikiOptions } from './wiki_session';
 import { readGitLabSerializers, type GitLabHostConfiguration } from './host_configuration';
 import { GitLabAssetResolver, type GitLabAssetResolverOptions } from './asset_resolver';
 import { GitLabMarkdownCodec, createGitLabSchemaSpec } from './markdown_codec';
@@ -41,6 +42,7 @@ import { namespaceGitLabFootnotes } from './footnote_labels';
 export type GitLabEditorStatus = 'unloaded' | 'loading' | 'ready' | 'error' | 'destroyed';
 export interface GitLabContentEditorOptions extends GitLabAssetResolverOptions {
   preserveWikiSource?: boolean;
+  wikiCollaboration?: () => Promise<GitLabWikiOptions>;
   tableOfContentsLabel?: string;
   editable?: boolean;
   extensions?: readonly FountainExtension[];
@@ -69,6 +71,7 @@ export class GitLabContentEditor {
   readonly editor: Editor;
   readonly assetResolver: GitLabAssetResolver;
   private readonly controller: SerializedContentController;
+  private readonly wiki?: GitLabWikiSession;
   private readonly codec: GitLabMarkdownCodec;
   private readonly insertions: GitLabMarkdownInsertion;
   private readonly uploads: GitLabAttachmentUploads;
@@ -99,6 +102,7 @@ export class GitLabContentEditor {
     const supported = new Set([
       'renderMarkdown',
       'preserveWikiSource',
+      'wikiCollaboration',
       'tableOfContentsLabel',
       'describeLabels',
       'onIssue',
@@ -156,8 +160,9 @@ export class GitLabContentEditor {
             })
         : undefined,
     });
+    if (options.wikiCollaboration) this.wiki = new GitLabWikiSession(options.wikiCollaboration,error => options.onListenerError?.(error));
     const kit = composeExtensions([...StarterKit.extensions.map(extension => extension.name === 'trailing-editable-block'
-      ? gitLabFootnoteBoundary(extension) : extension), math, ...(options.extensions ?? [])]);
+      ? gitLabFootnoteBoundary(extension) : extension), math, ...(options.extensions ?? []), ...(this.wiki ? [this.wiki.extension()] : [])]);
     this.assetResolver = new GitLabAssetResolver(options);
     let alertInput: Plugin | undefined;
     let quickActions: GitLabQuickActionEditing | undefined;
@@ -235,7 +240,7 @@ export class GitLabContentEditor {
     this.uploads = new GitLabAttachmentUploads(this.insertions, options.uploadAttachment,
       uploads => { this.notifyStatus(); this.notify(this.uploadListeners, uploads); }, options.maxUploadEntries);
     this.releaseChanges = this.controller.subscribeChange((change) => {
-      if (this.destroyed) return;
+      if (this.destroyed || (this.wiki && this.loading)) return;
       this.exportFailure = change.status === 'error';
       this.notifyStatus();
       const current: SerializedContentChange =
@@ -479,6 +484,7 @@ export class GitLabContentEditor {
     if (this.loading || this.pendingInsertions > 0 || this.uploads.hasFailures || this.loadFailure || !this.loaded)
       throw new GitLabEditorNotReady(this.status);
     try {
+      this.wiki?.assertCurrent(this.editor.state.doc);
       const markdown = this.controller.getSerializedContent();
       this.exportFailure = false;
       return markdown;
@@ -501,7 +507,11 @@ export class GitLabContentEditor {
     this.insertions.cancel();
     this.notifyStatus();
     try {
-      const result = await this.controller.setSerializedContent(markdown, options);
+      let result: SerializedContentResult;
+      if (this.wiki) {
+        await this.wiki.join(async signal => (await this.codec.deserialize({schema:this.editor.state.schema,markdown,signal})).document);
+        result = {status:'applied'};
+      } else result = await this.controller.setSerializedContent(markdown, options);
       if (request !== this.request || this.destroyed) return { status: 'superseded' };
       if (result.status === 'applied') {
         this.loaded = true;
