@@ -27,6 +27,10 @@ function wikiCodeLanguage(value: unknown): value is string {
     && !['math','mermaid','plantuml','glql','suggestion'].includes(value.toLowerCase());
 }
 
+function wikiCodeClass(language: unknown): string {
+  return 'code highlight js-syntax-highlight language-' + (language || 'plaintext');
+}
+
 function hasCaretLeaf(type: string): boolean {
   return type === 'paragraph' || type === 'heading' || type === 'code_block';
 }
@@ -36,7 +40,7 @@ function stockAttrs(type: string, attrs: Attributes, path: readonly number[]): A
   const result: Attributes = type === 'codeBlock' ? { language:'' } : {};
   for (const [key,value] of Object.entries(attrs)) {
     if (type === 'codeBlock' && key === 'language' && (value === null || wikiCodeLanguage(value))) result.language = value ?? '';
-    else if (type === 'codeBlock' && ((key === 'class' && value === 'code highlight') || (key === 'langParams' && value === null))) continue;
+    else if (type === 'codeBlock' && ((key === 'class' && (value === 'code highlight' || value === wikiCodeClass(attrs.language))) || (key === 'langParams' && value === null))) continue;
     else if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) result[key] = value;
     else if (type === 'table' && key === 'isMarkdown' && (value === null || typeof value === 'boolean')) result.gitlabIsMarkdown = value;
     else if (isStockCell(type) && ['colspan','rowspan','colwidth'].includes(key)) result[key] = value;
@@ -275,6 +279,7 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
       if (type === 'codeBlock' && key === 'language') {
         if (!wikiCodeLanguage(value)) unsupported(path,'codeBlock.language');
         attrs.language = value || null;
+        attrs.class = wikiCodeClass(value);
       } else if ((type === 'heading' && key === 'level') || (type === 'orderedList' && key === 'start')) attrs[key] = value;
       else if (type === 'table' && key === 'gitlabIsMarkdown') attrs.isMarkdown = value;
       else if (isStockCell(type) && ['colspan','rowspan','colwidth'].includes(key)) attrs[key] = value;

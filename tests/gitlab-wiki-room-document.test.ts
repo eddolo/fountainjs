@@ -103,7 +103,7 @@ it('round-trips a wiki code block without changing indentation, blank lines, or 
     const empty = new Y.XmlElement('codeBlock');
     room.push([code,empty]);
     code.setAttribute('language','python');
-    code.setAttribute('class','code highlight');
+    code.setAttribute('class','code highlight js-syntax-highlight language-python');
     const source = 'def threshold():\n\n    return 3\n';
     code.push([new Y.XmlText(source)]);
     const native = readGitLabWikiRoom(room,schema,Y);
@@ -111,8 +111,8 @@ it('round-trips a wiki code block without changing indentation, blank lines, or 
     expect(native.child(1).attrs.language).toBe('');
     expect(native.child(1).child(0).text).toBe('');
     expect(toGitLabWikiJSON(native).content).toEqual([
-      {type:'codeBlock',attrs:{language:'python'},content:[{type:'text',text:source}]},
-      {type:'codeBlock',attrs:{language:null}},
+      {type:'codeBlock',attrs:{language:'python',class:'code highlight js-syntax-highlight language-python'},content:[{type:'text',text:source}]},
+      {type:'codeBlock',attrs:{language:null,class:'code highlight js-syntax-highlight language-plaintext'}},
     ]);
     code.setAttribute('langParams','frontmatter');
     expect(() => readGitLabWikiRoom(room,schema,Y)).toThrow(/codeBlock.langParams/);
