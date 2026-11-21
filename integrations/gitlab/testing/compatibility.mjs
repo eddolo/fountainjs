@@ -524,7 +524,7 @@ export function compareGitLabCompatibility(original,fountain){
       }
       const status = input.source.split('\n\n').at(-1) + input.ownerEdit;
       const reference = input.wikiLink?.reference;
-      const authored = (reference ? input.source.replace('[' + input.wikiLink.label + '][','[' + input.wikiLink.peerLabel + '][') : input.source)
+      const authored = (input.code ? input.source.replace(input.code.text,input.code.edited) : reference ? input.source.replace('[' + input.wikiLink.label + '][','[' + input.wikiLink.peerLabel + '][') : input.source)
         + input.ownerEdit + input.peerEdit;
       for (const [key, expected, label] of [
         ['joinedDraft', status, 'The joining author receives the first author’s unsaved draft'],
@@ -533,6 +533,12 @@ export function compareGitLabCompatibility(original,fountain){
         ['cursors', [true,true], 'Both rich editors render the other author’s named caret'],
         ['afterPeerUndo', status, 'Peer undo retains the first author’s edit'],
         ['afterPeerRedo', status + input.peerEdit, 'Peer redo restores the second edit on the first screen'],
+        ...(input.code ? [
+          ['codeBefore',input.code.text,'The joining editor sees the indented code'],
+          ['codeUndo',input.code.text,'Undo restores the original code on the other screen'],
+          ['codeRedo',input.code.edited,'Redo restores the code edit on the other screen'],
+          ['readerCode',input.code.edited,'The GitLab reader displays the edited code with its indentation'],
+        ] : []),
         ['savedContent', authored, reference ? 'The wiki API retains both link uses and their single authored definition after a label edit'
           : 'The wiki API stores both edits, paragraphs and original formatting'],
         ...(reference ? [

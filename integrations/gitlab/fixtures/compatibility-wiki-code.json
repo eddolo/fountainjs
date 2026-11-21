@@ -1,0 +1,21 @@
+{
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "wiki-fenced-code",
+      "scope": "wiki-collaboration",
+      "title": "Release runbook",
+      "source": "Owner: **Sam**.\n\n```python\ndef threshold():\n    return 3\n```\n\nStatus: ready.",
+      "ownerEdit": " Reviewed.",
+      "peerEdit": " Approved.",
+      "code": {
+        "language": "python",
+        "text": "def threshold():\n    return 3",
+        "edited": "def threshold():\n    return 30"
+      }
+    }
+  ]
+}

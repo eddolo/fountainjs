@@ -146,6 +146,27 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
         return content.textContent;
       });
     }
+    const code = surface => surface.locator('[data-testid="suggestion-field"], pre[data-language] code');
+    const wikiCodeText = async surface => (await paragraphText(code(surface))).replace(/\n$/u,'');
+    async function appendToWikiCode(tab, surface) {
+      await code(surface).scrollIntoViewIfNeeded();
+      // Click the value on the final code line. Highlighted tokens may be separate DOM spans.
+      const point = await code(surface).evaluate(element => {
+        const walk = document.createTreeWalker(element,NodeFilter.SHOW_TEXT);
+        for (let node = walk.nextNode(); node; node = walk.nextNode()) {
+          const index = node.textContent.lastIndexOf('3');
+          if (index < 0) continue;
+          const range = document.createRange();
+          range.setStart(node,index); range.setEnd(node,index+1);
+          const box = range.getBoundingClientRect();
+          return {x:box.left+box.width/2,y:box.top+box.height/2};
+        }
+        throw new Error('The fixture code has no final digit');
+      });
+      await tab.mouse.click(point.x,point.y);
+      await tab.keyboard.press('End');
+      await tab.keyboard.insertText('0');
+    }
     async function readerHeaderAlignment(surface) {
       const headers = surface.getByRole('table').filter({hasText:input.table.headings[0]}).locator('tr').first().locator('th');
       await expect(headers).toHaveCount(input.table.headings.length);
@@ -215,7 +236,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     }
     item.stage = 'open-first-editor';
     let seedRendering;
-    if ((input.structure || input.wikiLink) && side === 'fountain') {
+    if ((input.structure || input.wikiLink || input.code) && side === 'fountain') {
       // Capture only the GitLab preview of this suite's known, generated source.
       seedRendering = page.waitForResponse(response => {
         if (response.request().method() !== 'POST' || !response.ok()) return false;
@@ -304,6 +325,19 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       item.peerEditedLinks = await checkWikiLinks(first,firstLabel);
       expect(await read()).toBe(input.source);
     }
+    if (input.code) {
+      item.stage = 'edit-shared-code';
+      item.codeBefore = await wikiCodeText(other);
+      expect(item.codeBefore).toBe(input.code.text);
+      await appendToWikiCode(peer,other);
+      await expect.poll(() => wikiCodeText(first)).toBe(input.code.edited);
+      await peer.keyboard.press('Control+z');
+      await expect.poll(() => wikiCodeText(first)).toBe(input.code.text);
+      item.codeUndo = await wikiCodeText(first);
+      await peer.keyboard.press('Control+Shift+z');
+      await expect.poll(() => wikiCodeText(first)).toBe(input.code.edited);
+      item.codeRedo = await wikiCodeText(first);
+    }
     await first.screenshot({path:join(output,'shared-wiki.png')});
     item.stage = 'save-and-reopen';
     const savingTab = input.wikiLink?.reference ? peer : page;
@@ -320,6 +354,12 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     await expect(peerReader).toContainText(both);
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
+    if (input.code) {
+      const rendered = peerReader.locator('pre');
+      item.readerCode = (await rendered.textContent()).replace(/\n$/u,'');
+      expect(item.readerCode).toBe(input.code.edited);
+      await rendered.screenshot({path:join(output,'reopened-reader-code.png')});
+    }
     if (input.table) {
       item[sourceEditor + 'ReaderHeaders'] = await readerHeaderAlignment(peerReader);
       const headerAlignments = item[sourceEditor + 'ReaderHeaders'].map(cell => cell.computed);
@@ -380,6 +420,12 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       expect(handover[rollout ? 'stock' : 'fountain'].native).toBe(!rollout);
       expect(await read()).toBe(item.saved);
       handover.unsaved = draft;
+      if (input.code) {
+        await appendToWikiCode(page,writer);
+        await expect.poll(() => wikiCodeText(witness)).toBe(input.code.edited + '0');
+        handover.unsavedCode = await wikiCodeText(witness);
+        expect(await read()).toBe(item.saved);
+      }
       if (input.structure) {
         const {child,pending} = input.structure;
         handover.beforeNestedEdit = await checkStructure(writer,child);
@@ -531,6 +577,10 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
           await expect.poll(() => paragraphText(status),{timeout:20000}).toBe(draft);
           await expect(editor.locator('strong')).toHaveText('Sam');
           handover.recovered = await paragraphText(status);
+          if (input.code) {
+            await expect.poll(() => wikiCodeText(editor)).toBe(input.code.edited + '0');
+            handover.recoveredCode = await wikiCodeText(editor);
+          }
           if (input.structure) handover.recoveredStructure = await checkStructure(editor,input.structure.child + input.structure.pending);
           await editor.screenshot({path:join(output,(rollout ? 'fountain' : 'stock') + '-recovered-draft.png')});
           await append(restored,status,' Published.');
@@ -541,6 +591,15 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
             await restored.keyboard.press('Control+Shift+z');
             await expect.poll(() => paragraphText(status)).toBe(draft + ' Published.');
             expect(await read()).toBe(item.saved);
+          }
+          if (input.code) {
+            item.stage = 'edit-recovered-code';
+            await appendToWikiCode(restored,editor);
+            await expect.poll(() => wikiCodeText(editor)).toBe(input.code.edited + '00');
+            await restored.keyboard.press('Control+z');
+            await expect.poll(() => wikiCodeText(editor)).toBe(handover.unsavedCode);
+            await restored.keyboard.press('Control+Shift+z');
+            await expect.poll(() => wikiCodeText(editor)).toBe(input.code.edited + '00');
           }
           if (input.link) {
             item.stage = 'edit-recovered-link';
@@ -602,6 +661,11 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
           await expect(reader).toContainText(draft + ' Published.');
           handover.saved = await read();
           let expectedSource = item.saved;
+          if (input.code) {
+            const line = input.code.edited.split('\n').at(-1);
+            expect(expectedSource.split(line)).toHaveLength(2);
+            expectedSource = expectedSource.replace(line,line + '00');
+          }
           if (input.structure) {
             const {child,pending} = input.structure;
             expect(expectedSource.split(child)).toHaveLength(2);
@@ -648,6 +712,12 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
           if (input.mergedTable) {
             handover.readerMergedTable = await checkMergedTable(reader,' handoff',' Chen');
             await reader.getByRole('table').filter({hasText:'Sign-off'}).screenshot({path:join(output,'reopened-merged-table.png')});
+          }
+          if (input.code) {
+            const code = reader.locator('pre');
+            handover.readerCode = (await code.textContent()).replace(/\n$/u,'');
+            expect(handover.readerCode).toBe(input.code.edited + '00');
+            await code.screenshot({path:join(output,'handover-reader-code.png')});
           }
           if (input.link) handover.readerLink = await checkLink(reader,input.link.editedLabel);
           if (input.structure) {

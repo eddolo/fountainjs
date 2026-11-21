@@ -97,7 +97,10 @@ if ((wikiInterruptedUpload || wikiUploaderClose) && (wikiRollout || mixedWiki ||
 const wikiPendingUpload = process.argv.includes('--wiki-pending-upload') || wikiInterruptedUpload || wikiUploaderClose;
 if (wikiPendingUpload && (suite !== 'wiki-collaboration' || wikiPageLinks || wikiReferenceLinks || mixedWiki || (draftRollbackRequested && !structuredWikiRollback)))
   throw new Error('Use --wiki-pending-upload on a matched wiki collaboration run, wiki rollout or structured rollback.');
-const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiPartialUpload ? 'wiki-partial-upload' : wikiUploaderClose ? 'wiki-uploader-close' : wikiInterruptedUpload ? 'wiki-interrupted-upload' : wikiPendingUpload ? 'wiki-pending-upload' : wikiReferenceLinks ? 'wiki-reference-links' : wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
+const wikiCode = process.argv.includes('--wiki-code');
+if (wikiCode && (suite !== 'wiki-collaboration' || mixedWiki || wikiPendingUpload || wikiPageLinks || wikiReferenceLinks))
+  throw new Error('Use --wiki-code on a wiki collaboration comparison or deployment handover.');
+const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiCode ? 'wiki-code' : wikiPartialUpload ? 'wiki-partial-upload' : wikiUploaderClose ? 'wiki-uploader-close' : wikiInterruptedUpload ? 'wiki-interrupted-upload' : wikiPendingUpload ? 'wiki-pending-upload' : wikiReferenceLinks ? 'wiki-reference-links' : wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
 const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
 const pin=JSON.parse(await readFile(resolve(root,'integrations/gitlab/runtime/upstream.json')));
 const compose=['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')],env={...process.env};
