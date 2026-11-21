@@ -32,7 +32,21 @@ function recoveryState(table) {
 }
 
 export async function runTableCheckboxRecovery({page,side,project,request,fixture,runId,output}) {
-  const [input] = fixture.cases;
+  const items = [];
+  for (const input of fixture.cases) items.push(await recoverCheckboxes({page,side,project,request,input,runId,output}));
+  return items;
+}
+
+function measureCheckboxes(table) {
+  return [...table.querySelectorAll('input[type=checkbox]')].map(box => {
+    const cell = box.closest('td,th').getBoundingClientRect(), control = box.getBoundingClientRect();
+    const center = control.left + control.width / 2 - cell.left;
+    return {width:cell.width,center,alignment:center > cell.width * .7 ? 'right' : center < cell.width * .3 ? 'left' : 'center'};
+  });
+}
+
+async function recoverCheckboxes({page,side,project,request,input,runId,output}) {
+  const imageName = name => join(output,(input.alignment ? input.alignment + '-' : '') + name + '.png');
   const item = {id:input.id,input,status:'incomplete'};
   const api = '/api/v4/projects/' + project.id + '/issues';
   const issue = await request(api,{title:input.title + ' ' + runId,description:input.markdown});
@@ -49,6 +63,7 @@ export async function runTableCheckboxRecovery({page,side,project,request,fixtur
     const menu = page.getByRole('button',{name:side === 'fountain' ? /Table actions/i : /Select action/i});
     const row = table.locator('tr').nth(1);
     item.before = await table.evaluate(recoveryState);
+    if (input.alignment) item.initialPositions = await table.evaluate(measureCheckboxes);
     await editor.getByText('Status: waiting.',{exact:true}).click();
     await page.keyboard.press('End');
     await page.keyboard.type(' Reviewed.');
@@ -64,7 +79,7 @@ export async function runTableCheckboxRecovery({page,side,project,request,fixtur
       const error = host.getByTestId('content-editor-error');
       await expect(error).toContainText('Convert table checkboxes to checklist items');
       item.guidance = await error.innerText();
-      await page.screenshot({path:join(output,'merge-recovery.png')});
+      await page.screenshot({path:imageName('merge-recovery')});
       if (await save.isEnabled()) await save.click();
       await expect(editor).toBeVisible();
       expect((await request(api + '/' + issue.iid)).description).toBe(input.markdown);
@@ -85,17 +100,19 @@ export async function runTableCheckboxRecovery({page,side,project,request,fixtur
     await page.reload();
     const reader = page.locator('.js-work-item-description table');
     item.reader = await reader.evaluate(recoveryState);
-    await reader.screenshot({path:join(output,'saved-checkboxes.png')});
+    if (input.alignment) item.readerPositions = await reader.evaluate(measureCheckboxes);
+    await reader.screenshot({path:imageName('saved-checkboxes')});
     await edit.click();
     const reopened = await openRich(host,side);
     item.reopenedEditorProof = await editorProof(reopened);
     item.reopened = await reopened.locator('table').evaluate(recoveryState);
+    if (input.alignment) item.reopenedPositions = await reopened.locator('table').evaluate(measureCheckboxes);
     item.status = 'observed';
   } catch(error) {
     item.failure = String(error);
-    await page.screenshot({path:join(output,'checkboxes-interrupted.png')}).catch(()=>{});
+    await page.screenshot({path:imageName('checkboxes-interrupted')}).catch(()=>{});
   }
-  return [item];
+  return item;
 }
 
 export async function runMergedTableTasks({page,side,project,request,fixture,runId,output}) {

@@ -1220,6 +1220,8 @@ export function compareGitLabCompatibility(original,fountain){
       const evidence = (report,item,key) => {
         if (item?.status !== 'observed' || !verifiedEditor(report,item)) return undefined;
         if (key === 'reopened' && !verifiedEditor(report,{editorProof:item.reopenedEditorProof})) return undefined;
+        if (key === 'reopenedPositions' && !verifiedEditor(report,{editorProof:item.reopenedEditorProof})) return undefined;
+        if (key.endsWith('Positions')) return item[key]?.map(box => box.alignment);
         if (key === 'prose') return item.savedMarkdown?.includes('Status: waiting. Reviewed.');
         return item[key];
       };
@@ -1229,6 +1231,8 @@ export function compareGitLabCompatibility(original,fountain){
         ['prose','The saved issue retains the edit made before merging the cells',true],
         ['reader','The saved reader retains all three checkbox states in the intended layout',merged],
         ['reopened','The rich editor reopens the merged table with all three checkbox states',merged],
+        ...(input.alignment ? ['initialPositions','readerPositions','reopenedPositions'].map(key =>
+          [key,'Checkbox controls follow the authored '+input.alignment+' alignment ('+key+')',states.map(() => input.alignment)]) : []),
       ]) rows.push({case:input.id,invariant:key,label,expected,original:evidence(original,a,key),fountain:evidence(fountain,b,key),classification:null});
       continue;
     }

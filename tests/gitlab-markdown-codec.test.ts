@@ -3,6 +3,7 @@ import { Schema, createEditor, createHistoryPlugin, Selection, undo, redo, type 
 import { GitLabMarkdownCodec, GitLabMarkdownConversionError, createGitLabSchemaSpec } from '../integrations/gitlab/services/markdown_codec';
 import data from '../integrations/gitlab/fixtures/service-html.json';
 import {convertGitLabTableCheckboxes,hasGitLabTableCheckboxes} from '../integrations/gitlab/services/task_cells';
+import alignedTaskPreviews from '../integrations/gitlab/fixtures/aligned-merged-task-renderer.json';
 import taskTablePreviews from '../integrations/gitlab/fixtures/merged-task-cell-renderer.json';
 import mergedPreviews from '../integrations/gitlab/fixtures/merged-grid-live-html.json';
 import emojiPreviews from '../integrations/gitlab/fixtures/clipboard-unicode-live-html.json';
@@ -16,6 +17,18 @@ async function convert(markdown: string, body: string, preserveWikiSource = fals
 }
 const append = (document: Node): Node => document.copy([...document.content,
   document.type.schema.node('paragraph', {}, [document.type.schema.text('Added.')])]);
+
+it.each(alignedTaskPreviews.fixtures.filter(item => /^cell-(attribute|style)-/.test(item.id)))(
+  'retains the alignment of a GitLab merged checklist cell through an edited Save ($id)', async ({id,source,html}) => {
+    const {codec,document} = await convert(source,html);
+    const expected = id.endsWith('center') ? 'center' : 'right';
+    const cell = document.child(0).child(1).child(0);
+    expect(cell.child(0).child(0).child(0).attrs.align).toBe(expected);
+    const exported = codec.serializeWithReport({doc:append(document),canonical:true});
+    expect(exported.issues).toEqual([]);
+    expect(exported.markdown).toContain('<td colspan="2" style="text-align: ' + expected + '">');
+    expect(exported.markdown).toContain('- [x] Verify backup');
+  });
 
 it.each(taskTablePreviews.fixtures.filter(item => ['task','inactive','empty','many'].includes(item.id)))(
   'preserves the GitLab checkbox list in a merged table on edited Save ($id)', async ({source,html}) => {
@@ -31,6 +44,15 @@ it.each(taskTablePreviews.fixtures.filter(item => ['task','inactive','empty','ma
     expect(exported.markdown.match(/[-*+] \[[ x~]\] /gu)).toEqual(markers.map(m => expect.stringContaining(m.slice(1))));
     expect(exported.markdown).toContain('Added.');
   });
+
+it('reports a mixed-alignment merge when one cell declaration would change a task', async () => {
+  const sample = alignedTaskPreviews.fixtures.find(item => item.id === 'cell-style-right')!;
+  const {schema,codec,document} = await convert(sample.source,sample.html);
+  const table = document.child(0), row = table.child(1), cell = row.child(0);
+  const mixed = cell.copy([schema.node('paragraph',{},[schema.text('Left')]),cell.child(0)]);
+  const doc = document.copy([table.copy([table.child(0),row.copy([mixed])])]);
+  expect(() => codec.serialize({doc})).toThrow(GitLabMarkdownConversionError);
+});
 
 it('reports a standalone pipe-table checkbox when merging cells would turn its marker into text', async () => {
   const sample = taskTablePreviews.fixtures.find(item => item.id === 'pipe')!;

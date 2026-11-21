@@ -63,6 +63,7 @@ function requiresHTMLTable(table: Node): boolean {
 
 function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: boolean): string | undefined {
   if (!requiresHTMLTable(table)) return undefined;
+  const hasTaskList = table.content.some(row => row.content.some(cell => cell.content.some(block => block.type.name === 'task_list')));
   let supported = true;
   table.descendants(node => {
     const name = node.type.name;
@@ -70,6 +71,8 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
     if (!['table', 'table_row', 'table_header', 'table_cell', 'paragraph', 'task_list', 'task_item', 'text'].includes(name)
       || (node !== table && name === 'table') || node.text?.includes(tokenPrefix)
       || Object.entries(node.attrs).some(([key, value]) => value !== node.type.spec.attrs?.[key]?.default
+        && !(hasTaskList && name === 'paragraph' && ((key === 'align' && (value === 'center' || value === 'right'))
+          || (key === 'alignExplicit' && value === true && node.attrs.align === 'left')))
         && !(name === 'table' && key === 'gitlabIsMarkdown')
         && !(name === 'task_item' && key === 'checked') && !(name === 'task_list' && key === 'gitlabBullet') && !(cell && (key === 'rowspan' || key === 'colspan')))) supported = false;
     for (const mark of node.marks) {
@@ -84,7 +87,6 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
   const inlineCellParagraph = (p: Node) => p.type.name === 'paragraph' && p.childCount === 1
     && p.child(0).isText && !p.child(0).marks.length
     && /^(?![0-9]{1,9}\.$)[\p{L}\p{N}]+(?:[ -][\p{L}\p{N}]+)*[.!?]?$/u.test(p.child(0).text!);
-  const hasTaskList = table.content.some(row => row.content.some(cell => cell.content.some(block => block.type.name === 'task_list')));
   if (wikiRoom || hasTaskList) {
     // GitLab accepts Markdown task lists between blank lines inside a raw table.
     // Its HTML sanitizer removes raw checkbox inputs.
@@ -98,8 +100,17 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
           const tag = cell.type.name === 'table_header' ? 'th' : 'td';
           const spans = ['colspan','rowspan'].filter(key => Number(cell.attrs[key]) > 1)
             .map(key => ` ${key}="${Number(cell.attrs[key])}"`).join('');
+          // GitLab retains cell alignment when parsing embedded Markdown lists.
+          // Flattening unlike paragraph alignments into a single value would lose an edit.
+          const alignments = new Set<string>();
+          if (hasTaskList) cell.descendants(node => {
+            if (node.type.name === 'paragraph') alignments.add(node.attrs.align === 'left' && !node.attrs.alignExplicit ? '' : String(node.attrs.align));
+          });
+          if (alignments.size > 1) return undefined;
+          const alignment = alignments.values().next().value;
+          const attributes = spans + (alignment ? ` style="text-align: ${alignment}"` : '');
           if (cell.childCount === 1 && inlineCellParagraph(cell.child(0))) {
-            lines.push(`<${tag}${spans}>${cell.child(0).child(0).text}</${tag}>`);
+            lines.push(`<${tag}${attributes}>${cell.child(0).child(0).text}</${tag}>`);
             continue;
           }
           const parts: string[] = [];
@@ -115,22 +126,27 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
                 if (wikiRoom) return undefined;
                 marker = marker === '-' ? '*' : '-';
               }
-              const emptyLabels = new Set(block.content.filter(item => item.type.name === 'task_item'
+              // Project only the alignment already encoded on the cell. The list
+              // exporter still checks every remaining attribute and mark for loss.
+              const listBlock = alignment ? block.copy(block.content.map(item => item.copy(item.content.map(p =>
+                p.type.name === 'paragraph' ? p.type.create({...p.attrs,align:'left',alignExplicit:undefined},p.content,undefined,p.marks) : p
+              )))) : block;
+              const emptyLabels = new Set(listBlock.content.filter(item => item.type.name === 'task_item'
                 && item.childCount === 1 && item.child(0).type.name === 'paragraph' && !item.child(0).textContent
                 && item.child(0).content.every(child => child.isText && !child.marks.length)).map(item => item.child(0)));
               // GitLab recognizes an empty task by the space after its marker.
               // Keep it through the generic exporter's final whitespace trim.
               const emptyLabelToken = tokenPrefix + 'EMPTYTASK';
-              const list = new MarkdownExporter().exportWithReport(block, {
+              const list = new MarkdownExporter().exportWithReport(listBlock, {
                 blockSerializers: {paragraph: p => emptyLabels.has(p) ? emptyLabelToken : undefined},
-                bulletMarker: node => node === block ? marker : wikiRoom ? wikiBulletMarker(node) : undefined,
+                bulletMarker: node => node === listBlock ? marker : wikiRoom ? wikiBulletMarker(node) : undefined,
               });
               if (list.losses.length) return undefined;
               parts.push(list.markdown.replaceAll(emptyLabelToken,''));
             } else return undefined;
           }
           const text = '\n\n' + parts.join('\n\n') + (plain ? '\n' : '\n\n');
-          lines.push(`<${tag}${spans}>${text}</${tag}>`);
+          lines.push(`<${tag}${attributes}>${text}</${tag}>`);
         }
         lines.push('</tr>');
       }

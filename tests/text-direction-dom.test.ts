@@ -23,6 +23,15 @@ it.each(['ltr', 'rtl', 'auto'] as const)('retains %s code direction in browser/s
     expect(view.dom.querySelector('pre')?.hasAttribute('dir')).toBe(false);
   } finally { view.destroy(); editor.destroy(); mount.remove(); }
 });
+it('inherits cell alignment in nested lists, respects local overrides, and keeps table placement independent', () => {
+  const html = '<table align="right"><tr><td align="center"><ul><li>Center</li><li style="text-align:right">Right</li></ul></td><td><p>Default</p></td></tr></table>';
+  const document = HTMLImporter.parse(html,schema);
+  expect(document.toJSON()).toEqual(ServerHTMLImporter.parse(html,schema).toJSON());
+  const row = document.child(0).child(0), list = row.child(0).child(0);
+  expect(list.content.map(item => item.child(0).attrs.align)).toEqual(['center','right']);
+  expect(row.child(1).child(0).attrs.align).toBe('left');
+});
+
 it('uses the same direction/alignment projection in browser and server HTML importers', () => {
   const html = '<section dir="rtl"><h2>عنوان</h2><blockquote><p>שלום</p></blockquote><p dir="LTR" style="text-align:left">Latin</p><p dir="auto" style="text-align:end">مرحبا</p><ul><li>قائمة</li></ul><table><tr><td>خلية</td></tr></table></section>';
   const browser = HTMLImporter.parse(html, schema);

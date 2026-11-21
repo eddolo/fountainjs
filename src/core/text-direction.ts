@@ -94,7 +94,10 @@ function alignmentDeclaration(element: DirectionElement, styleAlign: string | un
     if (style === 'initial') return 'start';
     if (textAlignmentAttribute.validate(style)) return style;
     // Explicit inheritance overrides the element's legacy presentational hint.
-    if (own && style !== 'inherit' && style !== 'unset') {
+    // A table's align hint positions the table itself. A cell or div's hint
+    // aligns its text, including paragraphs nested inside checklist items.
+    const textContainer = /^(?:td|th|div)$/i.test(current.tagName ?? '');
+    if ((own || textContainer) && style !== 'inherit' && style !== 'unset') {
       const hint = current.getAttribute('align')?.trim().toLowerCase();
       if (hint && textAlignmentAttribute.validate(hint)) return hint;
     }

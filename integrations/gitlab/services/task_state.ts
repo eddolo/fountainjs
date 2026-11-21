@@ -15,11 +15,19 @@ export function gitLabTaskItem(base: SchemaSpec): NodeSpec {
     const inactive = node.attrs.checked === NOT_APPLICABLE;
     const rendered = original.toDOM!(inactive ? node.type.create({ ...node.attrs, checked: false }, node.content) : node, context) as [string, Record<string, unknown>, TaskDOM, TaskDOM];
     const attrs = rendered[1];
+    const paragraph = node.content[0];
+    const alignment = paragraph?.attrs.align;
+    if (alignment === 'center' || alignment === 'right') {
+      const cell = context && context.path.length >= 2
+        ? context.path.slice(0,-2).reduce((parent,i) => parent.child(i),context.document) : undefined;
+      const emptyCellTask = (cell?.type.name === 'table_cell' || cell?.type.name === 'table_header')
+        && node.childCount === 1 && paragraph?.type.name === 'paragraph'
+        && paragraph.content.every(child => child.isText && !child.text);
+      if (node.attrs.gitlabTableItem || emptyCellTask) attrs['data-gitlab-checkbox-align'] = alignment;
+    }
     if (node.attrs.gitlabTableItem) {
       const input = (rendered[2] as [string,Record<string,unknown>])[1];
       if (inactive) input.disabled = true;
-      const alignment = node.content[0]?.attrs.align;
-      if (alignment === 'center' || alignment === 'right') attrs['data-gitlab-checkbox-align'] = alignment;
       if (context && context.path.length >= 4) {
         const table = context.path.slice(0,-4).reduce((parent,i) => parent.child(i),context.document);
         const heading = table.content[0]?.content[context.path.at(-3)!]?.textContent;

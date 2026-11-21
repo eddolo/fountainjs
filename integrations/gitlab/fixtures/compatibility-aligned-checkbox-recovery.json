@@ -1,0 +1,20 @@
+{
+  "formatVersion": 1,
+  "workflow": "recover-aligned-standalone-checkboxes-after-a-table-merge",
+  "cases": [
+    {
+      "id": "merge-center-aligned-gates",
+      "scope": "table-checkbox-recovery",
+      "alignment": "center",
+      "title": "Combine center-aligned release gates",
+      "markdown": "| Work | Required quality checks | Approved quality checks |\n| --- | :---: | :---: |\n| Backups | [x] | [~] |\n| Handover | [ ] | Ready |\n\nStatus: waiting."
+    },
+    {
+      "id": "merge-right-aligned-gates",
+      "scope": "table-checkbox-recovery",
+      "alignment": "right",
+      "title": "Combine right-aligned release gates",
+      "markdown": "| Work | Required quality checks | Approved quality checks |\n| --- | ---: | ---: |\n| Backups | [x] | [~] |\n| Handover | [ ] | Ready |\n\nStatus: waiting."
+    }
+  ]
+}

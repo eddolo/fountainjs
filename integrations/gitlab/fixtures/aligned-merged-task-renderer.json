@@ -1,0 +1,66 @@
+{
+  "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+  "gitlabVersion": {
+    "version": "19.5.3",
+    "revision": "0d4c9a9a2fa",
+    "kas": {
+      "enabled": true,
+      "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+      "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+      "version": "19.5.3"
+    },
+    "enterprise": false
+  },
+  "fixtures": [
+    {
+      "id": "control-center",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\">\n\n- [x] Verify backup\n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\">\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "cell-attribute-center",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\" align=\"center\">\n\n- [x] Verify backup\n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\" align=\"center\">\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "cell-style-center",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\" style=\"text-align: center\">\n\n- [x] Verify backup\n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\" style=\"text-align: center\">\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "wrapper-attribute-center",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\"><div align=\"center\">\n\n- [x] Verify backup\n\n</div></td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\"><div align=\"center\">\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</div></td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "wrapper-style-center",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\"><div style=\"text-align: center\">\n\n- [x] Verify backup\n\n</div></td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\"><div>\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</div></td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "control-right",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\">\n\n- [x] Verify backup\n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\">\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "cell-attribute-right",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\" align=\"right\">\n\n- [x] Verify backup\n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\" align=\"right\">\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "cell-style-right",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\" style=\"text-align: right\">\n\n- [x] Verify backup\n\n</td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\" style=\"text-align: right\">\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "wrapper-attribute-right",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\"><div align=\"right\">\n\n- [x] Verify backup\n\n</div></td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\"><div align=\"right\">\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</div></td></tr>\n</tbody></table>"
+    },
+    {
+      "id": "wrapper-style-right",
+      "source": "<table>\n<tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\"><div style=\"text-align: right\">\n\n- [x] Verify backup\n\n</div></td></tr>\n</table>",
+      "html": "<table dir=\"auto\">\n<tbody><tr><th>First</th><th>Second</th></tr>\n<tr><td colspan=\"2\"><div>\n<ul class=\"task-list\" data-sourcepos=\"5:1-5:19\">\n<li class=\"task-list-item\" data-sourcepos=\"5:1-6:0\"><input type=\"checkbox\" data-checkbox-sourcepos=\"5:4-5:4\" class=\"task-list-item-checkbox\" checked=\"\" disabled=\"\" aria-label=\"Check option: Verify backup\"> Verify backup</li>\n</ul>\n</div></td></tr>\n</tbody></table>"
+    }
+  ]
+}
