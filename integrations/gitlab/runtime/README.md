@@ -78,6 +78,8 @@ node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report
 
 For numbered task markers ending in `)`, use `--wiki-parenthesized-checklist` in both commands with a fresh run ID. The Developer toggles item three. Inspect the saved Markdown in each report as well as the reader, since the reader can display the same numbering for both source spellings.
 
+Use `--wiki-table-tasks` on both sides with a fresh run ID to test checkboxes inside a pipe table. The two authors edit the status paragraph, then the Developer ticks the Backup cell, undoes it and redoes it. Compare the saved Markdown and `saved-table-tasks.png`, including the completed Deploy cell and the not-applicable Retire cell.
+
 ### Reproduce a wiki restore across a project role change
 
 Run the two collectors sequentially against the prepared wiki controller and
