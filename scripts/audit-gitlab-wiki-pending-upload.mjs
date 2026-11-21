@@ -186,13 +186,22 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     if (switchWikiDeployment) {
       await page.goto('about:blank');
       item.stage = 'join-switched-wiki-before-upload-completion';
-      await switchWikiDeployment({wikiSlug:item.slug});
-      next = side === 'original' ? 'fountain' : 'original';
+      next = await switchWikiDeployment({wikiSlug:item.slug});
       fresh = await edit(page,next);
     }
+    pending.destinationSide = next;
     pending.destination = await editorProof(fresh);
     expect(pending.destination.native).toBe(next === 'fountain');
     await expect.poll(() => statusText(fresh)).toBe(expectedStatus);
+    if (next === 'prepared') {
+      const save = page.getByTestId('wiki-submit-button');
+      const notice = page.getByRole('list',{name:'Files being attached by other authors'}).getByText(name,{exact:true});
+      const start = Date.now();
+      pending.saveDisabledOnJoin = await save.isDisabled();
+      await expect(notice).toBeVisible();
+      await expect(save).toBeDisabled();
+      pending.peerNoticeBeforeTypingMs = Date.now() - start;
+    }
     if (side === 'original' && next === 'fountain') {
       await expect(fresh).toContainText(name);
       await expect(fresh.locator('a[href^="blob:"]')).toHaveCount(0);
@@ -212,7 +221,11 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     const notice = page.getByRole('list',{name:'Files being attached by other authors'}).getByText(name,{exact:true});
     pending.peerSave = {disabled:await save.isDisabled(), filenameVisible:
       await notice.isVisible() || (await fresh.innerText()).includes(name)};
-    if (next === 'fountain') expect(pending.peerSave.disabled).toBe(true);
+    if (next === 'prepared') {
+      await expect(notice).toBeVisible();
+      expect(pending.peerSave.filenameVisible).toBe(true);
+    }
+    if (next !== 'original') expect(pending.peerSave.disabled).toBe(true);
     await page.locator('form.wiki-form').screenshot({path:join(output,'peer-save-before-completion.png')});
     if (!pending.peerSave.disabled) {
       await save.click();
@@ -250,7 +263,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     expect(new URL(url).origin).toBe(origin);
     expect((await actor.getByRole('link',{name,exact:true}).evaluate(a => a.href))).toBe(url);
     await expect.poll(() => statusText(fresh)).toBe(pending.witnessDraft);
-    if (next === 'fountain') {
+    if (next !== 'original') {
       await expect(page.getByRole('list',{name:'Files being attached by other authors'})).toHaveCount(0);
       await expect(page.getByTestId('wiki-submit-button')).toBeEnabled();
     }
@@ -277,6 +290,8 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
     expect(pending.forwardedRequests).toBe(partialTransfer ? 2 : 1);
     pending.verifiedBytes = bytes.length;
     await reader.screenshot({path:join(output,'reopened-attachment.png')});
+    if (next === 'prepared') expect(pending.saveDisabledOnJoin,
+      'Save must already be guarded when the prepared editor first exposes the shared draft').toBe(true);
   } catch (error) {
     for (const [key,tab] of [['source',peer],['destination',page]]) {
       if (tab.isClosed()) continue;

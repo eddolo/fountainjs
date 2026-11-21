@@ -8,7 +8,7 @@ import {verifyGitLabRestart} from './verify-gitlab-restart.mjs';
 import {verifySuggestionHistoryRollback} from './verify-gitlab-suggestion-history-rollback.mjs';
 import {observePage} from './gitlab-audit-editor.mjs';
 import {verifyGitLabRollback} from './verify-gitlab-editor-rollback.mjs';
-import {buildIdentityError, describeBuild, observeEditorBuild, preparedRollbackTree} from '../integrations/gitlab/testing/build-identity.mjs';
+import {buildIdentityError, describeBuild, observeEditorBuild, preparedRollbackTree, wikiUploadRollbackTree} from '../integrations/gitlab/testing/build-identity.mjs';
 import {chromium,firefox,webkit,expect} from '@playwright/test';
 import {readGitLabAuditCredential} from './gitlab-audit-credentials.mjs';
 import {loggerStartupFailure,waitForGitLabDeployment} from './gitlab-deployment-readiness.mjs';
@@ -129,18 +129,26 @@ if(side==='fountain' || wikiRollout){
  env.FOUNTAIN_GITLAB_FRONTEND_ASSETS=resolve(install.source,'public/assets/webpack');
  if (!wikiRollout) compose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
 }
-if (preparedRollback) {
- const source = resolve(value('--prepared-source'));
+const wikiFallback = process.argv.includes('--wiki-upload-rollback-source');
+if (wikiFallback && !(structuredWikiRollback && wikiPendingUpload && side === 'fountain' && isAbsolute(value('--wiki-upload-rollback-source'))))
+ throw new Error('Use the prepared wiki fallback with a Fountain pending-upload structured rollback and an absolute source path.');
+let wikiFallbackAssets;
+if (preparedRollback || wikiFallback) {
+ const source = resolve(value(wikiFallback ? '--wiki-upload-rollback-source' : '--prepared-source'));
  const git = (...args) => execFileSync('git',['-C',source,...args],{encoding:'utf8'}).trim();
  const sourceTree = git('write-tree');
  if (source !== git('rev-parse','--show-toplevel') || git('rev-parse','HEAD') !== pin.commit ||
-     sourceTree !== preparedRollbackTree || git('diff','--name-only') || git('ls-files','--others','--exclude-standard'))
+     sourceTree !== (wikiFallback ? wikiUploadRollbackTree : preparedRollbackTree) || git('diff','--name-only') || git('ls-files','--others','--exclude-standard'))
    throw new Error('The prepared rollback requires the pinned GitLab checkout with all staged rollback patches.');
  const assets = resolve(source,'public/assets/webpack');
- expectedBuild.sourceTree = sourceTree;
- expectedBuild.rspackManifestSHA256 = hash(await readFile(resolve(assets,'manifest.rspack.json')));
- env.FOUNTAIN_GITLAB_FRONTEND_ASSETS = assets;
- compose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
+ const identity = wikiFallback ? targetBuild : expectedBuild;
+ identity.sourceTree = sourceTree;
+ identity.rspackManifestSHA256 = hash(await readFile(resolve(assets,'manifest.rspack.json')));
+ if (wikiFallback) wikiFallbackAssets = assets;
+ else {
+   env.FOUNTAIN_GITLAB_FRONTEND_ASSETS = assets;
+   compose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
+ }
 }
 const restartRequested = process.argv.includes('--verify-restart');
 if (restartRequested && suite !== 'composers') throw new Error('Restart verification requires saved composer records.');
@@ -304,10 +312,10 @@ try{
    }
    report.deployment[wikiRestore ? 'wikiRestore' : 'suggestionHistory'] = historyReceipt;
  }
- const identify = async (target = report, expected = expectedBuild) => {
+ const identify = async (target = report, expected = expectedBuild, wikiProbeURL) => {
  const manifests=docker('exec',containerName,'find',assetTarget,'-maxdepth','1','-name','manifest*.json').trim().split('\n').filter(Boolean);
  target.frontendManifests=manifests.length?docker('exec',containerName,'sha256sum',...manifests).trim().split('\n'):[];
- return observeEditorBuild({page,project,request,expected,report:target,observeProbe:probe=>observePage(probe,target,target.errors),readDeployedScripts:paths=>{
+ return observeEditorBuild({page,project,request,expected,wikiProbeURL,report:target,observeProbe:probe=>observePage(probe,target,target.errors),readDeployedScripts:paths=>{
   const prefix='/opt/gitlab/embedded/service/gitlab-rails/public';
   if(!paths.length)return new Map();
   return new Map(docker('exec',containerName,'sha256sum','--',...paths.map(path=>prefix+path)).trim().split('\n').map(line=>[line.slice(66+prefix.length),line.slice(0,64)]));
@@ -370,7 +378,9 @@ try{
    docker('stop',running.Id);
    // Recreate the inspected service on its existing volumes, changing only the frontend.
    const targetCompose = ['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')];
-   if (wikiRollout) targetCompose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
+   if (wikiFallback) env.FOUNTAIN_GITLAB_FRONTEND_ASSETS = wikiFallbackAssets;
+   const mountedTarget = wikiRollout || wikiFallback;
+   if (mountedTarget) targetCompose.push('-f',resolve(root,'integrations/gitlab/runtime/compose.frontend.yaml'));
    docker(...targetCompose,'up','-d','baseline');
    const target = inspect();
    expect(target.Id).not.toBe(running.Id);
@@ -378,16 +388,16 @@ try{
    expect(target.Image).toBe(running.Image);
    expect(target.Config.Image).toBe(pin.image);
    const mounts = target.Mounts.filter(m => m.Destination === assetTarget);
-   if (wikiRollout) {
+   if (mountedTarget) {
      expect(mounts).toHaveLength(1);
      expect(mounts[0]).toMatchObject({Type:'bind',Source:env.FOUNTAIN_GITLAB_FRONTEND_ASSETS,RW:false});
    } else expect(mounts).toEqual([]);
    const volumes = target.Mounts.filter(m => m.Destination !== assetTarget).map(m => ({name:m.Name,destination:m.Destination,type:m.Type})).sort((a,b)=>a.destination.localeCompare(b.destination));
    expect(volumes).toEqual(backendMounts);
-   expect(target.Config.Env.filter(item => item.startsWith('ENABLE_RSPACK='))).toEqual(wikiRollout ? ['ENABLE_RSPACK=true'] : []);
+   expect(target.Config.Env.filter(item => item.startsWith('ENABLE_RSPACK='))).toEqual(mountedTarget ? ['ENABLE_RSPACK=true'] : []);
    const environmentHash = hash(target.Config.Env.filter(item=>!item.startsWith('ENABLE_RSPACK=')).sort().join('\n'));
    expect(environmentHash).toBe(report.deployment.backendEnvironmentHash);
-   const receipt = {side:wikiRollout ? 'fountain' : 'original', startup:[], errors:[], containerId:target.Id, previousContainerId:running.Id,
+   const receipt = {side:wikiRollout ? 'fountain' : wikiFallback ? 'prepared' : 'original', startup:[], errors:[], containerId:target.Id, previousContainerId:running.Id,
      deployment:{image:target.Config.Image,imageId:target.Image,backendMounts:volumes,backendEnvironmentHash:environmentHash,assetMount:mounts.map(m => ({source:m.Source,readOnly:!m.RW}))}};
    if (wikiRollout) report.wikiDeploymentRollout = receipt;
    else report.draftRollback = receipt;
@@ -416,10 +426,11 @@ try{
    },{timeout:30000,intervals:[500,1000,2000]}).toBe(false);
    expect(versionResponse.status()).toBe(200);
    receipt.backend = {version:await versionResponse.json()};
-   receipt.buildIdentity = await identify(receipt,targetBuild);
+   receipt.buildIdentity = await identify(receipt,targetBuild,wikiFallback ? project.web_url+'/-/wikis/'+encodeURIComponent(wikiSlug) : undefined);
    expect(buildIdentityError(receipt)).toBeFalsy();
    expect(receipt.errors).toEqual([]);
    console.log(describeBuild(receipt));
+   return receipt.side;
  } : undefined;
  report.observations=await (['batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff'].includes(suite)?runRecordedGitLabBatch:suite==='wiki-collaboration'?runWikiCollaboration:wikiSuite?runWikiHistory:suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:['mr-create','mr-create-member','mr-review-handover'].includes(suite)?runGitLabMergeRequestCreation:suite==='board-issues'?runGitLabBoardCompatibility:suite==='saved-replies'?runGitLabSavedReplyCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:suite==='custom-label'?runCustomLabel:suite==='footnote-labels'?runFootnoteLabels:suite==='linked-image'?runLinkedImage:['contents','contents-authoring','contents-handover'].includes(suite)?runContents:suite==='table-authoring'?runTableAuthoring:writerImport?runWriterImport:['grid','merged-grid','header-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,mrHandoverFrom,switchDraftToStock:draftRollbackRequested ? switchEditorDeployment : undefined,switchWikiDeployment:switchEditorDeployment,wikiFlagAudit,readStoredWikiFlag,readIngress:wikiPartialUpload ? marker=>readUploadIngress(docker,containerName,marker) : undefined,mixedWiki,writerPaste,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onPageError:error=>report.errors.push(error),onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
  if (wikiFlagAudit?.restored) {

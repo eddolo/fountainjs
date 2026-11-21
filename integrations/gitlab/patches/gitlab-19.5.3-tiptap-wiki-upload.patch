@@ -1,0 +1,177 @@
+diff --git a/app/assets/javascripts/wikis/components/wiki_form.vue b/app/assets/javascripts/wikis/components/wiki_form.vue
+index a303ff1e2..9ff1212ab 100644
+--- a/app/assets/javascripts/wikis/components/wiki_form.vue
++++ b/app/assets/javascripts/wikis/components/wiki_form.vue
+@@ -228,6 +228,7 @@ export default {
+       isTemplateUrl: isTemplateUrl(),
+       isSubmitting: false,
+       collaborationProvider: null,
++      peerUploadNames: [],
+       plainTextStartContent: this.pageInfo.content || '',
+     };
+   },
+@@ -240,6 +241,9 @@ export default {
+     },
+   },
+   computed: {
++    waitingForPeerUpload() {
++      return this.peerUploadNames.length > 0;
++    },
+     isCollaborating() {
+       return Boolean(this.collaborationProvider);
+     },
+@@ -318,6 +322,7 @@ export default {
+           text: this.submitButtonText,
+           attributes: {
+             variant: 'confirm',
++            disabled: this.waitingForPeerUpload,
+             'data-testid': 'wiki-confirm-message',
+           },
+         },
+@@ -385,28 +390,45 @@ export default {
+         }),
+       );
+ 
+-      provider.connect();
+       this.collaborationProvider = provider;
++      provider.awareness.on('change', this.updatePeerUploads);
++      provider.connect();
++      this.updatePeerUploads();
++    },
++
++    updatePeerUploads() {
++      const provider = this.collaborationProvider;
++      const names = [];
++      for (const [client, state] of provider.awareness.getStates()) {
++        if (client === provider.doc.clientID || !provider.identityFor(client)) continue;
++        const files = state.fountainWikiFiles;
++        if (!Array.isArray(files) || files.length > 1000) continue;
++        for (const name of files) {
++          if (typeof name === 'string' && name.length && name.length <= 1024) names.push(name);
++        }
++      }
++      this.peerUploadNames = names;
+     },
+-
+     stopCollaborativeEditing() {
++      this.collaborationProvider?.awareness.off('change', this.updatePeerUploads);
++      this.peerUploadNames = [];
+       this.collaborationProvider?.destroy();
+       this.collaborationProvider = null;
+     },
+ 
+     async submitForm() {
++      if (this.waitingForPeerUpload) return;
+       this.setMissingFields();
+ 
+       this.updateDrafts();
++      // Refresh hidden fields, then check again before committing the draft.
++      await this.$nextTick();
++      if (this.waitingForPeerUpload) return;
+       this.isSubmitting = true;
+       this.isFormDirty = false;
+-
+       this.trackFormSubmit();
+       this.trackWikiFormat();
+ 
+-      // Wait until form field values are refreshed
+-      await this.$nextTick();
+-
+       this.$refs.form.$el.submit();
+     },
+ 
+@@ -533,6 +555,7 @@ export default {
+     },
+ 
+     submitFormWithShortcut() {
++      if (this.waitingForPeerUpload) return;
+       this.$refs.form.$el.submit();
+     },
+ 
+@@ -650,6 +673,7 @@ export default {
+     },
+ 
+     handleSave() {
++      if (this.waitingForPeerUpload) return;
+       if (this.useAutoCommitMessage) {
+         this.submitForm();
+       } else {
+@@ -865,6 +889,12 @@ export default {
+                 </div>
+                 <div class="gl-grow"></div>
+                 <div class="gl-my-3 gl-flex gl-shrink-0 gl-items-center gl-gap-3">
++                  <div v-if="waitingForPeerUpload" role="status">
++                    {{ s__('WikiPage|Waiting for attachments before saving') }}
++                    <ul :aria-label="s__('WikiPage|Files being attached by other authors')">
++                      <li v-for="(name, index) in peerUploadNames" :key="index">{{ name }}</li>
++                    </ul>
++                  </div>
+                   <collaborators-indicator
+                     v-if="isCollaborating"
+                     :provider="collaborationProvider"
+@@ -873,12 +903,14 @@ export default {
+                     <gl-button
+                       variant="confirm"
+                       type="submit"
++                      :disabled="waitingForPeerUpload"
+                       :loading="savingPreference"
+                       data-testid="wiki-submit-button"
+                       @click.prevent="handleSave"
+                       >{{ submitButtonText }}</gl-button
+                     >
+                     <gl-collapsible-listbox
++                      :disabled="waitingForPeerUpload"
+                       :selected="saveMessageMode"
+                       :items="$options.saveOptions"
+                       toggle-text="s__('Wiki|Save and choose commit message')"
+diff --git a/spec/frontend/wikis/components/wiki_form_spec.js b/spec/frontend/wikis/components/wiki_form_spec.js
+index 6b5661944..38ec0291a 100644
+--- a/spec/frontend/wikis/components/wiki_form_spec.js
++++ b/spec/frontend/wikis/components/wiki_form_spec.js
+@@ -1409,6 +1409,46 @@ describe('WikiForm', () => {
+       });
+     });
+ 
++    it('holds button, shortcut and confirmed Save until the last peer file clears', async () => {
++      createCollaborativeWrapper();
++      await activateRichTextEditor();
++      const provider = findCollaborationProvider();
++      const states = provider.awareness.getStates();
++      const refresh = async () => {
++        provider.awareness.emit('change', [{ added: [], updated: [], removed: [] }, 'remote']);
++        await nextTick();
++      };
++      const save = () => wrapper.findComponentByTestId('wiki-submit-button');
++      const submit = jest.spyOn(findForm().element, 'submit').mockImplementation(() => {});
++      const shortcut = new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: true });
++      provider.identities.set(11, { id: 42 });
++      provider.identities.set(12, { id: 43 });
++      states.set(11, { fountainWikiFiles: ['log.txt'] });
++      states.set(12, { fountainWikiFiles: ['notes.txt'] });
++      states.set(13, { fountainWikiFiles: ['unknown.txt'] });
++      await refresh();
++
++      expect(save().props('disabled')).toBe(true);
++      expect(wrapper.text()).toContain('log.txt');
++      expect(wrapper.text()).not.toContain('unknown.txt');
++      findMarkdownEditor().vm.$emit('keydown', shortcut);
++      await findForm().trigger('submit');
++      wrapper.findComponentByTestId('commit-message-modal').vm.$emit('primary');
++      await nextTick();
++      expect(submit).not.toHaveBeenCalled();
++
++      states.delete(11);
++      await refresh();
++      expect(save().props('disabled')).toBe(true);
++      states.set(12, { fountainWikiFiles: null });
++      await refresh();
++      expect(save().props('disabled')).toBe(false);
++      expect(submit).not.toHaveBeenCalled();
++      findMarkdownEditor().vm.$emit('keydown', shortcut);
++      await nextTick();
++      expect(submit).toHaveBeenCalledTimes(1);
++    });
++
+     it('shows the collaborators indicator', async () => {
+       createCollaborativeWrapper();
+       await activateRichTextEditor();

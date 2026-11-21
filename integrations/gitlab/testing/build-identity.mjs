@@ -1,9 +1,10 @@
 import { createHash } from 'node:crypto';
 
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
-// Exact GitLab CE 19.5.3 source trees used for the two fallback builds.
+// Exact GitLab CE 19.5.3 source trees used for the prepared fallback builds.
 const saveEchoTree = '075b931b09e4a1b2123bda61cc8f17a2d84c119c';
 export const preparedRollbackTree = '307cccf71054136fcec34e32cd902ce5a87051ce';
+export const wikiUploadRollbackTree = '71d94ee242ba0dc3ddbfd279ecd4fc06996cbc9f';
 const digest = value => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
 const revision = value => typeof value === 'string' && /^[a-f0-9]{40}$/u.test(value);
 const assetPath = /^\/assets\/webpack\/(?:[\w.-]+\/)*[\w.-]+\.js$/u;
@@ -31,11 +32,12 @@ export function buildIdentityError(report) {
   } else if (id.side === 'prepared') {
     if (mounts?.length !== 1 || mounts[0].readOnly !== true || observed.editor !== 'ProseMirror' ||
         observed.runtimeSHA256 !== null || observed.integrationSHA256 !== null ||
-        ![saveEchoTree, preparedRollbackTree].includes(expected.sourceTree) || !digest(expected.rspackManifestSHA256) ||
+        ![saveEchoTree, preparedRollbackTree, wikiUploadRollbackTree].includes(expected.sourceTree) || !digest(expected.rspackManifestSHA256) ||
         !report.frontendManifests.includes(expected.rspackManifestSHA256 + '  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json') ||
         !observed.scripts.some(script => script.preparedHandoff === true) ||
         !observed.scripts.some(script => script.preparedSaveEcho === true) ||
-        observed.scripts.some(script => script.preparedToolbarFocus === true) !== (expected.sourceTree === preparedRollbackTree))
+        observed.scripts.some(script => script.preparedToolbarFocus === true) !== (expected.sourceTree !== saveEchoTree) ||
+        (expected.sourceTree === wikiUploadRollbackTree && !observed.scripts.some(script => script.wikiUploadGuard === true)))
       return 'prepared Tiptap rollback build or handoff script mismatch';
   } else if (id.side === 'fountain') {
     if (mounts?.length !== 1 || mounts[0]?.readOnly !== true || observed.editor !== 'FountainJS' ||
@@ -47,7 +49,7 @@ export function buildIdentityError(report) {
   return null;
 }
 
-export async function observeEditorBuild({ page, project, request, expected, report, observeProbe, readDeployedScripts }) {
+export async function observeEditorBuild({ page, project, request, expected, report, observeProbe, readDeployedScripts, wikiProbeURL }) {
   const path = '/api/v4/projects/' + project.id + '/issues';
   const title = 'Fountain compatibility build identity control';
   const description = 'Open this issue to identify the installed rich-text editor.';
@@ -60,11 +62,12 @@ export async function observeEditorBuild({ page, project, request, expected, rep
     const probe = await context.newPage();
     await observeProbe(probe);
     const scripts = new Map();
-    probe.on('response', response => {
+    const collectScript = response => {
       const url = new URL(response.url());
       if (url.origin === 'http://127.0.0.1:5080' && assetPath.test(url.pathname) &&
           response.request().resourceType() === 'script' && response.status() === 200) scripts.set(url.pathname, response);
-    });
+    };
+    probe.on('response',collectScript);
     await probe.goto(issue.web_url);
     await probe.getByTestId('work-item-edit-form-button').click();
     const form = probe.getByTestId('work-item-description-wrapper');
@@ -80,6 +83,14 @@ export async function observeEditorBuild({ page, project, request, expected, rep
     }));
     observed.manifestSHA256 = sha256([...report.frontendManifests].sort().join('\n'));
     observed.scripts = [];
+    if (wikiProbeURL) {
+      const wiki = await context.newPage();
+      await observeProbe(wiki);
+      wiki.on('response',collectScript);
+      await wiki.goto(wikiProbeURL);
+      await wiki.getByTestId('wiki-edit-button').click();
+      await wiki.getByTestId('wiki-submit-button').waitFor();
+    }
     const entries = [...scripts].sort(([a], [b]) => a.localeCompare(b));
     const deployed = readDeployedScripts(entries.map(([path]) => path));
     for (const [path, response] of entries) {
@@ -91,6 +102,8 @@ export async function observeEditorBuild({ page, project, request, expected, rep
         script.preparedSaveEcho = true;
       if (report.side === 'prepared' && bytes.includes('refocusBeforeCommand') && bytes.includes('this.tiptapEditor.view.focus()'))
         script.preparedToolbarFocus = true;
+      if (wikiProbeURL && bytes.includes('fountainWikiFiles') && bytes.includes('Waiting for attachments before saving'))
+        script.wikiUploadGuard = true;
       observed.scripts.push(script);
     }
     return { side: report.side, expected, observed };
