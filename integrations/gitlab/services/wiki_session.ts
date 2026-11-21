@@ -34,6 +34,7 @@ export class GitLabWikiSession {
   private readonly origin = {};
   private options!:GitLabWikiOptions;
   private localFiles: readonly string[] = [];
+  private uploadBatch = 0;
   private peerFiles: readonly string[] = [];
   constructor(private readonly loadOptions:()=>Promise<GitLabWikiOptions>, private readonly notify:(error:unknown)=>void,
     private readonly onPeerFiles:(names:readonly string[])=>void) {}
@@ -194,6 +195,14 @@ export class GitLabWikiSession {
   }
   publishFiles(names: readonly string[]) {
     if (!this.binding || (names.length === this.localFiles.length && names.every((name,i) => name === this.localFiles[i]))) return;
+    const doc = this.options.provider.doc;
+    // Only the batch number is replayed to late joiners. Names and progress stay in live presence.
+    if (Boolean(names.length) !== Boolean(this.localFiles.length)) {
+      const pending = doc.getMap<number>('fountainWikiPendingUploads');
+      const client = String(doc.clientID);
+      if (names.length) pending.set(client,++this.uploadBatch);
+      else pending.delete(client);
+    }
     this.localFiles = names;
     // The original bytes and the uploader's progress belong to that browser.
     this.options.provider.awareness.setLocalStateField('fountainWikiFiles',names.length ? names : null);

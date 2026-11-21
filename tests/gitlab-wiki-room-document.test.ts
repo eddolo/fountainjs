@@ -176,6 +176,11 @@ it('shows file notices only for known peers, clears departed peers, and keeps no
     expect(Y.encodeStateAsUpdate(doc)).toEqual(bytes);
     const upload = service.uploadAttachment(new File(['evidence'],'proof.txt')).catch(() => {});
     expect(sent).toEqual([['proof.txt']]);
+    const restored = new Y.Doc();
+    Y.applyUpdate(restored,Y.encodeStateAsUpdate(doc));
+    const pending = restored.getMap<number>('fountainWikiPendingUploads');
+    expect([...pending.entries()]).toEqual([[String(doc.clientID),1]]);
+    expect(restored.getXmlFragment('default').toString()).toBe(room.toString());
     update({added:[peerId+1,doc.clientID]});
     update({added:[peerId]});
     update({added:[]});
@@ -185,7 +190,11 @@ it('shows file notices only for known peers, clears departed peers, and keeps no
     await upload;
     update({added:[peerId]});
     expect(sent).toEqual([['proof.txt'],['proof.txt'],null]);
-    expect(Y.encodeStateAsUpdate(doc)).toEqual(bytes);
+    Y.applyUpdate(restored,Y.encodeStateAsUpdate(doc,Y.encodeStateVector(restored)));
+    expect(pending.size).toBe(0);
+    expect(service.cancelUpload(service.attachmentUploads[0].id)).toBe(true);
+    expect(service.getSerializedContent()).toBe('Draft');
+    restored.destroy();
   } finally { service.dispose(); doc.destroy(); }
 });
 
