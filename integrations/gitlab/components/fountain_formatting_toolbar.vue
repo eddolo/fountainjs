@@ -363,7 +363,8 @@ export default {
         <gl-disclosure-dropdown v-if="activeCell" size="small" category="tertiary" icon="table"
           :toggle-text="s__('ContentEditor|Table actions')" :items="tableActions" @action="execute" />
         <toolbar-table-button v-else @insert-table="insertTableAtSelection" />
-        <gl-button v-if="supportsTableOfContents && !activeCell" size="small" category="tertiary" @click="insertContents">{{ s__('ContentEditor|Table of contents') }}</gl-button>
+        <gl-button v-if="supportsTableOfContents && !activeCell" size="small" category="tertiary" icon="book"
+          :aria-label="s__('ContentEditor|Table of contents')" :title="s__('ContentEditor|Table of contents')" @click="insertContents" />
       </template>
       <fountain-context-surface v-if="group.keys.includes('footnote') && footnoteContext" :editor="editor" :active="true" :anchor-path="footnoteContext.path" :get-editor-root="getEditorRoot" :label="s__('ContentEditor|Footnote actions')" :trigger-text="s__('ContentEditor|Note')" :suspended="renameOpen || footnoteOpen" @reveal="$emit('focus')">
         <div class="gl-w-full" role="group" :aria-label="s__('ContentEditor|Footnote controls')">

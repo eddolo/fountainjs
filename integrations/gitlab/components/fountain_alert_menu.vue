@@ -51,7 +51,8 @@ export default {
 </script>
 <template>
   <div data-testid="native-alert-menu" class="gl-inline-flex gl-flex-wrap gl-items-center gl-gap-2">
-    <gl-button :disabled="unavailable" size="small" @click="execute('insert')">{{ s__('ContentEditor|Insert alert') }}</gl-button>
+    <gl-button :disabled="unavailable" size="small" category="tertiary" icon="attention"
+      :aria-label="s__('ContentEditor|Insert alert')" :title="s__('ContentEditor|Insert alert')" @click="execute('insert')" />
     <template v-if="context">
       <gl-form-select :key="selectVersion" :value="context.kind" :options="types" :disabled="unavailable" :aria-label="s__('ContentEditor|Alert type')" class="gl-w-auto" @change="execute('setKind', $event)" />
       <gl-button :disabled="unavailable" size="small" @click="execute('unwrap')">{{ s__('ContentEditor|Convert alert to text') }}</gl-button>
