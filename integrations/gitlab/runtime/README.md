@@ -861,14 +861,15 @@ test "$(git -C "$fallback" write-tree)" = 6133fd5fecf0e94a017e8920e7e587947b44a7
 )
 ```
 
-Use one fresh run ID for both commands. The first run creates two issues with Fountain and leaves its deployment stopped. The second switches the same backend volumes to the prepared Tiptap frontend, creates two independent controls, then edits all four records through Markdown and rich text. The collector checks the prior deployment, package identity, loaded scripts, issue identities and exact source before editing. It retains the stored Markdown, per-cell data, checkbox coordinates and reader screenshots. A failed rollback sets a nonzero exit code. The receipt is `prepared-1/report.json` in the run directory.
+Use the same browser, run ID and attempt for both commands. Start with a fresh run ID per browser. Set `PLAYWRIGHT_BROWSERS_PATH` to the installed Linux browser cache if it is outside the Playwright default. The first run creates two issues with Fountain and leaves its deployment stopped. The second switches the same backend volumes to the prepared Tiptap frontend, creates two independent controls, then edits all four records through Markdown and rich text. The collector checks the prior deployment, package identity, loaded scripts, issue identities and exact source before editing. It retains the stored Markdown, per-cell data, checkbox coordinates and reader screenshots. A failed rollback sets a nonzero exit code. The receipt is `prepared-1/report.json` in the run directory.
 
 ```sh
-run_id=aligned-issue-rollback-$(date -u +%Y%m%d-%H%M%S)
+browser=chromium  # Repeat with firefox and webkit.
+run_id=aligned-issue-$browser-$(date -u +%Y%m%d-%H%M%S)
 node scripts/run-gitlab-compatibility.mjs --suite table-checkbox-recovery --aligned-checkboxes \
-  --editor fountain --run-id "$run_id"
+  --browser "$browser" --editor fountain --run-id "$run_id" &&
 node scripts/run-gitlab-compatibility.mjs --suite table-checkbox-recovery --aligned-checkboxes \
-  --editor prepared --run-id "$run_id" --verify-rollback --prepared-source "$fallback"
+  --browser "$browser" --editor prepared --run-id "$run_id" --verify-rollback --prepared-source "$fallback"
 ```
 
 To repeat the packaged stock comparison, use a separate fresh run ID, repeat the Fountain command, then run `--editor original --verify-rollback` with the same suite, fixture and run ID. The prepared build is an opt-in deployment target and has its own build identity. [Results and limits](../COMPATIBILITY_GRID_RESULTS.md#rollback-of-aligned-issue-checkboxes).
