@@ -1,0 +1,19 @@
+{
+  "projectPath": "root/fountain-product-integration",
+  "username": "fountain_compat_access",
+  "email": "fountain-compat-access@example.invalid",
+  "accountName": "Fountain compatibility access audit",
+  "cases": [
+    {
+      "id": "wiki-restore-role-change",
+      "scope": "wiki-restore-role",
+      "title": "Handoff review",
+      "source": "# Handoff review\r\n\r\nOwner: **Release team**.\r\n\r\nStatus: pending.",
+      "paragraph": "Status: pending.",
+      "addition": " Reviewed.",
+      "writerAccess": 30,
+      "readerAccess": 20,
+      "restoreMessage": "Restore the original handoff after review"
+    }
+  ]
+}

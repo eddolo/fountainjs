@@ -580,6 +580,29 @@ it('checks historical wiki source and retained revision identities independently
  expect(compare().rows.filter((row:any)=>row.classification==='regression').map((row:any)=>row.invariant)).toEqual(['retainedHistory','revisionSources']);
  expect(compare().featureAcceptance.passed).toBe(false);
 });
+it('scores the open wiki confirmation separately from the fresh reader and retained history', () => {
+  const [original,fountain] = reports() as any[];
+  const fixture = JSON.parse(readFileSync(new URL('../integrations/gitlab/fixtures/compatibility-wiki-restore-role.json',import.meta.url),'utf8'));
+  const input = fixture.cases[0], edited = input.source + input.addition;
+  const before = [{version:'v2',sha:'2'.repeat(40),author:fixture.accountName},
+    {version:'v1',sha:'1'.repeat(40),author:'Owner'}];
+  const after = [{version:'v3',sha:'3'.repeat(40),author:fixture.accountName,message:input.restoreMessage},...before];
+  for (const report of [original,fountain]) {
+    report.fixture = fixture;
+    Object.assign(report.observations[0], {id:input.id,input,status:'observed',pageErrors:[],before,after,
+      authors:{owner:{id:1,username:'root'},writer:{id:2,username:fixture.username,name:fixture.accountName,access:30}},
+      fixtureMembership:{before:null,after:null},submissions:{requests:[{stage:'edit'},{stage:'restore'}]},
+      editedSource:edited,readerCanSeeRevision:'Release team',readerHasRestore:false,openRestoreEnabled:true,
+      pendingMessage:input.restoreMessage,sourceWhileReader:edited,historyWhileReader:before,
+      revisions:after.map((row,index)=>({sha:row.sha,source:index===1?edited:input.source})),restoredReader:input.paragraph});
+  }
+  const score = () => compareGitLabCompatibility(original,fountain);
+  expect(score().rows.filter((r:any)=>r.classification==='shared-limitation').map((r:any)=>r.invariant)).toEqual(['openRestoreEnabled']);
+  fountain.observations[0].historyWhileReader=[];
+  expect(score().rows.find((r:any)=>r.invariant==='preservedHistory')?.classification).toBe('regression');
+  fountain.observations=[];
+  expect(score().summary.incomplete).toBe(13);
+});
 it.each(['wiki-restore-conflict','wiki-restore-authors'])('evaluates the stale restore, intervening author and intentional retry for %s', suite => {
   const [original, fountain] = reports() as any[];
   const fixture = JSON.parse(readFileSync(new URL(`../integrations/gitlab/fixtures/compatibility-${suite}.json`, import.meta.url), 'utf8'));

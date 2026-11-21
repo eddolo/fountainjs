@@ -45,7 +45,15 @@ async function checkWithSecondAuthor(options) {
     expect(identity.is_admin).not.toBe(true);
     expect(owner.username).toBe('root');
     expect(owner.id).not.toBe(identity.id);
-    item = await checkWikiPage({...options, competingWriter:writer});
+    if (input.scope === 'wiki-restore-role') {
+      const setRole = async level => {
+        await member.setRole(level);
+        expect((await membership())?.access_level).toBe(level);
+      };
+      item = await checkWikiPage({...options, page:writer, setRole});
+    } else {
+      item = await checkWikiPage({...options, competingWriter:writer});
+    }
     item.authors = {owner:{id:owner.id, name:owner.name, username:owner.username},
       writer:{id:identity.id, name:identity.name, username:identity.username, access:active.access_level}};
   } finally {
@@ -64,7 +72,7 @@ async function checkWithSecondAuthor(options) {
   return item;
 }
 
-async function checkWikiPage({ side, runId, page, request, project, input, output, competingWriter }) {
+async function checkWikiPage({ side, runId, page, request, project, input, output, competingWriter, setRole }) {
   const item = { id: input.id, input, status: 'incomplete', stage: 'seed' };
   // Wiki slugs are unique. Each build gets its own page with the same starting source.
   const title = [input.title, ...(input.scope === 'wiki-rename' ? [input.id] : []), side, runId].join('-');
@@ -196,6 +204,48 @@ async function checkWikiPage({ side, runId, page, request, project, input, outpu
     item.afterCancelSource = await read();
     item.stage = 'restore';
     await restore.click();
+    if (input.scope === 'wiki-restore-role') {
+      item.stage = 'role change';
+      const message = modal.getByRole('textbox');
+      const confirm = modal.getByRole('button',{name:'Restore',exact:true});
+      await message.fill(input.restoreMessage);
+      await expect(confirm).toBeEnabled();
+      const historicalURL = tab.url();
+      const fresh = await actor.newPage();
+      await observePage(fresh,item);
+      const freshReader = fresh.getByTestId('wiki-page-content');
+      const freshRestore = fresh.getByTestId('wiki-restore-version-button');
+      try {
+        await setRole(input.readerAccess);
+        const start = Date.now();
+        await fresh.goto(historicalURL);
+        await expect(freshReader.locator('p').last()).toHaveText(input.paragraph);
+        await expect(fresh.getByTestId('wiki-page-last-version')).toBeVisible();
+        item.readerHasRestore = await freshRestore.isVisible();
+        item.readerCanSeeRevision = await freshReader.locator('strong').innerText();
+        // Give a live dialog the same opportunity to refresh as the review UI.
+        await expect(confirm).toBeDisabled({timeout:5000}).catch(() => {});
+        item.sampleAfterMs = Date.now()-start;
+        item.openRestoreEnabled = await confirm.isVisible() && await confirm.isEnabled();
+        item.pendingMessage = await message.inputValue();
+        await tab.screenshot({path:join(output,input.id+'-pending.png')});
+        await fresh.screenshot({path:join(output,input.id+'-reader.png')});
+        await modal.getByRole('button',{name:'Cancel',exact:true}).click();
+        await expect(modal).toBeHidden();
+        await tab.goto(url);
+        await expect(reader.locator('p').last()).toHaveText(input.paragraph+input.addition);
+        item.historyWhileReader = await openHistory();
+        item.sourceWhileReader = await read();
+      } finally {
+        await setRole(input.writerAccess);
+        await fresh.close();
+      }
+      await tab.goto(url);
+      await openHistory();
+      await openFirstRevision();
+      await restore.click();
+      item.stage = 'restore';
+    }
     if (input.scope === 'wiki-restore-conflict') {
       item.stage = 'stale restore';
       item.openLock = await modal.locator('[name="wiki[last_commit_sha]"]').inputValue();

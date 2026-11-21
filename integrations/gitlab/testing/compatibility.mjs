@@ -572,6 +572,46 @@ export function compareGitLabCompatibility(original,fountain){
       ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
       continue;
     }
+    if (input.scope === 'wiki-restore-role') {
+      const edited = input.source.replace(input.paragraph,input.paragraph + input.addition);
+      const values = (report,item) => {
+        const member = item?.authors?.writer;
+        if (!verifiedEditor(report,item) || item.status !== 'observed' ||
+          member?.username !== fixture.username || member?.access !== input.writerAccess ||
+          item.authors.owner.username !== 'root' || member.id === item.authors.owner.id ||
+          ![item.before,item.after,item.revisions,item.submissions?.requests].every(Array.isArray) ||
+          !item.fixtureMembership || item.fixtureMembership.before !== item.fixtureMembership.after) return {};
+        const {before,after,revisions} = item;
+        return {
+          ...item,
+          preservedHistory:equal(before.map(row=>row.version),['v2','v1']) && equal(before,item.historyWhileReader),
+          noReadOnlySubmission:!item.submissions.requests.some(entry=>entry.stage==='role change'),
+          submittedOnce:item.submissions.requests.filter(entry=>entry.stage==='restore').length===1,
+          creditedRestore:after.length===3 && after[0].version==='v3' && after[0].author===member.name &&
+            after[0].message===input.restoreMessage && equal(after.slice(1),before),
+          historicalSource:revisions.length===3 && new Set(revisions.map(row=>row.sha)).size===3 &&
+            revisions.every((row,index)=>row.sha===after[index].sha && /^[a-f0-9]{40}$/.test(row.sha)) &&
+            equal(revisions.map(row=>row.source),[input.source,edited,input.source]),
+        };
+      };
+      const left=values(original,a), right=values(fountain,b);
+      for (const [key,label,expected] of [
+        ['editedSource','The Developer edits the wiki and saves the exact Markdown',edited],
+        ['readerCanSeeRevision','The Reporter can still read the selected revision','Release team'],
+        ['readerHasRestore','A freshly opened historical page hides Restore from the Reporter',false],
+        ['openRestoreEnabled','The already-open confirmation withdraws Restore after the role changes',false],
+        ['pendingMessage','The pending confirmation retains its typed commit message',input.restoreMessage],
+        ['noReadOnlySubmission','Cancelling the confirmation sends no restore submission',true],
+        ['sourceWhileReader','Cancelling as Reporter preserves the saved Markdown',edited],
+        ['preservedHistory','The role change and Cancel leave the same two revision IDs and credits',true],
+        ['submittedOnce','After Developer access returns one explicit restore is submitted',true],
+        ['creditedRestore','History credits one new restore to the Developer and retains both previous revisions',true],
+        ['historicalSource','All three revisions reopen with their original Markdown and distinct IDs',true],
+        ['restoredReader','The final reader shows the restored paragraph',input.paragraph],
+        ['pageErrors','The author and reader encounter no browser exceptions',[]],
+      ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});
+      continue;
+    }
     if (input.scope === 'wiki-restore-conflict') {
       const edited = input.source.replace(input.paragraph, input.paragraph + input.addition);
       const latest = input.source.replace(input.paragraph, input.paragraph + input.addition + input.competingEdit);

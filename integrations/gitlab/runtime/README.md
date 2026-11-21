@@ -59,6 +59,27 @@ This case covers a single shared data tier and a returning author who reopens
 the wiki. Automatic load-balancer failover, a tab left open on the replaced
 frontend and failure of a data service require their own evidence.
 
+### Reproduce a wiki restore across a project role change
+
+Run the two collectors sequentially against the prepared wiki controller and
+the pinned local GitLab project. Each collector stops the test instance on exit.
+
+```sh
+run="wiki-role-$(date +%s)"
+node scripts/run-gitlab-compatibility.mjs --suite wiki-restore-role --editor original --wiki-restore --run-id "$run"
+node scripts/run-gitlab-compatibility.mjs --suite wiki-restore-role --editor fountain --wiki-restore --run-id "$run"
+dir="artifacts/gitlab-compatibility/$run"
+node scripts/compare-gitlab-compatibility.mjs --original "$dir/original-1/report.json" --fountain "$dir/fountain-1/report.json" --output "$dir/verified"
+```
+
+The project owner changes the test Developer to Reporter after the Developer
+types a restore message. Compare the open dialog, a fresh historical reader,
+and the revision IDs and bytes after Cancel. The author opens a new confirmation
+after Developer access is restored. The run checks the author credit and exact
+Markdown across the three revisions, then returns the fixture membership to its
+original level. The screenshots end in `-pending`, `-reader`, `-restored` and
+`-history`.
+
 ### Reproduce merge-request creation
 
 Prepare the [frontend deployment](#reproduce-the-frontend-deployment-and-rollback) and run the commands below from the FountainJS checkout in Linux. The fixture creates one source branch and commit per editor through GitLab’s repository API. The browser selects that branch, creates the merge request, enters its formatted description, reopens it, adds a paragraph and saves. The collector checks the live draft immediately before Save and reads the saved Markdown and reader after reload. Each run leaves the branch and open merge request available for inspection.
