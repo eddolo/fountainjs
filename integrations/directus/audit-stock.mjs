@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium, expect } from '@playwright/test';
 
+import { auditToolbar } from './audit-toolbar.mjs';
+
 const pin = {
   version: '12.7.0',
   revision: '3e3bdddd20bc5f80200452d2b1aad4e3029c95e4',
@@ -195,12 +197,17 @@ try {
     const installedHash = docker('exec',container,'sha256sum','/directus/extensions/directus-extension-fountain-html/index.js').split(' ')[0];
     assert.equal(installedHash,candidate.bundleSHA256);
     report.fountain = candidate;
-    async function selectInterface(name) {
+    async function selectInterface(name, options = null) {
       const updated = await api('/fields/'+collection+'/body',{
-        method:'PATCH',body:JSON.stringify({meta:{interface:name}}),
+        method:'PATCH',body:JSON.stringify({meta:{interface:name, options}}),
       });
       assert.equal(updated.meta.interface,name);
     }
+    report.toolbar = {};
+    for (const side of ['stock', 'fountain']) {
+      report.toolbar[side] = await auditToolbar({ side, api, collection, selectInterface, openItem, out, report });
+    }
+    await selectInterface('input-rich-text-html');
     report.optionalField = { stock: await checkOptionalField('stock') };
     await selectInterface('fountain-rich-text-html');
     report.optionalField.fountain = await checkOptionalField('fountain');

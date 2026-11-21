@@ -1,7 +1,8 @@
-import { computed, defineComponent, h } from 'vue';
+import { computed, defineComponent, h, shallowRef } from 'vue';
 import { HTMLExporter, HTMLImporter, Schema, StarterKit } from '../../src/index';
 import { FountainDocumentField } from '../../src/vue';
 
+import { FieldToolbar, toolbarOption } from './toolbar';
 import fieldCss from './field.css?inline';
 
 const schema = new Schema(StarterKit.schema);
@@ -16,11 +17,13 @@ export default {
   icon: 'format_quote',
   types: ['text'],
   group: 'standard',
+  options: [toolbarOption],
   component: defineComponent({
     name: 'FountainDirectusHTML',
-    props: { value: String, disabled: Boolean, nonEditable: Boolean, comparisonMode: Boolean },
+    props: { toolbar: Array, value: String, disabled: Boolean, nonEditable: Boolean, comparisonMode: Boolean },
     emits: ['input'],
     setup(props, { emit }) {
+      const field = shallowRef(null);
       const incoming = computed(() => {
         const html = props.value ?? '';
         const doc = HTMLImporter.parse(html, schema);
@@ -45,8 +48,11 @@ export default {
         }
         return h('div', { class: 'fountain-directus-field' }, [
           h('style', fieldCss),
+          !props.disabled && !props.nonEditable && h(FieldToolbar, {
+            editor: field.value?.editor, buttons: props.toolbar, onRefocus: () => field.value?.focus(),
+          }),
           h(FountainDocumentField, {
-            config, options, modelValue: incoming.value.model, disabled: props.disabled || props.nonEditable,
+            ref: field, config, options, modelValue: incoming.value.model, disabled: props.disabled || props.nonEditable,
             'onUpdate:modelValue': publish,
           }),
         ]);

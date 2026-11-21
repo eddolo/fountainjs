@@ -5,6 +5,30 @@
   border-radius: var(--theme--border-radius);
 }
 
+.fountain-directus-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 4px;
+  background: var(--theme--background-subdued);
+  border-block-end: var(--theme--border-width) solid var(--theme--form--field--input--border-color);
+}
+.fountain-directus-toolbar button {
+  display: grid;
+  place-items: center;
+  inline-size: 32px;
+  block-size: 32px;
+  color: var(--theme--form--field--input--foreground);
+  border-radius: var(--theme--border-radius);
+}
+.fountain-directus-toolbar button:enabled:hover,
+.fountain-directus-toolbar button[aria-pressed="true"] {
+  color: var(--theme--primary);
+  background: var(--theme--primary-background);
+}
+.fountain-directus-toolbar button:focus-visible { outline: 2px solid var(--theme--primary); }
+.fountain-directus-toolbar button:disabled { opacity: 0.45; }
+
 .fountain-directus-field:focus-within {
   outline: var(--focus-ring-width) solid var(--theme--form--field--input--focus-ring-color);
   outline-offset: var(--focus-ring-offset-invert);
