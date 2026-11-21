@@ -18,6 +18,8 @@ export function gitLabTaskItem(base: SchemaSpec): NodeSpec {
     if (node.attrs.gitlabTableItem) {
       const input = (rendered[2] as [string,Record<string,unknown>])[1];
       if (inactive) input.disabled = true;
+      const alignment = node.content[0]?.attrs.align;
+      if (alignment === 'center' || alignment === 'right') attrs['data-gitlab-checkbox-align'] = alignment;
       if (context && context.path.length >= 4) {
         const table = context.path.slice(0,-4).reduce((parent,i) => parent.child(i),context.document);
         const heading = table.content[0]?.content[context.path.at(-3)!]?.textContent;

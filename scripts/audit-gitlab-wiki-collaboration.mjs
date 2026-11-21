@@ -339,8 +339,13 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       item.codeRedo = await wikiCodeText(first);
     }
     const tableStates = surface => surface.locator('td input[type="checkbox"]').evaluateAll(boxes => boxes.map(box => box.checked));
+    const checkboxPositions = surface => surface.locator('td input[type="checkbox"]').evaluateAll(boxes => boxes.map(box => {
+      const cell = box.closest('td').getBoundingClientRect(), rect = box.getBoundingClientRect();
+      return (rect.left + rect.width / 2 - cell.left) / cell.width;
+    }));
     if (input.tableTasks) {
       item.stage = 'shared-table-checkbox';
+      if (input.taskAlignment) item.editorCheckboxPositions = await checkboxPositions(other);
       item.tableTaskBefore = await tableStates(other);
       expect(item.tableTaskBefore).toEqual([false,true,false]);
       await other.getByRole('row').filter({hasText:'Backup'}).getByRole('checkbox').click();
@@ -389,6 +394,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
     if (input.tableTasks) {
+      if (input.taskAlignment) item.readerCheckboxPositions = await checkboxPositions(peerReader);
       item.tableTaskReader = await tableStates(peerReader);
       item.retiredTaskInapplicable = await peerReader.getByRole('row').filter({hasText:'Retire'})
         .getByRole('checkbox').evaluate(box => box.hasAttribute('data-inapplicable'));

@@ -1,4 +1,5 @@
 import type { Attributes, MarkJSON, Node, NodeJSON, Schema } from 'fountainjs-editor';
+import { taskCellBody } from './task_cells';
 import { NOT_APPLICABLE } from './task_state';
 import { fenceParameters, ordinaryFence } from './code_rendering';
 import type * as Y from 'yjs';
@@ -80,8 +81,13 @@ function fromStockNode(name: string, attrs: Attributes, content: NodeJSON[] | un
   if (isStockCell(name) && (attrs.align === 'center' || attrs.align === 'right')) {
     // GitLab places alignment on the cell. Fountain's editable paragraphs own it.
     content = content?.map(child => {
-      if (child.type !== 'paragraph') unsupported(path,'aligned cell containing ' + child.type);
-      return {...child,attrs:{...child.attrs,align:attrs.align}};
+      const aligned = (p: NodeJSON) => ({...p,attrs:{...p.attrs,align:attrs.align}});
+      if (child.type === 'paragraph') return aligned(child);
+      const task = child.content?.[0], p = task?.content?.[0];
+      if (content?.length === 1 && child.type === 'task_list' && child.content?.length === 1
+        && task?.type === 'task_item' && task.attrs?.gitlabTableItem && task.content?.length === 1 && p?.type === 'paragraph')
+        return {...child,content:[{...task,content:[aligned(p)]}]};
+      return unsupported(path,'aligned cell containing ' + child.type);
     });
   }
   // ProseMirror represents an empty text block with no children. Fountain uses an
@@ -384,9 +390,10 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
       else if (value !== node.type.spec.attrs?.[key]?.default) unsupported(path,node.type.name + '.' + key);
     }
     if (isStockCell(type)) {
-      const align = node.content[0]?.attrs.align ?? 'left';
+      const checkboxBody = taskCellBody(node);
+      const align = (checkboxBody ?? node.content[0])?.attrs.align ?? 'left';
       if (!['left','center','right'].includes(String(align)) ||
-        node.content.some(child => (child.attrs.align ?? 'left') !== align || (align !== 'left' && child.type.name !== 'paragraph')))
+        (!checkboxBody && node.content.some(child => (child.attrs.align ?? 'left') !== align || (align !== 'left' && child.type.name !== 'paragraph'))))
         unsupported(path,'mixed or unsupported cell alignment');
       attrs.align = align;
     }
@@ -394,8 +401,9 @@ export function toGitLabWikiJSON(doc: Node): NodeJSON {
     if (Object.keys(attrs).length) result.attrs = attrs;
     if (node.isText) result.text = node.text;
     if (node.childCount) {
+      const childAlignment = isStockCell(type) ? attrs.align : type === 'taskList' || type === 'taskItem' ? inheritedCellAlign : undefined;
       const content = node.content.flatMap((child,index) => hasCaretLeaf(node.type.name) && isEmptyCaret(child)
-        ? [] : [encode(child,[...path,index],isStockCell(type) ? attrs.align : undefined)]);
+        ? [] : [encode(child,[...path,index],childAlignment)]);
       if (content.length) result.content = content;
     }
     if (node.marks.length) {

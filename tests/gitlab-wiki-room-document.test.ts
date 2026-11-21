@@ -61,6 +61,34 @@ it('round-trips three GitLab table checkbox states and retains adjacent cell tex
   await expect(seed(source.replace('| Backup | [ ] |','| Backup | [x] |'))).rejects.toThrow();
 });
 
+it.each(['center','right'])('retains %s column alignment on a checkbox read from a stock room', alignment => {
+  const doc = new Y.Doc();
+  try {
+    const root = doc.getXmlFragment('default');
+    const table = new Y.XmlElement('table');
+    root.push([table]);
+    for (const header of [true,false]) {
+      const row = new Y.XmlElement('tableRow');
+      const cell = new Y.XmlElement<Record<string,any>>(header ? 'tableHeader' : 'tableCell');
+      const p = new Y.XmlElement('paragraph');
+      table.push([row]); row.push([cell]); cell.setAttribute('align',alignment);
+      if (header) { cell.push([p]); p.push([new Y.XmlText('Ready')]); }
+      else {
+        const list = new Y.XmlElement('taskList'), task = new Y.XmlElement<Record<string,any>>('taskItem');
+        cell.push([list]); list.push([task]); task.setAttribute('taskTableItem',true);
+        task.setAttribute('checked',true); task.push([p]);
+      }
+    }
+    const document = readGitLabWikiRoom(root,schema,Y);
+    const cell = toGitLabWikiJSON(document).content![0].content![1].content![0];
+    expect(cell.attrs?.align).toBe(alignment);
+    expect(cell.content![0].content![0].attrs?.checked).toBe(true);
+    const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async()=>({body:''})});
+    const delimiter = alignment === 'center' ? ':-----:' : '------:';
+    expect(codec.serialize({doc:document})).toBe('| Ready |\n|'+delimiter+'|\n| [x] |');
+  } finally {doc.destroy();}
+});
+
 it('refuses conflicting checkbox flags and task-table items before changing the shared room', () => {
   const doc = new Y.Doc();
   try {

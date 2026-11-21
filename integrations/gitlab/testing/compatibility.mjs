@@ -490,6 +490,11 @@ export function compareGitLabCompatibility(original,fountain){
         && item.restoredFlag === true ? {...item, savedContent:item.saved?.replace(/\r\n/g, '\n')} : {};
       const left = observe(original, a), right = observe(fountain, b);
       for (const view of [left,right]) {
+        if (input.taskAlignment === 'right') {
+          for (const key of ['editorCheckboxPositions','readerCheckboxPositions']) {
+            if (Array.isArray(view[key])) view[key + 'Right'] = view[key].length === 3 && view[key].every(offset => offset > 0.65 && offset < 1);
+          }
+        }
         if (input.upload?.closeBeforeTransfer && view.pendingUpload?.departure) {
           const {departure,forwardedRequests} = view.pendingUpload;
           view.visibleBeforeClose = departure.visibleBeforeClose;
@@ -533,6 +538,10 @@ export function compareGitLabCompatibility(original,fountain){
         ['cursors', [true,true], 'Both rich editors render the other author’s named caret'],
         ['afterPeerUndo', status, 'Peer undo retains the first author’s edit'],
         ['afterPeerRedo', status + input.peerEdit, 'Peer redo restores the second edit on the first screen'],
+        ...(input.taskAlignment === 'right' ? [
+          ['editorCheckboxPositionsRight',true,'All three checkbox centers lie in the right-hand portion of their authored column while editing'],
+          ['readerCheckboxPositionsRight',true,'The reopened reader places all three checkbox centers on the right'],
+        ] : []),
         ...(input.tableTasks ? [
           ['tableTaskBefore',[false,true,false],'The joining editor sees all three checkbox cells'],
           ['tableTaskUndo',[false,true,false],'Checkbox undo reaches the first author'],

@@ -65,11 +65,17 @@ export function hydrateTaskCells(doc: Node, states: CellStates): Node {
   return result;
 }
 
-export function taskCellParagraph(cell: Node): Node | undefined {
+export function taskCellBody(cell: Node): Node | undefined {
   if (!isCell(cell) || cell.childCount !== 1) return;
   const list = cell.child(0), task = list.content[0], p = task?.content[0];
   if (list.type.name !== 'task_list' || list.childCount !== 1 || task?.type.name !== 'task_item'
     || !task.attrs.gitlabTableItem || task.childCount !== 1 || p?.type.name !== 'paragraph'
     || p.content.some(child => !child.isText || child.text !== '' || child.marks.length)) return;
-  return p.copy([p.type.schema.text(marker(task.attrs.checked as State))]);
+  return p;
+}
+
+export function taskCellParagraph(cell: Node): Node | undefined {
+  const p = taskCellBody(cell);
+  if (!p) return;
+  return p.copy([p.type.schema.text(marker(cell.child(0).child(0).attrs.checked as State))]);
 }

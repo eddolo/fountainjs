@@ -187,6 +187,26 @@ export default {
   font-size: 10px;
   line-height: 1.4;
 }
+.fountain-editor .fountain-gitlab-task[data-gitlab-checkbox-align] {
+  grid-template-columns: 1fr auto max-content;
+  align-items: center;
+  padding-inline-end: 0;
+}
+.fountain-editor [data-gitlab-checkbox-align] > * { grid-row: 1; }
+.fountain-editor [data-gitlab-checkbox-align] > [data-fountain-task-toggle] { grid-column: 3; }
+.fountain-editor [data-gitlab-checkbox-align] > .fountain-task-item__content { grid-column: 1; }
+.fountain-editor [data-gitlab-checkbox-align] > [data-fountain-gitlab-task-state-toggle] {
+  position: static;
+  grid-column: 2;
+}
+.fountain-editor .fountain-gitlab-task[data-gitlab-checkbox-align="center"] {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+.fountain-editor [data-gitlab-checkbox-align="center"] > [data-fountain-task-toggle] { grid-column: 2; }
+.fountain-editor [data-gitlab-checkbox-align="center"] > [data-fountain-gitlab-task-state-toggle] {
+  grid-column: 3;
+  justify-self: start;
+}
 .fountain-editor [data-fountain-gitlab-task-state-toggle][aria-pressed="true"] {
   background: #ececef;
   font-weight: 600;
