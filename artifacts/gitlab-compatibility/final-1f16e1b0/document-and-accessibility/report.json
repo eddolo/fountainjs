@@ -1,0 +1,257 @@
+{
+  "checks": [
+    "Frontmatter, equation, Mermaid, issue reference and mention survived a rich edit, Save and reopen with the same link targets and unchanged technical source.",
+    "Actual GitLab controls stay grouped without horizontal overflow at 1440/1100/390px; media actions have distinct rows and separated deletion; keyboard properties, mobile dialog cancellation and toolbar/popup accessibility pass without changing content"
+  ],
+  "errors": [],
+  "passed": true,
+  "dismissedPatchNotices": [
+    "Important notice - Critical patch release"
+  ],
+  "build": {
+    "node": "peer",
+    "gitlab": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+    "fountain": "1f16e1b0abf20468b0d439ea65b0ddd6058240e5",
+    "integration": "62bab23a4d078670b032f65e353e0d36feca43d13ebe3b083b84ae7ca2d08824",
+    "runtime": "345d2f2c4233274201a0247f0fe09858bf6b74e365b1e1c2feae9d8e0986a03b",
+    "browser": "151.0.7922.34"
+  },
+  "document": {
+    "iid": 810,
+    "source": "---\ntitle: Paper\n# Retain comment\ntags:\n  - research\n---\n\nBody **text**.\n\nThe energy is $E = mc^2$ here\n\n```mermaid\ngraph LR\n  Draft-->Review\n```\n\nRelated #75 and @root.\n\nReview pending.",
+    "saved": "---\ntitle: Paper\n# Retain comment\ntags:\n  - research\n---\n\nBody **text**.\n\nThe energy is $E = mc^2$ here\n\n```mermaid\ngraph LR\n  Draft-->Review\n```\n\nRelated #75 and <span>@root</span>.\n\nReview pending. Approved.",
+    "byteExact": false,
+    "mentionUsesSpan": true,
+    "references": {
+      "before": [
+        {
+          "label": "#75",
+          "original": "#75",
+          "type": "issue",
+          "target": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/75"
+        },
+        {
+          "label": "@root",
+          "original": "@root",
+          "type": "user",
+          "target": "http://127.0.0.1:5080/root"
+        }
+      ],
+      "after": [
+        {
+          "label": "#75",
+          "original": "#75",
+          "type": "issue",
+          "target": "http://127.0.0.1:5080/root/fountain-product-integration/-/work_items/75"
+        },
+        {
+          "label": "@root",
+          "original": "@root",
+          "type": "user",
+          "target": "http://127.0.0.1:5080/root"
+        }
+      ]
+    }
+  },
+  "accessibilityIssue": 811,
+  "nativeControlsLayout": {
+    "layouts": [
+      {
+        "width": 1440,
+        "toolbar": {
+          "x": 254,
+          "y": 239,
+          "width": 827,
+          "height": 49
+        },
+        "clipboard": {
+          "attach": {
+            "x": 894,
+            "y": 251,
+            "width": 24,
+            "height": 24
+          },
+          "paste": {
+            "x": 920,
+            "y": 251,
+            "width": 24,
+            "height": 24
+          }
+        },
+        "actions": [
+          {
+            "name": "Edit media properties",
+            "x": 270,
+            "y": 435.5,
+            "width": 382,
+            "height": 32
+          },
+          {
+            "name": "Open media",
+            "x": 270,
+            "y": 471.5,
+            "width": 382,
+            "height": 32
+          },
+          {
+            "name": "Copy media URL",
+            "x": 270,
+            "y": 507.5,
+            "width": 382,
+            "height": 32
+          },
+          {
+            "name": "Replace media file",
+            "x": 270,
+            "y": 543.5,
+            "width": 382,
+            "height": 32
+          },
+          {
+            "name": "Delete media",
+            "x": 270,
+            "y": 596.5,
+            "width": 135,
+            "height": 32
+          }
+        ],
+        "overflow": 0,
+        "accessibilityScans": 2,
+        "accessibility": []
+      },
+      {
+        "width": 1100,
+        "toolbar": {
+          "x": 22,
+          "y": 239,
+          "width": 719,
+          "height": 75
+        },
+        "clipboard": {
+          "attach": {
+            "x": 35,
+            "y": 281,
+            "width": 24,
+            "height": 24
+          },
+          "paste": {
+            "x": 61,
+            "y": 281,
+            "width": 24,
+            "height": 24
+          }
+        },
+        "actions": [
+          {
+            "name": "Edit media properties",
+            "x": 38,
+            "y": 461.5,
+            "width": 382,
+            "height": 32
+          },
+          {
+            "name": "Open media",
+            "x": 38,
+            "y": 497.5,
+            "width": 382,
+            "height": 32
+          },
+          {
+            "name": "Copy media URL",
+            "x": 38,
+            "y": 533.5,
+            "width": 382,
+            "height": 32
+          },
+          {
+            "name": "Replace media file",
+            "x": 38,
+            "y": 569.5,
+            "width": 382,
+            "height": 32
+          },
+          {
+            "name": "Delete media",
+            "x": 38,
+            "y": 622.5,
+            "width": 135,
+            "height": 32
+          }
+        ],
+        "overflow": 0,
+        "accessibilityScans": 2,
+        "accessibility": []
+      },
+      {
+        "width": 390,
+        "toolbar": {
+          "x": 14,
+          "y": 260,
+          "width": 347,
+          "height": 350.5
+        },
+        "clipboard": {
+          "attach": {
+            "x": 22,
+            "y": 328,
+            "width": 24,
+            "height": 24
+          },
+          "paste": {
+            "x": 48,
+            "y": 328,
+            "width": 24,
+            "height": 24
+          }
+        },
+        "actions": [
+          {
+            "name": "Edit media properties",
+            "x": 22,
+            "y": 408.5,
+            "width": 331,
+            "height": 32
+          },
+          {
+            "name": "Open media",
+            "x": 22,
+            "y": 444.5,
+            "width": 331,
+            "height": 32
+          },
+          {
+            "name": "Copy media URL",
+            "x": 22,
+            "y": 480.5,
+            "width": 331,
+            "height": 32
+          },
+          {
+            "name": "Replace media file",
+            "x": 22,
+            "y": 516.5,
+            "width": 331,
+            "height": 32
+          },
+          {
+            "name": "Delete media",
+            "x": 22,
+            "y": 569.5,
+            "width": 135,
+            "height": 32
+          }
+        ],
+        "overflow": 0,
+        "accessibilityScans": 1,
+        "accessibility": []
+      }
+    ],
+    "documentUnchanged": true,
+    "keyboardProperties": true
+  },
+  "quickAction": {
+    "iid": 813,
+    "state": "closed",
+    "description": "Review complete."
+  }
+}

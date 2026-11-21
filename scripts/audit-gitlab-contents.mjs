@@ -44,7 +44,9 @@ export async function runContents({ page, side, project, request, fixture, runId
     await expect(outline).toContainText(input.heading);
     item.outlineBefore = await outline.innerText();
     const heading = editor.locator('h2').filter({hasText:input.heading});
-    await heading.click();
+    const touch = await page.evaluate(() => navigator.maxTouchPoints > 0);
+    if (touch) await heading.tap();
+    else await heading.click();
     await page.keyboard.press('End');
     await page.keyboard.insertText(input.suffix);
     const revised = input.heading + input.suffix;
@@ -52,7 +54,9 @@ export async function runContents({ page, side, project, request, fixture, runId
     await expect(outline).toContainText(revised);
     item.outlineAfter = await outline.innerText();
     if (side === 'fountain') {
-      await outline.getByRole('button',{name:revised,exact:true}).click();
+      const entry = outline.getByRole('button',{name:revised,exact:true});
+      if (touch) await entry.tap();
+      else await entry.click();
       item.navigatedTo = await editor.evaluate(root => {
         const anchor = root.ownerDocument.getSelection()?.anchorNode;
         return (anchor?.parentElement?.closest('h2') || (anchor?.nodeType === 1 && anchor.closest('h2')))?.textContent;

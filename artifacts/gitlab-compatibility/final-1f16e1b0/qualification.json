@@ -1,0 +1,587 @@
+{
+  "candidate": "1f16e1b0abf20468b0d439ea65b0ddd6058240e5",
+  "runtimeSHA256": "345d2f2c4233274201a0247f0fe09858bf6b74e365b1e1c2feae9d8e0986a03b",
+  "integrationSHA256": "62bab23a4d078670b032f65e353e0d36feca43d13ebe3b083b84ae7ca2d08824",
+  "gitlabRevision": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+  "upstream": {
+    "passedSuites": 23,
+    "passedTests": 522,
+    "skippedTests": 1
+  },
+  "upstreamReport": {
+    "path": "artifacts/gitlab-compatibility/final-1f16e1b0/upstream-jest.json",
+    "sha256": "3d62ff26e6b22e54aecf85d1d7e27117cbcf0d44f2d52ca807ece52146228a8b"
+  },
+  "evidence": {
+    "install.json": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0/install.json",
+      "sha256": "4170c7b752d29e4bc94e68eff246a07ac6f6265cbeec031551eec23b04563acc"
+    },
+    "roundtrip.json": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0/roundtrip.json",
+      "sha256": "6e6fb262d11d2bb9e2eea44db03021f7b340473d9aba92eba8eaa1912dfb2343"
+    },
+    "document-and-accessibility/report.json": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0/document-and-accessibility/report.json",
+      "sha256": "516d1b03d5fa9a078fb2add793a0fa20c8587095f41a90e525fa8f1b55a0c30b"
+    },
+    "showcase.json": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0/showcase.json",
+      "sha256": "5bf8b964318622643e3a2babf1b9c689971036bdbfeca7443a106dc9815d6e6b"
+    }
+  },
+  "matchedWorkflows": {
+    "outline-new-firefox": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-outline-new-firefox/final/report.json",
+      "sha256": "bd40b310b358a7ac0c68ce490c5e8387bea150ddd87a4efae99b3d96a5023783",
+      "matched": true,
+      "counts": {
+        "parity": 7,
+        "improvement": 6,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 13
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "outline-new-webkit": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-outline-new-webkit/final/report.json",
+      "sha256": "fe009490be0e329c8db9339c904347fb429765c6066e3a0bd09002ce3bcba0c1",
+      "matched": true,
+      "counts": {
+        "parity": 7,
+        "improvement": 6,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 13
+      },
+      "comparisonComplete": false,
+      "featureAcceptance": false,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [
+          "/127.0.0.1:5080/api/v4/users/1 due to access control checks.",
+          "/127.0.0.1:5080/api/v4/users/1/status due to access control checks.",
+          "Error: Network Error"
+        ],
+        "fountain": []
+      }
+    },
+    "outline-firefox": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-outline-firefox/final/report.json",
+      "sha256": "de1156580468dd5ea508b6b7f163bba0eb192b5b6f2cec9851e96415f61f53c9",
+      "matched": true,
+      "counts": {
+        "parity": 6,
+        "improvement": 1,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 7
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "outline-webkit": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-outline-webkit/final/report.json",
+      "sha256": "53563e5069feef93a9f38d68365ac7c44aacea85a662762b3ab7c37dd6a94f0e",
+      "matched": true,
+      "counts": {
+        "parity": 6,
+        "improvement": 1,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 7
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "touch-chrome": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-touch-chrome/final/report.json",
+      "sha256": "a640d9f22efafd04f79140ffe290ca9ad7d26e3c67aab3b4e54078f56e2b9891",
+      "matched": true,
+      "counts": {
+        "parity": 6,
+        "improvement": 1,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 7
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "touch-webkit": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-touch-webkit/final/report.json",
+      "sha256": "7f47c2fddf4d9043c94237d31235c6585869e86bc1df35c4c9b77966b3af2802",
+      "matched": true,
+      "counts": {
+        "parity": 6,
+        "improvement": 1,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 7
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "board": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-board/final/report.json",
+      "sha256": "33a72abde8009d3fb2b1c0d23865debc96ff39f3130e6892f924686ca7c38d4f",
+      "matched": true,
+      "counts": {
+        "parity": 13,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 13
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "mr": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-mr/final/report.json",
+      "sha256": "1b78d19385c081c4cb8082bcc30f8a53618472639987460bb20dab1713d1c099",
+      "matched": true,
+      "counts": {
+        "parity": 16,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 16
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "replies": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-replies/final/report.json",
+      "sha256": "b48cf75ed1b7ad4d2f18e36bcb024f8fb4f17f92c0a931e01b991160528193bd",
+      "matched": true,
+      "counts": {
+        "parity": 17,
+        "improvement": 1,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 18
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "review": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-review/final/report.json",
+      "sha256": "dbf5c7cc9b149bc70b57865a335e5639e6e902f716d5f3735d5667b186ef904b",
+      "matched": true,
+      "counts": {
+        "parity": 63,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 63
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "permissions": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-permissions/final/report.json",
+      "sha256": "1d9739086e391b255fc35e47867f4f867b466b72840662af29c1efb288d255f9",
+      "matched": true,
+      "counts": {
+        "parity": 52,
+        "improvement": 12,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 64
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "concurrent": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-concurrent/final/report.json",
+      "sha256": "a9978ee0670136c0cc819feab1505dd0fad9a355ae21a1a90ec290cc36c9504b",
+      "matched": true,
+      "counts": {
+        "parity": 30,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 1,
+        "incomplete": 0,
+        "total": 31
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": false,
+      "exceptions": [
+        {
+          "label": "Both ordinary Save requests finish without a server error",
+          "classification": "shared-limitation"
+        }
+      ],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "reconnect": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-reconnect/final/report.json",
+      "sha256": "2c50eb330c99e4c385f5eee21fe3fefe74589048a24c0cb7600f4a71ec900580",
+      "matched": true,
+      "counts": {
+        "parity": 16,
+        "improvement": 2,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 18
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "upload": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-upload/final/report.json",
+      "sha256": "95c541e7eb0c3dfbbb0c9a90b5ce8f91ee83b1161740f0accb884b8ad26ef70a",
+      "matched": true,
+      "counts": {
+        "parity": 15,
+        "improvement": 2,
+        "regression": 0,
+        "shared-limitation": 2,
+        "incomplete": 0,
+        "total": 19
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": false,
+      "exceptions": [
+        {
+          "label": "The wiki API also retains the original line endings",
+          "classification": "shared-limitation"
+        },
+        {
+          "label": "The final revision retains the authored Markdown and line endings after inserting the attachment",
+          "classification": "shared-limitation"
+        }
+      ],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "image": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-image/final/report.json",
+      "sha256": "e1f53be3b911b7e0dfc3e4284976b8c15b1e557306024f4af7c354d841263d6a",
+      "matched": true,
+      "counts": {
+        "parity": 8,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 8
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "table": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-table/final/report.json",
+      "sha256": "ab8ca3f0ef678f711bb579fb72577593c7ae5cd5bce2f38185254c8084e6a3ef",
+      "matched": true,
+      "counts": {
+        "parity": 14,
+        "improvement": 2,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 16
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "composers": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-composers/verified/report.json",
+      "sha256": "3530921350469fb05b0156c00f1e1632693f905cc32246ca41c61cbe69f57e63",
+      "matched": true,
+      "counts": {
+        "parity": 46,
+        "improvement": 0,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 46
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "history": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-history/verified/report.json",
+      "sha256": "64d13fc7c86affc92fe009cefde52841837c6f6d4badd3713725bb66d03794b9",
+      "matched": true,
+      "counts": {
+        "parity": 40,
+        "improvement": 6,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 46
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    },
+    "upload-exact": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0-upload-exact/final/report.json",
+      "sha256": "f78c079b27d506ca0008b2f6173cbff96f9042808ef3af926526dc791e5183a4",
+      "matched": true,
+      "counts": {
+        "parity": 15,
+        "improvement": 4,
+        "regression": 0,
+        "shared-limitation": 0,
+        "incomplete": 0,
+        "total": 19
+      },
+      "comparisonComplete": true,
+      "featureAcceptance": true,
+      "exceptions": [],
+      "browserErrors": {
+        "original": [],
+        "fountain": []
+      }
+    }
+  },
+  "sequentialDeployments": {
+    "final-8991f40b-composers/prepared-1": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-composers/prepared-1/report.json",
+      "sha256": "0d4f5693f06e15348e3d1d2472bbe7490e40f445feb17b73af1e3e18c614b23e",
+      "side": "prepared",
+      "collected": true,
+      "errors": [],
+      "rollback": true,
+      "observations": [
+        {
+          "id": "description-and-comment",
+          "status": "observed",
+          "stage": "reopen-both-records"
+        },
+        {
+          "id": "description-before-comment",
+          "status": "observed",
+          "stage": "reopen-both-records"
+        }
+      ]
+    },
+    "final-8991f40b-outline-handover/fountain-1": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-outline-handover/fountain-1/report.json",
+      "sha256": "831cfc37e1f23a62d6f0dacc642d95d41cf8cb0eb73894be9972b89787a0cf5e",
+      "side": "fountain",
+      "collected": true,
+      "errors": [],
+      "rollback": null,
+      "observations": [
+        {
+          "id": "outline-handover",
+          "status": "observed",
+          "stage": "ready-for-rollback"
+        }
+      ]
+    },
+    "final-8991f40b-outline-handover/original-1": {
+      "path": "artifacts/gitlab-compatibility/final-8991f40b-outline-handover/original-1/report.json",
+      "sha256": "c6b6b906b40459c07b5f1d15451c8f43d2323af5f6f6c402fcd4f2744910dce5",
+      "side": "original",
+      "collected": true,
+      "errors": [],
+      "rollback": null,
+      "observations": [
+        {
+          "id": "outline-handover",
+          "status": "observed",
+          "stage": "complete"
+        }
+      ]
+    },
+    "final-1f16e1b0-wiki-upload-handover/fountain-1": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0-wiki-upload-handover/fountain-1/report.json",
+      "sha256": "f94aa6b5d12cb45ddb5ef49827e96c1786effb6c04a84fdb8d98138f311ac3b8",
+      "side": "fountain",
+      "collected": true,
+      "errors": [],
+      "rollback": null,
+      "observations": [
+        {
+          "id": "pending-wiki-attachment",
+          "status": "observed",
+          "stage": "complete"
+        }
+      ]
+    },
+    "final-1f16e1b0-aligned/fountain-1": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0-aligned/fountain-1/report.json",
+      "sha256": "27578a114f064b369898d60fb04f1c9c0b8d02410eccc61501a60fb689be61ae",
+      "side": "fountain",
+      "collected": true,
+      "errors": [],
+      "rollback": null,
+      "observations": [
+        {
+          "id": "merge-center-aligned-gates",
+          "status": "observed",
+          "stage": null
+        },
+        {
+          "id": "merge-right-aligned-gates",
+          "status": "observed",
+          "stage": null
+        }
+      ]
+    },
+    "final-1f16e1b0-aligned/prepared-1": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0-aligned/prepared-1/report.json",
+      "sha256": "7141ad668fb1a0cfee0d63b6251bdcb994d9db15973534577c26a5c786180760",
+      "side": "prepared",
+      "collected": true,
+      "errors": [],
+      "rollback": true,
+      "observations": [
+        {
+          "id": "merge-center-aligned-gates",
+          "status": "observed",
+          "stage": null
+        },
+        {
+          "id": "merge-right-aligned-gates",
+          "status": "observed",
+          "stage": null
+        }
+      ]
+    },
+    "final-1f16e1b0-footnote/fountain-1": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0-footnote/fountain-1/report.json",
+      "sha256": "0653846f31b6ef45fb456fdf458c0d56fa544a231438e8b4bae6a005a0688061",
+      "side": "fountain",
+      "collected": true,
+      "errors": [],
+      "rollback": null,
+      "observations": [
+        {
+          "id": "reference-and-appendix",
+          "status": "observed",
+          "stage": "complete"
+        }
+      ]
+    },
+    "final-1f16e1b0-footnote/original-1": {
+      "path": "artifacts/gitlab-compatibility/final-1f16e1b0-footnote/original-1/report.json",
+      "sha256": "d3359d8989700c2c71c11290f3b2372418f771c48431b691012de73767f2235f",
+      "side": "original",
+      "collected": true,
+      "errors": [],
+      "rollback": null,
+      "observations": [
+        {
+          "id": "reference-and-appendix",
+          "status": "observed",
+          "stage": "complete"
+        }
+      ]
+    }
+  },
+  "deployment": {
+    "rollout": {
+      "path": "artifacts/gitlab-compatibility/wiki-two-nodes-rollout-20261121213638802/report.json",
+      "sha256": "cfa95731f174146504d8e400ac998aa79a5d134a8d344761209e9d79f3c467c8"
+    },
+    "rollback": {
+      "path": "artifacts/gitlab-compatibility/wiki-two-nodes-rollback-20261121214151350/report.json",
+      "sha256": "67e4288254a993df8a98ce45f71315d8a42c30904e170ca6d6c203f1756a2f44"
+    },
+    "sameWiki": "Fountain-two-node-rollout-20261121213638802",
+    "unchangedIssue": 1,
+    "unchangedIssueSHA256": "3effda5c8165b9d4a95e264a948d339c81c486ea7ab080387a926449938a730b"
+  },
+  "external": {
+    "physicalMobile": "Needs verification — environment unavailable",
+    "hostedStaging": "Needs verification — environment unavailable"
+  }
+}

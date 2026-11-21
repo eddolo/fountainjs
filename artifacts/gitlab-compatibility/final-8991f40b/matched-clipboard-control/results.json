@@ -1,0 +1,23 @@
+[
+  {
+    "engine": "webkit",
+    "matches": false,
+    "expectedLength": 30,
+    "receivedLength": 0,
+    "observations": [
+      {
+        "type": "copy",
+        "length": 30
+      },
+      {
+        "type": "paste",
+        "length": 0,
+        "types": [
+          "text/plain",
+          "text/uri-list",
+          "text/html"
+        ]
+      }
+    ]
+  }
+]

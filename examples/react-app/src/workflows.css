@@ -6,6 +6,11 @@
 .workflow-heading > p:last-child, .task-heading > p:last-child { max-width: 830px; font-size: 17px; line-height: 1.7; color: #5c5668; }
 .workflow-grid { max-width: 1450px; margin: auto; padding: 12px clamp(20px,5vw,72px) 60px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
 .workflow-card { display: flex; flex-direction: column; padding: 32px; background: white; border: 1px solid #d7d0e4; border-top: 5px solid #6542d5; border-radius: 12px; }
+#gitlab-comparison { scroll-margin-top: 8rem; }
+.workflow-more .workflow-comparison-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.5rem; }
+.workflow-comparison-images figure { min-width: 0; margin: 0; }
+.workflow-comparison-images figcaption { margin-bottom: .5rem; font-weight: 600; }
+.workflow-comparison-images img { display: block; width: 100%; height: auto; }
 .workflow-card--task { border-top-color: #137659; }
 .workflow-card h2 { font-size: 30px; letter-spacing: -.035em; margin: 20px 0 10px; }
 .workflow-card > p, .workflow-card li { font-size: 16px; line-height: 1.7; }

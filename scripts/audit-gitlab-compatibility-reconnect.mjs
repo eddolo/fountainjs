@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { join } from 'node:path';
+import { observePage } from './gitlab-audit-editor.mjs';
 
 function descriptionMutation(req) {
   if (new URL(req.url()).pathname !== '/api/graphql' || req.method() !== 'POST') return;
@@ -18,7 +19,7 @@ async function runCase({side, runId, project, request, page, output, onProgress}
   const context = await page.context().browser().newContext({storageState:await page.context().storageState(),
     viewport:{width:1280,height:900}, locale:'en-US',timezoneId:'UTC',recordVideo:{dir:output}});
   const actor = await context.newPage();
-  actor.on('pageerror', error => result.pageErrors.push(error.message));
+  await observePage(actor,result);
   actor.on('requestfailed', req => {
     const description = descriptionMutation(req);
     if (typeof description === 'string') result.failures.push({description, error:req.failure()?.errorText});

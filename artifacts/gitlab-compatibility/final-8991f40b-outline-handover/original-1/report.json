@@ -1,0 +1,614 @@
+{
+  "formatVersion": 2,
+  "buildIdentity": {
+    "side": "original",
+    "expected": {
+      "gitlabVersion": "19.5.3",
+      "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615"
+    },
+    "observed": {
+      "editor": "ProseMirror",
+      "integrationSHA256": null,
+      "runtimeSHA256": null,
+      "manifestSHA256": "8198a3fa9feab7a59f708cc2ff97dc0256501d391b843dc575a08234cbc61504",
+      "scripts": [
+        {
+          "path": "/assets/webpack/0dcf7166.fee24f6c.chunk.js",
+          "browserSHA256": "60628f5a436d0dca5e2f020f363e80dc8be815367061b4a17da8b97334f99b2e",
+          "deployedSHA256": "60628f5a436d0dca5e2f020f363e80dc8be815367061b4a17da8b97334f99b2e"
+        },
+        {
+          "path": "/assets/webpack/50d780ac.dc829e6f.chunk.js",
+          "browserSHA256": "4084592a280262ce2221cff3c7571da90f5ec91a3fe7e5c9f00ffa0607955e38",
+          "deployedSHA256": "4084592a280262ce2221cff3c7571da90f5ec91a3fe7e5c9f00ffa0607955e38"
+        },
+        {
+          "path": "/assets/webpack/6b30d853.22266848.chunk.js",
+          "browserSHA256": "4d6fcad270b71f586bb4744c6cac73cd0e054cee405aafed9bf942483d37ea00",
+          "deployedSHA256": "4d6fcad270b71f586bb4744c6cac73cd0e054cee405aafed9bf942483d37ea00"
+        },
+        {
+          "path": "/assets/webpack/8632254b.bbb48efe.chunk.js",
+          "browserSHA256": "174e8ee2737b0054549b8eb4708cb86bdc7bdd822299cdecbfea79dfead62787",
+          "deployedSHA256": "174e8ee2737b0054549b8eb4708cb86bdc7bdd822299cdecbfea79dfead62787"
+        },
+        {
+          "path": "/assets/webpack/8fcdb888.3328a406.chunk.js",
+          "browserSHA256": "c54120af43a5d32d9c6df52bdd8eae6b6596cdefcb2ec12e56fdce4255d1784d",
+          "deployedSHA256": "c54120af43a5d32d9c6df52bdd8eae6b6596cdefcb2ec12e56fdce4255d1784d"
+        },
+        {
+          "path": "/assets/webpack/af66d122.d929aab6.chunk.js",
+          "browserSHA256": "31b8757f37d2a4b1093f8c745f1d143ad8fd928f8bb2c552bff86d731cf0eebb",
+          "deployedSHA256": "31b8757f37d2a4b1093f8c745f1d143ad8fd928f8bb2c552bff86d731cf0eebb"
+        },
+        {
+          "path": "/assets/webpack/cec769ff.82e507cf.chunk.js",
+          "browserSHA256": "429b75f7b02eae2a935674ea5b627173c74cfa927c1fe014b976c59955c4a971",
+          "deployedSHA256": "429b75f7b02eae2a935674ea5b627173c74cfa927c1fe014b976c59955c4a971"
+        },
+        {
+          "path": "/assets/webpack/commons-graphql_explorer-pages.admin.application_settings.service_accounts-pages.admin.applications--b635524d.b3338b4b.chunk.js",
+          "browserSHA256": "b5ddfc03cb01c31f151176c33f7b53f2fded871d5107d0657dc114d3606242a2",
+          "deployedSHA256": "b5ddfc03cb01c31f151176c33f7b53f2fded871d5107d0657dc114d3606242a2"
+        },
+        {
+          "path": "/assets/webpack/commons-initGFMInput-pages.admin.organizations.settings.general-pages.admin.organizations.settings.g-9b13c352.4bfbb026.chunk.js",
+          "browserSHA256": "0d3b2e34bc1be84d687b597d85879a0eb636491ca314dd0752047e4f9a698cd2",
+          "deployedSHA256": "0d3b2e34bc1be84d687b597d85879a0eb636491ca314dd0752047e4f9a698cd2"
+        },
+        {
+          "path": "/assets/webpack/commons-initGFMInput-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.-bffa2291.801ef5c8.chunk.js",
+          "browserSHA256": "a3a3f53f2e9a3eb5f769d33b8bea04c5b48240e11c89443985b09bae9cc07ef6",
+          "deployedSHA256": "a3a3f53f2e9a3eb5f769d33b8bea04c5b48240e11c89443985b09bae9cc07ef6"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.abuse_reports-pages.admin.abuse_reports.show-pages.admin.groups.index-pages.admi-315b2517.e590656f.chunk.js",
+          "browserSHA256": "bfeceb581cb9548fa238c98be3359f85418821e003cf81f01e1977fbc3f5a1e4",
+          "deployedSHA256": "bfeceb581cb9548fa238c98be3359f85418821e003cf81f01e1977fbc3f5a1e4"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.issues.vue3-pages.dash-5ffc317d.0bcd8c23.chunk.js",
+          "browserSHA256": "934cb817bd1e8709dfc0041c94306da516a0bc2e2b3462e9495e2b0cced8a023",
+          "deployedSHA256": "934cb817bd1e8709dfc0041c94306da516a0bc2e2b3462e9495e2b0cced8a023"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.issues.vue3-pages.dash-f8003152.f196957a.chunk.js",
+          "browserSHA256": "eccd8bf8465106ba4b1d6b85e1c390a2ff11134cf5c887d709862b76bb3a15fe",
+          "deployedSHA256": "eccd8bf8465106ba4b1d6b85e1c390a2ff11134cf5c887d709862b76bb3a15fe"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.abuse_reports.show-pages.dashboard.issues-pages.dashboard.work_items-pages.group-b344e337.050faeee.chunk.js",
+          "browserSHA256": "80ac611196e70abce4fddcbc475864d346da5892bed36478c77fd44b57bd5586",
+          "deployedSHA256": "80ac611196e70abce4fddcbc475864d346da5892bed36478c77fd44b57bd5586"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.application_settings.service_accounts-pages.explore.analytics_dashboards-pages.e-306889d5.8b0f4475.chunk.js",
+          "browserSHA256": "85d6894177f53cdd03ae236b0127d180269cc65adc6a75bf234fcfda6e5ba689",
+          "deployedSHA256": "85d6894177f53cdd03ae236b0127d180269cc65adc6a75bf234fcfda6e5ba689"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.deploy_keys.index-pages.admin.deploy_keys.index.vue3-pages.admin.groups.index-pa-95f4ca76.204c76b4.chunk.js",
+          "browserSHA256": "ac2c2fa6162be75fba132cebdfa9e39e95e0900ba0685bf07ba1593bda409b29",
+          "deployedSHA256": "ac2c2fa6162be75fba132cebdfa9e39e95e0900ba0685bf07ba1593bda409b29"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.organizations.settings.general.vue3-p-12d52578.7bbbd3a2.chunk.js",
+          "browserSHA256": "1f0a66c98fde56a7c02443fdb9921e7d4d750b140d93d6351b1755f06dd3a625",
+          "deployedSHA256": "1f0a66c98fde56a7c02443fdb9921e7d4d750b140d93d6351b1755f06dd3a625"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.organizations.settings.general.vue3-p-94e849a5.56f93b0b.chunk.js",
+          "browserSHA256": "91ae5407df49b9599fb403684a20d8dde0135ab6066b40d19cabb676ea8bd524",
+          "deployedSHA256": "91ae5407df49b9599fb403684a20d8dde0135ab6066b40d19cabb676ea8bd524"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.topics.new-pa-b83f65ef.593ef6a6.chunk.js",
+          "browserSHA256": "d24ac522e166c3f9df0614fd91483a3030e8c25ea965aacf10aa94f94a919ee8",
+          "deployedSHA256": "d24ac522e166c3f9df0614fd91483a3030e8c25ea965aacf10aa94f94a919ee8"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.admin.organizations.settings.general-pages.admin.topics.edit-pages.admin.topics.new-pa-bb1f65b9.47fc7bae.chunk.js",
+          "browserSHA256": "d502802b4550459e837e7fb577d055b90e4414aa9e298a60ce888fcd500023c0",
+          "deployedSHA256": "d502802b4550459e837e7fb577d055b90e4414aa9e298a60ce888fcd500023c0"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.dashboard.home-pages.projects.snippets.show-pages.projects.snippets.show.vue3-pages.ro-3e3d840b.db458a62.chunk.js",
+          "browserSHA256": "57a24656dafc75786382be6707fcd709b69a216fd02565a7decb07e837b59edc",
+          "deployedSHA256": "57a24656dafc75786382be6707fcd709b69a216fd02565a7decb07e837b59edc"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.dashboard.home-pages.registrations.new-pages.root-pages.root.vue3-pages.sessions.new-p-a41aff06.d68c093a.chunk.js",
+          "browserSHA256": "731b4181e37659838b30f40d15555cbefb525cc4aa0e1ae6f11992596c787b38",
+          "deployedSHA256": "731b4181e37659838b30f40d15555cbefb525cc4aa0e1ae6f11992596c787b38"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.groups.merge_requests-pages.groups.merge_requests.vue3-pages.groups.milestones.edit-pa-23d8bf6c.33b0825c.chunk.js",
+          "browserSHA256": "c7befe99471a7fb2c86942f49308b8f0add4550eaa127127ff473effe494d4dd",
+          "deployedSHA256": "c7befe99471a7fb2c86942f49308b8f0add4550eaa127127ff473effe494d4dd"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.groups.saved_views.show-pages.groups.saved_views.show.vue3-pages.groups.work_items-pag-550486f6.9218719f.chunk.js",
+          "browserSHA256": "0b7eb7bf45c54c9c5dd7defe6b8465c2eedce5c2934f10d4c0ee0dbe1e70a444",
+          "deployedSHA256": "0b7eb7bf45c54c9c5dd7defe6b8465c2eedce5c2934f10d4c0ee0dbe1e70a444"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.groups.saved_views.show-pages.groups.work_items-pages.groups.work_items.show-pages.pro-164ac21d.01932e06.chunk.js",
+          "browserSHA256": "9dba0710087f076a9035418972a71a469f8900de5253f67215084b6708183404",
+          "deployedSHA256": "9dba0710087f076a9035418972a71a469f8900de5253f67215084b6708183404"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.projects-pages.projects.activity-pages.projects.activity.vue3-pages.projects.alert_man-376eb50e.11611bcc.chunk.js",
+          "browserSHA256": "2819b4a6ef6d68bd326631d8c74cbbf1e1b4e59f2df3ab971cda8d12ae9c9274",
+          "deployedSHA256": "2819b4a6ef6d68bd326631d8c74cbbf1e1b4e59f2df3ab971cda8d12ae9c9274"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.search.show-pages.search.show.vue3-super_sidebar-super_sidebar.vue3.e1ab1d65.chunk.js",
+          "browserSHA256": "864e2f2561a6fdaf57425542f4d61a50e4fe597581f19734c15842fc319a97b8",
+          "deployedSHA256": "864e2f2561a6fdaf57425542f4d61a50e4fe597581f19734c15842fc319a97b8"
+        },
+        {
+          "path": "/assets/webpack/commons-pages.search.show-super_sidebar.e41625fd.chunk.js",
+          "browserSHA256": "8eca9d8639d079b1c53d9fc6d7d9d18960aa1f80fd207fdfaca52637b2a7553f",
+          "deployedSHA256": "8eca9d8639d079b1c53d9fc6d7d9d18960aa1f80fd207fdfaca52637b2a7553f"
+        },
+        {
+          "path": "/assets/webpack/commons-super_sidebar-super_sidebar.vue3.e38d27a4.chunk.js",
+          "browserSHA256": "0c183f0c046747b3f2534b7a2ab28a94d35b2fe6740d9a1cbd481121b9f4a056",
+          "deployedSHA256": "0c183f0c046747b3f2534b7a2ab28a94d35b2fe6740d9a1cbd481121b9f4a056"
+        },
+        {
+          "path": "/assets/webpack/content_editor.49fdd8e0.chunk.js",
+          "browserSHA256": "1b59e1d51b37085c09ce0ca7b06e9bc2c2fd48f1884fe58575dc96535879943c",
+          "deployedSHA256": "1b59e1d51b37085c09ce0ca7b06e9bc2c2fd48f1884fe58575dc96535879943c"
+        },
+        {
+          "path": "/assets/webpack/f9f13fd0.2f09c304.chunk.js",
+          "browserSHA256": "a9d8a7fd29f87a408eec57f2a7424cbc7ce8229b2144a1df62489aa943bba65f",
+          "deployedSHA256": "a9d8a7fd29f87a408eec57f2a7424cbc7ce8229b2144a1df62489aa943bba65f"
+        },
+        {
+          "path": "/assets/webpack/global_search_modal.f7aa2163.chunk.js",
+          "browserSHA256": "dc6ae1e96e187f3e84fc110d11ad9edea9ee7e3b1b3dccb7277cf2c6b7c4f98f",
+          "deployedSHA256": "dc6ae1e96e187f3e84fc110d11ad9edea9ee7e3b1b3dccb7277cf2c6b7c4f98f"
+        },
+        {
+          "path": "/assets/webpack/hello.0063a1cb.chunk.js",
+          "browserSHA256": "f9f0adcbf9ac1ee0735624524c7340829e5779adc065f62f49097d0ed399d9e5",
+          "deployedSHA256": "f9f0adcbf9ac1ee0735624524c7340829e5779adc065f62f49097d0ed399d9e5"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersModal.227c3a5f.chunk.js",
+          "browserSHA256": "175bc6bb388a517703fba123ced915039244f7fe8107385295c362075bd56940",
+          "deployedSHA256": "175bc6bb388a517703fba123ced915039244f7fe8107385295c362075bd56940"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersTrigger.d59e549b.chunk.js",
+          "browserSHA256": "56331f0b6477b521f7871717dac9d8755f55c5c656b2de0db5345f4abb3b1915",
+          "deployedSHA256": "56331f0b6477b521f7871717dac9d8755f55c5c656b2de0db5345f4abb3b1915"
+        },
+        {
+          "path": "/assets/webpack/main.02b8bf31.chunk.js",
+          "browserSHA256": "65ec37e9bcbc79a60c68df12e1572a6a7628a9e1b2d48ce7ec159dc3b36d9da4",
+          "deployedSHA256": "65ec37e9bcbc79a60c68df12e1572a6a7628a9e1b2d48ce7ec159dc3b36d9da4"
+        },
+        {
+          "path": "/assets/webpack/pages.projects.work_items.aa84d846.chunk.js",
+          "browserSHA256": "25c5e5b4729ddf97c64b30d1873c3d2539bd2dd9576bb576ed359d61d127a010",
+          "deployedSHA256": "25c5e5b4729ddf97c64b30d1873c3d2539bd2dd9576bb576ed359d61d127a010"
+        },
+        {
+          "path": "/assets/webpack/prosemirror.04be8805.chunk.js",
+          "browserSHA256": "2759329fffd876e0752b362b93230f0aca48bf90090609428a37ee56e896a267",
+          "deployedSHA256": "2759329fffd876e0752b362b93230f0aca48bf90090609428a37ee56e896a267"
+        },
+        {
+          "path": "/assets/webpack/runtime.ea79027a.bundle.js",
+          "browserSHA256": "87500039b7aa4577224bdaefefb08825e878d72daa46274858992e9179e4a7d4",
+          "deployedSHA256": "87500039b7aa4577224bdaefefb08825e878d72daa46274858992e9179e4a7d4"
+        },
+        {
+          "path": "/assets/webpack/shortcutsBundle.45faa6aa.chunk.js",
+          "browserSHA256": "dd60126d0563e7efdf1656b92af46b0eee111b850c29ab3f38470f9c906a4712",
+          "deployedSHA256": "dd60126d0563e7efdf1656b92af46b0eee111b850c29ab3f38470f9c906a4712"
+        },
+        {
+          "path": "/assets/webpack/super_sidebar.ff1bc863.chunk.js",
+          "browserSHA256": "3d1d62fd9a55fdfaacd8bfc9c32fbb376e1716e7b65edb9ef5da2a5738f15e0c",
+          "deployedSHA256": "3d1d62fd9a55fdfaacd8bfc9c32fbb376e1716e7b65edb9ef5da2a5738f15e0c"
+        },
+        {
+          "path": "/assets/webpack/tracker.1eb446cb.chunk.js",
+          "browserSHA256": "f5d412f20f2dc1e36ac9208908410dcbb97c6a88114cbc3d5377a593b3fb7a68",
+          "deployedSHA256": "f5d412f20f2dc1e36ac9208908410dcbb97c6a88114cbc3d5377a593b3fb7a68"
+        }
+      ]
+    }
+  },
+  "runId": "final-8991f40b-outline-handover",
+  "attempt": 1,
+  "side": "original",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "contents-handover",
+  "restartRequested": false,
+  "draftRollbackRequested": false,
+  "mixedWiki": false,
+  "wikiRollout": false,
+  "writerPaste": false,
+  "rollbackRequested": false,
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-contents-handover.json",
+  "fixtureHash": "7d7c1f1e130f9636aaed7067edebacc309a03f50f39f99400993bc490677f4e0",
+  "fixture": {
+    "formatVersion": 1,
+    "workflow": "reopen-a-fountain-outline-after-packaged-gitlab-rollback",
+    "cases": [
+      {
+        "id": "outline-handover",
+        "scope": "contents-handover",
+        "title": "Outline rollback",
+        "note": "Draft the outline before adding headings.",
+        "heading": "Release handoff",
+        "body": "Confirm the release owner.",
+        "addition": "The reviewer confirmed the owner."
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "outline-handover",
+      "input": {
+        "id": "outline-handover",
+        "scope": "contents-handover",
+        "title": "Outline rollback",
+        "note": "Draft the outline before adding headings.",
+        "heading": "Release handoff",
+        "body": "Confirm the release owner.",
+        "addition": "The reviewer confirmed the owner."
+      },
+      "iid": 829,
+      "status": "observed",
+      "stage": "complete",
+      "initial": "[[_TOC_]]\n\n<p data-fountain-empty=\"text\"></p>\n\nDraft the outline before adding headings.",
+      "withoutHeading": "[[_TOC_]]\n\n<p data-fountain-empty=\"text\"></p>\n\nDraft the outline before adding headings.\n\nThe reviewer confirmed the owner.",
+      "withHeading": "[[_TOC_]]\n\n<p data-fountain-empty=\"text\"></p>\n\nDraft the outline before adding headings.\n\nThe reviewer confirmed the owner.\n\n## Release handoff",
+      "readerLinks": [
+        "Release handoff"
+      ],
+      "editorProof": {
+        "native": false,
+        "className": "tiptap ProseMirror rte-text-box"
+      }
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "e161a7e3d8d88a58a3506d476ddedab7c01b6e2a7e7ac10438bb7b5e533f07c4",
+    "scripts/verify-gitlab-editor-rollback.mjs": "a66d246c9a87e76703137b7ced18034903fbe16beec1fb2a257652b8b8853622",
+    "scripts/verify-gitlab-suggestion-history-rollback.mjs": "fb66e652a3b5af60c238555927014c162c7f9f1480609674217aa8a54c47a373",
+    "scripts/verify-gitlab-wiki-rollback.mjs": "e93b3aed1ab608173ffd8bacb1eebf0191521d618e5908df1329a05ee3d55b68",
+    "scripts/verify-gitlab-restart.mjs": "f88570ad3eb433605bd7339f2d078b2bd942c492d18a0558ef32e6a9edcf06c2",
+    "scripts/verify-gitlab-footnote-rollback.mjs": "497c68aab32d9e67dce5a34344cd50924771eb5be828a1d9c47e3c481efb5b32",
+    "integrations/gitlab/testing/save-gesture.mjs": "4754f1e22b3a588c41f1811b9f2ccbd8a1be0e8854f3df4f370e2d21a236a0c3",
+    "integrations/gitlab/testing/build-identity.mjs": "df61267b499214ec6cb3e670a446ce788dba78966ccb64c7156a785fc3be528c",
+    "scripts/audit-gitlab-compatibility-composers.mjs": "e026bc0dd05dcfebf20c50939d1bdd8a9280ea2956c55440191613977e88b441",
+    "scripts/audit-gitlab-saved-replies.mjs": "5b7863ff49ead70e41bab928d9e4f682f4b4cc497534948ad9fb19e159ed5fe1",
+    "scripts/audit-gitlab-issue-board.mjs": "1bf44124532370c32effb81a6fb09ec712b8fa2e9faa3d8b5b03860698ae8b93",
+    "scripts/audit-gitlab-mr-create.mjs": "f38761becab69cc55b8ac3a1d94352634fa9afdcbdbefbb6d110aaa85a74cb7d",
+    "scripts/verify-gitlab-mr-handover.mjs": "64c1b8e9c81494fec68e6eb408bdd164fe64b9a784b4737f4712780a7970ebc8",
+    "integrations/gitlab/testing/observe-mr-navigation.mjs": "5c87d10b6e7fd8771cd421c698644b38cffbcc2ed549124ad15458de09dd312b",
+    "scripts/gitlab-audit-editor.mjs": "07450c50f667c441ba12e601ea5add14997357b1aa58df2ae97569e8a68e374a",
+    "scripts/audit-gitlab-wiki-history.mjs": "8327a9aae1d84dcc5b2fe3be866e748ae67ad3fb51cf1392421897a420bef840",
+    "scripts/audit-gitlab-wiki-rename.mjs": "2e86e7733cc7f95ac77c1708d5692ffcbfd7149f230577858cf76642f2adab9c",
+    "scripts/audit-gitlab-compatibility-quick-save.mjs": "8cb17709efdb43d9df60a522d2fb90c3e2e0f60f1bfb7483ae6565d70169d8fc",
+    "scripts/audit-gitlab-compatibility-reconnect.mjs": "5cc2a4345a68f64353cfd366dbe0d06e4e2bc385183defcb88c9812f53ecc17f",
+    "scripts/audit-gitlab-compatibility-access.mjs": "2eba7a5f34e75944f56cb8789c0fb4eb861493249f3a5acba43bb5d3de06c592",
+    "scripts/audit-gitlab-offline-conflict.mjs": "3a959a11c5e9b91d38f48a1e0eb7cf2c294f563ee79f56bdbd5495239196acdf",
+    "scripts/audit-gitlab-simultaneous-issues.mjs": "6bb7d74d0bb0008de9a00c6db4864400de2c6155ef15c9f9620f5b9506c4a69d",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "277024a259238694df0f0f1e52d667ee9316a0dad8955258702163cec76950a6",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "4036c302767749662667d0987ec8441a37c5b89a2166b6991db39f7411b07212",
+    "scripts/audit-gitlab-concurrent-review.mjs": "8ecc2e2f91c05a00b5a55f60dffc5044245390d0b4b4de1cf6d3826aec3780e2",
+    "scripts/audit-gitlab-batch-review.mjs": "dbd74b5e00c7fe875c584d9a79839d00281653e5665c31a51f1eca2196b80826",
+    "scripts/audit-gitlab-reviewer-handoff.mjs": "3ff850b42fcc4f73fdde22f8d68decff4424b14e96a68e7c59d500eebc4dd55e",
+    "scripts/audit-gitlab-suggestion-history.mjs": "558fb85acd3aea288e81cd39b90983cc4272b0a2fa1a59d1e6bd3f26511fcc0e",
+    "scripts/gitlab-audit-member.mjs": "d72d2d7a08b6111fd4ced3e62e86349a5188769b1008373d23bac90433356675",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "26a16006b2a6dcad81afa41a2905c6229d4a03a12c746887066d9d9e0afac6b3",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "ed61d7f58e3d365b7a92a4cf9b970106373251e6380cfadbcae3fcc69952d8d2",
+    "scripts/audit-gitlab-contents.mjs": "68110297cdd5daa315ed22148eab3e53378f12a52fe11d1a85b4685390e5675f",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "2d772f975228d1824b3fed550ada452d00719a94c7c4eb43632de780630a2ed5",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "c84c64884a3063a56b1e32df26384a11bbc0571b0aebf4f7b84eca9bb5ea1c3f"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [],
+    "backendEnvironmentHash": "bbf9d40a1bb19c6a29c51fa8a118b830aff9d2d8fc5dcf537dc7911f25686239",
+    "assetSelector": "packaged-default",
+    "cpus": 2000000000,
+    "memory": 4294967296,
+    "puma": {
+      "minThreads": 2,
+      "maxThreads": 4,
+      "workers": 0
+    }
+  },
+  "browser": {
+    "engine": "chromium",
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 16,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 17,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 18,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 19,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 20,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 21,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 22,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 23,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 24,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 25,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 26,
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "exitCode": 0
+    }
+  ],
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb"
+    ]
+  },
+  "frontendManifests": [
+    "008e6f1d990965db5abffb6739a39f06c463de8e681c761315e84f836db4b802  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.json",
+    "36ebdd7dddd055eb892ff6ef5538947e463db218d3051c33cd04d304101030b9  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "buildProbeIssue": {
+    "iid": 528,
+    "descriptionSHA256": "5b3653ca1b1b87c589da22d2b2b8f459b77ab7bfbb04d01f7d6cc2597825a3eb"
+  },
+  "contentsHandoverSource": {
+    "path": "../fountain-1/report.json",
+    "sha256": "831cfc37e1f23a62d6f0dacc642d95d41cf8cb0eb73894be9972b89787a0cf5e",
+    "build": {
+      "gitlabVersion": "19.5.3",
+      "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+      "packageVersion": "0.5.0-beta.2",
+      "fountainRevision": "1f16e1b0abf20468b0d439ea65b0ddd6058240e5",
+      "runtimeSHA256": "345d2f2c4233274201a0247f0fe09858bf6b74e365b1e1c2feae9d8e0986a03b",
+      "integrationSHA256": "62bab23a4d078670b032f65e353e0d36feca43d13ebe3b083b84ae7ca2d08824"
+    }
+  },
+  "dismissedPatchNotices": [
+    "Important notice - Critical patch release"
+  ],
+  "collectionComplete": true
+}

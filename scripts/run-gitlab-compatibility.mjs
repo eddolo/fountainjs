@@ -9,7 +9,7 @@ import {verifySuggestionHistoryRollback} from './verify-gitlab-suggestion-histor
 import {observePage} from './gitlab-audit-editor.mjs';
 import {verifyGitLabRollback} from './verify-gitlab-editor-rollback.mjs';
 import {buildIdentityError, describeBuild, observeEditorBuild, preparedRollbackTree, wikiUploadReplayTree, alignedCheckboxRollbackTree} from '../integrations/gitlab/testing/build-identity.mjs';
-import {chromium,firefox,webkit,expect} from '@playwright/test';
+import {chromium,firefox,webkit,devices,expect} from '@playwright/test';
 import {readGitLabAuditCredential} from './gitlab-audit-credentials.mjs';
 import {loggerStartupFailure,waitForGitLabDeployment} from './gitlab-deployment-readiness.mjs';
 import {runGitLabAccessCompatibility} from './audit-gitlab-compatibility-access.mjs';
@@ -47,6 +47,12 @@ const browserName=process.argv.includes('--browser')?value('--browser'):'chromiu
 const browsers = {chromium, firefox, webkit};
 if (!Object.hasOwn(browsers,browserName)) throw new Error('Use --browser chromium, firefox or webkit.');
 const browserType = browsers[browserName];
+const mobile = process.argv.includes('--mobile');
+if (mobile && (suite !== 'contents' || !['chromium','webkit'].includes(browserName))) {
+  throw new Error('Mobile emulation uses the existing contents workflow in Chromium or WebKit.');
+}
+const deviceName = mobile ? (browserName === 'chromium' ? 'Pixel 7' : 'iPhone 15') : null;
+const {defaultBrowserType, ...device} = mobile ? devices[deviceName] : {viewport:{width:1280,height:900},deviceScaleFactor:1};
 const side=value('--editor'),runId=value('--run-id'),attempt=process.argv.includes('--attempt')?Number(value('--attempt')):1;
 if(!['suggestions','review-history','batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff','deletions','reviews','stale-reviews','relocated-reviews','concurrent-reviews','clipboard','partial','crossblock','wrapped','paint','grid','merged-grid','header-grid','writer-import','table-authoring','merged-table-tasks','table-checkbox-recovery','contents','contents-authoring','contents-handover','linked-image','footnote-labels','custom-label','tasks','task-recovery','task-menu','task-conversion','task-containers','conflicts','access','access-removal','composers','saved-replies','board-issues','mr-create','mr-create-member','mr-review-handover','quick-save','reconnect','offline-conflict','concurrent-issues','wiki-history','wiki-restore-conflict','wiki-restore-authors','wiki-restore-role','wiki-rename','wiki-titles','wiki-collaboration'].includes(suite)||!['original','fountain','prepared'].includes(side)||!process.argv.includes('--run-id')||!/^[a-z0-9][a-z0-9-]{0,60}$/u.test(runId)||!Number.isSafeInteger(attempt)||attempt<1||attempt>99)
  throw new Error('Usage: --editor original|fountain|prepared --run-id safe-id [--attempt 1..99] [--verify-rollback] [--verify-restart] [--browser chromium|firefox|webkit] [--suite suggestions|review-history|batch-reviews|multi-file-reviews|review-invalidation|overlap-reviews|reviewer-handoff|deletions|reviews|stale-reviews|relocated-reviews|concurrent-reviews|clipboard|partial|crossblock|wrapped|paint|grid|merged-grid|header-grid|writer-import|table-authoring|merged-table-tasks|table-checkbox-recovery|contents|contents-authoring|contents-handover|linked-image|footnote-labels|custom-label|tasks|task-recovery|task-menu|task-conversion|task-containers|conflicts|access|access-removal|composers|saved-replies|board-issues|mr-create|mr-create-member|mr-review-handover|quick-save|reconnect|offline-conflict|concurrent-issues|wiki-history|wiki-restore-conflict|wiki-restore-authors|wiki-restore-role|wiki-rename|wiki-titles|wiki-collaboration]');
@@ -144,7 +150,7 @@ if (preparedRollback || wikiFallback) {
  const source = resolve(value(wikiFallback ? '--wiki-upload-rollback-source' : '--prepared-source'));
  const git = (...args) => execFileSync('git',['-C',source,...args],{encoding:'utf8'}).trim();
  const sourceTree = git('write-tree');
- const allowedTrees = wikiFallback ? [wikiUploadReplayTree] : [preparedRollbackTree, wikiUploadReplayTree, alignedCheckboxRollbackTree];
+ const allowedTrees = wikiFallback ? [wikiUploadReplayTree, alignedCheckboxRollbackTree] : [preparedRollbackTree, wikiUploadReplayTree, alignedCheckboxRollbackTree];
  if (source !== git('rev-parse','--show-toplevel') || git('rev-parse','HEAD') !== pin.commit ||
      !allowedTrees.includes(sourceTree) || git('diff','--name-only') || git('ls-files','--others','--exclude-standard'))
    throw new Error('The prepared rollback requires the pinned GitLab checkout with all staged rollback patches.');
@@ -198,8 +204,13 @@ const docker=(...args)=>execFileSync('docker',args,{env,encoding:'utf8',timeout:
 const containerName='fountain-gitlab-integration-baseline-1';
 if (wikiPartialUpload) enableUploadIngressReceipt(compose,env,docker,resolve(root,'integrations/gitlab/runtime/compose.upload-ingress.yaml'));
 const prior=JSON.parse(docker('inspect',containerName))[0];
-if(prior.State.Running||prior.Config.Labels['com.docker.compose.project']!=='fountain-gitlab-integration'||prior.Config.Image!==pin.image)
- throw new Error('Stop the known isolated task deployment before switching editor modes.');
+const reuse = process.argv.includes('--use-running-deployment');
+if (reuse && (restartRequested || draftRollbackRequested || wikiRollout || preparedRollback || rollbackFrom || checkFootnotes ||
+    process.argv.includes('--verify-rollback') || process.argv.includes('--footnote-handover') || ['contents-handover','mr-review-handover'].includes(suite))) {
+  throw new Error('Deployment transitions require exclusive use of the stopped acceptance deployment.');
+}
+if(prior.State.Running !== reuse || prior.Config.Labels['com.docker.compose.project']!=='fountain-gitlab-integration'||prior.Config.Image!==pin.image)
+ throw new Error('Expected the pinned local container, running only for --use-running-deployment.');
 const footnoteHandover = process.argv.includes('--footnote-handover');
 if (footnoteHandover && suite !== 'footnote-labels') throw new Error('Use --footnote-handover with --suite footnote-labels.');
 let mrHandoverFrom, mrHandoverReceipt;
@@ -238,7 +249,10 @@ const report={formatVersion:2,buildIdentity:{side,expected:expectedBuild,observe
  suite,restartRequested,draftRollbackRequested,mixedWiki,wikiRollout,...(wikiFallback ? {abandonWikiUpload} : {}),writerPaste,rollbackRequested:Boolean(rollbackCandidate),fixturePath,fixtureHash:hash(fixtureBytes),fixture,observations:[],errors:[],classification:null,
  harnessHashes:Object.fromEntries(await Promise.all(['scripts/run-gitlab-compatibility.mjs','scripts/verify-gitlab-editor-rollback.mjs','scripts/verify-gitlab-suggestion-history-rollback.mjs','scripts/verify-gitlab-wiki-rollback.mjs','scripts/verify-gitlab-restart.mjs','scripts/verify-gitlab-footnote-rollback.mjs','integrations/gitlab/testing/save-gesture.mjs','integrations/gitlab/testing/build-identity.mjs','scripts/audit-gitlab-compatibility-composers.mjs','scripts/audit-gitlab-saved-replies.mjs','scripts/audit-gitlab-issue-board.mjs','scripts/audit-gitlab-mr-create.mjs','scripts/verify-gitlab-mr-handover.mjs','integrations/gitlab/testing/observe-mr-navigation.mjs','scripts/gitlab-audit-editor.mjs','scripts/audit-gitlab-wiki-history.mjs','scripts/audit-gitlab-wiki-rename.mjs','scripts/audit-gitlab-compatibility-quick-save.mjs','scripts/audit-gitlab-compatibility-reconnect.mjs','scripts/audit-gitlab-compatibility-access.mjs','scripts/audit-gitlab-offline-conflict.mjs','scripts/audit-gitlab-simultaneous-issues.mjs','scripts/audit-gitlab-compatibility-conflicts.mjs','scripts/audit-gitlab-compatibility-suggestions.mjs','scripts/audit-gitlab-concurrent-review.mjs','scripts/audit-gitlab-batch-review.mjs','scripts/audit-gitlab-reviewer-handoff.mjs','scripts/audit-gitlab-suggestion-history.mjs','scripts/gitlab-audit-member.mjs','scripts/audit-gitlab-compatibility-clipboard.mjs','scripts/audit-gitlab-compatibility-partial.mjs','scripts/audit-gitlab-compatibility-paint.mjs','scripts/audit-gitlab-compatibility-grid.mjs',...(writerPaste || writerImport ? ['scripts/audit-gitlab-writer-paste.py'] : []),...(suite === 'wiki-collaboration' ? ['scripts/audit-gitlab-wiki-collaboration.mjs','scripts/audit-gitlab-wiki-pending-upload.mjs','scripts/gitlab-partial-wiki-transfer.mjs'] : []),...(wikiPartialUpload ? ['integrations/gitlab/runtime/compose.upload-ingress.yaml'] : []),...(suite === 'custom-label' ? ['scripts/audit-gitlab-custom-label.mjs','integrations/gitlab/testing/issue_label_host.js'] : []),...(suite === 'footnote-labels' ? ['scripts/audit-gitlab-footnote-labels.mjs'] : []),...(suite === 'linked-image' ? ['scripts/audit-gitlab-linked-image.mjs'] : []),...(['contents','contents-authoring','contents-handover'].includes(suite) ? ['scripts/audit-gitlab-contents.mjs'] : []),...(['merged-table-tasks','table-checkbox-recovery'].includes(suite) ? ['scripts/audit-gitlab-merged-table-tasks.mjs','integrations/gitlab/testing/checkbox-rollback.mjs'] : []),...(suite === 'table-authoring' ? ['scripts/audit-gitlab-table-authoring.mjs'] : []),...(writerImport ? ['scripts/audit-gitlab-writer-import.mjs'] : []),'scripts/audit-gitlab-compatibility-tasks.mjs','scripts/audit-gitlab-compatibility-task-recovery.mjs','scripts/gitlab-deployment-readiness.mjs','scripts/audit-gitlab-compatibility-task-menu.mjs','scripts/audit-gitlab-compatibility-task-conversion.mjs'].map(async path=>[path,hash(await readFile(resolve(root,path)))])))};
 try{
- started=true;execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
+ if (!reuse) {
+   started=true;
+   execFileSync('docker',[...compose,'up','-d','baseline'],{env,stdio:'inherit',timeout:120000});
+ }
  const deployment=JSON.parse(docker('inspect',containerName))[0];
  if(deployment.Config.Image!==pin.image||deployment.Config.Labels['com.docker.compose.project']!=='fountain-gitlab-integration')throw new Error('Wrong live deployment');
  const assetTarget='/opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack';
@@ -257,10 +271,10 @@ try{
  assetSelector:deployment.Config.Env.find(item=>item.startsWith('ENABLE_RSPACK='))??'packaged-default',cpus:deployment.HostConfig.NanoCpus,memory:deployment.HostConfig.Memory};
  const credential=readGitLabAuditCredential(args=>docker('exec','-i',containerName,...args));
  if(!credential)throw new Error('No isolated task credential.');
- browser=await browserType.launch({headless:!(writerPaste || writerImport)});const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezoneId:'UTC'});
+ browser=await browserType.launch({headless:!(writerPaste || writerImport)});const context=await browser.newContext({...device,locale:'en-US',timezoneId:'UTC'});
  const permissions=['clipboard','partial','crossblock','wrapped','grid','merged-grid','header-grid'].includes(suite)?['clipboard-read','clipboard-write']:[];
  if(permissions.length)await context.grantPermissions(permissions,{origin:'http://127.0.0.1:5080'});
- const page=await context.newPage();report.browser={engine:browser.browserType().name(),version:browser.version(),viewport:{width:1280,height:900},deviceScaleFactor:1,locale:'en-US',timezone:'UTC',platform:process.platform,arch:process.arch,permissions};
+ const page=await context.newPage();report.browser={engine:browser.browserType().name(),version:browser.version(),viewport:device.viewport,deviceScaleFactor:device.deviceScaleFactor,...(mobile ? {emulatedDevice:deviceName,hasTouch:device.hasTouch,userAgent:device.userAgent} : {}),locale:'en-US',timezone:'UTC',platform:process.platform,arch:process.arch,permissions};
  report.startup=[];
  const waitUntilReady = (observations,retryLoggerExit) => waitForGitLabDeployment({retryLoggerExit,readState:()=>JSON.parse(docker('inspect','--format','{{json .State}}',containerName)),
   probe:async()=>(await page.request.get('http://127.0.0.1:5080/users/sign_in',{timeout:5000})).status(),
@@ -280,7 +294,8 @@ try{
    docker('start',containerId);
    return true;
  });
- await waitForBoot(report,deployment.Id);
+ if (reuse) await waitUntilReady(report.startup);
+ else await waitForBoot(report,deployment.Id);
  if (filter) {
    const digest = docker('exec',containerName,'sha256sum',filter.destination).split(/\s/u)[0];
    expect(digest).toBe(side==='fountain'?filter.patched:filter.original);

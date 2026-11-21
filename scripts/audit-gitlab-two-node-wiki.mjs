@@ -21,7 +21,8 @@ const args = process.argv.slice(2);
 const checklist = args.includes('--wiki-checklist');
 const failover = args.includes('--load-balancer');
 const keepTab = failover || args.includes('--keep-tab-open');
-const switches = args.filter(arg=>arg!=='--wiki-checklist' && arg!=='--keep-tab-open' && arg!=='--load-balancer');
+const previousArg = args.find(arg=>arg.startsWith('--previous-rollout='));
+const switches = args.filter(arg=>arg!==previousArg && arg!=='--wiki-checklist' && arg!=='--keep-tab-open' && arg!=='--load-balancer');
 assert.ok(switches.length<=1 && switches.every(arg=>['--rollback','--rollout'].includes(arg)), 'Use --rollback or --rollout with optional --wiki-checklist and --keep-tab-open or --load-balancer');
 const fixture = await readJSON('integrations/gitlab/fixtures/compatibility-wiki-'+(checklist?'checklist':'collaboration')+'.json');
 const input = fixture.cases[0];
@@ -31,6 +32,22 @@ const initialSide = direction==='rollback' ? 'fountain' : 'original';
 const finalSide = direction==='rollback' ? 'original' : 'fountain';
 const out = 'artifacts/gitlab-compatibility/wiki-two-nodes-' + direction + '-' + id;
 await mkdir(out, {recursive:true});
+let previousRollout;
+if (previousArg) {
+  assert.ok(failover && direction==='rollback' && !checklist);
+  const path = previousArg.slice('--previous-rollout='.length);
+  assert.match(path,/^artifacts\/gitlab-compatibility\/wiki-two-nodes-rollout-[0-9]+\/report\.json$/u);
+  const previous = await readJSON(path);
+  assert.ok(previous.passed && previous.direction==='rollout' && previous.continuedEditing?.side==='fountain');
+  for (const node of ['baseline','peer']) {
+    const destination = previous.nodes.filter(entry=>entry.node===node).at(-1);
+    assert.equal(destination.side,'fountain');
+    assert.equal(buildIdentityError(destination),null);
+    assert.equal(destination.buildIdentity.observed.integrationSHA256,install.integrationSHA256);
+  }
+  previousRollout = {path,slug:previous.wikiSlug,source:previous.continuedEditing.storedMarkdown};
+  assert.ok(previousRollout.slug && previousRollout.source);
+}
 const report = {direction,keepTab,checks:[],nodes:[],errors:[],passed:false,fixtureSHA256:sha256(JSON.stringify(fixture)),
   harnessSHA256:sha256(await readFile(new URL(import.meta.url)))};
 const docker = (...args) => execFileSync('docker', args, {encoding:'utf8',timeout:360000,maxBuffer:16*1024*1024});
@@ -154,6 +171,24 @@ try {
   await identify('baseline',owner,baselineSide);
   const admin = await peerBrowser.newPage({storageState:ownerState});
   await identify('peer',admin,initialSide);
+  // Carry the same pre-existing issue through each deployment independently of the new wiki draft.
+  const issuesPath = '/api/v4/projects/'+project.id+'/issues';
+  const [existingIssue] = await request(issuesPath+'?scope=all&order_by=created_at&sort=asc&per_page=1');
+  assert.ok(existingIssue && existingIssue.project_id===project.id);
+  const referencePath = issuesPath+'/'+existingIssue.iid;
+  const recordHash = issue => sha256(JSON.stringify([issue.id,issue.title,issue.description]));
+  report.existingIssue = {iid:existingIssue.iid,sha256:recordHash(existingIssue),reads:[]};
+  async function checkExistingIssue(tab,node,stage) {
+    const read = await tab.evaluate(async path=>{
+      const response = await fetch(path,{cache:'no-store'});
+      return {status:response.status,requestID:response.headers.get('x-request-id'),issue:await response.json()};
+    },referencePath);
+    assert.equal(read.status,200);
+    assert.equal(recordHash(read.issue),report.existingIssue.sha256);
+    report.existingIssue.reads.push({node,stage,requestID:receipt(node,read.requestID)});
+  }
+  await checkExistingIssue(owner,'baseline','mixed deployment');
+  await checkExistingIssue(admin,'peer','mixed deployment');
   const member = await prepareGitLabAuditMember({request,project,fixture});
   const members = '/api/v4/projects/'+project.id+'/members';
   const existing = (await request(members+'?query='+fixture.username)).find(user=>user.id===member.account.id);
@@ -175,8 +210,13 @@ try {
   const wikis = '/api/v4/projects/'+project.id+'/wikis';
   const wiki = await request(wikis,{title:'Fountain two-node '+direction+' '+id,content:input.source,format:'markdown'});
   const url = project.web_url+'/-/wikis/'+encodeURIComponent(wiki.slug);
-  const saved = async () => (await request(wikis+'/'+encodeURIComponent(wiki.slug))).content;
-  const editor = async (tab,node,side) => {
+  const saved = async (slug=wiki.slug) => (await request(wikis+'/'+encodeURIComponent(slug))).content;
+  if (previousRollout) {
+    assert.equal(await saved(previousRollout.slug),previousRollout.source);
+    report.previousRollout = {receipt:previousRollout.path,wikiSlug:previousRollout.slug,
+      savedSourceSHA256:sha256(previousRollout.source)};
+  }
+  const editor = async (tab,node,side,pageURL=url) => {
     const room = {node,side,events:[]};
     (report.editors ??= []).push(room);
     tab.on('websocket', socket => socket.on('framereceived', ({payload}) => {
@@ -187,7 +227,7 @@ try {
       const kind = frame.type ?? frame.message?.type;
       if (['init','confirm_subscription','reject_subscription'].includes(kind)) room.events.push(kind);
     }));
-    const response = await tab.goto(url);
+    const response = await tab.goto(pageURL);
     report.checks.push({node,wikiReaderRequest:receipt(node,await response.headerValue('x-request-id'))});
     await tab.getByTestId('wiki-edit-button').click();
     return openRich(tab.locator('form.wiki-form'),side);
@@ -252,6 +292,7 @@ try {
   const ownerLine = surface => paragraphText(surface.locator('p').first());
   if (!keepTab) await peer.close();
   docker('stop','--time','30',name('peer'));
+  await checkExistingIssue(owner,'baseline','peer offline');
   const during = ' Edited during '+direction+'.';
   await append(owner,first,during);
   await shows(first,both+during);
@@ -380,6 +421,29 @@ try {
     report.proxy.returnedPeerRequest = receipt('peer',await returning.headerValue('x-request-id'));
     await expect(returned.getByTestId('wiki-page-content').locator('p').last()).toHaveText(finalText);
     await expect(returned.getByTestId('wiki-page-content').locator('p').first()).toHaveText('Owner: Sam.'+localNote);
+    // Prove the deployed editor can continue this record after the switch.
+    const slug = previousRollout?.slug ?? wiki.slug;
+    const continuedURL = project.web_url+'/-/wikis/'+encodeURIComponent(slug);
+    const originalSource = previousRollout ? previousRollout.source.replaceAll('\r\n','\n') : expected;
+    const priorLine = originalSource.trimEnd().split('\n').at(-1);
+    const finalEditor = await editor(returned,'peer',finalSide,continuedURL);
+    await shows(finalEditor,priorLine);
+    const continuation = ' Continued after '+direction+'.';
+    await append(returned,finalEditor,continuation);
+    await shows(finalEditor,priorLine+continuation);
+    await returned.getByTestId('wiki-submit-button').click();
+    const finalConfirmation = returned.getByTestId('wiki-confirm-message');
+    const finalReader = returned.getByTestId('wiki-page-content');
+    await expect(finalConfirmation.or(finalReader).first()).toBeVisible();
+    if (await finalConfirmation.isVisible()) await finalConfirmation.click();
+    await expect(finalReader.locator('p').last()).toHaveText(priorLine+continuation);
+    const stored = await saved(slug);
+    assert.equal(stored.replaceAll('\r\n','\n'),originalSource.replace(priorLine,priorLine+continuation));
+    await owner.goto(continuedURL);
+    await expect(owner.getByTestId('wiki-page-content').locator('p').last()).toHaveText(priorLine+continuation);
+    await checkExistingIssue(returned,'peer','both nodes on destination build');
+    await checkExistingIssue(owner,'baseline','both nodes on destination build');
+    report.continuedEditing = {wikiSlug:slug,side:finalSide,writerNode:'peer',readerNode:'baseline',storedMarkdown:stored};
   }
   const survivor=inspect('baseline');
   assert.equal(survivor.Id,baseline.Id);

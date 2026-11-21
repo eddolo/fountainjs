@@ -1,6 +1,6 @@
 # GitLab application integration
 
-For the release decision, see the [verified workflows, open cases, replacement blockers and safe GitLab limitations](COMPATIBILITY_SUITE_PLAN.md). Select the rollback drill for the content on the pinned GitLab CE 19.5.3 deployment:
+The local GitLab CE 19.5.3 flagship is complete on FountainJS build `1f16e1b0`. Physical mobile and hosted staging await verification. The [six-gate ledger and exact-build evidence](COMPATIBILITY_SUITE_PLAN.md) record the sign-off and accepted GitLab limitations. Select the rollback drill for the content on the pinned GitLab CE 19.5.3 deployment:
 
 - For issue descriptions with aligned checkbox tables, use the [prepared Tiptap build and four-issue rollback drill](runtime/README.md#reproduce-rollback-of-aligned-issue-checkboxes). The earlier five-patch fallback rewrote untouched Markdown during a mode switch. [Observed failures and verified replacement](COMPATIBILITY_GRID_RESULTS.md#rollback-of-aligned-issue-checkboxes).
 - For an issue with a table of contents and no headings, use [Markdown during the packaged GitLab handover](runtime/README.md#roll-back-an-issue-with-a-table-of-contents-and-no-headings). A rich-text Save on stock GitLab can drop the directive. Add and save the first heading in Markdown before returning to rich text.

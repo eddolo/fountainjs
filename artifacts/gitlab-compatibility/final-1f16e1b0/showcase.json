@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "screens": [
+    {
+      "width": 1440,
+      "images": 2,
+      "download": "gitlab-firefox-outline-comparison.md",
+      "viewportOverflow": false
+    },
+    {
+      "width": 390,
+      "images": 2,
+      "download": "gitlab-firefox-outline-comparison.md",
+      "viewportOverflow": false
+    }
+  ]
+}

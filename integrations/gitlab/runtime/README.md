@@ -68,14 +68,15 @@ For rollout, start the surviving baseline with Fountain. For rollback, start it 
 
 ```sh
 docker compose -f integrations/gitlab/runtime/compose.yaml -f integrations/gitlab/runtime/compose.frontend.yaml up -d --wait baseline
-node scripts/audit-gitlab-two-node-wiki.mjs --rollout --load-balancer
+node scripts/audit-gitlab-two-node-wiki.mjs --rollout --load-balancer | tee rollout.log
+rollout_receipt=$(node -e "const r=JSON.parse(require('node:fs').readFileSync('rollout.log','utf8').trim().split(/\\n/).at(-1)); if(!r.passed)process.exit(1); console.log(r.out+'/report.json')") || exit 1
 docker compose -f integrations/gitlab/runtime/compose.yaml stop -t 150 baseline
 docker compose -f integrations/gitlab/runtime/compose.yaml up -d --wait baseline
-node scripts/audit-gitlab-two-node-wiki.mjs --rollback --load-balancer
+node scripts/audit-gitlab-two-node-wiki.mjs --rollback --load-balancer --previous-rollout="$rollout_receipt"
 docker compose -f integrations/gitlab/runtime/compose.yaml stop -t 150 baseline
 ```
 
-Inspect `proxy.handshakes` for the initial and reconnected cable upstreams, and `proxy.save` for the serving Workhorse request ID while the peer was stopped. The saved source and reader must contain both authors' edits. After the replacement becomes healthy, a fresh browser opens the same revision on the preferred node. This test exercises application-node loss with a healthy shared data tier.
+Inspect `proxy.handshakes` for the initial and reconnected cable upstreams, and `proxy.save` for the serving Workhorse request ID while the peer was stopped. The saved source and reader must contain both authors' edits. After the replacement becomes healthy, a fresh browser opens the same revision on the preferred node. Both nodes also read the same pre-existing issue, and the survivor reads it with its peer offline. The issue ID, title and description hash must match. The rollout saves a further edit on the returned Fountain node. Passing that receipt to rollback verifies the entire saved wiki source before editing, opens the same wiki on the returned stock node, and saves another edit. The surviving node verifies its source through the API and displays the edit to a reader. This test exercises application-node loss with a healthy shared data tier.
 
 ### Reproduce two authors editing a wiki checklist
 
