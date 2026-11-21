@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { prepareGitLabAuditMember } from './gitlab-audit-member.mjs';
 import { editorProof, observePage, openRich } from './gitlab-audit-editor.mjs';
 
-export async function runWikiCollaboration({page, request, project, fixture, side, runId, output}) {
+export async function runWikiCollaboration({page, request, project, fixture, side, runId, output, switchDraftToStock}) {
   const [input] = fixture.cases;
   const item = {id:input.id, input, stage:'setup', status:'incomplete', pageErrors:[]};
   const flag = 'wiki_collaborative_editing';
@@ -39,15 +39,25 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
     item.slug = wiki.slug;
     const url = project.web_url + '/-/wikis/' + encodeURIComponent(wiki.slug);
     const read = async () => (await request(wikis + '/' + encodeURIComponent(wiki.slug))).content;
-    async function edit(tab) {
+    async function edit(tab, editorSide = side) {
+      const roomEvents = [];
+      (item.roomEvents ??= []).push(roomEvents);
+      tab.on('websocket', socket => socket.on('framereceived', ({payload}) => {
+        if (typeof payload !== 'string' || roomEvents.length >= 12) return;
+        let frame;
+        try { frame = JSON.parse(payload); } catch { return; }
+        if (!frame.identifier?.includes('CollaborativeEditing::WikiPageChannel')) return;
+        const kind = frame.type ?? frame.message?.type;
+        if (['init','confirm_subscription','reject_subscription'].includes(kind)) roomEvents.push(kind);
+      }));
       await tab.goto(url);
       await tab.getByTestId('wiki-edit-button').click();
-      return openRich(tab.locator('form.wiki-form'), side);
+      return openRich(tab.locator('form.wiki-form'), editorSide);
     }
     async function paragraphText(paragraph) {
       return paragraph.evaluate(element => {
         const content = element.cloneNode(true);
-        for (const cursor of content.querySelectorAll('.collaboration-cursor-caret[aria-hidden="true"]')) cursor.remove();
+        for (const cursor of content.querySelectorAll('.collaboration-cursor-caret[aria-hidden="true"],.fountain-collaboration-caret[data-fountain-collaborator]')) cursor.remove();
         return content.textContent;
       });
     }
@@ -83,6 +93,23 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
       .catch(error => { if (error.name !== 'TimeoutError') throw error; })));
     item.ownerSeesPeer = await firstAvatar.isVisible();
     item.peerSeesOwner = await peerAvatar.isVisible();
+    // Fountain paints carets in a body overlay. Verify the peer's label intersects this editor.
+    async function peerCursorVisible(editor, name) {
+      return editor.evaluate((root, peerName) => {
+        const bounds = root.getBoundingClientRect();
+        const labels = [...root.querySelectorAll('.collaboration-cursor-label'),
+          ...root.ownerDocument.querySelectorAll('[data-fountain-overlay-widgets] [data-fountain-overlay-label]')];
+        return labels.some(label => {
+          if (label.textContent.trim() !== peerName || !label.checkVisibility()) return false;
+          const box = label.getBoundingClientRect();
+          return box.width > 0 && box.height > 0 && box.bottom > bounds.top && box.top < bounds.bottom
+            && box.right > bounds.left && box.left < bounds.right;
+        });
+      }, name);
+    }
+    const cursors = [() => peerCursorVisible(first,identity.name),() => peerCursorVisible(other,owner.name)];
+    await Promise.all(cursors.map(visible => expect.poll(visible,{timeout:5000}).toBe(true).catch(() => {})));
+    item.cursors = await Promise.all(cursors.map(visible => visible()));
     item.stage = 'peer-edit-and-local-undo';
     await append(peer, peerStatus, input.peerEdit);
     const both = 'Status: ready.' + input.ownerEdit + input.peerEdit;
@@ -117,10 +144,77 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
     await expect(peerReader).toContainText(both);
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
+    if (switchDraftToStock) {
+      item.stage = 'unsaved-draft-before-rollback';
+      const rollback = item.rollback = {};
+      const writer = await edit(page);
+      const witness = await edit(peer);
+      const draft = both + ' Pending rollback review.';
+      await append(page,writer.locator('p').filter({hasText:'Status:'}),' Pending rollback review.');
+      await expect.poll(() => paragraphText(witness.locator('p').filter({hasText:'Status:'}))).toBe(draft);
+      rollback.fountain = await editorProof(writer);
+      expect(rollback.fountain.native).toBe(true);
+      expect(await read()).toBe(item.saved);
+      rollback.unsaved = draft;
+      await writer.screenshot({path:join(output,'unsaved-before-rollback.png')});
+      // Leave no native tab connected that could reseed the room after the restart.
+      await Promise.all([page.goto('about:blank'),peer.goto('about:blank')]);
+      item.stage = 'reopen-live-room-on-stock';
+      await switchDraftToStock({wikiSlug:item.slug});
+      expect((await readFlag()).gates.find(value => value.key === 'actors')?.value).toEqual(item.gate);
+      expect(await read()).toBe(item.saved);
+      const clean = await page.context().browser().newContext();
+      try {
+        const restored = await clean.newPage();
+        await member.signInMember(restored,{});
+        await observePage(restored,item);
+        const editor = await edit(restored,'original');
+        rollback.stock = await editorProof(editor);
+        expect(rollback.stock.native).toBe(false);
+        const status = editor.locator('p').filter({hasText:'Status:'});
+        await expect.poll(() => paragraphText(status),{timeout:20000}).toBe(draft);
+        await expect(editor.locator('strong')).toHaveText('Sam');
+        rollback.recovered = await paragraphText(status);
+        await editor.screenshot({path:join(output,'stock-recovered-draft.png')});
+        await append(restored,status,' Published.');
+        await restored.getByTestId('wiki-submit-button').click();
+        const confirm = restored.getByTestId('wiki-confirm-message');
+        const reader = restored.getByTestId('wiki-page-content');
+        await expect(confirm.or(reader).first()).toBeVisible();
+        if (await confirm.isVisible()) await confirm.click();
+        await expect(reader).toContainText(draft + ' Published.');
+        rollback.saved = await read();
+        expect(rollback.saved).toBe(item.saved + ' Pending rollback review. Published.');
+        await restored.reload();
+        await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
+        await expect(reader.locator('strong')).toHaveText('Sam');
+        rollback.reopened = true;
+      } finally { await clean.close(); }
+    }
     item.status = 'observed';
     item.stage = 'complete';
   } catch (error) {
     item.failure = String(error);
+    if (side === 'fountain') {
+      const failed = page.locator('form.wiki-form [data-fountain-error]').first();
+      if (await failed.count()) item.editorFailure = await failed.evaluate(root => {
+        // Read the local fixture's retained editor error without copying its document or component state.
+        let instance = root.__vue__ || root.__vueParentComponent?.proxy;
+        if (!instance) {
+          let appRoot = root;
+          while (appRoot && !appRoot.__vue_app__) appRoot = appRoot.parentElement;
+          const seen = new Set();
+          function locate(vnode) {
+            if (!vnode || seen.has(vnode)) return;
+            seen.add(vnode);
+            if (vnode.component?.proxy?.$el === root && vnode.component.proxy.failure) return vnode.component.proxy;
+            return locate(vnode.component?.subTree) || (Array.isArray(vnode.children) && vnode.children.map(locate).find(Boolean));
+          }
+          instance = locate(appRoot?.__vue_app__?._container?._vnode);
+        }
+        return {code:root.dataset.fountainError,message:instance?.failure?.message};
+      });
+    }
     item.controls = await page.locator('form.wiki-form').ariaSnapshot({timeout:2000}).catch(() => '');
     await page.screenshot({path:join(output,'interrupted.png')}).catch(() => {});
   } finally {

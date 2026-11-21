@@ -270,7 +270,7 @@ it('requires both editor identities before grading a shared wiki draft or peer u
    report.fixture = fixture;
    const item = report.observations[0];
    Object.assign(item, {id:input.id, input, gate:['Namespaces::UserNamespace:1'], authors:{owner:'Administrator',peer:fixture.accountName},
-     restoredFlag:true, peerEditorProof:item.editorProof, joinedDraft:'Status: ready. Reviewed.',
+     restoredFlag:true, peerEditorProof:item.editorProof, cursors:[true,true], joinedDraft:'Status: ready. Reviewed.',
      afterPeerUndo:'Status: ready. Reviewed.'});
  }
  const result = (key:string) => compareGitLabCompatibility(stock,fountain).rows.find((row:any) => row.invariant === key)?.classification;
@@ -279,6 +279,9 @@ it('requires both editor identities before grading a shared wiki draft or peer u
  expect(result('savedContent')).toBe('parity');
  expect(result('saved')).toBe('improvement');
  expect(result('joinedDraft')).toBe('parity');
+ expect(result('cursors')).toBe('parity');
+ fountain.observations[0].cursors = [true,false];
+ expect(result('cursors')).toBe('regression');
  fountain.observations[0].afterPeerUndo = 'Status: ready.';
  expect(result('afterPeerUndo')).toBe('regression');
  fountain.observations[0].peerEditorProof = stock.observations[0].editorProof;

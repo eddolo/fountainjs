@@ -58,8 +58,8 @@ if (writerPaste || writerImport) {
     throw new Error('Run the Writer test under xvfb-run with a private display and clipboard.');
 }
 const draftRollbackRequested = process.argv.includes('--verify-draft-rollback');
-if (draftRollbackRequested && (suite !== 'mr-create-member' || side !== 'fountain'))
-  throw new Error('Use --verify-draft-rollback with --suite mr-create-member --editor fountain.');
+if (draftRollbackRequested && (!['mr-create-member','wiki-collaboration'].includes(suite) || side !== 'fountain'))
+  throw new Error('Use --verify-draft-rollback with a Fountain member MR or live wiki workflow.');
 const preparedRollback = side === 'prepared';
 if (preparedRollback && (suite !== 'composers' || !process.argv.includes('--verify-rollback') ||
     !process.argv.includes('--prepared-source') || !isAbsolute(value('--prepared-source')) ||
@@ -291,11 +291,32 @@ try{
    const query = "SELECT json_agg(json_build_object('id', id, 'commit', commit_id) ORDER BY relative_order) FROM suggestions WHERE note_id = " + noteId;
    return JSON.parse(docker('exec',containerName,'gitlab-psql','-d','gitlabhq_production','-XAt','-v','ON_ERROR_STOP=1','-c',query));
  }});
- const switchDraftToStock = draftRollbackRequested ? async () => {
+ const switchDraftToStock = draftRollbackRequested ? async ({wikiSlug} = {}) => {
    const inspect = () => JSON.parse(docker('inspect',containerName))[0];
    const running = inspect();
    expect(running.Id).toBe(deployment.Id);
    expect(running.State.Health?.Status).toBe('healthy');
+   let roomKey;
+   const roomLog = id => {
+     const redis = (...args) => docker('exec',id,'gitlab-redis-cli','--raw',...args).trimEnd();
+     const count = Number(redis('LLEN',roomKey));
+     if (!Number.isSafeInteger(count) || count < 1 || count > 2000) throw new Error('Missing or unexpected wiki room update count: ' + count);
+     const updates = redis('LRANGE',roomKey,'0','-1').split('\n');
+     expect(updates).toHaveLength(count);
+     return {count,sha256:hash(updates.join('\n'))};
+   };
+   let checkpoint;
+   if (wikiSlug !== undefined) {
+     if (suite !== 'wiki-collaboration' || !Number.isSafeInteger(project.id)
+       || !/^[A-Za-z0-9-]+$/.test(wikiSlug) || !wikiSlug.endsWith('-fountain-' + runId + '-a' + attempt))
+       throw new Error('Expected this run’s isolated wiki room.');
+     roomKey = 'collaborative_editing:{wiki:Project:' + project.id + ':' + wikiSlug + '}:updates';
+     checkpoint = roomLog(running.Id);
+     // This single-container deployment also restarts Redis. Flush its existing room history
+     // to the named data volume after both test clients have closed and before shutdown.
+     expect(docker('exec',running.Id,'gitlab-redis-cli','--raw','SAVE').trim()).toBe('OK');
+     expect(roomLog(running.Id)).toEqual(checkpoint);
+   }
    docker('stop',running.Id);
    // Recreate only the inspected task service from its stock Compose file. Keep all named volumes.
    const stockCompose = ['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')];
@@ -314,6 +335,10 @@ try{
      deployment:{image:stock.Config.Image,imageId:stock.Image,backendMounts:volumes,backendEnvironmentHash:environmentHash,assetMount:[]}};
    report.draftRollback = receipt;
    await waitForBoot(receipt,stock.Id);
+   if (checkpoint) {
+     receipt.wikiRoom = {before:checkpoint,after:roomLog(stock.Id)};
+     expect(receipt.wikiRoom.after).toEqual(checkpoint);
+   }
    const adminSession = await page.request.get('http://127.0.0.1:5080/api/v4/user');
    receipt.administratorSessionStatus = adminSession.status();
    if (adminSession.status() === 401) await signInAdministrator();

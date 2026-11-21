@@ -494,6 +494,7 @@ export function compareGitLabCompatibility(original,fountain){
         ['joinedDraft', status, 'The joining author receives the first author’s unsaved draft'],
         ['ownerSeesPeer', true, 'The first editor identifies the second author after both move their cursors'],
         ['peerSeesOwner', true, 'The second editor identifies the first author after both move their cursors'],
+        ['cursors', [true,true], 'Both rich editors render the other author’s named caret'],
         ['afterPeerUndo', status, 'Peer undo retains the first author’s edit'],
         ['afterPeerRedo', status + input.peerEdit, 'Peer redo restores the second edit on the first screen'],
         ['savedContent', input.source + input.ownerEdit + input.peerEdit, 'The wiki API stores both edits, paragraphs and original formatting'],

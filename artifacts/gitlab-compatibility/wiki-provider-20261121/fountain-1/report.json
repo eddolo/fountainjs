@@ -1,0 +1,679 @@
+{
+  "formatVersion": 2,
+  "buildIdentity": {
+    "side": "fountain",
+    "expected": {
+      "gitlabVersion": "19.5.3",
+      "gitlabCommit": "0d4c9a9a2fa291df4d2c9be7e07e41e70249b2bf",
+      "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+      "packageVersion": "0.5.0-beta.2",
+      "fountainRevision": "5ed861f6e65efb99a17b188ed9a73f6105d9b155",
+      "runtimeSHA256": "a25b0d376c5629f54a38254b39e46162e7a2ce7df2e9fbdb8e03505f3b5549a4",
+      "integrationSHA256": "81b5416504115160ef1c7fa2c3a4ff22c80877fb43000cd7447fd12f38581320"
+    },
+    "observed": {
+      "editor": "FountainJS",
+      "integrationSHA256": "81b5416504115160ef1c7fa2c3a4ff22c80877fb43000cd7447fd12f38581320",
+      "runtimeSHA256": "a25b0d376c5629f54a38254b39e46162e7a2ce7df2e9fbdb8e03505f3b5549a4",
+      "manifestSHA256": "719caf14fe40b4dbb2a39de02c82217103bf12cb6145dfd394f40a18189b7191",
+      "scripts": [
+        {
+          "path": "/assets/webpack/11477.eb4e3c00.chunk.js",
+          "browserSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93",
+          "deployedSHA256": "81ae9c2c33f755764b4f81fa0a7c368e7ba248ff3a59aa9ac823bc623ab68b93"
+        },
+        {
+          "path": "/assets/webpack/14847.8b5a843b.chunk.js",
+          "browserSHA256": "1338e7d78be6fdd014ffd14739c01ea86f9f244169abf6db7695bc766986b017",
+          "deployedSHA256": "1338e7d78be6fdd014ffd14739c01ea86f9f244169abf6db7695bc766986b017"
+        },
+        {
+          "path": "/assets/webpack/21220.42642502.chunk.js",
+          "browserSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8",
+          "deployedSHA256": "2bca5c31a2cb6f3c59412e7f6936940884684790fe8708748a093a2c8489e2d8"
+        },
+        {
+          "path": "/assets/webpack/26937.37f8dec7.chunk.js",
+          "browserSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6",
+          "deployedSHA256": "ffcb8cf2ca8fd8ade7e274e315a1f8345a300535618f2915fbb996f94642eae6"
+        },
+        {
+          "path": "/assets/webpack/31126.768e9d21.chunk.js",
+          "browserSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a",
+          "deployedSHA256": "06ac42d8cd155220730dbc8d677d735593b18d745069ba96b25fabaebf0d352a"
+        },
+        {
+          "path": "/assets/webpack/31580.e3bf8fed.chunk.js",
+          "browserSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293",
+          "deployedSHA256": "c1d461e36f9f70223ed43da1356768a0a7d7357f22a3d63a9f3f517b09d88293"
+        },
+        {
+          "path": "/assets/webpack/3236.e1f99f2a.chunk.js",
+          "browserSHA256": "e4e508b9a89c15b3bc58acfd188b33ecf7f87b92c0230bfdc1a8384ac180091f",
+          "deployedSHA256": "e4e508b9a89c15b3bc58acfd188b33ecf7f87b92c0230bfdc1a8384ac180091f"
+        },
+        {
+          "path": "/assets/webpack/33480.ce7ca688.chunk.js",
+          "browserSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566",
+          "deployedSHA256": "baa02d8f791c1e336ccdf5d1ab3cdbd916f14e52bb2b880b15f017b7aa889566"
+        },
+        {
+          "path": "/assets/webpack/33816.10488c93.chunk.js",
+          "browserSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14",
+          "deployedSHA256": "64a0c879e7ff18a807d7ce23ffecf1f68ef010959c03547eb34026bfc4311e14"
+        },
+        {
+          "path": "/assets/webpack/33975.2a6859ce.chunk.js",
+          "browserSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b",
+          "deployedSHA256": "cedc2116324eaa3d3443e0da2371b20cc1472f1e8157a2e69a5ec93ec64f5f1b"
+        },
+        {
+          "path": "/assets/webpack/34221.35146945.chunk.js",
+          "browserSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75",
+          "deployedSHA256": "8c66af0ca90b6b1c8dd4d61fb822a23a9e57b1ab63b7f2c2d2e9ecdd9745be75"
+        },
+        {
+          "path": "/assets/webpack/36950.473152a8.chunk.js",
+          "browserSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345",
+          "deployedSHA256": "3fa84e26cacb4b88baa365bb667b22671151de9300e97675ebc41bd00e8d3345"
+        },
+        {
+          "path": "/assets/webpack/381.5a615b5d.chunk.js",
+          "browserSHA256": "6947c74e378e2eca10922fc1831473d9a6099e2f700ae473436dd1c6007195bc",
+          "deployedSHA256": "6947c74e378e2eca10922fc1831473d9a6099e2f700ae473436dd1c6007195bc"
+        },
+        {
+          "path": "/assets/webpack/42297.f805cd32.chunk.js",
+          "browserSHA256": "cc416da431dacedd7ce08dbd6f97a07c579d6500286a1b2c4dc6b81d1cf164a0",
+          "deployedSHA256": "cc416da431dacedd7ce08dbd6f97a07c579d6500286a1b2c4dc6b81d1cf164a0"
+        },
+        {
+          "path": "/assets/webpack/44540.1b3fb37a.chunk.js",
+          "browserSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457",
+          "deployedSHA256": "1ce536111e54b6a3cc6f293e30fcf4aac3a7a31d3062c894356b8f4330eee457"
+        },
+        {
+          "path": "/assets/webpack/48082.f4fb9454.chunk.js",
+          "browserSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea",
+          "deployedSHA256": "1bd72f7770a7819d6f3df7c36c155e3458ba7bd330255e1b93f799c0f6d6beea"
+        },
+        {
+          "path": "/assets/webpack/52199.2635e6eb.chunk.js",
+          "browserSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4",
+          "deployedSHA256": "e707f9ccae85a27d23165c2f7e466b3df3fc4958a8c1751aa2d52d4478d5bea4"
+        },
+        {
+          "path": "/assets/webpack/54908.851e751e.chunk.js",
+          "browserSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278",
+          "deployedSHA256": "ac8f51f3eb67cdf1c38df0678ecffb809dc4ebf6414a11693677d004a068a278"
+        },
+        {
+          "path": "/assets/webpack/56524.a3f2adcc.chunk.js",
+          "browserSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649",
+          "deployedSHA256": "64ac49a4d6a67c7d314cc739d0bce71beffe2a940af33bffd980575810d9b649"
+        },
+        {
+          "path": "/assets/webpack/57920.9012b175.chunk.js",
+          "browserSHA256": "4b6fed1623dd8d29a3bef931659cdddd5b792ca5639676fde8b4858379b7df22",
+          "deployedSHA256": "4b6fed1623dd8d29a3bef931659cdddd5b792ca5639676fde8b4858379b7df22"
+        },
+        {
+          "path": "/assets/webpack/58279.be153399.chunk.js",
+          "browserSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179",
+          "deployedSHA256": "9723b406ab850b010e51dbcac9a74cd0333f96c08deae2909fdd0349bf9dc179"
+        },
+        {
+          "path": "/assets/webpack/60693.4f429d78.chunk.js",
+          "browserSHA256": "6f05a58c8dd688628b57c54e77f7e92ab39a367d95c226f962d66db5031f7000",
+          "deployedSHA256": "6f05a58c8dd688628b57c54e77f7e92ab39a367d95c226f962d66db5031f7000"
+        },
+        {
+          "path": "/assets/webpack/6368.b30463b3.chunk.js",
+          "browserSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e",
+          "deployedSHA256": "6c359de15daea95f191e2cfc37b8f7333898ee7b06fa6b32799f0a49916a1f9e"
+        },
+        {
+          "path": "/assets/webpack/65338.66de7a5c.chunk.js",
+          "browserSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60",
+          "deployedSHA256": "429aabbd593859ea849fe57a81d9efa0ae56a3884706c773f298a07d2145aa60"
+        },
+        {
+          "path": "/assets/webpack/65492.7ba55601.chunk.js",
+          "browserSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364",
+          "deployedSHA256": "5c6c2767176c15468a4186f1cf4aef7204fff41cd18f3997221a2bfaa2841364"
+        },
+        {
+          "path": "/assets/webpack/6620.52ee50e6.chunk.js",
+          "browserSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820",
+          "deployedSHA256": "449a1f0ae6ce97f04cebde2e8e3129df5bac2c883399e237399aca0af7ba2820"
+        },
+        {
+          "path": "/assets/webpack/66210.d86969b9.chunk.js",
+          "browserSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26",
+          "deployedSHA256": "831185625ec97e5772ae119f18dea5a283e81e375dd4225cf926759cff016b26"
+        },
+        {
+          "path": "/assets/webpack/67.0fe3d755.chunk.js",
+          "browserSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780",
+          "deployedSHA256": "3c253a469c152b9f5a138615713978493e39ae27bd02c964140f5a234d059780"
+        },
+        {
+          "path": "/assets/webpack/67755.7a10f0ad.chunk.js",
+          "browserSHA256": "f2a74c2fd479aeaea05c29ff34cd42205dad402f056be6373cb92c6abcebbe55",
+          "deployedSHA256": "f2a74c2fd479aeaea05c29ff34cd42205dad402f056be6373cb92c6abcebbe55"
+        },
+        {
+          "path": "/assets/webpack/68541.222d9bcd.chunk.js",
+          "browserSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece",
+          "deployedSHA256": "6c809cd6153a16e503b8a1bd608ae8a6b08ec6fd97e7e3626c4222c562993ece"
+        },
+        {
+          "path": "/assets/webpack/69513.9df26555.chunk.js",
+          "browserSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f",
+          "deployedSHA256": "e5c8d64a856ab15640ecff028c7eca1882e09174cea959bb7737382fdfeef78f"
+        },
+        {
+          "path": "/assets/webpack/70682.dbea24fb.chunk.js",
+          "browserSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92",
+          "deployedSHA256": "e492997e9b5246e68683295074d232d181873e58160c8b378bf0d39bd511ff92"
+        },
+        {
+          "path": "/assets/webpack/71642.4e382863.chunk.js",
+          "browserSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4",
+          "deployedSHA256": "1cb20e9414e0db68a39fef6928218c10b6ebd1c4077e3dff56ce06a17f45acf4"
+        },
+        {
+          "path": "/assets/webpack/77804.af4827ca.chunk.js",
+          "browserSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1",
+          "deployedSHA256": "f67cb1787a10b4bba003a68300afc5ca2f139b4838446f6c38c483f87419a6d1"
+        },
+        {
+          "path": "/assets/webpack/79164.07015d7a.chunk.js",
+          "browserSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448",
+          "deployedSHA256": "f55597f438260544fd0d8ae2ac2000b91050384f07f39b43ec5221db15c5d448"
+        },
+        {
+          "path": "/assets/webpack/90212.0f7599c8.chunk.js",
+          "browserSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8",
+          "deployedSHA256": "a4ad226421e43a414cf60c2ca351e167d946d10475dbc5c83b31a887f82490e8"
+        },
+        {
+          "path": "/assets/webpack/92505.e2029695.chunk.js",
+          "browserSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18",
+          "deployedSHA256": "82372b95396981ffe707ab821045fd7e5beef7c986689f68bb37194649551c18"
+        },
+        {
+          "path": "/assets/webpack/92967.a943bea6.chunk.js",
+          "browserSHA256": "64744caa51f2d055983d6e7a7b60166e29a23c3aa115015aa7f966d0c4be33e3",
+          "deployedSHA256": "64744caa51f2d055983d6e7a7b60166e29a23c3aa115015aa7f966d0c4be33e3"
+        },
+        {
+          "path": "/assets/webpack/96998.7e4df3c7.chunk.js",
+          "browserSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a",
+          "deployedSHA256": "73d61ecd312fd7303ba71a38578c7f2dae6c53294131be523bf3dcb4f99d214a"
+        },
+        {
+          "path": "/assets/webpack/content_editor.311cf67f.chunk.js",
+          "browserSHA256": "17408cdb1d7ca6eae11a1960036072c362db450dccbd48c8f2b2c7703f55ae5f",
+          "deployedSHA256": "17408cdb1d7ca6eae11a1960036072c362db450dccbd48c8f2b2c7703f55ae5f"
+        },
+        {
+          "path": "/assets/webpack/framework.f13ea082.chunk.js",
+          "browserSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9",
+          "deployedSHA256": "60f8d68e03c59823769b0cf5fe67d0db116bd68e8ccf1c486ee925aa66fcc2b9"
+        },
+        {
+          "path": "/assets/webpack/gitlab_ui.d82b8e33.chunk.js",
+          "browserSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886",
+          "deployedSHA256": "4f96374c4d21475a490909f79de8f28b5b65ec6af9daf9b2812a9a46f0a04886"
+        },
+        {
+          "path": "/assets/webpack/global_search_modal.276667de.chunk.js",
+          "browserSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42",
+          "deployedSHA256": "1896a9ede9a538a12b0ac8f0e55495fce434bf5fcd0d7e3b1bddf5fce3ab9c42"
+        },
+        {
+          "path": "/assets/webpack/hello.61f24ffa.chunk.js",
+          "browserSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab",
+          "deployedSHA256": "59ec8bc375bcdb90bce1b78ae3fe93945da4e8d21e5de08a4b39ba7713bd44ab"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersModal.ed948cf8.chunk.js",
+          "browserSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb",
+          "deployedSHA256": "8f87a0b3a3ebc181bac29a4328c02ec5a5a4bf332aa09f237b096d6f62da78cb"
+        },
+        {
+          "path": "/assets/webpack/initInviteMembersTrigger.cc208be6.chunk.js",
+          "browserSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122",
+          "deployedSHA256": "34c4c4f6505d60415c9de82f71831df3de3f0c6382881683707e343c0ddbd122"
+        },
+        {
+          "path": "/assets/webpack/main.963c66aa.chunk.js",
+          "browserSHA256": "3c9ea7541213561c30d6f343f07b0fbb892c1328a6f0ccbc59916f3d939a3b06",
+          "deployedSHA256": "3c9ea7541213561c30d6f343f07b0fbb892c1328a6f0ccbc59916f3d939a3b06"
+        },
+        {
+          "path": "/assets/webpack/pages.projects.work_items.77dcc690.chunk.js",
+          "browserSHA256": "cf150d76c8ea4b37607c4fc1ddb583d511fa19d9322c7584b169729d6006aa40",
+          "deployedSHA256": "cf150d76c8ea4b37607c4fc1ddb583d511fa19d9322c7584b169729d6006aa40"
+        },
+        {
+          "path": "/assets/webpack/prosemirror.1a81b4c4.chunk.js",
+          "browserSHA256": "b5e7b84a6fcbe7d6cbbee20cdb6b2ab394186a887a8e6283023e19f51f421fbb",
+          "deployedSHA256": "b5e7b84a6fcbe7d6cbbee20cdb6b2ab394186a887a8e6283023e19f51f421fbb"
+        },
+        {
+          "path": "/assets/webpack/runtime.eaba33d1.bundle.js",
+          "browserSHA256": "a448cea96c28a5d82235beb7a5dbc312c3eed64f61e61ebd2a7814d30dbad6c8",
+          "deployedSHA256": "a448cea96c28a5d82235beb7a5dbc312c3eed64f61e61ebd2a7814d30dbad6c8"
+        },
+        {
+          "path": "/assets/webpack/shortcutsBundle.be2e00cb.chunk.js",
+          "browserSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb",
+          "deployedSHA256": "6ae4be6e81d16f585e981721f79ae9ad241e686be5ab93897ff1b715d83283fb"
+        },
+        {
+          "path": "/assets/webpack/super_sidebar.9e4d9270.chunk.js",
+          "browserSHA256": "0f305154681b49b16c9327f94d2d664cedcaa47f3ba8c89f4924eff2aa4edaf7",
+          "deployedSHA256": "0f305154681b49b16c9327f94d2d664cedcaa47f3ba8c89f4924eff2aa4edaf7"
+        },
+        {
+          "path": "/assets/webpack/tracker.e8a6b670.chunk.js",
+          "browserSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858",
+          "deployedSHA256": "f2850cb93a8ff3708b957dca40a14594d0ec2353f79c0ed2ded2562f3a479858"
+        }
+      ]
+    }
+  },
+  "runId": "wiki-provider-20261121",
+  "attempt": 1,
+  "side": "fountain",
+  "scope": "Matched original GitLab/Fountain UI observations, not automatic superiority claims.",
+  "suite": "wiki-collaboration",
+  "restartRequested": false,
+  "draftRollbackRequested": false,
+  "writerPaste": false,
+  "rollbackRequested": false,
+  "fixturePath": "integrations/gitlab/fixtures/compatibility-wiki-collaboration.json",
+  "fixtureHash": "c5d488f178fc003a9f969a92ab3f3dbed2befba09f6f707f3679e7ff4d5aee48",
+  "fixture": {
+    "projectPath": "root/fountain-product-integration",
+    "username": "fountain_compat_access",
+    "email": "fountain-compat-access@example.invalid",
+    "accountName": "Fountain compatibility access audit",
+    "cases": [
+      {
+        "id": "live-wiki-authors",
+        "scope": "wiki-collaboration",
+        "title": "Live release notes",
+        "source": "Owner: **Sam**.\n\nStatus: ready.",
+        "ownerEdit": " Reviewed.",
+        "peerEdit": " Approved."
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "live-wiki-authors",
+      "input": {
+        "id": "live-wiki-authors",
+        "scope": "wiki-collaboration",
+        "title": "Live release notes",
+        "source": "Owner: **Sam**.\n\nStatus: ready.",
+        "ownerEdit": " Reviewed.",
+        "peerEdit": " Approved."
+      },
+      "stage": "open-first-editor",
+      "status": "incomplete",
+      "pageErrors": [],
+      "gate": [
+        "Namespaces::UserNamespace:1"
+      ],
+      "authors": {
+        "owner": "Administrator",
+        "peer": "Fountain compatibility access audit"
+      },
+      "slug": "Live-release-notes-fountain-wiki-provider-20261121-a1",
+      "failure": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('form.wiki-form').locator('.fountain-editor[contenteditable=true]').or(locator('form.wiki-form').getByRole('button', { name: 'Switch to rich text editing', exact: true })).first()\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for locator('form.wiki-form').locator('.fountain-editor[contenteditable=true]').or(locator('form.wiki-form').getByRole('button', { name: 'Switch to rich text editing', exact: true })).first()\n",
+      "controls": "- group:\n  - text: Content\n  - alert: Use plain text editing for unsupported references, quick actions, and specialized menus.\n  - alert:\n    - text: The editor operation could not be completed. Your source and current document are retained.\n    - button \"Retry source\"\n    - button \"Keep current document\"\n  - group: Retained document source\n  - button \"Open sidebar\"\n  - textbox \"Page title\": Live release notes fountain wiki provider 20261121 a1\n  - button \"Content Edit page options\": Edit page options\n  - group:\n    - button \"Save changes\"\n    - combobox \"Content s__('Wiki|Save and choose commit message')\": s__('Wiki|Save and choose commit message')\n  - button \"Cancel\"\n  - toolbar \"Editor toolbar\":\n    - combobox \"Text style\" [disabled]:\n      - option \"Normal text\" [selected]\n      - option \"Heading 1\"\n      - option \"Heading 2\"\n      - option \"Heading 3\"\n      - option \"Code block\"\n      - option \"Mermaid diagram\"\n      - option \"PlantUML diagram\"\n    - group \"History\":\n      - button \"Undo\" [disabled]\n      - button \"Redo\" [disabled]\n    - group \"Text formatting\":\n      - button \"Bold\" [disabled]\n      - button \"Italic\" [disabled]\n      - button \"Strikethrough\" [disabled]\n      - button \"Inline code\" [disabled]\n    - group \"Lists and quotes\":\n      - button \"Insert a quote\" [disabled]\n      - button \"Bullet list\" [disabled]\n      - button \"Numbered list\" [disabled]\n      - button \"Checklist\" [disabled]\n    - group \"Document tools\":\n      - button \"Insert frontmatter\" [disabled]\n      - button \"Insert footnote\" [disabled]\n    - button \"Insert or edit link\" [disabled]\n    - button \"Insert alert\" [disabled]\n    - group \"Clipboard, files and media\":\n      - button \"Attach a file or image\" [disabled]\n      - button \"Paste Markdown\" [disabled]\n    - button \"Switch to plain text editing\"\n  - textbox \"Content\":\n    - text: Write your content or drag files here…\n    - paragraph",
+      "restoredFlag": true
+    }
+  ],
+  "errors": [],
+  "classification": null,
+  "harnessHashes": {
+    "scripts/run-gitlab-compatibility.mjs": "2287cf0d30f47223c862643d4b24df44e1aac7a612f0b31072d3e83257b00d98",
+    "scripts/verify-gitlab-editor-rollback.mjs": "a66d246c9a87e76703137b7ced18034903fbe16beec1fb2a257652b8b8853622",
+    "scripts/verify-gitlab-suggestion-history-rollback.mjs": "fb66e652a3b5af60c238555927014c162c7f9f1480609674217aa8a54c47a373",
+    "scripts/verify-gitlab-wiki-rollback.mjs": "e93b3aed1ab608173ffd8bacb1eebf0191521d618e5908df1329a05ee3d55b68",
+    "scripts/verify-gitlab-restart.mjs": "f88570ad3eb433605bd7339f2d078b2bd942c492d18a0558ef32e6a9edcf06c2",
+    "scripts/verify-gitlab-footnote-rollback.mjs": "497c68aab32d9e67dce5a34344cd50924771eb5be828a1d9c47e3c481efb5b32",
+    "integrations/gitlab/testing/save-gesture.mjs": "4754f1e22b3a588c41f1811b9f2ccbd8a1be0e8854f3df4f370e2d21a236a0c3",
+    "integrations/gitlab/testing/build-identity.mjs": "574cd5c659380a88cc1a9713cbbe555a2d650fc35159dd3df4a253dc1de643a1",
+    "scripts/audit-gitlab-compatibility-composers.mjs": "e026bc0dd05dcfebf20c50939d1bdd8a9280ea2956c55440191613977e88b441",
+    "scripts/audit-gitlab-saved-replies.mjs": "5b7863ff49ead70e41bab928d9e4f682f4b4cc497534948ad9fb19e159ed5fe1",
+    "scripts/audit-gitlab-issue-board.mjs": "1bf44124532370c32effb81a6fb09ec712b8fa2e9faa3d8b5b03860698ae8b93",
+    "scripts/audit-gitlab-mr-create.mjs": "f38761becab69cc55b8ac3a1d94352634fa9afdcbdbefbb6d110aaa85a74cb7d",
+    "scripts/verify-gitlab-mr-handover.mjs": "64c1b8e9c81494fec68e6eb408bdd164fe64b9a784b4737f4712780a7970ebc8",
+    "integrations/gitlab/testing/observe-mr-navigation.mjs": "5c87d10b6e7fd8771cd421c698644b38cffbcc2ed549124ad15458de09dd312b",
+    "scripts/gitlab-audit-editor.mjs": "07450c50f667c441ba12e601ea5add14997357b1aa58df2ae97569e8a68e374a",
+    "scripts/audit-gitlab-wiki-history.mjs": "55b0474493732256c4bf556bacd1645d48a983591e861bf77dce1fc4b4339b39",
+    "scripts/audit-gitlab-wiki-rename.mjs": "2e86e7733cc7f95ac77c1708d5692ffcbfd7149f230577858cf76642f2adab9c",
+    "scripts/audit-gitlab-compatibility-quick-save.mjs": "8cb17709efdb43d9df60a522d2fb90c3e2e0f60f1bfb7483ae6565d70169d8fc",
+    "scripts/audit-gitlab-compatibility-reconnect.mjs": "e1512849ede5922fb8c641d4ab5a894687350a0b98ba26df832a706e8a760784",
+    "scripts/audit-gitlab-compatibility-access.mjs": "2eba7a5f34e75944f56cb8789c0fb4eb861493249f3a5acba43bb5d3de06c592",
+    "scripts/audit-gitlab-offline-conflict.mjs": "3a959a11c5e9b91d38f48a1e0eb7cf2c294f563ee79f56bdbd5495239196acdf",
+    "scripts/audit-gitlab-simultaneous-issues.mjs": "6bb7d74d0bb0008de9a00c6db4864400de2c6155ef15c9f9620f5b9506c4a69d",
+    "scripts/audit-gitlab-compatibility-conflicts.mjs": "277024a259238694df0f0f1e52d667ee9316a0dad8955258702163cec76950a6",
+    "scripts/audit-gitlab-compatibility-suggestions.mjs": "4036c302767749662667d0987ec8441a37c5b89a2166b6991db39f7411b07212",
+    "scripts/audit-gitlab-concurrent-review.mjs": "8ecc2e2f91c05a00b5a55f60dffc5044245390d0b4b4de1cf6d3826aec3780e2",
+    "scripts/audit-gitlab-batch-review.mjs": "dbd74b5e00c7fe875c584d9a79839d00281653e5665c31a51f1eca2196b80826",
+    "scripts/audit-gitlab-reviewer-handoff.mjs": "3ff850b42fcc4f73fdde22f8d68decff4424b14e96a68e7c59d500eebc4dd55e",
+    "scripts/audit-gitlab-suggestion-history.mjs": "558fb85acd3aea288e81cd39b90983cc4272b0a2fa1a59d1e6bd3f26511fcc0e",
+    "scripts/gitlab-audit-member.mjs": "d72d2d7a08b6111fd4ced3e62e86349a5188769b1008373d23bac90433356675",
+    "scripts/audit-gitlab-compatibility-clipboard.mjs": "1ed2c79b4958bd8fc2a426e096e833427cfc07f43d628c31eeb0ecfd4f00356e",
+    "scripts/audit-gitlab-compatibility-partial.mjs": "26a16006b2a6dcad81afa41a2905c6229d4a03a12c746887066d9d9e0afac6b3",
+    "scripts/audit-gitlab-compatibility-paint.mjs": "d9342df7be6509fccd266a351b6208cb560bb8b3c569b0d1798c3829cb0e0c6e",
+    "scripts/audit-gitlab-compatibility-grid.mjs": "ed61d7f58e3d365b7a92a4cf9b970106373251e6380cfadbcae3fcc69952d8d2",
+    "scripts/audit-gitlab-wiki-collaboration.mjs": "516a8a0fc9ff8cb12c92095d78cfd2fc793bbb46888773a38af87184e639daa1",
+    "scripts/audit-gitlab-compatibility-tasks.mjs": "ad9d071d8c8d2c5cbb2ba113d13c69f2f14637520a94705fb20274ac970a3cb4",
+    "scripts/audit-gitlab-compatibility-task-recovery.mjs": "3ca6325e395293098451feabe651b03da06f71c1042993ea56e2786638277d8b",
+    "scripts/gitlab-deployment-readiness.mjs": "2d772f975228d1824b3fed550ada452d00719a94c7c4eb43632de780630a2ed5",
+    "scripts/audit-gitlab-compatibility-task-menu.mjs": "17155b7071784770154248e05d2894c6530ba926f84070a58e34b1a252e4d58b",
+    "scripts/audit-gitlab-compatibility-task-conversion.mjs": "c84c64884a3063a56b1e32df26384a11bbc0571b0aebf4f7b84eca9bb5ea1c3f"
+  },
+  "deployment": {
+    "image": "gitlab/gitlab-ce:19.5.3-ce.0@sha256:60fc37e470aca439ead4b6e3ed8f578d9e85c954b84b611b5f323a32a9e47615",
+    "imageId": "sha256:f88c118808549ed0d65d94342db6eb5b11b53ba8692e6a4b8c87ef1a48687e41",
+    "backendMounts": [
+      {
+        "name": "fountain-gitlab-integration_baseline-config",
+        "destination": "/etc/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-logs",
+        "destination": "/var/log/gitlab",
+        "type": "volume"
+      },
+      {
+        "name": "fountain-gitlab-integration_baseline-data",
+        "destination": "/var/opt/gitlab",
+        "type": "volume"
+      }
+    ],
+    "assetMount": [
+      {
+        "source": "/home/eddolo/.cache/fountainjs-gitlab-product/source/public/assets/webpack",
+        "readOnly": true
+      }
+    ],
+    "backendEnvironmentHash": "bbf9d40a1bb19c6a29c51fa8a118b830aff9d2d8fc5dcf537dc7911f25686239",
+    "assetSelector": "ENABLE_RSPACK=true",
+    "cpus": 2000000000,
+    "memory": 4294967296,
+    "puma": {
+      "minThreads": 2,
+      "maxThreads": 4,
+      "workers": 0
+    }
+  },
+  "browser": {
+    "engine": "chromium",
+    "version": "151.0.7922.34",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "platform": "linux",
+    "arch": "x64",
+    "permissions": []
+  },
+  "startup": [
+    {
+      "attempt": 1,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 2,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 3,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 4,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 5,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 6,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 7,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 8,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 9,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 10,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 11,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 12,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 13,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 14,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 15,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 16,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 17,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 18,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 19,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 20,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 21,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 22,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 23,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 24,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 25,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 26,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 27,
+      "running": true,
+      "status": "running",
+      "health": "starting",
+      "exitCode": 0
+    },
+    {
+      "attempt": 28,
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "exitCode": 0
+    }
+  ],
+  "backend": {
+    "version": {
+      "version": "19.5.3",
+      "revision": "0d4c9a9a2fa",
+      "kas": {
+        "enabled": true,
+        "externalUrl": "ws://127.0.0.1:5080/-/kubernetes-agent/",
+        "externalK8sProxyUrl": "http://127.0.0.1:5080/-/kubernetes-agent/k8s-proxy/",
+        "version": "19.5.3"
+      },
+      "enterprise": false
+    },
+    "project": {
+      "id": 1,
+      "path": "root/fountain-product-integration",
+      "visibility": "private",
+      "defaultBranch": "main",
+      "defaultHead": "15aeca7199b19518372fcb918a96eae93fd7e915",
+      "permissions": {
+        "project_access": {
+          "access_level": 50,
+          "notification_level": 3
+        },
+        "group_access": null
+      }
+    },
+    "actor": "root",
+    "serverSources": [
+      "8387e916fc949a06bcd02b2b021a627d3711dfc0bab5ebf80269502ed098a5f2  /opt/gitlab/embedded/service/gitlab-rails/app/services/notes/update_service.rb",
+      "62f36b02054509242ffd628ce2f8e0b2205a0faf5a9144ffd30f9fbc5cf38e4a  /opt/gitlab/embedded/service/gitlab-rails/app/services/suggestions/create_service.rb",
+      "3840639c6650bcc067af8f46b3b9ea435a4d0bf89dd48dbdb41b61cfd8af6546  /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/diff/suggestion.rb",
+      "758d807e1b9e349a805e3f0b8dcc0594b1b0460e32d0ec5533d9f301f3a7b360  /opt/gitlab/embedded/service/gitlab-rails/app/channels/collaborative_editing/wiki_page_channel.rb",
+      "9238c854298dea8d7997442fa9f93dba048e6f02799e4711047b430e0b831c8c  /opt/gitlab/embedded/service/gitlab-rails/app/controllers/concerns/wiki_actions.rb"
+    ]
+  },
+  "frontendManifests": [
+    "1438d67a6a93b067dcba329a6db67f92551e1e32abcb7595fbd27bbcf4b75da4  /opt/gitlab/embedded/service/gitlab-rails/public/assets/webpack/manifest.rspack.json"
+  ],
+  "buildProbeIssue": {
+    "iid": 528,
+    "descriptionSHA256": "5b3653ca1b1b87c589da22d2b2b8f459b77ab7bfbb04d01f7d6cc2597825a3eb"
+  },
+  "dismissedPatchNotices": [
+    "Important notice - Critical patch release"
+  ],
+  "collectionComplete": false
+}
