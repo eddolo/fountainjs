@@ -440,7 +440,8 @@ files.set(reviewActionsPath,"import { reconcileAppliedSuggestion } from './fount
     // Propagate the same rejection through the iterator even when nobody awaits the shared promise.
     .replace('    rejectFetchNotes(e);\n    throw e;', '    rejectFetchNotes(e);\n    await completion;'));
 files.set(reviewHelperPath,await readFile(resolve(root,'integrations/gitlab/services/reconcile_applied_suggestion.js'),'utf8'));
-files.set(descriptionPath, prepareGitLabSaveBaseline(originalDescription));
+const alignedTableTasks = await readFile(resolve(root, 'integrations/gitlab/components/work_item_table_tasks.css'), 'utf8');
+files.set(descriptionPath, prepareGitLabSaveBaseline(originalDescription) + '\n<style>\n' + alignedTableTasks + '</style>\n');
 files.set(detailPath, prepareGitLabSaveAuthority(originalDetail));
 files.set(taskUtilsPath, prepareGitLabTaskConversion(originalTaskUtils));
 files.set(taskBodyPath, await readFile(resolve(root, 'integrations/gitlab/services/task_body_extractor.js'), 'utf8'));

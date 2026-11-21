@@ -108,7 +108,7 @@ function serializeGitLabHTMLTable(table: Node, tokenPrefix: string, wikiRoom: bo
           });
           if (alignments.size > 1) return undefined;
           const alignment = alignments.values().next().value;
-          const attributes = spans + (alignment ? ` style="text-align: ${alignment}"` : '');
+          const attributes = spans + (alignment ? ` align="${alignment}"` : '');
           if (cell.childCount === 1 && inlineCellParagraph(cell.child(0))) {
             lines.push(`<${tag}${attributes}>${cell.child(0).child(0).text}</${tag}>`);
             continue;

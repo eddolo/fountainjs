@@ -1,0 +1,16 @@
+/* GitLab normally pins a list checkbox to the left gutter. Inside an explicitly
+   aligned cell, keep the control in the same line of text as its label. */
+.js-work-item-description :is(td, th):is([align="center" i], [align="right" i]) > ul.task-list {
+  padding-inline-start: 0;
+}
+
+.js-work-item-description :is(td, th):is([align="center" i], [align="right" i]) > ul.task-list > li.task-list-item {
+  padding-inline-start: 0;
+}
+
+.js-work-item-description :is(td, th):is([align="center" i], [align="right" i]) > ul.task-list > li.task-list-item > input.task-list-item-checkbox {
+  display: inline-block;
+  position: relative;
+  inset: auto;
+  vertical-align: middle;
+}

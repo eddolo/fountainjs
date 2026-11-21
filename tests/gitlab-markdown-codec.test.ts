@@ -26,7 +26,7 @@ it.each(alignedTaskPreviews.fixtures.filter(item => /^cell-(attribute|style)-/.t
     expect(cell.child(0).child(0).child(0).attrs.align).toBe(expected);
     const exported = codec.serializeWithReport({doc:append(document),canonical:true});
     expect(exported.issues).toEqual([]);
-    expect(exported.markdown).toContain('<td colspan="2" style="text-align: ' + expected + '">');
+    expect(exported.markdown).toContain('<td colspan="2" align="' + expected + '">');
     expect(exported.markdown).toContain('- [x] Verify backup');
   });
 
