@@ -489,7 +489,17 @@ export function compareGitLabCompatibility(original,fountain){
         && item.authors?.peer === fixture.accountName && item.authors.owner !== item.authors.peer
         && item.restoredFlag === true ? {...item, savedContent:item.saved?.replace(/\r\n/g, '\n')} : {};
       const left = observe(original, a), right = observe(fountain, b);
+      for (const view of [left,right]) {
+        if (input.wikiLink?.reference && typeof view.saved === 'string') {
+          view.originalLineEndings = !view.saved.includes('\r');
+          view.peerLinkLabel = view.peerEditedLinks?.label;
+          view.readerLinkTitle = view.initialPageLinks?.title;
+        }
+      }
       const status = input.source.split('\n\n').at(-1) + input.ownerEdit;
+      const reference = input.wikiLink?.reference;
+      const authored = (reference ? input.source.replace('[' + input.wikiLink.label + '][','[' + input.wikiLink.peerLabel + '][') : input.source)
+        + input.ownerEdit + input.peerEdit;
       for (const [key, expected, label] of [
         ['joinedDraft', status, 'The joining author receives the first author’s unsaved draft'],
         ['ownerSeesPeer', true, 'The first editor identifies the second author after both move their cursors'],
@@ -497,8 +507,14 @@ export function compareGitLabCompatibility(original,fountain){
         ['cursors', [true,true], 'Both rich editors render the other author’s named caret'],
         ['afterPeerUndo', status, 'Peer undo retains the first author’s edit'],
         ['afterPeerRedo', status + input.peerEdit, 'Peer redo restores the second edit on the first screen'],
-        ['savedContent', input.source + input.ownerEdit + input.peerEdit, 'The wiki API stores both edits, paragraphs and original formatting'],
-        ['saved', input.source + input.ownerEdit + input.peerEdit, 'The wiki API also retains the original line endings'],
+        ['savedContent', authored, reference ? 'The wiki API retains both link uses and their single authored definition after a label edit'
+          : 'The wiki API stores both edits, paragraphs and original formatting'],
+        ...(reference ? [
+          ['peerLinkLabel',input.wikiLink.peerLabel,'The first author sees the other author’s new link label'],
+          ['readerLinkTitle',input.wikiLink.title,'Both links keep their title in the reopened reader'],
+          ['visitedReference',input.wikiLink.targetText,'The reloaded reader opens the intended wiki page'],
+          ['originalLineEndings',true,'The wiki API retains the fixture’s LF line endings'],
+        ] : [['saved',authored,'The wiki API also retains the original line endings']]),
         ['reopened', status + input.peerEdit, 'Both edits survive in the other author’s reloaded reader'],
         ['bold', 'Sam', 'The reader retains the owner’s bold name'],
       ]) rows.push({case:input.id,invariant:key,label,expected,original:left[key],fountain:right[key],classification:null});

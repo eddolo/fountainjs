@@ -15,7 +15,8 @@
         "target": "fountain-compat-escalation-guide",
         "targetText": "Contact the incident commander for escalation.",
         "label": "Escalation guide",
-        "edited": "Escalation field guide",
+        "peerLabel": "Escalation duty guide",
+        "edited": "Escalation field duty guide",
         "reference": "on-call",
         "title": "Escalation procedure"
       }

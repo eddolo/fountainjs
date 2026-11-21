@@ -53,8 +53,8 @@ export async function runWikiCollaboration(options) {
 async function runWikiEditors({page, request, project, fixture, side, runId, output, switchWikiDeployment, mixedWiki, wikiFlagAudit,readStoredWikiFlag}) {
   const [input] = fixture.cases;
   const sourceEditor = side === 'original' ? 'stock' : 'fountain';
-  const firstLabel = input.wikiLink?.reference ? 'Escalation duty guide' : input.wikiLink?.label;
-  const finalLabel = input.wikiLink?.reference ? 'Escalation field duty guide' : input.wikiLink?.edited;
+  const firstLabel = input.wikiLink?.peerLabel ?? input.wikiLink?.label;
+  const finalLabel = input.wikiLink?.edited;
   const item = {id:input.id, input, stage:'setup', status:'incomplete', pageErrors:[]};
   const endpoint = wikiFlagPath;
   const readFlag = () => readWikiFlag(request);
@@ -116,7 +116,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
         expect(await link.evaluate(a => a.href)).toBe(targetURL);
         if (input.wikiLink.title) await expect.poll(() => link.evaluate(a => a.title || a.dataset.originalTitle)).toBe(input.wikiLink.title);
       }
-      return {label,shorthand:input.wikiLink.target,destination:targetURL};
+      return {label,shorthand:input.wikiLink.target,destination:targetURL,...(input.wikiLink.title ? {title:input.wikiLink.title} : {})};
     }
     const wiki = await request(wikis, {title:[input.title,side,runId].join('-'),content:input.source,format:'markdown'});
     item.slug = wiki.slug;
@@ -312,8 +312,9 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     if (await confirm.isVisible()) await confirm.click();
     await expect(reader).toContainText(both);
     item.saved = await read();
-    await peer.goto(url);
-    const peerReader = peer.getByTestId('wiki-page-content');
+    const readingTab = savingTab === peer ? page : peer;
+    await readingTab.goto(url);
+    const peerReader = readingTab.getByTestId('wiki-page-content');
     await expect(peerReader).toContainText(both);
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
@@ -334,6 +335,13 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
         if (side === 'fountain') expect(saved).toBe(authored);
         else expect([authored,inline]).toContain(saved);
       } else expect(saved).toBe(authored);
+      if (!switchWikiDeployment) {
+        await peerReader.screenshot({path:join(output,'saved-reference-links.png')});
+        await peerReader.getByRole('link',{name:firstLabel,exact:true}).click();
+        await expect(readingTab).toHaveURL(targetURL);
+        item.visitedReference = await readingTab.getByTestId('wiki-page-content').innerText();
+        expect(item.visitedReference).toBe(input.wikiLink.targetText);
+      }
     }
     if (input.mergedTable) item[sourceEditor + 'ReaderMergedTable'] = await checkMergedTable(peerReader);
     if (switchWikiDeployment) {

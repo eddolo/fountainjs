@@ -83,8 +83,8 @@ const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const wikiPageLinks = process.argv.includes('--wiki-page-links');
 if (wikiPageLinks && !(wikiRollout || structuredWikiRollback)) throw new Error('Use --wiki-page-links with the wiki rollout or structured rollback.');
 const wikiReferenceLinks = process.argv.includes('--wiki-reference-links');
-if (wikiReferenceLinks && (wikiPageLinks || !(wikiRollout || structuredWikiRollback)))
-  throw new Error('Use --wiki-reference-links by itself on a wiki rollout or structured rollback.');
+if (wikiReferenceLinks && (suite !== 'wiki-collaboration' || wikiPageLinks || mixedWiki || (draftRollbackRequested && !structuredWikiRollback)))
+  throw new Error('Use --wiki-reference-links on a matched wiki collaboration run, wiki rollout or structured rollback.');
 const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiReferenceLinks ? 'wiki-reference-links' : wikiPageLinks ? 'wiki-page-links' : wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
 const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
 const pin=JSON.parse(await readFile(resolve(root,'integrations/gitlab/runtime/upstream.json')));
