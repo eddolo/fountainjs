@@ -1,0 +1,38 @@
+.fountain-directus-field {
+  --field-font: var(--theme--fonts--sans--font-family);
+  background: var(--theme--form--field--input--background);
+  border: var(--theme--border-width) solid var(--theme--form--field--input--border-color);
+  border-radius: var(--theme--border-radius);
+}
+
+.fountain-directus-field:focus-within {
+  outline: var(--focus-ring-width) solid var(--theme--form--field--input--focus-ring-color);
+  outline-offset: var(--focus-ring-offset-invert);
+}
+
+.fountain-directus-field .fountain-editor {
+  padding: 1.125rem;
+  min-block-size: var(--input-height-tall);
+  color: var(--theme--form--field--input--foreground);
+  font: 500 0.875rem/1.5714 var(--field-font);
+  outline: none;
+  overflow-wrap: break-word;
+}
+
+.fountain-directus-field :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--theme--form--field--input--foreground-accent);
+  font-weight: 700;
+  margin-block-end: 0;
+}
+
+.fountain-directus-field h1 { font-size: 2rem; line-height: 1.2813; margin-block-start: 1em; }
+.fountain-directus-field h2 { font-size: 1.375rem; line-height: 1.4091; margin-block-start: 1.25em; }
+.fountain-directus-field h3 { font-size: 1.0625rem; line-height: 1.5294; margin-block-start: 1.25em; }
+.fountain-directus-field h4 { font-size: 0.875rem; line-height: 1.6429; margin-block-start: 1.5em; }
+.fountain-directus-field h5 { font-size: 0.8125rem; line-height: 1.6923; margin-block-start: 2em; }
+.fountain-directus-field h6 { font-size: 0.6875rem; line-height: 1.8182; margin-block-start: 2em; }
+
+.fountain-directus-field p { margin-block: 1.5em; }
+.fountain-directus-field :is(h1, h2, h3, h4, h5, h6) + p { margin-block-start: 0.5em; }
+.fountain-directus-field li > p { margin: 0; }
+.fountain-directus-field :is(strong, b) { font-weight: 700; }

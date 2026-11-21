@@ -1,0 +1,66 @@
+{
+  "passed": true,
+  "version": "12.7.0",
+  "revision": "3e3bdddd20bc5f80200452d2b1aad4e3029c95e4",
+  "image": "directus/directus@sha256:f197911d949a37d882f781b0381955b851c86625435014cd67bdaf3eabcff2a7",
+  "source": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review.</p>",
+  "expected": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review. Approved.</p>",
+  "imageId": "sha256:61b5d21911b0d8cf8b4138eac002e8d5794aa463edab6b66477862831aefc8ba",
+  "fieldInterface": "input-rich-text-html",
+  "browser": "151.0.7922.34",
+  "stage": "complete",
+  "editorChunk": {
+    "path": "/admin/assets/input-rich-text-html-BYwQ77hj.js",
+    "sha256": "edf141a4f2da3f48b12a590b78a32039579a6183cfa78632b33a6ed5f7aaf9f2"
+  },
+  "saved": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review. Approved.</p>",
+  "restoredAfterRestart": true,
+  "layout": {
+    "stock": {
+      "headingSize": "22px",
+      "headingWeight": "700",
+      "bodySize": "14px",
+      "bodyWeight": "500",
+      "strongWeight": "700",
+      "headingInset": 45.5,
+      "textInset": 18,
+      "afterHeading": 7,
+      "betweenParagraphs": 21
+    },
+    "fountain": {
+      "headingSize": "22px",
+      "headingWeight": "700",
+      "bodySize": "14px",
+      "bodyWeight": "500",
+      "strongWeight": "700",
+      "headingInset": 45.5,
+      "textInset": 18,
+      "afterHeading": 7,
+      "betweenParagraphs": 21
+    }
+  },
+  "fountain": {
+    "buildId": "4a8d4551d6067cbaf7ef9708d461d861fce90a78923a2a5e9275c121e9f02719",
+    "bundleSHA256": "f9542ee4aa68cc7b05c3e531e9b65edd806cebaa66a5a1ac4418509e066b3269",
+    "repositoryHead": "ae597e77097cfa5f830370fd6d38789409519a01"
+  },
+  "optionalField": {
+    "stock": {
+      "itemId": 2,
+      "savedHTML": "<p>First paragraph.</p><p></p><p>After a blank line.</p>",
+      "clearedValue": null,
+      "invisibleHTML": "<p>​</p>"
+    },
+    "fountain": {
+      "itemId": 3,
+      "savedHTML": "<p>First paragraph.</p><p></p><p>After a blank line.</p>",
+      "clearedValue": null,
+      "invisibleHTML": "<p>​</p>"
+    }
+  },
+  "handover": {
+    "itemId": 1,
+    "saved": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review. Approved. Scheduled.</p>",
+    "rollbackSaved": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review. Approved. Scheduled. Published.</p>"
+  }
+}

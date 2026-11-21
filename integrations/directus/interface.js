@@ -2,6 +2,8 @@ import { computed, defineComponent, h } from 'vue';
 import { HTMLExporter, HTMLImporter, Schema, StarterKit } from '../../src/index';
 import { FountainDocumentField } from '../../src/vue';
 
+import fieldCss from './field.css?inline';
+
 const schema = new Schema(StarterKit.schema);
 const config = { schema: StarterKit.schema, plugins: StarterKit.plugins };
 const options = { ariaLabel: 'Rich text', attributes: { 'data-fountain-directus-build': __FOUNTAIN_DIRECTUS_BUILD__ } };
@@ -24,6 +26,15 @@ export default {
         const doc = HTMLImporter.parse(html, schema);
         return { model: doc.toJSON(), exact: !html || serialize(doc) === html };
       });
+      function publish(value) {
+        if (props.disabled || props.nonEditable || props.comparisonMode) return;
+        const doc = schema.nodeFromJSON(value);
+        const sole = doc.childCount === 1 ? doc.child(0) : null;
+        // A cleared paragraph may retain its empty text leaf as a caret target.
+        const empty = sole?.type.name === 'paragraph' &&
+          sole.content.every(child => child.isText && child.text === '');
+        emit('input', empty ? null : serialize(doc));
+      }
       return () => {
         // Keep the original field intact when the first adapter cannot round-trip it.
         if (!incoming.value.exact || props.comparisonMode) {
@@ -32,16 +43,13 @@ export default {
             h('pre', {style:{whiteSpace:'pre-wrap',overflowWrap:'anywhere'}}, props.value ?? ''),
           ]);
         }
-        return h(FountainDocumentField, {
-          config, options, modelValue: incoming.value.model, disabled: props.disabled || props.nonEditable,
-          'onUpdate:modelValue': value => {
-            if (props.disabled || props.nonEditable || props.comparisonMode) return;
-            const doc = schema.nodeFromJSON(value);
-            const sole = doc.childCount === 1 ? doc.child(0) : null;
-            const empty = sole?.type.name === 'paragraph' && sole.childCount === 0;
-            emit('input', empty ? null : serialize(doc));
-          },
-        });
+        return h('div', { class: 'fountain-directus-field' }, [
+          h('style', fieldCss),
+          h(FountainDocumentField, {
+            config, options, modelValue: incoming.value.model, disabled: props.disabled || props.nonEditable,
+            'onUpdate:modelValue': publish,
+          }),
+        ]);
       };
     },
   }),

@@ -70,7 +70,7 @@ try {
   report.fieldInterface = field.meta.interface;
   browser = await chromium.launch({headless:true});
   report.browser = browser.version();
-  async function openItem(side = 'stock') {
+  async function openItem(side = 'stock', route = itemRoute) {
     const context = await browser.newContext({viewport:{width:1280,height:900}});
     const page = await context.newPage();
     activePage = page;
@@ -85,7 +85,7 @@ try {
       await page.addLocatorHandler(action,()=>action.click());
     }
     report.stage = 'open item form';
-    await page.goto(origin + itemRoute);
+    await page.goto(origin + route);
     const editor = page.locator(side==='stock' ? '.tiptap.ProseMirror[contenteditable=true]' : '.fountain-editor[contenteditable=true]');
     if (side==='fountain') {
       await expect(editor).toHaveAttribute('data-fountain-directus-build',candidate.buildId,{timeout:30000});
@@ -103,6 +103,63 @@ try {
     if(report.editorChunk) assert.deepEqual(identity,report.editorChunk);
     report.editorChunk = identity;
     return {context,page,editor};
+  }
+  async function measureContent(editor) {
+    return editor.evaluate(root => {
+      const heading = root.querySelector('h2');
+      const [first, second] = root.querySelectorAll('p');
+      const bounds = element => element.getBoundingClientRect();
+      const style = element => getComputedStyle(element);
+      return {
+        headingSize: style(heading).fontSize,
+        headingWeight: style(heading).fontWeight,
+        bodySize: style(first).fontSize,
+        bodyWeight: style(first).fontWeight,
+        strongWeight: style(first.querySelector('strong')).fontWeight,
+        headingInset: bounds(heading).top - bounds(root).top,
+        textInset: bounds(first).left - bounds(root).left,
+        afterHeading: bounds(first).top - bounds(heading).bottom,
+        betweenParagraphs: bounds(second).top - bounds(first).bottom,
+      };
+    });
+  }
+  async function checkOptionalField(side) {
+    report.stage = side + ' optional HTML field';
+    const record = await api('/items/' + collection, { method: 'POST', body: JSON.stringify({ body: null }) });
+    const resource = '/items/' + collection + '/' + record.id;
+    const route = '/admin/content/' + collection + '/' + record.id;
+    const draft = await openItem(side, route);
+    report.stage = side + ' optional field: enter two paragraphs';
+    await draft.editor.click();
+    await draft.page.keyboard.insertText('First paragraph.');
+    await draft.page.keyboard.press('Enter');
+    await draft.page.keyboard.press('Enter');
+    await draft.page.keyboard.insertText('After a blank line.');
+    const html = '<p>First paragraph.</p><p></p><p>After a blank line.</p>';
+    await expect(draft.editor.locator('p')).toHaveCount(3);
+    await draft.page.keyboard.press('Control+s');
+    await expect.poll(async () => (await api(resource)).body).toBe(html);
+    await draft.context.close();
+
+    const saved = await openItem(side, route);
+    await expect(saved.editor.locator('p')).toHaveCount(3);
+    report.stage = side + ' optional field: clear the saved record';
+    await saved.editor.locator('p').last().click();
+    await saved.page.keyboard.press('Control+a');
+    await saved.page.keyboard.press('Backspace');
+    await saved.page.keyboard.press('Control+s');
+    await expect.poll(async () => (await api(resource)).body).toBe(null);
+    await saved.context.close();
+    const empty = await openItem(side, route);
+    report.stage = side + ' optional field: preserve a zero-width character';
+    await empty.editor.click();
+    await empty.page.keyboard.insertText('\u200b');
+    await empty.page.keyboard.press('Control+s');
+    const invisibleHTML = '<p>\u200b</p>';
+    await expect.poll(async () => (await api(resource)).body).toBe(invisibleHTML);
+    await empty.context.close();
+    return { itemId: record.id, savedHTML: html, clearedValue: null, invisibleHTML };
+
   }
   const {context,page,editor} = await openItem();
   await expect(editor.locator('h2')).toHaveText('Publication brief');
@@ -133,6 +190,7 @@ try {
   await reopened.page.screenshot({path:join(out,'reopened.png')});
   report.restoredAfterRestart = true;
   if (paired) {
+    report.layout = { stock: await measureContent(reopened.editor) };
     await reopened.context.close();
     const installedHash = docker('exec',container,'sha256sum','/directus/extensions/directus-extension-fountain-html/index.js').split(' ')[0];
     assert.equal(installedHash,candidate.bundleSHA256);
@@ -143,7 +201,9 @@ try {
       });
       assert.equal(updated.meta.interface,name);
     }
+    report.optionalField = { stock: await checkOptionalField('stock') };
     await selectInterface('fountain-rich-text-html');
+    report.optionalField.fountain = await checkOptionalField('fountain');
     const replacement = await openItem('fountain');
     report.stage = 'Fountain edit and save';
     const last = replacement.editor.locator('p').last();
@@ -171,6 +231,8 @@ try {
     await expect(fresh.editor.locator('p').last()).toHaveText('Ready for review. Approved. Scheduled.');
     await expect(fresh.editor.locator('h2')).toBeVisible();
     await fresh.editor.screenshot({path:join(out,'fountain.png')});
+    report.layout.fountain = await measureContent(fresh.editor);
+    assert.deepEqual(report.layout.fountain, report.layout.stock, 'Reopened rich field typography and spacing');
     await fresh.context.close();
     await selectInterface('input-rich-text-html');
     const rollback = await openItem();
