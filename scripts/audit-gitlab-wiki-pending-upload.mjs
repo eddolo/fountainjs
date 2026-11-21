@@ -11,6 +11,7 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
   expect(pending.uploader.native).toBe(side === 'fountain');
   const form = peer.locator('form.wiki-form');
   const status = actor.locator('p').filter({hasText:'Status:'});
+  item.stage = 'create-attachment-paragraph';
   const before = await read();
   await status.click();
   await peer.keyboard.press('End');
@@ -23,7 +24,8 @@ export async function checkPendingWikiUpload({page, peer, item, edit, read, para
   // Verify Enter on both clients before opening the picker. A refused split can
   // otherwise insert the completed attachment at the end of the status instead.
   for (const view of [actor,observer]) {
-    const paragraphs = view.locator(':scope > p');
+    // The stock editor wraps its paragraphs in NodeView elements.
+    const paragraphs = view.locator('p');
     await expect(paragraphs).toHaveCount(3);
     await expect.poll(() => paragraphText(paragraphs.last())).toBe('');
   }
