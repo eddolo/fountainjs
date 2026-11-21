@@ -181,7 +181,9 @@ const setAttr = (element: RawElement, name: string, value: string): void => {
   if (existing) existing.value = value;
   else element.attrs.push({ name, value });
 };
-function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>, supportsContents: boolean): string {
+interface WikiBlockOrigin { type: 'bullet_list' | 'table'; bullet?: string; isMarkdown?: boolean }
+
+function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptions, source: string, schema: Schema, emojiNames: Map<string,string>, supportsContents: boolean, wikiOrigins?: WikiBlockOrigin[]): string {
   const maxBytes = options.maxInputBytes ?? 1_048_576;
   if (new TextEncoder().encode(html).length > maxBytes) throw new Error('GitLab rendering exceeds the configured HTML byte limit.');
   const fragment = parseFragment(html), elements: RawElement[] = [], stack: [RawNode, number][] = [[fragment, 0]];
@@ -191,6 +193,16 @@ function normalizeGitLabRendering(html: string, options: ServerHTMLImporterOptio
     if (++count > (options.maxNodes ?? 50_000) || depth > (options.maxDepth ?? 128)) throw new Error('GitLab rendering exceeds configured structural limits.');
     if ('tagName' in node) elements.push(node);
     if ('childNodes' in node) for (let index = node.childNodes.length - 1; index >= 0; index--) stack.push([node.childNodes[index]!, depth + 1]);
+  }
+  if (wikiOrigins) {
+    const lines = source.split(/\r\n?|\n/u);
+    for (const element of elements) {
+      if (element.tagName !== 'ul' && element.tagName !== 'table') continue;
+      const position = attr(element,'data-sourcepos')?.match(/^(\d+):(\d+)-/u);
+      const start = position && lines[Number(position[1]) - 1]?.slice(Number(position[2]) - 1);
+      if (element.tagName === 'table') wikiOrigins.push({type:'table',isMarkdown:Boolean(start && !start.startsWith('<'))});
+      else wikiOrigins.push({type:'bullet_list',bullet:start?.match(/^([-+*])(?:\s|$)/u)?.[1]});
+    }
   }
   normalizeGitLabContents(elements, source, maxBytes, supportsContents);
   recoverGitLabImageSources(elements, source, schema, maxBytes);
@@ -271,6 +283,43 @@ function withoutReaderDirection(node: Node): Node {
   return children.some((child,index) => child !== node.child(index)) ? node.copy(children) : node;
 }
 
+// Compare the host preview with an independent parse of the authored source before
+// removing reader presentation. A mismatch leaves the original import untouched.
+function wikiSeedCandidate(node: Node, trimListSeparator = false): Node {
+  if (node.isText) {
+    const marks = node.marks.map(mark => mark.type.name === 'link' && mark.attrs.target === '_blank'
+      ? mark.type.create({...mark.attrs,target:mark.type.spec.attrs?.target?.default}) : mark);
+    const text = trimListSeparator && node.text!.endsWith('\n') && node.text!.length > 1 ? node.text!.slice(0,-1) : node.text!;
+    return node.type.schema.text(text,marks);
+  }
+  const children = node.content.map((child,i) => {
+    // GitLab's HTML has a formatting newline between loose label text and its nested list.
+    const next = node.content[i+1]?.type.name;
+    const beforeList = node.type.name === 'list_item' && child.type.name === 'paragraph' && (next === 'bullet_list' || next === 'ordered_list');
+    return wikiSeedCandidate(child,beforeList || (trimListSeparator && i === node.childCount-1));
+  });
+  return node.type.create(markdownAttributes(node),children,undefined,node.marks);
+}
+
+function withWikiBlockOrigins(document: Node, origins: readonly WikiBlockOrigin[]): Node {
+  let index = 0;
+  function apply(node: Node): Node {
+    if (node.isText) return node;
+    let decorated = node;
+    if (node.type.name === 'table' || node.type.name === 'bullet_list') {
+      const origin = origins[index++];
+      if (origin?.type !== node.type.name) throw new Error('Wiki preview block order does not match the source.');
+      if (origin.type === 'table') decorated = node.withAttrs({...node.attrs,gitlabIsMarkdown:origin.isMarkdown});
+      else if (origin.bullet === '-' || origin.bullet === '+') decorated = node.withAttrs({...node.attrs,gitlabBullet:origin.bullet});
+    }
+    const children = node.content.map(apply);
+    return children.some((child,i) => child !== node.child(i)) ? decorated.copy(children) : decorated;
+  }
+  const result = apply(document);
+  if (index !== origins.length) throw new Error('Unmapped wiki preview block.');
+  return result;
+}
+
 /** Explicit GitLab conversion boundary; known unhandled expansions remain errors. */
 export class GitLabMarkdownCodec implements SerializedContentCodec {
   private readonly emojiSpellings = new WeakMap<Node, ReadonlyMap<string,string>>();
@@ -301,7 +350,8 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         ...footnotes.issues.map(code => ({ stage: 'import' as const, code, message: 'A footnote projection requires its explicit source-aware adapter.' })),
       ]);
       const emojiNames = new Map<string,string>();
-      const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema, emojiNames, this.options.tableOfContentsLabel !== undefined), schema);
+      const wikiOrigins = wikiRoomSeed && this.options.wikiRoom ? [] as WikiBlockOrigin[] : undefined;
+      const result = parser.parseWithReport(normalizeGitLabRendering(footnotes.html, parser.options, renderedSource, schema, emojiNames, this.options.tableOfContentsLabel !== undefined,wikiOrigins), schema);
       if (result.issues.length) throw new GitLabMarkdownConversionError(result.issues.map(issue => ({ stage: 'import', code: issue.code, message: issue.message })));
       let document = hydrateGitLabQuickActions(hydrateGitLabFrontmatter(hydrateGitLabAlertTitles(result.document), markdown), renderedSource);
       schema.validate(document);
@@ -311,10 +361,14 @@ export class GitLabMarkdownCodec implements SerializedContentCodec {
         // GitLab owns the dialect. Reuse the core's block map only when parsing
         // the same source produces the complete tree returned by GitLab.
         try {
-          const parsed = MarkdownSourceSnapshot.parse(markdown, schema);
-          const prose = withoutReaderDirection(document);
+          const parsed = MarkdownSourceSnapshot.parse(markdown, schema, wikiOrigins ? {parseHTMLBlock:(html,target) => {
+            if (!/^\s*<table[\s>]/iu.test(html)) return null;
+            const raw = parser.parseWithReport(html,target);
+            return raw.issues.length ? null : raw.document;
+          }} : {});
+          const prose = wikiOrigins ? wikiSeedCandidate(document) : withoutReaderDirection(document);
           if (parsed.document.eq(prose)) {
-            if (wikiRoomSeed) document = prose;
+            if (wikiRoomSeed) document = wikiOrigins ? withWikiBlockOrigins(prose,wikiOrigins) : prose;
             if (proseOnly) wikiSource = parsed.source;
           }
         } catch {

@@ -66,6 +66,9 @@ if (preconfiguredWiki && !wikiRollout) throw new Error('Use --preconfigured-wiki
 const mixedWiki = process.argv.includes('--verify-mixed-wiki');
 if (mixedWiki && (suite !== 'wiki-collaboration' || side !== 'fountain' || process.argv.includes('--verify-draft-rollback')))
   throw new Error('Use --verify-mixed-wiki with --suite wiki-collaboration --editor fountain.');
+const structuredWikiRollback = process.argv.includes('--structured-wiki-rollback');
+if (structuredWikiRollback && (suite !== 'wiki-collaboration' || side !== 'fountain' || mixedWiki || !process.argv.includes('--verify-draft-rollback')))
+  throw new Error('Use --structured-wiki-rollback with --suite wiki-collaboration --editor fountain --verify-draft-rollback.');
 const draftRollbackRequested = mixedWiki || process.argv.includes('--verify-draft-rollback');
 if (draftRollbackRequested && (!['mr-create-member','wiki-collaboration'].includes(suite) || side !== 'fountain'))
   throw new Error('Use --verify-draft-rollback with a Fountain member MR or live wiki workflow.');
@@ -77,7 +80,7 @@ if (preparedRollback && (suite !== 'composers' || !process.argv.includes('--veri
 const root=fileURLToPath(new URL('../',import.meta.url)),out=resolve(root,'artifacts/gitlab-compatibility',runId,`${side}-${attempt}`);
 await mkdir(resolve(out,'..'),{recursive:true});await mkdir(out);
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiRollout ? 'wiki-rollout' : suite}.json`;
+const fixturePath=`integrations/gitlab/fixtures/compatibility-${wikiRollout || structuredWikiRollback ? 'wiki-rollout' : suite}.json`;
 const fixtureBytes=await readFile(resolve(root,fixturePath)),fixture=JSON.parse(fixtureBytes);
 const pin=JSON.parse(await readFile(resolve(root,'integrations/gitlab/runtime/upstream.json')));
 const compose=['compose','-f',resolve(root,'integrations/gitlab/runtime/compose.yaml')],env={...process.env};
@@ -308,7 +311,7 @@ try{
                         FROM feature_gates WHERE feature_key='wiki_collaborative_editing'),'[]'::json))`;
    return JSON.parse(docker('exec',containerName,'gitlab-psql','-d','gitlabhq_production','-XAt','-v','ON_ERROR_STOP=1','-c',query));
  };
- const wikiFlagAudit = wikiRollout ? (report.wikiFlagAudit = {preconfigured:preconfiguredWiki}) : undefined;
+ const wikiFlagAudit = wikiRollout || structuredWikiRollback ? (report.wikiFlagAudit = {preconfigured:preconfiguredWiki}) : undefined;
  const switchEditorDeployment = draftRollbackRequested || wikiRollout ? async ({wikiSlug} = {}) => {
    const inspect = () => JSON.parse(docker('inspect',containerName))[0];
    const running = inspect();
@@ -382,6 +385,13 @@ try{
    console.log(describeBuild(receipt));
  } : undefined;
  report.observations=await (['batch-reviews','multi-file-reviews','review-invalidation','overlap-reviews','reviewer-handoff'].includes(suite)?runRecordedGitLabBatch:suite==='wiki-collaboration'?runWikiCollaboration:wikiSuite?runWikiHistory:suite==='reconnect'?runGitLabReconnectCompatibility:suite==='quick-save'?runGitLabQuickSaveCompatibility:['mr-create','mr-create-member','mr-review-handover'].includes(suite)?runGitLabMergeRequestCreation:suite==='board-issues'?runGitLabBoardCompatibility:suite==='saved-replies'?runGitLabSavedReplyCompatibility:suite==='composers'?runGitLabComposerCompatibility:['access','access-removal','offline-conflict','concurrent-issues'].includes(suite)?runGitLabAccessCompatibility:suite==='conflicts'?runGitLabConflictCompatibility:['task-conversion','task-containers'].includes(suite)?runGitLabTaskConversionCompatibility:suite==='task-menu'?runGitLabTaskMenuCompatibility:suite==='task-recovery'?runGitLabTaskRecoveryCompatibility:suite==='tasks'?runGitLabTaskCompatibility:suite==='custom-label'?runCustomLabel:suite==='footnote-labels'?runFootnoteLabels:suite==='linked-image'?runLinkedImage:['contents','contents-authoring','contents-handover'].includes(suite)?runContents:suite==='table-authoring'?runTableAuthoring:writerImport?runWriterImport:['grid','merged-grid','header-grid'].includes(suite)?runGitLabGridClipboardCompatibility:suite==='paint'?runGitLabPaintDiagnostic:['partial','crossblock','wrapped'].includes(suite)?runGitLabPartialClipboardCompatibility:suite==='clipboard'?runGitLabClipboardCompatibility:runGitLabSuggestionCompatibility)({side,mrHandoverFrom,switchDraftToStock:draftRollbackRequested ? switchEditorDeployment : undefined,switchWikiDeployment:switchEditorDeployment,wikiFlagAudit,readStoredWikiFlag,mixedWiki,writerPaste,runId:runId+'-a'+attempt,page,request,project,fixture,output:out,onPageError:error=>report.errors.push(error),onProgress:detail=>console.log(JSON.stringify({kind:'gitlab-compatibility',...detail}))});
+ if (wikiFlagAudit?.restored) {
+   // The room handover explicitly saved Redis while the namespace flag was
+   // enabled. Persist its restored cache too before this fixture shuts down.
+   expect(wikiFlagAudit.restored.stored).toEqual(wikiFlagAudit.initial.stored);
+   expect(docker('exec',containerName,'gitlab-redis-cli','--raw','SAVE').trim()).toBe('OK');
+   wikiFlagAudit.restoredCacheCheckpoint = true;
+ }
  report.collectionComplete=report.observations.every(item=>item.status==='observed');
  if(restartRequested && report.collectionComplete) await verifyGitLabRestart({report,project,docker,deployment,waitUntilReady,identify,page,request,output:out});
  if(filter && report.collectionComplete) await probeFootnoteCache({report,candidate:rollbackCandidate,page,project,request,output:out,container:containerName});

@@ -1,6 +1,8 @@
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
 import { Schema } from 'fountainjs-editor';
+import rollout from '../integrations/gitlab/fixtures/compatibility-wiki-rollout.json';
+import seedPreview from '../integrations/gitlab/fixtures/wiki-structured-seed-render.html?raw';
 import { createGitLabSchemaSpec, GitLabMarkdownCodec } from '../integrations/gitlab/services/markdown_codec';
 import { readGitLabWikiRoom, toGitLabWikiJSON } from '../integrations/gitlab/services/wiki_room_document';
 
@@ -78,6 +80,29 @@ it('preserves the rendered and authored destinations of ordinary links in a stoc
     expect(() => readGitLabWikiRoom(root,schema,Y)).toThrow('isGollumLink');
     expect(Y.encodeStateAsUpdate(doc)).toEqual(unsupported);
   } finally { doc.destroy(); }
+});
+
+it('seeds stock-compatible structures from the real wiki preview', async () => {
+  const markdown = rollout.cases[0].source;
+  const codec = new GitLabMarkdownCodec({wikiRoom:true,renderMarkdown:async () => ({body:seedPreview})});
+  const {document} = await codec.deserialize({schema,markdown,signal:new AbortController().signal,wikiRoomSeed:true});
+  const stock = toGitLabWikiJSON(document);
+  expect(stock.content?.map(node => node.type)).toEqual(['heading','paragraph','bulletList','blockquote','paragraph','table','table','paragraph']);
+  expect(stock.content?.[5].attrs?.isMarkdown).toBe(true);
+  expect(stock.content?.[6].attrs?.isMarkdown).toBe(false);
+  expect(stock.content?.[5].content?.[0].content?.[1].attrs?.align).toBe('right');
+  expect(stock.content?.[6].content?.[1].content?.[0].content).toHaveLength(2);
+  expect(stock.content?.[4].content?.[1].marks?.[0]).toMatchObject({type:'link',attrs:{title:'Publishing steps'}});
+
+  const mixed = markdown.replace('* Verify','- Verify').replace('* Check','+ Check');
+  const {document:withMarkers} = await codec.deserialize({schema,markdown:mixed,signal:new AbortController().signal,wikiRoomSeed:true});
+  const list = toGitLabWikiJSON(withMarkers).content?.[2];
+  expect(list?.attrs?.bullet).toBe('-');
+  expect(list?.content?.[0].content?.[1].attrs?.bullet).toBe('+');
+
+  const {document:mismatch} = await codec.deserialize({schema,markdown:markdown.replace('Release handover','Other heading'),
+    signal:new AbortController().signal,wikiRoomSeed:true});
+  expect(() => toGitLabWikiJSON(mismatch)).toThrow('heading.align');
 });
 
 it('round-trips a shared GitLab table with aligned headers and body cells', () => {

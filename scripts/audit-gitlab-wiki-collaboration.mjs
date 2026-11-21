@@ -46,13 +46,13 @@ export async function runWikiCollaboration(options) {
       if (!before.exists && (await readWikiFlag(request))?.state === 'off') await request(wikiFlagPath,{},'DELETE');
     }
     audit.restored = await snapshot();
-    expect(audit.restored.stored).toEqual(before);
-    if (prepare) expect(audit.restored.apiState).toBe(before.exists ? 'off' : 'absent');
+    expect(audit.restored).toEqual(audit.initial);
   }
 }
 
 async function runWikiEditors({page, request, project, fixture, side, runId, output, switchWikiDeployment, mixedWiki, wikiFlagAudit,readStoredWikiFlag}) {
   const [input] = fixture.cases;
+  const sourceEditor = side === 'original' ? 'stock' : 'fountain';
   const item = {id:input.id, input, stage:'setup', status:'incomplete', pageErrors:[]};
   const endpoint = wikiFlagPath;
   const readFlag = () => readWikiFlag(request);
@@ -184,7 +184,22 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       await tab.keyboard.insertText(text);
     }
     item.stage = 'open-first-editor';
-    const first = await edit(page);
+    let seedRendering;
+    if (input.structure && side === 'fountain') {
+      // Capture only the GitLab preview of this suite's known, generated source.
+      seedRendering = page.waitForResponse(response => {
+        if (response.request().method() !== 'POST' || !response.ok()) return false;
+        const url = new URL(response.url());
+        if (url.origin !== new URL(project.web_url).origin || !url.searchParams.has('no_header_anchors')) return false;
+        try { return response.request().postDataJSON()?.text === input.source; } catch { return false; }
+      },{timeout:20000}).then(async response => {
+        const data = await response.json();
+        return data.body ?? data.html;
+      }).catch(() => undefined);
+    }
+    let first;
+    try { first = await edit(page); }
+    finally { if (seedRendering) item.seedRenderedHTML = await seedRendering; }
     item.editorProof = await editorProof(first);
     await expect(first.locator('strong')).toHaveText('Sam');
     const firstStatus = first.locator('p').filter({hasText:'Status:'});
@@ -264,13 +279,13 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
     if (input.table) {
-      item.stockReaderHeaders = await readerHeaderAlignment(peerReader);
-      const headerAlignments = item.stockReaderHeaders.map(cell => cell.computed);
-      item.stockReaderTable = await checkTable(peerReader,false,false,headerAlignments);
-      item.stockReaderMatchesAuthoredAlignment = headerAlignments.every((align,i) => align === input.table.alignments[i]);
-      await peerReader.getByRole('table').filter({hasText:input.table.headings[0]}).screenshot({path:join(output,'stock-reader-table.png')});
+      item[sourceEditor + 'ReaderHeaders'] = await readerHeaderAlignment(peerReader);
+      const headerAlignments = item[sourceEditor + 'ReaderHeaders'].map(cell => cell.computed);
+      item[sourceEditor + 'ReaderTable'] = await checkTable(peerReader,false,false,headerAlignments);
+      item[sourceEditor + 'ReaderMatchesAuthoredAlignment'] = headerAlignments.every((align,i) => align === input.table.alignments[i]);
+      await peerReader.getByRole('table').filter({hasText:input.table.headings[0]}).screenshot({path:join(output,sourceEditor + '-reader-table.png')});
     }
-    if (input.mergedTable) item.stockReaderMergedTable = await checkMergedTable(peerReader);
+    if (input.mergedTable) item[sourceEditor + 'ReaderMergedTable'] = await checkMergedTable(peerReader);
     if (switchWikiDeployment) {
       const rollout = side === 'original';
       const destination = rollout ? 'fountain' : 'original';
@@ -291,22 +306,22 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
       if (input.structure) {
         const {child,pending} = input.structure;
         handover.beforeNestedEdit = await checkStructure(writer,child);
-        if (input.link) handover.stockLink = await checkLink(writer,input.link.label);
+        if (input.link) handover[sourceEditor + 'Link'] = await checkLink(writer,input.link.label);
         await append(page,writer.locator('ul > li > ul > li p'),pending);
-        handover.stockStructure = await checkStructure(witness,child + pending);
+        handover[sourceEditor + 'Structure'] = await checkStructure(witness,child + pending);
         expect(await read()).toBe(item.saved);
       }
       if (input.table) {
-        handover.stockTable = await checkTable(writer,false,false);
+        handover[sourceEditor + 'Table'] = await checkTable(writer,false,false);
         await append(page,writer.getByRole('table').filter({hasText:input.table.headings[0]}).locator('td p').first(),' notes');
-        handover.stockTableDraft = await checkTable(witness,true,false);
+        handover[sourceEditor + 'TableDraft'] = await checkTable(witness,true,false);
         expect(await read()).toBe(item.saved);
       }
       if (input.mergedTable) {
-        item.stage = 'edit-stock-merged-cell';
+        item.stage = 'edit-' + sourceEditor + '-merged-cell';
         await checkMergedTable(writer);
         await append(page,writer.locator('td p').filter({hasText:'Night shift'}),' handoff');
-        handover.stockMergedDraft = await checkMergedTable(witness,' handoff');
+        handover[sourceEditor + 'MergedDraft'] = await checkMergedTable(witness,' handoff');
         expect(await read()).toBe(item.saved);
       }
       await writer.screenshot({path:join(output,rollout ? 'unsaved-before-rollout.png' : 'unsaved-before-rollback.png')});
@@ -442,7 +457,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
           if (input.structure) handover.recoveredStructure = await checkStructure(editor,input.structure.child + input.structure.pending);
           await editor.screenshot({path:join(output,(rollout ? 'fountain' : 'stock') + '-recovered-draft.png')});
           await append(restored,status,' Published.');
-          if (rollout) {
+          if (rollout || input.structure) {
             await restored.keyboard.press('Control+z');
             await expect.poll(() => paragraphText(status)).toBe(draft);
             handover.afterUndo = await paragraphText(status);
@@ -522,7 +537,7 @@ async function runWikiEditors({page, request, project, fixture, side, runId, out
           if (input.table) {
             item.stage = 'verify-saved-reader-table';
             handover.readerHeaders = await readerHeaderAlignment(reader);
-            expect(handover.readerHeaders).toEqual(item.stockReaderHeaders);
+            expect(handover.readerHeaders).toEqual(item[sourceEditor + 'ReaderHeaders']);
             const headerAlignments = handover.readerHeaders.map(cell => cell.computed);
             handover.readerMatchesAuthoredAlignment = headerAlignments.every((align,i) => align === input.table.alignments[i]);
             handover.readerTable = await checkTable(reader,true,true,headerAlignments);
