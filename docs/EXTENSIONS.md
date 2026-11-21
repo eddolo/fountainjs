@@ -120,6 +120,8 @@ text may be lossy unless the extension contributes explicit rules or formats.
 
 When a host stores the author's bullet character, pass a `bulletMarker` callback to `MarkdownExporter.exportWithReport`. It receives each unordered list, including nested lists, and can return `*`, `+`, `-` or `undefined`. Returning `undefined` uses the default hyphen. Two adjacent unordered lists need different markers to reopen as separate lists, so the exporter chooses an alternate if their requested markers coincide.
 
+For a pipe table, `tableDelimiterStyle: 'header-width'` sizes the alignment markers to each escaped header’s length. The default `compact` style uses fixed-width markers. Both retain supported column alignment.
+
 ## Canonical Markdown for custom blocks
 
 Pass host-owned `blockSerializers` to `MarkdownExporter.exportWithReport` when

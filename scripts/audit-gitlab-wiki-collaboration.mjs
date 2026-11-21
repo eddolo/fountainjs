@@ -70,7 +70,15 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
         return content.textContent;
       });
     }
-    async function checkTable(surface, reviewed, revisedHours) {
+    async function readerHeaderAlignment(surface) {
+      const headers = surface.locator('table tr').first().locator('th');
+      await expect(headers).toHaveCount(input.table.headings.length);
+      return headers.evaluateAll(cells => cells.map(cell => ({
+        text:cell.textContent.trim(),attribute:cell.getAttribute('align'),inline:cell.style.textAlign,
+        computed:getComputedStyle(cell.querySelector('p') ?? cell).textAlign.replace(/^-webkit-/,''),
+      })));
+    }
+    async function checkTable(surface, reviewed, revisedHours, headerAlignments = input.table.alignments) {
       const {headings,rows,alignments} = input.table;
       const expected = [headings,[rows[0][0] + (reviewed ? ' notes' : ''),rows[0][1]],
         [rows[1][0],rows[1][1] + (revisedHours ? '0' : '')]];
@@ -82,7 +90,7 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
         const align = getComputedStyle(cell.querySelector('p') ?? cell).textAlign.replace(/^-webkit-/,'');
         return {tag:cell.tagName,text,align};
       })));
-      const cells = expected.map((row,i) => row.map((text,j) => ({tag:i ? 'TD' : 'TH',text,align:alignments[j]})));
+      const cells = expected.map((row,i) => row.map((text,j) => ({tag:i ? 'TD' : 'TH',text,align:(i ? alignments : headerAlignments)[j]})));
       await expect.poll(snapshot).toEqual(cells);
       return cells;
     }
@@ -191,6 +199,13 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
     await expect(peerReader).toContainText(both);
     item.reopened = await peerReader.locator('p').last().innerText();
     item.bold = await peerReader.locator('strong').innerText();
+    if (input.table) {
+      item.stockReaderHeaders = await readerHeaderAlignment(peerReader);
+      const headerAlignments = item.stockReaderHeaders.map(cell => cell.computed);
+      item.stockReaderTable = await checkTable(peerReader,false,false,headerAlignments);
+      item.stockReaderMatchesAuthoredAlignment = headerAlignments.every((align,i) => align === input.table.alignments[i]);
+      await peerReader.locator('table').screenshot({path:join(output,'stock-reader-table.png')});
+    }
     if (switchWikiDeployment) {
       const rollout = side === 'original';
       const destination = rollout ? 'fountain' : 'original';
@@ -408,7 +423,15 @@ export async function runWikiCollaboration({page, request, project, fixture, sid
           await restored.reload();
           await expect(reader.locator('p').last()).toHaveText(draft + ' Published.');
           await expect(reader.locator('strong')).toHaveText('Sam');
-          if (input.table) handover.readerTable = await checkTable(reader,true,true);
+          if (input.table) {
+            item.stage = 'verify-saved-reader-table';
+            handover.readerHeaders = await readerHeaderAlignment(reader);
+            expect(handover.readerHeaders).toEqual(item.stockReaderHeaders);
+            const headerAlignments = handover.readerHeaders.map(cell => cell.computed);
+            handover.readerMatchesAuthoredAlignment = headerAlignments.every((align,i) => align === input.table.alignments[i]);
+            handover.readerTable = await checkTable(reader,true,true,headerAlignments);
+            await reader.locator('table').screenshot({path:join(output,'reopened-reader-table.png')});
+          }
           if (input.link) handover.readerLink = await checkLink(reader,input.link.editedLabel);
           if (input.structure) {
             handover.readerStructure = await checkStructure(reader,input.structure.child + input.structure.pending);

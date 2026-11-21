@@ -13,6 +13,13 @@ describe('GFM table structure (spec examples 198–205)', () => {
     expect(parse(MarkdownExporter.export(doc)).toJSON()).toEqual(doc.toJSON());
   });
 
+  it('sizes delimiters to escaped headers and keeps an empty aligned header parseable', () => {
+    const doc = parse('| A\\|B |  |\n| ---: | :---: |\n| west | east |');
+    const output = MarkdownExporter.export(doc,{tableDelimiterStyle:'header-width'});
+    expect(output.split('\n')[1]).toBe('|-----:|:-:|');
+    expect(parse(output).toJSON()).toEqual(doc.toJSON());
+  });
+
   it('accepts short delimiter cells and inconsistent outer pipes (199)', () => {
     const table = parse('| abc | defghi |\n:-: | -----------:\nbar | baz').child(0);
     expect(table.type.name).toBe('table');
