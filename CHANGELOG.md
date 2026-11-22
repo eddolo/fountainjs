@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.5.0-beta.3 — 2026-11-22
+
+- Completed the six local acceptance gates for GitLab CE 19.5.3 on build `1f16e1b0`, including two-node deployment and rollback. Physical mobile and hosted staging verification remain open. [Qualification ledger](https://github.com/eddolo/fountainjs/blob/v0.5.0-beta.3/integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md)
+- Added a Directus 12.7.0 HTML field integration for evaluation. Its matched browser workflows cover toolbar editing, source preservation, inline and captioned images, image presets and stock-editor rollback. [Integration status](https://github.com/eddolo/fountainjs/blob/v0.5.0-beta.3/integrations/directus/README.md)
+
 - `toggleQuote(editor, 'selection')` can lift part of a block quote while preserving quoted content on either side. The Directus Block quote button uses this mode.
 
 - `toggleList` accepts an optional `'list'` scope for switching an entire bullet or numbered list while keeping the selection. The Directus toolbar uses this mode.

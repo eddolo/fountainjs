@@ -10,12 +10,16 @@ FountainJS is an open-source TypeScript library you add to a website or web app.
 
 Underneath those ready-made features is a modular editing engine: a typed document model, selections, transactions, plugins, history, and a plain DOM view. The interfaces and optional capabilities are replaceable, so a product can add or change content types, commands, formats, UI, storage, collaboration, and services without forking the core.
 
-`0.5.0-beta.1` is an early beta. Read the [versioned release notes](docs/RELEASE_0_5_0_BETA_1.md)
+`0.5.0-beta.3` is an early beta. Read the [versioned release notes](docs/RELEASE_0_5_0_BETA_3.md)
 for upgrade requirements, verification scope and known limitations. The
 [npm versions](https://www.npmjs.com/package/fountainjs-editor?activeTab=versions)
 and [GitHub releases](https://github.com/eddolo/fountainjs/releases) report actual
 publication state; this repository and the development website can be ahead of
 the package you installed.
+
+The GitLab CE 19.5.3 replacement passed all six local acceptance gates, including two-node deployment and rollback. Hosted staging and physical devices still need verification. [GitLab sign-off](https://github.com/eddolo/fountainjs/blob/v0.5.0-beta.3/integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md)
+
+The Directus Data Studio HTML field is in development. Local tests cover editing, image handling and reopening saved items in the stock editor after rollback. [Directus progress](https://github.com/eddolo/fountainjs/blob/v0.5.0-beta.3/integrations/directus/README.md)
 
 **Upgrading a persisted collaboration room:** the 0.5 default Yjs entry uses
 retained storage. Existing XML rooms need `fountainjs-editor/yjs/legacy` or an

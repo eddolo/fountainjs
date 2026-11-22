@@ -19,6 +19,7 @@ function Workflows() {
     </section>
     <section id="gitlab-comparison" className="workflow-more" aria-labelledby="gitlab-comparison-title">
       <h2 id="gitlab-comparison-title">What survives an issue edit in GitLab?</h2>
+      <p>All six local qualification gates passed on editor build <code>1f16e1b0</code>, including saving through an application-node outage and returning both nodes to the stock editor. Hosted staging and physical mobile testing remain open. <a href="https://github.com/eddolo/fountainjs/blob/v0.5.0-beta.3/integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md">Read the GitLab acceptance ledger ↗</a></p>
       <p>In GitLab CE 19.5.3, an author inserted a table of contents before writing any headings, saved the issue, reopened it and added a paragraph. They then added a heading and reopened the issue again. These Firefox 153 captures show the result.</p>
       <div className="workflow-comparison-images">
         <figure><figcaption>Original GitLab editor</figcaption><img src={stockOutline} loading="lazy" alt="Reopened issue shows the release handoff heading and prose. The outline is missing." /></figure>
@@ -26,6 +27,7 @@ function Workflows() {
       </div>
       <p>Fountain retained the outline directive when the author saved the first paragraph. Both editors retained the heading and prose. <a href={outlineComparison} download="gitlab-firefox-outline-comparison.md">Download the 13 checks and exact build IDs</a></p>
     </section>
+    <section className="workflow-more"><h2>In development: Directus Data Studio</h2><p>Authors can edit an HTML field, place an image inside a sentence, or choose a project image preset. In local tests the stock Directus editor reopened and edited the same saved items. Account permissions and broader item workflows still need verification.</p><a href="https://github.com/eddolo/fountainjs/blob/v0.5.0-beta.3/integrations/directus/README.md">Directus installation and comparison results ↗</a></section>
     <section className="workflow-more"><h2>Choose the kind of proof you need.</h2><p>Product workflows show complete editing journeys. The integration gallery shows framework and backend boundaries. Capability labs explore specialist work in more depth.</p><div><a href="./demos.html#gallery">10 integration demos →</a><a href="./math-renderer.html">Math and paper-table lab →</a><a href="./math-references.html">Equation references and print lab →</a><a href="./developers.html#starter-templates">Download the template workspace →</a><a href="./developers.html">Developer guide →</a></div><p>No speed or feature-superiority claims are implied by a familiar layout. The demos label what is active, and the guides explain the boundaries.</p></section>
   </main>;
 }
