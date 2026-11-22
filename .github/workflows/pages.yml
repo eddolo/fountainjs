@@ -21,6 +21,9 @@ concurrency:
 
 jobs:
   verify:
+    permissions:
+      contents: read
+      actions: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,11 +41,13 @@ jobs:
         id: archive
         with:
           path: examples/react-app/dist
-      - uses: actions/download-artifact@v4
-        with:
-          artifact-ids: ${{ steps.archive.outputs.artifact_id }}
-          merge-multiple: true
-          path: ${{ runner.temp }}/pages-upload
+      - name: Download the uploaded Pages archive by ID
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ steps.archive.outputs.artifact_id }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID/zip" > "$RUNNER_TEMP/pages-upload.zip"
+          unzip -q "$RUNNER_TEMP/pages-upload.zip" -d "$RUNNER_TEMP/pages-upload"
       - name: Extract the uploaded Pages archive
         run: |
           mkdir -p "$RUNNER_TEMP/pages-preview/fountainjs"
