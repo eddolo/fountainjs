@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.5.0-beta.4 — 2026-11-22
+
+- Open the homepage at the top on a fresh visit. Direct links to sections still work while the collaboration and tracked-changes examples initialize.
+- Update the public declaration snapshot for the chart and diagram exports and optional HTML serialization hook for marks. The release check verifies 468 declaration files.
+
 ## 0.5.0-beta.3 — 2026-11-22
 
 - Completed the six local acceptance gates for GitLab CE 19.5.3 on build `1f16e1b0`, including two-node deployment and rollback. Physical mobile and hosted staging verification remain open. [Qualification ledger](https://github.com/eddolo/fountainjs/blob/v0.5.0-beta.3/integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md)

@@ -2,6 +2,23 @@ import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
 import { strFromU8, unzipSync } from 'fflate';
 
+test('opens the homepage at the requested section while the embedded editors initialize', async ({ page }) => {
+  for (const fragment of ['', '#review', '#collaboration']) {
+    await page.goto('about:blank');
+    await page.goto('./' + fragment);
+    await expect(page.getByRole('textbox', { name: 'Tracked changes demo editor' })).toBeAttached();
+    await expect(page.getByRole('textbox', { name: 'Grace collaborative editor' })).toBeAttached();
+    await page.evaluate(() => document.fonts.ready.then(() => undefined));
+    if (fragment) {
+      await expect(page.locator(fragment + ' h2').first()).toBeInViewport();
+    } else {
+      await expect(page.locator('#top h1')).toBeInViewport();
+      expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    }
+    expect(await page.evaluate(() => !!document.activeElement?.closest('[contenteditable=true]'))).toBe(false);
+  }
+});
+
 test('downloads complete standalone projects from the developer guide', async ({ page }, info) => {
   const publishedStarter = JSON.parse(await readFile('examples/starters/published-version.json', 'utf8'));
   const hiddenAssets = new Set<string>();

@@ -276,10 +276,12 @@ export default function CollaborationDemo() {
   };
 
   const seededComment = useRef(false);
+  const [selectionReady, setSelectionReady] = useState(false);
   useEffect(() => {
     if (seededComment.current) return;
     seededComment.current = true;
     selectText(right, [1, 0], 0, 16);
+    setSelectionReady(true);
     void createCommentThread(right, {
       threadId: 'demo-thread-review',
       commentId: 'demo-comment-grace',
@@ -303,7 +305,7 @@ export default function CollaborationDemo() {
       <div className="collaboration-demo__intro">
         <div><span>REAL-TIME COLLABORATION</span><h2>Two editors. <span className="keep-together">One convergent</span> document.</h2></div>
         <div>
-          <p>This preview uses the unreleased default Yjs adapter with two in-memory peers. Each room has its own document. Type or select on either side and watch the other follow.</p>
+          <p>This preview uses the default Yjs adapter with two in-memory peers. Each room has its own document. Type or select on either side and watch the other follow.</p>
           <p><strong>No FountainJS server or account is required.</strong> Transport, authentication, room access, and persistence stay replaceable.</p>
         </div>
       </div>
@@ -346,7 +348,7 @@ export default function CollaborationDemo() {
         </article>
         <article data-collaboration-editor="grace">
           <header><span><i style={{ background: '#d23877' }} />Grace</span><code>{rightCollaboration?.status === 'error' ? 'local draft' : paused ? 'sync paused' : rightCollaboration?.status ?? 'connecting'}</code></header>
-          <FountainComposer editor={right} showToolbar={false} ariaLabel="Grace collaborative editor" placeholder="Grace writes here…" />
+          {selectionReady && <FountainComposer editor={right} showToolbar={false} ariaLabel="Grace collaborative editor" placeholder="Grace writes here…" />}
           <div className="collaboration-demo__editor-footer collaboration-demo__formatting" role="group" aria-label="Grace formatting">
             <button onMouseDown={(event) => event.preventDefault()} onClick={() => toggleQuote(right)}>Toggle quote</button>
             <button onMouseDown={(event) => event.preventDefault()} onClick={() => toggleList(right, 'bullet')}>Toggle bullet list</button>

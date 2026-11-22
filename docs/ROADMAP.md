@@ -1,10 +1,10 @@
 # FountainJS roadmap
 
-Updated 2026-11-21.
+Updated 2026-11-22.
 
 **GitLab has passed local qualification.** The six gates passed on `1f16e1b0`, including two-node deployment and rollback. Physical mobile devices and hosted staging still need verification when those environments become available. [Final acceptance ledger](../integrations/gitlab/COMPATIBILITY_SUITE_PLAN.md#frozen-release-decision-for-gitlab-ce-1953).
 
-The next flagship under development is [Directus Data Studio](../integrations/directus/README.md).
+The next flagship under development is [Directus Data Studio](../integrations/directus/README.md). Its local Chromium comparison now verifies HTML editing, inline images, project image presets, and reopening saved items after switching back to the stock editor.
 Keep unrelated chart and diagram expansion queued. When an application workflow
 exposes an engine defect, fix it, add coverage at the engine or public editor surface, and return to the application workflow for verification. Use the strongest behavior Fountain can deliver as its own product target. Keep host-specific constraints in the adapter and its compatibility report.
 

@@ -440,6 +440,7 @@ function TrackedChangesDemo() {
   } as const), []);
   const editor = useFountain({ schema: kit.schema, plugins: kit.plugins, content });
   const seeded = useRef(false);
+  const [reviewReady, setReviewReady] = useState(false);
 
   useEffect(() => {
     if (seeded.current) return;
@@ -452,6 +453,8 @@ function TrackedChangesDemo() {
     ]);
     dispatchTrackedTransaction(editor, (transaction) => transaction.replace(editor.state.doc.childCount, editor.state.doc.childCount, [note]), 'Add the architecture boundary');
     setTrackedChangesUser(editor, { id: 'you', name: 'You', color: '#187a50' });
+    // Seed the model before a DOM caret can move the visitor to this section.
+    setReviewReady(true);
   }, [editor]);
 
   return <section className="tracked-demo" id="review">
@@ -462,7 +465,7 @@ function TrackedChangesDemo() {
     <div className="tracked-demo__workspace">
       <article className="tracked-demo__editor">
         <header><span>Review document</span><code>portable FountainJSON</code></header>
-        <FountainComposer editor={editor} showToolbar={false} ariaLabel="Tracked changes demo editor" placeholder="Write a suggestion…" />
+        {reviewReady && <FountainComposer editor={editor} showToolbar={false} ariaLabel="Tracked changes demo editor" placeholder="Write a suggestion…" />}
       </article>
       <aside><FountainTrackedChanges editor={editor} title="Review suggestions" onError={(error) => console.error(error)} /></aside>
     </div>
@@ -537,6 +540,28 @@ function VersionHistoryDemo() {
 }
 
 function App() {
+  useEffect(() => {
+    // React creates the section IDs after the browser's first fragment lookup.
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    if (navigation?.type !== 'navigate' || location.hash.length < 2) return;
+    const fragment = location.hash;
+    const target = window.document.getElementById(fragment.slice(1));
+    if (!target) return;
+    const pending = window.document.querySelector('#collaboration[aria-busy="true"]');
+    if (!pending || (target !== pending && !(pending.compareDocumentPosition(target) & window.Node.DOCUMENT_POSITION_FOLLOWING))) {
+      target.scrollIntoView();
+      return;
+    }
+    // The collaboration placeholder is replaced by a much taller section.
+    // Resolve the destination once the real section (or its error view) mounts.
+    const observer = new MutationObserver(() => {
+      if (pending.isConnected && pending.getAttribute('aria-busy') === 'true') return;
+      observer.disconnect();
+      if (location.hash === fragment) window.document.getElementById(fragment.slice(1))?.scrollIntoView();
+    });
+    observer.observe(pending.parentElement!, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-busy'] });
+    return () => observer.disconnect();
+  }, []);
   const editor = useFountain({
     schema: demoKit.schema,
     content: initialContent,
