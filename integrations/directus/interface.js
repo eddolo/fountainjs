@@ -3,11 +3,13 @@ import { HTMLExporter, HTMLImporter, Schema, StarterKit } from '../../src/index'
 import { FountainDocumentField } from '../../src/vue';
 import { defaultToolbar, FieldToolbar, toolbarOption } from './toolbar';
 import { directusLink, linkSelection } from './links';
+import { imageNodes, imageTarget } from './images';
+import { ImageDrawer } from './image-drawer';
 import { LinkDrawer } from './link-drawer';
 import { updateSourceText } from './source';
 import fieldCss from './field.css?inline';
 
-const fieldSchema = { ...StarterKit.schema, marks: { ...StarterKit.schema.marks, link: directusLink } };
+const fieldSchema = { ...StarterKit.schema, nodes: { ...StarterKit.schema.nodes, ...imageNodes }, marks: { ...StarterKit.schema.marks, link: directusLink } };
 const schema = new Schema(fieldSchema);
 const config = { schema: fieldSchema, plugins: StarterKit.plugins };
 const options = { ariaLabel: 'Rich text', attributes: { 'data-fountain-directus-build': __FOUNTAIN_DIRECTUS_BUILD__ } };
@@ -32,7 +34,7 @@ export default {
   options: [toolbarOption],
   component: defineComponent({
     name: 'FountainDirectusHTML',
-    props: { toolbar: Array, value: String, disabled: Boolean, nonEditable: Boolean, comparisonMode: Boolean },
+    props: { toolbar: Array, folder: String, value: String, disabled: Boolean, nonEditable: Boolean, comparisonMode: Boolean },
     emits: ['input'],
     setup(props, { emit }) {
       const drawer = resolveComponent('v-drawer');
@@ -49,6 +51,10 @@ export default {
         return exactDocument(props.value ?? '')?.toJSON();
       });
       const draft = shallowRef(null);
+      const selectedImage = shallowRef(null);
+      function openImage() {
+        if (canEdit.value) selectedImage.value = imageTarget(field.value?.editor);
+      }
       const linkRange = shallowRef(null);
       function openLink() {
         if (canEdit.value) linkRange.value = linkSelection(field.value?.editor);
@@ -114,7 +120,7 @@ export default {
         h('style', fieldCss),
         ...(incoming.value ? [
           canEdit.value && h(FieldToolbar, {
-            editor: field.value?.editor, buttons: props.toolbar, onRefocus: () => field.value?.focus(), onSource: openSource, onLink: openLink,
+            editor: field.value?.editor, buttons: props.toolbar, onRefocus: () => field.value?.focus(), onSource: openSource, onLink: openLink, onImage: openImage,
           }),
           h(FountainDocumentField, {
             ref: field, config, options, modelValue: incoming.value, disabled: !canEdit.value, 'onUpdate:modelValue': publish,
@@ -126,6 +132,10 @@ export default {
             canEdit.value && h(button, { small: true, onClick: openSource }, () => 'Edit HTML source'),
           ]),
         ]),
+        canEdit.value && selectedImage.value && h(ImageDrawer, {
+          editor:field.value?.editor, target:selectedImage.value, folder:props.folder,
+          onClose:() => { selectedImage.value = null; nextTick(() => field.value?.focus()); },
+        }),
         canEdit.value && linkRange.value && h(LinkDrawer, {
           editor: field.value?.editor, range: linkRange.value, onClose: closeLink,
         }),

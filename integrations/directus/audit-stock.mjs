@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium, expect } from '@playwright/test';
 
+import { auditImages } from './audit-images.mjs';
 import { auditLinks } from './audit-links.mjs';
 import { auditSource } from './audit-source.mjs';
 import { auditQuote } from './audit-quote.mjs';
@@ -26,7 +27,9 @@ const quoteOnly = process.argv.includes('--quote');
 const sourceOnly = process.argv.includes('--source');
 const linksOnly = process.argv.includes('--links');
 const stockLinks = process.argv.includes('--stock-links');
-const paired = linksOnly || sourceOnly || quoteOnly || structureOnly || process.argv.includes('--paired');
+const imagesOnly = process.argv.includes('--images');
+const stockImages = process.argv.includes('--stock-images');
+const paired = imagesOnly || linksOnly || sourceOnly || quoteOnly || structureOnly || process.argv.includes('--paired');
 const extension = fileURLToPath(new URL('../../artifacts/directus-extension/', import.meta.url));
 const candidate = paired ? JSON.parse(await readFile(join(extension,'identity.json'),'utf8')) : null;
 const out = fileURLToPath(new URL('../../artifacts/directus-'+(paired?'handover':'stock')+'/' + id + '/', import.meta.url));
@@ -184,6 +187,16 @@ try {
     });
     assert.equal(updated.meta.interface,name);
   }
+  async function checkImages() {
+    const context = { collection, api, selectInterface, openItem, out, report };
+    report.images = { stock: await auditImages({...context, side:'stock'}) };
+    if (!stockImages) {
+      report.images.fountain = await auditImages({...context, side:'fountain', fileId:report.images.stock.assetId});
+      for (const key of ['inserted','edited','dimensions','appearance','pixelSHA256','originalSHA256']) {
+        assert.deepEqual(report.images.fountain[key],report.images.stock[key],key);
+      }
+    }
+  }
   async function checkLinks() {
     report.links = {};
     for (const side of stockLinks ? ['stock'] : ['stock', 'fountain']) {
@@ -287,6 +300,7 @@ try {
       await checkQuotes();
       await checkSource();
       await checkLinks();
+      await checkImages();
       report.toolbar = {};
       for (const side of ['stock', 'fountain']) {
         report.toolbar[side] = await auditToolbar({ side, api, collection, selectInterface, openItem, out, report });
@@ -341,7 +355,8 @@ try {
       report.handover={itemId:item.id,saved:finalHTML,rollbackSaved:rollbackHTML};
     }
   }
-  if (linksOnly || stockLinks) await checkLinks();
+  if (imagesOnly || stockImages) await checkImages();
+  else if (linksOnly || stockLinks) await checkLinks();
   else if (sourceOnly) await checkSource();
   else if (quoteOnly) await checkQuotes();
   else if (structureOnly) await checkStructure();

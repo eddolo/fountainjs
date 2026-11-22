@@ -34,7 +34,7 @@ In the default desktop theme, the reopened heading, body, bold text and paragrap
 
 ## Configure an HTML field toolbar
 
-In Data Studio, open **Settings → Data Model**, select the collection and open its Fountain HTML field. On the **Interface** tab, use **Toolbar** to select controls, then save. The default includes Bold, Italic, Underline, Heading 1–3, numbered lists, bulleted lists, Block quote, Link and Edit HTML source. Administrators can also enable Heading 4–6, Strikethrough, Subscript, Superscript, Unlink, Undo and Redo. An empty selection of controls leaves the field editable.
+In Data Studio, open **Settings → Data Model**, select the collection and open its Fountain HTML field. On the **Interface** tab, use **Toolbar** to select controls, then save. The default includes Bold, Italic, Underline, Heading 1–3, numbered lists, bulleted lists, Block quote, Link, Image and Edit HTML source. Administrators can also enable Heading 4–6, Strikethrough, Subscript, Superscript, Unlink, Undo and Redo. An empty selection of controls leaves the field editable.
 
 The [paired Chromium workflow](../../artifacts/directus-handover/7b6786bb-966f-4dec-8437-6255931d49a7/report.json) applied each mark to a selected word, used the toolbar to undo and redo, and checked the complete stored HTML on both editors. In the [administrator screen](../../artifacts/directus-handover/7b6786bb-966f-4dec-8437-6255931d49a7/toolbar-settings.png), the administrator then enabled only Italic. An author reopened the item, removed that mark with the keyboard, regained editor focus and saved the remaining formatting intact. [Fountain toolbar](../../artifacts/directus-handover/7b6786bb-966f-4dec-8437-6255931d49a7/fountain-toolbar.png) · [Stock toolbar](../../artifacts/directus-handover/7b6786bb-966f-4dec-8437-6255931d49a7/stock-toolbar.png).
 
@@ -58,6 +58,14 @@ Build the extension and run `node integrations/directus/audit-stock.mjs --links`
 
 The text-link workflow uses Fountain’s URL policy. Image links, field-specific additional protocols and selections spanning multiple blocks still need separate integration work.
 
+### File-library images and captions
+
+Place the caret in a paragraph and choose **Image**. Use the folder button to choose a Directus file. The drawer previews the original image and lets you set alternative text, a caption and lazy loading. On a project allowing image transformations, you can set the dimensions. **Apply image** places the figure in the form. Choose **Save** on the item to persist it. To change a saved image, select it in the editor and reopen **Image**.
+
+Build the extension and run `node integrations/directus/audit-stock.mjs --images`. The [comparison in Directus 12.7.0](../../artifacts/directus-handover/509e4110-f6e3-49bf-be9f-9014a25bb195/report.json) uploaded a 400 × 60 PNG through stock Directus, selected that same file from Fountain’s library picker, and requested a 200 × 30 image in both editors. The test compared the saved HTML, original file bytes, decoded image pixels and caption appearance. It exercised caption undo/redo and saved another caption edit on the same record in stock Directus after rollback. [Fountain figure](../../artifacts/directus-handover/509e4110-f6e3-49bf-be9f-9014a25bb195/fountain-asset.png) · [Stock figure](../../artifacts/directus-handover/509e4110-f6e3-49bf-be9f-9014a25bb195/stock-asset.png)
+
+This comparison used an administrator account and pixel dimensions. Inline and linked images, named transformation presets, restricted-account asset access and other media types still need qualification.
+
 ### Edit HTML source
 
 Open **Edit HTML source** in the field toolbar. **Apply source** updates the item form. Choose **Save** on the item to write that change to Directus. Closing the drawer discards edits made since opening it. For HTML that the visual editor can represent exactly, the source edit also supports the field’s undo and redo controls.
@@ -66,4 +74,4 @@ If an existing fragment would change during visual editing, the field displays i
 
 After building the extension, run `node integrations/directus/audit-stock.mjs --source`. The [Data Studio comparison](../../artifacts/directus-handover/a2f533a8-91ea-4b84-abad-7d65ac5ecb29/report.json) saved and reopened a legacy tag and its single-quoted attribute in both editors. In Fountain, typing into a fragment with mixed CRLF, LF and CR line endings preserved each existing separator in the saved field. On reopening, Backspace between an adjacent CRLF and LF removed the CRLF and retained the LF. The audit checked the saved HTML through the Directus API after each edit. After rollback, stock Directus reopened and edited the item that Fountain had returned to visual mode. [Source drawer](../../artifacts/directus-handover/a2f533a8-91ea-4b84-abad-7d65ac5ecb29/source-drawer.png)
 
-Visual editing of extension-defined HTML, stock’s markup-normalization comparison and confirmation, revision comparison, asset drawers, other stock toolbar actions, non-admin permissions, concurrent authors and the broader item lifecycle remain open.
+Visual editing of extension-defined HTML, stock’s markup-normalization comparison and confirmation, revision comparison, further media controls, other stock toolbar actions, non-admin permissions, concurrent authors and the broader item lifecycle remain open.

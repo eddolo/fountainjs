@@ -1,0 +1,518 @@
+{
+  "passed": true,
+  "version": "12.7.0",
+  "revision": "3e3bdddd20bc5f80200452d2b1aad4e3029c95e4",
+  "image": "directus/directus@sha256:f197911d949a37d882f781b0381955b851c86625435014cd67bdaf3eabcff2a7",
+  "source": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review.</p>",
+  "expected": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review. Approved.</p>",
+  "imageId": "sha256:61b5d21911b0d8cf8b4138eac002e8d5794aa463edab6b66477862831aefc8ba",
+  "fieldInterface": "input-rich-text-html",
+  "browser": "151.0.7922.34",
+  "fountain": {
+    "buildId": "aed89777e66dd609fea5fb3e8524224d46b227f45877fcadbf8cc26474f1082d",
+    "bundleSHA256": "99bffe2295b792add73ee74e5a0d6fc7cc665d9f9ac0987bf86732790e6f7ada",
+    "repositoryHead": "39c382b2f4c3bd5e829726cec7a0a8234eb3cf78"
+  },
+  "stage": "complete",
+  "editorChunk": {
+    "path": "/admin/assets/input-rich-text-html-BYwQ77hj.js",
+    "sha256": "edf141a4f2da3f48b12a590b78a32039579a6183cfa78632b33a6ed5f7aaf9f2"
+  },
+  "saved": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review. Approved.</p>",
+  "restoredAfterRestart": true,
+  "layout": {
+    "stock": {
+      "headingSize": "22px",
+      "headingWeight": "700",
+      "bodySize": "14px",
+      "bodyWeight": "500",
+      "strongWeight": "700",
+      "headingInset": 45.5,
+      "textInset": 18,
+      "afterHeading": 7,
+      "betweenParagraphs": 21
+    },
+    "fountain": {
+      "headingSize": "22px",
+      "headingWeight": "700",
+      "bodySize": "14px",
+      "bodyWeight": "500",
+      "strongWeight": "700",
+      "headingInset": 45.5,
+      "textInset": 18,
+      "afterHeading": 7,
+      "betweenParagraphs": 21
+    }
+  },
+  "structure": {
+    "stock": {
+      "item": 2,
+      "levels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "saved": "<h2>Release notes</h2><h2>Highlights</h2><ol><li><p>Pack <strong>assets</strong>.</p></li><li><p>Ship build.</p></li></ol><p>Owner: Ava.</p>",
+      "marker": {
+        "display": "list-item",
+        "type": "decimal",
+        "indent": "40px"
+      },
+      "switchedHTML": "<h2>Release notes</h2><h2>Highlights</h2><ul><li><p>Pack <strong>assets</strong>.</p></li><li><p>Ship build. Ready.</p></li></ul><p>Owner: Ava.</p>"
+    },
+    "fountain": {
+      "item": 3,
+      "levels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "saved": "<h2>Release notes</h2><h2>Highlights</h2><ol><li><p>Pack <strong>assets</strong>.</p></li><li><p>Ship build.</p></li></ol><p>Owner: Ava.</p>",
+      "marker": {
+        "display": "list-item",
+        "type": "decimal",
+        "indent": "40px"
+      },
+      "switchedHTML": "<h2>Release notes</h2><h2>Highlights</h2><ul><li><p>Pack <strong>assets</strong>.</p></li><li><p>Ship build. Ready.</p></li></ul><p>Owner: Ava.</p>"
+    },
+    "rollback": {
+      "item": 3,
+      "saved": "<h2>Release notes</h2><h2>Highlights</h2><ul><li><p>Pack <strong>assets</strong>.</p></li><li><p>Ship build. Ready. Checked.</p></li></ul><p>Owner: Ava.</p>"
+    }
+  },
+  "caretListSwitch": {
+    "stock": [
+      {
+        "type": "ul",
+        "text": "Pack assets."
+      },
+      {
+        "type": "ul",
+        "text": "Ship build. Ready."
+      }
+    ],
+    "fountain": [
+      {
+        "type": "ul",
+        "text": "Pack assets."
+      },
+      {
+        "type": "ul",
+        "text": "Ship build. Ready."
+      }
+    ]
+  },
+  "quotes": {
+    "stock": {
+      "item": 4,
+      "quoted": "<h2>Editor’s note</h2><blockquote><p>Before the review.</p><p>Keep <strong>this evidence</strong>.</p><p>After the review.</p></blockquote><p>Attribution.</p>",
+      "revised": "<h2>Editor’s note</h2><blockquote><p>Before the review.</p></blockquote><p>Keep <strong>this evidence</strong>. Verified.</p><blockquote><p>After the review.</p></blockquote><p>Follow-up.</p><p>Attribution.</p>",
+      "geometry": {
+        "border": "2px",
+        "indent": "14px",
+        "inset": 18
+      },
+      "exitAtExpectedPosition": true
+    },
+    "fountain": {
+      "item": 5,
+      "quoted": "<h2>Editor’s note</h2><blockquote><p>Before the review.</p><p>Keep <strong>this evidence</strong>.</p><p>After the review.</p></blockquote><p>Attribution.</p>",
+      "revised": "<h2>Editor’s note</h2><blockquote><p>Before the review.</p></blockquote><p>Keep <strong>this evidence</strong>. Verified.</p><blockquote><p>After the review.</p></blockquote><p>Follow-up.</p><p>Attribution.</p>",
+      "geometry": {
+        "border": "2px",
+        "indent": "14px",
+        "inset": 18
+      },
+      "exitAtExpectedPosition": true
+    },
+    "rollback": {
+      "item": 5,
+      "saved": "<h2>Editor’s note</h2><blockquote><p>Before the review.</p></blockquote><p>Keep <strong>this evidence</strong>. Verified.</p><blockquote><p>After the review. Approved.</p></blockquote><p>Follow-up.</p><p>Attribution.</p>"
+    }
+  },
+  "quoteKeyboard": {
+    "stock": [
+      {
+        "blocks": [
+          [
+            "h2",
+            "Editor’s note",
+            0
+          ],
+          [
+            "blockquote",
+            "Before the review.",
+            1
+          ],
+          [
+            "p",
+            "Keep this evidence. Verified.",
+            1
+          ],
+          [
+            "blockquote",
+            "After the review.",
+            1
+          ],
+          [
+            "p",
+            "Attribution.",
+            0
+          ]
+        ],
+        "browser": [
+          "After the review.",
+          17
+        ],
+        "model": [
+          "After the review.",
+          17
+        ]
+      },
+      {
+        "blocks": [
+          [
+            "h2",
+            "Editor’s note",
+            0
+          ],
+          [
+            "blockquote",
+            "Before the review.",
+            1
+          ],
+          [
+            "p",
+            "Keep this evidence. Verified.",
+            1
+          ],
+          [
+            "blockquote",
+            "After the review.",
+            2
+          ],
+          [
+            "p",
+            "Attribution.",
+            0
+          ]
+        ],
+        "browser": [
+          "",
+          0
+        ],
+        "model": [
+          "",
+          0
+        ]
+      },
+      {
+        "blocks": [
+          [
+            "h2",
+            "Editor’s note",
+            0
+          ],
+          [
+            "blockquote",
+            "Before the review.",
+            1
+          ],
+          [
+            "p",
+            "Keep this evidence. Verified.",
+            1
+          ],
+          [
+            "blockquote",
+            "After the review.",
+            1
+          ],
+          [
+            "p",
+            "",
+            1
+          ],
+          [
+            "p",
+            "Attribution.",
+            0
+          ]
+        ],
+        "browser": [
+          "",
+          0
+        ],
+        "model": [
+          "",
+          0
+        ]
+      }
+    ],
+    "fountain": [
+      {
+        "blocks": [
+          [
+            "h2",
+            "Editor’s note",
+            1
+          ],
+          [
+            "blockquote",
+            "Before the review.",
+            1
+          ],
+          [
+            "p",
+            "Keep this evidence. Verified.",
+            3
+          ],
+          [
+            "blockquote",
+            "After the review.",
+            1
+          ],
+          [
+            "p",
+            "Attribution.",
+            1
+          ]
+        ],
+        "browser": [
+          "After the review.",
+          17
+        ],
+        "model": null
+      },
+      {
+        "blocks": [
+          [
+            "h2",
+            "Editor’s note",
+            1
+          ],
+          [
+            "blockquote",
+            "Before the review.",
+            1
+          ],
+          [
+            "p",
+            "Keep this evidence. Verified.",
+            3
+          ],
+          [
+            "blockquote",
+            "After the review.",
+            2
+          ],
+          [
+            "p",
+            "Attribution.",
+            1
+          ]
+        ],
+        "browser": [
+          "",
+          0
+        ],
+        "model": null
+      },
+      {
+        "blocks": [
+          [
+            "h2",
+            "Editor’s note",
+            1
+          ],
+          [
+            "blockquote",
+            "Before the review.",
+            1
+          ],
+          [
+            "p",
+            "Keep this evidence. Verified.",
+            3
+          ],
+          [
+            "blockquote",
+            "After the review.",
+            1
+          ],
+          [
+            "p",
+            "",
+            1
+          ],
+          [
+            "p",
+            "Attribution.",
+            1
+          ]
+        ],
+        "browser": [
+          "",
+          0
+        ],
+        "model": null
+      }
+    ]
+  },
+  "sourceEditing": {
+    "stock": {
+      "brief": 6,
+      "archived": 7,
+      "savedHTML": "<p>Reviewed by <strong>Ada</strong>.</p>",
+      "preservedHTML": "<marquee data-edition='print'>Reviewed wording.</marquee>"
+    },
+    "fountain": {
+      "brief": 8,
+      "archived": 9,
+      "savedHTML": "<p>Reviewed by <strong>Ada</strong>.</p>",
+      "preservedHTML": "<marquee data-edition='print'>Reviewed wording.</marquee>",
+      "preservedLineEndings": {
+        "item": 10,
+        "saved": "<marquee data-edition='print'>\r\nFirst line. Edited.\r\n\nSecond line.\rLast line.\r\n</marquee>",
+        "afterBackspace": "<marquee data-edition='print'>\r\nFirst line. Edited.\nSecond line.\rLast line.\r\n</marquee>"
+      }
+    },
+    "rollback": {
+      "item": 9,
+      "saved": "<p>Reviewed by <strong>Ada</strong>. Published.</p>"
+    }
+  },
+  "links": {
+    "stock": {
+      "id": 11,
+      "created": "<p>Read the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://example.org/handbook\" title=\"Staff guide\">handbook</a></p>",
+      "edited": "<p>Read the <a href=\"/guides/updated\" title=\"Staff guide\">updated guide</a></p>",
+      "removed": "<p>Read the updated guide</p>",
+      "directoryItem": 12,
+      "richHTML": "<p>Check <a rel=\"nofollow\" href=\"/directory\" title=\"Team\">the <strong>team</strong> guide</a>.</p>",
+      "insertedAtCaret": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://example.org/guide\">https://example.org/guide</a></p>"
+    },
+    "fountain": {
+      "id": 14,
+      "created": "<p>Read the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://example.org/handbook\" title=\"Staff guide\">handbook</a></p>",
+      "edited": "<p>Read the <a href=\"/guides/updated\" title=\"Staff guide\">updated guide</a></p>",
+      "removed": "<p>Read the updated guide</p>",
+      "directoryItem": 15,
+      "richHTML": "<p>Check <a rel=\"nofollow\" href=\"/directory\" title=\"Team\">the <strong>team</strong> guide</a>.</p>",
+      "insertedAtCaret": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://example.org/guide\">https://example.org/guide</a></p>",
+      "rollback": "<p>Check <a rel=\"nofollow\" href=\"/directory\" title=\"Directory\">the <strong>team</strong> guide</a>.</p>"
+    }
+  },
+  "images": {
+    "stock": {
+      "item": 17,
+      "assetId": "3d7f7d9f-c438-4744-855d-15419fadd632",
+      "originalSHA256": "e0c8ccf7ff92c5af314f34de55da109854b5971c04f20767ae8c16ce545c39b5",
+      "previewDimensions": [
+        400,
+        60
+      ],
+      "dimensions": [
+        200,
+        30
+      ],
+      "pixelSHA256": "843405092a0968e319f4fbb440b706582cc221c63f359c79dd7058d606fa1754",
+      "appearance": {
+        "width": 200,
+        "height": 30,
+        "captionAlignment": "center",
+        "captionColor": "rgb(162, 181, 205)",
+        "cornerRadius": "6px"
+      },
+      "inserted": "<p>Weekly report.</p><figure><img src=\"http://127.0.0.1:32769/assets/3d7f7d9f-c438-4744-855d-15419fadd632.png?width=200&amp;height=30\" alt=\"Weekly comparison\" loading=\"lazy\"><figcaption>Figure 1. Weekly results.</figcaption></figure><p></p>",
+      "edited": "<p>Weekly report.</p><figure><img src=\"http://127.0.0.1:32769/assets/3d7f7d9f-c438-4744-855d-15419fadd632.png?width=200&amp;height=30\" alt=\"Weekly comparison\" loading=\"lazy\"><figcaption>Figure 1. Reviewed results.</figcaption></figure><p></p>"
+    },
+    "fountain": {
+      "item": 18,
+      "assetId": "3d7f7d9f-c438-4744-855d-15419fadd632",
+      "originalSHA256": "e0c8ccf7ff92c5af314f34de55da109854b5971c04f20767ae8c16ce545c39b5",
+      "previewDimensions": [
+        400,
+        60
+      ],
+      "dimensions": [
+        200,
+        30
+      ],
+      "pixelSHA256": "843405092a0968e319f4fbb440b706582cc221c63f359c79dd7058d606fa1754",
+      "appearance": {
+        "width": 200,
+        "height": 30,
+        "captionAlignment": "center",
+        "captionColor": "rgb(162, 181, 205)",
+        "cornerRadius": "6px"
+      },
+      "inserted": "<p>Weekly report.</p><figure><img src=\"http://127.0.0.1:32769/assets/3d7f7d9f-c438-4744-855d-15419fadd632.png?width=200&amp;height=30\" alt=\"Weekly comparison\" loading=\"lazy\"><figcaption>Figure 1. Weekly results.</figcaption></figure><p></p>",
+      "edited": "<p>Weekly report.</p><figure><img src=\"http://127.0.0.1:32769/assets/3d7f7d9f-c438-4744-855d-15419fadd632.png?width=200&amp;height=30\" alt=\"Weekly comparison\" loading=\"lazy\"><figcaption>Figure 1. Reviewed results.</figcaption></figure><p></p>",
+      "rollback": "<p>Weekly report.</p><figure><img src=\"http://127.0.0.1:32769/assets/3d7f7d9f-c438-4744-855d-15419fadd632.png?width=200&amp;height=30\" alt=\"Weekly comparison\" loading=\"lazy\"><figcaption>Figure 1. Published results.</figcaption></figure><p></p>"
+    }
+  },
+  "toolbar": {
+    "stock": {
+      "item": 19,
+      "configured": [
+        "undo",
+        "redo",
+        "bold",
+        "italic",
+        "underline",
+        "strikethrough",
+        "subscript",
+        "superscript"
+      ],
+      "saved": "<p>Keep <strong>Bold</strong></p><p>Keep <em>Italic</em></p><p>Keep <u>Underline</u></p><p>Keep <s>Strikethrough</s></p><p>Keep <sub>Subscript</sub></p><p>Keep <sup>Superscript</sup></p>",
+      "emptyConfigurationButtons": 0
+    },
+    "fountain": {
+      "adminConfiguration": {
+        "toolbar": [
+          "italic"
+        ],
+        "keyboardSaved": "<p>Keep <strong>Bold</strong></p><p>Keep Italic</p><p>Keep <u>Underline</u></p><p>Keep <s>Strikethrough</s></p><p>Keep <sub>Subscript</sub></p><p>Keep <sup>Superscript</sup></p>"
+      },
+      "item": 20,
+      "configured": [
+        "undo",
+        "redo",
+        "bold",
+        "italic",
+        "underline",
+        "strikethrough",
+        "subscript",
+        "superscript"
+      ],
+      "saved": "<p>Keep <strong>Bold</strong></p><p>Keep <em>Italic</em></p><p>Keep <u>Underline</u></p><p>Keep <s>Strikethrough</s></p><p>Keep <sub>Subscript</sub></p><p>Keep <sup>Superscript</sup></p>",
+      "emptyConfigurationButtons": 0
+    }
+  },
+  "optionalField": {
+    "stock": {
+      "itemId": 21,
+      "savedHTML": "<p>First paragraph.</p><p></p><p>After a blank line.</p>",
+      "clearedValue": null,
+      "invisibleHTML": "<p>​</p>"
+    },
+    "fountain": {
+      "itemId": 22,
+      "savedHTML": "<p>First paragraph.</p><p></p><p>After a blank line.</p>",
+      "clearedValue": null,
+      "invisibleHTML": "<p>​</p>"
+    }
+  },
+  "handover": {
+    "itemId": 1,
+    "saved": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review. Approved. Scheduled.</p>",
+    "rollbackSaved": "<h2>Publication brief</h2><p>Owner: <strong>Research</strong>.</p><p>Ready for review. Approved. Scheduled. Published.</p>"
+  }
+}
