@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium, expect } from '@playwright/test';
 
+import { checkInlineImages } from './audit-inline-images.mjs';
 import { checkImagePresets } from './audit-image-presets.mjs';
 import { auditImages } from './audit-images.mjs';
 import { auditLinks } from './audit-links.mjs';
@@ -31,7 +32,8 @@ const stockLinks = process.argv.includes('--stock-links');
 const imagesOnly = process.argv.includes('--images');
 const stockImages = process.argv.includes('--stock-images');
 const presetsOnly = process.argv.includes('--image-presets');
-const paired = presetsOnly || imagesOnly || linksOnly || sourceOnly || quoteOnly || structureOnly || process.argv.includes('--paired');
+const inlineOnly = process.argv.includes('--inline-images');
+const paired = inlineOnly || presetsOnly || imagesOnly || linksOnly || sourceOnly || quoteOnly || structureOnly || process.argv.includes('--paired');
 const extension = fileURLToPath(new URL('../../artifacts/directus-extension/', import.meta.url));
 const candidate = paired ? JSON.parse(await readFile(join(extension,'identity.json'),'utf8')) : null;
 const out = fileURLToPath(new URL('../../artifacts/directus-'+(paired?'handover':'stock')+'/' + id + '/', import.meta.url));
@@ -303,6 +305,7 @@ try {
       await checkSource();
       await checkLinks();
       await checkImages();
+      await checkInlineImages({ api,collection,selectInterface,openItem,out,report });
       await checkImagePresets({ api,collection,selectInterface,openItem,origin,out,report });
       report.toolbar = {};
       for (const side of ['stock', 'fountain']) {
@@ -358,7 +361,8 @@ try {
       report.handover={itemId:item.id,saved:finalHTML,rollbackSaved:rollbackHTML};
     }
   }
-  if (presetsOnly) await checkImagePresets({ api,collection,selectInterface,openItem,origin,out,report });
+  if (inlineOnly) await checkInlineImages({ api,collection,selectInterface,openItem,out,report });
+  else if (presetsOnly) await checkImagePresets({ api,collection,selectInterface,openItem,origin,out,report });
   else if (imagesOnly || stockImages) await checkImages();
   else if (linksOnly || stockLinks) await checkLinks();
   else if (sourceOnly) await checkSource();

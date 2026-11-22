@@ -68,7 +68,11 @@ When the project allows only named transformations, choose a preset in the image
 
 Build the extension and run `node integrations/directus/audit-stock.mjs --image-presets` to reproduce this workflow. The [paired comparison](../../artifacts/directus-handover/ba1efef5-0d41-4328-92d6-959f65e5f63b/report.json) checked the loaded PNG at 240 × 36, 120 × 18 and its original 400 × 60. Both editors saved identical HTML for both presets, the manual size and the restored original. After rollback, stock Directus reopened the same Fountain-edited item, changed its preset and kept the caption. [Fountain preset drawer](../../artifacts/directus-handover/ba1efef5-0d41-4328-92d6-959f65e5f63b/fountain-preset.png) · [Stock preset drawer](../../artifacts/directus-handover/ba1efef5-0d41-4328-92d6-959f65e5f63b/stock-preset.png)
 
-The image comparisons used an administrator account. Inline and linked images, restricted-account asset access and other media types still need qualification.
+To place an image inside a sentence, put the caret between the words, choose **Image**, select the file, and enable **Show in the line of text**. Click **Apply image**, then save the item. To move an existing inline image onto its own line, select it and clear the same option. Returning it to inline puts it in its own paragraph, as in stock Data Studio. Captioned figures stay on their own line. An inline image carrying formatting or a link keeps its inline placement when you edit its properties. Edit formatted captions directly in the document to keep their inline images and formatting.
+
+Run `node integrations/directus/audit-stock.mjs --inline-images` after building the extension. The [paired Chromium comparison](../../artifacts/directus-handover/febd6b32-84d2-460f-9777-8f18ad5e6a0e/report.json) checked insertion between two parentheses, the adjacent bold text, alt-text undo and redo, moving the image onto its own line and back, and a further edit after rollback. The reopened paragraph screenshots were byte-identical. A separate Fountain edit changed the main figure’s alt text and retained its caption’s inline image and bold text. [Fountain paragraph](../../artifacts/directus-handover/febd6b32-84d2-460f-9777-8f18ad5e6a0e/fountain-inline.png) · [Stock paragraph](../../artifacts/directus-handover/febd6b32-84d2-460f-9777-8f18ad5e6a0e/stock-inline.png)
+
+The image comparisons used an administrator account. Linked images, restricted-account asset access and other media types still need qualification.
 
 ### Edit HTML source
 

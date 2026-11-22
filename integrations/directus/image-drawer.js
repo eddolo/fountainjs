@@ -20,7 +20,7 @@ export const ImageDrawer = defineComponent({
       const url = absolute(src);
       const preset = url.searchParams.get('key') ?? '';
       const definition = presets.value.find(item => item.key === preset);
-      return {src,alt,caption,lazy,preset,transformChanged:false,
+      return {src,alt,caption,lazy,preset,inline: Boolean(props.target.inline),transformChanged:false,
         width:definition?.width ?? url.searchParams.get('width') ?? '',
         height:definition?.height ?? url.searchParams.get('height') ?? ''};
     }
@@ -73,12 +73,12 @@ export const ImageDrawer = defineComponent({
         const fragment = src.indexOf('#');
         src = path + '?' + query.toString() + (fragment < 0 ? '' : src.slice(fragment));
       }
-      if (saveImage(props.editor,props.target,{src,alt:form.alt,loading:form.lazy ? 'lazy' : null},form.caption)) close();
+      if (saveImage(props.editor,props.target,{src,alt:form.alt,loading:form.lazy ? 'lazy' : null},form.caption,form.inline)) close();
       else message.value = 'The image could not be applied at this position. Close the drawer and select the image or a paragraph.';
     }
     const input = (label,key,dimension=false) => h('label',[label,h('input',{
       type:dimension ? 'number' : 'text',min:dimension ? 1 : undefined,value:model.value[key],
-      disabled:dimension && !!model.value.preset,
+      disabled:(dimension && !!model.value.preset) || (key === 'caption' && (model.value.inline || props.target.richCaption)),
       onInput:event => { model.value[key] = event.target.value; if (dimension) model.value.transformChanged = true; },
     })]);
     return () => h(drawer,{title:props.target.image ? 'Edit image' : 'Add image',icon:'image',modelValue:true,
@@ -88,10 +88,15 @@ export const ImageDrawer = defineComponent({
         ...(model.value ? [
           isSafeURL(model.value.src) && h('img',{class:'fountain-directus-image-preview',src:model.value.src,alt:model.value.alt}),
           input('Image URL','src'),input('Alternative Text','alt'),input('Caption','caption'),
+          props.target.richCaption && h('p', 'Edit this formatted caption directly in the document.'),
           policy.value === 'all' && input('Width','width',true),policy.value === 'all' && input('Height','height',true),
           policy.value !== 'none' && presets.value.length > 0 && h('label',['Transformation preset',h('select',{
             value:model.value.preset,onChange:event => selectPreset(event.target.value),
           },[h('option',{value:''},'None'),...presets.value.map(preset => h('option',{value:preset.key},preset.key))])]),
+          h('label',[h('input',{type:'checkbox',checked:model.value.inline,
+            disabled:!!props.target.figure || !!model.value.caption.trim() || Boolean(props.target.inline && props.target.image.marks.length),
+            onChange:event => { model.value.inline = event.target.checked; },
+          }),'Show in the line of text']),
           h('label',[h('input',{type:'checkbox',checked:model.value.lazy,onChange:event => { model.value.lazy = event.target.checked; }}),'Enable Lazy Loading']),
         ] : [h(upload,{multiple:false,fromLibrary:true,fromUrl:false,folder:props.folder,accept:'image/*',onInput:select})]),
         message.value && h('p',{role:'alert'},message.value),
