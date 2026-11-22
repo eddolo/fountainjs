@@ -757,7 +757,7 @@ function DemoPage() {
   return <main className="single-demo" style={{ '--demo-accent': demo.accent } as React.CSSProperties}>
     <header className="site-header">
       <a className="brand" href="../" aria-label="F FountainJS home"><span aria-hidden="true">F</span> FountainJS</a>
-      <nav aria-label="Primary navigation"><SitePageLink href="../">Home</SitePageLink><SitePageLink href="../demos.html">10 demos</SitePageLink><SitePageLink href="../developers.html">Developers</SitePageLink><a className="site-section-link site-external-link" href="https://github.com/eddolo/fountainjs">Source ↗</a></nav>
+      <nav aria-label="Primary navigation"><SitePageLink href="../">Home</SitePageLink><SitePageLink href="../demos.html">Demos</SitePageLink><SitePageLink href="../developers.html">Developers</SitePageLink><a className="site-section-link site-external-link" href="https://github.com/eddolo/fountainjs">Source ↗</a></nav>
       <a className="install-pill" href="../demos.html">Demo {String(demo.index).padStart(2, '0')} / 10</a>
     </header>
 

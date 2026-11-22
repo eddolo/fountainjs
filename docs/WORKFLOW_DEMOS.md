@@ -85,7 +85,7 @@ so direct visits work without relying on a previous browser-history entry.
 6. Delete a task, then use Undo delete. Its title, date, completion and edited
    description return; the description's Undo/Redo still operates independently.
 7. Delete every task. Add a new one from the empty state, or undo the last removal.
-8. Follow the breadcrumb/back arrow to the hub, or 10 demos/Developers to the integration
+8. Follow the breadcrumb/back arrow to the hub, or Demos/Developers to the integration
    documentation. Download before navigating away.
 
 Implementation: `examples/react-app/src/TaskWorkflow.tsx`, `task-main.tsx`,

@@ -5626,7 +5626,7 @@ test('keeps headline phrases together and makes full-page navigation explicit', 
   await page.goto('/');
   const primary = page.getByRole('navigation', { name: 'Primary navigation' });
   await expect(primary.getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('aria-current', 'page');
-  await expect(primary.getByRole('link', { name: '10 demos', exact: true }).locator('.site-page-link__arrow')).toBeVisible();
+  await expect(primary.getByRole('link', { name: 'Demos', exact: true }).locator('.site-page-link__arrow')).toBeVisible();
   await expect(primary.getByRole('link', { name: 'Developers', exact: true }).locator('.site-page-link__arrow')).toBeVisible();
 
   const collaborationPhrase = page.getByRole('heading', { name: 'Two editors. One convergent document.' }).locator('.keep-together');
@@ -5637,13 +5637,13 @@ test('keeps headline phrases together and makes full-page navigation explicit', 
   await page.goto('/demos.html');
   const demosNavigation = page.getByRole('navigation', { name: 'Primary navigation' });
   await expect(demosNavigation.getByRole('link', { name: 'Home', exact: true })).toBeVisible();
-  await expect(demosNavigation.getByRole('link', { name: '10 demos', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(demosNavigation.getByRole('link', { name: 'Demos', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(demosNavigation.getByRole('link', { name: 'Developers', exact: true })).toBeVisible();
 
   await page.goto('/developers.html');
   const developerNavigation = page.getByRole('navigation', { name: 'Primary navigation' });
   await expect(developerNavigation.getByRole('link', { name: 'Home', exact: true })).toBeVisible();
-  await expect(developerNavigation.getByRole('link', { name: '10 demos', exact: true })).toBeVisible();
+  await expect(developerNavigation.getByRole('link', { name: 'Demos', exact: true })).toBeVisible();
   await expect(developerNavigation.getByRole('link', { name: 'Developers', exact: true })).toHaveAttribute('aria-current', 'page');
 });
 

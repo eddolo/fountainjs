@@ -107,7 +107,7 @@ export async function productWorkflowJourney(page: Page, info: TestInfo): Promis
   await capture('task-reader-mobile.png');
   await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Workflows' }).click();
   await capture('workflow-hub-mobile.png');
-  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: '10 demos' }).click();
+  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Demos' }).click();
   await expect(discovery).toBeVisible();
   await capture('gallery-discovery-mobile.png');
   expect(pageErrors).toEqual([]);

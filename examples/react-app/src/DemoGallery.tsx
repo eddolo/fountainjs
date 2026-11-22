@@ -14,7 +14,7 @@ function DemoGallery() {
     <main className="demos-site">
       <header className="site-header">
         <a className="brand" href="./" aria-label="F FountainJS home"><span>F</span> FountainJS</a>
-        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html" current>10 demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink><a className="site-section-link" href="#boundaries">Boundaries</a></nav>
+        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html" current>Demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink><a className="site-section-link" href="#boundaries">Boundaries</a></nav>
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>
 

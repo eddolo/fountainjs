@@ -144,7 +144,7 @@ export async function vueRunbookJourney(page: Page, info: TestInfo) {
   await page.screenshot({ path: tableShot });
   await info.attach('Vue table recovery', { path: tableShot, contentType: 'image/png' });
   // Real page navigation destroys the app and a new visit gets a new editor.
-  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: '10 demos' }).click();
+  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Demos' }).click();
   await expect(page).toHaveURL(/demos\.html$/);
   await page.goto('/demos/vue-runbook.html');
   await expect(editor).toBeVisible();

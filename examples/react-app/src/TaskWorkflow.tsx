@@ -95,7 +95,7 @@ export function TaskWorkflow() {
   // Adding or deleting another task releases the previous removed pane.
   const retainedPanes = removed ? [...tasks, removed.task] : tasks;
   return <main className="task-site">
-    <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
+    <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
     <div className="task-heading"><WorkflowBreadcrumbs current="Todoist-style task briefs (unofficial)" /><h1>A task needs more than a title.</h1><p>Edit a brief, switch tasks, and come back. Each description has its own document and undo history.</p></div>
     {notice && <div className="task-notice" role="status"><span>{notice}</span>{removed && <button onClick={restoreTask}>Undo delete</button>}</div>}
     <div className="task-workspace">

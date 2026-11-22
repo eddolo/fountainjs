@@ -56,7 +56,7 @@ function MathRendererLab() {
   return <main className="demos-site math-lab">
     <header className="site-header">
       <a className="brand" href="./"><span>F</span> FountainJS</a>
-      <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav>
+      <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav>
       <span>Capability lab</span>
     </header>
     <section className="math-lab__intro">

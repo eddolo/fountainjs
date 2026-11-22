@@ -46,7 +46,7 @@ function Showcase() {
   const image = stock && item.stock ? item.stock : item.image;
   return <main className="workflows-site gl-showcase">
     <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a>
-      <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
+      <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
     <div className="gl-wrap"><WorkflowBreadcrumbs current="GitLab integration" />
     <header className="gl-intro"><div><p className="gl-context">GitLab Community Edition 19.5.3</p><h1>FountainJS inside GitLab</h1>
       <p>We replaced GitLab’s rich-text editor and ran both versions against the same application and test data. Compare saved issues, follow a code review, and see what two authors kept when a wiki server went offline.</p>

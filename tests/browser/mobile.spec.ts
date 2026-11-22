@@ -352,7 +352,7 @@ test('keeps the public editor usable without horizontal overflow at a phone view
   await page.goto('/');
   const primary = page.getByRole('navigation', { name: 'Primary navigation' });
   await expect(primary.getByRole('link', { name: 'Home', exact: true })).toBeVisible();
-  await expect(primary.getByRole('link', { name: '10 demos', exact: true })).toBeVisible();
+  await expect(primary.getByRole('link', { name: 'Demos', exact: true })).toBeVisible();
   await expect(primary.getByRole('link', { name: 'Developers', exact: true })).toBeVisible();
   const heading = page.getByRole('heading', { name: 'Build a rich-text editor. Use any framework. Extend every layer.' });
   await expect(heading).toBeVisible();

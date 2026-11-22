@@ -129,7 +129,7 @@ function EquationReferencesLab() {
 
   return <main className="math-lab equation-lab">
     <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a>
-      <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav><span>Capability lab</span></header>
+      <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav><span>Capability lab</span></header>
     <section className="math-lab__intro">
       <h1>Equation references</h1>
       <p>Edit labelled equations, move them, and watch the numbers and references update in both the editor and the reader preview. MathJax 4.1.3 and its TeX SVG font are bundled locally by this example; they are not Fountain engine dependencies. The host can supply a different preloaded SVG font.</p>
