@@ -64,7 +64,11 @@ Place the caret in a paragraph and choose **Image**. Use the folder button to ch
 
 Build the extension and run `node integrations/directus/audit-stock.mjs --images`. The [comparison in Directus 12.7.0](../../artifacts/directus-handover/509e4110-f6e3-49bf-be9f-9014a25bb195/report.json) uploaded a 400 × 60 PNG through stock Directus, selected that same file from Fountain’s library picker, and requested a 200 × 30 image in both editors. The test compared the saved HTML, original file bytes, decoded image pixels and caption appearance. It exercised caption undo/redo and saved another caption edit on the same record in stock Directus after rollback. [Fountain figure](../../artifacts/directus-handover/509e4110-f6e3-49bf-be9f-9014a25bb195/fountain-asset.png) · [Stock figure](../../artifacts/directus-handover/509e4110-f6e3-49bf-be9f-9014a25bb195/stock-asset.png)
 
-This comparison used an administrator account and pixel dimensions. Inline and linked images, named transformation presets, restricted-account asset access and other media types still need qualification.
+When the project allows only named transformations, choose a preset in the image drawer. Directus stores its key in the asset URL. When the project also allows custom sizes, the drawer shows the selected preset’s dimensions. Clear the preset to edit those dimensions yourself. If the administrator disables transformations, the next time you apply the image the field removes its transformation parameters and displays the original image.
+
+Build the extension and run `node integrations/directus/audit-stock.mjs --image-presets` to reproduce this workflow. The [paired comparison](../../artifacts/directus-handover/ba1efef5-0d41-4328-92d6-959f65e5f63b/report.json) checked the loaded PNG at 240 × 36, 120 × 18 and its original 400 × 60. Both editors saved identical HTML for both presets, the manual size and the restored original. After rollback, stock Directus reopened the same Fountain-edited item, changed its preset and kept the caption. [Fountain preset drawer](../../artifacts/directus-handover/ba1efef5-0d41-4328-92d6-959f65e5f63b/fountain-preset.png) · [Stock preset drawer](../../artifacts/directus-handover/ba1efef5-0d41-4328-92d6-959f65e5f63b/stock-preset.png)
+
+The image comparisons used an administrator account. Inline and linked images, restricted-account asset access and other media types still need qualification.
 
 ### Edit HTML source
 

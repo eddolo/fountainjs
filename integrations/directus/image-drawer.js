@@ -18,8 +18,11 @@ export const ImageDrawer = defineComponent({
     const model = ref(null);
     function properties(src,alt,caption,lazy) {
       const url = absolute(src);
-      return {src,alt,caption,lazy,width:url.searchParams.get('width') ?? '',height:url.searchParams.get('height') ?? '',
-        preset:url.searchParams.get('key') ?? '', transformChanged:false};
+      const preset = url.searchParams.get('key') ?? '';
+      const definition = presets.value.find(item => item.key === preset);
+      return {src,alt,caption,lazy,preset,transformChanged:false,
+        width:definition?.width ?? url.searchParams.get('width') ?? '',
+        height:definition?.height ?? url.searchParams.get('height') ?? ''};
     }
     if (props.target.image) {
       const attrs = props.target.image.attrs;
@@ -36,23 +39,39 @@ export const ImageDrawer = defineComponent({
       model.value.transformChanged = true;
       message.value = '';
     }
+    function selectPreset(key) {
+      const form = model.value;
+      form.preset = key;
+      form.transformChanged = true;
+      const definition = presets.value.find(item => item.key === key);
+      if (definition) {
+        form.width = definition.width ?? '';
+        form.height = definition.height ?? '';
+      }
+    }
     const close = () => emit('close');
     function apply() {
       const form = model.value;
       if (!form || !isSafeURL(form.src)) { message.value = 'Choose a valid image URL.'; return; }
       let src = form.src;
-      if (form.transformChanged) {
-        const url = absolute(src);
-        for (const key of ['key','width','height']) url.searchParams.delete(key);
-        if (policy.value !== 'none' && form.preset) url.searchParams.set('key',form.preset);
+      const query = absolute(src).searchParams;
+      const obsoleteDimensions = policy.value !== 'all' && (query.has('width') || query.has('height'));
+      const obsoletePreset = policy.value === 'none' && query.has('key');
+      if (form.transformChanged || obsoleteDimensions || obsoletePreset) {
+        for (const key of ['key','width','height']) query.delete(key);
+        if (policy.value !== 'none' && form.preset) query.set('key',form.preset);
         else if (policy.value === 'all') {
           for (const key of ['width','height']) {
             if (form[key] === '') continue;
             if (!/^[1-9]\d*$/.test(String(form[key]))) { message.value = 'Image dimensions must be positive whole numbers.'; return; }
-            url.searchParams.set(key,form[key]);
+            query.set(key,form[key]);
           }
         }
-        src = url.href;
+        // Directus keeps the query delimiter when clearing the final transform.
+        // Retain the author's path, unrelated parameters and any URL fragment.
+        const path = src.split(/[?#]/,1)[0];
+        const fragment = src.indexOf('#');
+        src = path + '?' + query.toString() + (fragment < 0 ? '' : src.slice(fragment));
       }
       if (saveImage(props.editor,props.target,{src,alt:form.alt,loading:form.lazy ? 'lazy' : null},form.caption)) close();
       else message.value = 'The image could not be applied at this position. Close the drawer and select the image or a paragraph.';
@@ -71,7 +90,7 @@ export const ImageDrawer = defineComponent({
           input('Image URL','src'),input('Alternative Text','alt'),input('Caption','caption'),
           policy.value === 'all' && input('Width','width',true),policy.value === 'all' && input('Height','height',true),
           policy.value !== 'none' && presets.value.length > 0 && h('label',['Transformation preset',h('select',{
-            value:model.value.preset,onChange:event => { model.value.preset = event.target.value; model.value.transformChanged = true; },
+            value:model.value.preset,onChange:event => selectPreset(event.target.value),
           },[h('option',{value:''},'None'),...presets.value.map(preset => h('option',{value:preset.key},preset.key))])]),
           h('label',[h('input',{type:'checkbox',checked:model.value.lazy,onChange:event => { model.value.lazy = event.target.checked; }}),'Enable Lazy Loading']),
         ] : [h(upload,{multiple:false,fromLibrary:true,fromUrl:false,folder:props.folder,accept:'image/*',onInput:select})]),
