@@ -1,0 +1,32 @@
+.gl-wrap { max-width: 1380px; margin: auto; padding: 30px clamp(18px, 5vw, 76px) 60px; }
+.gl-showcase .site-header { position: static; }
+.gl-intro { display: grid; align-items: center; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); gap: clamp(20px, 4vw, 64px); padding: clamp(28px, 5vw, 72px) 0 32px; }
+.gl-cover { margin: 0; padding: 10px; border: 1px solid #d7d0e4; border-radius: 12px; background: white; }
+.gl-cover img { display: block; width: 100%; height: auto; border-radius: 6px; }
+.gl-cover figcaption { font-size: .83rem; padding: 8px 4px 0; line-height: 1.4; }
+.gl-showcase h1, .gl-showcase h2, .gl-showcase h3 { text-wrap: balance; line-height: 1.1; }
+.gl-showcase h1 { font-size: clamp(2.6rem, 6.6vw, 6rem); letter-spacing: -.065em; margin: .18em 0; }
+.gl-showcase h2 { font-size: clamp(1.65rem, 3.4vw, 3rem); letter-spacing: -.04em; margin: 0 0 18px; }
+.gl-showcase h3 { font-size: clamp(1.3rem, 2vw, 1.9rem); margin: 12px 0; }
+.gl-showcase p { max-width: 76ch; line-height: 1.55; }
+.gl-context { font-family: ui-monospace, monospace; color: #584571; font-size: .83rem; margin: 0; }
+.gl-actions, .gl-choices, .gl-switch, .gl-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; }
+.gl-actions { gap: 1rem 1.4rem; }
+.gl-showcase :is(.gl-actions,.gl-narrative,figcaption) a { text-underline-offset: .23em; text-decoration: underline; }
+.gl-showcase button, .gl-showcase .gl-primary { border: 1px solid #bdb6cb; color: #261c36; background: #fff; border-radius: .5rem; font: inherit; padding: .6rem .9rem; cursor: pointer; }
+.gl-showcase .gl-primary, .gl-showcase button[aria-pressed="true"] { background: #32204c; color: #fff; border-color: #32204c; }
+.gl-showcase button:disabled { opacity: .48; cursor: default; }
+.gl-evidence, .gl-live, .gl-run { padding: 32px 0; border-top: 1px solid #d7d0e4; scroll-margin-top: 110px; }
+.gl-recording { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.5fr); gap: 24px; padding: 32px 0; border-top: 1px solid #d7d0e4; }
+.gl-recording video { width: 100%; aspect-ratio: 16/10; background: #211b2b; }
+.gl-result { display: grid; grid-template-columns: minmax(200px, .8fr) minmax(0, 2fr); margin-top: 18px; border: 1px solid #d7d0e4; border-radius: 12px; overflow: hidden; background: #fff; }
+.gl-narrative, .gl-result figure, .gl-composer { min-width: 0; padding: clamp(16px, 2vw, 28px); }
+.gl-result figure { margin: 0; background: #efedf4; }
+.gl-result img { width: 100%; height: auto; display: block; margin: 12px 0; border: 1px solid #d4cfdb; }
+.gl-result figcaption { font-size: .85rem; }
+.gl-composers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+.gl-composer { background: #fff; border: 1px solid #cfc8d8; border-radius: 10px; }
+.gl-composer .fountain-editor { min-height: 180px; padding: 12px; margin-block: 12px; border: 1px solid #d7d0e4; border-radius: 6px; }
+.gl-composer pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 12px; background: #f2eff6; }
+.gl-composer summary { cursor: pointer; }
+@media (max-width: 720px) { .gl-recording, .gl-intro, .gl-result, .gl-composers { grid-template-columns: minmax(0, 1fr); } .gl-choices button { flex: 1 1 42%; } }

@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from 'vite';
+import { gitlabVue2BridgePlugin } from './tools/gitlab-bridge/vite-plugin.mjs';
 import { angularLinker } from './tools/angular-build/vite-plugin.mjs';
 import { siteBuildInfoPlugin } from './tools/site-build-info';
 
@@ -20,9 +21,9 @@ const demoSlugs = [
 
 export default defineConfig({
   root: fileURLToPath(new URL('./examples/react-app', import.meta.url)),
-  plugins: [angularLinker(), react(), svelte({ configFile: false }), siteBuildInfoPlugin([
+  plugins: [gitlabVue2BridgePlugin(), angularLinker(), react(), svelte({ configFile: false }), siteBuildInfoPlugin([
     '/', '/index.html', '/developers.html', '/demos.html', '/conversion-lab.html',
-    '/workflows.html', '/task-workflow.html', '/issue-editor.html',
+    '/workflows.html', '/gitlab.html', '/task-workflow.html', '/issue-editor.html',
     '/math-renderer.html', '/math-references.html', '/block-reordering.html',
     ...demoSlugs.map(slug => `/demos/${slug}.html`),
   ])],
@@ -58,6 +59,7 @@ export default defineConfig({
         demos: fileURLToPath(new URL('./examples/react-app/demos.html', import.meta.url)),
         conversionLab: fileURLToPath(new URL('./examples/react-app/conversion-lab.html', import.meta.url)),
         workflows: fileURLToPath(new URL('./examples/react-app/workflows.html', import.meta.url)),
+        gitlab: fileURLToPath(new URL('./examples/react-app/gitlab.html', import.meta.url)),
         taskWorkflow: fileURLToPath(new URL('./examples/react-app/task-workflow.html', import.meta.url)),
         issueEditor: fileURLToPath(new URL('./examples/react-app/issue-editor.html', import.meta.url)),
         mathRenderer: fileURLToPath(new URL('./examples/react-app/math-renderer.html', import.meta.url)),

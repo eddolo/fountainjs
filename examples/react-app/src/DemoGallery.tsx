@@ -18,7 +18,7 @@ function DemoGallery() {
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>
 
-      <section className="workflow-discovery" aria-label="Real-world workflow demos"><div><h2>Real-world workflows, rebuilt with FountainJS.</h2><p>Try a GitLab-style issue editor or a Todoist-style task workspace. Then follow the implementation guide.</p></div><div className="workflow-discovery-actions"><a href="./workflows.html">Explore product workflows ↗</a><a href="./issue-editor.html">Open GitLab-style issue editor ↗</a></div></section>
+      <section className="workflow-discovery" aria-label="Real-world workflow demos"><div><h2>FountainJS in real products</h2><p>Try the GitLab editor integration and compare saved issues, merge requests and wikis.</p></div><div className="workflow-discovery-actions"><a href="./gitlab.html">Explore the GitLab integration ↗</a><a href="./workflows.html">Explore product workflows ↗</a></div></section>
 
       <section className="demos-hero">
         <div className="workflow-discovery"><div><h2>Try your own documents.</h2><p>Import files locally, inspect conversion warnings, edit and reopen an export.</p></div><a href="./conversion-lab.html">Open the conversion lab ↗</a></div>
@@ -46,7 +46,7 @@ function DemoGallery() {
 
       <section className="boundary-section" id="boundaries">
         <p><a href="./block-reordering.html">Block reordering lab →</a> — organize a bilingual runbook with whole-block hover/grab feedback, separate drop markers, keyboard/touch controls, undo, stable identities and a reader preview. Fixed-direction moves and shared automatic-scope limits are labelled explicitly.</p>
-        <p><a href="./issue-editor.html">Issue editor workflow →</a> — an unofficial GitLab-style bug report with visual/Markdown switching, source-fidelity diagnostics, local image insertion, draft download/reopen, and a separate reader preview. No account or submission server is connected.</p>
+        <p><a href="./gitlab.html">FountainJS inside GitLab →</a> Edit with the GitLab adapter, compare both editors’ saved results, and run the pinned application locally.</p>
         <p><a href="./math-renderer.html">Math renderer lab →</a> — edit typeset formulas, import a real paper’s table, and inspect equation failures and table-layout losses. This capability lab is separate from the ten environment demos.</p>
         <p><a href="./math-references.html">Equation references lab →</a> — edit and reorder the original labelled equations with locally bundled MathJax, save/reopen JSON files, inspect missing/duplicate references, and follow links across paged snapshots. Print or save a current snapshot as PDF; whole-paper layout, accessible PDF and native DOCX math remain separate audit work.</p>
         <div className="boundary-section__heading"><span>WHAT IS ACTUALLY SHARED</span><h2>Framework-neutral does not mean framework-shaped examples.</h2><p>The gallery groups framework bindings, plain DOM, Web Component and portable-data integrations. Each example names the route it actually runs.</p></div>

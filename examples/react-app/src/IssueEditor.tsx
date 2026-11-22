@@ -133,6 +133,7 @@ export function IssueEditor() {
       <section className="issue-workspace">
         <WorkflowBreadcrumbs current="GitLab-style issue editor (unofficial)" />
         <h1>A bug report, from draft to review.</h1>
+        <p><a href="./gitlab.html">Open the full GitLab integration showcase →</a></p>
         <p>Write visually, inspect the Markdown, and preview what a reader sees. This is a FountainJS implementation of an issue-writing workflow, not a GitLab integration or a full GitLab Flavored Markdown implementation.</p>
         <label className="issue-title">Issue title<input value={title} onChange={event => setTitle(event.target.value)} /></label>
         <section className="issue-card" aria-label="Issue description">

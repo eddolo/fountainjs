@@ -19,6 +19,48 @@ test('opens the homepage at the requested section while the embedded editors ini
   }
 });
 
+test('opens the GitLab showcase, compares saved records and edits the native composers independently', async ({ page }, info) => {
+  await page.goto('./demos.html');
+  await page.getByRole('link', { name: 'Explore the GitLab integration' }).click();
+  await expect(page.getByRole('heading', { name: 'FountainJS inside GitLab' })).toBeVisible();
+  await expect.poll(() => page.locator('.gl-cover img').evaluate(el => (el as HTMLImageElement).naturalWidth)).toBe(1280);
+  await page.screenshot({ path: info.outputPath('gitlab-integration-desktop.png') });
+  for (const name of ['Merge requests', 'Collaborative wikis', 'Deployment & rollback', 'Issues']) {
+    await page.getByRole('button', { name, exact: true }).click();
+    const image = page.getByRole('link', { name: 'Open full-size GitLab capture' }).locator('img');
+    await expect.poll(() => image.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(100);
+  }
+  await page.getByRole('button', { name: 'Stock GitLab' }).click();
+  await expect(page.locator('.gl-result figure img')).toHaveAttribute('alt', /stock issue/i);
+  const video = page.getByLabel('GitLab quick-action recording');
+  await video.evaluate(el => (el as HTMLVideoElement).load());
+  await expect.poll(() => video.evaluate(el => (el as HTMLVideoElement).duration)).toBeGreaterThan(200);
+  await page.getByRole('button', { name: 'Open both editors' }).click();
+  const tasks = page.locator('.gl-composer').filter({ has: page.getByRole('heading', { name: 'Release checklist' }) });
+  const notes = page.locator('.gl-composer').filter({ has: page.getByRole('heading', { name: 'Handoff notes' }) });
+  await tasks.locator('[data-fountain-task-toggle]').first().click();
+  await tasks.getByText('Inspect GitLab Markdown').click();
+  await expect(tasks.locator('pre')).toContainText('- [x] Verify deployment');
+  const editor = notes.getByRole('textbox', { name: 'Handoff notes editor' });
+  await editor.locator('p').last().click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' Ready for review.');
+  await notes.getByText('Inspect GitLab Markdown').click();
+  await expect(notes.locator('pre')).toContainText('Ready for review.');
+  await tasks.getByRole('button', { name: 'Undo' }).click();
+  await expect(tasks.locator('pre')).toContainText('- [ ] Verify deployment');
+  await expect(notes.locator('pre')).toContainText('Ready for review.');
+  await notes.getByRole('button', { name: 'Undo' }).click();
+  await expect(notes.locator('pre')).not.toContainText('Ready for review.');
+  await tasks.getByRole('button', { name: 'Redo' }).click();
+  await expect(tasks.locator('pre')).toContainText('- [x] Verify deployment');
+  await page.locator('.gl-live').screenshot({ path: info.outputPath('gitlab-live-composers.png') });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole('button', { name: 'FountainJS', exact: true }).click();
+  await page.locator('.gl-evidence').screenshot({ path: info.outputPath('gitlab-issue-mobile.png') });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
+});
+
 test('downloads complete standalone projects from the developer guide', async ({ page }, info) => {
   const publishedStarter = JSON.parse(await readFile('examples/starters/published-version.json', 'utf8'));
   const hiddenAssets = new Set<string>();

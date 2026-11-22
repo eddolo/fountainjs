@@ -15,7 +15,12 @@ export async function productWorkflowJourney(page: Page, info: TestInfo): Promis
   await page.goto('/demos.html');
   const discovery = page.getByRole('region', { name: 'Real-world workflow demos' });
   await expect(discovery).toBeInViewport();
-  await expect(discovery.getByRole('link', { name: 'Open GitLab-style issue editor' })).toBeVisible();
+  await discovery.getByRole('link', { name: 'Explore the GitLab integration' }).click();
+  await expect(page).toHaveURL(/\/gitlab\.html$/);
+  await page.getByRole('button', { name: 'Merge requests' }).click();
+  await page.getByRole('button', { name: 'Stock GitLab' }).click();
+  await expect(page.getByRole('img', { name: /Stock GitLab merge request/ })).toBeVisible();
+  await page.goBack();
   await capture('gallery-discovery.png');
   await discovery.getByRole('link', { name: 'Explore product workflows' }).click();
   await expect(page).toHaveURL(/\/workflows.html$/);
