@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.5.0-beta.5 — 2026-11-22
+
+- Display invalid chart axis ranges inline. Firefox users can correct a value and apply it with the next click.
+- Verify a restarted chart feed refreshes once and makes no further requests across three intervals after Stop.
+
 ## 0.5.0-beta.4 — 2026-11-22
 
 - Open the homepage at the top on a fresh visit. Direct links to sections still work while the collaboration and tracked-changes examples initialize.

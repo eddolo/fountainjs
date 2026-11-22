@@ -818,6 +818,13 @@ function App() {
                     onChange={event => setChartAxisTitle(editor, axis, event.target.value)} />
                 </label>)}
                 <form key={[editor.state.selection.path[0], chart.attrs.axisMin, chart.attrs.axisMax, chart.attrs.axisInterval].join(':')}
+                  onInvalid={event => {
+                    event.preventDefault();
+                    const input = event.target as HTMLInputElement;
+                    const feedback = event.currentTarget.elements.namedItem('rangeFeedback') as HTMLOutputElement;
+                    feedback.value = input.validationMessage;
+                    input.focus();
+                  }}
                   onSubmit={event => {
                     event.preventDefault();
                     const form = event.currentTarget;
@@ -838,11 +845,13 @@ function App() {
                       interval.value ? interval.valueAsNumber : null);
                   }} onInput={event => {
                     for (const name of ['maximum', 'interval']) (event.currentTarget.elements.namedItem(name) as HTMLInputElement).setCustomValidity('');
+                    (event.currentTarget.elements.namedItem('rangeFeedback') as HTMLOutputElement).value = '';
                   }}>
                   <label>Minimum <input type="number" step="any" name="minimum" placeholder="Automatic" defaultValue={String(chart.attrs.axisMin ?? '')} /></label>
                   <label>Maximum <input type="number" step="any" name="maximum" placeholder="Automatic" defaultValue={String(chart.attrs.axisMax ?? '')} /></label>
                   <label>Tick interval <input type="number" step="any" name="interval" placeholder="Automatic" defaultValue={String(chart.attrs.axisInterval ?? '')} /></label>
                   <button type="submit">Apply range</button>
+                  <output name="rangeFeedback" aria-label="Chart range validation" aria-live="polite" />
                   {(chart.attrs.axisMin != null || chart.attrs.axisMax != null || chart.attrs.axisInterval != null) &&
                     <button type="button" onClick={() => setChartValueRange(editor, null, null, null)}>Use automatic scale</button>}
                 </form>

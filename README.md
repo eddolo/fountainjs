@@ -10,7 +10,7 @@ FountainJS is an open-source TypeScript library you add to a website or web app.
 
 Underneath those ready-made features is a modular editing engine: a typed document model, selections, transactions, plugins, history, and a plain DOM view. The interfaces and optional capabilities are replaceable, so a product can add or change content types, commands, formats, UI, storage, collaboration, and services without forking the core.
 
-`0.5.0-beta.4` is an early beta. Read the [versioned release notes](docs/RELEASE_0_5_0_BETA_4.md)
+`0.5.0-beta.5` is an early beta. Read the [versioned release notes](docs/RELEASE_0_5_0_BETA_5.md)
 for upgrade requirements, verification scope and known limitations. The
 [npm versions](https://www.npmjs.com/package/fountainjs-editor?activeTab=versions)
 and [GitHub releases](https://github.com/eddolo/fountainjs/releases) report actual

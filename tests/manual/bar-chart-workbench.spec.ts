@@ -557,7 +557,10 @@ test('reads a horizontal tick ruler on a phone and clears the interval without c
   await interval.fill('0');
   await demo.getByRole('button', { name: 'Apply range' }).click();
   expect(await interval.evaluate(input => (input as HTMLInputElement).validity.customError)).toBe(true);
+  const feedback = demo.getByLabel('Chart range validation');
+  await expect(feedback).toHaveText('Tick interval must be positive.');
   await interval.fill('10');
+  await expect(feedback).toBeEmpty();
   await demo.getByRole('button', { name: 'Apply range' }).click();
   await expect(ticks).toHaveText(['-20', '-10', '0', '10', '20']);
   const boxes = await ticks.evaluateAll(nodes => nodes.map(n => {
@@ -763,13 +766,19 @@ test('automatically refreshes weekly orders while writing elsewhere and keeps an
     await expect(output).toContainText('Automatic refresh stopped');
     await expect(value).toHaveText('27');
     await chart.screenshot({ path: info.outputPath('retained-order-edit.png') });
-    // Restart and stop a new schedule away from the chart.
+    // Advance the restarted schedule independently of how long scrolling to its controls takes.
+    const start = new Date('2026-01-01T00:00:00Z');
+    await page.clock.install({ time: start });
+    await page.clock.pauseAt(new Date(start.getTime() + 1000));
     await demo.getByRole('button', { name: 'Start automatic refresh' }).click();
     await note.click();
+    await page.clock.runFor(1000);
+    await expect(value).toHaveText('12');
+    expect(hits).toBe(5);
     await demo.getByRole('button', { name: 'Stop automatic refresh' }).click();
     await expect(output).toHaveText('Automatic refresh stopped.');
-    await page.waitForTimeout(1150);
-    expect(hits).toBe(4);
+    await page.clock.runFor(3000);
+    expect(hits).toBe(5);
   } finally {
     release?.();
     await new Promise<void>(resolve => { server.close(() => resolve()); server.closeAllConnections(); });
