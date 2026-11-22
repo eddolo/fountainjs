@@ -68,7 +68,7 @@ import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids';
 import { defineWidget, insertWidget } from 'fountainjs-editor/widgets';
 import { createDOMWidgetExtension } from 'fountainjs-editor/widgets/dom';
 import { demoDefinitions, getDemo, type DemoDefinition } from './demo-definitions';
-import { SitePageLink } from './SitePageLink';
+import { SiteHeader } from './SiteHeader';
 
 type OutputFormat = 'json' | 'markdown' | 'html';
 
@@ -755,11 +755,7 @@ function DemoPage() {
   const next = demo.index < 10 ? demo.index : 0;
 
   return <main className="single-demo" style={{ '--demo-accent': demo.accent } as React.CSSProperties}>
-    <header className="site-header">
-      <a className="brand" href="../" aria-label="F FountainJS home"><span aria-hidden="true">F</span> FountainJS</a>
-      <nav aria-label="Primary navigation"><SitePageLink href="../">Home</SitePageLink><SitePageLink href="../demos.html">Demos</SitePageLink><SitePageLink href="../developers.html">Developers</SitePageLink><a className="site-section-link site-external-link" href="https://github.com/eddolo/fountainjs">Source ↗</a></nav>
-      <a className="install-pill" href="../demos.html">Demo {String(demo.index).padStart(2, '0')} / 10</a>
-    </header>
+    <SiteHeader page="Demos" base="../"><a className="site-section-link site-external-link" href="https://github.com/eddolo/fountainjs">Source ↗</a></SiteHeader>
 
     <section className="single-demo__hero">
       <div><p>{String(demo.index).padStart(2, '0')} · {demo.host.toUpperCase()}</p><h1>{demo.title}</h1><span>{demo.summary}</span></div>

@@ -1,5 +1,5 @@
 import bpmnLicenseURL from 'bpmn-js/LICENSE?url&no-inline';
-import { SitePageLink } from './SitePageLink';
+import { SiteHeader } from './SiteHeader';
 import { StarterDownload } from './StarterDownload';
 import publishedStarter from '../../starters/published-version.json';
 
@@ -646,11 +646,7 @@ function Code({ children }: { children: string }) {
 function Developers() {
   return (
     <main className="developer-page">
-      <header className="site-header">
-        <a className="brand" href="./" aria-label="F FountainJS home"><span>F</span> FountainJS</a>
-        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./developers.html" current>Developers</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><a className="site-section-link" href="#system-map">Architecture</a><a className="site-section-link" href="#extensions">Extensions</a></nav>
-        <a className="install-pill" href="./#playground">Open playground</a>
-      </header>
+      <SiteHeader page="Developers"><a className="site-section-link" href="#system-map">Architecture</a><a className="site-section-link" href="#extensions">Extensions</a><a className="install-pill" href="./#playground">Open playground</a></SiteHeader>
 
       <section className="dev-hero">
         <div className="dev-hero__copy">

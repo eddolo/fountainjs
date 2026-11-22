@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { SitePageLink } from './SitePageLink';
+import { SiteHeader } from './SiteHeader';
 import { WorkflowBreadcrumbs } from './WorkflowBreadcrumbs';
 import './index.css';
 import { loadSiteFonts } from './site-fonts';
@@ -11,7 +11,7 @@ import outlineComparison from '../../../artifacts/gitlab-compatibility/final-899
 
 function Workflows() {
   return <main className="workflows-site">
-    <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./workflows.html" current>Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
+    <SiteHeader page="Workflows" />
     <section className="workflow-heading"><WorkflowBreadcrumbs /><p>REAL-WORLD WORKFLOWS</p><h1>Familiar work.<br />Powered by FountainJS.</h1><p>Try the GitLab integration and the task workspace, then inspect the saved results.</p></section>
     <section className="workflow-grid" aria-label="Product workflow demos">
       <article className="workflow-card"><span className="workflow-kind">GITLAB COMMUNITY EDITION · 19.5.3</span><h2>FountainJS inside GitLab</h2><p>Try the installed editor’s Vue 2 surface. Compare what GitLab saved in issues, merge requests and collaborative wikis, then follow a two-node rollback.</p><a className="workflow-open" href="./gitlab.html">Explore the GitLab integration ↗</a><div className="workflow-links"><a href="./issue-editor.html">Try the issue editor example ↗</a><a href="#gitlab-comparison">See the Firefox outline comparison ↓</a></div></article>

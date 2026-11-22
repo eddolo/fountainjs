@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { EditorState, MarkdownExporter, MarkdownImporter, Schema, StarterKit, type ImageUploadHandler } from 'fountainjs-editor';
 import { FountainComposer, FountainEditor, useFountain, useFountainState } from 'fountainjs-editor/react';
 import { issueMarkdown } from './issue-example';
-import { SitePageLink } from './SitePageLink';
+import { SiteHeader } from './SiteHeader';
 import { WorkflowBreadcrumbs } from './WorkflowBreadcrumbs';
 import { issueMarkdownOptions } from './issue-markdown-policy';
 
@@ -128,7 +128,7 @@ export function IssueEditor() {
   };
 
   return <main className="issue-site">
-    <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav><a href="#integration">How this is built ↓</a></header>
+    <SiteHeader page="Workflows"><a href="#integration">How this is built ↓</a></SiteHeader>
     <div className="issue-layout">
       <section className="issue-workspace">
         <WorkflowBreadcrumbs current="GitLab-style issue editor (unofficial)" />

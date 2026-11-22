@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { composeExtensions, createEditor, defineExtension, EditorView, HTMLExporter, StarterKit, undo, redo, type Editor, type Node, type NodeJSON } from 'fountainjs-editor';
 import { createStableNodeIdsExtension, selectNodeById } from 'fountainjs-editor/node-ids';
-import { SitePageLink } from './SitePageLink';
+import { SiteHeader } from './SiteHeader';
 import 'fountainjs-editor/styles.css';
 import './block-reordering.css';
 
@@ -90,7 +90,7 @@ function ReorderingLab() {
     return () => view.destroy();
   }, [editor, direction]);
   return <main className="demos-site reorder-lab">
-    <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
+    <SiteHeader page="Demos" />
     <section className="reorder-lab__intro"><nav aria-label="Breadcrumb"><a href="./demos.html">← Demos</a><span> / Block reordering lab</span></nav><h1>Move the block. Keep its structure.</h1><p>Organize a bilingual incident runbook with paragraphs, headings, lists, a table, local media and a custom extension block. These are the supplied controls, not a separate drag engine.</p><p>Hover or focus the handle: the complete block is highlighted. Grab it: the stronger ring marks the source. The separate line marks the destination.</p></section>
     <section className="reorder-lab__workspace" aria-label="Runbook workspace">
       <div className="reorder-lab__controls"><label>Editor direction <select value={direction} onChange={event => setDirection(event.target.value)}><option value="ltr">Left to right</option><option value="rtl">Right to left</option><option value="auto">Automatic</option></select></label><button disabled={!editor} onClick={() => editor && undo(editor)}>Undo</button><button disabled={!editor} onClick={() => editor && redo(editor)}>Redo</button><button aria-pressed={reader} onClick={() => setReader(!reader)}>Reader preview</button><button disabled={!documentNode} onClick={() => documentNode && download('runbook.json', 'application/json', JSON.stringify(documentNode.toJSON(), null, 2))}>Download JSON</button><button disabled={!documentNode} onClick={() => documentNode && download('runbook.html', 'text/html', HTMLExporter.export(documentNode, { document: true, title: 'Recovery runbook', includeStyles: true }))}>Download HTML</button></div>

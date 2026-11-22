@@ -1,0 +1,30 @@
+#site-chrome { position: sticky; top: 0; z-index: 20; }
+html:has(.global-header) { scroll-padding-top: var(--site-scroll-offset, 130px); scrollbar-gutter: stable; }
+.site-header.global-header { position: static; display: block; height: auto; min-height: 0; padding: 0; color: #17152a; background: #f7f5f0; font-family: Manrope, system-ui, sans-serif; }
+.global-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 clamp(16px,4vw,64px); min-height: 54px; }
+.global-bar .brand { justify-self: start; }
+.global-header .global-bar nav { display: flex; align-items: center; justify-content: center; gap: clamp(3px,1vw,16px); }
+.global-header .site-page-link > i { display: inline-grid; place-content: center; width: 9px; flex-shrink: 0; }
+.global-header .site-page-link__current { width: 8px; height: 8px; }
+.global-header nav.home-sections { display: flex; width: 100%; box-sizing: border-box; align-items: center; justify-content: safe center; gap: 4px; overflow-x: auto; padding: 4px 12px; border-top: 1px solid #e6e2da; white-space: nowrap; font-size: 12px; scrollbar-width: thin; }
+.home-sections > span { font-weight: 700; color: #565068; margin-inline-end: 6px; }
+.home-sections a { display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border-radius: 6px; }
+.home-sections a i { display: block; height: 6px; width: 6px; border-radius: 50%; }
+.home-sections a[aria-current] { color: #4c35c3; background: #eae5ff; }
+.home-sections a[aria-current] i { background: #6d4aff; }
+.page-shortcuts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 1rem; padding: 8px clamp(16px,4vw,64px); font: 600 13px/1.5 Manrope,system-ui,sans-serif; }
+.page-shortcuts a { text-decoration: underline; text-underline-offset: .2em; }
+@media (max-width: 850px) {
+  .global-header .global-bar { grid-template-columns: auto 1fr; padding-inline: 12px; }
+  .global-header .global-bar nav { grid-column: auto; grid-row: auto; justify-self: end; font-size: 12px; }
+  .global-header .install-pill { display: none; }
+  #site-chrome .site-build-info { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; padding-block: 3px; scrollbar-width: none; }
+  #site-chrome .site-build-info > * { flex: none; }
+}
+@media (max-width: 540px) {
+  .global-header .global-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 10px; padding-block: 5px; }
+  .global-header .global-bar nav { flex-wrap: nowrap; }
+  .global-header .site-page-link { gap: 3px; padding-inline: 4px; }
+  .global-header .home-sections { justify-content: flex-start; }
+}
+@media print { #site-chrome, .page-shortcuts { display: none; } }

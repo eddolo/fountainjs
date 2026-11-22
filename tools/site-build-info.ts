@@ -65,7 +65,9 @@ export function siteBuildInfoPlugin(publicPages: readonly string[]): Plugin {
       if (!pages.has(context.path)) return;
       return [
         { tag: 'style', attrs: { 'data-fountain-build-info': '' }, children: styles, injectTo: 'head' },
-        { tag: 'aside', attrs: { class: 'site-build-info', 'aria-label': 'Website build information' }, children: siteBuildBanner(info), injectTo: 'body-prepend' },
+        { tag: 'div', attrs: { id: 'site-chrome' }, children: [
+          { tag: 'aside', attrs: { class: 'site-build-info', 'aria-label': 'Website build information' }, children: siteBuildBanner(info) },
+        ], injectTo: 'body-prepend' },
       ];
     },
     generateBundle() {

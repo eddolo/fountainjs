@@ -90,7 +90,7 @@ import { BpmnCanvasButton } from './BpmnCanvasButton';
 import { BpmnPreviewExtension } from './bpmn-preview';
 import editorialReview from './editorial-review.bpmn?raw';
 import { MermaidPreviewExtension } from './mermaid-preview';
-import { SitePageLink } from './SitePageLink';
+import { SiteHeader } from './SiteHeader';
 import 'fountainjs-editor/styles.css';
 import { LiveExportOutput } from './LiveExportOutput';
 
@@ -541,26 +541,29 @@ function VersionHistoryDemo() {
 
 function App() {
   useEffect(() => {
-    // React creates the section IDs after the browser's first fragment lookup.
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
     if (navigation?.type !== 'navigate' || location.hash.length < 2) return;
-    const fragment = location.hash;
-    const target = window.document.getElementById(fragment.slice(1));
-    if (!target) return;
-    const pending = window.document.querySelector('#collaboration[aria-busy="true"]');
-    if (!pending || (target !== pending && !(pending.compareDocumentPosition(target) & window.Node.DOCUMENT_POSITION_FOLLOWING))) {
-      target.scrollIntoView();
-      return;
-    }
-    // The collaboration placeholder is replaced by a much taller section.
-    // Resolve the destination once the real section (or its error view) mounts.
-    const observer = new MutationObserver(() => {
-      if (pending.isConnected && pending.getAttribute('aria-busy') === 'true') return;
-      observer.disconnect();
-      if (location.hash === fragment) window.document.getElementById(fragment.slice(1))?.scrollIntoView();
-    });
-    observer.observe(pending.parentElement!, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-busy'] });
-    return () => observer.disconnect();
+    const fragment = location.hash.slice(1);
+    const main = window.document.getElementById(fragment)?.closest('main');
+    if (!main) return;
+    // Fonts and both collaboration editors can change the layout after the
+    // first fragment lookup. Keep the incoming link aligned until the user acts.
+    const interaction = new AbortController();
+    let frame = 0;
+    const align = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        if (!interaction.signal.aborted && location.hash.slice(1) === fragment)
+          window.document.getElementById(fragment)?.scrollIntoView({ block: 'start' });
+      });
+    };
+    const size = new ResizeObserver(align);
+    const stop = () => { interaction.abort(); size.disconnect(); cancelAnimationFrame(frame); };
+    for (const event of ['pointerdown', 'wheel', 'touchstart', 'keydown', 'hashchange'])
+      window.addEventListener(event, stop, { signal: interaction.signal, passive: true });
+    size.observe(main);
+    align();
+    return stop;
   }, []);
   const editor = useFountain({
     schema: demoKit.schema,
@@ -701,11 +704,7 @@ function App() {
 
   return (
     <main>
-      <header className="site-header">
-        <a className="brand" href="#top" aria-label="F FountainJS home"><span>F</span> FountainJS</a>
-        <nav aria-label="Primary navigation"><SitePageLink href="#top" current>Home</SitePageLink><a className="site-section-link" href="#what">What it is</a><a className="site-section-link" href="#open-source">Open source</a><a className="site-section-link" href="#playground">Live demo</a><a className="site-section-link" href="#collaboration">Collaboration</a><a className="site-section-link" href="#review">Review</a><a className="site-section-link" href="#versions">Versions</a><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav>
-        <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
-      </header>
+      <SiteHeader page="Home" />
 
       <section className="hero" id="top">
         <div className="hero__eyebrow"><i /> Open source · MIT · early beta</div>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import katex from 'katex';
 import { createEditor, EditorView, StarterKit, composeExtensions, createMathExtension, createKaTeXRenderer, NodeSelection, MarkdownImporter, MarkdownExporter, undo, redo, type Editor, type Node } from 'fountainjs-editor';
-import { SitePageLink } from './SitePageLink';
+import { SiteHeader } from './SiteHeader';
 import { mathReferenceSamples } from './math-reference-samples';
 import { academicTableSource } from './academic-table-sample';
 import 'fountainjs-editor/styles.css';
@@ -54,11 +54,7 @@ function MathRendererLab() {
   }
 
   return <main className="demos-site math-lab">
-    <header className="site-header">
-      <a className="brand" href="./"><span>F</span> FountainJS</a>
-      <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav>
-      <span>Capability lab</span>
-    </header>
+    <SiteHeader page="Demos" />
     <section className="math-lab__intro">
       <h1>Math renderer lab</h1>
       <p>Real KaTeX, editable Fountain math nodes, and explicit failures. KaTeX and its fonts are bundled by this demo; they are not a Fountain engine dependency.</p>

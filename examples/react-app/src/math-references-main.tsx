@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createEditor, EditorView, StarterKit, composeExtensions, createMathExtension, NodeSelection, MarkdownExporter, undo, redo, type Editor, type Node } from 'fountainjs-editor';
-import { SitePageLink } from './SitePageLink';
+import { SiteHeader } from './SiteHeader';
 import { mathReferenceSamples } from './math-reference-samples';
 import { createDocumentMathJaxRenderer, type EquationSnapshot } from './mathjax-document-renderer';
 import { downloadDocumentFile, MAX_EQUATION_FILE_BYTES, nextEquationLabel, parseEquationDocument, replaceEquationDocument } from './math-document-files';
@@ -128,8 +128,7 @@ function EquationReferencesLab() {
   }
 
   return <main className="math-lab equation-lab">
-    <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a>
-      <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">Demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav><span>Capability lab</span></header>
+    <SiteHeader page="Demos" />
     <section className="math-lab__intro">
       <h1>Equation references</h1>
       <p>Edit labelled equations, move them, and watch the numbers and references update in both the editor and the reader preview. MathJax 4.1.3 and its TeX SVG font are bundled locally by this example; they are not Fountain engine dependencies. The host can supply a different preloaded SVG font.</p>

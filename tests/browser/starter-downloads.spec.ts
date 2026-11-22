@@ -19,6 +19,36 @@ test('opens the homepage at the requested section while the embedded editors ini
   }
 });
 
+test('keeps site navigation in place and follows the visible home section', async ({ page }) => {
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('./');
+    const nav = page.getByRole('navigation', { name: 'Primary navigation' });
+    const sections = page.getByRole('navigation', { name: 'Homepage sections' });
+    const banner = page.getByRole('complementary', { name: 'Website build information' });
+    const home = nav.getByRole('link', { name: 'Home', exact: true });
+    const demos = nav.getByRole('link', { name: 'Demos', exact: true });
+    await page.evaluate(() => document.fonts.ready);
+    await expect(home).toHaveAttribute('aria-current', 'page');
+    const position = await demos.boundingBox();
+    await sections.getByRole('link', { name: 'Open source' }).click();
+    await expect(sections.getByRole('link', { name: 'Open source' })).toHaveAttribute('aria-current', 'location');
+    await expect(home).not.toHaveAttribute('aria-current');
+    await page.locator('#what').evaluate(el => window.scrollTo(0, scrollY + el.getBoundingClientRect().top));
+    await expect(sections.getByRole('link', { name: 'What it is' })).toHaveAttribute('aria-current', 'location');
+    expect((await banner.boundingBox())!.y).toBe(0);
+    await demos.click();
+    await expect(demos).toHaveAttribute('aria-current', 'page');
+    await page.evaluate(() => document.fonts.ready);
+    const destination = await demos.boundingBox();
+    expect(Math.abs(position!.x - destination!.x)).toBeLessThan(2);
+    expect(Math.abs(position!.y - destination!.y)).toBeLessThan(2);
+    await sections.getByRole('link', { name: 'Review' }).click();
+    await expect(sections.getByRole('link', { name: 'Review' })).toHaveAttribute('aria-current', 'location');
+    expect((await banner.boundingBox())!.y).toBe(0);
+  }
+});
+
 test('opens the GitLab showcase, compares saved records and edits the native composers independently', async ({ page }, info) => {
   await page.goto('./demos.html');
   await page.getByRole('link', { name: 'Explore the GitLab integration' }).click();

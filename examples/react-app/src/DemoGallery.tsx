@@ -1,5 +1,5 @@
 import { demoDefinitions } from './demo-definitions';
-import { SitePageLink } from './SitePageLink';
+import { SiteHeader } from './SiteHeader';
 import './workflows.css';
 
 const surfaces = [
@@ -12,11 +12,7 @@ const surfaces = [
 function DemoGallery() {
   return (
     <main className="demos-site">
-      <header className="site-header">
-        <a className="brand" href="./" aria-label="F FountainJS home"><span>F</span> FountainJS</a>
-        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html" current>Demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink><a className="site-section-link" href="#boundaries">Boundaries</a></nav>
-        <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
-      </header>
+      <SiteHeader page="Demos"><a className="site-section-link" href="#boundaries">Boundaries</a></SiteHeader>
 
       <section className="workflow-discovery" aria-label="Real-world workflow demos"><div><h2>FountainJS in real products</h2><p>Try the GitLab editor integration and compare saved issues, merge requests and wikis.</p></div><div className="workflow-discovery-actions"><a href="./gitlab.html">Explore the GitLab integration ↗</a><a href="./workflows.html">Explore product workflows ↗</a></div></section>
 
