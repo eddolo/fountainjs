@@ -1002,7 +1002,7 @@ function App() {
           <article className="is-good"><span>FountainJS is a fit when…</span><p>You need a capable editor across multiple frontend surfaces, want extensions to stay host-controlled, and prefer portable JSON, open interfaces, and MIT licensing.</p></article>
           <article><span>Choose a mature alternative when…</span><p>You need a much larger extension market, years of physical-device deployment evidence, or commercial support today.</p></article>
         </div>
-        <p className="comparison__detail"><a href="https://github.com/eddolo/fountainjs/blob/master/docs/PROSEMIRROR_COMPARISON.md">Read the one-to-one full-stack comparison →</a></p>
+        <p className="comparison__detail"><a href="./prosemirror-alternative.html">Compare FountainJS, ProseMirror and Tiptap →</a></p>
       </section>
 
       <section className="architecture">

@@ -1,14 +1,26 @@
-# FountainJS
+# FountainJS rich-text editor
 
 [![npm version](https://img.shields.io/npm/v/fountainjs-editor?color=6d4aff)](https://www.npmjs.com/package/fountainjs-editor)
 [![CI](https://github.com/eddolo/fountainjs/actions/workflows/ci.yml/badge.svg)](https://github.com/eddolo/fountainjs/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/fountainjs-editor)](LICENSE)
 
-**A full-featured rich-text editor for any web app or frontend framework.**
+FountainJS is an MIT-licensed TypeScript alternative to ProseMirror and Tiptap. Its independent document engine supports tables, comments, tracked changes, Yjs collaboration and version history. Use it from plain JavaScript, React, Vue, Svelte, Angular or a Web Component, and store the document JSON on your own backend.
 
-FountainJS is an open-source TypeScript library you add to a website or web app. It includes rich text, images, tables, comments, tracked changes, collaboration, and named version history. Use it with React, Vue, Svelte, Angular, plain JavaScript, or a Web Component, and store its portable document JSON on any backend.
+**[Try the live editor](https://eddolo.github.io/fountainjs/#playground) · [Quick start](https://eddolo.github.io/fountainjs/developers.html#starters) · [Compare with ProseMirror and Tiptap](https://eddolo.github.io/fountainjs/prosemirror-alternative.html) · [See FountainJS inside GitLab](https://eddolo.github.io/fountainjs/gitlab.html)**
 
-Underneath those ready-made features is a modular editing engine: a typed document model, selections, transactions, plugins, history, and a plain DOM view. The interfaces and optional capabilities are replaceable, so a product can add or change content types, commands, formats, UI, storage, collaboration, and services without forking the core.
+## Install
+
+```sh
+npm install fountainjs-editor
+```
+
+The [plain JavaScript starter](examples/starters/plain-dom) mounts an editor, adds a custom block and shows the saved JSON. For other frameworks and server usage, see [installation options](#installation-options).
+
+[![A suggested change and an inline discussion posted through FountainJS in a GitLab merge request](https://raw.githubusercontent.com/eddolo/fountainjs/2225a571166efb887bdc8e37b01498592f0654e3/artifacts/gitlab-compatibility/review-20261116/fountain-1/posted-range-review-posted.png)](https://eddolo.github.io/fountainjs/gitlab.html)
+
+*A code review posted in a local GitLab CE 19.5.3 installation using FountainJS. [See the stock and replacement editors, recordings and reproduction steps.](https://eddolo.github.io/fountainjs/gitlab.html)*
+
+## Beta status and upgrading
 
 `0.5.0-beta.5` is an early beta. Read the [versioned release notes](docs/RELEASE_0_5_0_BETA_5.md)
 for upgrade requirements, verification scope and known limitations. The
@@ -75,11 +87,7 @@ the document engine. A practical test is that FountainJS continues to work
 without a Fountain account and can be maintained from a fork if this project
 disappears.
 
-## Install
-
-```bash
-npm install fountainjs-editor
-```
+## Installation options
 
 For a complete project, download the plain JavaScript, React, or Node.js
 starter from the [developer guide](https://eddolo.github.io/fountainjs/developers.html#starters).

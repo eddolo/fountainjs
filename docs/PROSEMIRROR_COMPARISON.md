@@ -1,5 +1,7 @@
 # FountainJS versus ProseMirror + Tiptap
 
+For a short introduction and a matched GitLab editing workflow, see [FountainJS vs ProseMirror and Tiptap](https://eddolo.github.io/fountainjs/prosemirror-alternative.html).
+
 Last reviewed against the public documentation on **2026-09-05**.
 
 ## The correct comparison

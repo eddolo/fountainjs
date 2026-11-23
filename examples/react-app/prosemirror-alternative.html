@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FountainJS vs ProseMirror and Tiptap | Rich-text editor comparison</title>
+    <meta name="description" content="Compare three approaches to building a rich-text editor. See how FountainJS and GitLab’s stock Tiptap editor handled the same issue, then try the editor or reproduce the test.">
+    <link rel="canonical" href="https://eddolo.github.io/fountainjs/prosemirror-alternative.html">
+    <meta property="og:title" content="FountainJS vs ProseMirror and Tiptap">
+    <meta property="og:description" content="Which editor fits your application? Follow one issue through both editors in the same GitLab installation.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://eddolo.github.io/fountainjs/prosemirror-alternative.html">
+    <meta property="og:image" content="https://raw.githubusercontent.com/eddolo/fountainjs/2225a571166efb887bdc8e37b01498592f0654e3/artifacts/gitlab-compatibility/final-8991f40b-outline-new-firefox/fountain-2/reopened-outline.png">
+    <meta property="og:image:alt" content="A reopened GitLab issue showing its saved outline and first heading.">
+    <link rel="stylesheet" href="./src/index.css">
+    <link rel="stylesheet" href="./src/comparison.css">
+  </head>
+  <body>
+    <div id="comparison-header"></div>
+    <main class="editor-comparison">
+      <nav aria-label="Breadcrumb"><a href="./developers.html">Developer guide</a> / Editor comparison</nav>
+      <h1>FountainJS vs ProseMirror and Tiptap</h1>
+      <p>All three can power a rich-text editor. The choice depends on which parts of the editor you want to build and which parts your application already relies on.</p>
+      <h2>Which would I choose?</h2>
+      <dl>
+        <dt>ProseMirror</dt>
+        <dd>Choose it when you want to design the schema, editing commands and interface yourself, especially if your team already works with ProseMirror transactions and plugins. <a href="https://prosemirror.net/docs/guide/">ProseMirror guide</a></dd>
+        <dt>Tiptap</dt>
+        <dd>Choose it when you want ProseMirror’s engine with a higher-level extension API, or your product already depends on a Tiptap extension. <a href="https://tiptap.dev/docs/editor/getting-started/overview">Tiptap editor overview</a></dd>
+        <dt>FountainJS</dt>
+        <dd>Try it when you want comments, tracked changes and Yjs collaboration as MIT-licensed modules, or need to process the same document in Node.js. You choose the UI, storage and collaboration provider. It is an early beta with its own model and plugin API. Existing ProseMirror plugins and Tiptap extensions require porting. <a href="./#playground">Edit a document</a> · <a href="./developers.html#starters">Download a starter</a></dd>
+      </dl>
+      <h2>What survived a save in GitLab?</h2>
+      <p>An author inserted a table of contents into an issue before writing the first heading. In both editors, undo and redo worked and the initial save kept the directive. The difference appeared after reopening the issue, adding prose and saving again.</p>
+      <figure>
+        <a href="./gitlab.html#journeys"><img src="../../artifacts/gitlab-compatibility/final-8991f40b-outline-new-firefox/fountain-2/reopened-outline.png" alt="The reopened GitLab issue has a table of contents linking to its Release handoff heading." loading="lazy"></a>
+        <figcaption>FountainJS kept the directive through the second save. When the first heading was added, the outline linked to it. GitLab’s stock editor kept the prose but dropped the directive on that second save.</figcaption>
+      </figure>
+      <p>Both runs used GitLab CE 19.5.3 and Firefox 153 on Linux. The replacement used FountainJS build <code>1f16e1b0</code>. Hosted staging and physical mobile verification remain open. <a href="./gitlab.html#journeys">Compare both captures</a> · <a href="https://github.com/eddolo/fountainjs/blob/2225a571166efb887bdc8e37b01498592f0654e3/artifacts/gitlab-compatibility/final-8991f40b-outline-new-firefox/final/report.md">Inspect the matched run and build IDs</a></p>
+      <p><a href="https://github.com/eddolo/fountainjs/blob/master/docs/PROSEMIRROR_COMPARISON.md">Read the full architecture and compatibility comparison →</a></p>
+    </main>
+    <script type="module" src="./src/comparison-main.tsx"></script>
+  </body>
+</html>

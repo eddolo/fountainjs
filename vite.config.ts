@@ -24,7 +24,7 @@ export default defineConfig({
   plugins: [gitlabVue2BridgePlugin(), angularLinker(), react(), svelte({ configFile: false }), siteBuildInfoPlugin([
     '/', '/index.html', '/developers.html', '/demos.html', '/conversion-lab.html',
     '/workflows.html', '/gitlab.html', '/task-workflow.html', '/issue-editor.html',
-    '/math-renderer.html', '/math-references.html', '/block-reordering.html',
+    '/math-renderer.html', '/math-references.html', '/block-reordering.html', '/prosemirror-alternative.html',
     ...demoSlugs.map(slug => `/demos/${slug}.html`),
   ])],
   // The optional Vue demo uses render functions, not the template compiler.
@@ -60,6 +60,7 @@ export default defineConfig({
         conversionLab: fileURLToPath(new URL('./examples/react-app/conversion-lab.html', import.meta.url)),
         workflows: fileURLToPath(new URL('./examples/react-app/workflows.html', import.meta.url)),
         gitlab: fileURLToPath(new URL('./examples/react-app/gitlab.html', import.meta.url)),
+        comparison: fileURLToPath(new URL('./examples/react-app/prosemirror-alternative.html', import.meta.url)),
         taskWorkflow: fileURLToPath(new URL('./examples/react-app/task-workflow.html', import.meta.url)),
         issueEditor: fileURLToPath(new URL('./examples/react-app/issue-editor.html', import.meta.url)),
         mathRenderer: fileURLToPath(new URL('./examples/react-app/math-renderer.html', import.meta.url)),
